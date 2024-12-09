@@ -1,0 +1,168 @@
+package com.anthropic.core.handlers
+
+import com.anthropic.core.http.Headers
+import com.anthropic.core.http.HttpResponse
+import com.anthropic.core.http.SseMessage
+import com.anthropic.core.jsonMapper
+import java.io.ByteArrayInputStream
+import java.io.InputStream
+import java.nio.charset.StandardCharsets
+import java.util.stream.Collectors.toList
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.catchThrowable
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
+
+class SseHandlerTest {
+
+    enum class TestCase(
+        internal val body: String,
+        internal val expectedMessages: List<SseMessage>? = null,
+        internal val expectedException: Exception? = null
+    ) {
+        EVENT_AND_DATA(
+            buildString {
+                append("event: completion\n")
+                append("data: {\"foo\":true}\n")
+                append("\n")
+            },
+            listOf(sseMessageBuilder().event("completion").data("{\"foo\":true}").build())
+        ),
+        EVENT_MISSING_DATA(
+            buildString {
+                append("event: completion\n")
+                append("\n")
+            },
+            listOf(sseMessageBuilder().event("completion").build())
+        ),
+        MULTIPLE_EVENTS_AND_DATA(
+            buildString {
+                append("event: completion\n")
+                append("data: {\"foo\":true}\n")
+                append("\n")
+                append("event: message_start\n")
+                append("data: {\"bar\":false}\n")
+                append("\n")
+            },
+            listOf(
+                sseMessageBuilder().event("completion").data("{\"foo\":true}").build(),
+                sseMessageBuilder().event("message_start").data("{\"bar\":false}").build()
+            )
+        ),
+        MULTIPLE_EVENTS_MISSING_DATA(
+            buildString {
+                append("event: completion\n")
+                append("\n")
+                append("event: message_start\n")
+                append("\n")
+            },
+            listOf(
+                sseMessageBuilder().event("completion").build(),
+                sseMessageBuilder().event("message_start").build()
+            )
+        ),
+        DATA_JSON_ESCAPED_DOUBLE_NEW_LINE(
+            buildString {
+                append("event: completion\n")
+                append("data: {\n")
+                append("data: \"foo\":\n")
+                append("data: true}\n")
+                append("\n\n")
+            },
+            listOf(sseMessageBuilder().event("completion").data("{\n\"foo\":\ntrue}").build())
+        ),
+        MULTIPLE_DATA_LINES(
+            buildString {
+                append("event: completion\n")
+                append("data: {\n")
+                append("data: \"foo\":\n")
+                append("data: true}\n")
+                append("\n\n")
+            },
+            listOf(sseMessageBuilder().event("completion").data("{\n\"foo\":\ntrue}").build())
+        ),
+        SPECIAL_NEW_LINE_CHARACTER(
+            buildString {
+                append("event: completion\n")
+                append("data: {\"content\":\" culpa\"}\n")
+                append("\n")
+                append("event: message_start\n")
+                append("data: {\"content\":\" \u2028\"}\n")
+                append("\n")
+                append("event: completion\n")
+                append("data: {\"content\":\"foo\"}\n")
+                append("\n")
+            },
+            listOf(
+                sseMessageBuilder().event("completion").data("{\"content\":\" culpa\"}").build(),
+                sseMessageBuilder()
+                    .event("message_start")
+                    .data("{\"content\":\" \u2028\"}")
+                    .build(),
+                sseMessageBuilder().event("completion").data("{\"content\":\"foo\"}").build()
+            )
+        ),
+        MULTI_BYTE_CHARACTER(
+            buildString {
+                append("event: completion\n")
+                append("data: {\"content\":\"\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u0438\"}\n")
+                append("\n")
+            },
+            listOf(
+                sseMessageBuilder().event("completion").data("{\"content\":\"известни\"}").build()
+            )
+        )
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    fun handle(testCase: TestCase) {
+        val response = httpResponse(testCase.body)
+        var messages: List<SseMessage>? = null
+        var exception: Exception? = null
+
+        try {
+            messages =
+                sseHandler(jsonMapper()).handle(response).use { it.stream().collect(toList()) }
+        } catch (e: Exception) {
+            exception = e
+        }
+
+        if (testCase.expectedMessages != null) {
+            assertThat(messages).containsExactlyElementsOf(testCase.expectedMessages)
+        }
+        if (testCase.expectedException != null) {
+            assertThat(exception).isInstanceOf(testCase.expectedException.javaClass)
+            assertThat(exception).hasMessage(testCase.expectedException.message)
+        }
+    }
+
+    @Test
+    fun cannotReuseStream() {
+        val response = httpResponse("body")
+        val streamResponse = sseHandler(jsonMapper()).handle(response)
+
+        val throwable =
+            streamResponse.use {
+                it.stream().collect(toList())
+                catchThrowable { it.stream().collect(toList()) }
+            }
+
+        assertThat(throwable).isInstanceOf(IllegalStateException::class.java)
+    }
+}
+
+private fun httpResponse(body: String): HttpResponse =
+    object : HttpResponse {
+        override fun statusCode(): Int = 0
+
+        override fun headers(): Headers = Headers.builder().build()
+
+        override fun body(): InputStream =
+            ByteArrayInputStream(body.toByteArray(StandardCharsets.UTF_8))
+
+        override fun close() {}
+    }
+
+private fun sseMessageBuilder() = SseMessage.builder().jsonMapper(jsonMapper())
