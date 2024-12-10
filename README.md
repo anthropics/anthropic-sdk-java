@@ -7,7 +7,7 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java/0.1.0-alpha.2)
+[![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java/0.1.0-alpha.3)
 
 <!-- x-release-please-end -->
 
@@ -30,7 +30,7 @@ The REST API documentation can be found on [docs.anthropic.com](https://docs.an
 <!-- x-release-please-start-version -->
 
 ```kotlin
-implementation("com.anthropic:anthropic-java:0.1.0-alpha.2")
+implementation("com.anthropic:anthropic-java:0.1.0-alpha.3")
 ```
 
 #### Maven
@@ -39,7 +39,7 @@ implementation("com.anthropic:anthropic-java:0.1.0-alpha.2")
 <dependency>
     <groupId>com.anthropic</groupId>
     <artifactId>anthropic-java</artifactId>
-    <version>0.1.0-alpha.2</version>
+    <version>0.1.0-alpha.3</version>
 </dependency>
 ```
 

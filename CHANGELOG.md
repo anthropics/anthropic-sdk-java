@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.0-alpha.3 (2024-12-10)
+
+Full Changelog: [v0.1.0-alpha.2...v0.1.0-alpha.3](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0-alpha.2...v0.1.0-alpha.3)
+
+### Features
+
+* docs: add example code ([#8](https://github.com/anthropics/anthropic-sdk-java/issues/8)) ([13e3a83](https://github.com/anthropics/anthropic-sdk-java/commit/13e3a83147fda14ff732481553d2e071487a453d))
+
+
+### Documentation
+
+* use latest sonnet in example snippets ([#6](https://github.com/anthropics/anthropic-sdk-java/issues/6)) ([a8f9175](https://github.com/anthropics/anthropic-sdk-java/commit/a8f91754a7ad26a8328a20dbbc4ee0051ae8aa06))
+
 ## 0.1.0-alpha.2 (2024-12-10)
 
 Full Changelog: [v0.1.0-alpha.1...v0.1.0-alpha.2](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0-alpha.1...v0.1.0-alpha.2)
