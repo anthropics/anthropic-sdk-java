@@ -1,5 +1,10 @@
 # Anthropic Java API Library
 
+> [!NOTE]  
+> The Anthropic Java API Library is currently in _alpha_.
+>
+> There may be frequent breaking changes.
+
 <!-- x-release-please-start-version -->
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java/0.1.0-alpha.1)
