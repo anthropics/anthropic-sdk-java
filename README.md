@@ -81,7 +81,7 @@ MessageCreateParams params = MessageCreateParams.builder()
         .content(MessageParam.Content.ofString("Hello, Claude"))
         .role(MessageParam.Role.user)
         .build()))
-    .model("claude-3-opus-20240229")
+    .model("claude-3-5-sonnet-latest")
     .build();
 Message message = client.messages().create(params);
 ```
