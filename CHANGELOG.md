@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.0-alpha.4 (2024-12-11)
+
+Full Changelog: [v0.1.0-alpha.3...v0.1.0-alpha.4](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0-alpha.3...v0.1.0-alpha.4)
+
+### Chores
+
+* update example values in tests and docs ([#9](https://github.com/anthropics/anthropic-sdk-java/issues/9)) ([5f50cbb](https://github.com/anthropics/anthropic-sdk-java/commit/5f50cbb47bdec4c97f5839359735898a0b9d2857))
+
+
+### Styles
+
+* **internal:** make enum value definitions less verbose ([#11](https://github.com/anthropics/anthropic-sdk-java/issues/11)) ([cd0507b](https://github.com/anthropics/anthropic-sdk-java/commit/cd0507b1b6af02fb3c20ce9c4785f48a6de31af0))
+* **internal:** move enum identity methods to bottom of class ([#12](https://github.com/anthropics/anthropic-sdk-java/issues/12)) ([804f3ec](https://github.com/anthropics/anthropic-sdk-java/commit/804f3ecac30aab1156d204df4d289a6553eb1a18))
+
 ## 0.1.0-alpha.3 (2024-12-10)
 
 Full Changelog: [v0.1.0-alpha.2...v0.1.0-alpha.3](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0-alpha.2...v0.1.0-alpha.3)
