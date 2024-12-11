@@ -11,14 +11,14 @@ class CompletionTest {
     fun createCompletion() {
         val completion =
             Completion.builder()
-                .id("id")
+                .id("compl_018CKm6gsux7P8yMcwZbeCPw")
                 .completion(" Hello! My name is Claude.")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .stopReason("stop_sequence")
                 .type(Completion.Type.COMPLETION)
                 .build()
         assertThat(completion).isNotNull
-        assertThat(completion.id()).isEqualTo("id")
+        assertThat(completion.id()).isEqualTo("compl_018CKm6gsux7P8yMcwZbeCPw")
         assertThat(completion.completion()).isEqualTo(" Hello! My name is Claude.")
         assertThat(completion.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
         assertThat(completion.stopReason()).contains("stop_sequence")

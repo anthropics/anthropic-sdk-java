@@ -22,7 +22,7 @@ class BetaMessageBatchIndividualResponseTest {
                                         listOf(
                                             BetaContentBlock.ofBetaTextBlock(
                                                 BetaTextBlock.builder()
-                                                    .text("text")
+                                                    .text("Hi! My name is Claude.")
                                                     .type(BetaTextBlock.Type.TEXT)
                                                     .build()
                                             )
@@ -31,7 +31,6 @@ class BetaMessageBatchIndividualResponseTest {
                                     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                                     .role(BetaMessage.Role.ASSISTANT)
                                     .stopReason(BetaMessage.StopReason.END_TURN)
-                                    .stopSequence("stop_sequence")
                                     .type(BetaMessage.Type.MESSAGE)
                                     .usage(
                                         BetaUsage.builder()
@@ -61,7 +60,7 @@ class BetaMessageBatchIndividualResponseTest {
                                     listOf(
                                         BetaContentBlock.ofBetaTextBlock(
                                             BetaTextBlock.builder()
-                                                .text("text")
+                                                .text("Hi! My name is Claude.")
                                                 .type(BetaTextBlock.Type.TEXT)
                                                 .build()
                                         )
@@ -70,7 +69,6 @@ class BetaMessageBatchIndividualResponseTest {
                                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                                 .role(BetaMessage.Role.ASSISTANT)
                                 .stopReason(BetaMessage.StopReason.END_TURN)
-                                .stopSequence("stop_sequence")
                                 .type(BetaMessage.Type.MESSAGE)
                                 .usage(
                                     BetaUsage.builder()

@@ -2,7 +2,7 @@
 
 package com.anthropic.models
 
-import com.anthropic.core.JsonNull
+import com.anthropic.core.JsonValue
 import com.anthropic.models.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -24,7 +24,21 @@ class BetaPromptCachingMessageCreateParamsTest {
             .model(Model.CLAUDE_3_5_HAIKU_LATEST)
             .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
             .stopSequences(listOf("string"))
-            .system(BetaPromptCachingMessageCreateParams.System.ofString("string"))
+            .system(
+                BetaPromptCachingMessageCreateParams.System.ofPromptCachingBetaTextBlockParams(
+                    listOf(
+                        PromptCachingBetaTextBlockParam.builder()
+                            .text("Today's date is 2024-06-01.")
+                            .type(PromptCachingBetaTextBlockParam.Type.TEXT)
+                            .cacheControl(
+                                PromptCachingBetaCacheControlEphemeral.builder()
+                                    .type(PromptCachingBetaCacheControlEphemeral.Type.EPHEMERAL)
+                                    .build()
+                            )
+                            .build()
+                    )
+                )
+            )
             .temperature(1.0)
             .toolChoice(
                 ToolChoice.ofToolChoiceAuto(
@@ -40,7 +54,24 @@ class BetaPromptCachingMessageCreateParamsTest {
                         .inputSchema(
                             PromptCachingBetaTool.InputSchema.builder()
                                 .type(PromptCachingBetaTool.InputSchema.Type.OBJECT)
-                                .properties(JsonNull.of())
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string"
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string"
+                                                )
+                                        )
+                                    )
+                                )
                                 .build()
                         )
                         .name("x")
@@ -75,7 +106,21 @@ class BetaPromptCachingMessageCreateParamsTest {
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .stopSequences(listOf("string"))
-                .system(BetaPromptCachingMessageCreateParams.System.ofString("string"))
+                .system(
+                    BetaPromptCachingMessageCreateParams.System.ofPromptCachingBetaTextBlockParams(
+                        listOf(
+                            PromptCachingBetaTextBlockParam.builder()
+                                .text("Today's date is 2024-06-01.")
+                                .type(PromptCachingBetaTextBlockParam.Type.TEXT)
+                                .cacheControl(
+                                    PromptCachingBetaCacheControlEphemeral.builder()
+                                        .type(PromptCachingBetaCacheControlEphemeral.Type.EPHEMERAL)
+                                        .build()
+                                )
+                                .build()
+                        )
+                    )
+                )
                 .temperature(1.0)
                 .toolChoice(
                     ToolChoice.ofToolChoiceAuto(
@@ -91,7 +136,24 @@ class BetaPromptCachingMessageCreateParamsTest {
                             .inputSchema(
                                 PromptCachingBetaTool.InputSchema.builder()
                                     .type(PromptCachingBetaTool.InputSchema.Type.OBJECT)
-                                    .properties(JsonNull.of())
+                                    .properties(
+                                        JsonValue.from(
+                                            mapOf(
+                                                "location" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "The city and state, e.g. San Francisco, CA",
+                                                        "type" to "string"
+                                                    ),
+                                                "unit" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "Unit for the output - one of (celsius, fahrenheit)",
+                                                        "type" to "string"
+                                                    )
+                                            )
+                                        )
+                                    )
                                     .build()
                             )
                             .name("x")
@@ -125,7 +187,21 @@ class BetaPromptCachingMessageCreateParamsTest {
             .isEqualTo(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
         assertThat(body.stopSequences()).isEqualTo(listOf("string"))
         assertThat(body.system())
-            .isEqualTo(BetaPromptCachingMessageCreateParams.System.ofString("string"))
+            .isEqualTo(
+                BetaPromptCachingMessageCreateParams.System.ofPromptCachingBetaTextBlockParams(
+                    listOf(
+                        PromptCachingBetaTextBlockParam.builder()
+                            .text("Today's date is 2024-06-01.")
+                            .type(PromptCachingBetaTextBlockParam.Type.TEXT)
+                            .cacheControl(
+                                PromptCachingBetaCacheControlEphemeral.builder()
+                                    .type(PromptCachingBetaCacheControlEphemeral.Type.EPHEMERAL)
+                                    .build()
+                            )
+                            .build()
+                    )
+                )
+            )
         assertThat(body.temperature()).isEqualTo(1.0)
         assertThat(body.toolChoice())
             .isEqualTo(
@@ -143,7 +219,24 @@ class BetaPromptCachingMessageCreateParamsTest {
                         .inputSchema(
                             PromptCachingBetaTool.InputSchema.builder()
                                 .type(PromptCachingBetaTool.InputSchema.Type.OBJECT)
-                                .properties(JsonNull.of())
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string"
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string"
+                                                )
+                                        )
+                                    )
+                                )
                                 .build()
                         )
                         .name("x")

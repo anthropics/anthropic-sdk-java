@@ -2,7 +2,7 @@
 
 package com.anthropic.models
 
-import com.anthropic.core.JsonNull
+import com.anthropic.core.JsonValue
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -15,7 +15,24 @@ class PromptCachingBetaToolTest {
                 .inputSchema(
                     PromptCachingBetaTool.InputSchema.builder()
                         .type(PromptCachingBetaTool.InputSchema.Type.OBJECT)
-                        .properties(JsonNull.of())
+                        .properties(
+                            JsonValue.from(
+                                mapOf(
+                                    "location" to
+                                        mapOf(
+                                            "description" to
+                                                "The city and state, e.g. San Francisco, CA",
+                                            "type" to "string"
+                                        ),
+                                    "unit" to
+                                        mapOf(
+                                            "description" to
+                                                "Unit for the output - one of (celsius, fahrenheit)",
+                                            "type" to "string"
+                                        )
+                                )
+                            )
+                        )
                         .build()
                 )
                 .name("x")
@@ -31,7 +48,24 @@ class PromptCachingBetaToolTest {
             .isEqualTo(
                 PromptCachingBetaTool.InputSchema.builder()
                     .type(PromptCachingBetaTool.InputSchema.Type.OBJECT)
-                    .properties(JsonNull.of())
+                    .properties(
+                        JsonValue.from(
+                            mapOf(
+                                "location" to
+                                    mapOf(
+                                        "description" to
+                                            "The city and state, e.g. San Francisco, CA",
+                                        "type" to "string"
+                                    ),
+                                "unit" to
+                                    mapOf(
+                                        "description" to
+                                            "Unit for the output - one of (celsius, fahrenheit)",
+                                        "type" to "string"
+                                    )
+                            )
+                        )
+                    )
                     .build()
             )
         assertThat(promptCachingBetaTool.name()).isEqualTo("x")

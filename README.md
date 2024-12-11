@@ -78,10 +78,10 @@ import java.util.List;
 MessageCreateParams params = MessageCreateParams.builder()
     .maxToken(1024L)
     .message(List.of(MessageParam.builder()
+        .role(MessageParam.Role.USER)
         .content(MessageParam.Content.ofString("Hello, Claude"))
-        .role(MessageParam.Role.user)
         .build()))
-    .model("claude-3-5-sonnet-latest")
+    .model(Model.CLAUDE_3_5_HAIKU_LATEST)
     .build();
 Message message = client.messages().create(params);
 ```

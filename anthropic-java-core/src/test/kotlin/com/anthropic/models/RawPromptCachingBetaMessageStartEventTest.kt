@@ -18,7 +18,7 @@ class RawPromptCachingBetaMessageStartEventTest {
                             listOf(
                                 ContentBlock.ofTextBlock(
                                     TextBlock.builder()
-                                        .text("text")
+                                        .text("Hi! My name is Claude.")
                                         .type(TextBlock.Type.TEXT)
                                         .build()
                                 )
@@ -27,7 +27,6 @@ class RawPromptCachingBetaMessageStartEventTest {
                         .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                         .role(PromptCachingBetaMessage.Role.ASSISTANT)
                         .stopReason(PromptCachingBetaMessage.StopReason.END_TURN)
-                        .stopSequence("stop_sequence")
                         .type(PromptCachingBetaMessage.Type.MESSAGE)
                         .usage(
                             PromptCachingBetaUsage.builder()
@@ -49,14 +48,16 @@ class RawPromptCachingBetaMessageStartEventTest {
                     .content(
                         listOf(
                             ContentBlock.ofTextBlock(
-                                TextBlock.builder().text("text").type(TextBlock.Type.TEXT).build()
+                                TextBlock.builder()
+                                    .text("Hi! My name is Claude.")
+                                    .type(TextBlock.Type.TEXT)
+                                    .build()
                             )
                         )
                     )
                     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                     .role(PromptCachingBetaMessage.Role.ASSISTANT)
                     .stopReason(PromptCachingBetaMessage.StopReason.END_TURN)
-                    .stopSequence("stop_sequence")
                     .type(PromptCachingBetaMessage.Type.MESSAGE)
                     .usage(
                         PromptCachingBetaUsage.builder()
