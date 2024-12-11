@@ -30,19 +30,15 @@ private constructor(
 
     companion object {
 
-        @JvmField
-        val MESSAGE_BATCHES_2024_09_24 = AnthropicBeta(JsonField.of("message-batches-2024-09-24"))
+        @JvmField val MESSAGE_BATCHES_2024_09_24 = of("message-batches-2024-09-24")
 
-        @JvmField
-        val PROMPT_CACHING_2024_07_31 = AnthropicBeta(JsonField.of("prompt-caching-2024-07-31"))
+        @JvmField val PROMPT_CACHING_2024_07_31 = of("prompt-caching-2024-07-31")
 
-        @JvmField
-        val COMPUTER_USE_2024_10_22 = AnthropicBeta(JsonField.of("computer-use-2024-10-22"))
+        @JvmField val COMPUTER_USE_2024_10_22 = of("computer-use-2024-10-22")
 
-        @JvmField val PDFS_2024_09_25 = AnthropicBeta(JsonField.of("pdfs-2024-09-25"))
+        @JvmField val PDFS_2024_09_25 = of("pdfs-2024-09-25")
 
-        @JvmField
-        val TOKEN_COUNTING_2024_11_01 = AnthropicBeta(JsonField.of("token-counting-2024-11-01"))
+        @JvmField val TOKEN_COUNTING_2024_11_01 = of("token-counting-2024-11-01")
 
         @JvmStatic fun of(value: String) = AnthropicBeta(JsonField.of(value))
     }

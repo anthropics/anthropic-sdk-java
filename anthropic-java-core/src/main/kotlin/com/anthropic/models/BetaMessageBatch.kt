@@ -443,11 +443,11 @@ private constructor(
 
         companion object {
 
-            @JvmField val IN_PROGRESS = ProcessingStatus(JsonField.of("in_progress"))
+            @JvmField val IN_PROGRESS = of("in_progress")
 
-            @JvmField val CANCELING = ProcessingStatus(JsonField.of("canceling"))
+            @JvmField val CANCELING = of("canceling")
 
-            @JvmField val ENDED = ProcessingStatus(JsonField.of("ended"))
+            @JvmField val ENDED = of("ended")
 
             @JvmStatic fun of(value: String) = ProcessingStatus(JsonField.of(value))
         }
@@ -506,7 +506,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val MESSAGE_BATCH = Type(JsonField.of("message_batch"))
+            @JvmField val MESSAGE_BATCH = of("message_batch")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }

@@ -124,7 +124,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val RATE_LIMIT_ERROR = Type(JsonField.of("rate_limit_error"))
+            @JvmField val RATE_LIMIT_ERROR = of("rate_limit_error")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }

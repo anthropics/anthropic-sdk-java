@@ -264,7 +264,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val COMPLETION = Type(JsonField.of("completion"))
+            @JvmField val COMPLETION = of("completion")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }

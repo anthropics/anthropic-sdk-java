@@ -167,7 +167,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val TOOL_USE = Type(JsonField.of("tool_use"))
+            @JvmField val TOOL_USE = of("tool_use")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }

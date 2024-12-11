@@ -228,7 +228,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val COMPUTER = Name(JsonField.of("computer"))
+            @JvmField val COMPUTER = of("computer")
 
             @JvmStatic fun of(value: String) = Name(JsonField.of(value))
         }
@@ -279,7 +279,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val COMPUTER_20241022 = Type(JsonField.of("computer_20241022"))
+            @JvmField val COMPUTER_20241022 = of("computer_20241022")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }

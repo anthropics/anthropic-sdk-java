@@ -124,7 +124,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val AUTHENTICATION_ERROR = Type(JsonField.of("authentication_error"))
+            @JvmField val AUTHENTICATION_ERROR = of("authentication_error")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }

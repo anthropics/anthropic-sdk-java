@@ -164,7 +164,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val BASH = Name(JsonField.of("bash"))
+            @JvmField val BASH = of("bash")
 
             @JvmStatic fun of(value: String) = Name(JsonField.of(value))
         }
@@ -215,7 +215,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val BASH_20241022 = Type(JsonField.of("bash_20241022"))
+            @JvmField val BASH_20241022 = of("bash_20241022")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }

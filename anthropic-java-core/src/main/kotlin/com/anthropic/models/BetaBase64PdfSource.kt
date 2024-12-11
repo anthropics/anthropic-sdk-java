@@ -139,7 +139,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val APPLICATION_PDF = MediaType(JsonField.of("application/pdf"))
+            @JvmField val APPLICATION_PDF = of("application/pdf")
 
             @JvmStatic fun of(value: String) = MediaType(JsonField.of(value))
         }
@@ -190,7 +190,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val BASE64 = Type(JsonField.of("base64"))
+            @JvmField val BASE64 = of("base64")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }

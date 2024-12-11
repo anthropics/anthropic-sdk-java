@@ -124,7 +124,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val OVERLOADED_ERROR = Type(JsonField.of("overloaded_error"))
+            @JvmField val OVERLOADED_ERROR = of("overloaded_error")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }

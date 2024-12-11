@@ -124,7 +124,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val TEXT_DELTA = Type(JsonField.of("text_delta"))
+            @JvmField val TEXT_DELTA = of("text_delta")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }
