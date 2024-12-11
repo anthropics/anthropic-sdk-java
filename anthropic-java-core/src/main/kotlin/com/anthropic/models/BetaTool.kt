@@ -334,7 +334,7 @@ private constructor(
 
             companion object {
 
-                @JvmField val OBJECT = Type(JsonField.of("object"))
+                @JvmField val OBJECT = of("object")
 
                 @JvmStatic fun of(value: String) = Type(JsonField.of(value))
             }
@@ -403,7 +403,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val CUSTOM = Type(JsonField.of("custom"))
+            @JvmField val CUSTOM = of("custom")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }

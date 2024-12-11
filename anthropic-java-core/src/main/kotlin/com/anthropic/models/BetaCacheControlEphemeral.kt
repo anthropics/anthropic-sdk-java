@@ -106,7 +106,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val EPHEMERAL = Type(JsonField.of("ephemeral"))
+            @JvmField val EPHEMERAL = of("ephemeral")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }

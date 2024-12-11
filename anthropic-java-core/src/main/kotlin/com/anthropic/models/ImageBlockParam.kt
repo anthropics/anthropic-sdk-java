@@ -224,13 +224,13 @@ private constructor(
 
             companion object {
 
-                @JvmField val IMAGE_JPEG = MediaType(JsonField.of("image/jpeg"))
+                @JvmField val IMAGE_JPEG = of("image/jpeg")
 
-                @JvmField val IMAGE_PNG = MediaType(JsonField.of("image/png"))
+                @JvmField val IMAGE_PNG = of("image/png")
 
-                @JvmField val IMAGE_GIF = MediaType(JsonField.of("image/gif"))
+                @JvmField val IMAGE_GIF = of("image/gif")
 
-                @JvmField val IMAGE_WEBP = MediaType(JsonField.of("image/webp"))
+                @JvmField val IMAGE_WEBP = of("image/webp")
 
                 @JvmStatic fun of(value: String) = MediaType(JsonField.of(value))
             }
@@ -293,7 +293,7 @@ private constructor(
 
             companion object {
 
-                @JvmField val BASE64 = Type(JsonField.of("base64"))
+                @JvmField val BASE64 = of("base64")
 
                 @JvmStatic fun of(value: String) = Type(JsonField.of(value))
             }
@@ -362,7 +362,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val IMAGE = Type(JsonField.of("image"))
+            @JvmField val IMAGE = of("image")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }

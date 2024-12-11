@@ -144,7 +144,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val DOCUMENT = Type(JsonField.of("document"))
+            @JvmField val DOCUMENT = of("document")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }

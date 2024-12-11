@@ -106,7 +106,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val EXPIRED = Type(JsonField.of("expired"))
+            @JvmField val EXPIRED = of("expired")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }

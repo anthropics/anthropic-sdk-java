@@ -124,7 +124,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val INVALID_REQUEST_ERROR = Type(JsonField.of("invalid_request_error"))
+            @JvmField val INVALID_REQUEST_ERROR = of("invalid_request_error")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }

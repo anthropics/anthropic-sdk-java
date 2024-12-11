@@ -152,7 +152,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val AUTO = Type(JsonField.of("auto"))
+            @JvmField val AUTO = of("auto")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }

@@ -106,7 +106,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val CANCELED = Type(JsonField.of("canceled"))
+            @JvmField val CANCELED = of("canceled")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }

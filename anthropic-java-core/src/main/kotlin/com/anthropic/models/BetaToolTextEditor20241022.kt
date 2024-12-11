@@ -164,7 +164,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val STR_REPLACE_EDITOR = Name(JsonField.of("str_replace_editor"))
+            @JvmField val STR_REPLACE_EDITOR = of("str_replace_editor")
 
             @JvmStatic fun of(value: String) = Name(JsonField.of(value))
         }
@@ -215,7 +215,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val TEXT_EDITOR_20241022 = Type(JsonField.of("text_editor_20241022"))
+            @JvmField val TEXT_EDITOR_20241022 = of("text_editor_20241022")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }

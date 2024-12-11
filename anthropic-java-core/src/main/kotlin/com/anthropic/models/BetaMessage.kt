@@ -545,7 +545,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val ASSISTANT = Role(JsonField.of("assistant"))
+            @JvmField val ASSISTANT = of("assistant")
 
             @JvmStatic fun of(value: String) = Role(JsonField.of(value))
         }
@@ -596,13 +596,13 @@ private constructor(
 
         companion object {
 
-            @JvmField val END_TURN = StopReason(JsonField.of("end_turn"))
+            @JvmField val END_TURN = of("end_turn")
 
-            @JvmField val MAX_TOKENS = StopReason(JsonField.of("max_tokens"))
+            @JvmField val MAX_TOKENS = of("max_tokens")
 
-            @JvmField val STOP_SEQUENCE = StopReason(JsonField.of("stop_sequence"))
+            @JvmField val STOP_SEQUENCE = of("stop_sequence")
 
-            @JvmField val TOOL_USE = StopReason(JsonField.of("tool_use"))
+            @JvmField val TOOL_USE = of("tool_use")
 
             @JvmStatic fun of(value: String) = StopReason(JsonField.of(value))
         }
@@ -665,7 +665,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val MESSAGE = Type(JsonField.of("message"))
+            @JvmField val MESSAGE = of("message")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }

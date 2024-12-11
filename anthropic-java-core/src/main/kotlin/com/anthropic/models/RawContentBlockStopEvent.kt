@@ -124,7 +124,7 @@ private constructor(
 
         companion object {
 
-            @JvmField val CONTENT_BLOCK_STOP = Type(JsonField.of("content_block_stop"))
+            @JvmField val CONTENT_BLOCK_STOP = of("content_block_stop")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }
