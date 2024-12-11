@@ -2,7 +2,7 @@
 
 package com.anthropic.models
 
-import com.anthropic.core.JsonNull
+import com.anthropic.core.JsonValue
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -15,7 +15,24 @@ class BetaToolTest {
                 .inputSchema(
                     BetaTool.InputSchema.builder()
                         .type(BetaTool.InputSchema.Type.OBJECT)
-                        .properties(JsonNull.of())
+                        .properties(
+                            JsonValue.from(
+                                mapOf(
+                                    "location" to
+                                        mapOf(
+                                            "description" to
+                                                "The city and state, e.g. San Francisco, CA",
+                                            "type" to "string"
+                                        ),
+                                    "unit" to
+                                        mapOf(
+                                            "description" to
+                                                "Unit for the output - one of (celsius, fahrenheit)",
+                                            "type" to "string"
+                                        )
+                                )
+                            )
+                        )
                         .build()
                 )
                 .name("x")
@@ -32,7 +49,24 @@ class BetaToolTest {
             .isEqualTo(
                 BetaTool.InputSchema.builder()
                     .type(BetaTool.InputSchema.Type.OBJECT)
-                    .properties(JsonNull.of())
+                    .properties(
+                        JsonValue.from(
+                            mapOf(
+                                "location" to
+                                    mapOf(
+                                        "description" to
+                                            "The city and state, e.g. San Francisco, CA",
+                                        "type" to "string"
+                                    ),
+                                "unit" to
+                                    mapOf(
+                                        "description" to
+                                            "Unit for the output - one of (celsius, fahrenheit)",
+                                        "type" to "string"
+                                    )
+                            )
+                        )
+                    )
                     .build()
             )
         assertThat(betaTool.name()).isEqualTo("x")

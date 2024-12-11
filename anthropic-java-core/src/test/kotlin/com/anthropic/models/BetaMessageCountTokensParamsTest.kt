@@ -2,7 +2,7 @@
 
 package com.anthropic.models
 
-import com.anthropic.core.JsonNull
+import com.anthropic.core.JsonValue
 import com.anthropic.models.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -21,7 +21,21 @@ class BetaMessageCountTokensParamsTest {
                 )
             )
             .model(Model.CLAUDE_3_5_HAIKU_LATEST)
-            .system(BetaMessageCountTokensParams.System.ofString("string"))
+            .system(
+                BetaMessageCountTokensParams.System.ofBetaTextBlockParams(
+                    listOf(
+                        BetaTextBlockParam.builder()
+                            .text("Today's date is 2024-06-01.")
+                            .type(BetaTextBlockParam.Type.TEXT)
+                            .cacheControl(
+                                BetaCacheControlEphemeral.builder()
+                                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
+                                    .build()
+                            )
+                            .build()
+                    )
+                )
+            )
             .toolChoice(
                 BetaToolChoice.ofBetaToolChoiceAuto(
                     BetaToolChoiceAuto.builder()
@@ -37,7 +51,24 @@ class BetaMessageCountTokensParamsTest {
                             .inputSchema(
                                 BetaTool.InputSchema.builder()
                                     .type(BetaTool.InputSchema.Type.OBJECT)
-                                    .properties(JsonNull.of())
+                                    .properties(
+                                        JsonValue.from(
+                                            mapOf(
+                                                "location" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "The city and state, e.g. San Francisco, CA",
+                                                        "type" to "string"
+                                                    ),
+                                                "unit" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "Unit for the output - one of (celsius, fahrenheit)",
+                                                        "type" to "string"
+                                                    )
+                                            )
+                                        )
+                                    )
                                     .build()
                             )
                             .name("x")
@@ -69,7 +100,21 @@ class BetaMessageCountTokensParamsTest {
                     )
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
-                .system(BetaMessageCountTokensParams.System.ofString("string"))
+                .system(
+                    BetaMessageCountTokensParams.System.ofBetaTextBlockParams(
+                        listOf(
+                            BetaTextBlockParam.builder()
+                                .text("Today's date is 2024-06-01.")
+                                .type(BetaTextBlockParam.Type.TEXT)
+                                .cacheControl(
+                                    BetaCacheControlEphemeral.builder()
+                                        .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
+                                        .build()
+                                )
+                                .build()
+                        )
+                    )
+                )
                 .toolChoice(
                     BetaToolChoice.ofBetaToolChoiceAuto(
                         BetaToolChoiceAuto.builder()
@@ -85,7 +130,24 @@ class BetaMessageCountTokensParamsTest {
                                 .inputSchema(
                                     BetaTool.InputSchema.builder()
                                         .type(BetaTool.InputSchema.Type.OBJECT)
-                                        .properties(JsonNull.of())
+                                        .properties(
+                                            JsonValue.from(
+                                                mapOf(
+                                                    "location" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "The city and state, e.g. San Francisco, CA",
+                                                            "type" to "string"
+                                                        ),
+                                                    "unit" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "Unit for the output - one of (celsius, fahrenheit)",
+                                                            "type" to "string"
+                                                        )
+                                                )
+                                            )
+                                        )
                                         .build()
                                 )
                                 .name("x")
@@ -114,7 +176,22 @@ class BetaMessageCountTokensParamsTest {
                 )
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
-        assertThat(body.system()).isEqualTo(BetaMessageCountTokensParams.System.ofString("string"))
+        assertThat(body.system())
+            .isEqualTo(
+                BetaMessageCountTokensParams.System.ofBetaTextBlockParams(
+                    listOf(
+                        BetaTextBlockParam.builder()
+                            .text("Today's date is 2024-06-01.")
+                            .type(BetaTextBlockParam.Type.TEXT)
+                            .cacheControl(
+                                BetaCacheControlEphemeral.builder()
+                                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
+                                    .build()
+                            )
+                            .build()
+                    )
+                )
+            )
         assertThat(body.toolChoice())
             .isEqualTo(
                 BetaToolChoice.ofBetaToolChoiceAuto(
@@ -132,7 +209,24 @@ class BetaMessageCountTokensParamsTest {
                             .inputSchema(
                                 BetaTool.InputSchema.builder()
                                     .type(BetaTool.InputSchema.Type.OBJECT)
-                                    .properties(JsonNull.of())
+                                    .properties(
+                                        JsonValue.from(
+                                            mapOf(
+                                                "location" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "The city and state, e.g. San Francisco, CA",
+                                                        "type" to "string"
+                                                    ),
+                                                "unit" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "Unit for the output - one of (celsius, fahrenheit)",
+                                                        "type" to "string"
+                                                    )
+                                            )
+                                        )
+                                    )
                                     .build()
                             )
                             .name("x")

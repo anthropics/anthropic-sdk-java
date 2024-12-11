@@ -4,7 +4,6 @@ package com.anthropic.services
 
 import com.anthropic.client.AnthropicClient
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
-import com.anthropic.core.JsonNull
 import com.anthropic.core.JsonString
 import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
@@ -70,7 +69,16 @@ class ServiceParamsTest {
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .stopSequences(listOf("string"))
-                .system(MessageCreateParams.System.ofString("string"))
+                .system(
+                    MessageCreateParams.System.ofTextBlockParams(
+                        listOf(
+                            TextBlockParam.builder()
+                                .text("Today's date is 2024-06-01.")
+                                .type(TextBlockParam.Type.TEXT)
+                                .build()
+                        )
+                    )
+                )
                 .temperature(1.0)
                 .toolChoice(
                     ToolChoice.ofToolChoiceAuto(
@@ -86,7 +94,24 @@ class ServiceParamsTest {
                             .inputSchema(
                                 Tool.InputSchema.builder()
                                     .type(Tool.InputSchema.Type.OBJECT)
-                                    .properties(JsonNull.of())
+                                    .properties(
+                                        JsonValue.from(
+                                            mapOf(
+                                                "location" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "The city and state, e.g. San Francisco, CA",
+                                                        "type" to "string"
+                                                    ),
+                                                "unit" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "Unit for the output - one of (celsius, fahrenheit)",
+                                                        "type" to "string"
+                                                    )
+                                            )
+                                        )
+                                    )
                                     .build()
                             )
                             .name("x")
@@ -107,14 +132,16 @@ class ServiceParamsTest {
                 .content(
                     listOf(
                         ContentBlock.ofTextBlock(
-                            TextBlock.builder().text("text").type(TextBlock.Type.TEXT).build()
+                            TextBlock.builder()
+                                .text("Hi! My name is Claude.")
+                                .type(TextBlock.Type.TEXT)
+                                .build()
                         )
                     )
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .role(Message.Role.ASSISTANT)
                 .stopReason(Message.StopReason.END_TURN)
-                .stopSequence("stop_sequence")
                 .type(Message.Type.MESSAGE)
                 .usage(Usage.builder().inputTokens(2095L).outputTokens(503L).build())
                 .build()

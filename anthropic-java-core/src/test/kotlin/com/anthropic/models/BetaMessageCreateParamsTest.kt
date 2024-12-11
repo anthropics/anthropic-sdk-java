@@ -2,7 +2,7 @@
 
 package com.anthropic.models
 
-import com.anthropic.core.JsonNull
+import com.anthropic.core.JsonValue
 import com.anthropic.models.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -24,7 +24,21 @@ class BetaMessageCreateParamsTest {
             .model(Model.CLAUDE_3_5_HAIKU_LATEST)
             .metadata(BetaMetadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
             .stopSequences(listOf("string"))
-            .system(BetaMessageCreateParams.System.ofString("string"))
+            .system(
+                BetaMessageCreateParams.System.ofBetaTextBlockParams(
+                    listOf(
+                        BetaTextBlockParam.builder()
+                            .text("Today's date is 2024-06-01.")
+                            .type(BetaTextBlockParam.Type.TEXT)
+                            .cacheControl(
+                                BetaCacheControlEphemeral.builder()
+                                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
+                                    .build()
+                            )
+                            .build()
+                    )
+                )
+            )
             .temperature(1.0)
             .toolChoice(
                 BetaToolChoice.ofBetaToolChoiceAuto(
@@ -41,7 +55,24 @@ class BetaMessageCreateParamsTest {
                             .inputSchema(
                                 BetaTool.InputSchema.builder()
                                     .type(BetaTool.InputSchema.Type.OBJECT)
-                                    .properties(JsonNull.of())
+                                    .properties(
+                                        JsonValue.from(
+                                            mapOf(
+                                                "location" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "The city and state, e.g. San Francisco, CA",
+                                                        "type" to "string"
+                                                    ),
+                                                "unit" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "Unit for the output - one of (celsius, fahrenheit)",
+                                                        "type" to "string"
+                                                    )
+                                            )
+                                        )
+                                    )
                                     .build()
                             )
                             .name("x")
@@ -80,7 +111,21 @@ class BetaMessageCreateParamsTest {
                     BetaMetadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
                 )
                 .stopSequences(listOf("string"))
-                .system(BetaMessageCreateParams.System.ofString("string"))
+                .system(
+                    BetaMessageCreateParams.System.ofBetaTextBlockParams(
+                        listOf(
+                            BetaTextBlockParam.builder()
+                                .text("Today's date is 2024-06-01.")
+                                .type(BetaTextBlockParam.Type.TEXT)
+                                .cacheControl(
+                                    BetaCacheControlEphemeral.builder()
+                                        .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
+                                        .build()
+                                )
+                                .build()
+                        )
+                    )
+                )
                 .temperature(1.0)
                 .toolChoice(
                     BetaToolChoice.ofBetaToolChoiceAuto(
@@ -97,7 +142,24 @@ class BetaMessageCreateParamsTest {
                                 .inputSchema(
                                     BetaTool.InputSchema.builder()
                                         .type(BetaTool.InputSchema.Type.OBJECT)
-                                        .properties(JsonNull.of())
+                                        .properties(
+                                            JsonValue.from(
+                                                mapOf(
+                                                    "location" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "The city and state, e.g. San Francisco, CA",
+                                                            "type" to "string"
+                                                        ),
+                                                    "unit" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "Unit for the output - one of (celsius, fahrenheit)",
+                                                            "type" to "string"
+                                                        )
+                                                )
+                                            )
+                                        )
                                         .build()
                                 )
                                 .name("x")
@@ -134,7 +196,22 @@ class BetaMessageCreateParamsTest {
                 BetaMetadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
             )
         assertThat(body.stopSequences()).isEqualTo(listOf("string"))
-        assertThat(body.system()).isEqualTo(BetaMessageCreateParams.System.ofString("string"))
+        assertThat(body.system())
+            .isEqualTo(
+                BetaMessageCreateParams.System.ofBetaTextBlockParams(
+                    listOf(
+                        BetaTextBlockParam.builder()
+                            .text("Today's date is 2024-06-01.")
+                            .type(BetaTextBlockParam.Type.TEXT)
+                            .cacheControl(
+                                BetaCacheControlEphemeral.builder()
+                                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
+                                    .build()
+                            )
+                            .build()
+                    )
+                )
+            )
         assertThat(body.temperature()).isEqualTo(1.0)
         assertThat(body.toolChoice())
             .isEqualTo(
@@ -153,7 +230,24 @@ class BetaMessageCreateParamsTest {
                             .inputSchema(
                                 BetaTool.InputSchema.builder()
                                     .type(BetaTool.InputSchema.Type.OBJECT)
-                                    .properties(JsonNull.of())
+                                    .properties(
+                                        JsonValue.from(
+                                            mapOf(
+                                                "location" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "The city and state, e.g. San Francisco, CA",
+                                                        "type" to "string"
+                                                    ),
+                                                "unit" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "Unit for the output - one of (celsius, fahrenheit)",
+                                                        "type" to "string"
+                                                    )
+                                            )
+                                        )
+                                    )
                                     .build()
                             )
                             .name("x")

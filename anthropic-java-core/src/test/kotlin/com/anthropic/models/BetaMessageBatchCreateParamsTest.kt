@@ -2,7 +2,7 @@
 
 package com.anthropic.models
 
-import com.anthropic.core.JsonNull
+import com.anthropic.core.JsonValue
 import com.anthropic.models.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -22,7 +22,9 @@ class BetaMessageBatchCreateParamsTest {
                                 .messages(
                                     listOf(
                                         BetaMessageParam.builder()
-                                            .content(BetaMessageParam.Content.ofString("string"))
+                                            .content(
+                                                BetaMessageParam.Content.ofString("Hello, world")
+                                            )
                                             .role(BetaMessageParam.Role.USER)
                                             .build()
                                     )
@@ -36,9 +38,23 @@ class BetaMessageBatchCreateParamsTest {
                                 .stopSequences(listOf("string"))
                                 .stream(true)
                                 .system(
-                                    BetaMessageBatchCreateParams.Request.Params.System.ofString(
-                                        "string"
-                                    )
+                                    BetaMessageBatchCreateParams.Request.Params.System
+                                        .ofBetaTextBlockParams(
+                                            listOf(
+                                                BetaTextBlockParam.builder()
+                                                    .text("Today's date is 2024-06-01.")
+                                                    .type(BetaTextBlockParam.Type.TEXT)
+                                                    .cacheControl(
+                                                        BetaCacheControlEphemeral.builder()
+                                                            .type(
+                                                                BetaCacheControlEphemeral.Type
+                                                                    .EPHEMERAL
+                                                            )
+                                                            .build()
+                                                    )
+                                                    .build()
+                                            )
+                                        )
                                 )
                                 .temperature(1.0)
                                 .toolChoice(
@@ -56,7 +72,24 @@ class BetaMessageBatchCreateParamsTest {
                                                 .inputSchema(
                                                     BetaTool.InputSchema.builder()
                                                         .type(BetaTool.InputSchema.Type.OBJECT)
-                                                        .properties(JsonNull.of())
+                                                        .properties(
+                                                            JsonValue.from(
+                                                                mapOf(
+                                                                    "location" to
+                                                                        mapOf(
+                                                                            "description" to
+                                                                                "The city and state, e.g. San Francisco, CA",
+                                                                            "type" to "string"
+                                                                        ),
+                                                                    "unit" to
+                                                                        mapOf(
+                                                                            "description" to
+                                                                                "Unit for the output - one of (celsius, fahrenheit)",
+                                                                            "type" to "string"
+                                                                        )
+                                                                )
+                                                            )
+                                                        )
                                                         .build()
                                                 )
                                                 .name("x")
@@ -101,7 +134,9 @@ class BetaMessageBatchCreateParamsTest {
                                         listOf(
                                             BetaMessageParam.builder()
                                                 .content(
-                                                    BetaMessageParam.Content.ofString("string")
+                                                    BetaMessageParam.Content.ofString(
+                                                        "Hello, world"
+                                                    )
                                                 )
                                                 .role(BetaMessageParam.Role.USER)
                                                 .build()
@@ -116,9 +151,23 @@ class BetaMessageBatchCreateParamsTest {
                                     .stopSequences(listOf("string"))
                                     .stream(true)
                                     .system(
-                                        BetaMessageBatchCreateParams.Request.Params.System.ofString(
-                                            "string"
-                                        )
+                                        BetaMessageBatchCreateParams.Request.Params.System
+                                            .ofBetaTextBlockParams(
+                                                listOf(
+                                                    BetaTextBlockParam.builder()
+                                                        .text("Today's date is 2024-06-01.")
+                                                        .type(BetaTextBlockParam.Type.TEXT)
+                                                        .cacheControl(
+                                                            BetaCacheControlEphemeral.builder()
+                                                                .type(
+                                                                    BetaCacheControlEphemeral.Type
+                                                                        .EPHEMERAL
+                                                                )
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                            )
                                     )
                                     .temperature(1.0)
                                     .toolChoice(
@@ -136,7 +185,24 @@ class BetaMessageBatchCreateParamsTest {
                                                     .inputSchema(
                                                         BetaTool.InputSchema.builder()
                                                             .type(BetaTool.InputSchema.Type.OBJECT)
-                                                            .properties(JsonNull.of())
+                                                            .properties(
+                                                                JsonValue.from(
+                                                                    mapOf(
+                                                                        "location" to
+                                                                            mapOf(
+                                                                                "description" to
+                                                                                    "The city and state, e.g. San Francisco, CA",
+                                                                                "type" to "string"
+                                                                            ),
+                                                                        "unit" to
+                                                                            mapOf(
+                                                                                "description" to
+                                                                                    "Unit for the output - one of (celsius, fahrenheit)",
+                                                                                "type" to "string"
+                                                                            )
+                                                                    )
+                                                                )
+                                                            )
                                                             .build()
                                                     )
                                                     .name("x")
@@ -178,7 +244,9 @@ class BetaMessageBatchCreateParamsTest {
                                 .messages(
                                     listOf(
                                         BetaMessageParam.builder()
-                                            .content(BetaMessageParam.Content.ofString("string"))
+                                            .content(
+                                                BetaMessageParam.Content.ofString("Hello, world")
+                                            )
                                             .role(BetaMessageParam.Role.USER)
                                             .build()
                                     )
@@ -192,9 +260,23 @@ class BetaMessageBatchCreateParamsTest {
                                 .stopSequences(listOf("string"))
                                 .stream(true)
                                 .system(
-                                    BetaMessageBatchCreateParams.Request.Params.System.ofString(
-                                        "string"
-                                    )
+                                    BetaMessageBatchCreateParams.Request.Params.System
+                                        .ofBetaTextBlockParams(
+                                            listOf(
+                                                BetaTextBlockParam.builder()
+                                                    .text("Today's date is 2024-06-01.")
+                                                    .type(BetaTextBlockParam.Type.TEXT)
+                                                    .cacheControl(
+                                                        BetaCacheControlEphemeral.builder()
+                                                            .type(
+                                                                BetaCacheControlEphemeral.Type
+                                                                    .EPHEMERAL
+                                                            )
+                                                            .build()
+                                                    )
+                                                    .build()
+                                            )
+                                        )
                                 )
                                 .temperature(1.0)
                                 .toolChoice(
@@ -212,7 +294,24 @@ class BetaMessageBatchCreateParamsTest {
                                                 .inputSchema(
                                                     BetaTool.InputSchema.builder()
                                                         .type(BetaTool.InputSchema.Type.OBJECT)
-                                                        .properties(JsonNull.of())
+                                                        .properties(
+                                                            JsonValue.from(
+                                                                mapOf(
+                                                                    "location" to
+                                                                        mapOf(
+                                                                            "description" to
+                                                                                "The city and state, e.g. San Francisco, CA",
+                                                                            "type" to "string"
+                                                                        ),
+                                                                    "unit" to
+                                                                        mapOf(
+                                                                            "description" to
+                                                                                "Unit for the output - one of (celsius, fahrenheit)",
+                                                                            "type" to "string"
+                                                                        )
+                                                                )
+                                                            )
+                                                        )
                                                         .build()
                                                 )
                                                 .name("x")
@@ -255,7 +354,9 @@ class BetaMessageBatchCreateParamsTest {
                                         listOf(
                                             BetaMessageParam.builder()
                                                 .content(
-                                                    BetaMessageParam.Content.ofString("string")
+                                                    BetaMessageParam.Content.ofString(
+                                                        "Hello, world"
+                                                    )
                                                 )
                                                 .role(BetaMessageParam.Role.USER)
                                                 .build()
@@ -281,7 +382,9 @@ class BetaMessageBatchCreateParamsTest {
                                 .messages(
                                     listOf(
                                         BetaMessageParam.builder()
-                                            .content(BetaMessageParam.Content.ofString("string"))
+                                            .content(
+                                                BetaMessageParam.Content.ofString("Hello, world")
+                                            )
                                             .role(BetaMessageParam.Role.USER)
                                             .build()
                                     )

@@ -15,14 +15,16 @@ class PromptCachingBetaMessageTest {
                 .content(
                     listOf(
                         ContentBlock.ofTextBlock(
-                            TextBlock.builder().text("text").type(TextBlock.Type.TEXT).build()
+                            TextBlock.builder()
+                                .text("Hi! My name is Claude.")
+                                .type(TextBlock.Type.TEXT)
+                                .build()
                         )
                     )
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .role(PromptCachingBetaMessage.Role.ASSISTANT)
                 .stopReason(PromptCachingBetaMessage.StopReason.END_TURN)
-                .stopSequence("stop_sequence")
                 .type(PromptCachingBetaMessage.Type.MESSAGE)
                 .usage(
                     PromptCachingBetaUsage.builder()
@@ -38,7 +40,10 @@ class PromptCachingBetaMessageTest {
         assertThat(promptCachingBetaMessage.content())
             .containsExactly(
                 ContentBlock.ofTextBlock(
-                    TextBlock.builder().text("text").type(TextBlock.Type.TEXT).build()
+                    TextBlock.builder()
+                        .text("Hi! My name is Claude.")
+                        .type(TextBlock.Type.TEXT)
+                        .build()
                 )
             )
         assertThat(promptCachingBetaMessage.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
@@ -46,7 +51,6 @@ class PromptCachingBetaMessageTest {
             .isEqualTo(PromptCachingBetaMessage.Role.ASSISTANT)
         assertThat(promptCachingBetaMessage.stopReason())
             .contains(PromptCachingBetaMessage.StopReason.END_TURN)
-        assertThat(promptCachingBetaMessage.stopSequence()).contains("stop_sequence")
         assertThat(promptCachingBetaMessage.type()).isEqualTo(PromptCachingBetaMessage.Type.MESSAGE)
         assertThat(promptCachingBetaMessage.usage())
             .isEqualTo(
