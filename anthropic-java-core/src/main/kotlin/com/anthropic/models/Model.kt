@@ -4,7 +4,6 @@ package com.anthropic.models
 
 import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
-import com.anthropic.core.JsonValue
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 
