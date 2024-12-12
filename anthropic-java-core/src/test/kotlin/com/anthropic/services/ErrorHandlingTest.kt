@@ -4,7 +4,6 @@ package com.anthropic.services
 
 import com.anthropic.client.AnthropicClient
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
-import com.anthropic.core.JsonString
 import com.anthropic.core.JsonValue
 import com.anthropic.core.http.Headers
 import com.anthropic.core.jsonMapper
@@ -39,7 +38,7 @@ class ErrorHandlingTest {
     private val JSON_MAPPER: JsonMapper = jsonMapper()
 
     private val ANTHROPIC_ERROR: AnthropicError =
-        AnthropicError.builder().putAdditionalProperty("key", JsonString.of("value")).build()
+        AnthropicError.builder().putAdditionalProperty("key", JsonValue.from("value")).build()
 
     private lateinit var client: AnthropicClient
 
