@@ -2,7 +2,9 @@
 
 package com.anthropic.client
 
-import com.anthropic.services.async.*
+import com.anthropic.services.async.BetaServiceAsync
+import com.anthropic.services.async.CompletionServiceAsync
+import com.anthropic.services.async.MessageServiceAsync
 
 interface AnthropicClientAsync {
 

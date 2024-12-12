@@ -2,7 +2,9 @@
 
 package com.anthropic.client
 
-import com.anthropic.services.blocking.*
+import com.anthropic.services.blocking.BetaService
+import com.anthropic.services.blocking.CompletionService
+import com.anthropic.services.blocking.MessageService
 
 interface AnthropicClient {
 

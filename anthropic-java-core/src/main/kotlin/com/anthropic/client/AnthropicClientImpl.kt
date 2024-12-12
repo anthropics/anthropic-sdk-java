@@ -4,7 +4,12 @@ package com.anthropic.client
 
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.getPackageVersion
-import com.anthropic.services.blocking.*
+import com.anthropic.services.blocking.BetaService
+import com.anthropic.services.blocking.BetaServiceImpl
+import com.anthropic.services.blocking.CompletionService
+import com.anthropic.services.blocking.CompletionServiceImpl
+import com.anthropic.services.blocking.MessageService
+import com.anthropic.services.blocking.MessageServiceImpl
 
 class AnthropicClientImpl
 constructor(

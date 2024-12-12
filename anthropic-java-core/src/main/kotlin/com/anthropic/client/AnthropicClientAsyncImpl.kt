@@ -4,7 +4,12 @@ package com.anthropic.client
 
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.getPackageVersion
-import com.anthropic.services.async.*
+import com.anthropic.services.async.BetaServiceAsync
+import com.anthropic.services.async.BetaServiceAsyncImpl
+import com.anthropic.services.async.CompletionServiceAsync
+import com.anthropic.services.async.CompletionServiceAsyncImpl
+import com.anthropic.services.async.MessageServiceAsync
+import com.anthropic.services.async.MessageServiceAsyncImpl
 
 class AnthropicClientAsyncImpl
 constructor(
