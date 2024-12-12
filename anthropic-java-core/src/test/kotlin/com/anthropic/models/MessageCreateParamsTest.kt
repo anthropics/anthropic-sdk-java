@@ -3,7 +3,6 @@
 package com.anthropic.models
 
 import com.anthropic.core.JsonValue
-import com.anthropic.models.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

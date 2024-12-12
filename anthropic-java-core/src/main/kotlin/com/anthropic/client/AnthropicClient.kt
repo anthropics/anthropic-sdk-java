@@ -2,7 +2,6 @@
 
 package com.anthropic.client
 
-import com.anthropic.models.*
 import com.anthropic.services.blocking.*
 
 interface AnthropicClient {

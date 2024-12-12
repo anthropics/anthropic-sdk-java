@@ -4,7 +4,6 @@ package com.anthropic.client
 
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.getPackageVersion
-import com.anthropic.models.*
 import com.anthropic.services.blocking.*
 
 class AnthropicClientImpl
