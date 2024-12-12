@@ -4,7 +4,9 @@ package com.anthropic.services.blocking
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
-import com.anthropic.models.*
+import com.anthropic.models.CompletionCreateParams
+import com.anthropic.models.Metadata
+import com.anthropic.models.Model
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 

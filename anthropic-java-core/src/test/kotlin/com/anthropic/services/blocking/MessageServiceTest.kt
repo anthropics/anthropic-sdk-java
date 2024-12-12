@@ -5,7 +5,14 @@ package com.anthropic.services.blocking
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.core.JsonValue
-import com.anthropic.models.*
+import com.anthropic.models.MessageCreateParams
+import com.anthropic.models.MessageParam
+import com.anthropic.models.Metadata
+import com.anthropic.models.Model
+import com.anthropic.models.TextBlockParam
+import com.anthropic.models.Tool
+import com.anthropic.models.ToolChoice
+import com.anthropic.models.ToolChoiceAuto
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
