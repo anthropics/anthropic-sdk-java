@@ -5,21 +5,19 @@ package com.anthropic.services.blocking
 import com.anthropic.core.ClientOptions
 import com.anthropic.services.blocking.beta.MessageService
 import com.anthropic.services.blocking.beta.MessageServiceImpl
-import com.anthropic.services.blocking.beta.PromptCachingService
-import com.anthropic.services.blocking.beta.PromptCachingServiceImpl
+import com.anthropic.services.blocking.beta.ModelService
+import com.anthropic.services.blocking.beta.ModelServiceImpl
 
 class BetaServiceImpl
 constructor(
     private val clientOptions: ClientOptions,
 ) : BetaService {
 
+    private val models: ModelService by lazy { ModelServiceImpl(clientOptions) }
+
     private val messages: MessageService by lazy { MessageServiceImpl(clientOptions) }
 
-    private val promptCaching: PromptCachingService by lazy {
-        PromptCachingServiceImpl(clientOptions)
-    }
+    override fun models(): ModelService = models
 
     override fun messages(): MessageService = messages
-
-    override fun promptCaching(): PromptCachingService = promptCaching
 }

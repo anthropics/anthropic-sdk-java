@@ -26,7 +26,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Objects
 import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
 @JsonDeserialize(builder = BetaRawContentBlockDeltaEvent.Builder::class)
 @NoAutoDetect
@@ -217,22 +216,15 @@ private constructor(
 
             override fun ObjectCodec.deserialize(node: JsonNode): Delta {
                 val json = JsonValue.fromJsonNode(node)
-                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
 
-                when (type) {
-                    "text_delta" -> {
-                        tryDeserialize(node, jacksonTypeRef<BetaTextDelta>()) { it.validate() }
-                            ?.let {
-                                return Delta(betaTextDelta = it, _json = json)
-                            }
+                tryDeserialize(node, jacksonTypeRef<BetaTextDelta>()) { it.validate() }
+                    ?.let {
+                        return Delta(betaTextDelta = it, _json = json)
                     }
-                    "input_json_delta" -> {
-                        tryDeserialize(node, jacksonTypeRef<BetaInputJsonDelta>()) { it.validate() }
-                            ?.let {
-                                return Delta(betaInputJsonDelta = it, _json = json)
-                            }
+                tryDeserialize(node, jacksonTypeRef<BetaInputJsonDelta>()) { it.validate() }
+                    ?.let {
+                        return Delta(betaInputJsonDelta = it, _json = json)
                     }
-                }
 
                 return Delta(_json = json)
             }

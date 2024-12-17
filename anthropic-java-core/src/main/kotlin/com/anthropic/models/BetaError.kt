@@ -24,9 +24,11 @@ class BetaError
 private constructor(
     private val betaInvalidRequestError: BetaInvalidRequestError? = null,
     private val betaAuthenticationError: BetaAuthenticationError? = null,
+    private val betaBillingError: BetaBillingError? = null,
     private val betaPermissionError: BetaPermissionError? = null,
     private val betaNotFoundError: BetaNotFoundError? = null,
     private val betaRateLimitError: BetaRateLimitError? = null,
+    private val betaGatewayTimeoutError: BetaGatewayTimeoutError? = null,
     private val betaApiError: BetaApiError? = null,
     private val betaOverloadedError: BetaOverloadedError? = null,
     private val _json: JsonValue? = null,
@@ -40,12 +42,17 @@ private constructor(
     fun betaAuthenticationError(): Optional<BetaAuthenticationError> =
         Optional.ofNullable(betaAuthenticationError)
 
+    fun betaBillingError(): Optional<BetaBillingError> = Optional.ofNullable(betaBillingError)
+
     fun betaPermissionError(): Optional<BetaPermissionError> =
         Optional.ofNullable(betaPermissionError)
 
     fun betaNotFoundError(): Optional<BetaNotFoundError> = Optional.ofNullable(betaNotFoundError)
 
     fun betaRateLimitError(): Optional<BetaRateLimitError> = Optional.ofNullable(betaRateLimitError)
+
+    fun betaGatewayTimeoutError(): Optional<BetaGatewayTimeoutError> =
+        Optional.ofNullable(betaGatewayTimeoutError)
 
     fun betaApiError(): Optional<BetaApiError> = Optional.ofNullable(betaApiError)
 
@@ -56,11 +63,15 @@ private constructor(
 
     fun isBetaAuthenticationError(): Boolean = betaAuthenticationError != null
 
+    fun isBetaBillingError(): Boolean = betaBillingError != null
+
     fun isBetaPermissionError(): Boolean = betaPermissionError != null
 
     fun isBetaNotFoundError(): Boolean = betaNotFoundError != null
 
     fun isBetaRateLimitError(): Boolean = betaRateLimitError != null
+
+    fun isBetaGatewayTimeoutError(): Boolean = betaGatewayTimeoutError != null
 
     fun isBetaApiError(): Boolean = betaApiError != null
 
@@ -72,6 +83,8 @@ private constructor(
     fun asBetaAuthenticationError(): BetaAuthenticationError =
         betaAuthenticationError.getOrThrow("betaAuthenticationError")
 
+    fun asBetaBillingError(): BetaBillingError = betaBillingError.getOrThrow("betaBillingError")
+
     fun asBetaPermissionError(): BetaPermissionError =
         betaPermissionError.getOrThrow("betaPermissionError")
 
@@ -79,6 +92,9 @@ private constructor(
 
     fun asBetaRateLimitError(): BetaRateLimitError =
         betaRateLimitError.getOrThrow("betaRateLimitError")
+
+    fun asBetaGatewayTimeoutError(): BetaGatewayTimeoutError =
+        betaGatewayTimeoutError.getOrThrow("betaGatewayTimeoutError")
 
     fun asBetaApiError(): BetaApiError = betaApiError.getOrThrow("betaApiError")
 
@@ -93,9 +109,12 @@ private constructor(
                 visitor.visitBetaInvalidRequestError(betaInvalidRequestError)
             betaAuthenticationError != null ->
                 visitor.visitBetaAuthenticationError(betaAuthenticationError)
+            betaBillingError != null -> visitor.visitBetaBillingError(betaBillingError)
             betaPermissionError != null -> visitor.visitBetaPermissionError(betaPermissionError)
             betaNotFoundError != null -> visitor.visitBetaNotFoundError(betaNotFoundError)
             betaRateLimitError != null -> visitor.visitBetaRateLimitError(betaRateLimitError)
+            betaGatewayTimeoutError != null ->
+                visitor.visitBetaGatewayTimeoutError(betaGatewayTimeoutError)
             betaApiError != null -> visitor.visitBetaApiError(betaApiError)
             betaOverloadedError != null -> visitor.visitBetaOverloadedError(betaOverloadedError)
             else -> visitor.unknown(_json)
@@ -107,9 +126,11 @@ private constructor(
             if (
                 betaInvalidRequestError == null &&
                     betaAuthenticationError == null &&
+                    betaBillingError == null &&
                     betaPermissionError == null &&
                     betaNotFoundError == null &&
                     betaRateLimitError == null &&
+                    betaGatewayTimeoutError == null &&
                     betaApiError == null &&
                     betaOverloadedError == null
             ) {
@@ -117,9 +138,11 @@ private constructor(
             }
             betaInvalidRequestError?.validate()
             betaAuthenticationError?.validate()
+            betaBillingError?.validate()
             betaPermissionError?.validate()
             betaNotFoundError?.validate()
             betaRateLimitError?.validate()
+            betaGatewayTimeoutError?.validate()
             betaApiError?.validate()
             betaOverloadedError?.validate()
             validated = true
@@ -131,10 +154,10 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaError && betaInvalidRequestError == other.betaInvalidRequestError && betaAuthenticationError == other.betaAuthenticationError && betaPermissionError == other.betaPermissionError && betaNotFoundError == other.betaNotFoundError && betaRateLimitError == other.betaRateLimitError && betaApiError == other.betaApiError && betaOverloadedError == other.betaOverloadedError /* spotless:on */
+        return /* spotless:off */ other is BetaError && betaInvalidRequestError == other.betaInvalidRequestError && betaAuthenticationError == other.betaAuthenticationError && betaBillingError == other.betaBillingError && betaPermissionError == other.betaPermissionError && betaNotFoundError == other.betaNotFoundError && betaRateLimitError == other.betaRateLimitError && betaGatewayTimeoutError == other.betaGatewayTimeoutError && betaApiError == other.betaApiError && betaOverloadedError == other.betaOverloadedError /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaInvalidRequestError, betaAuthenticationError, betaPermissionError, betaNotFoundError, betaRateLimitError, betaApiError, betaOverloadedError) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaInvalidRequestError, betaAuthenticationError, betaBillingError, betaPermissionError, betaNotFoundError, betaRateLimitError, betaGatewayTimeoutError, betaApiError, betaOverloadedError) /* spotless:on */
 
     override fun toString(): String =
         when {
@@ -142,9 +165,12 @@ private constructor(
                 "BetaError{betaInvalidRequestError=$betaInvalidRequestError}"
             betaAuthenticationError != null ->
                 "BetaError{betaAuthenticationError=$betaAuthenticationError}"
+            betaBillingError != null -> "BetaError{betaBillingError=$betaBillingError}"
             betaPermissionError != null -> "BetaError{betaPermissionError=$betaPermissionError}"
             betaNotFoundError != null -> "BetaError{betaNotFoundError=$betaNotFoundError}"
             betaRateLimitError != null -> "BetaError{betaRateLimitError=$betaRateLimitError}"
+            betaGatewayTimeoutError != null ->
+                "BetaError{betaGatewayTimeoutError=$betaGatewayTimeoutError}"
             betaApiError != null -> "BetaError{betaApiError=$betaApiError}"
             betaOverloadedError != null -> "BetaError{betaOverloadedError=$betaOverloadedError}"
             _json != null -> "BetaError{_unknown=$_json}"
@@ -162,6 +188,10 @@ private constructor(
             BetaError(betaAuthenticationError = betaAuthenticationError)
 
         @JvmStatic
+        fun ofBetaBillingError(betaBillingError: BetaBillingError) =
+            BetaError(betaBillingError = betaBillingError)
+
+        @JvmStatic
         fun ofBetaPermissionError(betaPermissionError: BetaPermissionError) =
             BetaError(betaPermissionError = betaPermissionError)
 
@@ -172,6 +202,10 @@ private constructor(
         @JvmStatic
         fun ofBetaRateLimitError(betaRateLimitError: BetaRateLimitError) =
             BetaError(betaRateLimitError = betaRateLimitError)
+
+        @JvmStatic
+        fun ofBetaGatewayTimeoutError(betaGatewayTimeoutError: BetaGatewayTimeoutError) =
+            BetaError(betaGatewayTimeoutError = betaGatewayTimeoutError)
 
         @JvmStatic
         fun ofBetaApiError(betaApiError: BetaApiError) = BetaError(betaApiError = betaApiError)
@@ -187,11 +221,15 @@ private constructor(
 
         fun visitBetaAuthenticationError(betaAuthenticationError: BetaAuthenticationError): T
 
+        fun visitBetaBillingError(betaBillingError: BetaBillingError): T
+
         fun visitBetaPermissionError(betaPermissionError: BetaPermissionError): T
 
         fun visitBetaNotFoundError(betaNotFoundError: BetaNotFoundError): T
 
         fun visitBetaRateLimitError(betaRateLimitError: BetaRateLimitError): T
+
+        fun visitBetaGatewayTimeoutError(betaGatewayTimeoutError: BetaGatewayTimeoutError): T
 
         fun visitBetaApiError(betaApiError: BetaApiError): T
 
@@ -225,6 +263,12 @@ private constructor(
                             return BetaError(betaAuthenticationError = it, _json = json)
                         }
                 }
+                "billing_error" -> {
+                    tryDeserialize(node, jacksonTypeRef<BetaBillingError>()) { it.validate() }
+                        ?.let {
+                            return BetaError(betaBillingError = it, _json = json)
+                        }
+                }
                 "permission_error" -> {
                     tryDeserialize(node, jacksonTypeRef<BetaPermissionError>()) { it.validate() }
                         ?.let {
@@ -241,6 +285,14 @@ private constructor(
                     tryDeserialize(node, jacksonTypeRef<BetaRateLimitError>()) { it.validate() }
                         ?.let {
                             return BetaError(betaRateLimitError = it, _json = json)
+                        }
+                }
+                "timeout_error" -> {
+                    tryDeserialize(node, jacksonTypeRef<BetaGatewayTimeoutError>()) {
+                            it.validate()
+                        }
+                        ?.let {
+                            return BetaError(betaGatewayTimeoutError = it, _json = json)
                         }
                 }
                 "api_error" -> {
@@ -273,10 +325,13 @@ private constructor(
                     generator.writeObject(value.betaInvalidRequestError)
                 value.betaAuthenticationError != null ->
                     generator.writeObject(value.betaAuthenticationError)
+                value.betaBillingError != null -> generator.writeObject(value.betaBillingError)
                 value.betaPermissionError != null ->
                     generator.writeObject(value.betaPermissionError)
                 value.betaNotFoundError != null -> generator.writeObject(value.betaNotFoundError)
                 value.betaRateLimitError != null -> generator.writeObject(value.betaRateLimitError)
+                value.betaGatewayTimeoutError != null ->
+                    generator.writeObject(value.betaGatewayTimeoutError)
                 value.betaApiError != null -> generator.writeObject(value.betaApiError)
                 value.betaOverloadedError != null ->
                     generator.writeObject(value.betaOverloadedError)

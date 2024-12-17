@@ -5,6 +5,8 @@ package com.anthropic.services.blocking
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.core.JsonValue
+import com.anthropic.models.CacheControlEphemeral
+import com.anthropic.models.MessageCountTokensParams
 import com.anthropic.models.MessageCreateParams
 import com.anthropic.models.MessageParam
 import com.anthropic.models.Metadata
@@ -50,6 +52,11 @@ class MessageServiceTest {
                                 TextBlockParam.builder()
                                     .text("Today's date is 2024-06-01.")
                                     .type(TextBlockParam.Type.TEXT)
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                            .build()
+                                    )
                                     .build()
                             )
                         )
@@ -90,6 +97,11 @@ class MessageServiceTest {
                                         .build()
                                 )
                                 .name("x")
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                        .build()
+                                )
                                 .description("Get the current weather in a given location")
                                 .build()
                         )
@@ -134,6 +146,11 @@ class MessageServiceTest {
                                 TextBlockParam.builder()
                                     .text("Today's date is 2024-06-01.")
                                     .type(TextBlockParam.Type.TEXT)
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                            .build()
+                                    )
                                     .build()
                             )
                         )
@@ -174,6 +191,11 @@ class MessageServiceTest {
                                         .build()
                                 )
                                 .name("x")
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                        .build()
+                                )
                                 .description("Get the current weather in a given location")
                                 .build()
                         )
@@ -189,5 +211,90 @@ class MessageServiceTest {
                 it.validate()
             }
         }
+    }
+
+    @Test
+    fun callCountTokens() {
+        val client =
+            AnthropicOkHttpClient.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .apiKey("my-anthropic-api-key")
+                .build()
+        val messageService = client.messages()
+        val messageTokensCount =
+            messageService.countTokens(
+                MessageCountTokensParams.builder()
+                    .messages(
+                        listOf(
+                            MessageParam.builder()
+                                .content(MessageParam.Content.ofString("string"))
+                                .role(MessageParam.Role.USER)
+                                .build()
+                        )
+                    )
+                    .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+                    .system(
+                        MessageCountTokensParams.System.ofTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .type(TextBlockParam.Type.TEXT)
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                    )
+                    .toolChoice(
+                        ToolChoice.ofToolChoiceAuto(
+                            ToolChoiceAuto.builder()
+                                .type(ToolChoiceAuto.Type.AUTO)
+                                .disableParallelToolUse(true)
+                                .build()
+                        )
+                    )
+                    .tools(
+                        listOf(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .type(Tool.InputSchema.Type.OBJECT)
+                                        .properties(
+                                            JsonValue.from(
+                                                mapOf(
+                                                    "location" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "The city and state, e.g. San Francisco, CA",
+                                                            "type" to "string"
+                                                        ),
+                                                    "unit" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "Unit for the output - one of (celsius, fahrenheit)",
+                                                            "type" to "string"
+                                                        )
+                                                )
+                                            )
+                                        )
+                                        .build()
+                                )
+                                .name("x")
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                        .build()
+                                )
+                                .description("Get the current weather in a given location")
+                                .build()
+                        )
+                    )
+                    .build()
+            )
+        println(messageTokensCount)
+        messageTokensCount.validate()
     }
 }

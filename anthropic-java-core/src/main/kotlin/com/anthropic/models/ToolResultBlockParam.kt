@@ -32,6 +32,7 @@ import kotlin.jvm.optionals.getOrNull
 @NoAutoDetect
 class ToolResultBlockParam
 private constructor(
+    private val cacheControl: JsonField<CacheControlEphemeral>,
     private val type: JsonField<Type>,
     private val toolUseId: JsonField<String>,
     private val isError: JsonField<Boolean>,
@@ -41,6 +42,9 @@ private constructor(
 
     private var validated: Boolean = false
 
+    fun cacheControl(): Optional<CacheControlEphemeral> =
+        Optional.ofNullable(cacheControl.getNullable("cache_control"))
+
     fun type(): Type = type.getRequired("type")
 
     fun toolUseId(): String = toolUseId.getRequired("tool_use_id")
@@ -48,6 +52,8 @@ private constructor(
     fun isError(): Optional<Boolean> = Optional.ofNullable(isError.getNullable("is_error"))
 
     fun content(): Optional<Content> = Optional.ofNullable(content.getNullable("content"))
+
+    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
 
     @JsonProperty("type") @ExcludeMissing fun _type() = type
 
@@ -63,6 +69,7 @@ private constructor(
 
     fun validate(): ToolResultBlockParam = apply {
         if (!validated) {
+            cacheControl().map { it.validate() }
             type()
             toolUseId()
             isError()
@@ -80,6 +87,7 @@ private constructor(
 
     class Builder {
 
+        private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var type: JsonField<Type> = JsonMissing.of()
         private var toolUseId: JsonField<String> = JsonMissing.of()
         private var isError: JsonField<Boolean> = JsonMissing.of()
@@ -88,11 +96,21 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(toolResultBlockParam: ToolResultBlockParam) = apply {
+            this.cacheControl = toolResultBlockParam.cacheControl
             this.type = toolResultBlockParam.type
             this.toolUseId = toolResultBlockParam.toolUseId
             this.isError = toolResultBlockParam.isError
             this.content = toolResultBlockParam.content
             additionalProperties(toolResultBlockParam.additionalProperties)
+        }
+
+        fun cacheControl(cacheControl: CacheControlEphemeral) =
+            cacheControl(JsonField.of(cacheControl))
+
+        @JsonProperty("cache_control")
+        @ExcludeMissing
+        fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
+            this.cacheControl = cacheControl
         }
 
         fun type(type: Type) = type(JsonField.of(type))
@@ -135,6 +153,7 @@ private constructor(
 
         fun build(): ToolResultBlockParam =
             ToolResultBlockParam(
+                cacheControl,
                 type,
                 toolUseId,
                 isError,
@@ -439,15 +458,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ToolResultBlockParam && type == other.type && toolUseId == other.toolUseId && isError == other.isError && content == other.content && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is ToolResultBlockParam && cacheControl == other.cacheControl && type == other.type && toolUseId == other.toolUseId && isError == other.isError && content == other.content && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(type, toolUseId, isError, content, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(cacheControl, type, toolUseId, isError, content, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ToolResultBlockParam{type=$type, toolUseId=$toolUseId, isError=$isError, content=$content, additionalProperties=$additionalProperties}"
+        "ToolResultBlockParam{cacheControl=$cacheControl, type=$type, toolUseId=$toolUseId, isError=$isError, content=$content, additionalProperties=$additionalProperties}"
 }

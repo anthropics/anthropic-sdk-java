@@ -3,11 +3,11 @@
 package com.anthropic.services.async
 
 import com.anthropic.services.async.beta.MessageServiceAsync
-import com.anthropic.services.async.beta.PromptCachingServiceAsync
+import com.anthropic.services.async.beta.ModelServiceAsync
 
 interface BetaServiceAsync {
 
-    fun messages(): MessageServiceAsync
+    fun models(): ModelServiceAsync
 
-    fun promptCaching(): PromptCachingServiceAsync
+    fun messages(): MessageServiceAsync
 }

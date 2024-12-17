@@ -3,11 +3,11 @@
 package com.anthropic.services.blocking
 
 import com.anthropic.services.blocking.beta.MessageService
-import com.anthropic.services.blocking.beta.PromptCachingService
+import com.anthropic.services.blocking.beta.ModelService
 
 interface BetaService {
 
-    fun messages(): MessageService
+    fun models(): ModelService
 
-    fun promptCaching(): PromptCachingService
+    fun messages(): MessageService
 }

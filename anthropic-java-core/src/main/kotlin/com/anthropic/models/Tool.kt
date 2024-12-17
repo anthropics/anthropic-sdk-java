@@ -25,6 +25,7 @@ private constructor(
     private val description: JsonField<String>,
     private val name: JsonField<String>,
     private val inputSchema: JsonField<InputSchema>,
+    private val cacheControl: JsonField<CacheControlEphemeral>,
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
@@ -54,6 +55,9 @@ private constructor(
      */
     fun inputSchema(): InputSchema = inputSchema.getRequired("input_schema")
 
+    fun cacheControl(): Optional<CacheControlEphemeral> =
+        Optional.ofNullable(cacheControl.getNullable("cache_control"))
+
     /**
      * Description of what this tool does.
      *
@@ -77,6 +81,8 @@ private constructor(
      */
     @JsonProperty("input_schema") @ExcludeMissing fun _inputSchema() = inputSchema
 
+    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
+
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
@@ -86,6 +92,7 @@ private constructor(
             description()
             name()
             inputSchema().validate()
+            cacheControl().map { it.validate() }
             validated = true
         }
     }
@@ -102,6 +109,7 @@ private constructor(
         private var description: JsonField<String> = JsonMissing.of()
         private var name: JsonField<String> = JsonMissing.of()
         private var inputSchema: JsonField<InputSchema> = JsonMissing.of()
+        private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -109,6 +117,7 @@ private constructor(
             this.description = tool.description
             this.name = tool.name
             this.inputSchema = tool.inputSchema
+            this.cacheControl = tool.cacheControl
             additionalProperties(tool.additionalProperties)
         }
 
@@ -170,6 +179,15 @@ private constructor(
             this.inputSchema = inputSchema
         }
 
+        fun cacheControl(cacheControl: CacheControlEphemeral) =
+            cacheControl(JsonField.of(cacheControl))
+
+        @JsonProperty("cache_control")
+        @ExcludeMissing
+        fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
+            this.cacheControl = cacheControl
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             this.additionalProperties.putAll(additionalProperties)
@@ -189,6 +207,7 @@ private constructor(
                 description,
                 name,
                 inputSchema,
+                cacheControl,
                 additionalProperties.toImmutable(),
             )
     }
@@ -352,15 +371,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is Tool && description == other.description && name == other.name && inputSchema == other.inputSchema && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is Tool && description == other.description && name == other.name && inputSchema == other.inputSchema && cacheControl == other.cacheControl && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(description, name, inputSchema, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(description, name, inputSchema, cacheControl, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Tool{description=$description, name=$name, inputSchema=$inputSchema, additionalProperties=$additionalProperties}"
+        "Tool{description=$description, name=$name, inputSchema=$inputSchema, cacheControl=$cacheControl, additionalProperties=$additionalProperties}"
 }

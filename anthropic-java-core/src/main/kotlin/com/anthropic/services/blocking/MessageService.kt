@@ -7,11 +7,16 @@ package com.anthropic.services.blocking
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.StreamResponse
 import com.anthropic.models.Message
+import com.anthropic.models.MessageCountTokensParams
 import com.anthropic.models.MessageCreateParams
+import com.anthropic.models.MessageTokensCount
 import com.anthropic.models.RawMessageStreamEvent
+import com.anthropic.services.blocking.messages.BatchService
 import com.google.errorprone.annotations.MustBeClosed
 
 interface MessageService {
+
+    fun batches(): BatchService
 
     /**
      * Send a structured list of input messages with text and/or image content, and the model will
@@ -37,4 +42,16 @@ interface MessageService {
         params: MessageCreateParams,
         requestOptions: RequestOptions = RequestOptions.none()
     ): StreamResponse<RawMessageStreamEvent>
+
+    /**
+     * Count the number of tokens in a Message.
+     *
+     * The Token Count API can be used to count the number of tokens in a Message, including tools,
+     * images, and documents, without creating it.
+     */
+    @JvmOverloads
+    fun countTokens(
+        params: MessageCountTokensParams,
+        requestOptions: RequestOptions = RequestOptions.none()
+    ): MessageTokensCount
 }

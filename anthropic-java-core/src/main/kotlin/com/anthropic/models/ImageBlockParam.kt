@@ -16,11 +16,13 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
+import java.util.Optional
 
 @JsonDeserialize(builder = ImageBlockParam.Builder::class)
 @NoAutoDetect
 class ImageBlockParam
 private constructor(
+    private val cacheControl: JsonField<CacheControlEphemeral>,
     private val type: JsonField<Type>,
     private val source: JsonField<Source>,
     private val additionalProperties: Map<String, JsonValue>,
@@ -28,9 +30,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    fun cacheControl(): Optional<CacheControlEphemeral> =
+        Optional.ofNullable(cacheControl.getNullable("cache_control"))
+
     fun type(): Type = type.getRequired("type")
 
     fun source(): Source = source.getRequired("source")
+
+    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
 
     @JsonProperty("type") @ExcludeMissing fun _type() = type
 
@@ -42,6 +49,7 @@ private constructor(
 
     fun validate(): ImageBlockParam = apply {
         if (!validated) {
+            cacheControl().map { it.validate() }
             type()
             source().validate()
             validated = true
@@ -57,15 +65,26 @@ private constructor(
 
     class Builder {
 
+        private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var type: JsonField<Type> = JsonMissing.of()
         private var source: JsonField<Source> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(imageBlockParam: ImageBlockParam) = apply {
+            this.cacheControl = imageBlockParam.cacheControl
             this.type = imageBlockParam.type
             this.source = imageBlockParam.source
             additionalProperties(imageBlockParam.additionalProperties)
+        }
+
+        fun cacheControl(cacheControl: CacheControlEphemeral) =
+            cacheControl(JsonField.of(cacheControl))
+
+        @JsonProperty("cache_control")
+        @ExcludeMissing
+        fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
+            this.cacheControl = cacheControl
         }
 
         fun type(type: Type) = type(JsonField.of(type))
@@ -96,6 +115,7 @@ private constructor(
 
         fun build(): ImageBlockParam =
             ImageBlockParam(
+                cacheControl,
                 type,
                 source,
                 additionalProperties.toImmutable(),
@@ -396,15 +416,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ImageBlockParam && type == other.type && source == other.source && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is ImageBlockParam && cacheControl == other.cacheControl && type == other.type && source == other.source && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(type, source, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(cacheControl, type, source, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ImageBlockParam{type=$type, source=$source, additionalProperties=$additionalProperties}"
+        "ImageBlockParam{cacheControl=$cacheControl, type=$type, source=$source, additionalProperties=$additionalProperties}"
 }

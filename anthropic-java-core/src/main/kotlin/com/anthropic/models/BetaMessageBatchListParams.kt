@@ -91,7 +91,7 @@ constructor(
         /**
          * Number of items to return per page.
          *
-         * Defaults to `20`. Ranges from `1` to `100`.
+         * Defaults to `20`. Ranges from `1` to `1000`.
          */
         fun limit(limit: Long) = apply { this.limit = limit }
 
