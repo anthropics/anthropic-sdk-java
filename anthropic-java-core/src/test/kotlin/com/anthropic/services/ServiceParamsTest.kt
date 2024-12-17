@@ -6,6 +6,7 @@ import com.anthropic.client.AnthropicClient
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
+import com.anthropic.models.CacheControlEphemeral
 import com.anthropic.models.ContentBlock
 import com.anthropic.models.Message
 import com.anthropic.models.MessageCreateParams
@@ -83,6 +84,11 @@ class ServiceParamsTest {
                             TextBlockParam.builder()
                                 .text("Today's date is 2024-06-01.")
                                 .type(TextBlockParam.Type.TEXT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                        .build()
+                                )
                                 .build()
                         )
                     )
@@ -123,6 +129,11 @@ class ServiceParamsTest {
                                     .build()
                             )
                             .name("x")
+                            .cacheControl(
+                                CacheControlEphemeral.builder()
+                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                    .build()
+                            )
                             .description("Get the current weather in a given location")
                             .build()
                     )
@@ -151,7 +162,14 @@ class ServiceParamsTest {
                 .role(Message.Role.ASSISTANT)
                 .stopReason(Message.StopReason.END_TURN)
                 .type(Message.Type.MESSAGE)
-                .usage(Usage.builder().inputTokens(2095L).outputTokens(503L).build())
+                .usage(
+                    Usage.builder()
+                        .cacheCreationInputTokens(2051L)
+                        .cacheReadInputTokens(2051L)
+                        .inputTokens(2095L)
+                        .outputTokens(503L)
+                        .build()
+                )
                 .build()
 
         stubFor(

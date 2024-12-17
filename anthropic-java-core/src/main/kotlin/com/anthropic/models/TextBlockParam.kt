@@ -16,11 +16,13 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
+import java.util.Optional
 
 @JsonDeserialize(builder = TextBlockParam.Builder::class)
 @NoAutoDetect
 class TextBlockParam
 private constructor(
+    private val cacheControl: JsonField<CacheControlEphemeral>,
     private val type: JsonField<Type>,
     private val text: JsonField<String>,
     private val additionalProperties: Map<String, JsonValue>,
@@ -28,9 +30,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    fun cacheControl(): Optional<CacheControlEphemeral> =
+        Optional.ofNullable(cacheControl.getNullable("cache_control"))
+
     fun type(): Type = type.getRequired("type")
 
     fun text(): String = text.getRequired("text")
+
+    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
 
     @JsonProperty("type") @ExcludeMissing fun _type() = type
 
@@ -42,6 +49,7 @@ private constructor(
 
     fun validate(): TextBlockParam = apply {
         if (!validated) {
+            cacheControl().map { it.validate() }
             type()
             text()
             validated = true
@@ -57,15 +65,26 @@ private constructor(
 
     class Builder {
 
+        private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var type: JsonField<Type> = JsonMissing.of()
         private var text: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(textBlockParam: TextBlockParam) = apply {
+            this.cacheControl = textBlockParam.cacheControl
             this.type = textBlockParam.type
             this.text = textBlockParam.text
             additionalProperties(textBlockParam.additionalProperties)
+        }
+
+        fun cacheControl(cacheControl: CacheControlEphemeral) =
+            cacheControl(JsonField.of(cacheControl))
+
+        @JsonProperty("cache_control")
+        @ExcludeMissing
+        fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
+            this.cacheControl = cacheControl
         }
 
         fun type(type: Type) = type(JsonField.of(type))
@@ -96,6 +115,7 @@ private constructor(
 
         fun build(): TextBlockParam =
             TextBlockParam(
+                cacheControl,
                 type,
                 text,
                 additionalProperties.toImmutable(),
@@ -158,15 +178,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is TextBlockParam && type == other.type && text == other.text && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is TextBlockParam && cacheControl == other.cacheControl && type == other.type && text == other.text && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(type, text, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(cacheControl, type, text, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "TextBlockParam{type=$type, text=$text, additionalProperties=$additionalProperties}"
+        "TextBlockParam{cacheControl=$cacheControl, type=$type, text=$text, additionalProperties=$additionalProperties}"
 }

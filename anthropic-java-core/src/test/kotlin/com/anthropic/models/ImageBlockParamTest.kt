@@ -19,6 +19,11 @@ class ImageBlockParamTest {
                         .build()
                 )
                 .type(ImageBlockParam.Type.IMAGE)
+                .cacheControl(
+                    CacheControlEphemeral.builder()
+                        .type(CacheControlEphemeral.Type.EPHEMERAL)
+                        .build()
+                )
                 .build()
         assertThat(imageBlockParam).isNotNull
         assertThat(imageBlockParam.source())
@@ -30,5 +35,9 @@ class ImageBlockParamTest {
                     .build()
             )
         assertThat(imageBlockParam.type()).isEqualTo(ImageBlockParam.Type.IMAGE)
+        assertThat(imageBlockParam.cacheControl())
+            .contains(
+                CacheControlEphemeral.builder().type(CacheControlEphemeral.Type.EPHEMERAL).build()
+            )
     }
 }

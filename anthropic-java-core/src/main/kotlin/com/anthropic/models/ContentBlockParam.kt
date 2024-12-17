@@ -26,6 +26,7 @@ private constructor(
     private val imageBlockParam: ImageBlockParam? = null,
     private val toolUseBlockParam: ToolUseBlockParam? = null,
     private val toolResultBlockParam: ToolResultBlockParam? = null,
+    private val documentBlockParam: DocumentBlockParam? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -40,6 +41,8 @@ private constructor(
     fun toolResultBlockParam(): Optional<ToolResultBlockParam> =
         Optional.ofNullable(toolResultBlockParam)
 
+    fun documentBlockParam(): Optional<DocumentBlockParam> = Optional.ofNullable(documentBlockParam)
+
     fun isTextBlockParam(): Boolean = textBlockParam != null
 
     fun isImageBlockParam(): Boolean = imageBlockParam != null
@@ -47,6 +50,8 @@ private constructor(
     fun isToolUseBlockParam(): Boolean = toolUseBlockParam != null
 
     fun isToolResultBlockParam(): Boolean = toolResultBlockParam != null
+
+    fun isDocumentBlockParam(): Boolean = documentBlockParam != null
 
     fun asTextBlockParam(): TextBlockParam = textBlockParam.getOrThrow("textBlockParam")
 
@@ -57,6 +62,9 @@ private constructor(
     fun asToolResultBlockParam(): ToolResultBlockParam =
         toolResultBlockParam.getOrThrow("toolResultBlockParam")
 
+    fun asDocumentBlockParam(): DocumentBlockParam =
+        documentBlockParam.getOrThrow("documentBlockParam")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
@@ -65,6 +73,7 @@ private constructor(
             imageBlockParam != null -> visitor.visitImageBlockParam(imageBlockParam)
             toolUseBlockParam != null -> visitor.visitToolUseBlockParam(toolUseBlockParam)
             toolResultBlockParam != null -> visitor.visitToolResultBlockParam(toolResultBlockParam)
+            documentBlockParam != null -> visitor.visitDocumentBlockParam(documentBlockParam)
             else -> visitor.unknown(_json)
         }
     }
@@ -75,7 +84,8 @@ private constructor(
                 textBlockParam == null &&
                     imageBlockParam == null &&
                     toolUseBlockParam == null &&
-                    toolResultBlockParam == null
+                    toolResultBlockParam == null &&
+                    documentBlockParam == null
             ) {
                 throw AnthropicInvalidDataException("Unknown ContentBlockParam: $_json")
             }
@@ -83,6 +93,7 @@ private constructor(
             imageBlockParam?.validate()
             toolUseBlockParam?.validate()
             toolResultBlockParam?.validate()
+            documentBlockParam?.validate()
             validated = true
         }
     }
@@ -92,10 +103,10 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ContentBlockParam && textBlockParam == other.textBlockParam && imageBlockParam == other.imageBlockParam && toolUseBlockParam == other.toolUseBlockParam && toolResultBlockParam == other.toolResultBlockParam /* spotless:on */
+        return /* spotless:off */ other is ContentBlockParam && textBlockParam == other.textBlockParam && imageBlockParam == other.imageBlockParam && toolUseBlockParam == other.toolUseBlockParam && toolResultBlockParam == other.toolResultBlockParam && documentBlockParam == other.documentBlockParam /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(textBlockParam, imageBlockParam, toolUseBlockParam, toolResultBlockParam) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(textBlockParam, imageBlockParam, toolUseBlockParam, toolResultBlockParam, documentBlockParam) /* spotless:on */
 
     override fun toString(): String =
         when {
@@ -104,6 +115,8 @@ private constructor(
             toolUseBlockParam != null -> "ContentBlockParam{toolUseBlockParam=$toolUseBlockParam}"
             toolResultBlockParam != null ->
                 "ContentBlockParam{toolResultBlockParam=$toolResultBlockParam}"
+            documentBlockParam != null ->
+                "ContentBlockParam{documentBlockParam=$documentBlockParam}"
             _json != null -> "ContentBlockParam{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid ContentBlockParam")
         }
@@ -125,6 +138,10 @@ private constructor(
         @JvmStatic
         fun ofToolResultBlockParam(toolResultBlockParam: ToolResultBlockParam) =
             ContentBlockParam(toolResultBlockParam = toolResultBlockParam)
+
+        @JvmStatic
+        fun ofDocumentBlockParam(documentBlockParam: DocumentBlockParam) =
+            ContentBlockParam(documentBlockParam = documentBlockParam)
     }
 
     interface Visitor<out T> {
@@ -136,6 +153,8 @@ private constructor(
         fun visitToolUseBlockParam(toolUseBlockParam: ToolUseBlockParam): T
 
         fun visitToolResultBlockParam(toolResultBlockParam: ToolResultBlockParam): T
+
+        fun visitDocumentBlockParam(documentBlockParam: DocumentBlockParam): T
 
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown ContentBlockParam: $json")
@@ -173,6 +192,12 @@ private constructor(
                             return ContentBlockParam(toolResultBlockParam = it, _json = json)
                         }
                 }
+                "document" -> {
+                    tryDeserialize(node, jacksonTypeRef<DocumentBlockParam>()) { it.validate() }
+                        ?.let {
+                            return ContentBlockParam(documentBlockParam = it, _json = json)
+                        }
+                }
             }
 
             return ContentBlockParam(_json = json)
@@ -192,6 +217,7 @@ private constructor(
                 value.toolUseBlockParam != null -> generator.writeObject(value.toolUseBlockParam)
                 value.toolResultBlockParam != null ->
                     generator.writeObject(value.toolResultBlockParam)
+                value.documentBlockParam != null -> generator.writeObject(value.documentBlockParam)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid ContentBlockParam")
             }

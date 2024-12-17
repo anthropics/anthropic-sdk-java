@@ -16,11 +16,13 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
+import java.util.Optional
 
 @JsonDeserialize(builder = ToolUseBlockParam.Builder::class)
 @NoAutoDetect
 class ToolUseBlockParam
 private constructor(
+    private val cacheControl: JsonField<CacheControlEphemeral>,
     private val type: JsonField<Type>,
     private val id: JsonField<String>,
     private val name: JsonField<String>,
@@ -30,11 +32,16 @@ private constructor(
 
     private var validated: Boolean = false
 
+    fun cacheControl(): Optional<CacheControlEphemeral> =
+        Optional.ofNullable(cacheControl.getNullable("cache_control"))
+
     fun type(): Type = type.getRequired("type")
 
     fun id(): String = id.getRequired("id")
 
     fun name(): String = name.getRequired("name")
+
+    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
 
     @JsonProperty("type") @ExcludeMissing fun _type() = type
 
@@ -50,6 +57,7 @@ private constructor(
 
     fun validate(): ToolUseBlockParam = apply {
         if (!validated) {
+            cacheControl().map { it.validate() }
             type()
             id()
             name()
@@ -66,6 +74,7 @@ private constructor(
 
     class Builder {
 
+        private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var type: JsonField<Type> = JsonMissing.of()
         private var id: JsonField<String> = JsonMissing.of()
         private var name: JsonField<String> = JsonMissing.of()
@@ -74,11 +83,21 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(toolUseBlockParam: ToolUseBlockParam) = apply {
+            this.cacheControl = toolUseBlockParam.cacheControl
             this.type = toolUseBlockParam.type
             this.id = toolUseBlockParam.id
             this.name = toolUseBlockParam.name
             this.input = toolUseBlockParam.input
             additionalProperties(toolUseBlockParam.additionalProperties)
+        }
+
+        fun cacheControl(cacheControl: CacheControlEphemeral) =
+            cacheControl(JsonField.of(cacheControl))
+
+        @JsonProperty("cache_control")
+        @ExcludeMissing
+        fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
+            this.cacheControl = cacheControl
         }
 
         fun type(type: Type) = type(JsonField.of(type))
@@ -117,6 +136,7 @@ private constructor(
 
         fun build(): ToolUseBlockParam =
             ToolUseBlockParam(
+                cacheControl,
                 type,
                 id,
                 name,
@@ -181,15 +201,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ToolUseBlockParam && type == other.type && id == other.id && name == other.name && input == other.input && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is ToolUseBlockParam && cacheControl == other.cacheControl && type == other.type && id == other.id && name == other.name && input == other.input && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(type, id, name, input, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(cacheControl, type, id, name, input, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ToolUseBlockParam{type=$type, id=$id, name=$name, input=$input, additionalProperties=$additionalProperties}"
+        "ToolUseBlockParam{cacheControl=$cacheControl, type=$type, id=$id, name=$name, input=$input, additionalProperties=$additionalProperties}"
 }

@@ -18,8 +18,12 @@ import com.anthropic.core.http.StreamResponse
 import com.anthropic.core.json
 import com.anthropic.errors.AnthropicError
 import com.anthropic.models.Message
+import com.anthropic.models.MessageCountTokensParams
 import com.anthropic.models.MessageCreateParams
+import com.anthropic.models.MessageTokensCount
 import com.anthropic.models.RawMessageStreamEvent
+import com.anthropic.services.blocking.messages.BatchService
+import com.anthropic.services.blocking.messages.BatchServiceImpl
 import java.time.Duration
 
 class MessageServiceImpl
@@ -28,6 +32,10 @@ constructor(
 ) : MessageService {
 
     private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
+
+    private val batches: BatchService by lazy { BatchServiceImpl(clientOptions) }
+
+    override fun batches(): BatchService = batches
 
     private val createHandler: Handler<Message> =
         jsonHandler<Message>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
@@ -119,5 +127,39 @@ constructor(
                         }
                     }
             }
+    }
+
+    private val countTokensHandler: Handler<MessageTokensCount> =
+        jsonHandler<MessageTokensCount>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+
+    /**
+     * Count the number of tokens in a Message.
+     *
+     * The Token Count API can be used to count the number of tokens in a Message, including tools,
+     * images, and documents, without creating it.
+     */
+    override fun countTokens(
+        params: MessageCountTokensParams,
+        requestOptions: RequestOptions
+    ): MessageTokensCount {
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.POST)
+                .addPathSegments("v1", "messages", "count_tokens")
+                .putAllQueryParams(clientOptions.queryParams)
+                .replaceAllQueryParams(params.getQueryParams())
+                .putAllHeaders(clientOptions.headers)
+                .replaceAllHeaders(params.getHeaders())
+                .body(json(clientOptions.jsonMapper, params.getBody()))
+                .build()
+        return clientOptions.httpClient.execute(request, requestOptions).let { response ->
+            response
+                .use { countTokensHandler.handle(it) }
+                .apply {
+                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                        validate()
+                    }
+                }
+        }
     }
 }

@@ -26,7 +26,14 @@ class MessageTest {
                 .role(Message.Role.ASSISTANT)
                 .stopReason(Message.StopReason.END_TURN)
                 .type(Message.Type.MESSAGE)
-                .usage(Usage.builder().inputTokens(2095L).outputTokens(503L).build())
+                .usage(
+                    Usage.builder()
+                        .cacheCreationInputTokens(2051L)
+                        .cacheReadInputTokens(2051L)
+                        .inputTokens(2095L)
+                        .outputTokens(503L)
+                        .build()
+                )
                 .build()
         assertThat(message).isNotNull
         assertThat(message.id()).isEqualTo("msg_013Zva2CMHLNnXjNJJKqJ2EF")
@@ -44,6 +51,13 @@ class MessageTest {
         assertThat(message.stopReason()).contains(Message.StopReason.END_TURN)
         assertThat(message.type()).isEqualTo(Message.Type.MESSAGE)
         assertThat(message.usage())
-            .isEqualTo(Usage.builder().inputTokens(2095L).outputTokens(503L).build())
+            .isEqualTo(
+                Usage.builder()
+                    .cacheCreationInputTokens(2051L)
+                    .cacheReadInputTokens(2051L)
+                    .inputTokens(2095L)
+                    .outputTokens(503L)
+                    .build()
+            )
     }
 }

@@ -36,6 +36,11 @@ class ToolTest {
                         .build()
                 )
                 .name("x")
+                .cacheControl(
+                    CacheControlEphemeral.builder()
+                        .type(CacheControlEphemeral.Type.EPHEMERAL)
+                        .build()
+                )
                 .description("Get the current weather in a given location")
                 .build()
         assertThat(tool).isNotNull
@@ -64,6 +69,10 @@ class ToolTest {
                     .build()
             )
         assertThat(tool.name()).isEqualTo("x")
+        assertThat(tool.cacheControl())
+            .contains(
+                CacheControlEphemeral.builder().type(CacheControlEphemeral.Type.EPHEMERAL).build()
+            )
         assertThat(tool.description()).contains("Get the current weather in a given location")
     }
 }

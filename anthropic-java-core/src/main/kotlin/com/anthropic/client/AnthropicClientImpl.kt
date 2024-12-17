@@ -10,6 +10,8 @@ import com.anthropic.services.blocking.CompletionService
 import com.anthropic.services.blocking.CompletionServiceImpl
 import com.anthropic.services.blocking.MessageService
 import com.anthropic.services.blocking.MessageServiceImpl
+import com.anthropic.services.blocking.ModelService
+import com.anthropic.services.blocking.ModelServiceImpl
 
 class AnthropicClientImpl
 constructor(
@@ -33,6 +35,8 @@ constructor(
 
     private val messages: MessageService by lazy { MessageServiceImpl(clientOptionsWithUserAgent) }
 
+    private val models: ModelService by lazy { ModelServiceImpl(clientOptionsWithUserAgent) }
+
     private val beta: BetaService by lazy { BetaServiceImpl(clientOptionsWithUserAgent) }
 
     override fun async(): AnthropicClientAsync = async
@@ -40,6 +44,8 @@ constructor(
     override fun completions(): CompletionService = completions
 
     override fun messages(): MessageService = messages
+
+    override fun models(): ModelService = models
 
     override fun beta(): BetaService = beta
 }
