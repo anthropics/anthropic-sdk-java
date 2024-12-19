@@ -72,7 +72,7 @@ class ErrorHandlingTest {
                 .messages(
                     listOf(
                         MessageParam.builder()
-                            .content(MessageParam.Content.ofString("string"))
+                            .content(MessageParam.Content.ofString("Hello, world"))
                             .role(MessageParam.Role.USER)
                             .build()
                     )
@@ -184,7 +184,7 @@ class ErrorHandlingTest {
                 .messages(
                     listOf(
                         MessageParam.builder()
-                            .content(MessageParam.Content.ofString("string"))
+                            .content(MessageParam.Content.ofString("Hello, world"))
                             .role(MessageParam.Role.USER)
                             .build()
                     )
@@ -275,7 +275,7 @@ class ErrorHandlingTest {
                 .messages(
                     listOf(
                         MessageParam.builder()
-                            .content(MessageParam.Content.ofString("string"))
+                            .content(MessageParam.Content.ofString("Hello, world"))
                             .role(MessageParam.Role.USER)
                             .build()
                     )
@@ -366,7 +366,7 @@ class ErrorHandlingTest {
                 .messages(
                     listOf(
                         MessageParam.builder()
-                            .content(MessageParam.Content.ofString("string"))
+                            .content(MessageParam.Content.ofString("Hello, world"))
                             .role(MessageParam.Role.USER)
                             .build()
                     )
@@ -461,7 +461,7 @@ class ErrorHandlingTest {
                 .messages(
                     listOf(
                         MessageParam.builder()
-                            .content(MessageParam.Content.ofString("string"))
+                            .content(MessageParam.Content.ofString("Hello, world"))
                             .role(MessageParam.Role.USER)
                             .build()
                     )
@@ -552,7 +552,7 @@ class ErrorHandlingTest {
                 .messages(
                     listOf(
                         MessageParam.builder()
-                            .content(MessageParam.Content.ofString("string"))
+                            .content(MessageParam.Content.ofString("Hello, world"))
                             .role(MessageParam.Role.USER)
                             .build()
                     )
@@ -647,7 +647,7 @@ class ErrorHandlingTest {
                 .messages(
                     listOf(
                         MessageParam.builder()
-                            .content(MessageParam.Content.ofString("string"))
+                            .content(MessageParam.Content.ofString("Hello, world"))
                             .role(MessageParam.Role.USER)
                             .build()
                     )
@@ -738,7 +738,7 @@ class ErrorHandlingTest {
                 .messages(
                     listOf(
                         MessageParam.builder()
-                            .content(MessageParam.Content.ofString("string"))
+                            .content(MessageParam.Content.ofString("Hello, world"))
                             .role(MessageParam.Role.USER)
                             .build()
                     )
@@ -833,7 +833,7 @@ class ErrorHandlingTest {
                 .messages(
                     listOf(
                         MessageParam.builder()
-                            .content(MessageParam.Content.ofString("string"))
+                            .content(MessageParam.Content.ofString("Hello, world"))
                             .role(MessageParam.Role.USER)
                             .build()
                     )
@@ -929,7 +929,7 @@ class ErrorHandlingTest {
                 .messages(
                     listOf(
                         MessageParam.builder()
-                            .content(MessageParam.Content.ofString("string"))
+                            .content(MessageParam.Content.ofString("Hello, world"))
                             .role(MessageParam.Role.USER)
                             .build()
                     )
@@ -1019,7 +1019,7 @@ class ErrorHandlingTest {
                 .messages(
                     listOf(
                         MessageParam.builder()
-                            .content(MessageParam.Content.ofString("string"))
+                            .content(MessageParam.Content.ofString("Hello, world"))
                             .role(MessageParam.Role.USER)
                             .build()
                     )
