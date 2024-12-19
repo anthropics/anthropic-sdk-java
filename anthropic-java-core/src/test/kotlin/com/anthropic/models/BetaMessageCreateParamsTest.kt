@@ -15,7 +15,7 @@ class BetaMessageCreateParamsTest {
             .messages(
                 listOf(
                     BetaMessageParam.builder()
-                        .content(BetaMessageParam.Content.ofString("string"))
+                        .content(BetaMessageParam.Content.ofString("Hello, world"))
                         .role(BetaMessageParam.Role.USER)
                         .build()
                 )
@@ -100,7 +100,7 @@ class BetaMessageCreateParamsTest {
                 .messages(
                     listOf(
                         BetaMessageParam.builder()
-                            .content(BetaMessageParam.Content.ofString("string"))
+                            .content(BetaMessageParam.Content.ofString("Hello, world"))
                             .role(BetaMessageParam.Role.USER)
                             .build()
                     )
@@ -184,7 +184,7 @@ class BetaMessageCreateParamsTest {
             .isEqualTo(
                 listOf(
                     BetaMessageParam.builder()
-                        .content(BetaMessageParam.Content.ofString("string"))
+                        .content(BetaMessageParam.Content.ofString("Hello, world"))
                         .role(BetaMessageParam.Role.USER)
                         .build()
                 )
@@ -273,7 +273,7 @@ class BetaMessageCreateParamsTest {
                 .messages(
                     listOf(
                         BetaMessageParam.builder()
-                            .content(BetaMessageParam.Content.ofString("string"))
+                            .content(BetaMessageParam.Content.ofString("Hello, world"))
                             .role(BetaMessageParam.Role.USER)
                             .build()
                     )
@@ -287,7 +287,7 @@ class BetaMessageCreateParamsTest {
             .isEqualTo(
                 listOf(
                     BetaMessageParam.builder()
-                        .content(BetaMessageParam.Content.ofString("string"))
+                        .content(BetaMessageParam.Content.ofString("Hello, world"))
                         .role(BetaMessageParam.Role.USER)
                         .build()
                 )
