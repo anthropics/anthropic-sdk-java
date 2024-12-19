@@ -37,7 +37,8 @@ public final class Main {
         }
 
         // Streaming example
-        try (StreamResponse<RawMessageStreamEvent> streamResponse = client.messages().createStreaming(createParamsBuilder.build())) {
+        try (StreamResponse<RawMessageStreamEvent> streamResponse =
+                client.messages().createStreaming(createParamsBuilder.build())) {
             streamResponse.stream()
                     .flatMap(event -> event.rawContentBlockDeltaEvent().stream())
                     .flatMap(deltaEvent -> deltaEvent.delta().textDelta().stream())
