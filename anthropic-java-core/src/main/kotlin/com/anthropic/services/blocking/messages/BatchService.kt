@@ -5,9 +5,11 @@
 package com.anthropic.services.blocking.messages
 
 import com.anthropic.core.RequestOptions
+import com.anthropic.models.DeletedMessageBatch
 import com.anthropic.models.MessageBatch
 import com.anthropic.models.MessageBatchCancelParams
 import com.anthropic.models.MessageBatchCreateParams
+import com.anthropic.models.MessageBatchDeleteParams
 import com.anthropic.models.MessageBatchListPage
 import com.anthropic.models.MessageBatchListParams
 import com.anthropic.models.MessageBatchRetrieveParams
@@ -46,6 +48,16 @@ interface BatchService {
         params: MessageBatchListParams,
         requestOptions: RequestOptions = RequestOptions.none()
     ): MessageBatchListPage
+
+    /**
+     * This endpoint is idempotent and can be used to poll for Message Batch completion. To access
+     * the results of a Message Batch, make a request to the `results_url` field in the response.
+     */
+    @JvmOverloads
+    fun delete(
+        params: MessageBatchDeleteParams,
+        requestOptions: RequestOptions = RequestOptions.none()
+    ): DeletedMessageBatch
 
     /**
      * Batches may be canceled any time before processing ends. Once cancellation is initiated, the
