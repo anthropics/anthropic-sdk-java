@@ -12,9 +12,11 @@ import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.json
 import com.anthropic.errors.AnthropicError
+import com.anthropic.models.DeletedMessageBatch
 import com.anthropic.models.MessageBatch
 import com.anthropic.models.MessageBatchCancelParams
 import com.anthropic.models.MessageBatchCreateParams
+import com.anthropic.models.MessageBatchDeleteParams
 import com.anthropic.models.MessageBatchListPageAsync
 import com.anthropic.models.MessageBatchListParams
 import com.anthropic.models.MessageBatchRetrieveParams
@@ -126,6 +128,39 @@ constructor(
                     }
                 }
                 .let { MessageBatchListPageAsync.of(this, params, it) }
+        }
+    }
+
+    private val deleteHandler: Handler<DeletedMessageBatch> =
+        jsonHandler<DeletedMessageBatch>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+
+    /**
+     * This endpoint is idempotent and can be used to poll for Message Batch completion. To access
+     * the results of a Message Batch, make a request to the `results_url` field in the response.
+     */
+    override fun delete(
+        params: MessageBatchDeleteParams,
+        requestOptions: RequestOptions
+    ): CompletableFuture<DeletedMessageBatch> {
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.DELETE)
+                .addPathSegments("v1", "messages", "batches", params.getPathParam(0))
+                .putAllQueryParams(clientOptions.queryParams)
+                .replaceAllQueryParams(params.getQueryParams())
+                .putAllHeaders(clientOptions.headers)
+                .replaceAllHeaders(params.getHeaders())
+                .apply { params.getBody().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                .build()
+        return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
+            ->
+            response
+                .use { deleteHandler.handle(it) }
+                .apply {
+                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                        validate()
+                    }
+                }
         }
     }
 
