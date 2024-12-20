@@ -168,7 +168,7 @@ class MessageCountTokensParamsTest {
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
         assertThat(body.system())
-            .contains(
+            .isEqualTo(
                 MessageCountTokensParams.System.ofTextBlockParams(
                     listOf(
                         TextBlockParam.builder()
@@ -184,7 +184,7 @@ class MessageCountTokensParamsTest {
                 )
             )
         assertThat(body.toolChoice())
-            .contains(
+            .isEqualTo(
                 ToolChoice.ofToolChoiceAuto(
                     ToolChoiceAuto.builder()
                         .type(ToolChoiceAuto.Type.AUTO)
@@ -193,7 +193,7 @@ class MessageCountTokensParamsTest {
                 )
             )
         assertThat(body.tools())
-            .contains(
+            .isEqualTo(
                 listOf(
                     Tool.builder()
                         .inputSchema(

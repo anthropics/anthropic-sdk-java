@@ -28,6 +28,8 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
+    private var validated: Boolean = false
+
     fun cacheControl(): Optional<CacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
@@ -44,8 +46,6 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
 
     fun validate(): DocumentBlockParam = apply {
         if (!validated) {
@@ -72,10 +72,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(documentBlockParam: DocumentBlockParam) = apply {
-            cacheControl = documentBlockParam.cacheControl
-            type = documentBlockParam.type
-            source = documentBlockParam.source
-            additionalProperties = documentBlockParam.additionalProperties.toMutableMap()
+            this.cacheControl = documentBlockParam.cacheControl
+            this.type = documentBlockParam.type
+            this.source = documentBlockParam.source
+            additionalProperties(documentBlockParam.additionalProperties)
         }
 
         fun cacheControl(cacheControl: CacheControlEphemeral) =
@@ -101,22 +101,16 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
+            this.additionalProperties.putAll(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
+            this.additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
-        }
-
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): DocumentBlockParam =

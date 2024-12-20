@@ -33,6 +33,16 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
+    fun toParam(): BetaMessageParam =
+        BetaMessageParam.builder()
+            .content(
+                BetaMessageParam.Content.ofBetaContentBlockParams(content().map { it.toParam() })
+            )
+            .role(BetaMessageParam.Role.of(role().toString()))
+            .build()
+
+    private var validated: Boolean = false
+
     /**
      * Unique object identifier.
      *
@@ -229,16 +239,6 @@ private constructor(
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
-    fun toParam(): BetaMessageParam =
-        BetaMessageParam.builder()
-            .content(
-                BetaMessageParam.Content.ofBetaContentBlockParams(content().map { it.toParam() })
-            )
-            .role(BetaMessageParam.Role.of(role().toString()))
-            .build()
-
-    private var validated: Boolean = false
-
     fun validate(): BetaMessage = apply {
         if (!validated) {
             id()
@@ -274,15 +274,15 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaMessage: BetaMessage) = apply {
-            id = betaMessage.id
-            type = betaMessage.type
-            role = betaMessage.role
-            content = betaMessage.content
-            model = betaMessage.model
-            stopReason = betaMessage.stopReason
-            stopSequence = betaMessage.stopSequence
-            usage = betaMessage.usage
-            additionalProperties = betaMessage.additionalProperties.toMutableMap()
+            this.id = betaMessage.id
+            this.type = betaMessage.type
+            this.role = betaMessage.role
+            this.content = betaMessage.content
+            this.model = betaMessage.model
+            this.stopReason = betaMessage.stopReason
+            this.stopSequence = betaMessage.stopSequence
+            this.usage = betaMessage.usage
+            additionalProperties(betaMessage.additionalProperties)
         }
 
         /**
@@ -497,22 +497,16 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
+            this.additionalProperties.putAll(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
+            this.additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
-        }
-
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): BetaMessage =

@@ -26,6 +26,8 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
+    private var validated: Boolean = false
+
     /** Number of requests in the Message Batch that are processing. */
     fun processing(): Long = processing.getRequired("processing")
 
@@ -92,8 +94,6 @@ private constructor(
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
-    private var validated: Boolean = false
-
     fun validate(): BetaMessageBatchRequestCounts = apply {
         if (!validated) {
             processing()
@@ -123,12 +123,12 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaMessageBatchRequestCounts: BetaMessageBatchRequestCounts) = apply {
-            processing = betaMessageBatchRequestCounts.processing
-            succeeded = betaMessageBatchRequestCounts.succeeded
-            errored = betaMessageBatchRequestCounts.errored
-            canceled = betaMessageBatchRequestCounts.canceled
-            expired = betaMessageBatchRequestCounts.expired
-            additionalProperties = betaMessageBatchRequestCounts.additionalProperties.toMutableMap()
+            this.processing = betaMessageBatchRequestCounts.processing
+            this.succeeded = betaMessageBatchRequestCounts.succeeded
+            this.errored = betaMessageBatchRequestCounts.errored
+            this.canceled = betaMessageBatchRequestCounts.canceled
+            this.expired = betaMessageBatchRequestCounts.expired
+            additionalProperties(betaMessageBatchRequestCounts.additionalProperties)
         }
 
         /** Number of requests in the Message Batch that are processing. */
@@ -205,22 +205,16 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
+            this.additionalProperties.putAll(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
+            this.additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
-        }
-
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): BetaMessageBatchRequestCounts =

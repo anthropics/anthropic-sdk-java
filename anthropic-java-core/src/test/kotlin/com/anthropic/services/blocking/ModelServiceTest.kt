@@ -34,8 +34,8 @@ class ModelServiceTest {
                 .apiKey("my-anthropic-api-key")
                 .build()
         val modelService = client.models()
-        val listResponseModelInfo = modelService.list(ModelListParams.builder().build())
-        println(listResponseModelInfo)
-        listResponseModelInfo.data().forEach { it.validate() }
+        val listResponseModelResponse = modelService.list(ModelListParams.builder().build())
+        println(listResponseModelResponse)
+        listResponseModelResponse.data().forEach { it.validate() }
     }
 }

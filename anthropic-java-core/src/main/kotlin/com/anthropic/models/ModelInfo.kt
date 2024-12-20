@@ -29,6 +29,8 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
+    private var validated: Boolean = false
+
     /**
      * Object type.
      *
@@ -71,8 +73,6 @@ private constructor(
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
-    private var validated: Boolean = false
-
     fun validate(): ModelInfo = apply {
         if (!validated) {
             type()
@@ -100,11 +100,11 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(modelInfo: ModelInfo) = apply {
-            type = modelInfo.type
-            id = modelInfo.id
-            displayName = modelInfo.displayName
-            createdAt = modelInfo.createdAt
-            additionalProperties = modelInfo.additionalProperties.toMutableMap()
+            this.type = modelInfo.type
+            this.id = modelInfo.id
+            this.displayName = modelInfo.displayName
+            this.createdAt = modelInfo.createdAt
+            additionalProperties(modelInfo.additionalProperties)
         }
 
         /**
@@ -153,22 +153,16 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
+            this.additionalProperties.putAll(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
+            this.additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
-        }
-
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): ModelInfo =

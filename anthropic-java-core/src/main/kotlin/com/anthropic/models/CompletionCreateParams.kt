@@ -75,9 +75,9 @@ constructor(
     @NoAutoDetect
     class CompletionCreateBody
     internal constructor(
-        private val maxTokensToSample: Long,
-        private val model: Model,
-        private val prompt: String,
+        private val maxTokensToSample: Long?,
+        private val model: Model?,
+        private val prompt: String?,
         private val metadata: Metadata?,
         private val stopSequences: List<String>?,
         private val temperature: Double?,
@@ -92,14 +92,14 @@ constructor(
          * Note that our models may stop _before_ reaching this maximum. This parameter only
          * specifies the absolute maximum number of tokens to generate.
          */
-        @JsonProperty("max_tokens_to_sample") fun maxTokensToSample(): Long = maxTokensToSample
+        @JsonProperty("max_tokens_to_sample") fun maxTokensToSample(): Long? = maxTokensToSample
 
         /**
          * The model that will complete your prompt.\n\nSee
          * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
          * options.
          */
-        @JsonProperty("model") fun model(): Model = model
+        @JsonProperty("model") fun model(): Model? = model
 
         /**
          * The prompt that you want Claude to complete.
@@ -114,10 +114,10 @@ constructor(
          * guide to [prompt design](https://docs.anthropic.com/en/docs/intro-to-prompting) for more
          * details.
          */
-        @JsonProperty("prompt") fun prompt(): String = prompt
+        @JsonProperty("prompt") fun prompt(): String? = prompt
 
         /** An object describing metadata about the request. */
-        @JsonProperty("metadata") fun metadata(): Optional<Metadata> = Optional.ofNullable(metadata)
+        @JsonProperty("metadata") fun metadata(): Metadata? = metadata
 
         /**
          * Sequences that will cause the model to stop generating.
@@ -126,8 +126,7 @@ constructor(
          * the future. By providing the stop_sequences parameter, you may include additional strings
          * that will cause the model to stop generating.
          */
-        @JsonProperty("stop_sequences")
-        fun stopSequences(): Optional<List<String>> = Optional.ofNullable(stopSequences)
+        @JsonProperty("stop_sequences") fun stopSequences(): List<String>? = stopSequences
 
         /**
          * Amount of randomness injected into the response.
@@ -137,8 +136,7 @@ constructor(
          *
          * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
          */
-        @JsonProperty("temperature")
-        fun temperature(): Optional<Double> = Optional.ofNullable(temperature)
+        @JsonProperty("temperature") fun temperature(): Double? = temperature
 
         /**
          * Only sample from the top K options for each subsequent token.
@@ -148,7 +146,7 @@ constructor(
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
          */
-        @JsonProperty("top_k") fun topK(): Optional<Long> = Optional.ofNullable(topK)
+        @JsonProperty("top_k") fun topK(): Long? = topK
 
         /**
          * Use nucleus sampling.
@@ -160,7 +158,7 @@ constructor(
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
          */
-        @JsonProperty("top_p") fun topP(): Optional<Double> = Optional.ofNullable(topP)
+        @JsonProperty("top_p") fun topP(): Double? = topP
 
         @JsonAnyGetter
         @ExcludeMissing
@@ -187,15 +185,15 @@ constructor(
 
             @JvmSynthetic
             internal fun from(completionCreateBody: CompletionCreateBody) = apply {
-                maxTokensToSample = completionCreateBody.maxTokensToSample
-                model = completionCreateBody.model
-                prompt = completionCreateBody.prompt
-                metadata = completionCreateBody.metadata
-                stopSequences = completionCreateBody.stopSequences?.toMutableList()
-                temperature = completionCreateBody.temperature
-                topK = completionCreateBody.topK
-                topP = completionCreateBody.topP
-                additionalProperties = completionCreateBody.additionalProperties.toMutableMap()
+                this.maxTokensToSample = completionCreateBody.maxTokensToSample
+                this.model = completionCreateBody.model
+                this.prompt = completionCreateBody.prompt
+                this.metadata = completionCreateBody.metadata
+                this.stopSequences = completionCreateBody.stopSequences
+                this.temperature = completionCreateBody.temperature
+                this.topK = completionCreateBody.topK
+                this.topP = completionCreateBody.topP
+                additionalProperties(completionCreateBody.additionalProperties)
             }
 
             /**
@@ -283,22 +281,16 @@ constructor(
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
+                this.additionalProperties.putAll(additionalProperties)
             }
 
             @JsonAnySetter
             fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
+                this.additionalProperties.put(key, value)
             }
 
             fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
             }
 
             fun build(): CompletionCreateBody =

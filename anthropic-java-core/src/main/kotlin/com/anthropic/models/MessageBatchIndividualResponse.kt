@@ -23,6 +23,8 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
+    private var validated: Boolean = false
+
     /**
      * Developer-provided ID created for each request in a Message Batch. Useful for matching
      * results to requests, as results may be given out of request order.
@@ -59,8 +61,6 @@ private constructor(
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
-    private var validated: Boolean = false
-
     fun validate(): MessageBatchIndividualResponse = apply {
         if (!validated) {
             customId()
@@ -84,10 +84,9 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(messageBatchIndividualResponse: MessageBatchIndividualResponse) = apply {
-            customId = messageBatchIndividualResponse.customId
-            result = messageBatchIndividualResponse.result
-            additionalProperties =
-                messageBatchIndividualResponse.additionalProperties.toMutableMap()
+            this.customId = messageBatchIndividualResponse.customId
+            this.result = messageBatchIndividualResponse.result
+            additionalProperties(messageBatchIndividualResponse.additionalProperties)
         }
 
         /**
@@ -130,22 +129,16 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
+            this.additionalProperties.putAll(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
+            this.additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
-        }
-
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): MessageBatchIndividualResponse =

@@ -37,6 +37,8 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
+    private var validated: Boolean = false
+
     fun type(): Type = type.getRequired("type")
 
     fun index(): Long = index.getRequired("index")
@@ -52,8 +54,6 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
 
     fun validate(): RawContentBlockDeltaEvent = apply {
         if (!validated) {
@@ -80,10 +80,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(rawContentBlockDeltaEvent: RawContentBlockDeltaEvent) = apply {
-            type = rawContentBlockDeltaEvent.type
-            index = rawContentBlockDeltaEvent.index
-            delta = rawContentBlockDeltaEvent.delta
-            additionalProperties = rawContentBlockDeltaEvent.additionalProperties.toMutableMap()
+            this.type = rawContentBlockDeltaEvent.type
+            this.index = rawContentBlockDeltaEvent.index
+            this.delta = rawContentBlockDeltaEvent.delta
+            additionalProperties(rawContentBlockDeltaEvent.additionalProperties)
         }
 
         fun type(type: Type) = type(JsonField.of(type))
@@ -106,22 +106,16 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
+            this.additionalProperties.putAll(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
+            this.additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
-        }
-
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): RawContentBlockDeltaEvent =

@@ -27,6 +27,8 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
+    private var validated: Boolean = false
+
     fun type(): Type = type.getRequired("type")
 
     fun mediaType(): MediaType = mediaType.getRequired("media_type")
@@ -42,8 +44,6 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
 
     fun validate(): BetaBase64PdfSource = apply {
         if (!validated) {
@@ -70,10 +70,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaBase64PdfSource: BetaBase64PdfSource) = apply {
-            type = betaBase64PdfSource.type
-            mediaType = betaBase64PdfSource.mediaType
-            data = betaBase64PdfSource.data
-            additionalProperties = betaBase64PdfSource.additionalProperties.toMutableMap()
+            this.type = betaBase64PdfSource.type
+            this.mediaType = betaBase64PdfSource.mediaType
+            this.data = betaBase64PdfSource.data
+            additionalProperties(betaBase64PdfSource.additionalProperties)
         }
 
         fun type(type: Type) = type(JsonField.of(type))
@@ -96,22 +96,16 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
+            this.additionalProperties.putAll(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
+            this.additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
-        }
-
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): BetaBase64PdfSource =

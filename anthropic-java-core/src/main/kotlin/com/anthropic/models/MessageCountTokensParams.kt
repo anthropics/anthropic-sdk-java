@@ -73,8 +73,8 @@ constructor(
     @NoAutoDetect
     class MessageCountTokensBody
     internal constructor(
-        private val messages: List<MessageParam>,
-        private val model: Model,
+        private val messages: List<MessageParam>?,
+        private val model: Model?,
         private val system: System?,
         private val toolChoice: ToolChoice?,
         private val tools: List<Tool>?,
@@ -162,14 +162,14 @@ constructor(
          * top-level `system` parameter — there is no `"system"` role for input messages in the
          * Messages API.
          */
-        @JsonProperty("messages") fun messages(): List<MessageParam> = messages
+        @JsonProperty("messages") fun messages(): List<MessageParam>? = messages
 
         /**
          * The model that will complete your prompt.\n\nSee
          * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
          * options.
          */
-        @JsonProperty("model") fun model(): Model = model
+        @JsonProperty("model") fun model(): Model? = model
 
         /**
          * System prompt.
@@ -178,14 +178,13 @@ constructor(
          * specifying a particular goal or role. See our
          * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
          */
-        @JsonProperty("system") fun system(): Optional<System> = Optional.ofNullable(system)
+        @JsonProperty("system") fun system(): System? = system
 
         /**
          * How the model should use the provided tools. The model can use a specific tool, any
          * available tool, or decide by itself.
          */
-        @JsonProperty("tool_choice")
-        fun toolChoice(): Optional<ToolChoice> = Optional.ofNullable(toolChoice)
+        @JsonProperty("tool_choice") fun toolChoice(): ToolChoice? = toolChoice
 
         /**
          * Definitions of tools that the model may use.
@@ -252,7 +251,7 @@ constructor(
          *
          * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
          */
-        @JsonProperty("tools") fun tools(): Optional<List<Tool>> = Optional.ofNullable(tools)
+        @JsonProperty("tools") fun tools(): List<Tool>? = tools
 
         @JsonAnyGetter
         @ExcludeMissing
@@ -276,12 +275,12 @@ constructor(
 
             @JvmSynthetic
             internal fun from(messageCountTokensBody: MessageCountTokensBody) = apply {
-                messages = messageCountTokensBody.messages.toMutableList()
-                model = messageCountTokensBody.model
-                system = messageCountTokensBody.system
-                toolChoice = messageCountTokensBody.toolChoice
-                tools = messageCountTokensBody.tools?.toMutableList()
-                additionalProperties = messageCountTokensBody.additionalProperties.toMutableMap()
+                this.messages = messageCountTokensBody.messages
+                this.model = messageCountTokensBody.model
+                this.system = messageCountTokensBody.system
+                this.toolChoice = messageCountTokensBody.toolChoice
+                this.tools = messageCountTokensBody.tools
+                additionalProperties(messageCountTokensBody.additionalProperties)
             }
 
             /**
@@ -461,22 +460,16 @@ constructor(
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
+                this.additionalProperties.putAll(additionalProperties)
             }
 
             @JsonAnySetter
             fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
+                this.additionalProperties.put(key, value)
             }
 
             fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
             }
 
             fun build(): MessageCountTokensBody =
@@ -1145,6 +1138,8 @@ constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        private var validated: Boolean = false
+
         fun string(): Optional<String> = Optional.ofNullable(string)
 
         fun textBlockParams(): Optional<List<TextBlockParam>> = Optional.ofNullable(textBlockParams)
@@ -1165,6 +1160,16 @@ constructor(
                 string != null -> visitor.visitString(string)
                 textBlockParams != null -> visitor.visitTextBlockParams(textBlockParams)
                 else -> visitor.unknown(_json)
+            }
+        }
+
+        fun validate(): System = apply {
+            if (!validated) {
+                if (string == null && textBlockParams == null) {
+                    throw AnthropicInvalidDataException("Unknown System: $_json")
+                }
+                textBlockParams?.forEach { it.validate() }
+                validated = true
             }
         }
 
@@ -1214,9 +1219,12 @@ constructor(
                 tryDeserialize(node, jacksonTypeRef<String>())?.let {
                     return System(string = it, _json = json)
                 }
-                tryDeserialize(node, jacksonTypeRef<List<TextBlockParam>>())?.let {
-                    return System(textBlockParams = it, _json = json)
-                }
+                tryDeserialize(node, jacksonTypeRef<List<TextBlockParam>>()) {
+                        it.forEach { it.validate() }
+                    }
+                    ?.let {
+                        return System(textBlockParams = it, _json = json)
+                    }
 
                 return System(_json = json)
             }

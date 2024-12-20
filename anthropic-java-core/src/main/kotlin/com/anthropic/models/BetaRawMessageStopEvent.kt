@@ -25,6 +25,8 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
+    private var validated: Boolean = false
+
     fun type(): Type = type.getRequired("type")
 
     @JsonProperty("type") @ExcludeMissing fun _type() = type
@@ -32,8 +34,6 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
 
     fun validate(): BetaRawMessageStopEvent = apply {
         if (!validated) {
@@ -56,8 +56,8 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaRawMessageStopEvent: BetaRawMessageStopEvent) = apply {
-            type = betaRawMessageStopEvent.type
-            additionalProperties = betaRawMessageStopEvent.additionalProperties.toMutableMap()
+            this.type = betaRawMessageStopEvent.type
+            additionalProperties(betaRawMessageStopEvent.additionalProperties)
         }
 
         fun type(type: Type) = type(JsonField.of(type))
@@ -68,22 +68,16 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
+            this.additionalProperties.putAll(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
+            this.additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
-        }
-
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): BetaRawMessageStopEvent =

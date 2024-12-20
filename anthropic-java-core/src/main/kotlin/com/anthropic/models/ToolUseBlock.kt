@@ -28,6 +28,16 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
+    fun toParam(): ToolUseBlockParam =
+        ToolUseBlockParam.builder()
+            .id(id())
+            .input(_input())
+            .name(name())
+            .type(ToolUseBlockParam.Type.of(type().toString()))
+            .build()
+
+    private var validated: Boolean = false
+
     fun type(): Type = type.getRequired("type")
 
     fun id(): String = id.getRequired("id")
@@ -45,16 +55,6 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    fun toParam(): ToolUseBlockParam =
-        ToolUseBlockParam.builder()
-            .id(id())
-            .input(_input())
-            .name(name())
-            .type(ToolUseBlockParam.Type.of(type().toString()))
-            .build()
-
-    private var validated: Boolean = false
 
     fun validate(): ToolUseBlock = apply {
         if (!validated) {
@@ -82,11 +82,11 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(toolUseBlock: ToolUseBlock) = apply {
-            type = toolUseBlock.type
-            id = toolUseBlock.id
-            name = toolUseBlock.name
-            input = toolUseBlock.input
-            additionalProperties = toolUseBlock.additionalProperties.toMutableMap()
+            this.type = toolUseBlock.type
+            this.id = toolUseBlock.id
+            this.name = toolUseBlock.name
+            this.input = toolUseBlock.input
+            additionalProperties(toolUseBlock.additionalProperties)
         }
 
         fun type(type: Type) = type(JsonField.of(type))
@@ -111,22 +111,16 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
+            this.additionalProperties.putAll(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
+            this.additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
-        }
-
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): ToolUseBlock =

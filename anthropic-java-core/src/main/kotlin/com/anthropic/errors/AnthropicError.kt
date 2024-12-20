@@ -2,7 +2,6 @@
 
 package com.anthropic.errors
 
-import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.toImmutable
@@ -16,7 +15,6 @@ import java.util.Objects
 class AnthropicError
 private constructor(
     @JsonAnyGetter
-    @ExcludeMissing
     @get:JvmName("additionalProperties")
     val additionalProperties: Map<String, JsonValue>,
 ) {
