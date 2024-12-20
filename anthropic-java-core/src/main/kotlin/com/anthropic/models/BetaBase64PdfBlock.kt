@@ -8,24 +8,28 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 import java.util.Optional
 
-@JsonDeserialize(builder = BetaBase64PdfBlock.Builder::class)
 @NoAutoDetect
 class BetaBase64PdfBlock
+@JsonCreator
 private constructor(
-    private val cacheControl: JsonField<BetaCacheControlEphemeral>,
-    private val type: JsonField<Type>,
-    private val source: JsonField<BetaBase64PdfSource>,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("cache_control")
+    @ExcludeMissing
+    private val cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+    @JsonProperty("source")
+    @ExcludeMissing
+    private val source: JsonField<BetaBase64PdfSource> = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
@@ -81,22 +85,16 @@ private constructor(
         fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
             cacheControl(JsonField.of(cacheControl))
 
-        @JsonProperty("cache_control")
-        @ExcludeMissing
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
 
         fun type(type: Type) = type(JsonField.of(type))
 
-        @JsonProperty("type")
-        @ExcludeMissing
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun source(source: BetaBase64PdfSource) = source(JsonField.of(source))
 
-        @JsonProperty("source")
-        @ExcludeMissing
         fun source(source: JsonField<BetaBase64PdfSource>) = apply { this.source = source }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -104,7 +102,6 @@ private constructor(
             putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
             additionalProperties.put(key, value)
         }

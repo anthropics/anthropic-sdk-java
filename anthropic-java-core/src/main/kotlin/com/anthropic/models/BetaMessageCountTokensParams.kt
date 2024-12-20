@@ -10,10 +10,12 @@ import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
@@ -78,16 +80,17 @@ constructor(
 
     @JvmSynthetic internal fun getQueryParams(): QueryParams = additionalQueryParams
 
-    @JsonDeserialize(builder = BetaMessageCountTokensBody.Builder::class)
     @NoAutoDetect
     class BetaMessageCountTokensBody
+    @JsonCreator
     internal constructor(
-        private val messages: List<BetaMessageParam>,
-        private val model: Model,
-        private val system: System?,
-        private val toolChoice: BetaToolChoice?,
-        private val tools: List<Tool>?,
-        private val additionalProperties: Map<String, JsonValue>,
+        @JsonProperty("messages") private val messages: List<BetaMessageParam>,
+        @JsonProperty("model") private val model: Model,
+        @JsonProperty("system") private val system: System?,
+        @JsonProperty("tool_choice") private val toolChoice: BetaToolChoice?,
+        @JsonProperty("tools") private val tools: List<Tool>?,
+        @JsonAnySetter
+        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
     ) {
 
         /**
@@ -376,7 +379,6 @@ constructor(
              * top-level `system` parameter — there is no `"system"` role for input messages in the
              * Messages API.
              */
-            @JsonProperty("messages")
             fun messages(messages: List<BetaMessageParam>) = apply { this.messages = messages }
 
             /**
@@ -384,7 +386,7 @@ constructor(
              * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
              * and options.
              */
-            @JsonProperty("model") fun model(model: Model) = apply { this.model = model }
+            fun model(model: Model) = apply { this.model = model }
 
             /**
              * System prompt.
@@ -393,13 +395,12 @@ constructor(
              * specifying a particular goal or role. See our
              * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
              */
-            @JsonProperty("system") fun system(system: System) = apply { this.system = system }
+            fun system(system: System) = apply { this.system = system }
 
             /**
              * How the model should use the provided tools. The model can use a specific tool, any
              * available tool, or decide by itself.
              */
-            @JsonProperty("tool_choice")
             fun toolChoice(toolChoice: BetaToolChoice) = apply { this.toolChoice = toolChoice }
 
             /**
@@ -467,14 +468,13 @@ constructor(
              *
              * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
              */
-            @JsonProperty("tools") fun tools(tools: List<Tool>) = apply { this.tools = tools }
+            fun tools(tools: List<Tool>) = apply { this.tools = tools }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
             }
 
-            @JsonAnySetter
             fun putAdditionalProperty(key: String, value: JsonValue) = apply {
                 additionalProperties.put(key, value)
             }

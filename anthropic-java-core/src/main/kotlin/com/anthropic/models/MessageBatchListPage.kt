@@ -7,12 +7,13 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.services.blocking.messages.BatchService
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 import java.util.Optional
 import java.util.stream.Stream
@@ -86,15 +87,16 @@ private constructor(
             )
     }
 
-    @JsonDeserialize(builder = Response.Builder::class)
     @NoAutoDetect
     class Response
+    @JsonCreator
     constructor(
-        private val data: JsonField<List<MessageBatch>>,
-        private val hasMore: JsonField<Boolean>,
-        private val firstId: JsonField<String>,
-        private val lastId: JsonField<String>,
-        private val additionalProperties: Map<String, JsonValue>,
+        @JsonProperty("data") private val data: JsonField<List<MessageBatch>> = JsonMissing.of(),
+        @JsonProperty("has_more") private val hasMore: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("first_id") private val firstId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("last_id") private val lastId: JsonField<String> = JsonMissing.of(),
+        @JsonAnySetter
+        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
     ) {
 
         private var validated: Boolean = false
@@ -172,25 +174,20 @@ private constructor(
 
             fun data(data: List<MessageBatch>) = data(JsonField.of(data))
 
-            @JsonProperty("data")
             fun data(data: JsonField<List<MessageBatch>>) = apply { this.data = data }
 
             fun hasMore(hasMore: Boolean) = hasMore(JsonField.of(hasMore))
 
-            @JsonProperty("has_more")
             fun hasMore(hasMore: JsonField<Boolean>) = apply { this.hasMore = hasMore }
 
             fun firstId(firstId: String) = firstId(JsonField.of(firstId))
 
-            @JsonProperty("first_id")
             fun firstId(firstId: JsonField<String>) = apply { this.firstId = firstId }
 
             fun lastId(lastId: String) = lastId(JsonField.of(lastId))
 
-            @JsonProperty("last_id")
             fun lastId(lastId: JsonField<String>) = apply { this.lastId = lastId }
 
-            @JsonAnySetter
             fun putAdditionalProperty(key: String, value: JsonValue) = apply {
                 this.additionalProperties.put(key, value)
             }

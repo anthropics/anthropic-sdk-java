@@ -11,6 +11,7 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -27,13 +28,15 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Objects
 import java.util.Optional
 
-@JsonDeserialize(builder = BetaMessageParam.Builder::class)
 @NoAutoDetect
 class BetaMessageParam
+@JsonCreator
 private constructor(
-    private val role: JsonField<Role>,
-    private val content: JsonField<Content>,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("role") @ExcludeMissing private val role: JsonField<Role> = JsonMissing.of(),
+    @JsonProperty("content")
+    @ExcludeMissing
+    private val content: JsonField<Content> = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
     fun role(): Role = role.getRequired("role")
@@ -80,14 +83,10 @@ private constructor(
 
         fun role(role: Role) = role(JsonField.of(role))
 
-        @JsonProperty("role")
-        @ExcludeMissing
         fun role(role: JsonField<Role>) = apply { this.role = role }
 
         fun content(content: Content) = content(JsonField.of(content))
 
-        @JsonProperty("content")
-        @ExcludeMissing
         fun content(content: JsonField<Content>) = apply { this.content = content }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -95,7 +94,6 @@ private constructor(
             putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
             additionalProperties.put(key, value)
         }

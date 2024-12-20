@@ -11,6 +11,7 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -27,14 +28,14 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Objects
 import java.util.Optional
 
-@JsonDeserialize(builder = BetaRawContentBlockDeltaEvent.Builder::class)
 @NoAutoDetect
 class BetaRawContentBlockDeltaEvent
+@JsonCreator
 private constructor(
-    private val type: JsonField<Type>,
-    private val index: JsonField<Long>,
-    private val delta: JsonField<Delta>,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+    @JsonProperty("index") @ExcludeMissing private val index: JsonField<Long> = JsonMissing.of(),
+    @JsonProperty("delta") @ExcludeMissing private val delta: JsonField<Delta> = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
     fun type(): Type = type.getRequired("type")
@@ -88,20 +89,14 @@ private constructor(
 
         fun type(type: Type) = type(JsonField.of(type))
 
-        @JsonProperty("type")
-        @ExcludeMissing
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun index(index: Long) = index(JsonField.of(index))
 
-        @JsonProperty("index")
-        @ExcludeMissing
         fun index(index: JsonField<Long>) = apply { this.index = index }
 
         fun delta(delta: Delta) = delta(JsonField.of(delta))
 
-        @JsonProperty("delta")
-        @ExcludeMissing
         fun delta(delta: JsonField<Delta>) = apply { this.delta = delta }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -109,7 +104,6 @@ private constructor(
             putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
             additionalProperties.put(key, value)
         }

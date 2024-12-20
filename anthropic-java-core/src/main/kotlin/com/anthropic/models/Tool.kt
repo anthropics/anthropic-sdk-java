@@ -8,25 +8,31 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 import java.util.Optional
 
-@JsonDeserialize(builder = Tool.Builder::class)
 @NoAutoDetect
 class Tool
+@JsonCreator
 private constructor(
-    private val description: JsonField<String>,
-    private val name: JsonField<String>,
-    private val inputSchema: JsonField<InputSchema>,
-    private val cacheControl: JsonField<CacheControlEphemeral>,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("description")
+    @ExcludeMissing
+    private val description: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("name") @ExcludeMissing private val name: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("input_schema")
+    @ExcludeMissing
+    private val inputSchema: JsonField<InputSchema> = JsonMissing.of(),
+    @JsonProperty("cache_control")
+    @ExcludeMissing
+    private val cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
     /**
@@ -139,8 +145,6 @@ private constructor(
          * natural language descriptions to reinforce important aspects of the tool input JSON
          * schema.
          */
-        @JsonProperty("description")
-        @ExcludeMissing
         fun description(description: JsonField<String>) = apply { this.description = description }
 
         /**
@@ -155,8 +159,6 @@ private constructor(
          *
          * This is how the tool will be called by the model and in tool_use blocks.
          */
-        @JsonProperty("name")
-        @ExcludeMissing
         fun name(name: JsonField<String>) = apply { this.name = name }
 
         /**
@@ -173,8 +175,6 @@ private constructor(
          * This defines the shape of the `input` that your tool accepts and that the model will
          * produce.
          */
-        @JsonProperty("input_schema")
-        @ExcludeMissing
         fun inputSchema(inputSchema: JsonField<InputSchema>) = apply {
             this.inputSchema = inputSchema
         }
@@ -182,8 +182,6 @@ private constructor(
         fun cacheControl(cacheControl: CacheControlEphemeral) =
             cacheControl(JsonField.of(cacheControl))
 
-        @JsonProperty("cache_control")
-        @ExcludeMissing
         fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
@@ -193,7 +191,6 @@ private constructor(
             putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
             additionalProperties.put(key, value)
         }
@@ -223,13 +220,16 @@ private constructor(
      *
      * This defines the shape of the `input` that your tool accepts and that the model will produce.
      */
-    @JsonDeserialize(builder = InputSchema.Builder::class)
     @NoAutoDetect
     class InputSchema
+    @JsonCreator
     private constructor(
-        private val type: JsonField<Type>,
-        private val properties: JsonValue,
-        private val additionalProperties: Map<String, JsonValue>,
+        @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+        @JsonProperty("properties")
+        @ExcludeMissing
+        private val properties: JsonValue = JsonMissing.of(),
+        @JsonAnySetter
+        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
     ) {
 
         fun type(): Type = type.getRequired("type")
@@ -273,12 +273,8 @@ private constructor(
 
             fun type(type: Type) = type(JsonField.of(type))
 
-            @JsonProperty("type")
-            @ExcludeMissing
             fun type(type: JsonField<Type>) = apply { this.type = type }
 
-            @JsonProperty("properties")
-            @ExcludeMissing
             fun properties(properties: JsonValue) = apply { this.properties = properties }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -286,7 +282,6 @@ private constructor(
                 putAllAdditionalProperties(additionalProperties)
             }
 
-            @JsonAnySetter
             fun putAdditionalProperty(key: String, value: JsonValue) = apply {
                 additionalProperties.put(key, value)
             }

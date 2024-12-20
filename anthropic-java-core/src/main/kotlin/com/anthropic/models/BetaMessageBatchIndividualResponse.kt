@@ -7,20 +7,25 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 
-@JsonDeserialize(builder = BetaMessageBatchIndividualResponse.Builder::class)
 @NoAutoDetect
 class BetaMessageBatchIndividualResponse
+@JsonCreator
 private constructor(
-    private val customId: JsonField<String>,
-    private val result: JsonField<BetaMessageBatchResult>,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("custom_id")
+    @ExcludeMissing
+    private val customId: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("result")
+    @ExcludeMissing
+    private val result: JsonField<BetaMessageBatchResult> = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
     /**
@@ -105,8 +110,6 @@ private constructor(
          *
          * Must be unique for each request within the Message Batch.
          */
-        @JsonProperty("custom_id")
-        @ExcludeMissing
         fun customId(customId: JsonField<String>) = apply { this.customId = customId }
 
         /**
@@ -125,8 +128,6 @@ private constructor(
          * failed, or the reason why processing was not attempted, such as cancellation or
          * expiration.
          */
-        @JsonProperty("result")
-        @ExcludeMissing
         fun result(result: JsonField<BetaMessageBatchResult>) = apply { this.result = result }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -134,7 +135,6 @@ private constructor(
             putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
             additionalProperties.put(key, value)
         }

@@ -7,11 +7,12 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 import java.util.Optional
 
@@ -71,19 +72,20 @@ constructor(
 
     @JvmSynthetic internal fun getQueryParams(): QueryParams = additionalQueryParams
 
-    @JsonDeserialize(builder = CompletionCreateBody.Builder::class)
     @NoAutoDetect
     class CompletionCreateBody
+    @JsonCreator
     internal constructor(
-        private val maxTokensToSample: Long,
-        private val model: Model,
-        private val prompt: String,
-        private val metadata: Metadata?,
-        private val stopSequences: List<String>?,
-        private val temperature: Double?,
-        private val topK: Long?,
-        private val topP: Double?,
-        private val additionalProperties: Map<String, JsonValue>,
+        @JsonProperty("max_tokens_to_sample") private val maxTokensToSample: Long,
+        @JsonProperty("model") private val model: Model,
+        @JsonProperty("prompt") private val prompt: String,
+        @JsonProperty("metadata") private val metadata: Metadata?,
+        @JsonProperty("stop_sequences") private val stopSequences: List<String>?,
+        @JsonProperty("temperature") private val temperature: Double?,
+        @JsonProperty("top_k") private val topK: Long?,
+        @JsonProperty("top_p") private val topP: Double?,
+        @JsonAnySetter
+        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
     ) {
 
         /**
@@ -204,7 +206,6 @@ constructor(
              * Note that our models may stop _before_ reaching this maximum. This parameter only
              * specifies the absolute maximum number of tokens to generate.
              */
-            @JsonProperty("max_tokens_to_sample")
             fun maxTokensToSample(maxTokensToSample: Long) = apply {
                 this.maxTokensToSample = maxTokensToSample
             }
@@ -214,7 +215,7 @@ constructor(
              * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
              * and options.
              */
-            @JsonProperty("model") fun model(model: Model) = apply { this.model = model }
+            fun model(model: Model) = apply { this.model = model }
 
             /**
              * The prompt that you want Claude to complete.
@@ -229,10 +230,9 @@ constructor(
              * guide to [prompt design](https://docs.anthropic.com/en/docs/intro-to-prompting) for
              * more details.
              */
-            @JsonProperty("prompt") fun prompt(prompt: String) = apply { this.prompt = prompt }
+            fun prompt(prompt: String) = apply { this.prompt = prompt }
 
             /** An object describing metadata about the request. */
-            @JsonProperty("metadata")
             fun metadata(metadata: Metadata) = apply { this.metadata = metadata }
 
             /**
@@ -242,7 +242,6 @@ constructor(
              * in the future. By providing the stop_sequences parameter, you may include additional
              * strings that will cause the model to stop generating.
              */
-            @JsonProperty("stop_sequences")
             fun stopSequences(stopSequences: List<String>) = apply {
                 this.stopSequences = stopSequences
             }
@@ -256,7 +255,6 @@ constructor(
              * Note that even with `temperature` of `0.0`, the results will not be fully
              * deterministic.
              */
-            @JsonProperty("temperature")
             fun temperature(temperature: Double) = apply { this.temperature = temperature }
 
             /**
@@ -267,7 +265,7 @@ constructor(
              *
              * Recommended for advanced use cases only. You usually only need to use `temperature`.
              */
-            @JsonProperty("top_k") fun topK(topK: Long) = apply { this.topK = topK }
+            fun topK(topK: Long) = apply { this.topK = topK }
 
             /**
              * Use nucleus sampling.
@@ -279,14 +277,13 @@ constructor(
              *
              * Recommended for advanced use cases only. You usually only need to use `temperature`.
              */
-            @JsonProperty("top_p") fun topP(topP: Double) = apply { this.topP = topP }
+            fun topP(topP: Double) = apply { this.topP = topP }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
             }
 
-            @JsonAnySetter
             fun putAdditionalProperty(key: String, value: JsonValue) = apply {
                 additionalProperties.put(key, value)
             }
