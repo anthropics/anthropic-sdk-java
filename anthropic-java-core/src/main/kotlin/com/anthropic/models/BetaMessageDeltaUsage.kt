@@ -7,19 +7,22 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 
-@JsonDeserialize(builder = BetaMessageDeltaUsage.Builder::class)
 @NoAutoDetect
 class BetaMessageDeltaUsage
+@JsonCreator
 private constructor(
-    private val outputTokens: JsonField<Long>,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("output_tokens")
+    @ExcludeMissing
+    private val outputTokens: JsonField<Long> = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
     /** The cumulative number of output tokens which were used. */
@@ -63,8 +66,6 @@ private constructor(
         fun outputTokens(outputTokens: Long) = outputTokens(JsonField.of(outputTokens))
 
         /** The cumulative number of output tokens which were used. */
-        @JsonProperty("output_tokens")
-        @ExcludeMissing
         fun outputTokens(outputTokens: JsonField<Long>) = apply { this.outputTokens = outputTokens }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -72,7 +73,6 @@ private constructor(
             putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
             additionalProperties.put(key, value)
         }

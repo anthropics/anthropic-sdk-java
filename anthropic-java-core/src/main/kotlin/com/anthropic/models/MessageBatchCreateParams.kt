@@ -10,10 +10,12 @@ import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
@@ -50,12 +52,13 @@ constructor(
 
     @JvmSynthetic internal fun getQueryParams(): QueryParams = additionalQueryParams
 
-    @JsonDeserialize(builder = MessageBatchCreateBody.Builder::class)
     @NoAutoDetect
     class MessageBatchCreateBody
+    @JsonCreator
     internal constructor(
-        private val requests: List<Request>,
-        private val additionalProperties: Map<String, JsonValue>,
+        @JsonProperty("requests") private val requests: List<Request>,
+        @JsonAnySetter
+        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
     ) {
 
         /**
@@ -90,7 +93,6 @@ constructor(
              * List of requests for prompt completion. Each is an individual request to create a
              * Message.
              */
-            @JsonProperty("requests")
             fun requests(requests: List<Request>) = apply { this.requests = requests }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -98,7 +100,6 @@ constructor(
                 putAllAdditionalProperties(additionalProperties)
             }
 
-            @JsonAnySetter
             fun putAdditionalProperty(key: String, value: JsonValue) = apply {
                 additionalProperties.put(key, value)
             }
@@ -307,13 +308,14 @@ constructor(
             )
     }
 
-    @JsonDeserialize(builder = Request.Builder::class)
     @NoAutoDetect
     class Request
+    @JsonCreator
     private constructor(
-        private val customId: String,
-        private val params: Params,
-        private val additionalProperties: Map<String, JsonValue>,
+        @JsonProperty("custom_id") private val customId: String,
+        @JsonProperty("params") private val params: Params,
+        @JsonAnySetter
+        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
     ) {
 
         /**
@@ -362,7 +364,6 @@ constructor(
              *
              * Must be unique for each request within the Message Batch.
              */
-            @JsonProperty("custom_id")
             fun customId(customId: String) = apply { this.customId = customId }
 
             /**
@@ -371,14 +372,13 @@ constructor(
              * See the [Messages API reference](/en/api/messages) for full documentation on
              * available parameters.
              */
-            @JsonProperty("params") fun params(params: Params) = apply { this.params = params }
+            fun params(params: Params) = apply { this.params = params }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
             }
 
-            @JsonAnySetter
             fun putAdditionalProperty(key: String, value: JsonValue) = apply {
                 additionalProperties.put(key, value)
             }
@@ -407,23 +407,24 @@ constructor(
          * See the [Messages API reference](/en/api/messages) for full documentation on available
          * parameters.
          */
-        @JsonDeserialize(builder = Params.Builder::class)
         @NoAutoDetect
         class Params
+        @JsonCreator
         private constructor(
-            private val model: Model,
-            private val messages: List<MessageParam>,
-            private val maxTokens: Long,
-            private val metadata: Metadata?,
-            private val stopSequences: List<String>?,
-            private val stream: Boolean?,
-            private val system: System?,
-            private val temperature: Double?,
-            private val toolChoice: ToolChoice?,
-            private val tools: List<Tool>?,
-            private val topK: Long?,
-            private val topP: Double?,
-            private val additionalProperties: Map<String, JsonValue>,
+            @JsonProperty("model") private val model: Model,
+            @JsonProperty("messages") private val messages: List<MessageParam>,
+            @JsonProperty("max_tokens") private val maxTokens: Long,
+            @JsonProperty("metadata") private val metadata: Metadata?,
+            @JsonProperty("stop_sequences") private val stopSequences: List<String>?,
+            @JsonProperty("stream") private val stream: Boolean?,
+            @JsonProperty("system") private val system: System?,
+            @JsonProperty("temperature") private val temperature: Double?,
+            @JsonProperty("tool_choice") private val toolChoice: ToolChoice?,
+            @JsonProperty("tools") private val tools: List<Tool>?,
+            @JsonProperty("top_k") private val topK: Long?,
+            @JsonProperty("top_p") private val topP: Double?,
+            @JsonAnySetter
+            private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
         ) {
 
             /**
@@ -719,7 +720,7 @@ constructor(
                  * [models](https://docs.anthropic.com/en/docs/models-overview) for additional
                  * details and options.
                  */
-                @JsonProperty("model") fun model(model: Model) = apply { this.model = model }
+                fun model(model: Model) = apply { this.model = model }
 
                 /**
                  * Input messages.
@@ -803,7 +804,6 @@ constructor(
                  * the top-level `system` parameter — there is no `"system"` role for input messages
                  * in the Messages API.
                  */
-                @JsonProperty("messages")
                 fun messages(messages: List<MessageParam>) = apply { this.messages = messages }
 
                 /**
@@ -815,11 +815,9 @@ constructor(
                  * Different models have different maximum values for this parameter. See
                  * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
                  */
-                @JsonProperty("max_tokens")
                 fun maxTokens(maxTokens: Long) = apply { this.maxTokens = maxTokens }
 
                 /** An object describing metadata about the request. */
-                @JsonProperty("metadata")
                 fun metadata(metadata: Metadata) = apply { this.metadata = metadata }
 
                 /**
@@ -833,7 +831,6 @@ constructor(
                  * the custom sequences, the response `stop_reason` value will be `"stop_sequence"`
                  * and the response `stop_sequence` value will contain the matched stop sequence.
                  */
-                @JsonProperty("stop_sequences")
                 fun stopSequences(stopSequences: List<String>) = apply {
                     this.stopSequences = stopSequences
                 }
@@ -844,7 +841,7 @@ constructor(
                  * See [streaming](https://docs.anthropic.com/en/api/messages-streaming) for
                  * details.
                  */
-                @JsonProperty("stream") fun stream(stream: Boolean) = apply { this.stream = stream }
+                fun stream(stream: Boolean) = apply { this.stream = stream }
 
                 /**
                  * System prompt.
@@ -853,7 +850,7 @@ constructor(
                  * specifying a particular goal or role. See our
                  * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
                  */
-                @JsonProperty("system") fun system(system: System) = apply { this.system = system }
+                fun system(system: System) = apply { this.system = system }
 
                 /**
                  * Amount of randomness injected into the response.
@@ -865,14 +862,12 @@ constructor(
                  * Note that even with `temperature` of `0.0`, the results will not be fully
                  * deterministic.
                  */
-                @JsonProperty("temperature")
                 fun temperature(temperature: Double) = apply { this.temperature = temperature }
 
                 /**
                  * How the model should use the provided tools. The model can use a specific tool,
                  * any available tool, or decide by itself.
                  */
-                @JsonProperty("tool_choice")
                 fun toolChoice(toolChoice: ToolChoice) = apply { this.toolChoice = toolChoice }
 
                 /**
@@ -940,7 +935,7 @@ constructor(
                  *
                  * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
                  */
-                @JsonProperty("tools") fun tools(tools: List<Tool>) = apply { this.tools = tools }
+                fun tools(tools: List<Tool>) = apply { this.tools = tools }
 
                 /**
                  * Only sample from the top K options for each subsequent token.
@@ -951,7 +946,7 @@ constructor(
                  * Recommended for advanced use cases only. You usually only need to use
                  * `temperature`.
                  */
-                @JsonProperty("top_k") fun topK(topK: Long) = apply { this.topK = topK }
+                fun topK(topK: Long) = apply { this.topK = topK }
 
                 /**
                  * Use nucleus sampling.
@@ -964,14 +959,13 @@ constructor(
                  * Recommended for advanced use cases only. You usually only need to use
                  * `temperature`.
                  */
-                @JsonProperty("top_p") fun topP(topP: Double) = apply { this.topP = topP }
+                fun topP(topP: Double) = apply { this.topP = topP }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                     this.additionalProperties.clear()
                     putAllAdditionalProperties(additionalProperties)
                 }
 
-                @JsonAnySetter
                 fun putAdditionalProperty(key: String, value: JsonValue) = apply {
                     additionalProperties.put(key, value)
                 }

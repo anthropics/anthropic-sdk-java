@@ -7,19 +7,22 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 
-@JsonDeserialize(builder = MessageTokensCount.Builder::class)
 @NoAutoDetect
 class MessageTokensCount
+@JsonCreator
 private constructor(
-    private val inputTokens: JsonField<Long>,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("input_tokens")
+    @ExcludeMissing
+    private val inputTokens: JsonField<Long> = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
     /**
@@ -73,8 +76,6 @@ private constructor(
          * The total number of tokens across the provided list of messages, system prompt, and
          * tools.
          */
-        @JsonProperty("input_tokens")
-        @ExcludeMissing
         fun inputTokens(inputTokens: JsonField<Long>) = apply { this.inputTokens = inputTokens }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -82,7 +83,6 @@ private constructor(
             putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
             additionalProperties.put(key, value)
         }
