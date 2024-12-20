@@ -29,8 +29,6 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
-    private var validated: Boolean = false
-
     fun type(): Type = type.getRequired("type")
 
     /** The name of the tool to use. */
@@ -62,6 +60,8 @@ private constructor(
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
+    private var validated: Boolean = false
+
     fun validate(): ToolChoiceTool = apply {
         if (!validated) {
             type()
@@ -87,10 +87,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(toolChoiceTool: ToolChoiceTool) = apply {
-            this.type = toolChoiceTool.type
-            this.name = toolChoiceTool.name
-            this.disableParallelToolUse = toolChoiceTool.disableParallelToolUse
-            additionalProperties(toolChoiceTool.additionalProperties)
+            type = toolChoiceTool.type
+            name = toolChoiceTool.name
+            disableParallelToolUse = toolChoiceTool.disableParallelToolUse
+            additionalProperties = toolChoiceTool.additionalProperties.toMutableMap()
         }
 
         fun type(type: Type) = type(JsonField.of(type))
@@ -128,16 +128,22 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): ToolChoiceTool =

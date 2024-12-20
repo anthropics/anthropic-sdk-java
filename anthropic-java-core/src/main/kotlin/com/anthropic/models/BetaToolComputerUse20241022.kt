@@ -31,8 +31,6 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
-    private var validated: Boolean = false
-
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
@@ -79,6 +77,8 @@ private constructor(
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
+    private var validated: Boolean = false
+
     fun validate(): BetaToolComputerUse20241022 = apply {
         if (!validated) {
             cacheControl().map { it.validate() }
@@ -110,13 +110,13 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaToolComputerUse20241022: BetaToolComputerUse20241022) = apply {
-            this.cacheControl = betaToolComputerUse20241022.cacheControl
-            this.type = betaToolComputerUse20241022.type
-            this.name = betaToolComputerUse20241022.name
-            this.displayHeightPx = betaToolComputerUse20241022.displayHeightPx
-            this.displayWidthPx = betaToolComputerUse20241022.displayWidthPx
-            this.displayNumber = betaToolComputerUse20241022.displayNumber
-            additionalProperties(betaToolComputerUse20241022.additionalProperties)
+            cacheControl = betaToolComputerUse20241022.cacheControl
+            type = betaToolComputerUse20241022.type
+            name = betaToolComputerUse20241022.name
+            displayHeightPx = betaToolComputerUse20241022.displayHeightPx
+            displayWidthPx = betaToolComputerUse20241022.displayWidthPx
+            displayNumber = betaToolComputerUse20241022.displayNumber
+            additionalProperties = betaToolComputerUse20241022.additionalProperties.toMutableMap()
         }
 
         fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
@@ -182,16 +182,22 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): BetaToolComputerUse20241022 =

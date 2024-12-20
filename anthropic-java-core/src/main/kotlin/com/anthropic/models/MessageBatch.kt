@@ -36,8 +36,6 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
-    private var validated: Boolean = false
-
     /**
      * Unique object identifier.
      *
@@ -176,6 +174,8 @@ private constructor(
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
+    private var validated: Boolean = false
+
     fun validate(): MessageBatch = apply {
         if (!validated) {
             id()
@@ -215,17 +215,17 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(messageBatch: MessageBatch) = apply {
-            this.id = messageBatch.id
-            this.type = messageBatch.type
-            this.processingStatus = messageBatch.processingStatus
-            this.requestCounts = messageBatch.requestCounts
-            this.endedAt = messageBatch.endedAt
-            this.createdAt = messageBatch.createdAt
-            this.expiresAt = messageBatch.expiresAt
-            this.archivedAt = messageBatch.archivedAt
-            this.cancelInitiatedAt = messageBatch.cancelInitiatedAt
-            this.resultsUrl = messageBatch.resultsUrl
-            additionalProperties(messageBatch.additionalProperties)
+            id = messageBatch.id
+            type = messageBatch.type
+            processingStatus = messageBatch.processingStatus
+            requestCounts = messageBatch.requestCounts
+            endedAt = messageBatch.endedAt
+            createdAt = messageBatch.createdAt
+            expiresAt = messageBatch.expiresAt
+            archivedAt = messageBatch.archivedAt
+            cancelInitiatedAt = messageBatch.cancelInitiatedAt
+            resultsUrl = messageBatch.resultsUrl
+            additionalProperties = messageBatch.additionalProperties.toMutableMap()
         }
 
         /**
@@ -393,16 +393,22 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): MessageBatch =

@@ -82,8 +82,8 @@ constructor(
     @NoAutoDetect
     class BetaMessageCountTokensBody
     internal constructor(
-        private val messages: List<BetaMessageParam>?,
-        private val model: Model?,
+        private val messages: List<BetaMessageParam>,
+        private val model: Model,
         private val system: System?,
         private val toolChoice: BetaToolChoice?,
         private val tools: List<Tool>?,
@@ -171,14 +171,14 @@ constructor(
          * top-level `system` parameter — there is no `"system"` role for input messages in the
          * Messages API.
          */
-        @JsonProperty("messages") fun messages(): List<BetaMessageParam>? = messages
+        @JsonProperty("messages") fun messages(): List<BetaMessageParam> = messages
 
         /**
          * The model that will complete your prompt.\n\nSee
          * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
          * options.
          */
-        @JsonProperty("model") fun model(): Model? = model
+        @JsonProperty("model") fun model(): Model = model
 
         /**
          * System prompt.
@@ -187,13 +187,14 @@ constructor(
          * specifying a particular goal or role. See our
          * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
          */
-        @JsonProperty("system") fun system(): System? = system
+        @JsonProperty("system") fun system(): Optional<System> = Optional.ofNullable(system)
 
         /**
          * How the model should use the provided tools. The model can use a specific tool, any
          * available tool, or decide by itself.
          */
-        @JsonProperty("tool_choice") fun toolChoice(): BetaToolChoice? = toolChoice
+        @JsonProperty("tool_choice")
+        fun toolChoice(): Optional<BetaToolChoice> = Optional.ofNullable(toolChoice)
 
         /**
          * Definitions of tools that the model may use.
@@ -260,7 +261,7 @@ constructor(
          *
          * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
          */
-        @JsonProperty("tools") fun tools(): List<Tool>? = tools
+        @JsonProperty("tools") fun tools(): Optional<List<Tool>> = Optional.ofNullable(tools)
 
         @JsonAnyGetter
         @ExcludeMissing
@@ -284,12 +285,13 @@ constructor(
 
             @JvmSynthetic
             internal fun from(betaMessageCountTokensBody: BetaMessageCountTokensBody) = apply {
-                this.messages = betaMessageCountTokensBody.messages
-                this.model = betaMessageCountTokensBody.model
-                this.system = betaMessageCountTokensBody.system
-                this.toolChoice = betaMessageCountTokensBody.toolChoice
-                this.tools = betaMessageCountTokensBody.tools
-                additionalProperties(betaMessageCountTokensBody.additionalProperties)
+                messages = betaMessageCountTokensBody.messages.toMutableList()
+                model = betaMessageCountTokensBody.model
+                system = betaMessageCountTokensBody.system
+                toolChoice = betaMessageCountTokensBody.toolChoice
+                tools = betaMessageCountTokensBody.tools?.toMutableList()
+                additionalProperties =
+                    betaMessageCountTokensBody.additionalProperties.toMutableMap()
             }
 
             /**
@@ -469,16 +471,22 @@ constructor(
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
-                this.additionalProperties.putAll(additionalProperties)
+                putAllAdditionalProperties(additionalProperties)
             }
 
             @JsonAnySetter
             fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                this.additionalProperties.put(key, value)
+                additionalProperties.put(key, value)
             }
 
             fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
             }
 
             fun build(): BetaMessageCountTokensBody =
@@ -1159,8 +1167,6 @@ constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        private var validated: Boolean = false
-
         fun string(): Optional<String> = Optional.ofNullable(string)
 
         fun betaTextBlockParams(): Optional<List<BetaTextBlockParam>> =
@@ -1182,16 +1188,6 @@ constructor(
                 string != null -> visitor.visitString(string)
                 betaTextBlockParams != null -> visitor.visitBetaTextBlockParams(betaTextBlockParams)
                 else -> visitor.unknown(_json)
-            }
-        }
-
-        fun validate(): System = apply {
-            if (!validated) {
-                if (string == null && betaTextBlockParams == null) {
-                    throw AnthropicInvalidDataException("Unknown System: $_json")
-                }
-                betaTextBlockParams?.forEach { it.validate() }
-                validated = true
             }
         }
 
@@ -1241,12 +1237,9 @@ constructor(
                 tryDeserialize(node, jacksonTypeRef<String>())?.let {
                     return System(string = it, _json = json)
                 }
-                tryDeserialize(node, jacksonTypeRef<List<BetaTextBlockParam>>()) {
-                        it.forEach { it.validate() }
-                    }
-                    ?.let {
-                        return System(betaTextBlockParams = it, _json = json)
-                    }
+                tryDeserialize(node, jacksonTypeRef<List<BetaTextBlockParam>>())?.let {
+                    return System(betaTextBlockParams = it, _json = json)
+                }
 
                 return System(_json = json)
             }
@@ -1280,8 +1273,6 @@ constructor(
         private val betaToolTextEditor20241022: BetaToolTextEditor20241022? = null,
         private val _json: JsonValue? = null,
     ) {
-
-        private var validated: Boolean = false
 
         fun betaTool(): Optional<BetaTool> = Optional.ofNullable(betaTool)
 
@@ -1325,24 +1316,6 @@ constructor(
                 betaToolTextEditor20241022 != null ->
                     visitor.visitBetaToolTextEditor20241022(betaToolTextEditor20241022)
                 else -> visitor.unknown(_json)
-            }
-        }
-
-        fun validate(): Tool = apply {
-            if (!validated) {
-                if (
-                    betaTool == null &&
-                        betaToolComputerUse20241022 == null &&
-                        betaToolBash20241022 == null &&
-                        betaToolTextEditor20241022 == null
-                ) {
-                    throw AnthropicInvalidDataException("Unknown Tool: $_json")
-                }
-                betaTool?.validate()
-                betaToolComputerUse20241022?.validate()
-                betaToolBash20241022?.validate()
-                betaToolTextEditor20241022?.validate()
-                validated = true
             }
         }
 
@@ -1411,24 +1384,18 @@ constructor(
             override fun ObjectCodec.deserialize(node: JsonNode): Tool {
                 val json = JsonValue.fromJsonNode(node)
 
-                tryDeserialize(node, jacksonTypeRef<BetaTool>()) { it.validate() }
-                    ?.let {
-                        return Tool(betaTool = it, _json = json)
-                    }
-                tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20241022>()) {
-                        it.validate()
-                    }
-                    ?.let {
-                        return Tool(betaToolComputerUse20241022 = it, _json = json)
-                    }
-                tryDeserialize(node, jacksonTypeRef<BetaToolBash20241022>()) { it.validate() }
-                    ?.let {
-                        return Tool(betaToolBash20241022 = it, _json = json)
-                    }
-                tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20241022>()) { it.validate() }
-                    ?.let {
-                        return Tool(betaToolTextEditor20241022 = it, _json = json)
-                    }
+                tryDeserialize(node, jacksonTypeRef<BetaTool>())?.let {
+                    return Tool(betaTool = it, _json = json)
+                }
+                tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20241022>())?.let {
+                    return Tool(betaToolComputerUse20241022 = it, _json = json)
+                }
+                tryDeserialize(node, jacksonTypeRef<BetaToolBash20241022>())?.let {
+                    return Tool(betaToolBash20241022 = it, _json = json)
+                }
+                tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20241022>())?.let {
+                    return Tool(betaToolTextEditor20241022 = it, _json = json)
+                }
 
                 return Tool(_json = json)
             }

@@ -28,8 +28,6 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
-    private var validated: Boolean = false
-
     fun type(): Type = type.getRequired("type")
 
     fun delta(): Delta = delta.getRequired("delta")
@@ -72,6 +70,8 @@ private constructor(
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
+    private var validated: Boolean = false
+
     fun validate(): BetaRawMessageDeltaEvent = apply {
         if (!validated) {
             type()
@@ -97,10 +97,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaRawMessageDeltaEvent: BetaRawMessageDeltaEvent) = apply {
-            this.type = betaRawMessageDeltaEvent.type
-            this.delta = betaRawMessageDeltaEvent.delta
-            this.usage = betaRawMessageDeltaEvent.usage
-            additionalProperties(betaRawMessageDeltaEvent.additionalProperties)
+            type = betaRawMessageDeltaEvent.type
+            delta = betaRawMessageDeltaEvent.delta
+            usage = betaRawMessageDeltaEvent.usage
+            additionalProperties = betaRawMessageDeltaEvent.additionalProperties.toMutableMap()
         }
 
         fun type(type: Type) = type(JsonField.of(type))
@@ -151,16 +151,22 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): BetaRawMessageDeltaEvent =
@@ -181,8 +187,6 @@ private constructor(
         private val additionalProperties: Map<String, JsonValue>,
     ) {
 
-        private var validated: Boolean = false
-
         fun stopReason(): Optional<StopReason> =
             Optional.ofNullable(stopReason.getNullable("stop_reason"))
 
@@ -196,6 +200,8 @@ private constructor(
         @JsonAnyGetter
         @ExcludeMissing
         fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+        private var validated: Boolean = false
 
         fun validate(): Delta = apply {
             if (!validated) {
@@ -220,9 +226,9 @@ private constructor(
 
             @JvmSynthetic
             internal fun from(delta: Delta) = apply {
-                this.stopReason = delta.stopReason
-                this.stopSequence = delta.stopSequence
-                additionalProperties(delta.additionalProperties)
+                stopReason = delta.stopReason
+                stopSequence = delta.stopSequence
+                additionalProperties = delta.additionalProperties.toMutableMap()
             }
 
             fun stopReason(stopReason: StopReason) = stopReason(JsonField.of(stopReason))
@@ -243,16 +249,22 @@ private constructor(
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
-                this.additionalProperties.putAll(additionalProperties)
+                putAllAdditionalProperties(additionalProperties)
             }
 
             @JsonAnySetter
             fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                this.additionalProperties.put(key, value)
+                additionalProperties.put(key, value)
             }
 
             fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
             }
 
             fun build(): Delta =

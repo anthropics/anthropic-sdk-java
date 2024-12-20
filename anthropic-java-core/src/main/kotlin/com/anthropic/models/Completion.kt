@@ -30,8 +30,6 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
-    private var validated: Boolean = false
-
     /**
      * Object type.
      *
@@ -104,6 +102,8 @@ private constructor(
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
+    private var validated: Boolean = false
+
     fun validate(): Completion = apply {
         if (!validated) {
             type()
@@ -133,12 +133,12 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(completion: Completion) = apply {
-            this.type = completion.type
-            this.id = completion.id
+            type = completion.type
+            id = completion.id
             this.completion = completion.completion
-            this.stopReason = completion.stopReason
-            this.model = completion.model
-            additionalProperties(completion.additionalProperties)
+            stopReason = completion.stopReason
+            model = completion.model
+            additionalProperties = completion.additionalProperties.toMutableMap()
         }
 
         /**
@@ -219,16 +219,22 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): Completion =

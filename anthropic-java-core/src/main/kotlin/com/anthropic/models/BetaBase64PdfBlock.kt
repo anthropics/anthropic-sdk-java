@@ -28,8 +28,6 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
-    private var validated: Boolean = false
-
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
@@ -46,6 +44,8 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+    private var validated: Boolean = false
 
     fun validate(): BetaBase64PdfBlock = apply {
         if (!validated) {
@@ -72,10 +72,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaBase64PdfBlock: BetaBase64PdfBlock) = apply {
-            this.cacheControl = betaBase64PdfBlock.cacheControl
-            this.type = betaBase64PdfBlock.type
-            this.source = betaBase64PdfBlock.source
-            additionalProperties(betaBase64PdfBlock.additionalProperties)
+            cacheControl = betaBase64PdfBlock.cacheControl
+            type = betaBase64PdfBlock.type
+            source = betaBase64PdfBlock.source
+            additionalProperties = betaBase64PdfBlock.additionalProperties.toMutableMap()
         }
 
         fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
@@ -101,16 +101,22 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): BetaBase64PdfBlock =

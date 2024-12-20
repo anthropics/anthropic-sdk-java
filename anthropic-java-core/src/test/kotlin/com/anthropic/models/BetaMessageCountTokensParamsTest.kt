@@ -176,7 +176,7 @@ class BetaMessageCountTokensParamsTest {
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
         assertThat(body.system())
-            .isEqualTo(
+            .contains(
                 BetaMessageCountTokensParams.System.ofBetaTextBlockParams(
                     listOf(
                         BetaTextBlockParam.builder()
@@ -192,7 +192,7 @@ class BetaMessageCountTokensParamsTest {
                 )
             )
         assertThat(body.toolChoice())
-            .isEqualTo(
+            .contains(
                 BetaToolChoice.ofBetaToolChoiceAuto(
                     BetaToolChoiceAuto.builder()
                         .type(BetaToolChoiceAuto.Type.AUTO)
@@ -201,7 +201,7 @@ class BetaMessageCountTokensParamsTest {
                 )
             )
         assertThat(body.tools())
-            .isEqualTo(
+            .contains(
                 listOf(
                     BetaMessageCountTokensParams.Tool.ofBetaTool(
                         BetaTool.builder()

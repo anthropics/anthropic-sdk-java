@@ -28,16 +28,6 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
-    fun toParam(): BetaToolUseBlockParam =
-        BetaToolUseBlockParam.builder()
-            .id(id())
-            .input(_input())
-            .name(name())
-            .type(BetaToolUseBlockParam.Type.of(type().toString()))
-            .build()
-
-    private var validated: Boolean = false
-
     fun type(): Type = type.getRequired("type")
 
     fun id(): String = id.getRequired("id")
@@ -55,6 +45,16 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+    fun toParam(): BetaToolUseBlockParam =
+        BetaToolUseBlockParam.builder()
+            .id(id())
+            .input(_input())
+            .name(name())
+            .type(BetaToolUseBlockParam.Type.of(type().toString()))
+            .build()
+
+    private var validated: Boolean = false
 
     fun validate(): BetaToolUseBlock = apply {
         if (!validated) {
@@ -82,11 +82,11 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaToolUseBlock: BetaToolUseBlock) = apply {
-            this.type = betaToolUseBlock.type
-            this.id = betaToolUseBlock.id
-            this.name = betaToolUseBlock.name
-            this.input = betaToolUseBlock.input
-            additionalProperties(betaToolUseBlock.additionalProperties)
+            type = betaToolUseBlock.type
+            id = betaToolUseBlock.id
+            name = betaToolUseBlock.name
+            input = betaToolUseBlock.input
+            additionalProperties = betaToolUseBlock.additionalProperties.toMutableMap()
         }
 
         fun type(type: Type) = type(JsonField.of(type))
@@ -111,16 +111,22 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): BetaToolUseBlock =

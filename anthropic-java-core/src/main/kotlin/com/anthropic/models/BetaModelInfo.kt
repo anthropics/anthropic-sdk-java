@@ -29,8 +29,6 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
-    private var validated: Boolean = false
-
     /**
      * Object type.
      *
@@ -73,6 +71,8 @@ private constructor(
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
+    private var validated: Boolean = false
+
     fun validate(): BetaModelInfo = apply {
         if (!validated) {
             type()
@@ -100,11 +100,11 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaModelInfo: BetaModelInfo) = apply {
-            this.type = betaModelInfo.type
-            this.id = betaModelInfo.id
-            this.displayName = betaModelInfo.displayName
-            this.createdAt = betaModelInfo.createdAt
-            additionalProperties(betaModelInfo.additionalProperties)
+            type = betaModelInfo.type
+            id = betaModelInfo.id
+            displayName = betaModelInfo.displayName
+            createdAt = betaModelInfo.createdAt
+            additionalProperties = betaModelInfo.additionalProperties.toMutableMap()
         }
 
         /**
@@ -153,16 +153,22 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): BetaModelInfo =
