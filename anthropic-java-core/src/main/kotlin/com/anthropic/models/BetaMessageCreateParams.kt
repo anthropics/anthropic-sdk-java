@@ -106,9 +106,9 @@ constructor(
     @NoAutoDetect
     class BetaMessageCreateBody
     internal constructor(
-        private val maxTokens: Long?,
-        private val messages: List<BetaMessageParam>?,
-        private val model: Model?,
+        private val maxTokens: Long,
+        private val messages: List<BetaMessageParam>,
+        private val model: Model,
         private val metadata: BetaMetadata?,
         private val stopSequences: List<String>?,
         private val system: System?,
@@ -129,7 +129,7 @@ constructor(
          * Different models have different maximum values for this parameter. See
          * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
          */
-        @JsonProperty("max_tokens") fun maxTokens(): Long? = maxTokens
+        @JsonProperty("max_tokens") fun maxTokens(): Long = maxTokens
 
         /**
          * Input messages.
@@ -212,17 +212,18 @@ constructor(
          * top-level `system` parameter — there is no `"system"` role for input messages in the
          * Messages API.
          */
-        @JsonProperty("messages") fun messages(): List<BetaMessageParam>? = messages
+        @JsonProperty("messages") fun messages(): List<BetaMessageParam> = messages
 
         /**
          * The model that will complete your prompt.\n\nSee
          * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
          * options.
          */
-        @JsonProperty("model") fun model(): Model? = model
+        @JsonProperty("model") fun model(): Model = model
 
         /** An object describing metadata about the request. */
-        @JsonProperty("metadata") fun metadata(): BetaMetadata? = metadata
+        @JsonProperty("metadata")
+        fun metadata(): Optional<BetaMetadata> = Optional.ofNullable(metadata)
 
         /**
          * Custom text sequences that will cause the model to stop generating.
@@ -235,7 +236,8 @@ constructor(
          * sequences, the response `stop_reason` value will be `"stop_sequence"` and the response
          * `stop_sequence` value will contain the matched stop sequence.
          */
-        @JsonProperty("stop_sequences") fun stopSequences(): List<String>? = stopSequences
+        @JsonProperty("stop_sequences")
+        fun stopSequences(): Optional<List<String>> = Optional.ofNullable(stopSequences)
 
         /**
          * System prompt.
@@ -244,7 +246,7 @@ constructor(
          * specifying a particular goal or role. See our
          * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
          */
-        @JsonProperty("system") fun system(): System? = system
+        @JsonProperty("system") fun system(): Optional<System> = Optional.ofNullable(system)
 
         /**
          * Amount of randomness injected into the response.
@@ -254,13 +256,15 @@ constructor(
          *
          * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
          */
-        @JsonProperty("temperature") fun temperature(): Double? = temperature
+        @JsonProperty("temperature")
+        fun temperature(): Optional<Double> = Optional.ofNullable(temperature)
 
         /**
          * How the model should use the provided tools. The model can use a specific tool, any
          * available tool, or decide by itself.
          */
-        @JsonProperty("tool_choice") fun toolChoice(): BetaToolChoice? = toolChoice
+        @JsonProperty("tool_choice")
+        fun toolChoice(): Optional<BetaToolChoice> = Optional.ofNullable(toolChoice)
 
         /**
          * Definitions of tools that the model may use.
@@ -327,7 +331,8 @@ constructor(
          *
          * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
          */
-        @JsonProperty("tools") fun tools(): List<BetaToolUnion>? = tools
+        @JsonProperty("tools")
+        fun tools(): Optional<List<BetaToolUnion>> = Optional.ofNullable(tools)
 
         /**
          * Only sample from the top K options for each subsequent token.
@@ -337,7 +342,7 @@ constructor(
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
          */
-        @JsonProperty("top_k") fun topK(): Long? = topK
+        @JsonProperty("top_k") fun topK(): Optional<Long> = Optional.ofNullable(topK)
 
         /**
          * Use nucleus sampling.
@@ -349,7 +354,7 @@ constructor(
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
          */
-        @JsonProperty("top_p") fun topP(): Double? = topP
+        @JsonProperty("top_p") fun topP(): Optional<Double> = Optional.ofNullable(topP)
 
         @JsonAnyGetter
         @ExcludeMissing
@@ -379,18 +384,18 @@ constructor(
 
             @JvmSynthetic
             internal fun from(betaMessageCreateBody: BetaMessageCreateBody) = apply {
-                this.maxTokens = betaMessageCreateBody.maxTokens
-                this.messages = betaMessageCreateBody.messages
-                this.model = betaMessageCreateBody.model
-                this.metadata = betaMessageCreateBody.metadata
-                this.stopSequences = betaMessageCreateBody.stopSequences
-                this.system = betaMessageCreateBody.system
-                this.temperature = betaMessageCreateBody.temperature
-                this.toolChoice = betaMessageCreateBody.toolChoice
-                this.tools = betaMessageCreateBody.tools
-                this.topK = betaMessageCreateBody.topK
-                this.topP = betaMessageCreateBody.topP
-                additionalProperties(betaMessageCreateBody.additionalProperties)
+                maxTokens = betaMessageCreateBody.maxTokens
+                messages = betaMessageCreateBody.messages.toMutableList()
+                model = betaMessageCreateBody.model
+                metadata = betaMessageCreateBody.metadata
+                stopSequences = betaMessageCreateBody.stopSequences?.toMutableList()
+                system = betaMessageCreateBody.system
+                temperature = betaMessageCreateBody.temperature
+                toolChoice = betaMessageCreateBody.toolChoice
+                tools = betaMessageCreateBody.tools?.toMutableList()
+                topK = betaMessageCreateBody.topK
+                topP = betaMessageCreateBody.topP
+                additionalProperties = betaMessageCreateBody.additionalProperties.toMutableMap()
             }
 
             /**
@@ -637,16 +642,22 @@ constructor(
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
-                this.additionalProperties.putAll(additionalProperties)
+                putAllAdditionalProperties(additionalProperties)
             }
 
             @JsonAnySetter
             fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                this.additionalProperties.put(key, value)
+                additionalProperties.put(key, value)
             }
 
             fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
             }
 
             fun build(): BetaMessageCreateBody =
@@ -1427,8 +1438,6 @@ constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        private var validated: Boolean = false
-
         fun string(): Optional<String> = Optional.ofNullable(string)
 
         fun betaTextBlockParams(): Optional<List<BetaTextBlockParam>> =
@@ -1450,16 +1459,6 @@ constructor(
                 string != null -> visitor.visitString(string)
                 betaTextBlockParams != null -> visitor.visitBetaTextBlockParams(betaTextBlockParams)
                 else -> visitor.unknown(_json)
-            }
-        }
-
-        fun validate(): System = apply {
-            if (!validated) {
-                if (string == null && betaTextBlockParams == null) {
-                    throw AnthropicInvalidDataException("Unknown System: $_json")
-                }
-                betaTextBlockParams?.forEach { it.validate() }
-                validated = true
             }
         }
 
@@ -1509,12 +1508,9 @@ constructor(
                 tryDeserialize(node, jacksonTypeRef<String>())?.let {
                     return System(string = it, _json = json)
                 }
-                tryDeserialize(node, jacksonTypeRef<List<BetaTextBlockParam>>()) {
-                        it.forEach { it.validate() }
-                    }
-                    ?.let {
-                        return System(betaTextBlockParams = it, _json = json)
-                    }
+                tryDeserialize(node, jacksonTypeRef<List<BetaTextBlockParam>>())?.let {
+                    return System(betaTextBlockParams = it, _json = json)
+                }
 
                 return System(_json = json)
             }

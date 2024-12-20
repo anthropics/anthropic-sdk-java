@@ -168,9 +168,9 @@ private constructor(
 
         fun maxRetries(maxRetries: Int) = apply { this.maxRetries = maxRetries }
 
-        fun apiKey(apiKey: String?) = apply { this.apiKey = apiKey }
+        fun apiKey(apiKey: String) = apply { this.apiKey = apiKey }
 
-        fun authToken(authToken: String?) = apply { this.authToken = authToken }
+        fun authToken(authToken: String) = apply { this.authToken = authToken }
 
         fun fromEnv() = apply {
             System.getenv("ANTHROPIC_API_KEY")?.let { apiKey(it) }

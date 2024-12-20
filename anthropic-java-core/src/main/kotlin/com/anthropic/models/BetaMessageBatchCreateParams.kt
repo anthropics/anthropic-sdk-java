@@ -63,7 +63,7 @@ constructor(
     @NoAutoDetect
     class BetaMessageBatchCreateBody
     internal constructor(
-        private val requests: List<Request>?,
+        private val requests: List<Request>,
         private val additionalProperties: Map<String, JsonValue>,
     ) {
 
@@ -71,7 +71,7 @@ constructor(
          * List of requests for prompt completion. Each is an individual request to create a
          * Message.
          */
-        @JsonProperty("requests") fun requests(): List<Request>? = requests
+        @JsonProperty("requests") fun requests(): List<Request> = requests
 
         @JsonAnyGetter
         @ExcludeMissing
@@ -91,8 +91,9 @@ constructor(
 
             @JvmSynthetic
             internal fun from(betaMessageBatchCreateBody: BetaMessageBatchCreateBody) = apply {
-                this.requests = betaMessageBatchCreateBody.requests
-                additionalProperties(betaMessageBatchCreateBody.additionalProperties)
+                requests = betaMessageBatchCreateBody.requests.toMutableList()
+                additionalProperties =
+                    betaMessageBatchCreateBody.additionalProperties.toMutableMap()
             }
 
             /**
@@ -104,16 +105,22 @@ constructor(
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
-                this.additionalProperties.putAll(additionalProperties)
+                putAllAdditionalProperties(additionalProperties)
             }
 
             @JsonAnySetter
             fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                this.additionalProperties.put(key, value)
+                additionalProperties.put(key, value)
             }
 
             fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
             }
 
             fun build(): BetaMessageBatchCreateBody =
@@ -326,8 +333,8 @@ constructor(
     @NoAutoDetect
     class Request
     private constructor(
-        private val customId: String?,
-        private val params: Params?,
+        private val customId: String,
+        private val params: Params,
         private val additionalProperties: Map<String, JsonValue>,
     ) {
 
@@ -337,7 +344,7 @@ constructor(
          *
          * Must be unique for each request within the Message Batch.
          */
-        @JsonProperty("custom_id") fun customId(): String? = customId
+        @JsonProperty("custom_id") fun customId(): String = customId
 
         /**
          * Messages API creation parameters for the individual request.
@@ -345,7 +352,7 @@ constructor(
          * See the [Messages API reference](/en/api/messages) for full documentation on available
          * parameters.
          */
-        @JsonProperty("params") fun params(): Params? = params
+        @JsonProperty("params") fun params(): Params = params
 
         @JsonAnyGetter
         @ExcludeMissing
@@ -366,9 +373,9 @@ constructor(
 
             @JvmSynthetic
             internal fun from(request: Request) = apply {
-                this.customId = request.customId
-                this.params = request.params
-                additionalProperties(request.additionalProperties)
+                customId = request.customId
+                params = request.params
+                additionalProperties = request.additionalProperties.toMutableMap()
             }
 
             /**
@@ -390,16 +397,22 @@ constructor(
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
-                this.additionalProperties.putAll(additionalProperties)
+                putAllAdditionalProperties(additionalProperties)
             }
 
             @JsonAnySetter
             fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                this.additionalProperties.put(key, value)
+                additionalProperties.put(key, value)
             }
 
             fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
             }
 
             fun build(): Request =
@@ -420,9 +433,9 @@ constructor(
         @NoAutoDetect
         class Params
         private constructor(
-            private val model: Model?,
-            private val messages: List<BetaMessageParam>?,
-            private val maxTokens: Long?,
+            private val model: Model,
+            private val messages: List<BetaMessageParam>,
+            private val maxTokens: Long,
             private val metadata: BetaMetadata?,
             private val stopSequences: List<String>?,
             private val stream: Boolean?,
@@ -440,7 +453,7 @@ constructor(
              * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
              * and options.
              */
-            @JsonProperty("model") fun model(): Model? = model
+            @JsonProperty("model") fun model(): Model = model
 
             /**
              * Input messages.
@@ -524,7 +537,7 @@ constructor(
              * top-level `system` parameter — there is no `"system"` role for input messages in the
              * Messages API.
              */
-            @JsonProperty("messages") fun messages(): List<BetaMessageParam>? = messages
+            @JsonProperty("messages") fun messages(): List<BetaMessageParam> = messages
 
             /**
              * The maximum number of tokens to generate before stopping.
@@ -535,10 +548,11 @@ constructor(
              * Different models have different maximum values for this parameter. See
              * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
              */
-            @JsonProperty("max_tokens") fun maxTokens(): Long? = maxTokens
+            @JsonProperty("max_tokens") fun maxTokens(): Long = maxTokens
 
             /** An object describing metadata about the request. */
-            @JsonProperty("metadata") fun metadata(): BetaMetadata? = metadata
+            @JsonProperty("metadata")
+            fun metadata(): Optional<BetaMetadata> = Optional.ofNullable(metadata)
 
             /**
              * Custom text sequences that will cause the model to stop generating.
@@ -551,14 +565,15 @@ constructor(
              * sequences, the response `stop_reason` value will be `"stop_sequence"` and the
              * response `stop_sequence` value will contain the matched stop sequence.
              */
-            @JsonProperty("stop_sequences") fun stopSequences(): List<String>? = stopSequences
+            @JsonProperty("stop_sequences")
+            fun stopSequences(): Optional<List<String>> = Optional.ofNullable(stopSequences)
 
             /**
              * Whether to incrementally stream the response using server-sent events.
              *
              * See [streaming](https://docs.anthropic.com/en/api/messages-streaming) for details.
              */
-            @JsonProperty("stream") fun stream(): Boolean? = stream
+            @JsonProperty("stream") fun stream(): Optional<Boolean> = Optional.ofNullable(stream)
 
             /**
              * System prompt.
@@ -567,7 +582,7 @@ constructor(
              * specifying a particular goal or role. See our
              * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
              */
-            @JsonProperty("system") fun system(): System? = system
+            @JsonProperty("system") fun system(): Optional<System> = Optional.ofNullable(system)
 
             /**
              * Amount of randomness injected into the response.
@@ -578,13 +593,15 @@ constructor(
              * Note that even with `temperature` of `0.0`, the results will not be fully
              * deterministic.
              */
-            @JsonProperty("temperature") fun temperature(): Double? = temperature
+            @JsonProperty("temperature")
+            fun temperature(): Optional<Double> = Optional.ofNullable(temperature)
 
             /**
              * How the model should use the provided tools. The model can use a specific tool, any
              * available tool, or decide by itself.
              */
-            @JsonProperty("tool_choice") fun toolChoice(): BetaToolChoice? = toolChoice
+            @JsonProperty("tool_choice")
+            fun toolChoice(): Optional<BetaToolChoice> = Optional.ofNullable(toolChoice)
 
             /**
              * Definitions of tools that the model may use.
@@ -651,7 +668,8 @@ constructor(
              *
              * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
              */
-            @JsonProperty("tools") fun tools(): List<BetaToolUnion>? = tools
+            @JsonProperty("tools")
+            fun tools(): Optional<List<BetaToolUnion>> = Optional.ofNullable(tools)
 
             /**
              * Only sample from the top K options for each subsequent token.
@@ -661,7 +679,7 @@ constructor(
              *
              * Recommended for advanced use cases only. You usually only need to use `temperature`.
              */
-            @JsonProperty("top_k") fun topK(): Long? = topK
+            @JsonProperty("top_k") fun topK(): Optional<Long> = Optional.ofNullable(topK)
 
             /**
              * Use nucleus sampling.
@@ -673,7 +691,7 @@ constructor(
              *
              * Recommended for advanced use cases only. You usually only need to use `temperature`.
              */
-            @JsonProperty("top_p") fun topP(): Double? = topP
+            @JsonProperty("top_p") fun topP(): Optional<Double> = Optional.ofNullable(topP)
 
             @JsonAnyGetter
             @ExcludeMissing
@@ -704,19 +722,19 @@ constructor(
 
                 @JvmSynthetic
                 internal fun from(params: Params) = apply {
-                    this.model = params.model
-                    this.messages = params.messages
-                    this.maxTokens = params.maxTokens
-                    this.metadata = params.metadata
-                    this.stopSequences = params.stopSequences
-                    this.stream = params.stream
-                    this.system = params.system
-                    this.temperature = params.temperature
-                    this.toolChoice = params.toolChoice
-                    this.tools = params.tools
-                    this.topK = params.topK
-                    this.topP = params.topP
-                    additionalProperties(params.additionalProperties)
+                    model = params.model
+                    messages = params.messages.toMutableList()
+                    maxTokens = params.maxTokens
+                    metadata = params.metadata
+                    stopSequences = params.stopSequences?.toMutableList()
+                    stream = params.stream
+                    system = params.system
+                    temperature = params.temperature
+                    toolChoice = params.toolChoice
+                    tools = params.tools?.toMutableList()
+                    topK = params.topK
+                    topP = params.topP
+                    additionalProperties = params.additionalProperties.toMutableMap()
                 }
 
                 /**
@@ -974,18 +992,26 @@ constructor(
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                     this.additionalProperties.clear()
-                    this.additionalProperties.putAll(additionalProperties)
+                    putAllAdditionalProperties(additionalProperties)
                 }
 
                 @JsonAnySetter
                 fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                    this.additionalProperties.put(key, value)
+                    additionalProperties.put(key, value)
                 }
 
                 fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
                     apply {
                         this.additionalProperties.putAll(additionalProperties)
                     }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
                 fun build(): Params =
                     Params(
@@ -1015,8 +1041,6 @@ constructor(
                 private val _json: JsonValue? = null,
             ) {
 
-                private var validated: Boolean = false
-
                 fun string(): Optional<String> = Optional.ofNullable(string)
 
                 fun betaTextBlockParams(): Optional<List<BetaTextBlockParam>> =
@@ -1039,16 +1063,6 @@ constructor(
                         betaTextBlockParams != null ->
                             visitor.visitBetaTextBlockParams(betaTextBlockParams)
                         else -> visitor.unknown(_json)
-                    }
-                }
-
-                fun validate(): System = apply {
-                    if (!validated) {
-                        if (string == null && betaTextBlockParams == null) {
-                            throw AnthropicInvalidDataException("Unknown System: $_json")
-                        }
-                        betaTextBlockParams?.forEach { it.validate() }
-                        validated = true
                     }
                 }
 
@@ -1099,12 +1113,9 @@ constructor(
                         tryDeserialize(node, jacksonTypeRef<String>())?.let {
                             return System(string = it, _json = json)
                         }
-                        tryDeserialize(node, jacksonTypeRef<List<BetaTextBlockParam>>()) {
-                                it.forEach { it.validate() }
-                            }
-                            ?.let {
-                                return System(betaTextBlockParams = it, _json = json)
-                            }
+                        tryDeserialize(node, jacksonTypeRef<List<BetaTextBlockParam>>())?.let {
+                            return System(betaTextBlockParams = it, _json = json)
+                        }
 
                         return System(_json = json)
                     }

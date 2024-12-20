@@ -128,9 +128,9 @@ class AnthropicOkHttpClientAsync private constructor() {
             clientOptions.responseValidation(responseValidation)
         }
 
-        fun apiKey(apiKey: String?) = apply { clientOptions.apiKey(apiKey) }
+        fun apiKey(apiKey: String) = apply { clientOptions.apiKey(apiKey) }
 
-        fun authToken(authToken: String?) = apply { clientOptions.authToken(authToken) }
+        fun authToken(authToken: String) = apply { clientOptions.authToken(authToken) }
 
         fun fromEnv() = apply { clientOptions.fromEnv() }
 

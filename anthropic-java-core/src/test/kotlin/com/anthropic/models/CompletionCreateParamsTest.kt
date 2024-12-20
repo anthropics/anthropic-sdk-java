@@ -40,11 +40,11 @@ class CompletionCreateParamsTest {
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
         assertThat(body.prompt()).isEqualTo("\n\nHuman: Hello, world!\n\nAssistant:")
         assertThat(body.metadata())
-            .isEqualTo(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
-        assertThat(body.stopSequences()).isEqualTo(listOf("string"))
-        assertThat(body.temperature()).isEqualTo(1.0)
-        assertThat(body.topK()).isEqualTo(5L)
-        assertThat(body.topP()).isEqualTo(0.7)
+            .contains(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
+        assertThat(body.stopSequences()).contains(listOf("string"))
+        assertThat(body.temperature()).contains(1.0)
+        assertThat(body.topK()).contains(5L)
+        assertThat(body.topP()).contains(0.7)
     }
 
     @Test

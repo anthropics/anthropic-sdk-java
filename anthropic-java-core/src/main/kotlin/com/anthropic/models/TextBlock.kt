@@ -26,14 +26,6 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
-    fun toParam(): TextBlockParam =
-        TextBlockParam.builder()
-            .text(text())
-            .type(TextBlockParam.Type.of(type().toString()))
-            .build()
-
-    private var validated: Boolean = false
-
     fun type(): Type = type.getRequired("type")
 
     fun text(): String = text.getRequired("text")
@@ -45,6 +37,14 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+    fun toParam(): TextBlockParam =
+        TextBlockParam.builder()
+            .text(text())
+            .type(TextBlockParam.Type.of(type().toString()))
+            .build()
+
+    private var validated: Boolean = false
 
     fun validate(): TextBlock = apply {
         if (!validated) {
@@ -69,9 +69,9 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(textBlock: TextBlock) = apply {
-            this.type = textBlock.type
-            this.text = textBlock.text
-            additionalProperties(textBlock.additionalProperties)
+            type = textBlock.type
+            text = textBlock.text
+            additionalProperties = textBlock.additionalProperties.toMutableMap()
         }
 
         fun type(type: Type) = type(JsonField.of(type))
@@ -88,16 +88,22 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): TextBlock =

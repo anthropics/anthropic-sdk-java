@@ -28,8 +28,6 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
-    private var validated: Boolean = false
-
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
@@ -46,6 +44,8 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+    private var validated: Boolean = false
 
     fun validate(): BetaImageBlockParam = apply {
         if (!validated) {
@@ -72,10 +72,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaImageBlockParam: BetaImageBlockParam) = apply {
-            this.cacheControl = betaImageBlockParam.cacheControl
-            this.type = betaImageBlockParam.type
-            this.source = betaImageBlockParam.source
-            additionalProperties(betaImageBlockParam.additionalProperties)
+            cacheControl = betaImageBlockParam.cacheControl
+            type = betaImageBlockParam.type
+            source = betaImageBlockParam.source
+            additionalProperties = betaImageBlockParam.additionalProperties.toMutableMap()
         }
 
         fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
@@ -101,16 +101,22 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): BetaImageBlockParam =
@@ -132,8 +138,6 @@ private constructor(
         private val additionalProperties: Map<String, JsonValue>,
     ) {
 
-        private var validated: Boolean = false
-
         fun type(): Type = type.getRequired("type")
 
         fun mediaType(): MediaType = mediaType.getRequired("media_type")
@@ -149,6 +153,8 @@ private constructor(
         @JsonAnyGetter
         @ExcludeMissing
         fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+        private var validated: Boolean = false
 
         fun validate(): Source = apply {
             if (!validated) {
@@ -175,10 +181,10 @@ private constructor(
 
             @JvmSynthetic
             internal fun from(source: Source) = apply {
-                this.type = source.type
-                this.mediaType = source.mediaType
-                this.data = source.data
-                additionalProperties(source.additionalProperties)
+                type = source.type
+                mediaType = source.mediaType
+                data = source.data
+                additionalProperties = source.additionalProperties.toMutableMap()
             }
 
             fun type(type: Type) = type(JsonField.of(type))
@@ -201,16 +207,22 @@ private constructor(
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
-                this.additionalProperties.putAll(additionalProperties)
+                putAllAdditionalProperties(additionalProperties)
             }
 
             @JsonAnySetter
             fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                this.additionalProperties.put(key, value)
+                additionalProperties.put(key, value)
             }
 
             fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
             }
 
             fun build(): Source =

@@ -28,8 +28,6 @@ private constructor(
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
-    private var validated: Boolean = false
-
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
@@ -57,6 +55,8 @@ private constructor(
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
+    private var validated: Boolean = false
+
     fun validate(): BetaToolTextEditor20241022 = apply {
         if (!validated) {
             cacheControl().map { it.validate() }
@@ -82,10 +82,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaToolTextEditor20241022: BetaToolTextEditor20241022) = apply {
-            this.cacheControl = betaToolTextEditor20241022.cacheControl
-            this.type = betaToolTextEditor20241022.type
-            this.name = betaToolTextEditor20241022.name
-            additionalProperties(betaToolTextEditor20241022.additionalProperties)
+            cacheControl = betaToolTextEditor20241022.cacheControl
+            type = betaToolTextEditor20241022.type
+            name = betaToolTextEditor20241022.name
+            additionalProperties = betaToolTextEditor20241022.additionalProperties.toMutableMap()
         }
 
         fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
@@ -121,16 +121,22 @@ private constructor(
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
         @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): BetaToolTextEditor20241022 =
