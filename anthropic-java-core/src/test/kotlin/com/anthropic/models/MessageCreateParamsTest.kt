@@ -15,7 +15,7 @@ class MessageCreateParamsTest {
             .messages(
                 listOf(
                     MessageParam.builder()
-                        .content(MessageParam.Content.ofString("string"))
+                        .content(MessageParam.Content.ofString("Hello, world"))
                         .role(MessageParam.Role.USER)
                         .build()
                 )
@@ -96,7 +96,7 @@ class MessageCreateParamsTest {
                 .messages(
                     listOf(
                         MessageParam.builder()
-                            .content(MessageParam.Content.ofString("string"))
+                            .content(MessageParam.Content.ofString("Hello, world"))
                             .role(MessageParam.Role.USER)
                             .build()
                     )
@@ -174,7 +174,7 @@ class MessageCreateParamsTest {
             .isEqualTo(
                 listOf(
                     MessageParam.builder()
-                        .content(MessageParam.Content.ofString("string"))
+                        .content(MessageParam.Content.ofString("Hello, world"))
                         .role(MessageParam.Role.USER)
                         .build()
                 )
@@ -258,7 +258,7 @@ class MessageCreateParamsTest {
                 .messages(
                     listOf(
                         MessageParam.builder()
-                            .content(MessageParam.Content.ofString("string"))
+                            .content(MessageParam.Content.ofString("Hello, world"))
                             .role(MessageParam.Role.USER)
                             .build()
                     )
@@ -272,7 +272,7 @@ class MessageCreateParamsTest {
             .isEqualTo(
                 listOf(
                     MessageParam.builder()
-                        .content(MessageParam.Content.ofString("string"))
+                        .content(MessageParam.Content.ofString("Hello, world"))
                         .role(MessageParam.Role.USER)
                         .build()
                 )
