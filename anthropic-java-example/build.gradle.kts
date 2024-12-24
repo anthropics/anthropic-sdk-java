@@ -1,13 +1,18 @@
 plugins {
+    id("anthropic.kotlin")
     id("java")
-}
-
-repositories {
-    mavenCentral()
+    application
 }
 
 dependencies {
-
     implementation(project(":anthropic-java"))
-    implementation(project(mapOf("path" to ":anthropic-java-core")))
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    // Allow using more modern APIs, like `List.of` and `Map.of`, in examples.
+    options.release.set(9)
+}
+
+application {
+    mainClass = "com.anthropic.example.Main"
 }
