@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.1.0-alpha.6 (2024-12-28)
+
+Full Changelog: [v0.1.0-alpha.5...v0.1.0-alpha.6](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0-alpha.5...v0.1.0-alpha.6)
+
+### Chores
+
+* bump testing data uri ([#27](https://github.com/anthropics/anthropic-sdk-java/issues/27)) ([3261fbe](https://github.com/anthropics/anthropic-sdk-java/commit/3261fbe5818d21b3423873472243bccb899cb469))
+* **docs:** add example project ([#25](https://github.com/anthropics/anthropic-sdk-java/issues/25)) ([9ba2956](https://github.com/anthropics/anthropic-sdk-java/commit/9ba2956a29bb23f00d2bb36fbf7563b552b56ede))
+* **docs:** fix code block language ([#28](https://github.com/anthropics/anthropic-sdk-java/issues/28)) ([a686284](https://github.com/anthropics/anthropic-sdk-java/commit/a686284937af4e0c8f9b936899464c8e7c89f302))
+* **docs:** update readme ([#24](https://github.com/anthropics/anthropic-sdk-java/issues/24)) ([d0891a2](https://github.com/anthropics/anthropic-sdk-java/commit/d0891a22de46658b1e82a3ebbe406f30ad69c387))
+* format example ([729ca6a](https://github.com/anthropics/anthropic-sdk-java/commit/729ca6a49260477a2846d1d3d6b214499ef97e1d))
+* update parameter examples in tests and docs ([#22](https://github.com/anthropics/anthropic-sdk-java/issues/22)) ([22fdc9c](https://github.com/anthropics/anthropic-sdk-java/commit/22fdc9c74f61fb6f634f2da28b0a6526e08652bd))
+
+
+### Documentation
+
+* add note about feedback ([79fc77b](https://github.com/anthropics/anthropic-sdk-java/commit/79fc77bb42a65585f8478e00736470f5008384fc))
+
 ## 0.1.0-alpha.5 (2024-12-17)
 
 Full Changelog: [v0.1.0-alpha.4...v0.1.0-alpha.5](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0-alpha.4...v0.1.0-alpha.5)
