@@ -17,10 +17,23 @@ constructor(
     private val additionalQueryParams: QueryParams,
 ) {
 
+    /**
+     * ID of the object to use as a cursor for pagination. When provided, returns the page of
+     * results immediately after this object.
+     */
     fun afterId(): Optional<String> = Optional.ofNullable(afterId)
 
+    /**
+     * ID of the object to use as a cursor for pagination. When provided, returns the page of
+     * results immediately before this object.
+     */
     fun beforeId(): Optional<String> = Optional.ofNullable(beforeId)
 
+    /**
+     * Number of items to return per page.
+     *
+     * Defaults to `20`. Ranges from `1` to `1000`.
+     */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
     fun _additionalHeaders(): Headers = additionalHeaders

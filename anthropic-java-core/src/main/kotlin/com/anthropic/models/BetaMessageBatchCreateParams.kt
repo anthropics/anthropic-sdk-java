@@ -29,27 +29,27 @@ import java.util.Optional
 
 class BetaMessageBatchCreateParams
 constructor(
-    private val requests: List<Request>,
     private val betas: List<AnthropicBeta>?,
+    private val body: BetaMessageBatchCreateBody,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
-    private val additionalBodyProperties: Map<String, JsonValue>,
 ) {
 
-    fun requests(): List<Request> = requests
-
+    /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    /**
+     * List of requests for prompt completion. Each is an individual request to create a Message.
+     */
+    fun requests(): List<Request> = body.requests()
 
     fun _additionalHeaders(): Headers = additionalHeaders
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
+    fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
-    @JvmSynthetic
-    internal fun getBody(): BetaMessageBatchCreateBody {
-        return BetaMessageBatchCreateBody(requests, additionalBodyProperties)
-    }
+    @JvmSynthetic internal fun getBody(): BetaMessageBatchCreateBody = body
 
     @JvmSynthetic
     internal fun getHeaders(): Headers {
@@ -89,7 +89,7 @@ constructor(
 
         class Builder {
 
-            private var requests: List<Request>? = null
+            private var requests: MutableList<Request>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -103,7 +103,17 @@ constructor(
              * List of requests for prompt completion. Each is an individual request to create a
              * Message.
              */
-            fun requests(requests: List<Request>) = apply { this.requests = requests }
+            fun requests(requests: List<Request>) = apply {
+                this.requests = requests.toMutableList()
+            }
+
+            /**
+             * List of requests for prompt completion. Each is an individual request to create a
+             * Message.
+             */
+            fun addRequest(request: Request) = apply {
+                requests = (requests ?: mutableListOf()).apply { add(request) }
+            }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -160,45 +170,38 @@ constructor(
     @NoAutoDetect
     class Builder {
 
-        private var requests: MutableList<Request> = mutableListOf()
-        private var betas: MutableList<AnthropicBeta> = mutableListOf()
+        private var betas: MutableList<AnthropicBeta>? = null
+        private var body: BetaMessageBatchCreateBody.Builder = BetaMessageBatchCreateBody.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
-        private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaMessageBatchCreateParams: BetaMessageBatchCreateParams) = apply {
-            requests = betaMessageBatchCreateParams.requests.toMutableList()
-            betas = betaMessageBatchCreateParams.betas?.toMutableList() ?: mutableListOf()
+            betas = betaMessageBatchCreateParams.betas?.toMutableList()
+            body = betaMessageBatchCreateParams.body.toBuilder()
             additionalHeaders = betaMessageBatchCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = betaMessageBatchCreateParams.additionalQueryParams.toBuilder()
-            additionalBodyProperties =
-                betaMessageBatchCreateParams.additionalBodyProperties.toMutableMap()
+        }
+
+        /** Optional header to specify the beta version(s) you want to use. */
+        fun betas(betas: List<AnthropicBeta>) = apply { this.betas = betas.toMutableList() }
+
+        /** Optional header to specify the beta version(s) you want to use. */
+        fun addBeta(beta: AnthropicBeta) = apply {
+            betas = (betas ?: mutableListOf()).apply { add(beta) }
         }
 
         /**
          * List of requests for prompt completion. Each is an individual request to create a
          * Message.
          */
-        fun requests(requests: List<Request>) = apply {
-            this.requests.clear()
-            this.requests.addAll(requests)
-        }
+        fun requests(requests: List<Request>) = apply { body.requests(requests) }
 
         /**
          * List of requests for prompt completion. Each is an individual request to create a
          * Message.
          */
-        fun addRequest(request: Request) = apply { this.requests.add(request) }
-
-        /** Optional header to specify the beta version(s) you want to use. */
-        fun betas(betas: List<AnthropicBeta>) = apply {
-            this.betas.clear()
-            this.betas.addAll(betas)
-        }
-
-        /** Optional header to specify the beta version(s) you want to use. */
-        fun addBeta(beta: AnthropicBeta) = apply { this.betas.add(beta) }
+        fun addRequest(request: Request) = apply { body.addRequest(request) }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -299,34 +302,30 @@ constructor(
         }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
-            this.additionalBodyProperties.clear()
-            putAllAdditionalBodyProperties(additionalBodyProperties)
+            body.additionalProperties(additionalBodyProperties)
         }
 
         fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
-            additionalBodyProperties.put(key, value)
+            body.putAdditionalProperty(key, value)
         }
 
         fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
             apply {
-                this.additionalBodyProperties.putAll(additionalBodyProperties)
+                body.putAllAdditionalProperties(additionalBodyProperties)
             }
 
-        fun removeAdditionalBodyProperty(key: String) = apply {
-            additionalBodyProperties.remove(key)
-        }
+        fun removeAdditionalBodyProperty(key: String) = apply { body.removeAdditionalProperty(key) }
 
         fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalBodyProperty)
+            body.removeAllAdditionalProperties(keys)
         }
 
         fun build(): BetaMessageBatchCreateParams =
             BetaMessageBatchCreateParams(
-                requests.toImmutable(),
-                betas.toImmutable().ifEmpty { null },
+                betas?.toImmutable(),
+                body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
-                additionalBodyProperties.toImmutable(),
             )
     }
 
@@ -708,15 +707,15 @@ constructor(
             class Builder {
 
                 private var model: Model? = null
-                private var messages: List<BetaMessageParam>? = null
+                private var messages: MutableList<BetaMessageParam>? = null
                 private var maxTokens: Long? = null
                 private var metadata: BetaMetadata? = null
-                private var stopSequences: List<String>? = null
+                private var stopSequences: MutableList<String>? = null
                 private var stream: Boolean? = null
                 private var system: System? = null
                 private var temperature: Double? = null
                 private var toolChoice: BetaToolChoice? = null
-                private var tools: List<BetaToolUnion>? = null
+                private var tools: MutableList<BetaToolUnion>? = null
                 private var topK: Long? = null
                 private var topP: Double? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -744,6 +743,13 @@ constructor(
                  * details and options.
                  */
                 fun model(model: Model) = apply { this.model = model }
+
+                /**
+                 * The model that will complete your prompt.\n\nSee
+                 * [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+                 * details and options.
+                 */
+                fun model(value: String) = apply { model = Model.of(value) }
 
                 /**
                  * Input messages.
@@ -827,7 +833,179 @@ constructor(
                  * the top-level `system` parameter — there is no `"system"` role for input messages
                  * in the Messages API.
                  */
-                fun messages(messages: List<BetaMessageParam>) = apply { this.messages = messages }
+                fun messages(messages: List<BetaMessageParam>) = apply {
+                    this.messages = messages.toMutableList()
+                }
+
+                /**
+                 * Input messages.
+                 *
+                 * Our models are trained to operate on alternating `user` and `assistant`
+                 * conversational turns. When creating a new `Message`, you specify the prior
+                 * conversational turns with the `messages` parameter, and the model then generates
+                 * the next `Message` in the conversation. Consecutive `user` or `assistant` turns
+                 * in your request will be combined into a single turn.
+                 *
+                 * Each input message must be an object with a `role` and `content`. You can specify
+                 * a single `user`-role message, or you can include multiple `user` and `assistant`
+                 * messages.
+                 *
+                 * If the final message uses the `assistant` role, the response content will
+                 * continue immediately from the content in that message. This can be used to
+                 * constrain part of the model's response.
+                 *
+                 * Example with a single `user` message:
+                 * ```json
+                 * [{ "role": "user", "content": "Hello, Claude" }]
+                 * ```
+                 *
+                 * Example with multiple conversational turns:
+                 * ```json
+                 * [
+                 *   { "role": "user", "content": "Hello there." },
+                 *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
+                 *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
+                 * ]
+                 * ```
+                 *
+                 * Example with a partially-filled response from Claude:
+                 * ```json
+                 * [
+                 *   {
+                 *     "role": "user",
+                 *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
+                 *   },
+                 *   { "role": "assistant", "content": "The best answer is (" }
+                 * ]
+                 * ```
+                 *
+                 * Each input message `content` may be either a single `string` or an array of
+                 * content blocks, where each block has a specific `type`. Using a `string` for
+                 * `content` is shorthand for an array of one content block of type `"text"`. The
+                 * following input messages are equivalent:
+                 * ```json
+                 * { "role": "user", "content": "Hello, Claude" }
+                 * ```
+                 * ```json
+                 * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
+                 * ```
+                 *
+                 * Starting with Claude 3 models, you can also send image content blocks:
+                 * ```json
+                 * {
+                 *   "role": "user",
+                 *   "content": [
+                 *     {
+                 *       "type": "image",
+                 *       "source": {
+                 *         "type": "base64",
+                 *         "media_type": "image/jpeg",
+                 *         "data": "/9j/4AAQSkZJRg..."
+                 *       }
+                 *     },
+                 *     { "type": "text", "text": "What is in this image?" }
+                 *   ]
+                 * }
+                 * ```
+                 *
+                 * We currently support the `base64` source type for images, and the `image/jpeg`,
+                 * `image/png`, `image/gif`, and `image/webp` media types.
+                 *
+                 * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for
+                 * more input examples.
+                 *
+                 * Note that if you want to include a
+                 * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use
+                 * the top-level `system` parameter — there is no `"system"` role for input messages
+                 * in the Messages API.
+                 */
+                fun addMessage(message: BetaMessageParam) = apply {
+                    messages = (messages ?: mutableListOf()).apply { add(message) }
+                }
+
+                /**
+                 * Input messages.
+                 *
+                 * Our models are trained to operate on alternating `user` and `assistant`
+                 * conversational turns. When creating a new `Message`, you specify the prior
+                 * conversational turns with the `messages` parameter, and the model then generates
+                 * the next `Message` in the conversation. Consecutive `user` or `assistant` turns
+                 * in your request will be combined into a single turn.
+                 *
+                 * Each input message must be an object with a `role` and `content`. You can specify
+                 * a single `user`-role message, or you can include multiple `user` and `assistant`
+                 * messages.
+                 *
+                 * If the final message uses the `assistant` role, the response content will
+                 * continue immediately from the content in that message. This can be used to
+                 * constrain part of the model's response.
+                 *
+                 * Example with a single `user` message:
+                 * ```json
+                 * [{ "role": "user", "content": "Hello, Claude" }]
+                 * ```
+                 *
+                 * Example with multiple conversational turns:
+                 * ```json
+                 * [
+                 *   { "role": "user", "content": "Hello there." },
+                 *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
+                 *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
+                 * ]
+                 * ```
+                 *
+                 * Example with a partially-filled response from Claude:
+                 * ```json
+                 * [
+                 *   {
+                 *     "role": "user",
+                 *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
+                 *   },
+                 *   { "role": "assistant", "content": "The best answer is (" }
+                 * ]
+                 * ```
+                 *
+                 * Each input message `content` may be either a single `string` or an array of
+                 * content blocks, where each block has a specific `type`. Using a `string` for
+                 * `content` is shorthand for an array of one content block of type `"text"`. The
+                 * following input messages are equivalent:
+                 * ```json
+                 * { "role": "user", "content": "Hello, Claude" }
+                 * ```
+                 * ```json
+                 * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
+                 * ```
+                 *
+                 * Starting with Claude 3 models, you can also send image content blocks:
+                 * ```json
+                 * {
+                 *   "role": "user",
+                 *   "content": [
+                 *     {
+                 *       "type": "image",
+                 *       "source": {
+                 *         "type": "base64",
+                 *         "media_type": "image/jpeg",
+                 *         "data": "/9j/4AAQSkZJRg..."
+                 *       }
+                 *     },
+                 *     { "type": "text", "text": "What is in this image?" }
+                 *   ]
+                 * }
+                 * ```
+                 *
+                 * We currently support the `base64` source type for images, and the `image/jpeg`,
+                 * `image/png`, `image/gif`, and `image/webp` media types.
+                 *
+                 * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for
+                 * more input examples.
+                 *
+                 * Note that if you want to include a
+                 * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use
+                 * the top-level `system` parameter — there is no `"system"` role for input messages
+                 * in the Messages API.
+                 */
+                fun addMessage(message: BetaMessage) = addMessage(message.toParam())
 
                 /**
                  * The maximum number of tokens to generate before stopping.
@@ -855,7 +1033,22 @@ constructor(
                  * and the response `stop_sequence` value will contain the matched stop sequence.
                  */
                 fun stopSequences(stopSequences: List<String>) = apply {
-                    this.stopSequences = stopSequences
+                    this.stopSequences = stopSequences.toMutableList()
+                }
+
+                /**
+                 * Custom text sequences that will cause the model to stop generating.
+                 *
+                 * Our models will normally stop when they have naturally completed their turn,
+                 * which will result in a response `stop_reason` of `"end_turn"`.
+                 *
+                 * If you want the model to stop generating when it encounters custom strings of
+                 * text, you can use the `stop_sequences` parameter. If the model encounters one of
+                 * the custom sequences, the response `stop_reason` value will be `"stop_sequence"`
+                 * and the response `stop_sequence` value will contain the matched stop sequence.
+                 */
+                fun addStopSequence(stopSequence: String) = apply {
+                    stopSequences = (stopSequences ?: mutableListOf()).apply { add(stopSequence) }
                 }
 
                 /**
@@ -875,6 +1068,13 @@ constructor(
                  */
                 fun system(system: System) = apply { this.system = system }
 
+                fun system(string: String) = apply { this.system = System.ofString(string) }
+
+                fun systemOfBetaTextBlockParams(betaTextBlockParams: List<BetaTextBlockParam>) =
+                    apply {
+                        this.system = System.ofBetaTextBlockParams(betaTextBlockParams)
+                    }
+
                 /**
                  * Amount of randomness injected into the response.
                  *
@@ -892,6 +1092,21 @@ constructor(
                  * any available tool, or decide by itself.
                  */
                 fun toolChoice(toolChoice: BetaToolChoice) = apply { this.toolChoice = toolChoice }
+
+                /** The model will automatically decide whether to use tools. */
+                fun toolChoice(betaToolChoiceAuto: BetaToolChoiceAuto) = apply {
+                    this.toolChoice = BetaToolChoice.ofBetaToolChoiceAuto(betaToolChoiceAuto)
+                }
+
+                /** The model will use any available tools. */
+                fun toolChoice(betaToolChoiceAny: BetaToolChoiceAny) = apply {
+                    this.toolChoice = BetaToolChoice.ofBetaToolChoiceAny(betaToolChoiceAny)
+                }
+
+                /** The model will use the specified tool with `tool_choice.name`. */
+                fun toolChoice(betaToolChoiceTool: BetaToolChoiceTool) = apply {
+                    this.toolChoice = BetaToolChoice.ofBetaToolChoiceTool(betaToolChoiceTool)
+                }
 
                 /**
                  * Definitions of tools that the model may use.
@@ -958,7 +1173,76 @@ constructor(
                  *
                  * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
                  */
-                fun tools(tools: List<BetaToolUnion>) = apply { this.tools = tools }
+                fun tools(tools: List<BetaToolUnion>) = apply { this.tools = tools.toMutableList() }
+
+                /**
+                 * Definitions of tools that the model may use.
+                 *
+                 * If you include `tools` in your API request, the model may return `tool_use`
+                 * content blocks that represent the model's use of those tools. You can then run
+                 * those tools using the tool input generated by the model and then optionally
+                 * return results back to the model using `tool_result` content blocks.
+                 *
+                 * Each tool definition includes:
+                 * - `name`: Name of the tool.
+                 * - `description`: Optional, but strongly-recommended description of the tool.
+                 * - `input_schema`: [JSON schema](https://json-schema.org/) for the tool `input`
+                 *   shape that the model will produce in `tool_use` output content blocks.
+                 *
+                 * For example, if you defined `tools` as:
+                 * ```json
+                 * [
+                 *   {
+                 *     "name": "get_stock_price",
+                 *     "description": "Get the current stock price for a given ticker symbol.",
+                 *     "input_schema": {
+                 *       "type": "object",
+                 *       "properties": {
+                 *         "ticker": {
+                 *           "type": "string",
+                 *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
+                 *         }
+                 *       },
+                 *       "required": ["ticker"]
+                 *     }
+                 *   }
+                 * ]
+                 * ```
+                 *
+                 * And then asked the model "What's the S&P 500 at today?", the model might produce
+                 * `tool_use` content blocks in the response like this:
+                 * ```json
+                 * [
+                 *   {
+                 *     "type": "tool_use",
+                 *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+                 *     "name": "get_stock_price",
+                 *     "input": { "ticker": "^GSPC" }
+                 *   }
+                 * ]
+                 * ```
+                 *
+                 * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an
+                 * input, and return the following back to the model in a subsequent `user` message:
+                 * ```json
+                 * [
+                 *   {
+                 *     "type": "tool_result",
+                 *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+                 *     "content": "259.75 USD"
+                 *   }
+                 * ]
+                 * ```
+                 *
+                 * Tools can be used for workflows that include running client-side tools and
+                 * functions, or more generally whenever you want the model to produce a particular
+                 * JSON structure of output.
+                 *
+                 * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+                 */
+                fun addTool(tool: BetaToolUnion) = apply {
+                    tools = (tools ?: mutableListOf()).apply { add(tool) }
+                }
 
                 /**
                  * Only sample from the top K options for each subsequent token.
@@ -1173,11 +1457,11 @@ constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaMessageBatchCreateParams && requests == other.requests && betas == other.betas && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams && additionalBodyProperties == other.additionalBodyProperties /* spotless:on */
+        return /* spotless:off */ other is BetaMessageBatchCreateParams && betas == other.betas && body == other.body && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(requests, betas, additionalHeaders, additionalQueryParams, additionalBodyProperties) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betas, body, additionalHeaders, additionalQueryParams) /* spotless:on */
 
     override fun toString() =
-        "BetaMessageBatchCreateParams{requests=$requests, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "BetaMessageBatchCreateParams{betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -18,55 +18,91 @@ import java.util.Optional
 
 class CompletionCreateParams
 constructor(
-    private val maxTokensToSample: Long,
-    private val model: Model,
-    private val prompt: String,
-    private val metadata: Metadata?,
-    private val stopSequences: List<String>?,
-    private val temperature: Double?,
-    private val topK: Long?,
-    private val topP: Double?,
+    private val body: CompletionCreateBody,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
-    private val additionalBodyProperties: Map<String, JsonValue>,
 ) {
 
-    fun maxTokensToSample(): Long = maxTokensToSample
+    /**
+     * The maximum number of tokens to generate before stopping.
+     *
+     * Note that our models may stop _before_ reaching this maximum. This parameter only specifies
+     * the absolute maximum number of tokens to generate.
+     */
+    fun maxTokensToSample(): Long = body.maxTokensToSample()
 
-    fun model(): Model = model
+    /**
+     * The model that will complete your prompt.\n\nSee
+     * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
+     * options.
+     */
+    fun model(): Model = body.model()
 
-    fun prompt(): String = prompt
+    /**
+     * The prompt that you want Claude to complete.
+     *
+     * For proper response generation you will need to format your prompt using alternating
+     * `\n\nHuman:` and `\n\nAssistant:` conversational turns. For example:
+     * ```
+     * "\n\nHuman: {userQuestion}\n\nAssistant:"
+     * ```
+     *
+     * See [prompt validation](https://docs.anthropic.com/en/api/prompt-validation) and our guide to
+     * [prompt design](https://docs.anthropic.com/en/docs/intro-to-prompting) for more details.
+     */
+    fun prompt(): String = body.prompt()
 
-    fun metadata(): Optional<Metadata> = Optional.ofNullable(metadata)
+    /** An object describing metadata about the request. */
+    fun metadata(): Optional<Metadata> = body.metadata()
 
-    fun stopSequences(): Optional<List<String>> = Optional.ofNullable(stopSequences)
+    /**
+     * Sequences that will cause the model to stop generating.
+     *
+     * Our models stop on `"\n\nHuman:"`, and may include additional built-in stop sequences in the
+     * future. By providing the stop_sequences parameter, you may include additional strings that
+     * will cause the model to stop generating.
+     */
+    fun stopSequences(): Optional<List<String>> = body.stopSequences()
 
-    fun temperature(): Optional<Double> = Optional.ofNullable(temperature)
+    /**
+     * Amount of randomness injected into the response.
+     *
+     * Defaults to `1.0`. Ranges from `0.0` to `1.0`. Use `temperature` closer to `0.0` for
+     * analytical / multiple choice, and closer to `1.0` for creative and generative tasks.
+     *
+     * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
+     */
+    fun temperature(): Optional<Double> = body.temperature()
 
-    fun topK(): Optional<Long> = Optional.ofNullable(topK)
+    /**
+     * Only sample from the top K options for each subsequent token.
+     *
+     * Used to remove "long tail" low probability responses.
+     * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
+     *
+     * Recommended for advanced use cases only. You usually only need to use `temperature`.
+     */
+    fun topK(): Optional<Long> = body.topK()
 
-    fun topP(): Optional<Double> = Optional.ofNullable(topP)
+    /**
+     * Use nucleus sampling.
+     *
+     * In nucleus sampling, we compute the cumulative distribution over all the options for each
+     * subsequent token in decreasing probability order and cut it off once it reaches a particular
+     * probability specified by `top_p`. You should either alter `temperature` or `top_p`, but not
+     * both.
+     *
+     * Recommended for advanced use cases only. You usually only need to use `temperature`.
+     */
+    fun topP(): Optional<Double> = body.topP()
 
     fun _additionalHeaders(): Headers = additionalHeaders
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
+    fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
-    @JvmSynthetic
-    internal fun getBody(): CompletionCreateBody {
-        return CompletionCreateBody(
-            maxTokensToSample,
-            model,
-            prompt,
-            metadata,
-            stopSequences,
-            temperature,
-            topK,
-            topP,
-            additionalBodyProperties,
-        )
-    }
+    @JvmSynthetic internal fun getBody(): CompletionCreateBody = body
 
     @JvmSynthetic internal fun getHeaders(): Headers = additionalHeaders
 
@@ -181,7 +217,7 @@ constructor(
             private var model: Model? = null
             private var prompt: String? = null
             private var metadata: Metadata? = null
-            private var stopSequences: List<String>? = null
+            private var stopSequences: MutableList<String>? = null
             private var temperature: Double? = null
             private var topK: Long? = null
             private var topP: Double? = null
@@ -218,6 +254,13 @@ constructor(
             fun model(model: Model) = apply { this.model = model }
 
             /**
+             * The model that will complete your prompt.\n\nSee
+             * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
+             * and options.
+             */
+            fun model(value: String) = apply { model = Model.of(value) }
+
+            /**
              * The prompt that you want Claude to complete.
              *
              * For proper response generation you will need to format your prompt using alternating
@@ -243,7 +286,18 @@ constructor(
              * strings that will cause the model to stop generating.
              */
             fun stopSequences(stopSequences: List<String>) = apply {
-                this.stopSequences = stopSequences
+                this.stopSequences = stopSequences.toMutableList()
+            }
+
+            /**
+             * Sequences that will cause the model to stop generating.
+             *
+             * Our models stop on `"\n\nHuman:"`, and may include additional built-in stop sequences
+             * in the future. By providing the stop_sequences parameter, you may include additional
+             * strings that will cause the model to stop generating.
+             */
+            fun addStopSequence(stopSequence: String) = apply {
+                stopSequences = (stopSequences ?: mutableListOf()).apply { add(stopSequence) }
             }
 
             /**
@@ -342,32 +396,15 @@ constructor(
     @NoAutoDetect
     class Builder {
 
-        private var maxTokensToSample: Long? = null
-        private var model: Model? = null
-        private var prompt: String? = null
-        private var metadata: Metadata? = null
-        private var stopSequences: MutableList<String> = mutableListOf()
-        private var temperature: Double? = null
-        private var topK: Long? = null
-        private var topP: Double? = null
+        private var body: CompletionCreateBody.Builder = CompletionCreateBody.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
-        private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(completionCreateParams: CompletionCreateParams) = apply {
-            maxTokensToSample = completionCreateParams.maxTokensToSample
-            model = completionCreateParams.model
-            prompt = completionCreateParams.prompt
-            metadata = completionCreateParams.metadata
-            stopSequences = completionCreateParams.stopSequences?.toMutableList() ?: mutableListOf()
-            temperature = completionCreateParams.temperature
-            topK = completionCreateParams.topK
-            topP = completionCreateParams.topP
+            body = completionCreateParams.body.toBuilder()
             additionalHeaders = completionCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = completionCreateParams.additionalQueryParams.toBuilder()
-            additionalBodyProperties =
-                completionCreateParams.additionalBodyProperties.toMutableMap()
         }
 
         /**
@@ -377,7 +414,7 @@ constructor(
          * specifies the absolute maximum number of tokens to generate.
          */
         fun maxTokensToSample(maxTokensToSample: Long) = apply {
-            this.maxTokensToSample = maxTokensToSample
+            body.maxTokensToSample(maxTokensToSample)
         }
 
         /**
@@ -385,14 +422,14 @@ constructor(
          * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
          * options.
          */
-        fun model(model: Model) = apply { this.model = model }
+        fun model(model: Model) = apply { body.model(model) }
 
         /**
          * The model that will complete your prompt.\n\nSee
          * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
          * options.
          */
-        fun model(value: String) = apply { this.model = Model.of(value) }
+        fun model(value: String) = apply { body.model(value) }
 
         /**
          * The prompt that you want Claude to complete.
@@ -407,10 +444,10 @@ constructor(
          * guide to [prompt design](https://docs.anthropic.com/en/docs/intro-to-prompting) for more
          * details.
          */
-        fun prompt(prompt: String) = apply { this.prompt = prompt }
+        fun prompt(prompt: String) = apply { body.prompt(prompt) }
 
         /** An object describing metadata about the request. */
-        fun metadata(metadata: Metadata) = apply { this.metadata = metadata }
+        fun metadata(metadata: Metadata) = apply { body.metadata(metadata) }
 
         /**
          * Sequences that will cause the model to stop generating.
@@ -419,10 +456,7 @@ constructor(
          * the future. By providing the stop_sequences parameter, you may include additional strings
          * that will cause the model to stop generating.
          */
-        fun stopSequences(stopSequences: List<String>) = apply {
-            this.stopSequences.clear()
-            this.stopSequences.addAll(stopSequences)
-        }
+        fun stopSequences(stopSequences: List<String>) = apply { body.stopSequences(stopSequences) }
 
         /**
          * Sequences that will cause the model to stop generating.
@@ -431,7 +465,7 @@ constructor(
          * the future. By providing the stop_sequences parameter, you may include additional strings
          * that will cause the model to stop generating.
          */
-        fun addStopSequence(stopSequence: String) = apply { this.stopSequences.add(stopSequence) }
+        fun addStopSequence(stopSequence: String) = apply { body.addStopSequence(stopSequence) }
 
         /**
          * Amount of randomness injected into the response.
@@ -441,7 +475,7 @@ constructor(
          *
          * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
          */
-        fun temperature(temperature: Double) = apply { this.temperature = temperature }
+        fun temperature(temperature: Double) = apply { body.temperature(temperature) }
 
         /**
          * Only sample from the top K options for each subsequent token.
@@ -451,7 +485,7 @@ constructor(
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
          */
-        fun topK(topK: Long) = apply { this.topK = topK }
+        fun topK(topK: Long) = apply { body.topK(topK) }
 
         /**
          * Use nucleus sampling.
@@ -463,7 +497,7 @@ constructor(
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
          */
-        fun topP(topP: Double) = apply { this.topP = topP }
+        fun topP(topP: Double) = apply { body.topP(topP) }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -564,42 +598,29 @@ constructor(
         }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
-            this.additionalBodyProperties.clear()
-            putAllAdditionalBodyProperties(additionalBodyProperties)
+            body.additionalProperties(additionalBodyProperties)
         }
 
         fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
-            additionalBodyProperties.put(key, value)
+            body.putAdditionalProperty(key, value)
         }
 
         fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
             apply {
-                this.additionalBodyProperties.putAll(additionalBodyProperties)
+                body.putAllAdditionalProperties(additionalBodyProperties)
             }
 
-        fun removeAdditionalBodyProperty(key: String) = apply {
-            additionalBodyProperties.remove(key)
-        }
+        fun removeAdditionalBodyProperty(key: String) = apply { body.removeAdditionalProperty(key) }
 
         fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalBodyProperty)
+            body.removeAllAdditionalProperties(keys)
         }
 
         fun build(): CompletionCreateParams =
             CompletionCreateParams(
-                checkNotNull(maxTokensToSample) {
-                    "`maxTokensToSample` is required but was not set"
-                },
-                checkNotNull(model) { "`model` is required but was not set" },
-                checkNotNull(prompt) { "`prompt` is required but was not set" },
-                metadata,
-                stopSequences.toImmutable().ifEmpty { null },
-                temperature,
-                topK,
-                topP,
+                body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
-                additionalBodyProperties.toImmutable(),
             )
     }
 
@@ -608,11 +629,11 @@ constructor(
             return true
         }
 
-        return /* spotless:off */ other is CompletionCreateParams && maxTokensToSample == other.maxTokensToSample && model == other.model && prompt == other.prompt && metadata == other.metadata && stopSequences == other.stopSequences && temperature == other.temperature && topK == other.topK && topP == other.topP && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams && additionalBodyProperties == other.additionalBodyProperties /* spotless:on */
+        return /* spotless:off */ other is CompletionCreateParams && body == other.body && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(maxTokensToSample, model, prompt, metadata, stopSequences, temperature, topK, topP, additionalHeaders, additionalQueryParams, additionalBodyProperties) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(body, additionalHeaders, additionalQueryParams) /* spotless:on */
 
     override fun toString() =
-        "CompletionCreateParams{maxTokensToSample=$maxTokensToSample, model=$model, prompt=$prompt, metadata=$metadata, stopSequences=$stopSequences, temperature=$temperature, topK=$topK, topP=$topP, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "CompletionCreateParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
