@@ -18,6 +18,10 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * How the model should use the provided tools. The model can use a specific tool, any available
+ * tool, or decide by itself.
+ */
 @JsonDeserialize(using = ToolChoice.Deserializer::class)
 @JsonSerialize(using = ToolChoice.Serializer::class)
 class ToolChoice
@@ -43,10 +47,11 @@ private constructor(
 
     fun isToolChoiceTool(): Boolean = toolChoiceTool != null
 
+    /** The model will automatically decide whether to use tools. */
     fun asToolChoiceAuto(): ToolChoiceAuto = toolChoiceAuto.getOrThrow("toolChoiceAuto")
-
+    /** The model will use any available tools. */
     fun asToolChoiceAny(): ToolChoiceAny = toolChoiceAny.getOrThrow("toolChoiceAny")
-
+    /** The model will use the specified tool with `tool_choice.name`. */
     fun asToolChoiceTool(): ToolChoiceTool = toolChoiceTool.getOrThrow("toolChoiceTool")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
@@ -93,14 +98,17 @@ private constructor(
 
     companion object {
 
+        /** The model will automatically decide whether to use tools. */
         @JvmStatic
         fun ofToolChoiceAuto(toolChoiceAuto: ToolChoiceAuto) =
             ToolChoice(toolChoiceAuto = toolChoiceAuto)
 
+        /** The model will use any available tools. */
         @JvmStatic
         fun ofToolChoiceAny(toolChoiceAny: ToolChoiceAny) =
             ToolChoice(toolChoiceAny = toolChoiceAny)
 
+        /** The model will use the specified tool with `tool_choice.name`. */
         @JvmStatic
         fun ofToolChoiceTool(toolChoiceTool: ToolChoiceTool) =
             ToolChoice(toolChoiceTool = toolChoiceTool)
