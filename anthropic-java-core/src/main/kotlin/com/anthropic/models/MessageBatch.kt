@@ -8,35 +8,49 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.time.OffsetDateTime
 import java.util.Objects
 import java.util.Optional
 
-@JsonDeserialize(builder = MessageBatch.Builder::class)
 @NoAutoDetect
 class MessageBatch
+@JsonCreator
 private constructor(
-    private val id: JsonField<String>,
-    private val type: JsonField<Type>,
-    private val processingStatus: JsonField<ProcessingStatus>,
-    private val requestCounts: JsonField<MessageBatchRequestCounts>,
-    private val endedAt: JsonField<OffsetDateTime>,
-    private val createdAt: JsonField<OffsetDateTime>,
-    private val expiresAt: JsonField<OffsetDateTime>,
-    private val archivedAt: JsonField<OffsetDateTime>,
-    private val cancelInitiatedAt: JsonField<OffsetDateTime>,
-    private val resultsUrl: JsonField<String>,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+    @JsonProperty("processing_status")
+    @ExcludeMissing
+    private val processingStatus: JsonField<ProcessingStatus> = JsonMissing.of(),
+    @JsonProperty("request_counts")
+    @ExcludeMissing
+    private val requestCounts: JsonField<MessageBatchRequestCounts> = JsonMissing.of(),
+    @JsonProperty("ended_at")
+    @ExcludeMissing
+    private val endedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+    @JsonProperty("created_at")
+    @ExcludeMissing
+    private val createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+    @JsonProperty("expires_at")
+    @ExcludeMissing
+    private val expiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+    @JsonProperty("archived_at")
+    @ExcludeMissing
+    private val archivedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+    @JsonProperty("cancel_initiated_at")
+    @ExcludeMissing
+    private val cancelInitiatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+    @JsonProperty("results_url")
+    @ExcludeMissing
+    private val resultsUrl: JsonField<String> = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
-
-    private var validated: Boolean = false
 
     /**
      * Unique object identifier.
@@ -176,6 +190,8 @@ private constructor(
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
+    private var validated: Boolean = false
+
     fun validate(): MessageBatch = apply {
         if (!validated) {
             id()
@@ -215,17 +231,17 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(messageBatch: MessageBatch) = apply {
-            this.id = messageBatch.id
-            this.type = messageBatch.type
-            this.processingStatus = messageBatch.processingStatus
-            this.requestCounts = messageBatch.requestCounts
-            this.endedAt = messageBatch.endedAt
-            this.createdAt = messageBatch.createdAt
-            this.expiresAt = messageBatch.expiresAt
-            this.archivedAt = messageBatch.archivedAt
-            this.cancelInitiatedAt = messageBatch.cancelInitiatedAt
-            this.resultsUrl = messageBatch.resultsUrl
-            additionalProperties(messageBatch.additionalProperties)
+            id = messageBatch.id
+            type = messageBatch.type
+            processingStatus = messageBatch.processingStatus
+            requestCounts = messageBatch.requestCounts
+            endedAt = messageBatch.endedAt
+            createdAt = messageBatch.createdAt
+            expiresAt = messageBatch.expiresAt
+            archivedAt = messageBatch.archivedAt
+            cancelInitiatedAt = messageBatch.cancelInitiatedAt
+            resultsUrl = messageBatch.resultsUrl
+            additionalProperties = messageBatch.additionalProperties.toMutableMap()
         }
 
         /**
@@ -240,7 +256,7 @@ private constructor(
          *
          * The format and length of IDs may change over time.
          */
-        @JsonProperty("id") @ExcludeMissing fun id(id: JsonField<String>) = apply { this.id = id }
+        fun id(id: JsonField<String>) = apply { this.id = id }
 
         /**
          * Object type.
@@ -254,8 +270,6 @@ private constructor(
          *
          * For Message Batches, this is always `"message_batch"`.
          */
-        @JsonProperty("type")
-        @ExcludeMissing
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
         /** Processing status of the Message Batch. */
@@ -263,8 +277,6 @@ private constructor(
             processingStatus(JsonField.of(processingStatus))
 
         /** Processing status of the Message Batch. */
-        @JsonProperty("processing_status")
-        @ExcludeMissing
         fun processingStatus(processingStatus: JsonField<ProcessingStatus>) = apply {
             this.processingStatus = processingStatus
         }
@@ -286,8 +298,6 @@ private constructor(
          * of the entire batch ends. The sum of all values always matches the total number of
          * requests in the batch.
          */
-        @JsonProperty("request_counts")
-        @ExcludeMissing
         fun requestCounts(requestCounts: JsonField<MessageBatchRequestCounts>) = apply {
             this.requestCounts = requestCounts
         }
@@ -308,8 +318,6 @@ private constructor(
          * Processing ends when every request in a Message Batch has either succeeded, errored,
          * canceled, or expired.
          */
-        @JsonProperty("ended_at")
-        @ExcludeMissing
         fun endedAt(endedAt: JsonField<OffsetDateTime>) = apply { this.endedAt = endedAt }
 
         /**
@@ -320,8 +328,6 @@ private constructor(
         /**
          * RFC 3339 datetime string representing the time at which the Message Batch was created.
          */
-        @JsonProperty("created_at")
-        @ExcludeMissing
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
         /**
@@ -334,8 +340,6 @@ private constructor(
          * RFC 3339 datetime string representing the time at which the Message Batch will expire and
          * end processing, which is 24 hours after creation.
          */
-        @JsonProperty("expires_at")
-        @ExcludeMissing
         fun expiresAt(expiresAt: JsonField<OffsetDateTime>) = apply { this.expiresAt = expiresAt }
 
         /**
@@ -348,8 +352,6 @@ private constructor(
          * RFC 3339 datetime string representing the time at which the Message Batch was archived
          * and its results became unavailable.
          */
-        @JsonProperty("archived_at")
-        @ExcludeMissing
         fun archivedAt(archivedAt: JsonField<OffsetDateTime>) = apply {
             this.archivedAt = archivedAt
         }
@@ -365,8 +367,6 @@ private constructor(
          * RFC 3339 datetime string representing the time at which cancellation was initiated for
          * the Message Batch. Specified only if cancellation was initiated.
          */
-        @JsonProperty("cancel_initiated_at")
-        @ExcludeMissing
         fun cancelInitiatedAt(cancelInitiatedAt: JsonField<OffsetDateTime>) = apply {
             this.cancelInitiatedAt = cancelInitiatedAt
         }
@@ -387,22 +387,25 @@ private constructor(
          * Results in the file are not guaranteed to be in the same order as requests. Use the
          * `custom_id` field to match results to requests.
          */
-        @JsonProperty("results_url")
-        @ExcludeMissing
         fun resultsUrl(resultsUrl: JsonField<String>) = apply { this.resultsUrl = resultsUrl }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): MessageBatch =

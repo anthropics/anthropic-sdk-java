@@ -7,23 +7,26 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 
-@JsonDeserialize(builder = BetaMessageBatchIndividualResponse.Builder::class)
 @NoAutoDetect
 class BetaMessageBatchIndividualResponse
+@JsonCreator
 private constructor(
-    private val customId: JsonField<String>,
-    private val result: JsonField<BetaMessageBatchResult>,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("custom_id")
+    @ExcludeMissing
+    private val customId: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("result")
+    @ExcludeMissing
+    private val result: JsonField<BetaMessageBatchResult> = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
-
-    private var validated: Boolean = false
 
     /**
      * Developer-provided ID created for each request in a Message Batch. Useful for matching
@@ -61,6 +64,8 @@ private constructor(
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
+    private var validated: Boolean = false
+
     fun validate(): BetaMessageBatchIndividualResponse = apply {
         if (!validated) {
             customId()
@@ -85,9 +90,10 @@ private constructor(
         @JvmSynthetic
         internal fun from(betaMessageBatchIndividualResponse: BetaMessageBatchIndividualResponse) =
             apply {
-                this.customId = betaMessageBatchIndividualResponse.customId
-                this.result = betaMessageBatchIndividualResponse.result
-                additionalProperties(betaMessageBatchIndividualResponse.additionalProperties)
+                customId = betaMessageBatchIndividualResponse.customId
+                result = betaMessageBatchIndividualResponse.result
+                additionalProperties =
+                    betaMessageBatchIndividualResponse.additionalProperties.toMutableMap()
             }
 
         /**
@@ -104,8 +110,6 @@ private constructor(
          *
          * Must be unique for each request within the Message Batch.
          */
-        @JsonProperty("custom_id")
-        @ExcludeMissing
         fun customId(customId: JsonField<String>) = apply { this.customId = customId }
 
         /**
@@ -124,22 +128,25 @@ private constructor(
          * failed, or the reason why processing was not attempted, such as cancellation or
          * expiration.
          */
-        @JsonProperty("result")
-        @ExcludeMissing
         fun result(result: JsonField<BetaMessageBatchResult>) = apply { this.result = result }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): BetaMessageBatchIndividualResponse =

@@ -8,6 +8,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.models.CacheControlEphemeral
 import com.anthropic.models.MessageBatchCancelParams
 import com.anthropic.models.MessageBatchCreateParams
+import com.anthropic.models.MessageBatchDeleteParams
 import com.anthropic.models.MessageBatchListParams
 import com.anthropic.models.MessageBatchRetrieveParams
 import com.anthropic.models.MessageParam
@@ -169,6 +170,22 @@ class BatchServiceTest {
         val listResponseMessageBatch = batchService.list(MessageBatchListParams.builder().build())
         println(listResponseMessageBatch)
         listResponseMessageBatch.data().forEach { it.validate() }
+    }
+
+    @Test
+    fun callDelete() {
+        val client =
+            AnthropicOkHttpClient.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .apiKey("my-anthropic-api-key")
+                .build()
+        val batchService = client.messages().batches()
+        val deletedMessageBatch =
+            batchService.delete(
+                MessageBatchDeleteParams.builder().messageBatchId("message_batch_id").build()
+            )
+        println(deletedMessageBatch)
+        deletedMessageBatch.validate()
     }
 
     @Test

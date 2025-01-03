@@ -8,27 +8,27 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 import java.util.Optional
 
-@JsonDeserialize(builder = BetaTextBlockParam.Builder::class)
 @NoAutoDetect
 class BetaTextBlockParam
+@JsonCreator
 private constructor(
-    private val cacheControl: JsonField<BetaCacheControlEphemeral>,
-    private val type: JsonField<Type>,
-    private val text: JsonField<String>,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("cache_control")
+    @ExcludeMissing
+    private val cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+    @JsonProperty("text") @ExcludeMissing private val text: JsonField<String> = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
-
-    private var validated: Boolean = false
 
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
@@ -46,6 +46,8 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+    private var validated: Boolean = false
 
     fun validate(): BetaTextBlockParam = apply {
         if (!validated) {
@@ -72,45 +74,44 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaTextBlockParam: BetaTextBlockParam) = apply {
-            this.cacheControl = betaTextBlockParam.cacheControl
-            this.type = betaTextBlockParam.type
-            this.text = betaTextBlockParam.text
-            additionalProperties(betaTextBlockParam.additionalProperties)
+            cacheControl = betaTextBlockParam.cacheControl
+            type = betaTextBlockParam.type
+            text = betaTextBlockParam.text
+            additionalProperties = betaTextBlockParam.additionalProperties.toMutableMap()
         }
 
         fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
             cacheControl(JsonField.of(cacheControl))
 
-        @JsonProperty("cache_control")
-        @ExcludeMissing
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
 
         fun type(type: Type) = type(JsonField.of(type))
 
-        @JsonProperty("type")
-        @ExcludeMissing
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun text(text: String) = text(JsonField.of(text))
 
-        @JsonProperty("text")
-        @ExcludeMissing
         fun text(text: JsonField<String>) = apply { this.text = text }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): BetaTextBlockParam =

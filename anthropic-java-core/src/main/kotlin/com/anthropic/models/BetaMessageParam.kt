@@ -11,6 +11,7 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -27,16 +28,16 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Objects
 import java.util.Optional
 
-@JsonDeserialize(builder = BetaMessageParam.Builder::class)
 @NoAutoDetect
 class BetaMessageParam
+@JsonCreator
 private constructor(
-    private val role: JsonField<Role>,
-    private val content: JsonField<Content>,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("role") @ExcludeMissing private val role: JsonField<Role> = JsonMissing.of(),
+    @JsonProperty("content")
+    @ExcludeMissing
+    private val content: JsonField<Content> = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
-
-    private var validated: Boolean = false
 
     fun role(): Role = role.getRequired("role")
 
@@ -49,6 +50,8 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+    private var validated: Boolean = false
 
     fun validate(): BetaMessageParam = apply {
         if (!validated) {
@@ -73,35 +76,36 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaMessageParam: BetaMessageParam) = apply {
-            this.role = betaMessageParam.role
-            this.content = betaMessageParam.content
-            additionalProperties(betaMessageParam.additionalProperties)
+            role = betaMessageParam.role
+            content = betaMessageParam.content
+            additionalProperties = betaMessageParam.additionalProperties.toMutableMap()
         }
 
         fun role(role: Role) = role(JsonField.of(role))
 
-        @JsonProperty("role")
-        @ExcludeMissing
         fun role(role: JsonField<Role>) = apply { this.role = role }
 
         fun content(content: Content) = content(JsonField.of(content))
 
-        @JsonProperty("content")
-        @ExcludeMissing
         fun content(content: JsonField<Content>) = apply { this.content = content }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): BetaMessageParam =

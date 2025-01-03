@@ -17,8 +17,10 @@ constructor(
     private val additionalQueryParams: QueryParams,
 ) {
 
+    /** ID of the Message Batch. */
     fun messageBatchId(): String = messageBatchId
 
+    /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -53,14 +55,14 @@ constructor(
     class Builder {
 
         private var messageBatchId: String? = null
-        private var betas: MutableList<AnthropicBeta> = mutableListOf()
+        private var betas: MutableList<AnthropicBeta>? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(betaMessageBatchRetrieveParams: BetaMessageBatchRetrieveParams) = apply {
             messageBatchId = betaMessageBatchRetrieveParams.messageBatchId
-            betas = betaMessageBatchRetrieveParams.betas?.toMutableList() ?: mutableListOf()
+            betas = betaMessageBatchRetrieveParams.betas?.toMutableList()
             additionalHeaders = betaMessageBatchRetrieveParams.additionalHeaders.toBuilder()
             additionalQueryParams = betaMessageBatchRetrieveParams.additionalQueryParams.toBuilder()
         }
@@ -69,13 +71,12 @@ constructor(
         fun messageBatchId(messageBatchId: String) = apply { this.messageBatchId = messageBatchId }
 
         /** Optional header to specify the beta version(s) you want to use. */
-        fun betas(betas: List<AnthropicBeta>) = apply {
-            this.betas.clear()
-            this.betas.addAll(betas)
-        }
+        fun betas(betas: List<AnthropicBeta>) = apply { this.betas = betas.toMutableList() }
 
         /** Optional header to specify the beta version(s) you want to use. */
-        fun addBeta(beta: AnthropicBeta) = apply { this.betas.add(beta) }
+        fun addBeta(beta: AnthropicBeta) = apply {
+            betas = (betas ?: mutableListOf()).apply { add(beta) }
+        }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -178,7 +179,7 @@ constructor(
         fun build(): BetaMessageBatchRetrieveParams =
             BetaMessageBatchRetrieveParams(
                 checkNotNull(messageBatchId) { "`messageBatchId` is required but was not set" },
-                betas.toImmutable().ifEmpty { null },
+                betas?.toImmutable(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )

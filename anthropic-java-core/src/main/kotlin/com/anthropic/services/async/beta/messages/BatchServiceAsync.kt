@@ -5,9 +5,11 @@
 package com.anthropic.services.async.beta.messages
 
 import com.anthropic.core.RequestOptions
+import com.anthropic.models.BetaDeletedMessageBatch
 import com.anthropic.models.BetaMessageBatch
 import com.anthropic.models.BetaMessageBatchCancelParams
 import com.anthropic.models.BetaMessageBatchCreateParams
+import com.anthropic.models.BetaMessageBatchDeleteParams
 import com.anthropic.models.BetaMessageBatchListPageAsync
 import com.anthropic.models.BetaMessageBatchListParams
 import com.anthropic.models.BetaMessageBatchRetrieveParams
@@ -47,6 +49,16 @@ interface BatchServiceAsync {
         params: BetaMessageBatchListParams,
         requestOptions: RequestOptions = RequestOptions.none()
     ): CompletableFuture<BetaMessageBatchListPageAsync>
+
+    /**
+     * This endpoint is idempotent and can be used to poll for Message Batch completion. To access
+     * the results of a Message Batch, make a request to the `results_url` field in the response.
+     */
+    @JvmOverloads
+    fun delete(
+        params: BetaMessageBatchDeleteParams,
+        requestOptions: RequestOptions = RequestOptions.none()
+    ): CompletableFuture<BetaDeletedMessageBatch>
 
     /**
      * Batches may be canceled any time before processing ends. Once cancellation is initiated, the

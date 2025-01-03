@@ -8,28 +8,30 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.time.OffsetDateTime
 import java.util.Objects
 
-@JsonDeserialize(builder = ModelInfo.Builder::class)
 @NoAutoDetect
 class ModelInfo
+@JsonCreator
 private constructor(
-    private val type: JsonField<Type>,
-    private val id: JsonField<String>,
-    private val displayName: JsonField<String>,
-    private val createdAt: JsonField<OffsetDateTime>,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+    @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("display_name")
+    @ExcludeMissing
+    private val displayName: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("created_at")
+    @ExcludeMissing
+    private val createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
-
-    private var validated: Boolean = false
 
     /**
      * Object type.
@@ -73,6 +75,8 @@ private constructor(
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
+    private var validated: Boolean = false
+
     fun validate(): ModelInfo = apply {
         if (!validated) {
             type()
@@ -100,11 +104,11 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(modelInfo: ModelInfo) = apply {
-            this.type = modelInfo.type
-            this.id = modelInfo.id
-            this.displayName = modelInfo.displayName
-            this.createdAt = modelInfo.createdAt
-            additionalProperties(modelInfo.additionalProperties)
+            type = modelInfo.type
+            id = modelInfo.id
+            displayName = modelInfo.displayName
+            createdAt = modelInfo.createdAt
+            additionalProperties = modelInfo.additionalProperties.toMutableMap()
         }
 
         /**
@@ -119,22 +123,18 @@ private constructor(
          *
          * For Models, this is always `"model"`.
          */
-        @JsonProperty("type")
-        @ExcludeMissing
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
         /** Unique model identifier. */
         fun id(id: String) = id(JsonField.of(id))
 
         /** Unique model identifier. */
-        @JsonProperty("id") @ExcludeMissing fun id(id: JsonField<String>) = apply { this.id = id }
+        fun id(id: JsonField<String>) = apply { this.id = id }
 
         /** A human-readable name for the model. */
         fun displayName(displayName: String) = displayName(JsonField.of(displayName))
 
         /** A human-readable name for the model. */
-        @JsonProperty("display_name")
-        @ExcludeMissing
         fun displayName(displayName: JsonField<String>) = apply { this.displayName = displayName }
 
         /**
@@ -147,22 +147,25 @@ private constructor(
          * RFC 3339 datetime string representing the time at which the model was released. May be
          * set to an epoch value if the release date is unknown.
          */
-        @JsonProperty("created_at")
-        @ExcludeMissing
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): ModelInfo =

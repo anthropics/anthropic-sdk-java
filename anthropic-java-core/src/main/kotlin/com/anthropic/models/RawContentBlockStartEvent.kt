@@ -11,6 +11,7 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -28,17 +29,17 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-@JsonDeserialize(builder = RawContentBlockStartEvent.Builder::class)
 @NoAutoDetect
 class RawContentBlockStartEvent
+@JsonCreator
 private constructor(
-    private val type: JsonField<Type>,
-    private val index: JsonField<Long>,
-    private val contentBlock: JsonField<ContentBlock>,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+    @JsonProperty("index") @ExcludeMissing private val index: JsonField<Long> = JsonMissing.of(),
+    @JsonProperty("content_block")
+    @ExcludeMissing
+    private val contentBlock: JsonField<ContentBlock> = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
-
-    private var validated: Boolean = false
 
     fun type(): Type = type.getRequired("type")
 
@@ -55,6 +56,8 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+    private var validated: Boolean = false
 
     fun validate(): RawContentBlockStartEvent = apply {
         if (!validated) {
@@ -81,44 +84,43 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(rawContentBlockStartEvent: RawContentBlockStartEvent) = apply {
-            this.type = rawContentBlockStartEvent.type
-            this.index = rawContentBlockStartEvent.index
-            this.contentBlock = rawContentBlockStartEvent.contentBlock
-            additionalProperties(rawContentBlockStartEvent.additionalProperties)
+            type = rawContentBlockStartEvent.type
+            index = rawContentBlockStartEvent.index
+            contentBlock = rawContentBlockStartEvent.contentBlock
+            additionalProperties = rawContentBlockStartEvent.additionalProperties.toMutableMap()
         }
 
         fun type(type: Type) = type(JsonField.of(type))
 
-        @JsonProperty("type")
-        @ExcludeMissing
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun index(index: Long) = index(JsonField.of(index))
 
-        @JsonProperty("index")
-        @ExcludeMissing
         fun index(index: JsonField<Long>) = apply { this.index = index }
 
         fun contentBlock(contentBlock: ContentBlock) = contentBlock(JsonField.of(contentBlock))
 
-        @JsonProperty("content_block")
-        @ExcludeMissing
         fun contentBlock(contentBlock: JsonField<ContentBlock>) = apply {
             this.contentBlock = contentBlock
         }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): RawContentBlockStartEvent =

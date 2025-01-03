@@ -7,26 +7,35 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 
-@JsonDeserialize(builder = MessageBatchRequestCounts.Builder::class)
 @NoAutoDetect
 class MessageBatchRequestCounts
+@JsonCreator
 private constructor(
-    private val processing: JsonField<Long>,
-    private val succeeded: JsonField<Long>,
-    private val errored: JsonField<Long>,
-    private val canceled: JsonField<Long>,
-    private val expired: JsonField<Long>,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("processing")
+    @ExcludeMissing
+    private val processing: JsonField<Long> = JsonMissing.of(),
+    @JsonProperty("succeeded")
+    @ExcludeMissing
+    private val succeeded: JsonField<Long> = JsonMissing.of(),
+    @JsonProperty("errored")
+    @ExcludeMissing
+    private val errored: JsonField<Long> = JsonMissing.of(),
+    @JsonProperty("canceled")
+    @ExcludeMissing
+    private val canceled: JsonField<Long> = JsonMissing.of(),
+    @JsonProperty("expired")
+    @ExcludeMissing
+    private val expired: JsonField<Long> = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
-
-    private var validated: Boolean = false
 
     /** Number of requests in the Message Batch that are processing. */
     fun processing(): Long = processing.getRequired("processing")
@@ -94,6 +103,8 @@ private constructor(
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
+    private var validated: Boolean = false
+
     fun validate(): MessageBatchRequestCounts = apply {
         if (!validated) {
             processing()
@@ -123,20 +134,18 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(messageBatchRequestCounts: MessageBatchRequestCounts) = apply {
-            this.processing = messageBatchRequestCounts.processing
-            this.succeeded = messageBatchRequestCounts.succeeded
-            this.errored = messageBatchRequestCounts.errored
-            this.canceled = messageBatchRequestCounts.canceled
-            this.expired = messageBatchRequestCounts.expired
-            additionalProperties(messageBatchRequestCounts.additionalProperties)
+            processing = messageBatchRequestCounts.processing
+            succeeded = messageBatchRequestCounts.succeeded
+            errored = messageBatchRequestCounts.errored
+            canceled = messageBatchRequestCounts.canceled
+            expired = messageBatchRequestCounts.expired
+            additionalProperties = messageBatchRequestCounts.additionalProperties.toMutableMap()
         }
 
         /** Number of requests in the Message Batch that are processing. */
         fun processing(processing: Long) = processing(JsonField.of(processing))
 
         /** Number of requests in the Message Batch that are processing. */
-        @JsonProperty("processing")
-        @ExcludeMissing
         fun processing(processing: JsonField<Long>) = apply { this.processing = processing }
 
         /**
@@ -151,8 +160,6 @@ private constructor(
          *
          * This is zero until processing of the entire Message Batch has ended.
          */
-        @JsonProperty("succeeded")
-        @ExcludeMissing
         fun succeeded(succeeded: JsonField<Long>) = apply { this.succeeded = succeeded }
 
         /**
@@ -167,8 +174,6 @@ private constructor(
          *
          * This is zero until processing of the entire Message Batch has ended.
          */
-        @JsonProperty("errored")
-        @ExcludeMissing
         fun errored(errored: JsonField<Long>) = apply { this.errored = errored }
 
         /**
@@ -183,8 +188,6 @@ private constructor(
          *
          * This is zero until processing of the entire Message Batch has ended.
          */
-        @JsonProperty("canceled")
-        @ExcludeMissing
         fun canceled(canceled: JsonField<Long>) = apply { this.canceled = canceled }
 
         /**
@@ -199,22 +202,25 @@ private constructor(
          *
          * This is zero until processing of the entire Message Batch has ended.
          */
-        @JsonProperty("expired")
-        @ExcludeMissing
         fun expired(expired: JsonField<Long>) = apply { this.expired = expired }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): MessageBatchRequestCounts =

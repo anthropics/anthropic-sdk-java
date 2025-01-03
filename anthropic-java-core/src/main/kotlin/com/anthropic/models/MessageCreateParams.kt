@@ -10,10 +10,12 @@ import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
@@ -27,88 +29,267 @@ import java.util.Optional
 
 class MessageCreateParams
 constructor(
-    private val maxTokens: Long,
-    private val messages: List<MessageParam>,
-    private val model: Model,
-    private val metadata: Metadata?,
-    private val stopSequences: List<String>?,
-    private val system: System?,
-    private val temperature: Double?,
-    private val toolChoice: ToolChoice?,
-    private val tools: List<Tool>?,
-    private val topK: Long?,
-    private val topP: Double?,
+    private val body: MessageCreateBody,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
-    private val additionalBodyProperties: Map<String, JsonValue>,
 ) {
 
-    fun maxTokens(): Long = maxTokens
+    /**
+     * The maximum number of tokens to generate before stopping.
+     *
+     * Note that our models may stop _before_ reaching this maximum. This parameter only specifies
+     * the absolute maximum number of tokens to generate.
+     *
+     * Different models have different maximum values for this parameter. See
+     * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
+     */
+    fun maxTokens(): Long = body.maxTokens()
 
-    fun messages(): List<MessageParam> = messages
+    /**
+     * Input messages.
+     *
+     * Our models are trained to operate on alternating `user` and `assistant` conversational turns.
+     * When creating a new `Message`, you specify the prior conversational turns with the `messages`
+     * parameter, and the model then generates the next `Message` in the conversation. Consecutive
+     * `user` or `assistant` turns in your request will be combined into a single turn.
+     *
+     * Each input message must be an object with a `role` and `content`. You can specify a single
+     * `user`-role message, or you can include multiple `user` and `assistant` messages.
+     *
+     * If the final message uses the `assistant` role, the response content will continue
+     * immediately from the content in that message. This can be used to constrain part of the
+     * model's response.
+     *
+     * Example with a single `user` message:
+     * ```json
+     * [{ "role": "user", "content": "Hello, Claude" }]
+     * ```
+     *
+     * Example with multiple conversational turns:
+     * ```json
+     * [
+     *   { "role": "user", "content": "Hello there." },
+     *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
+     *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
+     * ]
+     * ```
+     *
+     * Example with a partially-filled response from Claude:
+     * ```json
+     * [
+     *   {
+     *     "role": "user",
+     *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
+     *   },
+     *   { "role": "assistant", "content": "The best answer is (" }
+     * ]
+     * ```
+     *
+     * Each input message `content` may be either a single `string` or an array of content blocks,
+     * where each block has a specific `type`. Using a `string` for `content` is shorthand for an
+     * array of one content block of type `"text"`. The following input messages are equivalent:
+     * ```json
+     * { "role": "user", "content": "Hello, Claude" }
+     * ```
+     * ```json
+     * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
+     * ```
+     *
+     * Starting with Claude 3 models, you can also send image content blocks:
+     * ```json
+     * {
+     *   "role": "user",
+     *   "content": [
+     *     {
+     *       "type": "image",
+     *       "source": {
+     *         "type": "base64",
+     *         "media_type": "image/jpeg",
+     *         "data": "/9j/4AAQSkZJRg..."
+     *       }
+     *     },
+     *     { "type": "text", "text": "What is in this image?" }
+     *   ]
+     * }
+     * ```
+     *
+     * We currently support the `base64` source type for images, and the `image/jpeg`, `image/png`,
+     * `image/gif`, and `image/webp` media types.
+     *
+     * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more input
+     * examples.
+     *
+     * Note that if you want to include a
+     * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the top-level
+     * `system` parameter — there is no `"system"` role for input messages in the Messages API.
+     */
+    fun messages(): List<MessageParam> = body.messages()
 
-    fun model(): Model = model
+    /**
+     * The model that will complete your prompt.\n\nSee
+     * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
+     * options.
+     */
+    fun model(): Model = body.model()
 
-    fun metadata(): Optional<Metadata> = Optional.ofNullable(metadata)
+    /** An object describing metadata about the request. */
+    fun metadata(): Optional<Metadata> = body.metadata()
 
-    fun stopSequences(): Optional<List<String>> = Optional.ofNullable(stopSequences)
+    /**
+     * Custom text sequences that will cause the model to stop generating.
+     *
+     * Our models will normally stop when they have naturally completed their turn, which will
+     * result in a response `stop_reason` of `"end_turn"`.
+     *
+     * If you want the model to stop generating when it encounters custom strings of text, you can
+     * use the `stop_sequences` parameter. If the model encounters one of the custom sequences, the
+     * response `stop_reason` value will be `"stop_sequence"` and the response `stop_sequence` value
+     * will contain the matched stop sequence.
+     */
+    fun stopSequences(): Optional<List<String>> = body.stopSequences()
 
-    fun system(): Optional<System> = Optional.ofNullable(system)
+    /**
+     * System prompt.
+     *
+     * A system prompt is a way of providing context and instructions to Claude, such as specifying
+     * a particular goal or role. See our
+     * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+     */
+    fun system(): Optional<System> = body.system()
 
-    fun temperature(): Optional<Double> = Optional.ofNullable(temperature)
+    /**
+     * Amount of randomness injected into the response.
+     *
+     * Defaults to `1.0`. Ranges from `0.0` to `1.0`. Use `temperature` closer to `0.0` for
+     * analytical / multiple choice, and closer to `1.0` for creative and generative tasks.
+     *
+     * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
+     */
+    fun temperature(): Optional<Double> = body.temperature()
 
-    fun toolChoice(): Optional<ToolChoice> = Optional.ofNullable(toolChoice)
+    /**
+     * How the model should use the provided tools. The model can use a specific tool, any available
+     * tool, or decide by itself.
+     */
+    fun toolChoice(): Optional<ToolChoice> = body.toolChoice()
 
-    fun tools(): Optional<List<Tool>> = Optional.ofNullable(tools)
+    /**
+     * Definitions of tools that the model may use.
+     *
+     * If you include `tools` in your API request, the model may return `tool_use` content blocks
+     * that represent the model's use of those tools. You can then run those tools using the tool
+     * input generated by the model and then optionally return results back to the model using
+     * `tool_result` content blocks.
+     *
+     * Each tool definition includes:
+     * - `name`: Name of the tool.
+     * - `description`: Optional, but strongly-recommended description of the tool.
+     * - `input_schema`: [JSON schema](https://json-schema.org/) for the tool `input` shape that the
+     *   model will produce in `tool_use` output content blocks.
+     *
+     * For example, if you defined `tools` as:
+     * ```json
+     * [
+     *   {
+     *     "name": "get_stock_price",
+     *     "description": "Get the current stock price for a given ticker symbol.",
+     *     "input_schema": {
+     *       "type": "object",
+     *       "properties": {
+     *         "ticker": {
+     *           "type": "string",
+     *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
+     *         }
+     *       },
+     *       "required": ["ticker"]
+     *     }
+     *   }
+     * ]
+     * ```
+     *
+     * And then asked the model "What's the S&P 500 at today?", the model might produce `tool_use`
+     * content blocks in the response like this:
+     * ```json
+     * [
+     *   {
+     *     "type": "tool_use",
+     *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+     *     "name": "get_stock_price",
+     *     "input": { "ticker": "^GSPC" }
+     *   }
+     * ]
+     * ```
+     *
+     * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an input, and
+     * return the following back to the model in a subsequent `user` message:
+     * ```json
+     * [
+     *   {
+     *     "type": "tool_result",
+     *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+     *     "content": "259.75 USD"
+     *   }
+     * ]
+     * ```
+     *
+     * Tools can be used for workflows that include running client-side tools and functions, or more
+     * generally whenever you want the model to produce a particular JSON structure of output.
+     *
+     * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+     */
+    fun tools(): Optional<List<Tool>> = body.tools()
 
-    fun topK(): Optional<Long> = Optional.ofNullable(topK)
+    /**
+     * Only sample from the top K options for each subsequent token.
+     *
+     * Used to remove "long tail" low probability responses.
+     * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
+     *
+     * Recommended for advanced use cases only. You usually only need to use `temperature`.
+     */
+    fun topK(): Optional<Long> = body.topK()
 
-    fun topP(): Optional<Double> = Optional.ofNullable(topP)
+    /**
+     * Use nucleus sampling.
+     *
+     * In nucleus sampling, we compute the cumulative distribution over all the options for each
+     * subsequent token in decreasing probability order and cut it off once it reaches a particular
+     * probability specified by `top_p`. You should either alter `temperature` or `top_p`, but not
+     * both.
+     *
+     * Recommended for advanced use cases only. You usually only need to use `temperature`.
+     */
+    fun topP(): Optional<Double> = body.topP()
 
     fun _additionalHeaders(): Headers = additionalHeaders
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
+    fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
-    @JvmSynthetic
-    internal fun getBody(): MessageCreateBody {
-        return MessageCreateBody(
-            maxTokens,
-            messages,
-            model,
-            metadata,
-            stopSequences,
-            system,
-            temperature,
-            toolChoice,
-            tools,
-            topK,
-            topP,
-            additionalBodyProperties,
-        )
-    }
+    @JvmSynthetic internal fun getBody(): MessageCreateBody = body
 
     @JvmSynthetic internal fun getHeaders(): Headers = additionalHeaders
 
     @JvmSynthetic internal fun getQueryParams(): QueryParams = additionalQueryParams
 
-    @JsonDeserialize(builder = MessageCreateBody.Builder::class)
     @NoAutoDetect
     class MessageCreateBody
+    @JsonCreator
     internal constructor(
-        private val maxTokens: Long?,
-        private val messages: List<MessageParam>?,
-        private val model: Model?,
-        private val metadata: Metadata?,
-        private val stopSequences: List<String>?,
-        private val system: System?,
-        private val temperature: Double?,
-        private val toolChoice: ToolChoice?,
-        private val tools: List<Tool>?,
-        private val topK: Long?,
-        private val topP: Double?,
-        private val additionalProperties: Map<String, JsonValue>,
+        @JsonProperty("max_tokens") private val maxTokens: Long,
+        @JsonProperty("messages") private val messages: List<MessageParam>,
+        @JsonProperty("model") private val model: Model,
+        @JsonProperty("metadata") private val metadata: Metadata?,
+        @JsonProperty("stop_sequences") private val stopSequences: List<String>?,
+        @JsonProperty("system") private val system: System?,
+        @JsonProperty("temperature") private val temperature: Double?,
+        @JsonProperty("tool_choice") private val toolChoice: ToolChoice?,
+        @JsonProperty("tools") private val tools: List<Tool>?,
+        @JsonProperty("top_k") private val topK: Long?,
+        @JsonProperty("top_p") private val topP: Double?,
+        @JsonAnySetter
+        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
     ) {
 
         /**
@@ -120,7 +301,7 @@ constructor(
          * Different models have different maximum values for this parameter. See
          * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
          */
-        @JsonProperty("max_tokens") fun maxTokens(): Long? = maxTokens
+        @JsonProperty("max_tokens") fun maxTokens(): Long = maxTokens
 
         /**
          * Input messages.
@@ -203,17 +384,17 @@ constructor(
          * top-level `system` parameter — there is no `"system"` role for input messages in the
          * Messages API.
          */
-        @JsonProperty("messages") fun messages(): List<MessageParam>? = messages
+        @JsonProperty("messages") fun messages(): List<MessageParam> = messages
 
         /**
          * The model that will complete your prompt.\n\nSee
          * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
          * options.
          */
-        @JsonProperty("model") fun model(): Model? = model
+        @JsonProperty("model") fun model(): Model = model
 
         /** An object describing metadata about the request. */
-        @JsonProperty("metadata") fun metadata(): Metadata? = metadata
+        @JsonProperty("metadata") fun metadata(): Optional<Metadata> = Optional.ofNullable(metadata)
 
         /**
          * Custom text sequences that will cause the model to stop generating.
@@ -226,7 +407,8 @@ constructor(
          * sequences, the response `stop_reason` value will be `"stop_sequence"` and the response
          * `stop_sequence` value will contain the matched stop sequence.
          */
-        @JsonProperty("stop_sequences") fun stopSequences(): List<String>? = stopSequences
+        @JsonProperty("stop_sequences")
+        fun stopSequences(): Optional<List<String>> = Optional.ofNullable(stopSequences)
 
         /**
          * System prompt.
@@ -235,7 +417,7 @@ constructor(
          * specifying a particular goal or role. See our
          * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
          */
-        @JsonProperty("system") fun system(): System? = system
+        @JsonProperty("system") fun system(): Optional<System> = Optional.ofNullable(system)
 
         /**
          * Amount of randomness injected into the response.
@@ -245,13 +427,15 @@ constructor(
          *
          * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
          */
-        @JsonProperty("temperature") fun temperature(): Double? = temperature
+        @JsonProperty("temperature")
+        fun temperature(): Optional<Double> = Optional.ofNullable(temperature)
 
         /**
          * How the model should use the provided tools. The model can use a specific tool, any
          * available tool, or decide by itself.
          */
-        @JsonProperty("tool_choice") fun toolChoice(): ToolChoice? = toolChoice
+        @JsonProperty("tool_choice")
+        fun toolChoice(): Optional<ToolChoice> = Optional.ofNullable(toolChoice)
 
         /**
          * Definitions of tools that the model may use.
@@ -318,7 +502,7 @@ constructor(
          *
          * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
          */
-        @JsonProperty("tools") fun tools(): List<Tool>? = tools
+        @JsonProperty("tools") fun tools(): Optional<List<Tool>> = Optional.ofNullable(tools)
 
         /**
          * Only sample from the top K options for each subsequent token.
@@ -328,7 +512,7 @@ constructor(
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
          */
-        @JsonProperty("top_k") fun topK(): Long? = topK
+        @JsonProperty("top_k") fun topK(): Optional<Long> = Optional.ofNullable(topK)
 
         /**
          * Use nucleus sampling.
@@ -340,7 +524,7 @@ constructor(
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
          */
-        @JsonProperty("top_p") fun topP(): Double? = topP
+        @JsonProperty("top_p") fun topP(): Optional<Double> = Optional.ofNullable(topP)
 
         @JsonAnyGetter
         @ExcludeMissing
@@ -356,32 +540,32 @@ constructor(
         class Builder {
 
             private var maxTokens: Long? = null
-            private var messages: List<MessageParam>? = null
+            private var messages: MutableList<MessageParam>? = null
             private var model: Model? = null
             private var metadata: Metadata? = null
-            private var stopSequences: List<String>? = null
+            private var stopSequences: MutableList<String>? = null
             private var system: System? = null
             private var temperature: Double? = null
             private var toolChoice: ToolChoice? = null
-            private var tools: List<Tool>? = null
+            private var tools: MutableList<Tool>? = null
             private var topK: Long? = null
             private var topP: Double? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(messageCreateBody: MessageCreateBody) = apply {
-                this.maxTokens = messageCreateBody.maxTokens
-                this.messages = messageCreateBody.messages
-                this.model = messageCreateBody.model
-                this.metadata = messageCreateBody.metadata
-                this.stopSequences = messageCreateBody.stopSequences
-                this.system = messageCreateBody.system
-                this.temperature = messageCreateBody.temperature
-                this.toolChoice = messageCreateBody.toolChoice
-                this.tools = messageCreateBody.tools
-                this.topK = messageCreateBody.topK
-                this.topP = messageCreateBody.topP
-                additionalProperties(messageCreateBody.additionalProperties)
+                maxTokens = messageCreateBody.maxTokens
+                messages = messageCreateBody.messages.toMutableList()
+                model = messageCreateBody.model
+                metadata = messageCreateBody.metadata
+                stopSequences = messageCreateBody.stopSequences?.toMutableList()
+                system = messageCreateBody.system
+                temperature = messageCreateBody.temperature
+                toolChoice = messageCreateBody.toolChoice
+                tools = messageCreateBody.tools?.toMutableList()
+                topK = messageCreateBody.topK
+                topP = messageCreateBody.topP
+                additionalProperties = messageCreateBody.additionalProperties.toMutableMap()
             }
 
             /**
@@ -393,7 +577,6 @@ constructor(
              * Different models have different maximum values for this parameter. See
              * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
              */
-            @JsonProperty("max_tokens")
             fun maxTokens(maxTokens: Long) = apply { this.maxTokens = maxTokens }
 
             /**
@@ -478,18 +661,195 @@ constructor(
              * top-level `system` parameter — there is no `"system"` role for input messages in the
              * Messages API.
              */
-            @JsonProperty("messages")
-            fun messages(messages: List<MessageParam>) = apply { this.messages = messages }
+            fun messages(messages: List<MessageParam>) = apply {
+                this.messages = messages.toMutableList()
+            }
+
+            /**
+             * Input messages.
+             *
+             * Our models are trained to operate on alternating `user` and `assistant`
+             * conversational turns. When creating a new `Message`, you specify the prior
+             * conversational turns with the `messages` parameter, and the model then generates the
+             * next `Message` in the conversation. Consecutive `user` or `assistant` turns in your
+             * request will be combined into a single turn.
+             *
+             * Each input message must be an object with a `role` and `content`. You can specify a
+             * single `user`-role message, or you can include multiple `user` and `assistant`
+             * messages.
+             *
+             * If the final message uses the `assistant` role, the response content will continue
+             * immediately from the content in that message. This can be used to constrain part of
+             * the model's response.
+             *
+             * Example with a single `user` message:
+             * ```json
+             * [{ "role": "user", "content": "Hello, Claude" }]
+             * ```
+             *
+             * Example with multiple conversational turns:
+             * ```json
+             * [
+             *   { "role": "user", "content": "Hello there." },
+             *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
+             *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
+             * ]
+             * ```
+             *
+             * Example with a partially-filled response from Claude:
+             * ```json
+             * [
+             *   {
+             *     "role": "user",
+             *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
+             *   },
+             *   { "role": "assistant", "content": "The best answer is (" }
+             * ]
+             * ```
+             *
+             * Each input message `content` may be either a single `string` or an array of content
+             * blocks, where each block has a specific `type`. Using a `string` for `content` is
+             * shorthand for an array of one content block of type `"text"`. The following input
+             * messages are equivalent:
+             * ```json
+             * { "role": "user", "content": "Hello, Claude" }
+             * ```
+             * ```json
+             * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
+             * ```
+             *
+             * Starting with Claude 3 models, you can also send image content blocks:
+             * ```json
+             * {
+             *   "role": "user",
+             *   "content": [
+             *     {
+             *       "type": "image",
+             *       "source": {
+             *         "type": "base64",
+             *         "media_type": "image/jpeg",
+             *         "data": "/9j/4AAQSkZJRg..."
+             *       }
+             *     },
+             *     { "type": "text", "text": "What is in this image?" }
+             *   ]
+             * }
+             * ```
+             *
+             * We currently support the `base64` source type for images, and the `image/jpeg`,
+             * `image/png`, `image/gif`, and `image/webp` media types.
+             *
+             * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more
+             * input examples.
+             *
+             * Note that if you want to include a
+             * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
+             * top-level `system` parameter — there is no `"system"` role for input messages in the
+             * Messages API.
+             */
+            fun addMessage(message: MessageParam) = apply {
+                messages = (messages ?: mutableListOf()).apply { add(message) }
+            }
+
+            /**
+             * Input messages.
+             *
+             * Our models are trained to operate on alternating `user` and `assistant`
+             * conversational turns. When creating a new `Message`, you specify the prior
+             * conversational turns with the `messages` parameter, and the model then generates the
+             * next `Message` in the conversation. Consecutive `user` or `assistant` turns in your
+             * request will be combined into a single turn.
+             *
+             * Each input message must be an object with a `role` and `content`. You can specify a
+             * single `user`-role message, or you can include multiple `user` and `assistant`
+             * messages.
+             *
+             * If the final message uses the `assistant` role, the response content will continue
+             * immediately from the content in that message. This can be used to constrain part of
+             * the model's response.
+             *
+             * Example with a single `user` message:
+             * ```json
+             * [{ "role": "user", "content": "Hello, Claude" }]
+             * ```
+             *
+             * Example with multiple conversational turns:
+             * ```json
+             * [
+             *   { "role": "user", "content": "Hello there." },
+             *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
+             *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
+             * ]
+             * ```
+             *
+             * Example with a partially-filled response from Claude:
+             * ```json
+             * [
+             *   {
+             *     "role": "user",
+             *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
+             *   },
+             *   { "role": "assistant", "content": "The best answer is (" }
+             * ]
+             * ```
+             *
+             * Each input message `content` may be either a single `string` or an array of content
+             * blocks, where each block has a specific `type`. Using a `string` for `content` is
+             * shorthand for an array of one content block of type `"text"`. The following input
+             * messages are equivalent:
+             * ```json
+             * { "role": "user", "content": "Hello, Claude" }
+             * ```
+             * ```json
+             * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
+             * ```
+             *
+             * Starting with Claude 3 models, you can also send image content blocks:
+             * ```json
+             * {
+             *   "role": "user",
+             *   "content": [
+             *     {
+             *       "type": "image",
+             *       "source": {
+             *         "type": "base64",
+             *         "media_type": "image/jpeg",
+             *         "data": "/9j/4AAQSkZJRg..."
+             *       }
+             *     },
+             *     { "type": "text", "text": "What is in this image?" }
+             *   ]
+             * }
+             * ```
+             *
+             * We currently support the `base64` source type for images, and the `image/jpeg`,
+             * `image/png`, `image/gif`, and `image/webp` media types.
+             *
+             * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more
+             * input examples.
+             *
+             * Note that if you want to include a
+             * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
+             * top-level `system` parameter — there is no `"system"` role for input messages in the
+             * Messages API.
+             */
+            fun addMessage(message: Message) = addMessage(message.toParam())
 
             /**
              * The model that will complete your prompt.\n\nSee
              * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
              * and options.
              */
-            @JsonProperty("model") fun model(model: Model) = apply { this.model = model }
+            fun model(model: Model) = apply { this.model = model }
+
+            /**
+             * The model that will complete your prompt.\n\nSee
+             * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
+             * and options.
+             */
+            fun model(value: String) = apply { model = Model.of(value) }
 
             /** An object describing metadata about the request. */
-            @JsonProperty("metadata")
             fun metadata(metadata: Metadata) = apply { this.metadata = metadata }
 
             /**
@@ -503,9 +863,23 @@ constructor(
              * sequences, the response `stop_reason` value will be `"stop_sequence"` and the
              * response `stop_sequence` value will contain the matched stop sequence.
              */
-            @JsonProperty("stop_sequences")
             fun stopSequences(stopSequences: List<String>) = apply {
-                this.stopSequences = stopSequences
+                this.stopSequences = stopSequences.toMutableList()
+            }
+
+            /**
+             * Custom text sequences that will cause the model to stop generating.
+             *
+             * Our models will normally stop when they have naturally completed their turn, which
+             * will result in a response `stop_reason` of `"end_turn"`.
+             *
+             * If you want the model to stop generating when it encounters custom strings of text,
+             * you can use the `stop_sequences` parameter. If the model encounters one of the custom
+             * sequences, the response `stop_reason` value will be `"stop_sequence"` and the
+             * response `stop_sequence` value will contain the matched stop sequence.
+             */
+            fun addStopSequence(stopSequence: String) = apply {
+                stopSequences = (stopSequences ?: mutableListOf()).apply { add(stopSequence) }
             }
 
             /**
@@ -515,7 +889,13 @@ constructor(
              * specifying a particular goal or role. See our
              * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
              */
-            @JsonProperty("system") fun system(system: System) = apply { this.system = system }
+            fun system(system: System) = apply { this.system = system }
+
+            fun system(string: String) = apply { this.system = System.ofString(string) }
+
+            fun systemOfTextBlockParams(textBlockParams: List<TextBlockParam>) = apply {
+                this.system = System.ofTextBlockParams(textBlockParams)
+            }
 
             /**
              * Amount of randomness injected into the response.
@@ -526,15 +906,28 @@ constructor(
              * Note that even with `temperature` of `0.0`, the results will not be fully
              * deterministic.
              */
-            @JsonProperty("temperature")
             fun temperature(temperature: Double) = apply { this.temperature = temperature }
 
             /**
              * How the model should use the provided tools. The model can use a specific tool, any
              * available tool, or decide by itself.
              */
-            @JsonProperty("tool_choice")
             fun toolChoice(toolChoice: ToolChoice) = apply { this.toolChoice = toolChoice }
+
+            /** The model will automatically decide whether to use tools. */
+            fun toolChoice(toolChoiceAuto: ToolChoiceAuto) = apply {
+                this.toolChoice = ToolChoice.ofToolChoiceAuto(toolChoiceAuto)
+            }
+
+            /** The model will use any available tools. */
+            fun toolChoice(toolChoiceAny: ToolChoiceAny) = apply {
+                this.toolChoice = ToolChoice.ofToolChoiceAny(toolChoiceAny)
+            }
+
+            /** The model will use the specified tool with `tool_choice.name`. */
+            fun toolChoice(toolChoiceTool: ToolChoiceTool) = apply {
+                this.toolChoice = ToolChoice.ofToolChoiceTool(toolChoiceTool)
+            }
 
             /**
              * Definitions of tools that the model may use.
@@ -601,7 +994,76 @@ constructor(
              *
              * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
              */
-            @JsonProperty("tools") fun tools(tools: List<Tool>) = apply { this.tools = tools }
+            fun tools(tools: List<Tool>) = apply { this.tools = tools.toMutableList() }
+
+            /**
+             * Definitions of tools that the model may use.
+             *
+             * If you include `tools` in your API request, the model may return `tool_use` content
+             * blocks that represent the model's use of those tools. You can then run those tools
+             * using the tool input generated by the model and then optionally return results back
+             * to the model using `tool_result` content blocks.
+             *
+             * Each tool definition includes:
+             * - `name`: Name of the tool.
+             * - `description`: Optional, but strongly-recommended description of the tool.
+             * - `input_schema`: [JSON schema](https://json-schema.org/) for the tool `input` shape
+             *   that the model will produce in `tool_use` output content blocks.
+             *
+             * For example, if you defined `tools` as:
+             * ```json
+             * [
+             *   {
+             *     "name": "get_stock_price",
+             *     "description": "Get the current stock price for a given ticker symbol.",
+             *     "input_schema": {
+             *       "type": "object",
+             *       "properties": {
+             *         "ticker": {
+             *           "type": "string",
+             *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
+             *         }
+             *       },
+             *       "required": ["ticker"]
+             *     }
+             *   }
+             * ]
+             * ```
+             *
+             * And then asked the model "What's the S&P 500 at today?", the model might produce
+             * `tool_use` content blocks in the response like this:
+             * ```json
+             * [
+             *   {
+             *     "type": "tool_use",
+             *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+             *     "name": "get_stock_price",
+             *     "input": { "ticker": "^GSPC" }
+             *   }
+             * ]
+             * ```
+             *
+             * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an
+             * input, and return the following back to the model in a subsequent `user` message:
+             * ```json
+             * [
+             *   {
+             *     "type": "tool_result",
+             *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+             *     "content": "259.75 USD"
+             *   }
+             * ]
+             * ```
+             *
+             * Tools can be used for workflows that include running client-side tools and functions,
+             * or more generally whenever you want the model to produce a particular JSON structure
+             * of output.
+             *
+             * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+             */
+            fun addTool(tool: Tool) = apply {
+                tools = (tools ?: mutableListOf()).apply { add(tool) }
+            }
 
             /**
              * Only sample from the top K options for each subsequent token.
@@ -611,7 +1073,7 @@ constructor(
              *
              * Recommended for advanced use cases only. You usually only need to use `temperature`.
              */
-            @JsonProperty("top_k") fun topK(topK: Long) = apply { this.topK = topK }
+            fun topK(topK: Long) = apply { this.topK = topK }
 
             /**
              * Use nucleus sampling.
@@ -623,20 +1085,25 @@ constructor(
              *
              * Recommended for advanced use cases only. You usually only need to use `temperature`.
              */
-            @JsonProperty("top_p") fun topP(topP: Double) = apply { this.topP = topP }
+            fun topP(topP: Double) = apply { this.topP = topP }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
-                this.additionalProperties.putAll(additionalProperties)
+                putAllAdditionalProperties(additionalProperties)
             }
 
-            @JsonAnySetter
             fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                this.additionalProperties.put(key, value)
+                additionalProperties.put(key, value)
             }
 
             fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
             }
 
             fun build(): MessageCreateBody =
@@ -685,37 +1152,15 @@ constructor(
     @NoAutoDetect
     class Builder {
 
-        private var maxTokens: Long? = null
-        private var messages: MutableList<MessageParam> = mutableListOf()
-        private var model: Model? = null
-        private var metadata: Metadata? = null
-        private var stopSequences: MutableList<String> = mutableListOf()
-        private var system: System? = null
-        private var temperature: Double? = null
-        private var toolChoice: ToolChoice? = null
-        private var tools: MutableList<Tool> = mutableListOf()
-        private var topK: Long? = null
-        private var topP: Double? = null
+        private var body: MessageCreateBody.Builder = MessageCreateBody.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
-        private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(messageCreateParams: MessageCreateParams) = apply {
-            maxTokens = messageCreateParams.maxTokens
-            messages = messageCreateParams.messages.toMutableList()
-            model = messageCreateParams.model
-            metadata = messageCreateParams.metadata
-            stopSequences = messageCreateParams.stopSequences?.toMutableList() ?: mutableListOf()
-            system = messageCreateParams.system
-            temperature = messageCreateParams.temperature
-            toolChoice = messageCreateParams.toolChoice
-            tools = messageCreateParams.tools?.toMutableList() ?: mutableListOf()
-            topK = messageCreateParams.topK
-            topP = messageCreateParams.topP
+            body = messageCreateParams.body.toBuilder()
             additionalHeaders = messageCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = messageCreateParams.additionalQueryParams.toBuilder()
-            additionalBodyProperties = messageCreateParams.additionalBodyProperties.toMutableMap()
         }
 
         /**
@@ -727,7 +1172,7 @@ constructor(
          * Different models have different maximum values for this parameter. See
          * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
          */
-        fun maxTokens(maxTokens: Long) = apply { this.maxTokens = maxTokens }
+        fun maxTokens(maxTokens: Long) = apply { body.maxTokens(maxTokens) }
 
         /**
          * Input messages.
@@ -810,10 +1255,7 @@ constructor(
          * top-level `system` parameter — there is no `"system"` role for input messages in the
          * Messages API.
          */
-        fun messages(messages: List<MessageParam>) = apply {
-            this.messages.clear()
-            this.messages.addAll(messages)
-        }
+        fun messages(messages: List<MessageParam>) = apply { body.messages(messages) }
 
         /**
          * Input messages.
@@ -896,7 +1338,7 @@ constructor(
          * top-level `system` parameter — there is no `"system"` role for input messages in the
          * Messages API.
          */
-        fun addMessage(message: MessageParam) = apply { this.messages.add(message) }
+        fun addMessage(message: MessageParam) = apply { body.addMessage(message) }
 
         /**
          * Input messages.
@@ -979,24 +1421,24 @@ constructor(
          * top-level `system` parameter — there is no `"system"` role for input messages in the
          * Messages API.
          */
-        fun addMessage(message: Message) = addMessage(message.toParam())
+        fun addMessage(message: Message) = apply { body.addMessage(message) }
 
         /**
          * The model that will complete your prompt.\n\nSee
          * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
          * options.
          */
-        fun model(model: Model) = apply { this.model = model }
+        fun model(model: Model) = apply { body.model(model) }
 
         /**
          * The model that will complete your prompt.\n\nSee
          * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
          * options.
          */
-        fun model(value: String) = apply { this.model = Model.of(value) }
+        fun model(value: String) = apply { body.model(value) }
 
         /** An object describing metadata about the request. */
-        fun metadata(metadata: Metadata) = apply { this.metadata = metadata }
+        fun metadata(metadata: Metadata) = apply { body.metadata(metadata) }
 
         /**
          * Custom text sequences that will cause the model to stop generating.
@@ -1009,10 +1451,7 @@ constructor(
          * sequences, the response `stop_reason` value will be `"stop_sequence"` and the response
          * `stop_sequence` value will contain the matched stop sequence.
          */
-        fun stopSequences(stopSequences: List<String>) = apply {
-            this.stopSequences.clear()
-            this.stopSequences.addAll(stopSequences)
-        }
+        fun stopSequences(stopSequences: List<String>) = apply { body.stopSequences(stopSequences) }
 
         /**
          * Custom text sequences that will cause the model to stop generating.
@@ -1025,7 +1464,7 @@ constructor(
          * sequences, the response `stop_reason` value will be `"stop_sequence"` and the response
          * `stop_sequence` value will contain the matched stop sequence.
          */
-        fun addStopSequence(stopSequence: String) = apply { this.stopSequences.add(stopSequence) }
+        fun addStopSequence(stopSequence: String) = apply { body.addStopSequence(stopSequence) }
 
         /**
          * System prompt.
@@ -1034,26 +1473,12 @@ constructor(
          * specifying a particular goal or role. See our
          * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
          */
-        fun system(system: System) = apply { this.system = system }
+        fun system(system: System) = apply { body.system(system) }
 
-        /**
-         * System prompt.
-         *
-         * A system prompt is a way of providing context and instructions to Claude, such as
-         * specifying a particular goal or role. See our
-         * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
-         */
-        fun system(string: String) = apply { this.system = System.ofString(string) }
+        fun system(string: String) = apply { body.system(string) }
 
-        /**
-         * System prompt.
-         *
-         * A system prompt is a way of providing context and instructions to Claude, such as
-         * specifying a particular goal or role. See our
-         * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
-         */
         fun systemOfTextBlockParams(textBlockParams: List<TextBlockParam>) = apply {
-            this.system = System.ofTextBlockParams(textBlockParams)
+            body.systemOfTextBlockParams(textBlockParams)
         }
 
         /**
@@ -1064,37 +1489,22 @@ constructor(
          *
          * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
          */
-        fun temperature(temperature: Double) = apply { this.temperature = temperature }
+        fun temperature(temperature: Double) = apply { body.temperature(temperature) }
 
         /**
          * How the model should use the provided tools. The model can use a specific tool, any
          * available tool, or decide by itself.
          */
-        fun toolChoice(toolChoice: ToolChoice) = apply { this.toolChoice = toolChoice }
+        fun toolChoice(toolChoice: ToolChoice) = apply { body.toolChoice(toolChoice) }
 
-        /**
-         * How the model should use the provided tools. The model can use a specific tool, any
-         * available tool, or decide by itself.
-         */
-        fun toolChoice(toolChoiceAuto: ToolChoiceAuto) = apply {
-            this.toolChoice = ToolChoice.ofToolChoiceAuto(toolChoiceAuto)
-        }
+        /** The model will automatically decide whether to use tools. */
+        fun toolChoice(toolChoiceAuto: ToolChoiceAuto) = apply { body.toolChoice(toolChoiceAuto) }
 
-        /**
-         * How the model should use the provided tools. The model can use a specific tool, any
-         * available tool, or decide by itself.
-         */
-        fun toolChoice(toolChoiceAny: ToolChoiceAny) = apply {
-            this.toolChoice = ToolChoice.ofToolChoiceAny(toolChoiceAny)
-        }
+        /** The model will use any available tools. */
+        fun toolChoice(toolChoiceAny: ToolChoiceAny) = apply { body.toolChoice(toolChoiceAny) }
 
-        /**
-         * How the model should use the provided tools. The model can use a specific tool, any
-         * available tool, or decide by itself.
-         */
-        fun toolChoice(toolChoiceTool: ToolChoiceTool) = apply {
-            this.toolChoice = ToolChoice.ofToolChoiceTool(toolChoiceTool)
-        }
+        /** The model will use the specified tool with `tool_choice.name`. */
+        fun toolChoice(toolChoiceTool: ToolChoiceTool) = apply { body.toolChoice(toolChoiceTool) }
 
         /**
          * Definitions of tools that the model may use.
@@ -1161,10 +1571,7 @@ constructor(
          *
          * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
          */
-        fun tools(tools: List<Tool>) = apply {
-            this.tools.clear()
-            this.tools.addAll(tools)
-        }
+        fun tools(tools: List<Tool>) = apply { body.tools(tools) }
 
         /**
          * Definitions of tools that the model may use.
@@ -1231,7 +1638,7 @@ constructor(
          *
          * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
          */
-        fun addTool(tool: Tool) = apply { this.tools.add(tool) }
+        fun addTool(tool: Tool) = apply { body.addTool(tool) }
 
         /**
          * Only sample from the top K options for each subsequent token.
@@ -1241,7 +1648,7 @@ constructor(
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
          */
-        fun topK(topK: Long) = apply { this.topK = topK }
+        fun topK(topK: Long) = apply { body.topK(topK) }
 
         /**
          * Use nucleus sampling.
@@ -1253,7 +1660,7 @@ constructor(
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
          */
-        fun topP(topP: Double) = apply { this.topP = topP }
+        fun topP(topP: Double) = apply { body.topP(topP) }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -1354,46 +1761,39 @@ constructor(
         }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
-            this.additionalBodyProperties.clear()
-            putAllAdditionalBodyProperties(additionalBodyProperties)
+            body.additionalProperties(additionalBodyProperties)
         }
 
         fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
-            additionalBodyProperties.put(key, value)
+            body.putAdditionalProperty(key, value)
         }
 
         fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
             apply {
-                this.additionalBodyProperties.putAll(additionalBodyProperties)
+                body.putAllAdditionalProperties(additionalBodyProperties)
             }
 
-        fun removeAdditionalBodyProperty(key: String) = apply {
-            additionalBodyProperties.remove(key)
-        }
+        fun removeAdditionalBodyProperty(key: String) = apply { body.removeAdditionalProperty(key) }
 
         fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalBodyProperty)
+            body.removeAllAdditionalProperties(keys)
         }
 
         fun build(): MessageCreateParams =
             MessageCreateParams(
-                checkNotNull(maxTokens) { "`maxTokens` is required but was not set" },
-                messages.toImmutable(),
-                checkNotNull(model) { "`model` is required but was not set" },
-                metadata,
-                stopSequences.toImmutable().ifEmpty { null },
-                system,
-                temperature,
-                toolChoice,
-                tools.toImmutable().ifEmpty { null },
-                topK,
-                topP,
+                body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
-                additionalBodyProperties.toImmutable(),
             )
     }
 
+    /**
+     * System prompt.
+     *
+     * A system prompt is a way of providing context and instructions to Claude, such as specifying
+     * a particular goal or role. See our
+     * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+     */
     @JsonDeserialize(using = System.Deserializer::class)
     @JsonSerialize(using = System.Serializer::class)
     class System
@@ -1402,8 +1802,6 @@ constructor(
         private val textBlockParams: List<TextBlockParam>? = null,
         private val _json: JsonValue? = null,
     ) {
-
-        private var validated: Boolean = false
 
         fun string(): Optional<String> = Optional.ofNullable(string)
 
@@ -1425,16 +1823,6 @@ constructor(
                 string != null -> visitor.visitString(string)
                 textBlockParams != null -> visitor.visitTextBlockParams(textBlockParams)
                 else -> visitor.unknown(_json)
-            }
-        }
-
-        fun validate(): System = apply {
-            if (!validated) {
-                if (string == null && textBlockParams == null) {
-                    throw AnthropicInvalidDataException("Unknown System: $_json")
-                }
-                textBlockParams?.forEach { it.validate() }
-                validated = true
             }
         }
 
@@ -1484,12 +1872,9 @@ constructor(
                 tryDeserialize(node, jacksonTypeRef<String>())?.let {
                     return System(string = it, _json = json)
                 }
-                tryDeserialize(node, jacksonTypeRef<List<TextBlockParam>>()) {
-                        it.forEach { it.validate() }
-                    }
-                    ?.let {
-                        return System(textBlockParams = it, _json = json)
-                    }
+                tryDeserialize(node, jacksonTypeRef<List<TextBlockParam>>())?.let {
+                    return System(textBlockParams = it, _json = json)
+                }
 
                 return System(_json = json)
             }
@@ -1517,11 +1902,11 @@ constructor(
             return true
         }
 
-        return /* spotless:off */ other is MessageCreateParams && maxTokens == other.maxTokens && messages == other.messages && model == other.model && metadata == other.metadata && stopSequences == other.stopSequences && system == other.system && temperature == other.temperature && toolChoice == other.toolChoice && tools == other.tools && topK == other.topK && topP == other.topP && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams && additionalBodyProperties == other.additionalBodyProperties /* spotless:on */
+        return /* spotless:off */ other is MessageCreateParams && body == other.body && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(maxTokens, messages, model, metadata, stopSequences, system, temperature, toolChoice, tools, topK, topP, additionalHeaders, additionalQueryParams, additionalBodyProperties) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(body, additionalHeaders, additionalQueryParams) /* spotless:on */
 
     override fun toString() =
-        "MessageCreateParams{maxTokens=$maxTokens, messages=$messages, model=$model, metadata=$metadata, stopSequences=$stopSequences, system=$system, temperature=$temperature, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "MessageCreateParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -8,30 +8,36 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 import java.util.Optional
 
-@JsonDeserialize(builder = BetaToolComputerUse20241022.Builder::class)
 @NoAutoDetect
 class BetaToolComputerUse20241022
+@JsonCreator
 private constructor(
-    private val cacheControl: JsonField<BetaCacheControlEphemeral>,
-    private val type: JsonField<Type>,
-    private val name: JsonField<Name>,
-    private val displayHeightPx: JsonField<Long>,
-    private val displayWidthPx: JsonField<Long>,
-    private val displayNumber: JsonField<Long>,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("cache_control")
+    @ExcludeMissing
+    private val cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+    @JsonProperty("name") @ExcludeMissing private val name: JsonField<Name> = JsonMissing.of(),
+    @JsonProperty("display_height_px")
+    @ExcludeMissing
+    private val displayHeightPx: JsonField<Long> = JsonMissing.of(),
+    @JsonProperty("display_width_px")
+    @ExcludeMissing
+    private val displayWidthPx: JsonField<Long> = JsonMissing.of(),
+    @JsonProperty("display_number")
+    @ExcludeMissing
+    private val displayNumber: JsonField<Long> = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
-
-    private var validated: Boolean = false
 
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
@@ -79,6 +85,8 @@ private constructor(
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
+    private var validated: Boolean = false
+
     fun validate(): BetaToolComputerUse20241022 = apply {
         if (!validated) {
             cacheControl().map { it.validate() }
@@ -110,28 +118,24 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaToolComputerUse20241022: BetaToolComputerUse20241022) = apply {
-            this.cacheControl = betaToolComputerUse20241022.cacheControl
-            this.type = betaToolComputerUse20241022.type
-            this.name = betaToolComputerUse20241022.name
-            this.displayHeightPx = betaToolComputerUse20241022.displayHeightPx
-            this.displayWidthPx = betaToolComputerUse20241022.displayWidthPx
-            this.displayNumber = betaToolComputerUse20241022.displayNumber
-            additionalProperties(betaToolComputerUse20241022.additionalProperties)
+            cacheControl = betaToolComputerUse20241022.cacheControl
+            type = betaToolComputerUse20241022.type
+            name = betaToolComputerUse20241022.name
+            displayHeightPx = betaToolComputerUse20241022.displayHeightPx
+            displayWidthPx = betaToolComputerUse20241022.displayWidthPx
+            displayNumber = betaToolComputerUse20241022.displayNumber
+            additionalProperties = betaToolComputerUse20241022.additionalProperties.toMutableMap()
         }
 
         fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
             cacheControl(JsonField.of(cacheControl))
 
-        @JsonProperty("cache_control")
-        @ExcludeMissing
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
 
         fun type(type: Type) = type(JsonField.of(type))
 
-        @JsonProperty("type")
-        @ExcludeMissing
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
         /**
@@ -146,16 +150,12 @@ private constructor(
          *
          * This is how the tool will be called by the model and in tool_use blocks.
          */
-        @JsonProperty("name")
-        @ExcludeMissing
         fun name(name: JsonField<Name>) = apply { this.name = name }
 
         /** The height of the display in pixels. */
         fun displayHeightPx(displayHeightPx: Long) = displayHeightPx(JsonField.of(displayHeightPx))
 
         /** The height of the display in pixels. */
-        @JsonProperty("display_height_px")
-        @ExcludeMissing
         fun displayHeightPx(displayHeightPx: JsonField<Long>) = apply {
             this.displayHeightPx = displayHeightPx
         }
@@ -164,8 +164,6 @@ private constructor(
         fun displayWidthPx(displayWidthPx: Long) = displayWidthPx(JsonField.of(displayWidthPx))
 
         /** The width of the display in pixels. */
-        @JsonProperty("display_width_px")
-        @ExcludeMissing
         fun displayWidthPx(displayWidthPx: JsonField<Long>) = apply {
             this.displayWidthPx = displayWidthPx
         }
@@ -174,24 +172,27 @@ private constructor(
         fun displayNumber(displayNumber: Long) = displayNumber(JsonField.of(displayNumber))
 
         /** The X11 display number (e.g. 0, 1) for the display. */
-        @JsonProperty("display_number")
-        @ExcludeMissing
         fun displayNumber(displayNumber: JsonField<Long>) = apply {
             this.displayNumber = displayNumber
         }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): BetaToolComputerUse20241022 =

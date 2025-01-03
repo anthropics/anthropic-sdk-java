@@ -7,26 +7,33 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 import java.util.Optional
 
-@JsonDeserialize(builder = BetaUsage.Builder::class)
 @NoAutoDetect
 class BetaUsage
+@JsonCreator
 private constructor(
-    private val inputTokens: JsonField<Long>,
-    private val cacheCreationInputTokens: JsonField<Long>,
-    private val cacheReadInputTokens: JsonField<Long>,
-    private val outputTokens: JsonField<Long>,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("input_tokens")
+    @ExcludeMissing
+    private val inputTokens: JsonField<Long> = JsonMissing.of(),
+    @JsonProperty("cache_creation_input_tokens")
+    @ExcludeMissing
+    private val cacheCreationInputTokens: JsonField<Long> = JsonMissing.of(),
+    @JsonProperty("cache_read_input_tokens")
+    @ExcludeMissing
+    private val cacheReadInputTokens: JsonField<Long> = JsonMissing.of(),
+    @JsonProperty("output_tokens")
+    @ExcludeMissing
+    private val outputTokens: JsonField<Long> = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
-
-    private var validated: Boolean = false
 
     /** The number of input tokens which were used. */
     fun inputTokens(): Long = inputTokens.getRequired("input_tokens")
@@ -62,6 +69,8 @@ private constructor(
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
+    private var validated: Boolean = false
+
     fun validate(): BetaUsage = apply {
         if (!validated) {
             inputTokens()
@@ -89,19 +98,17 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaUsage: BetaUsage) = apply {
-            this.inputTokens = betaUsage.inputTokens
-            this.cacheCreationInputTokens = betaUsage.cacheCreationInputTokens
-            this.cacheReadInputTokens = betaUsage.cacheReadInputTokens
-            this.outputTokens = betaUsage.outputTokens
-            additionalProperties(betaUsage.additionalProperties)
+            inputTokens = betaUsage.inputTokens
+            cacheCreationInputTokens = betaUsage.cacheCreationInputTokens
+            cacheReadInputTokens = betaUsage.cacheReadInputTokens
+            outputTokens = betaUsage.outputTokens
+            additionalProperties = betaUsage.additionalProperties.toMutableMap()
         }
 
         /** The number of input tokens which were used. */
         fun inputTokens(inputTokens: Long) = inputTokens(JsonField.of(inputTokens))
 
         /** The number of input tokens which were used. */
-        @JsonProperty("input_tokens")
-        @ExcludeMissing
         fun inputTokens(inputTokens: JsonField<Long>) = apply { this.inputTokens = inputTokens }
 
         /** The number of input tokens used to create the cache entry. */
@@ -109,8 +116,6 @@ private constructor(
             cacheCreationInputTokens(JsonField.of(cacheCreationInputTokens))
 
         /** The number of input tokens used to create the cache entry. */
-        @JsonProperty("cache_creation_input_tokens")
-        @ExcludeMissing
         fun cacheCreationInputTokens(cacheCreationInputTokens: JsonField<Long>) = apply {
             this.cacheCreationInputTokens = cacheCreationInputTokens
         }
@@ -120,8 +125,6 @@ private constructor(
             cacheReadInputTokens(JsonField.of(cacheReadInputTokens))
 
         /** The number of input tokens read from the cache. */
-        @JsonProperty("cache_read_input_tokens")
-        @ExcludeMissing
         fun cacheReadInputTokens(cacheReadInputTokens: JsonField<Long>) = apply {
             this.cacheReadInputTokens = cacheReadInputTokens
         }
@@ -130,22 +133,25 @@ private constructor(
         fun outputTokens(outputTokens: Long) = outputTokens(JsonField.of(outputTokens))
 
         /** The number of output tokens which were used. */
-        @JsonProperty("output_tokens")
-        @ExcludeMissing
         fun outputTokens(outputTokens: JsonField<Long>) = apply { this.outputTokens = outputTokens }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): BetaUsage =

@@ -8,27 +8,29 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 import java.util.Optional
 
-@JsonDeserialize(builder = BetaImageBlockParam.Builder::class)
 @NoAutoDetect
 class BetaImageBlockParam
+@JsonCreator
 private constructor(
-    private val cacheControl: JsonField<BetaCacheControlEphemeral>,
-    private val type: JsonField<Type>,
-    private val source: JsonField<Source>,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("cache_control")
+    @ExcludeMissing
+    private val cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+    @JsonProperty("source")
+    @ExcludeMissing
+    private val source: JsonField<Source> = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
-
-    private var validated: Boolean = false
 
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
@@ -46,6 +48,8 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+    private var validated: Boolean = false
 
     fun validate(): BetaImageBlockParam = apply {
         if (!validated) {
@@ -72,45 +76,44 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaImageBlockParam: BetaImageBlockParam) = apply {
-            this.cacheControl = betaImageBlockParam.cacheControl
-            this.type = betaImageBlockParam.type
-            this.source = betaImageBlockParam.source
-            additionalProperties(betaImageBlockParam.additionalProperties)
+            cacheControl = betaImageBlockParam.cacheControl
+            type = betaImageBlockParam.type
+            source = betaImageBlockParam.source
+            additionalProperties = betaImageBlockParam.additionalProperties.toMutableMap()
         }
 
         fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
             cacheControl(JsonField.of(cacheControl))
 
-        @JsonProperty("cache_control")
-        @ExcludeMissing
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
 
         fun type(type: Type) = type(JsonField.of(type))
 
-        @JsonProperty("type")
-        @ExcludeMissing
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun source(source: Source) = source(JsonField.of(source))
 
-        @JsonProperty("source")
-        @ExcludeMissing
         fun source(source: JsonField<Source>) = apply { this.source = source }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): BetaImageBlockParam =
@@ -122,17 +125,20 @@ private constructor(
             )
     }
 
-    @JsonDeserialize(builder = Source.Builder::class)
     @NoAutoDetect
     class Source
+    @JsonCreator
     private constructor(
-        private val type: JsonField<Type>,
-        private val mediaType: JsonField<MediaType>,
-        private val data: JsonField<String>,
-        private val additionalProperties: Map<String, JsonValue>,
+        @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+        @JsonProperty("media_type")
+        @ExcludeMissing
+        private val mediaType: JsonField<MediaType> = JsonMissing.of(),
+        @JsonProperty("data")
+        @ExcludeMissing
+        private val data: JsonField<String> = JsonMissing.of(),
+        @JsonAnySetter
+        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
     ) {
-
-        private var validated: Boolean = false
 
         fun type(): Type = type.getRequired("type")
 
@@ -149,6 +155,8 @@ private constructor(
         @JsonAnyGetter
         @ExcludeMissing
         fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+        private var validated: Boolean = false
 
         fun validate(): Source = apply {
             if (!validated) {
@@ -175,42 +183,41 @@ private constructor(
 
             @JvmSynthetic
             internal fun from(source: Source) = apply {
-                this.type = source.type
-                this.mediaType = source.mediaType
-                this.data = source.data
-                additionalProperties(source.additionalProperties)
+                type = source.type
+                mediaType = source.mediaType
+                data = source.data
+                additionalProperties = source.additionalProperties.toMutableMap()
             }
 
             fun type(type: Type) = type(JsonField.of(type))
 
-            @JsonProperty("type")
-            @ExcludeMissing
             fun type(type: JsonField<Type>) = apply { this.type = type }
 
             fun mediaType(mediaType: MediaType) = mediaType(JsonField.of(mediaType))
 
-            @JsonProperty("media_type")
-            @ExcludeMissing
             fun mediaType(mediaType: JsonField<MediaType>) = apply { this.mediaType = mediaType }
 
             fun data(data: String) = data(JsonField.of(data))
 
-            @JsonProperty("data")
-            @ExcludeMissing
             fun data(data: JsonField<String>) = apply { this.data = data }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
-                this.additionalProperties.putAll(additionalProperties)
+                putAllAdditionalProperties(additionalProperties)
             }
 
-            @JsonAnySetter
             fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                this.additionalProperties.put(key, value)
+                additionalProperties.put(key, value)
             }
 
             fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
             }
 
             fun build(): Source =

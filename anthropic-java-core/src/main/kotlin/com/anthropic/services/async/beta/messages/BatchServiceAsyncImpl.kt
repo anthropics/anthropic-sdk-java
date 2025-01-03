@@ -12,9 +12,11 @@ import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.json
 import com.anthropic.errors.AnthropicError
+import com.anthropic.models.BetaDeletedMessageBatch
 import com.anthropic.models.BetaMessageBatch
 import com.anthropic.models.BetaMessageBatchCancelParams
 import com.anthropic.models.BetaMessageBatchCreateParams
+import com.anthropic.models.BetaMessageBatchDeleteParams
 import com.anthropic.models.BetaMessageBatchListPageAsync
 import com.anthropic.models.BetaMessageBatchListParams
 import com.anthropic.models.BetaMessageBatchRetrieveParams
@@ -129,6 +131,41 @@ constructor(
                     }
                 }
                 .let { BetaMessageBatchListPageAsync.of(this, params, it) }
+        }
+    }
+
+    private val deleteHandler: Handler<BetaDeletedMessageBatch> =
+        jsonHandler<BetaDeletedMessageBatch>(clientOptions.jsonMapper)
+            .withErrorHandler(errorHandler)
+
+    /**
+     * This endpoint is idempotent and can be used to poll for Message Batch completion. To access
+     * the results of a Message Batch, make a request to the `results_url` field in the response.
+     */
+    override fun delete(
+        params: BetaMessageBatchDeleteParams,
+        requestOptions: RequestOptions
+    ): CompletableFuture<BetaDeletedMessageBatch> {
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.DELETE)
+                .addPathSegments("v1", "messages", "batches", params.getPathParam(0))
+                .putQueryParam("beta", "true")
+                .putAllQueryParams(clientOptions.queryParams)
+                .replaceAllQueryParams(params.getQueryParams())
+                .putAllHeaders(clientOptions.headers)
+                .replaceAllHeaders(params.getHeaders())
+                .apply { params.getBody().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                .build()
+        return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
+            ->
+            response
+                .use { deleteHandler.handle(it) }
+                .apply {
+                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                        validate()
+                    }
+                }
         }
     }
 

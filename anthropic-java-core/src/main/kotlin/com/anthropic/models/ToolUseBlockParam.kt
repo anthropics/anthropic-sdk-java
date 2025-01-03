@@ -8,29 +8,29 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 import java.util.Optional
 
-@JsonDeserialize(builder = ToolUseBlockParam.Builder::class)
 @NoAutoDetect
 class ToolUseBlockParam
+@JsonCreator
 private constructor(
-    private val cacheControl: JsonField<CacheControlEphemeral>,
-    private val type: JsonField<Type>,
-    private val id: JsonField<String>,
-    private val name: JsonField<String>,
-    private val input: JsonValue,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("cache_control")
+    @ExcludeMissing
+    private val cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+    @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("name") @ExcludeMissing private val name: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("input") @ExcludeMissing private val input: JsonValue = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
-
-    private var validated: Boolean = false
 
     fun cacheControl(): Optional<CacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
@@ -54,6 +54,8 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+    private var validated: Boolean = false
 
     fun validate(): ToolUseBlockParam = apply {
         if (!validated) {
@@ -83,55 +85,52 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(toolUseBlockParam: ToolUseBlockParam) = apply {
-            this.cacheControl = toolUseBlockParam.cacheControl
-            this.type = toolUseBlockParam.type
-            this.id = toolUseBlockParam.id
-            this.name = toolUseBlockParam.name
-            this.input = toolUseBlockParam.input
-            additionalProperties(toolUseBlockParam.additionalProperties)
+            cacheControl = toolUseBlockParam.cacheControl
+            type = toolUseBlockParam.type
+            id = toolUseBlockParam.id
+            name = toolUseBlockParam.name
+            input = toolUseBlockParam.input
+            additionalProperties = toolUseBlockParam.additionalProperties.toMutableMap()
         }
 
         fun cacheControl(cacheControl: CacheControlEphemeral) =
             cacheControl(JsonField.of(cacheControl))
 
-        @JsonProperty("cache_control")
-        @ExcludeMissing
         fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
 
         fun type(type: Type) = type(JsonField.of(type))
 
-        @JsonProperty("type")
-        @ExcludeMissing
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun id(id: String) = id(JsonField.of(id))
 
-        @JsonProperty("id") @ExcludeMissing fun id(id: JsonField<String>) = apply { this.id = id }
+        fun id(id: JsonField<String>) = apply { this.id = id }
 
         fun name(name: String) = name(JsonField.of(name))
 
-        @JsonProperty("name")
-        @ExcludeMissing
         fun name(name: JsonField<String>) = apply { this.name = name }
 
-        @JsonProperty("input")
-        @ExcludeMissing
         fun input(input: JsonValue) = apply { this.input = input }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): ToolUseBlockParam =

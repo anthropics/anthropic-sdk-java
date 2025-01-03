@@ -8,26 +8,26 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 
-@JsonDeserialize(builder = Base64PdfSource.Builder::class)
 @NoAutoDetect
 class Base64PdfSource
+@JsonCreator
 private constructor(
-    private val type: JsonField<Type>,
-    private val mediaType: JsonField<MediaType>,
-    private val data: JsonField<String>,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+    @JsonProperty("media_type")
+    @ExcludeMissing
+    private val mediaType: JsonField<MediaType> = JsonMissing.of(),
+    @JsonProperty("data") @ExcludeMissing private val data: JsonField<String> = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
-
-    private var validated: Boolean = false
 
     fun type(): Type = type.getRequired("type")
 
@@ -44,6 +44,8 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+    private var validated: Boolean = false
 
     fun validate(): Base64PdfSource = apply {
         if (!validated) {
@@ -70,42 +72,41 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(base64PdfSource: Base64PdfSource) = apply {
-            this.type = base64PdfSource.type
-            this.mediaType = base64PdfSource.mediaType
-            this.data = base64PdfSource.data
-            additionalProperties(base64PdfSource.additionalProperties)
+            type = base64PdfSource.type
+            mediaType = base64PdfSource.mediaType
+            data = base64PdfSource.data
+            additionalProperties = base64PdfSource.additionalProperties.toMutableMap()
         }
 
         fun type(type: Type) = type(JsonField.of(type))
 
-        @JsonProperty("type")
-        @ExcludeMissing
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun mediaType(mediaType: MediaType) = mediaType(JsonField.of(mediaType))
 
-        @JsonProperty("media_type")
-        @ExcludeMissing
         fun mediaType(mediaType: JsonField<MediaType>) = apply { this.mediaType = mediaType }
 
         fun data(data: String) = data(JsonField.of(data))
 
-        @JsonProperty("data")
-        @ExcludeMissing
         fun data(data: JsonField<String>) = apply { this.data = data }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): Base64PdfSource =

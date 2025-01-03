@@ -181,10 +181,10 @@ class MessageCreateParamsTest {
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
         assertThat(body.metadata())
-            .isEqualTo(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
-        assertThat(body.stopSequences()).isEqualTo(listOf("string"))
+            .contains(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
+        assertThat(body.stopSequences()).contains(listOf("string"))
         assertThat(body.system())
-            .isEqualTo(
+            .contains(
                 MessageCreateParams.System.ofTextBlockParams(
                     listOf(
                         TextBlockParam.builder()
@@ -199,9 +199,9 @@ class MessageCreateParamsTest {
                     )
                 )
             )
-        assertThat(body.temperature()).isEqualTo(1.0)
+        assertThat(body.temperature()).contains(1.0)
         assertThat(body.toolChoice())
-            .isEqualTo(
+            .contains(
                 ToolChoice.ofToolChoiceAuto(
                     ToolChoiceAuto.builder()
                         .type(ToolChoiceAuto.Type.AUTO)
@@ -210,7 +210,7 @@ class MessageCreateParamsTest {
                 )
             )
         assertThat(body.tools())
-            .isEqualTo(
+            .contains(
                 listOf(
                     Tool.builder()
                         .inputSchema(
@@ -246,8 +246,8 @@ class MessageCreateParamsTest {
                         .build()
                 )
             )
-        assertThat(body.topK()).isEqualTo(5L)
-        assertThat(body.topP()).isEqualTo(0.7)
+        assertThat(body.topK()).contains(5L)
+        assertThat(body.topP()).contains(0.7)
     }
 
     @Test

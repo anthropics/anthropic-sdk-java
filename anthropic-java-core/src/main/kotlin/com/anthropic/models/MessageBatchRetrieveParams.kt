@@ -14,6 +14,7 @@ constructor(
     private val additionalQueryParams: QueryParams,
 ) {
 
+    /** ID of the Message Batch. */
     fun messageBatchId(): String = messageBatchId
 
     fun _additionalHeaders(): Headers = additionalHeaders

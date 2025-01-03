@@ -14,6 +14,7 @@ constructor(
     private val additionalQueryParams: QueryParams,
 ) {
 
+    /** Model identifier or alias. */
     fun modelId(): String = modelId
 
     fun _additionalHeaders(): Headers = additionalHeaders

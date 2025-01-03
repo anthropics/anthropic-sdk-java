@@ -8,40 +8,38 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 import java.util.Optional
 
-@JsonDeserialize(builder = BetaMessage.Builder::class)
 @NoAutoDetect
 class BetaMessage
+@JsonCreator
 private constructor(
-    private val id: JsonField<String>,
-    private val type: JsonField<Type>,
-    private val role: JsonField<Role>,
-    private val content: JsonField<List<BetaContentBlock>>,
-    private val model: JsonField<Model>,
-    private val stopReason: JsonField<StopReason>,
-    private val stopSequence: JsonField<String>,
-    private val usage: JsonField<BetaUsage>,
-    private val additionalProperties: Map<String, JsonValue>,
+    @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+    @JsonProperty("role") @ExcludeMissing private val role: JsonField<Role> = JsonMissing.of(),
+    @JsonProperty("content")
+    @ExcludeMissing
+    private val content: JsonField<List<BetaContentBlock>> = JsonMissing.of(),
+    @JsonProperty("model") @ExcludeMissing private val model: JsonField<Model> = JsonMissing.of(),
+    @JsonProperty("stop_reason")
+    @ExcludeMissing
+    private val stopReason: JsonField<StopReason> = JsonMissing.of(),
+    @JsonProperty("stop_sequence")
+    @ExcludeMissing
+    private val stopSequence: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("usage")
+    @ExcludeMissing
+    private val usage: JsonField<BetaUsage> = JsonMissing.of(),
+    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
-
-    fun toParam(): BetaMessageParam =
-        BetaMessageParam.builder()
-            .content(
-                BetaMessageParam.Content.ofBetaContentBlockParams(content().map { it.toParam() })
-            )
-            .role(BetaMessageParam.Role.of(role().toString()))
-            .build()
-
-    private var validated: Boolean = false
 
     /**
      * Unique object identifier.
@@ -239,6 +237,16 @@ private constructor(
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
+    fun toParam(): BetaMessageParam =
+        BetaMessageParam.builder()
+            .content(
+                BetaMessageParam.Content.ofBetaContentBlockParams(content().map { it.toParam() })
+            )
+            .role(BetaMessageParam.Role.of(role().toString()))
+            .build()
+
+    private var validated: Boolean = false
+
     fun validate(): BetaMessage = apply {
         if (!validated) {
             id()
@@ -274,15 +282,15 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaMessage: BetaMessage) = apply {
-            this.id = betaMessage.id
-            this.type = betaMessage.type
-            this.role = betaMessage.role
-            this.content = betaMessage.content
-            this.model = betaMessage.model
-            this.stopReason = betaMessage.stopReason
-            this.stopSequence = betaMessage.stopSequence
-            this.usage = betaMessage.usage
-            additionalProperties(betaMessage.additionalProperties)
+            id = betaMessage.id
+            type = betaMessage.type
+            role = betaMessage.role
+            content = betaMessage.content
+            model = betaMessage.model
+            stopReason = betaMessage.stopReason
+            stopSequence = betaMessage.stopSequence
+            usage = betaMessage.usage
+            additionalProperties = betaMessage.additionalProperties.toMutableMap()
         }
 
         /**
@@ -297,7 +305,7 @@ private constructor(
          *
          * The format and length of IDs may change over time.
          */
-        @JsonProperty("id") @ExcludeMissing fun id(id: JsonField<String>) = apply { this.id = id }
+        fun id(id: JsonField<String>) = apply { this.id = id }
 
         /**
          * Object type.
@@ -311,8 +319,6 @@ private constructor(
          *
          * For Messages, this is always `"message"`.
          */
-        @JsonProperty("type")
-        @ExcludeMissing
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
         /**
@@ -327,8 +333,6 @@ private constructor(
          *
          * This will always be `"assistant"`.
          */
-        @JsonProperty("role")
-        @ExcludeMissing
         fun role(role: JsonField<Role>) = apply { this.role = role }
 
         /**
@@ -393,8 +397,6 @@ private constructor(
          * [{ "type": "text", "text": "B)" }]
          * ```
          */
-        @JsonProperty("content")
-        @ExcludeMissing
         fun content(content: JsonField<List<BetaContentBlock>>) = apply { this.content = content }
 
         /**
@@ -409,8 +411,6 @@ private constructor(
          * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
          * options.
          */
-        @JsonProperty("model")
-        @ExcludeMissing
         fun model(model: JsonField<Model>) = apply { this.model = model }
 
         /**
@@ -439,8 +439,6 @@ private constructor(
          * In non-streaming mode this value is always non-null. In streaming mode, it is null in the
          * `message_start` event and non-null otherwise.
          */
-        @JsonProperty("stop_reason")
-        @ExcludeMissing
         fun stopReason(stopReason: JsonField<StopReason>) = apply { this.stopReason = stopReason }
 
         /**
@@ -455,8 +453,6 @@ private constructor(
          *
          * This value will be a non-null string if one of your custom stop sequences was generated.
          */
-        @JsonProperty("stop_sequence")
-        @ExcludeMissing
         fun stopSequence(stopSequence: JsonField<String>) = apply {
             this.stopSequence = stopSequence
         }
@@ -491,22 +487,25 @@ private constructor(
          * For example, `output_tokens` will be non-zero, even for an empty string response from
          * Claude.
          */
-        @JsonProperty("usage")
-        @ExcludeMissing
         fun usage(usage: JsonField<BetaUsage>) = apply { this.usage = usage }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            this.additionalProperties.putAll(additionalProperties)
+            putAllAdditionalProperties(additionalProperties)
         }
 
-        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            this.additionalProperties.put(key, value)
+            additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): BetaMessage =

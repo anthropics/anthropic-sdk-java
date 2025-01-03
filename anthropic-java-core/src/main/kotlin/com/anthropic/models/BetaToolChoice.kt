@@ -18,6 +18,10 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * How the model should use the provided tools. The model can use a specific tool, any available
+ * tool, or decide by itself.
+ */
 @JsonDeserialize(using = BetaToolChoice.Deserializer::class)
 @JsonSerialize(using = BetaToolChoice.Serializer::class)
 class BetaToolChoice
@@ -43,11 +47,12 @@ private constructor(
 
     fun isBetaToolChoiceTool(): Boolean = betaToolChoiceTool != null
 
+    /** The model will automatically decide whether to use tools. */
     fun asBetaToolChoiceAuto(): BetaToolChoiceAuto =
         betaToolChoiceAuto.getOrThrow("betaToolChoiceAuto")
-
+    /** The model will use any available tools. */
     fun asBetaToolChoiceAny(): BetaToolChoiceAny = betaToolChoiceAny.getOrThrow("betaToolChoiceAny")
-
+    /** The model will use the specified tool with `tool_choice.name`. */
     fun asBetaToolChoiceTool(): BetaToolChoiceTool =
         betaToolChoiceTool.getOrThrow("betaToolChoiceTool")
 
@@ -99,14 +104,17 @@ private constructor(
 
     companion object {
 
+        /** The model will automatically decide whether to use tools. */
         @JvmStatic
         fun ofBetaToolChoiceAuto(betaToolChoiceAuto: BetaToolChoiceAuto) =
             BetaToolChoice(betaToolChoiceAuto = betaToolChoiceAuto)
 
+        /** The model will use any available tools. */
         @JvmStatic
         fun ofBetaToolChoiceAny(betaToolChoiceAny: BetaToolChoiceAny) =
             BetaToolChoice(betaToolChoiceAny = betaToolChoiceAny)
 
+        /** The model will use the specified tool with `tool_choice.name`. */
         @JvmStatic
         fun ofBetaToolChoiceTool(betaToolChoiceTool: BetaToolChoiceTool) =
             BetaToolChoice(betaToolChoiceTool = betaToolChoiceTool)
