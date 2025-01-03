@@ -19,12 +19,26 @@ constructor(
     private val additionalQueryParams: QueryParams,
 ) {
 
+    /**
+     * ID of the object to use as a cursor for pagination. When provided, returns the page of
+     * results immediately after this object.
+     */
     fun afterId(): Optional<String> = Optional.ofNullable(afterId)
 
+    /**
+     * ID of the object to use as a cursor for pagination. When provided, returns the page of
+     * results immediately before this object.
+     */
     fun beforeId(): Optional<String> = Optional.ofNullable(beforeId)
 
+    /**
+     * Number of items to return per page.
+     *
+     * Defaults to `20`. Ranges from `1` to `1000`.
+     */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
+    /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -62,7 +76,7 @@ constructor(
         private var afterId: String? = null
         private var beforeId: String? = null
         private var limit: Long? = null
-        private var betas: MutableList<AnthropicBeta> = mutableListOf()
+        private var betas: MutableList<AnthropicBeta>? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -71,7 +85,7 @@ constructor(
             afterId = betaMessageBatchListParams.afterId
             beforeId = betaMessageBatchListParams.beforeId
             limit = betaMessageBatchListParams.limit
-            betas = betaMessageBatchListParams.betas?.toMutableList() ?: mutableListOf()
+            betas = betaMessageBatchListParams.betas?.toMutableList()
             additionalHeaders = betaMessageBatchListParams.additionalHeaders.toBuilder()
             additionalQueryParams = betaMessageBatchListParams.additionalQueryParams.toBuilder()
         }
@@ -96,13 +110,12 @@ constructor(
         fun limit(limit: Long) = apply { this.limit = limit }
 
         /** Optional header to specify the beta version(s) you want to use. */
-        fun betas(betas: List<AnthropicBeta>) = apply {
-            this.betas.clear()
-            this.betas.addAll(betas)
-        }
+        fun betas(betas: List<AnthropicBeta>) = apply { this.betas = betas.toMutableList() }
 
         /** Optional header to specify the beta version(s) you want to use. */
-        fun addBeta(beta: AnthropicBeta) = apply { this.betas.add(beta) }
+        fun addBeta(beta: AnthropicBeta) = apply {
+            betas = (betas ?: mutableListOf()).apply { add(beta) }
+        }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -207,7 +220,7 @@ constructor(
                 afterId,
                 beforeId,
                 limit,
-                betas.toImmutable().ifEmpty { null },
+                betas?.toImmutable(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )

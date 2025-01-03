@@ -19,8 +19,10 @@ constructor(
     private val additionalBodyProperties: Map<String, JsonValue>,
 ) {
 
+    /** ID of the Message Batch. */
     fun messageBatchId(): String = messageBatchId
 
+    /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -30,9 +32,8 @@ constructor(
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
 
     @JvmSynthetic
-    internal fun getBody(): Optional<Map<String, JsonValue>> {
-        return Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
-    }
+    internal fun getBody(): Optional<Map<String, JsonValue>> =
+        Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
 
     @JvmSynthetic
     internal fun getHeaders(): Headers {
@@ -62,7 +63,7 @@ constructor(
     class Builder {
 
         private var messageBatchId: String? = null
-        private var betas: MutableList<AnthropicBeta> = mutableListOf()
+        private var betas: MutableList<AnthropicBeta>? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -70,7 +71,7 @@ constructor(
         @JvmSynthetic
         internal fun from(betaMessageBatchDeleteParams: BetaMessageBatchDeleteParams) = apply {
             messageBatchId = betaMessageBatchDeleteParams.messageBatchId
-            betas = betaMessageBatchDeleteParams.betas?.toMutableList() ?: mutableListOf()
+            betas = betaMessageBatchDeleteParams.betas?.toMutableList()
             additionalHeaders = betaMessageBatchDeleteParams.additionalHeaders.toBuilder()
             additionalQueryParams = betaMessageBatchDeleteParams.additionalQueryParams.toBuilder()
             additionalBodyProperties =
@@ -81,13 +82,12 @@ constructor(
         fun messageBatchId(messageBatchId: String) = apply { this.messageBatchId = messageBatchId }
 
         /** Optional header to specify the beta version(s) you want to use. */
-        fun betas(betas: List<AnthropicBeta>) = apply {
-            this.betas.clear()
-            this.betas.addAll(betas)
-        }
+        fun betas(betas: List<AnthropicBeta>) = apply { this.betas = betas.toMutableList() }
 
         /** Optional header to specify the beta version(s) you want to use. */
-        fun addBeta(beta: AnthropicBeta) = apply { this.betas.add(beta) }
+        fun addBeta(beta: AnthropicBeta) = apply {
+            betas = (betas ?: mutableListOf()).apply { add(beta) }
+        }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -212,7 +212,7 @@ constructor(
         fun build(): BetaMessageBatchDeleteParams =
             BetaMessageBatchDeleteParams(
                 checkNotNull(messageBatchId) { "`messageBatchId` is required but was not set" },
-                betas.toImmutable().ifEmpty { null },
+                betas?.toImmutable(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
                 additionalBodyProperties.toImmutable(),
