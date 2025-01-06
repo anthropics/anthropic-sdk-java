@@ -184,7 +184,10 @@ constructor(
         }
 
         /** Optional header to specify the beta version(s) you want to use. */
-        fun betas(betas: List<AnthropicBeta>) = apply { this.betas = betas.toMutableList() }
+        fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
+
+        /** Optional header to specify the beta version(s) you want to use. */
+        fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.orElse(null))
 
         /** Optional header to specify the beta version(s) you want to use. */
         fun addBeta(beta: AnthropicBeta) = apply {
@@ -1019,7 +1022,10 @@ constructor(
                 fun model(value: String) = apply { model = Model.of(value) }
 
                 /** An object describing metadata about the request. */
-                fun metadata(metadata: BetaMetadata) = apply { this.metadata = metadata }
+                fun metadata(metadata: BetaMetadata?) = apply { this.metadata = metadata }
+
+                /** An object describing metadata about the request. */
+                fun metadata(metadata: Optional<BetaMetadata>) = metadata(metadata.orElse(null))
 
                 /**
                  * Custom text sequences that will cause the model to stop generating.
@@ -1032,9 +1038,23 @@ constructor(
                  * the custom sequences, the response `stop_reason` value will be `"stop_sequence"`
                  * and the response `stop_sequence` value will contain the matched stop sequence.
                  */
-                fun stopSequences(stopSequences: List<String>) = apply {
-                    this.stopSequences = stopSequences.toMutableList()
+                fun stopSequences(stopSequences: List<String>?) = apply {
+                    this.stopSequences = stopSequences?.toMutableList()
                 }
+
+                /**
+                 * Custom text sequences that will cause the model to stop generating.
+                 *
+                 * Our models will normally stop when they have naturally completed their turn,
+                 * which will result in a response `stop_reason` of `"end_turn"`.
+                 *
+                 * If you want the model to stop generating when it encounters custom strings of
+                 * text, you can use the `stop_sequences` parameter. If the model encounters one of
+                 * the custom sequences, the response `stop_reason` value will be `"stop_sequence"`
+                 * and the response `stop_sequence` value will contain the matched stop sequence.
+                 */
+                fun stopSequences(stopSequences: Optional<List<String>>) =
+                    stopSequences(stopSequences.orElse(null))
 
                 /**
                  * Custom text sequences that will cause the model to stop generating.
@@ -1057,7 +1077,24 @@ constructor(
                  * See [streaming](https://docs.anthropic.com/en/api/messages-streaming) for
                  * details.
                  */
-                fun stream(stream: Boolean) = apply { this.stream = stream }
+                fun stream(stream: Boolean?) = apply { this.stream = stream }
+
+                /**
+                 * Whether to incrementally stream the response using server-sent events.
+                 *
+                 * See [streaming](https://docs.anthropic.com/en/api/messages-streaming) for
+                 * details.
+                 */
+                fun stream(stream: Boolean) = stream(stream as Boolean?)
+
+                /**
+                 * Whether to incrementally stream the response using server-sent events.
+                 *
+                 * See [streaming](https://docs.anthropic.com/en/api/messages-streaming) for
+                 * details.
+                 */
+                @Suppress("USELESS_CAST") // See https://youtrack.jetbrains.com/issue/KT-74228
+                fun stream(stream: Optional<Boolean>) = stream(stream.orElse(null) as Boolean?)
 
                 /**
                  * System prompt.
@@ -1066,7 +1103,16 @@ constructor(
                  * specifying a particular goal or role. See our
                  * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
                  */
-                fun system(system: System) = apply { this.system = system }
+                fun system(system: System?) = apply { this.system = system }
+
+                /**
+                 * System prompt.
+                 *
+                 * A system prompt is a way of providing context and instructions to Claude, such as
+                 * specifying a particular goal or role. See our
+                 * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+                 */
+                fun system(system: Optional<System>) = system(system.orElse(null))
 
                 fun system(string: String) = apply { this.system = System.ofString(string) }
 
@@ -1085,13 +1131,46 @@ constructor(
                  * Note that even with `temperature` of `0.0`, the results will not be fully
                  * deterministic.
                  */
-                fun temperature(temperature: Double) = apply { this.temperature = temperature }
+                fun temperature(temperature: Double?) = apply { this.temperature = temperature }
+
+                /**
+                 * Amount of randomness injected into the response.
+                 *
+                 * Defaults to `1.0`. Ranges from `0.0` to `1.0`. Use `temperature` closer to `0.0`
+                 * for analytical / multiple choice, and closer to `1.0` for creative and generative
+                 * tasks.
+                 *
+                 * Note that even with `temperature` of `0.0`, the results will not be fully
+                 * deterministic.
+                 */
+                fun temperature(temperature: Double) = temperature(temperature as Double?)
+
+                /**
+                 * Amount of randomness injected into the response.
+                 *
+                 * Defaults to `1.0`. Ranges from `0.0` to `1.0`. Use `temperature` closer to `0.0`
+                 * for analytical / multiple choice, and closer to `1.0` for creative and generative
+                 * tasks.
+                 *
+                 * Note that even with `temperature` of `0.0`, the results will not be fully
+                 * deterministic.
+                 */
+                @Suppress("USELESS_CAST") // See https://youtrack.jetbrains.com/issue/KT-74228
+                fun temperature(temperature: Optional<Double>) =
+                    temperature(temperature.orElse(null) as Double?)
 
                 /**
                  * How the model should use the provided tools. The model can use a specific tool,
                  * any available tool, or decide by itself.
                  */
-                fun toolChoice(toolChoice: BetaToolChoice) = apply { this.toolChoice = toolChoice }
+                fun toolChoice(toolChoice: BetaToolChoice?) = apply { this.toolChoice = toolChoice }
+
+                /**
+                 * How the model should use the provided tools. The model can use a specific tool,
+                 * any available tool, or decide by itself.
+                 */
+                fun toolChoice(toolChoice: Optional<BetaToolChoice>) =
+                    toolChoice(toolChoice.orElse(null))
 
                 /** The model will automatically decide whether to use tools. */
                 fun toolChoice(betaToolChoiceAuto: BetaToolChoiceAuto) = apply {
@@ -1173,7 +1252,76 @@ constructor(
                  *
                  * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
                  */
-                fun tools(tools: List<BetaToolUnion>) = apply { this.tools = tools.toMutableList() }
+                fun tools(tools: List<BetaToolUnion>?) = apply {
+                    this.tools = tools?.toMutableList()
+                }
+
+                /**
+                 * Definitions of tools that the model may use.
+                 *
+                 * If you include `tools` in your API request, the model may return `tool_use`
+                 * content blocks that represent the model's use of those tools. You can then run
+                 * those tools using the tool input generated by the model and then optionally
+                 * return results back to the model using `tool_result` content blocks.
+                 *
+                 * Each tool definition includes:
+                 * - `name`: Name of the tool.
+                 * - `description`: Optional, but strongly-recommended description of the tool.
+                 * - `input_schema`: [JSON schema](https://json-schema.org/) for the tool `input`
+                 *   shape that the model will produce in `tool_use` output content blocks.
+                 *
+                 * For example, if you defined `tools` as:
+                 * ```json
+                 * [
+                 *   {
+                 *     "name": "get_stock_price",
+                 *     "description": "Get the current stock price for a given ticker symbol.",
+                 *     "input_schema": {
+                 *       "type": "object",
+                 *       "properties": {
+                 *         "ticker": {
+                 *           "type": "string",
+                 *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
+                 *         }
+                 *       },
+                 *       "required": ["ticker"]
+                 *     }
+                 *   }
+                 * ]
+                 * ```
+                 *
+                 * And then asked the model "What's the S&P 500 at today?", the model might produce
+                 * `tool_use` content blocks in the response like this:
+                 * ```json
+                 * [
+                 *   {
+                 *     "type": "tool_use",
+                 *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+                 *     "name": "get_stock_price",
+                 *     "input": { "ticker": "^GSPC" }
+                 *   }
+                 * ]
+                 * ```
+                 *
+                 * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an
+                 * input, and return the following back to the model in a subsequent `user` message:
+                 * ```json
+                 * [
+                 *   {
+                 *     "type": "tool_result",
+                 *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+                 *     "content": "259.75 USD"
+                 *   }
+                 * ]
+                 * ```
+                 *
+                 * Tools can be used for workflows that include running client-side tools and
+                 * functions, or more generally whenever you want the model to produce a particular
+                 * JSON structure of output.
+                 *
+                 * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+                 */
+                fun tools(tools: Optional<List<BetaToolUnion>>) = tools(tools.orElse(null))
 
                 /**
                  * Definitions of tools that the model may use.
@@ -1253,7 +1401,30 @@ constructor(
                  * Recommended for advanced use cases only. You usually only need to use
                  * `temperature`.
                  */
-                fun topK(topK: Long) = apply { this.topK = topK }
+                fun topK(topK: Long?) = apply { this.topK = topK }
+
+                /**
+                 * Only sample from the top K options for each subsequent token.
+                 *
+                 * Used to remove "long tail" low probability responses.
+                 * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
+                 *
+                 * Recommended for advanced use cases only. You usually only need to use
+                 * `temperature`.
+                 */
+                fun topK(topK: Long) = topK(topK as Long?)
+
+                /**
+                 * Only sample from the top K options for each subsequent token.
+                 *
+                 * Used to remove "long tail" low probability responses.
+                 * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
+                 *
+                 * Recommended for advanced use cases only. You usually only need to use
+                 * `temperature`.
+                 */
+                @Suppress("USELESS_CAST") // See https://youtrack.jetbrains.com/issue/KT-74228
+                fun topK(topK: Optional<Long>) = topK(topK.orElse(null) as Long?)
 
                 /**
                  * Use nucleus sampling.
@@ -1266,7 +1437,34 @@ constructor(
                  * Recommended for advanced use cases only. You usually only need to use
                  * `temperature`.
                  */
-                fun topP(topP: Double) = apply { this.topP = topP }
+                fun topP(topP: Double?) = apply { this.topP = topP }
+
+                /**
+                 * Use nucleus sampling.
+                 *
+                 * In nucleus sampling, we compute the cumulative distribution over all the options
+                 * for each subsequent token in decreasing probability order and cut it off once it
+                 * reaches a particular probability specified by `top_p`. You should either alter
+                 * `temperature` or `top_p`, but not both.
+                 *
+                 * Recommended for advanced use cases only. You usually only need to use
+                 * `temperature`.
+                 */
+                fun topP(topP: Double) = topP(topP as Double?)
+
+                /**
+                 * Use nucleus sampling.
+                 *
+                 * In nucleus sampling, we compute the cumulative distribution over all the options
+                 * for each subsequent token in decreasing probability order and cut it off once it
+                 * reaches a particular probability specified by `top_p`. You should either alter
+                 * `temperature` or `top_p`, but not both.
+                 *
+                 * Recommended for advanced use cases only. You usually only need to use
+                 * `temperature`.
+                 */
+                @Suppress("USELESS_CAST") // See https://youtrack.jetbrains.com/issue/KT-74228
+                fun topP(topP: Optional<Double>) = topP(topP.orElse(null) as Double?)
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                     this.additionalProperties.clear()

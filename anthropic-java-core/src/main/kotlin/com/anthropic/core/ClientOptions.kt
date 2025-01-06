@@ -9,6 +9,7 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.http.RetryingHttpClient
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.time.Clock
+import java.util.Optional
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
@@ -168,9 +169,13 @@ private constructor(
 
         fun maxRetries(maxRetries: Int) = apply { this.maxRetries = maxRetries }
 
-        fun apiKey(apiKey: String) = apply { this.apiKey = apiKey }
+        fun apiKey(apiKey: String?) = apply { this.apiKey = apiKey }
 
-        fun authToken(authToken: String) = apply { this.authToken = authToken }
+        fun apiKey(apiKey: Optional<String>) = apiKey(apiKey.orElse(null))
+
+        fun authToken(authToken: String?) = apply { this.authToken = authToken }
+
+        fun authToken(authToken: Optional<String>) = authToken(authToken.orElse(null))
 
         fun fromEnv() = apply {
             System.getenv("ANTHROPIC_API_KEY")?.let { apiKey(it) }

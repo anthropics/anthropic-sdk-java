@@ -276,7 +276,10 @@ constructor(
             fun prompt(prompt: String) = apply { this.prompt = prompt }
 
             /** An object describing metadata about the request. */
-            fun metadata(metadata: Metadata) = apply { this.metadata = metadata }
+            fun metadata(metadata: Metadata?) = apply { this.metadata = metadata }
+
+            /** An object describing metadata about the request. */
+            fun metadata(metadata: Optional<Metadata>) = metadata(metadata.orElse(null))
 
             /**
              * Sequences that will cause the model to stop generating.
@@ -285,9 +288,19 @@ constructor(
              * in the future. By providing the stop_sequences parameter, you may include additional
              * strings that will cause the model to stop generating.
              */
-            fun stopSequences(stopSequences: List<String>) = apply {
-                this.stopSequences = stopSequences.toMutableList()
+            fun stopSequences(stopSequences: List<String>?) = apply {
+                this.stopSequences = stopSequences?.toMutableList()
             }
+
+            /**
+             * Sequences that will cause the model to stop generating.
+             *
+             * Our models stop on `"\n\nHuman:"`, and may include additional built-in stop sequences
+             * in the future. By providing the stop_sequences parameter, you may include additional
+             * strings that will cause the model to stop generating.
+             */
+            fun stopSequences(stopSequences: Optional<List<String>>) =
+                stopSequences(stopSequences.orElse(null))
 
             /**
              * Sequences that will cause the model to stop generating.
@@ -309,7 +322,31 @@ constructor(
              * Note that even with `temperature` of `0.0`, the results will not be fully
              * deterministic.
              */
-            fun temperature(temperature: Double) = apply { this.temperature = temperature }
+            fun temperature(temperature: Double?) = apply { this.temperature = temperature }
+
+            /**
+             * Amount of randomness injected into the response.
+             *
+             * Defaults to `1.0`. Ranges from `0.0` to `1.0`. Use `temperature` closer to `0.0` for
+             * analytical / multiple choice, and closer to `1.0` for creative and generative tasks.
+             *
+             * Note that even with `temperature` of `0.0`, the results will not be fully
+             * deterministic.
+             */
+            fun temperature(temperature: Double) = temperature(temperature as Double?)
+
+            /**
+             * Amount of randomness injected into the response.
+             *
+             * Defaults to `1.0`. Ranges from `0.0` to `1.0`. Use `temperature` closer to `0.0` for
+             * analytical / multiple choice, and closer to `1.0` for creative and generative tasks.
+             *
+             * Note that even with `temperature` of `0.0`, the results will not be fully
+             * deterministic.
+             */
+            @Suppress("USELESS_CAST") // See https://youtrack.jetbrains.com/issue/KT-74228
+            fun temperature(temperature: Optional<Double>) =
+                temperature(temperature.orElse(null) as Double?)
 
             /**
              * Only sample from the top K options for each subsequent token.
@@ -319,7 +356,28 @@ constructor(
              *
              * Recommended for advanced use cases only. You usually only need to use `temperature`.
              */
-            fun topK(topK: Long) = apply { this.topK = topK }
+            fun topK(topK: Long?) = apply { this.topK = topK }
+
+            /**
+             * Only sample from the top K options for each subsequent token.
+             *
+             * Used to remove "long tail" low probability responses.
+             * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
+             *
+             * Recommended for advanced use cases only. You usually only need to use `temperature`.
+             */
+            fun topK(topK: Long) = topK(topK as Long?)
+
+            /**
+             * Only sample from the top K options for each subsequent token.
+             *
+             * Used to remove "long tail" low probability responses.
+             * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
+             *
+             * Recommended for advanced use cases only. You usually only need to use `temperature`.
+             */
+            @Suppress("USELESS_CAST") // See https://youtrack.jetbrains.com/issue/KT-74228
+            fun topK(topK: Optional<Long>) = topK(topK.orElse(null) as Long?)
 
             /**
              * Use nucleus sampling.
@@ -331,7 +389,32 @@ constructor(
              *
              * Recommended for advanced use cases only. You usually only need to use `temperature`.
              */
-            fun topP(topP: Double) = apply { this.topP = topP }
+            fun topP(topP: Double?) = apply { this.topP = topP }
+
+            /**
+             * Use nucleus sampling.
+             *
+             * In nucleus sampling, we compute the cumulative distribution over all the options for
+             * each subsequent token in decreasing probability order and cut it off once it reaches
+             * a particular probability specified by `top_p`. You should either alter `temperature`
+             * or `top_p`, but not both.
+             *
+             * Recommended for advanced use cases only. You usually only need to use `temperature`.
+             */
+            fun topP(topP: Double) = topP(topP as Double?)
+
+            /**
+             * Use nucleus sampling.
+             *
+             * In nucleus sampling, we compute the cumulative distribution over all the options for
+             * each subsequent token in decreasing probability order and cut it off once it reaches
+             * a particular probability specified by `top_p`. You should either alter `temperature`
+             * or `top_p`, but not both.
+             *
+             * Recommended for advanced use cases only. You usually only need to use `temperature`.
+             */
+            @Suppress("USELESS_CAST") // See https://youtrack.jetbrains.com/issue/KT-74228
+            fun topP(topP: Optional<Double>) = topP(topP.orElse(null) as Double?)
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -447,7 +530,10 @@ constructor(
         fun prompt(prompt: String) = apply { body.prompt(prompt) }
 
         /** An object describing metadata about the request. */
-        fun metadata(metadata: Metadata) = apply { body.metadata(metadata) }
+        fun metadata(metadata: Metadata?) = apply { body.metadata(metadata) }
+
+        /** An object describing metadata about the request. */
+        fun metadata(metadata: Optional<Metadata>) = metadata(metadata.orElse(null))
 
         /**
          * Sequences that will cause the model to stop generating.
@@ -456,7 +542,19 @@ constructor(
          * the future. By providing the stop_sequences parameter, you may include additional strings
          * that will cause the model to stop generating.
          */
-        fun stopSequences(stopSequences: List<String>) = apply { body.stopSequences(stopSequences) }
+        fun stopSequences(stopSequences: List<String>?) = apply {
+            body.stopSequences(stopSequences)
+        }
+
+        /**
+         * Sequences that will cause the model to stop generating.
+         *
+         * Our models stop on `"\n\nHuman:"`, and may include additional built-in stop sequences in
+         * the future. By providing the stop_sequences parameter, you may include additional strings
+         * that will cause the model to stop generating.
+         */
+        fun stopSequences(stopSequences: Optional<List<String>>) =
+            stopSequences(stopSequences.orElse(null))
 
         /**
          * Sequences that will cause the model to stop generating.
@@ -475,7 +573,29 @@ constructor(
          *
          * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
          */
-        fun temperature(temperature: Double) = apply { body.temperature(temperature) }
+        fun temperature(temperature: Double?) = apply { body.temperature(temperature) }
+
+        /**
+         * Amount of randomness injected into the response.
+         *
+         * Defaults to `1.0`. Ranges from `0.0` to `1.0`. Use `temperature` closer to `0.0` for
+         * analytical / multiple choice, and closer to `1.0` for creative and generative tasks.
+         *
+         * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
+         */
+        fun temperature(temperature: Double) = temperature(temperature as Double?)
+
+        /**
+         * Amount of randomness injected into the response.
+         *
+         * Defaults to `1.0`. Ranges from `0.0` to `1.0`. Use `temperature` closer to `0.0` for
+         * analytical / multiple choice, and closer to `1.0` for creative and generative tasks.
+         *
+         * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
+         */
+        @Suppress("USELESS_CAST") // See https://youtrack.jetbrains.com/issue/KT-74228
+        fun temperature(temperature: Optional<Double>) =
+            temperature(temperature.orElse(null) as Double?)
 
         /**
          * Only sample from the top K options for each subsequent token.
@@ -485,7 +605,28 @@ constructor(
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
          */
-        fun topK(topK: Long) = apply { body.topK(topK) }
+        fun topK(topK: Long?) = apply { body.topK(topK) }
+
+        /**
+         * Only sample from the top K options for each subsequent token.
+         *
+         * Used to remove "long tail" low probability responses.
+         * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
+         *
+         * Recommended for advanced use cases only. You usually only need to use `temperature`.
+         */
+        fun topK(topK: Long) = topK(topK as Long?)
+
+        /**
+         * Only sample from the top K options for each subsequent token.
+         *
+         * Used to remove "long tail" low probability responses.
+         * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
+         *
+         * Recommended for advanced use cases only. You usually only need to use `temperature`.
+         */
+        @Suppress("USELESS_CAST") // See https://youtrack.jetbrains.com/issue/KT-74228
+        fun topK(topK: Optional<Long>) = topK(topK.orElse(null) as Long?)
 
         /**
          * Use nucleus sampling.
@@ -497,7 +638,32 @@ constructor(
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
          */
-        fun topP(topP: Double) = apply { body.topP(topP) }
+        fun topP(topP: Double?) = apply { body.topP(topP) }
+
+        /**
+         * Use nucleus sampling.
+         *
+         * In nucleus sampling, we compute the cumulative distribution over all the options for each
+         * subsequent token in decreasing probability order and cut it off once it reaches a
+         * particular probability specified by `top_p`. You should either alter `temperature` or
+         * `top_p`, but not both.
+         *
+         * Recommended for advanced use cases only. You usually only need to use `temperature`.
+         */
+        fun topP(topP: Double) = topP(topP as Double?)
+
+        /**
+         * Use nucleus sampling.
+         *
+         * In nucleus sampling, we compute the cumulative distribution over all the options for each
+         * subsequent token in decreasing probability order and cut it off once it reaches a
+         * particular probability specified by `top_p`. You should either alter `temperature` or
+         * `top_p`, but not both.
+         *
+         * Recommended for advanced use cases only. You usually only need to use `temperature`.
+         */
+        @Suppress("USELESS_CAST") // See https://youtrack.jetbrains.com/issue/KT-74228
+        fun topP(topP: Optional<Double>) = topP(topP.orElse(null) as Double?)
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
