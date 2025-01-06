@@ -21,20 +21,20 @@ import java.util.Objects
 class RawMessageStartEvent
 @JsonCreator
 private constructor(
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonProperty("message")
     @ExcludeMissing
     private val message: JsonField<Message> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
-    fun type(): Type = type.getRequired("type")
-
     fun message(): Message = message.getRequired("message")
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    fun type(): Type = type.getRequired("type")
 
     @JsonProperty("message") @ExcludeMissing fun _message() = message
+
+    @JsonProperty("type") @ExcludeMissing fun _type() = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -44,8 +44,8 @@ private constructor(
 
     fun validate(): RawMessageStartEvent = apply {
         if (!validated) {
-            type()
             message().validate()
+            type()
             validated = true
         }
     }
@@ -59,24 +59,24 @@ private constructor(
 
     class Builder {
 
-        private var type: JsonField<Type> = JsonMissing.of()
         private var message: JsonField<Message> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(rawMessageStartEvent: RawMessageStartEvent) = apply {
-            type = rawMessageStartEvent.type
             message = rawMessageStartEvent.message
+            type = rawMessageStartEvent.type
             additionalProperties = rawMessageStartEvent.additionalProperties.toMutableMap()
         }
-
-        fun type(type: Type) = type(JsonField.of(type))
-
-        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun message(message: Message) = message(JsonField.of(message))
 
         fun message(message: JsonField<Message>) = apply { this.message = message }
+
+        fun type(type: Type) = type(JsonField.of(type))
+
+        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -99,8 +99,8 @@ private constructor(
 
         fun build(): RawMessageStartEvent =
             RawMessageStartEvent(
-                type,
                 message,
+                type,
                 additionalProperties.toImmutable(),
             )
     }
@@ -161,15 +161,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is RawMessageStartEvent && type == other.type && message == other.message && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is RawMessageStartEvent && message == other.message && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(type, message, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(message, type, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "RawMessageStartEvent{type=$type, message=$message, additionalProperties=$additionalProperties}"
+        "RawMessageStartEvent{message=$message, type=$type, additionalProperties=$additionalProperties}"
 }

@@ -32,20 +32,20 @@ import java.util.Optional
 class MessageParam
 @JsonCreator
 private constructor(
-    @JsonProperty("role") @ExcludeMissing private val role: JsonField<Role> = JsonMissing.of(),
     @JsonProperty("content")
     @ExcludeMissing
     private val content: JsonField<Content> = JsonMissing.of(),
+    @JsonProperty("role") @ExcludeMissing private val role: JsonField<Role> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
-    fun role(): Role = role.getRequired("role")
-
     fun content(): Content = content.getRequired("content")
 
-    @JsonProperty("role") @ExcludeMissing fun _role() = role
+    fun role(): Role = role.getRequired("role")
 
     @JsonProperty("content") @ExcludeMissing fun _content() = content
+
+    @JsonProperty("role") @ExcludeMissing fun _role() = role
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -55,8 +55,8 @@ private constructor(
 
     fun validate(): MessageParam = apply {
         if (!validated) {
-            role()
             content()
+            role()
             validated = true
         }
     }
@@ -70,24 +70,24 @@ private constructor(
 
     class Builder {
 
-        private var role: JsonField<Role> = JsonMissing.of()
         private var content: JsonField<Content> = JsonMissing.of()
+        private var role: JsonField<Role> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(messageParam: MessageParam) = apply {
-            role = messageParam.role
             content = messageParam.content
+            role = messageParam.role
             additionalProperties = messageParam.additionalProperties.toMutableMap()
         }
-
-        fun role(role: Role) = role(JsonField.of(role))
-
-        fun role(role: JsonField<Role>) = apply { this.role = role }
 
         fun content(content: Content) = content(JsonField.of(content))
 
         fun content(content: JsonField<Content>) = apply { this.content = content }
+
+        fun role(role: Role) = role(JsonField.of(role))
+
+        fun role(role: JsonField<Role>) = apply { this.role = role }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -110,8 +110,8 @@ private constructor(
 
         fun build(): MessageParam =
             MessageParam(
-                role,
                 content,
+                role,
                 additionalProperties.toImmutable(),
             )
     }
@@ -294,15 +294,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is MessageParam && role == other.role && content == other.content && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is MessageParam && content == other.content && role == other.role && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(role, content, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(content, role, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "MessageParam{role=$role, content=$content, additionalProperties=$additionalProperties}"
+        "MessageParam{content=$content, role=$role, additionalProperties=$additionalProperties}"
 }

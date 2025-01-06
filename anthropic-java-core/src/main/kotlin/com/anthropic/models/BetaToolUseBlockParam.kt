@@ -22,34 +22,34 @@ import java.util.Optional
 class BetaToolUseBlockParam
 @JsonCreator
 private constructor(
+    @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("input") @ExcludeMissing private val input: JsonValue = JsonMissing.of(),
+    @JsonProperty("name") @ExcludeMissing private val name: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonProperty("cache_control")
     @ExcludeMissing
     private val cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
-    @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("name") @ExcludeMissing private val name: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("input") @ExcludeMissing private val input: JsonValue = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
-
-    fun cacheControl(): Optional<BetaCacheControlEphemeral> =
-        Optional.ofNullable(cacheControl.getNullable("cache_control"))
-
-    fun type(): Type = type.getRequired("type")
 
     fun id(): String = id.getRequired("id")
 
     fun name(): String = name.getRequired("name")
 
-    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
+    fun type(): Type = type.getRequired("type")
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    fun cacheControl(): Optional<BetaCacheControlEphemeral> =
+        Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
     @JsonProperty("id") @ExcludeMissing fun _id() = id
 
+    @JsonProperty("input") @ExcludeMissing fun _input() = input
+
     @JsonProperty("name") @ExcludeMissing fun _name() = name
 
-    @JsonProperty("input") @ExcludeMissing fun _input() = input
+    @JsonProperty("type") @ExcludeMissing fun _type() = type
+
+    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -59,10 +59,10 @@ private constructor(
 
     fun validate(): BetaToolUseBlockParam = apply {
         if (!validated) {
-            cacheControl().map { it.validate() }
-            type()
             id()
             name()
+            type()
+            cacheControl().map { it.validate() }
             validated = true
         }
     }
@@ -76,22 +76,36 @@ private constructor(
 
     class Builder {
 
-        private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
         private var id: JsonField<String> = JsonMissing.of()
-        private var name: JsonField<String> = JsonMissing.of()
         private var input: JsonValue = JsonMissing.of()
+        private var name: JsonField<String> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
+        private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaToolUseBlockParam: BetaToolUseBlockParam) = apply {
-            cacheControl = betaToolUseBlockParam.cacheControl
-            type = betaToolUseBlockParam.type
             id = betaToolUseBlockParam.id
-            name = betaToolUseBlockParam.name
             input = betaToolUseBlockParam.input
+            name = betaToolUseBlockParam.name
+            type = betaToolUseBlockParam.type
+            cacheControl = betaToolUseBlockParam.cacheControl
             additionalProperties = betaToolUseBlockParam.additionalProperties.toMutableMap()
         }
+
+        fun id(id: String) = id(JsonField.of(id))
+
+        fun id(id: JsonField<String>) = apply { this.id = id }
+
+        fun input(input: JsonValue) = apply { this.input = input }
+
+        fun name(name: String) = name(JsonField.of(name))
+
+        fun name(name: JsonField<String>) = apply { this.name = name }
+
+        fun type(type: Type) = type(JsonField.of(type))
+
+        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
             cacheControl(JsonField.of(cacheControl))
@@ -99,20 +113,6 @@ private constructor(
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
-
-        fun type(type: Type) = type(JsonField.of(type))
-
-        fun type(type: JsonField<Type>) = apply { this.type = type }
-
-        fun id(id: String) = id(JsonField.of(id))
-
-        fun id(id: JsonField<String>) = apply { this.id = id }
-
-        fun name(name: String) = name(JsonField.of(name))
-
-        fun name(name: JsonField<String>) = apply { this.name = name }
-
-        fun input(input: JsonValue) = apply { this.input = input }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -135,11 +135,11 @@ private constructor(
 
         fun build(): BetaToolUseBlockParam =
             BetaToolUseBlockParam(
-                cacheControl,
-                type,
                 id,
-                name,
                 input,
+                name,
+                type,
+                cacheControl,
                 additionalProperties.toImmutable(),
             )
     }
@@ -200,15 +200,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaToolUseBlockParam && cacheControl == other.cacheControl && type == other.type && id == other.id && name == other.name && input == other.input && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is BetaToolUseBlockParam && id == other.id && input == other.input && name == other.name && type == other.type && cacheControl == other.cacheControl && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(cacheControl, type, id, name, input, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(id, input, name, type, cacheControl, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaToolUseBlockParam{cacheControl=$cacheControl, type=$type, id=$id, name=$name, input=$input, additionalProperties=$additionalProperties}"
+        "BetaToolUseBlockParam{id=$id, input=$input, name=$name, type=$type, cacheControl=$cacheControl, additionalProperties=$additionalProperties}"
 }

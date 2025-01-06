@@ -22,17 +22,44 @@ import java.util.Optional
 class Completion
 @JsonCreator
 private constructor(
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
     @JsonProperty("completion")
     @ExcludeMissing
     private val completion: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("model") @ExcludeMissing private val model: JsonField<Model> = JsonMissing.of(),
     @JsonProperty("stop_reason")
     @ExcludeMissing
     private val stopReason: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("model") @ExcludeMissing private val model: JsonField<Model> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
+
+    /**
+     * Unique object identifier.
+     *
+     * The format and length of IDs may change over time.
+     */
+    fun id(): String = id.getRequired("id")
+
+    /** The resulting completion up to and excluding the stop sequences. */
+    fun completion(): String = completion.getRequired("completion")
+
+    /**
+     * The model that will complete your prompt.\n\nSee
+     * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
+     * options.
+     */
+    fun model(): Model = model.getRequired("model")
+
+    /**
+     * The reason that we stopped.
+     *
+     * This may be one the following values:
+     * - `"stop_sequence"`: we reached a stop sequence — either provided by you via the
+     *   `stop_sequences` parameter, or a stop sequence built into the model
+     * - `"max_tokens"`: we exceeded `max_tokens_to_sample` or the model's maximum
+     */
+    fun stopReason(): Optional<String> = Optional.ofNullable(stopReason.getNullable("stop_reason"))
 
     /**
      * Object type.
@@ -46,44 +73,17 @@ private constructor(
      *
      * The format and length of IDs may change over time.
      */
-    fun id(): String = id.getRequired("id")
+    @JsonProperty("id") @ExcludeMissing fun _id() = id
 
     /** The resulting completion up to and excluding the stop sequences. */
-    fun completion(): String = completion.getRequired("completion")
-
-    /**
-     * The reason that we stopped.
-     *
-     * This may be one the following values:
-     * - `"stop_sequence"`: we reached a stop sequence — either provided by you via the
-     *   `stop_sequences` parameter, or a stop sequence built into the model
-     * - `"max_tokens"`: we exceeded `max_tokens_to_sample` or the model's maximum
-     */
-    fun stopReason(): Optional<String> = Optional.ofNullable(stopReason.getNullable("stop_reason"))
+    @JsonProperty("completion") @ExcludeMissing fun _completion() = completion
 
     /**
      * The model that will complete your prompt.\n\nSee
      * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
      * options.
      */
-    fun model(): Model = model.getRequired("model")
-
-    /**
-     * Object type.
-     *
-     * For Text Completions, this is always `"completion"`.
-     */
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
-
-    /**
-     * Unique object identifier.
-     *
-     * The format and length of IDs may change over time.
-     */
-    @JsonProperty("id") @ExcludeMissing fun _id() = id
-
-    /** The resulting completion up to and excluding the stop sequences. */
-    @JsonProperty("completion") @ExcludeMissing fun _completion() = completion
+    @JsonProperty("model") @ExcludeMissing fun _model() = model
 
     /**
      * The reason that we stopped.
@@ -96,11 +96,11 @@ private constructor(
     @JsonProperty("stop_reason") @ExcludeMissing fun _stopReason() = stopReason
 
     /**
-     * The model that will complete your prompt.\n\nSee
-     * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
-     * options.
+     * Object type.
+     *
+     * For Text Completions, this is always `"completion"`.
      */
-    @JsonProperty("model") @ExcludeMissing fun _model() = model
+    @JsonProperty("type") @ExcludeMissing fun _type() = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -110,11 +110,11 @@ private constructor(
 
     fun validate(): Completion = apply {
         if (!validated) {
-            type()
             id()
             completion()
-            stopReason()
             model()
+            stopReason()
+            type()
             validated = true
         }
     }
@@ -128,36 +128,22 @@ private constructor(
 
     class Builder {
 
-        private var type: JsonField<Type> = JsonMissing.of()
         private var id: JsonField<String> = JsonMissing.of()
         private var completion: JsonField<String> = JsonMissing.of()
-        private var stopReason: JsonField<String> = JsonMissing.of()
         private var model: JsonField<Model> = JsonMissing.of()
+        private var stopReason: JsonField<String> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(completion: Completion) = apply {
-            type = completion.type
             id = completion.id
             this.completion = completion.completion
-            stopReason = completion.stopReason
             model = completion.model
+            stopReason = completion.stopReason
+            type = completion.type
             additionalProperties = completion.additionalProperties.toMutableMap()
         }
-
-        /**
-         * Object type.
-         *
-         * For Text Completions, this is always `"completion"`.
-         */
-        fun type(type: Type) = type(JsonField.of(type))
-
-        /**
-         * Object type.
-         *
-         * For Text Completions, this is always `"completion"`.
-         */
-        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         /**
          * Unique object identifier.
@@ -180,6 +166,20 @@ private constructor(
         fun completion(completion: JsonField<String>) = apply { this.completion = completion }
 
         /**
+         * The model that will complete your prompt.\n\nSee
+         * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
+         * options.
+         */
+        fun model(model: Model) = model(JsonField.of(model))
+
+        /**
+         * The model that will complete your prompt.\n\nSee
+         * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
+         * options.
+         */
+        fun model(model: JsonField<Model>) = apply { this.model = model }
+
+        /**
          * The reason that we stopped.
          *
          * This may be one the following values:
@@ -200,18 +200,18 @@ private constructor(
         fun stopReason(stopReason: JsonField<String>) = apply { this.stopReason = stopReason }
 
         /**
-         * The model that will complete your prompt.\n\nSee
-         * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
-         * options.
+         * Object type.
+         *
+         * For Text Completions, this is always `"completion"`.
          */
-        fun model(model: Model) = model(JsonField.of(model))
+        fun type(type: Type) = type(JsonField.of(type))
 
         /**
-         * The model that will complete your prompt.\n\nSee
-         * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
-         * options.
+         * Object type.
+         *
+         * For Text Completions, this is always `"completion"`.
          */
-        fun model(model: JsonField<Model>) = apply { this.model = model }
+        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -234,11 +234,11 @@ private constructor(
 
         fun build(): Completion =
             Completion(
-                type,
                 id,
                 completion,
-                stopReason,
                 model,
+                stopReason,
+                type,
                 additionalProperties.toImmutable(),
             )
     }
@@ -299,15 +299,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is Completion && type == other.type && id == other.id && completion == other.completion && stopReason == other.stopReason && model == other.model && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is Completion && id == other.id && completion == other.completion && model == other.model && stopReason == other.stopReason && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(type, id, completion, stopReason, model, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(id, completion, model, stopReason, type, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Completion{type=$type, id=$id, completion=$completion, stopReason=$stopReason, model=$model, additionalProperties=$additionalProperties}"
+        "Completion{id=$id, completion=$completion, model=$model, stopReason=$stopReason, type=$type, additionalProperties=$additionalProperties}"
 }

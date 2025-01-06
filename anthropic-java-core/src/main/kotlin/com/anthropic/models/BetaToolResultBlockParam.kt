@@ -33,42 +33,42 @@ import kotlin.jvm.optionals.getOrNull
 class BetaToolResultBlockParam
 @JsonCreator
 private constructor(
-    @JsonProperty("cache_control")
-    @ExcludeMissing
-    private val cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonProperty("tool_use_id")
     @ExcludeMissing
     private val toolUseId: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("is_error")
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+    @JsonProperty("cache_control")
     @ExcludeMissing
-    private val isError: JsonField<Boolean> = JsonMissing.of(),
+    private val cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
     @JsonProperty("content")
     @ExcludeMissing
     private val content: JsonField<Content> = JsonMissing.of(),
+    @JsonProperty("is_error")
+    @ExcludeMissing
+    private val isError: JsonField<Boolean> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
+
+    fun toolUseId(): String = toolUseId.getRequired("tool_use_id")
+
+    fun type(): Type = type.getRequired("type")
 
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
-    fun type(): Type = type.getRequired("type")
-
-    fun toolUseId(): String = toolUseId.getRequired("tool_use_id")
+    fun content(): Optional<Content> = Optional.ofNullable(content.getNullable("content"))
 
     fun isError(): Optional<Boolean> = Optional.ofNullable(isError.getNullable("is_error"))
 
-    fun content(): Optional<Content> = Optional.ofNullable(content.getNullable("content"))
-
-    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
+    @JsonProperty("tool_use_id") @ExcludeMissing fun _toolUseId() = toolUseId
 
     @JsonProperty("type") @ExcludeMissing fun _type() = type
 
-    @JsonProperty("tool_use_id") @ExcludeMissing fun _toolUseId() = toolUseId
-
-    @JsonProperty("is_error") @ExcludeMissing fun _isError() = isError
+    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
 
     @JsonProperty("content") @ExcludeMissing fun _content() = content
+
+    @JsonProperty("is_error") @ExcludeMissing fun _isError() = isError
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -78,11 +78,11 @@ private constructor(
 
     fun validate(): BetaToolResultBlockParam = apply {
         if (!validated) {
-            cacheControl().map { it.validate() }
-            type()
             toolUseId()
-            isError()
+            type()
+            cacheControl().map { it.validate() }
             content()
+            isError()
             validated = true
         }
     }
@@ -96,22 +96,30 @@ private constructor(
 
     class Builder {
 
-        private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
         private var toolUseId: JsonField<String> = JsonMissing.of()
-        private var isError: JsonField<Boolean> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
+        private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var content: JsonField<Content> = JsonMissing.of()
+        private var isError: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaToolResultBlockParam: BetaToolResultBlockParam) = apply {
-            cacheControl = betaToolResultBlockParam.cacheControl
-            type = betaToolResultBlockParam.type
             toolUseId = betaToolResultBlockParam.toolUseId
-            isError = betaToolResultBlockParam.isError
+            type = betaToolResultBlockParam.type
+            cacheControl = betaToolResultBlockParam.cacheControl
             content = betaToolResultBlockParam.content
+            isError = betaToolResultBlockParam.isError
             additionalProperties = betaToolResultBlockParam.additionalProperties.toMutableMap()
         }
+
+        fun toolUseId(toolUseId: String) = toolUseId(JsonField.of(toolUseId))
+
+        fun toolUseId(toolUseId: JsonField<String>) = apply { this.toolUseId = toolUseId }
+
+        fun type(type: Type) = type(JsonField.of(type))
+
+        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
             cacheControl(JsonField.of(cacheControl))
@@ -120,21 +128,13 @@ private constructor(
             this.cacheControl = cacheControl
         }
 
-        fun type(type: Type) = type(JsonField.of(type))
+        fun content(content: Content) = content(JsonField.of(content))
 
-        fun type(type: JsonField<Type>) = apply { this.type = type }
-
-        fun toolUseId(toolUseId: String) = toolUseId(JsonField.of(toolUseId))
-
-        fun toolUseId(toolUseId: JsonField<String>) = apply { this.toolUseId = toolUseId }
+        fun content(content: JsonField<Content>) = apply { this.content = content }
 
         fun isError(isError: Boolean) = isError(JsonField.of(isError))
 
         fun isError(isError: JsonField<Boolean>) = apply { this.isError = isError }
-
-        fun content(content: Content) = content(JsonField.of(content))
-
-        fun content(content: JsonField<Content>) = apply { this.content = content }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -157,11 +157,11 @@ private constructor(
 
         fun build(): BetaToolResultBlockParam =
             BetaToolResultBlockParam(
-                cacheControl,
-                type,
                 toolUseId,
-                isError,
+                type,
+                cacheControl,
                 content,
+                isError,
                 additionalProperties.toImmutable(),
             )
     }
@@ -471,15 +471,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaToolResultBlockParam && cacheControl == other.cacheControl && type == other.type && toolUseId == other.toolUseId && isError == other.isError && content == other.content && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is BetaToolResultBlockParam && toolUseId == other.toolUseId && type == other.type && cacheControl == other.cacheControl && content == other.content && isError == other.isError && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(cacheControl, type, toolUseId, isError, content, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(toolUseId, type, cacheControl, content, isError, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaToolResultBlockParam{cacheControl=$cacheControl, type=$type, toolUseId=$toolUseId, isError=$isError, content=$content, additionalProperties=$additionalProperties}"
+        "BetaToolResultBlockParam{toolUseId=$toolUseId, type=$type, cacheControl=$cacheControl, content=$content, isError=$isError, additionalProperties=$additionalProperties}"
 }

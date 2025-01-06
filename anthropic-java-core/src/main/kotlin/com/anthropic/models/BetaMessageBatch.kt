@@ -24,31 +24,31 @@ class BetaMessageBatch
 @JsonCreator
 private constructor(
     @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
-    @JsonProperty("processing_status")
-    @ExcludeMissing
-    private val processingStatus: JsonField<ProcessingStatus> = JsonMissing.of(),
-    @JsonProperty("request_counts")
-    @ExcludeMissing
-    private val requestCounts: JsonField<BetaMessageBatchRequestCounts> = JsonMissing.of(),
-    @JsonProperty("ended_at")
-    @ExcludeMissing
-    private val endedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    @JsonProperty("created_at")
-    @ExcludeMissing
-    private val createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    @JsonProperty("expires_at")
-    @ExcludeMissing
-    private val expiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
     @JsonProperty("archived_at")
     @ExcludeMissing
     private val archivedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
     @JsonProperty("cancel_initiated_at")
     @ExcludeMissing
     private val cancelInitiatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+    @JsonProperty("created_at")
+    @ExcludeMissing
+    private val createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+    @JsonProperty("ended_at")
+    @ExcludeMissing
+    private val endedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+    @JsonProperty("expires_at")
+    @ExcludeMissing
+    private val expiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+    @JsonProperty("processing_status")
+    @ExcludeMissing
+    private val processingStatus: JsonField<ProcessingStatus> = JsonMissing.of(),
+    @JsonProperty("request_counts")
+    @ExcludeMissing
+    private val requestCounts: JsonField<BetaMessageBatchRequestCounts> = JsonMissing.of(),
     @JsonProperty("results_url")
     @ExcludeMissing
     private val resultsUrl: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
@@ -58,43 +58,6 @@ private constructor(
      * The format and length of IDs may change over time.
      */
     fun id(): String = id.getRequired("id")
-
-    /**
-     * Object type.
-     *
-     * For Message Batches, this is always `"message_batch"`.
-     */
-    fun type(): Type = type.getRequired("type")
-
-    /** Processing status of the Message Batch. */
-    fun processingStatus(): ProcessingStatus = processingStatus.getRequired("processing_status")
-
-    /**
-     * Tallies requests within the Message Batch, categorized by their status.
-     *
-     * Requests start as `processing` and move to one of the other statuses only once processing of
-     * the entire batch ends. The sum of all values always matches the total number of requests in
-     * the batch.
-     */
-    fun requestCounts(): BetaMessageBatchRequestCounts = requestCounts.getRequired("request_counts")
-
-    /**
-     * RFC 3339 datetime string representing the time at which processing for the Message Batch
-     * ended. Specified only once processing ends.
-     *
-     * Processing ends when every request in a Message Batch has either succeeded, errored,
-     * canceled, or expired.
-     */
-    fun endedAt(): Optional<OffsetDateTime> = Optional.ofNullable(endedAt.getNullable("ended_at"))
-
-    /** RFC 3339 datetime string representing the time at which the Message Batch was created. */
-    fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
-
-    /**
-     * RFC 3339 datetime string representing the time at which the Message Batch will expire and end
-     * processing, which is 24 hours after creation.
-     */
-    fun expiresAt(): OffsetDateTime = expiresAt.getRequired("expires_at")
 
     /**
      * RFC 3339 datetime string representing the time at which the Message Batch was archived and
@@ -110,6 +73,36 @@ private constructor(
     fun cancelInitiatedAt(): Optional<OffsetDateTime> =
         Optional.ofNullable(cancelInitiatedAt.getNullable("cancel_initiated_at"))
 
+    /** RFC 3339 datetime string representing the time at which the Message Batch was created. */
+    fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
+
+    /**
+     * RFC 3339 datetime string representing the time at which processing for the Message Batch
+     * ended. Specified only once processing ends.
+     *
+     * Processing ends when every request in a Message Batch has either succeeded, errored,
+     * canceled, or expired.
+     */
+    fun endedAt(): Optional<OffsetDateTime> = Optional.ofNullable(endedAt.getNullable("ended_at"))
+
+    /**
+     * RFC 3339 datetime string representing the time at which the Message Batch will expire and end
+     * processing, which is 24 hours after creation.
+     */
+    fun expiresAt(): OffsetDateTime = expiresAt.getRequired("expires_at")
+
+    /** Processing status of the Message Batch. */
+    fun processingStatus(): ProcessingStatus = processingStatus.getRequired("processing_status")
+
+    /**
+     * Tallies requests within the Message Batch, categorized by their status.
+     *
+     * Requests start as `processing` and move to one of the other statuses only once processing of
+     * the entire batch ends. The sum of all values always matches the total number of requests in
+     * the batch.
+     */
+    fun requestCounts(): BetaMessageBatchRequestCounts = requestCounts.getRequired("request_counts")
+
     /**
      * URL to a `.jsonl` file containing the results of the Message Batch requests. Specified only
      * once processing ends.
@@ -120,48 +113,18 @@ private constructor(
     fun resultsUrl(): Optional<String> = Optional.ofNullable(resultsUrl.getNullable("results_url"))
 
     /**
+     * Object type.
+     *
+     * For Message Batches, this is always `"message_batch"`.
+     */
+    fun type(): Type = type.getRequired("type")
+
+    /**
      * Unique object identifier.
      *
      * The format and length of IDs may change over time.
      */
     @JsonProperty("id") @ExcludeMissing fun _id() = id
-
-    /**
-     * Object type.
-     *
-     * For Message Batches, this is always `"message_batch"`.
-     */
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
-
-    /** Processing status of the Message Batch. */
-    @JsonProperty("processing_status") @ExcludeMissing fun _processingStatus() = processingStatus
-
-    /**
-     * Tallies requests within the Message Batch, categorized by their status.
-     *
-     * Requests start as `processing` and move to one of the other statuses only once processing of
-     * the entire batch ends. The sum of all values always matches the total number of requests in
-     * the batch.
-     */
-    @JsonProperty("request_counts") @ExcludeMissing fun _requestCounts() = requestCounts
-
-    /**
-     * RFC 3339 datetime string representing the time at which processing for the Message Batch
-     * ended. Specified only once processing ends.
-     *
-     * Processing ends when every request in a Message Batch has either succeeded, errored,
-     * canceled, or expired.
-     */
-    @JsonProperty("ended_at") @ExcludeMissing fun _endedAt() = endedAt
-
-    /** RFC 3339 datetime string representing the time at which the Message Batch was created. */
-    @JsonProperty("created_at") @ExcludeMissing fun _createdAt() = createdAt
-
-    /**
-     * RFC 3339 datetime string representing the time at which the Message Batch will expire and end
-     * processing, which is 24 hours after creation.
-     */
-    @JsonProperty("expires_at") @ExcludeMissing fun _expiresAt() = expiresAt
 
     /**
      * RFC 3339 datetime string representing the time at which the Message Batch was archived and
@@ -177,6 +140,36 @@ private constructor(
     @ExcludeMissing
     fun _cancelInitiatedAt() = cancelInitiatedAt
 
+    /** RFC 3339 datetime string representing the time at which the Message Batch was created. */
+    @JsonProperty("created_at") @ExcludeMissing fun _createdAt() = createdAt
+
+    /**
+     * RFC 3339 datetime string representing the time at which processing for the Message Batch
+     * ended. Specified only once processing ends.
+     *
+     * Processing ends when every request in a Message Batch has either succeeded, errored,
+     * canceled, or expired.
+     */
+    @JsonProperty("ended_at") @ExcludeMissing fun _endedAt() = endedAt
+
+    /**
+     * RFC 3339 datetime string representing the time at which the Message Batch will expire and end
+     * processing, which is 24 hours after creation.
+     */
+    @JsonProperty("expires_at") @ExcludeMissing fun _expiresAt() = expiresAt
+
+    /** Processing status of the Message Batch. */
+    @JsonProperty("processing_status") @ExcludeMissing fun _processingStatus() = processingStatus
+
+    /**
+     * Tallies requests within the Message Batch, categorized by their status.
+     *
+     * Requests start as `processing` and move to one of the other statuses only once processing of
+     * the entire batch ends. The sum of all values always matches the total number of requests in
+     * the batch.
+     */
+    @JsonProperty("request_counts") @ExcludeMissing fun _requestCounts() = requestCounts
+
     /**
      * URL to a `.jsonl` file containing the results of the Message Batch requests. Specified only
      * once processing ends.
@@ -185,6 +178,13 @@ private constructor(
      * `custom_id` field to match results to requests.
      */
     @JsonProperty("results_url") @ExcludeMissing fun _resultsUrl() = resultsUrl
+
+    /**
+     * Object type.
+     *
+     * For Message Batches, this is always `"message_batch"`.
+     */
+    @JsonProperty("type") @ExcludeMissing fun _type() = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -195,15 +195,15 @@ private constructor(
     fun validate(): BetaMessageBatch = apply {
         if (!validated) {
             id()
-            type()
-            processingStatus()
-            requestCounts().validate()
-            endedAt()
-            createdAt()
-            expiresAt()
             archivedAt()
             cancelInitiatedAt()
+            createdAt()
+            endedAt()
+            expiresAt()
+            processingStatus()
+            requestCounts().validate()
             resultsUrl()
+            type()
             validated = true
         }
     }
@@ -218,29 +218,29 @@ private constructor(
     class Builder {
 
         private var id: JsonField<String> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
-        private var processingStatus: JsonField<ProcessingStatus> = JsonMissing.of()
-        private var requestCounts: JsonField<BetaMessageBatchRequestCounts> = JsonMissing.of()
-        private var endedAt: JsonField<OffsetDateTime> = JsonMissing.of()
-        private var createdAt: JsonField<OffsetDateTime> = JsonMissing.of()
-        private var expiresAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var archivedAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var cancelInitiatedAt: JsonField<OffsetDateTime> = JsonMissing.of()
+        private var createdAt: JsonField<OffsetDateTime> = JsonMissing.of()
+        private var endedAt: JsonField<OffsetDateTime> = JsonMissing.of()
+        private var expiresAt: JsonField<OffsetDateTime> = JsonMissing.of()
+        private var processingStatus: JsonField<ProcessingStatus> = JsonMissing.of()
+        private var requestCounts: JsonField<BetaMessageBatchRequestCounts> = JsonMissing.of()
         private var resultsUrl: JsonField<String> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaMessageBatch: BetaMessageBatch) = apply {
             id = betaMessageBatch.id
-            type = betaMessageBatch.type
-            processingStatus = betaMessageBatch.processingStatus
-            requestCounts = betaMessageBatch.requestCounts
-            endedAt = betaMessageBatch.endedAt
-            createdAt = betaMessageBatch.createdAt
-            expiresAt = betaMessageBatch.expiresAt
             archivedAt = betaMessageBatch.archivedAt
             cancelInitiatedAt = betaMessageBatch.cancelInitiatedAt
+            createdAt = betaMessageBatch.createdAt
+            endedAt = betaMessageBatch.endedAt
+            expiresAt = betaMessageBatch.expiresAt
+            processingStatus = betaMessageBatch.processingStatus
+            requestCounts = betaMessageBatch.requestCounts
             resultsUrl = betaMessageBatch.resultsUrl
+            type = betaMessageBatch.type
             additionalProperties = betaMessageBatch.additionalProperties.toMutableMap()
         }
 
@@ -259,18 +259,73 @@ private constructor(
         fun id(id: JsonField<String>) = apply { this.id = id }
 
         /**
-         * Object type.
-         *
-         * For Message Batches, this is always `"message_batch"`.
+         * RFC 3339 datetime string representing the time at which the Message Batch was archived
+         * and its results became unavailable.
          */
-        fun type(type: Type) = type(JsonField.of(type))
+        fun archivedAt(archivedAt: OffsetDateTime) = archivedAt(JsonField.of(archivedAt))
 
         /**
-         * Object type.
-         *
-         * For Message Batches, this is always `"message_batch"`.
+         * RFC 3339 datetime string representing the time at which the Message Batch was archived
+         * and its results became unavailable.
          */
-        fun type(type: JsonField<Type>) = apply { this.type = type }
+        fun archivedAt(archivedAt: JsonField<OffsetDateTime>) = apply {
+            this.archivedAt = archivedAt
+        }
+
+        /**
+         * RFC 3339 datetime string representing the time at which cancellation was initiated for
+         * the Message Batch. Specified only if cancellation was initiated.
+         */
+        fun cancelInitiatedAt(cancelInitiatedAt: OffsetDateTime) =
+            cancelInitiatedAt(JsonField.of(cancelInitiatedAt))
+
+        /**
+         * RFC 3339 datetime string representing the time at which cancellation was initiated for
+         * the Message Batch. Specified only if cancellation was initiated.
+         */
+        fun cancelInitiatedAt(cancelInitiatedAt: JsonField<OffsetDateTime>) = apply {
+            this.cancelInitiatedAt = cancelInitiatedAt
+        }
+
+        /**
+         * RFC 3339 datetime string representing the time at which the Message Batch was created.
+         */
+        fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
+
+        /**
+         * RFC 3339 datetime string representing the time at which the Message Batch was created.
+         */
+        fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
+
+        /**
+         * RFC 3339 datetime string representing the time at which processing for the Message Batch
+         * ended. Specified only once processing ends.
+         *
+         * Processing ends when every request in a Message Batch has either succeeded, errored,
+         * canceled, or expired.
+         */
+        fun endedAt(endedAt: OffsetDateTime) = endedAt(JsonField.of(endedAt))
+
+        /**
+         * RFC 3339 datetime string representing the time at which processing for the Message Batch
+         * ended. Specified only once processing ends.
+         *
+         * Processing ends when every request in a Message Batch has either succeeded, errored,
+         * canceled, or expired.
+         */
+        fun endedAt(endedAt: JsonField<OffsetDateTime>) = apply { this.endedAt = endedAt }
+
+        /**
+         * RFC 3339 datetime string representing the time at which the Message Batch will expire and
+         * end processing, which is 24 hours after creation.
+         */
+        fun expiresAt(expiresAt: OffsetDateTime) = expiresAt(JsonField.of(expiresAt))
+
+        /**
+         * RFC 3339 datetime string representing the time at which the Message Batch will expire and
+         * end processing, which is 24 hours after creation.
+         */
+        fun expiresAt(expiresAt: JsonField<OffsetDateTime>) = apply { this.expiresAt = expiresAt }
 
         /** Processing status of the Message Batch. */
         fun processingStatus(processingStatus: ProcessingStatus) =
@@ -303,75 +358,6 @@ private constructor(
         }
 
         /**
-         * RFC 3339 datetime string representing the time at which processing for the Message Batch
-         * ended. Specified only once processing ends.
-         *
-         * Processing ends when every request in a Message Batch has either succeeded, errored,
-         * canceled, or expired.
-         */
-        fun endedAt(endedAt: OffsetDateTime) = endedAt(JsonField.of(endedAt))
-
-        /**
-         * RFC 3339 datetime string representing the time at which processing for the Message Batch
-         * ended. Specified only once processing ends.
-         *
-         * Processing ends when every request in a Message Batch has either succeeded, errored,
-         * canceled, or expired.
-         */
-        fun endedAt(endedAt: JsonField<OffsetDateTime>) = apply { this.endedAt = endedAt }
-
-        /**
-         * RFC 3339 datetime string representing the time at which the Message Batch was created.
-         */
-        fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
-
-        /**
-         * RFC 3339 datetime string representing the time at which the Message Batch was created.
-         */
-        fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
-
-        /**
-         * RFC 3339 datetime string representing the time at which the Message Batch will expire and
-         * end processing, which is 24 hours after creation.
-         */
-        fun expiresAt(expiresAt: OffsetDateTime) = expiresAt(JsonField.of(expiresAt))
-
-        /**
-         * RFC 3339 datetime string representing the time at which the Message Batch will expire and
-         * end processing, which is 24 hours after creation.
-         */
-        fun expiresAt(expiresAt: JsonField<OffsetDateTime>) = apply { this.expiresAt = expiresAt }
-
-        /**
-         * RFC 3339 datetime string representing the time at which the Message Batch was archived
-         * and its results became unavailable.
-         */
-        fun archivedAt(archivedAt: OffsetDateTime) = archivedAt(JsonField.of(archivedAt))
-
-        /**
-         * RFC 3339 datetime string representing the time at which the Message Batch was archived
-         * and its results became unavailable.
-         */
-        fun archivedAt(archivedAt: JsonField<OffsetDateTime>) = apply {
-            this.archivedAt = archivedAt
-        }
-
-        /**
-         * RFC 3339 datetime string representing the time at which cancellation was initiated for
-         * the Message Batch. Specified only if cancellation was initiated.
-         */
-        fun cancelInitiatedAt(cancelInitiatedAt: OffsetDateTime) =
-            cancelInitiatedAt(JsonField.of(cancelInitiatedAt))
-
-        /**
-         * RFC 3339 datetime string representing the time at which cancellation was initiated for
-         * the Message Batch. Specified only if cancellation was initiated.
-         */
-        fun cancelInitiatedAt(cancelInitiatedAt: JsonField<OffsetDateTime>) = apply {
-            this.cancelInitiatedAt = cancelInitiatedAt
-        }
-
-        /**
          * URL to a `.jsonl` file containing the results of the Message Batch requests. Specified
          * only once processing ends.
          *
@@ -388,6 +374,20 @@ private constructor(
          * `custom_id` field to match results to requests.
          */
         fun resultsUrl(resultsUrl: JsonField<String>) = apply { this.resultsUrl = resultsUrl }
+
+        /**
+         * Object type.
+         *
+         * For Message Batches, this is always `"message_batch"`.
+         */
+        fun type(type: Type) = type(JsonField.of(type))
+
+        /**
+         * Object type.
+         *
+         * For Message Batches, this is always `"message_batch"`.
+         */
+        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -411,15 +411,15 @@ private constructor(
         fun build(): BetaMessageBatch =
             BetaMessageBatch(
                 id,
-                type,
-                processingStatus,
-                requestCounts,
-                endedAt,
-                createdAt,
-                expiresAt,
                 archivedAt,
                 cancelInitiatedAt,
+                createdAt,
+                endedAt,
+                expiresAt,
+                processingStatus,
+                requestCounts,
                 resultsUrl,
+                type,
                 additionalProperties.toImmutable(),
             )
     }
@@ -543,15 +543,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaMessageBatch && id == other.id && type == other.type && processingStatus == other.processingStatus && requestCounts == other.requestCounts && endedAt == other.endedAt && createdAt == other.createdAt && expiresAt == other.expiresAt && archivedAt == other.archivedAt && cancelInitiatedAt == other.cancelInitiatedAt && resultsUrl == other.resultsUrl && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is BetaMessageBatch && id == other.id && archivedAt == other.archivedAt && cancelInitiatedAt == other.cancelInitiatedAt && createdAt == other.createdAt && endedAt == other.endedAt && expiresAt == other.expiresAt && processingStatus == other.processingStatus && requestCounts == other.requestCounts && resultsUrl == other.resultsUrl && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(id, type, processingStatus, requestCounts, endedAt, createdAt, expiresAt, archivedAt, cancelInitiatedAt, resultsUrl, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(id, archivedAt, cancelInitiatedAt, createdAt, endedAt, expiresAt, processingStatus, requestCounts, resultsUrl, type, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaMessageBatch{id=$id, type=$type, processingStatus=$processingStatus, requestCounts=$requestCounts, endedAt=$endedAt, createdAt=$createdAt, expiresAt=$expiresAt, archivedAt=$archivedAt, cancelInitiatedAt=$cancelInitiatedAt, resultsUrl=$resultsUrl, additionalProperties=$additionalProperties}"
+        "BetaMessageBatch{id=$id, archivedAt=$archivedAt, cancelInitiatedAt=$cancelInitiatedAt, createdAt=$createdAt, endedAt=$endedAt, expiresAt=$expiresAt, processingStatus=$processingStatus, requestCounts=$requestCounts, resultsUrl=$resultsUrl, type=$type, additionalProperties=$additionalProperties}"
 }

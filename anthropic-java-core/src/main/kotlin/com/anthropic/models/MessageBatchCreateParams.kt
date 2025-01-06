@@ -410,9 +410,9 @@ constructor(
         class Params
         @JsonCreator
         private constructor(
-            @JsonProperty("model") private val model: Model,
-            @JsonProperty("messages") private val messages: List<MessageParam>,
             @JsonProperty("max_tokens") private val maxTokens: Long,
+            @JsonProperty("messages") private val messages: List<MessageParam>,
+            @JsonProperty("model") private val model: Model,
             @JsonProperty("metadata") private val metadata: Metadata?,
             @JsonProperty("stop_sequences") private val stopSequences: List<String>?,
             @JsonProperty("stream") private val stream: Boolean?,
@@ -427,11 +427,15 @@ constructor(
         ) {
 
             /**
-             * The model that will complete your prompt.\n\nSee
-             * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
-             * and options.
+             * The maximum number of tokens to generate before stopping.
+             *
+             * Note that our models may stop _before_ reaching this maximum. This parameter only
+             * specifies the absolute maximum number of tokens to generate.
+             *
+             * Different models have different maximum values for this parameter. See
+             * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
              */
-            @JsonProperty("model") fun model(): Model = model
+            @JsonProperty("max_tokens") fun maxTokens(): Long = maxTokens
 
             /**
              * Input messages.
@@ -518,15 +522,11 @@ constructor(
             @JsonProperty("messages") fun messages(): List<MessageParam> = messages
 
             /**
-             * The maximum number of tokens to generate before stopping.
-             *
-             * Note that our models may stop _before_ reaching this maximum. This parameter only
-             * specifies the absolute maximum number of tokens to generate.
-             *
-             * Different models have different maximum values for this parameter. See
-             * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
+             * The model that will complete your prompt.\n\nSee
+             * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
+             * and options.
              */
-            @JsonProperty("max_tokens") fun maxTokens(): Long = maxTokens
+            @JsonProperty("model") fun model(): Model = model
 
             /** An object describing metadata about the request. */
             @JsonProperty("metadata")
@@ -683,9 +683,9 @@ constructor(
 
             class Builder {
 
-                private var model: Model? = null
-                private var messages: MutableList<MessageParam>? = null
                 private var maxTokens: Long? = null
+                private var messages: MutableList<MessageParam>? = null
+                private var model: Model? = null
                 private var metadata: Metadata? = null
                 private var stopSequences: MutableList<String>? = null
                 private var stream: Boolean? = null
@@ -699,9 +699,9 @@ constructor(
 
                 @JvmSynthetic
                 internal fun from(params: Params) = apply {
-                    model = params.model
-                    messages = params.messages.toMutableList()
                     maxTokens = params.maxTokens
+                    messages = params.messages.toMutableList()
+                    model = params.model
                     metadata = params.metadata
                     stopSequences = params.stopSequences?.toMutableList()
                     stream = params.stream
@@ -715,18 +715,15 @@ constructor(
                 }
 
                 /**
-                 * The model that will complete your prompt.\n\nSee
-                 * [models](https://docs.anthropic.com/en/docs/models-overview) for additional
-                 * details and options.
+                 * The maximum number of tokens to generate before stopping.
+                 *
+                 * Note that our models may stop _before_ reaching this maximum. This parameter only
+                 * specifies the absolute maximum number of tokens to generate.
+                 *
+                 * Different models have different maximum values for this parameter. See
+                 * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
                  */
-                fun model(model: Model) = apply { this.model = model }
-
-                /**
-                 * The model that will complete your prompt.\n\nSee
-                 * [models](https://docs.anthropic.com/en/docs/models-overview) for additional
-                 * details and options.
-                 */
-                fun model(value: String) = apply { model = Model.of(value) }
+                fun maxTokens(maxTokens: Long) = apply { this.maxTokens = maxTokens }
 
                 /**
                  * Input messages.
@@ -985,15 +982,18 @@ constructor(
                 fun addMessage(message: Message) = addMessage(message.toParam())
 
                 /**
-                 * The maximum number of tokens to generate before stopping.
-                 *
-                 * Note that our models may stop _before_ reaching this maximum. This parameter only
-                 * specifies the absolute maximum number of tokens to generate.
-                 *
-                 * Different models have different maximum values for this parameter. See
-                 * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
+                 * The model that will complete your prompt.\n\nSee
+                 * [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+                 * details and options.
                  */
-                fun maxTokens(maxTokens: Long) = apply { this.maxTokens = maxTokens }
+                fun model(model: Model) = apply { this.model = model }
+
+                /**
+                 * The model that will complete your prompt.\n\nSee
+                 * [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+                 * details and options.
+                 */
+                fun model(value: String) = apply { model = Model.of(value) }
 
                 /** An object describing metadata about the request. */
                 fun metadata(metadata: Metadata) = apply { this.metadata = metadata }
@@ -1268,10 +1268,10 @@ constructor(
 
                 fun build(): Params =
                     Params(
-                        checkNotNull(model) { "`model` is required but was not set" },
+                        checkNotNull(maxTokens) { "`maxTokens` is required but was not set" },
                         checkNotNull(messages) { "`messages` is required but was not set" }
                             .toImmutable(),
-                        checkNotNull(maxTokens) { "`maxTokens` is required but was not set" },
+                        checkNotNull(model) { "`model` is required but was not set" },
                         metadata,
                         stopSequences?.toImmutable(),
                         stream,
@@ -1402,17 +1402,17 @@ constructor(
                     return true
                 }
 
-                return /* spotless:off */ other is Params && model == other.model && messages == other.messages && maxTokens == other.maxTokens && metadata == other.metadata && stopSequences == other.stopSequences && stream == other.stream && system == other.system && temperature == other.temperature && toolChoice == other.toolChoice && tools == other.tools && topK == other.topK && topP == other.topP && additionalProperties == other.additionalProperties /* spotless:on */
+                return /* spotless:off */ other is Params && maxTokens == other.maxTokens && messages == other.messages && model == other.model && metadata == other.metadata && stopSequences == other.stopSequences && stream == other.stream && system == other.system && temperature == other.temperature && toolChoice == other.toolChoice && tools == other.tools && topK == other.topK && topP == other.topP && additionalProperties == other.additionalProperties /* spotless:on */
             }
 
             /* spotless:off */
-            private val hashCode: Int by lazy { Objects.hash(model, messages, maxTokens, metadata, stopSequences, stream, system, temperature, toolChoice, tools, topK, topP, additionalProperties) }
+            private val hashCode: Int by lazy { Objects.hash(maxTokens, messages, model, metadata, stopSequences, stream, system, temperature, toolChoice, tools, topK, topP, additionalProperties) }
             /* spotless:on */
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Params{model=$model, messages=$messages, maxTokens=$maxTokens, metadata=$metadata, stopSequences=$stopSequences, stream=$stream, system=$system, temperature=$temperature, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+                "Params{maxTokens=$maxTokens, messages=$messages, model=$model, metadata=$metadata, stopSequences=$stopSequences, stream=$stream, system=$system, temperature=$temperature, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {

@@ -21,25 +21,25 @@ import java.util.Objects
 class BetaBase64PdfSource
 @JsonCreator
 private constructor(
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+    @JsonProperty("data") @ExcludeMissing private val data: JsonField<String> = JsonMissing.of(),
     @JsonProperty("media_type")
     @ExcludeMissing
     private val mediaType: JsonField<MediaType> = JsonMissing.of(),
-    @JsonProperty("data") @ExcludeMissing private val data: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
-    fun type(): Type = type.getRequired("type")
+    fun data(): String = data.getRequired("data")
 
     fun mediaType(): MediaType = mediaType.getRequired("media_type")
 
-    fun data(): String = data.getRequired("data")
+    fun type(): Type = type.getRequired("type")
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("data") @ExcludeMissing fun _data() = data
 
     @JsonProperty("media_type") @ExcludeMissing fun _mediaType() = mediaType
 
-    @JsonProperty("data") @ExcludeMissing fun _data() = data
+    @JsonProperty("type") @ExcludeMissing fun _type() = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -49,9 +49,9 @@ private constructor(
 
     fun validate(): BetaBase64PdfSource = apply {
         if (!validated) {
-            type()
-            mediaType()
             data()
+            mediaType()
+            type()
             validated = true
         }
     }
@@ -65,30 +65,30 @@ private constructor(
 
     class Builder {
 
-        private var type: JsonField<Type> = JsonMissing.of()
-        private var mediaType: JsonField<MediaType> = JsonMissing.of()
         private var data: JsonField<String> = JsonMissing.of()
+        private var mediaType: JsonField<MediaType> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaBase64PdfSource: BetaBase64PdfSource) = apply {
-            type = betaBase64PdfSource.type
-            mediaType = betaBase64PdfSource.mediaType
             data = betaBase64PdfSource.data
+            mediaType = betaBase64PdfSource.mediaType
+            type = betaBase64PdfSource.type
             additionalProperties = betaBase64PdfSource.additionalProperties.toMutableMap()
         }
 
-        fun type(type: Type) = type(JsonField.of(type))
+        fun data(data: String) = data(JsonField.of(data))
 
-        fun type(type: JsonField<Type>) = apply { this.type = type }
+        fun data(data: JsonField<String>) = apply { this.data = data }
 
         fun mediaType(mediaType: MediaType) = mediaType(JsonField.of(mediaType))
 
         fun mediaType(mediaType: JsonField<MediaType>) = apply { this.mediaType = mediaType }
 
-        fun data(data: String) = data(JsonField.of(data))
+        fun type(type: Type) = type(JsonField.of(type))
 
-        fun data(data: JsonField<String>) = apply { this.data = data }
+        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -111,9 +111,9 @@ private constructor(
 
         fun build(): BetaBase64PdfSource =
             BetaBase64PdfSource(
-                type,
-                mediaType,
                 data,
+                mediaType,
+                type,
                 additionalProperties.toImmutable(),
             )
     }
@@ -225,15 +225,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaBase64PdfSource && type == other.type && mediaType == other.mediaType && data == other.data && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is BetaBase64PdfSource && data == other.data && mediaType == other.mediaType && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(type, mediaType, data, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(data, mediaType, type, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaBase64PdfSource{type=$type, mediaType=$mediaType, data=$data, additionalProperties=$additionalProperties}"
+        "BetaBase64PdfSource{data=$data, mediaType=$mediaType, type=$type, additionalProperties=$additionalProperties}"
 }

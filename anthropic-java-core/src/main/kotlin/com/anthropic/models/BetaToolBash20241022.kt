@@ -22,18 +22,13 @@ import java.util.Optional
 class BetaToolBash20241022
 @JsonCreator
 private constructor(
+    @JsonProperty("name") @ExcludeMissing private val name: JsonField<Name> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonProperty("cache_control")
     @ExcludeMissing
     private val cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
-    @JsonProperty("name") @ExcludeMissing private val name: JsonField<Name> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
-
-    fun cacheControl(): Optional<BetaCacheControlEphemeral> =
-        Optional.ofNullable(cacheControl.getNullable("cache_control"))
-
-    fun type(): Type = type.getRequired("type")
 
     /**
      * Name of the tool.
@@ -42,9 +37,10 @@ private constructor(
      */
     fun name(): Name = name.getRequired("name")
 
-    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
+    fun type(): Type = type.getRequired("type")
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    fun cacheControl(): Optional<BetaCacheControlEphemeral> =
+        Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
     /**
      * Name of the tool.
@@ -52,6 +48,10 @@ private constructor(
      * This is how the tool will be called by the model and in tool_use blocks.
      */
     @JsonProperty("name") @ExcludeMissing fun _name() = name
+
+    @JsonProperty("type") @ExcludeMissing fun _type() = type
+
+    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -61,9 +61,9 @@ private constructor(
 
     fun validate(): BetaToolBash20241022 = apply {
         if (!validated) {
-            cacheControl().map { it.validate() }
-            type()
             name()
+            type()
+            cacheControl().map { it.validate() }
             validated = true
         }
     }
@@ -77,29 +77,18 @@ private constructor(
 
     class Builder {
 
-        private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
         private var name: JsonField<Name> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
+        private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaToolBash20241022: BetaToolBash20241022) = apply {
-            cacheControl = betaToolBash20241022.cacheControl
-            type = betaToolBash20241022.type
             name = betaToolBash20241022.name
+            type = betaToolBash20241022.type
+            cacheControl = betaToolBash20241022.cacheControl
             additionalProperties = betaToolBash20241022.additionalProperties.toMutableMap()
         }
-
-        fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
-            cacheControl(JsonField.of(cacheControl))
-
-        fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
-            this.cacheControl = cacheControl
-        }
-
-        fun type(type: Type) = type(JsonField.of(type))
-
-        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         /**
          * Name of the tool.
@@ -114,6 +103,17 @@ private constructor(
          * This is how the tool will be called by the model and in tool_use blocks.
          */
         fun name(name: JsonField<Name>) = apply { this.name = name }
+
+        fun type(type: Type) = type(JsonField.of(type))
+
+        fun type(type: JsonField<Type>) = apply { this.type = type }
+
+        fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
+            cacheControl(JsonField.of(cacheControl))
+
+        fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
+            this.cacheControl = cacheControl
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -136,9 +136,9 @@ private constructor(
 
         fun build(): BetaToolBash20241022 =
             BetaToolBash20241022(
-                cacheControl,
-                type,
                 name,
+                type,
+                cacheControl,
                 additionalProperties.toImmutable(),
             )
     }
@@ -250,15 +250,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaToolBash20241022 && cacheControl == other.cacheControl && type == other.type && name == other.name && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is BetaToolBash20241022 && name == other.name && type == other.type && cacheControl == other.cacheControl && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(cacheControl, type, name, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(name, type, cacheControl, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaToolBash20241022{cacheControl=$cacheControl, type=$type, name=$name, additionalProperties=$additionalProperties}"
+        "BetaToolBash20241022{name=$name, type=$type, cacheControl=$cacheControl, additionalProperties=$additionalProperties}"
 }

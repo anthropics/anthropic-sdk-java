@@ -22,27 +22,28 @@ import java.util.Optional
 class BetaToolComputerUse20241022
 @JsonCreator
 private constructor(
-    @JsonProperty("cache_control")
-    @ExcludeMissing
-    private val cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
-    @JsonProperty("name") @ExcludeMissing private val name: JsonField<Name> = JsonMissing.of(),
     @JsonProperty("display_height_px")
     @ExcludeMissing
     private val displayHeightPx: JsonField<Long> = JsonMissing.of(),
     @JsonProperty("display_width_px")
     @ExcludeMissing
     private val displayWidthPx: JsonField<Long> = JsonMissing.of(),
+    @JsonProperty("name") @ExcludeMissing private val name: JsonField<Name> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+    @JsonProperty("cache_control")
+    @ExcludeMissing
+    private val cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
     @JsonProperty("display_number")
     @ExcludeMissing
     private val displayNumber: JsonField<Long> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
-    fun cacheControl(): Optional<BetaCacheControlEphemeral> =
-        Optional.ofNullable(cacheControl.getNullable("cache_control"))
+    /** The height of the display in pixels. */
+    fun displayHeightPx(): Long = displayHeightPx.getRequired("display_height_px")
 
-    fun type(): Type = type.getRequired("type")
+    /** The width of the display in pixels. */
+    fun displayWidthPx(): Long = displayWidthPx.getRequired("display_width_px")
 
     /**
      * Name of the tool.
@@ -51,19 +52,20 @@ private constructor(
      */
     fun name(): Name = name.getRequired("name")
 
-    /** The height of the display in pixels. */
-    fun displayHeightPx(): Long = displayHeightPx.getRequired("display_height_px")
+    fun type(): Type = type.getRequired("type")
 
-    /** The width of the display in pixels. */
-    fun displayWidthPx(): Long = displayWidthPx.getRequired("display_width_px")
+    fun cacheControl(): Optional<BetaCacheControlEphemeral> =
+        Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
     /** The X11 display number (e.g. 0, 1) for the display. */
     fun displayNumber(): Optional<Long> =
         Optional.ofNullable(displayNumber.getNullable("display_number"))
 
-    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
+    /** The height of the display in pixels. */
+    @JsonProperty("display_height_px") @ExcludeMissing fun _displayHeightPx() = displayHeightPx
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    /** The width of the display in pixels. */
+    @JsonProperty("display_width_px") @ExcludeMissing fun _displayWidthPx() = displayWidthPx
 
     /**
      * Name of the tool.
@@ -72,11 +74,9 @@ private constructor(
      */
     @JsonProperty("name") @ExcludeMissing fun _name() = name
 
-    /** The height of the display in pixels. */
-    @JsonProperty("display_height_px") @ExcludeMissing fun _displayHeightPx() = displayHeightPx
+    @JsonProperty("type") @ExcludeMissing fun _type() = type
 
-    /** The width of the display in pixels. */
-    @JsonProperty("display_width_px") @ExcludeMissing fun _displayWidthPx() = displayWidthPx
+    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
 
     /** The X11 display number (e.g. 0, 1) for the display. */
     @JsonProperty("display_number") @ExcludeMissing fun _displayNumber() = displayNumber
@@ -89,11 +89,11 @@ private constructor(
 
     fun validate(): BetaToolComputerUse20241022 = apply {
         if (!validated) {
-            cacheControl().map { it.validate() }
-            type()
-            name()
             displayHeightPx()
             displayWidthPx()
+            name()
+            type()
+            cacheControl().map { it.validate() }
             displayNumber()
             validated = true
         }
@@ -108,49 +108,24 @@ private constructor(
 
     class Builder {
 
-        private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
-        private var name: JsonField<Name> = JsonMissing.of()
         private var displayHeightPx: JsonField<Long> = JsonMissing.of()
         private var displayWidthPx: JsonField<Long> = JsonMissing.of()
+        private var name: JsonField<Name> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
+        private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var displayNumber: JsonField<Long> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaToolComputerUse20241022: BetaToolComputerUse20241022) = apply {
-            cacheControl = betaToolComputerUse20241022.cacheControl
-            type = betaToolComputerUse20241022.type
-            name = betaToolComputerUse20241022.name
             displayHeightPx = betaToolComputerUse20241022.displayHeightPx
             displayWidthPx = betaToolComputerUse20241022.displayWidthPx
+            name = betaToolComputerUse20241022.name
+            type = betaToolComputerUse20241022.type
+            cacheControl = betaToolComputerUse20241022.cacheControl
             displayNumber = betaToolComputerUse20241022.displayNumber
             additionalProperties = betaToolComputerUse20241022.additionalProperties.toMutableMap()
         }
-
-        fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
-            cacheControl(JsonField.of(cacheControl))
-
-        fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
-            this.cacheControl = cacheControl
-        }
-
-        fun type(type: Type) = type(JsonField.of(type))
-
-        fun type(type: JsonField<Type>) = apply { this.type = type }
-
-        /**
-         * Name of the tool.
-         *
-         * This is how the tool will be called by the model and in tool_use blocks.
-         */
-        fun name(name: Name) = name(JsonField.of(name))
-
-        /**
-         * Name of the tool.
-         *
-         * This is how the tool will be called by the model and in tool_use blocks.
-         */
-        fun name(name: JsonField<Name>) = apply { this.name = name }
 
         /** The height of the display in pixels. */
         fun displayHeightPx(displayHeightPx: Long) = displayHeightPx(JsonField.of(displayHeightPx))
@@ -166,6 +141,31 @@ private constructor(
         /** The width of the display in pixels. */
         fun displayWidthPx(displayWidthPx: JsonField<Long>) = apply {
             this.displayWidthPx = displayWidthPx
+        }
+
+        /**
+         * Name of the tool.
+         *
+         * This is how the tool will be called by the model and in tool_use blocks.
+         */
+        fun name(name: Name) = name(JsonField.of(name))
+
+        /**
+         * Name of the tool.
+         *
+         * This is how the tool will be called by the model and in tool_use blocks.
+         */
+        fun name(name: JsonField<Name>) = apply { this.name = name }
+
+        fun type(type: Type) = type(JsonField.of(type))
+
+        fun type(type: JsonField<Type>) = apply { this.type = type }
+
+        fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
+            cacheControl(JsonField.of(cacheControl))
+
+        fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
+            this.cacheControl = cacheControl
         }
 
         /** The X11 display number (e.g. 0, 1) for the display. */
@@ -197,11 +197,11 @@ private constructor(
 
         fun build(): BetaToolComputerUse20241022 =
             BetaToolComputerUse20241022(
-                cacheControl,
-                type,
-                name,
                 displayHeightPx,
                 displayWidthPx,
+                name,
+                type,
+                cacheControl,
                 displayNumber,
                 additionalProperties.toImmutable(),
             )
@@ -314,15 +314,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaToolComputerUse20241022 && cacheControl == other.cacheControl && type == other.type && name == other.name && displayHeightPx == other.displayHeightPx && displayWidthPx == other.displayWidthPx && displayNumber == other.displayNumber && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is BetaToolComputerUse20241022 && displayHeightPx == other.displayHeightPx && displayWidthPx == other.displayWidthPx && name == other.name && type == other.type && cacheControl == other.cacheControl && displayNumber == other.displayNumber && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(cacheControl, type, name, displayHeightPx, displayWidthPx, displayNumber, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(displayHeightPx, displayWidthPx, name, type, cacheControl, displayNumber, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaToolComputerUse20241022{cacheControl=$cacheControl, type=$type, name=$name, displayHeightPx=$displayHeightPx, displayWidthPx=$displayWidthPx, displayNumber=$displayNumber, additionalProperties=$additionalProperties}"
+        "BetaToolComputerUse20241022{displayHeightPx=$displayHeightPx, displayWidthPx=$displayWidthPx, name=$name, type=$type, cacheControl=$cacheControl, displayNumber=$displayNumber, additionalProperties=$additionalProperties}"
 }

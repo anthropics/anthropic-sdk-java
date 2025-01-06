@@ -21,20 +21,20 @@ import java.util.Objects
 class PermissionError
 @JsonCreator
 private constructor(
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonProperty("message")
     @ExcludeMissing
     private val message: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
-    fun type(): Type = type.getRequired("type")
-
     fun message(): String = message.getRequired("message")
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    fun type(): Type = type.getRequired("type")
 
     @JsonProperty("message") @ExcludeMissing fun _message() = message
+
+    @JsonProperty("type") @ExcludeMissing fun _type() = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -44,8 +44,8 @@ private constructor(
 
     fun validate(): PermissionError = apply {
         if (!validated) {
-            type()
             message()
+            type()
             validated = true
         }
     }
@@ -59,24 +59,24 @@ private constructor(
 
     class Builder {
 
-        private var type: JsonField<Type> = JsonMissing.of()
         private var message: JsonField<String> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(permissionError: PermissionError) = apply {
-            type = permissionError.type
             message = permissionError.message
+            type = permissionError.type
             additionalProperties = permissionError.additionalProperties.toMutableMap()
         }
-
-        fun type(type: Type) = type(JsonField.of(type))
-
-        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun message(message: String) = message(JsonField.of(message))
 
         fun message(message: JsonField<String>) = apply { this.message = message }
+
+        fun type(type: Type) = type(JsonField.of(type))
+
+        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -99,8 +99,8 @@ private constructor(
 
         fun build(): PermissionError =
             PermissionError(
-                type,
                 message,
+                type,
                 additionalProperties.toImmutable(),
             )
     }
@@ -161,15 +161,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is PermissionError && type == other.type && message == other.message && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is PermissionError && message == other.message && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(type, message, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(message, type, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "PermissionError{type=$type, message=$message, additionalProperties=$additionalProperties}"
+        "PermissionError{message=$message, type=$type, additionalProperties=$additionalProperties}"
 }

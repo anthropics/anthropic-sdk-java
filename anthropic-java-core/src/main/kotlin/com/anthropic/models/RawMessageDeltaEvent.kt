@@ -22,17 +22,17 @@ import java.util.Optional
 class RawMessageDeltaEvent
 @JsonCreator
 private constructor(
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonProperty("delta") @ExcludeMissing private val delta: JsonField<Delta> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonProperty("usage")
     @ExcludeMissing
     private val usage: JsonField<MessageDeltaUsage> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
-    fun type(): Type = type.getRequired("type")
-
     fun delta(): Delta = delta.getRequired("delta")
+
+    fun type(): Type = type.getRequired("type")
 
     /**
      * Billing and rate-limit usage.
@@ -49,9 +49,9 @@ private constructor(
      */
     fun usage(): MessageDeltaUsage = usage.getRequired("usage")
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
-
     @JsonProperty("delta") @ExcludeMissing fun _delta() = delta
+
+    @JsonProperty("type") @ExcludeMissing fun _type() = type
 
     /**
      * Billing and rate-limit usage.
@@ -76,8 +76,8 @@ private constructor(
 
     fun validate(): RawMessageDeltaEvent = apply {
         if (!validated) {
-            type()
             delta().validate()
+            type()
             usage().validate()
             validated = true
         }
@@ -92,26 +92,26 @@ private constructor(
 
     class Builder {
 
-        private var type: JsonField<Type> = JsonMissing.of()
         private var delta: JsonField<Delta> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
         private var usage: JsonField<MessageDeltaUsage> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(rawMessageDeltaEvent: RawMessageDeltaEvent) = apply {
-            type = rawMessageDeltaEvent.type
             delta = rawMessageDeltaEvent.delta
+            type = rawMessageDeltaEvent.type
             usage = rawMessageDeltaEvent.usage
             additionalProperties = rawMessageDeltaEvent.additionalProperties.toMutableMap()
         }
 
-        fun type(type: Type) = type(JsonField.of(type))
-
-        fun type(type: JsonField<Type>) = apply { this.type = type }
-
         fun delta(delta: Delta) = delta(JsonField.of(delta))
 
         fun delta(delta: JsonField<Delta>) = apply { this.delta = delta }
+
+        fun type(type: Type) = type(JsonField.of(type))
+
+        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         /**
          * Billing and rate-limit usage.
@@ -166,8 +166,8 @@ private constructor(
 
         fun build(): RawMessageDeltaEvent =
             RawMessageDeltaEvent(
-                type,
                 delta,
+                type,
                 usage,
                 additionalProperties.toImmutable(),
             )
@@ -413,15 +413,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is RawMessageDeltaEvent && type == other.type && delta == other.delta && usage == other.usage && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is RawMessageDeltaEvent && delta == other.delta && type == other.type && usage == other.usage && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(type, delta, usage, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(delta, type, usage, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "RawMessageDeltaEvent{type=$type, delta=$delta, usage=$usage, additionalProperties=$additionalProperties}"
+        "RawMessageDeltaEvent{delta=$delta, type=$type, usage=$usage, additionalProperties=$additionalProperties}"
 }

@@ -22,28 +22,28 @@ import java.util.Optional
 class BetaBase64PdfBlock
 @JsonCreator
 private constructor(
-    @JsonProperty("cache_control")
-    @ExcludeMissing
-    private val cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonProperty("source")
     @ExcludeMissing
     private val source: JsonField<BetaBase64PdfSource> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+    @JsonProperty("cache_control")
+    @ExcludeMissing
+    private val cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
+
+    fun source(): BetaBase64PdfSource = source.getRequired("source")
+
+    fun type(): Type = type.getRequired("type")
 
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
-    fun type(): Type = type.getRequired("type")
-
-    fun source(): BetaBase64PdfSource = source.getRequired("source")
-
-    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
+    @JsonProperty("source") @ExcludeMissing fun _source() = source
 
     @JsonProperty("type") @ExcludeMissing fun _type() = type
 
-    @JsonProperty("source") @ExcludeMissing fun _source() = source
+    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -53,9 +53,9 @@ private constructor(
 
     fun validate(): BetaBase64PdfBlock = apply {
         if (!validated) {
-            cacheControl().map { it.validate() }
-            type()
             source().validate()
+            type()
+            cacheControl().map { it.validate() }
             validated = true
         }
     }
@@ -69,18 +69,26 @@ private constructor(
 
     class Builder {
 
-        private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
         private var source: JsonField<BetaBase64PdfSource> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
+        private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaBase64PdfBlock: BetaBase64PdfBlock) = apply {
-            cacheControl = betaBase64PdfBlock.cacheControl
-            type = betaBase64PdfBlock.type
             source = betaBase64PdfBlock.source
+            type = betaBase64PdfBlock.type
+            cacheControl = betaBase64PdfBlock.cacheControl
             additionalProperties = betaBase64PdfBlock.additionalProperties.toMutableMap()
         }
+
+        fun source(source: BetaBase64PdfSource) = source(JsonField.of(source))
+
+        fun source(source: JsonField<BetaBase64PdfSource>) = apply { this.source = source }
+
+        fun type(type: Type) = type(JsonField.of(type))
+
+        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
             cacheControl(JsonField.of(cacheControl))
@@ -88,14 +96,6 @@ private constructor(
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
-
-        fun type(type: Type) = type(JsonField.of(type))
-
-        fun type(type: JsonField<Type>) = apply { this.type = type }
-
-        fun source(source: BetaBase64PdfSource) = source(JsonField.of(source))
-
-        fun source(source: JsonField<BetaBase64PdfSource>) = apply { this.source = source }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -118,9 +118,9 @@ private constructor(
 
         fun build(): BetaBase64PdfBlock =
             BetaBase64PdfBlock(
-                cacheControl,
-                type,
                 source,
+                type,
+                cacheControl,
                 additionalProperties.toImmutable(),
             )
     }
@@ -181,15 +181,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaBase64PdfBlock && cacheControl == other.cacheControl && type == other.type && source == other.source && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is BetaBase64PdfBlock && source == other.source && type == other.type && cacheControl == other.cacheControl && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(cacheControl, type, source, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(source, type, cacheControl, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaBase64PdfBlock{cacheControl=$cacheControl, type=$type, source=$source, additionalProperties=$additionalProperties}"
+        "BetaBase64PdfBlock{source=$source, type=$type, cacheControl=$cacheControl, additionalProperties=$additionalProperties}"
 }

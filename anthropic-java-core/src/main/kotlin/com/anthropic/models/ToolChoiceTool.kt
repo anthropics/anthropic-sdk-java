@@ -23,18 +23,18 @@ import java.util.Optional
 class ToolChoiceTool
 @JsonCreator
 private constructor(
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonProperty("name") @ExcludeMissing private val name: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonProperty("disable_parallel_tool_use")
     @ExcludeMissing
     private val disableParallelToolUse: JsonField<Boolean> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
-    fun type(): Type = type.getRequired("type")
-
     /** The name of the tool to use. */
     fun name(): String = name.getRequired("name")
+
+    fun type(): Type = type.getRequired("type")
 
     /**
      * Whether to disable parallel tool use.
@@ -44,10 +44,10 @@ private constructor(
     fun disableParallelToolUse(): Optional<Boolean> =
         Optional.ofNullable(disableParallelToolUse.getNullable("disable_parallel_tool_use"))
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
-
     /** The name of the tool to use. */
     @JsonProperty("name") @ExcludeMissing fun _name() = name
+
+    @JsonProperty("type") @ExcludeMissing fun _type() = type
 
     /**
      * Whether to disable parallel tool use.
@@ -66,8 +66,8 @@ private constructor(
 
     fun validate(): ToolChoiceTool = apply {
         if (!validated) {
-            type()
             name()
+            type()
             disableParallelToolUse()
             validated = true
         }
@@ -82,28 +82,28 @@ private constructor(
 
     class Builder {
 
-        private var type: JsonField<Type> = JsonMissing.of()
         private var name: JsonField<String> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
         private var disableParallelToolUse: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(toolChoiceTool: ToolChoiceTool) = apply {
-            type = toolChoiceTool.type
             name = toolChoiceTool.name
+            type = toolChoiceTool.type
             disableParallelToolUse = toolChoiceTool.disableParallelToolUse
             additionalProperties = toolChoiceTool.additionalProperties.toMutableMap()
         }
-
-        fun type(type: Type) = type(JsonField.of(type))
-
-        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         /** The name of the tool to use. */
         fun name(name: String) = name(JsonField.of(name))
 
         /** The name of the tool to use. */
         fun name(name: JsonField<String>) = apply { this.name = name }
+
+        fun type(type: Type) = type(JsonField.of(type))
+
+        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         /**
          * Whether to disable parallel tool use.
@@ -143,8 +143,8 @@ private constructor(
 
         fun build(): ToolChoiceTool =
             ToolChoiceTool(
-                type,
                 name,
+                type,
                 disableParallelToolUse,
                 additionalProperties.toImmutable(),
             )
@@ -206,15 +206,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ToolChoiceTool && type == other.type && name == other.name && disableParallelToolUse == other.disableParallelToolUse && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is ToolChoiceTool && name == other.name && type == other.type && disableParallelToolUse == other.disableParallelToolUse && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(type, name, disableParallelToolUse, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(name, type, disableParallelToolUse, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ToolChoiceTool{type=$type, name=$name, disableParallelToolUse=$disableParallelToolUse, additionalProperties=$additionalProperties}"
+        "ToolChoiceTool{name=$name, type=$type, disableParallelToolUse=$disableParallelToolUse, additionalProperties=$additionalProperties}"
 }

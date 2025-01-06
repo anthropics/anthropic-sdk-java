@@ -21,20 +21,20 @@ import java.util.Objects
 class BetaErrorResponse
 @JsonCreator
 private constructor(
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonProperty("error")
     @ExcludeMissing
     private val error: JsonField<BetaError> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
-    fun type(): Type = type.getRequired("type")
-
     fun error(): BetaError = error.getRequired("error")
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    fun type(): Type = type.getRequired("type")
 
     @JsonProperty("error") @ExcludeMissing fun _error() = error
+
+    @JsonProperty("type") @ExcludeMissing fun _type() = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -44,8 +44,8 @@ private constructor(
 
     fun validate(): BetaErrorResponse = apply {
         if (!validated) {
-            type()
             error()
+            type()
             validated = true
         }
     }
@@ -59,24 +59,24 @@ private constructor(
 
     class Builder {
 
-        private var type: JsonField<Type> = JsonMissing.of()
         private var error: JsonField<BetaError> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaErrorResponse: BetaErrorResponse) = apply {
-            type = betaErrorResponse.type
             error = betaErrorResponse.error
+            type = betaErrorResponse.type
             additionalProperties = betaErrorResponse.additionalProperties.toMutableMap()
         }
-
-        fun type(type: Type) = type(JsonField.of(type))
-
-        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun error(error: BetaError) = error(JsonField.of(error))
 
         fun error(error: JsonField<BetaError>) = apply { this.error = error }
+
+        fun type(type: Type) = type(JsonField.of(type))
+
+        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -99,8 +99,8 @@ private constructor(
 
         fun build(): BetaErrorResponse =
             BetaErrorResponse(
-                type,
                 error,
+                type,
                 additionalProperties.toImmutable(),
             )
     }
@@ -161,15 +161,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaErrorResponse && type == other.type && error == other.error && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is BetaErrorResponse && error == other.error && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(type, error, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(error, type, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaErrorResponse{type=$type, error=$error, additionalProperties=$additionalProperties}"
+        "BetaErrorResponse{error=$error, type=$type, additionalProperties=$additionalProperties}"
 }
