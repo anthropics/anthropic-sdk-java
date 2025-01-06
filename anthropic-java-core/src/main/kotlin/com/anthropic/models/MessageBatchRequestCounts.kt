@@ -19,23 +19,44 @@ import java.util.Objects
 class MessageBatchRequestCounts
 @JsonCreator
 private constructor(
+    @JsonProperty("canceled")
+    @ExcludeMissing
+    private val canceled: JsonField<Long> = JsonMissing.of(),
+    @JsonProperty("errored")
+    @ExcludeMissing
+    private val errored: JsonField<Long> = JsonMissing.of(),
+    @JsonProperty("expired")
+    @ExcludeMissing
+    private val expired: JsonField<Long> = JsonMissing.of(),
     @JsonProperty("processing")
     @ExcludeMissing
     private val processing: JsonField<Long> = JsonMissing.of(),
     @JsonProperty("succeeded")
     @ExcludeMissing
     private val succeeded: JsonField<Long> = JsonMissing.of(),
-    @JsonProperty("errored")
-    @ExcludeMissing
-    private val errored: JsonField<Long> = JsonMissing.of(),
-    @JsonProperty("canceled")
-    @ExcludeMissing
-    private val canceled: JsonField<Long> = JsonMissing.of(),
-    @JsonProperty("expired")
-    @ExcludeMissing
-    private val expired: JsonField<Long> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
+
+    /**
+     * Number of requests in the Message Batch that have been canceled.
+     *
+     * This is zero until processing of the entire Message Batch has ended.
+     */
+    fun canceled(): Long = canceled.getRequired("canceled")
+
+    /**
+     * Number of requests in the Message Batch that encountered an error.
+     *
+     * This is zero until processing of the entire Message Batch has ended.
+     */
+    fun errored(): Long = errored.getRequired("errored")
+
+    /**
+     * Number of requests in the Message Batch that have expired.
+     *
+     * This is zero until processing of the entire Message Batch has ended.
+     */
+    fun expired(): Long = expired.getRequired("expired")
 
     /** Number of requests in the Message Batch that are processing. */
     fun processing(): Long = processing.getRequired("processing")
@@ -48,25 +69,25 @@ private constructor(
     fun succeeded(): Long = succeeded.getRequired("succeeded")
 
     /**
-     * Number of requests in the Message Batch that encountered an error.
-     *
-     * This is zero until processing of the entire Message Batch has ended.
-     */
-    fun errored(): Long = errored.getRequired("errored")
-
-    /**
      * Number of requests in the Message Batch that have been canceled.
      *
      * This is zero until processing of the entire Message Batch has ended.
      */
-    fun canceled(): Long = canceled.getRequired("canceled")
+    @JsonProperty("canceled") @ExcludeMissing fun _canceled() = canceled
+
+    /**
+     * Number of requests in the Message Batch that encountered an error.
+     *
+     * This is zero until processing of the entire Message Batch has ended.
+     */
+    @JsonProperty("errored") @ExcludeMissing fun _errored() = errored
 
     /**
      * Number of requests in the Message Batch that have expired.
      *
      * This is zero until processing of the entire Message Batch has ended.
      */
-    fun expired(): Long = expired.getRequired("expired")
+    @JsonProperty("expired") @ExcludeMissing fun _expired() = expired
 
     /** Number of requests in the Message Batch that are processing. */
     @JsonProperty("processing") @ExcludeMissing fun _processing() = processing
@@ -78,27 +99,6 @@ private constructor(
      */
     @JsonProperty("succeeded") @ExcludeMissing fun _succeeded() = succeeded
 
-    /**
-     * Number of requests in the Message Batch that encountered an error.
-     *
-     * This is zero until processing of the entire Message Batch has ended.
-     */
-    @JsonProperty("errored") @ExcludeMissing fun _errored() = errored
-
-    /**
-     * Number of requests in the Message Batch that have been canceled.
-     *
-     * This is zero until processing of the entire Message Batch has ended.
-     */
-    @JsonProperty("canceled") @ExcludeMissing fun _canceled() = canceled
-
-    /**
-     * Number of requests in the Message Batch that have expired.
-     *
-     * This is zero until processing of the entire Message Batch has ended.
-     */
-    @JsonProperty("expired") @ExcludeMissing fun _expired() = expired
-
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
@@ -107,11 +107,11 @@ private constructor(
 
     fun validate(): MessageBatchRequestCounts = apply {
         if (!validated) {
+            canceled()
+            errored()
+            expired()
             processing()
             succeeded()
-            errored()
-            canceled()
-            expired()
             validated = true
         }
     }
@@ -125,22 +125,64 @@ private constructor(
 
     class Builder {
 
+        private var canceled: JsonField<Long> = JsonMissing.of()
+        private var errored: JsonField<Long> = JsonMissing.of()
+        private var expired: JsonField<Long> = JsonMissing.of()
         private var processing: JsonField<Long> = JsonMissing.of()
         private var succeeded: JsonField<Long> = JsonMissing.of()
-        private var errored: JsonField<Long> = JsonMissing.of()
-        private var canceled: JsonField<Long> = JsonMissing.of()
-        private var expired: JsonField<Long> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(messageBatchRequestCounts: MessageBatchRequestCounts) = apply {
+            canceled = messageBatchRequestCounts.canceled
+            errored = messageBatchRequestCounts.errored
+            expired = messageBatchRequestCounts.expired
             processing = messageBatchRequestCounts.processing
             succeeded = messageBatchRequestCounts.succeeded
-            errored = messageBatchRequestCounts.errored
-            canceled = messageBatchRequestCounts.canceled
-            expired = messageBatchRequestCounts.expired
             additionalProperties = messageBatchRequestCounts.additionalProperties.toMutableMap()
         }
+
+        /**
+         * Number of requests in the Message Batch that have been canceled.
+         *
+         * This is zero until processing of the entire Message Batch has ended.
+         */
+        fun canceled(canceled: Long) = canceled(JsonField.of(canceled))
+
+        /**
+         * Number of requests in the Message Batch that have been canceled.
+         *
+         * This is zero until processing of the entire Message Batch has ended.
+         */
+        fun canceled(canceled: JsonField<Long>) = apply { this.canceled = canceled }
+
+        /**
+         * Number of requests in the Message Batch that encountered an error.
+         *
+         * This is zero until processing of the entire Message Batch has ended.
+         */
+        fun errored(errored: Long) = errored(JsonField.of(errored))
+
+        /**
+         * Number of requests in the Message Batch that encountered an error.
+         *
+         * This is zero until processing of the entire Message Batch has ended.
+         */
+        fun errored(errored: JsonField<Long>) = apply { this.errored = errored }
+
+        /**
+         * Number of requests in the Message Batch that have expired.
+         *
+         * This is zero until processing of the entire Message Batch has ended.
+         */
+        fun expired(expired: Long) = expired(JsonField.of(expired))
+
+        /**
+         * Number of requests in the Message Batch that have expired.
+         *
+         * This is zero until processing of the entire Message Batch has ended.
+         */
+        fun expired(expired: JsonField<Long>) = apply { this.expired = expired }
 
         /** Number of requests in the Message Batch that are processing. */
         fun processing(processing: Long) = processing(JsonField.of(processing))
@@ -161,48 +203,6 @@ private constructor(
          * This is zero until processing of the entire Message Batch has ended.
          */
         fun succeeded(succeeded: JsonField<Long>) = apply { this.succeeded = succeeded }
-
-        /**
-         * Number of requests in the Message Batch that encountered an error.
-         *
-         * This is zero until processing of the entire Message Batch has ended.
-         */
-        fun errored(errored: Long) = errored(JsonField.of(errored))
-
-        /**
-         * Number of requests in the Message Batch that encountered an error.
-         *
-         * This is zero until processing of the entire Message Batch has ended.
-         */
-        fun errored(errored: JsonField<Long>) = apply { this.errored = errored }
-
-        /**
-         * Number of requests in the Message Batch that have been canceled.
-         *
-         * This is zero until processing of the entire Message Batch has ended.
-         */
-        fun canceled(canceled: Long) = canceled(JsonField.of(canceled))
-
-        /**
-         * Number of requests in the Message Batch that have been canceled.
-         *
-         * This is zero until processing of the entire Message Batch has ended.
-         */
-        fun canceled(canceled: JsonField<Long>) = apply { this.canceled = canceled }
-
-        /**
-         * Number of requests in the Message Batch that have expired.
-         *
-         * This is zero until processing of the entire Message Batch has ended.
-         */
-        fun expired(expired: Long) = expired(JsonField.of(expired))
-
-        /**
-         * Number of requests in the Message Batch that have expired.
-         *
-         * This is zero until processing of the entire Message Batch has ended.
-         */
-        fun expired(expired: JsonField<Long>) = apply { this.expired = expired }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -225,11 +225,11 @@ private constructor(
 
         fun build(): MessageBatchRequestCounts =
             MessageBatchRequestCounts(
+                canceled,
+                errored,
+                expired,
                 processing,
                 succeeded,
-                errored,
-                canceled,
-                expired,
                 additionalProperties.toImmutable(),
             )
     }
@@ -239,15 +239,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is MessageBatchRequestCounts && processing == other.processing && succeeded == other.succeeded && errored == other.errored && canceled == other.canceled && expired == other.expired && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is MessageBatchRequestCounts && canceled == other.canceled && errored == other.errored && expired == other.expired && processing == other.processing && succeeded == other.succeeded && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(processing, succeeded, errored, canceled, expired, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(canceled, errored, expired, processing, succeeded, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "MessageBatchRequestCounts{processing=$processing, succeeded=$succeeded, errored=$errored, canceled=$canceled, expired=$expired, additionalProperties=$additionalProperties}"
+        "MessageBatchRequestCounts{canceled=$canceled, errored=$errored, expired=$expired, processing=$processing, succeeded=$succeeded, additionalProperties=$additionalProperties}"
 }

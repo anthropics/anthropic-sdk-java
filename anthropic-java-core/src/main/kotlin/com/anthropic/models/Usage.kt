@@ -20,23 +20,20 @@ import java.util.Optional
 class Usage
 @JsonCreator
 private constructor(
-    @JsonProperty("input_tokens")
-    @ExcludeMissing
-    private val inputTokens: JsonField<Long> = JsonMissing.of(),
     @JsonProperty("cache_creation_input_tokens")
     @ExcludeMissing
     private val cacheCreationInputTokens: JsonField<Long> = JsonMissing.of(),
     @JsonProperty("cache_read_input_tokens")
     @ExcludeMissing
     private val cacheReadInputTokens: JsonField<Long> = JsonMissing.of(),
+    @JsonProperty("input_tokens")
+    @ExcludeMissing
+    private val inputTokens: JsonField<Long> = JsonMissing.of(),
     @JsonProperty("output_tokens")
     @ExcludeMissing
     private val outputTokens: JsonField<Long> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
-
-    /** The number of input tokens which were used. */
-    fun inputTokens(): Long = inputTokens.getRequired("input_tokens")
 
     /** The number of input tokens used to create the cache entry. */
     fun cacheCreationInputTokens(): Optional<Long> =
@@ -46,11 +43,11 @@ private constructor(
     fun cacheReadInputTokens(): Optional<Long> =
         Optional.ofNullable(cacheReadInputTokens.getNullable("cache_read_input_tokens"))
 
+    /** The number of input tokens which were used. */
+    fun inputTokens(): Long = inputTokens.getRequired("input_tokens")
+
     /** The number of output tokens which were used. */
     fun outputTokens(): Long = outputTokens.getRequired("output_tokens")
-
-    /** The number of input tokens which were used. */
-    @JsonProperty("input_tokens") @ExcludeMissing fun _inputTokens() = inputTokens
 
     /** The number of input tokens used to create the cache entry. */
     @JsonProperty("cache_creation_input_tokens")
@@ -61,6 +58,9 @@ private constructor(
     @JsonProperty("cache_read_input_tokens")
     @ExcludeMissing
     fun _cacheReadInputTokens() = cacheReadInputTokens
+
+    /** The number of input tokens which were used. */
+    @JsonProperty("input_tokens") @ExcludeMissing fun _inputTokens() = inputTokens
 
     /** The number of output tokens which were used. */
     @JsonProperty("output_tokens") @ExcludeMissing fun _outputTokens() = outputTokens
@@ -73,9 +73,9 @@ private constructor(
 
     fun validate(): Usage = apply {
         if (!validated) {
-            inputTokens()
             cacheCreationInputTokens()
             cacheReadInputTokens()
+            inputTokens()
             outputTokens()
             validated = true
         }
@@ -90,26 +90,20 @@ private constructor(
 
     class Builder {
 
-        private var inputTokens: JsonField<Long> = JsonMissing.of()
         private var cacheCreationInputTokens: JsonField<Long> = JsonMissing.of()
         private var cacheReadInputTokens: JsonField<Long> = JsonMissing.of()
+        private var inputTokens: JsonField<Long> = JsonMissing.of()
         private var outputTokens: JsonField<Long> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(usage: Usage) = apply {
-            inputTokens = usage.inputTokens
             cacheCreationInputTokens = usage.cacheCreationInputTokens
             cacheReadInputTokens = usage.cacheReadInputTokens
+            inputTokens = usage.inputTokens
             outputTokens = usage.outputTokens
             additionalProperties = usage.additionalProperties.toMutableMap()
         }
-
-        /** The number of input tokens which were used. */
-        fun inputTokens(inputTokens: Long) = inputTokens(JsonField.of(inputTokens))
-
-        /** The number of input tokens which were used. */
-        fun inputTokens(inputTokens: JsonField<Long>) = apply { this.inputTokens = inputTokens }
 
         /** The number of input tokens used to create the cache entry. */
         fun cacheCreationInputTokens(cacheCreationInputTokens: Long) =
@@ -128,6 +122,12 @@ private constructor(
         fun cacheReadInputTokens(cacheReadInputTokens: JsonField<Long>) = apply {
             this.cacheReadInputTokens = cacheReadInputTokens
         }
+
+        /** The number of input tokens which were used. */
+        fun inputTokens(inputTokens: Long) = inputTokens(JsonField.of(inputTokens))
+
+        /** The number of input tokens which were used. */
+        fun inputTokens(inputTokens: JsonField<Long>) = apply { this.inputTokens = inputTokens }
 
         /** The number of output tokens which were used. */
         fun outputTokens(outputTokens: Long) = outputTokens(JsonField.of(outputTokens))
@@ -156,9 +156,9 @@ private constructor(
 
         fun build(): Usage =
             Usage(
-                inputTokens,
                 cacheCreationInputTokens,
                 cacheReadInputTokens,
+                inputTokens,
                 outputTokens,
                 additionalProperties.toImmutable(),
             )
@@ -169,15 +169,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is Usage && inputTokens == other.inputTokens && cacheCreationInputTokens == other.cacheCreationInputTokens && cacheReadInputTokens == other.cacheReadInputTokens && outputTokens == other.outputTokens && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is Usage && cacheCreationInputTokens == other.cacheCreationInputTokens && cacheReadInputTokens == other.cacheReadInputTokens && inputTokens == other.inputTokens && outputTokens == other.outputTokens && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(inputTokens, cacheCreationInputTokens, cacheReadInputTokens, outputTokens, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(cacheCreationInputTokens, cacheReadInputTokens, inputTokens, outputTokens, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Usage{inputTokens=$inputTokens, cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, outputTokens=$outputTokens, additionalProperties=$additionalProperties}"
+        "Usage{cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inputTokens=$inputTokens, outputTokens=$outputTokens, additionalProperties=$additionalProperties}"
 }

@@ -21,20 +21,20 @@ import java.util.Objects
 class InputJsonDelta
 @JsonCreator
 private constructor(
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonProperty("partial_json")
     @ExcludeMissing
     private val partialJson: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
-    fun type(): Type = type.getRequired("type")
-
     fun partialJson(): String = partialJson.getRequired("partial_json")
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    fun type(): Type = type.getRequired("type")
 
     @JsonProperty("partial_json") @ExcludeMissing fun _partialJson() = partialJson
+
+    @JsonProperty("type") @ExcludeMissing fun _type() = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -44,8 +44,8 @@ private constructor(
 
     fun validate(): InputJsonDelta = apply {
         if (!validated) {
-            type()
             partialJson()
+            type()
             validated = true
         }
     }
@@ -59,24 +59,24 @@ private constructor(
 
     class Builder {
 
-        private var type: JsonField<Type> = JsonMissing.of()
         private var partialJson: JsonField<String> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(inputJsonDelta: InputJsonDelta) = apply {
-            type = inputJsonDelta.type
             partialJson = inputJsonDelta.partialJson
+            type = inputJsonDelta.type
             additionalProperties = inputJsonDelta.additionalProperties.toMutableMap()
         }
-
-        fun type(type: Type) = type(JsonField.of(type))
-
-        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun partialJson(partialJson: String) = partialJson(JsonField.of(partialJson))
 
         fun partialJson(partialJson: JsonField<String>) = apply { this.partialJson = partialJson }
+
+        fun type(type: Type) = type(JsonField.of(type))
+
+        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -99,8 +99,8 @@ private constructor(
 
         fun build(): InputJsonDelta =
             InputJsonDelta(
-                type,
                 partialJson,
+                type,
                 additionalProperties.toImmutable(),
             )
     }
@@ -161,15 +161,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is InputJsonDelta && type == other.type && partialJson == other.partialJson && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is InputJsonDelta && partialJson == other.partialJson && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(type, partialJson, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(partialJson, type, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "InputJsonDelta{type=$type, partialJson=$partialJson, additionalProperties=$additionalProperties}"
+        "InputJsonDelta{partialJson=$partialJson, type=$type, additionalProperties=$additionalProperties}"
 }

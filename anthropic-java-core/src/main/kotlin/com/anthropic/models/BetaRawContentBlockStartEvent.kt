@@ -33,25 +33,25 @@ import kotlin.jvm.optionals.getOrNull
 class BetaRawContentBlockStartEvent
 @JsonCreator
 private constructor(
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
-    @JsonProperty("index") @ExcludeMissing private val index: JsonField<Long> = JsonMissing.of(),
     @JsonProperty("content_block")
     @ExcludeMissing
     private val contentBlock: JsonField<ContentBlock> = JsonMissing.of(),
+    @JsonProperty("index") @ExcludeMissing private val index: JsonField<Long> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
-    fun type(): Type = type.getRequired("type")
+    fun contentBlock(): ContentBlock = contentBlock.getRequired("content_block")
 
     fun index(): Long = index.getRequired("index")
 
-    fun contentBlock(): ContentBlock = contentBlock.getRequired("content_block")
+    fun type(): Type = type.getRequired("type")
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("content_block") @ExcludeMissing fun _contentBlock() = contentBlock
 
     @JsonProperty("index") @ExcludeMissing fun _index() = index
 
-    @JsonProperty("content_block") @ExcludeMissing fun _contentBlock() = contentBlock
+    @JsonProperty("type") @ExcludeMissing fun _type() = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -61,9 +61,9 @@ private constructor(
 
     fun validate(): BetaRawContentBlockStartEvent = apply {
         if (!validated) {
-            type()
-            index()
             contentBlock()
+            index()
+            type()
             validated = true
         }
     }
@@ -77,32 +77,32 @@ private constructor(
 
     class Builder {
 
-        private var type: JsonField<Type> = JsonMissing.of()
-        private var index: JsonField<Long> = JsonMissing.of()
         private var contentBlock: JsonField<ContentBlock> = JsonMissing.of()
+        private var index: JsonField<Long> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaRawContentBlockStartEvent: BetaRawContentBlockStartEvent) = apply {
-            type = betaRawContentBlockStartEvent.type
-            index = betaRawContentBlockStartEvent.index
             contentBlock = betaRawContentBlockStartEvent.contentBlock
+            index = betaRawContentBlockStartEvent.index
+            type = betaRawContentBlockStartEvent.type
             additionalProperties = betaRawContentBlockStartEvent.additionalProperties.toMutableMap()
         }
-
-        fun type(type: Type) = type(JsonField.of(type))
-
-        fun type(type: JsonField<Type>) = apply { this.type = type }
-
-        fun index(index: Long) = index(JsonField.of(index))
-
-        fun index(index: JsonField<Long>) = apply { this.index = index }
 
         fun contentBlock(contentBlock: ContentBlock) = contentBlock(JsonField.of(contentBlock))
 
         fun contentBlock(contentBlock: JsonField<ContentBlock>) = apply {
             this.contentBlock = contentBlock
         }
+
+        fun index(index: Long) = index(JsonField.of(index))
+
+        fun index(index: JsonField<Long>) = apply { this.index = index }
+
+        fun type(type: Type) = type(JsonField.of(type))
+
+        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -125,9 +125,9 @@ private constructor(
 
         fun build(): BetaRawContentBlockStartEvent =
             BetaRawContentBlockStartEvent(
-                type,
-                index,
                 contentBlock,
+                index,
+                type,
                 additionalProperties.toImmutable(),
             )
     }
@@ -314,15 +314,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaRawContentBlockStartEvent && type == other.type && index == other.index && contentBlock == other.contentBlock && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is BetaRawContentBlockStartEvent && contentBlock == other.contentBlock && index == other.index && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(type, index, contentBlock, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(contentBlock, index, type, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaRawContentBlockStartEvent{type=$type, index=$index, contentBlock=$contentBlock, additionalProperties=$additionalProperties}"
+        "BetaRawContentBlockStartEvent{contentBlock=$contentBlock, index=$index, type=$type, additionalProperties=$additionalProperties}"
 }

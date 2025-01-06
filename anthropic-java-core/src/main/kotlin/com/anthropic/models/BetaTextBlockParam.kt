@@ -22,26 +22,26 @@ import java.util.Optional
 class BetaTextBlockParam
 @JsonCreator
 private constructor(
+    @JsonProperty("text") @ExcludeMissing private val text: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonProperty("cache_control")
     @ExcludeMissing
     private val cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
-    @JsonProperty("text") @ExcludeMissing private val text: JsonField<String> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
+
+    fun text(): String = text.getRequired("text")
+
+    fun type(): Type = type.getRequired("type")
 
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
-    fun type(): Type = type.getRequired("type")
-
-    fun text(): String = text.getRequired("text")
-
-    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
+    @JsonProperty("text") @ExcludeMissing fun _text() = text
 
     @JsonProperty("type") @ExcludeMissing fun _type() = type
 
-    @JsonProperty("text") @ExcludeMissing fun _text() = text
+    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -51,9 +51,9 @@ private constructor(
 
     fun validate(): BetaTextBlockParam = apply {
         if (!validated) {
-            cacheControl().map { it.validate() }
-            type()
             text()
+            type()
+            cacheControl().map { it.validate() }
             validated = true
         }
     }
@@ -67,18 +67,26 @@ private constructor(
 
     class Builder {
 
-        private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
         private var text: JsonField<String> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
+        private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaTextBlockParam: BetaTextBlockParam) = apply {
-            cacheControl = betaTextBlockParam.cacheControl
-            type = betaTextBlockParam.type
             text = betaTextBlockParam.text
+            type = betaTextBlockParam.type
+            cacheControl = betaTextBlockParam.cacheControl
             additionalProperties = betaTextBlockParam.additionalProperties.toMutableMap()
         }
+
+        fun text(text: String) = text(JsonField.of(text))
+
+        fun text(text: JsonField<String>) = apply { this.text = text }
+
+        fun type(type: Type) = type(JsonField.of(type))
+
+        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
             cacheControl(JsonField.of(cacheControl))
@@ -86,14 +94,6 @@ private constructor(
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
-
-        fun type(type: Type) = type(JsonField.of(type))
-
-        fun type(type: JsonField<Type>) = apply { this.type = type }
-
-        fun text(text: String) = text(JsonField.of(text))
-
-        fun text(text: JsonField<String>) = apply { this.text = text }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -116,9 +116,9 @@ private constructor(
 
         fun build(): BetaTextBlockParam =
             BetaTextBlockParam(
-                cacheControl,
-                type,
                 text,
+                type,
+                cacheControl,
                 additionalProperties.toImmutable(),
             )
     }
@@ -179,15 +179,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaTextBlockParam && cacheControl == other.cacheControl && type == other.type && text == other.text && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is BetaTextBlockParam && text == other.text && type == other.type && cacheControl == other.cacheControl && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(cacheControl, type, text, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(text, type, cacheControl, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaTextBlockParam{cacheControl=$cacheControl, type=$type, text=$text, additionalProperties=$additionalProperties}"
+        "BetaTextBlockParam{text=$text, type=$type, cacheControl=$cacheControl, additionalProperties=$additionalProperties}"
 }

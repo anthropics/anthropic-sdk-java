@@ -22,21 +22,36 @@ import java.util.Optional
 class BetaTool
 @JsonCreator
 private constructor(
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
-    @JsonProperty("description")
-    @ExcludeMissing
-    private val description: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("name") @ExcludeMissing private val name: JsonField<String> = JsonMissing.of(),
     @JsonProperty("input_schema")
     @ExcludeMissing
     private val inputSchema: JsonField<InputSchema> = JsonMissing.of(),
+    @JsonProperty("name") @ExcludeMissing private val name: JsonField<String> = JsonMissing.of(),
     @JsonProperty("cache_control")
     @ExcludeMissing
     private val cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
+    @JsonProperty("description")
+    @ExcludeMissing
+    private val description: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
-    fun type(): Optional<Type> = Optional.ofNullable(type.getNullable("type"))
+    /**
+     * [JSON schema](https://json-schema.org/) for this tool's input.
+     *
+     * This defines the shape of the `input` that your tool accepts and that the model will produce.
+     */
+    fun inputSchema(): InputSchema = inputSchema.getRequired("input_schema")
+
+    /**
+     * Name of the tool.
+     *
+     * This is how the tool will be called by the model and in tool_use blocks.
+     */
+    fun name(): String = name.getRequired("name")
+
+    fun cacheControl(): Optional<BetaCacheControlEphemeral> =
+        Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
     /**
      * Description of what this tool does.
@@ -48,24 +63,23 @@ private constructor(
     fun description(): Optional<String> =
         Optional.ofNullable(description.getNullable("description"))
 
-    /**
-     * Name of the tool.
-     *
-     * This is how the tool will be called by the model and in tool_use blocks.
-     */
-    fun name(): String = name.getRequired("name")
+    fun type(): Optional<Type> = Optional.ofNullable(type.getNullable("type"))
 
     /**
      * [JSON schema](https://json-schema.org/) for this tool's input.
      *
      * This defines the shape of the `input` that your tool accepts and that the model will produce.
      */
-    fun inputSchema(): InputSchema = inputSchema.getRequired("input_schema")
+    @JsonProperty("input_schema") @ExcludeMissing fun _inputSchema() = inputSchema
 
-    fun cacheControl(): Optional<BetaCacheControlEphemeral> =
-        Optional.ofNullable(cacheControl.getNullable("cache_control"))
+    /**
+     * Name of the tool.
+     *
+     * This is how the tool will be called by the model and in tool_use blocks.
+     */
+    @JsonProperty("name") @ExcludeMissing fun _name() = name
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
 
     /**
      * Description of what this tool does.
@@ -76,21 +90,7 @@ private constructor(
      */
     @JsonProperty("description") @ExcludeMissing fun _description() = description
 
-    /**
-     * Name of the tool.
-     *
-     * This is how the tool will be called by the model and in tool_use blocks.
-     */
-    @JsonProperty("name") @ExcludeMissing fun _name() = name
-
-    /**
-     * [JSON schema](https://json-schema.org/) for this tool's input.
-     *
-     * This defines the shape of the `input` that your tool accepts and that the model will produce.
-     */
-    @JsonProperty("input_schema") @ExcludeMissing fun _inputSchema() = inputSchema
-
-    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
+    @JsonProperty("type") @ExcludeMissing fun _type() = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -100,11 +100,11 @@ private constructor(
 
     fun validate(): BetaTool = apply {
         if (!validated) {
-            type()
-            description()
-            name()
             inputSchema().validate()
+            name()
             cacheControl().map { it.validate() }
+            description()
+            type()
             validated = true
         }
     }
@@ -118,26 +118,61 @@ private constructor(
 
     class Builder {
 
-        private var type: JsonField<Type> = JsonMissing.of()
-        private var description: JsonField<String> = JsonMissing.of()
-        private var name: JsonField<String> = JsonMissing.of()
         private var inputSchema: JsonField<InputSchema> = JsonMissing.of()
+        private var name: JsonField<String> = JsonMissing.of()
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
+        private var description: JsonField<String> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaTool: BetaTool) = apply {
-            type = betaTool.type
-            description = betaTool.description
-            name = betaTool.name
             inputSchema = betaTool.inputSchema
+            name = betaTool.name
             cacheControl = betaTool.cacheControl
+            description = betaTool.description
+            type = betaTool.type
             additionalProperties = betaTool.additionalProperties.toMutableMap()
         }
 
-        fun type(type: Type) = type(JsonField.of(type))
+        /**
+         * [JSON schema](https://json-schema.org/) for this tool's input.
+         *
+         * This defines the shape of the `input` that your tool accepts and that the model will
+         * produce.
+         */
+        fun inputSchema(inputSchema: InputSchema) = inputSchema(JsonField.of(inputSchema))
 
-        fun type(type: JsonField<Type>) = apply { this.type = type }
+        /**
+         * [JSON schema](https://json-schema.org/) for this tool's input.
+         *
+         * This defines the shape of the `input` that your tool accepts and that the model will
+         * produce.
+         */
+        fun inputSchema(inputSchema: JsonField<InputSchema>) = apply {
+            this.inputSchema = inputSchema
+        }
+
+        /**
+         * Name of the tool.
+         *
+         * This is how the tool will be called by the model and in tool_use blocks.
+         */
+        fun name(name: String) = name(JsonField.of(name))
+
+        /**
+         * Name of the tool.
+         *
+         * This is how the tool will be called by the model and in tool_use blocks.
+         */
+        fun name(name: JsonField<String>) = apply { this.name = name }
+
+        fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
+            cacheControl(JsonField.of(cacheControl))
+
+        fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
+            this.cacheControl = cacheControl
+        }
 
         /**
          * Description of what this tool does.
@@ -159,44 +194,9 @@ private constructor(
          */
         fun description(description: JsonField<String>) = apply { this.description = description }
 
-        /**
-         * Name of the tool.
-         *
-         * This is how the tool will be called by the model and in tool_use blocks.
-         */
-        fun name(name: String) = name(JsonField.of(name))
+        fun type(type: Type) = type(JsonField.of(type))
 
-        /**
-         * Name of the tool.
-         *
-         * This is how the tool will be called by the model and in tool_use blocks.
-         */
-        fun name(name: JsonField<String>) = apply { this.name = name }
-
-        /**
-         * [JSON schema](https://json-schema.org/) for this tool's input.
-         *
-         * This defines the shape of the `input` that your tool accepts and that the model will
-         * produce.
-         */
-        fun inputSchema(inputSchema: InputSchema) = inputSchema(JsonField.of(inputSchema))
-
-        /**
-         * [JSON schema](https://json-schema.org/) for this tool's input.
-         *
-         * This defines the shape of the `input` that your tool accepts and that the model will
-         * produce.
-         */
-        fun inputSchema(inputSchema: JsonField<InputSchema>) = apply {
-            this.inputSchema = inputSchema
-        }
-
-        fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
-            cacheControl(JsonField.of(cacheControl))
-
-        fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
-            this.cacheControl = cacheControl
-        }
+        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -219,11 +219,11 @@ private constructor(
 
         fun build(): BetaTool =
             BetaTool(
-                type,
-                description,
-                name,
                 inputSchema,
+                name,
                 cacheControl,
+                description,
+                type,
                 additionalProperties.toImmutable(),
             )
     }
@@ -442,15 +442,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaTool && type == other.type && description == other.description && name == other.name && inputSchema == other.inputSchema && cacheControl == other.cacheControl && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is BetaTool && inputSchema == other.inputSchema && name == other.name && cacheControl == other.cacheControl && description == other.description && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(type, description, name, inputSchema, cacheControl, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(inputSchema, name, cacheControl, description, type, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaTool{type=$type, description=$description, name=$name, inputSchema=$inputSchema, cacheControl=$cacheControl, additionalProperties=$additionalProperties}"
+        "BetaTool{inputSchema=$inputSchema, name=$name, cacheControl=$cacheControl, description=$description, type=$type, additionalProperties=$additionalProperties}"
 }

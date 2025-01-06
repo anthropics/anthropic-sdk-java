@@ -21,26 +21,26 @@ import java.util.Objects
 class BetaToolUseBlock
 @JsonCreator
 private constructor(
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("name") @ExcludeMissing private val name: JsonField<String> = JsonMissing.of(),
     @JsonProperty("input") @ExcludeMissing private val input: JsonValue = JsonMissing.of(),
+    @JsonProperty("name") @ExcludeMissing private val name: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
-
-    fun type(): Type = type.getRequired("type")
 
     fun id(): String = id.getRequired("id")
 
     fun name(): String = name.getRequired("name")
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    fun type(): Type = type.getRequired("type")
 
     @JsonProperty("id") @ExcludeMissing fun _id() = id
 
+    @JsonProperty("input") @ExcludeMissing fun _input() = input
+
     @JsonProperty("name") @ExcludeMissing fun _name() = name
 
-    @JsonProperty("input") @ExcludeMissing fun _input() = input
+    @JsonProperty("type") @ExcludeMissing fun _type() = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -58,9 +58,9 @@ private constructor(
 
     fun validate(): BetaToolUseBlock = apply {
         if (!validated) {
-            type()
             id()
             name()
+            type()
             validated = true
         }
     }
@@ -74,34 +74,34 @@ private constructor(
 
     class Builder {
 
-        private var type: JsonField<Type> = JsonMissing.of()
         private var id: JsonField<String> = JsonMissing.of()
-        private var name: JsonField<String> = JsonMissing.of()
         private var input: JsonValue = JsonMissing.of()
+        private var name: JsonField<String> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaToolUseBlock: BetaToolUseBlock) = apply {
-            type = betaToolUseBlock.type
             id = betaToolUseBlock.id
-            name = betaToolUseBlock.name
             input = betaToolUseBlock.input
+            name = betaToolUseBlock.name
+            type = betaToolUseBlock.type
             additionalProperties = betaToolUseBlock.additionalProperties.toMutableMap()
         }
-
-        fun type(type: Type) = type(JsonField.of(type))
-
-        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun id(id: String) = id(JsonField.of(id))
 
         fun id(id: JsonField<String>) = apply { this.id = id }
 
+        fun input(input: JsonValue) = apply { this.input = input }
+
         fun name(name: String) = name(JsonField.of(name))
 
         fun name(name: JsonField<String>) = apply { this.name = name }
 
-        fun input(input: JsonValue) = apply { this.input = input }
+        fun type(type: Type) = type(JsonField.of(type))
+
+        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -124,10 +124,10 @@ private constructor(
 
         fun build(): BetaToolUseBlock =
             BetaToolUseBlock(
-                type,
                 id,
-                name,
                 input,
+                name,
+                type,
                 additionalProperties.toImmutable(),
             )
     }
@@ -188,15 +188,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaToolUseBlock && type == other.type && id == other.id && name == other.name && input == other.input && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is BetaToolUseBlock && id == other.id && input == other.input && name == other.name && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(type, id, name, input, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(id, input, name, type, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaToolUseBlock{type=$type, id=$id, name=$name, input=$input, additionalProperties=$additionalProperties}"
+        "BetaToolUseBlock{id=$id, input=$input, name=$name, type=$type, additionalProperties=$additionalProperties}"
 }

@@ -21,20 +21,20 @@ import java.util.Objects
 class BetaRawMessageStartEvent
 @JsonCreator
 private constructor(
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonProperty("message")
     @ExcludeMissing
     private val message: JsonField<BetaMessage> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
-    fun type(): Type = type.getRequired("type")
-
     fun message(): BetaMessage = message.getRequired("message")
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    fun type(): Type = type.getRequired("type")
 
     @JsonProperty("message") @ExcludeMissing fun _message() = message
+
+    @JsonProperty("type") @ExcludeMissing fun _type() = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -44,8 +44,8 @@ private constructor(
 
     fun validate(): BetaRawMessageStartEvent = apply {
         if (!validated) {
-            type()
             message().validate()
+            type()
             validated = true
         }
     }
@@ -59,24 +59,24 @@ private constructor(
 
     class Builder {
 
-        private var type: JsonField<Type> = JsonMissing.of()
         private var message: JsonField<BetaMessage> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaRawMessageStartEvent: BetaRawMessageStartEvent) = apply {
-            type = betaRawMessageStartEvent.type
             message = betaRawMessageStartEvent.message
+            type = betaRawMessageStartEvent.type
             additionalProperties = betaRawMessageStartEvent.additionalProperties.toMutableMap()
         }
-
-        fun type(type: Type) = type(JsonField.of(type))
-
-        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun message(message: BetaMessage) = message(JsonField.of(message))
 
         fun message(message: JsonField<BetaMessage>) = apply { this.message = message }
+
+        fun type(type: Type) = type(JsonField.of(type))
+
+        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -99,8 +99,8 @@ private constructor(
 
         fun build(): BetaRawMessageStartEvent =
             BetaRawMessageStartEvent(
-                type,
                 message,
+                type,
                 additionalProperties.toImmutable(),
             )
     }
@@ -161,15 +161,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaRawMessageStartEvent && type == other.type && message == other.message && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is BetaRawMessageStartEvent && message == other.message && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(type, message, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(message, type, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaRawMessageStartEvent{type=$type, message=$message, additionalProperties=$additionalProperties}"
+        "BetaRawMessageStartEvent{message=$message, type=$type, additionalProperties=$additionalProperties}"
 }

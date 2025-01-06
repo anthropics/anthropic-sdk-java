@@ -32,23 +32,23 @@ import java.util.Optional
 class RawContentBlockDeltaEvent
 @JsonCreator
 private constructor(
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
-    @JsonProperty("index") @ExcludeMissing private val index: JsonField<Long> = JsonMissing.of(),
     @JsonProperty("delta") @ExcludeMissing private val delta: JsonField<Delta> = JsonMissing.of(),
+    @JsonProperty("index") @ExcludeMissing private val index: JsonField<Long> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
-    fun type(): Type = type.getRequired("type")
+    fun delta(): Delta = delta.getRequired("delta")
 
     fun index(): Long = index.getRequired("index")
 
-    fun delta(): Delta = delta.getRequired("delta")
+    fun type(): Type = type.getRequired("type")
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("delta") @ExcludeMissing fun _delta() = delta
 
     @JsonProperty("index") @ExcludeMissing fun _index() = index
 
-    @JsonProperty("delta") @ExcludeMissing fun _delta() = delta
+    @JsonProperty("type") @ExcludeMissing fun _type() = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -58,9 +58,9 @@ private constructor(
 
     fun validate(): RawContentBlockDeltaEvent = apply {
         if (!validated) {
-            type()
-            index()
             delta()
+            index()
+            type()
             validated = true
         }
     }
@@ -74,30 +74,30 @@ private constructor(
 
     class Builder {
 
-        private var type: JsonField<Type> = JsonMissing.of()
-        private var index: JsonField<Long> = JsonMissing.of()
         private var delta: JsonField<Delta> = JsonMissing.of()
+        private var index: JsonField<Long> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(rawContentBlockDeltaEvent: RawContentBlockDeltaEvent) = apply {
-            type = rawContentBlockDeltaEvent.type
-            index = rawContentBlockDeltaEvent.index
             delta = rawContentBlockDeltaEvent.delta
+            index = rawContentBlockDeltaEvent.index
+            type = rawContentBlockDeltaEvent.type
             additionalProperties = rawContentBlockDeltaEvent.additionalProperties.toMutableMap()
         }
 
-        fun type(type: Type) = type(JsonField.of(type))
+        fun delta(delta: Delta) = delta(JsonField.of(delta))
 
-        fun type(type: JsonField<Type>) = apply { this.type = type }
+        fun delta(delta: JsonField<Delta>) = apply { this.delta = delta }
 
         fun index(index: Long) = index(JsonField.of(index))
 
         fun index(index: JsonField<Long>) = apply { this.index = index }
 
-        fun delta(delta: Delta) = delta(JsonField.of(delta))
+        fun type(type: Type) = type(JsonField.of(type))
 
-        fun delta(delta: JsonField<Delta>) = apply { this.delta = delta }
+        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -120,9 +120,9 @@ private constructor(
 
         fun build(): RawContentBlockDeltaEvent =
             RawContentBlockDeltaEvent(
-                type,
-                index,
                 delta,
+                index,
+                type,
                 additionalProperties.toImmutable(),
             )
     }
@@ -300,15 +300,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is RawContentBlockDeltaEvent && type == other.type && index == other.index && delta == other.delta && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is RawContentBlockDeltaEvent && delta == other.delta && index == other.index && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(type, index, delta, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(delta, index, type, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "RawContentBlockDeltaEvent{type=$type, index=$index, delta=$delta, additionalProperties=$additionalProperties}"
+        "RawContentBlockDeltaEvent{delta=$delta, index=$index, type=$type, additionalProperties=$additionalProperties}"
 }

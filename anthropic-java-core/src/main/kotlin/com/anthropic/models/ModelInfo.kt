@@ -22,16 +22,28 @@ import java.util.Objects
 class ModelInfo
 @JsonCreator
 private constructor(
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("display_name")
-    @ExcludeMissing
-    private val displayName: JsonField<String> = JsonMissing.of(),
     @JsonProperty("created_at")
     @ExcludeMissing
     private val createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+    @JsonProperty("display_name")
+    @ExcludeMissing
+    private val displayName: JsonField<String> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
+
+    /** Unique model identifier. */
+    fun id(): String = id.getRequired("id")
+
+    /**
+     * RFC 3339 datetime string representing the time at which the model was released. May be set to
+     * an epoch value if the release date is unknown.
+     */
+    fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
+
+    /** A human-readable name for the model. */
+    fun displayName(): String = displayName.getRequired("display_name")
 
     /**
      * Object type.
@@ -41,16 +53,16 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /** Unique model identifier. */
-    fun id(): String = id.getRequired("id")
-
-    /** A human-readable name for the model. */
-    fun displayName(): String = displayName.getRequired("display_name")
+    @JsonProperty("id") @ExcludeMissing fun _id() = id
 
     /**
      * RFC 3339 datetime string representing the time at which the model was released. May be set to
      * an epoch value if the release date is unknown.
      */
-    fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
+    @JsonProperty("created_at") @ExcludeMissing fun _createdAt() = createdAt
+
+    /** A human-readable name for the model. */
+    @JsonProperty("display_name") @ExcludeMissing fun _displayName() = displayName
 
     /**
      * Object type.
@@ -58,18 +70,6 @@ private constructor(
      * For Models, this is always `"model"`.
      */
     @JsonProperty("type") @ExcludeMissing fun _type() = type
-
-    /** Unique model identifier. */
-    @JsonProperty("id") @ExcludeMissing fun _id() = id
-
-    /** A human-readable name for the model. */
-    @JsonProperty("display_name") @ExcludeMissing fun _displayName() = displayName
-
-    /**
-     * RFC 3339 datetime string representing the time at which the model was released. May be set to
-     * an epoch value if the release date is unknown.
-     */
-    @JsonProperty("created_at") @ExcludeMissing fun _createdAt() = createdAt
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -79,10 +79,10 @@ private constructor(
 
     fun validate(): ModelInfo = apply {
         if (!validated) {
-            type()
             id()
-            displayName()
             createdAt()
+            displayName()
+            type()
             validated = true
         }
     }
@@ -96,20 +96,44 @@ private constructor(
 
     class Builder {
 
-        private var type: JsonField<Type> = JsonMissing.of()
         private var id: JsonField<String> = JsonMissing.of()
-        private var displayName: JsonField<String> = JsonMissing.of()
         private var createdAt: JsonField<OffsetDateTime> = JsonMissing.of()
+        private var displayName: JsonField<String> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(modelInfo: ModelInfo) = apply {
-            type = modelInfo.type
             id = modelInfo.id
-            displayName = modelInfo.displayName
             createdAt = modelInfo.createdAt
+            displayName = modelInfo.displayName
+            type = modelInfo.type
             additionalProperties = modelInfo.additionalProperties.toMutableMap()
         }
+
+        /** Unique model identifier. */
+        fun id(id: String) = id(JsonField.of(id))
+
+        /** Unique model identifier. */
+        fun id(id: JsonField<String>) = apply { this.id = id }
+
+        /**
+         * RFC 3339 datetime string representing the time at which the model was released. May be
+         * set to an epoch value if the release date is unknown.
+         */
+        fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
+
+        /**
+         * RFC 3339 datetime string representing the time at which the model was released. May be
+         * set to an epoch value if the release date is unknown.
+         */
+        fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
+
+        /** A human-readable name for the model. */
+        fun displayName(displayName: String) = displayName(JsonField.of(displayName))
+
+        /** A human-readable name for the model. */
+        fun displayName(displayName: JsonField<String>) = apply { this.displayName = displayName }
 
         /**
          * Object type.
@@ -124,30 +148,6 @@ private constructor(
          * For Models, this is always `"model"`.
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
-
-        /** Unique model identifier. */
-        fun id(id: String) = id(JsonField.of(id))
-
-        /** Unique model identifier. */
-        fun id(id: JsonField<String>) = apply { this.id = id }
-
-        /** A human-readable name for the model. */
-        fun displayName(displayName: String) = displayName(JsonField.of(displayName))
-
-        /** A human-readable name for the model. */
-        fun displayName(displayName: JsonField<String>) = apply { this.displayName = displayName }
-
-        /**
-         * RFC 3339 datetime string representing the time at which the model was released. May be
-         * set to an epoch value if the release date is unknown.
-         */
-        fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
-
-        /**
-         * RFC 3339 datetime string representing the time at which the model was released. May be
-         * set to an epoch value if the release date is unknown.
-         */
-        fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -170,10 +170,10 @@ private constructor(
 
         fun build(): ModelInfo =
             ModelInfo(
-                type,
                 id,
-                displayName,
                 createdAt,
+                displayName,
+                type,
                 additionalProperties.toImmutable(),
             )
     }
@@ -234,15 +234,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ModelInfo && type == other.type && id == other.id && displayName == other.displayName && createdAt == other.createdAt && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is ModelInfo && id == other.id && createdAt == other.createdAt && displayName == other.displayName && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(type, id, displayName, createdAt, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(id, createdAt, displayName, type, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ModelInfo{type=$type, id=$id, displayName=$displayName, createdAt=$createdAt, additionalProperties=$additionalProperties}"
+        "ModelInfo{id=$id, createdAt=$createdAt, displayName=$displayName, type=$type, additionalProperties=$additionalProperties}"
 }
