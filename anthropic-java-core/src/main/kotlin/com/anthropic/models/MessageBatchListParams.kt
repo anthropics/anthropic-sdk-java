@@ -81,20 +81,47 @@ constructor(
          * ID of the object to use as a cursor for pagination. When provided, returns the page of
          * results immediately after this object.
          */
-        fun afterId(afterId: String) = apply { this.afterId = afterId }
+        fun afterId(afterId: String?) = apply { this.afterId = afterId }
+
+        /**
+         * ID of the object to use as a cursor for pagination. When provided, returns the page of
+         * results immediately after this object.
+         */
+        fun afterId(afterId: Optional<String>) = afterId(afterId.orElse(null))
 
         /**
          * ID of the object to use as a cursor for pagination. When provided, returns the page of
          * results immediately before this object.
          */
-        fun beforeId(beforeId: String) = apply { this.beforeId = beforeId }
+        fun beforeId(beforeId: String?) = apply { this.beforeId = beforeId }
+
+        /**
+         * ID of the object to use as a cursor for pagination. When provided, returns the page of
+         * results immediately before this object.
+         */
+        fun beforeId(beforeId: Optional<String>) = beforeId(beforeId.orElse(null))
 
         /**
          * Number of items to return per page.
          *
          * Defaults to `20`. Ranges from `1` to `1000`.
          */
-        fun limit(limit: Long) = apply { this.limit = limit }
+        fun limit(limit: Long?) = apply { this.limit = limit }
+
+        /**
+         * Number of items to return per page.
+         *
+         * Defaults to `20`. Ranges from `1` to `1000`.
+         */
+        fun limit(limit: Long) = limit(limit as Long?)
+
+        /**
+         * Number of items to return per page.
+         *
+         * Defaults to `20`. Ranges from `1` to `1000`.
+         */
+        @Suppress("USELESS_CAST") // See https://youtrack.jetbrains.com/issue/KT-74228
+        fun limit(limit: Optional<Long>) = limit(limit.orElse(null) as Long?)
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()

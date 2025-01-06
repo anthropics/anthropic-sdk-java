@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import java.net.Proxy
 import java.time.Clock
 import java.time.Duration
+import java.util.Optional
 
 class AnthropicOkHttpClient private constructor() {
 
@@ -128,9 +129,13 @@ class AnthropicOkHttpClient private constructor() {
             clientOptions.responseValidation(responseValidation)
         }
 
-        fun apiKey(apiKey: String) = apply { clientOptions.apiKey(apiKey) }
+        fun apiKey(apiKey: String?) = apply { clientOptions.apiKey(apiKey) }
 
-        fun authToken(authToken: String) = apply { clientOptions.authToken(authToken) }
+        fun apiKey(apiKey: Optional<String>) = apiKey(apiKey.orElse(null))
+
+        fun authToken(authToken: String?) = apply { clientOptions.authToken(authToken) }
+
+        fun authToken(authToken: Optional<String>) = authToken(authToken.orElse(null))
 
         fun fromEnv() = apply { clientOptions.fromEnv() }
 

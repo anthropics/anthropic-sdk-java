@@ -82,7 +82,10 @@ constructor(
         fun messageBatchId(messageBatchId: String) = apply { this.messageBatchId = messageBatchId }
 
         /** Optional header to specify the beta version(s) you want to use. */
-        fun betas(betas: List<AnthropicBeta>) = apply { this.betas = betas.toMutableList() }
+        fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
+
+        /** Optional header to specify the beta version(s) you want to use. */
+        fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.orElse(null))
 
         /** Optional header to specify the beta version(s) you want to use. */
         fun addBeta(beta: AnthropicBeta) = apply {
