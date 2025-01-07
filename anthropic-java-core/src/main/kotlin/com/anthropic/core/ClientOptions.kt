@@ -83,6 +83,20 @@ private constructor(
 
         fun baseUrl(baseUrl: String) = apply { this.baseUrl = baseUrl }
 
+        fun responseValidation(responseValidation: Boolean) = apply {
+            this.responseValidation = responseValidation
+        }
+
+        fun maxRetries(maxRetries: Int) = apply { this.maxRetries = maxRetries }
+
+        fun apiKey(apiKey: String?) = apply { this.apiKey = apiKey }
+
+        fun apiKey(apiKey: Optional<String>) = apiKey(apiKey.orElse(null))
+
+        fun authToken(authToken: String?) = apply { this.authToken = authToken }
+
+        fun authToken(authToken: Optional<String>) = authToken(authToken.orElse(null))
+
         fun headers(headers: Headers) = apply {
             this.headers.clear()
             putAllHeaders(headers)
@@ -162,20 +176,6 @@ private constructor(
         fun removeQueryParams(key: String) = apply { queryParams.remove(key) }
 
         fun removeAllQueryParams(keys: Set<String>) = apply { queryParams.removeAll(keys) }
-
-        fun responseValidation(responseValidation: Boolean) = apply {
-            this.responseValidation = responseValidation
-        }
-
-        fun maxRetries(maxRetries: Int) = apply { this.maxRetries = maxRetries }
-
-        fun apiKey(apiKey: String?) = apply { this.apiKey = apiKey }
-
-        fun apiKey(apiKey: Optional<String>) = apiKey(apiKey.orElse(null))
-
-        fun authToken(authToken: String?) = apply { this.authToken = authToken }
-
-        fun authToken(authToken: Optional<String>) = authToken(authToken.orElse(null))
 
         fun fromEnv() = apply {
             System.getenv("ANTHROPIC_API_KEY")?.let { apiKey(it) }

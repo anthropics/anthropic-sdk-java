@@ -27,6 +27,7 @@ class BetaRawMessageStartEventTest {
                         .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                         .role(BetaMessage.Role.ASSISTANT)
                         .stopReason(BetaMessage.StopReason.END_TURN)
+                        .stopSequence(null)
                         .type(BetaMessage.Type.MESSAGE)
                         .usage(
                             BetaUsage.builder()
@@ -58,6 +59,7 @@ class BetaRawMessageStartEventTest {
                     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                     .role(BetaMessage.Role.ASSISTANT)
                     .stopReason(BetaMessage.StopReason.END_TURN)
+                    .stopSequence(null)
                     .type(BetaMessage.Type.MESSAGE)
                     .usage(
                         BetaUsage.builder()

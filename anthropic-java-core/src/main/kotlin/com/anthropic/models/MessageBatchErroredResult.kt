@@ -32,9 +32,9 @@ private constructor(
 
     fun type(): Type = type.getRequired("type")
 
-    @JsonProperty("error") @ExcludeMissing fun _error() = error
+    @JsonProperty("error") @ExcludeMissing fun _error(): JsonField<ErrorResponse> = error
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -59,8 +59,8 @@ private constructor(
 
     class Builder {
 
-        private var error: JsonField<ErrorResponse> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
+        private var error: JsonField<ErrorResponse>? = null
+        private var type: JsonField<Type>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -99,8 +99,8 @@ private constructor(
 
         fun build(): MessageBatchErroredResult =
             MessageBatchErroredResult(
-                error,
-                type,
+                checkNotNull(error) { "`error` is required but was not set" },
+                checkNotNull(type) { "`type` is required but was not set" },
                 additionalProperties.toImmutable(),
             )
     }

@@ -37,14 +37,14 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /** ID of the Message Batch. */
-    @JsonProperty("id") @ExcludeMissing fun _id() = id
+    @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
     /**
      * Deleted object type.
      *
      * For Message Batches, this is always `"message_batch_deleted"`.
      */
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -69,8 +69,8 @@ private constructor(
 
     class Builder {
 
-        private var id: JsonField<String> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
+        private var id: JsonField<String>? = null
+        private var type: JsonField<Type>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -121,8 +121,8 @@ private constructor(
 
         fun build(): DeletedMessageBatch =
             DeletedMessageBatch(
-                id,
-                type,
+                checkNotNull(id) { "`id` is required but was not set" },
+                checkNotNull(type) { "`type` is required but was not set" },
                 additionalProperties.toImmutable(),
             )
     }

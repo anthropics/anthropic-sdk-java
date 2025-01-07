@@ -124,13 +124,15 @@ private constructor(
      *
      * The format and length of IDs may change over time.
      */
-    @JsonProperty("id") @ExcludeMissing fun _id() = id
+    @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
     /**
      * RFC 3339 datetime string representing the time at which the Message Batch was archived and
      * its results became unavailable.
      */
-    @JsonProperty("archived_at") @ExcludeMissing fun _archivedAt() = archivedAt
+    @JsonProperty("archived_at")
+    @ExcludeMissing
+    fun _archivedAt(): JsonField<OffsetDateTime> = archivedAt
 
     /**
      * RFC 3339 datetime string representing the time at which cancellation was initiated for the
@@ -138,10 +140,12 @@ private constructor(
      */
     @JsonProperty("cancel_initiated_at")
     @ExcludeMissing
-    fun _cancelInitiatedAt() = cancelInitiatedAt
+    fun _cancelInitiatedAt(): JsonField<OffsetDateTime> = cancelInitiatedAt
 
     /** RFC 3339 datetime string representing the time at which the Message Batch was created. */
-    @JsonProperty("created_at") @ExcludeMissing fun _createdAt() = createdAt
+    @JsonProperty("created_at")
+    @ExcludeMissing
+    fun _createdAt(): JsonField<OffsetDateTime> = createdAt
 
     /**
      * RFC 3339 datetime string representing the time at which processing for the Message Batch
@@ -150,16 +154,20 @@ private constructor(
      * Processing ends when every request in a Message Batch has either succeeded, errored,
      * canceled, or expired.
      */
-    @JsonProperty("ended_at") @ExcludeMissing fun _endedAt() = endedAt
+    @JsonProperty("ended_at") @ExcludeMissing fun _endedAt(): JsonField<OffsetDateTime> = endedAt
 
     /**
      * RFC 3339 datetime string representing the time at which the Message Batch will expire and end
      * processing, which is 24 hours after creation.
      */
-    @JsonProperty("expires_at") @ExcludeMissing fun _expiresAt() = expiresAt
+    @JsonProperty("expires_at")
+    @ExcludeMissing
+    fun _expiresAt(): JsonField<OffsetDateTime> = expiresAt
 
     /** Processing status of the Message Batch. */
-    @JsonProperty("processing_status") @ExcludeMissing fun _processingStatus() = processingStatus
+    @JsonProperty("processing_status")
+    @ExcludeMissing
+    fun _processingStatus(): JsonField<ProcessingStatus> = processingStatus
 
     /**
      * Tallies requests within the Message Batch, categorized by their status.
@@ -168,7 +176,9 @@ private constructor(
      * the entire batch ends. The sum of all values always matches the total number of requests in
      * the batch.
      */
-    @JsonProperty("request_counts") @ExcludeMissing fun _requestCounts() = requestCounts
+    @JsonProperty("request_counts")
+    @ExcludeMissing
+    fun _requestCounts(): JsonField<BetaMessageBatchRequestCounts> = requestCounts
 
     /**
      * URL to a `.jsonl` file containing the results of the Message Batch requests. Specified only
@@ -177,14 +187,14 @@ private constructor(
      * Results in the file are not guaranteed to be in the same order as requests. Use the
      * `custom_id` field to match results to requests.
      */
-    @JsonProperty("results_url") @ExcludeMissing fun _resultsUrl() = resultsUrl
+    @JsonProperty("results_url") @ExcludeMissing fun _resultsUrl(): JsonField<String> = resultsUrl
 
     /**
      * Object type.
      *
      * For Message Batches, this is always `"message_batch"`.
      */
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -217,16 +227,16 @@ private constructor(
 
     class Builder {
 
-        private var id: JsonField<String> = JsonMissing.of()
-        private var archivedAt: JsonField<OffsetDateTime> = JsonMissing.of()
-        private var cancelInitiatedAt: JsonField<OffsetDateTime> = JsonMissing.of()
-        private var createdAt: JsonField<OffsetDateTime> = JsonMissing.of()
-        private var endedAt: JsonField<OffsetDateTime> = JsonMissing.of()
-        private var expiresAt: JsonField<OffsetDateTime> = JsonMissing.of()
-        private var processingStatus: JsonField<ProcessingStatus> = JsonMissing.of()
-        private var requestCounts: JsonField<BetaMessageBatchRequestCounts> = JsonMissing.of()
-        private var resultsUrl: JsonField<String> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
+        private var id: JsonField<String>? = null
+        private var archivedAt: JsonField<OffsetDateTime>? = null
+        private var cancelInitiatedAt: JsonField<OffsetDateTime>? = null
+        private var createdAt: JsonField<OffsetDateTime>? = null
+        private var endedAt: JsonField<OffsetDateTime>? = null
+        private var expiresAt: JsonField<OffsetDateTime>? = null
+        private var processingStatus: JsonField<ProcessingStatus>? = null
+        private var requestCounts: JsonField<BetaMessageBatchRequestCounts>? = null
+        private var resultsUrl: JsonField<String>? = null
+        private var type: JsonField<Type>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -262,7 +272,13 @@ private constructor(
          * RFC 3339 datetime string representing the time at which the Message Batch was archived
          * and its results became unavailable.
          */
-        fun archivedAt(archivedAt: OffsetDateTime) = archivedAt(JsonField.of(archivedAt))
+        fun archivedAt(archivedAt: OffsetDateTime?) = archivedAt(JsonField.ofNullable(archivedAt))
+
+        /**
+         * RFC 3339 datetime string representing the time at which the Message Batch was archived
+         * and its results became unavailable.
+         */
+        fun archivedAt(archivedAt: Optional<OffsetDateTime>) = archivedAt(archivedAt.orElse(null))
 
         /**
          * RFC 3339 datetime string representing the time at which the Message Batch was archived
@@ -276,8 +292,15 @@ private constructor(
          * RFC 3339 datetime string representing the time at which cancellation was initiated for
          * the Message Batch. Specified only if cancellation was initiated.
          */
-        fun cancelInitiatedAt(cancelInitiatedAt: OffsetDateTime) =
-            cancelInitiatedAt(JsonField.of(cancelInitiatedAt))
+        fun cancelInitiatedAt(cancelInitiatedAt: OffsetDateTime?) =
+            cancelInitiatedAt(JsonField.ofNullable(cancelInitiatedAt))
+
+        /**
+         * RFC 3339 datetime string representing the time at which cancellation was initiated for
+         * the Message Batch. Specified only if cancellation was initiated.
+         */
+        fun cancelInitiatedAt(cancelInitiatedAt: Optional<OffsetDateTime>) =
+            cancelInitiatedAt(cancelInitiatedAt.orElse(null))
 
         /**
          * RFC 3339 datetime string representing the time at which cancellation was initiated for
@@ -304,7 +327,16 @@ private constructor(
          * Processing ends when every request in a Message Batch has either succeeded, errored,
          * canceled, or expired.
          */
-        fun endedAt(endedAt: OffsetDateTime) = endedAt(JsonField.of(endedAt))
+        fun endedAt(endedAt: OffsetDateTime?) = endedAt(JsonField.ofNullable(endedAt))
+
+        /**
+         * RFC 3339 datetime string representing the time at which processing for the Message Batch
+         * ended. Specified only once processing ends.
+         *
+         * Processing ends when every request in a Message Batch has either succeeded, errored,
+         * canceled, or expired.
+         */
+        fun endedAt(endedAt: Optional<OffsetDateTime>) = endedAt(endedAt.orElse(null))
 
         /**
          * RFC 3339 datetime string representing the time at which processing for the Message Batch
@@ -364,7 +396,16 @@ private constructor(
          * Results in the file are not guaranteed to be in the same order as requests. Use the
          * `custom_id` field to match results to requests.
          */
-        fun resultsUrl(resultsUrl: String) = resultsUrl(JsonField.of(resultsUrl))
+        fun resultsUrl(resultsUrl: String?) = resultsUrl(JsonField.ofNullable(resultsUrl))
+
+        /**
+         * URL to a `.jsonl` file containing the results of the Message Batch requests. Specified
+         * only once processing ends.
+         *
+         * Results in the file are not guaranteed to be in the same order as requests. Use the
+         * `custom_id` field to match results to requests.
+         */
+        fun resultsUrl(resultsUrl: Optional<String>) = resultsUrl(resultsUrl.orElse(null))
 
         /**
          * URL to a `.jsonl` file containing the results of the Message Batch requests. Specified
@@ -410,16 +451,18 @@ private constructor(
 
         fun build(): BetaMessageBatch =
             BetaMessageBatch(
-                id,
-                archivedAt,
-                cancelInitiatedAt,
-                createdAt,
-                endedAt,
-                expiresAt,
-                processingStatus,
-                requestCounts,
-                resultsUrl,
-                type,
+                checkNotNull(id) { "`id` is required but was not set" },
+                checkNotNull(archivedAt) { "`archivedAt` is required but was not set" },
+                checkNotNull(cancelInitiatedAt) {
+                    "`cancelInitiatedAt` is required but was not set"
+                },
+                checkNotNull(createdAt) { "`createdAt` is required but was not set" },
+                checkNotNull(endedAt) { "`endedAt` is required but was not set" },
+                checkNotNull(expiresAt) { "`expiresAt` is required but was not set" },
+                checkNotNull(processingStatus) { "`processingStatus` is required but was not set" },
+                checkNotNull(requestCounts) { "`requestCounts` is required but was not set" },
+                checkNotNull(resultsUrl) { "`resultsUrl` is required but was not set" },
+                checkNotNull(type) { "`type` is required but was not set" },
                 additionalProperties.toImmutable(),
             )
     }

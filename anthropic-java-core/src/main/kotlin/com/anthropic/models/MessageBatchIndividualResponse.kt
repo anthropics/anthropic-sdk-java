@@ -50,7 +50,7 @@ private constructor(
      *
      * Must be unique for each request within the Message Batch.
      */
-    @JsonProperty("custom_id") @ExcludeMissing fun _customId() = customId
+    @JsonProperty("custom_id") @ExcludeMissing fun _customId(): JsonField<String> = customId
 
     /**
      * Processing result for this request.
@@ -58,7 +58,7 @@ private constructor(
      * Contains a Message output if processing was successful, an error response if processing
      * failed, or the reason why processing was not attempted, such as cancellation or expiration.
      */
-    @JsonProperty("result") @ExcludeMissing fun _result() = result
+    @JsonProperty("result") @ExcludeMissing fun _result(): JsonField<MessageBatchResult> = result
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -83,8 +83,8 @@ private constructor(
 
     class Builder {
 
-        private var customId: JsonField<String> = JsonMissing.of()
-        private var result: JsonField<MessageBatchResult> = JsonMissing.of()
+        private var customId: JsonField<String>? = null
+        private var result: JsonField<MessageBatchResult>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -129,6 +129,18 @@ private constructor(
          */
         fun result(result: JsonField<MessageBatchResult>) = apply { this.result = result }
 
+        fun result(messageBatchSucceededResult: MessageBatchSucceededResult) =
+            result(MessageBatchResult.ofMessageBatchSucceededResult(messageBatchSucceededResult))
+
+        fun result(messageBatchErroredResult: MessageBatchErroredResult) =
+            result(MessageBatchResult.ofMessageBatchErroredResult(messageBatchErroredResult))
+
+        fun result(messageBatchCanceledResult: MessageBatchCanceledResult) =
+            result(MessageBatchResult.ofMessageBatchCanceledResult(messageBatchCanceledResult))
+
+        fun result(messageBatchExpiredResult: MessageBatchExpiredResult) =
+            result(MessageBatchResult.ofMessageBatchExpiredResult(messageBatchExpiredResult))
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -150,8 +162,8 @@ private constructor(
 
         fun build(): MessageBatchIndividualResponse =
             MessageBatchIndividualResponse(
-                customId,
-                result,
+                checkNotNull(customId) { "`customId` is required but was not set" },
+                checkNotNull(result) { "`result` is required but was not set" },
                 additionalProperties.toImmutable(),
             )
     }

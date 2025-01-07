@@ -44,11 +44,11 @@ private constructor(
 
     fun type(): Type = type.getRequired("type")
 
-    @JsonProperty("delta") @ExcludeMissing fun _delta() = delta
+    @JsonProperty("delta") @ExcludeMissing fun _delta(): JsonField<Delta> = delta
 
-    @JsonProperty("index") @ExcludeMissing fun _index() = index
+    @JsonProperty("index") @ExcludeMissing fun _index(): JsonField<Long> = index
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -74,9 +74,9 @@ private constructor(
 
     class Builder {
 
-        private var delta: JsonField<Delta> = JsonMissing.of()
-        private var index: JsonField<Long> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
+        private var delta: JsonField<Delta>? = null
+        private var index: JsonField<Long>? = null
+        private var type: JsonField<Type>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -90,6 +90,10 @@ private constructor(
         fun delta(delta: Delta) = delta(JsonField.of(delta))
 
         fun delta(delta: JsonField<Delta>) = apply { this.delta = delta }
+
+        fun delta(textDelta: TextDelta) = delta(Delta.ofTextDelta(textDelta))
+
+        fun delta(inputJsonDelta: InputJsonDelta) = delta(Delta.ofInputJsonDelta(inputJsonDelta))
 
         fun index(index: Long) = index(JsonField.of(index))
 
@@ -120,9 +124,9 @@ private constructor(
 
         fun build(): RawContentBlockDeltaEvent =
             RawContentBlockDeltaEvent(
-                delta,
-                index,
-                type,
+                checkNotNull(delta) { "`delta` is required but was not set" },
+                checkNotNull(index) { "`index` is required but was not set" },
+                checkNotNull(type) { "`type` is required but was not set" },
                 additionalProperties.toImmutable(),
             )
     }

@@ -33,7 +33,7 @@ private constructor(
     /**
      * The total number of tokens across the provided list of messages, system prompt, and tools.
      */
-    @JsonProperty("input_tokens") @ExcludeMissing fun _inputTokens() = inputTokens
+    @JsonProperty("input_tokens") @ExcludeMissing fun _inputTokens(): JsonField<Long> = inputTokens
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -57,7 +57,7 @@ private constructor(
 
     class Builder {
 
-        private var inputTokens: JsonField<Long> = JsonMissing.of()
+        private var inputTokens: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -98,7 +98,10 @@ private constructor(
         }
 
         fun build(): MessageTokensCount =
-            MessageTokensCount(inputTokens, additionalProperties.toImmutable())
+            MessageTokensCount(
+                checkNotNull(inputTokens) { "`inputTokens` is required but was not set" },
+                additionalProperties.toImmutable()
+            )
     }
 
     override fun equals(other: Any?): Boolean {

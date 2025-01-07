@@ -40,7 +40,7 @@ private constructor(
     fun disableParallelToolUse(): Optional<Boolean> =
         Optional.ofNullable(disableParallelToolUse.getNullable("disable_parallel_tool_use"))
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     /**
      * Whether to disable parallel tool use.
@@ -49,7 +49,7 @@ private constructor(
      */
     @JsonProperty("disable_parallel_tool_use")
     @ExcludeMissing
-    fun _disableParallelToolUse() = disableParallelToolUse
+    fun _disableParallelToolUse(): JsonField<Boolean> = disableParallelToolUse
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -74,7 +74,7 @@ private constructor(
 
     class Builder {
 
-        private var type: JsonField<Type> = JsonMissing.of()
+        private var type: JsonField<Type>? = null
         private var disableParallelToolUse: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -127,7 +127,7 @@ private constructor(
 
         fun build(): ToolChoiceAny =
             ToolChoiceAny(
-                type,
+                checkNotNull(type) { "`type` is required but was not set" },
                 disableParallelToolUse,
                 additionalProperties.toImmutable(),
             )

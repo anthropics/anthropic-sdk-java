@@ -52,18 +52,20 @@ private constructor(
     /** The number of input tokens used to create the cache entry. */
     @JsonProperty("cache_creation_input_tokens")
     @ExcludeMissing
-    fun _cacheCreationInputTokens() = cacheCreationInputTokens
+    fun _cacheCreationInputTokens(): JsonField<Long> = cacheCreationInputTokens
 
     /** The number of input tokens read from the cache. */
     @JsonProperty("cache_read_input_tokens")
     @ExcludeMissing
-    fun _cacheReadInputTokens() = cacheReadInputTokens
+    fun _cacheReadInputTokens(): JsonField<Long> = cacheReadInputTokens
 
     /** The number of input tokens which were used. */
-    @JsonProperty("input_tokens") @ExcludeMissing fun _inputTokens() = inputTokens
+    @JsonProperty("input_tokens") @ExcludeMissing fun _inputTokens(): JsonField<Long> = inputTokens
 
     /** The number of output tokens which were used. */
-    @JsonProperty("output_tokens") @ExcludeMissing fun _outputTokens() = outputTokens
+    @JsonProperty("output_tokens")
+    @ExcludeMissing
+    fun _outputTokens(): JsonField<Long> = outputTokens
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -90,10 +92,10 @@ private constructor(
 
     class Builder {
 
-        private var cacheCreationInputTokens: JsonField<Long> = JsonMissing.of()
-        private var cacheReadInputTokens: JsonField<Long> = JsonMissing.of()
-        private var inputTokens: JsonField<Long> = JsonMissing.of()
-        private var outputTokens: JsonField<Long> = JsonMissing.of()
+        private var cacheCreationInputTokens: JsonField<Long>? = null
+        private var cacheReadInputTokens: JsonField<Long>? = null
+        private var inputTokens: JsonField<Long>? = null
+        private var outputTokens: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -106,8 +108,17 @@ private constructor(
         }
 
         /** The number of input tokens used to create the cache entry. */
+        fun cacheCreationInputTokens(cacheCreationInputTokens: Long?) =
+            cacheCreationInputTokens(JsonField.ofNullable(cacheCreationInputTokens))
+
+        /** The number of input tokens used to create the cache entry. */
         fun cacheCreationInputTokens(cacheCreationInputTokens: Long) =
-            cacheCreationInputTokens(JsonField.of(cacheCreationInputTokens))
+            cacheCreationInputTokens(cacheCreationInputTokens as Long?)
+
+        /** The number of input tokens used to create the cache entry. */
+        @Suppress("USELESS_CAST") // See https://youtrack.jetbrains.com/issue/KT-74228
+        fun cacheCreationInputTokens(cacheCreationInputTokens: Optional<Long>) =
+            cacheCreationInputTokens(cacheCreationInputTokens.orElse(null) as Long?)
 
         /** The number of input tokens used to create the cache entry. */
         fun cacheCreationInputTokens(cacheCreationInputTokens: JsonField<Long>) = apply {
@@ -115,8 +126,17 @@ private constructor(
         }
 
         /** The number of input tokens read from the cache. */
+        fun cacheReadInputTokens(cacheReadInputTokens: Long?) =
+            cacheReadInputTokens(JsonField.ofNullable(cacheReadInputTokens))
+
+        /** The number of input tokens read from the cache. */
         fun cacheReadInputTokens(cacheReadInputTokens: Long) =
-            cacheReadInputTokens(JsonField.of(cacheReadInputTokens))
+            cacheReadInputTokens(cacheReadInputTokens as Long?)
+
+        /** The number of input tokens read from the cache. */
+        @Suppress("USELESS_CAST") // See https://youtrack.jetbrains.com/issue/KT-74228
+        fun cacheReadInputTokens(cacheReadInputTokens: Optional<Long>) =
+            cacheReadInputTokens(cacheReadInputTokens.orElse(null) as Long?)
 
         /** The number of input tokens read from the cache. */
         fun cacheReadInputTokens(cacheReadInputTokens: JsonField<Long>) = apply {
@@ -156,10 +176,14 @@ private constructor(
 
         fun build(): BetaUsage =
             BetaUsage(
-                cacheCreationInputTokens,
-                cacheReadInputTokens,
-                inputTokens,
-                outputTokens,
+                checkNotNull(cacheCreationInputTokens) {
+                    "`cacheCreationInputTokens` is required but was not set"
+                },
+                checkNotNull(cacheReadInputTokens) {
+                    "`cacheReadInputTokens` is required but was not set"
+                },
+                checkNotNull(inputTokens) { "`inputTokens` is required but was not set" },
+                checkNotNull(outputTokens) { "`outputTokens` is required but was not set" },
                 additionalProperties.toImmutable(),
             )
     }

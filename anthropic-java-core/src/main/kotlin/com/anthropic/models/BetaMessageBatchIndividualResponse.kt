@@ -50,7 +50,7 @@ private constructor(
      *
      * Must be unique for each request within the Message Batch.
      */
-    @JsonProperty("custom_id") @ExcludeMissing fun _customId() = customId
+    @JsonProperty("custom_id") @ExcludeMissing fun _customId(): JsonField<String> = customId
 
     /**
      * Processing result for this request.
@@ -58,7 +58,9 @@ private constructor(
      * Contains a Message output if processing was successful, an error response if processing
      * failed, or the reason why processing was not attempted, such as cancellation or expiration.
      */
-    @JsonProperty("result") @ExcludeMissing fun _result() = result
+    @JsonProperty("result")
+    @ExcludeMissing
+    fun _result(): JsonField<BetaMessageBatchResult> = result
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -83,8 +85,8 @@ private constructor(
 
     class Builder {
 
-        private var customId: JsonField<String> = JsonMissing.of()
-        private var result: JsonField<BetaMessageBatchResult> = JsonMissing.of()
+        private var customId: JsonField<String>? = null
+        private var result: JsonField<BetaMessageBatchResult>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -130,6 +132,34 @@ private constructor(
          */
         fun result(result: JsonField<BetaMessageBatchResult>) = apply { this.result = result }
 
+        fun result(betaMessageBatchSucceededResult: BetaMessageBatchSucceededResult) =
+            result(
+                BetaMessageBatchResult.ofBetaMessageBatchSucceededResult(
+                    betaMessageBatchSucceededResult
+                )
+            )
+
+        fun result(betaMessageBatchErroredResult: BetaMessageBatchErroredResult) =
+            result(
+                BetaMessageBatchResult.ofBetaMessageBatchErroredResult(
+                    betaMessageBatchErroredResult
+                )
+            )
+
+        fun result(betaMessageBatchCanceledResult: BetaMessageBatchCanceledResult) =
+            result(
+                BetaMessageBatchResult.ofBetaMessageBatchCanceledResult(
+                    betaMessageBatchCanceledResult
+                )
+            )
+
+        fun result(betaMessageBatchExpiredResult: BetaMessageBatchExpiredResult) =
+            result(
+                BetaMessageBatchResult.ofBetaMessageBatchExpiredResult(
+                    betaMessageBatchExpiredResult
+                )
+            )
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -151,8 +181,8 @@ private constructor(
 
         fun build(): BetaMessageBatchIndividualResponse =
             BetaMessageBatchIndividualResponse(
-                customId,
-                result,
+                checkNotNull(customId) { "`customId` is required but was not set" },
+                checkNotNull(result) { "`result` is required but was not set" },
                 additionalProperties.toImmutable(),
             )
     }

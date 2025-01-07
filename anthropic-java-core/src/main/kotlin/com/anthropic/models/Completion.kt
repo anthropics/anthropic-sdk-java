@@ -73,17 +73,17 @@ private constructor(
      *
      * The format and length of IDs may change over time.
      */
-    @JsonProperty("id") @ExcludeMissing fun _id() = id
+    @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
     /** The resulting completion up to and excluding the stop sequences. */
-    @JsonProperty("completion") @ExcludeMissing fun _completion() = completion
+    @JsonProperty("completion") @ExcludeMissing fun _completion(): JsonField<String> = completion
 
     /**
      * The model that will complete your prompt.\n\nSee
      * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
      * options.
      */
-    @JsonProperty("model") @ExcludeMissing fun _model() = model
+    @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
 
     /**
      * The reason that we stopped.
@@ -93,14 +93,14 @@ private constructor(
      *   `stop_sequences` parameter, or a stop sequence built into the model
      * - `"max_tokens"`: we exceeded `max_tokens_to_sample` or the model's maximum
      */
-    @JsonProperty("stop_reason") @ExcludeMissing fun _stopReason() = stopReason
+    @JsonProperty("stop_reason") @ExcludeMissing fun _stopReason(): JsonField<String> = stopReason
 
     /**
      * Object type.
      *
      * For Text Completions, this is always `"completion"`.
      */
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -128,11 +128,11 @@ private constructor(
 
     class Builder {
 
-        private var id: JsonField<String> = JsonMissing.of()
-        private var completion: JsonField<String> = JsonMissing.of()
-        private var model: JsonField<Model> = JsonMissing.of()
-        private var stopReason: JsonField<String> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
+        private var id: JsonField<String>? = null
+        private var completion: JsonField<String>? = null
+        private var model: JsonField<Model>? = null
+        private var stopReason: JsonField<String>? = null
+        private var type: JsonField<Type>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -180,6 +180,13 @@ private constructor(
         fun model(model: JsonField<Model>) = apply { this.model = model }
 
         /**
+         * The model that will complete your prompt.\n\nSee
+         * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
+         * options.
+         */
+        fun model(value: String) = apply { model(Model.of(value)) }
+
+        /**
          * The reason that we stopped.
          *
          * This may be one the following values:
@@ -187,7 +194,17 @@ private constructor(
          *   `stop_sequences` parameter, or a stop sequence built into the model
          * - `"max_tokens"`: we exceeded `max_tokens_to_sample` or the model's maximum
          */
-        fun stopReason(stopReason: String) = stopReason(JsonField.of(stopReason))
+        fun stopReason(stopReason: String?) = stopReason(JsonField.ofNullable(stopReason))
+
+        /**
+         * The reason that we stopped.
+         *
+         * This may be one the following values:
+         * - `"stop_sequence"`: we reached a stop sequence — either provided by you via the
+         *   `stop_sequences` parameter, or a stop sequence built into the model
+         * - `"max_tokens"`: we exceeded `max_tokens_to_sample` or the model's maximum
+         */
+        fun stopReason(stopReason: Optional<String>) = stopReason(stopReason.orElse(null))
 
         /**
          * The reason that we stopped.
@@ -234,11 +251,11 @@ private constructor(
 
         fun build(): Completion =
             Completion(
-                id,
-                completion,
-                model,
-                stopReason,
-                type,
+                checkNotNull(id) { "`id` is required but was not set" },
+                checkNotNull(completion) { "`completion` is required but was not set" },
+                checkNotNull(model) { "`model` is required but was not set" },
+                checkNotNull(stopReason) { "`stopReason` is required but was not set" },
+                checkNotNull(type) { "`type` is required but was not set" },
                 additionalProperties.toImmutable(),
             )
     }

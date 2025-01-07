@@ -37,11 +37,13 @@ private constructor(
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
-    @JsonProperty("text") @ExcludeMissing fun _text() = text
+    @JsonProperty("text") @ExcludeMissing fun _text(): JsonField<String> = text
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
-    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
+    @JsonProperty("cache_control")
+    @ExcludeMissing
+    fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -67,8 +69,8 @@ private constructor(
 
     class Builder {
 
-        private var text: JsonField<String> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
+        private var text: JsonField<String>? = null
+        private var type: JsonField<Type>? = null
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -88,8 +90,11 @@ private constructor(
 
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
-            cacheControl(JsonField.of(cacheControl))
+        fun cacheControl(cacheControl: BetaCacheControlEphemeral?) =
+            cacheControl(JsonField.ofNullable(cacheControl))
+
+        fun cacheControl(cacheControl: Optional<BetaCacheControlEphemeral>) =
+            cacheControl(cacheControl.orElse(null))
 
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
@@ -116,8 +121,8 @@ private constructor(
 
         fun build(): BetaTextBlockParam =
             BetaTextBlockParam(
-                text,
-                type,
+                checkNotNull(text) { "`text` is required but was not set" },
+                checkNotNull(type) { "`type` is required but was not set" },
                 cacheControl,
                 additionalProperties.toImmutable(),
             )

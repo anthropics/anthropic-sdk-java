@@ -27,7 +27,7 @@ private constructor(
 
     fun type(): Type = type.getRequired("type")
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -51,7 +51,7 @@ private constructor(
 
     class Builder {
 
-        private var type: JsonField<Type> = JsonMissing.of()
+        private var type: JsonField<Type>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -84,7 +84,10 @@ private constructor(
         }
 
         fun build(): MessageBatchExpiredResult =
-            MessageBatchExpiredResult(type, additionalProperties.toImmutable())
+            MessageBatchExpiredResult(
+                checkNotNull(type) { "`type` is required but was not set" },
+                additionalProperties.toImmutable()
+            )
     }
 
     class Type

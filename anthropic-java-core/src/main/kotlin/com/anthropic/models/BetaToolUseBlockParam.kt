@@ -34,6 +34,8 @@ private constructor(
 
     fun id(): String = id.getRequired("id")
 
+    @JsonProperty("input") @ExcludeMissing fun _input(): JsonValue = input
+
     fun name(): String = name.getRequired("name")
 
     fun type(): Type = type.getRequired("type")
@@ -41,15 +43,15 @@ private constructor(
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
-    @JsonProperty("id") @ExcludeMissing fun _id() = id
+    @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
-    @JsonProperty("input") @ExcludeMissing fun _input() = input
+    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
 
-    @JsonProperty("name") @ExcludeMissing fun _name() = name
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
-
-    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
+    @JsonProperty("cache_control")
+    @ExcludeMissing
+    fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -76,10 +78,10 @@ private constructor(
 
     class Builder {
 
-        private var id: JsonField<String> = JsonMissing.of()
-        private var input: JsonValue = JsonMissing.of()
-        private var name: JsonField<String> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
+        private var id: JsonField<String>? = null
+        private var input: JsonValue? = null
+        private var name: JsonField<String>? = null
+        private var type: JsonField<Type>? = null
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -107,8 +109,11 @@ private constructor(
 
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
-            cacheControl(JsonField.of(cacheControl))
+        fun cacheControl(cacheControl: BetaCacheControlEphemeral?) =
+            cacheControl(JsonField.ofNullable(cacheControl))
+
+        fun cacheControl(cacheControl: Optional<BetaCacheControlEphemeral>) =
+            cacheControl(cacheControl.orElse(null))
 
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
@@ -135,10 +140,10 @@ private constructor(
 
         fun build(): BetaToolUseBlockParam =
             BetaToolUseBlockParam(
-                id,
-                input,
-                name,
-                type,
+                checkNotNull(id) { "`id` is required but was not set" },
+                checkNotNull(input) { "`input` is required but was not set" },
+                checkNotNull(name) { "`name` is required but was not set" },
+                checkNotNull(type) { "`type` is required but was not set" },
                 cacheControl,
                 additionalProperties.toImmutable(),
             )

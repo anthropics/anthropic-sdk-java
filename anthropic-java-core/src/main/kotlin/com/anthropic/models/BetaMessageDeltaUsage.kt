@@ -29,7 +29,9 @@ private constructor(
     fun outputTokens(): Long = outputTokens.getRequired("output_tokens")
 
     /** The cumulative number of output tokens which were used. */
-    @JsonProperty("output_tokens") @ExcludeMissing fun _outputTokens() = outputTokens
+    @JsonProperty("output_tokens")
+    @ExcludeMissing
+    fun _outputTokens(): JsonField<Long> = outputTokens
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -53,7 +55,7 @@ private constructor(
 
     class Builder {
 
-        private var outputTokens: JsonField<Long> = JsonMissing.of()
+        private var outputTokens: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -88,7 +90,10 @@ private constructor(
         }
 
         fun build(): BetaMessageDeltaUsage =
-            BetaMessageDeltaUsage(outputTokens, additionalProperties.toImmutable())
+            BetaMessageDeltaUsage(
+                checkNotNull(outputTokens) { "`outputTokens` is required but was not set" },
+                additionalProperties.toImmutable()
+            )
     }
 
     override fun equals(other: Any?): Boolean {
