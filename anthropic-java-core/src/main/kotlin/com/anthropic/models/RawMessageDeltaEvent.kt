@@ -49,9 +49,9 @@ private constructor(
      */
     fun usage(): MessageDeltaUsage = usage.getRequired("usage")
 
-    @JsonProperty("delta") @ExcludeMissing fun _delta() = delta
+    @JsonProperty("delta") @ExcludeMissing fun _delta(): JsonField<Delta> = delta
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     /**
      * Billing and rate-limit usage.
@@ -66,7 +66,7 @@ private constructor(
      *
      * For example, `output_tokens` will be non-zero, even for an empty string response from Claude.
      */
-    @JsonProperty("usage") @ExcludeMissing fun _usage() = usage
+    @JsonProperty("usage") @ExcludeMissing fun _usage(): JsonField<MessageDeltaUsage> = usage
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -92,9 +92,9 @@ private constructor(
 
     class Builder {
 
-        private var delta: JsonField<Delta> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
-        private var usage: JsonField<MessageDeltaUsage> = JsonMissing.of()
+        private var delta: JsonField<Delta>? = null
+        private var type: JsonField<Type>? = null
+        private var usage: JsonField<MessageDeltaUsage>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -166,9 +166,9 @@ private constructor(
 
         fun build(): RawMessageDeltaEvent =
             RawMessageDeltaEvent(
-                delta,
-                type,
-                usage,
+                checkNotNull(delta) { "`delta` is required but was not set" },
+                checkNotNull(type) { "`type` is required but was not set" },
+                checkNotNull(usage) { "`usage` is required but was not set" },
                 additionalProperties.toImmutable(),
             )
     }
@@ -193,9 +193,13 @@ private constructor(
         fun stopSequence(): Optional<String> =
             Optional.ofNullable(stopSequence.getNullable("stop_sequence"))
 
-        @JsonProperty("stop_reason") @ExcludeMissing fun _stopReason() = stopReason
+        @JsonProperty("stop_reason")
+        @ExcludeMissing
+        fun _stopReason(): JsonField<StopReason> = stopReason
 
-        @JsonProperty("stop_sequence") @ExcludeMissing fun _stopSequence() = stopSequence
+        @JsonProperty("stop_sequence")
+        @ExcludeMissing
+        fun _stopSequence(): JsonField<String> = stopSequence
 
         @JsonAnyGetter
         @ExcludeMissing
@@ -220,8 +224,8 @@ private constructor(
 
         class Builder {
 
-            private var stopReason: JsonField<StopReason> = JsonMissing.of()
-            private var stopSequence: JsonField<String> = JsonMissing.of()
+            private var stopReason: JsonField<StopReason>? = null
+            private var stopSequence: JsonField<String>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -231,13 +235,19 @@ private constructor(
                 additionalProperties = delta.additionalProperties.toMutableMap()
             }
 
-            fun stopReason(stopReason: StopReason) = stopReason(JsonField.of(stopReason))
+            fun stopReason(stopReason: StopReason?) = stopReason(JsonField.ofNullable(stopReason))
+
+            fun stopReason(stopReason: Optional<StopReason>) = stopReason(stopReason.orElse(null))
 
             fun stopReason(stopReason: JsonField<StopReason>) = apply {
                 this.stopReason = stopReason
             }
 
-            fun stopSequence(stopSequence: String) = stopSequence(JsonField.of(stopSequence))
+            fun stopSequence(stopSequence: String?) =
+                stopSequence(JsonField.ofNullable(stopSequence))
+
+            fun stopSequence(stopSequence: Optional<String>) =
+                stopSequence(stopSequence.orElse(null))
 
             fun stopSequence(stopSequence: JsonField<String>) = apply {
                 this.stopSequence = stopSequence
@@ -264,8 +274,8 @@ private constructor(
 
             fun build(): Delta =
                 Delta(
-                    stopReason,
-                    stopSequence,
+                    checkNotNull(stopReason) { "`stopReason` is required but was not set" },
+                    checkNotNull(stopSequence) { "`stopSequence` is required but was not set" },
                     additionalProperties.toImmutable(),
                 )
         }

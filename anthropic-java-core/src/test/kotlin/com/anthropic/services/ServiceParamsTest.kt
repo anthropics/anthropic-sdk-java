@@ -161,6 +161,7 @@ class ServiceParamsTest {
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .role(Message.Role.ASSISTANT)
                 .stopReason(Message.StopReason.END_TURN)
+                .stopSequence(null)
                 .type(Message.Type.MESSAGE)
                 .usage(
                     Usage.builder()

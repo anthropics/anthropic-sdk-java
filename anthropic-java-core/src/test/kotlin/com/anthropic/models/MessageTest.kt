@@ -25,6 +25,7 @@ class MessageTest {
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .role(Message.Role.ASSISTANT)
                 .stopReason(Message.StopReason.END_TURN)
+                .stopSequence(null)
                 .type(Message.Type.MESSAGE)
                 .usage(
                     Usage.builder()
@@ -49,6 +50,7 @@ class MessageTest {
         assertThat(message.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
         assertThat(message.role()).isEqualTo(Message.Role.ASSISTANT)
         assertThat(message.stopReason()).contains(Message.StopReason.END_TURN)
+        assertThat(message.stopSequence()).isEmpty
         assertThat(message.type()).isEqualTo(Message.Type.MESSAGE)
         assertThat(message.usage())
             .isEqualTo(

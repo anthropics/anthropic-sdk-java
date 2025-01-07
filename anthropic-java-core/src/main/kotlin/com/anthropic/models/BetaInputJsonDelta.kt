@@ -32,9 +32,11 @@ private constructor(
 
     fun type(): Type = type.getRequired("type")
 
-    @JsonProperty("partial_json") @ExcludeMissing fun _partialJson() = partialJson
+    @JsonProperty("partial_json")
+    @ExcludeMissing
+    fun _partialJson(): JsonField<String> = partialJson
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -59,8 +61,8 @@ private constructor(
 
     class Builder {
 
-        private var partialJson: JsonField<String> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
+        private var partialJson: JsonField<String>? = null
+        private var type: JsonField<Type>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -99,8 +101,8 @@ private constructor(
 
         fun build(): BetaInputJsonDelta =
             BetaInputJsonDelta(
-                partialJson,
-                type,
+                checkNotNull(partialJson) { "`partialJson` is required but was not set" },
+                checkNotNull(type) { "`type` is required but was not set" },
                 additionalProperties.toImmutable(),
             )
     }

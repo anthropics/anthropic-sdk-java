@@ -32,9 +32,9 @@ private constructor(
 
     fun type(): Type = type.getRequired("type")
 
-    @JsonProperty("error") @ExcludeMissing fun _error() = error
+    @JsonProperty("error") @ExcludeMissing fun _error(): JsonField<BetaError> = error
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -59,8 +59,8 @@ private constructor(
 
     class Builder {
 
-        private var error: JsonField<BetaError> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
+        private var error: JsonField<BetaError>? = null
+        private var type: JsonField<Type>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -73,6 +73,32 @@ private constructor(
         fun error(error: BetaError) = error(JsonField.of(error))
 
         fun error(error: JsonField<BetaError>) = apply { this.error = error }
+
+        fun error(betaInvalidRequestError: BetaInvalidRequestError) =
+            error(BetaError.ofBetaInvalidRequestError(betaInvalidRequestError))
+
+        fun error(betaAuthenticationError: BetaAuthenticationError) =
+            error(BetaError.ofBetaAuthenticationError(betaAuthenticationError))
+
+        fun error(betaBillingError: BetaBillingError) =
+            error(BetaError.ofBetaBillingError(betaBillingError))
+
+        fun error(betaPermissionError: BetaPermissionError) =
+            error(BetaError.ofBetaPermissionError(betaPermissionError))
+
+        fun error(betaNotFoundError: BetaNotFoundError) =
+            error(BetaError.ofBetaNotFoundError(betaNotFoundError))
+
+        fun error(betaRateLimitError: BetaRateLimitError) =
+            error(BetaError.ofBetaRateLimitError(betaRateLimitError))
+
+        fun error(betaGatewayTimeoutError: BetaGatewayTimeoutError) =
+            error(BetaError.ofBetaGatewayTimeoutError(betaGatewayTimeoutError))
+
+        fun error(betaApiError: BetaApiError) = error(BetaError.ofBetaApiError(betaApiError))
+
+        fun error(betaOverloadedError: BetaOverloadedError) =
+            error(BetaError.ofBetaOverloadedError(betaOverloadedError))
 
         fun type(type: Type) = type(JsonField.of(type))
 
@@ -99,8 +125,8 @@ private constructor(
 
         fun build(): BetaErrorResponse =
             BetaErrorResponse(
-                error,
-                type,
+                checkNotNull(error) { "`error` is required but was not set" },
+                checkNotNull(type) { "`type` is required but was not set" },
                 additionalProperties.toImmutable(),
             )
     }

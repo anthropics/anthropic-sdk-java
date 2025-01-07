@@ -30,17 +30,17 @@ private constructor(
 
     fun id(): String = id.getRequired("id")
 
+    @JsonProperty("input") @ExcludeMissing fun _input(): JsonValue = input
+
     fun name(): String = name.getRequired("name")
 
     fun type(): Type = type.getRequired("type")
 
-    @JsonProperty("id") @ExcludeMissing fun _id() = id
+    @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
-    @JsonProperty("input") @ExcludeMissing fun _input() = input
+    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
 
-    @JsonProperty("name") @ExcludeMissing fun _name() = name
-
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -74,10 +74,10 @@ private constructor(
 
     class Builder {
 
-        private var id: JsonField<String> = JsonMissing.of()
-        private var input: JsonValue = JsonMissing.of()
-        private var name: JsonField<String> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
+        private var id: JsonField<String>? = null
+        private var input: JsonValue? = null
+        private var name: JsonField<String>? = null
+        private var type: JsonField<Type>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -124,10 +124,10 @@ private constructor(
 
         fun build(): ToolUseBlock =
             ToolUseBlock(
-                id,
-                input,
-                name,
-                type,
+                checkNotNull(id) { "`id` is required but was not set" },
+                checkNotNull(input) { "`input` is required but was not set" },
+                checkNotNull(name) { "`name` is required but was not set" },
+                checkNotNull(type) { "`type` is required but was not set" },
                 additionalProperties.toImmutable(),
             )
     }

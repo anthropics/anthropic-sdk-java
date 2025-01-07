@@ -73,31 +73,31 @@ private constructor(
      *
      * This is zero until processing of the entire Message Batch has ended.
      */
-    @JsonProperty("canceled") @ExcludeMissing fun _canceled() = canceled
+    @JsonProperty("canceled") @ExcludeMissing fun _canceled(): JsonField<Long> = canceled
 
     /**
      * Number of requests in the Message Batch that encountered an error.
      *
      * This is zero until processing of the entire Message Batch has ended.
      */
-    @JsonProperty("errored") @ExcludeMissing fun _errored() = errored
+    @JsonProperty("errored") @ExcludeMissing fun _errored(): JsonField<Long> = errored
 
     /**
      * Number of requests in the Message Batch that have expired.
      *
      * This is zero until processing of the entire Message Batch has ended.
      */
-    @JsonProperty("expired") @ExcludeMissing fun _expired() = expired
+    @JsonProperty("expired") @ExcludeMissing fun _expired(): JsonField<Long> = expired
 
     /** Number of requests in the Message Batch that are processing. */
-    @JsonProperty("processing") @ExcludeMissing fun _processing() = processing
+    @JsonProperty("processing") @ExcludeMissing fun _processing(): JsonField<Long> = processing
 
     /**
      * Number of requests in the Message Batch that have completed successfully.
      *
      * This is zero until processing of the entire Message Batch has ended.
      */
-    @JsonProperty("succeeded") @ExcludeMissing fun _succeeded() = succeeded
+    @JsonProperty("succeeded") @ExcludeMissing fun _succeeded(): JsonField<Long> = succeeded
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -125,11 +125,11 @@ private constructor(
 
     class Builder {
 
-        private var canceled: JsonField<Long> = JsonMissing.of()
-        private var errored: JsonField<Long> = JsonMissing.of()
-        private var expired: JsonField<Long> = JsonMissing.of()
-        private var processing: JsonField<Long> = JsonMissing.of()
-        private var succeeded: JsonField<Long> = JsonMissing.of()
+        private var canceled: JsonField<Long>? = null
+        private var errored: JsonField<Long>? = null
+        private var expired: JsonField<Long>? = null
+        private var processing: JsonField<Long>? = null
+        private var succeeded: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -225,11 +225,11 @@ private constructor(
 
         fun build(): MessageBatchRequestCounts =
             MessageBatchRequestCounts(
-                canceled,
-                errored,
-                expired,
-                processing,
-                succeeded,
+                checkNotNull(canceled) { "`canceled` is required but was not set" },
+                checkNotNull(errored) { "`errored` is required but was not set" },
+                checkNotNull(expired) { "`expired` is required but was not set" },
+                checkNotNull(processing) { "`processing` is required but was not set" },
+                checkNotNull(succeeded) { "`succeeded` is required but was not set" },
                 additionalProperties.toImmutable(),
             )
     }

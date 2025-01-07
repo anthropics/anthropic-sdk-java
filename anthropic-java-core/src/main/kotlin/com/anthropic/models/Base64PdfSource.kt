@@ -35,11 +35,11 @@ private constructor(
 
     fun type(): Type = type.getRequired("type")
 
-    @JsonProperty("data") @ExcludeMissing fun _data() = data
+    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<String> = data
 
-    @JsonProperty("media_type") @ExcludeMissing fun _mediaType() = mediaType
+    @JsonProperty("media_type") @ExcludeMissing fun _mediaType(): JsonField<MediaType> = mediaType
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -65,9 +65,9 @@ private constructor(
 
     class Builder {
 
-        private var data: JsonField<String> = JsonMissing.of()
-        private var mediaType: JsonField<MediaType> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
+        private var data: JsonField<String>? = null
+        private var mediaType: JsonField<MediaType>? = null
+        private var type: JsonField<Type>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -111,9 +111,9 @@ private constructor(
 
         fun build(): Base64PdfSource =
             Base64PdfSource(
-                data,
-                mediaType,
-                type,
+                checkNotNull(data) { "`data` is required but was not set" },
+                checkNotNull(mediaType) { "`mediaType` is required but was not set" },
+                checkNotNull(type) { "`type` is required but was not set" },
                 additionalProperties.toImmutable(),
             )
     }

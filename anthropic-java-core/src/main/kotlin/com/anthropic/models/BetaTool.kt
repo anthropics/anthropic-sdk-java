@@ -70,16 +70,20 @@ private constructor(
      *
      * This defines the shape of the `input` that your tool accepts and that the model will produce.
      */
-    @JsonProperty("input_schema") @ExcludeMissing fun _inputSchema() = inputSchema
+    @JsonProperty("input_schema")
+    @ExcludeMissing
+    fun _inputSchema(): JsonField<InputSchema> = inputSchema
 
     /**
      * Name of the tool.
      *
      * This is how the tool will be called by the model and in tool_use blocks.
      */
-    @JsonProperty("name") @ExcludeMissing fun _name() = name
+    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
 
-    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
+    @JsonProperty("cache_control")
+    @ExcludeMissing
+    fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
 
     /**
      * Description of what this tool does.
@@ -88,9 +92,9 @@ private constructor(
      * about what the tool is and how to use it, the better it will perform. You can use natural
      * language descriptions to reinforce important aspects of the tool input JSON schema.
      */
-    @JsonProperty("description") @ExcludeMissing fun _description() = description
+    @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -118,8 +122,8 @@ private constructor(
 
     class Builder {
 
-        private var inputSchema: JsonField<InputSchema> = JsonMissing.of()
-        private var name: JsonField<String> = JsonMissing.of()
+        private var inputSchema: JsonField<InputSchema>? = null
+        private var name: JsonField<String>? = null
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var description: JsonField<String> = JsonMissing.of()
         private var type: JsonField<Type> = JsonMissing.of()
@@ -167,8 +171,11 @@ private constructor(
          */
         fun name(name: JsonField<String>) = apply { this.name = name }
 
-        fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
-            cacheControl(JsonField.of(cacheControl))
+        fun cacheControl(cacheControl: BetaCacheControlEphemeral?) =
+            cacheControl(JsonField.ofNullable(cacheControl))
+
+        fun cacheControl(cacheControl: Optional<BetaCacheControlEphemeral>) =
+            cacheControl(cacheControl.orElse(null))
 
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
@@ -194,7 +201,9 @@ private constructor(
          */
         fun description(description: JsonField<String>) = apply { this.description = description }
 
-        fun type(type: Type) = type(JsonField.of(type))
+        fun type(type: Type?) = type(JsonField.ofNullable(type))
+
+        fun type(type: Optional<Type>) = type(type.orElse(null))
 
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
@@ -219,8 +228,8 @@ private constructor(
 
         fun build(): BetaTool =
             BetaTool(
-                inputSchema,
-                name,
+                checkNotNull(inputSchema) { "`inputSchema` is required but was not set" },
+                checkNotNull(name) { "`name` is required but was not set" },
                 cacheControl,
                 description,
                 type,
@@ -247,9 +256,9 @@ private constructor(
 
         fun type(): Type = type.getRequired("type")
 
-        @JsonProperty("type") @ExcludeMissing fun _type() = type
+        @JsonProperty("properties") @ExcludeMissing fun _properties(): JsonValue = properties
 
-        @JsonProperty("properties") @ExcludeMissing fun _properties() = properties
+        @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
         @JsonAnyGetter
         @ExcludeMissing
@@ -273,7 +282,7 @@ private constructor(
 
         class Builder {
 
-            private var type: JsonField<Type> = JsonMissing.of()
+            private var type: JsonField<Type>? = null
             private var properties: JsonValue = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -311,7 +320,7 @@ private constructor(
 
             fun build(): InputSchema =
                 InputSchema(
-                    type,
+                    checkNotNull(type) { "`type` is required but was not set" },
                     properties,
                     additionalProperties.toImmutable(),
                 )

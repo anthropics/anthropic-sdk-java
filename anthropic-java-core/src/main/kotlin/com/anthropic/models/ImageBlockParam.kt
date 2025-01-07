@@ -39,11 +39,13 @@ private constructor(
     fun cacheControl(): Optional<CacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
-    @JsonProperty("source") @ExcludeMissing fun _source() = source
+    @JsonProperty("source") @ExcludeMissing fun _source(): JsonField<Source> = source
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
-    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
+    @JsonProperty("cache_control")
+    @ExcludeMissing
+    fun _cacheControl(): JsonField<CacheControlEphemeral> = cacheControl
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -69,8 +71,8 @@ private constructor(
 
     class Builder {
 
-        private var source: JsonField<Source> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
+        private var source: JsonField<Source>? = null
+        private var type: JsonField<Type>? = null
         private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -90,8 +92,11 @@ private constructor(
 
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        fun cacheControl(cacheControl: CacheControlEphemeral) =
-            cacheControl(JsonField.of(cacheControl))
+        fun cacheControl(cacheControl: CacheControlEphemeral?) =
+            cacheControl(JsonField.ofNullable(cacheControl))
+
+        fun cacheControl(cacheControl: Optional<CacheControlEphemeral>) =
+            cacheControl(cacheControl.orElse(null))
 
         fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
@@ -118,8 +123,8 @@ private constructor(
 
         fun build(): ImageBlockParam =
             ImageBlockParam(
-                source,
-                type,
+                checkNotNull(source) { "`source` is required but was not set" },
+                checkNotNull(type) { "`type` is required but was not set" },
                 cacheControl,
                 additionalProperties.toImmutable(),
             )
@@ -146,11 +151,13 @@ private constructor(
 
         fun type(): Type = type.getRequired("type")
 
-        @JsonProperty("data") @ExcludeMissing fun _data() = data
+        @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<String> = data
 
-        @JsonProperty("media_type") @ExcludeMissing fun _mediaType() = mediaType
+        @JsonProperty("media_type")
+        @ExcludeMissing
+        fun _mediaType(): JsonField<MediaType> = mediaType
 
-        @JsonProperty("type") @ExcludeMissing fun _type() = type
+        @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
         @JsonAnyGetter
         @ExcludeMissing
@@ -176,9 +183,9 @@ private constructor(
 
         class Builder {
 
-            private var data: JsonField<String> = JsonMissing.of()
-            private var mediaType: JsonField<MediaType> = JsonMissing.of()
-            private var type: JsonField<Type> = JsonMissing.of()
+            private var data: JsonField<String>? = null
+            private var mediaType: JsonField<MediaType>? = null
+            private var type: JsonField<Type>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -222,9 +229,9 @@ private constructor(
 
             fun build(): Source =
                 Source(
-                    data,
-                    mediaType,
-                    type,
+                    checkNotNull(data) { "`data` is required but was not set" },
+                    checkNotNull(mediaType) { "`mediaType` is required but was not set" },
+                    checkNotNull(type) { "`type` is required but was not set" },
                     additionalProperties.toImmutable(),
                 )
         }

@@ -60,15 +60,17 @@ private constructor(
 
     fun isError(): Optional<Boolean> = Optional.ofNullable(isError.getNullable("is_error"))
 
-    @JsonProperty("tool_use_id") @ExcludeMissing fun _toolUseId() = toolUseId
+    @JsonProperty("tool_use_id") @ExcludeMissing fun _toolUseId(): JsonField<String> = toolUseId
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
-    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
+    @JsonProperty("cache_control")
+    @ExcludeMissing
+    fun _cacheControl(): JsonField<CacheControlEphemeral> = cacheControl
 
-    @JsonProperty("content") @ExcludeMissing fun _content() = content
+    @JsonProperty("content") @ExcludeMissing fun _content(): JsonField<Content> = content
 
-    @JsonProperty("is_error") @ExcludeMissing fun _isError() = isError
+    @JsonProperty("is_error") @ExcludeMissing fun _isError(): JsonField<Boolean> = isError
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -96,8 +98,8 @@ private constructor(
 
     class Builder {
 
-        private var toolUseId: JsonField<String> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
+        private var toolUseId: JsonField<String>? = null
+        private var type: JsonField<Type>? = null
         private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var content: JsonField<Content> = JsonMissing.of()
         private var isError: JsonField<Boolean> = JsonMissing.of()
@@ -121,8 +123,11 @@ private constructor(
 
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        fun cacheControl(cacheControl: CacheControlEphemeral) =
-            cacheControl(JsonField.of(cacheControl))
+        fun cacheControl(cacheControl: CacheControlEphemeral?) =
+            cacheControl(JsonField.ofNullable(cacheControl))
+
+        fun cacheControl(cacheControl: Optional<CacheControlEphemeral>) =
+            cacheControl(cacheControl.orElse(null))
 
         fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
@@ -131,6 +136,10 @@ private constructor(
         fun content(content: Content) = content(JsonField.of(content))
 
         fun content(content: JsonField<Content>) = apply { this.content = content }
+
+        fun content(string: String) = content(Content.ofString(string))
+
+        fun contentOfBlocks(blocks: List<Content.Block>) = content(Content.ofBlocks(blocks))
 
         fun isError(isError: Boolean) = isError(JsonField.of(isError))
 
@@ -157,8 +166,8 @@ private constructor(
 
         fun build(): ToolResultBlockParam =
             ToolResultBlockParam(
-                toolUseId,
-                type,
+                checkNotNull(toolUseId) { "`toolUseId` is required but was not set" },
+                checkNotNull(type) { "`type` is required but was not set" },
                 cacheControl,
                 content,
                 isError,

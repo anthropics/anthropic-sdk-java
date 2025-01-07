@@ -32,9 +32,9 @@ private constructor(
 
     fun type(): Type = type.getRequired("type")
 
-    @JsonProperty("error") @ExcludeMissing fun _error() = error
+    @JsonProperty("error") @ExcludeMissing fun _error(): JsonField<ErrorObject> = error
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -59,8 +59,8 @@ private constructor(
 
     class Builder {
 
-        private var error: JsonField<ErrorObject> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
+        private var error: JsonField<ErrorObject>? = null
+        private var type: JsonField<Type>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -73,6 +73,31 @@ private constructor(
         fun error(error: ErrorObject) = error(JsonField.of(error))
 
         fun error(error: JsonField<ErrorObject>) = apply { this.error = error }
+
+        fun error(invalidRequestError: InvalidRequestError) =
+            error(ErrorObject.ofInvalidRequestError(invalidRequestError))
+
+        fun error(authenticationError: AuthenticationError) =
+            error(ErrorObject.ofAuthenticationError(authenticationError))
+
+        fun error(billingError: BillingError) = error(ErrorObject.ofBillingError(billingError))
+
+        fun error(permissionError: PermissionError) =
+            error(ErrorObject.ofPermissionError(permissionError))
+
+        fun error(notFoundError: NotFoundError) = error(ErrorObject.ofNotFoundError(notFoundError))
+
+        fun error(rateLimitError: RateLimitError) =
+            error(ErrorObject.ofRateLimitError(rateLimitError))
+
+        fun error(gatewayTimeoutError: GatewayTimeoutError) =
+            error(ErrorObject.ofGatewayTimeoutError(gatewayTimeoutError))
+
+        fun error(apiErrorObject: ApiErrorObject) =
+            error(ErrorObject.ofApiErrorObject(apiErrorObject))
+
+        fun error(overloadedError: OverloadedError) =
+            error(ErrorObject.ofOverloadedError(overloadedError))
 
         fun type(type: Type) = type(JsonField.of(type))
 
@@ -99,8 +124,8 @@ private constructor(
 
         fun build(): ErrorResponse =
             ErrorResponse(
-                error,
-                type,
+                checkNotNull(error) { "`error` is required but was not set" },
+                checkNotNull(type) { "`type` is required but was not set" },
                 additionalProperties.toImmutable(),
             )
     }

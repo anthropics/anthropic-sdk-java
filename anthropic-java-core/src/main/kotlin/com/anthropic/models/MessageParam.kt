@@ -43,9 +43,9 @@ private constructor(
 
     fun role(): Role = role.getRequired("role")
 
-    @JsonProperty("content") @ExcludeMissing fun _content() = content
+    @JsonProperty("content") @ExcludeMissing fun _content(): JsonField<Content> = content
 
-    @JsonProperty("role") @ExcludeMissing fun _role() = role
+    @JsonProperty("role") @ExcludeMissing fun _role(): JsonField<Role> = role
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -70,8 +70,8 @@ private constructor(
 
     class Builder {
 
-        private var content: JsonField<Content> = JsonMissing.of()
-        private var role: JsonField<Role> = JsonMissing.of()
+        private var content: JsonField<Content>? = null
+        private var role: JsonField<Role>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -84,6 +84,11 @@ private constructor(
         fun content(content: Content) = content(JsonField.of(content))
 
         fun content(content: JsonField<Content>) = apply { this.content = content }
+
+        fun content(string: String) = content(Content.ofString(string))
+
+        fun contentOfContentBlockParams(contentBlockParams: List<ContentBlockParam>) =
+            content(Content.ofContentBlockParams(contentBlockParams))
 
         fun role(role: Role) = role(JsonField.of(role))
 
@@ -110,8 +115,8 @@ private constructor(
 
         fun build(): MessageParam =
             MessageParam(
-                content,
-                role,
+                checkNotNull(content) { "`content` is required but was not set" },
+                checkNotNull(role) { "`role` is required but was not set" },
                 additionalProperties.toImmutable(),
             )
     }

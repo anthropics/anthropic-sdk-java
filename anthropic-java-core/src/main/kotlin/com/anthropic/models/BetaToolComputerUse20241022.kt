@@ -62,24 +62,32 @@ private constructor(
         Optional.ofNullable(displayNumber.getNullable("display_number"))
 
     /** The height of the display in pixels. */
-    @JsonProperty("display_height_px") @ExcludeMissing fun _displayHeightPx() = displayHeightPx
+    @JsonProperty("display_height_px")
+    @ExcludeMissing
+    fun _displayHeightPx(): JsonField<Long> = displayHeightPx
 
     /** The width of the display in pixels. */
-    @JsonProperty("display_width_px") @ExcludeMissing fun _displayWidthPx() = displayWidthPx
+    @JsonProperty("display_width_px")
+    @ExcludeMissing
+    fun _displayWidthPx(): JsonField<Long> = displayWidthPx
 
     /**
      * Name of the tool.
      *
      * This is how the tool will be called by the model and in tool_use blocks.
      */
-    @JsonProperty("name") @ExcludeMissing fun _name() = name
+    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<Name> = name
 
-    @JsonProperty("type") @ExcludeMissing fun _type() = type
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
-    @JsonProperty("cache_control") @ExcludeMissing fun _cacheControl() = cacheControl
+    @JsonProperty("cache_control")
+    @ExcludeMissing
+    fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
 
     /** The X11 display number (e.g. 0, 1) for the display. */
-    @JsonProperty("display_number") @ExcludeMissing fun _displayNumber() = displayNumber
+    @JsonProperty("display_number")
+    @ExcludeMissing
+    fun _displayNumber(): JsonField<Long> = displayNumber
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -108,10 +116,10 @@ private constructor(
 
     class Builder {
 
-        private var displayHeightPx: JsonField<Long> = JsonMissing.of()
-        private var displayWidthPx: JsonField<Long> = JsonMissing.of()
-        private var name: JsonField<Name> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
+        private var displayHeightPx: JsonField<Long>? = null
+        private var displayWidthPx: JsonField<Long>? = null
+        private var name: JsonField<Name>? = null
+        private var type: JsonField<Type>? = null
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var displayNumber: JsonField<Long> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -161,15 +169,26 @@ private constructor(
 
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        fun cacheControl(cacheControl: BetaCacheControlEphemeral) =
-            cacheControl(JsonField.of(cacheControl))
+        fun cacheControl(cacheControl: BetaCacheControlEphemeral?) =
+            cacheControl(JsonField.ofNullable(cacheControl))
+
+        fun cacheControl(cacheControl: Optional<BetaCacheControlEphemeral>) =
+            cacheControl(cacheControl.orElse(null))
 
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
 
         /** The X11 display number (e.g. 0, 1) for the display. */
-        fun displayNumber(displayNumber: Long) = displayNumber(JsonField.of(displayNumber))
+        fun displayNumber(displayNumber: Long?) = displayNumber(JsonField.ofNullable(displayNumber))
+
+        /** The X11 display number (e.g. 0, 1) for the display. */
+        fun displayNumber(displayNumber: Long) = displayNumber(displayNumber as Long?)
+
+        /** The X11 display number (e.g. 0, 1) for the display. */
+        @Suppress("USELESS_CAST") // See https://youtrack.jetbrains.com/issue/KT-74228
+        fun displayNumber(displayNumber: Optional<Long>) =
+            displayNumber(displayNumber.orElse(null) as Long?)
 
         /** The X11 display number (e.g. 0, 1) for the display. */
         fun displayNumber(displayNumber: JsonField<Long>) = apply {
@@ -197,10 +216,10 @@ private constructor(
 
         fun build(): BetaToolComputerUse20241022 =
             BetaToolComputerUse20241022(
-                displayHeightPx,
-                displayWidthPx,
-                name,
-                type,
+                checkNotNull(displayHeightPx) { "`displayHeightPx` is required but was not set" },
+                checkNotNull(displayWidthPx) { "`displayWidthPx` is required but was not set" },
+                checkNotNull(name) { "`name` is required but was not set" },
+                checkNotNull(type) { "`type` is required but was not set" },
                 cacheControl,
                 displayNumber,
                 additionalProperties.toImmutable(),

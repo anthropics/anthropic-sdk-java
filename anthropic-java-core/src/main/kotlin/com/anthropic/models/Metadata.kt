@@ -42,7 +42,7 @@ private constructor(
      * help detect abuse. Do not include any identifying information such as name, email address, or
      * phone number.
      */
-    @JsonProperty("user_id") @ExcludeMissing fun _userId() = userId
+    @JsonProperty("user_id") @ExcludeMissing fun _userId(): JsonField<String> = userId
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -82,7 +82,16 @@ private constructor(
          * to help detect abuse. Do not include any identifying information such as name, email
          * address, or phone number.
          */
-        fun userId(userId: String) = userId(JsonField.of(userId))
+        fun userId(userId: String?) = userId(JsonField.ofNullable(userId))
+
+        /**
+         * An external identifier for the user who is associated with the request.
+         *
+         * This should be a uuid, hash value, or other opaque identifier. Anthropic may use this id
+         * to help detect abuse. Do not include any identifying information such as name, email
+         * address, or phone number.
+         */
+        fun userId(userId: Optional<String>) = userId(userId.orElse(null))
 
         /**
          * An external identifier for the user who is associated with the request.
