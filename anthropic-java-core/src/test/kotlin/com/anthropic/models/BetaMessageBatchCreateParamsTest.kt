@@ -91,7 +91,7 @@ class BetaMessageBatchCreateParamsTest {
                                                         )
                                                         .build()
                                                 )
-                                                .name("x")
+                                                .name("name")
                                                 .cacheControl(
                                                     BetaCacheControlEphemeral.builder()
                                                         .type(
@@ -204,7 +204,7 @@ class BetaMessageBatchCreateParamsTest {
                                                             )
                                                             .build()
                                                     )
-                                                    .name("x")
+                                                    .name("name")
                                                     .cacheControl(
                                                         BetaCacheControlEphemeral.builder()
                                                             .type(
@@ -313,7 +313,7 @@ class BetaMessageBatchCreateParamsTest {
                                                         )
                                                         .build()
                                                 )
-                                                .name("x")
+                                                .name("name")
                                                 .cacheControl(
                                                     BetaCacheControlEphemeral.builder()
                                                         .type(

@@ -35,7 +35,7 @@ class ToolTest {
                         )
                         .build()
                 )
-                .name("x")
+                .name("name")
                 .cacheControl(
                     CacheControlEphemeral.builder()
                         .type(CacheControlEphemeral.Type.EPHEMERAL)
@@ -68,7 +68,7 @@ class ToolTest {
                     )
                     .build()
             )
-        assertThat(tool.name()).isEqualTo("x")
+        assertThat(tool.name()).isEqualTo("name")
         assertThat(tool.cacheControl())
             .contains(
                 CacheControlEphemeral.builder().type(CacheControlEphemeral.Type.EPHEMERAL).build()

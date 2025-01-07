@@ -96,7 +96,7 @@ class MessageServiceTest {
                                         )
                                         .build()
                                 )
-                                .name("x")
+                                .name("name")
                                 .cacheControl(
                                     CacheControlEphemeral.builder()
                                         .type(CacheControlEphemeral.Type.EPHEMERAL)
@@ -190,7 +190,7 @@ class MessageServiceTest {
                                         )
                                         .build()
                                 )
-                                .name("x")
+                                .name("name")
                                 .cacheControl(
                                     CacheControlEphemeral.builder()
                                         .type(CacheControlEphemeral.Type.EPHEMERAL)
@@ -282,7 +282,7 @@ class MessageServiceTest {
                                         )
                                         .build()
                                 )
-                                .name("x")
+                                .name("name")
                                 .cacheControl(
                                     CacheControlEphemeral.builder()
                                         .type(CacheControlEphemeral.Type.EPHEMERAL)

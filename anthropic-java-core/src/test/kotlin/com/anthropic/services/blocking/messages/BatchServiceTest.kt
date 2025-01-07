@@ -116,7 +116,7 @@ class BatchServiceTest {
                                                             )
                                                             .build()
                                                     )
-                                                    .name("x")
+                                                    .name("name")
                                                     .cacheControl(
                                                         CacheControlEphemeral.builder()
                                                             .type(

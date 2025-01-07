@@ -70,7 +70,7 @@ class BetaMessageCountTokensParamsTest {
                                     )
                                     .build()
                             )
-                            .name("x")
+                            .name("name")
                             .cacheControl(
                                 BetaCacheControlEphemeral.builder()
                                     .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
@@ -149,7 +149,7 @@ class BetaMessageCountTokensParamsTest {
                                         )
                                         .build()
                                 )
-                                .name("x")
+                                .name("name")
                                 .cacheControl(
                                     BetaCacheControlEphemeral.builder()
                                         .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
@@ -228,7 +228,7 @@ class BetaMessageCountTokensParamsTest {
                                     )
                                     .build()
                             )
-                            .name("x")
+                            .name("name")
                             .cacheControl(
                                 BetaCacheControlEphemeral.builder()
                                     .type(BetaCacheControlEphemeral.Type.EPHEMERAL)

@@ -14,7 +14,7 @@ class ToolUseBlockParamTest {
             ToolUseBlockParam.builder()
                 .id("id")
                 .input(JsonValue.from(mapOf<String, Any>()))
-                .name("x")
+                .name("name")
                 .type(ToolUseBlockParam.Type.TOOL_USE)
                 .cacheControl(
                     CacheControlEphemeral.builder()
@@ -25,7 +25,7 @@ class ToolUseBlockParamTest {
         assertThat(toolUseBlockParam).isNotNull
         assertThat(toolUseBlockParam.id()).isEqualTo("id")
         assertThat(toolUseBlockParam._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
-        assertThat(toolUseBlockParam.name()).isEqualTo("x")
+        assertThat(toolUseBlockParam.name()).isEqualTo("name")
         assertThat(toolUseBlockParam.type()).isEqualTo(ToolUseBlockParam.Type.TOOL_USE)
         assertThat(toolUseBlockParam.cacheControl())
             .contains(

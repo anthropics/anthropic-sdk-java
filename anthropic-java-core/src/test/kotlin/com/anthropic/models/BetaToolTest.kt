@@ -35,7 +35,7 @@ class BetaToolTest {
                         )
                         .build()
                 )
-                .name("x")
+                .name("name")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
@@ -69,7 +69,7 @@ class BetaToolTest {
                     )
                     .build()
             )
-        assertThat(betaTool.name()).isEqualTo("x")
+        assertThat(betaTool.name()).isEqualTo("name")
         assertThat(betaTool.cacheControl())
             .contains(
                 BetaCacheControlEphemeral.builder()
