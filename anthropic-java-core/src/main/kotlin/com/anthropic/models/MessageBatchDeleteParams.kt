@@ -10,6 +10,10 @@ import com.anthropic.core.toImmutable
 import java.util.Objects
 import java.util.Optional
 
+/**
+ * This endpoint is idempotent and can be used to poll for Message Batch completion. To access the
+ * results of a Message Batch, make a request to the `results_url` field in the response.
+ */
 class MessageBatchDeleteParams
 constructor(
     private val messageBatchId: String,

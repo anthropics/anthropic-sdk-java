@@ -10,6 +10,15 @@ import com.anthropic.core.toImmutable
 import java.util.Objects
 import java.util.Optional
 
+/**
+ * Batches may be canceled any time before processing ends. Once cancellation is initiated, the
+ * batch enters a `canceling` state, at which time the system may complete any in-progress,
+ * non-interruptible requests before finalizing cancellation.
+ *
+ * The number of canceled requests is specified in `request_counts`. To determine which requests
+ * were canceled, check the individual results within the batch. Note that cancellation may not
+ * result in any canceled requests if they were non-interruptible.
+ */
 class MessageBatchCancelParams
 constructor(
     private val messageBatchId: String,

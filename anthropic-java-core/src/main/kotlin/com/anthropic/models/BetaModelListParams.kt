@@ -8,6 +8,12 @@ import com.anthropic.core.http.QueryParams
 import java.util.Objects
 import java.util.Optional
 
+/**
+ * List available models.
+ *
+ * The Models API response can be used to determine which models are available for use in the API.
+ * More recently released models are listed first.
+ */
 class BetaModelListParams
 constructor(
     private val afterId: String?,

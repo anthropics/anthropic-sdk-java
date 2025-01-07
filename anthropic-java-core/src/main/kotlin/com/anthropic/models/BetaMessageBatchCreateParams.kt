@@ -27,6 +27,13 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Objects
 import java.util.Optional
 
+/**
+ * Send a batch of Message creation requests.
+ *
+ * The Message Batches API can be used to process multiple Messages API requests at once. Once a
+ * Message Batch is created, it begins processing immediately. Batches can take up to 24 hours to
+ * complete.
+ */
 class BetaMessageBatchCreateParams
 constructor(
     private val betas: List<AnthropicBeta>?,

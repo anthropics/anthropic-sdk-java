@@ -27,6 +27,12 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Objects
 import java.util.Optional
 
+/**
+ * Send a structured list of input messages with text and/or image content, and the model will
+ * generate the next message in the conversation.
+ *
+ * The Messages API can be used for either single queries or stateless multi-turn conversations.
+ */
 class BetaMessageCreateParams
 constructor(
     private val betas: List<AnthropicBeta>?,

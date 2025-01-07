@@ -9,6 +9,9 @@ import com.anthropic.core.toImmutable
 import java.util.Objects
 import java.util.Optional
 
+/**
+ * List all Message Batches within a Workspace. Most recently created batches are returned first.
+ */
 class BetaMessageBatchListParams
 constructor(
     private val afterId: String?,
