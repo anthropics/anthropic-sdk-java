@@ -7,6 +7,12 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import java.util.Objects
 
+/**
+ * Get a specific model.
+ *
+ * The Models API response can be used to determine information about a specific model or resolve a
+ * model alias to a model ID.
+ */
 class BetaModelRetrieveParams
 constructor(
     private val modelId: String,

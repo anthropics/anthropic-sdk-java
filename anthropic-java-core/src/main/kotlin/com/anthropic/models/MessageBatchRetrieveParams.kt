@@ -7,6 +7,10 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import java.util.Objects
 
+/**
+ * This endpoint is idempotent and can be used to poll for Message Batch completion. To access the
+ * results of a Message Batch, make a request to the `results_url` field in the response.
+ */
 class MessageBatchRetrieveParams
 constructor(
     private val messageBatchId: String,

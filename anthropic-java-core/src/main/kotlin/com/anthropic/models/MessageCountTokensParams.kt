@@ -27,6 +27,12 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Objects
 import java.util.Optional
 
+/**
+ * Count the number of tokens in a Message.
+ *
+ * The Token Count API can be used to count the number of tokens in a Message, including tools,
+ * images, and documents, without creating it.
+ */
 class MessageCountTokensParams
 constructor(
     private val body: MessageCountTokensBody,

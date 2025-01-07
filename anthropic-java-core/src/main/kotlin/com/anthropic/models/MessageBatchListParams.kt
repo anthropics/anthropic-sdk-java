@@ -8,6 +8,9 @@ import com.anthropic.core.http.QueryParams
 import java.util.Objects
 import java.util.Optional
 
+/**
+ * List all Message Batches within a Workspace. Most recently created batches are returned first.
+ */
 class MessageBatchListParams
 constructor(
     private val afterId: String?,
