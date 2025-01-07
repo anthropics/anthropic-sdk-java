@@ -101,7 +101,7 @@ class MessageServiceTest {
                                             )
                                             .build()
                                     )
-                                    .name("x")
+                                    .name("name")
                                     .cacheControl(
                                         BetaCacheControlEphemeral.builder()
                                             .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
@@ -201,7 +201,7 @@ class MessageServiceTest {
                                             )
                                             .build()
                                     )
-                                    .name("x")
+                                    .name("name")
                                     .cacheControl(
                                         BetaCacheControlEphemeral.builder()
                                             .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
@@ -297,7 +297,7 @@ class MessageServiceTest {
                                             )
                                             .build()
                                     )
-                                    .name("x")
+                                    .name("name")
                                     .cacheControl(
                                         BetaCacheControlEphemeral.builder()
                                             .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
