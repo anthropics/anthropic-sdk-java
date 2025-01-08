@@ -85,6 +85,9 @@ constructor(
             betas = (betas ?: mutableListOf()).apply { add(beta) }
         }
 
+        /** Optional header to specify the beta version(s) you want to use. */
+        fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
             putAllAdditionalHeaders(additionalHeaders)
