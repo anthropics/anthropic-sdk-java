@@ -1563,8 +1563,22 @@ constructor(
              */
             fun system(system: JsonField<System>) = apply { this.system = system }
 
+            /**
+             * System prompt.
+             *
+             * A system prompt is a way of providing context and instructions to Claude, such as
+             * specifying a particular goal or role. See our
+             * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+             */
             fun system(string: String) = system(System.ofString(string))
 
+            /**
+             * System prompt.
+             *
+             * A system prompt is a way of providing context and instructions to Claude, such as
+             * specifying a particular goal or role. See our
+             * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+             */
             fun systemOfBetaTextBlockParams(betaTextBlockParams: List<BetaTextBlockParam>) =
                 system(System.ofBetaTextBlockParams(betaTextBlockParams))
 
@@ -2681,8 +2695,22 @@ constructor(
          */
         fun system(system: JsonField<System>) = apply { body.system(system) }
 
+        /**
+         * System prompt.
+         *
+         * A system prompt is a way of providing context and instructions to Claude, such as
+         * specifying a particular goal or role. See our
+         * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+         */
         fun system(string: String) = apply { body.system(string) }
 
+        /**
+         * System prompt.
+         *
+         * A system prompt is a way of providing context and instructions to Claude, such as
+         * specifying a particular goal or role. See our
+         * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+         */
         fun systemOfBetaTextBlockParams(betaTextBlockParams: List<BetaTextBlockParam>) = apply {
             body.systemOfBetaTextBlockParams(betaTextBlockParams)
         }
