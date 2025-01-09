@@ -132,6 +132,13 @@ private constructor(
          */
         fun result(result: JsonField<BetaMessageBatchResult>) = apply { this.result = result }
 
+        /**
+         * Processing result for this request.
+         *
+         * Contains a Message output if processing was successful, an error response if processing
+         * failed, or the reason why processing was not attempted, such as cancellation or
+         * expiration.
+         */
         fun result(betaMessageBatchSucceededResult: BetaMessageBatchSucceededResult) =
             result(
                 BetaMessageBatchResult.ofBetaMessageBatchSucceededResult(
@@ -139,6 +146,13 @@ private constructor(
                 )
             )
 
+        /**
+         * Processing result for this request.
+         *
+         * Contains a Message output if processing was successful, an error response if processing
+         * failed, or the reason why processing was not attempted, such as cancellation or
+         * expiration.
+         */
         fun result(betaMessageBatchErroredResult: BetaMessageBatchErroredResult) =
             result(
                 BetaMessageBatchResult.ofBetaMessageBatchErroredResult(
@@ -146,6 +160,13 @@ private constructor(
                 )
             )
 
+        /**
+         * Processing result for this request.
+         *
+         * Contains a Message output if processing was successful, an error response if processing
+         * failed, or the reason why processing was not attempted, such as cancellation or
+         * expiration.
+         */
         fun result(betaMessageBatchCanceledResult: BetaMessageBatchCanceledResult) =
             result(
                 BetaMessageBatchResult.ofBetaMessageBatchCanceledResult(
@@ -153,6 +174,13 @@ private constructor(
                 )
             )
 
+        /**
+         * Processing result for this request.
+         *
+         * Contains a Message output if processing was successful, an error response if processing
+         * failed, or the reason why processing was not attempted, such as cancellation or
+         * expiration.
+         */
         fun result(betaMessageBatchExpiredResult: BetaMessageBatchExpiredResult) =
             result(
                 BetaMessageBatchResult.ofBetaMessageBatchExpiredResult(
