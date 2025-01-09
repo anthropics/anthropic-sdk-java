@@ -36,8 +36,10 @@ private constructor(
 
     /** The model will automatically decide whether to use tools. */
     fun betaToolChoiceAuto(): Optional<BetaToolChoiceAuto> = Optional.ofNullable(betaToolChoiceAuto)
+
     /** The model will use any available tools. */
     fun betaToolChoiceAny(): Optional<BetaToolChoiceAny> = Optional.ofNullable(betaToolChoiceAny)
+
     /** The model will use the specified tool with `tool_choice.name`. */
     fun betaToolChoiceTool(): Optional<BetaToolChoiceTool> = Optional.ofNullable(betaToolChoiceTool)
 
@@ -50,8 +52,10 @@ private constructor(
     /** The model will automatically decide whether to use tools. */
     fun asBetaToolChoiceAuto(): BetaToolChoiceAuto =
         betaToolChoiceAuto.getOrThrow("betaToolChoiceAuto")
+
     /** The model will use any available tools. */
     fun asBetaToolChoiceAny(): BetaToolChoiceAny = betaToolChoiceAny.getOrThrow("betaToolChoiceAny")
+
     /** The model will use the specified tool with `tool_choice.name`. */
     fun asBetaToolChoiceTool(): BetaToolChoiceTool =
         betaToolChoiceTool.getOrThrow("betaToolChoiceTool")
