@@ -32,8 +32,6 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    private var validated: Boolean = false
-
     /** The model will automatically decide whether to use tools. */
     fun toolChoiceAuto(): Optional<ToolChoiceAuto> = Optional.ofNullable(toolChoiceAuto)
 
@@ -69,16 +67,29 @@ private constructor(
         }
     }
 
+    private var validated: Boolean = false
+
     fun validate(): ToolChoice = apply {
-        if (!validated) {
-            if (toolChoiceAuto == null && toolChoiceAny == null && toolChoiceTool == null) {
-                throw AnthropicInvalidDataException("Unknown ToolChoice: $_json")
-            }
-            toolChoiceAuto?.validate()
-            toolChoiceAny?.validate()
-            toolChoiceTool?.validate()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        accept(
+            object : Visitor<Unit> {
+                override fun visitToolChoiceAuto(toolChoiceAuto: ToolChoiceAuto) {
+                    toolChoiceAuto.validate()
+                }
+
+                override fun visitToolChoiceAny(toolChoiceAny: ToolChoiceAny) {
+                    toolChoiceAny.validate()
+                }
+
+                override fun visitToolChoiceTool(toolChoiceTool: ToolChoiceTool) {
+                    toolChoiceTool.validate()
+                }
+            }
+        )
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

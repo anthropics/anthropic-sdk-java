@@ -54,11 +54,13 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): MessageParam = apply {
-        if (!validated) {
-            content()
-            role()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        content().validate()
+        role()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)
@@ -130,8 +132,6 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        private var validated: Boolean = false
-
         fun string(): Optional<String> = Optional.ofNullable(string)
 
         fun contentBlockParams(): Optional<List<ContentBlockParam>> =
@@ -156,13 +156,25 @@ private constructor(
             }
         }
 
+        private var validated: Boolean = false
+
         fun validate(): Content = apply {
-            if (!validated) {
-                if (string == null && contentBlockParams == null) {
-                    throw AnthropicInvalidDataException("Unknown Content: $_json")
-                }
-                validated = true
+            if (validated) {
+                return@apply
             }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitString(string: String) {}
+
+                    override fun visitContentBlockParams(
+                        contentBlockParams: List<ContentBlockParam>
+                    ) {
+                        contentBlockParams.forEach { it.validate() }
+                    }
+                }
+            )
+            validated = true
         }
 
         override fun equals(other: Any?): Boolean {
@@ -211,9 +223,12 @@ private constructor(
                 tryDeserialize(node, jacksonTypeRef<String>())?.let {
                     return Content(string = it, _json = json)
                 }
-                tryDeserialize(node, jacksonTypeRef<List<ContentBlockParam>>())?.let {
-                    return Content(contentBlockParams = it, _json = json)
-                }
+                tryDeserialize(node, jacksonTypeRef<List<ContentBlockParam>>()) {
+                        it.forEach { it.validate() }
+                    }
+                    ?.let {
+                        return Content(contentBlockParams = it, _json = json)
+                    }
 
                 return Content(_json = json)
             }

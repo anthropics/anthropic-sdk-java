@@ -32,8 +32,6 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    private var validated: Boolean = false
-
     /** The model will automatically decide whether to use tools. */
     fun betaToolChoiceAuto(): Optional<BetaToolChoiceAuto> = Optional.ofNullable(betaToolChoiceAuto)
 
@@ -71,20 +69,29 @@ private constructor(
         }
     }
 
+    private var validated: Boolean = false
+
     fun validate(): BetaToolChoice = apply {
-        if (!validated) {
-            if (
-                betaToolChoiceAuto == null &&
-                    betaToolChoiceAny == null &&
-                    betaToolChoiceTool == null
-            ) {
-                throw AnthropicInvalidDataException("Unknown BetaToolChoice: $_json")
-            }
-            betaToolChoiceAuto?.validate()
-            betaToolChoiceAny?.validate()
-            betaToolChoiceTool?.validate()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        accept(
+            object : Visitor<Unit> {
+                override fun visitBetaToolChoiceAuto(betaToolChoiceAuto: BetaToolChoiceAuto) {
+                    betaToolChoiceAuto.validate()
+                }
+
+                override fun visitBetaToolChoiceAny(betaToolChoiceAny: BetaToolChoiceAny) {
+                    betaToolChoiceAny.validate()
+                }
+
+                override fun visitBetaToolChoiceTool(betaToolChoiceTool: BetaToolChoiceTool) {
+                    betaToolChoiceTool.validate()
+                }
+            }
+        )
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

@@ -31,8 +31,6 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    private var validated: Boolean = false
-
     fun rawMessageStartEvent(): Optional<RawMessageStartEvent> =
         Optional.ofNullable(rawMessageStartEvent)
 
@@ -98,26 +96,47 @@ private constructor(
         }
     }
 
+    private var validated: Boolean = false
+
     fun validate(): RawMessageStreamEvent = apply {
-        if (!validated) {
-            if (
-                rawMessageStartEvent == null &&
-                    rawMessageDeltaEvent == null &&
-                    rawMessageStopEvent == null &&
-                    rawContentBlockStartEvent == null &&
-                    rawContentBlockDeltaEvent == null &&
-                    rawContentBlockStopEvent == null
-            ) {
-                throw AnthropicInvalidDataException("Unknown RawMessageStreamEvent: $_json")
-            }
-            rawMessageStartEvent?.validate()
-            rawMessageDeltaEvent?.validate()
-            rawMessageStopEvent?.validate()
-            rawContentBlockStartEvent?.validate()
-            rawContentBlockDeltaEvent?.validate()
-            rawContentBlockStopEvent?.validate()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        accept(
+            object : Visitor<Unit> {
+                override fun visitRawMessageStartEvent(rawMessageStartEvent: RawMessageStartEvent) {
+                    rawMessageStartEvent.validate()
+                }
+
+                override fun visitRawMessageDeltaEvent(rawMessageDeltaEvent: RawMessageDeltaEvent) {
+                    rawMessageDeltaEvent.validate()
+                }
+
+                override fun visitRawMessageStopEvent(rawMessageStopEvent: RawMessageStopEvent) {
+                    rawMessageStopEvent.validate()
+                }
+
+                override fun visitRawContentBlockStartEvent(
+                    rawContentBlockStartEvent: RawContentBlockStartEvent
+                ) {
+                    rawContentBlockStartEvent.validate()
+                }
+
+                override fun visitRawContentBlockDeltaEvent(
+                    rawContentBlockDeltaEvent: RawContentBlockDeltaEvent
+                ) {
+                    rawContentBlockDeltaEvent.validate()
+                }
+
+                override fun visitRawContentBlockStopEvent(
+                    rawContentBlockStopEvent: RawContentBlockStopEvent
+                ) {
+                    rawContentBlockStopEvent.validate()
+                }
+            }
+        )
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

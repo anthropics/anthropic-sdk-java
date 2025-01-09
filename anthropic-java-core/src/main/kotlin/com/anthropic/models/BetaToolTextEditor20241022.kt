@@ -62,12 +62,14 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): BetaToolTextEditor20241022 = apply {
-        if (!validated) {
-            name()
-            type()
-            cacheControl().map { it.validate() }
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        name()
+        type()
+        cacheControl().ifPresent { it.validate() }
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)

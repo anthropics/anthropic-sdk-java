@@ -54,11 +54,13 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): BetaMessageParam = apply {
-        if (!validated) {
-            content()
-            role()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        content().validate()
+        role()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)
@@ -130,8 +132,6 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        private var validated: Boolean = false
-
         fun string(): Optional<String> = Optional.ofNullable(string)
 
         fun betaContentBlockParams(): Optional<List<BetaContentBlockParam>> =
@@ -157,13 +157,25 @@ private constructor(
             }
         }
 
+        private var validated: Boolean = false
+
         fun validate(): Content = apply {
-            if (!validated) {
-                if (string == null && betaContentBlockParams == null) {
-                    throw AnthropicInvalidDataException("Unknown Content: $_json")
-                }
-                validated = true
+            if (validated) {
+                return@apply
             }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitString(string: String) {}
+
+                    override fun visitBetaContentBlockParams(
+                        betaContentBlockParams: List<BetaContentBlockParam>
+                    ) {
+                        betaContentBlockParams.forEach { it.validate() }
+                    }
+                }
+            )
+            validated = true
         }
 
         override fun equals(other: Any?): Boolean {
@@ -213,9 +225,12 @@ private constructor(
                 tryDeserialize(node, jacksonTypeRef<String>())?.let {
                     return Content(string = it, _json = json)
                 }
-                tryDeserialize(node, jacksonTypeRef<List<BetaContentBlockParam>>())?.let {
-                    return Content(betaContentBlockParams = it, _json = json)
-                }
+                tryDeserialize(node, jacksonTypeRef<List<BetaContentBlockParam>>()) {
+                        it.forEach { it.validate() }
+                    }
+                    ?.let {
+                        return Content(betaContentBlockParams = it, _json = json)
+                    }
 
                 return Content(_json = json)
             }

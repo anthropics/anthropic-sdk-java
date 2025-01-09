@@ -57,12 +57,14 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): RawContentBlockDeltaEvent = apply {
-        if (!validated) {
-            delta()
-            index()
-            type()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        delta().validate()
+        index()
+        type()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)
@@ -140,8 +142,6 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        private var validated: Boolean = false
-
         fun textDelta(): Optional<TextDelta> = Optional.ofNullable(textDelta)
 
         fun inputJsonDelta(): Optional<InputJsonDelta> = Optional.ofNullable(inputJsonDelta)
@@ -164,15 +164,25 @@ private constructor(
             }
         }
 
+        private var validated: Boolean = false
+
         fun validate(): Delta = apply {
-            if (!validated) {
-                if (textDelta == null && inputJsonDelta == null) {
-                    throw AnthropicInvalidDataException("Unknown Delta: $_json")
-                }
-                textDelta?.validate()
-                inputJsonDelta?.validate()
-                validated = true
+            if (validated) {
+                return@apply
             }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitTextDelta(textDelta: TextDelta) {
+                        textDelta.validate()
+                    }
+
+                    override fun visitInputJsonDelta(inputJsonDelta: InputJsonDelta) {
+                        inputJsonDelta.validate()
+                    }
+                }
+            )
+            validated = true
         }
 
         override fun equals(other: Any?): Boolean {

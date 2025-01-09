@@ -48,12 +48,14 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): Base64PdfSource = apply {
-        if (!validated) {
-            data()
-            mediaType()
-            type()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        data()
+        mediaType()
+        type()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)

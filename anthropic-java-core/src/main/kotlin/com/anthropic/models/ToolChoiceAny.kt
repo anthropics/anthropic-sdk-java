@@ -58,11 +58,13 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): ToolChoiceAny = apply {
-        if (!validated) {
-            type()
-            disableParallelToolUse()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        type()
+        disableParallelToolUse()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)

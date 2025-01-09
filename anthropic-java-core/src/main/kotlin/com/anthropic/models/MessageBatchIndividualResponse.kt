@@ -67,11 +67,13 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): MessageBatchIndividualResponse = apply {
-        if (!validated) {
-            customId()
-            result()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        customId()
+        result().validate()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)

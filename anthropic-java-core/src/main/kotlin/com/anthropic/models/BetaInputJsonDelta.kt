@@ -45,11 +45,13 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): BetaInputJsonDelta = apply {
-        if (!validated) {
-            partialJson()
-            type()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        partialJson()
+        type()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)

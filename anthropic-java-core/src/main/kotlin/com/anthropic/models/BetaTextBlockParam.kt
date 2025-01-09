@@ -52,12 +52,14 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): BetaTextBlockParam = apply {
-        if (!validated) {
-            text()
-            type()
-            cacheControl().map { it.validate() }
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        text()
+        type()
+        cacheControl().ifPresent { it.validate() }
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)

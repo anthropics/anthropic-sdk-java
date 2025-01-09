@@ -43,11 +43,13 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): BetaInvalidRequestError = apply {
-        if (!validated) {
-            message()
-            type()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        message()
+        type()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)

@@ -1027,20 +1027,22 @@ constructor(
         private var validated: Boolean = false
 
         fun validate(): MessageCreateBody = apply {
-            if (!validated) {
-                maxTokens()
-                messages().forEach { it.validate() }
-                model()
-                metadata().map { it.validate() }
-                stopSequences()
-                system()
-                temperature()
-                toolChoice()
-                tools().map { it.forEach { it.validate() } }
-                topK()
-                topP()
-                validated = true
+            if (validated) {
+                return@apply
             }
+
+            maxTokens()
+            messages().forEach { it.validate() }
+            model()
+            metadata().ifPresent { it.validate() }
+            stopSequences()
+            system().ifPresent { it.validate() }
+            temperature()
+            toolChoice().ifPresent { it.validate() }
+            tools().ifPresent { it.forEach { it.validate() } }
+            topK()
+            topP()
+            validated = true
         }
 
         fun toBuilder() = Builder().from(this)
@@ -2840,8 +2842,6 @@ constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        private var validated: Boolean = false
-
         fun string(): Optional<String> = Optional.ofNullable(string)
 
         fun textBlockParams(): Optional<List<TextBlockParam>> = Optional.ofNullable(textBlockParams)
@@ -2865,14 +2865,23 @@ constructor(
             }
         }
 
+        private var validated: Boolean = false
+
         fun validate(): System = apply {
-            if (!validated) {
-                if (string == null && textBlockParams == null) {
-                    throw AnthropicInvalidDataException("Unknown System: $_json")
-                }
-                textBlockParams?.forEach { it.validate() }
-                validated = true
+            if (validated) {
+                return@apply
             }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitString(string: String) {}
+
+                    override fun visitTextBlockParams(textBlockParams: List<TextBlockParam>) {
+                        textBlockParams.forEach { it.validate() }
+                    }
+                }
+            )
+            validated = true
         }
 
         override fun equals(other: Any?): Boolean {

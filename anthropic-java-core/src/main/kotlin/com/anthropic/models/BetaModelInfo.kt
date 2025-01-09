@@ -82,13 +82,15 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): BetaModelInfo = apply {
-        if (!validated) {
-            id()
-            createdAt()
-            displayName()
-            type()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        id()
+        createdAt()
+        displayName()
+        type()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)
