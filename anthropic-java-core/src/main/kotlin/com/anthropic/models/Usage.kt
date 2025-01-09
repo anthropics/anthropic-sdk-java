@@ -74,13 +74,15 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): Usage = apply {
-        if (!validated) {
-            cacheCreationInputTokens()
-            cacheReadInputTokens()
-            inputTokens()
-            outputTokens()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        cacheCreationInputTokens()
+        cacheReadInputTokens()
+        inputTokens()
+        outputTokens()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)

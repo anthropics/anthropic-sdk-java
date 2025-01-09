@@ -386,17 +386,19 @@ constructor(
         private var validated: Boolean = false
 
         fun validate(): CompletionCreateBody = apply {
-            if (!validated) {
-                maxTokensToSample()
-                model()
-                prompt()
-                metadata().map { it.validate() }
-                stopSequences()
-                temperature()
-                topK()
-                topP()
-                validated = true
+            if (validated) {
+                return@apply
             }
+
+            maxTokensToSample()
+            model()
+            prompt()
+            metadata().ifPresent { it.validate() }
+            stopSequences()
+            temperature()
+            topK()
+            topP()
+            validated = true
         }
 
         fun toBuilder() = Builder().from(this)

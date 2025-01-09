@@ -51,10 +51,12 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): BetaMetadata = apply {
-        if (!validated) {
-            userId()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        userId()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)

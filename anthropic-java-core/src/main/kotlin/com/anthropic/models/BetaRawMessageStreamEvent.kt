@@ -31,8 +31,6 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    private var validated: Boolean = false
-
     fun betaRawMessageStartEvent(): Optional<BetaRawMessageStartEvent> =
         Optional.ofNullable(betaRawMessageStartEvent)
 
@@ -101,26 +99,53 @@ private constructor(
         }
     }
 
+    private var validated: Boolean = false
+
     fun validate(): BetaRawMessageStreamEvent = apply {
-        if (!validated) {
-            if (
-                betaRawMessageStartEvent == null &&
-                    betaRawMessageDeltaEvent == null &&
-                    betaRawMessageStopEvent == null &&
-                    betaRawContentBlockStartEvent == null &&
-                    betaRawContentBlockDeltaEvent == null &&
-                    betaRawContentBlockStopEvent == null
-            ) {
-                throw AnthropicInvalidDataException("Unknown BetaRawMessageStreamEvent: $_json")
-            }
-            betaRawMessageStartEvent?.validate()
-            betaRawMessageDeltaEvent?.validate()
-            betaRawMessageStopEvent?.validate()
-            betaRawContentBlockStartEvent?.validate()
-            betaRawContentBlockDeltaEvent?.validate()
-            betaRawContentBlockStopEvent?.validate()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        accept(
+            object : Visitor<Unit> {
+                override fun visitBetaRawMessageStartEvent(
+                    betaRawMessageStartEvent: BetaRawMessageStartEvent
+                ) {
+                    betaRawMessageStartEvent.validate()
+                }
+
+                override fun visitBetaRawMessageDeltaEvent(
+                    betaRawMessageDeltaEvent: BetaRawMessageDeltaEvent
+                ) {
+                    betaRawMessageDeltaEvent.validate()
+                }
+
+                override fun visitBetaRawMessageStopEvent(
+                    betaRawMessageStopEvent: BetaRawMessageStopEvent
+                ) {
+                    betaRawMessageStopEvent.validate()
+                }
+
+                override fun visitBetaRawContentBlockStartEvent(
+                    betaRawContentBlockStartEvent: BetaRawContentBlockStartEvent
+                ) {
+                    betaRawContentBlockStartEvent.validate()
+                }
+
+                override fun visitBetaRawContentBlockDeltaEvent(
+                    betaRawContentBlockDeltaEvent: BetaRawContentBlockDeltaEvent
+                ) {
+                    betaRawContentBlockDeltaEvent.validate()
+                }
+
+                override fun visitBetaRawContentBlockStopEvent(
+                    betaRawContentBlockStopEvent: BetaRawContentBlockStopEvent
+                ) {
+                    betaRawContentBlockStopEvent.validate()
+                }
+            }
+        )
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

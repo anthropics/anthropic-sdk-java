@@ -34,8 +34,6 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    private var validated: Boolean = false
-
     fun invalidRequestError(): Optional<InvalidRequestError> =
         Optional.ofNullable(invalidRequestError)
 
@@ -113,32 +111,53 @@ private constructor(
         }
     }
 
+    private var validated: Boolean = false
+
     fun validate(): ErrorObject = apply {
-        if (!validated) {
-            if (
-                invalidRequestError == null &&
-                    authenticationError == null &&
-                    billingError == null &&
-                    permissionError == null &&
-                    notFoundError == null &&
-                    rateLimitError == null &&
-                    gatewayTimeoutError == null &&
-                    apiErrorObject == null &&
-                    overloadedError == null
-            ) {
-                throw AnthropicInvalidDataException("Unknown ErrorObject: $_json")
-            }
-            invalidRequestError?.validate()
-            authenticationError?.validate()
-            billingError?.validate()
-            permissionError?.validate()
-            notFoundError?.validate()
-            rateLimitError?.validate()
-            gatewayTimeoutError?.validate()
-            apiErrorObject?.validate()
-            overloadedError?.validate()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        accept(
+            object : Visitor<Unit> {
+                override fun visitInvalidRequestError(invalidRequestError: InvalidRequestError) {
+                    invalidRequestError.validate()
+                }
+
+                override fun visitAuthenticationError(authenticationError: AuthenticationError) {
+                    authenticationError.validate()
+                }
+
+                override fun visitBillingError(billingError: BillingError) {
+                    billingError.validate()
+                }
+
+                override fun visitPermissionError(permissionError: PermissionError) {
+                    permissionError.validate()
+                }
+
+                override fun visitNotFoundError(notFoundError: NotFoundError) {
+                    notFoundError.validate()
+                }
+
+                override fun visitRateLimitError(rateLimitError: RateLimitError) {
+                    rateLimitError.validate()
+                }
+
+                override fun visitGatewayTimeoutError(gatewayTimeoutError: GatewayTimeoutError) {
+                    gatewayTimeoutError.validate()
+                }
+
+                override fun visitApiErrorObject(apiErrorObject: ApiErrorObject) {
+                    apiErrorObject.validate()
+                }
+
+                override fun visitOverloadedError(overloadedError: OverloadedError) {
+                    overloadedError.validate()
+                }
+            }
+        )
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

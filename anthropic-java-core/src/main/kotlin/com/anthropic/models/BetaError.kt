@@ -34,8 +34,6 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    private var validated: Boolean = false
-
     fun betaInvalidRequestError(): Optional<BetaInvalidRequestError> =
         Optional.ofNullable(betaInvalidRequestError)
 
@@ -121,32 +119,59 @@ private constructor(
         }
     }
 
+    private var validated: Boolean = false
+
     fun validate(): BetaError = apply {
-        if (!validated) {
-            if (
-                betaInvalidRequestError == null &&
-                    betaAuthenticationError == null &&
-                    betaBillingError == null &&
-                    betaPermissionError == null &&
-                    betaNotFoundError == null &&
-                    betaRateLimitError == null &&
-                    betaGatewayTimeoutError == null &&
-                    betaApiError == null &&
-                    betaOverloadedError == null
-            ) {
-                throw AnthropicInvalidDataException("Unknown BetaError: $_json")
-            }
-            betaInvalidRequestError?.validate()
-            betaAuthenticationError?.validate()
-            betaBillingError?.validate()
-            betaPermissionError?.validate()
-            betaNotFoundError?.validate()
-            betaRateLimitError?.validate()
-            betaGatewayTimeoutError?.validate()
-            betaApiError?.validate()
-            betaOverloadedError?.validate()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        accept(
+            object : Visitor<Unit> {
+                override fun visitBetaInvalidRequestError(
+                    betaInvalidRequestError: BetaInvalidRequestError
+                ) {
+                    betaInvalidRequestError.validate()
+                }
+
+                override fun visitBetaAuthenticationError(
+                    betaAuthenticationError: BetaAuthenticationError
+                ) {
+                    betaAuthenticationError.validate()
+                }
+
+                override fun visitBetaBillingError(betaBillingError: BetaBillingError) {
+                    betaBillingError.validate()
+                }
+
+                override fun visitBetaPermissionError(betaPermissionError: BetaPermissionError) {
+                    betaPermissionError.validate()
+                }
+
+                override fun visitBetaNotFoundError(betaNotFoundError: BetaNotFoundError) {
+                    betaNotFoundError.validate()
+                }
+
+                override fun visitBetaRateLimitError(betaRateLimitError: BetaRateLimitError) {
+                    betaRateLimitError.validate()
+                }
+
+                override fun visitBetaGatewayTimeoutError(
+                    betaGatewayTimeoutError: BetaGatewayTimeoutError
+                ) {
+                    betaGatewayTimeoutError.validate()
+                }
+
+                override fun visitBetaApiError(betaApiError: BetaApiError) {
+                    betaApiError.validate()
+                }
+
+                override fun visitBetaOverloadedError(betaOverloadedError: BetaOverloadedError) {
+                    betaOverloadedError.validate()
+                }
+            }
+        )
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

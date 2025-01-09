@@ -96,15 +96,17 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): BetaToolComputerUse20241022 = apply {
-        if (!validated) {
-            displayHeightPx()
-            displayWidthPx()
-            name()
-            type()
-            cacheControl().map { it.validate() }
-            displayNumber()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        displayHeightPx()
+        displayWidthPx()
+        name()
+        type()
+        cacheControl().ifPresent { it.validate() }
+        displayNumber()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)

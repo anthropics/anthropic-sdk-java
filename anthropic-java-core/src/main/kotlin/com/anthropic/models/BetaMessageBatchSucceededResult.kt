@@ -43,11 +43,13 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): BetaMessageBatchSucceededResult = apply {
-        if (!validated) {
-            message().validate()
-            type()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        message().validate()
+        type()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)

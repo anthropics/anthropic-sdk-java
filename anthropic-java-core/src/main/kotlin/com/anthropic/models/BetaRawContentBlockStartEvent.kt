@@ -62,12 +62,14 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): BetaRawContentBlockStartEvent = apply {
-        if (!validated) {
-            contentBlock()
-            index()
-            type()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        contentBlock().validate()
+        index()
+        type()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)
@@ -149,8 +151,6 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        private var validated: Boolean = false
-
         fun betaTextBlock(): Optional<BetaTextBlock> = Optional.ofNullable(betaTextBlock)
 
         fun betaToolUseBlock(): Optional<BetaToolUseBlock> = Optional.ofNullable(betaToolUseBlock)
@@ -173,15 +173,25 @@ private constructor(
             }
         }
 
+        private var validated: Boolean = false
+
         fun validate(): ContentBlock = apply {
-            if (!validated) {
-                if (betaTextBlock == null && betaToolUseBlock == null) {
-                    throw AnthropicInvalidDataException("Unknown ContentBlock: $_json")
-                }
-                betaTextBlock?.validate()
-                betaToolUseBlock?.validate()
-                validated = true
+            if (validated) {
+                return@apply
             }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitBetaTextBlock(betaTextBlock: BetaTextBlock) {
+                        betaTextBlock.validate()
+                    }
+
+                    override fun visitBetaToolUseBlock(betaToolUseBlock: BetaToolUseBlock) {
+                        betaToolUseBlock.validate()
+                    }
+                }
+            )
+            validated = true
         }
 
         override fun equals(other: Any?): Boolean {

@@ -254,17 +254,19 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): BetaMessage = apply {
-        if (!validated) {
-            id()
-            content()
-            model()
-            role()
-            stopReason()
-            stopSequence()
-            type()
-            usage().validate()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        id()
+        content().forEach { it.validate() }
+        model()
+        role()
+        stopReason()
+        stopSequence()
+        type()
+        usage().validate()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)

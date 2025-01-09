@@ -54,12 +54,14 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): BetaBase64PdfBlock = apply {
-        if (!validated) {
-            source().validate()
-            type()
-            cacheControl().map { it.validate() }
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        source().validate()
+        type()
+        cacheControl().ifPresent { it.validate() }
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)

@@ -35,8 +35,6 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    private var validated: Boolean = false
-
     fun betaMessageBatchSucceededResult(): Optional<BetaMessageBatchSucceededResult> =
         Optional.ofNullable(betaMessageBatchSucceededResult)
 
@@ -85,22 +83,41 @@ private constructor(
         }
     }
 
+    private var validated: Boolean = false
+
     fun validate(): BetaMessageBatchResult = apply {
-        if (!validated) {
-            if (
-                betaMessageBatchSucceededResult == null &&
-                    betaMessageBatchErroredResult == null &&
-                    betaMessageBatchCanceledResult == null &&
-                    betaMessageBatchExpiredResult == null
-            ) {
-                throw AnthropicInvalidDataException("Unknown BetaMessageBatchResult: $_json")
-            }
-            betaMessageBatchSucceededResult?.validate()
-            betaMessageBatchErroredResult?.validate()
-            betaMessageBatchCanceledResult?.validate()
-            betaMessageBatchExpiredResult?.validate()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        accept(
+            object : Visitor<Unit> {
+                override fun visitBetaMessageBatchSucceededResult(
+                    betaMessageBatchSucceededResult: BetaMessageBatchSucceededResult
+                ) {
+                    betaMessageBatchSucceededResult.validate()
+                }
+
+                override fun visitBetaMessageBatchErroredResult(
+                    betaMessageBatchErroredResult: BetaMessageBatchErroredResult
+                ) {
+                    betaMessageBatchErroredResult.validate()
+                }
+
+                override fun visitBetaMessageBatchCanceledResult(
+                    betaMessageBatchCanceledResult: BetaMessageBatchCanceledResult
+                ) {
+                    betaMessageBatchCanceledResult.validate()
+                }
+
+                override fun visitBetaMessageBatchExpiredResult(
+                    betaMessageBatchExpiredResult: BetaMessageBatchExpiredResult
+                ) {
+                    betaMessageBatchExpiredResult.validate()
+                }
+            }
+        )
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

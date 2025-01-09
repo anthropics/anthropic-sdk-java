@@ -79,14 +79,16 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): ToolResultBlockParam = apply {
-        if (!validated) {
-            toolUseId()
-            type()
-            cacheControl().map { it.validate() }
-            content()
-            isError()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        toolUseId()
+        type()
+        cacheControl().ifPresent { it.validate() }
+        content().ifPresent { it.validate() }
+        isError()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)
@@ -235,8 +237,6 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        private var validated: Boolean = false
-
         fun string(): Optional<String> = Optional.ofNullable(string)
 
         fun blocks(): Optional<List<Block>> = Optional.ofNullable(blocks)
@@ -259,13 +259,23 @@ private constructor(
             }
         }
 
+        private var validated: Boolean = false
+
         fun validate(): Content = apply {
-            if (!validated) {
-                if (string == null && blocks == null) {
-                    throw AnthropicInvalidDataException("Unknown Content: $_json")
-                }
-                validated = true
+            if (validated) {
+                return@apply
             }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitString(string: String) {}
+
+                    override fun visitBlocks(blocks: List<Block>) {
+                        blocks.forEach { it.validate() }
+                    }
+                }
+            )
+            validated = true
         }
 
         override fun equals(other: Any?): Boolean {
@@ -312,9 +322,10 @@ private constructor(
                 tryDeserialize(node, jacksonTypeRef<String>())?.let {
                     return Content(string = it, _json = json)
                 }
-                tryDeserialize(node, jacksonTypeRef<List<Block>>())?.let {
-                    return Content(blocks = it, _json = json)
-                }
+                tryDeserialize(node, jacksonTypeRef<List<Block>>()) { it.forEach { it.validate() } }
+                    ?.let {
+                        return Content(blocks = it, _json = json)
+                    }
 
                 return Content(_json = json)
             }
@@ -345,8 +356,6 @@ private constructor(
             private val _json: JsonValue? = null,
         ) {
 
-            private var validated: Boolean = false
-
             fun textBlockParam(): Optional<TextBlockParam> = Optional.ofNullable(textBlockParam)
 
             fun imageBlockParam(): Optional<ImageBlockParam> = Optional.ofNullable(imageBlockParam)
@@ -369,15 +378,25 @@ private constructor(
                 }
             }
 
+            private var validated: Boolean = false
+
             fun validate(): Block = apply {
-                if (!validated) {
-                    if (textBlockParam == null && imageBlockParam == null) {
-                        throw AnthropicInvalidDataException("Unknown Block: $_json")
-                    }
-                    textBlockParam?.validate()
-                    imageBlockParam?.validate()
-                    validated = true
+                if (validated) {
+                    return@apply
                 }
+
+                accept(
+                    object : Visitor<Unit> {
+                        override fun visitTextBlockParam(textBlockParam: TextBlockParam) {
+                            textBlockParam.validate()
+                        }
+
+                        override fun visitImageBlockParam(imageBlockParam: ImageBlockParam) {
+                            imageBlockParam.validate()
+                        }
+                    }
+                )
+                validated = true
             }
 
             override fun equals(other: Any?): Boolean {

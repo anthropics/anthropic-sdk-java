@@ -40,10 +40,12 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): MessageDeltaUsage = apply {
-        if (!validated) {
-            outputTokens()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        outputTokens()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)

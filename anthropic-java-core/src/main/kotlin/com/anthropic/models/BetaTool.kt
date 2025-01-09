@@ -103,14 +103,16 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): BetaTool = apply {
-        if (!validated) {
-            inputSchema().validate()
-            name()
-            cacheControl().map { it.validate() }
-            description()
-            type()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        inputSchema().validate()
+        name()
+        cacheControl().ifPresent { it.validate() }
+        description()
+        type()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)
@@ -267,10 +269,12 @@ private constructor(
         private var validated: Boolean = false
 
         fun validate(): InputSchema = apply {
-            if (!validated) {
-                type()
-                validated = true
+            if (validated) {
+                return@apply
             }
+
+            type()
+            validated = true
         }
 
         fun toBuilder() = Builder().from(this)

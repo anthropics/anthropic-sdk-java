@@ -203,19 +203,21 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): BetaMessageBatch = apply {
-        if (!validated) {
-            id()
-            archivedAt()
-            cancelInitiatedAt()
-            createdAt()
-            endedAt()
-            expiresAt()
-            processingStatus()
-            requestCounts().validate()
-            resultsUrl()
-            type()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        id()
+        archivedAt()
+        cancelInitiatedAt()
+        createdAt()
+        endedAt()
+        expiresAt()
+        processingStatus()
+        requestCounts().validate()
+        resultsUrl()
+        type()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)

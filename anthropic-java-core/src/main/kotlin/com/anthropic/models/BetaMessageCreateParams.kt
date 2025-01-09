@@ -1040,20 +1040,22 @@ constructor(
         private var validated: Boolean = false
 
         fun validate(): BetaMessageCreateBody = apply {
-            if (!validated) {
-                maxTokens()
-                messages().forEach { it.validate() }
-                model()
-                metadata().map { it.validate() }
-                stopSequences()
-                system()
-                temperature()
-                toolChoice()
-                tools()
-                topK()
-                topP()
-                validated = true
+            if (validated) {
+                return@apply
             }
+
+            maxTokens()
+            messages().forEach { it.validate() }
+            model()
+            metadata().ifPresent { it.validate() }
+            stopSequences()
+            system().ifPresent { it.validate() }
+            temperature()
+            toolChoice().ifPresent { it.validate() }
+            tools().ifPresent { it.forEach { it.validate() } }
+            topK()
+            topP()
+            validated = true
         }
 
         fun toBuilder() = Builder().from(this)
@@ -3425,8 +3427,6 @@ constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        private var validated: Boolean = false
-
         fun string(): Optional<String> = Optional.ofNullable(string)
 
         fun betaTextBlockParams(): Optional<List<BetaTextBlockParam>> =
@@ -3451,14 +3451,25 @@ constructor(
             }
         }
 
+        private var validated: Boolean = false
+
         fun validate(): System = apply {
-            if (!validated) {
-                if (string == null && betaTextBlockParams == null) {
-                    throw AnthropicInvalidDataException("Unknown System: $_json")
-                }
-                betaTextBlockParams?.forEach { it.validate() }
-                validated = true
+            if (validated) {
+                return@apply
             }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitString(string: String) {}
+
+                    override fun visitBetaTextBlockParams(
+                        betaTextBlockParams: List<BetaTextBlockParam>
+                    ) {
+                        betaTextBlockParams.forEach { it.validate() }
+                    }
+                }
+            )
+            validated = true
         }
 
         override fun equals(other: Any?): Boolean {

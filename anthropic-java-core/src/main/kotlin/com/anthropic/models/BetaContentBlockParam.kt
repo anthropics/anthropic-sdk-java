@@ -30,8 +30,6 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    private var validated: Boolean = false
-
     fun betaTextBlockParam(): Optional<BetaTextBlockParam> = Optional.ofNullable(betaTextBlockParam)
 
     fun betaImageBlockParam(): Optional<BetaImageBlockParam> =
@@ -85,24 +83,41 @@ private constructor(
         }
     }
 
+    private var validated: Boolean = false
+
     fun validate(): BetaContentBlockParam = apply {
-        if (!validated) {
-            if (
-                betaTextBlockParam == null &&
-                    betaImageBlockParam == null &&
-                    betaToolUseBlockParam == null &&
-                    betaToolResultBlockParam == null &&
-                    betaBase64PdfBlock == null
-            ) {
-                throw AnthropicInvalidDataException("Unknown BetaContentBlockParam: $_json")
-            }
-            betaTextBlockParam?.validate()
-            betaImageBlockParam?.validate()
-            betaToolUseBlockParam?.validate()
-            betaToolResultBlockParam?.validate()
-            betaBase64PdfBlock?.validate()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        accept(
+            object : Visitor<Unit> {
+                override fun visitBetaTextBlockParam(betaTextBlockParam: BetaTextBlockParam) {
+                    betaTextBlockParam.validate()
+                }
+
+                override fun visitBetaImageBlockParam(betaImageBlockParam: BetaImageBlockParam) {
+                    betaImageBlockParam.validate()
+                }
+
+                override fun visitBetaToolUseBlockParam(
+                    betaToolUseBlockParam: BetaToolUseBlockParam
+                ) {
+                    betaToolUseBlockParam.validate()
+                }
+
+                override fun visitBetaToolResultBlockParam(
+                    betaToolResultBlockParam: BetaToolResultBlockParam
+                ) {
+                    betaToolResultBlockParam.validate()
+                }
+
+                override fun visitBetaBase64PdfBlock(betaBase64PdfBlock: BetaBase64PdfBlock) {
+                    betaBase64PdfBlock.validate()
+                }
+            }
+        )
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

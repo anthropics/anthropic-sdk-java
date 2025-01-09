@@ -779,14 +779,16 @@ constructor(
         private var validated: Boolean = false
 
         fun validate(): BetaMessageCountTokensBody = apply {
-            if (!validated) {
-                messages().forEach { it.validate() }
-                model()
-                system()
-                toolChoice()
-                tools()
-                validated = true
+            if (validated) {
+                return@apply
             }
+
+            messages().forEach { it.validate() }
+            model()
+            system().ifPresent { it.validate() }
+            toolChoice().ifPresent { it.validate() }
+            tools().ifPresent { it.forEach { it.validate() } }
+            validated = true
         }
 
         fun toBuilder() = Builder().from(this)
@@ -2859,8 +2861,6 @@ constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        private var validated: Boolean = false
-
         fun string(): Optional<String> = Optional.ofNullable(string)
 
         fun betaTextBlockParams(): Optional<List<BetaTextBlockParam>> =
@@ -2885,14 +2885,25 @@ constructor(
             }
         }
 
+        private var validated: Boolean = false
+
         fun validate(): System = apply {
-            if (!validated) {
-                if (string == null && betaTextBlockParams == null) {
-                    throw AnthropicInvalidDataException("Unknown System: $_json")
-                }
-                betaTextBlockParams?.forEach { it.validate() }
-                validated = true
+            if (validated) {
+                return@apply
             }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitString(string: String) {}
+
+                    override fun visitBetaTextBlockParams(
+                        betaTextBlockParams: List<BetaTextBlockParam>
+                    ) {
+                        betaTextBlockParams.forEach { it.validate() }
+                    }
+                }
+            )
+            validated = true
         }
 
         override fun equals(other: Any?): Boolean {
@@ -2981,8 +2992,6 @@ constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        private var validated: Boolean = false
-
         fun betaTool(): Optional<BetaTool> = Optional.ofNullable(betaTool)
 
         fun betaToolComputerUse20241022(): Optional<BetaToolComputerUse20241022> =
@@ -3028,22 +3037,39 @@ constructor(
             }
         }
 
+        private var validated: Boolean = false
+
         fun validate(): Tool = apply {
-            if (!validated) {
-                if (
-                    betaTool == null &&
-                        betaToolComputerUse20241022 == null &&
-                        betaToolBash20241022 == null &&
-                        betaToolTextEditor20241022 == null
-                ) {
-                    throw AnthropicInvalidDataException("Unknown Tool: $_json")
-                }
-                betaTool?.validate()
-                betaToolComputerUse20241022?.validate()
-                betaToolBash20241022?.validate()
-                betaToolTextEditor20241022?.validate()
-                validated = true
+            if (validated) {
+                return@apply
             }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitBetaTool(betaTool: BetaTool) {
+                        betaTool.validate()
+                    }
+
+                    override fun visitBetaToolComputerUse20241022(
+                        betaToolComputerUse20241022: BetaToolComputerUse20241022
+                    ) {
+                        betaToolComputerUse20241022.validate()
+                    }
+
+                    override fun visitBetaToolBash20241022(
+                        betaToolBash20241022: BetaToolBash20241022
+                    ) {
+                        betaToolBash20241022.validate()
+                    }
+
+                    override fun visitBetaToolTextEditor20241022(
+                        betaToolTextEditor20241022: BetaToolTextEditor20241022
+                    ) {
+                        betaToolTextEditor20241022.validate()
+                    }
+                }
+            )
+            validated = true
         }
 
         override fun equals(other: Any?): Boolean {

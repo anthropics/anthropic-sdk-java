@@ -75,12 +75,14 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): RawMessageDeltaEvent = apply {
-        if (!validated) {
-            delta().validate()
-            type()
-            usage().validate()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        delta().validate()
+        type()
+        usage().validate()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)
@@ -208,11 +210,13 @@ private constructor(
         private var validated: Boolean = false
 
         fun validate(): Delta = apply {
-            if (!validated) {
-                stopReason()
-                stopSequence()
-                validated = true
+            if (validated) {
+                return@apply
             }
+
+            stopReason()
+            stopSequence()
+            validated = true
         }
 
         fun toBuilder() = Builder().from(this)

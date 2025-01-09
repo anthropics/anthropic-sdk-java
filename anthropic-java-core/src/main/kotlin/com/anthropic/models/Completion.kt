@@ -109,14 +109,16 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): Completion = apply {
-        if (!validated) {
-            id()
-            completion()
-            model()
-            stopReason()
-            type()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        id()
+        completion()
+        model()
+        stopReason()
+        type()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)

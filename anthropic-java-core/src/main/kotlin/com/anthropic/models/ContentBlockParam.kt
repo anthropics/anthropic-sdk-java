@@ -30,8 +30,6 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    private var validated: Boolean = false
-
     fun textBlockParam(): Optional<TextBlockParam> = Optional.ofNullable(textBlockParam)
 
     fun imageBlockParam(): Optional<ImageBlockParam> = Optional.ofNullable(imageBlockParam)
@@ -78,24 +76,37 @@ private constructor(
         }
     }
 
+    private var validated: Boolean = false
+
     fun validate(): ContentBlockParam = apply {
-        if (!validated) {
-            if (
-                textBlockParam == null &&
-                    imageBlockParam == null &&
-                    toolUseBlockParam == null &&
-                    toolResultBlockParam == null &&
-                    documentBlockParam == null
-            ) {
-                throw AnthropicInvalidDataException("Unknown ContentBlockParam: $_json")
-            }
-            textBlockParam?.validate()
-            imageBlockParam?.validate()
-            toolUseBlockParam?.validate()
-            toolResultBlockParam?.validate()
-            documentBlockParam?.validate()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        accept(
+            object : Visitor<Unit> {
+                override fun visitTextBlockParam(textBlockParam: TextBlockParam) {
+                    textBlockParam.validate()
+                }
+
+                override fun visitImageBlockParam(imageBlockParam: ImageBlockParam) {
+                    imageBlockParam.validate()
+                }
+
+                override fun visitToolUseBlockParam(toolUseBlockParam: ToolUseBlockParam) {
+                    toolUseBlockParam.validate()
+                }
+
+                override fun visitToolResultBlockParam(toolResultBlockParam: ToolResultBlockParam) {
+                    toolResultBlockParam.validate()
+                }
+
+                override fun visitDocumentBlockParam(documentBlockParam: DocumentBlockParam) {
+                    documentBlockParam.validate()
+                }
+            }
+        )
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

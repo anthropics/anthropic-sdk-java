@@ -35,8 +35,6 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    private var validated: Boolean = false
-
     fun messageBatchSucceededResult(): Optional<MessageBatchSucceededResult> =
         Optional.ofNullable(messageBatchSucceededResult)
 
@@ -85,22 +83,41 @@ private constructor(
         }
     }
 
+    private var validated: Boolean = false
+
     fun validate(): MessageBatchResult = apply {
-        if (!validated) {
-            if (
-                messageBatchSucceededResult == null &&
-                    messageBatchErroredResult == null &&
-                    messageBatchCanceledResult == null &&
-                    messageBatchExpiredResult == null
-            ) {
-                throw AnthropicInvalidDataException("Unknown MessageBatchResult: $_json")
-            }
-            messageBatchSucceededResult?.validate()
-            messageBatchErroredResult?.validate()
-            messageBatchCanceledResult?.validate()
-            messageBatchExpiredResult?.validate()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        accept(
+            object : Visitor<Unit> {
+                override fun visitMessageBatchSucceededResult(
+                    messageBatchSucceededResult: MessageBatchSucceededResult
+                ) {
+                    messageBatchSucceededResult.validate()
+                }
+
+                override fun visitMessageBatchErroredResult(
+                    messageBatchErroredResult: MessageBatchErroredResult
+                ) {
+                    messageBatchErroredResult.validate()
+                }
+
+                override fun visitMessageBatchCanceledResult(
+                    messageBatchCanceledResult: MessageBatchCanceledResult
+                ) {
+                    messageBatchCanceledResult.validate()
+                }
+
+                override fun visitMessageBatchExpiredResult(
+                    messageBatchExpiredResult: MessageBatchExpiredResult
+                ) {
+                    messageBatchExpiredResult.validate()
+                }
+            }
+        )
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

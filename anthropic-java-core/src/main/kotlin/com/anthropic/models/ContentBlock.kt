@@ -38,8 +38,6 @@ private constructor(
             }
         )
 
-    private var validated: Boolean = false
-
     fun textBlock(): Optional<TextBlock> = Optional.ofNullable(textBlock)
 
     fun toolUseBlock(): Optional<ToolUseBlock> = Optional.ofNullable(toolUseBlock)
@@ -62,15 +60,25 @@ private constructor(
         }
     }
 
+    private var validated: Boolean = false
+
     fun validate(): ContentBlock = apply {
-        if (!validated) {
-            if (textBlock == null && toolUseBlock == null) {
-                throw AnthropicInvalidDataException("Unknown ContentBlock: $_json")
-            }
-            textBlock?.validate()
-            toolUseBlock?.validate()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        accept(
+            object : Visitor<Unit> {
+                override fun visitTextBlock(textBlock: TextBlock) {
+                    textBlock.validate()
+                }
+
+                override fun visitToolUseBlock(toolUseBlock: ToolUseBlock) {
+                    toolUseBlock.validate()
+                }
+            }
+        )
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

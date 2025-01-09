@@ -42,8 +42,6 @@ private constructor(
             }
         )
 
-    private var validated: Boolean = false
-
     fun betaTextBlock(): Optional<BetaTextBlock> = Optional.ofNullable(betaTextBlock)
 
     fun betaToolUseBlock(): Optional<BetaToolUseBlock> = Optional.ofNullable(betaToolUseBlock)
@@ -66,15 +64,25 @@ private constructor(
         }
     }
 
+    private var validated: Boolean = false
+
     fun validate(): BetaContentBlock = apply {
-        if (!validated) {
-            if (betaTextBlock == null && betaToolUseBlock == null) {
-                throw AnthropicInvalidDataException("Unknown BetaContentBlock: $_json")
-            }
-            betaTextBlock?.validate()
-            betaToolUseBlock?.validate()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        accept(
+            object : Visitor<Unit> {
+                override fun visitBetaTextBlock(betaTextBlock: BetaTextBlock) {
+                    betaTextBlock.validate()
+                }
+
+                override fun visitBetaToolUseBlock(betaToolUseBlock: BetaToolUseBlock) {
+                    betaToolUseBlock.validate()
+                }
+            }
+        )
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

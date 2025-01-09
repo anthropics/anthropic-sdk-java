@@ -57,12 +57,14 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): BetaToolUseBlock = apply {
-        if (!validated) {
-            id()
-            name()
-            type()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        id()
+        name()
+        type()
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)

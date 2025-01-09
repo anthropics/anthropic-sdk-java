@@ -28,8 +28,6 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    private var validated: Boolean = false
-
     fun betaTool(): Optional<BetaTool> = Optional.ofNullable(betaTool)
 
     fun betaToolComputerUse20241022(): Optional<BetaToolComputerUse20241022> =
@@ -74,22 +72,37 @@ private constructor(
         }
     }
 
+    private var validated: Boolean = false
+
     fun validate(): BetaToolUnion = apply {
-        if (!validated) {
-            if (
-                betaTool == null &&
-                    betaToolComputerUse20241022 == null &&
-                    betaToolBash20241022 == null &&
-                    betaToolTextEditor20241022 == null
-            ) {
-                throw AnthropicInvalidDataException("Unknown BetaToolUnion: $_json")
-            }
-            betaTool?.validate()
-            betaToolComputerUse20241022?.validate()
-            betaToolBash20241022?.validate()
-            betaToolTextEditor20241022?.validate()
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        accept(
+            object : Visitor<Unit> {
+                override fun visitBetaTool(betaTool: BetaTool) {
+                    betaTool.validate()
+                }
+
+                override fun visitBetaToolComputerUse20241022(
+                    betaToolComputerUse20241022: BetaToolComputerUse20241022
+                ) {
+                    betaToolComputerUse20241022.validate()
+                }
+
+                override fun visitBetaToolBash20241022(betaToolBash20241022: BetaToolBash20241022) {
+                    betaToolBash20241022.validate()
+                }
+
+                override fun visitBetaToolTextEditor20241022(
+                    betaToolTextEditor20241022: BetaToolTextEditor20241022
+                ) {
+                    betaToolTextEditor20241022.validate()
+                }
+            }
+        )
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {
