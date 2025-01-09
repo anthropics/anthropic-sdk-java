@@ -36,8 +36,10 @@ private constructor(
 
     /** The model will automatically decide whether to use tools. */
     fun toolChoiceAuto(): Optional<ToolChoiceAuto> = Optional.ofNullable(toolChoiceAuto)
+
     /** The model will use any available tools. */
     fun toolChoiceAny(): Optional<ToolChoiceAny> = Optional.ofNullable(toolChoiceAny)
+
     /** The model will use the specified tool with `tool_choice.name`. */
     fun toolChoiceTool(): Optional<ToolChoiceTool> = Optional.ofNullable(toolChoiceTool)
 
@@ -49,8 +51,10 @@ private constructor(
 
     /** The model will automatically decide whether to use tools. */
     fun asToolChoiceAuto(): ToolChoiceAuto = toolChoiceAuto.getOrThrow("toolChoiceAuto")
+
     /** The model will use any available tools. */
     fun asToolChoiceAny(): ToolChoiceAny = toolChoiceAny.getOrThrow("toolChoiceAny")
+
     /** The model will use the specified tool with `tool_choice.name`. */
     fun asToolChoiceTool(): ToolChoiceTool = toolChoiceTool.getOrThrow("toolChoiceTool")
 
