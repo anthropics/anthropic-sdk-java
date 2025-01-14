@@ -1,5 +1,64 @@
 # Changelog
 
+## 0.1.0-alpha.7 (2025-01-14)
+
+Full Changelog: [v0.1.0-alpha.6...v0.1.0-alpha.7](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0-alpha.6...v0.1.0-alpha.7)
+
+### ⚠ BREAKING CHANGES
+
+* **client:** switch query params objects to use `QueryParams` ([#31](https://github.com/anthropics/anthropic-sdk-java/issues/31))
+
+### Features
+
+* **api:** add message batch delete endpoint ([#29](https://github.com/anthropics/anthropic-sdk-java/issues/29)) ([4cfead7](https://github.com/anthropics/anthropic-sdk-java/commit/4cfead7e723bf66c870ed2bc13d1f7778e572de9))
+* **client:** add more builder convenience methods for lists ([#46](https://github.com/anthropics/anthropic-sdk-java/issues/46)) ([40210f9](https://github.com/anthropics/anthropic-sdk-java/commit/40210f90ff6c1c700042efdbe2649921c061bd78))
+* **client:** add various convenience setters to models ([#44](https://github.com/anthropics/anthropic-sdk-java/issues/44)) ([2588011](https://github.com/anthropics/anthropic-sdk-java/commit/25880112453645c2bb9d7d333bede61835f22410))
+* **client:** allow passing null or optional for nullable fields ([#40](https://github.com/anthropics/anthropic-sdk-java/issues/40)) ([f1594bf](https://github.com/anthropics/anthropic-sdk-java/commit/f1594bf97bfcba21ae6258622f15b1d1db8a07b3))
+* **client:** allow setting arbitrary JSON for top-level body params ([2588011](https://github.com/anthropics/anthropic-sdk-java/commit/25880112453645c2bb9d7d333bede61835f22410))
+* **client:** expose getters for `JsonField` of body params ([2588011](https://github.com/anthropics/anthropic-sdk-java/commit/25880112453645c2bb9d7d333bede61835f22410))
+* **client:** put body field in params, add more convenience methods, and add missing docs ([#37](https://github.com/anthropics/anthropic-sdk-java/issues/37)) ([bc9974b](https://github.com/anthropics/anthropic-sdk-java/commit/bc9974b330f8f6032a69a984f9d59b15e7c43af6))
+
+
+### Bug Fixes
+
+* **client:** add some missing `validate()` calls ([#49](https://github.com/anthropics/anthropic-sdk-java/issues/49)) ([3030d05](https://github.com/anthropics/anthropic-sdk-java/commit/3030d057d53c7dd5dfd7c566204876e0903ff1bb))
+* **client:** consistently throw on omitting required fields ([2588011](https://github.com/anthropics/anthropic-sdk-java/commit/25880112453645c2bb9d7d333bede61835f22410))
+* **client:** convert `JsonField` containing list type to mutable in builder ([2588011](https://github.com/anthropics/anthropic-sdk-java/commit/25880112453645c2bb9d7d333bede61835f22410))
+
+
+### Chores
+
+* **internal:** add some missing newlines between methods ([#48](https://github.com/anthropics/anthropic-sdk-java/issues/48)) ([67e7461](https://github.com/anthropics/anthropic-sdk-java/commit/67e74612794995bf05acce426224752d03466455))
+* **internal:** extract a `checkRequired` function ([#54](https://github.com/anthropics/anthropic-sdk-java/issues/54)) ([1562284](https://github.com/anthropics/anthropic-sdk-java/commit/1562284ae76888974318e1623fceee61ae3f2880))
+* **internal:** fix up root `build.gradle.kts` formatting ([#50](https://github.com/anthropics/anthropic-sdk-java/issues/50)) ([b766f44](https://github.com/anthropics/anthropic-sdk-java/commit/b766f44dfaa6b7c67cd6ed620cd6db4256de8edd))
+* **internal:** refactor `validate` methods ([3030d05](https://github.com/anthropics/anthropic-sdk-java/commit/3030d057d53c7dd5dfd7c566204876e0903ff1bb))
+* **internal:** remove unused Gradle imports ([#51](https://github.com/anthropics/anthropic-sdk-java/issues/51)) ([acd68e0](https://github.com/anthropics/anthropic-sdk-java/commit/acd68e0e9fcfc99232ac53f709965b0d1bb4f2f0))
+* **internal:** remove unused or unnecessary Gradle imports ([#52](https://github.com/anthropics/anthropic-sdk-java/issues/52)) ([5c2320d](https://github.com/anthropics/anthropic-sdk-java/commit/5c2320dfd370d3952e11ee8382e9f860e54b7bca))
+* **internal:** update examples ([#41](https://github.com/anthropics/anthropic-sdk-java/issues/41)) ([8dc8b63](https://github.com/anthropics/anthropic-sdk-java/commit/8dc8b63e1f5f8f98e2c590e549bbb4bfc1c319a2))
+
+
+### Documentation
+
+* add params class javadocs ([#43](https://github.com/anthropics/anthropic-sdk-java/issues/43)) ([6f0ce7b](https://github.com/anthropics/anthropic-sdk-java/commit/6f0ce7b62d8f8f985d06f52881ccaed66911adb1))
+* add some missing javadocs ([#38](https://github.com/anthropics/anthropic-sdk-java/issues/38)) ([49a9056](https://github.com/anthropics/anthropic-sdk-java/commit/49a90567fc27cbadabf13cb0dc3a95125501d27a))
+* publish dokka javadoc ([#53](https://github.com/anthropics/anthropic-sdk-java/issues/53)) ([8bd0316](https://github.com/anthropics/anthropic-sdk-java/commit/8bd03162f0e6800a0b8e03d854eaf69088b5948e))
+* **readme:** fix misplaced period ([#45](https://github.com/anthropics/anthropic-sdk-java/issues/45)) ([bcdf8cd](https://github.com/anthropics/anthropic-sdk-java/commit/bcdf8cd51de09e2b5c54788bd22d54c88f532339))
+* update some builder method javadocs ([#47](https://github.com/anthropics/anthropic-sdk-java/issues/47)) ([94a426b](https://github.com/anthropics/anthropic-sdk-java/commit/94a426ba16cf5fc852751c4fce67d4a8ef80267d))
+
+
+### Styles
+
+* **internal:** explicitly add some method return types ([2588011](https://github.com/anthropics/anthropic-sdk-java/commit/25880112453645c2bb9d7d333bede61835f22410))
+* **internal:** move headers and query params setters below others ([2588011](https://github.com/anthropics/anthropic-sdk-java/commit/25880112453645c2bb9d7d333bede61835f22410))
+* **internal:** simplify existing convenience setters on params ([2588011](https://github.com/anthropics/anthropic-sdk-java/commit/25880112453645c2bb9d7d333bede61835f22410))
+* **internal:** sort fields ([#39](https://github.com/anthropics/anthropic-sdk-java/issues/39)) ([de172c3](https://github.com/anthropics/anthropic-sdk-java/commit/de172c38c727faeb76e602e970fb4f290b2cbd8f))
+
+
+### Refactors
+
+* **client:** switch query params objects to use `QueryParams` ([#31](https://github.com/anthropics/anthropic-sdk-java/issues/31)) ([29a101a](https://github.com/anthropics/anthropic-sdk-java/commit/29a101a34d1e2a33867fdc3f946dffb10c030aa4))
+* **internal:** use constructor to deserialize json ([#32](https://github.com/anthropics/anthropic-sdk-java/issues/32)) ([6f08181](https://github.com/anthropics/anthropic-sdk-java/commit/6f0818132c13db29fb76800258820b8785607bc5))
+
 ## 0.1.0-alpha.6 (2024-12-28)
 
 Full Changelog: [v0.1.0-alpha.5...v0.1.0-alpha.6](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0-alpha.5...v0.1.0-alpha.6)
