@@ -8,6 +8,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.checkRequired
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -657,15 +658,14 @@ private constructor(
 
         fun build(): BetaMessage =
             BetaMessage(
-                checkNotNull(id) { "`id` is required but was not set" },
-                checkNotNull(content) { "`content` is required but was not set" }
-                    .map { it.toImmutable() },
-                checkNotNull(model) { "`model` is required but was not set" },
-                checkNotNull(role) { "`role` is required but was not set" },
-                checkNotNull(stopReason) { "`stopReason` is required but was not set" },
-                checkNotNull(stopSequence) { "`stopSequence` is required but was not set" },
-                checkNotNull(type) { "`type` is required but was not set" },
-                checkNotNull(usage) { "`usage` is required but was not set" },
+                checkRequired("id", id),
+                checkRequired("content", content).map { it.toImmutable() },
+                checkRequired("model", model),
+                checkRequired("role", role),
+                checkRequired("stopReason", stopReason),
+                checkRequired("stopSequence", stopSequence),
+                checkRequired("type", type),
+                checkRequired("usage", usage),
                 additionalProperties.toImmutable(),
             )
     }

@@ -7,6 +7,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.immutableEmptyMap
@@ -639,11 +640,9 @@ constructor(
 
             fun build(): CompletionCreateBody =
                 CompletionCreateBody(
-                    checkNotNull(maxTokensToSample) {
-                        "`maxTokensToSample` is required but was not set"
-                    },
-                    checkNotNull(model) { "`model` is required but was not set" },
-                    checkNotNull(prompt) { "`prompt` is required but was not set" },
+                    checkRequired("maxTokensToSample", maxTokensToSample),
+                    checkRequired("model", model),
+                    checkRequired("prompt", prompt),
                     metadata,
                     (stopSequences ?: JsonMissing.of()).map { it.toImmutable() },
                     temperature,

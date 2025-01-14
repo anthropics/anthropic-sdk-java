@@ -8,6 +8,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.checkRequired
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -453,18 +454,16 @@ private constructor(
 
         fun build(): MessageBatch =
             MessageBatch(
-                checkNotNull(id) { "`id` is required but was not set" },
-                checkNotNull(archivedAt) { "`archivedAt` is required but was not set" },
-                checkNotNull(cancelInitiatedAt) {
-                    "`cancelInitiatedAt` is required but was not set"
-                },
-                checkNotNull(createdAt) { "`createdAt` is required but was not set" },
-                checkNotNull(endedAt) { "`endedAt` is required but was not set" },
-                checkNotNull(expiresAt) { "`expiresAt` is required but was not set" },
-                checkNotNull(processingStatus) { "`processingStatus` is required but was not set" },
-                checkNotNull(requestCounts) { "`requestCounts` is required but was not set" },
-                checkNotNull(resultsUrl) { "`resultsUrl` is required but was not set" },
-                checkNotNull(type) { "`type` is required but was not set" },
+                checkRequired("id", id),
+                checkRequired("archivedAt", archivedAt),
+                checkRequired("cancelInitiatedAt", cancelInitiatedAt),
+                checkRequired("createdAt", createdAt),
+                checkRequired("endedAt", endedAt),
+                checkRequired("expiresAt", expiresAt),
+                checkRequired("processingStatus", processingStatus),
+                checkRequired("requestCounts", requestCounts),
+                checkRequired("resultsUrl", resultsUrl),
+                checkRequired("type", type),
                 additionalProperties.toImmutable(),
             )
     }

@@ -3,6 +3,7 @@
 package com.anthropic.models
 
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import java.util.Objects
@@ -162,7 +163,7 @@ constructor(
 
         fun build(): ModelRetrieveParams =
             ModelRetrieveParams(
-                checkNotNull(modelId) { "`modelId` is required but was not set" },
+                checkRequired("modelId", modelId),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )

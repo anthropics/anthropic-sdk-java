@@ -7,6 +7,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.checkRequired
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -178,14 +179,10 @@ private constructor(
 
         fun build(): BetaUsage =
             BetaUsage(
-                checkNotNull(cacheCreationInputTokens) {
-                    "`cacheCreationInputTokens` is required but was not set"
-                },
-                checkNotNull(cacheReadInputTokens) {
-                    "`cacheReadInputTokens` is required but was not set"
-                },
-                checkNotNull(inputTokens) { "`inputTokens` is required but was not set" },
-                checkNotNull(outputTokens) { "`outputTokens` is required but was not set" },
+                checkRequired("cacheCreationInputTokens", cacheCreationInputTokens),
+                checkRequired("cacheReadInputTokens", cacheReadInputTokens),
+                checkRequired("inputTokens", inputTokens),
+                checkRequired("outputTokens", outputTokens),
                 additionalProperties.toImmutable(),
             )
     }

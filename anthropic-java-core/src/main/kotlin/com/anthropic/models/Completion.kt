@@ -8,6 +8,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.checkRequired
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -253,11 +254,11 @@ private constructor(
 
         fun build(): Completion =
             Completion(
-                checkNotNull(id) { "`id` is required but was not set" },
-                checkNotNull(completion) { "`completion` is required but was not set" },
-                checkNotNull(model) { "`model` is required but was not set" },
-                checkNotNull(stopReason) { "`stopReason` is required but was not set" },
-                checkNotNull(type) { "`type` is required but was not set" },
+                checkRequired("id", id),
+                checkRequired("completion", completion),
+                checkRequired("model", model),
+                checkRequired("stopReason", stopReason),
+                checkRequired("type", type),
                 additionalProperties.toImmutable(),
             )
     }

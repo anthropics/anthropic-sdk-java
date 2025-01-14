@@ -8,6 +8,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.checkRequired
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -216,8 +217,8 @@ private constructor(
 
         fun build(): Tool =
             Tool(
-                checkNotNull(inputSchema) { "`inputSchema` is required but was not set" },
-                checkNotNull(name) { "`name` is required but was not set" },
+                checkRequired("inputSchema", inputSchema),
+                checkRequired("name", name),
                 cacheControl,
                 description,
                 additionalProperties.toImmutable(),
@@ -309,7 +310,7 @@ private constructor(
 
             fun build(): InputSchema =
                 InputSchema(
-                    checkNotNull(type) { "`type` is required but was not set" },
+                    checkRequired("type", type),
                     properties,
                     additionalProperties.toImmutable(),
                 )

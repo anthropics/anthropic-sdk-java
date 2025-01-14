@@ -4,6 +4,7 @@ package com.anthropic.models
 
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
@@ -195,7 +196,7 @@ constructor(
 
         fun build(): MessageBatchDeleteParams =
             MessageBatchDeleteParams(
-                checkNotNull(messageBatchId) { "`messageBatchId` is required but was not set" },
+                checkRequired("messageBatchId", messageBatchId),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
                 additionalBodyProperties.toImmutable(),

@@ -7,6 +7,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.checkRequired
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -93,7 +94,7 @@ private constructor(
 
         fun build(): MessageDeltaUsage =
             MessageDeltaUsage(
-                checkNotNull(outputTokens) { "`outputTokens` is required but was not set" },
+                checkRequired("outputTokens", outputTokens),
                 additionalProperties.toImmutable()
             )
     }
