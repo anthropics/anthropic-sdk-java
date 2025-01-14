@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
@@ -1900,10 +1901,9 @@ constructor(
 
             fun build(): MessageCreateBody =
                 MessageCreateBody(
-                    checkNotNull(maxTokens) { "`maxTokens` is required but was not set" },
-                    checkNotNull(messages) { "`messages` is required but was not set" }
-                        .map { it.toImmutable() },
-                    checkNotNull(model) { "`model` is required but was not set" },
+                    checkRequired("maxTokens", maxTokens),
+                    checkRequired("messages", messages).map { it.toImmutable() },
+                    checkRequired("model", model),
                     metadata,
                     (stopSequences ?: JsonMissing.of()).map { it.toImmutable() },
                     system,

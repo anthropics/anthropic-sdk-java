@@ -7,6 +7,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.checkRequired
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -227,11 +228,11 @@ private constructor(
 
         fun build(): BetaMessageBatchRequestCounts =
             BetaMessageBatchRequestCounts(
-                checkNotNull(canceled) { "`canceled` is required but was not set" },
-                checkNotNull(errored) { "`errored` is required but was not set" },
-                checkNotNull(expired) { "`expired` is required but was not set" },
-                checkNotNull(processing) { "`processing` is required but was not set" },
-                checkNotNull(succeeded) { "`succeeded` is required but was not set" },
+                checkRequired("canceled", canceled),
+                checkRequired("errored", errored),
+                checkRequired("expired", expired),
+                checkRequired("processing", processing),
+                checkRequired("succeeded", succeeded),
                 additionalProperties.toImmutable(),
             )
     }

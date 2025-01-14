@@ -10,6 +10,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
@@ -117,8 +118,8 @@ private constructor(
 
         fun build(): MessageParam =
             MessageParam(
-                checkNotNull(content) { "`content` is required but was not set" },
-                checkNotNull(role) { "`role` is required but was not set" },
+                checkRequired("content", content),
+                checkRequired("role", role),
                 additionalProperties.toImmutable(),
             )
     }

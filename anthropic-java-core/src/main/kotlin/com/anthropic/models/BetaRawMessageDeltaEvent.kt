@@ -8,6 +8,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.checkRequired
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -168,9 +169,9 @@ private constructor(
 
         fun build(): BetaRawMessageDeltaEvent =
             BetaRawMessageDeltaEvent(
-                checkNotNull(delta) { "`delta` is required but was not set" },
-                checkNotNull(type) { "`type` is required but was not set" },
-                checkNotNull(usage) { "`usage` is required but was not set" },
+                checkRequired("delta", delta),
+                checkRequired("type", type),
+                checkRequired("usage", usage),
                 additionalProperties.toImmutable(),
             )
     }
@@ -278,8 +279,8 @@ private constructor(
 
             fun build(): Delta =
                 Delta(
-                    checkNotNull(stopReason) { "`stopReason` is required but was not set" },
-                    checkNotNull(stopSequence) { "`stopSequence` is required but was not set" },
+                    checkRequired("stopReason", stopReason),
+                    checkRequired("stopSequence", stopSequence),
                     additionalProperties.toImmutable(),
                 )
         }

@@ -10,6 +10,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
@@ -168,8 +169,8 @@ private constructor(
 
         fun build(): BetaToolResultBlockParam =
             BetaToolResultBlockParam(
-                checkNotNull(toolUseId) { "`toolUseId` is required but was not set" },
-                checkNotNull(type) { "`type` is required but was not set" },
+                checkRequired("toolUseId", toolUseId),
+                checkRequired("type", type),
                 cacheControl,
                 content,
                 isError,

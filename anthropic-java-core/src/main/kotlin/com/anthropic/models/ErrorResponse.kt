@@ -8,6 +8,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.checkRequired
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -126,8 +127,8 @@ private constructor(
 
         fun build(): ErrorResponse =
             ErrorResponse(
-                checkNotNull(error) { "`error` is required but was not set" },
-                checkNotNull(type) { "`type` is required but was not set" },
+                checkRequired("error", error),
+                checkRequired("type", type),
                 additionalProperties.toImmutable(),
             )
     }

@@ -7,6 +7,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.checkRequired
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -192,8 +193,8 @@ private constructor(
 
         fun build(): MessageBatchIndividualResponse =
             MessageBatchIndividualResponse(
-                checkNotNull(customId) { "`customId` is required but was not set" },
-                checkNotNull(result) { "`result` is required but was not set" },
+                checkRequired("customId", customId),
+                checkRequired("result", result),
                 additionalProperties.toImmutable(),
             )
     }

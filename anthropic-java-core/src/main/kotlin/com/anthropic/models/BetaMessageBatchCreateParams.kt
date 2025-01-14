@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
@@ -186,8 +187,7 @@ constructor(
 
             fun build(): BetaMessageBatchCreateBody =
                 BetaMessageBatchCreateBody(
-                    checkNotNull(requests) { "`requests` is required but was not set" }
-                        .map { it.toImmutable() },
+                    checkRequired("requests", requests).map { it.toImmutable() },
                     additionalProperties.toImmutable()
                 )
         }
@@ -526,8 +526,8 @@ constructor(
 
             fun build(): Request =
                 Request(
-                    checkNotNull(customId) { "`customId` is required but was not set" },
-                    checkNotNull(params) { "`params` is required but was not set" },
+                    checkRequired("customId", customId),
+                    checkRequired("params", params),
                     additionalProperties.toImmutable(),
                 )
         }
@@ -2262,10 +2262,9 @@ constructor(
 
                 fun build(): Params =
                     Params(
-                        checkNotNull(maxTokens) { "`maxTokens` is required but was not set" },
-                        checkNotNull(messages) { "`messages` is required but was not set" }
-                            .map { it.toImmutable() },
-                        checkNotNull(model) { "`model` is required but was not set" },
+                        checkRequired("maxTokens", maxTokens),
+                        checkRequired("messages", messages).map { it.toImmutable() },
+                        checkRequired("model", model),
                         metadata,
                         (stopSequences ?: JsonMissing.of()).map { it.toImmutable() },
                         stream,

@@ -8,6 +8,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.checkRequired
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -218,10 +219,10 @@ private constructor(
 
         fun build(): BetaToolComputerUse20241022 =
             BetaToolComputerUse20241022(
-                checkNotNull(displayHeightPx) { "`displayHeightPx` is required but was not set" },
-                checkNotNull(displayWidthPx) { "`displayWidthPx` is required but was not set" },
-                checkNotNull(name) { "`name` is required but was not set" },
-                checkNotNull(type) { "`type` is required but was not set" },
+                checkRequired("displayHeightPx", displayHeightPx),
+                checkRequired("displayWidthPx", displayWidthPx),
+                checkRequired("name", name),
+                checkRequired("type", type),
                 cacheControl,
                 displayNumber,
                 additionalProperties.toImmutable(),
