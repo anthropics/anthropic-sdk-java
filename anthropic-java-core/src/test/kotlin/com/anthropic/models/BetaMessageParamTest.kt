@@ -10,10 +10,7 @@ class BetaMessageParamTest {
     @Test
     fun createBetaMessageParam() {
         val betaMessageParam =
-            BetaMessageParam.builder()
-                .content(BetaMessageParam.Content.ofString("string"))
-                .role(BetaMessageParam.Role.USER)
-                .build()
+            BetaMessageParam.builder().content("string").role(BetaMessageParam.Role.USER).build()
         assertThat(betaMessageParam).isNotNull
         assertThat(betaMessageParam.content())
             .isEqualTo(BetaMessageParam.Content.ofString("string"))

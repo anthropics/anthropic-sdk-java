@@ -12,12 +12,10 @@ class ErrorResponseTest {
         val errorResponse =
             ErrorResponse.builder()
                 .error(
-                    ErrorObject.ofInvalidRequestError(
-                        InvalidRequestError.builder()
-                            .message("message")
-                            .type(InvalidRequestError.Type.INVALID_REQUEST_ERROR)
-                            .build()
-                    )
+                    InvalidRequestError.builder()
+                        .message("message")
+                        .type(InvalidRequestError.Type.INVALID_REQUEST_ERROR)
+                        .build()
                 )
                 .type(ErrorResponse.Type.ERROR)
                 .build()

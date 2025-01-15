@@ -13,13 +13,81 @@ class BetaMessageCountTokensParamsTest {
         BetaMessageCountTokensParams.builder()
             .addMessage(
                 BetaMessageParam.builder()
-                    .content(BetaMessageParam.Content.ofString("string"))
+                    .content("string")
                     .role(BetaMessageParam.Role.USER)
                     .build()
             )
             .model(Model.CLAUDE_3_5_HAIKU_LATEST)
-            .system(
-                BetaMessageCountTokensParams.System.ofBetaTextBlockParams(
+            .systemOfBetaTextBlockParams(
+                listOf(
+                    BetaTextBlockParam.builder()
+                        .text("Today's date is 2024-06-01.")
+                        .type(BetaTextBlockParam.Type.TEXT)
+                        .cacheControl(
+                            BetaCacheControlEphemeral.builder()
+                                .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
+                                .build()
+                        )
+                        .build()
+                )
+            )
+            .toolChoice(
+                BetaToolChoiceAuto.builder()
+                    .type(BetaToolChoiceAuto.Type.AUTO)
+                    .disableParallelToolUse(true)
+                    .build()
+            )
+            .addTool(
+                BetaTool.builder()
+                    .inputSchema(
+                        BetaTool.InputSchema.builder()
+                            .type(BetaTool.InputSchema.Type.OBJECT)
+                            .properties(
+                                JsonValue.from(
+                                    mapOf(
+                                        "location" to
+                                            mapOf(
+                                                "description" to
+                                                    "The city and state, e.g. San Francisco, CA",
+                                                "type" to "string"
+                                            ),
+                                        "unit" to
+                                            mapOf(
+                                                "description" to
+                                                    "Unit for the output - one of (celsius, fahrenheit)",
+                                                "type" to "string"
+                                            )
+                                    )
+                                )
+                            )
+                            .build()
+                    )
+                    .name("name")
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
+                            .build()
+                    )
+                    .description("Get the current weather in a given location")
+                    .type(BetaTool.Type.CUSTOM)
+                    .build()
+            )
+            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .build()
+    }
+
+    @Test
+    fun getBody() {
+        val params =
+            BetaMessageCountTokensParams.builder()
+                .addMessage(
+                    BetaMessageParam.builder()
+                        .content("string")
+                        .role(BetaMessageParam.Role.USER)
+                        .build()
+                )
+                .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+                .systemOfBetaTextBlockParams(
                     listOf(
                         BetaTextBlockParam.builder()
                             .text("Today's date is 2024-06-01.")
@@ -32,17 +100,13 @@ class BetaMessageCountTokensParamsTest {
                             .build()
                     )
                 )
-            )
-            .toolChoice(
-                BetaToolChoice.ofBetaToolChoiceAuto(
+                .toolChoice(
                     BetaToolChoiceAuto.builder()
                         .type(BetaToolChoiceAuto.Type.AUTO)
                         .disableParallelToolUse(true)
                         .build()
                 )
-            )
-            .addTool(
-                BetaMessageCountTokensParams.Tool.ofBetaTool(
+                .addTool(
                     BetaTool.builder()
                         .inputSchema(
                             BetaTool.InputSchema.builder()
@@ -77,82 +141,6 @@ class BetaMessageCountTokensParamsTest {
                         .type(BetaTool.Type.CUSTOM)
                         .build()
                 )
-            )
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-            .build()
-    }
-
-    @Test
-    fun getBody() {
-        val params =
-            BetaMessageCountTokensParams.builder()
-                .addMessage(
-                    BetaMessageParam.builder()
-                        .content(BetaMessageParam.Content.ofString("string"))
-                        .role(BetaMessageParam.Role.USER)
-                        .build()
-                )
-                .model(Model.CLAUDE_3_5_HAIKU_LATEST)
-                .system(
-                    BetaMessageCountTokensParams.System.ofBetaTextBlockParams(
-                        listOf(
-                            BetaTextBlockParam.builder()
-                                .text("Today's date is 2024-06-01.")
-                                .type(BetaTextBlockParam.Type.TEXT)
-                                .cacheControl(
-                                    BetaCacheControlEphemeral.builder()
-                                        .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                        .build()
-                                )
-                                .build()
-                        )
-                    )
-                )
-                .toolChoice(
-                    BetaToolChoice.ofBetaToolChoiceAuto(
-                        BetaToolChoiceAuto.builder()
-                            .type(BetaToolChoiceAuto.Type.AUTO)
-                            .disableParallelToolUse(true)
-                            .build()
-                    )
-                )
-                .addTool(
-                    BetaMessageCountTokensParams.Tool.ofBetaTool(
-                        BetaTool.builder()
-                            .inputSchema(
-                                BetaTool.InputSchema.builder()
-                                    .type(BetaTool.InputSchema.Type.OBJECT)
-                                    .properties(
-                                        JsonValue.from(
-                                            mapOf(
-                                                "location" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string"
-                                                    ),
-                                                "unit" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string"
-                                                    )
-                                            )
-                                        )
-                                    )
-                                    .build()
-                            )
-                            .name("name")
-                            .cacheControl(
-                                BetaCacheControlEphemeral.builder()
-                                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                    .build()
-                            )
-                            .description("Get the current weather in a given location")
-                            .type(BetaTool.Type.CUSTOM)
-                            .build()
-                    )
-                )
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
         val body = params.getBody()
@@ -161,7 +149,7 @@ class BetaMessageCountTokensParamsTest {
             .isEqualTo(
                 listOf(
                     BetaMessageParam.builder()
-                        .content(BetaMessageParam.Content.ofString("string"))
+                        .content("string")
                         .role(BetaMessageParam.Role.USER)
                         .build()
                 )
@@ -240,7 +228,7 @@ class BetaMessageCountTokensParamsTest {
             BetaMessageCountTokensParams.builder()
                 .addMessage(
                     BetaMessageParam.builder()
-                        .content(BetaMessageParam.Content.ofString("string"))
+                        .content("string")
                         .role(BetaMessageParam.Role.USER)
                         .build()
                 )
@@ -252,7 +240,7 @@ class BetaMessageCountTokensParamsTest {
             .isEqualTo(
                 listOf(
                     BetaMessageParam.builder()
-                        .content(BetaMessageParam.Content.ofString("string"))
+                        .content("string")
                         .role(BetaMessageParam.Role.USER)
                         .build()
                 )

@@ -18,7 +18,7 @@ class ToolResultBlockParamTest {
                         .type(CacheControlEphemeral.Type.EPHEMERAL)
                         .build()
                 )
-                .content(ToolResultBlockParam.Content.ofString("string"))
+                .content("string")
                 .isError(true)
                 .build()
         assertThat(toolResultBlockParam).isNotNull

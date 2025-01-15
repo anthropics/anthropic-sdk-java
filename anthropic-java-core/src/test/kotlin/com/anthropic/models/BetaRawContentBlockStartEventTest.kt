@@ -12,9 +12,7 @@ class BetaRawContentBlockStartEventTest {
         val betaRawContentBlockStartEvent =
             BetaRawContentBlockStartEvent.builder()
                 .contentBlock(
-                    BetaRawContentBlockStartEvent.ContentBlock.ofBetaTextBlock(
-                        BetaTextBlock.builder().text("text").type(BetaTextBlock.Type.TEXT).build()
-                    )
+                    BetaTextBlock.builder().text("text").type(BetaTextBlock.Type.TEXT).build()
                 )
                 .index(0L)
                 .type(BetaRawContentBlockStartEvent.Type.CONTENT_BLOCK_START)

@@ -13,37 +13,30 @@ class MessageCreateParamsTest {
         MessageCreateParams.builder()
             .maxTokens(1024L)
             .addMessage(
-                MessageParam.builder()
-                    .content(MessageParam.Content.ofString("Hello, world"))
-                    .role(MessageParam.Role.USER)
-                    .build()
+                MessageParam.builder().content("Hello, world").role(MessageParam.Role.USER).build()
             )
             .model(Model.CLAUDE_3_5_HAIKU_LATEST)
             .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
             .addStopSequence("string")
-            .system(
-                MessageCreateParams.System.ofTextBlockParams(
-                    listOf(
-                        TextBlockParam.builder()
-                            .text("Today's date is 2024-06-01.")
-                            .type(TextBlockParam.Type.TEXT)
-                            .cacheControl(
-                                CacheControlEphemeral.builder()
-                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                    .build()
-                            )
-                            .build()
-                    )
+            .systemOfTextBlockParams(
+                listOf(
+                    TextBlockParam.builder()
+                        .text("Today's date is 2024-06-01.")
+                        .type(TextBlockParam.Type.TEXT)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                .build()
+                        )
+                        .build()
                 )
             )
             .temperature(1.0)
             .toolChoice(
-                ToolChoice.ofToolChoiceAuto(
-                    ToolChoiceAuto.builder()
-                        .type(ToolChoiceAuto.Type.AUTO)
-                        .disableParallelToolUse(true)
-                        .build()
-                )
+                ToolChoiceAuto.builder()
+                    .type(ToolChoiceAuto.Type.AUTO)
+                    .disableParallelToolUse(true)
+                    .build()
             )
             .addTool(
                 Tool.builder()
@@ -91,36 +84,32 @@ class MessageCreateParamsTest {
                 .maxTokens(1024L)
                 .addMessage(
                     MessageParam.builder()
-                        .content(MessageParam.Content.ofString("Hello, world"))
+                        .content("Hello, world")
                         .role(MessageParam.Role.USER)
                         .build()
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .addStopSequence("string")
-                .system(
-                    MessageCreateParams.System.ofTextBlockParams(
-                        listOf(
-                            TextBlockParam.builder()
-                                .text("Today's date is 2024-06-01.")
-                                .type(TextBlockParam.Type.TEXT)
-                                .cacheControl(
-                                    CacheControlEphemeral.builder()
-                                        .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                        .build()
-                                )
-                                .build()
-                        )
+                .systemOfTextBlockParams(
+                    listOf(
+                        TextBlockParam.builder()
+                            .text("Today's date is 2024-06-01.")
+                            .type(TextBlockParam.Type.TEXT)
+                            .cacheControl(
+                                CacheControlEphemeral.builder()
+                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                    .build()
+                            )
+                            .build()
                     )
                 )
                 .temperature(1.0)
                 .toolChoice(
-                    ToolChoice.ofToolChoiceAuto(
-                        ToolChoiceAuto.builder()
-                            .type(ToolChoiceAuto.Type.AUTO)
-                            .disableParallelToolUse(true)
-                            .build()
-                    )
+                    ToolChoiceAuto.builder()
+                        .type(ToolChoiceAuto.Type.AUTO)
+                        .disableParallelToolUse(true)
+                        .build()
                 )
                 .addTool(
                     Tool.builder()
@@ -166,7 +155,7 @@ class MessageCreateParamsTest {
             .isEqualTo(
                 listOf(
                     MessageParam.builder()
-                        .content(MessageParam.Content.ofString("Hello, world"))
+                        .content("Hello, world")
                         .role(MessageParam.Role.USER)
                         .build()
                 )
@@ -249,7 +238,7 @@ class MessageCreateParamsTest {
                 .maxTokens(1024L)
                 .addMessage(
                     MessageParam.builder()
-                        .content(MessageParam.Content.ofString("Hello, world"))
+                        .content("Hello, world")
                         .role(MessageParam.Role.USER)
                         .build()
                 )
@@ -262,7 +251,7 @@ class MessageCreateParamsTest {
             .isEqualTo(
                 listOf(
                     MessageParam.builder()
-                        .content(MessageParam.Content.ofString("Hello, world"))
+                        .content("Hello, world")
                         .role(MessageParam.Role.USER)
                         .build()
                 )

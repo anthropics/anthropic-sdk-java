@@ -18,7 +18,7 @@ class BetaToolResultBlockParamTest {
                         .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
                         .build()
                 )
-                .content(BetaToolResultBlockParam.Content.ofString("string"))
+                .content("string")
                 .isError(true)
                 .build()
         assertThat(betaToolResultBlockParam).isNotNull

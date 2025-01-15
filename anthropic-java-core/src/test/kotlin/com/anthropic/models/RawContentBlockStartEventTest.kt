@@ -11,11 +11,7 @@ class RawContentBlockStartEventTest {
     fun createRawContentBlockStartEvent() {
         val rawContentBlockStartEvent =
             RawContentBlockStartEvent.builder()
-                .contentBlock(
-                    RawContentBlockStartEvent.ContentBlock.ofTextBlock(
-                        TextBlock.builder().text("text").type(TextBlock.Type.TEXT).build()
-                    )
-                )
+                .contentBlock(TextBlock.builder().text("text").type(TextBlock.Type.TEXT).build())
                 .index(0L)
                 .type(RawContentBlockStartEvent.Type.CONTENT_BLOCK_START)
                 .build()

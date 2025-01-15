@@ -15,12 +15,10 @@ class MessageBatchSucceededResultTest {
                     Message.builder()
                         .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
                         .addContent(
-                            ContentBlock.ofTextBlock(
-                                TextBlock.builder()
-                                    .text("Hi! My name is Claude.")
-                                    .type(TextBlock.Type.TEXT)
-                                    .build()
-                            )
+                            TextBlock.builder()
+                                .text("Hi! My name is Claude.")
+                                .type(TextBlock.Type.TEXT)
+                                .build()
                         )
                         .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                         .role(Message.Role.ASSISTANT)
@@ -45,12 +43,10 @@ class MessageBatchSucceededResultTest {
                 Message.builder()
                     .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
                     .addContent(
-                        ContentBlock.ofTextBlock(
-                            TextBlock.builder()
-                                .text("Hi! My name is Claude.")
-                                .type(TextBlock.Type.TEXT)
-                                .build()
-                        )
+                        TextBlock.builder()
+                            .text("Hi! My name is Claude.")
+                            .type(TextBlock.Type.TEXT)
+                            .build()
                     )
                     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                     .role(Message.Role.ASSISTANT)

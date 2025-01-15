@@ -12,12 +12,10 @@ class BetaErrorResponseTest {
         val betaErrorResponse =
             BetaErrorResponse.builder()
                 .error(
-                    BetaError.ofBetaInvalidRequestError(
-                        BetaInvalidRequestError.builder()
-                            .message("message")
-                            .type(BetaInvalidRequestError.Type.INVALID_REQUEST_ERROR)
-                            .build()
-                    )
+                    BetaInvalidRequestError.builder()
+                        .message("message")
+                        .type(BetaInvalidRequestError.Type.INVALID_REQUEST_ERROR)
+                        .build()
                 )
                 .type(BetaErrorResponse.Type.ERROR)
                 .build()

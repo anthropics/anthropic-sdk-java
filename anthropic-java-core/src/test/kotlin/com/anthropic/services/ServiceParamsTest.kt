@@ -7,7 +7,6 @@ import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.models.CacheControlEphemeral
-import com.anthropic.models.ContentBlock
 import com.anthropic.models.Message
 import com.anthropic.models.MessageCreateParams
 import com.anthropic.models.MessageParam
@@ -16,7 +15,6 @@ import com.anthropic.models.Model
 import com.anthropic.models.TextBlock
 import com.anthropic.models.TextBlockParam
 import com.anthropic.models.Tool
-import com.anthropic.models.ToolChoice
 import com.anthropic.models.ToolChoiceAuto
 import com.anthropic.models.Usage
 import com.fasterxml.jackson.databind.json.JsonMapper
@@ -69,36 +67,32 @@ class ServiceParamsTest {
                 .maxTokens(1024L)
                 .addMessage(
                     MessageParam.builder()
-                        .content(MessageParam.Content.ofString("Hello, world"))
+                        .content("Hello, world")
                         .role(MessageParam.Role.USER)
                         .build()
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .addStopSequence("string")
-                .system(
-                    MessageCreateParams.System.ofTextBlockParams(
-                        listOf(
-                            TextBlockParam.builder()
-                                .text("Today's date is 2024-06-01.")
-                                .type(TextBlockParam.Type.TEXT)
-                                .cacheControl(
-                                    CacheControlEphemeral.builder()
-                                        .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                        .build()
-                                )
-                                .build()
-                        )
+                .systemOfTextBlockParams(
+                    listOf(
+                        TextBlockParam.builder()
+                            .text("Today's date is 2024-06-01.")
+                            .type(TextBlockParam.Type.TEXT)
+                            .cacheControl(
+                                CacheControlEphemeral.builder()
+                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                    .build()
+                            )
+                            .build()
                     )
                 )
                 .temperature(1.0)
                 .toolChoice(
-                    ToolChoice.ofToolChoiceAuto(
-                        ToolChoiceAuto.builder()
-                            .type(ToolChoiceAuto.Type.AUTO)
-                            .disableParallelToolUse(true)
-                            .build()
-                    )
+                    ToolChoiceAuto.builder()
+                        .type(ToolChoiceAuto.Type.AUTO)
+                        .disableParallelToolUse(true)
+                        .build()
                 )
                 .addTool(
                     Tool.builder()
@@ -145,12 +139,10 @@ class ServiceParamsTest {
             Message.builder()
                 .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
                 .addContent(
-                    ContentBlock.ofTextBlock(
-                        TextBlock.builder()
-                            .text("Hi! My name is Claude.")
-                            .type(TextBlock.Type.TEXT)
-                            .build()
-                    )
+                    TextBlock.builder()
+                        .text("Hi! My name is Claude.")
+                        .type(TextBlock.Type.TEXT)
+                        .build()
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .role(Message.Role.ASSISTANT)

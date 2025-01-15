@@ -13,12 +13,10 @@ class BetaMessageTest {
             BetaMessage.builder()
                 .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
                 .addContent(
-                    BetaContentBlock.ofBetaTextBlock(
-                        BetaTextBlock.builder()
-                            .text("Hi! My name is Claude.")
-                            .type(BetaTextBlock.Type.TEXT)
-                            .build()
-                    )
+                    BetaTextBlock.builder()
+                        .text("Hi! My name is Claude.")
+                        .type(BetaTextBlock.Type.TEXT)
+                        .build()
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .role(BetaMessage.Role.ASSISTANT)

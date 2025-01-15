@@ -19,7 +19,7 @@ class MessageBatchCreateParamsTest {
                             .maxTokens(1024L)
                             .addMessage(
                                 MessageParam.builder()
-                                    .content(MessageParam.Content.ofString("Hello, world"))
+                                    .content("Hello, world")
                                     .role(MessageParam.Role.USER)
                                     .build()
                             )
@@ -31,29 +31,25 @@ class MessageBatchCreateParamsTest {
                             )
                             .addStopSequence("string")
                             .stream(true)
-                            .system(
-                                MessageBatchCreateParams.Request.Params.System.ofTextBlockParams(
-                                    listOf(
-                                        TextBlockParam.builder()
-                                            .text("Today's date is 2024-06-01.")
-                                            .type(TextBlockParam.Type.TEXT)
-                                            .cacheControl(
-                                                CacheControlEphemeral.builder()
-                                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                                    .build()
-                                            )
-                                            .build()
-                                    )
+                            .systemOfTextBlockParams(
+                                listOf(
+                                    TextBlockParam.builder()
+                                        .text("Today's date is 2024-06-01.")
+                                        .type(TextBlockParam.Type.TEXT)
+                                        .cacheControl(
+                                            CacheControlEphemeral.builder()
+                                                .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                                .build()
+                                        )
+                                        .build()
                                 )
                             )
                             .temperature(1.0)
                             .toolChoice(
-                                ToolChoice.ofToolChoiceAuto(
-                                    ToolChoiceAuto.builder()
-                                        .type(ToolChoiceAuto.Type.AUTO)
-                                        .disableParallelToolUse(true)
-                                        .build()
-                                )
+                                ToolChoiceAuto.builder()
+                                    .type(ToolChoiceAuto.Type.AUTO)
+                                    .disableParallelToolUse(true)
+                                    .build()
                             )
                             .addTool(
                                 Tool.builder()
@@ -110,7 +106,7 @@ class MessageBatchCreateParamsTest {
                                 .maxTokens(1024L)
                                 .addMessage(
                                     MessageParam.builder()
-                                        .content(MessageParam.Content.ofString("Hello, world"))
+                                        .content("Hello, world")
                                         .role(MessageParam.Role.USER)
                                         .build()
                                 )
@@ -122,32 +118,25 @@ class MessageBatchCreateParamsTest {
                                 )
                                 .addStopSequence("string")
                                 .stream(true)
-                                .system(
-                                    MessageBatchCreateParams.Request.Params.System
-                                        .ofTextBlockParams(
-                                            listOf(
-                                                TextBlockParam.builder()
-                                                    .text("Today's date is 2024-06-01.")
-                                                    .type(TextBlockParam.Type.TEXT)
-                                                    .cacheControl(
-                                                        CacheControlEphemeral.builder()
-                                                            .type(
-                                                                CacheControlEphemeral.Type.EPHEMERAL
-                                                            )
-                                                            .build()
-                                                    )
+                                .systemOfTextBlockParams(
+                                    listOf(
+                                        TextBlockParam.builder()
+                                            .text("Today's date is 2024-06-01.")
+                                            .type(TextBlockParam.Type.TEXT)
+                                            .cacheControl(
+                                                CacheControlEphemeral.builder()
+                                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
                                                     .build()
                                             )
-                                        )
+                                            .build()
+                                    )
                                 )
                                 .temperature(1.0)
                                 .toolChoice(
-                                    ToolChoice.ofToolChoiceAuto(
-                                        ToolChoiceAuto.builder()
-                                            .type(ToolChoiceAuto.Type.AUTO)
-                                            .disableParallelToolUse(true)
-                                            .build()
-                                    )
+                                    ToolChoiceAuto.builder()
+                                        .type(ToolChoiceAuto.Type.AUTO)
+                                        .disableParallelToolUse(true)
+                                        .build()
                                 )
                                 .addTool(
                                     Tool.builder()
@@ -202,7 +191,7 @@ class MessageBatchCreateParamsTest {
                                 .maxTokens(1024L)
                                 .addMessage(
                                     MessageParam.builder()
-                                        .content(MessageParam.Content.ofString("Hello, world"))
+                                        .content("Hello, world")
                                         .role(MessageParam.Role.USER)
                                         .build()
                                 )
@@ -214,32 +203,25 @@ class MessageBatchCreateParamsTest {
                                 )
                                 .addStopSequence("string")
                                 .stream(true)
-                                .system(
-                                    MessageBatchCreateParams.Request.Params.System
-                                        .ofTextBlockParams(
-                                            listOf(
-                                                TextBlockParam.builder()
-                                                    .text("Today's date is 2024-06-01.")
-                                                    .type(TextBlockParam.Type.TEXT)
-                                                    .cacheControl(
-                                                        CacheControlEphemeral.builder()
-                                                            .type(
-                                                                CacheControlEphemeral.Type.EPHEMERAL
-                                                            )
-                                                            .build()
-                                                    )
+                                .systemOfTextBlockParams(
+                                    listOf(
+                                        TextBlockParam.builder()
+                                            .text("Today's date is 2024-06-01.")
+                                            .type(TextBlockParam.Type.TEXT)
+                                            .cacheControl(
+                                                CacheControlEphemeral.builder()
+                                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
                                                     .build()
                                             )
-                                        )
+                                            .build()
+                                    )
                                 )
                                 .temperature(1.0)
                                 .toolChoice(
-                                    ToolChoice.ofToolChoiceAuto(
-                                        ToolChoiceAuto.builder()
-                                            .type(ToolChoiceAuto.Type.AUTO)
-                                            .disableParallelToolUse(true)
-                                            .build()
-                                    )
+                                    ToolChoiceAuto.builder()
+                                        .type(ToolChoiceAuto.Type.AUTO)
+                                        .disableParallelToolUse(true)
+                                        .build()
                                 )
                                 .addTool(
                                     Tool.builder()
@@ -296,7 +278,7 @@ class MessageBatchCreateParamsTest {
                                 .maxTokens(1024L)
                                 .addMessage(
                                     MessageParam.builder()
-                                        .content(MessageParam.Content.ofString("Hello, world"))
+                                        .content("Hello, world")
                                         .role(MessageParam.Role.USER)
                                         .build()
                                 )
@@ -318,7 +300,7 @@ class MessageBatchCreateParamsTest {
                                 .maxTokens(1024L)
                                 .addMessage(
                                     MessageParam.builder()
-                                        .content(MessageParam.Content.ofString("Hello, world"))
+                                        .content("Hello, world")
                                         .role(MessageParam.Role.USER)
                                         .build()
                                 )
