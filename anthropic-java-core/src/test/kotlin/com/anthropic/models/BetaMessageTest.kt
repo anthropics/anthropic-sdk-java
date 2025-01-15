@@ -12,14 +12,12 @@ class BetaMessageTest {
         val betaMessage =
             BetaMessage.builder()
                 .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
-                .content(
-                    listOf(
-                        BetaContentBlock.ofBetaTextBlock(
-                            BetaTextBlock.builder()
-                                .text("Hi! My name is Claude.")
-                                .type(BetaTextBlock.Type.TEXT)
-                                .build()
-                        )
+                .addContent(
+                    BetaContentBlock.ofBetaTextBlock(
+                        BetaTextBlock.builder()
+                            .text("Hi! My name is Claude.")
+                            .type(BetaTextBlock.Type.TEXT)
+                            .build()
                     )
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)

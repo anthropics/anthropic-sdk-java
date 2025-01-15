@@ -69,17 +69,15 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .messages(
-                    listOf(
-                        MessageParam.builder()
-                            .content(MessageParam.Content.ofString("Hello, world"))
-                            .role(MessageParam.Role.USER)
-                            .build()
-                    )
+                .addMessage(
+                    MessageParam.builder()
+                        .content(MessageParam.Content.ofString("Hello, world"))
+                        .role(MessageParam.Role.USER)
+                        .build()
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
-                .stopSequences(listOf("string"))
+                .addStopSequence("string")
                 .system(
                     MessageCreateParams.System.ofTextBlockParams(
                         listOf(
@@ -104,41 +102,39 @@ class ErrorHandlingTest {
                             .build()
                     )
                 )
-                .tools(
-                    listOf(
-                        Tool.builder()
-                            .inputSchema(
-                                Tool.InputSchema.builder()
-                                    .type(Tool.InputSchema.Type.OBJECT)
-                                    .properties(
-                                        JsonValue.from(
-                                            mapOf(
-                                                "location" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string"
-                                                    ),
-                                                "unit" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string"
-                                                    )
-                                            )
+                .addTool(
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .type(Tool.InputSchema.Type.OBJECT)
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string"
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string"
+                                                )
                                         )
                                     )
-                                    .build()
-                            )
-                            .name("name")
-                            .cacheControl(
-                                CacheControlEphemeral.builder()
-                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                    .build()
-                            )
-                            .description("Get the current weather in a given location")
-                            .build()
-                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                .build()
+                        )
+                        .description("Get the current weather in a given location")
+                        .build()
                 )
                 .topK(5L)
                 .topP(0.7)
@@ -147,14 +143,12 @@ class ErrorHandlingTest {
         val expected =
             Message.builder()
                 .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
-                .content(
-                    listOf(
-                        ContentBlock.ofTextBlock(
-                            TextBlock.builder()
-                                .text("Hi! My name is Claude.")
-                                .type(TextBlock.Type.TEXT)
-                                .build()
-                        )
+                .addContent(
+                    ContentBlock.ofTextBlock(
+                        TextBlock.builder()
+                            .text("Hi! My name is Claude.")
+                            .type(TextBlock.Type.TEXT)
+                            .build()
                     )
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
@@ -182,17 +176,15 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .messages(
-                    listOf(
-                        MessageParam.builder()
-                            .content(MessageParam.Content.ofString("Hello, world"))
-                            .role(MessageParam.Role.USER)
-                            .build()
-                    )
+                .addMessage(
+                    MessageParam.builder()
+                        .content(MessageParam.Content.ofString("Hello, world"))
+                        .role(MessageParam.Role.USER)
+                        .build()
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
-                .stopSequences(listOf("string"))
+                .addStopSequence("string")
                 .system(
                     MessageCreateParams.System.ofTextBlockParams(
                         listOf(
@@ -217,41 +209,39 @@ class ErrorHandlingTest {
                             .build()
                     )
                 )
-                .tools(
-                    listOf(
-                        Tool.builder()
-                            .inputSchema(
-                                Tool.InputSchema.builder()
-                                    .type(Tool.InputSchema.Type.OBJECT)
-                                    .properties(
-                                        JsonValue.from(
-                                            mapOf(
-                                                "location" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string"
-                                                    ),
-                                                "unit" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string"
-                                                    )
-                                            )
+                .addTool(
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .type(Tool.InputSchema.Type.OBJECT)
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string"
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string"
+                                                )
                                         )
                                     )
-                                    .build()
-                            )
-                            .name("name")
-                            .cacheControl(
-                                CacheControlEphemeral.builder()
-                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                    .build()
-                            )
-                            .description("Get the current weather in a given location")
-                            .build()
-                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                .build()
+                        )
+                        .description("Get the current weather in a given location")
+                        .build()
                 )
                 .topK(5L)
                 .topP(0.7)
@@ -273,17 +263,15 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .messages(
-                    listOf(
-                        MessageParam.builder()
-                            .content(MessageParam.Content.ofString("Hello, world"))
-                            .role(MessageParam.Role.USER)
-                            .build()
-                    )
+                .addMessage(
+                    MessageParam.builder()
+                        .content(MessageParam.Content.ofString("Hello, world"))
+                        .role(MessageParam.Role.USER)
+                        .build()
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
-                .stopSequences(listOf("string"))
+                .addStopSequence("string")
                 .system(
                     MessageCreateParams.System.ofTextBlockParams(
                         listOf(
@@ -308,41 +296,39 @@ class ErrorHandlingTest {
                             .build()
                     )
                 )
-                .tools(
-                    listOf(
-                        Tool.builder()
-                            .inputSchema(
-                                Tool.InputSchema.builder()
-                                    .type(Tool.InputSchema.Type.OBJECT)
-                                    .properties(
-                                        JsonValue.from(
-                                            mapOf(
-                                                "location" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string"
-                                                    ),
-                                                "unit" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string"
-                                                    )
-                                            )
+                .addTool(
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .type(Tool.InputSchema.Type.OBJECT)
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string"
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string"
+                                                )
                                         )
                                     )
-                                    .build()
-                            )
-                            .name("name")
-                            .cacheControl(
-                                CacheControlEphemeral.builder()
-                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                    .build()
-                            )
-                            .description("Get the current weather in a given location")
-                            .build()
-                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                .build()
+                        )
+                        .description("Get the current weather in a given location")
+                        .build()
                 )
                 .topK(5L)
                 .topP(0.7)
@@ -364,17 +350,15 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .messages(
-                    listOf(
-                        MessageParam.builder()
-                            .content(MessageParam.Content.ofString("Hello, world"))
-                            .role(MessageParam.Role.USER)
-                            .build()
-                    )
+                .addMessage(
+                    MessageParam.builder()
+                        .content(MessageParam.Content.ofString("Hello, world"))
+                        .role(MessageParam.Role.USER)
+                        .build()
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
-                .stopSequences(listOf("string"))
+                .addStopSequence("string")
                 .system(
                     MessageCreateParams.System.ofTextBlockParams(
                         listOf(
@@ -399,41 +383,39 @@ class ErrorHandlingTest {
                             .build()
                     )
                 )
-                .tools(
-                    listOf(
-                        Tool.builder()
-                            .inputSchema(
-                                Tool.InputSchema.builder()
-                                    .type(Tool.InputSchema.Type.OBJECT)
-                                    .properties(
-                                        JsonValue.from(
-                                            mapOf(
-                                                "location" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string"
-                                                    ),
-                                                "unit" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string"
-                                                    )
-                                            )
+                .addTool(
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .type(Tool.InputSchema.Type.OBJECT)
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string"
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string"
+                                                )
                                         )
                                     )
-                                    .build()
-                            )
-                            .name("name")
-                            .cacheControl(
-                                CacheControlEphemeral.builder()
-                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                    .build()
-                            )
-                            .description("Get the current weather in a given location")
-                            .build()
-                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                .build()
+                        )
+                        .description("Get the current weather in a given location")
+                        .build()
                 )
                 .topK(5L)
                 .topP(0.7)
@@ -459,17 +441,15 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .messages(
-                    listOf(
-                        MessageParam.builder()
-                            .content(MessageParam.Content.ofString("Hello, world"))
-                            .role(MessageParam.Role.USER)
-                            .build()
-                    )
+                .addMessage(
+                    MessageParam.builder()
+                        .content(MessageParam.Content.ofString("Hello, world"))
+                        .role(MessageParam.Role.USER)
+                        .build()
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
-                .stopSequences(listOf("string"))
+                .addStopSequence("string")
                 .system(
                     MessageCreateParams.System.ofTextBlockParams(
                         listOf(
@@ -494,41 +474,39 @@ class ErrorHandlingTest {
                             .build()
                     )
                 )
-                .tools(
-                    listOf(
-                        Tool.builder()
-                            .inputSchema(
-                                Tool.InputSchema.builder()
-                                    .type(Tool.InputSchema.Type.OBJECT)
-                                    .properties(
-                                        JsonValue.from(
-                                            mapOf(
-                                                "location" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string"
-                                                    ),
-                                                "unit" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string"
-                                                    )
-                                            )
+                .addTool(
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .type(Tool.InputSchema.Type.OBJECT)
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string"
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string"
+                                                )
                                         )
                                     )
-                                    .build()
-                            )
-                            .name("name")
-                            .cacheControl(
-                                CacheControlEphemeral.builder()
-                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                    .build()
-                            )
-                            .description("Get the current weather in a given location")
-                            .build()
-                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                .build()
+                        )
+                        .description("Get the current weather in a given location")
+                        .build()
                 )
                 .topK(5L)
                 .topP(0.7)
@@ -550,17 +528,15 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .messages(
-                    listOf(
-                        MessageParam.builder()
-                            .content(MessageParam.Content.ofString("Hello, world"))
-                            .role(MessageParam.Role.USER)
-                            .build()
-                    )
+                .addMessage(
+                    MessageParam.builder()
+                        .content(MessageParam.Content.ofString("Hello, world"))
+                        .role(MessageParam.Role.USER)
+                        .build()
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
-                .stopSequences(listOf("string"))
+                .addStopSequence("string")
                 .system(
                     MessageCreateParams.System.ofTextBlockParams(
                         listOf(
@@ -585,41 +561,39 @@ class ErrorHandlingTest {
                             .build()
                     )
                 )
-                .tools(
-                    listOf(
-                        Tool.builder()
-                            .inputSchema(
-                                Tool.InputSchema.builder()
-                                    .type(Tool.InputSchema.Type.OBJECT)
-                                    .properties(
-                                        JsonValue.from(
-                                            mapOf(
-                                                "location" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string"
-                                                    ),
-                                                "unit" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string"
-                                                    )
-                                            )
+                .addTool(
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .type(Tool.InputSchema.Type.OBJECT)
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string"
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string"
+                                                )
                                         )
                                     )
-                                    .build()
-                            )
-                            .name("name")
-                            .cacheControl(
-                                CacheControlEphemeral.builder()
-                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                    .build()
-                            )
-                            .description("Get the current weather in a given location")
-                            .build()
-                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                .build()
+                        )
+                        .description("Get the current weather in a given location")
+                        .build()
                 )
                 .topK(5L)
                 .topP(0.7)
@@ -645,17 +619,15 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .messages(
-                    listOf(
-                        MessageParam.builder()
-                            .content(MessageParam.Content.ofString("Hello, world"))
-                            .role(MessageParam.Role.USER)
-                            .build()
-                    )
+                .addMessage(
+                    MessageParam.builder()
+                        .content(MessageParam.Content.ofString("Hello, world"))
+                        .role(MessageParam.Role.USER)
+                        .build()
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
-                .stopSequences(listOf("string"))
+                .addStopSequence("string")
                 .system(
                     MessageCreateParams.System.ofTextBlockParams(
                         listOf(
@@ -680,41 +652,39 @@ class ErrorHandlingTest {
                             .build()
                     )
                 )
-                .tools(
-                    listOf(
-                        Tool.builder()
-                            .inputSchema(
-                                Tool.InputSchema.builder()
-                                    .type(Tool.InputSchema.Type.OBJECT)
-                                    .properties(
-                                        JsonValue.from(
-                                            mapOf(
-                                                "location" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string"
-                                                    ),
-                                                "unit" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string"
-                                                    )
-                                            )
+                .addTool(
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .type(Tool.InputSchema.Type.OBJECT)
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string"
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string"
+                                                )
                                         )
                                     )
-                                    .build()
-                            )
-                            .name("name")
-                            .cacheControl(
-                                CacheControlEphemeral.builder()
-                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                    .build()
-                            )
-                            .description("Get the current weather in a given location")
-                            .build()
-                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                .build()
+                        )
+                        .description("Get the current weather in a given location")
+                        .build()
                 )
                 .topK(5L)
                 .topP(0.7)
@@ -736,17 +706,15 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .messages(
-                    listOf(
-                        MessageParam.builder()
-                            .content(MessageParam.Content.ofString("Hello, world"))
-                            .role(MessageParam.Role.USER)
-                            .build()
-                    )
+                .addMessage(
+                    MessageParam.builder()
+                        .content(MessageParam.Content.ofString("Hello, world"))
+                        .role(MessageParam.Role.USER)
+                        .build()
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
-                .stopSequences(listOf("string"))
+                .addStopSequence("string")
                 .system(
                     MessageCreateParams.System.ofTextBlockParams(
                         listOf(
@@ -771,41 +739,39 @@ class ErrorHandlingTest {
                             .build()
                     )
                 )
-                .tools(
-                    listOf(
-                        Tool.builder()
-                            .inputSchema(
-                                Tool.InputSchema.builder()
-                                    .type(Tool.InputSchema.Type.OBJECT)
-                                    .properties(
-                                        JsonValue.from(
-                                            mapOf(
-                                                "location" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string"
-                                                    ),
-                                                "unit" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string"
-                                                    )
-                                            )
+                .addTool(
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .type(Tool.InputSchema.Type.OBJECT)
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string"
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string"
+                                                )
                                         )
                                     )
-                                    .build()
-                            )
-                            .name("name")
-                            .cacheControl(
-                                CacheControlEphemeral.builder()
-                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                    .build()
-                            )
-                            .description("Get the current weather in a given location")
-                            .build()
-                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                .build()
+                        )
+                        .description("Get the current weather in a given location")
+                        .build()
                 )
                 .topK(5L)
                 .topP(0.7)
@@ -831,17 +797,15 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .messages(
-                    listOf(
-                        MessageParam.builder()
-                            .content(MessageParam.Content.ofString("Hello, world"))
-                            .role(MessageParam.Role.USER)
-                            .build()
-                    )
+                .addMessage(
+                    MessageParam.builder()
+                        .content(MessageParam.Content.ofString("Hello, world"))
+                        .role(MessageParam.Role.USER)
+                        .build()
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
-                .stopSequences(listOf("string"))
+                .addStopSequence("string")
                 .system(
                     MessageCreateParams.System.ofTextBlockParams(
                         listOf(
@@ -866,41 +830,39 @@ class ErrorHandlingTest {
                             .build()
                     )
                 )
-                .tools(
-                    listOf(
-                        Tool.builder()
-                            .inputSchema(
-                                Tool.InputSchema.builder()
-                                    .type(Tool.InputSchema.Type.OBJECT)
-                                    .properties(
-                                        JsonValue.from(
-                                            mapOf(
-                                                "location" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string"
-                                                    ),
-                                                "unit" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string"
-                                                    )
-                                            )
+                .addTool(
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .type(Tool.InputSchema.Type.OBJECT)
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string"
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string"
+                                                )
                                         )
                                     )
-                                    .build()
-                            )
-                            .name("name")
-                            .cacheControl(
-                                CacheControlEphemeral.builder()
-                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                    .build()
-                            )
-                            .description("Get the current weather in a given location")
-                            .build()
-                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                .build()
+                        )
+                        .description("Get the current weather in a given location")
+                        .build()
                 )
                 .topK(5L)
                 .topP(0.7)
@@ -927,17 +889,15 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .messages(
-                    listOf(
-                        MessageParam.builder()
-                            .content(MessageParam.Content.ofString("Hello, world"))
-                            .role(MessageParam.Role.USER)
-                            .build()
-                    )
+                .addMessage(
+                    MessageParam.builder()
+                        .content(MessageParam.Content.ofString("Hello, world"))
+                        .role(MessageParam.Role.USER)
+                        .build()
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
-                .stopSequences(listOf("string"))
+                .addStopSequence("string")
                 .system(
                     MessageCreateParams.System.ofTextBlockParams(
                         listOf(
@@ -962,41 +922,39 @@ class ErrorHandlingTest {
                             .build()
                     )
                 )
-                .tools(
-                    listOf(
-                        Tool.builder()
-                            .inputSchema(
-                                Tool.InputSchema.builder()
-                                    .type(Tool.InputSchema.Type.OBJECT)
-                                    .properties(
-                                        JsonValue.from(
-                                            mapOf(
-                                                "location" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string"
-                                                    ),
-                                                "unit" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string"
-                                                    )
-                                            )
+                .addTool(
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .type(Tool.InputSchema.Type.OBJECT)
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string"
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string"
+                                                )
                                         )
                                     )
-                                    .build()
-                            )
-                            .name("name")
-                            .cacheControl(
-                                CacheControlEphemeral.builder()
-                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                    .build()
-                            )
-                            .description("Get the current weather in a given location")
-                            .build()
-                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                .build()
+                        )
+                        .description("Get the current weather in a given location")
+                        .build()
                 )
                 .topK(5L)
                 .topP(0.7)
@@ -1017,17 +975,15 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .messages(
-                    listOf(
-                        MessageParam.builder()
-                            .content(MessageParam.Content.ofString("Hello, world"))
-                            .role(MessageParam.Role.USER)
-                            .build()
-                    )
+                .addMessage(
+                    MessageParam.builder()
+                        .content(MessageParam.Content.ofString("Hello, world"))
+                        .role(MessageParam.Role.USER)
+                        .build()
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
-                .stopSequences(listOf("string"))
+                .addStopSequence("string")
                 .system(
                     MessageCreateParams.System.ofTextBlockParams(
                         listOf(
@@ -1052,41 +1008,39 @@ class ErrorHandlingTest {
                             .build()
                     )
                 )
-                .tools(
-                    listOf(
-                        Tool.builder()
-                            .inputSchema(
-                                Tool.InputSchema.builder()
-                                    .type(Tool.InputSchema.Type.OBJECT)
-                                    .properties(
-                                        JsonValue.from(
-                                            mapOf(
-                                                "location" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string"
-                                                    ),
-                                                "unit" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string"
-                                                    )
-                                            )
+                .addTool(
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .type(Tool.InputSchema.Type.OBJECT)
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string"
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string"
+                                                )
                                         )
                                     )
-                                    .build()
-                            )
-                            .name("name")
-                            .cacheControl(
-                                CacheControlEphemeral.builder()
-                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                    .build()
-                            )
-                            .description("Get the current weather in a given location")
-                            .build()
-                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                .build()
+                        )
+                        .description("Get the current weather in a given location")
+                        .build()
                 )
                 .topK(5L)
                 .topP(0.7)

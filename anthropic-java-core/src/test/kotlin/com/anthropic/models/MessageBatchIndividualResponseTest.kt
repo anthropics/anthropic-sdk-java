@@ -18,14 +18,12 @@ class MessageBatchIndividualResponseTest {
                             .message(
                                 Message.builder()
                                     .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
-                                    .content(
-                                        listOf(
-                                            ContentBlock.ofTextBlock(
-                                                TextBlock.builder()
-                                                    .text("Hi! My name is Claude.")
-                                                    .type(TextBlock.Type.TEXT)
-                                                    .build()
-                                            )
+                                    .addContent(
+                                        ContentBlock.ofTextBlock(
+                                            TextBlock.builder()
+                                                .text("Hi! My name is Claude.")
+                                                .type(TextBlock.Type.TEXT)
+                                                .build()
                                         )
                                     )
                                     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
@@ -57,14 +55,12 @@ class MessageBatchIndividualResponseTest {
                         .message(
                             Message.builder()
                                 .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
-                                .content(
-                                    listOf(
-                                        ContentBlock.ofTextBlock(
-                                            TextBlock.builder()
-                                                .text("Hi! My name is Claude.")
-                                                .type(TextBlock.Type.TEXT)
-                                                .build()
-                                        )
+                                .addContent(
+                                    ContentBlock.ofTextBlock(
+                                        TextBlock.builder()
+                                            .text("Hi! My name is Claude.")
+                                            .type(TextBlock.Type.TEXT)
+                                            .build()
                                     )
                                 )
                                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)

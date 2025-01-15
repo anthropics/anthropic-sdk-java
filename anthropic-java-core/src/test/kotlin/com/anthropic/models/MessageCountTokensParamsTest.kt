@@ -11,13 +11,11 @@ class MessageCountTokensParamsTest {
     @Test
     fun createMessageCountTokensParams() {
         MessageCountTokensParams.builder()
-            .messages(
-                listOf(
-                    MessageParam.builder()
-                        .content(MessageParam.Content.ofString("string"))
-                        .role(MessageParam.Role.USER)
-                        .build()
-                )
+            .addMessage(
+                MessageParam.builder()
+                    .content(MessageParam.Content.ofString("string"))
+                    .role(MessageParam.Role.USER)
+                    .build()
             )
             .model(Model.CLAUDE_3_5_HAIKU_LATEST)
             .system(
@@ -43,8 +41,78 @@ class MessageCountTokensParamsTest {
                         .build()
                 )
             )
-            .tools(
-                listOf(
+            .addTool(
+                Tool.builder()
+                    .inputSchema(
+                        Tool.InputSchema.builder()
+                            .type(Tool.InputSchema.Type.OBJECT)
+                            .properties(
+                                JsonValue.from(
+                                    mapOf(
+                                        "location" to
+                                            mapOf(
+                                                "description" to
+                                                    "The city and state, e.g. San Francisco, CA",
+                                                "type" to "string"
+                                            ),
+                                        "unit" to
+                                            mapOf(
+                                                "description" to
+                                                    "Unit for the output - one of (celsius, fahrenheit)",
+                                                "type" to "string"
+                                            )
+                                    )
+                                )
+                            )
+                            .build()
+                    )
+                    .name("name")
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .type(CacheControlEphemeral.Type.EPHEMERAL)
+                            .build()
+                    )
+                    .description("Get the current weather in a given location")
+                    .build()
+            )
+            .build()
+    }
+
+    @Test
+    fun getBody() {
+        val params =
+            MessageCountTokensParams.builder()
+                .addMessage(
+                    MessageParam.builder()
+                        .content(MessageParam.Content.ofString("string"))
+                        .role(MessageParam.Role.USER)
+                        .build()
+                )
+                .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+                .system(
+                    MessageCountTokensParams.System.ofTextBlockParams(
+                        listOf(
+                            TextBlockParam.builder()
+                                .text("Today's date is 2024-06-01.")
+                                .type(TextBlockParam.Type.TEXT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                        .build()
+                                )
+                                .build()
+                        )
+                    )
+                )
+                .toolChoice(
+                    ToolChoice.ofToolChoiceAuto(
+                        ToolChoiceAuto.builder()
+                            .type(ToolChoiceAuto.Type.AUTO)
+                            .disableParallelToolUse(true)
+                            .build()
+                    )
+                )
+                .addTool(
                     Tool.builder()
                         .inputSchema(
                             Tool.InputSchema.builder()
@@ -77,82 +145,6 @@ class MessageCountTokensParamsTest {
                         )
                         .description("Get the current weather in a given location")
                         .build()
-                )
-            )
-            .build()
-    }
-
-    @Test
-    fun getBody() {
-        val params =
-            MessageCountTokensParams.builder()
-                .messages(
-                    listOf(
-                        MessageParam.builder()
-                            .content(MessageParam.Content.ofString("string"))
-                            .role(MessageParam.Role.USER)
-                            .build()
-                    )
-                )
-                .model(Model.CLAUDE_3_5_HAIKU_LATEST)
-                .system(
-                    MessageCountTokensParams.System.ofTextBlockParams(
-                        listOf(
-                            TextBlockParam.builder()
-                                .text("Today's date is 2024-06-01.")
-                                .type(TextBlockParam.Type.TEXT)
-                                .cacheControl(
-                                    CacheControlEphemeral.builder()
-                                        .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                        .build()
-                                )
-                                .build()
-                        )
-                    )
-                )
-                .toolChoice(
-                    ToolChoice.ofToolChoiceAuto(
-                        ToolChoiceAuto.builder()
-                            .type(ToolChoiceAuto.Type.AUTO)
-                            .disableParallelToolUse(true)
-                            .build()
-                    )
-                )
-                .tools(
-                    listOf(
-                        Tool.builder()
-                            .inputSchema(
-                                Tool.InputSchema.builder()
-                                    .type(Tool.InputSchema.Type.OBJECT)
-                                    .properties(
-                                        JsonValue.from(
-                                            mapOf(
-                                                "location" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string"
-                                                    ),
-                                                "unit" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string"
-                                                    )
-                                            )
-                                        )
-                                    )
-                                    .build()
-                            )
-                            .name("name")
-                            .cacheControl(
-                                CacheControlEphemeral.builder()
-                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                    .build()
-                            )
-                            .description("Get the current weather in a given location")
-                            .build()
-                    )
                 )
                 .build()
         val body = params.getBody()
@@ -235,13 +227,11 @@ class MessageCountTokensParamsTest {
     fun getBodyWithoutOptionalFields() {
         val params =
             MessageCountTokensParams.builder()
-                .messages(
-                    listOf(
-                        MessageParam.builder()
-                            .content(MessageParam.Content.ofString("string"))
-                            .role(MessageParam.Role.USER)
-                            .build()
-                    )
+                .addMessage(
+                    MessageParam.builder()
+                        .content(MessageParam.Content.ofString("string"))
+                        .role(MessageParam.Role.USER)
+                        .build()
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .build()

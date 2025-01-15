@@ -77,14 +77,13 @@ import com.anthropic.models.Message;
 import com.anthropic.models.MessageCreateParams;
 import com.anthropic.models.MessageParam;
 import com.anthropic.models.Model;
-import java.util.List;
 
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
-    .messages(List.of(MessageParam.builder()
+    .addMessage(MessageParam.builder()
         .role(MessageParam.Role.USER)
         .content(MessageParam.Content.ofString("Hello, Claude"))
-        .build()))
+        .build())
     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
     .build();
 Message message = client.messages().create(params);
@@ -110,13 +109,12 @@ Use the `BetaMessageBatchListParams` builder to set parameters:
 import com.anthropic.models.AnthropicBeta;
 import com.anthropic.models.BetaMessageBatchListPage;
 import com.anthropic.models.BetaMessageBatchListParams;
-import java.util.List;
 
 BetaMessageBatchListParams params = BetaMessageBatchListParams.builder()
     .afterId("after_id")
     .beforeId("before_id")
     .limit(20L)
-    .betas(List.of(AnthropicBeta.MESSAGE_BATCHES_2024_09_24))
+    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
     .build();
 BetaMessageBatchListPage page1 = client.beta().messages().batches().list(params);
 
