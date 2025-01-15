@@ -4,7 +4,7 @@ plugins {
 
 allprojects {
     group = "com.anthropic"
-    version = "0.1.0-alpha.7" // x-release-please-version
+    version = "0.1.0-alpha.8" // x-release-please-version
 }
 
 subprojects {

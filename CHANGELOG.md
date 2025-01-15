@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.1.0-alpha.8 (2025-01-15)
+
+Full Changelog: [v0.1.0-alpha.7...v0.1.0-alpha.8](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0-alpha.7...v0.1.0-alpha.8)
+
+### Chores
+
+* **internal:** add and tweak check functions ([#55](https://github.com/anthropics/anthropic-sdk-java/issues/55)) ([16f8002](https://github.com/anthropics/anthropic-sdk-java/commit/16f80028849f54f8feab7314e33d557e4a923581))
+* **internal:** remove unused gradle task ([#60](https://github.com/anthropics/anthropic-sdk-java/issues/60)) ([f503120](https://github.com/anthropics/anthropic-sdk-java/commit/f50312015016e33fefb08a07365d01bf9e11d07d))
+* **internal:** tweak client options nullability handling ([16f8002](https://github.com/anthropics/anthropic-sdk-java/commit/16f80028849f54f8feab7314e33d557e4a923581))
+* simplify examples involving lists ([#57](https://github.com/anthropics/anthropic-sdk-java/issues/57)) ([b9f1145](https://github.com/anthropics/anthropic-sdk-java/commit/b9f114543501938c386f659417e312844900dd56))
+* simplify examples involving unions ([#58](https://github.com/anthropics/anthropic-sdk-java/issues/58)) ([e800907](https://github.com/anthropics/anthropic-sdk-java/commit/e800907343dfa88baf644eafa3953098072fcda0))
+
+
+### Documentation
+
+* don't mention a non-existent SDK ([#59](https://github.com/anthropics/anthropic-sdk-java/issues/59)) ([421a9ab](https://github.com/anthropics/anthropic-sdk-java/commit/421a9ab64779d1bb34fb10cd7ad014defe2660df))
+
 ## 0.1.0-alpha.7 (2025-01-14)
 
 Full Changelog: [v0.1.0-alpha.6...v0.1.0-alpha.7](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0-alpha.6...v0.1.0-alpha.7)
