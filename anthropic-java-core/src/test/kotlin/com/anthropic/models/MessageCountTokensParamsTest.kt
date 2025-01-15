@@ -12,34 +12,27 @@ class MessageCountTokensParamsTest {
     fun createMessageCountTokensParams() {
         MessageCountTokensParams.builder()
             .addMessage(
-                MessageParam.builder()
-                    .content(MessageParam.Content.ofString("string"))
-                    .role(MessageParam.Role.USER)
-                    .build()
+                MessageParam.builder().content("string").role(MessageParam.Role.USER).build()
             )
             .model(Model.CLAUDE_3_5_HAIKU_LATEST)
-            .system(
-                MessageCountTokensParams.System.ofTextBlockParams(
-                    listOf(
-                        TextBlockParam.builder()
-                            .text("Today's date is 2024-06-01.")
-                            .type(TextBlockParam.Type.TEXT)
-                            .cacheControl(
-                                CacheControlEphemeral.builder()
-                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                    .build()
-                            )
-                            .build()
-                    )
+            .systemOfTextBlockParams(
+                listOf(
+                    TextBlockParam.builder()
+                        .text("Today's date is 2024-06-01.")
+                        .type(TextBlockParam.Type.TEXT)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                .build()
+                        )
+                        .build()
                 )
             )
             .toolChoice(
-                ToolChoice.ofToolChoiceAuto(
-                    ToolChoiceAuto.builder()
-                        .type(ToolChoiceAuto.Type.AUTO)
-                        .disableParallelToolUse(true)
-                        .build()
-                )
+                ToolChoiceAuto.builder()
+                    .type(ToolChoiceAuto.Type.AUTO)
+                    .disableParallelToolUse(true)
+                    .build()
             )
             .addTool(
                 Tool.builder()
@@ -83,34 +76,27 @@ class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addMessage(
-                    MessageParam.builder()
-                        .content(MessageParam.Content.ofString("string"))
-                        .role(MessageParam.Role.USER)
-                        .build()
+                    MessageParam.builder().content("string").role(MessageParam.Role.USER).build()
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
-                .system(
-                    MessageCountTokensParams.System.ofTextBlockParams(
-                        listOf(
-                            TextBlockParam.builder()
-                                .text("Today's date is 2024-06-01.")
-                                .type(TextBlockParam.Type.TEXT)
-                                .cacheControl(
-                                    CacheControlEphemeral.builder()
-                                        .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                        .build()
-                                )
-                                .build()
-                        )
+                .systemOfTextBlockParams(
+                    listOf(
+                        TextBlockParam.builder()
+                            .text("Today's date is 2024-06-01.")
+                            .type(TextBlockParam.Type.TEXT)
+                            .cacheControl(
+                                CacheControlEphemeral.builder()
+                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                    .build()
+                            )
+                            .build()
                     )
                 )
                 .toolChoice(
-                    ToolChoice.ofToolChoiceAuto(
-                        ToolChoiceAuto.builder()
-                            .type(ToolChoiceAuto.Type.AUTO)
-                            .disableParallelToolUse(true)
-                            .build()
-                    )
+                    ToolChoiceAuto.builder()
+                        .type(ToolChoiceAuto.Type.AUTO)
+                        .disableParallelToolUse(true)
+                        .build()
                 )
                 .addTool(
                     Tool.builder()
@@ -152,10 +138,7 @@ class MessageCountTokensParamsTest {
         assertThat(body.messages())
             .isEqualTo(
                 listOf(
-                    MessageParam.builder()
-                        .content(MessageParam.Content.ofString("string"))
-                        .role(MessageParam.Role.USER)
-                        .build()
+                    MessageParam.builder().content("string").role(MessageParam.Role.USER).build()
                 )
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
@@ -228,10 +211,7 @@ class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addMessage(
-                    MessageParam.builder()
-                        .content(MessageParam.Content.ofString("string"))
-                        .role(MessageParam.Role.USER)
-                        .build()
+                    MessageParam.builder().content("string").role(MessageParam.Role.USER).build()
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .build()
@@ -240,10 +220,7 @@ class MessageCountTokensParamsTest {
         assertThat(body.messages())
             .isEqualTo(
                 listOf(
-                    MessageParam.builder()
-                        .content(MessageParam.Content.ofString("string"))
-                        .role(MessageParam.Role.USER)
-                        .build()
+                    MessageParam.builder().content("string").role(MessageParam.Role.USER).build()
                 )
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)

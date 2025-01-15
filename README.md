@@ -82,7 +82,7 @@ MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addMessage(MessageParam.builder()
         .role(MessageParam.Role.USER)
-        .content(MessageParam.Content.ofString("Hello, Claude"))
+        .content("Hello, Claude")
         .build())
     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
     .build();

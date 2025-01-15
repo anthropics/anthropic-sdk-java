@@ -16,7 +16,6 @@ import com.anthropic.models.Metadata
 import com.anthropic.models.Model
 import com.anthropic.models.TextBlockParam
 import com.anthropic.models.Tool
-import com.anthropic.models.ToolChoice
 import com.anthropic.models.ToolChoiceAuto
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -43,7 +42,7 @@ class BatchServiceTest {
                                     .maxTokens(1024L)
                                     .addMessage(
                                         MessageParam.builder()
-                                            .content(MessageParam.Content.ofString("Hello, world"))
+                                            .content("Hello, world")
                                             .role(MessageParam.Role.USER)
                                             .build()
                                     )
@@ -55,33 +54,25 @@ class BatchServiceTest {
                                     )
                                     .addStopSequence("string")
                                     .stream(true)
-                                    .system(
-                                        MessageBatchCreateParams.Request.Params.System
-                                            .ofTextBlockParams(
-                                                listOf(
-                                                    TextBlockParam.builder()
-                                                        .text("Today's date is 2024-06-01.")
-                                                        .type(TextBlockParam.Type.TEXT)
-                                                        .cacheControl(
-                                                            CacheControlEphemeral.builder()
-                                                                .type(
-                                                                    CacheControlEphemeral.Type
-                                                                        .EPHEMERAL
-                                                                )
-                                                                .build()
-                                                        )
+                                    .systemOfTextBlockParams(
+                                        listOf(
+                                            TextBlockParam.builder()
+                                                .text("Today's date is 2024-06-01.")
+                                                .type(TextBlockParam.Type.TEXT)
+                                                .cacheControl(
+                                                    CacheControlEphemeral.builder()
+                                                        .type(CacheControlEphemeral.Type.EPHEMERAL)
                                                         .build()
                                                 )
-                                            )
+                                                .build()
+                                        )
                                     )
                                     .temperature(1.0)
                                     .toolChoice(
-                                        ToolChoice.ofToolChoiceAuto(
-                                            ToolChoiceAuto.builder()
-                                                .type(ToolChoiceAuto.Type.AUTO)
-                                                .disableParallelToolUse(true)
-                                                .build()
-                                        )
+                                        ToolChoiceAuto.builder()
+                                            .type(ToolChoiceAuto.Type.AUTO)
+                                            .disableParallelToolUse(true)
+                                            .build()
                                     )
                                     .addTool(
                                         Tool.builder()

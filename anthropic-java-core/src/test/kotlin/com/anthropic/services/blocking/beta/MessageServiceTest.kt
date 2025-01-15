@@ -13,9 +13,7 @@ import com.anthropic.models.BetaMessageParam
 import com.anthropic.models.BetaMetadata
 import com.anthropic.models.BetaTextBlockParam
 import com.anthropic.models.BetaTool
-import com.anthropic.models.BetaToolChoice
 import com.anthropic.models.BetaToolChoiceAuto
-import com.anthropic.models.BetaToolUnion
 import com.anthropic.models.Model
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -37,7 +35,7 @@ class MessageServiceTest {
                     .maxTokens(1024L)
                     .addMessage(
                         BetaMessageParam.builder()
-                            .content(BetaMessageParam.Content.ofString("Hello, world"))
+                            .content("Hello, world")
                             .role(BetaMessageParam.Role.USER)
                             .build()
                     )
@@ -48,66 +46,60 @@ class MessageServiceTest {
                             .build()
                     )
                     .addStopSequence("string")
-                    .system(
-                        BetaMessageCreateParams.System.ofBetaTextBlockParams(
-                            listOf(
-                                BetaTextBlockParam.builder()
-                                    .text("Today's date is 2024-06-01.")
-                                    .type(BetaTextBlockParam.Type.TEXT)
-                                    .cacheControl(
-                                        BetaCacheControlEphemeral.builder()
-                                            .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                            .build()
-                                    )
-                                    .build()
-                            )
-                        )
-                    )
-                    .temperature(1.0)
-                    .toolChoice(
-                        BetaToolChoice.ofBetaToolChoiceAuto(
-                            BetaToolChoiceAuto.builder()
-                                .type(BetaToolChoiceAuto.Type.AUTO)
-                                .disableParallelToolUse(true)
-                                .build()
-                        )
-                    )
-                    .addTool(
-                        BetaToolUnion.ofBetaTool(
-                            BetaTool.builder()
-                                .inputSchema(
-                                    BetaTool.InputSchema.builder()
-                                        .type(BetaTool.InputSchema.Type.OBJECT)
-                                        .properties(
-                                            JsonValue.from(
-                                                mapOf(
-                                                    "location" to
-                                                        mapOf(
-                                                            "description" to
-                                                                "The city and state, e.g. San Francisco, CA",
-                                                            "type" to "string"
-                                                        ),
-                                                    "unit" to
-                                                        mapOf(
-                                                            "description" to
-                                                                "Unit for the output - one of (celsius, fahrenheit)",
-                                                            "type" to "string"
-                                                        )
-                                                )
-                                            )
-                                        )
-                                        .build()
-                                )
-                                .name("name")
+                    .systemOfBetaTextBlockParams(
+                        listOf(
+                            BetaTextBlockParam.builder()
+                                .text("Today's date is 2024-06-01.")
+                                .type(BetaTextBlockParam.Type.TEXT)
                                 .cacheControl(
                                     BetaCacheControlEphemeral.builder()
                                         .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
                                         .build()
                                 )
-                                .description("Get the current weather in a given location")
-                                .type(BetaTool.Type.CUSTOM)
                                 .build()
                         )
+                    )
+                    .temperature(1.0)
+                    .toolChoice(
+                        BetaToolChoiceAuto.builder()
+                            .type(BetaToolChoiceAuto.Type.AUTO)
+                            .disableParallelToolUse(true)
+                            .build()
+                    )
+                    .addTool(
+                        BetaTool.builder()
+                            .inputSchema(
+                                BetaTool.InputSchema.builder()
+                                    .type(BetaTool.InputSchema.Type.OBJECT)
+                                    .properties(
+                                        JsonValue.from(
+                                            mapOf(
+                                                "location" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "The city and state, e.g. San Francisco, CA",
+                                                        "type" to "string"
+                                                    ),
+                                                "unit" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "Unit for the output - one of (celsius, fahrenheit)",
+                                                        "type" to "string"
+                                                    )
+                                            )
+                                        )
+                                    )
+                                    .build()
+                            )
+                            .name("name")
+                            .cacheControl(
+                                BetaCacheControlEphemeral.builder()
+                                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
+                                    .build()
+                            )
+                            .description("Get the current weather in a given location")
+                            .type(BetaTool.Type.CUSTOM)
+                            .build()
                     )
                     .topK(5L)
                     .topP(0.7)
@@ -133,7 +125,7 @@ class MessageServiceTest {
                     .maxTokens(1024L)
                     .addMessage(
                         BetaMessageParam.builder()
-                            .content(BetaMessageParam.Content.ofString("Hello, world"))
+                            .content("Hello, world")
                             .role(BetaMessageParam.Role.USER)
                             .build()
                     )
@@ -144,66 +136,60 @@ class MessageServiceTest {
                             .build()
                     )
                     .addStopSequence("string")
-                    .system(
-                        BetaMessageCreateParams.System.ofBetaTextBlockParams(
-                            listOf(
-                                BetaTextBlockParam.builder()
-                                    .text("Today's date is 2024-06-01.")
-                                    .type(BetaTextBlockParam.Type.TEXT)
-                                    .cacheControl(
-                                        BetaCacheControlEphemeral.builder()
-                                            .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                            .build()
-                                    )
-                                    .build()
-                            )
-                        )
-                    )
-                    .temperature(1.0)
-                    .toolChoice(
-                        BetaToolChoice.ofBetaToolChoiceAuto(
-                            BetaToolChoiceAuto.builder()
-                                .type(BetaToolChoiceAuto.Type.AUTO)
-                                .disableParallelToolUse(true)
-                                .build()
-                        )
-                    )
-                    .addTool(
-                        BetaToolUnion.ofBetaTool(
-                            BetaTool.builder()
-                                .inputSchema(
-                                    BetaTool.InputSchema.builder()
-                                        .type(BetaTool.InputSchema.Type.OBJECT)
-                                        .properties(
-                                            JsonValue.from(
-                                                mapOf(
-                                                    "location" to
-                                                        mapOf(
-                                                            "description" to
-                                                                "The city and state, e.g. San Francisco, CA",
-                                                            "type" to "string"
-                                                        ),
-                                                    "unit" to
-                                                        mapOf(
-                                                            "description" to
-                                                                "Unit for the output - one of (celsius, fahrenheit)",
-                                                            "type" to "string"
-                                                        )
-                                                )
-                                            )
-                                        )
-                                        .build()
-                                )
-                                .name("name")
+                    .systemOfBetaTextBlockParams(
+                        listOf(
+                            BetaTextBlockParam.builder()
+                                .text("Today's date is 2024-06-01.")
+                                .type(BetaTextBlockParam.Type.TEXT)
                                 .cacheControl(
                                     BetaCacheControlEphemeral.builder()
                                         .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
                                         .build()
                                 )
-                                .description("Get the current weather in a given location")
-                                .type(BetaTool.Type.CUSTOM)
                                 .build()
                         )
+                    )
+                    .temperature(1.0)
+                    .toolChoice(
+                        BetaToolChoiceAuto.builder()
+                            .type(BetaToolChoiceAuto.Type.AUTO)
+                            .disableParallelToolUse(true)
+                            .build()
+                    )
+                    .addTool(
+                        BetaTool.builder()
+                            .inputSchema(
+                                BetaTool.InputSchema.builder()
+                                    .type(BetaTool.InputSchema.Type.OBJECT)
+                                    .properties(
+                                        JsonValue.from(
+                                            mapOf(
+                                                "location" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "The city and state, e.g. San Francisco, CA",
+                                                        "type" to "string"
+                                                    ),
+                                                "unit" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "Unit for the output - one of (celsius, fahrenheit)",
+                                                        "type" to "string"
+                                                    )
+                                            )
+                                        )
+                                    )
+                                    .build()
+                            )
+                            .name("name")
+                            .cacheControl(
+                                BetaCacheControlEphemeral.builder()
+                                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
+                                    .build()
+                            )
+                            .description("Get the current weather in a given location")
+                            .type(BetaTool.Type.CUSTOM)
+                            .build()
                     )
                     .topK(5L)
                     .topP(0.7)
@@ -232,70 +218,64 @@ class MessageServiceTest {
                 BetaMessageCountTokensParams.builder()
                     .addMessage(
                         BetaMessageParam.builder()
-                            .content(BetaMessageParam.Content.ofString("string"))
+                            .content("string")
                             .role(BetaMessageParam.Role.USER)
                             .build()
                     )
                     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
-                    .system(
-                        BetaMessageCountTokensParams.System.ofBetaTextBlockParams(
-                            listOf(
-                                BetaTextBlockParam.builder()
-                                    .text("Today's date is 2024-06-01.")
-                                    .type(BetaTextBlockParam.Type.TEXT)
-                                    .cacheControl(
-                                        BetaCacheControlEphemeral.builder()
-                                            .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                            .build()
-                                    )
-                                    .build()
-                            )
-                        )
-                    )
-                    .toolChoice(
-                        BetaToolChoice.ofBetaToolChoiceAuto(
-                            BetaToolChoiceAuto.builder()
-                                .type(BetaToolChoiceAuto.Type.AUTO)
-                                .disableParallelToolUse(true)
-                                .build()
-                        )
-                    )
-                    .addTool(
-                        BetaMessageCountTokensParams.Tool.ofBetaTool(
-                            BetaTool.builder()
-                                .inputSchema(
-                                    BetaTool.InputSchema.builder()
-                                        .type(BetaTool.InputSchema.Type.OBJECT)
-                                        .properties(
-                                            JsonValue.from(
-                                                mapOf(
-                                                    "location" to
-                                                        mapOf(
-                                                            "description" to
-                                                                "The city and state, e.g. San Francisco, CA",
-                                                            "type" to "string"
-                                                        ),
-                                                    "unit" to
-                                                        mapOf(
-                                                            "description" to
-                                                                "Unit for the output - one of (celsius, fahrenheit)",
-                                                            "type" to "string"
-                                                        )
-                                                )
-                                            )
-                                        )
-                                        .build()
-                                )
-                                .name("name")
+                    .systemOfBetaTextBlockParams(
+                        listOf(
+                            BetaTextBlockParam.builder()
+                                .text("Today's date is 2024-06-01.")
+                                .type(BetaTextBlockParam.Type.TEXT)
                                 .cacheControl(
                                     BetaCacheControlEphemeral.builder()
                                         .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
                                         .build()
                                 )
-                                .description("Get the current weather in a given location")
-                                .type(BetaTool.Type.CUSTOM)
                                 .build()
                         )
+                    )
+                    .toolChoice(
+                        BetaToolChoiceAuto.builder()
+                            .type(BetaToolChoiceAuto.Type.AUTO)
+                            .disableParallelToolUse(true)
+                            .build()
+                    )
+                    .addTool(
+                        BetaTool.builder()
+                            .inputSchema(
+                                BetaTool.InputSchema.builder()
+                                    .type(BetaTool.InputSchema.Type.OBJECT)
+                                    .properties(
+                                        JsonValue.from(
+                                            mapOf(
+                                                "location" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "The city and state, e.g. San Francisco, CA",
+                                                        "type" to "string"
+                                                    ),
+                                                "unit" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "Unit for the output - one of (celsius, fahrenheit)",
+                                                        "type" to "string"
+                                                    )
+                                            )
+                                        )
+                                    )
+                                    .build()
+                            )
+                            .name("name")
+                            .cacheControl(
+                                BetaCacheControlEphemeral.builder()
+                                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
+                                    .build()
+                            )
+                            .description("Get the current weather in a given location")
+                            .type(BetaTool.Type.CUSTOM)
+                            .build()
                     )
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()

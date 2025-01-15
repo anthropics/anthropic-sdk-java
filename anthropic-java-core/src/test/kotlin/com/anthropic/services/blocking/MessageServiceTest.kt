@@ -13,7 +13,6 @@ import com.anthropic.models.Metadata
 import com.anthropic.models.Model
 import com.anthropic.models.TextBlockParam
 import com.anthropic.models.Tool
-import com.anthropic.models.ToolChoice
 import com.anthropic.models.ToolChoiceAuto
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -35,7 +34,7 @@ class MessageServiceTest {
                     .maxTokens(1024L)
                     .addMessage(
                         MessageParam.builder()
-                            .content(MessageParam.Content.ofString("Hello, world"))
+                            .content("Hello, world")
                             .role(MessageParam.Role.USER)
                             .build()
                     )
@@ -44,29 +43,25 @@ class MessageServiceTest {
                         Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
                     )
                     .addStopSequence("string")
-                    .system(
-                        MessageCreateParams.System.ofTextBlockParams(
-                            listOf(
-                                TextBlockParam.builder()
-                                    .text("Today's date is 2024-06-01.")
-                                    .type(TextBlockParam.Type.TEXT)
-                                    .cacheControl(
-                                        CacheControlEphemeral.builder()
-                                            .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                            .build()
-                                    )
-                                    .build()
-                            )
+                    .systemOfTextBlockParams(
+                        listOf(
+                            TextBlockParam.builder()
+                                .text("Today's date is 2024-06-01.")
+                                .type(TextBlockParam.Type.TEXT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                        .build()
+                                )
+                                .build()
                         )
                     )
                     .temperature(1.0)
                     .toolChoice(
-                        ToolChoice.ofToolChoiceAuto(
-                            ToolChoiceAuto.builder()
-                                .type(ToolChoiceAuto.Type.AUTO)
-                                .disableParallelToolUse(true)
-                                .build()
-                        )
+                        ToolChoiceAuto.builder()
+                            .type(ToolChoiceAuto.Type.AUTO)
+                            .disableParallelToolUse(true)
+                            .build()
                     )
                     .addTool(
                         Tool.builder()
@@ -125,7 +120,7 @@ class MessageServiceTest {
                     .maxTokens(1024L)
                     .addMessage(
                         MessageParam.builder()
-                            .content(MessageParam.Content.ofString("Hello, world"))
+                            .content("Hello, world")
                             .role(MessageParam.Role.USER)
                             .build()
                     )
@@ -134,29 +129,25 @@ class MessageServiceTest {
                         Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
                     )
                     .addStopSequence("string")
-                    .system(
-                        MessageCreateParams.System.ofTextBlockParams(
-                            listOf(
-                                TextBlockParam.builder()
-                                    .text("Today's date is 2024-06-01.")
-                                    .type(TextBlockParam.Type.TEXT)
-                                    .cacheControl(
-                                        CacheControlEphemeral.builder()
-                                            .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                            .build()
-                                    )
-                                    .build()
-                            )
+                    .systemOfTextBlockParams(
+                        listOf(
+                            TextBlockParam.builder()
+                                .text("Today's date is 2024-06-01.")
+                                .type(TextBlockParam.Type.TEXT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                        .build()
+                                )
+                                .build()
                         )
                     )
                     .temperature(1.0)
                     .toolChoice(
-                        ToolChoice.ofToolChoiceAuto(
-                            ToolChoiceAuto.builder()
-                                .type(ToolChoiceAuto.Type.AUTO)
-                                .disableParallelToolUse(true)
-                                .build()
-                        )
+                        ToolChoiceAuto.builder()
+                            .type(ToolChoiceAuto.Type.AUTO)
+                            .disableParallelToolUse(true)
+                            .build()
                     )
                     .addTool(
                         Tool.builder()
@@ -218,33 +209,29 @@ class MessageServiceTest {
                 MessageCountTokensParams.builder()
                     .addMessage(
                         MessageParam.builder()
-                            .content(MessageParam.Content.ofString("string"))
+                            .content("string")
                             .role(MessageParam.Role.USER)
                             .build()
                     )
                     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
-                    .system(
-                        MessageCountTokensParams.System.ofTextBlockParams(
-                            listOf(
-                                TextBlockParam.builder()
-                                    .text("Today's date is 2024-06-01.")
-                                    .type(TextBlockParam.Type.TEXT)
-                                    .cacheControl(
-                                        CacheControlEphemeral.builder()
-                                            .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                            .build()
-                                    )
-                                    .build()
-                            )
+                    .systemOfTextBlockParams(
+                        listOf(
+                            TextBlockParam.builder()
+                                .text("Today's date is 2024-06-01.")
+                                .type(TextBlockParam.Type.TEXT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                        .build()
+                                )
+                                .build()
                         )
                     )
                     .toolChoice(
-                        ToolChoice.ofToolChoiceAuto(
-                            ToolChoiceAuto.builder()
-                                .type(ToolChoiceAuto.Type.AUTO)
-                                .disableParallelToolUse(true)
-                                .build()
-                        )
+                        ToolChoiceAuto.builder()
+                            .type(ToolChoiceAuto.Type.AUTO)
+                            .disableParallelToolUse(true)
+                            .build()
                     )
                     .addTool(
                         Tool.builder()
