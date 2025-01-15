@@ -14,7 +14,7 @@ class BetaMessageBatchListParamsTest {
             .afterId("after_id")
             .beforeId("before_id")
             .limit(1L)
-            .betas(listOf(AnthropicBeta.MESSAGE_BATCHES_2024_09_24))
+            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .build()
     }
 
@@ -25,7 +25,7 @@ class BetaMessageBatchListParamsTest {
                 .afterId("after_id")
                 .beforeId("before_id")
                 .limit(1L)
-                .betas(listOf(AnthropicBeta.MESSAGE_BATCHES_2024_09_24))
+                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
         val expected = QueryParams.builder()
         expected.put("after_id", "after_id")

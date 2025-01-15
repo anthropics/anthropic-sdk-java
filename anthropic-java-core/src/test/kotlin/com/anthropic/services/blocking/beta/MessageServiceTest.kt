@@ -35,13 +35,11 @@ class MessageServiceTest {
             messageService.create(
                 BetaMessageCreateParams.builder()
                     .maxTokens(1024L)
-                    .messages(
-                        listOf(
-                            BetaMessageParam.builder()
-                                .content(BetaMessageParam.Content.ofString("Hello, world"))
-                                .role(BetaMessageParam.Role.USER)
-                                .build()
-                        )
+                    .addMessage(
+                        BetaMessageParam.builder()
+                            .content(BetaMessageParam.Content.ofString("Hello, world"))
+                            .role(BetaMessageParam.Role.USER)
+                            .build()
                     )
                     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                     .metadata(
@@ -49,7 +47,7 @@ class MessageServiceTest {
                             .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
                             .build()
                     )
-                    .stopSequences(listOf("string"))
+                    .addStopSequence("string")
                     .system(
                         BetaMessageCreateParams.System.ofBetaTextBlockParams(
                             listOf(
@@ -74,48 +72,46 @@ class MessageServiceTest {
                                 .build()
                         )
                     )
-                    .tools(
-                        listOf(
-                            BetaToolUnion.ofBetaTool(
-                                BetaTool.builder()
-                                    .inputSchema(
-                                        BetaTool.InputSchema.builder()
-                                            .type(BetaTool.InputSchema.Type.OBJECT)
-                                            .properties(
-                                                JsonValue.from(
-                                                    mapOf(
-                                                        "location" to
-                                                            mapOf(
-                                                                "description" to
-                                                                    "The city and state, e.g. San Francisco, CA",
-                                                                "type" to "string"
-                                                            ),
-                                                        "unit" to
-                                                            mapOf(
-                                                                "description" to
-                                                                    "Unit for the output - one of (celsius, fahrenheit)",
-                                                                "type" to "string"
-                                                            )
-                                                    )
+                    .addTool(
+                        BetaToolUnion.ofBetaTool(
+                            BetaTool.builder()
+                                .inputSchema(
+                                    BetaTool.InputSchema.builder()
+                                        .type(BetaTool.InputSchema.Type.OBJECT)
+                                        .properties(
+                                            JsonValue.from(
+                                                mapOf(
+                                                    "location" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "The city and state, e.g. San Francisco, CA",
+                                                            "type" to "string"
+                                                        ),
+                                                    "unit" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "Unit for the output - one of (celsius, fahrenheit)",
+                                                            "type" to "string"
+                                                        )
                                                 )
                                             )
-                                            .build()
-                                    )
-                                    .name("name")
-                                    .cacheControl(
-                                        BetaCacheControlEphemeral.builder()
-                                            .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                            .build()
-                                    )
-                                    .description("Get the current weather in a given location")
-                                    .type(BetaTool.Type.CUSTOM)
-                                    .build()
-                            )
+                                        )
+                                        .build()
+                                )
+                                .name("name")
+                                .cacheControl(
+                                    BetaCacheControlEphemeral.builder()
+                                        .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
+                                        .build()
+                                )
+                                .description("Get the current weather in a given location")
+                                .type(BetaTool.Type.CUSTOM)
+                                .build()
                         )
                     )
                     .topK(5L)
                     .topP(0.7)
-                    .betas(listOf(AnthropicBeta.MESSAGE_BATCHES_2024_09_24))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
         println(betaMessage)
@@ -135,13 +131,11 @@ class MessageServiceTest {
             messageService.createStreaming(
                 BetaMessageCreateParams.builder()
                     .maxTokens(1024L)
-                    .messages(
-                        listOf(
-                            BetaMessageParam.builder()
-                                .content(BetaMessageParam.Content.ofString("Hello, world"))
-                                .role(BetaMessageParam.Role.USER)
-                                .build()
-                        )
+                    .addMessage(
+                        BetaMessageParam.builder()
+                            .content(BetaMessageParam.Content.ofString("Hello, world"))
+                            .role(BetaMessageParam.Role.USER)
+                            .build()
                     )
                     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                     .metadata(
@@ -149,7 +143,7 @@ class MessageServiceTest {
                             .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
                             .build()
                     )
-                    .stopSequences(listOf("string"))
+                    .addStopSequence("string")
                     .system(
                         BetaMessageCreateParams.System.ofBetaTextBlockParams(
                             listOf(
@@ -174,48 +168,46 @@ class MessageServiceTest {
                                 .build()
                         )
                     )
-                    .tools(
-                        listOf(
-                            BetaToolUnion.ofBetaTool(
-                                BetaTool.builder()
-                                    .inputSchema(
-                                        BetaTool.InputSchema.builder()
-                                            .type(BetaTool.InputSchema.Type.OBJECT)
-                                            .properties(
-                                                JsonValue.from(
-                                                    mapOf(
-                                                        "location" to
-                                                            mapOf(
-                                                                "description" to
-                                                                    "The city and state, e.g. San Francisco, CA",
-                                                                "type" to "string"
-                                                            ),
-                                                        "unit" to
-                                                            mapOf(
-                                                                "description" to
-                                                                    "Unit for the output - one of (celsius, fahrenheit)",
-                                                                "type" to "string"
-                                                            )
-                                                    )
+                    .addTool(
+                        BetaToolUnion.ofBetaTool(
+                            BetaTool.builder()
+                                .inputSchema(
+                                    BetaTool.InputSchema.builder()
+                                        .type(BetaTool.InputSchema.Type.OBJECT)
+                                        .properties(
+                                            JsonValue.from(
+                                                mapOf(
+                                                    "location" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "The city and state, e.g. San Francisco, CA",
+                                                            "type" to "string"
+                                                        ),
+                                                    "unit" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "Unit for the output - one of (celsius, fahrenheit)",
+                                                            "type" to "string"
+                                                        )
                                                 )
                                             )
-                                            .build()
-                                    )
-                                    .name("name")
-                                    .cacheControl(
-                                        BetaCacheControlEphemeral.builder()
-                                            .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                            .build()
-                                    )
-                                    .description("Get the current weather in a given location")
-                                    .type(BetaTool.Type.CUSTOM)
-                                    .build()
-                            )
+                                        )
+                                        .build()
+                                )
+                                .name("name")
+                                .cacheControl(
+                                    BetaCacheControlEphemeral.builder()
+                                        .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
+                                        .build()
+                                )
+                                .description("Get the current weather in a given location")
+                                .type(BetaTool.Type.CUSTOM)
+                                .build()
                         )
                     )
                     .topK(5L)
                     .topP(0.7)
-                    .betas(listOf(AnthropicBeta.MESSAGE_BATCHES_2024_09_24))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
 
@@ -238,13 +230,11 @@ class MessageServiceTest {
         val betaMessageTokensCount =
             messageService.countTokens(
                 BetaMessageCountTokensParams.builder()
-                    .messages(
-                        listOf(
-                            BetaMessageParam.builder()
-                                .content(BetaMessageParam.Content.ofString("string"))
-                                .role(BetaMessageParam.Role.USER)
-                                .build()
-                        )
+                    .addMessage(
+                        BetaMessageParam.builder()
+                            .content(BetaMessageParam.Content.ofString("string"))
+                            .role(BetaMessageParam.Role.USER)
+                            .build()
                     )
                     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                     .system(
@@ -270,46 +260,44 @@ class MessageServiceTest {
                                 .build()
                         )
                     )
-                    .tools(
-                        listOf(
-                            BetaMessageCountTokensParams.Tool.ofBetaTool(
-                                BetaTool.builder()
-                                    .inputSchema(
-                                        BetaTool.InputSchema.builder()
-                                            .type(BetaTool.InputSchema.Type.OBJECT)
-                                            .properties(
-                                                JsonValue.from(
-                                                    mapOf(
-                                                        "location" to
-                                                            mapOf(
-                                                                "description" to
-                                                                    "The city and state, e.g. San Francisco, CA",
-                                                                "type" to "string"
-                                                            ),
-                                                        "unit" to
-                                                            mapOf(
-                                                                "description" to
-                                                                    "Unit for the output - one of (celsius, fahrenheit)",
-                                                                "type" to "string"
-                                                            )
-                                                    )
+                    .addTool(
+                        BetaMessageCountTokensParams.Tool.ofBetaTool(
+                            BetaTool.builder()
+                                .inputSchema(
+                                    BetaTool.InputSchema.builder()
+                                        .type(BetaTool.InputSchema.Type.OBJECT)
+                                        .properties(
+                                            JsonValue.from(
+                                                mapOf(
+                                                    "location" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "The city and state, e.g. San Francisco, CA",
+                                                            "type" to "string"
+                                                        ),
+                                                    "unit" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "Unit for the output - one of (celsius, fahrenheit)",
+                                                            "type" to "string"
+                                                        )
                                                 )
                                             )
-                                            .build()
-                                    )
-                                    .name("name")
-                                    .cacheControl(
-                                        BetaCacheControlEphemeral.builder()
-                                            .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                            .build()
-                                    )
-                                    .description("Get the current weather in a given location")
-                                    .type(BetaTool.Type.CUSTOM)
-                                    .build()
-                            )
+                                        )
+                                        .build()
+                                )
+                                .name("name")
+                                .cacheControl(
+                                    BetaCacheControlEphemeral.builder()
+                                        .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
+                                        .build()
+                                )
+                                .description("Get the current weather in a given location")
+                                .type(BetaTool.Type.CUSTOM)
+                                .build()
                         )
                     )
-                    .betas(listOf(AnthropicBeta.MESSAGE_BATCHES_2024_09_24))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
         println(betaMessageTokensCount)

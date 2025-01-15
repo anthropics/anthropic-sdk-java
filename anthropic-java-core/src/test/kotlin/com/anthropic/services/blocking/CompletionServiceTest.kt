@@ -30,7 +30,7 @@ class CompletionServiceTest {
                     .metadata(
                         Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
                     )
-                    .stopSequences(listOf("string"))
+                    .addStopSequence("string")
                     .temperature(1.0)
                     .topK(5L)
                     .topP(0.7)
@@ -58,7 +58,7 @@ class CompletionServiceTest {
                     .metadata(
                         Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
                     )
-                    .stopSequences(listOf("string"))
+                    .addStopSequence("string")
                     .temperature(1.0)
                     .topK(5L)
                     .topP(0.7)

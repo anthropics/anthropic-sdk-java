@@ -11,7 +11,7 @@ class BetaMessageBatchRetrieveParamsTest {
     fun createBetaMessageBatchRetrieveParams() {
         BetaMessageBatchRetrieveParams.builder()
             .messageBatchId("message_batch_id")
-            .betas(listOf(AnthropicBeta.MESSAGE_BATCHES_2024_09_24))
+            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .build()
     }
 
