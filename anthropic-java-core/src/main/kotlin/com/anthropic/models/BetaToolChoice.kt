@@ -133,10 +133,13 @@ private constructor(
 
     interface Visitor<out T> {
 
+        /** The model will automatically decide whether to use tools. */
         fun visitBetaToolChoiceAuto(betaToolChoiceAuto: BetaToolChoiceAuto): T
 
+        /** The model will use any available tools. */
         fun visitBetaToolChoiceAny(betaToolChoiceAny: BetaToolChoiceAny): T
 
+        /** The model will use the specified tool with `tool_choice.name`. */
         fun visitBetaToolChoiceTool(betaToolChoiceTool: BetaToolChoiceTool): T
 
         fun unknown(json: JsonValue?): T {

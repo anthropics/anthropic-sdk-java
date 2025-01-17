@@ -468,6 +468,7 @@ private constructor(
             )
     }
 
+    /** Processing status of the Message Batch. */
     class ProcessingStatus
     @JsonCreator
     private constructor(
@@ -531,6 +532,11 @@ private constructor(
         override fun toString() = value.toString()
     }
 
+    /**
+     * Object type.
+     *
+     * For Message Batches, this is always `"message_batch"`.
+     */
     class Type
     @JsonCreator
     private constructor(

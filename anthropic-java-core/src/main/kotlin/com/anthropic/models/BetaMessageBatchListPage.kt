@@ -19,6 +19,9 @@ import java.util.Optional
 import java.util.stream.Stream
 import java.util.stream.StreamSupport
 
+/**
+ * List all Message Batches within a Workspace. Most recently created batches are returned first.
+ */
 class BetaMessageBatchListPage
 private constructor(
     private val batchesService: BatchService,

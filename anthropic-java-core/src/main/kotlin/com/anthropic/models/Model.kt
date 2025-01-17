@@ -7,6 +7,10 @@ import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 
+/**
+ * The model that will complete your prompt.\n\nSee
+ * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and options.
+ */
 class Model
 @JsonCreator
 private constructor(
@@ -43,28 +47,46 @@ private constructor(
     }
 
     enum class Known {
+        /** Fast and cost-effective model */
         CLAUDE_3_5_HAIKU_LATEST,
+        /** Fast and cost-effective model */
         CLAUDE_3_5_HAIKU_20241022,
+        /** Our most intelligent model */
         CLAUDE_3_5_SONNET_LATEST,
+        /** Our most intelligent model */
         CLAUDE_3_5_SONNET_20241022,
+        /** Our previous most intelligent model */
         CLAUDE_3_5_SONNET_20240620,
+        /** Excels at writing and complex tasks */
         CLAUDE_3_OPUS_LATEST,
+        /** Excels at writing and complex tasks */
         CLAUDE_3_OPUS_20240229,
+        /** Balance of speed and intelligence */
         CLAUDE_3_SONNET_20240229,
+        /** Our previous fast and cost-effective */
         CLAUDE_3_HAIKU_20240307,
         CLAUDE_2_1,
         CLAUDE_2_0,
     }
 
     enum class Value {
+        /** Fast and cost-effective model */
         CLAUDE_3_5_HAIKU_LATEST,
+        /** Fast and cost-effective model */
         CLAUDE_3_5_HAIKU_20241022,
+        /** Our most intelligent model */
         CLAUDE_3_5_SONNET_LATEST,
+        /** Our most intelligent model */
         CLAUDE_3_5_SONNET_20241022,
+        /** Our previous most intelligent model */
         CLAUDE_3_5_SONNET_20240620,
+        /** Excels at writing and complex tasks */
         CLAUDE_3_OPUS_LATEST,
+        /** Excels at writing and complex tasks */
         CLAUDE_3_OPUS_20240229,
+        /** Balance of speed and intelligence */
         CLAUDE_3_SONNET_20240229,
+        /** Our previous fast and cost-effective */
         CLAUDE_3_HAIKU_20240307,
         CLAUDE_2_1,
         CLAUDE_2_0,
