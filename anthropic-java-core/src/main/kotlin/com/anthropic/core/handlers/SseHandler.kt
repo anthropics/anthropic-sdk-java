@@ -6,9 +6,9 @@ import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.SseMessage
 import com.anthropic.core.http.StreamResponse
+import com.anthropic.core.http.map
 import com.anthropic.errors.AnthropicException
 import com.fasterxml.jackson.databind.json.JsonMapper
-import java.util.stream.Stream
 
 @JvmSynthetic
 internal fun sseHandler(jsonMapper: JsonMapper): Handler<StreamResponse<SseMessage>> =
@@ -116,12 +116,4 @@ internal inline fun <reified T> Handler<StreamResponse<SseMessage>>.mapJson():
                     throw AnthropicException("Error reading response", e)
                 }
             }
-    }
-
-@JvmSynthetic
-internal fun <T, R> StreamResponse<T>.map(transform: (T) -> R): StreamResponse<R> =
-    object : StreamResponse<R> {
-        override fun stream(): Stream<R> = this@map.stream().map(transform)
-
-        override fun close() = this@map.close()
     }
