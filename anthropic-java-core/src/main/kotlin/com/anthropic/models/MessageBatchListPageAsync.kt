@@ -20,6 +20,9 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import java.util.function.Predicate
 
+/**
+ * List all Message Batches within a Workspace. Most recently created batches are returned first.
+ */
 class MessageBatchListPageAsync
 private constructor(
     private val batchesService: BatchServiceAsync,

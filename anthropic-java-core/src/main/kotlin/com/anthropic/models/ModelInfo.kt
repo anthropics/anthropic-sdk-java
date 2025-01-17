@@ -185,6 +185,11 @@ private constructor(
             )
     }
 
+    /**
+     * Object type.
+     *
+     * For Models, this is always `"model"`.
+     */
     class Type
     @JsonCreator
     private constructor(

@@ -131,10 +131,13 @@ private constructor(
 
     interface Visitor<out T> {
 
+        /** The model will automatically decide whether to use tools. */
         fun visitToolChoiceAuto(toolChoiceAuto: ToolChoiceAuto): T
 
+        /** The model will use any available tools. */
         fun visitToolChoiceAny(toolChoiceAny: ToolChoiceAny): T
 
+        /** The model will use the specified tool with `tool_choice.name`. */
         fun visitToolChoiceTool(toolChoiceTool: ToolChoiceTool): T
 
         fun unknown(json: JsonValue?): T {

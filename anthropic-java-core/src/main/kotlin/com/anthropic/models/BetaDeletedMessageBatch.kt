@@ -130,6 +130,11 @@ private constructor(
             )
     }
 
+    /**
+     * Deleted object type.
+     *
+     * For Message Batches, this is always `"message_batch_deleted"`.
+     */
     class Type
     @JsonCreator
     private constructor(

@@ -263,6 +263,11 @@ private constructor(
             )
     }
 
+    /**
+     * Object type.
+     *
+     * For Text Completions, this is always `"completion"`.
+     */
     class Type
     @JsonCreator
     private constructor(
