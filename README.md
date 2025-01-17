@@ -10,6 +10,7 @@
 <!-- x-release-please-start-version -->
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java/0.1.0-alpha.8)
+[![javadoc](https://javadoc.io/badge2/com.anthropic/anthropic-java/0.0.1-alpha.8/javadoc.svg)](https://javadoc.io/doc/com.anthropic/anthropic-java/0.0.1-alpha.8)
 
 <!-- x-release-please-end -->
 
