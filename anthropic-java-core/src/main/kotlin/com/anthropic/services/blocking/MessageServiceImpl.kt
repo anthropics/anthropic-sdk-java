@@ -7,7 +7,6 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
-import com.anthropic.core.handlers.map
 import com.anthropic.core.handlers.mapJson
 import com.anthropic.core.handlers.sseHandler
 import com.anthropic.core.handlers.withErrorHandler
@@ -15,6 +14,7 @@ import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.StreamResponse
+import com.anthropic.core.http.map
 import com.anthropic.core.json
 import com.anthropic.errors.AnthropicError
 import com.anthropic.models.Message
