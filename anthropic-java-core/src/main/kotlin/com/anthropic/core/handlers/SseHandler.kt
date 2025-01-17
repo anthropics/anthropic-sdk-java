@@ -4,56 +4,30 @@ package com.anthropic.core.handlers
 
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
-import com.anthropic.core.http.PhantomReachableClosingStreamResponse
 import com.anthropic.core.http.SseMessage
 import com.anthropic.core.http.StreamResponse
 import com.anthropic.errors.AnthropicException
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.util.stream.Stream
-import kotlin.streams.asStream
 
 @JvmSynthetic
 internal fun sseHandler(jsonMapper: JsonMapper): Handler<StreamResponse<SseMessage>> =
-    object : Handler<StreamResponse<SseMessage>> {
+    streamHandler { lines ->
+        val state = SseState(jsonMapper)
+        for (line in lines) {
+            val message = state.decode(line) ?: continue
 
-        override fun handle(response: HttpResponse): StreamResponse<SseMessage> {
-            val reader = response.body().bufferedReader()
-            val sequence =
-                sequence {
-                        reader.useLines { lines ->
-                            val state = SseState(jsonMapper)
-                            for (line in lines) {
-                                val message = state.decode(line) ?: continue
-
-                                when (message.event) {
-                                    "completion",
-                                    "message_start",
-                                    "message_delta",
-                                    "message_stop",
-                                    "content_block_start",
-                                    "content_block_delta",
-                                    "content_block_stop" -> yield(message)
-                                    "ping" -> continue
-                                    "error" ->
-                                        throw AnthropicException(
-                                            "Error while streaming: ${message.data}"
-                                        )
-                                }
-                            }
-                        }
-                    }
-                    .constrainOnce()
-
-            return PhantomReachableClosingStreamResponse(
-                object : StreamResponse<SseMessage> {
-                    override fun stream(): Stream<SseMessage> = sequence.asStream()
-
-                    override fun close() {
-                        reader.close()
-                        response.close()
-                    }
-                }
-            )
+            when (message.event) {
+                "completion",
+                "message_start",
+                "message_delta",
+                "message_stop",
+                "content_block_start",
+                "content_block_delta",
+                "content_block_stop" -> yield(message)
+                "ping" -> continue
+                "error" -> throw AnthropicException("Error while streaming: ${message.data}")
+            }
         }
     }
 
