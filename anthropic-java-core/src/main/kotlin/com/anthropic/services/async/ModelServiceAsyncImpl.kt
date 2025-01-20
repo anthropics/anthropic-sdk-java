@@ -18,7 +18,7 @@ import com.anthropic.models.ModelRetrieveParams
 import java.util.concurrent.CompletableFuture
 
 class ModelServiceAsyncImpl
-constructor(
+internal constructor(
     private val clientOptions: ClientOptions,
 ) : ModelServiceAsync {
 

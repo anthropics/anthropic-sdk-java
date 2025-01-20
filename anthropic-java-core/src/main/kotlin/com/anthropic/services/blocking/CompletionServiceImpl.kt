@@ -22,7 +22,7 @@ import com.anthropic.models.CompletionCreateParams
 import java.time.Duration
 
 class CompletionServiceImpl
-constructor(
+internal constructor(
     private val clientOptions: ClientOptions,
 ) : CompletionService {
 

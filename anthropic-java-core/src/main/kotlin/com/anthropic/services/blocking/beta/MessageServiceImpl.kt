@@ -27,7 +27,7 @@ import com.anthropic.services.blocking.beta.messages.BatchServiceImpl
 import java.time.Duration
 
 class MessageServiceImpl
-constructor(
+internal constructor(
     private val clientOptions: ClientOptions,
 ) : MessageService {
 

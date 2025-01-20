@@ -9,7 +9,7 @@ import com.anthropic.services.async.beta.ModelServiceAsync
 import com.anthropic.services.async.beta.ModelServiceAsyncImpl
 
 class BetaServiceAsyncImpl
-constructor(
+internal constructor(
     private val clientOptions: ClientOptions,
 ) : BetaServiceAsync {
 
