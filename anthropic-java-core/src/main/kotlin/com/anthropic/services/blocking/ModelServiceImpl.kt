@@ -17,7 +17,7 @@ import com.anthropic.models.ModelListParams
 import com.anthropic.models.ModelRetrieveParams
 
 class ModelServiceImpl
-constructor(
+internal constructor(
     private val clientOptions: ClientOptions,
 ) : ModelService {
 

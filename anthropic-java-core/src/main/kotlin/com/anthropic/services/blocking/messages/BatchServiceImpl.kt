@@ -22,7 +22,7 @@ import com.anthropic.models.MessageBatchListParams
 import com.anthropic.models.MessageBatchRetrieveParams
 
 class BatchServiceImpl
-constructor(
+internal constructor(
     private val clientOptions: ClientOptions,
 ) : BatchService {
 

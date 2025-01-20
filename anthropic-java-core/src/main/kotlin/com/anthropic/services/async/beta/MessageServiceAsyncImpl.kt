@@ -30,7 +30,7 @@ import java.time.Duration
 import java.util.concurrent.CompletableFuture
 
 class MessageServiceAsyncImpl
-constructor(
+internal constructor(
     private val clientOptions: ClientOptions,
 ) : MessageServiceAsync {
 

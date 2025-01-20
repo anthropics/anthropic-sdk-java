@@ -9,7 +9,7 @@ import com.anthropic.services.blocking.beta.ModelService
 import com.anthropic.services.blocking.beta.ModelServiceImpl
 
 class BetaServiceImpl
-constructor(
+internal constructor(
     private val clientOptions: ClientOptions,
 ) : BetaService {
 

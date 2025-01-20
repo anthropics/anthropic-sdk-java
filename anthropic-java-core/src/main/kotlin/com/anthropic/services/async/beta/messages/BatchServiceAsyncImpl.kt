@@ -23,7 +23,7 @@ import com.anthropic.models.BetaMessageBatchRetrieveParams
 import java.util.concurrent.CompletableFuture
 
 class BatchServiceAsyncImpl
-constructor(
+internal constructor(
     private val clientOptions: ClientOptions,
 ) : BatchServiceAsync {
 
