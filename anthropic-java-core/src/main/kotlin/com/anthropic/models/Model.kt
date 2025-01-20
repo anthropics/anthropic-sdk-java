@@ -21,22 +21,31 @@ private constructor(
 
     companion object {
 
+        /** Fast and cost-effective model */
         @JvmField val CLAUDE_3_5_HAIKU_LATEST = of("claude-3-5-haiku-latest")
 
+        /** Fast and cost-effective model */
         @JvmField val CLAUDE_3_5_HAIKU_20241022 = of("claude-3-5-haiku-20241022")
 
+        /** Our most intelligent model */
         @JvmField val CLAUDE_3_5_SONNET_LATEST = of("claude-3-5-sonnet-latest")
 
+        /** Our most intelligent model */
         @JvmField val CLAUDE_3_5_SONNET_20241022 = of("claude-3-5-sonnet-20241022")
 
+        /** Our previous most intelligent model */
         @JvmField val CLAUDE_3_5_SONNET_20240620 = of("claude-3-5-sonnet-20240620")
 
+        /** Excels at writing and complex tasks */
         @JvmField val CLAUDE_3_OPUS_LATEST = of("claude-3-opus-latest")
 
+        /** Excels at writing and complex tasks */
         @JvmField val CLAUDE_3_OPUS_20240229 = of("claude-3-opus-20240229")
 
+        /** Balance of speed and intelligence */
         @JvmField val CLAUDE_3_SONNET_20240229 = of("claude-3-sonnet-20240229")
 
+        /** Our previous fast and cost-effective */
         @JvmField val CLAUDE_3_HAIKU_20240307 = of("claude-3-haiku-20240307")
 
         @JvmField val CLAUDE_2_1 = of("claude-2.1")
