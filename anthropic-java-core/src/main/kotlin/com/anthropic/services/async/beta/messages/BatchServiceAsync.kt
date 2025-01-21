@@ -5,13 +5,16 @@
 package com.anthropic.services.async.beta.messages
 
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.http.AsyncStreamResponse
 import com.anthropic.models.BetaDeletedMessageBatch
 import com.anthropic.models.BetaMessageBatch
 import com.anthropic.models.BetaMessageBatchCancelParams
 import com.anthropic.models.BetaMessageBatchCreateParams
 import com.anthropic.models.BetaMessageBatchDeleteParams
+import com.anthropic.models.BetaMessageBatchIndividualResponse
 import com.anthropic.models.BetaMessageBatchListPageAsync
 import com.anthropic.models.BetaMessageBatchListParams
+import com.anthropic.models.BetaMessageBatchResultsParams
 import com.anthropic.models.BetaMessageBatchRetrieveParams
 import java.util.concurrent.CompletableFuture
 
@@ -74,4 +77,17 @@ interface BatchServiceAsync {
         params: BetaMessageBatchCancelParams,
         requestOptions: RequestOptions = RequestOptions.none()
     ): CompletableFuture<BetaMessageBatch>
+
+    /**
+     * Streams the results of a Message Batch as a `.jsonl` file.
+     *
+     * Each line in the file is a JSON object containing the result of a single request in the
+     * Message Batch. Results are not guaranteed to be in the same order as requests. Use the
+     * `custom_id` field to match results to requests.
+     */
+    @JvmOverloads
+    fun resultsStreaming(
+        params: BetaMessageBatchResultsParams,
+        requestOptions: RequestOptions = RequestOptions.none()
+    ): AsyncStreamResponse<BetaMessageBatchIndividualResponse>
 }

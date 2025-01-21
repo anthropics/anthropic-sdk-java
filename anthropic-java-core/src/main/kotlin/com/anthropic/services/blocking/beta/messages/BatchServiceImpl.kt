@@ -6,11 +6,14 @@ import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
+import com.anthropic.core.handlers.jsonlHandler
 import com.anthropic.core.handlers.withErrorHandler
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse.Handler
+import com.anthropic.core.http.StreamResponse
+import com.anthropic.core.http.map
 import com.anthropic.core.json
 import com.anthropic.errors.AnthropicError
 import com.anthropic.models.BetaDeletedMessageBatch
@@ -18,8 +21,10 @@ import com.anthropic.models.BetaMessageBatch
 import com.anthropic.models.BetaMessageBatchCancelParams
 import com.anthropic.models.BetaMessageBatchCreateParams
 import com.anthropic.models.BetaMessageBatchDeleteParams
+import com.anthropic.models.BetaMessageBatchIndividualResponse
 import com.anthropic.models.BetaMessageBatchListPage
 import com.anthropic.models.BetaMessageBatchListParams
+import com.anthropic.models.BetaMessageBatchResultsParams
 import com.anthropic.models.BetaMessageBatchRetrieveParams
 
 class BatchServiceImpl
@@ -209,6 +214,46 @@ internal constructor(
                 .apply {
                     if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
                         validate()
+                    }
+                }
+        }
+    }
+
+    private val resultsStreamingHandler:
+        Handler<StreamResponse<BetaMessageBatchIndividualResponse>> =
+        jsonlHandler<BetaMessageBatchIndividualResponse>(clientOptions.jsonMapper)
+            .withErrorHandler(errorHandler)
+
+    /**
+     * Streams the results of a Message Batch as a `.jsonl` file.
+     *
+     * Each line in the file is a JSON object containing the result of a single request in the
+     * Message Batch. Results are not guaranteed to be in the same order as requests. Use the
+     * `custom_id` field to match results to requests.
+     */
+    override fun resultsStreaming(
+        params: BetaMessageBatchResultsParams,
+        requestOptions: RequestOptions
+    ): StreamResponse<BetaMessageBatchIndividualResponse> {
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.GET)
+                .addPathSegments("v1", "messages", "batches", params.getPathParam(0), "results")
+                .putQueryParam("beta", "true")
+                .putAllQueryParams(clientOptions.queryParams)
+                .replaceAllQueryParams(params.getQueryParams())
+                .putAllHeaders(clientOptions.headers)
+                .replaceAllHeaders(DEFAULT_HEADERS)
+                .replaceAllHeaders(params.getHeaders())
+                .build()
+        return clientOptions.httpClient.execute(request, requestOptions).let { response ->
+            response
+                .let { resultsStreamingHandler.handle(it) }
+                .let { streamResponse ->
+                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                        streamResponse.map { it.validate() }
+                    } else {
+                        streamResponse
                     }
                 }
         }
