@@ -1,3 +1,5 @@
+// File generated from our OpenAPI spec by Stainless.
+
 @file:JvmName("SseHandler")
 
 package com.anthropic.core.handlers
