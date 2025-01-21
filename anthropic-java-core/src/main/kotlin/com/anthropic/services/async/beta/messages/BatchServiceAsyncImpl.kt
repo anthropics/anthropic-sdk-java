@@ -7,6 +7,7 @@ import com.anthropic.core.RequestOptions
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
 import com.anthropic.core.handlers.withErrorHandler
+import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse.Handler
@@ -26,6 +27,12 @@ class BatchServiceAsyncImpl
 internal constructor(
     private val clientOptions: ClientOptions,
 ) : BatchServiceAsync {
+
+    companion object {
+
+        private val DEFAULT_HEADERS =
+            Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+    }
 
     private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
 
@@ -51,6 +58,7 @@ internal constructor(
                 .putAllQueryParams(clientOptions.queryParams)
                 .replaceAllQueryParams(params.getQueryParams())
                 .putAllHeaders(clientOptions.headers)
+                .replaceAllHeaders(DEFAULT_HEADERS)
                 .replaceAllHeaders(params.getHeaders())
                 .body(json(clientOptions.jsonMapper, params.getBody()))
                 .build()
@@ -85,6 +93,7 @@ internal constructor(
                 .putAllQueryParams(clientOptions.queryParams)
                 .replaceAllQueryParams(params.getQueryParams())
                 .putAllHeaders(clientOptions.headers)
+                .replaceAllHeaders(DEFAULT_HEADERS)
                 .replaceAllHeaders(params.getHeaders())
                 .build()
         return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
@@ -119,6 +128,7 @@ internal constructor(
                 .putAllQueryParams(clientOptions.queryParams)
                 .replaceAllQueryParams(params.getQueryParams())
                 .putAllHeaders(clientOptions.headers)
+                .replaceAllHeaders(DEFAULT_HEADERS)
                 .replaceAllHeaders(params.getHeaders())
                 .build()
         return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
@@ -154,6 +164,7 @@ internal constructor(
                 .putAllQueryParams(clientOptions.queryParams)
                 .replaceAllQueryParams(params.getQueryParams())
                 .putAllHeaders(clientOptions.headers)
+                .replaceAllHeaders(DEFAULT_HEADERS)
                 .replaceAllHeaders(params.getHeaders())
                 .apply { params.getBody().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                 .build()
@@ -193,6 +204,7 @@ internal constructor(
                 .putAllQueryParams(clientOptions.queryParams)
                 .replaceAllQueryParams(params.getQueryParams())
                 .putAllHeaders(clientOptions.headers)
+                .replaceAllHeaders(DEFAULT_HEADERS)
                 .replaceAllHeaders(params.getHeaders())
                 .apply { params.getBody().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                 .build()
