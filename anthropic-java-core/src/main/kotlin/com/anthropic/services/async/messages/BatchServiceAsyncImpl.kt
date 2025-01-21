@@ -6,10 +6,15 @@ import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
+import com.anthropic.core.handlers.jsonlHandler
 import com.anthropic.core.handlers.withErrorHandler
+import com.anthropic.core.http.AsyncStreamResponse
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse.Handler
+import com.anthropic.core.http.StreamResponse
+import com.anthropic.core.http.map
+import com.anthropic.core.http.toAsync
 import com.anthropic.core.json
 import com.anthropic.errors.AnthropicError
 import com.anthropic.models.DeletedMessageBatch
@@ -17,8 +22,10 @@ import com.anthropic.models.MessageBatch
 import com.anthropic.models.MessageBatchCancelParams
 import com.anthropic.models.MessageBatchCreateParams
 import com.anthropic.models.MessageBatchDeleteParams
+import com.anthropic.models.MessageBatchIndividualResponse
 import com.anthropic.models.MessageBatchListPageAsync
 import com.anthropic.models.MessageBatchListParams
+import com.anthropic.models.MessageBatchResultsParams
 import com.anthropic.models.MessageBatchRetrieveParams
 import java.util.concurrent.CompletableFuture
 
@@ -200,5 +207,45 @@ internal constructor(
                     }
                 }
         }
+    }
+
+    private val resultsStreamingHandler: Handler<StreamResponse<MessageBatchIndividualResponse>> =
+        jsonlHandler<MessageBatchIndividualResponse>(clientOptions.jsonMapper)
+            .withErrorHandler(errorHandler)
+
+    /**
+     * Streams the results of a Message Batch as a `.jsonl` file.
+     *
+     * Each line in the file is a JSON object containing the result of a single request in the
+     * Message Batch. Results are not guaranteed to be in the same order as requests. Use the
+     * `custom_id` field to match results to requests.
+     */
+    override fun resultsStreaming(
+        params: MessageBatchResultsParams,
+        requestOptions: RequestOptions
+    ): AsyncStreamResponse<MessageBatchIndividualResponse> {
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.GET)
+                .addPathSegments("v1", "messages", "batches", params.getPathParam(0), "results")
+                .putAllQueryParams(clientOptions.queryParams)
+                .replaceAllQueryParams(params.getQueryParams())
+                .putAllHeaders(clientOptions.headers)
+                .replaceAllHeaders(params.getHeaders())
+                .build()
+        return clientOptions.httpClient
+            .executeAsync(request, requestOptions)
+            .thenApply { response ->
+                response
+                    .let { resultsStreamingHandler.handle(it) }
+                    .let { streamResponse ->
+                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                            streamResponse.map { it.validate() }
+                        } else {
+                            streamResponse
+                        }
+                    }
+            }
+            .toAsync(clientOptions.streamHandlerExecutor)
     }
 }

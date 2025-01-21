@@ -5,13 +5,16 @@
 package com.anthropic.services.blocking.messages
 
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.http.StreamResponse
 import com.anthropic.models.DeletedMessageBatch
 import com.anthropic.models.MessageBatch
 import com.anthropic.models.MessageBatchCancelParams
 import com.anthropic.models.MessageBatchCreateParams
 import com.anthropic.models.MessageBatchDeleteParams
+import com.anthropic.models.MessageBatchIndividualResponse
 import com.anthropic.models.MessageBatchListPage
 import com.anthropic.models.MessageBatchListParams
+import com.anthropic.models.MessageBatchResultsParams
 import com.anthropic.models.MessageBatchRetrieveParams
 
 interface BatchService {
@@ -73,4 +76,17 @@ interface BatchService {
         params: MessageBatchCancelParams,
         requestOptions: RequestOptions = RequestOptions.none()
     ): MessageBatch
+
+    /**
+     * Streams the results of a Message Batch as a `.jsonl` file.
+     *
+     * Each line in the file is a JSON object containing the result of a single request in the
+     * Message Batch. Results are not guaranteed to be in the same order as requests. Use the
+     * `custom_id` field to match results to requests.
+     */
+    @JvmOverloads
+    fun resultsStreaming(
+        params: MessageBatchResultsParams,
+        requestOptions: RequestOptions = RequestOptions.none()
+    ): StreamResponse<MessageBatchIndividualResponse>
 }
