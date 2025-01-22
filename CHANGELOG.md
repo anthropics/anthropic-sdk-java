@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.1.0-alpha.9 (2025-01-22)
+
+Full Changelog: [v0.1.0-alpha.8...v0.1.0-alpha.9](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0-alpha.8...v0.1.0-alpha.9)
+
+### Features
+
+* **client:** make message roundtripping more robust ([#75](https://github.com/anthropics/anthropic-sdk-java/issues/75)) ([3153b8b](https://github.com/anthropics/anthropic-sdk-java/commit/3153b8b4512d8e97daa3a80907c8c246dbf6778c))
+* **client:** support results endpoint ([#73](https://github.com/anthropics/anthropic-sdk-java/issues/73)) ([361a2d2](https://github.com/anthropics/anthropic-sdk-java/commit/361a2d21e12329600447b0703fa5a863ab725d1f))
+
+
+### Bug Fixes
+
+* **client:** add missing default headers ([#72](https://github.com/anthropics/anthropic-sdk-java/issues/72)) ([4bfb8c5](https://github.com/anthropics/anthropic-sdk-java/commit/4bfb8c5bc3f2d7372243d727937bec1cedd468df))
+* **client:** make service impl constructors internal ([#70](https://github.com/anthropics/anthropic-sdk-java/issues/70)) ([77f8873](https://github.com/anthropics/anthropic-sdk-java/commit/77f88730bd9066a91d667f9a432beef9e47b0e9e))
+
+
+### Chores
+
+* **internal:** add file comment ([#74](https://github.com/anthropics/anthropic-sdk-java/issues/74)) ([70def92](https://github.com/anthropics/anthropic-sdk-java/commit/70def920ea6c7e358f9b464411417408770ac627))
+* **internal:** move `StreamResponse` method ([#65](https://github.com/anthropics/anthropic-sdk-java/issues/65)) ([083a7b5](https://github.com/anthropics/anthropic-sdk-java/commit/083a7b5746329527eac1d12fbe6e10a6ca522035))
+* **internal:** refactor streaming implementation ([#64](https://github.com/anthropics/anthropic-sdk-java/issues/64)) ([02dcd90](https://github.com/anthropics/anthropic-sdk-java/commit/02dcd9031064cfd7e7a6a9fc25b14d7b3adddc78))
+* **internal:** remove space ([#63](https://github.com/anthropics/anthropic-sdk-java/issues/63)) ([b3a86b3](https://github.com/anthropics/anthropic-sdk-java/commit/b3a86b36ff3c4c7135931125a0958e960986ada8))
+* **internal:** upgrade kotlin compiler and gradle ([#66](https://github.com/anthropics/anthropic-sdk-java/issues/66)) ([8685797](https://github.com/anthropics/anthropic-sdk-java/commit/86857974a752405318ca92fe4d593af757742743))
+
+
+### Documentation
+
+* add javadoc.io badge ([#68](https://github.com/anthropics/anthropic-sdk-java/issues/68)) ([9853408](https://github.com/anthropics/anthropic-sdk-java/commit/98534089861eb8f3bbd78863bcbc1ed69bcf80dc))
+* add more documentation ([#67](https://github.com/anthropics/anthropic-sdk-java/issues/67)) ([c179f7c](https://github.com/anthropics/anthropic-sdk-java/commit/c179f7cf2648d8df5d110df8e2cee2e658d1a739))
+* generate merged core + okhttp docs ([#61](https://github.com/anthropics/anthropic-sdk-java/issues/61)) ([c2802d1](https://github.com/anthropics/anthropic-sdk-java/commit/c2802d114cf04ebf49d9d3988c094732f9ab5d3f))
+* more enum documentation ([#71](https://github.com/anthropics/anthropic-sdk-java/issues/71)) ([21c6ef2](https://github.com/anthropics/anthropic-sdk-java/commit/21c6ef237d88a506915eb7cb0eb4a79d6b603528))
+* move up requirements section ([#77](https://github.com/anthropics/anthropic-sdk-java/issues/77)) ([a3243cb](https://github.com/anthropics/anthropic-sdk-java/commit/a3243cb562af8897792c0d3e51327d6f7230605f))
+* update readme ([#76](https://github.com/anthropics/anthropic-sdk-java/issues/76)) ([fe53290](https://github.com/anthropics/anthropic-sdk-java/commit/fe5329055b49ef2dcd57bb4b307ec0614c538551))
+
 ## 0.1.0-alpha.8 (2025-01-15)
 
 Full Changelog: [v0.1.0-alpha.7...v0.1.0-alpha.8](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0-alpha.7...v0.1.0-alpha.8)
