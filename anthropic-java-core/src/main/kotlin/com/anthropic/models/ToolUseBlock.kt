@@ -49,10 +49,10 @@ private constructor(
 
     fun toParam(): ToolUseBlockParam =
         ToolUseBlockParam.builder()
-            .id(id())
+            .id(_id())
             .input(_input())
-            .name(name())
-            .type(ToolUseBlockParam.Type.of(type().toString()))
+            .name(_name())
+            .type(_type().map { ToolUseBlockParam.Type.of(it.toString()) })
             .build()
 
     private var validated: Boolean = false

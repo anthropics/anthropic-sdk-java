@@ -41,8 +41,8 @@ private constructor(
 
     fun toParam(): TextBlockParam =
         TextBlockParam.builder()
-            .text(text())
-            .type(TextBlockParam.Type.of(type().toString()))
+            .text(_text())
+            .type(_type().map { TextBlockParam.Type.of(it.toString()) })
             .build()
 
     private var validated: Boolean = false

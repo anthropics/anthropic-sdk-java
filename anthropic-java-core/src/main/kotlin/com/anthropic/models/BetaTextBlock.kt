@@ -41,8 +41,8 @@ private constructor(
 
     fun toParam(): BetaTextBlockParam =
         BetaTextBlockParam.builder()
-            .text(text())
-            .type(BetaTextBlockParam.Type.of(type().toString()))
+            .text(_text())
+            .type(_type().map { BetaTextBlockParam.Type.of(it.toString()) })
             .build()
 
     private var validated: Boolean = false
