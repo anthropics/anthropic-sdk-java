@@ -242,8 +242,12 @@ private constructor(
 
     fun toParam(): MessageParam =
         MessageParam.builder()
-            .content(MessageParam.Content.ofContentBlockParams(content().map { it.toParam() }))
-            .role(MessageParam.Role.of(role().toString()))
+            .content(
+                _content().map {
+                    MessageParam.Content.ofContentBlockParams(it.map { it.toParam() })
+                }
+            )
+            .role(_role().map { MessageParam.Role.of(it.toString()) })
             .build()
 
     private var validated: Boolean = false

@@ -247,9 +247,11 @@ private constructor(
     fun toParam(): BetaMessageParam =
         BetaMessageParam.builder()
             .content(
-                BetaMessageParam.Content.ofBetaContentBlockParams(content().map { it.toParam() })
+                _content().map {
+                    BetaMessageParam.Content.ofBetaContentBlockParams(it.map { it.toParam() })
+                }
             )
-            .role(BetaMessageParam.Role.of(role().toString()))
+            .role(_role().map { BetaMessageParam.Role.of(it.toString()) })
             .build()
 
     private var validated: Boolean = false

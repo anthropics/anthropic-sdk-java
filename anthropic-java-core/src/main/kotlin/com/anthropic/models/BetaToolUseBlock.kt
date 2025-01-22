@@ -49,10 +49,10 @@ private constructor(
 
     fun toParam(): BetaToolUseBlockParam =
         BetaToolUseBlockParam.builder()
-            .id(id())
+            .id(_id())
             .input(_input())
-            .name(name())
-            .type(BetaToolUseBlockParam.Type.of(type().toString()))
+            .name(_name())
+            .type(_type().map { BetaToolUseBlockParam.Type.of(it.toString()) })
             .build()
 
     private var validated: Boolean = false
