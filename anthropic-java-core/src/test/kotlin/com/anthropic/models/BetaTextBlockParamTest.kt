@@ -18,6 +18,16 @@ class BetaTextBlockParamTest {
                         .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
                         .build()
                 )
+                .addCitation(
+                    BetaCitationCharLocationParam.builder()
+                        .citedText("cited_text")
+                        .documentIndex(0L)
+                        .documentTitle("x")
+                        .endCharIndex(0L)
+                        .startCharIndex(0L)
+                        .type(BetaCitationCharLocationParam.Type.CHAR_LOCATION)
+                        .build()
+                )
                 .build()
         assertThat(betaTextBlockParam).isNotNull
         assertThat(betaTextBlockParam.text()).isEqualTo("x")
@@ -27,6 +37,19 @@ class BetaTextBlockParamTest {
                 BetaCacheControlEphemeral.builder()
                     .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
                     .build()
+            )
+        assertThat(betaTextBlockParam.citations().get())
+            .containsExactly(
+                BetaTextCitationParam.ofBetaCitationCharLocationParam(
+                    BetaCitationCharLocationParam.builder()
+                        .citedText("cited_text")
+                        .documentIndex(0L)
+                        .documentTitle("x")
+                        .endCharIndex(0L)
+                        .startCharIndex(0L)
+                        .type(BetaCitationCharLocationParam.Type.CHAR_LOCATION)
+                        .build()
+                )
             )
     }
 }

@@ -18,6 +18,16 @@ class TextBlockParamTest {
                         .type(CacheControlEphemeral.Type.EPHEMERAL)
                         .build()
                 )
+                .addCitation(
+                    CitationCharLocationParam.builder()
+                        .citedText("cited_text")
+                        .documentIndex(0L)
+                        .documentTitle("x")
+                        .endCharIndex(0L)
+                        .startCharIndex(0L)
+                        .type(CitationCharLocationParam.Type.CHAR_LOCATION)
+                        .build()
+                )
                 .build()
         assertThat(textBlockParam).isNotNull
         assertThat(textBlockParam.text()).isEqualTo("x")
@@ -25,6 +35,19 @@ class TextBlockParamTest {
         assertThat(textBlockParam.cacheControl())
             .contains(
                 CacheControlEphemeral.builder().type(CacheControlEphemeral.Type.EPHEMERAL).build()
+            )
+        assertThat(textBlockParam.citations().get())
+            .containsExactly(
+                TextCitationParam.ofCitationCharLocationParam(
+                    CitationCharLocationParam.builder()
+                        .citedText("cited_text")
+                        .documentIndex(0L)
+                        .documentTitle("x")
+                        .endCharIndex(0L)
+                        .startCharIndex(0L)
+                        .type(CitationCharLocationParam.Type.CHAR_LOCATION)
+                        .build()
+                )
             )
     }
 }

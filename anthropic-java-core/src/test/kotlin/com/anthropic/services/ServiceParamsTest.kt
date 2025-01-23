@@ -7,6 +7,8 @@ import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.models.CacheControlEphemeral
+import com.anthropic.models.CitationCharLocation
+import com.anthropic.models.CitationCharLocationParam
 import com.anthropic.models.Message
 import com.anthropic.models.MessageCreateParams
 import com.anthropic.models.MessageParam
@@ -84,6 +86,16 @@ class ServiceParamsTest {
                                     .type(CacheControlEphemeral.Type.EPHEMERAL)
                                     .build()
                             )
+                            .addCitation(
+                                CitationCharLocationParam.builder()
+                                    .citedText("cited_text")
+                                    .documentIndex(0L)
+                                    .documentTitle("x")
+                                    .endCharIndex(0L)
+                                    .startCharIndex(0L)
+                                    .type(CitationCharLocationParam.Type.CHAR_LOCATION)
+                                    .build()
+                            )
                             .build()
                     )
                 )
@@ -140,6 +152,16 @@ class ServiceParamsTest {
                 .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
                 .addContent(
                     TextBlock.builder()
+                        .addCitation(
+                            CitationCharLocation.builder()
+                                .citedText("cited_text")
+                                .documentIndex(0L)
+                                .documentTitle("document_title")
+                                .endCharIndex(0L)
+                                .startCharIndex(0L)
+                                .type(CitationCharLocation.Type.CHAR_LOCATION)
+                                .build()
+                        )
                         .text("Hi! My name is Claude.")
                         .type(TextBlock.Type.TEXT)
                         .build()

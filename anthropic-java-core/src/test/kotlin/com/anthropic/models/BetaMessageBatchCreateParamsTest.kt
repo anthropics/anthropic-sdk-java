@@ -41,6 +41,18 @@ class BetaMessageBatchCreateParamsTest {
                                                 .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
                                                 .build()
                                         )
+                                        .addCitation(
+                                            BetaCitationCharLocationParam.builder()
+                                                .citedText("cited_text")
+                                                .documentIndex(0L)
+                                                .documentTitle("x")
+                                                .endCharIndex(0L)
+                                                .startCharIndex(0L)
+                                                .type(
+                                                    BetaCitationCharLocationParam.Type.CHAR_LOCATION
+                                                )
+                                                .build()
+                                        )
                                         .build()
                                 )
                             )
@@ -130,6 +142,19 @@ class BetaMessageBatchCreateParamsTest {
                                                     .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
                                                     .build()
                                             )
+                                            .addCitation(
+                                                BetaCitationCharLocationParam.builder()
+                                                    .citedText("cited_text")
+                                                    .documentIndex(0L)
+                                                    .documentTitle("x")
+                                                    .endCharIndex(0L)
+                                                    .startCharIndex(0L)
+                                                    .type(
+                                                        BetaCitationCharLocationParam.Type
+                                                            .CHAR_LOCATION
+                                                    )
+                                                    .build()
+                                            )
                                             .build()
                                     )
                                 )
@@ -215,6 +240,19 @@ class BetaMessageBatchCreateParamsTest {
                                             .cacheControl(
                                                 BetaCacheControlEphemeral.builder()
                                                     .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
+                                                    .build()
+                                            )
+                                            .addCitation(
+                                                BetaCitationCharLocationParam.builder()
+                                                    .citedText("cited_text")
+                                                    .documentIndex(0L)
+                                                    .documentTitle("x")
+                                                    .endCharIndex(0L)
+                                                    .startCharIndex(0L)
+                                                    .type(
+                                                        BetaCitationCharLocationParam.Type
+                                                            .CHAR_LOCATION
+                                                    )
                                                     .build()
                                             )
                                             .build()

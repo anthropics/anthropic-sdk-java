@@ -41,6 +41,16 @@ class MessageBatchCreateParamsTest {
                                                 .type(CacheControlEphemeral.Type.EPHEMERAL)
                                                 .build()
                                         )
+                                        .addCitation(
+                                            CitationCharLocationParam.builder()
+                                                .citedText("cited_text")
+                                                .documentIndex(0L)
+                                                .documentTitle("x")
+                                                .endCharIndex(0L)
+                                                .startCharIndex(0L)
+                                                .type(CitationCharLocationParam.Type.CHAR_LOCATION)
+                                                .build()
+                                        )
                                         .build()
                                 )
                             )
@@ -128,6 +138,18 @@ class MessageBatchCreateParamsTest {
                                                     .type(CacheControlEphemeral.Type.EPHEMERAL)
                                                     .build()
                                             )
+                                            .addCitation(
+                                                CitationCharLocationParam.builder()
+                                                    .citedText("cited_text")
+                                                    .documentIndex(0L)
+                                                    .documentTitle("x")
+                                                    .endCharIndex(0L)
+                                                    .startCharIndex(0L)
+                                                    .type(
+                                                        CitationCharLocationParam.Type.CHAR_LOCATION
+                                                    )
+                                                    .build()
+                                            )
                                             .build()
                                     )
                                 )
@@ -211,6 +233,18 @@ class MessageBatchCreateParamsTest {
                                             .cacheControl(
                                                 CacheControlEphemeral.builder()
                                                     .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                                    .build()
+                                            )
+                                            .addCitation(
+                                                CitationCharLocationParam.builder()
+                                                    .citedText("cited_text")
+                                                    .documentIndex(0L)
+                                                    .documentTitle("x")
+                                                    .endCharIndex(0L)
+                                                    .startCharIndex(0L)
+                                                    .type(
+                                                        CitationCharLocationParam.Type.CHAR_LOCATION
+                                                    )
                                                     .build()
                                             )
                                             .build()

@@ -6,6 +6,7 @@ import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.core.JsonValue
 import com.anthropic.models.CacheControlEphemeral
+import com.anthropic.models.CitationCharLocationParam
 import com.anthropic.models.MessageCountTokensParams
 import com.anthropic.models.MessageCreateParams
 import com.anthropic.models.MessageParam
@@ -51,6 +52,16 @@ class MessageServiceTest {
                                 .cacheControl(
                                     CacheControlEphemeral.builder()
                                         .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                        .build()
+                                )
+                                .addCitation(
+                                    CitationCharLocationParam.builder()
+                                        .citedText("cited_text")
+                                        .documentIndex(0L)
+                                        .documentTitle("x")
+                                        .endCharIndex(0L)
+                                        .startCharIndex(0L)
+                                        .type(CitationCharLocationParam.Type.CHAR_LOCATION)
                                         .build()
                                 )
                                 .build()
@@ -139,6 +150,16 @@ class MessageServiceTest {
                                         .type(CacheControlEphemeral.Type.EPHEMERAL)
                                         .build()
                                 )
+                                .addCitation(
+                                    CitationCharLocationParam.builder()
+                                        .citedText("cited_text")
+                                        .documentIndex(0L)
+                                        .documentTitle("x")
+                                        .endCharIndex(0L)
+                                        .startCharIndex(0L)
+                                        .type(CitationCharLocationParam.Type.CHAR_LOCATION)
+                                        .build()
+                                )
                                 .build()
                         )
                     )
@@ -222,6 +243,16 @@ class MessageServiceTest {
                                 .cacheControl(
                                     CacheControlEphemeral.builder()
                                         .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                        .build()
+                                )
+                                .addCitation(
+                                    CitationCharLocationParam.builder()
+                                        .citedText("cited_text")
+                                        .documentIndex(0L)
+                                        .documentTitle("x")
+                                        .endCharIndex(0L)
+                                        .startCharIndex(0L)
+                                        .type(CitationCharLocationParam.Type.CHAR_LOCATION)
                                         .build()
                                 )
                                 .build()

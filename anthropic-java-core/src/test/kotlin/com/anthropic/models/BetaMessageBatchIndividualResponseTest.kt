@@ -19,6 +19,16 @@ class BetaMessageBatchIndividualResponseTest {
                                 .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
                                 .addContent(
                                     BetaTextBlock.builder()
+                                        .addCitation(
+                                            BetaCitationCharLocation.builder()
+                                                .citedText("cited_text")
+                                                .documentIndex(0L)
+                                                .documentTitle("document_title")
+                                                .endCharIndex(0L)
+                                                .startCharIndex(0L)
+                                                .type(BetaCitationCharLocation.Type.CHAR_LOCATION)
+                                                .build()
+                                        )
                                         .text("Hi! My name is Claude.")
                                         .type(BetaTextBlock.Type.TEXT)
                                         .build()
@@ -53,6 +63,16 @@ class BetaMessageBatchIndividualResponseTest {
                                 .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
                                 .addContent(
                                     BetaTextBlock.builder()
+                                        .addCitation(
+                                            BetaCitationCharLocation.builder()
+                                                .citedText("cited_text")
+                                                .documentIndex(0L)
+                                                .documentTitle("document_title")
+                                                .endCharIndex(0L)
+                                                .startCharIndex(0L)
+                                                .type(BetaCitationCharLocation.Type.CHAR_LOCATION)
+                                                .build()
+                                        )
                                         .text("Hi! My name is Claude.")
                                         .type(BetaTextBlock.Type.TEXT)
                                         .build()

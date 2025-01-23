@@ -28,6 +28,9 @@ private constructor(
     @JsonProperty("cache_control")
     @ExcludeMissing
     private val cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
+    @JsonProperty("citations")
+    @ExcludeMissing
+    private val citations: JsonField<List<BetaTextCitationParam>> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
@@ -38,6 +41,9 @@ private constructor(
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
+    fun citations(): Optional<List<BetaTextCitationParam>> =
+        Optional.ofNullable(citations.getNullable("citations"))
+
     @JsonProperty("text") @ExcludeMissing fun _text(): JsonField<String> = text
 
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
@@ -45,6 +51,10 @@ private constructor(
     @JsonProperty("cache_control")
     @ExcludeMissing
     fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
+
+    @JsonProperty("citations")
+    @ExcludeMissing
+    fun _citations(): JsonField<List<BetaTextCitationParam>> = citations
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -60,6 +70,7 @@ private constructor(
         text()
         type()
         cacheControl().ifPresent { it.validate() }
+        citations().ifPresent { it.forEach { it.validate() } }
         validated = true
     }
 
@@ -75,6 +86,7 @@ private constructor(
         private var text: JsonField<String>? = null
         private var type: JsonField<Type>? = null
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
+        private var citations: JsonField<MutableList<BetaTextCitationParam>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -82,6 +94,7 @@ private constructor(
             text = betaTextBlockParam.text
             type = betaTextBlockParam.type
             cacheControl = betaTextBlockParam.cacheControl
+            citations = betaTextBlockParam.citations.map { it.toMutableList() }
             additionalProperties = betaTextBlockParam.additionalProperties.toMutableMap()
         }
 
@@ -102,6 +115,48 @@ private constructor(
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
+
+        fun citations(citations: List<BetaTextCitationParam>?) =
+            citations(JsonField.ofNullable(citations))
+
+        fun citations(citations: Optional<List<BetaTextCitationParam>>) =
+            citations(citations.orElse(null))
+
+        fun citations(citations: JsonField<List<BetaTextCitationParam>>) = apply {
+            this.citations = citations.map { it.toMutableList() }
+        }
+
+        fun addCitation(citation: BetaTextCitationParam) = apply {
+            citations =
+                (citations ?: JsonField.of(mutableListOf())).apply {
+                    asKnown()
+                        .orElseThrow {
+                            IllegalStateException(
+                                "Field was set to non-list type: ${javaClass.simpleName}"
+                            )
+                        }
+                        .add(citation)
+                }
+        }
+
+        fun addCitation(betaCitationCharLocationParam: BetaCitationCharLocationParam) =
+            addCitation(
+                BetaTextCitationParam.ofBetaCitationCharLocationParam(betaCitationCharLocationParam)
+            )
+
+        fun addCitation(betaCitationPageLocationParam: BetaCitationPageLocationParam) =
+            addCitation(
+                BetaTextCitationParam.ofBetaCitationPageLocationParam(betaCitationPageLocationParam)
+            )
+
+        fun addCitation(
+            betaCitationContentBlockLocationParam: BetaCitationContentBlockLocationParam
+        ) =
+            addCitation(
+                BetaTextCitationParam.ofBetaCitationContentBlockLocationParam(
+                    betaCitationContentBlockLocationParam
+                )
+            )
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -127,6 +182,7 @@ private constructor(
                 checkRequired("text", text),
                 checkRequired("type", type),
                 cacheControl,
+                (citations ?: JsonMissing.of()).map { it.toImmutable() },
                 additionalProperties.toImmutable(),
             )
     }
@@ -187,15 +243,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaTextBlockParam && text == other.text && type == other.type && cacheControl == other.cacheControl && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is BetaTextBlockParam && text == other.text && type == other.type && cacheControl == other.cacheControl && citations == other.citations && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(text, type, cacheControl, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(text, type, cacheControl, citations, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaTextBlockParam{text=$text, type=$type, cacheControl=$cacheControl, additionalProperties=$additionalProperties}"
+        "BetaTextBlockParam{text=$text, type=$type, cacheControl=$cacheControl, citations=$citations, additionalProperties=$additionalProperties}"
 }

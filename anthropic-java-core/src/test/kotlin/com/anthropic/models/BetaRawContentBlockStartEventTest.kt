@@ -12,7 +12,20 @@ class BetaRawContentBlockStartEventTest {
         val betaRawContentBlockStartEvent =
             BetaRawContentBlockStartEvent.builder()
                 .contentBlock(
-                    BetaTextBlock.builder().text("text").type(BetaTextBlock.Type.TEXT).build()
+                    BetaTextBlock.builder()
+                        .addCitation(
+                            BetaCitationCharLocation.builder()
+                                .citedText("cited_text")
+                                .documentIndex(0L)
+                                .documentTitle("document_title")
+                                .endCharIndex(0L)
+                                .startCharIndex(0L)
+                                .type(BetaCitationCharLocation.Type.CHAR_LOCATION)
+                                .build()
+                        )
+                        .text("text")
+                        .type(BetaTextBlock.Type.TEXT)
+                        .build()
                 )
                 .index(0L)
                 .type(BetaRawContentBlockStartEvent.Type.CONTENT_BLOCK_START)
@@ -21,7 +34,20 @@ class BetaRawContentBlockStartEventTest {
         assertThat(betaRawContentBlockStartEvent.contentBlock())
             .isEqualTo(
                 BetaRawContentBlockStartEvent.ContentBlock.ofBetaTextBlock(
-                    BetaTextBlock.builder().text("text").type(BetaTextBlock.Type.TEXT).build()
+                    BetaTextBlock.builder()
+                        .addCitation(
+                            BetaCitationCharLocation.builder()
+                                .citedText("cited_text")
+                                .documentIndex(0L)
+                                .documentTitle("document_title")
+                                .endCharIndex(0L)
+                                .startCharIndex(0L)
+                                .type(BetaCitationCharLocation.Type.CHAR_LOCATION)
+                                .build()
+                        )
+                        .text("text")
+                        .type(BetaTextBlock.Type.TEXT)
+                        .build()
                 )
             )
         assertThat(betaRawContentBlockStartEvent.index()).isEqualTo(0L)

@@ -24,20 +24,29 @@ class DocumentBlockParamTest {
                         .type(CacheControlEphemeral.Type.EPHEMERAL)
                         .build()
                 )
+                .citations(CitationsConfigParam.builder().enabled(true).build())
+                .context("x")
+                .title("x")
                 .build()
         assertThat(documentBlockParam).isNotNull
         assertThat(documentBlockParam.source())
             .isEqualTo(
-                Base64PdfSource.builder()
-                    .data("U3RhaW5sZXNzIHJvY2tz")
-                    .mediaType(Base64PdfSource.MediaType.APPLICATION_PDF)
-                    .type(Base64PdfSource.Type.BASE64)
-                    .build()
+                DocumentBlockParam.Source.ofBase64PdfSource(
+                    Base64PdfSource.builder()
+                        .data("U3RhaW5sZXNzIHJvY2tz")
+                        .mediaType(Base64PdfSource.MediaType.APPLICATION_PDF)
+                        .type(Base64PdfSource.Type.BASE64)
+                        .build()
+                )
             )
         assertThat(documentBlockParam.type()).isEqualTo(DocumentBlockParam.Type.DOCUMENT)
         assertThat(documentBlockParam.cacheControl())
             .contains(
                 CacheControlEphemeral.builder().type(CacheControlEphemeral.Type.EPHEMERAL).build()
             )
+        assertThat(documentBlockParam.citations())
+            .contains(CitationsConfigParam.builder().enabled(true).build())
+        assertThat(documentBlockParam.context()).contains("x")
+        assertThat(documentBlockParam.title()).contains("x")
     }
 }

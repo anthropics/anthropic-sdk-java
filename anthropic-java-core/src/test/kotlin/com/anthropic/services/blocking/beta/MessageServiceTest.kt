@@ -7,6 +7,7 @@ import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.core.JsonValue
 import com.anthropic.models.AnthropicBeta
 import com.anthropic.models.BetaCacheControlEphemeral
+import com.anthropic.models.BetaCitationCharLocationParam
 import com.anthropic.models.BetaMessageCountTokensParams
 import com.anthropic.models.BetaMessageCreateParams
 import com.anthropic.models.BetaMessageParam
@@ -54,6 +55,16 @@ class MessageServiceTest {
                                 .cacheControl(
                                     BetaCacheControlEphemeral.builder()
                                         .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
+                                        .build()
+                                )
+                                .addCitation(
+                                    BetaCitationCharLocationParam.builder()
+                                        .citedText("cited_text")
+                                        .documentIndex(0L)
+                                        .documentTitle("x")
+                                        .endCharIndex(0L)
+                                        .startCharIndex(0L)
+                                        .type(BetaCitationCharLocationParam.Type.CHAR_LOCATION)
                                         .build()
                                 )
                                 .build()
@@ -146,6 +157,16 @@ class MessageServiceTest {
                                         .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
                                         .build()
                                 )
+                                .addCitation(
+                                    BetaCitationCharLocationParam.builder()
+                                        .citedText("cited_text")
+                                        .documentIndex(0L)
+                                        .documentTitle("x")
+                                        .endCharIndex(0L)
+                                        .startCharIndex(0L)
+                                        .type(BetaCitationCharLocationParam.Type.CHAR_LOCATION)
+                                        .build()
+                                )
                                 .build()
                         )
                     )
@@ -231,6 +252,16 @@ class MessageServiceTest {
                                 .cacheControl(
                                     BetaCacheControlEphemeral.builder()
                                         .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
+                                        .build()
+                                )
+                                .addCitation(
+                                    BetaCitationCharLocationParam.builder()
+                                        .citedText("cited_text")
+                                        .documentIndex(0L)
+                                        .documentTitle("x")
+                                        .endCharIndex(0L)
+                                        .startCharIndex(0L)
+                                        .type(BetaCitationCharLocationParam.Type.CHAR_LOCATION)
                                         .build()
                                 )
                                 .build()

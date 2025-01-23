@@ -7,6 +7,7 @@ import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.core.JsonValue
 import com.anthropic.models.AnthropicBeta
 import com.anthropic.models.BetaCacheControlEphemeral
+import com.anthropic.models.BetaCitationCharLocationParam
 import com.anthropic.models.BetaMessageBatchCancelParams
 import com.anthropic.models.BetaMessageBatchCreateParams
 import com.anthropic.models.BetaMessageBatchDeleteParams
@@ -64,6 +65,19 @@ class BatchServiceTest {
                                                     BetaCacheControlEphemeral.builder()
                                                         .type(
                                                             BetaCacheControlEphemeral.Type.EPHEMERAL
+                                                        )
+                                                        .build()
+                                                )
+                                                .addCitation(
+                                                    BetaCitationCharLocationParam.builder()
+                                                        .citedText("cited_text")
+                                                        .documentIndex(0L)
+                                                        .documentTitle("x")
+                                                        .endCharIndex(0L)
+                                                        .startCharIndex(0L)
+                                                        .type(
+                                                            BetaCitationCharLocationParam.Type
+                                                                .CHAR_LOCATION
                                                         )
                                                         .build()
                                                 )

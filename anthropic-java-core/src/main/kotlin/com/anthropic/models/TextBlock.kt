@@ -17,19 +17,44 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Objects
+import java.util.Optional
 
 @NoAutoDetect
 class TextBlock
 @JsonCreator
 private constructor(
+    @JsonProperty("citations")
+    @ExcludeMissing
+    private val citations: JsonField<List<TextCitation>> = JsonMissing.of(),
     @JsonProperty("text") @ExcludeMissing private val text: JsonField<String> = JsonMissing.of(),
     @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
+    /**
+     * Citations supporting the text block.
+     *
+     * The type of citation returned will depend on the type of document being cited. Citing a PDF
+     * results in `page_location`, plain text results in `char_location`, and content document
+     * results in `content_block_location`.
+     */
+    fun citations(): Optional<List<TextCitation>> =
+        Optional.ofNullable(citations.getNullable("citations"))
+
     fun text(): String = text.getRequired("text")
 
     fun type(): Type = type.getRequired("type")
+
+    /**
+     * Citations supporting the text block.
+     *
+     * The type of citation returned will depend on the type of document being cited. Citing a PDF
+     * results in `page_location`, plain text results in `char_location`, and content document
+     * results in `content_block_location`.
+     */
+    @JsonProperty("citations")
+    @ExcludeMissing
+    fun _citations(): JsonField<List<TextCitation>> = citations
 
     @JsonProperty("text") @ExcludeMissing fun _text(): JsonField<String> = text
 
@@ -52,6 +77,7 @@ private constructor(
             return@apply
         }
 
+        citations().ifPresent { it.forEach { it.validate() } }
         text()
         type()
         validated = true
@@ -66,16 +92,97 @@ private constructor(
 
     class Builder {
 
+        private var citations: JsonField<MutableList<TextCitation>>? = null
         private var text: JsonField<String>? = null
         private var type: JsonField<Type>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(textBlock: TextBlock) = apply {
+            citations = textBlock.citations.map { it.toMutableList() }
             text = textBlock.text
             type = textBlock.type
             additionalProperties = textBlock.additionalProperties.toMutableMap()
         }
+
+        /**
+         * Citations supporting the text block.
+         *
+         * The type of citation returned will depend on the type of document being cited. Citing a
+         * PDF results in `page_location`, plain text results in `char_location`, and content
+         * document results in `content_block_location`.
+         */
+        fun citations(citations: List<TextCitation>?) = citations(JsonField.ofNullable(citations))
+
+        /**
+         * Citations supporting the text block.
+         *
+         * The type of citation returned will depend on the type of document being cited. Citing a
+         * PDF results in `page_location`, plain text results in `char_location`, and content
+         * document results in `content_block_location`.
+         */
+        fun citations(citations: Optional<List<TextCitation>>) = citations(citations.orElse(null))
+
+        /**
+         * Citations supporting the text block.
+         *
+         * The type of citation returned will depend on the type of document being cited. Citing a
+         * PDF results in `page_location`, plain text results in `char_location`, and content
+         * document results in `content_block_location`.
+         */
+        fun citations(citations: JsonField<List<TextCitation>>) = apply {
+            this.citations = citations.map { it.toMutableList() }
+        }
+
+        /**
+         * Citations supporting the text block.
+         *
+         * The type of citation returned will depend on the type of document being cited. Citing a
+         * PDF results in `page_location`, plain text results in `char_location`, and content
+         * document results in `content_block_location`.
+         */
+        fun addCitation(citation: TextCitation) = apply {
+            citations =
+                (citations ?: JsonField.of(mutableListOf())).apply {
+                    asKnown()
+                        .orElseThrow {
+                            IllegalStateException(
+                                "Field was set to non-list type: ${javaClass.simpleName}"
+                            )
+                        }
+                        .add(citation)
+                }
+        }
+
+        /**
+         * Citations supporting the text block.
+         *
+         * The type of citation returned will depend on the type of document being cited. Citing a
+         * PDF results in `page_location`, plain text results in `char_location`, and content
+         * document results in `content_block_location`.
+         */
+        fun addCitation(citationCharLocation: CitationCharLocation) =
+            addCitation(TextCitation.ofCitationCharLocation(citationCharLocation))
+
+        /**
+         * Citations supporting the text block.
+         *
+         * The type of citation returned will depend on the type of document being cited. Citing a
+         * PDF results in `page_location`, plain text results in `char_location`, and content
+         * document results in `content_block_location`.
+         */
+        fun addCitation(citationPageLocation: CitationPageLocation) =
+            addCitation(TextCitation.ofCitationPageLocation(citationPageLocation))
+
+        /**
+         * Citations supporting the text block.
+         *
+         * The type of citation returned will depend on the type of document being cited. Citing a
+         * PDF results in `page_location`, plain text results in `char_location`, and content
+         * document results in `content_block_location`.
+         */
+        fun addCitation(citationContentBlockLocation: CitationContentBlockLocation) =
+            addCitation(TextCitation.ofCitationContentBlockLocation(citationContentBlockLocation))
 
         fun text(text: String) = text(JsonField.of(text))
 
@@ -106,6 +213,7 @@ private constructor(
 
         fun build(): TextBlock =
             TextBlock(
+                checkRequired("citations", citations).map { it.toImmutable() },
                 checkRequired("text", text),
                 checkRequired("type", type),
                 additionalProperties.toImmutable(),
@@ -168,15 +276,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is TextBlock && text == other.text && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is TextBlock && citations == other.citations && text == other.text && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(text, type, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(citations, text, type, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "TextBlock{text=$text, type=$type, additionalProperties=$additionalProperties}"
+        "TextBlock{citations=$citations, text=$text, type=$type, additionalProperties=$additionalProperties}"
 }

@@ -14,6 +14,16 @@ class MessageTest {
                 .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
                 .addContent(
                     TextBlock.builder()
+                        .addCitation(
+                            CitationCharLocation.builder()
+                                .citedText("cited_text")
+                                .documentIndex(0L)
+                                .documentTitle("document_title")
+                                .endCharIndex(0L)
+                                .startCharIndex(0L)
+                                .type(CitationCharLocation.Type.CHAR_LOCATION)
+                                .build()
+                        )
                         .text("Hi! My name is Claude.")
                         .type(TextBlock.Type.TEXT)
                         .build()
@@ -38,6 +48,16 @@ class MessageTest {
             .containsExactly(
                 ContentBlock.ofTextBlock(
                     TextBlock.builder()
+                        .addCitation(
+                            CitationCharLocation.builder()
+                                .citedText("cited_text")
+                                .documentIndex(0L)
+                                .documentTitle("document_title")
+                                .endCharIndex(0L)
+                                .startCharIndex(0L)
+                                .type(CitationCharLocation.Type.CHAR_LOCATION)
+                                .build()
+                        )
                         .text("Hi! My name is Claude.")
                         .type(TextBlock.Type.TEXT)
                         .build()

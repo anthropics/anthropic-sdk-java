@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 @NoAutoDetect
 class RawContentBlockDeltaEvent
@@ -98,6 +99,8 @@ private constructor(
 
         fun delta(inputJsonDelta: InputJsonDelta) = delta(Delta.ofInputJsonDelta(inputJsonDelta))
 
+        fun delta(citationsDelta: CitationsDelta) = delta(Delta.ofCitationsDelta(citationsDelta))
+
         fun index(index: Long) = index(JsonField.of(index))
 
         fun index(index: JsonField<Long>) = apply { this.index = index }
@@ -140,6 +143,7 @@ private constructor(
     private constructor(
         private val textDelta: TextDelta? = null,
         private val inputJsonDelta: InputJsonDelta? = null,
+        private val citationsDelta: CitationsDelta? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -147,13 +151,19 @@ private constructor(
 
         fun inputJsonDelta(): Optional<InputJsonDelta> = Optional.ofNullable(inputJsonDelta)
 
+        fun citationsDelta(): Optional<CitationsDelta> = Optional.ofNullable(citationsDelta)
+
         fun isTextDelta(): Boolean = textDelta != null
 
         fun isInputJsonDelta(): Boolean = inputJsonDelta != null
 
+        fun isCitationsDelta(): Boolean = citationsDelta != null
+
         fun asTextDelta(): TextDelta = textDelta.getOrThrow("textDelta")
 
         fun asInputJsonDelta(): InputJsonDelta = inputJsonDelta.getOrThrow("inputJsonDelta")
+
+        fun asCitationsDelta(): CitationsDelta = citationsDelta.getOrThrow("citationsDelta")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -161,6 +171,7 @@ private constructor(
             return when {
                 textDelta != null -> visitor.visitTextDelta(textDelta)
                 inputJsonDelta != null -> visitor.visitInputJsonDelta(inputJsonDelta)
+                citationsDelta != null -> visitor.visitCitationsDelta(citationsDelta)
                 else -> visitor.unknown(_json)
             }
         }
@@ -181,6 +192,10 @@ private constructor(
                     override fun visitInputJsonDelta(inputJsonDelta: InputJsonDelta) {
                         inputJsonDelta.validate()
                     }
+
+                    override fun visitCitationsDelta(citationsDelta: CitationsDelta) {
+                        citationsDelta.validate()
+                    }
                 }
             )
             validated = true
@@ -191,15 +206,16 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Delta && textDelta == other.textDelta && inputJsonDelta == other.inputJsonDelta /* spotless:on */
+            return /* spotless:off */ other is Delta && textDelta == other.textDelta && inputJsonDelta == other.inputJsonDelta && citationsDelta == other.citationsDelta /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(textDelta, inputJsonDelta) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(textDelta, inputJsonDelta, citationsDelta) /* spotless:on */
 
         override fun toString(): String =
             when {
                 textDelta != null -> "Delta{textDelta=$textDelta}"
                 inputJsonDelta != null -> "Delta{inputJsonDelta=$inputJsonDelta}"
+                citationsDelta != null -> "Delta{citationsDelta=$citationsDelta}"
                 _json != null -> "Delta{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Delta")
             }
@@ -211,6 +227,10 @@ private constructor(
             @JvmStatic
             fun ofInputJsonDelta(inputJsonDelta: InputJsonDelta) =
                 Delta(inputJsonDelta = inputJsonDelta)
+
+            @JvmStatic
+            fun ofCitationsDelta(citationsDelta: CitationsDelta) =
+                Delta(citationsDelta = citationsDelta)
         }
 
         interface Visitor<out T> {
@@ -218,6 +238,8 @@ private constructor(
             fun visitTextDelta(textDelta: TextDelta): T
 
             fun visitInputJsonDelta(inputJsonDelta: InputJsonDelta): T
+
+            fun visitCitationsDelta(citationsDelta: CitationsDelta): T
 
             fun unknown(json: JsonValue?): T {
                 throw AnthropicInvalidDataException("Unknown Delta: $json")
@@ -228,15 +250,28 @@ private constructor(
 
             override fun ObjectCodec.deserialize(node: JsonNode): Delta {
                 val json = JsonValue.fromJsonNode(node)
+                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
 
-                tryDeserialize(node, jacksonTypeRef<TextDelta>()) { it.validate() }
-                    ?.let {
-                        return Delta(textDelta = it, _json = json)
+                when (type) {
+                    "text_delta" -> {
+                        tryDeserialize(node, jacksonTypeRef<TextDelta>()) { it.validate() }
+                            ?.let {
+                                return Delta(textDelta = it, _json = json)
+                            }
                     }
-                tryDeserialize(node, jacksonTypeRef<InputJsonDelta>()) { it.validate() }
-                    ?.let {
-                        return Delta(inputJsonDelta = it, _json = json)
+                    "input_json_delta" -> {
+                        tryDeserialize(node, jacksonTypeRef<InputJsonDelta>()) { it.validate() }
+                            ?.let {
+                                return Delta(inputJsonDelta = it, _json = json)
+                            }
                     }
+                    "citations_delta" -> {
+                        tryDeserialize(node, jacksonTypeRef<CitationsDelta>()) { it.validate() }
+                            ?.let {
+                                return Delta(citationsDelta = it, _json = json)
+                            }
+                    }
+                }
 
                 return Delta(_json = json)
             }
@@ -252,6 +287,7 @@ private constructor(
                 when {
                     value.textDelta != null -> generator.writeObject(value.textDelta)
                     value.inputJsonDelta != null -> generator.writeObject(value.inputJsonDelta)
+                    value.citationsDelta != null -> generator.writeObject(value.citationsDelta)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Delta")
                 }

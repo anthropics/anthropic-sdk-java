@@ -24,15 +24,20 @@ class BetaBase64PdfBlockTest {
                         .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
                         .build()
                 )
+                .citations(BetaCitationsConfigParam.builder().enabled(true).build())
+                .context("x")
+                .title("x")
                 .build()
         assertThat(betaBase64PdfBlock).isNotNull
         assertThat(betaBase64PdfBlock.source())
             .isEqualTo(
-                BetaBase64PdfSource.builder()
-                    .data("U3RhaW5sZXNzIHJvY2tz")
-                    .mediaType(BetaBase64PdfSource.MediaType.APPLICATION_PDF)
-                    .type(BetaBase64PdfSource.Type.BASE64)
-                    .build()
+                BetaBase64PdfBlock.Source.ofBetaBase64PdfSource(
+                    BetaBase64PdfSource.builder()
+                        .data("U3RhaW5sZXNzIHJvY2tz")
+                        .mediaType(BetaBase64PdfSource.MediaType.APPLICATION_PDF)
+                        .type(BetaBase64PdfSource.Type.BASE64)
+                        .build()
+                )
             )
         assertThat(betaBase64PdfBlock.type()).isEqualTo(BetaBase64PdfBlock.Type.DOCUMENT)
         assertThat(betaBase64PdfBlock.cacheControl())
@@ -41,5 +46,9 @@ class BetaBase64PdfBlockTest {
                     .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
                     .build()
             )
+        assertThat(betaBase64PdfBlock.citations())
+            .contains(BetaCitationsConfigParam.builder().enabled(true).build())
+        assertThat(betaBase64PdfBlock.context()).contains("x")
+        assertThat(betaBase64PdfBlock.title()).contains("x")
     }
 }

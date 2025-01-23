@@ -6,6 +6,7 @@ import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.core.JsonValue
 import com.anthropic.models.CacheControlEphemeral
+import com.anthropic.models.CitationCharLocationParam
 import com.anthropic.models.MessageBatchCancelParams
 import com.anthropic.models.MessageBatchCreateParams
 import com.anthropic.models.MessageBatchDeleteParams
@@ -62,6 +63,19 @@ class BatchServiceTest {
                                                 .cacheControl(
                                                     CacheControlEphemeral.builder()
                                                         .type(CacheControlEphemeral.Type.EPHEMERAL)
+                                                        .build()
+                                                )
+                                                .addCitation(
+                                                    CitationCharLocationParam.builder()
+                                                        .citedText("cited_text")
+                                                        .documentIndex(0L)
+                                                        .documentTitle("x")
+                                                        .endCharIndex(0L)
+                                                        .startCharIndex(0L)
+                                                        .type(
+                                                            CitationCharLocationParam.Type
+                                                                .CHAR_LOCATION
+                                                        )
                                                         .build()
                                                 )
                                                 .build()

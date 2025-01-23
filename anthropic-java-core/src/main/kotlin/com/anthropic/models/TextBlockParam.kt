@@ -28,6 +28,9 @@ private constructor(
     @JsonProperty("cache_control")
     @ExcludeMissing
     private val cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of(),
+    @JsonProperty("citations")
+    @ExcludeMissing
+    private val citations: JsonField<List<TextCitationParam>> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
@@ -38,6 +41,9 @@ private constructor(
     fun cacheControl(): Optional<CacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
+    fun citations(): Optional<List<TextCitationParam>> =
+        Optional.ofNullable(citations.getNullable("citations"))
+
     @JsonProperty("text") @ExcludeMissing fun _text(): JsonField<String> = text
 
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
@@ -45,6 +51,10 @@ private constructor(
     @JsonProperty("cache_control")
     @ExcludeMissing
     fun _cacheControl(): JsonField<CacheControlEphemeral> = cacheControl
+
+    @JsonProperty("citations")
+    @ExcludeMissing
+    fun _citations(): JsonField<List<TextCitationParam>> = citations
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -60,6 +70,7 @@ private constructor(
         text()
         type()
         cacheControl().ifPresent { it.validate() }
+        citations().ifPresent { it.forEach { it.validate() } }
         validated = true
     }
 
@@ -75,6 +86,7 @@ private constructor(
         private var text: JsonField<String>? = null
         private var type: JsonField<Type>? = null
         private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
+        private var citations: JsonField<MutableList<TextCitationParam>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -82,6 +94,7 @@ private constructor(
             text = textBlockParam.text
             type = textBlockParam.type
             cacheControl = textBlockParam.cacheControl
+            citations = textBlockParam.citations.map { it.toMutableList() }
             additionalProperties = textBlockParam.additionalProperties.toMutableMap()
         }
 
@@ -102,6 +115,42 @@ private constructor(
         fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
+
+        fun citations(citations: List<TextCitationParam>?) =
+            citations(JsonField.ofNullable(citations))
+
+        fun citations(citations: Optional<List<TextCitationParam>>) =
+            citations(citations.orElse(null))
+
+        fun citations(citations: JsonField<List<TextCitationParam>>) = apply {
+            this.citations = citations.map { it.toMutableList() }
+        }
+
+        fun addCitation(citation: TextCitationParam) = apply {
+            citations =
+                (citations ?: JsonField.of(mutableListOf())).apply {
+                    asKnown()
+                        .orElseThrow {
+                            IllegalStateException(
+                                "Field was set to non-list type: ${javaClass.simpleName}"
+                            )
+                        }
+                        .add(citation)
+                }
+        }
+
+        fun addCitation(citationCharLocationParam: CitationCharLocationParam) =
+            addCitation(TextCitationParam.ofCitationCharLocationParam(citationCharLocationParam))
+
+        fun addCitation(citationPageLocationParam: CitationPageLocationParam) =
+            addCitation(TextCitationParam.ofCitationPageLocationParam(citationPageLocationParam))
+
+        fun addCitation(citationContentBlockLocationParam: CitationContentBlockLocationParam) =
+            addCitation(
+                TextCitationParam.ofCitationContentBlockLocationParam(
+                    citationContentBlockLocationParam
+                )
+            )
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -127,6 +176,7 @@ private constructor(
                 checkRequired("text", text),
                 checkRequired("type", type),
                 cacheControl,
+                (citations ?: JsonMissing.of()).map { it.toImmutable() },
                 additionalProperties.toImmutable(),
             )
     }
@@ -187,15 +237,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is TextBlockParam && text == other.text && type == other.type && cacheControl == other.cacheControl && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is TextBlockParam && text == other.text && type == other.type && cacheControl == other.cacheControl && citations == other.citations && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(text, type, cacheControl, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(text, type, cacheControl, citations, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "TextBlockParam{text=$text, type=$type, cacheControl=$cacheControl, additionalProperties=$additionalProperties}"
+        "TextBlockParam{text=$text, type=$type, cacheControl=$cacheControl, citations=$citations, additionalProperties=$additionalProperties}"
 }
