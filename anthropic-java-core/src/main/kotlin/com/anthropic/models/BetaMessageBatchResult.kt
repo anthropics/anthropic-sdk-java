@@ -28,57 +28,45 @@ import kotlin.jvm.optionals.getOrNull
 @JsonSerialize(using = BetaMessageBatchResult.Serializer::class)
 class BetaMessageBatchResult
 private constructor(
-    private val betaMessageBatchSucceededResult: BetaMessageBatchSucceededResult? = null,
-    private val betaMessageBatchErroredResult: BetaMessageBatchErroredResult? = null,
-    private val betaMessageBatchCanceledResult: BetaMessageBatchCanceledResult? = null,
-    private val betaMessageBatchExpiredResult: BetaMessageBatchExpiredResult? = null,
+    private val succeeded: BetaMessageBatchSucceededResult? = null,
+    private val errored: BetaMessageBatchErroredResult? = null,
+    private val canceled: BetaMessageBatchCanceledResult? = null,
+    private val expired: BetaMessageBatchExpiredResult? = null,
     private val _json: JsonValue? = null,
 ) {
 
-    fun betaMessageBatchSucceededResult(): Optional<BetaMessageBatchSucceededResult> =
-        Optional.ofNullable(betaMessageBatchSucceededResult)
+    fun succeeded(): Optional<BetaMessageBatchSucceededResult> = Optional.ofNullable(succeeded)
 
-    fun betaMessageBatchErroredResult(): Optional<BetaMessageBatchErroredResult> =
-        Optional.ofNullable(betaMessageBatchErroredResult)
+    fun errored(): Optional<BetaMessageBatchErroredResult> = Optional.ofNullable(errored)
 
-    fun betaMessageBatchCanceledResult(): Optional<BetaMessageBatchCanceledResult> =
-        Optional.ofNullable(betaMessageBatchCanceledResult)
+    fun canceled(): Optional<BetaMessageBatchCanceledResult> = Optional.ofNullable(canceled)
 
-    fun betaMessageBatchExpiredResult(): Optional<BetaMessageBatchExpiredResult> =
-        Optional.ofNullable(betaMessageBatchExpiredResult)
+    fun expired(): Optional<BetaMessageBatchExpiredResult> = Optional.ofNullable(expired)
 
-    fun isBetaMessageBatchSucceededResult(): Boolean = betaMessageBatchSucceededResult != null
+    fun isSucceeded(): Boolean = succeeded != null
 
-    fun isBetaMessageBatchErroredResult(): Boolean = betaMessageBatchErroredResult != null
+    fun isErrored(): Boolean = errored != null
 
-    fun isBetaMessageBatchCanceledResult(): Boolean = betaMessageBatchCanceledResult != null
+    fun isCanceled(): Boolean = canceled != null
 
-    fun isBetaMessageBatchExpiredResult(): Boolean = betaMessageBatchExpiredResult != null
+    fun isExpired(): Boolean = expired != null
 
-    fun asBetaMessageBatchSucceededResult(): BetaMessageBatchSucceededResult =
-        betaMessageBatchSucceededResult.getOrThrow("betaMessageBatchSucceededResult")
+    fun asSucceeded(): BetaMessageBatchSucceededResult = succeeded.getOrThrow("succeeded")
 
-    fun asBetaMessageBatchErroredResult(): BetaMessageBatchErroredResult =
-        betaMessageBatchErroredResult.getOrThrow("betaMessageBatchErroredResult")
+    fun asErrored(): BetaMessageBatchErroredResult = errored.getOrThrow("errored")
 
-    fun asBetaMessageBatchCanceledResult(): BetaMessageBatchCanceledResult =
-        betaMessageBatchCanceledResult.getOrThrow("betaMessageBatchCanceledResult")
+    fun asCanceled(): BetaMessageBatchCanceledResult = canceled.getOrThrow("canceled")
 
-    fun asBetaMessageBatchExpiredResult(): BetaMessageBatchExpiredResult =
-        betaMessageBatchExpiredResult.getOrThrow("betaMessageBatchExpiredResult")
+    fun asExpired(): BetaMessageBatchExpiredResult = expired.getOrThrow("expired")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
         return when {
-            betaMessageBatchSucceededResult != null ->
-                visitor.visitBetaMessageBatchSucceededResult(betaMessageBatchSucceededResult)
-            betaMessageBatchErroredResult != null ->
-                visitor.visitBetaMessageBatchErroredResult(betaMessageBatchErroredResult)
-            betaMessageBatchCanceledResult != null ->
-                visitor.visitBetaMessageBatchCanceledResult(betaMessageBatchCanceledResult)
-            betaMessageBatchExpiredResult != null ->
-                visitor.visitBetaMessageBatchExpiredResult(betaMessageBatchExpiredResult)
+            succeeded != null -> visitor.visitSucceeded(succeeded)
+            errored != null -> visitor.visitErrored(errored)
+            canceled != null -> visitor.visitCanceled(canceled)
+            expired != null -> visitor.visitExpired(expired)
             else -> visitor.unknown(_json)
         }
     }
@@ -92,28 +80,20 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
-                override fun visitBetaMessageBatchSucceededResult(
-                    betaMessageBatchSucceededResult: BetaMessageBatchSucceededResult
-                ) {
-                    betaMessageBatchSucceededResult.validate()
+                override fun visitSucceeded(succeeded: BetaMessageBatchSucceededResult) {
+                    succeeded.validate()
                 }
 
-                override fun visitBetaMessageBatchErroredResult(
-                    betaMessageBatchErroredResult: BetaMessageBatchErroredResult
-                ) {
-                    betaMessageBatchErroredResult.validate()
+                override fun visitErrored(errored: BetaMessageBatchErroredResult) {
+                    errored.validate()
                 }
 
-                override fun visitBetaMessageBatchCanceledResult(
-                    betaMessageBatchCanceledResult: BetaMessageBatchCanceledResult
-                ) {
-                    betaMessageBatchCanceledResult.validate()
+                override fun visitCanceled(canceled: BetaMessageBatchCanceledResult) {
+                    canceled.validate()
                 }
 
-                override fun visitBetaMessageBatchExpiredResult(
-                    betaMessageBatchExpiredResult: BetaMessageBatchExpiredResult
-                ) {
-                    betaMessageBatchExpiredResult.validate()
+                override fun visitExpired(expired: BetaMessageBatchExpiredResult) {
+                    expired.validate()
                 }
             }
         )
@@ -125,21 +105,17 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaMessageBatchResult && betaMessageBatchSucceededResult == other.betaMessageBatchSucceededResult && betaMessageBatchErroredResult == other.betaMessageBatchErroredResult && betaMessageBatchCanceledResult == other.betaMessageBatchCanceledResult && betaMessageBatchExpiredResult == other.betaMessageBatchExpiredResult /* spotless:on */
+        return /* spotless:off */ other is BetaMessageBatchResult && succeeded == other.succeeded && errored == other.errored && canceled == other.canceled && expired == other.expired /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaMessageBatchSucceededResult, betaMessageBatchErroredResult, betaMessageBatchCanceledResult, betaMessageBatchExpiredResult) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(succeeded, errored, canceled, expired) /* spotless:on */
 
     override fun toString(): String =
         when {
-            betaMessageBatchSucceededResult != null ->
-                "BetaMessageBatchResult{betaMessageBatchSucceededResult=$betaMessageBatchSucceededResult}"
-            betaMessageBatchErroredResult != null ->
-                "BetaMessageBatchResult{betaMessageBatchErroredResult=$betaMessageBatchErroredResult}"
-            betaMessageBatchCanceledResult != null ->
-                "BetaMessageBatchResult{betaMessageBatchCanceledResult=$betaMessageBatchCanceledResult}"
-            betaMessageBatchExpiredResult != null ->
-                "BetaMessageBatchResult{betaMessageBatchExpiredResult=$betaMessageBatchExpiredResult}"
+            succeeded != null -> "BetaMessageBatchResult{succeeded=$succeeded}"
+            errored != null -> "BetaMessageBatchResult{errored=$errored}"
+            canceled != null -> "BetaMessageBatchResult{canceled=$canceled}"
+            expired != null -> "BetaMessageBatchResult{expired=$expired}"
             _json != null -> "BetaMessageBatchResult{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaMessageBatchResult")
         }
@@ -147,46 +123,31 @@ private constructor(
     companion object {
 
         @JvmStatic
-        fun ofBetaMessageBatchSucceededResult(
-            betaMessageBatchSucceededResult: BetaMessageBatchSucceededResult
-        ) =
-            BetaMessageBatchResult(
-                betaMessageBatchSucceededResult = betaMessageBatchSucceededResult
-            )
+        fun ofSucceeded(succeeded: BetaMessageBatchSucceededResult) =
+            BetaMessageBatchResult(succeeded = succeeded)
 
         @JvmStatic
-        fun ofBetaMessageBatchErroredResult(
-            betaMessageBatchErroredResult: BetaMessageBatchErroredResult
-        ) = BetaMessageBatchResult(betaMessageBatchErroredResult = betaMessageBatchErroredResult)
+        fun ofErrored(errored: BetaMessageBatchErroredResult) =
+            BetaMessageBatchResult(errored = errored)
 
         @JvmStatic
-        fun ofBetaMessageBatchCanceledResult(
-            betaMessageBatchCanceledResult: BetaMessageBatchCanceledResult
-        ) = BetaMessageBatchResult(betaMessageBatchCanceledResult = betaMessageBatchCanceledResult)
+        fun ofCanceled(canceled: BetaMessageBatchCanceledResult) =
+            BetaMessageBatchResult(canceled = canceled)
 
         @JvmStatic
-        fun ofBetaMessageBatchExpiredResult(
-            betaMessageBatchExpiredResult: BetaMessageBatchExpiredResult
-        ) = BetaMessageBatchResult(betaMessageBatchExpiredResult = betaMessageBatchExpiredResult)
+        fun ofExpired(expired: BetaMessageBatchExpiredResult) =
+            BetaMessageBatchResult(expired = expired)
     }
 
     interface Visitor<out T> {
 
-        fun visitBetaMessageBatchSucceededResult(
-            betaMessageBatchSucceededResult: BetaMessageBatchSucceededResult
-        ): T
+        fun visitSucceeded(succeeded: BetaMessageBatchSucceededResult): T
 
-        fun visitBetaMessageBatchErroredResult(
-            betaMessageBatchErroredResult: BetaMessageBatchErroredResult
-        ): T
+        fun visitErrored(errored: BetaMessageBatchErroredResult): T
 
-        fun visitBetaMessageBatchCanceledResult(
-            betaMessageBatchCanceledResult: BetaMessageBatchCanceledResult
-        ): T
+        fun visitCanceled(canceled: BetaMessageBatchCanceledResult): T
 
-        fun visitBetaMessageBatchExpiredResult(
-            betaMessageBatchExpiredResult: BetaMessageBatchExpiredResult
-        ): T
+        fun visitExpired(expired: BetaMessageBatchExpiredResult): T
 
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown BetaMessageBatchResult: $json")
@@ -205,10 +166,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return BetaMessageBatchResult(
-                                betaMessageBatchSucceededResult = it,
-                                _json = json
-                            )
+                            return BetaMessageBatchResult(succeeded = it, _json = json)
                         }
                 }
                 "errored" -> {
@@ -216,10 +174,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return BetaMessageBatchResult(
-                                betaMessageBatchErroredResult = it,
-                                _json = json
-                            )
+                            return BetaMessageBatchResult(errored = it, _json = json)
                         }
                 }
                 "canceled" -> {
@@ -227,10 +182,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return BetaMessageBatchResult(
-                                betaMessageBatchCanceledResult = it,
-                                _json = json
-                            )
+                            return BetaMessageBatchResult(canceled = it, _json = json)
                         }
                 }
                 "expired" -> {
@@ -238,10 +190,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return BetaMessageBatchResult(
-                                betaMessageBatchExpiredResult = it,
-                                _json = json
-                            )
+                            return BetaMessageBatchResult(expired = it, _json = json)
                         }
                 }
             }
@@ -258,14 +207,10 @@ private constructor(
             provider: SerializerProvider
         ) {
             when {
-                value.betaMessageBatchSucceededResult != null ->
-                    generator.writeObject(value.betaMessageBatchSucceededResult)
-                value.betaMessageBatchErroredResult != null ->
-                    generator.writeObject(value.betaMessageBatchErroredResult)
-                value.betaMessageBatchCanceledResult != null ->
-                    generator.writeObject(value.betaMessageBatchCanceledResult)
-                value.betaMessageBatchExpiredResult != null ->
-                    generator.writeObject(value.betaMessageBatchExpiredResult)
+                value.succeeded != null -> generator.writeObject(value.succeeded)
+                value.errored != null -> generator.writeObject(value.errored)
+                value.canceled != null -> generator.writeObject(value.canceled)
+                value.expired != null -> generator.writeObject(value.expired)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaMessageBatchResult")
             }

@@ -22,40 +22,40 @@ import kotlin.jvm.optionals.getOrNull
 @JsonSerialize(using = ContentBlock.Serializer::class)
 class ContentBlock
 private constructor(
-    private val textBlock: TextBlock? = null,
-    private val toolUseBlock: ToolUseBlock? = null,
+    private val text: TextBlock? = null,
+    private val toolUse: ToolUseBlock? = null,
     private val _json: JsonValue? = null,
 ) {
 
     fun toParam(): ContentBlockParam =
         accept(
             object : Visitor<ContentBlockParam> {
-                override fun visitTextBlock(textBlock: TextBlock): ContentBlockParam =
-                    ContentBlockParam.ofTextBlockParam(textBlock.toParam())
+                override fun visitText(text: TextBlock): ContentBlockParam =
+                    ContentBlockParam.ofText(text.toParam())
 
-                override fun visitToolUseBlock(toolUseBlock: ToolUseBlock): ContentBlockParam =
-                    ContentBlockParam.ofToolUseBlockParam(toolUseBlock.toParam())
+                override fun visitToolUse(toolUse: ToolUseBlock): ContentBlockParam =
+                    ContentBlockParam.ofToolUse(toolUse.toParam())
             }
         )
 
-    fun textBlock(): Optional<TextBlock> = Optional.ofNullable(textBlock)
+    fun text(): Optional<TextBlock> = Optional.ofNullable(text)
 
-    fun toolUseBlock(): Optional<ToolUseBlock> = Optional.ofNullable(toolUseBlock)
+    fun toolUse(): Optional<ToolUseBlock> = Optional.ofNullable(toolUse)
 
-    fun isTextBlock(): Boolean = textBlock != null
+    fun isText(): Boolean = text != null
 
-    fun isToolUseBlock(): Boolean = toolUseBlock != null
+    fun isToolUse(): Boolean = toolUse != null
 
-    fun asTextBlock(): TextBlock = textBlock.getOrThrow("textBlock")
+    fun asText(): TextBlock = text.getOrThrow("text")
 
-    fun asToolUseBlock(): ToolUseBlock = toolUseBlock.getOrThrow("toolUseBlock")
+    fun asToolUse(): ToolUseBlock = toolUse.getOrThrow("toolUse")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
         return when {
-            textBlock != null -> visitor.visitTextBlock(textBlock)
-            toolUseBlock != null -> visitor.visitToolUseBlock(toolUseBlock)
+            text != null -> visitor.visitText(text)
+            toolUse != null -> visitor.visitToolUse(toolUse)
             else -> visitor.unknown(_json)
         }
     }
@@ -69,12 +69,12 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
-                override fun visitTextBlock(textBlock: TextBlock) {
-                    textBlock.validate()
+                override fun visitText(text: TextBlock) {
+                    text.validate()
                 }
 
-                override fun visitToolUseBlock(toolUseBlock: ToolUseBlock) {
-                    toolUseBlock.validate()
+                override fun visitToolUse(toolUse: ToolUseBlock) {
+                    toolUse.validate()
                 }
             }
         )
@@ -86,32 +86,31 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ContentBlock && textBlock == other.textBlock && toolUseBlock == other.toolUseBlock /* spotless:on */
+        return /* spotless:off */ other is ContentBlock && text == other.text && toolUse == other.toolUse /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(textBlock, toolUseBlock) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, toolUse) /* spotless:on */
 
     override fun toString(): String =
         when {
-            textBlock != null -> "ContentBlock{textBlock=$textBlock}"
-            toolUseBlock != null -> "ContentBlock{toolUseBlock=$toolUseBlock}"
+            text != null -> "ContentBlock{text=$text}"
+            toolUse != null -> "ContentBlock{toolUse=$toolUse}"
             _json != null -> "ContentBlock{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid ContentBlock")
         }
 
     companion object {
 
-        @JvmStatic fun ofTextBlock(textBlock: TextBlock) = ContentBlock(textBlock = textBlock)
+        @JvmStatic fun ofText(text: TextBlock) = ContentBlock(text = text)
 
-        @JvmStatic
-        fun ofToolUseBlock(toolUseBlock: ToolUseBlock) = ContentBlock(toolUseBlock = toolUseBlock)
+        @JvmStatic fun ofToolUse(toolUse: ToolUseBlock) = ContentBlock(toolUse = toolUse)
     }
 
     interface Visitor<out T> {
 
-        fun visitTextBlock(textBlock: TextBlock): T
+        fun visitText(text: TextBlock): T
 
-        fun visitToolUseBlock(toolUseBlock: ToolUseBlock): T
+        fun visitToolUse(toolUse: ToolUseBlock): T
 
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown ContentBlock: $json")
@@ -128,13 +127,13 @@ private constructor(
                 "text" -> {
                     tryDeserialize(node, jacksonTypeRef<TextBlock>()) { it.validate() }
                         ?.let {
-                            return ContentBlock(textBlock = it, _json = json)
+                            return ContentBlock(text = it, _json = json)
                         }
                 }
                 "tool_use" -> {
                     tryDeserialize(node, jacksonTypeRef<ToolUseBlock>()) { it.validate() }
                         ?.let {
-                            return ContentBlock(toolUseBlock = it, _json = json)
+                            return ContentBlock(toolUse = it, _json = json)
                         }
                 }
             }
@@ -151,8 +150,8 @@ private constructor(
             provider: SerializerProvider
         ) {
             when {
-                value.textBlock != null -> generator.writeObject(value.textBlock)
-                value.toolUseBlock != null -> generator.writeObject(value.toolUseBlock)
+                value.text != null -> generator.writeObject(value.text)
+                value.toolUse != null -> generator.writeObject(value.toolUse)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid ContentBlock")
             }

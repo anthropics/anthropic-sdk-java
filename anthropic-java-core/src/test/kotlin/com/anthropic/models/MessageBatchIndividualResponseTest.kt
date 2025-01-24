@@ -56,7 +56,7 @@ class MessageBatchIndividualResponseTest {
         assertThat(messageBatchIndividualResponse.customId()).isEqualTo("my-custom-id-1")
         assertThat(messageBatchIndividualResponse.result())
             .isEqualTo(
-                MessageBatchResult.ofMessageBatchSucceededResult(
+                MessageBatchResult.ofSucceeded(
                     MessageBatchSucceededResult.builder()
                         .message(
                             Message.builder()

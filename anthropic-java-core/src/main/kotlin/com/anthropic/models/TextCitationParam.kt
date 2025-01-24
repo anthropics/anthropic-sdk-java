@@ -22,46 +22,44 @@ import kotlin.jvm.optionals.getOrNull
 @JsonSerialize(using = TextCitationParam.Serializer::class)
 class TextCitationParam
 private constructor(
-    private val citationCharLocationParam: CitationCharLocationParam? = null,
-    private val citationPageLocationParam: CitationPageLocationParam? = null,
-    private val citationContentBlockLocationParam: CitationContentBlockLocationParam? = null,
+    private val citationCharLocation: CitationCharLocationParam? = null,
+    private val citationPageLocation: CitationPageLocationParam? = null,
+    private val citationContentBlockLocation: CitationContentBlockLocationParam? = null,
     private val _json: JsonValue? = null,
 ) {
 
-    fun citationCharLocationParam(): Optional<CitationCharLocationParam> =
-        Optional.ofNullable(citationCharLocationParam)
+    fun citationCharLocation(): Optional<CitationCharLocationParam> =
+        Optional.ofNullable(citationCharLocation)
 
-    fun citationPageLocationParam(): Optional<CitationPageLocationParam> =
-        Optional.ofNullable(citationPageLocationParam)
+    fun citationPageLocation(): Optional<CitationPageLocationParam> =
+        Optional.ofNullable(citationPageLocation)
 
-    fun citationContentBlockLocationParam(): Optional<CitationContentBlockLocationParam> =
-        Optional.ofNullable(citationContentBlockLocationParam)
+    fun citationContentBlockLocation(): Optional<CitationContentBlockLocationParam> =
+        Optional.ofNullable(citationContentBlockLocation)
 
-    fun isCitationCharLocationParam(): Boolean = citationCharLocationParam != null
+    fun isCitationCharLocation(): Boolean = citationCharLocation != null
 
-    fun isCitationPageLocationParam(): Boolean = citationPageLocationParam != null
+    fun isCitationPageLocation(): Boolean = citationPageLocation != null
 
-    fun isCitationContentBlockLocationParam(): Boolean = citationContentBlockLocationParam != null
+    fun isCitationContentBlockLocation(): Boolean = citationContentBlockLocation != null
 
-    fun asCitationCharLocationParam(): CitationCharLocationParam =
-        citationCharLocationParam.getOrThrow("citationCharLocationParam")
+    fun asCitationCharLocation(): CitationCharLocationParam =
+        citationCharLocation.getOrThrow("citationCharLocation")
 
-    fun asCitationPageLocationParam(): CitationPageLocationParam =
-        citationPageLocationParam.getOrThrow("citationPageLocationParam")
+    fun asCitationPageLocation(): CitationPageLocationParam =
+        citationPageLocation.getOrThrow("citationPageLocation")
 
-    fun asCitationContentBlockLocationParam(): CitationContentBlockLocationParam =
-        citationContentBlockLocationParam.getOrThrow("citationContentBlockLocationParam")
+    fun asCitationContentBlockLocation(): CitationContentBlockLocationParam =
+        citationContentBlockLocation.getOrThrow("citationContentBlockLocation")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
         return when {
-            citationCharLocationParam != null ->
-                visitor.visitCitationCharLocationParam(citationCharLocationParam)
-            citationPageLocationParam != null ->
-                visitor.visitCitationPageLocationParam(citationPageLocationParam)
-            citationContentBlockLocationParam != null ->
-                visitor.visitCitationContentBlockLocationParam(citationContentBlockLocationParam)
+            citationCharLocation != null -> visitor.visitCitationCharLocation(citationCharLocation)
+            citationPageLocation != null -> visitor.visitCitationPageLocation(citationPageLocation)
+            citationContentBlockLocation != null ->
+                visitor.visitCitationContentBlockLocation(citationContentBlockLocation)
             else -> visitor.unknown(_json)
         }
     }
@@ -75,22 +73,22 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
-                override fun visitCitationCharLocationParam(
-                    citationCharLocationParam: CitationCharLocationParam
+                override fun visitCitationCharLocation(
+                    citationCharLocation: CitationCharLocationParam
                 ) {
-                    citationCharLocationParam.validate()
+                    citationCharLocation.validate()
                 }
 
-                override fun visitCitationPageLocationParam(
-                    citationPageLocationParam: CitationPageLocationParam
+                override fun visitCitationPageLocation(
+                    citationPageLocation: CitationPageLocationParam
                 ) {
-                    citationPageLocationParam.validate()
+                    citationPageLocation.validate()
                 }
 
-                override fun visitCitationContentBlockLocationParam(
-                    citationContentBlockLocationParam: CitationContentBlockLocationParam
+                override fun visitCitationContentBlockLocation(
+                    citationContentBlockLocation: CitationContentBlockLocationParam
                 ) {
-                    citationContentBlockLocationParam.validate()
+                    citationContentBlockLocation.validate()
                 }
             }
         )
@@ -102,19 +100,19 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is TextCitationParam && citationCharLocationParam == other.citationCharLocationParam && citationPageLocationParam == other.citationPageLocationParam && citationContentBlockLocationParam == other.citationContentBlockLocationParam /* spotless:on */
+        return /* spotless:off */ other is TextCitationParam && citationCharLocation == other.citationCharLocation && citationPageLocation == other.citationPageLocation && citationContentBlockLocation == other.citationContentBlockLocation /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(citationCharLocationParam, citationPageLocationParam, citationContentBlockLocationParam) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(citationCharLocation, citationPageLocation, citationContentBlockLocation) /* spotless:on */
 
     override fun toString(): String =
         when {
-            citationCharLocationParam != null ->
-                "TextCitationParam{citationCharLocationParam=$citationCharLocationParam}"
-            citationPageLocationParam != null ->
-                "TextCitationParam{citationPageLocationParam=$citationPageLocationParam}"
-            citationContentBlockLocationParam != null ->
-                "TextCitationParam{citationContentBlockLocationParam=$citationContentBlockLocationParam}"
+            citationCharLocation != null ->
+                "TextCitationParam{citationCharLocation=$citationCharLocation}"
+            citationPageLocation != null ->
+                "TextCitationParam{citationPageLocation=$citationPageLocation}"
+            citationContentBlockLocation != null ->
+                "TextCitationParam{citationContentBlockLocation=$citationContentBlockLocation}"
             _json != null -> "TextCitationParam{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid TextCitationParam")
         }
@@ -122,27 +120,27 @@ private constructor(
     companion object {
 
         @JvmStatic
-        fun ofCitationCharLocationParam(citationCharLocationParam: CitationCharLocationParam) =
-            TextCitationParam(citationCharLocationParam = citationCharLocationParam)
+        fun ofCitationCharLocation(citationCharLocation: CitationCharLocationParam) =
+            TextCitationParam(citationCharLocation = citationCharLocation)
 
         @JvmStatic
-        fun ofCitationPageLocationParam(citationPageLocationParam: CitationPageLocationParam) =
-            TextCitationParam(citationPageLocationParam = citationPageLocationParam)
+        fun ofCitationPageLocation(citationPageLocation: CitationPageLocationParam) =
+            TextCitationParam(citationPageLocation = citationPageLocation)
 
         @JvmStatic
-        fun ofCitationContentBlockLocationParam(
-            citationContentBlockLocationParam: CitationContentBlockLocationParam
-        ) = TextCitationParam(citationContentBlockLocationParam = citationContentBlockLocationParam)
+        fun ofCitationContentBlockLocation(
+            citationContentBlockLocation: CitationContentBlockLocationParam
+        ) = TextCitationParam(citationContentBlockLocation = citationContentBlockLocation)
     }
 
     interface Visitor<out T> {
 
-        fun visitCitationCharLocationParam(citationCharLocationParam: CitationCharLocationParam): T
+        fun visitCitationCharLocation(citationCharLocation: CitationCharLocationParam): T
 
-        fun visitCitationPageLocationParam(citationPageLocationParam: CitationPageLocationParam): T
+        fun visitCitationPageLocation(citationPageLocation: CitationPageLocationParam): T
 
-        fun visitCitationContentBlockLocationParam(
-            citationContentBlockLocationParam: CitationContentBlockLocationParam
+        fun visitCitationContentBlockLocation(
+            citationContentBlockLocation: CitationContentBlockLocationParam
         ): T
 
         fun unknown(json: JsonValue?): T {
@@ -162,7 +160,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return TextCitationParam(citationCharLocationParam = it, _json = json)
+                            return TextCitationParam(citationCharLocation = it, _json = json)
                         }
                 }
                 "page_location" -> {
@@ -170,7 +168,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return TextCitationParam(citationPageLocationParam = it, _json = json)
+                            return TextCitationParam(citationPageLocation = it, _json = json)
                         }
                 }
                 "content_block_location" -> {
@@ -179,7 +177,7 @@ private constructor(
                         }
                         ?.let {
                             return TextCitationParam(
-                                citationContentBlockLocationParam = it,
+                                citationContentBlockLocation = it,
                                 _json = json
                             )
                         }
@@ -198,12 +196,12 @@ private constructor(
             provider: SerializerProvider
         ) {
             when {
-                value.citationCharLocationParam != null ->
-                    generator.writeObject(value.citationCharLocationParam)
-                value.citationPageLocationParam != null ->
-                    generator.writeObject(value.citationPageLocationParam)
-                value.citationContentBlockLocationParam != null ->
-                    generator.writeObject(value.citationContentBlockLocationParam)
+                value.citationCharLocation != null ->
+                    generator.writeObject(value.citationCharLocation)
+                value.citationPageLocation != null ->
+                    generator.writeObject(value.citationPageLocation)
+                value.citationContentBlockLocation != null ->
+                    generator.writeObject(value.citationContentBlockLocation)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid TextCitationParam")
             }

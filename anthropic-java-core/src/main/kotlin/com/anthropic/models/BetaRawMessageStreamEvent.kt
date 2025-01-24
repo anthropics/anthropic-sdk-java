@@ -22,79 +22,67 @@ import kotlin.jvm.optionals.getOrNull
 @JsonSerialize(using = BetaRawMessageStreamEvent.Serializer::class)
 class BetaRawMessageStreamEvent
 private constructor(
-    private val betaRawMessageStartEvent: BetaRawMessageStartEvent? = null,
-    private val betaRawMessageDeltaEvent: BetaRawMessageDeltaEvent? = null,
-    private val betaRawMessageStopEvent: BetaRawMessageStopEvent? = null,
-    private val betaRawContentBlockStartEvent: BetaRawContentBlockStartEvent? = null,
-    private val betaRawContentBlockDeltaEvent: BetaRawContentBlockDeltaEvent? = null,
-    private val betaRawContentBlockStopEvent: BetaRawContentBlockStopEvent? = null,
+    private val start: BetaRawMessageStartEvent? = null,
+    private val delta: BetaRawMessageDeltaEvent? = null,
+    private val stop: BetaRawMessageStopEvent? = null,
+    private val contentBlockStart: BetaRawContentBlockStartEvent? = null,
+    private val contentBlockDelta: BetaRawContentBlockDeltaEvent? = null,
+    private val contentBlockStop: BetaRawContentBlockStopEvent? = null,
     private val _json: JsonValue? = null,
 ) {
 
-    fun betaRawMessageStartEvent(): Optional<BetaRawMessageStartEvent> =
-        Optional.ofNullable(betaRawMessageStartEvent)
+    fun start(): Optional<BetaRawMessageStartEvent> = Optional.ofNullable(start)
 
-    fun betaRawMessageDeltaEvent(): Optional<BetaRawMessageDeltaEvent> =
-        Optional.ofNullable(betaRawMessageDeltaEvent)
+    fun delta(): Optional<BetaRawMessageDeltaEvent> = Optional.ofNullable(delta)
 
-    fun betaRawMessageStopEvent(): Optional<BetaRawMessageStopEvent> =
-        Optional.ofNullable(betaRawMessageStopEvent)
+    fun stop(): Optional<BetaRawMessageStopEvent> = Optional.ofNullable(stop)
 
-    fun betaRawContentBlockStartEvent(): Optional<BetaRawContentBlockStartEvent> =
-        Optional.ofNullable(betaRawContentBlockStartEvent)
+    fun contentBlockStart(): Optional<BetaRawContentBlockStartEvent> =
+        Optional.ofNullable(contentBlockStart)
 
-    fun betaRawContentBlockDeltaEvent(): Optional<BetaRawContentBlockDeltaEvent> =
-        Optional.ofNullable(betaRawContentBlockDeltaEvent)
+    fun contentBlockDelta(): Optional<BetaRawContentBlockDeltaEvent> =
+        Optional.ofNullable(contentBlockDelta)
 
-    fun betaRawContentBlockStopEvent(): Optional<BetaRawContentBlockStopEvent> =
-        Optional.ofNullable(betaRawContentBlockStopEvent)
+    fun contentBlockStop(): Optional<BetaRawContentBlockStopEvent> =
+        Optional.ofNullable(contentBlockStop)
 
-    fun isBetaRawMessageStartEvent(): Boolean = betaRawMessageStartEvent != null
+    fun isStart(): Boolean = start != null
 
-    fun isBetaRawMessageDeltaEvent(): Boolean = betaRawMessageDeltaEvent != null
+    fun isDelta(): Boolean = delta != null
 
-    fun isBetaRawMessageStopEvent(): Boolean = betaRawMessageStopEvent != null
+    fun isStop(): Boolean = stop != null
 
-    fun isBetaRawContentBlockStartEvent(): Boolean = betaRawContentBlockStartEvent != null
+    fun isContentBlockStart(): Boolean = contentBlockStart != null
 
-    fun isBetaRawContentBlockDeltaEvent(): Boolean = betaRawContentBlockDeltaEvent != null
+    fun isContentBlockDelta(): Boolean = contentBlockDelta != null
 
-    fun isBetaRawContentBlockStopEvent(): Boolean = betaRawContentBlockStopEvent != null
+    fun isContentBlockStop(): Boolean = contentBlockStop != null
 
-    fun asBetaRawMessageStartEvent(): BetaRawMessageStartEvent =
-        betaRawMessageStartEvent.getOrThrow("betaRawMessageStartEvent")
+    fun asStart(): BetaRawMessageStartEvent = start.getOrThrow("start")
 
-    fun asBetaRawMessageDeltaEvent(): BetaRawMessageDeltaEvent =
-        betaRawMessageDeltaEvent.getOrThrow("betaRawMessageDeltaEvent")
+    fun asDelta(): BetaRawMessageDeltaEvent = delta.getOrThrow("delta")
 
-    fun asBetaRawMessageStopEvent(): BetaRawMessageStopEvent =
-        betaRawMessageStopEvent.getOrThrow("betaRawMessageStopEvent")
+    fun asStop(): BetaRawMessageStopEvent = stop.getOrThrow("stop")
 
-    fun asBetaRawContentBlockStartEvent(): BetaRawContentBlockStartEvent =
-        betaRawContentBlockStartEvent.getOrThrow("betaRawContentBlockStartEvent")
+    fun asContentBlockStart(): BetaRawContentBlockStartEvent =
+        contentBlockStart.getOrThrow("contentBlockStart")
 
-    fun asBetaRawContentBlockDeltaEvent(): BetaRawContentBlockDeltaEvent =
-        betaRawContentBlockDeltaEvent.getOrThrow("betaRawContentBlockDeltaEvent")
+    fun asContentBlockDelta(): BetaRawContentBlockDeltaEvent =
+        contentBlockDelta.getOrThrow("contentBlockDelta")
 
-    fun asBetaRawContentBlockStopEvent(): BetaRawContentBlockStopEvent =
-        betaRawContentBlockStopEvent.getOrThrow("betaRawContentBlockStopEvent")
+    fun asContentBlockStop(): BetaRawContentBlockStopEvent =
+        contentBlockStop.getOrThrow("contentBlockStop")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
         return when {
-            betaRawMessageStartEvent != null ->
-                visitor.visitBetaRawMessageStartEvent(betaRawMessageStartEvent)
-            betaRawMessageDeltaEvent != null ->
-                visitor.visitBetaRawMessageDeltaEvent(betaRawMessageDeltaEvent)
-            betaRawMessageStopEvent != null ->
-                visitor.visitBetaRawMessageStopEvent(betaRawMessageStopEvent)
-            betaRawContentBlockStartEvent != null ->
-                visitor.visitBetaRawContentBlockStartEvent(betaRawContentBlockStartEvent)
-            betaRawContentBlockDeltaEvent != null ->
-                visitor.visitBetaRawContentBlockDeltaEvent(betaRawContentBlockDeltaEvent)
-            betaRawContentBlockStopEvent != null ->
-                visitor.visitBetaRawContentBlockStopEvent(betaRawContentBlockStopEvent)
+            start != null -> visitor.visitStart(start)
+            delta != null -> visitor.visitDelta(delta)
+            stop != null -> visitor.visitStop(stop)
+            contentBlockStart != null -> visitor.visitContentBlockStart(contentBlockStart)
+            contentBlockDelta != null -> visitor.visitContentBlockDelta(contentBlockDelta)
+            contentBlockStop != null -> visitor.visitContentBlockStop(contentBlockStop)
             else -> visitor.unknown(_json)
         }
     }
@@ -108,40 +96,32 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
-                override fun visitBetaRawMessageStartEvent(
-                    betaRawMessageStartEvent: BetaRawMessageStartEvent
-                ) {
-                    betaRawMessageStartEvent.validate()
+                override fun visitStart(start: BetaRawMessageStartEvent) {
+                    start.validate()
                 }
 
-                override fun visitBetaRawMessageDeltaEvent(
-                    betaRawMessageDeltaEvent: BetaRawMessageDeltaEvent
-                ) {
-                    betaRawMessageDeltaEvent.validate()
+                override fun visitDelta(delta: BetaRawMessageDeltaEvent) {
+                    delta.validate()
                 }
 
-                override fun visitBetaRawMessageStopEvent(
-                    betaRawMessageStopEvent: BetaRawMessageStopEvent
-                ) {
-                    betaRawMessageStopEvent.validate()
+                override fun visitStop(stop: BetaRawMessageStopEvent) {
+                    stop.validate()
                 }
 
-                override fun visitBetaRawContentBlockStartEvent(
-                    betaRawContentBlockStartEvent: BetaRawContentBlockStartEvent
+                override fun visitContentBlockStart(
+                    contentBlockStart: BetaRawContentBlockStartEvent
                 ) {
-                    betaRawContentBlockStartEvent.validate()
+                    contentBlockStart.validate()
                 }
 
-                override fun visitBetaRawContentBlockDeltaEvent(
-                    betaRawContentBlockDeltaEvent: BetaRawContentBlockDeltaEvent
+                override fun visitContentBlockDelta(
+                    contentBlockDelta: BetaRawContentBlockDeltaEvent
                 ) {
-                    betaRawContentBlockDeltaEvent.validate()
+                    contentBlockDelta.validate()
                 }
 
-                override fun visitBetaRawContentBlockStopEvent(
-                    betaRawContentBlockStopEvent: BetaRawContentBlockStopEvent
-                ) {
-                    betaRawContentBlockStopEvent.validate()
+                override fun visitContentBlockStop(contentBlockStop: BetaRawContentBlockStopEvent) {
+                    contentBlockStop.validate()
                 }
             }
         )
@@ -153,25 +133,22 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaRawMessageStreamEvent && betaRawMessageStartEvent == other.betaRawMessageStartEvent && betaRawMessageDeltaEvent == other.betaRawMessageDeltaEvent && betaRawMessageStopEvent == other.betaRawMessageStopEvent && betaRawContentBlockStartEvent == other.betaRawContentBlockStartEvent && betaRawContentBlockDeltaEvent == other.betaRawContentBlockDeltaEvent && betaRawContentBlockStopEvent == other.betaRawContentBlockStopEvent /* spotless:on */
+        return /* spotless:off */ other is BetaRawMessageStreamEvent && start == other.start && delta == other.delta && stop == other.stop && contentBlockStart == other.contentBlockStart && contentBlockDelta == other.contentBlockDelta && contentBlockStop == other.contentBlockStop /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaRawMessageStartEvent, betaRawMessageDeltaEvent, betaRawMessageStopEvent, betaRawContentBlockStartEvent, betaRawContentBlockDeltaEvent, betaRawContentBlockStopEvent) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(start, delta, stop, contentBlockStart, contentBlockDelta, contentBlockStop) /* spotless:on */
 
     override fun toString(): String =
         when {
-            betaRawMessageStartEvent != null ->
-                "BetaRawMessageStreamEvent{betaRawMessageStartEvent=$betaRawMessageStartEvent}"
-            betaRawMessageDeltaEvent != null ->
-                "BetaRawMessageStreamEvent{betaRawMessageDeltaEvent=$betaRawMessageDeltaEvent}"
-            betaRawMessageStopEvent != null ->
-                "BetaRawMessageStreamEvent{betaRawMessageStopEvent=$betaRawMessageStopEvent}"
-            betaRawContentBlockStartEvent != null ->
-                "BetaRawMessageStreamEvent{betaRawContentBlockStartEvent=$betaRawContentBlockStartEvent}"
-            betaRawContentBlockDeltaEvent != null ->
-                "BetaRawMessageStreamEvent{betaRawContentBlockDeltaEvent=$betaRawContentBlockDeltaEvent}"
-            betaRawContentBlockStopEvent != null ->
-                "BetaRawMessageStreamEvent{betaRawContentBlockStopEvent=$betaRawContentBlockStopEvent}"
+            start != null -> "BetaRawMessageStreamEvent{start=$start}"
+            delta != null -> "BetaRawMessageStreamEvent{delta=$delta}"
+            stop != null -> "BetaRawMessageStreamEvent{stop=$stop}"
+            contentBlockStart != null ->
+                "BetaRawMessageStreamEvent{contentBlockStart=$contentBlockStart}"
+            contentBlockDelta != null ->
+                "BetaRawMessageStreamEvent{contentBlockDelta=$contentBlockDelta}"
+            contentBlockStop != null ->
+                "BetaRawMessageStreamEvent{contentBlockStop=$contentBlockStop}"
             _json != null -> "BetaRawMessageStreamEvent{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaRawMessageStreamEvent")
         }
@@ -179,52 +156,40 @@ private constructor(
     companion object {
 
         @JvmStatic
-        fun ofBetaRawMessageStartEvent(betaRawMessageStartEvent: BetaRawMessageStartEvent) =
-            BetaRawMessageStreamEvent(betaRawMessageStartEvent = betaRawMessageStartEvent)
+        fun ofStart(start: BetaRawMessageStartEvent) = BetaRawMessageStreamEvent(start = start)
 
         @JvmStatic
-        fun ofBetaRawMessageDeltaEvent(betaRawMessageDeltaEvent: BetaRawMessageDeltaEvent) =
-            BetaRawMessageStreamEvent(betaRawMessageDeltaEvent = betaRawMessageDeltaEvent)
+        fun ofDelta(delta: BetaRawMessageDeltaEvent) = BetaRawMessageStreamEvent(delta = delta)
 
         @JvmStatic
-        fun ofBetaRawMessageStopEvent(betaRawMessageStopEvent: BetaRawMessageStopEvent) =
-            BetaRawMessageStreamEvent(betaRawMessageStopEvent = betaRawMessageStopEvent)
+        fun ofStop(stop: BetaRawMessageStopEvent) = BetaRawMessageStreamEvent(stop = stop)
 
         @JvmStatic
-        fun ofBetaRawContentBlockStartEvent(
-            betaRawContentBlockStartEvent: BetaRawContentBlockStartEvent
-        ) = BetaRawMessageStreamEvent(betaRawContentBlockStartEvent = betaRawContentBlockStartEvent)
+        fun ofContentBlockStart(contentBlockStart: BetaRawContentBlockStartEvent) =
+            BetaRawMessageStreamEvent(contentBlockStart = contentBlockStart)
 
         @JvmStatic
-        fun ofBetaRawContentBlockDeltaEvent(
-            betaRawContentBlockDeltaEvent: BetaRawContentBlockDeltaEvent
-        ) = BetaRawMessageStreamEvent(betaRawContentBlockDeltaEvent = betaRawContentBlockDeltaEvent)
+        fun ofContentBlockDelta(contentBlockDelta: BetaRawContentBlockDeltaEvent) =
+            BetaRawMessageStreamEvent(contentBlockDelta = contentBlockDelta)
 
         @JvmStatic
-        fun ofBetaRawContentBlockStopEvent(
-            betaRawContentBlockStopEvent: BetaRawContentBlockStopEvent
-        ) = BetaRawMessageStreamEvent(betaRawContentBlockStopEvent = betaRawContentBlockStopEvent)
+        fun ofContentBlockStop(contentBlockStop: BetaRawContentBlockStopEvent) =
+            BetaRawMessageStreamEvent(contentBlockStop = contentBlockStop)
     }
 
     interface Visitor<out T> {
 
-        fun visitBetaRawMessageStartEvent(betaRawMessageStartEvent: BetaRawMessageStartEvent): T
+        fun visitStart(start: BetaRawMessageStartEvent): T
 
-        fun visitBetaRawMessageDeltaEvent(betaRawMessageDeltaEvent: BetaRawMessageDeltaEvent): T
+        fun visitDelta(delta: BetaRawMessageDeltaEvent): T
 
-        fun visitBetaRawMessageStopEvent(betaRawMessageStopEvent: BetaRawMessageStopEvent): T
+        fun visitStop(stop: BetaRawMessageStopEvent): T
 
-        fun visitBetaRawContentBlockStartEvent(
-            betaRawContentBlockStartEvent: BetaRawContentBlockStartEvent
-        ): T
+        fun visitContentBlockStart(contentBlockStart: BetaRawContentBlockStartEvent): T
 
-        fun visitBetaRawContentBlockDeltaEvent(
-            betaRawContentBlockDeltaEvent: BetaRawContentBlockDeltaEvent
-        ): T
+        fun visitContentBlockDelta(contentBlockDelta: BetaRawContentBlockDeltaEvent): T
 
-        fun visitBetaRawContentBlockStopEvent(
-            betaRawContentBlockStopEvent: BetaRawContentBlockStopEvent
-        ): T
+        fun visitContentBlockStop(contentBlockStop: BetaRawContentBlockStopEvent): T
 
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown BetaRawMessageStreamEvent: $json")
@@ -244,10 +209,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return BetaRawMessageStreamEvent(
-                                betaRawMessageStartEvent = it,
-                                _json = json
-                            )
+                            return BetaRawMessageStreamEvent(start = it, _json = json)
                         }
                 }
                 "message_delta" -> {
@@ -255,10 +217,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return BetaRawMessageStreamEvent(
-                                betaRawMessageDeltaEvent = it,
-                                _json = json
-                            )
+                            return BetaRawMessageStreamEvent(delta = it, _json = json)
                         }
                 }
                 "message_stop" -> {
@@ -266,10 +225,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return BetaRawMessageStreamEvent(
-                                betaRawMessageStopEvent = it,
-                                _json = json
-                            )
+                            return BetaRawMessageStreamEvent(stop = it, _json = json)
                         }
                 }
                 "content_block_start" -> {
@@ -277,10 +233,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return BetaRawMessageStreamEvent(
-                                betaRawContentBlockStartEvent = it,
-                                _json = json
-                            )
+                            return BetaRawMessageStreamEvent(contentBlockStart = it, _json = json)
                         }
                 }
                 "content_block_delta" -> {
@@ -288,10 +241,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return BetaRawMessageStreamEvent(
-                                betaRawContentBlockDeltaEvent = it,
-                                _json = json
-                            )
+                            return BetaRawMessageStreamEvent(contentBlockDelta = it, _json = json)
                         }
                 }
                 "content_block_stop" -> {
@@ -299,10 +249,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return BetaRawMessageStreamEvent(
-                                betaRawContentBlockStopEvent = it,
-                                _json = json
-                            )
+                            return BetaRawMessageStreamEvent(contentBlockStop = it, _json = json)
                         }
                 }
             }
@@ -319,18 +266,12 @@ private constructor(
             provider: SerializerProvider
         ) {
             when {
-                value.betaRawMessageStartEvent != null ->
-                    generator.writeObject(value.betaRawMessageStartEvent)
-                value.betaRawMessageDeltaEvent != null ->
-                    generator.writeObject(value.betaRawMessageDeltaEvent)
-                value.betaRawMessageStopEvent != null ->
-                    generator.writeObject(value.betaRawMessageStopEvent)
-                value.betaRawContentBlockStartEvent != null ->
-                    generator.writeObject(value.betaRawContentBlockStartEvent)
-                value.betaRawContentBlockDeltaEvent != null ->
-                    generator.writeObject(value.betaRawContentBlockDeltaEvent)
-                value.betaRawContentBlockStopEvent != null ->
-                    generator.writeObject(value.betaRawContentBlockStopEvent)
+                value.start != null -> generator.writeObject(value.start)
+                value.delta != null -> generator.writeObject(value.delta)
+                value.stop != null -> generator.writeObject(value.stop)
+                value.contentBlockStart != null -> generator.writeObject(value.contentBlockStart)
+                value.contentBlockDelta != null -> generator.writeObject(value.contentBlockDelta)
+                value.contentBlockStop != null -> generator.writeObject(value.contentBlockStop)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaRawMessageStreamEvent")
             }

@@ -26,7 +26,7 @@ class CitationsDeltaTest {
         assertThat(citationsDelta).isNotNull
         assertThat(citationsDelta.citation())
             .isEqualTo(
-                CitationsDelta.Citation.ofCitationCharLocation(
+                CitationsDelta.Citation.ofCharLocation(
                     CitationCharLocation.builder()
                         .citedText("cited_text")
                         .documentIndex(0L)

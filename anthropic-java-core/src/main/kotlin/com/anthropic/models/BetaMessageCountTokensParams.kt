@@ -1241,16 +1241,13 @@ constructor(
             }
 
             /** The model will automatically decide whether to use tools. */
-            fun toolChoice(betaToolChoiceAuto: BetaToolChoiceAuto) =
-                toolChoice(BetaToolChoice.ofBetaToolChoiceAuto(betaToolChoiceAuto))
+            fun toolChoice(auto: BetaToolChoiceAuto) = toolChoice(BetaToolChoice.ofAuto(auto))
 
             /** The model will use any available tools. */
-            fun toolChoice(betaToolChoiceAny: BetaToolChoiceAny) =
-                toolChoice(BetaToolChoice.ofBetaToolChoiceAny(betaToolChoiceAny))
+            fun toolChoice(any: BetaToolChoiceAny) = toolChoice(BetaToolChoice.ofAny(any))
 
             /** The model will use the specified tool with `tool_choice.name`. */
-            fun toolChoice(betaToolChoiceTool: BetaToolChoiceTool) =
-                toolChoice(BetaToolChoice.ofBetaToolChoiceTool(betaToolChoiceTool))
+            fun toolChoice(tool: BetaToolChoiceTool) = toolChoice(BetaToolChoice.ofTool(tool))
 
             /**
              * Definitions of tools that the model may use.
@@ -1531,7 +1528,7 @@ constructor(
              *
              * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
              */
-            fun addTool(betaTool: BetaTool) = addTool(Tool.ofBetaTool(betaTool))
+            fun addTool(beta: BetaTool) = addTool(Tool.ofBeta(beta))
 
             /**
              * Definitions of tools that the model may use.
@@ -2230,19 +2227,13 @@ constructor(
         }
 
         /** The model will automatically decide whether to use tools. */
-        fun toolChoice(betaToolChoiceAuto: BetaToolChoiceAuto) = apply {
-            body.toolChoice(betaToolChoiceAuto)
-        }
+        fun toolChoice(auto: BetaToolChoiceAuto) = apply { body.toolChoice(auto) }
 
         /** The model will use any available tools. */
-        fun toolChoice(betaToolChoiceAny: BetaToolChoiceAny) = apply {
-            body.toolChoice(betaToolChoiceAny)
-        }
+        fun toolChoice(any: BetaToolChoiceAny) = apply { body.toolChoice(any) }
 
         /** The model will use the specified tool with `tool_choice.name`. */
-        fun toolChoice(betaToolChoiceTool: BetaToolChoiceTool) = apply {
-            body.toolChoice(betaToolChoiceTool)
-        }
+        fun toolChoice(tool: BetaToolChoiceTool) = apply { body.toolChoice(tool) }
 
         /**
          * Definitions of tools that the model may use.
@@ -2510,7 +2501,7 @@ constructor(
          *
          * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
          */
-        fun addTool(betaTool: BetaTool) = apply { body.addTool(betaTool) }
+        fun addTool(beta: BetaTool) = apply { body.addTool(beta) }
 
         /**
          * Definitions of tools that the model may use.
@@ -2985,14 +2976,14 @@ constructor(
     @JsonSerialize(using = Tool.Serializer::class)
     class Tool
     private constructor(
-        private val betaTool: BetaTool? = null,
+        private val beta: BetaTool? = null,
         private val betaToolComputerUse20241022: BetaToolComputerUse20241022? = null,
         private val betaToolBash20241022: BetaToolBash20241022? = null,
         private val betaToolTextEditor20241022: BetaToolTextEditor20241022? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun betaTool(): Optional<BetaTool> = Optional.ofNullable(betaTool)
+        fun beta(): Optional<BetaTool> = Optional.ofNullable(beta)
 
         fun betaToolComputerUse20241022(): Optional<BetaToolComputerUse20241022> =
             Optional.ofNullable(betaToolComputerUse20241022)
@@ -3003,7 +2994,7 @@ constructor(
         fun betaToolTextEditor20241022(): Optional<BetaToolTextEditor20241022> =
             Optional.ofNullable(betaToolTextEditor20241022)
 
-        fun isBetaTool(): Boolean = betaTool != null
+        fun isBeta(): Boolean = beta != null
 
         fun isBetaToolComputerUse20241022(): Boolean = betaToolComputerUse20241022 != null
 
@@ -3011,7 +3002,7 @@ constructor(
 
         fun isBetaToolTextEditor20241022(): Boolean = betaToolTextEditor20241022 != null
 
-        fun asBetaTool(): BetaTool = betaTool.getOrThrow("betaTool")
+        fun asBeta(): BetaTool = beta.getOrThrow("beta")
 
         fun asBetaToolComputerUse20241022(): BetaToolComputerUse20241022 =
             betaToolComputerUse20241022.getOrThrow("betaToolComputerUse20241022")
@@ -3026,7 +3017,7 @@ constructor(
 
         fun <T> accept(visitor: Visitor<T>): T {
             return when {
-                betaTool != null -> visitor.visitBetaTool(betaTool)
+                beta != null -> visitor.visitBeta(beta)
                 betaToolComputerUse20241022 != null ->
                     visitor.visitBetaToolComputerUse20241022(betaToolComputerUse20241022)
                 betaToolBash20241022 != null ->
@@ -3046,8 +3037,8 @@ constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitBetaTool(betaTool: BetaTool) {
-                        betaTool.validate()
+                    override fun visitBeta(beta: BetaTool) {
+                        beta.validate()
                     }
 
                     override fun visitBetaToolComputerUse20241022(
@@ -3077,14 +3068,14 @@ constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Tool && betaTool == other.betaTool && betaToolComputerUse20241022 == other.betaToolComputerUse20241022 && betaToolBash20241022 == other.betaToolBash20241022 && betaToolTextEditor20241022 == other.betaToolTextEditor20241022 /* spotless:on */
+            return /* spotless:off */ other is Tool && beta == other.beta && betaToolComputerUse20241022 == other.betaToolComputerUse20241022 && betaToolBash20241022 == other.betaToolBash20241022 && betaToolTextEditor20241022 == other.betaToolTextEditor20241022 /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaTool, betaToolComputerUse20241022, betaToolBash20241022, betaToolTextEditor20241022) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(beta, betaToolComputerUse20241022, betaToolBash20241022, betaToolTextEditor20241022) /* spotless:on */
 
         override fun toString(): String =
             when {
-                betaTool != null -> "Tool{betaTool=$betaTool}"
+                beta != null -> "Tool{beta=$beta}"
                 betaToolComputerUse20241022 != null ->
                     "Tool{betaToolComputerUse20241022=$betaToolComputerUse20241022}"
                 betaToolBash20241022 != null -> "Tool{betaToolBash20241022=$betaToolBash20241022}"
@@ -3096,7 +3087,7 @@ constructor(
 
         companion object {
 
-            @JvmStatic fun ofBetaTool(betaTool: BetaTool) = Tool(betaTool = betaTool)
+            @JvmStatic fun ofBeta(beta: BetaTool) = Tool(beta = beta)
 
             @JvmStatic
             fun ofBetaToolComputerUse20241022(
@@ -3115,7 +3106,7 @@ constructor(
 
         interface Visitor<out T> {
 
-            fun visitBetaTool(betaTool: BetaTool): T
+            fun visitBeta(beta: BetaTool): T
 
             fun visitBetaToolComputerUse20241022(
                 betaToolComputerUse20241022: BetaToolComputerUse20241022
@@ -3139,7 +3130,7 @@ constructor(
 
                 tryDeserialize(node, jacksonTypeRef<BetaTool>()) { it.validate() }
                     ?.let {
-                        return Tool(betaTool = it, _json = json)
+                        return Tool(beta = it, _json = json)
                     }
                 tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20241022>()) {
                         it.validate()
@@ -3168,7 +3159,7 @@ constructor(
                 provider: SerializerProvider
             ) {
                 when {
-                    value.betaTool != null -> generator.writeObject(value.betaTool)
+                    value.beta != null -> generator.writeObject(value.beta)
                     value.betaToolComputerUse20241022 != null ->
                         generator.writeObject(value.betaToolComputerUse20241022)
                     value.betaToolBash20241022 != null ->

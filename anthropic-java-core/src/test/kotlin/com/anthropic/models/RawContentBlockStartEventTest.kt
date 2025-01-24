@@ -33,7 +33,7 @@ class RawContentBlockStartEventTest {
         assertThat(rawContentBlockStartEvent).isNotNull
         assertThat(rawContentBlockStartEvent.contentBlock())
             .isEqualTo(
-                RawContentBlockStartEvent.ContentBlock.ofTextBlock(
+                RawContentBlockStartEvent.ContentBlock.ofText(
                     TextBlock.builder()
                         .addCitation(
                             CitationCharLocation.builder()

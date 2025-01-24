@@ -22,63 +22,53 @@ import kotlin.jvm.optionals.getOrNull
 @JsonSerialize(using = BetaContentBlockParam.Serializer::class)
 class BetaContentBlockParam
 private constructor(
-    private val betaTextBlockParam: BetaTextBlockParam? = null,
-    private val betaImageBlockParam: BetaImageBlockParam? = null,
-    private val betaToolUseBlockParam: BetaToolUseBlockParam? = null,
-    private val betaToolResultBlockParam: BetaToolResultBlockParam? = null,
-    private val betaBase64PdfBlock: BetaBase64PdfBlock? = null,
+    private val text: BetaTextBlockParam? = null,
+    private val image: BetaImageBlockParam? = null,
+    private val toolUse: BetaToolUseBlockParam? = null,
+    private val toolResult: BetaToolResultBlockParam? = null,
+    private val base64PdfBlock: BetaBase64PdfBlock? = null,
     private val _json: JsonValue? = null,
 ) {
 
-    fun betaTextBlockParam(): Optional<BetaTextBlockParam> = Optional.ofNullable(betaTextBlockParam)
+    fun text(): Optional<BetaTextBlockParam> = Optional.ofNullable(text)
 
-    fun betaImageBlockParam(): Optional<BetaImageBlockParam> =
-        Optional.ofNullable(betaImageBlockParam)
+    fun image(): Optional<BetaImageBlockParam> = Optional.ofNullable(image)
 
-    fun betaToolUseBlockParam(): Optional<BetaToolUseBlockParam> =
-        Optional.ofNullable(betaToolUseBlockParam)
+    fun toolUse(): Optional<BetaToolUseBlockParam> = Optional.ofNullable(toolUse)
 
-    fun betaToolResultBlockParam(): Optional<BetaToolResultBlockParam> =
-        Optional.ofNullable(betaToolResultBlockParam)
+    fun toolResult(): Optional<BetaToolResultBlockParam> = Optional.ofNullable(toolResult)
 
-    fun betaBase64PdfBlock(): Optional<BetaBase64PdfBlock> = Optional.ofNullable(betaBase64PdfBlock)
+    fun base64PdfBlock(): Optional<BetaBase64PdfBlock> = Optional.ofNullable(base64PdfBlock)
 
-    fun isBetaTextBlockParam(): Boolean = betaTextBlockParam != null
+    fun isText(): Boolean = text != null
 
-    fun isBetaImageBlockParam(): Boolean = betaImageBlockParam != null
+    fun isImage(): Boolean = image != null
 
-    fun isBetaToolUseBlockParam(): Boolean = betaToolUseBlockParam != null
+    fun isToolUse(): Boolean = toolUse != null
 
-    fun isBetaToolResultBlockParam(): Boolean = betaToolResultBlockParam != null
+    fun isToolResult(): Boolean = toolResult != null
 
-    fun isBetaBase64PdfBlock(): Boolean = betaBase64PdfBlock != null
+    fun isBase64PdfBlock(): Boolean = base64PdfBlock != null
 
-    fun asBetaTextBlockParam(): BetaTextBlockParam =
-        betaTextBlockParam.getOrThrow("betaTextBlockParam")
+    fun asText(): BetaTextBlockParam = text.getOrThrow("text")
 
-    fun asBetaImageBlockParam(): BetaImageBlockParam =
-        betaImageBlockParam.getOrThrow("betaImageBlockParam")
+    fun asImage(): BetaImageBlockParam = image.getOrThrow("image")
 
-    fun asBetaToolUseBlockParam(): BetaToolUseBlockParam =
-        betaToolUseBlockParam.getOrThrow("betaToolUseBlockParam")
+    fun asToolUse(): BetaToolUseBlockParam = toolUse.getOrThrow("toolUse")
 
-    fun asBetaToolResultBlockParam(): BetaToolResultBlockParam =
-        betaToolResultBlockParam.getOrThrow("betaToolResultBlockParam")
+    fun asToolResult(): BetaToolResultBlockParam = toolResult.getOrThrow("toolResult")
 
-    fun asBetaBase64PdfBlock(): BetaBase64PdfBlock =
-        betaBase64PdfBlock.getOrThrow("betaBase64PdfBlock")
+    fun asBase64PdfBlock(): BetaBase64PdfBlock = base64PdfBlock.getOrThrow("base64PdfBlock")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
         return when {
-            betaTextBlockParam != null -> visitor.visitBetaTextBlockParam(betaTextBlockParam)
-            betaImageBlockParam != null -> visitor.visitBetaImageBlockParam(betaImageBlockParam)
-            betaToolUseBlockParam != null ->
-                visitor.visitBetaToolUseBlockParam(betaToolUseBlockParam)
-            betaToolResultBlockParam != null ->
-                visitor.visitBetaToolResultBlockParam(betaToolResultBlockParam)
-            betaBase64PdfBlock != null -> visitor.visitBetaBase64PdfBlock(betaBase64PdfBlock)
+            text != null -> visitor.visitText(text)
+            image != null -> visitor.visitImage(image)
+            toolUse != null -> visitor.visitToolUse(toolUse)
+            toolResult != null -> visitor.visitToolResult(toolResult)
+            base64PdfBlock != null -> visitor.visitBase64PdfBlock(base64PdfBlock)
             else -> visitor.unknown(_json)
         }
     }
@@ -92,28 +82,24 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
-                override fun visitBetaTextBlockParam(betaTextBlockParam: BetaTextBlockParam) {
-                    betaTextBlockParam.validate()
+                override fun visitText(text: BetaTextBlockParam) {
+                    text.validate()
                 }
 
-                override fun visitBetaImageBlockParam(betaImageBlockParam: BetaImageBlockParam) {
-                    betaImageBlockParam.validate()
+                override fun visitImage(image: BetaImageBlockParam) {
+                    image.validate()
                 }
 
-                override fun visitBetaToolUseBlockParam(
-                    betaToolUseBlockParam: BetaToolUseBlockParam
-                ) {
-                    betaToolUseBlockParam.validate()
+                override fun visitToolUse(toolUse: BetaToolUseBlockParam) {
+                    toolUse.validate()
                 }
 
-                override fun visitBetaToolResultBlockParam(
-                    betaToolResultBlockParam: BetaToolResultBlockParam
-                ) {
-                    betaToolResultBlockParam.validate()
+                override fun visitToolResult(toolResult: BetaToolResultBlockParam) {
+                    toolResult.validate()
                 }
 
-                override fun visitBetaBase64PdfBlock(betaBase64PdfBlock: BetaBase64PdfBlock) {
-                    betaBase64PdfBlock.validate()
+                override fun visitBase64PdfBlock(base64PdfBlock: BetaBase64PdfBlock) {
+                    base64PdfBlock.validate()
                 }
             }
         )
@@ -125,61 +111,51 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaContentBlockParam && betaTextBlockParam == other.betaTextBlockParam && betaImageBlockParam == other.betaImageBlockParam && betaToolUseBlockParam == other.betaToolUseBlockParam && betaToolResultBlockParam == other.betaToolResultBlockParam && betaBase64PdfBlock == other.betaBase64PdfBlock /* spotless:on */
+        return /* spotless:off */ other is BetaContentBlockParam && text == other.text && image == other.image && toolUse == other.toolUse && toolResult == other.toolResult && base64PdfBlock == other.base64PdfBlock /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaTextBlockParam, betaImageBlockParam, betaToolUseBlockParam, betaToolResultBlockParam, betaBase64PdfBlock) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image, toolUse, toolResult, base64PdfBlock) /* spotless:on */
 
     override fun toString(): String =
         when {
-            betaTextBlockParam != null ->
-                "BetaContentBlockParam{betaTextBlockParam=$betaTextBlockParam}"
-            betaImageBlockParam != null ->
-                "BetaContentBlockParam{betaImageBlockParam=$betaImageBlockParam}"
-            betaToolUseBlockParam != null ->
-                "BetaContentBlockParam{betaToolUseBlockParam=$betaToolUseBlockParam}"
-            betaToolResultBlockParam != null ->
-                "BetaContentBlockParam{betaToolResultBlockParam=$betaToolResultBlockParam}"
-            betaBase64PdfBlock != null ->
-                "BetaContentBlockParam{betaBase64PdfBlock=$betaBase64PdfBlock}"
+            text != null -> "BetaContentBlockParam{text=$text}"
+            image != null -> "BetaContentBlockParam{image=$image}"
+            toolUse != null -> "BetaContentBlockParam{toolUse=$toolUse}"
+            toolResult != null -> "BetaContentBlockParam{toolResult=$toolResult}"
+            base64PdfBlock != null -> "BetaContentBlockParam{base64PdfBlock=$base64PdfBlock}"
             _json != null -> "BetaContentBlockParam{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaContentBlockParam")
         }
 
     companion object {
 
-        @JvmStatic
-        fun ofBetaTextBlockParam(betaTextBlockParam: BetaTextBlockParam) =
-            BetaContentBlockParam(betaTextBlockParam = betaTextBlockParam)
+        @JvmStatic fun ofText(text: BetaTextBlockParam) = BetaContentBlockParam(text = text)
+
+        @JvmStatic fun ofImage(image: BetaImageBlockParam) = BetaContentBlockParam(image = image)
 
         @JvmStatic
-        fun ofBetaImageBlockParam(betaImageBlockParam: BetaImageBlockParam) =
-            BetaContentBlockParam(betaImageBlockParam = betaImageBlockParam)
+        fun ofToolUse(toolUse: BetaToolUseBlockParam) = BetaContentBlockParam(toolUse = toolUse)
 
         @JvmStatic
-        fun ofBetaToolUseBlockParam(betaToolUseBlockParam: BetaToolUseBlockParam) =
-            BetaContentBlockParam(betaToolUseBlockParam = betaToolUseBlockParam)
+        fun ofToolResult(toolResult: BetaToolResultBlockParam) =
+            BetaContentBlockParam(toolResult = toolResult)
 
         @JvmStatic
-        fun ofBetaToolResultBlockParam(betaToolResultBlockParam: BetaToolResultBlockParam) =
-            BetaContentBlockParam(betaToolResultBlockParam = betaToolResultBlockParam)
-
-        @JvmStatic
-        fun ofBetaBase64PdfBlock(betaBase64PdfBlock: BetaBase64PdfBlock) =
-            BetaContentBlockParam(betaBase64PdfBlock = betaBase64PdfBlock)
+        fun ofBase64PdfBlock(base64PdfBlock: BetaBase64PdfBlock) =
+            BetaContentBlockParam(base64PdfBlock = base64PdfBlock)
     }
 
     interface Visitor<out T> {
 
-        fun visitBetaTextBlockParam(betaTextBlockParam: BetaTextBlockParam): T
+        fun visitText(text: BetaTextBlockParam): T
 
-        fun visitBetaImageBlockParam(betaImageBlockParam: BetaImageBlockParam): T
+        fun visitImage(image: BetaImageBlockParam): T
 
-        fun visitBetaToolUseBlockParam(betaToolUseBlockParam: BetaToolUseBlockParam): T
+        fun visitToolUse(toolUse: BetaToolUseBlockParam): T
 
-        fun visitBetaToolResultBlockParam(betaToolResultBlockParam: BetaToolResultBlockParam): T
+        fun visitToolResult(toolResult: BetaToolResultBlockParam): T
 
-        fun visitBetaBase64PdfBlock(betaBase64PdfBlock: BetaBase64PdfBlock): T
+        fun visitBase64PdfBlock(base64PdfBlock: BetaBase64PdfBlock): T
 
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown BetaContentBlockParam: $json")
@@ -196,19 +172,19 @@ private constructor(
                 "text" -> {
                     tryDeserialize(node, jacksonTypeRef<BetaTextBlockParam>()) { it.validate() }
                         ?.let {
-                            return BetaContentBlockParam(betaTextBlockParam = it, _json = json)
+                            return BetaContentBlockParam(text = it, _json = json)
                         }
                 }
                 "image" -> {
                     tryDeserialize(node, jacksonTypeRef<BetaImageBlockParam>()) { it.validate() }
                         ?.let {
-                            return BetaContentBlockParam(betaImageBlockParam = it, _json = json)
+                            return BetaContentBlockParam(image = it, _json = json)
                         }
                 }
                 "tool_use" -> {
                     tryDeserialize(node, jacksonTypeRef<BetaToolUseBlockParam>()) { it.validate() }
                         ?.let {
-                            return BetaContentBlockParam(betaToolUseBlockParam = it, _json = json)
+                            return BetaContentBlockParam(toolUse = it, _json = json)
                         }
                 }
                 "tool_result" -> {
@@ -216,16 +192,13 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return BetaContentBlockParam(
-                                betaToolResultBlockParam = it,
-                                _json = json
-                            )
+                            return BetaContentBlockParam(toolResult = it, _json = json)
                         }
                 }
                 "document" -> {
                     tryDeserialize(node, jacksonTypeRef<BetaBase64PdfBlock>()) { it.validate() }
                         ?.let {
-                            return BetaContentBlockParam(betaBase64PdfBlock = it, _json = json)
+                            return BetaContentBlockParam(base64PdfBlock = it, _json = json)
                         }
                 }
             }
@@ -242,14 +215,11 @@ private constructor(
             provider: SerializerProvider
         ) {
             when {
-                value.betaTextBlockParam != null -> generator.writeObject(value.betaTextBlockParam)
-                value.betaImageBlockParam != null ->
-                    generator.writeObject(value.betaImageBlockParam)
-                value.betaToolUseBlockParam != null ->
-                    generator.writeObject(value.betaToolUseBlockParam)
-                value.betaToolResultBlockParam != null ->
-                    generator.writeObject(value.betaToolResultBlockParam)
-                value.betaBase64PdfBlock != null -> generator.writeObject(value.betaBase64PdfBlock)
+                value.text != null -> generator.writeObject(value.text)
+                value.image != null -> generator.writeObject(value.image)
+                value.toolUse != null -> generator.writeObject(value.toolUse)
+                value.toolResult != null -> generator.writeObject(value.toolResult)
+                value.base64PdfBlock != null -> generator.writeObject(value.base64PdfBlock)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaContentBlockParam")
             }

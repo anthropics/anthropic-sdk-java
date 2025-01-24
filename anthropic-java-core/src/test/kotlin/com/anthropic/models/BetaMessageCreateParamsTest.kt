@@ -222,7 +222,7 @@ class BetaMessageCreateParamsTest {
         assertThat(body.temperature()).contains(1.0)
         assertThat(body.toolChoice())
             .contains(
-                BetaToolChoice.ofBetaToolChoiceAuto(
+                BetaToolChoice.ofAuto(
                     BetaToolChoiceAuto.builder()
                         .type(BetaToolChoiceAuto.Type.AUTO)
                         .disableParallelToolUse(true)

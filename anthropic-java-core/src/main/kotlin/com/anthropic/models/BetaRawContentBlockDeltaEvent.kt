@@ -95,13 +95,11 @@ private constructor(
 
         fun delta(delta: JsonField<Delta>) = apply { this.delta = delta }
 
-        fun delta(betaTextDelta: BetaTextDelta) = delta(Delta.ofBetaTextDelta(betaTextDelta))
+        fun delta(betaText: BetaTextDelta) = delta(Delta.ofBetaText(betaText))
 
-        fun delta(betaInputJsonDelta: BetaInputJsonDelta) =
-            delta(Delta.ofBetaInputJsonDelta(betaInputJsonDelta))
+        fun delta(betaInputJson: BetaInputJsonDelta) = delta(Delta.ofBetaInputJson(betaInputJson))
 
-        fun delta(betaCitationsDelta: BetaCitationsDelta) =
-            delta(Delta.ofBetaCitationsDelta(betaCitationsDelta))
+        fun delta(betaCitations: BetaCitationsDelta) = delta(Delta.ofBetaCitations(betaCitations))
 
         fun index(index: Long) = index(JsonField.of(index))
 
@@ -143,41 +141,37 @@ private constructor(
     @JsonSerialize(using = Delta.Serializer::class)
     class Delta
     private constructor(
-        private val betaTextDelta: BetaTextDelta? = null,
-        private val betaInputJsonDelta: BetaInputJsonDelta? = null,
-        private val betaCitationsDelta: BetaCitationsDelta? = null,
+        private val betaText: BetaTextDelta? = null,
+        private val betaInputJson: BetaInputJsonDelta? = null,
+        private val betaCitations: BetaCitationsDelta? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun betaTextDelta(): Optional<BetaTextDelta> = Optional.ofNullable(betaTextDelta)
+        fun betaText(): Optional<BetaTextDelta> = Optional.ofNullable(betaText)
 
-        fun betaInputJsonDelta(): Optional<BetaInputJsonDelta> =
-            Optional.ofNullable(betaInputJsonDelta)
+        fun betaInputJson(): Optional<BetaInputJsonDelta> = Optional.ofNullable(betaInputJson)
 
-        fun betaCitationsDelta(): Optional<BetaCitationsDelta> =
-            Optional.ofNullable(betaCitationsDelta)
+        fun betaCitations(): Optional<BetaCitationsDelta> = Optional.ofNullable(betaCitations)
 
-        fun isBetaTextDelta(): Boolean = betaTextDelta != null
+        fun isBetaText(): Boolean = betaText != null
 
-        fun isBetaInputJsonDelta(): Boolean = betaInputJsonDelta != null
+        fun isBetaInputJson(): Boolean = betaInputJson != null
 
-        fun isBetaCitationsDelta(): Boolean = betaCitationsDelta != null
+        fun isBetaCitations(): Boolean = betaCitations != null
 
-        fun asBetaTextDelta(): BetaTextDelta = betaTextDelta.getOrThrow("betaTextDelta")
+        fun asBetaText(): BetaTextDelta = betaText.getOrThrow("betaText")
 
-        fun asBetaInputJsonDelta(): BetaInputJsonDelta =
-            betaInputJsonDelta.getOrThrow("betaInputJsonDelta")
+        fun asBetaInputJson(): BetaInputJsonDelta = betaInputJson.getOrThrow("betaInputJson")
 
-        fun asBetaCitationsDelta(): BetaCitationsDelta =
-            betaCitationsDelta.getOrThrow("betaCitationsDelta")
+        fun asBetaCitations(): BetaCitationsDelta = betaCitations.getOrThrow("betaCitations")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T {
             return when {
-                betaTextDelta != null -> visitor.visitBetaTextDelta(betaTextDelta)
-                betaInputJsonDelta != null -> visitor.visitBetaInputJsonDelta(betaInputJsonDelta)
-                betaCitationsDelta != null -> visitor.visitBetaCitationsDelta(betaCitationsDelta)
+                betaText != null -> visitor.visitBetaText(betaText)
+                betaInputJson != null -> visitor.visitBetaInputJson(betaInputJson)
+                betaCitations != null -> visitor.visitBetaCitations(betaCitations)
                 else -> visitor.unknown(_json)
             }
         }
@@ -191,16 +185,16 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitBetaTextDelta(betaTextDelta: BetaTextDelta) {
-                        betaTextDelta.validate()
+                    override fun visitBetaText(betaText: BetaTextDelta) {
+                        betaText.validate()
                     }
 
-                    override fun visitBetaInputJsonDelta(betaInputJsonDelta: BetaInputJsonDelta) {
-                        betaInputJsonDelta.validate()
+                    override fun visitBetaInputJson(betaInputJson: BetaInputJsonDelta) {
+                        betaInputJson.validate()
                     }
 
-                    override fun visitBetaCitationsDelta(betaCitationsDelta: BetaCitationsDelta) {
-                        betaCitationsDelta.validate()
+                    override fun visitBetaCitations(betaCitations: BetaCitationsDelta) {
+                        betaCitations.validate()
                     }
                 }
             )
@@ -212,41 +206,40 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Delta && betaTextDelta == other.betaTextDelta && betaInputJsonDelta == other.betaInputJsonDelta && betaCitationsDelta == other.betaCitationsDelta /* spotless:on */
+            return /* spotless:off */ other is Delta && betaText == other.betaText && betaInputJson == other.betaInputJson && betaCitations == other.betaCitations /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaTextDelta, betaInputJsonDelta, betaCitationsDelta) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaText, betaInputJson, betaCitations) /* spotless:on */
 
         override fun toString(): String =
             when {
-                betaTextDelta != null -> "Delta{betaTextDelta=$betaTextDelta}"
-                betaInputJsonDelta != null -> "Delta{betaInputJsonDelta=$betaInputJsonDelta}"
-                betaCitationsDelta != null -> "Delta{betaCitationsDelta=$betaCitationsDelta}"
+                betaText != null -> "Delta{betaText=$betaText}"
+                betaInputJson != null -> "Delta{betaInputJson=$betaInputJson}"
+                betaCitations != null -> "Delta{betaCitations=$betaCitations}"
                 _json != null -> "Delta{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Delta")
             }
 
         companion object {
 
-            @JvmStatic
-            fun ofBetaTextDelta(betaTextDelta: BetaTextDelta) = Delta(betaTextDelta = betaTextDelta)
+            @JvmStatic fun ofBetaText(betaText: BetaTextDelta) = Delta(betaText = betaText)
 
             @JvmStatic
-            fun ofBetaInputJsonDelta(betaInputJsonDelta: BetaInputJsonDelta) =
-                Delta(betaInputJsonDelta = betaInputJsonDelta)
+            fun ofBetaInputJson(betaInputJson: BetaInputJsonDelta) =
+                Delta(betaInputJson = betaInputJson)
 
             @JvmStatic
-            fun ofBetaCitationsDelta(betaCitationsDelta: BetaCitationsDelta) =
-                Delta(betaCitationsDelta = betaCitationsDelta)
+            fun ofBetaCitations(betaCitations: BetaCitationsDelta) =
+                Delta(betaCitations = betaCitations)
         }
 
         interface Visitor<out T> {
 
-            fun visitBetaTextDelta(betaTextDelta: BetaTextDelta): T
+            fun visitBetaText(betaText: BetaTextDelta): T
 
-            fun visitBetaInputJsonDelta(betaInputJsonDelta: BetaInputJsonDelta): T
+            fun visitBetaInputJson(betaInputJson: BetaInputJsonDelta): T
 
-            fun visitBetaCitationsDelta(betaCitationsDelta: BetaCitationsDelta): T
+            fun visitBetaCitations(betaCitations: BetaCitationsDelta): T
 
             fun unknown(json: JsonValue?): T {
                 throw AnthropicInvalidDataException("Unknown Delta: $json")
@@ -263,19 +256,19 @@ private constructor(
                     "text_delta" -> {
                         tryDeserialize(node, jacksonTypeRef<BetaTextDelta>()) { it.validate() }
                             ?.let {
-                                return Delta(betaTextDelta = it, _json = json)
+                                return Delta(betaText = it, _json = json)
                             }
                     }
                     "input_json_delta" -> {
                         tryDeserialize(node, jacksonTypeRef<BetaInputJsonDelta>()) { it.validate() }
                             ?.let {
-                                return Delta(betaInputJsonDelta = it, _json = json)
+                                return Delta(betaInputJson = it, _json = json)
                             }
                     }
                     "citations_delta" -> {
                         tryDeserialize(node, jacksonTypeRef<BetaCitationsDelta>()) { it.validate() }
                             ?.let {
-                                return Delta(betaCitationsDelta = it, _json = json)
+                                return Delta(betaCitations = it, _json = json)
                             }
                     }
                 }
@@ -292,11 +285,9 @@ private constructor(
                 provider: SerializerProvider
             ) {
                 when {
-                    value.betaTextDelta != null -> generator.writeObject(value.betaTextDelta)
-                    value.betaInputJsonDelta != null ->
-                        generator.writeObject(value.betaInputJsonDelta)
-                    value.betaCitationsDelta != null ->
-                        generator.writeObject(value.betaCitationsDelta)
+                    value.betaText != null -> generator.writeObject(value.betaText)
+                    value.betaInputJson != null -> generator.writeObject(value.betaInputJson)
+                    value.betaCitations != null -> generator.writeObject(value.betaCitations)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Delta")
                 }

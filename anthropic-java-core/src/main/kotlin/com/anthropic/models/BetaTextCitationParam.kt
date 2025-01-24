@@ -22,50 +22,44 @@ import kotlin.jvm.optionals.getOrNull
 @JsonSerialize(using = BetaTextCitationParam.Serializer::class)
 class BetaTextCitationParam
 private constructor(
-    private val betaCitationCharLocationParam: BetaCitationCharLocationParam? = null,
-    private val betaCitationPageLocationParam: BetaCitationPageLocationParam? = null,
-    private val betaCitationContentBlockLocationParam: BetaCitationContentBlockLocationParam? =
-        null,
+    private val citationCharLocation: BetaCitationCharLocationParam? = null,
+    private val citationPageLocation: BetaCitationPageLocationParam? = null,
+    private val citationContentBlockLocation: BetaCitationContentBlockLocationParam? = null,
     private val _json: JsonValue? = null,
 ) {
 
-    fun betaCitationCharLocationParam(): Optional<BetaCitationCharLocationParam> =
-        Optional.ofNullable(betaCitationCharLocationParam)
+    fun citationCharLocation(): Optional<BetaCitationCharLocationParam> =
+        Optional.ofNullable(citationCharLocation)
 
-    fun betaCitationPageLocationParam(): Optional<BetaCitationPageLocationParam> =
-        Optional.ofNullable(betaCitationPageLocationParam)
+    fun citationPageLocation(): Optional<BetaCitationPageLocationParam> =
+        Optional.ofNullable(citationPageLocation)
 
-    fun betaCitationContentBlockLocationParam(): Optional<BetaCitationContentBlockLocationParam> =
-        Optional.ofNullable(betaCitationContentBlockLocationParam)
+    fun citationContentBlockLocation(): Optional<BetaCitationContentBlockLocationParam> =
+        Optional.ofNullable(citationContentBlockLocation)
 
-    fun isBetaCitationCharLocationParam(): Boolean = betaCitationCharLocationParam != null
+    fun isCitationCharLocation(): Boolean = citationCharLocation != null
 
-    fun isBetaCitationPageLocationParam(): Boolean = betaCitationPageLocationParam != null
+    fun isCitationPageLocation(): Boolean = citationPageLocation != null
 
-    fun isBetaCitationContentBlockLocationParam(): Boolean =
-        betaCitationContentBlockLocationParam != null
+    fun isCitationContentBlockLocation(): Boolean = citationContentBlockLocation != null
 
-    fun asBetaCitationCharLocationParam(): BetaCitationCharLocationParam =
-        betaCitationCharLocationParam.getOrThrow("betaCitationCharLocationParam")
+    fun asCitationCharLocation(): BetaCitationCharLocationParam =
+        citationCharLocation.getOrThrow("citationCharLocation")
 
-    fun asBetaCitationPageLocationParam(): BetaCitationPageLocationParam =
-        betaCitationPageLocationParam.getOrThrow("betaCitationPageLocationParam")
+    fun asCitationPageLocation(): BetaCitationPageLocationParam =
+        citationPageLocation.getOrThrow("citationPageLocation")
 
-    fun asBetaCitationContentBlockLocationParam(): BetaCitationContentBlockLocationParam =
-        betaCitationContentBlockLocationParam.getOrThrow("betaCitationContentBlockLocationParam")
+    fun asCitationContentBlockLocation(): BetaCitationContentBlockLocationParam =
+        citationContentBlockLocation.getOrThrow("citationContentBlockLocation")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
         return when {
-            betaCitationCharLocationParam != null ->
-                visitor.visitBetaCitationCharLocationParam(betaCitationCharLocationParam)
-            betaCitationPageLocationParam != null ->
-                visitor.visitBetaCitationPageLocationParam(betaCitationPageLocationParam)
-            betaCitationContentBlockLocationParam != null ->
-                visitor.visitBetaCitationContentBlockLocationParam(
-                    betaCitationContentBlockLocationParam
-                )
+            citationCharLocation != null -> visitor.visitCitationCharLocation(citationCharLocation)
+            citationPageLocation != null -> visitor.visitCitationPageLocation(citationPageLocation)
+            citationContentBlockLocation != null ->
+                visitor.visitCitationContentBlockLocation(citationContentBlockLocation)
             else -> visitor.unknown(_json)
         }
     }
@@ -79,22 +73,22 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
-                override fun visitBetaCitationCharLocationParam(
-                    betaCitationCharLocationParam: BetaCitationCharLocationParam
+                override fun visitCitationCharLocation(
+                    citationCharLocation: BetaCitationCharLocationParam
                 ) {
-                    betaCitationCharLocationParam.validate()
+                    citationCharLocation.validate()
                 }
 
-                override fun visitBetaCitationPageLocationParam(
-                    betaCitationPageLocationParam: BetaCitationPageLocationParam
+                override fun visitCitationPageLocation(
+                    citationPageLocation: BetaCitationPageLocationParam
                 ) {
-                    betaCitationPageLocationParam.validate()
+                    citationPageLocation.validate()
                 }
 
-                override fun visitBetaCitationContentBlockLocationParam(
-                    betaCitationContentBlockLocationParam: BetaCitationContentBlockLocationParam
+                override fun visitCitationContentBlockLocation(
+                    citationContentBlockLocation: BetaCitationContentBlockLocationParam
                 ) {
-                    betaCitationContentBlockLocationParam.validate()
+                    citationContentBlockLocation.validate()
                 }
             }
         )
@@ -106,19 +100,19 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaTextCitationParam && betaCitationCharLocationParam == other.betaCitationCharLocationParam && betaCitationPageLocationParam == other.betaCitationPageLocationParam && betaCitationContentBlockLocationParam == other.betaCitationContentBlockLocationParam /* spotless:on */
+        return /* spotless:off */ other is BetaTextCitationParam && citationCharLocation == other.citationCharLocation && citationPageLocation == other.citationPageLocation && citationContentBlockLocation == other.citationContentBlockLocation /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaCitationCharLocationParam, betaCitationPageLocationParam, betaCitationContentBlockLocationParam) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(citationCharLocation, citationPageLocation, citationContentBlockLocation) /* spotless:on */
 
     override fun toString(): String =
         when {
-            betaCitationCharLocationParam != null ->
-                "BetaTextCitationParam{betaCitationCharLocationParam=$betaCitationCharLocationParam}"
-            betaCitationPageLocationParam != null ->
-                "BetaTextCitationParam{betaCitationPageLocationParam=$betaCitationPageLocationParam}"
-            betaCitationContentBlockLocationParam != null ->
-                "BetaTextCitationParam{betaCitationContentBlockLocationParam=$betaCitationContentBlockLocationParam}"
+            citationCharLocation != null ->
+                "BetaTextCitationParam{citationCharLocation=$citationCharLocation}"
+            citationPageLocation != null ->
+                "BetaTextCitationParam{citationPageLocation=$citationPageLocation}"
+            citationContentBlockLocation != null ->
+                "BetaTextCitationParam{citationContentBlockLocation=$citationContentBlockLocation}"
             _json != null -> "BetaTextCitationParam{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaTextCitationParam")
         }
@@ -126,36 +120,27 @@ private constructor(
     companion object {
 
         @JvmStatic
-        fun ofBetaCitationCharLocationParam(
-            betaCitationCharLocationParam: BetaCitationCharLocationParam
-        ) = BetaTextCitationParam(betaCitationCharLocationParam = betaCitationCharLocationParam)
+        fun ofCitationCharLocation(citationCharLocation: BetaCitationCharLocationParam) =
+            BetaTextCitationParam(citationCharLocation = citationCharLocation)
 
         @JvmStatic
-        fun ofBetaCitationPageLocationParam(
-            betaCitationPageLocationParam: BetaCitationPageLocationParam
-        ) = BetaTextCitationParam(betaCitationPageLocationParam = betaCitationPageLocationParam)
+        fun ofCitationPageLocation(citationPageLocation: BetaCitationPageLocationParam) =
+            BetaTextCitationParam(citationPageLocation = citationPageLocation)
 
         @JvmStatic
-        fun ofBetaCitationContentBlockLocationParam(
-            betaCitationContentBlockLocationParam: BetaCitationContentBlockLocationParam
-        ) =
-            BetaTextCitationParam(
-                betaCitationContentBlockLocationParam = betaCitationContentBlockLocationParam
-            )
+        fun ofCitationContentBlockLocation(
+            citationContentBlockLocation: BetaCitationContentBlockLocationParam
+        ) = BetaTextCitationParam(citationContentBlockLocation = citationContentBlockLocation)
     }
 
     interface Visitor<out T> {
 
-        fun visitBetaCitationCharLocationParam(
-            betaCitationCharLocationParam: BetaCitationCharLocationParam
-        ): T
+        fun visitCitationCharLocation(citationCharLocation: BetaCitationCharLocationParam): T
 
-        fun visitBetaCitationPageLocationParam(
-            betaCitationPageLocationParam: BetaCitationPageLocationParam
-        ): T
+        fun visitCitationPageLocation(citationPageLocation: BetaCitationPageLocationParam): T
 
-        fun visitBetaCitationContentBlockLocationParam(
-            betaCitationContentBlockLocationParam: BetaCitationContentBlockLocationParam
+        fun visitCitationContentBlockLocation(
+            citationContentBlockLocation: BetaCitationContentBlockLocationParam
         ): T
 
         fun unknown(json: JsonValue?): T {
@@ -175,10 +160,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return BetaTextCitationParam(
-                                betaCitationCharLocationParam = it,
-                                _json = json
-                            )
+                            return BetaTextCitationParam(citationCharLocation = it, _json = json)
                         }
                 }
                 "page_location" -> {
@@ -186,10 +168,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return BetaTextCitationParam(
-                                betaCitationPageLocationParam = it,
-                                _json = json
-                            )
+                            return BetaTextCitationParam(citationPageLocation = it, _json = json)
                         }
                 }
                 "content_block_location" -> {
@@ -198,7 +177,7 @@ private constructor(
                         }
                         ?.let {
                             return BetaTextCitationParam(
-                                betaCitationContentBlockLocationParam = it,
+                                citationContentBlockLocation = it,
                                 _json = json
                             )
                         }
@@ -217,12 +196,12 @@ private constructor(
             provider: SerializerProvider
         ) {
             when {
-                value.betaCitationCharLocationParam != null ->
-                    generator.writeObject(value.betaCitationCharLocationParam)
-                value.betaCitationPageLocationParam != null ->
-                    generator.writeObject(value.betaCitationPageLocationParam)
-                value.betaCitationContentBlockLocationParam != null ->
-                    generator.writeObject(value.betaCitationContentBlockLocationParam)
+                value.citationCharLocation != null ->
+                    generator.writeObject(value.citationCharLocation)
+                value.citationPageLocation != null ->
+                    generator.writeObject(value.citationPageLocation)
+                value.citationContentBlockLocation != null ->
+                    generator.writeObject(value.citationContentBlockLocation)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaTextCitationParam")
             }

@@ -18,7 +18,7 @@ class RawContentBlockDeltaEventTest {
         assertThat(rawContentBlockDeltaEvent).isNotNull
         assertThat(rawContentBlockDeltaEvent.delta())
             .isEqualTo(
-                RawContentBlockDeltaEvent.Delta.ofTextDelta(
+                RawContentBlockDeltaEvent.Delta.ofText(
                     TextDelta.builder().text("text").type(TextDelta.Type.TEXT_DELTA).build()
                 )
             )

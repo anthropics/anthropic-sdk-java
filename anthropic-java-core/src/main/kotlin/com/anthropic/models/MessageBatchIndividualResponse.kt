@@ -143,8 +143,8 @@ private constructor(
          * failed, or the reason why processing was not attempted, such as cancellation or
          * expiration.
          */
-        fun result(messageBatchSucceededResult: MessageBatchSucceededResult) =
-            result(MessageBatchResult.ofMessageBatchSucceededResult(messageBatchSucceededResult))
+        fun result(succeeded: MessageBatchSucceededResult) =
+            result(MessageBatchResult.ofSucceeded(succeeded))
 
         /**
          * Processing result for this request.
@@ -153,8 +153,8 @@ private constructor(
          * failed, or the reason why processing was not attempted, such as cancellation or
          * expiration.
          */
-        fun result(messageBatchErroredResult: MessageBatchErroredResult) =
-            result(MessageBatchResult.ofMessageBatchErroredResult(messageBatchErroredResult))
+        fun result(errored: MessageBatchErroredResult) =
+            result(MessageBatchResult.ofErrored(errored))
 
         /**
          * Processing result for this request.
@@ -163,8 +163,8 @@ private constructor(
          * failed, or the reason why processing was not attempted, such as cancellation or
          * expiration.
          */
-        fun result(messageBatchCanceledResult: MessageBatchCanceledResult) =
-            result(MessageBatchResult.ofMessageBatchCanceledResult(messageBatchCanceledResult))
+        fun result(canceled: MessageBatchCanceledResult) =
+            result(MessageBatchResult.ofCanceled(canceled))
 
         /**
          * Processing result for this request.
@@ -173,8 +173,8 @@ private constructor(
          * failed, or the reason why processing was not attempted, such as cancellation or
          * expiration.
          */
-        fun result(messageBatchExpiredResult: MessageBatchExpiredResult) =
-            result(MessageBatchResult.ofMessageBatchExpiredResult(messageBatchExpiredResult))
+        fun result(expired: MessageBatchExpiredResult) =
+            result(MessageBatchResult.ofExpired(expired))
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()

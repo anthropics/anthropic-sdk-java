@@ -26,45 +26,43 @@ import kotlin.jvm.optionals.getOrNull
 @JsonSerialize(using = BetaToolChoice.Serializer::class)
 class BetaToolChoice
 private constructor(
-    private val betaToolChoiceAuto: BetaToolChoiceAuto? = null,
-    private val betaToolChoiceAny: BetaToolChoiceAny? = null,
-    private val betaToolChoiceTool: BetaToolChoiceTool? = null,
+    private val auto: BetaToolChoiceAuto? = null,
+    private val any: BetaToolChoiceAny? = null,
+    private val tool: BetaToolChoiceTool? = null,
     private val _json: JsonValue? = null,
 ) {
 
     /** The model will automatically decide whether to use tools. */
-    fun betaToolChoiceAuto(): Optional<BetaToolChoiceAuto> = Optional.ofNullable(betaToolChoiceAuto)
+    fun auto(): Optional<BetaToolChoiceAuto> = Optional.ofNullable(auto)
 
     /** The model will use any available tools. */
-    fun betaToolChoiceAny(): Optional<BetaToolChoiceAny> = Optional.ofNullable(betaToolChoiceAny)
+    fun any(): Optional<BetaToolChoiceAny> = Optional.ofNullable(any)
 
     /** The model will use the specified tool with `tool_choice.name`. */
-    fun betaToolChoiceTool(): Optional<BetaToolChoiceTool> = Optional.ofNullable(betaToolChoiceTool)
+    fun tool(): Optional<BetaToolChoiceTool> = Optional.ofNullable(tool)
 
-    fun isBetaToolChoiceAuto(): Boolean = betaToolChoiceAuto != null
+    fun isAuto(): Boolean = auto != null
 
-    fun isBetaToolChoiceAny(): Boolean = betaToolChoiceAny != null
+    fun isAny(): Boolean = any != null
 
-    fun isBetaToolChoiceTool(): Boolean = betaToolChoiceTool != null
+    fun isTool(): Boolean = tool != null
 
     /** The model will automatically decide whether to use tools. */
-    fun asBetaToolChoiceAuto(): BetaToolChoiceAuto =
-        betaToolChoiceAuto.getOrThrow("betaToolChoiceAuto")
+    fun asAuto(): BetaToolChoiceAuto = auto.getOrThrow("auto")
 
     /** The model will use any available tools. */
-    fun asBetaToolChoiceAny(): BetaToolChoiceAny = betaToolChoiceAny.getOrThrow("betaToolChoiceAny")
+    fun asAny(): BetaToolChoiceAny = any.getOrThrow("any")
 
     /** The model will use the specified tool with `tool_choice.name`. */
-    fun asBetaToolChoiceTool(): BetaToolChoiceTool =
-        betaToolChoiceTool.getOrThrow("betaToolChoiceTool")
+    fun asTool(): BetaToolChoiceTool = tool.getOrThrow("tool")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
         return when {
-            betaToolChoiceAuto != null -> visitor.visitBetaToolChoiceAuto(betaToolChoiceAuto)
-            betaToolChoiceAny != null -> visitor.visitBetaToolChoiceAny(betaToolChoiceAny)
-            betaToolChoiceTool != null -> visitor.visitBetaToolChoiceTool(betaToolChoiceTool)
+            auto != null -> visitor.visitAuto(auto)
+            any != null -> visitor.visitAny(any)
+            tool != null -> visitor.visitTool(tool)
             else -> visitor.unknown(_json)
         }
     }
@@ -78,16 +76,16 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
-                override fun visitBetaToolChoiceAuto(betaToolChoiceAuto: BetaToolChoiceAuto) {
-                    betaToolChoiceAuto.validate()
+                override fun visitAuto(auto: BetaToolChoiceAuto) {
+                    auto.validate()
                 }
 
-                override fun visitBetaToolChoiceAny(betaToolChoiceAny: BetaToolChoiceAny) {
-                    betaToolChoiceAny.validate()
+                override fun visitAny(any: BetaToolChoiceAny) {
+                    any.validate()
                 }
 
-                override fun visitBetaToolChoiceTool(betaToolChoiceTool: BetaToolChoiceTool) {
-                    betaToolChoiceTool.validate()
+                override fun visitTool(tool: BetaToolChoiceTool) {
+                    tool.validate()
                 }
             }
         )
@@ -99,16 +97,16 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaToolChoice && betaToolChoiceAuto == other.betaToolChoiceAuto && betaToolChoiceAny == other.betaToolChoiceAny && betaToolChoiceTool == other.betaToolChoiceTool /* spotless:on */
+        return /* spotless:off */ other is BetaToolChoice && auto == other.auto && any == other.any && tool == other.tool /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaToolChoiceAuto, betaToolChoiceAny, betaToolChoiceTool) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(auto, any, tool) /* spotless:on */
 
     override fun toString(): String =
         when {
-            betaToolChoiceAuto != null -> "BetaToolChoice{betaToolChoiceAuto=$betaToolChoiceAuto}"
-            betaToolChoiceAny != null -> "BetaToolChoice{betaToolChoiceAny=$betaToolChoiceAny}"
-            betaToolChoiceTool != null -> "BetaToolChoice{betaToolChoiceTool=$betaToolChoiceTool}"
+            auto != null -> "BetaToolChoice{auto=$auto}"
+            any != null -> "BetaToolChoice{any=$any}"
+            tool != null -> "BetaToolChoice{tool=$tool}"
             _json != null -> "BetaToolChoice{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaToolChoice")
         }
@@ -116,31 +114,25 @@ private constructor(
     companion object {
 
         /** The model will automatically decide whether to use tools. */
-        @JvmStatic
-        fun ofBetaToolChoiceAuto(betaToolChoiceAuto: BetaToolChoiceAuto) =
-            BetaToolChoice(betaToolChoiceAuto = betaToolChoiceAuto)
+        @JvmStatic fun ofAuto(auto: BetaToolChoiceAuto) = BetaToolChoice(auto = auto)
 
         /** The model will use any available tools. */
-        @JvmStatic
-        fun ofBetaToolChoiceAny(betaToolChoiceAny: BetaToolChoiceAny) =
-            BetaToolChoice(betaToolChoiceAny = betaToolChoiceAny)
+        @JvmStatic fun ofAny(any: BetaToolChoiceAny) = BetaToolChoice(any = any)
 
         /** The model will use the specified tool with `tool_choice.name`. */
-        @JvmStatic
-        fun ofBetaToolChoiceTool(betaToolChoiceTool: BetaToolChoiceTool) =
-            BetaToolChoice(betaToolChoiceTool = betaToolChoiceTool)
+        @JvmStatic fun ofTool(tool: BetaToolChoiceTool) = BetaToolChoice(tool = tool)
     }
 
     interface Visitor<out T> {
 
         /** The model will automatically decide whether to use tools. */
-        fun visitBetaToolChoiceAuto(betaToolChoiceAuto: BetaToolChoiceAuto): T
+        fun visitAuto(auto: BetaToolChoiceAuto): T
 
         /** The model will use any available tools. */
-        fun visitBetaToolChoiceAny(betaToolChoiceAny: BetaToolChoiceAny): T
+        fun visitAny(any: BetaToolChoiceAny): T
 
         /** The model will use the specified tool with `tool_choice.name`. */
-        fun visitBetaToolChoiceTool(betaToolChoiceTool: BetaToolChoiceTool): T
+        fun visitTool(tool: BetaToolChoiceTool): T
 
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown BetaToolChoice: $json")
@@ -157,19 +149,19 @@ private constructor(
                 "auto" -> {
                     tryDeserialize(node, jacksonTypeRef<BetaToolChoiceAuto>()) { it.validate() }
                         ?.let {
-                            return BetaToolChoice(betaToolChoiceAuto = it, _json = json)
+                            return BetaToolChoice(auto = it, _json = json)
                         }
                 }
                 "any" -> {
                     tryDeserialize(node, jacksonTypeRef<BetaToolChoiceAny>()) { it.validate() }
                         ?.let {
-                            return BetaToolChoice(betaToolChoiceAny = it, _json = json)
+                            return BetaToolChoice(any = it, _json = json)
                         }
                 }
                 "tool" -> {
                     tryDeserialize(node, jacksonTypeRef<BetaToolChoiceTool>()) { it.validate() }
                         ?.let {
-                            return BetaToolChoice(betaToolChoiceTool = it, _json = json)
+                            return BetaToolChoice(tool = it, _json = json)
                         }
                 }
             }
@@ -186,9 +178,9 @@ private constructor(
             provider: SerializerProvider
         ) {
             when {
-                value.betaToolChoiceAuto != null -> generator.writeObject(value.betaToolChoiceAuto)
-                value.betaToolChoiceAny != null -> generator.writeObject(value.betaToolChoiceAny)
-                value.betaToolChoiceTool != null -> generator.writeObject(value.betaToolChoiceTool)
+                value.auto != null -> generator.writeObject(value.auto)
+                value.any != null -> generator.writeObject(value.any)
+                value.tool != null -> generator.writeObject(value.tool)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaToolChoice")
             }

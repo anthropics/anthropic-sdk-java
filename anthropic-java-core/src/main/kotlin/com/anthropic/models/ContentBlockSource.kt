@@ -90,9 +90,8 @@ private constructor(
 
         fun content(string: String) = content(Content.ofString(string))
 
-        fun contentOfContentBlockSourceContent(
-            contentBlockSourceContent: List<ContentBlockSourceContent>
-        ) = content(Content.ofContentBlockSourceContent(contentBlockSourceContent))
+        fun contentOfBlockSource(blockSource: List<ContentBlockSourceContent>) =
+            content(Content.ofBlockSource(blockSource))
 
         fun type(type: Type) = type(JsonField.of(type))
 
@@ -130,31 +129,29 @@ private constructor(
     class Content
     private constructor(
         private val string: String? = null,
-        private val contentBlockSourceContent: List<ContentBlockSourceContent>? = null,
+        private val blockSource: List<ContentBlockSourceContent>? = null,
         private val _json: JsonValue? = null,
     ) {
 
         fun string(): Optional<String> = Optional.ofNullable(string)
 
-        fun contentBlockSourceContent(): Optional<List<ContentBlockSourceContent>> =
-            Optional.ofNullable(contentBlockSourceContent)
+        fun blockSource(): Optional<List<ContentBlockSourceContent>> =
+            Optional.ofNullable(blockSource)
 
         fun isString(): Boolean = string != null
 
-        fun isContentBlockSourceContent(): Boolean = contentBlockSourceContent != null
+        fun isBlockSource(): Boolean = blockSource != null
 
         fun asString(): String = string.getOrThrow("string")
 
-        fun asContentBlockSourceContent(): List<ContentBlockSourceContent> =
-            contentBlockSourceContent.getOrThrow("contentBlockSourceContent")
+        fun asBlockSource(): List<ContentBlockSourceContent> = blockSource.getOrThrow("blockSource")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T {
             return when {
                 string != null -> visitor.visitString(string)
-                contentBlockSourceContent != null ->
-                    visitor.visitContentBlockSourceContent(contentBlockSourceContent)
+                blockSource != null -> visitor.visitBlockSource(blockSource)
                 else -> visitor.unknown(_json)
             }
         }
@@ -170,10 +167,8 @@ private constructor(
                 object : Visitor<Unit> {
                     override fun visitString(string: String) {}
 
-                    override fun visitContentBlockSourceContent(
-                        contentBlockSourceContent: List<ContentBlockSourceContent>
-                    ) {
-                        contentBlockSourceContent.forEach { it.validate() }
+                    override fun visitBlockSource(blockSource: List<ContentBlockSourceContent>) {
+                        blockSource.forEach { it.validate() }
                     }
                 }
             )
@@ -185,16 +180,15 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Content && string == other.string && contentBlockSourceContent == other.contentBlockSourceContent /* spotless:on */
+            return /* spotless:off */ other is Content && string == other.string && blockSource == other.blockSource /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(string, contentBlockSourceContent) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(string, blockSource) /* spotless:on */
 
         override fun toString(): String =
             when {
                 string != null -> "Content{string=$string}"
-                contentBlockSourceContent != null ->
-                    "Content{contentBlockSourceContent=$contentBlockSourceContent}"
+                blockSource != null -> "Content{blockSource=$blockSource}"
                 _json != null -> "Content{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Content")
             }
@@ -204,18 +198,15 @@ private constructor(
             @JvmStatic fun ofString(string: String) = Content(string = string)
 
             @JvmStatic
-            fun ofContentBlockSourceContent(
-                contentBlockSourceContent: List<ContentBlockSourceContent>
-            ) = Content(contentBlockSourceContent = contentBlockSourceContent)
+            fun ofBlockSource(blockSource: List<ContentBlockSourceContent>) =
+                Content(blockSource = blockSource)
         }
 
         interface Visitor<out T> {
 
             fun visitString(string: String): T
 
-            fun visitContentBlockSourceContent(
-                contentBlockSourceContent: List<ContentBlockSourceContent>
-            ): T
+            fun visitBlockSource(blockSource: List<ContentBlockSourceContent>): T
 
             fun unknown(json: JsonValue?): T {
                 throw AnthropicInvalidDataException("Unknown Content: $json")
@@ -234,7 +225,7 @@ private constructor(
                         it.forEach { it.validate() }
                     }
                     ?.let {
-                        return Content(contentBlockSourceContent = it, _json = json)
+                        return Content(blockSource = it, _json = json)
                     }
 
                 return Content(_json = json)
@@ -250,8 +241,7 @@ private constructor(
             ) {
                 when {
                     value.string != null -> generator.writeObject(value.string)
-                    value.contentBlockSourceContent != null ->
-                        generator.writeObject(value.contentBlockSourceContent)
+                    value.blockSource != null -> generator.writeObject(value.blockSource)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Content")
                 }

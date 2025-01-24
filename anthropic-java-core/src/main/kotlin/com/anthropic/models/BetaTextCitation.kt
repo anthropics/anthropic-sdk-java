@@ -22,46 +22,44 @@ import kotlin.jvm.optionals.getOrNull
 @JsonSerialize(using = BetaTextCitation.Serializer::class)
 class BetaTextCitation
 private constructor(
-    private val betaCitationCharLocation: BetaCitationCharLocation? = null,
-    private val betaCitationPageLocation: BetaCitationPageLocation? = null,
-    private val betaCitationContentBlockLocation: BetaCitationContentBlockLocation? = null,
+    private val citationCharLocation: BetaCitationCharLocation? = null,
+    private val citationPageLocation: BetaCitationPageLocation? = null,
+    private val citationContentBlockLocation: BetaCitationContentBlockLocation? = null,
     private val _json: JsonValue? = null,
 ) {
 
-    fun betaCitationCharLocation(): Optional<BetaCitationCharLocation> =
-        Optional.ofNullable(betaCitationCharLocation)
+    fun citationCharLocation(): Optional<BetaCitationCharLocation> =
+        Optional.ofNullable(citationCharLocation)
 
-    fun betaCitationPageLocation(): Optional<BetaCitationPageLocation> =
-        Optional.ofNullable(betaCitationPageLocation)
+    fun citationPageLocation(): Optional<BetaCitationPageLocation> =
+        Optional.ofNullable(citationPageLocation)
 
-    fun betaCitationContentBlockLocation(): Optional<BetaCitationContentBlockLocation> =
-        Optional.ofNullable(betaCitationContentBlockLocation)
+    fun citationContentBlockLocation(): Optional<BetaCitationContentBlockLocation> =
+        Optional.ofNullable(citationContentBlockLocation)
 
-    fun isBetaCitationCharLocation(): Boolean = betaCitationCharLocation != null
+    fun isCitationCharLocation(): Boolean = citationCharLocation != null
 
-    fun isBetaCitationPageLocation(): Boolean = betaCitationPageLocation != null
+    fun isCitationPageLocation(): Boolean = citationPageLocation != null
 
-    fun isBetaCitationContentBlockLocation(): Boolean = betaCitationContentBlockLocation != null
+    fun isCitationContentBlockLocation(): Boolean = citationContentBlockLocation != null
 
-    fun asBetaCitationCharLocation(): BetaCitationCharLocation =
-        betaCitationCharLocation.getOrThrow("betaCitationCharLocation")
+    fun asCitationCharLocation(): BetaCitationCharLocation =
+        citationCharLocation.getOrThrow("citationCharLocation")
 
-    fun asBetaCitationPageLocation(): BetaCitationPageLocation =
-        betaCitationPageLocation.getOrThrow("betaCitationPageLocation")
+    fun asCitationPageLocation(): BetaCitationPageLocation =
+        citationPageLocation.getOrThrow("citationPageLocation")
 
-    fun asBetaCitationContentBlockLocation(): BetaCitationContentBlockLocation =
-        betaCitationContentBlockLocation.getOrThrow("betaCitationContentBlockLocation")
+    fun asCitationContentBlockLocation(): BetaCitationContentBlockLocation =
+        citationContentBlockLocation.getOrThrow("citationContentBlockLocation")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
         return when {
-            betaCitationCharLocation != null ->
-                visitor.visitBetaCitationCharLocation(betaCitationCharLocation)
-            betaCitationPageLocation != null ->
-                visitor.visitBetaCitationPageLocation(betaCitationPageLocation)
-            betaCitationContentBlockLocation != null ->
-                visitor.visitBetaCitationContentBlockLocation(betaCitationContentBlockLocation)
+            citationCharLocation != null -> visitor.visitCitationCharLocation(citationCharLocation)
+            citationPageLocation != null -> visitor.visitCitationPageLocation(citationPageLocation)
+            citationContentBlockLocation != null ->
+                visitor.visitCitationContentBlockLocation(citationContentBlockLocation)
             else -> visitor.unknown(_json)
         }
     }
@@ -75,22 +73,22 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
-                override fun visitBetaCitationCharLocation(
-                    betaCitationCharLocation: BetaCitationCharLocation
+                override fun visitCitationCharLocation(
+                    citationCharLocation: BetaCitationCharLocation
                 ) {
-                    betaCitationCharLocation.validate()
+                    citationCharLocation.validate()
                 }
 
-                override fun visitBetaCitationPageLocation(
-                    betaCitationPageLocation: BetaCitationPageLocation
+                override fun visitCitationPageLocation(
+                    citationPageLocation: BetaCitationPageLocation
                 ) {
-                    betaCitationPageLocation.validate()
+                    citationPageLocation.validate()
                 }
 
-                override fun visitBetaCitationContentBlockLocation(
-                    betaCitationContentBlockLocation: BetaCitationContentBlockLocation
+                override fun visitCitationContentBlockLocation(
+                    citationContentBlockLocation: BetaCitationContentBlockLocation
                 ) {
-                    betaCitationContentBlockLocation.validate()
+                    citationContentBlockLocation.validate()
                 }
             }
         )
@@ -102,19 +100,19 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaTextCitation && betaCitationCharLocation == other.betaCitationCharLocation && betaCitationPageLocation == other.betaCitationPageLocation && betaCitationContentBlockLocation == other.betaCitationContentBlockLocation /* spotless:on */
+        return /* spotless:off */ other is BetaTextCitation && citationCharLocation == other.citationCharLocation && citationPageLocation == other.citationPageLocation && citationContentBlockLocation == other.citationContentBlockLocation /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaCitationCharLocation, betaCitationPageLocation, betaCitationContentBlockLocation) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(citationCharLocation, citationPageLocation, citationContentBlockLocation) /* spotless:on */
 
     override fun toString(): String =
         when {
-            betaCitationCharLocation != null ->
-                "BetaTextCitation{betaCitationCharLocation=$betaCitationCharLocation}"
-            betaCitationPageLocation != null ->
-                "BetaTextCitation{betaCitationPageLocation=$betaCitationPageLocation}"
-            betaCitationContentBlockLocation != null ->
-                "BetaTextCitation{betaCitationContentBlockLocation=$betaCitationContentBlockLocation}"
+            citationCharLocation != null ->
+                "BetaTextCitation{citationCharLocation=$citationCharLocation}"
+            citationPageLocation != null ->
+                "BetaTextCitation{citationPageLocation=$citationPageLocation}"
+            citationContentBlockLocation != null ->
+                "BetaTextCitation{citationContentBlockLocation=$citationContentBlockLocation}"
             _json != null -> "BetaTextCitation{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaTextCitation")
         }
@@ -122,27 +120,27 @@ private constructor(
     companion object {
 
         @JvmStatic
-        fun ofBetaCitationCharLocation(betaCitationCharLocation: BetaCitationCharLocation) =
-            BetaTextCitation(betaCitationCharLocation = betaCitationCharLocation)
+        fun ofCitationCharLocation(citationCharLocation: BetaCitationCharLocation) =
+            BetaTextCitation(citationCharLocation = citationCharLocation)
 
         @JvmStatic
-        fun ofBetaCitationPageLocation(betaCitationPageLocation: BetaCitationPageLocation) =
-            BetaTextCitation(betaCitationPageLocation = betaCitationPageLocation)
+        fun ofCitationPageLocation(citationPageLocation: BetaCitationPageLocation) =
+            BetaTextCitation(citationPageLocation = citationPageLocation)
 
         @JvmStatic
-        fun ofBetaCitationContentBlockLocation(
-            betaCitationContentBlockLocation: BetaCitationContentBlockLocation
-        ) = BetaTextCitation(betaCitationContentBlockLocation = betaCitationContentBlockLocation)
+        fun ofCitationContentBlockLocation(
+            citationContentBlockLocation: BetaCitationContentBlockLocation
+        ) = BetaTextCitation(citationContentBlockLocation = citationContentBlockLocation)
     }
 
     interface Visitor<out T> {
 
-        fun visitBetaCitationCharLocation(betaCitationCharLocation: BetaCitationCharLocation): T
+        fun visitCitationCharLocation(citationCharLocation: BetaCitationCharLocation): T
 
-        fun visitBetaCitationPageLocation(betaCitationPageLocation: BetaCitationPageLocation): T
+        fun visitCitationPageLocation(citationPageLocation: BetaCitationPageLocation): T
 
-        fun visitBetaCitationContentBlockLocation(
-            betaCitationContentBlockLocation: BetaCitationContentBlockLocation
+        fun visitCitationContentBlockLocation(
+            citationContentBlockLocation: BetaCitationContentBlockLocation
         ): T
 
         fun unknown(json: JsonValue?): T {
@@ -162,7 +160,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return BetaTextCitation(betaCitationCharLocation = it, _json = json)
+                            return BetaTextCitation(citationCharLocation = it, _json = json)
                         }
                 }
                 "page_location" -> {
@@ -170,7 +168,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return BetaTextCitation(betaCitationPageLocation = it, _json = json)
+                            return BetaTextCitation(citationPageLocation = it, _json = json)
                         }
                 }
                 "content_block_location" -> {
@@ -178,10 +176,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return BetaTextCitation(
-                                betaCitationContentBlockLocation = it,
-                                _json = json
-                            )
+                            return BetaTextCitation(citationContentBlockLocation = it, _json = json)
                         }
                 }
             }
@@ -198,12 +193,12 @@ private constructor(
             provider: SerializerProvider
         ) {
             when {
-                value.betaCitationCharLocation != null ->
-                    generator.writeObject(value.betaCitationCharLocation)
-                value.betaCitationPageLocation != null ->
-                    generator.writeObject(value.betaCitationPageLocation)
-                value.betaCitationContentBlockLocation != null ->
-                    generator.writeObject(value.betaCitationContentBlockLocation)
+                value.citationCharLocation != null ->
+                    generator.writeObject(value.citationCharLocation)
+                value.citationPageLocation != null ->
+                    generator.writeObject(value.citationPageLocation)
+                value.citationContentBlockLocation != null ->
+                    generator.writeObject(value.citationContentBlockLocation)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaTextCitation")
             }

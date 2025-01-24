@@ -1692,16 +1692,13 @@ constructor(
                 }
 
                 /** The model will automatically decide whether to use tools. */
-                fun toolChoice(betaToolChoiceAuto: BetaToolChoiceAuto) =
-                    toolChoice(BetaToolChoice.ofBetaToolChoiceAuto(betaToolChoiceAuto))
+                fun toolChoice(auto: BetaToolChoiceAuto) = toolChoice(BetaToolChoice.ofAuto(auto))
 
                 /** The model will use any available tools. */
-                fun toolChoice(betaToolChoiceAny: BetaToolChoiceAny) =
-                    toolChoice(BetaToolChoice.ofBetaToolChoiceAny(betaToolChoiceAny))
+                fun toolChoice(any: BetaToolChoiceAny) = toolChoice(BetaToolChoice.ofAny(any))
 
                 /** The model will use the specified tool with `tool_choice.name`. */
-                fun toolChoice(betaToolChoiceTool: BetaToolChoiceTool) =
-                    toolChoice(BetaToolChoice.ofBetaToolChoiceTool(betaToolChoiceTool))
+                fun toolChoice(tool: BetaToolChoiceTool) = toolChoice(BetaToolChoice.ofTool(tool))
 
                 /**
                  * Definitions of tools that the model may use.
@@ -2049,10 +2046,8 @@ constructor(
                  *
                  * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
                  */
-                fun addTool(betaToolComputerUse20241022: BetaToolComputerUse20241022) =
-                    addTool(
-                        BetaToolUnion.ofBetaToolComputerUse20241022(betaToolComputerUse20241022)
-                    )
+                fun addTool(computerUse20241022: BetaToolComputerUse20241022) =
+                    addTool(BetaToolUnion.ofComputerUse20241022(computerUse20241022))
 
                 /**
                  * Definitions of tools that the model may use.
@@ -2119,8 +2114,8 @@ constructor(
                  *
                  * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
                  */
-                fun addTool(betaToolBash20241022: BetaToolBash20241022) =
-                    addTool(BetaToolUnion.ofBetaToolBash20241022(betaToolBash20241022))
+                fun addTool(bash20241022: BetaToolBash20241022) =
+                    addTool(BetaToolUnion.ofBash20241022(bash20241022))
 
                 /**
                  * Definitions of tools that the model may use.
@@ -2187,8 +2182,8 @@ constructor(
                  *
                  * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
                  */
-                fun addTool(betaToolTextEditor20241022: BetaToolTextEditor20241022) =
-                    addTool(BetaToolUnion.ofBetaToolTextEditor20241022(betaToolTextEditor20241022))
+                fun addTool(textEditor20241022: BetaToolTextEditor20241022) =
+                    addTool(BetaToolUnion.ofTextEditor20241022(textEditor20241022))
 
                 /**
                  * Only sample from the top K options for each subsequent token.

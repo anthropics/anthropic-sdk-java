@@ -133,14 +133,14 @@ private constructor(
 
         fun source(source: JsonField<Source>) = apply { this.source = source }
 
-        fun source(betaBase64PdfSource: BetaBase64PdfSource) =
-            source(Source.ofBetaBase64PdfSource(betaBase64PdfSource))
+        fun source(betaBase64Pdf: BetaBase64PdfSource) =
+            source(Source.ofBetaBase64Pdf(betaBase64Pdf))
 
-        fun source(betaPlainTextSource: BetaPlainTextSource) =
-            source(Source.ofBetaPlainTextSource(betaPlainTextSource))
+        fun source(betaPlainText: BetaPlainTextSource) =
+            source(Source.ofBetaPlainText(betaPlainText))
 
-        fun source(betaContentBlockSource: BetaContentBlockSource) =
-            source(Source.ofBetaContentBlockSource(betaContentBlockSource))
+        fun source(betaContentBlock: BetaContentBlockSource) =
+            source(Source.ofBetaContentBlock(betaContentBlock))
 
         fun type(type: Type) = type(JsonField.of(type))
 
@@ -209,44 +209,39 @@ private constructor(
     @JsonSerialize(using = Source.Serializer::class)
     class Source
     private constructor(
-        private val betaBase64PdfSource: BetaBase64PdfSource? = null,
-        private val betaPlainTextSource: BetaPlainTextSource? = null,
-        private val betaContentBlockSource: BetaContentBlockSource? = null,
+        private val betaBase64Pdf: BetaBase64PdfSource? = null,
+        private val betaPlainText: BetaPlainTextSource? = null,
+        private val betaContentBlock: BetaContentBlockSource? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun betaBase64PdfSource(): Optional<BetaBase64PdfSource> =
-            Optional.ofNullable(betaBase64PdfSource)
+        fun betaBase64Pdf(): Optional<BetaBase64PdfSource> = Optional.ofNullable(betaBase64Pdf)
 
-        fun betaPlainTextSource(): Optional<BetaPlainTextSource> =
-            Optional.ofNullable(betaPlainTextSource)
+        fun betaPlainText(): Optional<BetaPlainTextSource> = Optional.ofNullable(betaPlainText)
 
-        fun betaContentBlockSource(): Optional<BetaContentBlockSource> =
-            Optional.ofNullable(betaContentBlockSource)
+        fun betaContentBlock(): Optional<BetaContentBlockSource> =
+            Optional.ofNullable(betaContentBlock)
 
-        fun isBetaBase64PdfSource(): Boolean = betaBase64PdfSource != null
+        fun isBetaBase64Pdf(): Boolean = betaBase64Pdf != null
 
-        fun isBetaPlainTextSource(): Boolean = betaPlainTextSource != null
+        fun isBetaPlainText(): Boolean = betaPlainText != null
 
-        fun isBetaContentBlockSource(): Boolean = betaContentBlockSource != null
+        fun isBetaContentBlock(): Boolean = betaContentBlock != null
 
-        fun asBetaBase64PdfSource(): BetaBase64PdfSource =
-            betaBase64PdfSource.getOrThrow("betaBase64PdfSource")
+        fun asBetaBase64Pdf(): BetaBase64PdfSource = betaBase64Pdf.getOrThrow("betaBase64Pdf")
 
-        fun asBetaPlainTextSource(): BetaPlainTextSource =
-            betaPlainTextSource.getOrThrow("betaPlainTextSource")
+        fun asBetaPlainText(): BetaPlainTextSource = betaPlainText.getOrThrow("betaPlainText")
 
-        fun asBetaContentBlockSource(): BetaContentBlockSource =
-            betaContentBlockSource.getOrThrow("betaContentBlockSource")
+        fun asBetaContentBlock(): BetaContentBlockSource =
+            betaContentBlock.getOrThrow("betaContentBlock")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T {
             return when {
-                betaBase64PdfSource != null -> visitor.visitBetaBase64PdfSource(betaBase64PdfSource)
-                betaPlainTextSource != null -> visitor.visitBetaPlainTextSource(betaPlainTextSource)
-                betaContentBlockSource != null ->
-                    visitor.visitBetaContentBlockSource(betaContentBlockSource)
+                betaBase64Pdf != null -> visitor.visitBetaBase64Pdf(betaBase64Pdf)
+                betaPlainText != null -> visitor.visitBetaPlainText(betaPlainText)
+                betaContentBlock != null -> visitor.visitBetaContentBlock(betaContentBlock)
                 else -> visitor.unknown(_json)
             }
         }
@@ -260,22 +255,16 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitBetaBase64PdfSource(
-                        betaBase64PdfSource: BetaBase64PdfSource
-                    ) {
-                        betaBase64PdfSource.validate()
+                    override fun visitBetaBase64Pdf(betaBase64Pdf: BetaBase64PdfSource) {
+                        betaBase64Pdf.validate()
                     }
 
-                    override fun visitBetaPlainTextSource(
-                        betaPlainTextSource: BetaPlainTextSource
-                    ) {
-                        betaPlainTextSource.validate()
+                    override fun visitBetaPlainText(betaPlainText: BetaPlainTextSource) {
+                        betaPlainText.validate()
                     }
 
-                    override fun visitBetaContentBlockSource(
-                        betaContentBlockSource: BetaContentBlockSource
-                    ) {
-                        betaContentBlockSource.validate()
+                    override fun visitBetaContentBlock(betaContentBlock: BetaContentBlockSource) {
+                        betaContentBlock.validate()
                     }
                 }
             )
@@ -287,17 +276,16 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Source && betaBase64PdfSource == other.betaBase64PdfSource && betaPlainTextSource == other.betaPlainTextSource && betaContentBlockSource == other.betaContentBlockSource /* spotless:on */
+            return /* spotless:off */ other is Source && betaBase64Pdf == other.betaBase64Pdf && betaPlainText == other.betaPlainText && betaContentBlock == other.betaContentBlock /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaBase64PdfSource, betaPlainTextSource, betaContentBlockSource) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaBase64Pdf, betaPlainText, betaContentBlock) /* spotless:on */
 
         override fun toString(): String =
             when {
-                betaBase64PdfSource != null -> "Source{betaBase64PdfSource=$betaBase64PdfSource}"
-                betaPlainTextSource != null -> "Source{betaPlainTextSource=$betaPlainTextSource}"
-                betaContentBlockSource != null ->
-                    "Source{betaContentBlockSource=$betaContentBlockSource}"
+                betaBase64Pdf != null -> "Source{betaBase64Pdf=$betaBase64Pdf}"
+                betaPlainText != null -> "Source{betaPlainText=$betaPlainText}"
+                betaContentBlock != null -> "Source{betaContentBlock=$betaContentBlock}"
                 _json != null -> "Source{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Source")
             }
@@ -305,25 +293,25 @@ private constructor(
         companion object {
 
             @JvmStatic
-            fun ofBetaBase64PdfSource(betaBase64PdfSource: BetaBase64PdfSource) =
-                Source(betaBase64PdfSource = betaBase64PdfSource)
+            fun ofBetaBase64Pdf(betaBase64Pdf: BetaBase64PdfSource) =
+                Source(betaBase64Pdf = betaBase64Pdf)
 
             @JvmStatic
-            fun ofBetaPlainTextSource(betaPlainTextSource: BetaPlainTextSource) =
-                Source(betaPlainTextSource = betaPlainTextSource)
+            fun ofBetaPlainText(betaPlainText: BetaPlainTextSource) =
+                Source(betaPlainText = betaPlainText)
 
             @JvmStatic
-            fun ofBetaContentBlockSource(betaContentBlockSource: BetaContentBlockSource) =
-                Source(betaContentBlockSource = betaContentBlockSource)
+            fun ofBetaContentBlock(betaContentBlock: BetaContentBlockSource) =
+                Source(betaContentBlock = betaContentBlock)
         }
 
         interface Visitor<out T> {
 
-            fun visitBetaBase64PdfSource(betaBase64PdfSource: BetaBase64PdfSource): T
+            fun visitBetaBase64Pdf(betaBase64Pdf: BetaBase64PdfSource): T
 
-            fun visitBetaPlainTextSource(betaPlainTextSource: BetaPlainTextSource): T
+            fun visitBetaPlainText(betaPlainText: BetaPlainTextSource): T
 
-            fun visitBetaContentBlockSource(betaContentBlockSource: BetaContentBlockSource): T
+            fun visitBetaContentBlock(betaContentBlock: BetaContentBlockSource): T
 
             fun unknown(json: JsonValue?): T {
                 throw AnthropicInvalidDataException("Unknown Source: $json")
@@ -342,7 +330,7 @@ private constructor(
                                 it.validate()
                             }
                             ?.let {
-                                return Source(betaBase64PdfSource = it, _json = json)
+                                return Source(betaBase64Pdf = it, _json = json)
                             }
                     }
                     "text" -> {
@@ -350,7 +338,7 @@ private constructor(
                                 it.validate()
                             }
                             ?.let {
-                                return Source(betaPlainTextSource = it, _json = json)
+                                return Source(betaPlainText = it, _json = json)
                             }
                     }
                     "content" -> {
@@ -358,7 +346,7 @@ private constructor(
                                 it.validate()
                             }
                             ?.let {
-                                return Source(betaContentBlockSource = it, _json = json)
+                                return Source(betaContentBlock = it, _json = json)
                             }
                     }
                 }
@@ -375,12 +363,9 @@ private constructor(
                 provider: SerializerProvider
             ) {
                 when {
-                    value.betaBase64PdfSource != null ->
-                        generator.writeObject(value.betaBase64PdfSource)
-                    value.betaPlainTextSource != null ->
-                        generator.writeObject(value.betaPlainTextSource)
-                    value.betaContentBlockSource != null ->
-                        generator.writeObject(value.betaContentBlockSource)
+                    value.betaBase64Pdf != null -> generator.writeObject(value.betaBase64Pdf)
+                    value.betaPlainText != null -> generator.writeObject(value.betaPlainText)
+                    value.betaContentBlock != null -> generator.writeObject(value.betaContentBlock)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Source")
                 }

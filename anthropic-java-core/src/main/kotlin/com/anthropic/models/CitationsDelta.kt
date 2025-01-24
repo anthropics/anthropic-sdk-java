@@ -89,14 +89,14 @@ private constructor(
 
         fun citation(citation: JsonField<Citation>) = apply { this.citation = citation }
 
-        fun citation(citationCharLocation: CitationCharLocation) =
-            citation(Citation.ofCitationCharLocation(citationCharLocation))
+        fun citation(charLocation: CitationCharLocation) =
+            citation(Citation.ofCharLocation(charLocation))
 
-        fun citation(citationPageLocation: CitationPageLocation) =
-            citation(Citation.ofCitationPageLocation(citationPageLocation))
+        fun citation(pageLocation: CitationPageLocation) =
+            citation(Citation.ofPageLocation(pageLocation))
 
-        fun citation(citationContentBlockLocation: CitationContentBlockLocation) =
-            citation(Citation.ofCitationContentBlockLocation(citationContentBlockLocation))
+        fun citation(contentBlockLocation: CitationContentBlockLocation) =
+            citation(Citation.ofContentBlockLocation(contentBlockLocation))
 
         fun type(type: Type) = type(JsonField.of(type))
 
@@ -133,46 +133,40 @@ private constructor(
     @JsonSerialize(using = Citation.Serializer::class)
     class Citation
     private constructor(
-        private val citationCharLocation: CitationCharLocation? = null,
-        private val citationPageLocation: CitationPageLocation? = null,
-        private val citationContentBlockLocation: CitationContentBlockLocation? = null,
+        private val charLocation: CitationCharLocation? = null,
+        private val pageLocation: CitationPageLocation? = null,
+        private val contentBlockLocation: CitationContentBlockLocation? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun citationCharLocation(): Optional<CitationCharLocation> =
-            Optional.ofNullable(citationCharLocation)
+        fun charLocation(): Optional<CitationCharLocation> = Optional.ofNullable(charLocation)
 
-        fun citationPageLocation(): Optional<CitationPageLocation> =
-            Optional.ofNullable(citationPageLocation)
+        fun pageLocation(): Optional<CitationPageLocation> = Optional.ofNullable(pageLocation)
 
-        fun citationContentBlockLocation(): Optional<CitationContentBlockLocation> =
-            Optional.ofNullable(citationContentBlockLocation)
+        fun contentBlockLocation(): Optional<CitationContentBlockLocation> =
+            Optional.ofNullable(contentBlockLocation)
 
-        fun isCitationCharLocation(): Boolean = citationCharLocation != null
+        fun isCharLocation(): Boolean = charLocation != null
 
-        fun isCitationPageLocation(): Boolean = citationPageLocation != null
+        fun isPageLocation(): Boolean = pageLocation != null
 
-        fun isCitationContentBlockLocation(): Boolean = citationContentBlockLocation != null
+        fun isContentBlockLocation(): Boolean = contentBlockLocation != null
 
-        fun asCitationCharLocation(): CitationCharLocation =
-            citationCharLocation.getOrThrow("citationCharLocation")
+        fun asCharLocation(): CitationCharLocation = charLocation.getOrThrow("charLocation")
 
-        fun asCitationPageLocation(): CitationPageLocation =
-            citationPageLocation.getOrThrow("citationPageLocation")
+        fun asPageLocation(): CitationPageLocation = pageLocation.getOrThrow("pageLocation")
 
-        fun asCitationContentBlockLocation(): CitationContentBlockLocation =
-            citationContentBlockLocation.getOrThrow("citationContentBlockLocation")
+        fun asContentBlockLocation(): CitationContentBlockLocation =
+            contentBlockLocation.getOrThrow("contentBlockLocation")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T {
             return when {
-                citationCharLocation != null ->
-                    visitor.visitCitationCharLocation(citationCharLocation)
-                citationPageLocation != null ->
-                    visitor.visitCitationPageLocation(citationPageLocation)
-                citationContentBlockLocation != null ->
-                    visitor.visitCitationContentBlockLocation(citationContentBlockLocation)
+                charLocation != null -> visitor.visitCharLocation(charLocation)
+                pageLocation != null -> visitor.visitPageLocation(pageLocation)
+                contentBlockLocation != null ->
+                    visitor.visitContentBlockLocation(contentBlockLocation)
                 else -> visitor.unknown(_json)
             }
         }
@@ -186,22 +180,18 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitCitationCharLocation(
-                        citationCharLocation: CitationCharLocation
-                    ) {
-                        citationCharLocation.validate()
+                    override fun visitCharLocation(charLocation: CitationCharLocation) {
+                        charLocation.validate()
                     }
 
-                    override fun visitCitationPageLocation(
-                        citationPageLocation: CitationPageLocation
-                    ) {
-                        citationPageLocation.validate()
+                    override fun visitPageLocation(pageLocation: CitationPageLocation) {
+                        pageLocation.validate()
                     }
 
-                    override fun visitCitationContentBlockLocation(
-                        citationContentBlockLocation: CitationContentBlockLocation
+                    override fun visitContentBlockLocation(
+                        contentBlockLocation: CitationContentBlockLocation
                     ) {
-                        citationContentBlockLocation.validate()
+                        contentBlockLocation.validate()
                     }
                 }
             )
@@ -213,19 +203,17 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Citation && citationCharLocation == other.citationCharLocation && citationPageLocation == other.citationPageLocation && citationContentBlockLocation == other.citationContentBlockLocation /* spotless:on */
+            return /* spotless:off */ other is Citation && charLocation == other.charLocation && pageLocation == other.pageLocation && contentBlockLocation == other.contentBlockLocation /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(citationCharLocation, citationPageLocation, citationContentBlockLocation) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(charLocation, pageLocation, contentBlockLocation) /* spotless:on */
 
         override fun toString(): String =
             when {
-                citationCharLocation != null ->
-                    "Citation{citationCharLocation=$citationCharLocation}"
-                citationPageLocation != null ->
-                    "Citation{citationPageLocation=$citationPageLocation}"
-                citationContentBlockLocation != null ->
-                    "Citation{citationContentBlockLocation=$citationContentBlockLocation}"
+                charLocation != null -> "Citation{charLocation=$charLocation}"
+                pageLocation != null -> "Citation{pageLocation=$pageLocation}"
+                contentBlockLocation != null ->
+                    "Citation{contentBlockLocation=$contentBlockLocation}"
                 _json != null -> "Citation{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Citation")
             }
@@ -233,28 +221,25 @@ private constructor(
         companion object {
 
             @JvmStatic
-            fun ofCitationCharLocation(citationCharLocation: CitationCharLocation) =
-                Citation(citationCharLocation = citationCharLocation)
+            fun ofCharLocation(charLocation: CitationCharLocation) =
+                Citation(charLocation = charLocation)
 
             @JvmStatic
-            fun ofCitationPageLocation(citationPageLocation: CitationPageLocation) =
-                Citation(citationPageLocation = citationPageLocation)
+            fun ofPageLocation(pageLocation: CitationPageLocation) =
+                Citation(pageLocation = pageLocation)
 
             @JvmStatic
-            fun ofCitationContentBlockLocation(
-                citationContentBlockLocation: CitationContentBlockLocation
-            ) = Citation(citationContentBlockLocation = citationContentBlockLocation)
+            fun ofContentBlockLocation(contentBlockLocation: CitationContentBlockLocation) =
+                Citation(contentBlockLocation = contentBlockLocation)
         }
 
         interface Visitor<out T> {
 
-            fun visitCitationCharLocation(citationCharLocation: CitationCharLocation): T
+            fun visitCharLocation(charLocation: CitationCharLocation): T
 
-            fun visitCitationPageLocation(citationPageLocation: CitationPageLocation): T
+            fun visitPageLocation(pageLocation: CitationPageLocation): T
 
-            fun visitCitationContentBlockLocation(
-                citationContentBlockLocation: CitationContentBlockLocation
-            ): T
+            fun visitContentBlockLocation(contentBlockLocation: CitationContentBlockLocation): T
 
             fun unknown(json: JsonValue?): T {
                 throw AnthropicInvalidDataException("Unknown Citation: $json")
@@ -273,7 +258,7 @@ private constructor(
                                 it.validate()
                             }
                             ?.let {
-                                return Citation(citationCharLocation = it, _json = json)
+                                return Citation(charLocation = it, _json = json)
                             }
                     }
                     "page_location" -> {
@@ -281,7 +266,7 @@ private constructor(
                                 it.validate()
                             }
                             ?.let {
-                                return Citation(citationPageLocation = it, _json = json)
+                                return Citation(pageLocation = it, _json = json)
                             }
                     }
                     "content_block_location" -> {
@@ -289,7 +274,7 @@ private constructor(
                                 it.validate()
                             }
                             ?.let {
-                                return Citation(citationContentBlockLocation = it, _json = json)
+                                return Citation(contentBlockLocation = it, _json = json)
                             }
                     }
                 }
@@ -306,12 +291,10 @@ private constructor(
                 provider: SerializerProvider
             ) {
                 when {
-                    value.citationCharLocation != null ->
-                        generator.writeObject(value.citationCharLocation)
-                    value.citationPageLocation != null ->
-                        generator.writeObject(value.citationPageLocation)
-                    value.citationContentBlockLocation != null ->
-                        generator.writeObject(value.citationContentBlockLocation)
+                    value.charLocation != null -> generator.writeObject(value.charLocation)
+                    value.pageLocation != null -> generator.writeObject(value.pageLocation)
+                    value.contentBlockLocation != null ->
+                        generator.writeObject(value.contentBlockLocation)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Citation")
                 }

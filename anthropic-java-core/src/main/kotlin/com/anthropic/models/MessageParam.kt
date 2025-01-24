@@ -90,8 +90,8 @@ private constructor(
 
         fun content(string: String) = content(Content.ofString(string))
 
-        fun contentOfContentBlockParams(contentBlockParams: List<ContentBlockParam>) =
-            content(Content.ofContentBlockParams(contentBlockParams))
+        fun contentOfBlockParams(blockParams: List<ContentBlockParam>) =
+            content(Content.ofBlockParams(blockParams))
 
         fun role(role: Role) = role(JsonField.of(role))
 
@@ -129,30 +129,28 @@ private constructor(
     class Content
     private constructor(
         private val string: String? = null,
-        private val contentBlockParams: List<ContentBlockParam>? = null,
+        private val blockParams: List<ContentBlockParam>? = null,
         private val _json: JsonValue? = null,
     ) {
 
         fun string(): Optional<String> = Optional.ofNullable(string)
 
-        fun contentBlockParams(): Optional<List<ContentBlockParam>> =
-            Optional.ofNullable(contentBlockParams)
+        fun blockParams(): Optional<List<ContentBlockParam>> = Optional.ofNullable(blockParams)
 
         fun isString(): Boolean = string != null
 
-        fun isContentBlockParams(): Boolean = contentBlockParams != null
+        fun isBlockParams(): Boolean = blockParams != null
 
         fun asString(): String = string.getOrThrow("string")
 
-        fun asContentBlockParams(): List<ContentBlockParam> =
-            contentBlockParams.getOrThrow("contentBlockParams")
+        fun asBlockParams(): List<ContentBlockParam> = blockParams.getOrThrow("blockParams")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T {
             return when {
                 string != null -> visitor.visitString(string)
-                contentBlockParams != null -> visitor.visitContentBlockParams(contentBlockParams)
+                blockParams != null -> visitor.visitBlockParams(blockParams)
                 else -> visitor.unknown(_json)
             }
         }
@@ -168,10 +166,8 @@ private constructor(
                 object : Visitor<Unit> {
                     override fun visitString(string: String) {}
 
-                    override fun visitContentBlockParams(
-                        contentBlockParams: List<ContentBlockParam>
-                    ) {
-                        contentBlockParams.forEach { it.validate() }
+                    override fun visitBlockParams(blockParams: List<ContentBlockParam>) {
+                        blockParams.forEach { it.validate() }
                     }
                 }
             )
@@ -183,15 +179,15 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Content && string == other.string && contentBlockParams == other.contentBlockParams /* spotless:on */
+            return /* spotless:off */ other is Content && string == other.string && blockParams == other.blockParams /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(string, contentBlockParams) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(string, blockParams) /* spotless:on */
 
         override fun toString(): String =
             when {
                 string != null -> "Content{string=$string}"
-                contentBlockParams != null -> "Content{contentBlockParams=$contentBlockParams}"
+                blockParams != null -> "Content{blockParams=$blockParams}"
                 _json != null -> "Content{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Content")
             }
@@ -201,15 +197,15 @@ private constructor(
             @JvmStatic fun ofString(string: String) = Content(string = string)
 
             @JvmStatic
-            fun ofContentBlockParams(contentBlockParams: List<ContentBlockParam>) =
-                Content(contentBlockParams = contentBlockParams)
+            fun ofBlockParams(blockParams: List<ContentBlockParam>) =
+                Content(blockParams = blockParams)
         }
 
         interface Visitor<out T> {
 
             fun visitString(string: String): T
 
-            fun visitContentBlockParams(contentBlockParams: List<ContentBlockParam>): T
+            fun visitBlockParams(blockParams: List<ContentBlockParam>): T
 
             fun unknown(json: JsonValue?): T {
                 throw AnthropicInvalidDataException("Unknown Content: $json")
@@ -228,7 +224,7 @@ private constructor(
                         it.forEach { it.validate() }
                     }
                     ?.let {
-                        return Content(contentBlockParams = it, _json = json)
+                        return Content(blockParams = it, _json = json)
                     }
 
                 return Content(_json = json)
@@ -244,8 +240,7 @@ private constructor(
             ) {
                 when {
                     value.string != null -> generator.writeObject(value.string)
-                    value.contentBlockParams != null ->
-                        generator.writeObject(value.contentBlockParams)
+                    value.blockParams != null -> generator.writeObject(value.blockParams)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Content")
                 }

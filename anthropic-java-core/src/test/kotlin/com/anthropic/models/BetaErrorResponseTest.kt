@@ -22,7 +22,7 @@ class BetaErrorResponseTest {
         assertThat(betaErrorResponse).isNotNull
         assertThat(betaErrorResponse.error())
             .isEqualTo(
-                BetaError.ofBetaInvalidRequestError(
+                BetaError.ofInvalidRequest(
                     BetaInvalidRequestError.builder()
                         .message("message")
                         .type(BetaInvalidRequestError.Type.INVALID_REQUEST_ERROR)

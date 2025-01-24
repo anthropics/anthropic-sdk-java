@@ -22,52 +22,48 @@ import java.util.Optional
 class BetaToolUnion
 private constructor(
     private val betaTool: BetaTool? = null,
-    private val betaToolComputerUse20241022: BetaToolComputerUse20241022? = null,
-    private val betaToolBash20241022: BetaToolBash20241022? = null,
-    private val betaToolTextEditor20241022: BetaToolTextEditor20241022? = null,
+    private val computerUse20241022: BetaToolComputerUse20241022? = null,
+    private val bash20241022: BetaToolBash20241022? = null,
+    private val textEditor20241022: BetaToolTextEditor20241022? = null,
     private val _json: JsonValue? = null,
 ) {
 
     fun betaTool(): Optional<BetaTool> = Optional.ofNullable(betaTool)
 
-    fun betaToolComputerUse20241022(): Optional<BetaToolComputerUse20241022> =
-        Optional.ofNullable(betaToolComputerUse20241022)
+    fun computerUse20241022(): Optional<BetaToolComputerUse20241022> =
+        Optional.ofNullable(computerUse20241022)
 
-    fun betaToolBash20241022(): Optional<BetaToolBash20241022> =
-        Optional.ofNullable(betaToolBash20241022)
+    fun bash20241022(): Optional<BetaToolBash20241022> = Optional.ofNullable(bash20241022)
 
-    fun betaToolTextEditor20241022(): Optional<BetaToolTextEditor20241022> =
-        Optional.ofNullable(betaToolTextEditor20241022)
+    fun textEditor20241022(): Optional<BetaToolTextEditor20241022> =
+        Optional.ofNullable(textEditor20241022)
 
     fun isBetaTool(): Boolean = betaTool != null
 
-    fun isBetaToolComputerUse20241022(): Boolean = betaToolComputerUse20241022 != null
+    fun isComputerUse20241022(): Boolean = computerUse20241022 != null
 
-    fun isBetaToolBash20241022(): Boolean = betaToolBash20241022 != null
+    fun isBash20241022(): Boolean = bash20241022 != null
 
-    fun isBetaToolTextEditor20241022(): Boolean = betaToolTextEditor20241022 != null
+    fun isTextEditor20241022(): Boolean = textEditor20241022 != null
 
     fun asBetaTool(): BetaTool = betaTool.getOrThrow("betaTool")
 
-    fun asBetaToolComputerUse20241022(): BetaToolComputerUse20241022 =
-        betaToolComputerUse20241022.getOrThrow("betaToolComputerUse20241022")
+    fun asComputerUse20241022(): BetaToolComputerUse20241022 =
+        computerUse20241022.getOrThrow("computerUse20241022")
 
-    fun asBetaToolBash20241022(): BetaToolBash20241022 =
-        betaToolBash20241022.getOrThrow("betaToolBash20241022")
+    fun asBash20241022(): BetaToolBash20241022 = bash20241022.getOrThrow("bash20241022")
 
-    fun asBetaToolTextEditor20241022(): BetaToolTextEditor20241022 =
-        betaToolTextEditor20241022.getOrThrow("betaToolTextEditor20241022")
+    fun asTextEditor20241022(): BetaToolTextEditor20241022 =
+        textEditor20241022.getOrThrow("textEditor20241022")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
         return when {
             betaTool != null -> visitor.visitBetaTool(betaTool)
-            betaToolComputerUse20241022 != null ->
-                visitor.visitBetaToolComputerUse20241022(betaToolComputerUse20241022)
-            betaToolBash20241022 != null -> visitor.visitBetaToolBash20241022(betaToolBash20241022)
-            betaToolTextEditor20241022 != null ->
-                visitor.visitBetaToolTextEditor20241022(betaToolTextEditor20241022)
+            computerUse20241022 != null -> visitor.visitComputerUse20241022(computerUse20241022)
+            bash20241022 != null -> visitor.visitBash20241022(bash20241022)
+            textEditor20241022 != null -> visitor.visitTextEditor20241022(textEditor20241022)
             else -> visitor.unknown(_json)
         }
     }
@@ -85,20 +81,20 @@ private constructor(
                     betaTool.validate()
                 }
 
-                override fun visitBetaToolComputerUse20241022(
-                    betaToolComputerUse20241022: BetaToolComputerUse20241022
+                override fun visitComputerUse20241022(
+                    computerUse20241022: BetaToolComputerUse20241022
                 ) {
-                    betaToolComputerUse20241022.validate()
+                    computerUse20241022.validate()
                 }
 
-                override fun visitBetaToolBash20241022(betaToolBash20241022: BetaToolBash20241022) {
-                    betaToolBash20241022.validate()
+                override fun visitBash20241022(bash20241022: BetaToolBash20241022) {
+                    bash20241022.validate()
                 }
 
-                override fun visitBetaToolTextEditor20241022(
-                    betaToolTextEditor20241022: BetaToolTextEditor20241022
+                override fun visitTextEditor20241022(
+                    textEditor20241022: BetaToolTextEditor20241022
                 ) {
-                    betaToolTextEditor20241022.validate()
+                    textEditor20241022.validate()
                 }
             }
         )
@@ -110,20 +106,17 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaToolUnion && betaTool == other.betaTool && betaToolComputerUse20241022 == other.betaToolComputerUse20241022 && betaToolBash20241022 == other.betaToolBash20241022 && betaToolTextEditor20241022 == other.betaToolTextEditor20241022 /* spotless:on */
+        return /* spotless:off */ other is BetaToolUnion && betaTool == other.betaTool && computerUse20241022 == other.computerUse20241022 && bash20241022 == other.bash20241022 && textEditor20241022 == other.textEditor20241022 /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaTool, betaToolComputerUse20241022, betaToolBash20241022, betaToolTextEditor20241022) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaTool, computerUse20241022, bash20241022, textEditor20241022) /* spotless:on */
 
     override fun toString(): String =
         when {
             betaTool != null -> "BetaToolUnion{betaTool=$betaTool}"
-            betaToolComputerUse20241022 != null ->
-                "BetaToolUnion{betaToolComputerUse20241022=$betaToolComputerUse20241022}"
-            betaToolBash20241022 != null ->
-                "BetaToolUnion{betaToolBash20241022=$betaToolBash20241022}"
-            betaToolTextEditor20241022 != null ->
-                "BetaToolUnion{betaToolTextEditor20241022=$betaToolTextEditor20241022}"
+            computerUse20241022 != null -> "BetaToolUnion{computerUse20241022=$computerUse20241022}"
+            bash20241022 != null -> "BetaToolUnion{bash20241022=$bash20241022}"
+            textEditor20241022 != null -> "BetaToolUnion{textEditor20241022=$textEditor20241022}"
             _json != null -> "BetaToolUnion{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaToolUnion")
         }
@@ -133,32 +126,27 @@ private constructor(
         @JvmStatic fun ofBetaTool(betaTool: BetaTool) = BetaToolUnion(betaTool = betaTool)
 
         @JvmStatic
-        fun ofBetaToolComputerUse20241022(
-            betaToolComputerUse20241022: BetaToolComputerUse20241022
-        ) = BetaToolUnion(betaToolComputerUse20241022 = betaToolComputerUse20241022)
+        fun ofComputerUse20241022(computerUse20241022: BetaToolComputerUse20241022) =
+            BetaToolUnion(computerUse20241022 = computerUse20241022)
 
         @JvmStatic
-        fun ofBetaToolBash20241022(betaToolBash20241022: BetaToolBash20241022) =
-            BetaToolUnion(betaToolBash20241022 = betaToolBash20241022)
+        fun ofBash20241022(bash20241022: BetaToolBash20241022) =
+            BetaToolUnion(bash20241022 = bash20241022)
 
         @JvmStatic
-        fun ofBetaToolTextEditor20241022(betaToolTextEditor20241022: BetaToolTextEditor20241022) =
-            BetaToolUnion(betaToolTextEditor20241022 = betaToolTextEditor20241022)
+        fun ofTextEditor20241022(textEditor20241022: BetaToolTextEditor20241022) =
+            BetaToolUnion(textEditor20241022 = textEditor20241022)
     }
 
     interface Visitor<out T> {
 
         fun visitBetaTool(betaTool: BetaTool): T
 
-        fun visitBetaToolComputerUse20241022(
-            betaToolComputerUse20241022: BetaToolComputerUse20241022
-        ): T
+        fun visitComputerUse20241022(computerUse20241022: BetaToolComputerUse20241022): T
 
-        fun visitBetaToolBash20241022(betaToolBash20241022: BetaToolBash20241022): T
+        fun visitBash20241022(bash20241022: BetaToolBash20241022): T
 
-        fun visitBetaToolTextEditor20241022(
-            betaToolTextEditor20241022: BetaToolTextEditor20241022
-        ): T
+        fun visitTextEditor20241022(textEditor20241022: BetaToolTextEditor20241022): T
 
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown BetaToolUnion: $json")
@@ -176,15 +164,15 @@ private constructor(
                 }
             tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20241022>()) { it.validate() }
                 ?.let {
-                    return BetaToolUnion(betaToolComputerUse20241022 = it, _json = json)
+                    return BetaToolUnion(computerUse20241022 = it, _json = json)
                 }
             tryDeserialize(node, jacksonTypeRef<BetaToolBash20241022>()) { it.validate() }
                 ?.let {
-                    return BetaToolUnion(betaToolBash20241022 = it, _json = json)
+                    return BetaToolUnion(bash20241022 = it, _json = json)
                 }
             tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20241022>()) { it.validate() }
                 ?.let {
-                    return BetaToolUnion(betaToolTextEditor20241022 = it, _json = json)
+                    return BetaToolUnion(textEditor20241022 = it, _json = json)
                 }
 
             return BetaToolUnion(_json = json)
@@ -200,12 +188,10 @@ private constructor(
         ) {
             when {
                 value.betaTool != null -> generator.writeObject(value.betaTool)
-                value.betaToolComputerUse20241022 != null ->
-                    generator.writeObject(value.betaToolComputerUse20241022)
-                value.betaToolBash20241022 != null ->
-                    generator.writeObject(value.betaToolBash20241022)
-                value.betaToolTextEditor20241022 != null ->
-                    generator.writeObject(value.betaToolTextEditor20241022)
+                value.computerUse20241022 != null ->
+                    generator.writeObject(value.computerUse20241022)
+                value.bash20241022 != null -> generator.writeObject(value.bash20241022)
+                value.textEditor20241022 != null -> generator.writeObject(value.textEditor20241022)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaToolUnion")
             }

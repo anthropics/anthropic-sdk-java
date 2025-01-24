@@ -28,57 +28,45 @@ import kotlin.jvm.optionals.getOrNull
 @JsonSerialize(using = MessageBatchResult.Serializer::class)
 class MessageBatchResult
 private constructor(
-    private val messageBatchSucceededResult: MessageBatchSucceededResult? = null,
-    private val messageBatchErroredResult: MessageBatchErroredResult? = null,
-    private val messageBatchCanceledResult: MessageBatchCanceledResult? = null,
-    private val messageBatchExpiredResult: MessageBatchExpiredResult? = null,
+    private val succeeded: MessageBatchSucceededResult? = null,
+    private val errored: MessageBatchErroredResult? = null,
+    private val canceled: MessageBatchCanceledResult? = null,
+    private val expired: MessageBatchExpiredResult? = null,
     private val _json: JsonValue? = null,
 ) {
 
-    fun messageBatchSucceededResult(): Optional<MessageBatchSucceededResult> =
-        Optional.ofNullable(messageBatchSucceededResult)
+    fun succeeded(): Optional<MessageBatchSucceededResult> = Optional.ofNullable(succeeded)
 
-    fun messageBatchErroredResult(): Optional<MessageBatchErroredResult> =
-        Optional.ofNullable(messageBatchErroredResult)
+    fun errored(): Optional<MessageBatchErroredResult> = Optional.ofNullable(errored)
 
-    fun messageBatchCanceledResult(): Optional<MessageBatchCanceledResult> =
-        Optional.ofNullable(messageBatchCanceledResult)
+    fun canceled(): Optional<MessageBatchCanceledResult> = Optional.ofNullable(canceled)
 
-    fun messageBatchExpiredResult(): Optional<MessageBatchExpiredResult> =
-        Optional.ofNullable(messageBatchExpiredResult)
+    fun expired(): Optional<MessageBatchExpiredResult> = Optional.ofNullable(expired)
 
-    fun isMessageBatchSucceededResult(): Boolean = messageBatchSucceededResult != null
+    fun isSucceeded(): Boolean = succeeded != null
 
-    fun isMessageBatchErroredResult(): Boolean = messageBatchErroredResult != null
+    fun isErrored(): Boolean = errored != null
 
-    fun isMessageBatchCanceledResult(): Boolean = messageBatchCanceledResult != null
+    fun isCanceled(): Boolean = canceled != null
 
-    fun isMessageBatchExpiredResult(): Boolean = messageBatchExpiredResult != null
+    fun isExpired(): Boolean = expired != null
 
-    fun asMessageBatchSucceededResult(): MessageBatchSucceededResult =
-        messageBatchSucceededResult.getOrThrow("messageBatchSucceededResult")
+    fun asSucceeded(): MessageBatchSucceededResult = succeeded.getOrThrow("succeeded")
 
-    fun asMessageBatchErroredResult(): MessageBatchErroredResult =
-        messageBatchErroredResult.getOrThrow("messageBatchErroredResult")
+    fun asErrored(): MessageBatchErroredResult = errored.getOrThrow("errored")
 
-    fun asMessageBatchCanceledResult(): MessageBatchCanceledResult =
-        messageBatchCanceledResult.getOrThrow("messageBatchCanceledResult")
+    fun asCanceled(): MessageBatchCanceledResult = canceled.getOrThrow("canceled")
 
-    fun asMessageBatchExpiredResult(): MessageBatchExpiredResult =
-        messageBatchExpiredResult.getOrThrow("messageBatchExpiredResult")
+    fun asExpired(): MessageBatchExpiredResult = expired.getOrThrow("expired")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
         return when {
-            messageBatchSucceededResult != null ->
-                visitor.visitMessageBatchSucceededResult(messageBatchSucceededResult)
-            messageBatchErroredResult != null ->
-                visitor.visitMessageBatchErroredResult(messageBatchErroredResult)
-            messageBatchCanceledResult != null ->
-                visitor.visitMessageBatchCanceledResult(messageBatchCanceledResult)
-            messageBatchExpiredResult != null ->
-                visitor.visitMessageBatchExpiredResult(messageBatchExpiredResult)
+            succeeded != null -> visitor.visitSucceeded(succeeded)
+            errored != null -> visitor.visitErrored(errored)
+            canceled != null -> visitor.visitCanceled(canceled)
+            expired != null -> visitor.visitExpired(expired)
             else -> visitor.unknown(_json)
         }
     }
@@ -92,28 +80,20 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
-                override fun visitMessageBatchSucceededResult(
-                    messageBatchSucceededResult: MessageBatchSucceededResult
-                ) {
-                    messageBatchSucceededResult.validate()
+                override fun visitSucceeded(succeeded: MessageBatchSucceededResult) {
+                    succeeded.validate()
                 }
 
-                override fun visitMessageBatchErroredResult(
-                    messageBatchErroredResult: MessageBatchErroredResult
-                ) {
-                    messageBatchErroredResult.validate()
+                override fun visitErrored(errored: MessageBatchErroredResult) {
+                    errored.validate()
                 }
 
-                override fun visitMessageBatchCanceledResult(
-                    messageBatchCanceledResult: MessageBatchCanceledResult
-                ) {
-                    messageBatchCanceledResult.validate()
+                override fun visitCanceled(canceled: MessageBatchCanceledResult) {
+                    canceled.validate()
                 }
 
-                override fun visitMessageBatchExpiredResult(
-                    messageBatchExpiredResult: MessageBatchExpiredResult
-                ) {
-                    messageBatchExpiredResult.validate()
+                override fun visitExpired(expired: MessageBatchExpiredResult) {
+                    expired.validate()
                 }
             }
         )
@@ -125,21 +105,17 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is MessageBatchResult && messageBatchSucceededResult == other.messageBatchSucceededResult && messageBatchErroredResult == other.messageBatchErroredResult && messageBatchCanceledResult == other.messageBatchCanceledResult && messageBatchExpiredResult == other.messageBatchExpiredResult /* spotless:on */
+        return /* spotless:off */ other is MessageBatchResult && succeeded == other.succeeded && errored == other.errored && canceled == other.canceled && expired == other.expired /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(messageBatchSucceededResult, messageBatchErroredResult, messageBatchCanceledResult, messageBatchExpiredResult) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(succeeded, errored, canceled, expired) /* spotless:on */
 
     override fun toString(): String =
         when {
-            messageBatchSucceededResult != null ->
-                "MessageBatchResult{messageBatchSucceededResult=$messageBatchSucceededResult}"
-            messageBatchErroredResult != null ->
-                "MessageBatchResult{messageBatchErroredResult=$messageBatchErroredResult}"
-            messageBatchCanceledResult != null ->
-                "MessageBatchResult{messageBatchCanceledResult=$messageBatchCanceledResult}"
-            messageBatchExpiredResult != null ->
-                "MessageBatchResult{messageBatchExpiredResult=$messageBatchExpiredResult}"
+            succeeded != null -> "MessageBatchResult{succeeded=$succeeded}"
+            errored != null -> "MessageBatchResult{errored=$errored}"
+            canceled != null -> "MessageBatchResult{canceled=$canceled}"
+            expired != null -> "MessageBatchResult{expired=$expired}"
             _json != null -> "MessageBatchResult{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid MessageBatchResult")
         }
@@ -147,36 +123,29 @@ private constructor(
     companion object {
 
         @JvmStatic
-        fun ofMessageBatchSucceededResult(
-            messageBatchSucceededResult: MessageBatchSucceededResult
-        ) = MessageBatchResult(messageBatchSucceededResult = messageBatchSucceededResult)
+        fun ofSucceeded(succeeded: MessageBatchSucceededResult) =
+            MessageBatchResult(succeeded = succeeded)
 
         @JvmStatic
-        fun ofMessageBatchErroredResult(messageBatchErroredResult: MessageBatchErroredResult) =
-            MessageBatchResult(messageBatchErroredResult = messageBatchErroredResult)
+        fun ofErrored(errored: MessageBatchErroredResult) = MessageBatchResult(errored = errored)
 
         @JvmStatic
-        fun ofMessageBatchCanceledResult(messageBatchCanceledResult: MessageBatchCanceledResult) =
-            MessageBatchResult(messageBatchCanceledResult = messageBatchCanceledResult)
+        fun ofCanceled(canceled: MessageBatchCanceledResult) =
+            MessageBatchResult(canceled = canceled)
 
         @JvmStatic
-        fun ofMessageBatchExpiredResult(messageBatchExpiredResult: MessageBatchExpiredResult) =
-            MessageBatchResult(messageBatchExpiredResult = messageBatchExpiredResult)
+        fun ofExpired(expired: MessageBatchExpiredResult) = MessageBatchResult(expired = expired)
     }
 
     interface Visitor<out T> {
 
-        fun visitMessageBatchSucceededResult(
-            messageBatchSucceededResult: MessageBatchSucceededResult
-        ): T
+        fun visitSucceeded(succeeded: MessageBatchSucceededResult): T
 
-        fun visitMessageBatchErroredResult(messageBatchErroredResult: MessageBatchErroredResult): T
+        fun visitErrored(errored: MessageBatchErroredResult): T
 
-        fun visitMessageBatchCanceledResult(
-            messageBatchCanceledResult: MessageBatchCanceledResult
-        ): T
+        fun visitCanceled(canceled: MessageBatchCanceledResult): T
 
-        fun visitMessageBatchExpiredResult(messageBatchExpiredResult: MessageBatchExpiredResult): T
+        fun visitExpired(expired: MessageBatchExpiredResult): T
 
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown MessageBatchResult: $json")
@@ -195,10 +164,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return MessageBatchResult(
-                                messageBatchSucceededResult = it,
-                                _json = json
-                            )
+                            return MessageBatchResult(succeeded = it, _json = json)
                         }
                 }
                 "errored" -> {
@@ -206,7 +172,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return MessageBatchResult(messageBatchErroredResult = it, _json = json)
+                            return MessageBatchResult(errored = it, _json = json)
                         }
                 }
                 "canceled" -> {
@@ -214,7 +180,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return MessageBatchResult(messageBatchCanceledResult = it, _json = json)
+                            return MessageBatchResult(canceled = it, _json = json)
                         }
                 }
                 "expired" -> {
@@ -222,7 +188,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return MessageBatchResult(messageBatchExpiredResult = it, _json = json)
+                            return MessageBatchResult(expired = it, _json = json)
                         }
                 }
             }
@@ -239,14 +205,10 @@ private constructor(
             provider: SerializerProvider
         ) {
             when {
-                value.messageBatchSucceededResult != null ->
-                    generator.writeObject(value.messageBatchSucceededResult)
-                value.messageBatchErroredResult != null ->
-                    generator.writeObject(value.messageBatchErroredResult)
-                value.messageBatchCanceledResult != null ->
-                    generator.writeObject(value.messageBatchCanceledResult)
-                value.messageBatchExpiredResult != null ->
-                    generator.writeObject(value.messageBatchExpiredResult)
+                value.succeeded != null -> generator.writeObject(value.succeeded)
+                value.errored != null -> generator.writeObject(value.errored)
+                value.canceled != null -> generator.writeObject(value.canceled)
+                value.expired != null -> generator.writeObject(value.expired)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid MessageBatchResult")
             }

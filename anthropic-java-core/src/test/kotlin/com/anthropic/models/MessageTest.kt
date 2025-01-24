@@ -46,7 +46,7 @@ class MessageTest {
         assertThat(message.id()).isEqualTo("msg_013Zva2CMHLNnXjNJJKqJ2EF")
         assertThat(message.content())
             .containsExactly(
-                ContentBlock.ofTextBlock(
+                ContentBlock.ofText(
                     TextBlock.builder()
                         .addCitation(
                             CitationCharLocation.builder()

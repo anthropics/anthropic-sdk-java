@@ -163,8 +163,8 @@ private constructor(
          * PDF results in `page_location`, plain text results in `char_location`, and content
          * document results in `content_block_location`.
          */
-        fun addCitation(betaCitationCharLocation: BetaCitationCharLocation) =
-            addCitation(BetaTextCitation.ofBetaCitationCharLocation(betaCitationCharLocation))
+        fun addCitation(citationCharLocation: BetaCitationCharLocation) =
+            addCitation(BetaTextCitation.ofCitationCharLocation(citationCharLocation))
 
         /**
          * Citations supporting the text block.
@@ -173,8 +173,8 @@ private constructor(
          * PDF results in `page_location`, plain text results in `char_location`, and content
          * document results in `content_block_location`.
          */
-        fun addCitation(betaCitationPageLocation: BetaCitationPageLocation) =
-            addCitation(BetaTextCitation.ofBetaCitationPageLocation(betaCitationPageLocation))
+        fun addCitation(citationPageLocation: BetaCitationPageLocation) =
+            addCitation(BetaTextCitation.ofCitationPageLocation(citationPageLocation))
 
         /**
          * Citations supporting the text block.
@@ -183,11 +183,9 @@ private constructor(
          * PDF results in `page_location`, plain text results in `char_location`, and content
          * document results in `content_block_location`.
          */
-        fun addCitation(betaCitationContentBlockLocation: BetaCitationContentBlockLocation) =
+        fun addCitation(citationContentBlockLocation: BetaCitationContentBlockLocation) =
             addCitation(
-                BetaTextCitation.ofBetaCitationContentBlockLocation(
-                    betaCitationContentBlockLocation
-                )
+                BetaTextCitation.ofCitationContentBlockLocation(citationContentBlockLocation)
             )
 
         fun text(text: String) = text(JsonField.of(text))

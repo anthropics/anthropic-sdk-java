@@ -46,7 +46,7 @@ class BetaMessageTest {
         assertThat(betaMessage.id()).isEqualTo("msg_013Zva2CMHLNnXjNJJKqJ2EF")
         assertThat(betaMessage.content())
             .containsExactly(
-                BetaContentBlock.ofBetaTextBlock(
+                BetaContentBlock.ofText(
                     BetaTextBlock.builder()
                         .addCitation(
                             BetaCitationCharLocation.builder()

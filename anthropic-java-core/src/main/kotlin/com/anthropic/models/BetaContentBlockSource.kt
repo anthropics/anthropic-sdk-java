@@ -90,9 +90,9 @@ private constructor(
 
         fun content(string: String) = content(Content.ofString(string))
 
-        fun contentOfBetaContentBlockSourceContent(
-            betaContentBlockSourceContent: List<BetaContentBlockSourceContent>
-        ) = content(Content.ofBetaContentBlockSourceContent(betaContentBlockSourceContent))
+        fun contentOfBetaContentBlockSource(
+            betaContentBlockSource: List<BetaContentBlockSourceContent>
+        ) = content(Content.ofBetaContentBlockSource(betaContentBlockSource))
 
         fun type(type: Type) = type(JsonField.of(type))
 
@@ -130,31 +130,31 @@ private constructor(
     class Content
     private constructor(
         private val string: String? = null,
-        private val betaContentBlockSourceContent: List<BetaContentBlockSourceContent>? = null,
+        private val betaContentBlockSource: List<BetaContentBlockSourceContent>? = null,
         private val _json: JsonValue? = null,
     ) {
 
         fun string(): Optional<String> = Optional.ofNullable(string)
 
-        fun betaContentBlockSourceContent(): Optional<List<BetaContentBlockSourceContent>> =
-            Optional.ofNullable(betaContentBlockSourceContent)
+        fun betaContentBlockSource(): Optional<List<BetaContentBlockSourceContent>> =
+            Optional.ofNullable(betaContentBlockSource)
 
         fun isString(): Boolean = string != null
 
-        fun isBetaContentBlockSourceContent(): Boolean = betaContentBlockSourceContent != null
+        fun isBetaContentBlockSource(): Boolean = betaContentBlockSource != null
 
         fun asString(): String = string.getOrThrow("string")
 
-        fun asBetaContentBlockSourceContent(): List<BetaContentBlockSourceContent> =
-            betaContentBlockSourceContent.getOrThrow("betaContentBlockSourceContent")
+        fun asBetaContentBlockSource(): List<BetaContentBlockSourceContent> =
+            betaContentBlockSource.getOrThrow("betaContentBlockSource")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T {
             return when {
                 string != null -> visitor.visitString(string)
-                betaContentBlockSourceContent != null ->
-                    visitor.visitBetaContentBlockSourceContent(betaContentBlockSourceContent)
+                betaContentBlockSource != null ->
+                    visitor.visitBetaContentBlockSource(betaContentBlockSource)
                 else -> visitor.unknown(_json)
             }
         }
@@ -170,10 +170,10 @@ private constructor(
                 object : Visitor<Unit> {
                     override fun visitString(string: String) {}
 
-                    override fun visitBetaContentBlockSourceContent(
-                        betaContentBlockSourceContent: List<BetaContentBlockSourceContent>
+                    override fun visitBetaContentBlockSource(
+                        betaContentBlockSource: List<BetaContentBlockSourceContent>
                     ) {
-                        betaContentBlockSourceContent.forEach { it.validate() }
+                        betaContentBlockSource.forEach { it.validate() }
                     }
                 }
             )
@@ -185,16 +185,16 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Content && string == other.string && betaContentBlockSourceContent == other.betaContentBlockSourceContent /* spotless:on */
+            return /* spotless:off */ other is Content && string == other.string && betaContentBlockSource == other.betaContentBlockSource /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(string, betaContentBlockSourceContent) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(string, betaContentBlockSource) /* spotless:on */
 
         override fun toString(): String =
             when {
                 string != null -> "Content{string=$string}"
-                betaContentBlockSourceContent != null ->
-                    "Content{betaContentBlockSourceContent=$betaContentBlockSourceContent}"
+                betaContentBlockSource != null ->
+                    "Content{betaContentBlockSource=$betaContentBlockSource}"
                 _json != null -> "Content{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Content")
             }
@@ -204,17 +204,17 @@ private constructor(
             @JvmStatic fun ofString(string: String) = Content(string = string)
 
             @JvmStatic
-            fun ofBetaContentBlockSourceContent(
-                betaContentBlockSourceContent: List<BetaContentBlockSourceContent>
-            ) = Content(betaContentBlockSourceContent = betaContentBlockSourceContent)
+            fun ofBetaContentBlockSource(
+                betaContentBlockSource: List<BetaContentBlockSourceContent>
+            ) = Content(betaContentBlockSource = betaContentBlockSource)
         }
 
         interface Visitor<out T> {
 
             fun visitString(string: String): T
 
-            fun visitBetaContentBlockSourceContent(
-                betaContentBlockSourceContent: List<BetaContentBlockSourceContent>
+            fun visitBetaContentBlockSource(
+                betaContentBlockSource: List<BetaContentBlockSourceContent>
             ): T
 
             fun unknown(json: JsonValue?): T {
@@ -234,7 +234,7 @@ private constructor(
                         it.forEach { it.validate() }
                     }
                     ?.let {
-                        return Content(betaContentBlockSourceContent = it, _json = json)
+                        return Content(betaContentBlockSource = it, _json = json)
                     }
 
                 return Content(_json = json)
@@ -250,8 +250,8 @@ private constructor(
             ) {
                 when {
                     value.string != null -> generator.writeObject(value.string)
-                    value.betaContentBlockSourceContent != null ->
-                        generator.writeObject(value.betaContentBlockSourceContent)
+                    value.betaContentBlockSource != null ->
+                        generator.writeObject(value.betaContentBlockSource)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Content")
                 }

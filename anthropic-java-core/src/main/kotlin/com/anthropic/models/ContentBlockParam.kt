@@ -22,56 +22,53 @@ import kotlin.jvm.optionals.getOrNull
 @JsonSerialize(using = ContentBlockParam.Serializer::class)
 class ContentBlockParam
 private constructor(
-    private val textBlockParam: TextBlockParam? = null,
-    private val imageBlockParam: ImageBlockParam? = null,
-    private val toolUseBlockParam: ToolUseBlockParam? = null,
-    private val toolResultBlockParam: ToolResultBlockParam? = null,
-    private val documentBlockParam: DocumentBlockParam? = null,
+    private val text: TextBlockParam? = null,
+    private val image: ImageBlockParam? = null,
+    private val toolUse: ToolUseBlockParam? = null,
+    private val toolResult: ToolResultBlockParam? = null,
+    private val document: DocumentBlockParam? = null,
     private val _json: JsonValue? = null,
 ) {
 
-    fun textBlockParam(): Optional<TextBlockParam> = Optional.ofNullable(textBlockParam)
+    fun text(): Optional<TextBlockParam> = Optional.ofNullable(text)
 
-    fun imageBlockParam(): Optional<ImageBlockParam> = Optional.ofNullable(imageBlockParam)
+    fun image(): Optional<ImageBlockParam> = Optional.ofNullable(image)
 
-    fun toolUseBlockParam(): Optional<ToolUseBlockParam> = Optional.ofNullable(toolUseBlockParam)
+    fun toolUse(): Optional<ToolUseBlockParam> = Optional.ofNullable(toolUse)
 
-    fun toolResultBlockParam(): Optional<ToolResultBlockParam> =
-        Optional.ofNullable(toolResultBlockParam)
+    fun toolResult(): Optional<ToolResultBlockParam> = Optional.ofNullable(toolResult)
 
-    fun documentBlockParam(): Optional<DocumentBlockParam> = Optional.ofNullable(documentBlockParam)
+    fun document(): Optional<DocumentBlockParam> = Optional.ofNullable(document)
 
-    fun isTextBlockParam(): Boolean = textBlockParam != null
+    fun isText(): Boolean = text != null
 
-    fun isImageBlockParam(): Boolean = imageBlockParam != null
+    fun isImage(): Boolean = image != null
 
-    fun isToolUseBlockParam(): Boolean = toolUseBlockParam != null
+    fun isToolUse(): Boolean = toolUse != null
 
-    fun isToolResultBlockParam(): Boolean = toolResultBlockParam != null
+    fun isToolResult(): Boolean = toolResult != null
 
-    fun isDocumentBlockParam(): Boolean = documentBlockParam != null
+    fun isDocument(): Boolean = document != null
 
-    fun asTextBlockParam(): TextBlockParam = textBlockParam.getOrThrow("textBlockParam")
+    fun asText(): TextBlockParam = text.getOrThrow("text")
 
-    fun asImageBlockParam(): ImageBlockParam = imageBlockParam.getOrThrow("imageBlockParam")
+    fun asImage(): ImageBlockParam = image.getOrThrow("image")
 
-    fun asToolUseBlockParam(): ToolUseBlockParam = toolUseBlockParam.getOrThrow("toolUseBlockParam")
+    fun asToolUse(): ToolUseBlockParam = toolUse.getOrThrow("toolUse")
 
-    fun asToolResultBlockParam(): ToolResultBlockParam =
-        toolResultBlockParam.getOrThrow("toolResultBlockParam")
+    fun asToolResult(): ToolResultBlockParam = toolResult.getOrThrow("toolResult")
 
-    fun asDocumentBlockParam(): DocumentBlockParam =
-        documentBlockParam.getOrThrow("documentBlockParam")
+    fun asDocument(): DocumentBlockParam = document.getOrThrow("document")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
         return when {
-            textBlockParam != null -> visitor.visitTextBlockParam(textBlockParam)
-            imageBlockParam != null -> visitor.visitImageBlockParam(imageBlockParam)
-            toolUseBlockParam != null -> visitor.visitToolUseBlockParam(toolUseBlockParam)
-            toolResultBlockParam != null -> visitor.visitToolResultBlockParam(toolResultBlockParam)
-            documentBlockParam != null -> visitor.visitDocumentBlockParam(documentBlockParam)
+            text != null -> visitor.visitText(text)
+            image != null -> visitor.visitImage(image)
+            toolUse != null -> visitor.visitToolUse(toolUse)
+            toolResult != null -> visitor.visitToolResult(toolResult)
+            document != null -> visitor.visitDocument(document)
             else -> visitor.unknown(_json)
         }
     }
@@ -85,24 +82,24 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
-                override fun visitTextBlockParam(textBlockParam: TextBlockParam) {
-                    textBlockParam.validate()
+                override fun visitText(text: TextBlockParam) {
+                    text.validate()
                 }
 
-                override fun visitImageBlockParam(imageBlockParam: ImageBlockParam) {
-                    imageBlockParam.validate()
+                override fun visitImage(image: ImageBlockParam) {
+                    image.validate()
                 }
 
-                override fun visitToolUseBlockParam(toolUseBlockParam: ToolUseBlockParam) {
-                    toolUseBlockParam.validate()
+                override fun visitToolUse(toolUse: ToolUseBlockParam) {
+                    toolUse.validate()
                 }
 
-                override fun visitToolResultBlockParam(toolResultBlockParam: ToolResultBlockParam) {
-                    toolResultBlockParam.validate()
+                override fun visitToolResult(toolResult: ToolResultBlockParam) {
+                    toolResult.validate()
                 }
 
-                override fun visitDocumentBlockParam(documentBlockParam: DocumentBlockParam) {
-                    documentBlockParam.validate()
+                override fun visitDocument(document: DocumentBlockParam) {
+                    document.validate()
                 }
             }
         )
@@ -114,58 +111,49 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ContentBlockParam && textBlockParam == other.textBlockParam && imageBlockParam == other.imageBlockParam && toolUseBlockParam == other.toolUseBlockParam && toolResultBlockParam == other.toolResultBlockParam && documentBlockParam == other.documentBlockParam /* spotless:on */
+        return /* spotless:off */ other is ContentBlockParam && text == other.text && image == other.image && toolUse == other.toolUse && toolResult == other.toolResult && document == other.document /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(textBlockParam, imageBlockParam, toolUseBlockParam, toolResultBlockParam, documentBlockParam) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image, toolUse, toolResult, document) /* spotless:on */
 
     override fun toString(): String =
         when {
-            textBlockParam != null -> "ContentBlockParam{textBlockParam=$textBlockParam}"
-            imageBlockParam != null -> "ContentBlockParam{imageBlockParam=$imageBlockParam}"
-            toolUseBlockParam != null -> "ContentBlockParam{toolUseBlockParam=$toolUseBlockParam}"
-            toolResultBlockParam != null ->
-                "ContentBlockParam{toolResultBlockParam=$toolResultBlockParam}"
-            documentBlockParam != null ->
-                "ContentBlockParam{documentBlockParam=$documentBlockParam}"
+            text != null -> "ContentBlockParam{text=$text}"
+            image != null -> "ContentBlockParam{image=$image}"
+            toolUse != null -> "ContentBlockParam{toolUse=$toolUse}"
+            toolResult != null -> "ContentBlockParam{toolResult=$toolResult}"
+            document != null -> "ContentBlockParam{document=$document}"
             _json != null -> "ContentBlockParam{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid ContentBlockParam")
         }
 
     companion object {
 
-        @JvmStatic
-        fun ofTextBlockParam(textBlockParam: TextBlockParam) =
-            ContentBlockParam(textBlockParam = textBlockParam)
+        @JvmStatic fun ofText(text: TextBlockParam) = ContentBlockParam(text = text)
+
+        @JvmStatic fun ofImage(image: ImageBlockParam) = ContentBlockParam(image = image)
+
+        @JvmStatic fun ofToolUse(toolUse: ToolUseBlockParam) = ContentBlockParam(toolUse = toolUse)
 
         @JvmStatic
-        fun ofImageBlockParam(imageBlockParam: ImageBlockParam) =
-            ContentBlockParam(imageBlockParam = imageBlockParam)
+        fun ofToolResult(toolResult: ToolResultBlockParam) =
+            ContentBlockParam(toolResult = toolResult)
 
         @JvmStatic
-        fun ofToolUseBlockParam(toolUseBlockParam: ToolUseBlockParam) =
-            ContentBlockParam(toolUseBlockParam = toolUseBlockParam)
-
-        @JvmStatic
-        fun ofToolResultBlockParam(toolResultBlockParam: ToolResultBlockParam) =
-            ContentBlockParam(toolResultBlockParam = toolResultBlockParam)
-
-        @JvmStatic
-        fun ofDocumentBlockParam(documentBlockParam: DocumentBlockParam) =
-            ContentBlockParam(documentBlockParam = documentBlockParam)
+        fun ofDocument(document: DocumentBlockParam) = ContentBlockParam(document = document)
     }
 
     interface Visitor<out T> {
 
-        fun visitTextBlockParam(textBlockParam: TextBlockParam): T
+        fun visitText(text: TextBlockParam): T
 
-        fun visitImageBlockParam(imageBlockParam: ImageBlockParam): T
+        fun visitImage(image: ImageBlockParam): T
 
-        fun visitToolUseBlockParam(toolUseBlockParam: ToolUseBlockParam): T
+        fun visitToolUse(toolUse: ToolUseBlockParam): T
 
-        fun visitToolResultBlockParam(toolResultBlockParam: ToolResultBlockParam): T
+        fun visitToolResult(toolResult: ToolResultBlockParam): T
 
-        fun visitDocumentBlockParam(documentBlockParam: DocumentBlockParam): T
+        fun visitDocument(document: DocumentBlockParam): T
 
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown ContentBlockParam: $json")
@@ -182,31 +170,31 @@ private constructor(
                 "text" -> {
                     tryDeserialize(node, jacksonTypeRef<TextBlockParam>()) { it.validate() }
                         ?.let {
-                            return ContentBlockParam(textBlockParam = it, _json = json)
+                            return ContentBlockParam(text = it, _json = json)
                         }
                 }
                 "image" -> {
                     tryDeserialize(node, jacksonTypeRef<ImageBlockParam>()) { it.validate() }
                         ?.let {
-                            return ContentBlockParam(imageBlockParam = it, _json = json)
+                            return ContentBlockParam(image = it, _json = json)
                         }
                 }
                 "tool_use" -> {
                     tryDeserialize(node, jacksonTypeRef<ToolUseBlockParam>()) { it.validate() }
                         ?.let {
-                            return ContentBlockParam(toolUseBlockParam = it, _json = json)
+                            return ContentBlockParam(toolUse = it, _json = json)
                         }
                 }
                 "tool_result" -> {
                     tryDeserialize(node, jacksonTypeRef<ToolResultBlockParam>()) { it.validate() }
                         ?.let {
-                            return ContentBlockParam(toolResultBlockParam = it, _json = json)
+                            return ContentBlockParam(toolResult = it, _json = json)
                         }
                 }
                 "document" -> {
                     tryDeserialize(node, jacksonTypeRef<DocumentBlockParam>()) { it.validate() }
                         ?.let {
-                            return ContentBlockParam(documentBlockParam = it, _json = json)
+                            return ContentBlockParam(document = it, _json = json)
                         }
                 }
             }
@@ -223,12 +211,11 @@ private constructor(
             provider: SerializerProvider
         ) {
             when {
-                value.textBlockParam != null -> generator.writeObject(value.textBlockParam)
-                value.imageBlockParam != null -> generator.writeObject(value.imageBlockParam)
-                value.toolUseBlockParam != null -> generator.writeObject(value.toolUseBlockParam)
-                value.toolResultBlockParam != null ->
-                    generator.writeObject(value.toolResultBlockParam)
-                value.documentBlockParam != null -> generator.writeObject(value.documentBlockParam)
+                value.text != null -> generator.writeObject(value.text)
+                value.image != null -> generator.writeObject(value.image)
+                value.toolUse != null -> generator.writeObject(value.toolUse)
+                value.toolResult != null -> generator.writeObject(value.toolResult)
+                value.document != null -> generator.writeObject(value.document)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid ContentBlockParam")
             }

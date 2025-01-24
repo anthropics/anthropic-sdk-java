@@ -33,7 +33,7 @@ class BetaRawContentBlockStartEventTest {
         assertThat(betaRawContentBlockStartEvent).isNotNull
         assertThat(betaRawContentBlockStartEvent.contentBlock())
             .isEqualTo(
-                BetaRawContentBlockStartEvent.ContentBlock.ofBetaTextBlock(
+                BetaRawContentBlockStartEvent.ContentBlock.ofBetaText(
                     BetaTextBlock.builder()
                         .addCitation(
                             BetaCitationCharLocation.builder()

@@ -190,7 +190,7 @@ class MessageCountTokensParamsTest {
             )
         assertThat(body.toolChoice())
             .contains(
-                ToolChoice.ofToolChoiceAuto(
+                ToolChoice.ofAuto(
                     ToolChoiceAuto.builder()
                         .type(ToolChoiceAuto.Type.AUTO)
                         .disableParallelToolUse(true)

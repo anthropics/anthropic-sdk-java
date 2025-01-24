@@ -96,8 +96,7 @@ private constructor(
         fun error(gatewayTimeoutError: GatewayTimeoutError) =
             error(ErrorObject.ofGatewayTimeoutError(gatewayTimeoutError))
 
-        fun error(apiErrorObject: ApiErrorObject) =
-            error(ErrorObject.ofApiErrorObject(apiErrorObject))
+        fun error(api: ApiErrorObject) = error(ErrorObject.ofApi(api))
 
         fun error(overloadedError: OverloadedError) =
             error(ErrorObject.ofOverloadedError(overloadedError))

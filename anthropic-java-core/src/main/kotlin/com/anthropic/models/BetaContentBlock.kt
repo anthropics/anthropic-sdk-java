@@ -22,44 +22,40 @@ import kotlin.jvm.optionals.getOrNull
 @JsonSerialize(using = BetaContentBlock.Serializer::class)
 class BetaContentBlock
 private constructor(
-    private val betaTextBlock: BetaTextBlock? = null,
-    private val betaToolUseBlock: BetaToolUseBlock? = null,
+    private val text: BetaTextBlock? = null,
+    private val toolUse: BetaToolUseBlock? = null,
     private val _json: JsonValue? = null,
 ) {
 
     fun toParam(): BetaContentBlockParam =
         accept(
             object : Visitor<BetaContentBlockParam> {
-                override fun visitBetaTextBlock(
-                    betaTextBlock: BetaTextBlock
-                ): BetaContentBlockParam =
-                    BetaContentBlockParam.ofBetaTextBlockParam(betaTextBlock.toParam())
+                override fun visitText(text: BetaTextBlock): BetaContentBlockParam =
+                    BetaContentBlockParam.ofText(text.toParam())
 
-                override fun visitBetaToolUseBlock(
-                    betaToolUseBlock: BetaToolUseBlock
-                ): BetaContentBlockParam =
-                    BetaContentBlockParam.ofBetaToolUseBlockParam(betaToolUseBlock.toParam())
+                override fun visitToolUse(toolUse: BetaToolUseBlock): BetaContentBlockParam =
+                    BetaContentBlockParam.ofToolUse(toolUse.toParam())
             }
         )
 
-    fun betaTextBlock(): Optional<BetaTextBlock> = Optional.ofNullable(betaTextBlock)
+    fun text(): Optional<BetaTextBlock> = Optional.ofNullable(text)
 
-    fun betaToolUseBlock(): Optional<BetaToolUseBlock> = Optional.ofNullable(betaToolUseBlock)
+    fun toolUse(): Optional<BetaToolUseBlock> = Optional.ofNullable(toolUse)
 
-    fun isBetaTextBlock(): Boolean = betaTextBlock != null
+    fun isText(): Boolean = text != null
 
-    fun isBetaToolUseBlock(): Boolean = betaToolUseBlock != null
+    fun isToolUse(): Boolean = toolUse != null
 
-    fun asBetaTextBlock(): BetaTextBlock = betaTextBlock.getOrThrow("betaTextBlock")
+    fun asText(): BetaTextBlock = text.getOrThrow("text")
 
-    fun asBetaToolUseBlock(): BetaToolUseBlock = betaToolUseBlock.getOrThrow("betaToolUseBlock")
+    fun asToolUse(): BetaToolUseBlock = toolUse.getOrThrow("toolUse")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
         return when {
-            betaTextBlock != null -> visitor.visitBetaTextBlock(betaTextBlock)
-            betaToolUseBlock != null -> visitor.visitBetaToolUseBlock(betaToolUseBlock)
+            text != null -> visitor.visitText(text)
+            toolUse != null -> visitor.visitToolUse(toolUse)
             else -> visitor.unknown(_json)
         }
     }
@@ -73,12 +69,12 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
-                override fun visitBetaTextBlock(betaTextBlock: BetaTextBlock) {
-                    betaTextBlock.validate()
+                override fun visitText(text: BetaTextBlock) {
+                    text.validate()
                 }
 
-                override fun visitBetaToolUseBlock(betaToolUseBlock: BetaToolUseBlock) {
-                    betaToolUseBlock.validate()
+                override fun visitToolUse(toolUse: BetaToolUseBlock) {
+                    toolUse.validate()
                 }
             }
         )
@@ -90,35 +86,31 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaContentBlock && betaTextBlock == other.betaTextBlock && betaToolUseBlock == other.betaToolUseBlock /* spotless:on */
+        return /* spotless:off */ other is BetaContentBlock && text == other.text && toolUse == other.toolUse /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaTextBlock, betaToolUseBlock) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, toolUse) /* spotless:on */
 
     override fun toString(): String =
         when {
-            betaTextBlock != null -> "BetaContentBlock{betaTextBlock=$betaTextBlock}"
-            betaToolUseBlock != null -> "BetaContentBlock{betaToolUseBlock=$betaToolUseBlock}"
+            text != null -> "BetaContentBlock{text=$text}"
+            toolUse != null -> "BetaContentBlock{toolUse=$toolUse}"
             _json != null -> "BetaContentBlock{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaContentBlock")
         }
 
     companion object {
 
-        @JvmStatic
-        fun ofBetaTextBlock(betaTextBlock: BetaTextBlock) =
-            BetaContentBlock(betaTextBlock = betaTextBlock)
+        @JvmStatic fun ofText(text: BetaTextBlock) = BetaContentBlock(text = text)
 
-        @JvmStatic
-        fun ofBetaToolUseBlock(betaToolUseBlock: BetaToolUseBlock) =
-            BetaContentBlock(betaToolUseBlock = betaToolUseBlock)
+        @JvmStatic fun ofToolUse(toolUse: BetaToolUseBlock) = BetaContentBlock(toolUse = toolUse)
     }
 
     interface Visitor<out T> {
 
-        fun visitBetaTextBlock(betaTextBlock: BetaTextBlock): T
+        fun visitText(text: BetaTextBlock): T
 
-        fun visitBetaToolUseBlock(betaToolUseBlock: BetaToolUseBlock): T
+        fun visitToolUse(toolUse: BetaToolUseBlock): T
 
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown BetaContentBlock: $json")
@@ -135,13 +127,13 @@ private constructor(
                 "text" -> {
                     tryDeserialize(node, jacksonTypeRef<BetaTextBlock>()) { it.validate() }
                         ?.let {
-                            return BetaContentBlock(betaTextBlock = it, _json = json)
+                            return BetaContentBlock(text = it, _json = json)
                         }
                 }
                 "tool_use" -> {
                     tryDeserialize(node, jacksonTypeRef<BetaToolUseBlock>()) { it.validate() }
                         ?.let {
-                            return BetaContentBlock(betaToolUseBlock = it, _json = json)
+                            return BetaContentBlock(toolUse = it, _json = json)
                         }
                 }
             }
@@ -158,8 +150,8 @@ private constructor(
             provider: SerializerProvider
         ) {
             when {
-                value.betaTextBlock != null -> generator.writeObject(value.betaTextBlock)
-                value.betaToolUseBlock != null -> generator.writeObject(value.betaToolUseBlock)
+                value.text != null -> generator.writeObject(value.text)
+                value.toolUse != null -> generator.writeObject(value.toolUse)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaContentBlock")
             }

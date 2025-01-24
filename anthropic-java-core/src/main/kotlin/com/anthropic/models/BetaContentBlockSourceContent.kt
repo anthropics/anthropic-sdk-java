@@ -22,32 +22,29 @@ import kotlin.jvm.optionals.getOrNull
 @JsonSerialize(using = BetaContentBlockSourceContent.Serializer::class)
 class BetaContentBlockSourceContent
 private constructor(
-    private val betaTextBlockParam: BetaTextBlockParam? = null,
-    private val betaImageBlockParam: BetaImageBlockParam? = null,
+    private val textBlockParam: BetaTextBlockParam? = null,
+    private val imageBlockParam: BetaImageBlockParam? = null,
     private val _json: JsonValue? = null,
 ) {
 
-    fun betaTextBlockParam(): Optional<BetaTextBlockParam> = Optional.ofNullable(betaTextBlockParam)
+    fun textBlockParam(): Optional<BetaTextBlockParam> = Optional.ofNullable(textBlockParam)
 
-    fun betaImageBlockParam(): Optional<BetaImageBlockParam> =
-        Optional.ofNullable(betaImageBlockParam)
+    fun imageBlockParam(): Optional<BetaImageBlockParam> = Optional.ofNullable(imageBlockParam)
 
-    fun isBetaTextBlockParam(): Boolean = betaTextBlockParam != null
+    fun isTextBlockParam(): Boolean = textBlockParam != null
 
-    fun isBetaImageBlockParam(): Boolean = betaImageBlockParam != null
+    fun isImageBlockParam(): Boolean = imageBlockParam != null
 
-    fun asBetaTextBlockParam(): BetaTextBlockParam =
-        betaTextBlockParam.getOrThrow("betaTextBlockParam")
+    fun asTextBlockParam(): BetaTextBlockParam = textBlockParam.getOrThrow("textBlockParam")
 
-    fun asBetaImageBlockParam(): BetaImageBlockParam =
-        betaImageBlockParam.getOrThrow("betaImageBlockParam")
+    fun asImageBlockParam(): BetaImageBlockParam = imageBlockParam.getOrThrow("imageBlockParam")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
         return when {
-            betaTextBlockParam != null -> visitor.visitBetaTextBlockParam(betaTextBlockParam)
-            betaImageBlockParam != null -> visitor.visitBetaImageBlockParam(betaImageBlockParam)
+            textBlockParam != null -> visitor.visitTextBlockParam(textBlockParam)
+            imageBlockParam != null -> visitor.visitImageBlockParam(imageBlockParam)
             else -> visitor.unknown(_json)
         }
     }
@@ -61,12 +58,12 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
-                override fun visitBetaTextBlockParam(betaTextBlockParam: BetaTextBlockParam) {
-                    betaTextBlockParam.validate()
+                override fun visitTextBlockParam(textBlockParam: BetaTextBlockParam) {
+                    textBlockParam.validate()
                 }
 
-                override fun visitBetaImageBlockParam(betaImageBlockParam: BetaImageBlockParam) {
-                    betaImageBlockParam.validate()
+                override fun visitImageBlockParam(imageBlockParam: BetaImageBlockParam) {
+                    imageBlockParam.validate()
                 }
             }
         )
@@ -78,17 +75,17 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaContentBlockSourceContent && betaTextBlockParam == other.betaTextBlockParam && betaImageBlockParam == other.betaImageBlockParam /* spotless:on */
+        return /* spotless:off */ other is BetaContentBlockSourceContent && textBlockParam == other.textBlockParam && imageBlockParam == other.imageBlockParam /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaTextBlockParam, betaImageBlockParam) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(textBlockParam, imageBlockParam) /* spotless:on */
 
     override fun toString(): String =
         when {
-            betaTextBlockParam != null ->
-                "BetaContentBlockSourceContent{betaTextBlockParam=$betaTextBlockParam}"
-            betaImageBlockParam != null ->
-                "BetaContentBlockSourceContent{betaImageBlockParam=$betaImageBlockParam}"
+            textBlockParam != null ->
+                "BetaContentBlockSourceContent{textBlockParam=$textBlockParam}"
+            imageBlockParam != null ->
+                "BetaContentBlockSourceContent{imageBlockParam=$imageBlockParam}"
             _json != null -> "BetaContentBlockSourceContent{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaContentBlockSourceContent")
         }
@@ -96,19 +93,19 @@ private constructor(
     companion object {
 
         @JvmStatic
-        fun ofBetaTextBlockParam(betaTextBlockParam: BetaTextBlockParam) =
-            BetaContentBlockSourceContent(betaTextBlockParam = betaTextBlockParam)
+        fun ofTextBlockParam(textBlockParam: BetaTextBlockParam) =
+            BetaContentBlockSourceContent(textBlockParam = textBlockParam)
 
         @JvmStatic
-        fun ofBetaImageBlockParam(betaImageBlockParam: BetaImageBlockParam) =
-            BetaContentBlockSourceContent(betaImageBlockParam = betaImageBlockParam)
+        fun ofImageBlockParam(imageBlockParam: BetaImageBlockParam) =
+            BetaContentBlockSourceContent(imageBlockParam = imageBlockParam)
     }
 
     interface Visitor<out T> {
 
-        fun visitBetaTextBlockParam(betaTextBlockParam: BetaTextBlockParam): T
+        fun visitTextBlockParam(textBlockParam: BetaTextBlockParam): T
 
-        fun visitBetaImageBlockParam(betaImageBlockParam: BetaImageBlockParam): T
+        fun visitImageBlockParam(imageBlockParam: BetaImageBlockParam): T
 
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown BetaContentBlockSourceContent: $json")
@@ -126,19 +123,13 @@ private constructor(
                 "text" -> {
                     tryDeserialize(node, jacksonTypeRef<BetaTextBlockParam>()) { it.validate() }
                         ?.let {
-                            return BetaContentBlockSourceContent(
-                                betaTextBlockParam = it,
-                                _json = json
-                            )
+                            return BetaContentBlockSourceContent(textBlockParam = it, _json = json)
                         }
                 }
                 "image" -> {
                     tryDeserialize(node, jacksonTypeRef<BetaImageBlockParam>()) { it.validate() }
                         ?.let {
-                            return BetaContentBlockSourceContent(
-                                betaImageBlockParam = it,
-                                _json = json
-                            )
+                            return BetaContentBlockSourceContent(imageBlockParam = it, _json = json)
                         }
                 }
             }
@@ -156,9 +147,8 @@ private constructor(
             provider: SerializerProvider
         ) {
             when {
-                value.betaTextBlockParam != null -> generator.writeObject(value.betaTextBlockParam)
-                value.betaImageBlockParam != null ->
-                    generator.writeObject(value.betaImageBlockParam)
+                value.textBlockParam != null -> generator.writeObject(value.textBlockParam)
+                value.imageBlockParam != null -> generator.writeObject(value.imageBlockParam)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaContentBlockSourceContent")
             }

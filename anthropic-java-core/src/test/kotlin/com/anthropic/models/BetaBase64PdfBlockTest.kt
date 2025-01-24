@@ -31,7 +31,7 @@ class BetaBase64PdfBlockTest {
         assertThat(betaBase64PdfBlock).isNotNull
         assertThat(betaBase64PdfBlock.source())
             .isEqualTo(
-                BetaBase64PdfBlock.Source.ofBetaBase64PdfSource(
+                BetaBase64PdfBlock.Source.ofBetaBase64Pdf(
                     BetaBase64PdfSource.builder()
                         .data("U3RhaW5sZXNzIHJvY2tz")
                         .mediaType(BetaBase64PdfSource.MediaType.APPLICATION_PDF)

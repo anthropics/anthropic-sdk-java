@@ -203,7 +203,7 @@ class BetaMessageCountTokensParamsTest {
             )
         assertThat(body.toolChoice())
             .contains(
-                BetaToolChoice.ofBetaToolChoiceAuto(
+                BetaToolChoice.ofAuto(
                     BetaToolChoiceAuto.builder()
                         .type(BetaToolChoiceAuto.Type.AUTO)
                         .disableParallelToolUse(true)
@@ -213,7 +213,7 @@ class BetaMessageCountTokensParamsTest {
         assertThat(body.tools())
             .contains(
                 listOf(
-                    BetaMessageCountTokensParams.Tool.ofBetaTool(
+                    BetaMessageCountTokensParams.Tool.ofBeta(
                         BetaTool.builder()
                             .inputSchema(
                                 BetaTool.InputSchema.builder()

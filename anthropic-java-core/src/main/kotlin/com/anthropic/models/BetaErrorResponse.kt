@@ -77,31 +77,26 @@ private constructor(
 
         fun error(error: JsonField<BetaError>) = apply { this.error = error }
 
-        fun error(betaInvalidRequestError: BetaInvalidRequestError) =
-            error(BetaError.ofBetaInvalidRequestError(betaInvalidRequestError))
+        fun error(invalidRequest: BetaInvalidRequestError) =
+            error(BetaError.ofInvalidRequest(invalidRequest))
 
-        fun error(betaAuthenticationError: BetaAuthenticationError) =
-            error(BetaError.ofBetaAuthenticationError(betaAuthenticationError))
+        fun error(authentication: BetaAuthenticationError) =
+            error(BetaError.ofAuthentication(authentication))
 
-        fun error(betaBillingError: BetaBillingError) =
-            error(BetaError.ofBetaBillingError(betaBillingError))
+        fun error(billing: BetaBillingError) = error(BetaError.ofBilling(billing))
 
-        fun error(betaPermissionError: BetaPermissionError) =
-            error(BetaError.ofBetaPermissionError(betaPermissionError))
+        fun error(permission: BetaPermissionError) = error(BetaError.ofPermission(permission))
 
-        fun error(betaNotFoundError: BetaNotFoundError) =
-            error(BetaError.ofBetaNotFoundError(betaNotFoundError))
+        fun error(notFound: BetaNotFoundError) = error(BetaError.ofNotFound(notFound))
 
-        fun error(betaRateLimitError: BetaRateLimitError) =
-            error(BetaError.ofBetaRateLimitError(betaRateLimitError))
+        fun error(rateLimit: BetaRateLimitError) = error(BetaError.ofRateLimit(rateLimit))
 
-        fun error(betaGatewayTimeoutError: BetaGatewayTimeoutError) =
-            error(BetaError.ofBetaGatewayTimeoutError(betaGatewayTimeoutError))
+        fun error(gatewayTimeout: BetaGatewayTimeoutError) =
+            error(BetaError.ofGatewayTimeout(gatewayTimeout))
 
-        fun error(betaApiError: BetaApiError) = error(BetaError.ofBetaApiError(betaApiError))
+        fun error(api: BetaApiError) = error(BetaError.ofApi(api))
 
-        fun error(betaOverloadedError: BetaOverloadedError) =
-            error(BetaError.ofBetaOverloadedError(betaOverloadedError))
+        fun error(overloaded: BetaOverloadedError) = error(BetaError.ofOverloaded(overloaded))
 
         fun type(type: Type) = type(JsonField.of(type))
 

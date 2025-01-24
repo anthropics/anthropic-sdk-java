@@ -22,76 +22,67 @@ import kotlin.jvm.optionals.getOrNull
 @JsonSerialize(using = RawMessageStreamEvent.Serializer::class)
 class RawMessageStreamEvent
 private constructor(
-    private val rawMessageStartEvent: RawMessageStartEvent? = null,
-    private val rawMessageDeltaEvent: RawMessageDeltaEvent? = null,
-    private val rawMessageStopEvent: RawMessageStopEvent? = null,
-    private val rawContentBlockStartEvent: RawContentBlockStartEvent? = null,
-    private val rawContentBlockDeltaEvent: RawContentBlockDeltaEvent? = null,
-    private val rawContentBlockStopEvent: RawContentBlockStopEvent? = null,
+    private val start: RawMessageStartEvent? = null,
+    private val delta: RawMessageDeltaEvent? = null,
+    private val stop: RawMessageStopEvent? = null,
+    private val contentBlockStart: RawContentBlockStartEvent? = null,
+    private val contentBlockDelta: RawContentBlockDeltaEvent? = null,
+    private val contentBlockStop: RawContentBlockStopEvent? = null,
     private val _json: JsonValue? = null,
 ) {
 
-    fun rawMessageStartEvent(): Optional<RawMessageStartEvent> =
-        Optional.ofNullable(rawMessageStartEvent)
+    fun start(): Optional<RawMessageStartEvent> = Optional.ofNullable(start)
 
-    fun rawMessageDeltaEvent(): Optional<RawMessageDeltaEvent> =
-        Optional.ofNullable(rawMessageDeltaEvent)
+    fun delta(): Optional<RawMessageDeltaEvent> = Optional.ofNullable(delta)
 
-    fun rawMessageStopEvent(): Optional<RawMessageStopEvent> =
-        Optional.ofNullable(rawMessageStopEvent)
+    fun stop(): Optional<RawMessageStopEvent> = Optional.ofNullable(stop)
 
-    fun rawContentBlockStartEvent(): Optional<RawContentBlockStartEvent> =
-        Optional.ofNullable(rawContentBlockStartEvent)
+    fun contentBlockStart(): Optional<RawContentBlockStartEvent> =
+        Optional.ofNullable(contentBlockStart)
 
-    fun rawContentBlockDeltaEvent(): Optional<RawContentBlockDeltaEvent> =
-        Optional.ofNullable(rawContentBlockDeltaEvent)
+    fun contentBlockDelta(): Optional<RawContentBlockDeltaEvent> =
+        Optional.ofNullable(contentBlockDelta)
 
-    fun rawContentBlockStopEvent(): Optional<RawContentBlockStopEvent> =
-        Optional.ofNullable(rawContentBlockStopEvent)
+    fun contentBlockStop(): Optional<RawContentBlockStopEvent> =
+        Optional.ofNullable(contentBlockStop)
 
-    fun isRawMessageStartEvent(): Boolean = rawMessageStartEvent != null
+    fun isStart(): Boolean = start != null
 
-    fun isRawMessageDeltaEvent(): Boolean = rawMessageDeltaEvent != null
+    fun isDelta(): Boolean = delta != null
 
-    fun isRawMessageStopEvent(): Boolean = rawMessageStopEvent != null
+    fun isStop(): Boolean = stop != null
 
-    fun isRawContentBlockStartEvent(): Boolean = rawContentBlockStartEvent != null
+    fun isContentBlockStart(): Boolean = contentBlockStart != null
 
-    fun isRawContentBlockDeltaEvent(): Boolean = rawContentBlockDeltaEvent != null
+    fun isContentBlockDelta(): Boolean = contentBlockDelta != null
 
-    fun isRawContentBlockStopEvent(): Boolean = rawContentBlockStopEvent != null
+    fun isContentBlockStop(): Boolean = contentBlockStop != null
 
-    fun asRawMessageStartEvent(): RawMessageStartEvent =
-        rawMessageStartEvent.getOrThrow("rawMessageStartEvent")
+    fun asStart(): RawMessageStartEvent = start.getOrThrow("start")
 
-    fun asRawMessageDeltaEvent(): RawMessageDeltaEvent =
-        rawMessageDeltaEvent.getOrThrow("rawMessageDeltaEvent")
+    fun asDelta(): RawMessageDeltaEvent = delta.getOrThrow("delta")
 
-    fun asRawMessageStopEvent(): RawMessageStopEvent =
-        rawMessageStopEvent.getOrThrow("rawMessageStopEvent")
+    fun asStop(): RawMessageStopEvent = stop.getOrThrow("stop")
 
-    fun asRawContentBlockStartEvent(): RawContentBlockStartEvent =
-        rawContentBlockStartEvent.getOrThrow("rawContentBlockStartEvent")
+    fun asContentBlockStart(): RawContentBlockStartEvent =
+        contentBlockStart.getOrThrow("contentBlockStart")
 
-    fun asRawContentBlockDeltaEvent(): RawContentBlockDeltaEvent =
-        rawContentBlockDeltaEvent.getOrThrow("rawContentBlockDeltaEvent")
+    fun asContentBlockDelta(): RawContentBlockDeltaEvent =
+        contentBlockDelta.getOrThrow("contentBlockDelta")
 
-    fun asRawContentBlockStopEvent(): RawContentBlockStopEvent =
-        rawContentBlockStopEvent.getOrThrow("rawContentBlockStopEvent")
+    fun asContentBlockStop(): RawContentBlockStopEvent =
+        contentBlockStop.getOrThrow("contentBlockStop")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
         return when {
-            rawMessageStartEvent != null -> visitor.visitRawMessageStartEvent(rawMessageStartEvent)
-            rawMessageDeltaEvent != null -> visitor.visitRawMessageDeltaEvent(rawMessageDeltaEvent)
-            rawMessageStopEvent != null -> visitor.visitRawMessageStopEvent(rawMessageStopEvent)
-            rawContentBlockStartEvent != null ->
-                visitor.visitRawContentBlockStartEvent(rawContentBlockStartEvent)
-            rawContentBlockDeltaEvent != null ->
-                visitor.visitRawContentBlockDeltaEvent(rawContentBlockDeltaEvent)
-            rawContentBlockStopEvent != null ->
-                visitor.visitRawContentBlockStopEvent(rawContentBlockStopEvent)
+            start != null -> visitor.visitStart(start)
+            delta != null -> visitor.visitDelta(delta)
+            stop != null -> visitor.visitStop(stop)
+            contentBlockStart != null -> visitor.visitContentBlockStart(contentBlockStart)
+            contentBlockDelta != null -> visitor.visitContentBlockDelta(contentBlockDelta)
+            contentBlockStop != null -> visitor.visitContentBlockStop(contentBlockStop)
             else -> visitor.unknown(_json)
         }
     }
@@ -105,34 +96,28 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
-                override fun visitRawMessageStartEvent(rawMessageStartEvent: RawMessageStartEvent) {
-                    rawMessageStartEvent.validate()
+                override fun visitStart(start: RawMessageStartEvent) {
+                    start.validate()
                 }
 
-                override fun visitRawMessageDeltaEvent(rawMessageDeltaEvent: RawMessageDeltaEvent) {
-                    rawMessageDeltaEvent.validate()
+                override fun visitDelta(delta: RawMessageDeltaEvent) {
+                    delta.validate()
                 }
 
-                override fun visitRawMessageStopEvent(rawMessageStopEvent: RawMessageStopEvent) {
-                    rawMessageStopEvent.validate()
+                override fun visitStop(stop: RawMessageStopEvent) {
+                    stop.validate()
                 }
 
-                override fun visitRawContentBlockStartEvent(
-                    rawContentBlockStartEvent: RawContentBlockStartEvent
-                ) {
-                    rawContentBlockStartEvent.validate()
+                override fun visitContentBlockStart(contentBlockStart: RawContentBlockStartEvent) {
+                    contentBlockStart.validate()
                 }
 
-                override fun visitRawContentBlockDeltaEvent(
-                    rawContentBlockDeltaEvent: RawContentBlockDeltaEvent
-                ) {
-                    rawContentBlockDeltaEvent.validate()
+                override fun visitContentBlockDelta(contentBlockDelta: RawContentBlockDeltaEvent) {
+                    contentBlockDelta.validate()
                 }
 
-                override fun visitRawContentBlockStopEvent(
-                    rawContentBlockStopEvent: RawContentBlockStopEvent
-                ) {
-                    rawContentBlockStopEvent.validate()
+                override fun visitContentBlockStop(contentBlockStop: RawContentBlockStopEvent) {
+                    contentBlockStop.validate()
                 }
             }
         )
@@ -144,69 +129,59 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is RawMessageStreamEvent && rawMessageStartEvent == other.rawMessageStartEvent && rawMessageDeltaEvent == other.rawMessageDeltaEvent && rawMessageStopEvent == other.rawMessageStopEvent && rawContentBlockStartEvent == other.rawContentBlockStartEvent && rawContentBlockDeltaEvent == other.rawContentBlockDeltaEvent && rawContentBlockStopEvent == other.rawContentBlockStopEvent /* spotless:on */
+        return /* spotless:off */ other is RawMessageStreamEvent && start == other.start && delta == other.delta && stop == other.stop && contentBlockStart == other.contentBlockStart && contentBlockDelta == other.contentBlockDelta && contentBlockStop == other.contentBlockStop /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(rawMessageStartEvent, rawMessageDeltaEvent, rawMessageStopEvent, rawContentBlockStartEvent, rawContentBlockDeltaEvent, rawContentBlockStopEvent) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(start, delta, stop, contentBlockStart, contentBlockDelta, contentBlockStop) /* spotless:on */
 
     override fun toString(): String =
         when {
-            rawMessageStartEvent != null ->
-                "RawMessageStreamEvent{rawMessageStartEvent=$rawMessageStartEvent}"
-            rawMessageDeltaEvent != null ->
-                "RawMessageStreamEvent{rawMessageDeltaEvent=$rawMessageDeltaEvent}"
-            rawMessageStopEvent != null ->
-                "RawMessageStreamEvent{rawMessageStopEvent=$rawMessageStopEvent}"
-            rawContentBlockStartEvent != null ->
-                "RawMessageStreamEvent{rawContentBlockStartEvent=$rawContentBlockStartEvent}"
-            rawContentBlockDeltaEvent != null ->
-                "RawMessageStreamEvent{rawContentBlockDeltaEvent=$rawContentBlockDeltaEvent}"
-            rawContentBlockStopEvent != null ->
-                "RawMessageStreamEvent{rawContentBlockStopEvent=$rawContentBlockStopEvent}"
+            start != null -> "RawMessageStreamEvent{start=$start}"
+            delta != null -> "RawMessageStreamEvent{delta=$delta}"
+            stop != null -> "RawMessageStreamEvent{stop=$stop}"
+            contentBlockStart != null ->
+                "RawMessageStreamEvent{contentBlockStart=$contentBlockStart}"
+            contentBlockDelta != null ->
+                "RawMessageStreamEvent{contentBlockDelta=$contentBlockDelta}"
+            contentBlockStop != null -> "RawMessageStreamEvent{contentBlockStop=$contentBlockStop}"
             _json != null -> "RawMessageStreamEvent{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid RawMessageStreamEvent")
         }
 
     companion object {
 
-        @JvmStatic
-        fun ofRawMessageStartEvent(rawMessageStartEvent: RawMessageStartEvent) =
-            RawMessageStreamEvent(rawMessageStartEvent = rawMessageStartEvent)
+        @JvmStatic fun ofStart(start: RawMessageStartEvent) = RawMessageStreamEvent(start = start)
+
+        @JvmStatic fun ofDelta(delta: RawMessageDeltaEvent) = RawMessageStreamEvent(delta = delta)
+
+        @JvmStatic fun ofStop(stop: RawMessageStopEvent) = RawMessageStreamEvent(stop = stop)
 
         @JvmStatic
-        fun ofRawMessageDeltaEvent(rawMessageDeltaEvent: RawMessageDeltaEvent) =
-            RawMessageStreamEvent(rawMessageDeltaEvent = rawMessageDeltaEvent)
+        fun ofContentBlockStart(contentBlockStart: RawContentBlockStartEvent) =
+            RawMessageStreamEvent(contentBlockStart = contentBlockStart)
 
         @JvmStatic
-        fun ofRawMessageStopEvent(rawMessageStopEvent: RawMessageStopEvent) =
-            RawMessageStreamEvent(rawMessageStopEvent = rawMessageStopEvent)
+        fun ofContentBlockDelta(contentBlockDelta: RawContentBlockDeltaEvent) =
+            RawMessageStreamEvent(contentBlockDelta = contentBlockDelta)
 
         @JvmStatic
-        fun ofRawContentBlockStartEvent(rawContentBlockStartEvent: RawContentBlockStartEvent) =
-            RawMessageStreamEvent(rawContentBlockStartEvent = rawContentBlockStartEvent)
-
-        @JvmStatic
-        fun ofRawContentBlockDeltaEvent(rawContentBlockDeltaEvent: RawContentBlockDeltaEvent) =
-            RawMessageStreamEvent(rawContentBlockDeltaEvent = rawContentBlockDeltaEvent)
-
-        @JvmStatic
-        fun ofRawContentBlockStopEvent(rawContentBlockStopEvent: RawContentBlockStopEvent) =
-            RawMessageStreamEvent(rawContentBlockStopEvent = rawContentBlockStopEvent)
+        fun ofContentBlockStop(contentBlockStop: RawContentBlockStopEvent) =
+            RawMessageStreamEvent(contentBlockStop = contentBlockStop)
     }
 
     interface Visitor<out T> {
 
-        fun visitRawMessageStartEvent(rawMessageStartEvent: RawMessageStartEvent): T
+        fun visitStart(start: RawMessageStartEvent): T
 
-        fun visitRawMessageDeltaEvent(rawMessageDeltaEvent: RawMessageDeltaEvent): T
+        fun visitDelta(delta: RawMessageDeltaEvent): T
 
-        fun visitRawMessageStopEvent(rawMessageStopEvent: RawMessageStopEvent): T
+        fun visitStop(stop: RawMessageStopEvent): T
 
-        fun visitRawContentBlockStartEvent(rawContentBlockStartEvent: RawContentBlockStartEvent): T
+        fun visitContentBlockStart(contentBlockStart: RawContentBlockStartEvent): T
 
-        fun visitRawContentBlockDeltaEvent(rawContentBlockDeltaEvent: RawContentBlockDeltaEvent): T
+        fun visitContentBlockDelta(contentBlockDelta: RawContentBlockDeltaEvent): T
 
-        fun visitRawContentBlockStopEvent(rawContentBlockStopEvent: RawContentBlockStopEvent): T
+        fun visitContentBlockStop(contentBlockStop: RawContentBlockStopEvent): T
 
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown RawMessageStreamEvent: $json")
@@ -223,19 +198,19 @@ private constructor(
                 "message_start" -> {
                     tryDeserialize(node, jacksonTypeRef<RawMessageStartEvent>()) { it.validate() }
                         ?.let {
-                            return RawMessageStreamEvent(rawMessageStartEvent = it, _json = json)
+                            return RawMessageStreamEvent(start = it, _json = json)
                         }
                 }
                 "message_delta" -> {
                     tryDeserialize(node, jacksonTypeRef<RawMessageDeltaEvent>()) { it.validate() }
                         ?.let {
-                            return RawMessageStreamEvent(rawMessageDeltaEvent = it, _json = json)
+                            return RawMessageStreamEvent(delta = it, _json = json)
                         }
                 }
                 "message_stop" -> {
                     tryDeserialize(node, jacksonTypeRef<RawMessageStopEvent>()) { it.validate() }
                         ?.let {
-                            return RawMessageStreamEvent(rawMessageStopEvent = it, _json = json)
+                            return RawMessageStreamEvent(stop = it, _json = json)
                         }
                 }
                 "content_block_start" -> {
@@ -243,10 +218,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return RawMessageStreamEvent(
-                                rawContentBlockStartEvent = it,
-                                _json = json
-                            )
+                            return RawMessageStreamEvent(contentBlockStart = it, _json = json)
                         }
                 }
                 "content_block_delta" -> {
@@ -254,10 +226,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return RawMessageStreamEvent(
-                                rawContentBlockDeltaEvent = it,
-                                _json = json
-                            )
+                            return RawMessageStreamEvent(contentBlockDelta = it, _json = json)
                         }
                 }
                 "content_block_stop" -> {
@@ -265,10 +234,7 @@ private constructor(
                             it.validate()
                         }
                         ?.let {
-                            return RawMessageStreamEvent(
-                                rawContentBlockStopEvent = it,
-                                _json = json
-                            )
+                            return RawMessageStreamEvent(contentBlockStop = it, _json = json)
                         }
                 }
             }
@@ -285,18 +251,12 @@ private constructor(
             provider: SerializerProvider
         ) {
             when {
-                value.rawMessageStartEvent != null ->
-                    generator.writeObject(value.rawMessageStartEvent)
-                value.rawMessageDeltaEvent != null ->
-                    generator.writeObject(value.rawMessageDeltaEvent)
-                value.rawMessageStopEvent != null ->
-                    generator.writeObject(value.rawMessageStopEvent)
-                value.rawContentBlockStartEvent != null ->
-                    generator.writeObject(value.rawContentBlockStartEvent)
-                value.rawContentBlockDeltaEvent != null ->
-                    generator.writeObject(value.rawContentBlockDeltaEvent)
-                value.rawContentBlockStopEvent != null ->
-                    generator.writeObject(value.rawContentBlockStopEvent)
+                value.start != null -> generator.writeObject(value.start)
+                value.delta != null -> generator.writeObject(value.delta)
+                value.stop != null -> generator.writeObject(value.stop)
+                value.contentBlockStart != null -> generator.writeObject(value.contentBlockStart)
+                value.contentBlockDelta != null -> generator.writeObject(value.contentBlockDelta)
+                value.contentBlockStop != null -> generator.writeObject(value.contentBlockStop)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid RawMessageStreamEvent")
             }

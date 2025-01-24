@@ -1611,16 +1611,13 @@ constructor(
             }
 
             /** The model will automatically decide whether to use tools. */
-            fun toolChoice(toolChoiceAuto: ToolChoiceAuto) =
-                toolChoice(ToolChoice.ofToolChoiceAuto(toolChoiceAuto))
+            fun toolChoice(auto: ToolChoiceAuto) = toolChoice(ToolChoice.ofAuto(auto))
 
             /** The model will use any available tools. */
-            fun toolChoice(toolChoiceAny: ToolChoiceAny) =
-                toolChoice(ToolChoice.ofToolChoiceAny(toolChoiceAny))
+            fun toolChoice(any: ToolChoiceAny) = toolChoice(ToolChoice.ofAny(any))
 
             /** The model will use the specified tool with `tool_choice.name`. */
-            fun toolChoice(toolChoiceTool: ToolChoiceTool) =
-                toolChoice(ToolChoice.ofToolChoiceTool(toolChoiceTool))
+            fun toolChoice(tool: ToolChoiceTool) = toolChoice(ToolChoice.ofTool(tool))
 
             /**
              * Definitions of tools that the model may use.
@@ -2448,13 +2445,13 @@ constructor(
         fun toolChoice(toolChoice: JsonField<ToolChoice>) = apply { body.toolChoice(toolChoice) }
 
         /** The model will automatically decide whether to use tools. */
-        fun toolChoice(toolChoiceAuto: ToolChoiceAuto) = apply { body.toolChoice(toolChoiceAuto) }
+        fun toolChoice(auto: ToolChoiceAuto) = apply { body.toolChoice(auto) }
 
         /** The model will use any available tools. */
-        fun toolChoice(toolChoiceAny: ToolChoiceAny) = apply { body.toolChoice(toolChoiceAny) }
+        fun toolChoice(any: ToolChoiceAny) = apply { body.toolChoice(any) }
 
         /** The model will use the specified tool with `tool_choice.name`. */
-        fun toolChoice(toolChoiceTool: ToolChoiceTool) = apply { body.toolChoice(toolChoiceTool) }
+        fun toolChoice(tool: ToolChoiceTool) = apply { body.toolChoice(tool) }
 
         /**
          * Definitions of tools that the model may use.

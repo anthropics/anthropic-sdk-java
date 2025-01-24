@@ -139,23 +139,15 @@ private constructor(
                 }
         }
 
-        fun addCitation(betaCitationCharLocationParam: BetaCitationCharLocationParam) =
-            addCitation(
-                BetaTextCitationParam.ofBetaCitationCharLocationParam(betaCitationCharLocationParam)
-            )
+        fun addCitation(citationCharLocation: BetaCitationCharLocationParam) =
+            addCitation(BetaTextCitationParam.ofCitationCharLocation(citationCharLocation))
 
-        fun addCitation(betaCitationPageLocationParam: BetaCitationPageLocationParam) =
-            addCitation(
-                BetaTextCitationParam.ofBetaCitationPageLocationParam(betaCitationPageLocationParam)
-            )
+        fun addCitation(citationPageLocation: BetaCitationPageLocationParam) =
+            addCitation(BetaTextCitationParam.ofCitationPageLocation(citationPageLocation))
 
-        fun addCitation(
-            betaCitationContentBlockLocationParam: BetaCitationContentBlockLocationParam
-        ) =
+        fun addCitation(citationContentBlockLocation: BetaCitationContentBlockLocationParam) =
             addCitation(
-                BetaTextCitationParam.ofBetaCitationContentBlockLocationParam(
-                    betaCitationContentBlockLocationParam
-                )
+                BetaTextCitationParam.ofCitationContentBlockLocation(citationContentBlockLocation)
             )
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

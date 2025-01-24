@@ -133,14 +133,11 @@ private constructor(
 
         fun source(source: JsonField<Source>) = apply { this.source = source }
 
-        fun source(base64PdfSource: Base64PdfSource) =
-            source(Source.ofBase64PdfSource(base64PdfSource))
+        fun source(base64Pdf: Base64PdfSource) = source(Source.ofBase64Pdf(base64Pdf))
 
-        fun source(plainTextSource: PlainTextSource) =
-            source(Source.ofPlainTextSource(plainTextSource))
+        fun source(plainText: PlainTextSource) = source(Source.ofPlainText(plainText))
 
-        fun source(contentBlockSource: ContentBlockSource) =
-            source(Source.ofContentBlockSource(contentBlockSource))
+        fun source(contentBlock: ContentBlockSource) = source(Source.ofContentBlock(contentBlock))
 
         fun type(type: Type) = type(JsonField.of(type))
 
@@ -209,39 +206,37 @@ private constructor(
     @JsonSerialize(using = Source.Serializer::class)
     class Source
     private constructor(
-        private val base64PdfSource: Base64PdfSource? = null,
-        private val plainTextSource: PlainTextSource? = null,
-        private val contentBlockSource: ContentBlockSource? = null,
+        private val base64Pdf: Base64PdfSource? = null,
+        private val plainText: PlainTextSource? = null,
+        private val contentBlock: ContentBlockSource? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun base64PdfSource(): Optional<Base64PdfSource> = Optional.ofNullable(base64PdfSource)
+        fun base64Pdf(): Optional<Base64PdfSource> = Optional.ofNullable(base64Pdf)
 
-        fun plainTextSource(): Optional<PlainTextSource> = Optional.ofNullable(plainTextSource)
+        fun plainText(): Optional<PlainTextSource> = Optional.ofNullable(plainText)
 
-        fun contentBlockSource(): Optional<ContentBlockSource> =
-            Optional.ofNullable(contentBlockSource)
+        fun contentBlock(): Optional<ContentBlockSource> = Optional.ofNullable(contentBlock)
 
-        fun isBase64PdfSource(): Boolean = base64PdfSource != null
+        fun isBase64Pdf(): Boolean = base64Pdf != null
 
-        fun isPlainTextSource(): Boolean = plainTextSource != null
+        fun isPlainText(): Boolean = plainText != null
 
-        fun isContentBlockSource(): Boolean = contentBlockSource != null
+        fun isContentBlock(): Boolean = contentBlock != null
 
-        fun asBase64PdfSource(): Base64PdfSource = base64PdfSource.getOrThrow("base64PdfSource")
+        fun asBase64Pdf(): Base64PdfSource = base64Pdf.getOrThrow("base64Pdf")
 
-        fun asPlainTextSource(): PlainTextSource = plainTextSource.getOrThrow("plainTextSource")
+        fun asPlainText(): PlainTextSource = plainText.getOrThrow("plainText")
 
-        fun asContentBlockSource(): ContentBlockSource =
-            contentBlockSource.getOrThrow("contentBlockSource")
+        fun asContentBlock(): ContentBlockSource = contentBlock.getOrThrow("contentBlock")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T {
             return when {
-                base64PdfSource != null -> visitor.visitBase64PdfSource(base64PdfSource)
-                plainTextSource != null -> visitor.visitPlainTextSource(plainTextSource)
-                contentBlockSource != null -> visitor.visitContentBlockSource(contentBlockSource)
+                base64Pdf != null -> visitor.visitBase64Pdf(base64Pdf)
+                plainText != null -> visitor.visitPlainText(plainText)
+                contentBlock != null -> visitor.visitContentBlock(contentBlock)
                 else -> visitor.unknown(_json)
             }
         }
@@ -255,16 +250,16 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitBase64PdfSource(base64PdfSource: Base64PdfSource) {
-                        base64PdfSource.validate()
+                    override fun visitBase64Pdf(base64Pdf: Base64PdfSource) {
+                        base64Pdf.validate()
                     }
 
-                    override fun visitPlainTextSource(plainTextSource: PlainTextSource) {
-                        plainTextSource.validate()
+                    override fun visitPlainText(plainText: PlainTextSource) {
+                        plainText.validate()
                     }
 
-                    override fun visitContentBlockSource(contentBlockSource: ContentBlockSource) {
-                        contentBlockSource.validate()
+                    override fun visitContentBlock(contentBlock: ContentBlockSource) {
+                        contentBlock.validate()
                     }
                 }
             )
@@ -276,42 +271,38 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Source && base64PdfSource == other.base64PdfSource && plainTextSource == other.plainTextSource && contentBlockSource == other.contentBlockSource /* spotless:on */
+            return /* spotless:off */ other is Source && base64Pdf == other.base64Pdf && plainText == other.plainText && contentBlock == other.contentBlock /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(base64PdfSource, plainTextSource, contentBlockSource) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(base64Pdf, plainText, contentBlock) /* spotless:on */
 
         override fun toString(): String =
             when {
-                base64PdfSource != null -> "Source{base64PdfSource=$base64PdfSource}"
-                plainTextSource != null -> "Source{plainTextSource=$plainTextSource}"
-                contentBlockSource != null -> "Source{contentBlockSource=$contentBlockSource}"
+                base64Pdf != null -> "Source{base64Pdf=$base64Pdf}"
+                plainText != null -> "Source{plainText=$plainText}"
+                contentBlock != null -> "Source{contentBlock=$contentBlock}"
                 _json != null -> "Source{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Source")
             }
 
         companion object {
 
-            @JvmStatic
-            fun ofBase64PdfSource(base64PdfSource: Base64PdfSource) =
-                Source(base64PdfSource = base64PdfSource)
+            @JvmStatic fun ofBase64Pdf(base64Pdf: Base64PdfSource) = Source(base64Pdf = base64Pdf)
+
+            @JvmStatic fun ofPlainText(plainText: PlainTextSource) = Source(plainText = plainText)
 
             @JvmStatic
-            fun ofPlainTextSource(plainTextSource: PlainTextSource) =
-                Source(plainTextSource = plainTextSource)
-
-            @JvmStatic
-            fun ofContentBlockSource(contentBlockSource: ContentBlockSource) =
-                Source(contentBlockSource = contentBlockSource)
+            fun ofContentBlock(contentBlock: ContentBlockSource) =
+                Source(contentBlock = contentBlock)
         }
 
         interface Visitor<out T> {
 
-            fun visitBase64PdfSource(base64PdfSource: Base64PdfSource): T
+            fun visitBase64Pdf(base64Pdf: Base64PdfSource): T
 
-            fun visitPlainTextSource(plainTextSource: PlainTextSource): T
+            fun visitPlainText(plainText: PlainTextSource): T
 
-            fun visitContentBlockSource(contentBlockSource: ContentBlockSource): T
+            fun visitContentBlock(contentBlock: ContentBlockSource): T
 
             fun unknown(json: JsonValue?): T {
                 throw AnthropicInvalidDataException("Unknown Source: $json")
@@ -328,19 +319,19 @@ private constructor(
                     "base64" -> {
                         tryDeserialize(node, jacksonTypeRef<Base64PdfSource>()) { it.validate() }
                             ?.let {
-                                return Source(base64PdfSource = it, _json = json)
+                                return Source(base64Pdf = it, _json = json)
                             }
                     }
                     "text" -> {
                         tryDeserialize(node, jacksonTypeRef<PlainTextSource>()) { it.validate() }
                             ?.let {
-                                return Source(plainTextSource = it, _json = json)
+                                return Source(plainText = it, _json = json)
                             }
                     }
                     "content" -> {
                         tryDeserialize(node, jacksonTypeRef<ContentBlockSource>()) { it.validate() }
                             ?.let {
-                                return Source(contentBlockSource = it, _json = json)
+                                return Source(contentBlock = it, _json = json)
                             }
                     }
                 }
@@ -357,10 +348,9 @@ private constructor(
                 provider: SerializerProvider
             ) {
                 when {
-                    value.base64PdfSource != null -> generator.writeObject(value.base64PdfSource)
-                    value.plainTextSource != null -> generator.writeObject(value.plainTextSource)
-                    value.contentBlockSource != null ->
-                        generator.writeObject(value.contentBlockSource)
+                    value.base64Pdf != null -> generator.writeObject(value.base64Pdf)
+                    value.plainText != null -> generator.writeObject(value.plainText)
+                    value.contentBlock != null -> generator.writeObject(value.contentBlock)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Source")
                 }

@@ -20,7 +20,7 @@ class BetaRawContentBlockDeltaEventTest {
         assertThat(betaRawContentBlockDeltaEvent).isNotNull
         assertThat(betaRawContentBlockDeltaEvent.delta())
             .isEqualTo(
-                BetaRawContentBlockDeltaEvent.Delta.ofBetaTextDelta(
+                BetaRawContentBlockDeltaEvent.Delta.ofBetaText(
                     BetaTextDelta.builder().text("text").type(BetaTextDelta.Type.TEXT_DELTA).build()
                 )
             )

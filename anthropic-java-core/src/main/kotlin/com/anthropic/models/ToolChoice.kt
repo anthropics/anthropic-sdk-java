@@ -26,43 +26,43 @@ import kotlin.jvm.optionals.getOrNull
 @JsonSerialize(using = ToolChoice.Serializer::class)
 class ToolChoice
 private constructor(
-    private val toolChoiceAuto: ToolChoiceAuto? = null,
-    private val toolChoiceAny: ToolChoiceAny? = null,
-    private val toolChoiceTool: ToolChoiceTool? = null,
+    private val auto: ToolChoiceAuto? = null,
+    private val any: ToolChoiceAny? = null,
+    private val tool: ToolChoiceTool? = null,
     private val _json: JsonValue? = null,
 ) {
 
     /** The model will automatically decide whether to use tools. */
-    fun toolChoiceAuto(): Optional<ToolChoiceAuto> = Optional.ofNullable(toolChoiceAuto)
+    fun auto(): Optional<ToolChoiceAuto> = Optional.ofNullable(auto)
 
     /** The model will use any available tools. */
-    fun toolChoiceAny(): Optional<ToolChoiceAny> = Optional.ofNullable(toolChoiceAny)
+    fun any(): Optional<ToolChoiceAny> = Optional.ofNullable(any)
 
     /** The model will use the specified tool with `tool_choice.name`. */
-    fun toolChoiceTool(): Optional<ToolChoiceTool> = Optional.ofNullable(toolChoiceTool)
+    fun tool(): Optional<ToolChoiceTool> = Optional.ofNullable(tool)
 
-    fun isToolChoiceAuto(): Boolean = toolChoiceAuto != null
+    fun isAuto(): Boolean = auto != null
 
-    fun isToolChoiceAny(): Boolean = toolChoiceAny != null
+    fun isAny(): Boolean = any != null
 
-    fun isToolChoiceTool(): Boolean = toolChoiceTool != null
+    fun isTool(): Boolean = tool != null
 
     /** The model will automatically decide whether to use tools. */
-    fun asToolChoiceAuto(): ToolChoiceAuto = toolChoiceAuto.getOrThrow("toolChoiceAuto")
+    fun asAuto(): ToolChoiceAuto = auto.getOrThrow("auto")
 
     /** The model will use any available tools. */
-    fun asToolChoiceAny(): ToolChoiceAny = toolChoiceAny.getOrThrow("toolChoiceAny")
+    fun asAny(): ToolChoiceAny = any.getOrThrow("any")
 
     /** The model will use the specified tool with `tool_choice.name`. */
-    fun asToolChoiceTool(): ToolChoiceTool = toolChoiceTool.getOrThrow("toolChoiceTool")
+    fun asTool(): ToolChoiceTool = tool.getOrThrow("tool")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
         return when {
-            toolChoiceAuto != null -> visitor.visitToolChoiceAuto(toolChoiceAuto)
-            toolChoiceAny != null -> visitor.visitToolChoiceAny(toolChoiceAny)
-            toolChoiceTool != null -> visitor.visitToolChoiceTool(toolChoiceTool)
+            auto != null -> visitor.visitAuto(auto)
+            any != null -> visitor.visitAny(any)
+            tool != null -> visitor.visitTool(tool)
             else -> visitor.unknown(_json)
         }
     }
@@ -76,16 +76,16 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
-                override fun visitToolChoiceAuto(toolChoiceAuto: ToolChoiceAuto) {
-                    toolChoiceAuto.validate()
+                override fun visitAuto(auto: ToolChoiceAuto) {
+                    auto.validate()
                 }
 
-                override fun visitToolChoiceAny(toolChoiceAny: ToolChoiceAny) {
-                    toolChoiceAny.validate()
+                override fun visitAny(any: ToolChoiceAny) {
+                    any.validate()
                 }
 
-                override fun visitToolChoiceTool(toolChoiceTool: ToolChoiceTool) {
-                    toolChoiceTool.validate()
+                override fun visitTool(tool: ToolChoiceTool) {
+                    tool.validate()
                 }
             }
         )
@@ -97,16 +97,16 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ToolChoice && toolChoiceAuto == other.toolChoiceAuto && toolChoiceAny == other.toolChoiceAny && toolChoiceTool == other.toolChoiceTool /* spotless:on */
+        return /* spotless:off */ other is ToolChoice && auto == other.auto && any == other.any && tool == other.tool /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(toolChoiceAuto, toolChoiceAny, toolChoiceTool) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(auto, any, tool) /* spotless:on */
 
     override fun toString(): String =
         when {
-            toolChoiceAuto != null -> "ToolChoice{toolChoiceAuto=$toolChoiceAuto}"
-            toolChoiceAny != null -> "ToolChoice{toolChoiceAny=$toolChoiceAny}"
-            toolChoiceTool != null -> "ToolChoice{toolChoiceTool=$toolChoiceTool}"
+            auto != null -> "ToolChoice{auto=$auto}"
+            any != null -> "ToolChoice{any=$any}"
+            tool != null -> "ToolChoice{tool=$tool}"
             _json != null -> "ToolChoice{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid ToolChoice")
         }
@@ -114,31 +114,25 @@ private constructor(
     companion object {
 
         /** The model will automatically decide whether to use tools. */
-        @JvmStatic
-        fun ofToolChoiceAuto(toolChoiceAuto: ToolChoiceAuto) =
-            ToolChoice(toolChoiceAuto = toolChoiceAuto)
+        @JvmStatic fun ofAuto(auto: ToolChoiceAuto) = ToolChoice(auto = auto)
 
         /** The model will use any available tools. */
-        @JvmStatic
-        fun ofToolChoiceAny(toolChoiceAny: ToolChoiceAny) =
-            ToolChoice(toolChoiceAny = toolChoiceAny)
+        @JvmStatic fun ofAny(any: ToolChoiceAny) = ToolChoice(any = any)
 
         /** The model will use the specified tool with `tool_choice.name`. */
-        @JvmStatic
-        fun ofToolChoiceTool(toolChoiceTool: ToolChoiceTool) =
-            ToolChoice(toolChoiceTool = toolChoiceTool)
+        @JvmStatic fun ofTool(tool: ToolChoiceTool) = ToolChoice(tool = tool)
     }
 
     interface Visitor<out T> {
 
         /** The model will automatically decide whether to use tools. */
-        fun visitToolChoiceAuto(toolChoiceAuto: ToolChoiceAuto): T
+        fun visitAuto(auto: ToolChoiceAuto): T
 
         /** The model will use any available tools. */
-        fun visitToolChoiceAny(toolChoiceAny: ToolChoiceAny): T
+        fun visitAny(any: ToolChoiceAny): T
 
         /** The model will use the specified tool with `tool_choice.name`. */
-        fun visitToolChoiceTool(toolChoiceTool: ToolChoiceTool): T
+        fun visitTool(tool: ToolChoiceTool): T
 
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown ToolChoice: $json")
@@ -155,19 +149,19 @@ private constructor(
                 "auto" -> {
                     tryDeserialize(node, jacksonTypeRef<ToolChoiceAuto>()) { it.validate() }
                         ?.let {
-                            return ToolChoice(toolChoiceAuto = it, _json = json)
+                            return ToolChoice(auto = it, _json = json)
                         }
                 }
                 "any" -> {
                     tryDeserialize(node, jacksonTypeRef<ToolChoiceAny>()) { it.validate() }
                         ?.let {
-                            return ToolChoice(toolChoiceAny = it, _json = json)
+                            return ToolChoice(any = it, _json = json)
                         }
                 }
                 "tool" -> {
                     tryDeserialize(node, jacksonTypeRef<ToolChoiceTool>()) { it.validate() }
                         ?.let {
-                            return ToolChoice(toolChoiceTool = it, _json = json)
+                            return ToolChoice(tool = it, _json = json)
                         }
                 }
             }
@@ -184,9 +178,9 @@ private constructor(
             provider: SerializerProvider
         ) {
             when {
-                value.toolChoiceAuto != null -> generator.writeObject(value.toolChoiceAuto)
-                value.toolChoiceAny != null -> generator.writeObject(value.toolChoiceAny)
-                value.toolChoiceTool != null -> generator.writeObject(value.toolChoiceTool)
+                value.auto != null -> generator.writeObject(value.auto)
+                value.any != null -> generator.writeObject(value.any)
+                value.tool != null -> generator.writeObject(value.tool)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid ToolChoice")
             }

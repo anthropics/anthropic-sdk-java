@@ -56,7 +56,7 @@ class BetaMessageBatchIndividualResponseTest {
         assertThat(betaMessageBatchIndividualResponse.customId()).isEqualTo("my-custom-id-1")
         assertThat(betaMessageBatchIndividualResponse.result())
             .isEqualTo(
-                BetaMessageBatchResult.ofBetaMessageBatchSucceededResult(
+                BetaMessageBatchResult.ofSucceeded(
                     BetaMessageBatchSucceededResult.builder()
                         .message(
                             BetaMessage.builder()

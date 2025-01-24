@@ -31,7 +31,7 @@ class DocumentBlockParamTest {
         assertThat(documentBlockParam).isNotNull
         assertThat(documentBlockParam.source())
             .isEqualTo(
-                DocumentBlockParam.Source.ofBase64PdfSource(
+                DocumentBlockParam.Source.ofBase64Pdf(
                     Base64PdfSource.builder()
                         .data("U3RhaW5sZXNzIHJvY2tz")
                         .mediaType(Base64PdfSource.MediaType.APPLICATION_PDF)

@@ -146,12 +146,8 @@ private constructor(
          * failed, or the reason why processing was not attempted, such as cancellation or
          * expiration.
          */
-        fun result(betaMessageBatchSucceededResult: BetaMessageBatchSucceededResult) =
-            result(
-                BetaMessageBatchResult.ofBetaMessageBatchSucceededResult(
-                    betaMessageBatchSucceededResult
-                )
-            )
+        fun result(succeeded: BetaMessageBatchSucceededResult) =
+            result(BetaMessageBatchResult.ofSucceeded(succeeded))
 
         /**
          * Processing result for this request.
@@ -160,12 +156,8 @@ private constructor(
          * failed, or the reason why processing was not attempted, such as cancellation or
          * expiration.
          */
-        fun result(betaMessageBatchErroredResult: BetaMessageBatchErroredResult) =
-            result(
-                BetaMessageBatchResult.ofBetaMessageBatchErroredResult(
-                    betaMessageBatchErroredResult
-                )
-            )
+        fun result(errored: BetaMessageBatchErroredResult) =
+            result(BetaMessageBatchResult.ofErrored(errored))
 
         /**
          * Processing result for this request.
@@ -174,12 +166,8 @@ private constructor(
          * failed, or the reason why processing was not attempted, such as cancellation or
          * expiration.
          */
-        fun result(betaMessageBatchCanceledResult: BetaMessageBatchCanceledResult) =
-            result(
-                BetaMessageBatchResult.ofBetaMessageBatchCanceledResult(
-                    betaMessageBatchCanceledResult
-                )
-            )
+        fun result(canceled: BetaMessageBatchCanceledResult) =
+            result(BetaMessageBatchResult.ofCanceled(canceled))
 
         /**
          * Processing result for this request.
@@ -188,12 +176,8 @@ private constructor(
          * failed, or the reason why processing was not attempted, such as cancellation or
          * expiration.
          */
-        fun result(betaMessageBatchExpiredResult: BetaMessageBatchExpiredResult) =
-            result(
-                BetaMessageBatchResult.ofBetaMessageBatchExpiredResult(
-                    betaMessageBatchExpiredResult
-                )
-            )
+        fun result(expired: BetaMessageBatchExpiredResult) =
+            result(BetaMessageBatchResult.ofExpired(expired))
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
