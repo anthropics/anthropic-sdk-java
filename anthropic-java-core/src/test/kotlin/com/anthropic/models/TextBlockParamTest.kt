@@ -50,7 +50,7 @@ class TextBlockParamTest {
             )
         assertThat(textBlockParam.citations().get())
             .containsExactly(
-                TextCitationParam.ofCitationCharLocationParam(
+                TextCitationParam.ofCitationCharLocation(
                     CitationCharLocationParam.builder()
                         .citedText("cited_text")
                         .documentIndex(0L)

@@ -51,7 +51,7 @@ class BetaTextBlockParamTest {
             )
         assertThat(betaTextBlockParam.citations().get())
             .containsExactly(
-                BetaTextCitationParam.ofBetaCitationCharLocationParam(
+                BetaTextCitationParam.ofCitationCharLocation(
                     BetaCitationCharLocationParam.builder()
                         .citedText("cited_text")
                         .documentIndex(0L)
