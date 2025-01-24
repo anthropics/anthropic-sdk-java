@@ -1,5 +1,6 @@
 package com.anthropic.core.http
 
+import com.anthropic.core.checkRequired
 import com.anthropic.core.toImmutable
 
 class HttpRequest
@@ -134,7 +135,7 @@ private constructor(
 
         fun build(): HttpRequest =
             HttpRequest(
-                checkNotNull(method) { "`method` is required but was not set" },
+                checkRequired("method", method),
                 url,
                 pathSegments.toImmutable(),
                 headers.build(),

@@ -1,6 +1,7 @@
 package com.anthropic.client.okhttp
 
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpClient
 import com.anthropic.core.http.HttpMethod
@@ -195,7 +196,7 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
                     .callTimeout(if (timeout.seconds == 0L) timeout else timeout.plusSeconds(30))
                     .proxy(proxy)
                     .build(),
-                checkNotNull(baseUrl) { "`baseUrl` is required but was not set" },
+                checkRequired("baseUrl", baseUrl),
             )
     }
 }
