@@ -16,6 +16,10 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Objects
 
+/**
+ * This is a single line in the response `.jsonl` file and does not represent the response as a
+ * whole.
+ */
 @NoAutoDetect
 class MessageBatchIndividualResponse
 @JsonCreator
