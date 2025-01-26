@@ -37,7 +37,7 @@ import java.util.Optional
  * The Messages API can be used for either single queries or stateless multi-turn conversations.
  */
 class BetaMessageCreateParams
-constructor(
+private constructor(
     private val betas: List<AnthropicBeta>?,
     private val body: BetaMessageCreateBody,
     private val additionalHeaders: Headers,
@@ -1066,7 +1066,7 @@ constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        class Builder {
+        class Builder internal constructor() {
 
             private var maxTokens: JsonField<Long>? = null
             private var messages: JsonField<MutableList<BetaMessageParam>>? = null
@@ -2223,7 +2223,7 @@ constructor(
     }
 
     @NoAutoDetect
-    class Builder {
+    class Builder internal constructor() {
 
         private var betas: MutableList<AnthropicBeta>? = null
         private var body: BetaMessageCreateBody.Builder = BetaMessageCreateBody.builder()
@@ -3499,7 +3499,7 @@ constructor(
             }
         }
 
-        class Deserializer : BaseDeserializer<System>(System::class) {
+        internal class Deserializer : BaseDeserializer<System>(System::class) {
 
             override fun ObjectCodec.deserialize(node: JsonNode): System {
                 val json = JsonValue.fromJsonNode(node)
@@ -3518,7 +3518,7 @@ constructor(
             }
         }
 
-        class Serializer : BaseSerializer<System>(System::class) {
+        internal class Serializer : BaseSerializer<System>(System::class) {
 
             override fun serialize(
                 value: System,

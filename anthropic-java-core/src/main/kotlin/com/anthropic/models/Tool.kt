@@ -117,7 +117,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    class Builder {
+    class Builder internal constructor() {
 
         private var inputSchema: JsonField<InputSchema>? = null
         private var name: JsonField<String>? = null
@@ -270,7 +270,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        class Builder {
+        class Builder internal constructor() {
 
             private var type: JsonField<Type>? = null
             private var properties: JsonValue = JsonMissing.of()

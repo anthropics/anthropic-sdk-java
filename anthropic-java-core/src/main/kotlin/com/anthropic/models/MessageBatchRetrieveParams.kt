@@ -13,7 +13,7 @@ import java.util.Objects
  * results of a Message Batch, make a request to the `results_url` field in the response.
  */
 class MessageBatchRetrieveParams
-constructor(
+private constructor(
     private val messageBatchId: String,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -45,7 +45,7 @@ constructor(
     }
 
     @NoAutoDetect
-    class Builder {
+    class Builder internal constructor() {
 
         private var messageBatchId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()

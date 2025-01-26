@@ -76,7 +76,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    class Builder {
+    class Builder internal constructor() {
 
         private var delta: JsonField<Delta>? = null
         private var index: JsonField<Long>? = null
@@ -242,7 +242,7 @@ private constructor(
             }
         }
 
-        class Deserializer : BaseDeserializer<Delta>(Delta::class) {
+        internal class Deserializer : BaseDeserializer<Delta>(Delta::class) {
 
             override fun ObjectCodec.deserialize(node: JsonNode): Delta {
                 val json = JsonValue.fromJsonNode(node)
@@ -273,7 +273,7 @@ private constructor(
             }
         }
 
-        class Serializer : BaseSerializer<Delta>(Delta::class) {
+        internal class Serializer : BaseSerializer<Delta>(Delta::class) {
 
             override fun serialize(
                 value: Delta,

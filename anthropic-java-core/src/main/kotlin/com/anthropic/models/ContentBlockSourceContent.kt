@@ -110,7 +110,7 @@ private constructor(
         }
     }
 
-    class Deserializer :
+    internal class Deserializer :
         BaseDeserializer<ContentBlockSourceContent>(ContentBlockSourceContent::class) {
 
         override fun ObjectCodec.deserialize(node: JsonNode): ContentBlockSourceContent {
@@ -136,7 +136,8 @@ private constructor(
         }
     }
 
-    class Serializer : BaseSerializer<ContentBlockSourceContent>(ContentBlockSourceContent::class) {
+    internal class Serializer :
+        BaseSerializer<ContentBlockSourceContent>(ContentBlockSourceContent::class) {
 
         override fun serialize(
             value: ContentBlockSourceContent,

@@ -90,7 +90,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    class Builder {
+    class Builder internal constructor() {
 
         private var citations: JsonField<MutableList<TextCitation>>? = null
         private var text: JsonField<String>? = null

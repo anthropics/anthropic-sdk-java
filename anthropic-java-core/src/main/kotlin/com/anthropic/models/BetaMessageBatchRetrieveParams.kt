@@ -15,7 +15,7 @@ import java.util.Optional
  * results of a Message Batch, make a request to the `results_url` field in the response.
  */
 class BetaMessageBatchRetrieveParams
-constructor(
+private constructor(
     private val messageBatchId: String,
     private val betas: List<AnthropicBeta>?,
     private val additionalHeaders: Headers,
@@ -57,7 +57,7 @@ constructor(
     }
 
     @NoAutoDetect
-    class Builder {
+    class Builder internal constructor() {
 
         private var messageBatchId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null

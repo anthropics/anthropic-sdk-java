@@ -30,7 +30,7 @@ import java.util.Optional
  * for guidance in migrating from Text Completions to Messages.
  */
 class CompletionCreateParams
-constructor(
+private constructor(
     private val body: CompletionCreateBody,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -409,7 +409,7 @@ constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        class Builder {
+        class Builder internal constructor() {
 
             private var maxTokensToSample: JsonField<Long>? = null
             private var model: JsonField<Model>? = null
@@ -678,7 +678,7 @@ constructor(
     }
 
     @NoAutoDetect
-    class Builder {
+    class Builder internal constructor() {
 
         private var body: CompletionCreateBody.Builder = CompletionCreateBody.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()

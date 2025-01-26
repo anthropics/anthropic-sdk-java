@@ -148,7 +148,8 @@ private constructor(
         }
     }
 
-    class Deserializer : BaseDeserializer<BetaTextCitationParam>(BetaTextCitationParam::class) {
+    internal class Deserializer :
+        BaseDeserializer<BetaTextCitationParam>(BetaTextCitationParam::class) {
 
         override fun ObjectCodec.deserialize(node: JsonNode): BetaTextCitationParam {
             val json = JsonValue.fromJsonNode(node)
@@ -188,7 +189,8 @@ private constructor(
         }
     }
 
-    class Serializer : BaseSerializer<BetaTextCitationParam>(BetaTextCitationParam::class) {
+    internal class Serializer :
+        BaseSerializer<BetaTextCitationParam>(BetaTextCitationParam::class) {
 
         override fun serialize(
             value: BetaTextCitationParam,

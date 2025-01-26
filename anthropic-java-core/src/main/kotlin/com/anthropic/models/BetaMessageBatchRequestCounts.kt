@@ -126,7 +126,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    class Builder {
+    class Builder internal constructor() {
 
         private var canceled: JsonField<Long>? = null
         private var errored: JsonField<Long>? = null

@@ -93,7 +93,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    class Builder {
+    class Builder internal constructor() {
 
         private var cacheCreationInputTokens: JsonField<Long>? = null
         private var cacheReadInputTokens: JsonField<Long>? = null

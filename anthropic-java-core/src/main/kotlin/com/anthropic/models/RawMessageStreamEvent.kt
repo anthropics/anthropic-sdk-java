@@ -188,7 +188,8 @@ private constructor(
         }
     }
 
-    class Deserializer : BaseDeserializer<RawMessageStreamEvent>(RawMessageStreamEvent::class) {
+    internal class Deserializer :
+        BaseDeserializer<RawMessageStreamEvent>(RawMessageStreamEvent::class) {
 
         override fun ObjectCodec.deserialize(node: JsonNode): RawMessageStreamEvent {
             val json = JsonValue.fromJsonNode(node)
@@ -243,7 +244,8 @@ private constructor(
         }
     }
 
-    class Serializer : BaseSerializer<RawMessageStreamEvent>(RawMessageStreamEvent::class) {
+    internal class Serializer :
+        BaseSerializer<RawMessageStreamEvent>(RawMessageStreamEvent::class) {
 
         override fun serialize(
             value: RawMessageStreamEvent,

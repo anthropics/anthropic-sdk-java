@@ -15,7 +15,7 @@ import java.util.Objects
  * model alias to a model ID.
  */
 class ModelRetrieveParams
-constructor(
+private constructor(
     private val modelId: String,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -47,7 +47,7 @@ constructor(
     }
 
     @NoAutoDetect
-    class Builder {
+    class Builder internal constructor() {
 
         private var modelId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()

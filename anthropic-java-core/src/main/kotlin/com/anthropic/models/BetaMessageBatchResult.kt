@@ -154,7 +154,8 @@ private constructor(
         }
     }
 
-    class Deserializer : BaseDeserializer<BetaMessageBatchResult>(BetaMessageBatchResult::class) {
+    internal class Deserializer :
+        BaseDeserializer<BetaMessageBatchResult>(BetaMessageBatchResult::class) {
 
         override fun ObjectCodec.deserialize(node: JsonNode): BetaMessageBatchResult {
             val json = JsonValue.fromJsonNode(node)
@@ -199,7 +200,8 @@ private constructor(
         }
     }
 
-    class Serializer : BaseSerializer<BetaMessageBatchResult>(BetaMessageBatchResult::class) {
+    internal class Serializer :
+        BaseSerializer<BetaMessageBatchResult>(BetaMessageBatchResult::class) {
 
         override fun serialize(
             value: BetaMessageBatchResult,

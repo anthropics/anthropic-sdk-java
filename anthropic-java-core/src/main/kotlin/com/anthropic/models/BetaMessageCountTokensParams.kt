@@ -37,7 +37,7 @@ import java.util.Optional
  * images, and documents, without creating it.
  */
 class BetaMessageCountTokensParams
-constructor(
+private constructor(
     private val betas: List<AnthropicBeta>?,
     private val body: BetaMessageCountTokensBody,
     private val additionalHeaders: Headers,
@@ -799,7 +799,7 @@ constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        class Builder {
+        class Builder internal constructor() {
 
             private var messages: JsonField<MutableList<BetaMessageParam>>? = null
             private var model: JsonField<Model>? = null
@@ -1790,7 +1790,7 @@ constructor(
     }
 
     @NoAutoDetect
-    class Builder {
+    class Builder internal constructor() {
 
         private var betas: MutableList<AnthropicBeta>? = null
         private var body: BetaMessageCountTokensBody.Builder = BetaMessageCountTokensBody.builder()
@@ -2935,7 +2935,7 @@ constructor(
             }
         }
 
-        class Deserializer : BaseDeserializer<System>(System::class) {
+        internal class Deserializer : BaseDeserializer<System>(System::class) {
 
             override fun ObjectCodec.deserialize(node: JsonNode): System {
                 val json = JsonValue.fromJsonNode(node)
@@ -2954,7 +2954,7 @@ constructor(
             }
         }
 
-        class Serializer : BaseSerializer<System>(System::class) {
+        internal class Serializer : BaseSerializer<System>(System::class) {
 
             override fun serialize(
                 value: System,
@@ -3123,7 +3123,7 @@ constructor(
             }
         }
 
-        class Deserializer : BaseDeserializer<Tool>(Tool::class) {
+        internal class Deserializer : BaseDeserializer<Tool>(Tool::class) {
 
             override fun ObjectCodec.deserialize(node: JsonNode): Tool {
                 val json = JsonValue.fromJsonNode(node)
@@ -3151,7 +3151,7 @@ constructor(
             }
         }
 
-        class Serializer : BaseSerializer<Tool>(Tool::class) {
+        internal class Serializer : BaseSerializer<Tool>(Tool::class) {
 
             override fun serialize(
                 value: Tool,

@@ -99,7 +99,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    class Builder {
+    class Builder internal constructor() {
 
         private var toolUseId: JsonField<String>? = null
         private var type: JsonField<Type>? = null
@@ -315,7 +315,7 @@ private constructor(
             }
         }
 
-        class Deserializer : BaseDeserializer<Content>(Content::class) {
+        internal class Deserializer : BaseDeserializer<Content>(Content::class) {
 
             override fun ObjectCodec.deserialize(node: JsonNode): Content {
                 val json = JsonValue.fromJsonNode(node)
@@ -332,7 +332,7 @@ private constructor(
             }
         }
 
-        class Serializer : BaseSerializer<Content>(Content::class) {
+        internal class Serializer : BaseSerializer<Content>(Content::class) {
 
             override fun serialize(
                 value: Content,
@@ -440,7 +440,7 @@ private constructor(
                 }
             }
 
-            class Deserializer : BaseDeserializer<Block>(Block::class) {
+            internal class Deserializer : BaseDeserializer<Block>(Block::class) {
 
                 override fun ObjectCodec.deserialize(node: JsonNode): Block {
                     val json = JsonValue.fromJsonNode(node)
@@ -467,7 +467,7 @@ private constructor(
                 }
             }
 
-            class Serializer : BaseSerializer<Block>(Block::class) {
+            internal class Serializer : BaseSerializer<Block>(Block::class) {
 
                 override fun serialize(
                     value: Block,

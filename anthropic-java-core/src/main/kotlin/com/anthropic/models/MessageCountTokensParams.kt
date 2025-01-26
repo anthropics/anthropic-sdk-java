@@ -37,7 +37,7 @@ import java.util.Optional
  * images, and documents, without creating it.
  */
 class MessageCountTokensParams
-constructor(
+private constructor(
     private val body: MessageCountTokensBody,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -789,7 +789,7 @@ constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        class Builder {
+        class Builder internal constructor() {
 
             private var messages: JsonField<MutableList<MessageParam>>? = null
             private var model: JsonField<Model>? = null
@@ -1508,7 +1508,7 @@ constructor(
     }
 
     @NoAutoDetect
-    class Builder {
+    class Builder internal constructor() {
 
         private var body: MessageCountTokensBody.Builder = MessageCountTokensBody.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -2355,7 +2355,7 @@ constructor(
             }
         }
 
-        class Deserializer : BaseDeserializer<System>(System::class) {
+        internal class Deserializer : BaseDeserializer<System>(System::class) {
 
             override fun ObjectCodec.deserialize(node: JsonNode): System {
                 val json = JsonValue.fromJsonNode(node)
@@ -2374,7 +2374,7 @@ constructor(
             }
         }
 
-        class Serializer : BaseSerializer<System>(System::class) {
+        internal class Serializer : BaseSerializer<System>(System::class) {
 
             override fun serialize(
                 value: System,

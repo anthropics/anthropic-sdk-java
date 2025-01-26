@@ -117,7 +117,7 @@ private constructor(
         }
     }
 
-    class Deserializer : BaseDeserializer<BetaContentBlock>(BetaContentBlock::class) {
+    internal class Deserializer : BaseDeserializer<BetaContentBlock>(BetaContentBlock::class) {
 
         override fun ObjectCodec.deserialize(node: JsonNode): BetaContentBlock {
             val json = JsonValue.fromJsonNode(node)
@@ -142,7 +142,7 @@ private constructor(
         }
     }
 
-    class Serializer : BaseSerializer<BetaContentBlock>(BetaContentBlock::class) {
+    internal class Serializer : BaseSerializer<BetaContentBlock>(BetaContentBlock::class) {
 
         override fun serialize(
             value: BetaContentBlock,

@@ -117,7 +117,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    class Builder {
+    class Builder internal constructor() {
 
         private var displayHeightPx: JsonField<Long>? = null
         private var displayWidthPx: JsonField<Long>? = null

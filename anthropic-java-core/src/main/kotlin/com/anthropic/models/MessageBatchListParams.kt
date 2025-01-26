@@ -12,7 +12,7 @@ import java.util.Optional
  * List all Message Batches within a Workspace. Most recently created batches are returned first.
  */
 class MessageBatchListParams
-constructor(
+private constructor(
     private val afterId: String?,
     private val beforeId: String?,
     private val limit: Long?,
@@ -63,7 +63,7 @@ constructor(
     }
 
     @NoAutoDetect
-    class Builder {
+    class Builder internal constructor() {
 
         private var afterId: String? = null
         private var beforeId: String? = null

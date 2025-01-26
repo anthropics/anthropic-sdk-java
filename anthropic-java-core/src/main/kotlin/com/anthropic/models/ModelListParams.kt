@@ -15,7 +15,7 @@ import java.util.Optional
  * More recently released models are listed first.
  */
 class ModelListParams
-constructor(
+private constructor(
     private val afterId: String?,
     private val beforeId: String?,
     private val limit: Long?,
@@ -66,7 +66,7 @@ constructor(
     }
 
     @NoAutoDetect
-    class Builder {
+    class Builder internal constructor() {
 
         private var afterId: String? = null
         private var beforeId: String? = null

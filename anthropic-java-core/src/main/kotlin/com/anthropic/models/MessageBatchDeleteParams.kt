@@ -18,7 +18,7 @@ import java.util.Optional
  * in-progress batch, you must first cancel it.
  */
 class MessageBatchDeleteParams
-constructor(
+private constructor(
     private val messageBatchId: String,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -57,7 +57,7 @@ constructor(
     }
 
     @NoAutoDetect
-    class Builder {
+    class Builder internal constructor() {
 
         private var messageBatchId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()

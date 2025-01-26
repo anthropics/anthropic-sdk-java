@@ -93,7 +93,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    class Builder {
+    class Builder internal constructor() {
 
         private var delta: JsonField<Delta>? = null
         private var type: JsonField<Type>? = null
@@ -227,7 +227,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        class Builder {
+        class Builder internal constructor() {
 
             private var stopReason: JsonField<StopReason>? = null
             private var stopSequence: JsonField<String>? = null

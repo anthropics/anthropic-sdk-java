@@ -13,8 +13,7 @@ import com.anthropic.services.blocking.MessageServiceImpl
 import com.anthropic.services.blocking.ModelService
 import com.anthropic.services.blocking.ModelServiceImpl
 
-class AnthropicClientImpl
-constructor(
+class AnthropicClientImpl(
     private val clientOptions: ClientOptions,
 ) : AnthropicClient {
 

@@ -153,7 +153,7 @@ private constructor(
         }
     }
 
-    class Deserializer : BaseDeserializer<BetaToolUnion>(BetaToolUnion::class) {
+    internal class Deserializer : BaseDeserializer<BetaToolUnion>(BetaToolUnion::class) {
 
         override fun ObjectCodec.deserialize(node: JsonNode): BetaToolUnion {
             val json = JsonValue.fromJsonNode(node)
@@ -179,7 +179,7 @@ private constructor(
         }
     }
 
-    class Serializer : BaseSerializer<BetaToolUnion>(BetaToolUnion::class) {
+    internal class Serializer : BaseSerializer<BetaToolUnion>(BetaToolUnion::class) {
 
         override fun serialize(
             value: BetaToolUnion,

@@ -21,7 +21,7 @@ import java.util.Optional
  * result in any canceled requests if they were non-interruptible.
  */
 class BetaMessageBatchCancelParams
-constructor(
+private constructor(
     private val messageBatchId: String,
     private val betas: List<AnthropicBeta>?,
     private val additionalHeaders: Headers,
@@ -70,7 +70,7 @@ constructor(
     }
 
     @NoAutoDetect
-    class Builder {
+    class Builder internal constructor() {
 
         private var messageBatchId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null

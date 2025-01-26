@@ -196,7 +196,7 @@ private constructor(
         }
     }
 
-    class Deserializer :
+    internal class Deserializer :
         BaseDeserializer<BetaRawMessageStreamEvent>(BetaRawMessageStreamEvent::class) {
 
         override fun ObjectCodec.deserialize(node: JsonNode): BetaRawMessageStreamEvent {
@@ -258,7 +258,8 @@ private constructor(
         }
     }
 
-    class Serializer : BaseSerializer<BetaRawMessageStreamEvent>(BetaRawMessageStreamEvent::class) {
+    internal class Serializer :
+        BaseSerializer<BetaRawMessageStreamEvent>(BetaRawMessageStreamEvent::class) {
 
         override fun serialize(
             value: BetaRawMessageStreamEvent,

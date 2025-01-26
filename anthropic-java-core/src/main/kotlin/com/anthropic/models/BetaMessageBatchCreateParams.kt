@@ -38,7 +38,7 @@ import java.util.Optional
  * complete.
  */
 class BetaMessageBatchCreateParams
-constructor(
+private constructor(
     private val betas: List<AnthropicBeta>?,
     private val body: BetaMessageBatchCreateBody,
     private val additionalHeaders: Headers,
@@ -123,7 +123,7 @@ constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        class Builder {
+        class Builder internal constructor() {
 
             private var requests: JsonField<MutableList<Request>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -218,7 +218,7 @@ constructor(
     }
 
     @NoAutoDetect
-    class Builder {
+    class Builder internal constructor() {
 
         private var betas: MutableList<AnthropicBeta>? = null
         private var body: BetaMessageBatchCreateBody.Builder = BetaMessageBatchCreateBody.builder()
@@ -460,7 +460,7 @@ constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        class Builder {
+        class Builder internal constructor() {
 
             private var customId: JsonField<String>? = null
             private var params: JsonField<Params>? = null
@@ -1114,7 +1114,7 @@ constructor(
                 @JvmStatic fun builder() = Builder()
             }
 
-            class Builder {
+            class Builder internal constructor() {
 
                 private var maxTokens: JsonField<Long>? = null
                 private var messages: JsonField<MutableList<BetaMessageParam>>? = null
@@ -2374,7 +2374,7 @@ constructor(
                     }
                 }
 
-                class Deserializer : BaseDeserializer<System>(System::class) {
+                internal class Deserializer : BaseDeserializer<System>(System::class) {
 
                     override fun ObjectCodec.deserialize(node: JsonNode): System {
                         val json = JsonValue.fromJsonNode(node)
@@ -2393,7 +2393,7 @@ constructor(
                     }
                 }
 
-                class Serializer : BaseSerializer<System>(System::class) {
+                internal class Serializer : BaseSerializer<System>(System::class) {
 
                     override fun serialize(
                         value: System,

@@ -72,7 +72,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    class Builder {
+    class Builder internal constructor() {
 
         private var citation: JsonField<Citation>? = null
         private var type: JsonField<Type>? = null
@@ -246,7 +246,7 @@ private constructor(
             }
         }
 
-        class Deserializer : BaseDeserializer<Citation>(Citation::class) {
+        internal class Deserializer : BaseDeserializer<Citation>(Citation::class) {
 
             override fun ObjectCodec.deserialize(node: JsonNode): Citation {
                 val json = JsonValue.fromJsonNode(node)
@@ -283,7 +283,7 @@ private constructor(
             }
         }
 
-        class Serializer : BaseSerializer<Citation>(Citation::class) {
+        internal class Serializer : BaseSerializer<Citation>(Citation::class) {
 
             override fun serialize(
                 value: Citation,

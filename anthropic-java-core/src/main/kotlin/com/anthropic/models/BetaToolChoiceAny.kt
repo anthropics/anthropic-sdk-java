@@ -75,7 +75,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    class Builder {
+    class Builder internal constructor() {
 
         private var type: JsonField<Type>? = null
         private var disableParallelToolUse: JsonField<Boolean> = JsonMissing.of()

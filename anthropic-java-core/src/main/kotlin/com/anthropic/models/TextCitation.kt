@@ -144,7 +144,7 @@ private constructor(
         }
     }
 
-    class Deserializer : BaseDeserializer<TextCitation>(TextCitation::class) {
+    internal class Deserializer : BaseDeserializer<TextCitation>(TextCitation::class) {
 
         override fun ObjectCodec.deserialize(node: JsonNode): TextCitation {
             val json = JsonValue.fromJsonNode(node)
@@ -177,7 +177,7 @@ private constructor(
         }
     }
 
-    class Serializer : BaseSerializer<TextCitation>(TextCitation::class) {
+    internal class Serializer : BaseSerializer<TextCitation>(TextCitation::class) {
 
         override fun serialize(
             value: TextCitation,
