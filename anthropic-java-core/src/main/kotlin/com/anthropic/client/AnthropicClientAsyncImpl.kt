@@ -52,4 +52,6 @@ constructor(
     override fun models(): ModelServiceAsync = models
 
     override fun beta(): BetaServiceAsync = beta
+
+    override fun close() = clientOptions.httpClient.close()
 }

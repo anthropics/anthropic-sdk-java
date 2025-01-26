@@ -48,4 +48,6 @@ constructor(
     override fun models(): ModelService = models
 
     override fun beta(): BetaService = beta
+
+    override fun close() = clientOptions.httpClient.close()
 }
