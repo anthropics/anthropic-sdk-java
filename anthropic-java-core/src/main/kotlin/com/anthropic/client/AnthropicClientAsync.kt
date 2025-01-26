@@ -23,6 +23,12 @@ import com.anthropic.services.async.ModelServiceAsync
  */
 interface AnthropicClientAsync {
 
+    /**
+     * Returns a version of this client that uses synchronous execution.
+     *
+     * The returned client shares its resources, like its connection pool and thread pools, with
+     * this client.
+     */
     fun sync(): AnthropicClient
 
     fun completions(): CompletionServiceAsync
