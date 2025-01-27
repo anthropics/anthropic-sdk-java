@@ -1188,7 +1188,7 @@ private constructor(
              * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
              * and options.
              */
-            fun model(value: String) = apply { model(Model.of(value)) }
+            fun model(value: String) = model(Model.of(value))
 
             /**
              * System prompt.
