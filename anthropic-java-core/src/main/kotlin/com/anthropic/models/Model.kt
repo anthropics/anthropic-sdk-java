@@ -50,14 +50,26 @@ private constructor(
         @JvmField val CLAUDE_3_OPUS_20240229 = of("claude-3-opus-20240229")
 
         /** Balance of speed and intelligence */
-        @JvmField val CLAUDE_3_SONNET_20240229 = of("claude-3-sonnet-20240229")
+        @Deprecated(
+            "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
+        @JvmField
+        val CLAUDE_3_SONNET_20240229 = of("claude-3-sonnet-20240229")
 
         /** Our previous fast and cost-effective */
         @JvmField val CLAUDE_3_HAIKU_20240307 = of("claude-3-haiku-20240307")
 
-        @JvmField val CLAUDE_2_1 = of("claude-2.1")
+        @Deprecated(
+            "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
+        @JvmField
+        val CLAUDE_2_1 = of("claude-2.1")
 
-        @JvmField val CLAUDE_2_0 = of("claude-2.0")
+        @Deprecated(
+            "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
+        @JvmField
+        val CLAUDE_2_0 = of("claude-2.0")
 
         @JvmStatic fun of(value: String) = Model(JsonField.of(value))
     }
@@ -78,11 +90,20 @@ private constructor(
         CLAUDE_3_OPUS_LATEST,
         /** Excels at writing and complex tasks */
         CLAUDE_3_OPUS_20240229,
+        @Deprecated(
+            "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Balance of speed and intelligence */
         CLAUDE_3_SONNET_20240229,
         /** Our previous fast and cost-effective */
         CLAUDE_3_HAIKU_20240307,
+        @Deprecated(
+            "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         CLAUDE_2_1,
+        @Deprecated(
+            "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         CLAUDE_2_0,
     }
 
@@ -110,11 +131,20 @@ private constructor(
         CLAUDE_3_OPUS_LATEST,
         /** Excels at writing and complex tasks */
         CLAUDE_3_OPUS_20240229,
+        @Deprecated(
+            "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Balance of speed and intelligence */
         CLAUDE_3_SONNET_20240229,
         /** Our previous fast and cost-effective */
         CLAUDE_3_HAIKU_20240307,
+        @Deprecated(
+            "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         CLAUDE_2_1,
+        @Deprecated(
+            "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         CLAUDE_2_0,
         /** An enum member indicating that [Model] was instantiated with an unknown value. */
         _UNKNOWN,
