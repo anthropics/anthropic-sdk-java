@@ -88,6 +88,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
+    /** A builder for [MessageBatchIndividualResponse]. */
     class Builder internal constructor() {
 
         private var customId: JsonField<String>? = null

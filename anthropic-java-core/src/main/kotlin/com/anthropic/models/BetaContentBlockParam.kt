@@ -145,6 +145,10 @@ private constructor(
             BetaContentBlockParam(base64PdfBlock = base64PdfBlock)
     }
 
+    /**
+     * An interface that defines how to map each variant of [BetaContentBlockParam] to a value of
+     * type [T].
+     */
     interface Visitor<out T> {
 
         fun visitText(text: BetaTextBlockParam): T
@@ -157,6 +161,16 @@ private constructor(
 
         fun visitBase64PdfBlock(base64PdfBlock: BetaBase64PdfBlock): T
 
+        /**
+         * Maps an unknown variant of [BetaContentBlockParam] to a value of type [T].
+         *
+         * An instance of [BetaContentBlockParam] can contain an unknown variant if it was
+         * deserialized from data that doesn't match any known variant. For example, if the SDK is
+         * on an older version than the API, then the API may respond with new variants that the SDK
+         * is unaware of.
+         *
+         * @throws AnthropicInvalidDataException in the default implementation.
+         */
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown BetaContentBlockParam: $json")
         }

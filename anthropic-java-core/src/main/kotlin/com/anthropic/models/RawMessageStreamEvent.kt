@@ -169,6 +169,10 @@ private constructor(
             RawMessageStreamEvent(contentBlockStop = contentBlockStop)
     }
 
+    /**
+     * An interface that defines how to map each variant of [RawMessageStreamEvent] to a value of
+     * type [T].
+     */
     interface Visitor<out T> {
 
         fun visitStart(start: RawMessageStartEvent): T
@@ -183,6 +187,16 @@ private constructor(
 
         fun visitContentBlockStop(contentBlockStop: RawContentBlockStopEvent): T
 
+        /**
+         * Maps an unknown variant of [RawMessageStreamEvent] to a value of type [T].
+         *
+         * An instance of [RawMessageStreamEvent] can contain an unknown variant if it was
+         * deserialized from data that doesn't match any known variant. For example, if the SDK is
+         * on an older version than the API, then the API may respond with new variants that the SDK
+         * is unaware of.
+         *
+         * @throws AnthropicInvalidDataException in the default implementation.
+         */
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown RawMessageStreamEvent: $json")
         }

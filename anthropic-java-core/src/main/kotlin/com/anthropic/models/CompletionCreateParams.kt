@@ -409,6 +409,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
+        /** A builder for [CompletionCreateBody]. */
         class Builder internal constructor() {
 
             private var maxTokensToSample: JsonField<Long>? = null
@@ -677,6 +678,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
+    /** A builder for [CompletionCreateParams]. */
     @NoAutoDetect
     class Builder internal constructor() {
 

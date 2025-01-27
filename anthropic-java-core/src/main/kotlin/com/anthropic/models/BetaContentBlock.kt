@@ -106,12 +106,26 @@ private constructor(
         @JvmStatic fun ofToolUse(toolUse: BetaToolUseBlock) = BetaContentBlock(toolUse = toolUse)
     }
 
+    /**
+     * An interface that defines how to map each variant of [BetaContentBlock] to a value of type
+     * [T].
+     */
     interface Visitor<out T> {
 
         fun visitText(text: BetaTextBlock): T
 
         fun visitToolUse(toolUse: BetaToolUseBlock): T
 
+        /**
+         * Maps an unknown variant of [BetaContentBlock] to a value of type [T].
+         *
+         * An instance of [BetaContentBlock] can contain an unknown variant if it was deserialized
+         * from data that doesn't match any known variant. For example, if the SDK is on an older
+         * version than the API, then the API may respond with new variants that the SDK is unaware
+         * of.
+         *
+         * @throws AnthropicInvalidDataException in the default implementation.
+         */
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown BetaContentBlock: $json")
         }

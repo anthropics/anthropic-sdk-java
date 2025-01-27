@@ -66,6 +66,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
+    /** A builder for [BetaMessageBatchDeleteParams]. */
     @NoAutoDetect
     class Builder internal constructor() {
 

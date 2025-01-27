@@ -177,6 +177,10 @@ private constructor(
             BetaRawMessageStreamEvent(contentBlockStop = contentBlockStop)
     }
 
+    /**
+     * An interface that defines how to map each variant of [BetaRawMessageStreamEvent] to a value
+     * of type [T].
+     */
     interface Visitor<out T> {
 
         fun visitStart(start: BetaRawMessageStartEvent): T
@@ -191,6 +195,16 @@ private constructor(
 
         fun visitContentBlockStop(contentBlockStop: BetaRawContentBlockStopEvent): T
 
+        /**
+         * Maps an unknown variant of [BetaRawMessageStreamEvent] to a value of type [T].
+         *
+         * An instance of [BetaRawMessageStreamEvent] can contain an unknown variant if it was
+         * deserialized from data that doesn't match any known variant. For example, if the SDK is
+         * on an older version than the API, then the API may respond with new variants that the SDK
+         * is unaware of.
+         *
+         * @throws AnthropicInvalidDataException in the default implementation.
+         */
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown BetaRawMessageStreamEvent: $json")
         }

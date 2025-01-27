@@ -22,6 +22,7 @@ class AnthropicOkHttpClient private constructor() {
         @JvmStatic fun fromEnv(): AnthropicClient = builder().fromEnv().build()
     }
 
+    /** A builder for [AnthropicOkHttpClient]. */
     class Builder internal constructor() {
 
         private var clientOptions: ClientOptions.Builder = ClientOptions.builder()

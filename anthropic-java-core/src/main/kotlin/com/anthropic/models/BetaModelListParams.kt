@@ -65,6 +65,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
+    /** A builder for [BetaModelListParams]. */
     @NoAutoDetect
     class Builder internal constructor() {
 

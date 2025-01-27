@@ -66,6 +66,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
+    /** A builder for [BetaMetadata]. */
     class Builder internal constructor() {
 
         private var userId: JsonField<String> = JsonMissing.of()

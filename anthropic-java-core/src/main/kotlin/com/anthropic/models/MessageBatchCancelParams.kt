@@ -59,6 +59,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
+    /** A builder for [MessageBatchCancelParams]. */
     @NoAutoDetect
     class Builder internal constructor() {
 

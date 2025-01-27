@@ -208,6 +208,7 @@ private constructor(
         fun ofOverloaded(overloaded: BetaOverloadedError) = BetaError(overloaded = overloaded)
     }
 
+    /** An interface that defines how to map each variant of [BetaError] to a value of type [T]. */
     interface Visitor<out T> {
 
         fun visitInvalidRequest(invalidRequest: BetaInvalidRequestError): T
@@ -228,6 +229,15 @@ private constructor(
 
         fun visitOverloaded(overloaded: BetaOverloadedError): T
 
+        /**
+         * Maps an unknown variant of [BetaError] to a value of type [T].
+         *
+         * An instance of [BetaError] can contain an unknown variant if it was deserialized from
+         * data that doesn't match any known variant. For example, if the SDK is on an older version
+         * than the API, then the API may respond with new variants that the SDK is unaware of.
+         *
+         * @throws AnthropicInvalidDataException in the default implementation.
+         */
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown BetaError: $json")
         }

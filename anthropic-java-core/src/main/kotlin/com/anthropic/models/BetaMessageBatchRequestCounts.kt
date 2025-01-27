@@ -126,6 +126,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
+    /** A builder for [BetaMessageBatchRequestCounts]. */
     class Builder internal constructor() {
 
         private var canceled: JsonField<Long>? = null

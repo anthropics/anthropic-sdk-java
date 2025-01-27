@@ -52,6 +52,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
+    /** A builder for [CitationsConfigParam]. */
     class Builder internal constructor() {
 
         private var enabled: JsonField<Boolean> = JsonMissing.of()

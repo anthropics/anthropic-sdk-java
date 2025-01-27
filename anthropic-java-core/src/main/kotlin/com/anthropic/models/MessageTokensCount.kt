@@ -58,6 +58,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
+    /** A builder for [MessageTokensCount]. */
     class Builder internal constructor() {
 
         private var inputTokens: JsonField<Long>? = null

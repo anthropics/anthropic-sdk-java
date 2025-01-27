@@ -133,6 +133,10 @@ private constructor(
         ) = BetaTextCitation(citationContentBlockLocation = citationContentBlockLocation)
     }
 
+    /**
+     * An interface that defines how to map each variant of [BetaTextCitation] to a value of type
+     * [T].
+     */
     interface Visitor<out T> {
 
         fun visitCitationCharLocation(citationCharLocation: BetaCitationCharLocation): T
@@ -143,6 +147,16 @@ private constructor(
             citationContentBlockLocation: BetaCitationContentBlockLocation
         ): T
 
+        /**
+         * Maps an unknown variant of [BetaTextCitation] to a value of type [T].
+         *
+         * An instance of [BetaTextCitation] can contain an unknown variant if it was deserialized
+         * from data that doesn't match any known variant. For example, if the SDK is on an older
+         * version than the API, then the API may respond with new variants that the SDK is unaware
+         * of.
+         *
+         * @throws AnthropicInvalidDataException in the default implementation.
+         */
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown BetaTextCitation: $json")
         }

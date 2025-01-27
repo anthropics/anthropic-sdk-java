@@ -56,6 +56,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
+    /** A builder for [MessageDeltaUsage]. */
     class Builder internal constructor() {
 
         private var outputTokens: JsonField<Long>? = null

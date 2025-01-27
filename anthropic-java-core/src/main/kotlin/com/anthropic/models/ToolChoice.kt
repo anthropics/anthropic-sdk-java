@@ -123,6 +123,7 @@ private constructor(
         @JvmStatic fun ofTool(tool: ToolChoiceTool) = ToolChoice(tool = tool)
     }
 
+    /** An interface that defines how to map each variant of [ToolChoice] to a value of type [T]. */
     interface Visitor<out T> {
 
         /** The model will automatically decide whether to use tools. */
@@ -134,6 +135,15 @@ private constructor(
         /** The model will use the specified tool with `tool_choice.name`. */
         fun visitTool(tool: ToolChoiceTool): T
 
+        /**
+         * Maps an unknown variant of [ToolChoice] to a value of type [T].
+         *
+         * An instance of [ToolChoice] can contain an unknown variant if it was deserialized from
+         * data that doesn't match any known variant. For example, if the SDK is on an older version
+         * than the API, then the API may respond with new variants that the SDK is unaware of.
+         *
+         * @throws AnthropicInvalidDataException in the default implementation.
+         */
         fun unknown(json: JsonValue?): T {
             throw AnthropicInvalidDataException("Unknown ToolChoice: $json")
         }
