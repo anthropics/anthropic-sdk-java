@@ -4,6 +4,7 @@ package com.anthropic.models
 
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
@@ -24,7 +25,7 @@ private constructor(
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
     private val additionalBodyProperties: Map<String, JsonValue>,
-) {
+) : Params {
 
     /** ID of the Message Batch. */
     fun messageBatchId(): String = messageBatchId
@@ -39,18 +40,17 @@ private constructor(
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
 
     @JvmSynthetic
-    internal fun getBody(): Optional<Map<String, JsonValue>> =
+    internal fun _body(): Optional<Map<String, JsonValue>> =
         Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
 
-    @JvmSynthetic
-    internal fun getHeaders(): Headers {
+    override fun _headers(): Headers {
         val headers = Headers.builder()
         this.betas?.let { headers.put("anthropic-beta", it.map(Any::toString)) }
         headers.putAll(additionalHeaders)
         return headers.build()
     }
 
-    @JvmSynthetic internal fun getQueryParams(): QueryParams = additionalQueryParams
+    override fun _queryParams(): QueryParams = additionalQueryParams
 
     fun getPathParam(index: Int): String {
         return when (index) {

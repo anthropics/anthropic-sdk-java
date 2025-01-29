@@ -93,7 +93,7 @@ class BetaMessageCreateParamsTest {
     }
 
     @Test
-    fun getBody() {
+    fun body() {
         val params =
             BetaMessageCreateParams.builder()
                 .maxTokens(1024L)
@@ -177,7 +177,7 @@ class BetaMessageCreateParamsTest {
                 .topP(0.7)
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
-        val body = params.getBody()
+        val body = params._body()
         assertThat(body).isNotNull
         assertThat(body.maxTokens()).isEqualTo(1024L)
         assertThat(body.messages())
@@ -274,7 +274,7 @@ class BetaMessageCreateParamsTest {
     }
 
     @Test
-    fun getBodyWithoutOptionalFields() {
+    fun bodyWithoutOptionalFields() {
         val params =
             BetaMessageCreateParams.builder()
                 .maxTokens(1024L)
@@ -286,7 +286,7 @@ class BetaMessageCreateParamsTest {
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .build()
-        val body = params.getBody()
+        val body = params._body()
         assertThat(body).isNotNull
         assertThat(body.maxTokens()).isEqualTo(1024L)
         assertThat(body.messages())

@@ -105,7 +105,7 @@ class MessageBatchCreateParamsTest {
     }
 
     @Test
-    fun getBody() {
+    fun body() {
         val params =
             MessageBatchCreateParams.builder()
                 .addRequest(
@@ -201,7 +201,7 @@ class MessageBatchCreateParamsTest {
                         .build()
                 )
                 .build()
-        val body = params.getBody()
+        val body = params._body()
         assertThat(body).isNotNull
         assertThat(body.requests())
             .isEqualTo(
@@ -301,7 +301,7 @@ class MessageBatchCreateParamsTest {
     }
 
     @Test
-    fun getBodyWithoutOptionalFields() {
+    fun bodyWithoutOptionalFields() {
         val params =
             MessageBatchCreateParams.builder()
                 .addRequest(
@@ -322,7 +322,7 @@ class MessageBatchCreateParamsTest {
                         .build()
                 )
                 .build()
-        val body = params.getBody()
+        val body = params._body()
         assertThat(body).isNotNull
         assertThat(body.requests())
             .isEqualTo(

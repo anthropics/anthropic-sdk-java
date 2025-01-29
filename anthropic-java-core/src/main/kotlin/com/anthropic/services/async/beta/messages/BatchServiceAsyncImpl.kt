@@ -17,6 +17,7 @@ import com.anthropic.core.http.StreamResponse
 import com.anthropic.core.http.map
 import com.anthropic.core.http.toAsync
 import com.anthropic.core.json
+import com.anthropic.core.prepareAsync
 import com.anthropic.errors.AnthropicError
 import com.anthropic.models.BetaDeletedMessageBatch
 import com.anthropic.models.BetaMessageBatch
@@ -62,23 +63,21 @@ internal constructor(
                 .method(HttpMethod.POST)
                 .addPathSegments("v1", "messages", "batches")
                 .putQueryParam("beta", "true")
-                .putAllQueryParams(clientOptions.queryParams)
-                .replaceAllQueryParams(params.getQueryParams())
-                .putAllHeaders(clientOptions.headers)
-                .replaceAllHeaders(DEFAULT_HEADERS)
-                .replaceAllHeaders(params.getHeaders())
-                .body(json(clientOptions.jsonMapper, params.getBody()))
+                .putAllHeaders(DEFAULT_HEADERS)
+                .body(json(clientOptions.jsonMapper, params._body()))
                 .build()
-        return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
-            ->
-            response
-                .use { createHandler.handle(it) }
-                .apply {
-                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                        validate()
+                .prepareAsync(clientOptions, params)
+        return request
+            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+            .thenApply { response ->
+                response
+                    .use { createHandler.handle(it) }
+                    .apply {
+                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                            validate()
+                        }
                     }
-                }
-        }
+            }
     }
 
     private val retrieveHandler: Handler<BetaMessageBatch> =
@@ -97,22 +96,20 @@ internal constructor(
                 .method(HttpMethod.GET)
                 .addPathSegments("v1", "messages", "batches", params.getPathParam(0))
                 .putQueryParam("beta", "true")
-                .putAllQueryParams(clientOptions.queryParams)
-                .replaceAllQueryParams(params.getQueryParams())
-                .putAllHeaders(clientOptions.headers)
-                .replaceAllHeaders(DEFAULT_HEADERS)
-                .replaceAllHeaders(params.getHeaders())
+                .putAllHeaders(DEFAULT_HEADERS)
                 .build()
-        return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
-            ->
-            response
-                .use { retrieveHandler.handle(it) }
-                .apply {
-                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                        validate()
+                .prepareAsync(clientOptions, params)
+        return request
+            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+            .thenApply { response ->
+                response
+                    .use { retrieveHandler.handle(it) }
+                    .apply {
+                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                            validate()
+                        }
                     }
-                }
-        }
+            }
     }
 
     private val listHandler: Handler<BetaMessageBatchListPageAsync.Response> =
@@ -132,23 +129,21 @@ internal constructor(
                 .method(HttpMethod.GET)
                 .addPathSegments("v1", "messages", "batches")
                 .putQueryParam("beta", "true")
-                .putAllQueryParams(clientOptions.queryParams)
-                .replaceAllQueryParams(params.getQueryParams())
-                .putAllHeaders(clientOptions.headers)
-                .replaceAllHeaders(DEFAULT_HEADERS)
-                .replaceAllHeaders(params.getHeaders())
+                .putAllHeaders(DEFAULT_HEADERS)
                 .build()
-        return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
-            ->
-            response
-                .use { listHandler.handle(it) }
-                .apply {
-                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                        validate()
+                .prepareAsync(clientOptions, params)
+        return request
+            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+            .thenApply { response ->
+                response
+                    .use { listHandler.handle(it) }
+                    .apply {
+                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                            validate()
+                        }
                     }
-                }
-                .let { BetaMessageBatchListPageAsync.of(this, params, it) }
-        }
+                    .let { BetaMessageBatchListPageAsync.of(this, params, it) }
+            }
     }
 
     private val deleteHandler: Handler<BetaDeletedMessageBatch> =
@@ -170,23 +165,21 @@ internal constructor(
                 .method(HttpMethod.DELETE)
                 .addPathSegments("v1", "messages", "batches", params.getPathParam(0))
                 .putQueryParam("beta", "true")
-                .putAllQueryParams(clientOptions.queryParams)
-                .replaceAllQueryParams(params.getQueryParams())
-                .putAllHeaders(clientOptions.headers)
-                .replaceAllHeaders(DEFAULT_HEADERS)
-                .replaceAllHeaders(params.getHeaders())
-                .apply { params.getBody().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                .putAllHeaders(DEFAULT_HEADERS)
+                .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                 .build()
-        return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
-            ->
-            response
-                .use { deleteHandler.handle(it) }
-                .apply {
-                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                        validate()
+                .prepareAsync(clientOptions, params)
+        return request
+            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+            .thenApply { response ->
+                response
+                    .use { deleteHandler.handle(it) }
+                    .apply {
+                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                            validate()
+                        }
                     }
-                }
-        }
+            }
     }
 
     private val cancelHandler: Handler<BetaMessageBatch> =
@@ -210,23 +203,21 @@ internal constructor(
                 .method(HttpMethod.POST)
                 .addPathSegments("v1", "messages", "batches", params.getPathParam(0), "cancel")
                 .putQueryParam("beta", "true")
-                .putAllQueryParams(clientOptions.queryParams)
-                .replaceAllQueryParams(params.getQueryParams())
-                .putAllHeaders(clientOptions.headers)
-                .replaceAllHeaders(DEFAULT_HEADERS)
-                .replaceAllHeaders(params.getHeaders())
-                .apply { params.getBody().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                .putAllHeaders(DEFAULT_HEADERS)
+                .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                 .build()
-        return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
-            ->
-            response
-                .use { cancelHandler.handle(it) }
-                .apply {
-                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                        validate()
+                .prepareAsync(clientOptions, params)
+        return request
+            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+            .thenApply { response ->
+                response
+                    .use { cancelHandler.handle(it) }
+                    .apply {
+                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                            validate()
+                        }
                     }
-                }
-        }
+            }
     }
 
     private val resultsStreamingHandler:
@@ -250,14 +241,11 @@ internal constructor(
                 .method(HttpMethod.GET)
                 .addPathSegments("v1", "messages", "batches", params.getPathParam(0), "results")
                 .putQueryParam("beta", "true")
-                .putAllQueryParams(clientOptions.queryParams)
-                .replaceAllQueryParams(params.getQueryParams())
-                .putAllHeaders(clientOptions.headers)
-                .replaceAllHeaders(DEFAULT_HEADERS)
-                .replaceAllHeaders(params.getHeaders())
+                .putAllHeaders(DEFAULT_HEADERS)
                 .build()
-        return clientOptions.httpClient
-            .executeAsync(request, requestOptions)
+                .prepareAsync(clientOptions, params)
+        return request
+            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
             .thenApply { response ->
                 response
                     .let { resultsStreamingHandler.handle(it) }
