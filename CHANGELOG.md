@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.0-alpha.11 (2025-01-29)
+
+Full Changelog: [v0.1.0-alpha.10...v0.1.0-alpha.11](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0-alpha.10...v0.1.0-alpha.11)
+
+### Chores
+
+* **internal:** improve `RetryingHttpClientTest` ([#97](https://github.com/anthropics/anthropic-sdk-java/issues/97)) ([314215c](https://github.com/anthropics/anthropic-sdk-java/commit/314215cf62e2e6c6b65cfb71d48747056d6091cb))
+
+
+### Documentation
+
+* update feedback link ([51c5b70](https://github.com/anthropics/anthropic-sdk-java/commit/51c5b703d9c79ace259ff02a3ff7dae333f5438c))
+
 ## 0.1.0-alpha.10 (2025-01-29)
 
 Full Changelog: [v0.1.0-alpha.9...v0.1.0-alpha.10](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0-alpha.9...v0.1.0-alpha.10)
