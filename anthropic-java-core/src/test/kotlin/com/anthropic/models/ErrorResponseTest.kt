@@ -11,14 +11,7 @@ class ErrorResponseTest {
     fun createErrorResponse() {
         val errorResponse =
             ErrorResponse.builder()
-                .error(
-                    ErrorObject.ofInvalidRequestError(
-                        InvalidRequestError.builder()
-                            .message("message")
-                            .type(InvalidRequestError.Type.INVALID_REQUEST_ERROR)
-                            .build()
-                    )
-                )
+                .invalidRequestErrorError("message")
                 .type(ErrorResponse.Type.ERROR)
                 .build()
         assertThat(errorResponse).isNotNull
