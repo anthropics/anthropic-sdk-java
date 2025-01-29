@@ -10,6 +10,7 @@ import com.anthropic.core.handlers.withErrorHandler
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse.Handler
+import com.anthropic.core.prepare
 import com.anthropic.errors.AnthropicError
 import com.anthropic.models.ModelInfo
 import com.anthropic.models.ModelListPage
@@ -37,11 +38,8 @@ internal constructor(
             HttpRequest.builder()
                 .method(HttpMethod.GET)
                 .addPathSegments("v1", "models", params.getPathParam(0))
-                .putAllQueryParams(clientOptions.queryParams)
-                .replaceAllQueryParams(params.getQueryParams())
-                .putAllHeaders(clientOptions.headers)
-                .replaceAllHeaders(params.getHeaders())
                 .build()
+                .prepare(clientOptions, params)
         return clientOptions.httpClient.execute(request, requestOptions).let { response ->
             response
                 .use { retrieveHandler.handle(it) }
@@ -67,11 +65,8 @@ internal constructor(
             HttpRequest.builder()
                 .method(HttpMethod.GET)
                 .addPathSegments("v1", "models")
-                .putAllQueryParams(clientOptions.queryParams)
-                .replaceAllQueryParams(params.getQueryParams())
-                .putAllHeaders(clientOptions.headers)
-                .replaceAllHeaders(params.getHeaders())
                 .build()
+                .prepare(clientOptions, params)
         return clientOptions.httpClient.execute(request, requestOptions).let { response ->
             response
                 .use { listHandler.handle(it) }

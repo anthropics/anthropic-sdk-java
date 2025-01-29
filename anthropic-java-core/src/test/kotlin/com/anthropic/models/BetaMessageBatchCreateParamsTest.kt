@@ -109,7 +109,7 @@ class BetaMessageBatchCreateParamsTest {
     }
 
     @Test
-    fun getBody() {
+    fun body() {
         val params =
             BetaMessageBatchCreateParams.builder()
                 .addRequest(
@@ -208,7 +208,7 @@ class BetaMessageBatchCreateParamsTest {
                 )
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
-        val body = params.getBody()
+        val body = params._body()
         assertThat(body).isNotNull
         assertThat(body.requests())
             .isEqualTo(
@@ -310,7 +310,7 @@ class BetaMessageBatchCreateParamsTest {
     }
 
     @Test
-    fun getBodyWithoutOptionalFields() {
+    fun bodyWithoutOptionalFields() {
         val params =
             BetaMessageBatchCreateParams.builder()
                 .addRequest(
@@ -331,7 +331,7 @@ class BetaMessageBatchCreateParamsTest {
                         .build()
                 )
                 .build()
-        val body = params.getBody()
+        val body = params._body()
         assertThat(body).isNotNull
         assertThat(body.requests())
             .isEqualTo(

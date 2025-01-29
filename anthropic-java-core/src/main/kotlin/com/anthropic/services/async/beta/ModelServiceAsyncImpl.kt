@@ -10,6 +10,7 @@ import com.anthropic.core.handlers.withErrorHandler
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse.Handler
+import com.anthropic.core.prepareAsync
 import com.anthropic.errors.AnthropicError
 import com.anthropic.models.BetaModelInfo
 import com.anthropic.models.BetaModelListPageAsync
@@ -42,21 +43,19 @@ internal constructor(
                 .method(HttpMethod.GET)
                 .addPathSegments("v1", "models", params.getPathParam(0))
                 .putQueryParam("beta", "true")
-                .putAllQueryParams(clientOptions.queryParams)
-                .replaceAllQueryParams(params.getQueryParams())
-                .putAllHeaders(clientOptions.headers)
-                .replaceAllHeaders(params.getHeaders())
                 .build()
-        return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
-            ->
-            response
-                .use { retrieveHandler.handle(it) }
-                .apply {
-                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                        validate()
+                .prepareAsync(clientOptions, params)
+        return request
+            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+            .thenApply { response ->
+                response
+                    .use { retrieveHandler.handle(it) }
+                    .apply {
+                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                            validate()
+                        }
                     }
-                }
-        }
+            }
     }
 
     private val listHandler: Handler<BetaModelListPageAsync.Response> =
@@ -78,21 +77,19 @@ internal constructor(
                 .method(HttpMethod.GET)
                 .addPathSegments("v1", "models")
                 .putQueryParam("beta", "true")
-                .putAllQueryParams(clientOptions.queryParams)
-                .replaceAllQueryParams(params.getQueryParams())
-                .putAllHeaders(clientOptions.headers)
-                .replaceAllHeaders(params.getHeaders())
                 .build()
-        return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
-            ->
-            response
-                .use { listHandler.handle(it) }
-                .apply {
-                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                        validate()
+                .prepareAsync(clientOptions, params)
+        return request
+            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+            .thenApply { response ->
+                response
+                    .use { listHandler.handle(it) }
+                    .apply {
+                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                            validate()
+                        }
                     }
-                }
-                .let { BetaModelListPageAsync.of(this, params, it) }
-        }
+                    .let { BetaModelListPageAsync.of(this, params, it) }
+            }
     }
 }

@@ -22,7 +22,7 @@ class CompletionCreateParamsTest {
     }
 
     @Test
-    fun getBody() {
+    fun body() {
         val params =
             CompletionCreateParams.builder()
                 .maxTokensToSample(256L)
@@ -34,7 +34,7 @@ class CompletionCreateParamsTest {
                 .topK(5L)
                 .topP(0.7)
                 .build()
-        val body = params.getBody()
+        val body = params._body()
         assertThat(body).isNotNull
         assertThat(body.maxTokensToSample()).isEqualTo(256L)
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
@@ -48,14 +48,14 @@ class CompletionCreateParamsTest {
     }
 
     @Test
-    fun getBodyWithoutOptionalFields() {
+    fun bodyWithoutOptionalFields() {
         val params =
             CompletionCreateParams.builder()
                 .maxTokensToSample(256L)
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
                 .build()
-        val body = params.getBody()
+        val body = params._body()
         assertThat(body).isNotNull
         assertThat(body.maxTokensToSample()).isEqualTo(256L)
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)

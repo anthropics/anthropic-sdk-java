@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.http.Headers
@@ -42,7 +43,7 @@ private constructor(
     private val body: BetaMessageCreateBody,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
-) {
+) : Params {
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
@@ -507,17 +508,16 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    @JvmSynthetic internal fun getBody(): BetaMessageCreateBody = body
+    @JvmSynthetic internal fun _body(): BetaMessageCreateBody = body
 
-    @JvmSynthetic
-    internal fun getHeaders(): Headers {
+    override fun _headers(): Headers {
         val headers = Headers.builder()
         this.betas?.let { headers.put("anthropic-beta", it.map(Any::toString)) }
         headers.putAll(additionalHeaders)
         return headers.build()
     }
 
-    @JvmSynthetic internal fun getQueryParams(): QueryParams = additionalQueryParams
+    override fun _queryParams(): QueryParams = additionalQueryParams
 
     @NoAutoDetect
     class BetaMessageCreateBody

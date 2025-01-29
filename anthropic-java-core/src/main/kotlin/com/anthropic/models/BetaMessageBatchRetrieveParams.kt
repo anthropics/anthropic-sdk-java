@@ -3,6 +3,7 @@
 package com.anthropic.models
 
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
@@ -20,7 +21,7 @@ private constructor(
     private val betas: List<AnthropicBeta>?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
-) {
+) : Params {
 
     /** ID of the Message Batch. */
     fun messageBatchId(): String = messageBatchId
@@ -32,15 +33,14 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    @JvmSynthetic
-    internal fun getHeaders(): Headers {
+    override fun _headers(): Headers {
         val headers = Headers.builder()
         this.betas?.let { headers.put("anthropic-beta", it.map(Any::toString)) }
         headers.putAll(additionalHeaders)
         return headers.build()
     }
 
-    @JvmSynthetic internal fun getQueryParams(): QueryParams = additionalQueryParams
+    override fun _queryParams(): QueryParams = additionalQueryParams
 
     fun getPathParam(index: Int): String {
         return when (index) {

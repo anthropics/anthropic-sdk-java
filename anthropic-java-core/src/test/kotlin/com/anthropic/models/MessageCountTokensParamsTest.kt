@@ -82,7 +82,7 @@ class MessageCountTokensParamsTest {
     }
 
     @Test
-    fun getBody() {
+    fun body() {
         val params =
             MessageCountTokensParams.builder()
                 .addMessage(
@@ -153,7 +153,7 @@ class MessageCountTokensParamsTest {
                         .build()
                 )
                 .build()
-        val body = params.getBody()
+        val body = params._body()
         assertThat(body).isNotNull
         assertThat(body.messages())
             .isEqualTo(
@@ -237,7 +237,7 @@ class MessageCountTokensParamsTest {
     }
 
     @Test
-    fun getBodyWithoutOptionalFields() {
+    fun bodyWithoutOptionalFields() {
         val params =
             MessageCountTokensParams.builder()
                 .addMessage(
@@ -245,7 +245,7 @@ class MessageCountTokensParamsTest {
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .build()
-        val body = params.getBody()
+        val body = params._body()
         assertThat(body).isNotNull
         assertThat(body.messages())
             .isEqualTo(
