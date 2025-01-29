@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.1.0-alpha.10 (2025-01-29)
+
+Full Changelog: [v0.1.0-alpha.9...v0.1.0-alpha.10](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0-alpha.9...v0.1.0-alpha.10)
+
+### ⚠ BREAKING CHANGES
+
+* **client:** better union variant method and variable names ([#82](https://github.com/anthropics/anthropic-sdk-java/issues/82))
+
+### Features
+
+* **api:** add citations ([#78](https://github.com/anthropics/anthropic-sdk-java/issues/78)) ([f206f8a](https://github.com/anthropics/anthropic-sdk-java/commit/f206f8a2b3334714f8dfde4d4a4fc602a8233272))
+* **client:** add `_queryParams` and `_headers` methods ([#94](https://github.com/anthropics/anthropic-sdk-java/issues/94)) ([6387b49](https://github.com/anthropics/anthropic-sdk-java/commit/6387b498b486af6a669f103fb2144431a7a40670))
+* **client:** add `close` method ([#87](https://github.com/anthropics/anthropic-sdk-java/issues/87)) ([2ef94d1](https://github.com/anthropics/anthropic-sdk-java/commit/2ef94d196ba402fd7af3db48aed98e7f57afca90))
+* **client:** better union variant method and variable names ([#82](https://github.com/anthropics/anthropic-sdk-java/issues/82)) ([f961513](https://github.com/anthropics/anthropic-sdk-java/commit/f9615133f292297ce37019cfb2db40b08c3e4c39))
+
+
+### Bug Fixes
+
+* **client:** async streaming flakiness ([#85](https://github.com/anthropics/anthropic-sdk-java/issues/85)) ([fbc58f3](https://github.com/anthropics/anthropic-sdk-java/commit/fbc58f3931c1d11f16cd1095818d13c7e8f47e28))
+* **client:** make some classes and constructors non-public ([#90](https://github.com/anthropics/anthropic-sdk-java/issues/90)) ([803559d](https://github.com/anthropics/anthropic-sdk-java/commit/803559d4b43e90543f700080d768a81a831aa9b8))
+* examples ([0a7cd8c](https://github.com/anthropics/anthropic-sdk-java/commit/0a7cd8c951078ecbee42c71b84ea0b03b33c6fd7))
+
+
+### Chores
+
+* add max retries to test ([#83](https://github.com/anthropics/anthropic-sdk-java/issues/83)) ([8b96530](https://github.com/anthropics/anthropic-sdk-java/commit/8b96530c976f3ebdc48c7832e1cab7a6b9e98c99))
+* **api:** deprecate some models ([#93](https://github.com/anthropics/anthropic-sdk-java/issues/93)) ([e88f509](https://github.com/anthropics/anthropic-sdk-java/commit/e88f509fbe355f54053efb516b00fe8ce5438deb))
+* **docs:** updates ([#81](https://github.com/anthropics/anthropic-sdk-java/issues/81)) ([1c064b5](https://github.com/anthropics/anthropic-sdk-java/commit/1c064b5fdd4e5c8708f7c50a8d1a1737f9b55704))
+* **internal:** fix release ([#86](https://github.com/anthropics/anthropic-sdk-java/issues/86)) ([122923d](https://github.com/anthropics/anthropic-sdk-java/commit/122923d1a3006b052966d0ba5226a1a7091f9174))
+* **internal:** remove some unnecessary `constructor` keywords ([803559d](https://github.com/anthropics/anthropic-sdk-java/commit/803559d4b43e90543f700080d768a81a831aa9b8))
+* **internal:** shorten `model` method impl ([#92](https://github.com/anthropics/anthropic-sdk-java/issues/92)) ([10c45b2](https://github.com/anthropics/anthropic-sdk-java/commit/10c45b28377ac8ebb84f474c09792b031056bf6d))
+* **internal:** swap `checkNotNull` to `checkRequired` ([#80](https://github.com/anthropics/anthropic-sdk-java/issues/80)) ([7bc70d7](https://github.com/anthropics/anthropic-sdk-java/commit/7bc70d70d4900dd481300a9fdce2b7c95d23150e))
+
+
+### Documentation
+
+* `async` and `sync` method comments ([#89](https://github.com/anthropics/anthropic-sdk-java/issues/89)) ([b7dbed7](https://github.com/anthropics/anthropic-sdk-java/commit/b7dbed7759c78c9bd9ba6b660afe5718b995e5a0))
+* add client documentation ([#88](https://github.com/anthropics/anthropic-sdk-java/issues/88)) ([ac678e4](https://github.com/anthropics/anthropic-sdk-java/commit/ac678e4e238b634faed95a9e52018a5443d9e29b))
+* builder, enum, and union comments ([#91](https://github.com/anthropics/anthropic-sdk-java/issues/91)) ([e8ad558](https://github.com/anthropics/anthropic-sdk-java/commit/e8ad558347d04ffea57863568453fb824289ca82))
+* many more examples ([#84](https://github.com/anthropics/anthropic-sdk-java/issues/84)) ([52f73db](https://github.com/anthropics/anthropic-sdk-java/commit/52f73dbe747e42ea9dda87283db7073d2a59570e))
+
+
+### Refactors
+
+* **internal:** extract request preparation logic ([6387b49](https://github.com/anthropics/anthropic-sdk-java/commit/6387b498b486af6a669f103fb2144431a7a40670))
+
 ## 0.1.0-alpha.9 (2025-01-22)
 
 Full Changelog: [v0.1.0-alpha.8...v0.1.0-alpha.9](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0-alpha.8...v0.1.0-alpha.9)
