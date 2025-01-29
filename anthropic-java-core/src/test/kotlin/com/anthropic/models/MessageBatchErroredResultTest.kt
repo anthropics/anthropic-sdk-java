@@ -13,14 +13,7 @@ class MessageBatchErroredResultTest {
             MessageBatchErroredResult.builder()
                 .error(
                     ErrorResponse.builder()
-                        .error(
-                            ErrorObject.ofInvalidRequestError(
-                                InvalidRequestError.builder()
-                                    .message("message")
-                                    .type(InvalidRequestError.Type.INVALID_REQUEST_ERROR)
-                                    .build()
-                            )
-                        )
+                        .invalidRequestErrorError("message")
                         .type(ErrorResponse.Type.ERROR)
                         .build()
                 )
@@ -30,14 +23,7 @@ class MessageBatchErroredResultTest {
         assertThat(messageBatchErroredResult.error())
             .isEqualTo(
                 ErrorResponse.builder()
-                    .error(
-                        ErrorObject.ofInvalidRequestError(
-                            InvalidRequestError.builder()
-                                .message("message")
-                                .type(InvalidRequestError.Type.INVALID_REQUEST_ERROR)
-                                .build()
-                        )
-                    )
+                    .invalidRequestErrorError("message")
                     .type(ErrorResponse.Type.ERROR)
                     .build()
             )
