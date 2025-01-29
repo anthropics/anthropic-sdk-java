@@ -140,6 +140,20 @@ private constructor(
 
         fun source(contentBlock: ContentBlockSource) = source(Source.ofContentBlock(contentBlock))
 
+        fun contentBlockSource(content: ContentBlockSource.Content) =
+            source(
+                ContentBlockSource.builder()
+                    .type(ContentBlockSource.Type.CONTENT)
+                    .content(content)
+                    .build()
+            )
+
+        fun contentBlockSource(string: String) =
+            contentBlockSource(ContentBlockSource.Content.ofString(string))
+
+        fun contentBlockSourceOfBlockSource(blockSource: List<ContentBlockSourceContent>) =
+            contentBlockSource(ContentBlockSource.Content.ofBlockSource(blockSource))
+
         fun type(type: Type) = type(JsonField.of(type))
 
         fun type(type: JsonField<Type>) = apply { this.type = type }

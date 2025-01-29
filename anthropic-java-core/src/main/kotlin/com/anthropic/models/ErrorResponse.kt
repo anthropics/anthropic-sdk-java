@@ -81,26 +81,98 @@ private constructor(
         fun error(invalidRequestError: InvalidRequestError) =
             error(ErrorObject.ofInvalidRequestError(invalidRequestError))
 
+        fun invalidRequestErrorError(message: String) =
+            error(
+                InvalidRequestError.builder()
+                    .type(InvalidRequestError.Type.INVALID_REQUEST_ERROR)
+                    .message(message)
+                    .build()
+            )
+
         fun error(authenticationError: AuthenticationError) =
             error(ErrorObject.ofAuthenticationError(authenticationError))
 
+        fun authenticationErrorError(message: String) =
+            error(
+                AuthenticationError.builder()
+                    .type(AuthenticationError.Type.AUTHENTICATION_ERROR)
+                    .message(message)
+                    .build()
+            )
+
         fun error(billingError: BillingError) = error(ErrorObject.ofBillingError(billingError))
+
+        fun billingErrorError(message: String) =
+            error(
+                BillingError.builder()
+                    .type(BillingError.Type.BILLING_ERROR)
+                    .message(message)
+                    .build()
+            )
 
         fun error(permissionError: PermissionError) =
             error(ErrorObject.ofPermissionError(permissionError))
 
+        fun permissionErrorError(message: String) =
+            error(
+                PermissionError.builder()
+                    .type(PermissionError.Type.PERMISSION_ERROR)
+                    .message(message)
+                    .build()
+            )
+
         fun error(notFoundError: NotFoundError) = error(ErrorObject.ofNotFoundError(notFoundError))
+
+        fun notFoundErrorError(message: String) =
+            error(
+                NotFoundError.builder()
+                    .type(NotFoundError.Type.NOT_FOUND_ERROR)
+                    .message(message)
+                    .build()
+            )
 
         fun error(rateLimitError: RateLimitError) =
             error(ErrorObject.ofRateLimitError(rateLimitError))
 
+        fun rateLimitErrorError(message: String) =
+            error(
+                RateLimitError.builder()
+                    .type(RateLimitError.Type.RATE_LIMIT_ERROR)
+                    .message(message)
+                    .build()
+            )
+
         fun error(gatewayTimeoutError: GatewayTimeoutError) =
             error(ErrorObject.ofGatewayTimeoutError(gatewayTimeoutError))
 
+        fun gatewayTimeoutErrorError(message: String) =
+            error(
+                GatewayTimeoutError.builder()
+                    .type(GatewayTimeoutError.Type.TIMEOUT_ERROR)
+                    .message(message)
+                    .build()
+            )
+
         fun error(api: ApiErrorObject) = error(ErrorObject.ofApi(api))
+
+        fun apiError(message: String) =
+            error(
+                ApiErrorObject.builder()
+                    .type(ApiErrorObject.Type.API_ERROR)
+                    .message(message)
+                    .build()
+            )
 
         fun error(overloadedError: OverloadedError) =
             error(ErrorObject.ofOverloadedError(overloadedError))
+
+        fun overloadedErrorError(message: String) =
+            error(
+                OverloadedError.builder()
+                    .type(OverloadedError.Type.OVERLOADED_ERROR)
+                    .message(message)
+                    .build()
+            )
 
         fun type(type: Type) = type(JsonField.of(type))
 

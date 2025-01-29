@@ -98,9 +98,37 @@ private constructor(
 
         fun delta(text: TextDelta) = delta(Delta.ofText(text))
 
+        fun textDelta(text: String) =
+            delta(TextDelta.builder().type(TextDelta.Type.TEXT_DELTA).text(text).build())
+
         fun delta(inputJson: InputJsonDelta) = delta(Delta.ofInputJson(inputJson))
 
+        fun inputJsonDelta(partialJson: String) =
+            delta(
+                InputJsonDelta.builder()
+                    .type(InputJsonDelta.Type.INPUT_JSON_DELTA)
+                    .partialJson(partialJson)
+                    .build()
+            )
+
         fun delta(citations: CitationsDelta) = delta(Delta.ofCitations(citations))
+
+        fun citationsDelta(citation: CitationsDelta.Citation) =
+            delta(
+                CitationsDelta.builder()
+                    .type(CitationsDelta.Type.CITATIONS_DELTA)
+                    .citation(citation)
+                    .build()
+            )
+
+        fun citationsDelta(charLocation: CitationCharLocation) =
+            citationsDelta(CitationsDelta.Citation.ofCharLocation(charLocation))
+
+        fun citationsDelta(pageLocation: CitationPageLocation) =
+            citationsDelta(CitationsDelta.Citation.ofPageLocation(pageLocation))
+
+        fun citationsDelta(contentBlockLocation: CitationContentBlockLocation) =
+            citationsDelta(CitationsDelta.Citation.ofContentBlockLocation(contentBlockLocation))
 
         fun index(index: Long) = index(JsonField.of(index))
 

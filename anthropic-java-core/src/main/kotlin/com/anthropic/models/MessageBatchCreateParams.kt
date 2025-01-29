@@ -1674,6 +1674,12 @@ private constructor(
                 /** The model will use the specified tool with `tool_choice.name`. */
                 fun toolChoice(tool: ToolChoiceTool) = toolChoice(ToolChoice.ofTool(tool))
 
+                /** The model will use the specified tool with `tool_choice.name`. */
+                fun toolToolChoice(name: String) =
+                    toolChoice(
+                        ToolChoiceTool.builder().type(ToolChoiceTool.Type.TOOL).name(name).build()
+                    )
+
                 /**
                  * Definitions of tools that the model may use.
                  *
