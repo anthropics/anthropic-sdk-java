@@ -154,8 +154,38 @@ private constructor(
          * failed, or the reason why processing was not attempted, such as cancellation or
          * expiration.
          */
+        fun succeededResult(message: Message) =
+            result(
+                MessageBatchSucceededResult.builder()
+                    .type(MessageBatchSucceededResult.Type.SUCCEEDED)
+                    .message(message)
+                    .build()
+            )
+
+        /**
+         * Processing result for this request.
+         *
+         * Contains a Message output if processing was successful, an error response if processing
+         * failed, or the reason why processing was not attempted, such as cancellation or
+         * expiration.
+         */
         fun result(errored: MessageBatchErroredResult) =
             result(MessageBatchResult.ofErrored(errored))
+
+        /**
+         * Processing result for this request.
+         *
+         * Contains a Message output if processing was successful, an error response if processing
+         * failed, or the reason why processing was not attempted, such as cancellation or
+         * expiration.
+         */
+        fun erroredResult(error: ErrorResponse) =
+            result(
+                MessageBatchErroredResult.builder()
+                    .type(MessageBatchErroredResult.Type.ERRORED)
+                    .error(error)
+                    .build()
+            )
 
         /**
          * Processing result for this request.

@@ -81,23 +81,90 @@ private constructor(
         fun error(invalidRequest: BetaInvalidRequestError) =
             error(BetaError.ofInvalidRequest(invalidRequest))
 
+        fun invalidRequestError(message: String) =
+            error(
+                BetaInvalidRequestError.builder()
+                    .type(BetaInvalidRequestError.Type.INVALID_REQUEST_ERROR)
+                    .message(message)
+                    .build()
+            )
+
         fun error(authentication: BetaAuthenticationError) =
             error(BetaError.ofAuthentication(authentication))
 
+        fun authenticationError(message: String) =
+            error(
+                BetaAuthenticationError.builder()
+                    .type(BetaAuthenticationError.Type.AUTHENTICATION_ERROR)
+                    .message(message)
+                    .build()
+            )
+
         fun error(billing: BetaBillingError) = error(BetaError.ofBilling(billing))
+
+        fun billingError(message: String) =
+            error(
+                BetaBillingError.builder()
+                    .type(BetaBillingError.Type.BILLING_ERROR)
+                    .message(message)
+                    .build()
+            )
 
         fun error(permission: BetaPermissionError) = error(BetaError.ofPermission(permission))
 
+        fun permissionError(message: String) =
+            error(
+                BetaPermissionError.builder()
+                    .type(BetaPermissionError.Type.PERMISSION_ERROR)
+                    .message(message)
+                    .build()
+            )
+
         fun error(notFound: BetaNotFoundError) = error(BetaError.ofNotFound(notFound))
 
+        fun notFoundError(message: String) =
+            error(
+                BetaNotFoundError.builder()
+                    .type(BetaNotFoundError.Type.NOT_FOUND_ERROR)
+                    .message(message)
+                    .build()
+            )
+
         fun error(rateLimit: BetaRateLimitError) = error(BetaError.ofRateLimit(rateLimit))
+
+        fun rateLimitError(message: String) =
+            error(
+                BetaRateLimitError.builder()
+                    .type(BetaRateLimitError.Type.RATE_LIMIT_ERROR)
+                    .message(message)
+                    .build()
+            )
 
         fun error(gatewayTimeout: BetaGatewayTimeoutError) =
             error(BetaError.ofGatewayTimeout(gatewayTimeout))
 
+        fun gatewayTimeoutError(message: String) =
+            error(
+                BetaGatewayTimeoutError.builder()
+                    .type(BetaGatewayTimeoutError.Type.TIMEOUT_ERROR)
+                    .message(message)
+                    .build()
+            )
+
         fun error(api: BetaApiError) = error(BetaError.ofApi(api))
 
+        fun apiError(message: String) =
+            error(BetaApiError.builder().type(BetaApiError.Type.API_ERROR).message(message).build())
+
         fun error(overloaded: BetaOverloadedError) = error(BetaError.ofOverloaded(overloaded))
+
+        fun overloadedError(message: String) =
+            error(
+                BetaOverloadedError.builder()
+                    .type(BetaOverloadedError.Type.OVERLOADED_ERROR)
+                    .message(message)
+                    .build()
+            )
 
         fun type(type: Type) = type(JsonField.of(type))
 
