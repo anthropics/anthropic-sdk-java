@@ -143,6 +143,24 @@ private constructor(
         fun source(betaContentBlock: BetaContentBlockSource) =
             source(Source.ofBetaContentBlock(betaContentBlock))
 
+        fun betaContentBlockSource(content: BetaContentBlockSource.Content) =
+            source(
+                BetaContentBlockSource.builder()
+                    .type(BetaContentBlockSource.Type.CONTENT)
+                    .content(content)
+                    .build()
+            )
+
+        fun betaContentBlockSource(string: String) =
+            betaContentBlockSource(BetaContentBlockSource.Content.ofString(string))
+
+        fun betaContentBlockSourceOfBetaContentBlockSource(
+            betaContentBlockSource: List<BetaContentBlockSourceContent>
+        ) =
+            betaContentBlockSource(
+                BetaContentBlockSource.Content.ofBetaContentBlockSource(betaContentBlockSource)
+            )
+
         fun type(type: Type) = type(JsonField.of(type))
 
         fun type(type: JsonField<Type>) = apply { this.type = type }

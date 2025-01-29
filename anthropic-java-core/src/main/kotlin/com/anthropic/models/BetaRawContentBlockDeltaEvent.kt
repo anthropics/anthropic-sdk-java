@@ -98,9 +98,45 @@ private constructor(
 
         fun delta(betaText: BetaTextDelta) = delta(Delta.ofBetaText(betaText))
 
+        fun betaTextDelta(text: String) =
+            delta(BetaTextDelta.builder().type(BetaTextDelta.Type.TEXT_DELTA).text(text).build())
+
         fun delta(betaInputJson: BetaInputJsonDelta) = delta(Delta.ofBetaInputJson(betaInputJson))
 
+        fun betaInputJsonDelta(partialJson: String) =
+            delta(
+                BetaInputJsonDelta.builder()
+                    .type(BetaInputJsonDelta.Type.INPUT_JSON_DELTA)
+                    .partialJson(partialJson)
+                    .build()
+            )
+
         fun delta(betaCitations: BetaCitationsDelta) = delta(Delta.ofBetaCitations(betaCitations))
+
+        fun betaCitationsDelta(citation: BetaCitationsDelta.Citation) =
+            delta(
+                BetaCitationsDelta.builder()
+                    .type(BetaCitationsDelta.Type.CITATIONS_DELTA)
+                    .citation(citation)
+                    .build()
+            )
+
+        fun betaCitationsDelta(betaCitationCharLocation: BetaCitationCharLocation) =
+            betaCitationsDelta(
+                BetaCitationsDelta.Citation.ofBetaCitationCharLocation(betaCitationCharLocation)
+            )
+
+        fun betaCitationsDelta(betaCitationPageLocation: BetaCitationPageLocation) =
+            betaCitationsDelta(
+                BetaCitationsDelta.Citation.ofBetaCitationPageLocation(betaCitationPageLocation)
+            )
+
+        fun betaCitationsDelta(betaCitationContentBlockLocation: BetaCitationContentBlockLocation) =
+            betaCitationsDelta(
+                BetaCitationsDelta.Citation.ofBetaCitationContentBlockLocation(
+                    betaCitationContentBlockLocation
+                )
+            )
 
         fun index(index: Long) = index(JsonField.of(index))
 

@@ -14,10 +14,12 @@ class BetaMessageBatchErroredResultTest {
                 .error(
                     BetaErrorResponse.builder()
                         .error(
-                            BetaInvalidRequestError.builder()
-                                .message("message")
-                                .type(BetaInvalidRequestError.Type.INVALID_REQUEST_ERROR)
-                                .build()
+                            BetaError.ofInvalidRequest(
+                                BetaInvalidRequestError.builder()
+                                    .message("message")
+                                    .type(BetaInvalidRequestError.Type.INVALID_REQUEST_ERROR)
+                                    .build()
+                            )
                         )
                         .type(BetaErrorResponse.Type.ERROR)
                         .build()
@@ -29,10 +31,12 @@ class BetaMessageBatchErroredResultTest {
             .isEqualTo(
                 BetaErrorResponse.builder()
                     .error(
-                        BetaInvalidRequestError.builder()
-                            .message("message")
-                            .type(BetaInvalidRequestError.Type.INVALID_REQUEST_ERROR)
-                            .build()
+                        BetaError.ofInvalidRequest(
+                            BetaInvalidRequestError.builder()
+                                .message("message")
+                                .type(BetaInvalidRequestError.Type.INVALID_REQUEST_ERROR)
+                                .build()
+                        )
                     )
                     .type(BetaErrorResponse.Type.ERROR)
                     .build()
