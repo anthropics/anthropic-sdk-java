@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.http.Headers
@@ -42,7 +43,7 @@ private constructor(
     private val body: MessageBatchCreateBody,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
-) {
+) : Params {
 
     /**
      * List of requests for prompt completion. Each is an individual request to create a Message.
@@ -60,11 +61,11 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    @JvmSynthetic internal fun getBody(): MessageBatchCreateBody = body
+    @JvmSynthetic internal fun _body(): MessageBatchCreateBody = body
 
-    @JvmSynthetic internal fun getHeaders(): Headers = additionalHeaders
+    override fun _headers(): Headers = additionalHeaders
 
-    @JvmSynthetic internal fun getQueryParams(): QueryParams = additionalQueryParams
+    override fun _queryParams(): QueryParams = additionalQueryParams
 
     @NoAutoDetect
     class MessageBatchCreateBody

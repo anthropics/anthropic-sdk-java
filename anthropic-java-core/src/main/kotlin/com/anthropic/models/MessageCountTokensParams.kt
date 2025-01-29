@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.http.Headers
@@ -41,7 +42,7 @@ private constructor(
     private val body: MessageCountTokensBody,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
-) {
+) : Params {
 
     /**
      * Input messages.
@@ -385,11 +386,11 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    @JvmSynthetic internal fun getBody(): MessageCountTokensBody = body
+    @JvmSynthetic internal fun _body(): MessageCountTokensBody = body
 
-    @JvmSynthetic internal fun getHeaders(): Headers = additionalHeaders
+    override fun _headers(): Headers = additionalHeaders
 
-    @JvmSynthetic internal fun getQueryParams(): QueryParams = additionalQueryParams
+    override fun _queryParams(): QueryParams = additionalQueryParams
 
     @NoAutoDetect
     class MessageCountTokensBody

@@ -87,7 +87,7 @@ class BetaMessageCountTokensParamsTest {
     }
 
     @Test
-    fun getBody() {
+    fun body() {
         val params =
             BetaMessageCountTokensParams.builder()
                 .addMessage(
@@ -163,7 +163,7 @@ class BetaMessageCountTokensParamsTest {
                 )
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
-        val body = params.getBody()
+        val body = params._body()
         assertThat(body).isNotNull
         assertThat(body.messages())
             .isEqualTo(
@@ -253,7 +253,7 @@ class BetaMessageCountTokensParamsTest {
     }
 
     @Test
-    fun getBodyWithoutOptionalFields() {
+    fun bodyWithoutOptionalFields() {
         val params =
             BetaMessageCountTokensParams.builder()
                 .addMessage(
@@ -264,7 +264,7 @@ class BetaMessageCountTokensParamsTest {
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .build()
-        val body = params.getBody()
+        val body = params._body()
         assertThat(body).isNotNull
         assertThat(body.messages())
             .isEqualTo(

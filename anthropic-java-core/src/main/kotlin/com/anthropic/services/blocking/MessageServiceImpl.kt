@@ -16,6 +16,7 @@ import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.StreamResponse
 import com.anthropic.core.http.map
 import com.anthropic.core.json
+import com.anthropic.core.prepare
 import com.anthropic.errors.AnthropicError
 import com.anthropic.models.Message
 import com.anthropic.models.MessageCountTokensParams
@@ -51,12 +52,9 @@ internal constructor(
             HttpRequest.builder()
                 .method(HttpMethod.POST)
                 .addPathSegments("v1", "messages")
-                .putAllQueryParams(clientOptions.queryParams)
-                .replaceAllQueryParams(params.getQueryParams())
-                .putAllHeaders(clientOptions.headers)
-                .replaceAllHeaders(params.getHeaders())
-                .body(json(clientOptions.jsonMapper, params.getBody()))
+                .body(json(clientOptions.jsonMapper, params._body()))
                 .build()
+                .prepare(clientOptions, params)
         return clientOptions.httpClient
             .execute(
                 request,
@@ -94,21 +92,18 @@ internal constructor(
             HttpRequest.builder()
                 .method(HttpMethod.POST)
                 .addPathSegments("v1", "messages")
-                .putAllQueryParams(clientOptions.queryParams)
-                .replaceAllQueryParams(params.getQueryParams())
-                .putAllHeaders(clientOptions.headers)
-                .replaceAllHeaders(params.getHeaders())
                 .body(
                     json(
                         clientOptions.jsonMapper,
                         params
-                            .getBody()
+                            ._body()
                             .toBuilder()
                             .putAdditionalProperty("stream", JsonValue.from(true))
                             .build()
                     )
                 )
                 .build()
+                .prepare(clientOptions, params)
         return clientOptions.httpClient
             .execute(
                 request,
@@ -146,12 +141,9 @@ internal constructor(
             HttpRequest.builder()
                 .method(HttpMethod.POST)
                 .addPathSegments("v1", "messages", "count_tokens")
-                .putAllQueryParams(clientOptions.queryParams)
-                .replaceAllQueryParams(params.getQueryParams())
-                .putAllHeaders(clientOptions.headers)
-                .replaceAllHeaders(params.getHeaders())
-                .body(json(clientOptions.jsonMapper, params.getBody()))
+                .body(json(clientOptions.jsonMapper, params._body()))
                 .build()
+                .prepare(clientOptions, params)
         return clientOptions.httpClient.execute(request, requestOptions).let { response ->
             response
                 .use { countTokensHandler.handle(it) }

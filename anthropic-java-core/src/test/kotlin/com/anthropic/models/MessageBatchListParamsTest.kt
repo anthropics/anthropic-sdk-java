@@ -14,7 +14,7 @@ class MessageBatchListParamsTest {
     }
 
     @Test
-    fun getQueryParams() {
+    fun queryParams() {
         val params =
             MessageBatchListParams.builder()
                 .afterId("after_id")
@@ -25,13 +25,13 @@ class MessageBatchListParamsTest {
         expected.put("after_id", "after_id")
         expected.put("before_id", "before_id")
         expected.put("limit", "1")
-        assertThat(params.getQueryParams()).isEqualTo(expected.build())
+        assertThat(params._queryParams()).isEqualTo(expected.build())
     }
 
     @Test
-    fun getQueryParamsWithoutOptionalFields() {
+    fun queryParamsWithoutOptionalFields() {
         val params = MessageBatchListParams.builder().build()
         val expected = QueryParams.builder()
-        assertThat(params.getQueryParams()).isEqualTo(expected.build())
+        assertThat(params._queryParams()).isEqualTo(expected.build())
     }
 }

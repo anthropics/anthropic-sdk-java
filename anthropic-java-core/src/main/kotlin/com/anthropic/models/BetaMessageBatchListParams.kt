@@ -3,6 +3,7 @@
 package com.anthropic.models
 
 import com.anthropic.core.NoAutoDetect
+import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
@@ -20,7 +21,7 @@ private constructor(
     private val betas: List<AnthropicBeta>?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
-) {
+) : Params {
 
     /**
      * ID of the object to use as a cursor for pagination. When provided, returns the page of
@@ -48,16 +49,14 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    @JvmSynthetic
-    internal fun getHeaders(): Headers {
+    override fun _headers(): Headers {
         val headers = Headers.builder()
         this.betas?.let { headers.put("anthropic-beta", it.map(Any::toString)) }
         headers.putAll(additionalHeaders)
         return headers.build()
     }
 
-    @JvmSynthetic
-    internal fun getQueryParams(): QueryParams {
+    override fun _queryParams(): QueryParams {
         val queryParams = QueryParams.builder()
         this.afterId?.let { queryParams.put("after_id", listOf(it.toString())) }
         this.beforeId?.let { queryParams.put("before_id", listOf(it.toString())) }

@@ -14,7 +14,7 @@ class BetaModelListParamsTest {
     }
 
     @Test
-    fun getQueryParams() {
+    fun queryParams() {
         val params =
             BetaModelListParams.builder()
                 .afterId("after_id")
@@ -25,13 +25,13 @@ class BetaModelListParamsTest {
         expected.put("after_id", "after_id")
         expected.put("before_id", "before_id")
         expected.put("limit", "1")
-        assertThat(params.getQueryParams()).isEqualTo(expected.build())
+        assertThat(params._queryParams()).isEqualTo(expected.build())
     }
 
     @Test
-    fun getQueryParamsWithoutOptionalFields() {
+    fun queryParamsWithoutOptionalFields() {
         val params = BetaModelListParams.builder().build()
         val expected = QueryParams.builder()
-        assertThat(params.getQueryParams()).isEqualTo(expected.build())
+        assertThat(params._queryParams()).isEqualTo(expected.build())
     }
 }
