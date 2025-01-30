@@ -11,9 +11,7 @@ class MessageCountTokensParamsTest {
     @Test
     fun createMessageCountTokensParams() {
         MessageCountTokensParams.builder()
-            .addMessage(
-                MessageParam.builder().content("string").role(MessageParam.Role.USER).build()
-            )
+            .addUserMessage("string")
             .model(Model.CLAUDE_3_5_HAIKU_LATEST)
             .systemOfTextBlockParams(
                 listOf(
@@ -85,9 +83,7 @@ class MessageCountTokensParamsTest {
     fun body() {
         val params =
             MessageCountTokensParams.builder()
-                .addMessage(
-                    MessageParam.builder().content("string").role(MessageParam.Role.USER).build()
-                )
+                .addUserMessage("string")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .systemOfTextBlockParams(
                     listOf(
@@ -240,9 +236,7 @@ class MessageCountTokensParamsTest {
     fun bodyWithoutOptionalFields() {
         val params =
             MessageCountTokensParams.builder()
-                .addMessage(
-                    MessageParam.builder().content("string").role(MessageParam.Role.USER).build()
-                )
+                .addUserMessage("string")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .build()
         val body = params._body()

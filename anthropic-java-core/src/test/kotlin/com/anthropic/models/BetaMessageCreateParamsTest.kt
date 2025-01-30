@@ -12,12 +12,7 @@ class BetaMessageCreateParamsTest {
     fun createBetaMessageCreateParams() {
         BetaMessageCreateParams.builder()
             .maxTokens(1024L)
-            .addMessage(
-                BetaMessageParam.builder()
-                    .content("Hello, world")
-                    .role(BetaMessageParam.Role.USER)
-                    .build()
-            )
+            .addUserMessage("Hello, world")
             .model(Model.CLAUDE_3_5_HAIKU_LATEST)
             .metadata(BetaMetadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
             .addStopSequence("string")
@@ -97,12 +92,7 @@ class BetaMessageCreateParamsTest {
         val params =
             BetaMessageCreateParams.builder()
                 .maxTokens(1024L)
-                .addMessage(
-                    BetaMessageParam.builder()
-                        .content("Hello, world")
-                        .role(BetaMessageParam.Role.USER)
-                        .build()
-                )
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(
                     BetaMetadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
@@ -278,12 +268,7 @@ class BetaMessageCreateParamsTest {
         val params =
             BetaMessageCreateParams.builder()
                 .maxTokens(1024L)
-                .addMessage(
-                    BetaMessageParam.builder()
-                        .content("Hello, world")
-                        .role(BetaMessageParam.Role.USER)
-                        .build()
-                )
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .build()
         val body = params._body()

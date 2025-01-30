@@ -10,7 +10,6 @@ import com.anthropic.models.BetaCacheControlEphemeral
 import com.anthropic.models.BetaCitationCharLocationParam
 import com.anthropic.models.BetaMessageCountTokensParams
 import com.anthropic.models.BetaMessageCreateParams
-import com.anthropic.models.BetaMessageParam
 import com.anthropic.models.BetaMetadata
 import com.anthropic.models.BetaTextBlockParam
 import com.anthropic.models.BetaTool
@@ -34,12 +33,7 @@ class MessageServiceTest {
             messageService.create(
                 BetaMessageCreateParams.builder()
                     .maxTokens(1024L)
-                    .addMessage(
-                        BetaMessageParam.builder()
-                            .content("Hello, world")
-                            .role(BetaMessageParam.Role.USER)
-                            .build()
-                    )
+                    .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                     .metadata(
                         BetaMetadata.builder()
@@ -134,12 +128,7 @@ class MessageServiceTest {
             messageService.createStreaming(
                 BetaMessageCreateParams.builder()
                     .maxTokens(1024L)
-                    .addMessage(
-                        BetaMessageParam.builder()
-                            .content("Hello, world")
-                            .role(BetaMessageParam.Role.USER)
-                            .build()
-                    )
+                    .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                     .metadata(
                         BetaMetadata.builder()
@@ -237,12 +226,7 @@ class MessageServiceTest {
         val betaMessageTokensCount =
             messageService.countTokens(
                 BetaMessageCountTokensParams.builder()
-                    .addMessage(
-                        BetaMessageParam.builder()
-                            .content("string")
-                            .role(BetaMessageParam.Role.USER)
-                            .build()
-                    )
+                    .addUserMessage("string")
                     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                     .systemOfBetaTextBlockParams(
                         listOf(
