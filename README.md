@@ -1,9 +1,9 @@
 # Anthropic Java API Library
 
 > [!NOTE]  
-> The Anthropic Java API Library is currently in _alpha_.
+> The Anthropic Java API Library is currently in _beta_.
 >
-> There may be frequent breaking changes.
+> There may be minor breaking changes.
 >
 > Have thoughts or feedback? [File an issue](https://github.com/anthropics/anthropic-sdk-java/issues/new) or comment on [this discussion](https://github.com/anthropics/anthropic-sdk-java/discussions/95). 
 
