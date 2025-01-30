@@ -19,10 +19,7 @@ public final class MessagesConversationAsyncExample {
         MessageCreateParams.Builder createParamsBuilder = MessageCreateParams.builder()
                 .model(Model.CLAUDE_3_5_SONNET_LATEST)
                 .maxTokens(2048)
-                .addMessage(MessageParam.builder()
-                        .role(MessageParam.Role.USER)
-                        .content("Tell me a story about building the best SDK!")
-                        .build());
+                .addUserMessage("Tell me a story about building the best SDK!");
 
         CompletableFuture<Void> future = CompletableFuture.completedFuture(null);
         for (int i = 0; i < 4; i++) {
@@ -37,10 +34,7 @@ public final class MessagesConversationAsyncExample {
 
                         createParamsBuilder
                                 .addMessage(message)
-                                .addMessage(MessageParam.builder()
-                                        .role(MessageParam.Role.USER)
-                                        .content("But why?" + "?".repeat(index))
-                                        .build());
+                                .addUserMessage("But why?" + "?".repeat(index));
                     });
         }
 
