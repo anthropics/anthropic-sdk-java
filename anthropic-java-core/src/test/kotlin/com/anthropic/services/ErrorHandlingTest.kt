@@ -22,7 +22,6 @@ import com.anthropic.models.CitationCharLocation
 import com.anthropic.models.CitationCharLocationParam
 import com.anthropic.models.Message
 import com.anthropic.models.MessageCreateParams
-import com.anthropic.models.MessageParam
 import com.anthropic.models.Metadata
 import com.anthropic.models.Model
 import com.anthropic.models.TextBlock
@@ -69,12 +68,7 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .addMessage(
-                    MessageParam.builder()
-                        .content("Hello, world")
-                        .role(MessageParam.Role.USER)
-                        .build()
-                )
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .addStopSequence("string")
@@ -190,12 +184,7 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .addMessage(
-                    MessageParam.builder()
-                        .content("Hello, world")
-                        .role(MessageParam.Role.USER)
-                        .build()
-                )
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .addStopSequence("string")
@@ -283,12 +272,7 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .addMessage(
-                    MessageParam.builder()
-                        .content("Hello, world")
-                        .role(MessageParam.Role.USER)
-                        .build()
-                )
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .addStopSequence("string")
@@ -376,12 +360,7 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .addMessage(
-                    MessageParam.builder()
-                        .content("Hello, world")
-                        .role(MessageParam.Role.USER)
-                        .build()
-                )
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .addStopSequence("string")
@@ -473,12 +452,7 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .addMessage(
-                    MessageParam.builder()
-                        .content("Hello, world")
-                        .role(MessageParam.Role.USER)
-                        .build()
-                )
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .addStopSequence("string")
@@ -566,12 +540,7 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .addMessage(
-                    MessageParam.builder()
-                        .content("Hello, world")
-                        .role(MessageParam.Role.USER)
-                        .build()
-                )
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .addStopSequence("string")
@@ -663,12 +632,7 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .addMessage(
-                    MessageParam.builder()
-                        .content("Hello, world")
-                        .role(MessageParam.Role.USER)
-                        .build()
-                )
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .addStopSequence("string")
@@ -756,12 +720,7 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .addMessage(
-                    MessageParam.builder()
-                        .content("Hello, world")
-                        .role(MessageParam.Role.USER)
-                        .build()
-                )
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .addStopSequence("string")
@@ -853,12 +812,7 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .addMessage(
-                    MessageParam.builder()
-                        .content("Hello, world")
-                        .role(MessageParam.Role.USER)
-                        .build()
-                )
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .addStopSequence("string")
@@ -951,12 +905,7 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .addMessage(
-                    MessageParam.builder()
-                        .content("Hello, world")
-                        .role(MessageParam.Role.USER)
-                        .build()
-                )
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .addStopSequence("string")
@@ -1043,12 +992,7 @@ class ErrorHandlingTest {
         val params =
             MessageCreateParams.builder()
                 .maxTokens(1024L)
-                .addMessage(
-                    MessageParam.builder()
-                        .content("Hello, world")
-                        .role(MessageParam.Role.USER)
-                        .build()
-                )
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .addStopSequence("string")
