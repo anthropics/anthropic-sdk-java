@@ -17,12 +17,7 @@ class BetaMessageBatchCreateParamsTest {
                     .params(
                         BetaMessageBatchCreateParams.Request.Params.builder()
                             .maxTokens(1024L)
-                            .addMessage(
-                                BetaMessageParam.builder()
-                                    .content("Hello, world")
-                                    .role(BetaMessageParam.Role.USER)
-                                    .build()
-                            )
+                            .addUserMessage("Hello, world")
                             .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                             .metadata(
                                 BetaMetadata.builder()
@@ -118,12 +113,7 @@ class BetaMessageBatchCreateParamsTest {
                         .params(
                             BetaMessageBatchCreateParams.Request.Params.builder()
                                 .maxTokens(1024L)
-                                .addMessage(
-                                    BetaMessageParam.builder()
-                                        .content("Hello, world")
-                                        .role(BetaMessageParam.Role.USER)
-                                        .build()
-                                )
+                                .addUserMessage("Hello, world")
                                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                                 .metadata(
                                     BetaMetadata.builder()
@@ -218,12 +208,7 @@ class BetaMessageBatchCreateParamsTest {
                         .params(
                             BetaMessageBatchCreateParams.Request.Params.builder()
                                 .maxTokens(1024L)
-                                .addMessage(
-                                    BetaMessageParam.builder()
-                                        .content("Hello, world")
-                                        .role(BetaMessageParam.Role.USER)
-                                        .build()
-                                )
+                                .addUserMessage("Hello, world")
                                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                                 .metadata(
                                     BetaMetadata.builder()
@@ -319,12 +304,7 @@ class BetaMessageBatchCreateParamsTest {
                         .params(
                             BetaMessageBatchCreateParams.Request.Params.builder()
                                 .maxTokens(1024L)
-                                .addMessage(
-                                    BetaMessageParam.builder()
-                                        .content("Hello, world")
-                                        .role(BetaMessageParam.Role.USER)
-                                        .build()
-                                )
+                                .addUserMessage("Hello, world")
                                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                                 .build()
                         )
@@ -341,12 +321,7 @@ class BetaMessageBatchCreateParamsTest {
                         .params(
                             BetaMessageBatchCreateParams.Request.Params.builder()
                                 .maxTokens(1024L)
-                                .addMessage(
-                                    BetaMessageParam.builder()
-                                        .content("Hello, world")
-                                        .role(BetaMessageParam.Role.USER)
-                                        .build()
-                                )
+                                .addUserMessage("Hello, world")
                                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                                 .build()
                         )

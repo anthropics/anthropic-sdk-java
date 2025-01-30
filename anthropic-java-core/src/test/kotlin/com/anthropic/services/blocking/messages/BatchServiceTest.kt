@@ -12,7 +12,6 @@ import com.anthropic.models.MessageBatchCreateParams
 import com.anthropic.models.MessageBatchDeleteParams
 import com.anthropic.models.MessageBatchListParams
 import com.anthropic.models.MessageBatchRetrieveParams
-import com.anthropic.models.MessageParam
 import com.anthropic.models.Metadata
 import com.anthropic.models.Model
 import com.anthropic.models.TextBlockParam
@@ -41,12 +40,7 @@ class BatchServiceTest {
                             .params(
                                 MessageBatchCreateParams.Request.Params.builder()
                                     .maxTokens(1024L)
-                                    .addMessage(
-                                        MessageParam.builder()
-                                            .content("Hello, world")
-                                            .role(MessageParam.Role.USER)
-                                            .build()
-                                    )
+                                    .addUserMessage("Hello, world")
                                     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                                     .metadata(
                                         Metadata.builder()

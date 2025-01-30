@@ -17,12 +17,7 @@ class MessageBatchCreateParamsTest {
                     .params(
                         MessageBatchCreateParams.Request.Params.builder()
                             .maxTokens(1024L)
-                            .addMessage(
-                                MessageParam.builder()
-                                    .content("Hello, world")
-                                    .role(MessageParam.Role.USER)
-                                    .build()
-                            )
+                            .addUserMessage("Hello, world")
                             .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                             .metadata(
                                 Metadata.builder()
@@ -114,12 +109,7 @@ class MessageBatchCreateParamsTest {
                         .params(
                             MessageBatchCreateParams.Request.Params.builder()
                                 .maxTokens(1024L)
-                                .addMessage(
-                                    MessageParam.builder()
-                                        .content("Hello, world")
-                                        .role(MessageParam.Role.USER)
-                                        .build()
-                                )
+                                .addUserMessage("Hello, world")
                                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                                 .metadata(
                                     Metadata.builder()
@@ -211,12 +201,7 @@ class MessageBatchCreateParamsTest {
                         .params(
                             MessageBatchCreateParams.Request.Params.builder()
                                 .maxTokens(1024L)
-                                .addMessage(
-                                    MessageParam.builder()
-                                        .content("Hello, world")
-                                        .role(MessageParam.Role.USER)
-                                        .build()
-                                )
+                                .addUserMessage("Hello, world")
                                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                                 .metadata(
                                     Metadata.builder()
@@ -310,12 +295,7 @@ class MessageBatchCreateParamsTest {
                         .params(
                             MessageBatchCreateParams.Request.Params.builder()
                                 .maxTokens(1024L)
-                                .addMessage(
-                                    MessageParam.builder()
-                                        .content("Hello, world")
-                                        .role(MessageParam.Role.USER)
-                                        .build()
-                                )
+                                .addUserMessage("Hello, world")
                                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                                 .build()
                         )
@@ -332,12 +312,7 @@ class MessageBatchCreateParamsTest {
                         .params(
                             MessageBatchCreateParams.Request.Params.builder()
                                 .maxTokens(1024L)
-                                .addMessage(
-                                    MessageParam.builder()
-                                        .content("Hello, world")
-                                        .role(MessageParam.Role.USER)
-                                        .build()
-                                )
+                                .addUserMessage("Hello, world")
                                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                                 .build()
                         )

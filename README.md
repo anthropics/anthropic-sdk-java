@@ -83,15 +83,11 @@ To create a new message, first use the `MessageCreateParams` builder to specify 
 ```java
 import com.anthropic.models.Message;
 import com.anthropic.models.MessageCreateParams;
-import com.anthropic.models.MessageParam;
 import com.anthropic.models.Model;
 
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
-    .addMessage(MessageParam.builder()
-        .role(MessageParam.Role.USER)
-        .content("Hello, Claude")
-        .build())
+    .addUserMessage("Hello, Claude")
     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
     .build();
 Message message = client.messages().create(params);

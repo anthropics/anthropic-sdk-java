@@ -11,12 +11,7 @@ class BetaMessageCountTokensParamsTest {
     @Test
     fun createBetaMessageCountTokensParams() {
         BetaMessageCountTokensParams.builder()
-            .addMessage(
-                BetaMessageParam.builder()
-                    .content("string")
-                    .role(BetaMessageParam.Role.USER)
-                    .build()
-            )
+            .addUserMessage("string")
             .model(Model.CLAUDE_3_5_HAIKU_LATEST)
             .systemOfBetaTextBlockParams(
                 listOf(
@@ -90,12 +85,7 @@ class BetaMessageCountTokensParamsTest {
     fun body() {
         val params =
             BetaMessageCountTokensParams.builder()
-                .addMessage(
-                    BetaMessageParam.builder()
-                        .content("string")
-                        .role(BetaMessageParam.Role.USER)
-                        .build()
-                )
+                .addUserMessage("string")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .systemOfBetaTextBlockParams(
                     listOf(
@@ -256,12 +246,7 @@ class BetaMessageCountTokensParamsTest {
     fun bodyWithoutOptionalFields() {
         val params =
             BetaMessageCountTokensParams.builder()
-                .addMessage(
-                    BetaMessageParam.builder()
-                        .content("string")
-                        .role(BetaMessageParam.Role.USER)
-                        .build()
-                )
+                .addUserMessage("string")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .build()
         val body = params._body()

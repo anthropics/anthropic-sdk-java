@@ -13,7 +13,6 @@ import com.anthropic.models.BetaMessageBatchCreateParams
 import com.anthropic.models.BetaMessageBatchDeleteParams
 import com.anthropic.models.BetaMessageBatchListParams
 import com.anthropic.models.BetaMessageBatchRetrieveParams
-import com.anthropic.models.BetaMessageParam
 import com.anthropic.models.BetaMetadata
 import com.anthropic.models.BetaTextBlockParam
 import com.anthropic.models.BetaTool
@@ -42,12 +41,7 @@ class BatchServiceTest {
                             .params(
                                 BetaMessageBatchCreateParams.Request.Params.builder()
                                     .maxTokens(1024L)
-                                    .addMessage(
-                                        BetaMessageParam.builder()
-                                            .content("Hello, world")
-                                            .role(BetaMessageParam.Role.USER)
-                                            .build()
-                                    )
+                                    .addUserMessage("Hello, world")
                                     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                                     .metadata(
                                         BetaMetadata.builder()
