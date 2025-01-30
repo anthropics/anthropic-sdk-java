@@ -3,7 +3,6 @@ package com.anthropic.example;
 import com.anthropic.client.AnthropicClientAsync;
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync;
 import com.anthropic.models.MessageCreateParams;
-import com.anthropic.models.MessageParam;
 import com.anthropic.models.Model;
 import java.util.concurrent.CompletableFuture;
 
@@ -32,9 +31,7 @@ public final class MessagesConversationAsyncExample {
 
                         System.out.println("\n-----------------------------------\n");
 
-                        createParamsBuilder
-                                .addMessage(message)
-                                .addUserMessage("But why?" + "?".repeat(index));
+                        createParamsBuilder.addMessage(message).addUserMessage("But why?" + "?".repeat(index));
                     });
         }
 

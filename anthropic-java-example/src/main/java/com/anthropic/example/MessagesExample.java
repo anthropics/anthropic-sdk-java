@@ -3,8 +3,6 @@ package com.anthropic.example;
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.models.MessageCreateParams;
-import com.anthropic.models.MessageParam;
-import com.anthropic.models.MessageParam.Role;
 import com.anthropic.models.Model;
 
 public final class MessagesExample {

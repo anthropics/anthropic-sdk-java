@@ -4,8 +4,6 @@ import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.core.http.StreamResponse;
 import com.anthropic.models.MessageCreateParams;
-import com.anthropic.models.MessageParam;
-import com.anthropic.models.MessageParam.Role;
 import com.anthropic.models.Model;
 import com.anthropic.models.RawMessageStreamEvent;
 

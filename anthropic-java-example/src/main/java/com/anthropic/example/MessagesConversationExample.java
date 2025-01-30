@@ -4,7 +4,6 @@ import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.models.Message;
 import com.anthropic.models.MessageCreateParams;
-import com.anthropic.models.MessageParam;
 import com.anthropic.models.Model;
 
 public final class MessagesConversationExample {
@@ -30,9 +29,7 @@ public final class MessagesConversationExample {
 
             System.out.println("\n-----------------------------------\n");
 
-            createParamsBuilder
-                    .addMessage(message)
-                    .addUserMessage("But why?" + "?".repeat(i));
+            createParamsBuilder.addMessage(message).addUserMessage("But why?" + "?".repeat(i));
         }
     }
 }
