@@ -133,19 +133,7 @@ See [Pagination](#pagination) below for more information on transparently workin
 
 To make a request to the Anthropic API, you generally build an instance of the appropriate `Params` class.
 
-In [Example: creating a resource](#example-creating-a-resource) above, we used the `MessageCreateParams.builder()` to pass to the `create` method of the `messages` service.
-
-Sometimes, the API may support other properties that are not yet supported in the Java SDK types. In that case, you can attach them using the `putAdditionalProperty` method.
-
-```java
-import com.anthropic.core.JsonValue;
-import com.anthropic.models.MessageCreateParams;
-
-MessageCreateParams params = MessageCreateParams.builder()
-    // ... normal properties
-    .putAdditionalProperty("secret_param", JsonValue.from("4242"))
-    .build();
-```
+See [Undocumented request params](#undocumented-request-params) for how to send arbitrary parameters.
 
 ## Responses
 
@@ -325,18 +313,26 @@ This library is typed for convenient access to the documented API. If you need t
 
 ### Undocumented request params
 
-To make requests using undocumented parameters, you can provide or override parameters on the params object while building it.
+In [Example: creating a resource](#example-creating-a-resource) above, we used the `MessageCreateParams.builder()` to pass to the `create` method of the `messages` service.
+
+Sometimes, the API may support other properties that are not yet supported in the Java SDK types. In that case, you can attach them using raw setters:
 
 ```java
-FooCreateParams address = FooCreateParams.builder()
-    .id("my_id")
-    .putAdditionalProperty("secret_prop", JsonValue.from("hello"))
+import com.anthropic.core.JsonValue;
+import com.anthropic.models.MessageCreateParams;
+
+MessageCreateParams params = MessageCreateParams.builder()
+    .putAdditionalHeader("Secret-Header", "42")
+    .putAdditionalQueryParam("secret_query_param", "42")
+    .putAdditionalBodyProperty("secretProperty", JsonValue.from("42"))
     .build();
 ```
 
+You can also use the `putAdditionalProperty` method on nested headers, query params, or body objects.
+
 ### Undocumented response properties
 
-To access undocumented response properties, you can use `res._additionalProperties()` on a response object to get a map of untyped fields of type `Map<String, JsonValue>`. You can then access fields like `._additionalProperties().get("secret_prop").asString()` or use other helpers defined on the `JsonValue` class to extract it to a desired type.
+To access undocumented response properties, you can use `res._additionalProperties()` on a response object to get a map of untyped fields of type `Map<String, JsonValue>`. You can then access fields like `res._additionalProperties().get("secret_prop").asString()` or use other helpers defined on the `JsonValue` class to extract it to a desired type.
 
 ## Logging
 
