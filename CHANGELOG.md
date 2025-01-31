@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.1.0 (2025-01-31)
+
+Full Changelog: [v0.1.0-alpha.11...v0.1.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0-alpha.11...v0.1.0)
+
+### Features
+
+* **client:** helpers for discriminated union variants with one required prop ([#98](https://github.com/anthropics/anthropic-sdk-java/issues/98)) ([03c6ff6](https://github.com/anthropics/anthropic-sdk-java/commit/03c6ff6ea48d331cabf5633b6bce664f3d3b04dc))
+
+
+### Bug Fixes
+
+* **client:** don't leak responses when retrying ([#103](https://github.com/anthropics/anthropic-sdk-java/issues/103)) ([052894b](https://github.com/anthropics/anthropic-sdk-java/commit/052894b2a757a4436194266fe41677239b6fa17a))
+
+
+### Chores
+
+* **api:** update openapi spec url ([#104](https://github.com/anthropics/anthropic-sdk-java/issues/104)) ([eabbf47](https://github.com/anthropics/anthropic-sdk-java/commit/eabbf47bb7844afe3c0f5573dd7533da6a07d612))
+* **internal:** simplify object construction ([#99](https://github.com/anthropics/anthropic-sdk-java/issues/99)) ([df51ab4](https://github.com/anthropics/anthropic-sdk-java/commit/df51ab48521b81e544fe4c5abe2d059852335110))
+
+
+### Documentation
+
+* fix incorrect additional properties info ([#105](https://github.com/anthropics/anthropic-sdk-java/issues/105)) ([535ea7e](https://github.com/anthropics/anthropic-sdk-java/commit/535ea7e20d76541ca974f40d78822a7ca89d7927))
+* format examples ([4b73f0a](https://github.com/anthropics/anthropic-sdk-java/commit/4b73f0a5856c5d02e121c142428264cb5103b631))
+* update examples to use shorthand ([52ddf54](https://github.com/anthropics/anthropic-sdk-java/commit/52ddf5497f53f2cbfc705acade9811ebc392c41d))
+* update to beta ([cfba991](https://github.com/anthropics/anthropic-sdk-java/commit/cfba9919e160107ce3c3876265c41c4976694f54))
+
 ## 0.1.0-alpha.11 (2025-01-29)
 
 Full Changelog: [v0.1.0-alpha.10...v0.1.0-alpha.11](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0-alpha.10...v0.1.0-alpha.11)
