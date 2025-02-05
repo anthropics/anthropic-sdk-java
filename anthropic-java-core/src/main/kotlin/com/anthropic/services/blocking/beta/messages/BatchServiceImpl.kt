@@ -64,15 +64,14 @@ internal constructor(
                 .body(json(clientOptions.jsonMapper, params._body()))
                 .build()
                 .prepare(clientOptions, params)
-        return clientOptions.httpClient.execute(request, requestOptions).let { response ->
-            response
-                .use { createHandler.handle(it) }
-                .apply {
-                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                        validate()
-                    }
+        val response = clientOptions.httpClient.execute(request, requestOptions)
+        return response
+            .use { createHandler.handle(it) }
+            .also {
+                if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                    it.validate()
                 }
-        }
+            }
     }
 
     private val retrieveHandler: Handler<BetaMessageBatch> =
@@ -94,15 +93,14 @@ internal constructor(
                 .putAllHeaders(DEFAULT_HEADERS)
                 .build()
                 .prepare(clientOptions, params)
-        return clientOptions.httpClient.execute(request, requestOptions).let { response ->
-            response
-                .use { retrieveHandler.handle(it) }
-                .apply {
-                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                        validate()
-                    }
+        val response = clientOptions.httpClient.execute(request, requestOptions)
+        return response
+            .use { retrieveHandler.handle(it) }
+            .also {
+                if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                    it.validate()
                 }
-        }
+            }
     }
 
     private val listHandler: Handler<BetaMessageBatchListPage.Response> =
@@ -125,16 +123,15 @@ internal constructor(
                 .putAllHeaders(DEFAULT_HEADERS)
                 .build()
                 .prepare(clientOptions, params)
-        return clientOptions.httpClient.execute(request, requestOptions).let { response ->
-            response
-                .use { listHandler.handle(it) }
-                .apply {
-                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                        validate()
-                    }
+        val response = clientOptions.httpClient.execute(request, requestOptions)
+        return response
+            .use { listHandler.handle(it) }
+            .also {
+                if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                    it.validate()
                 }
-                .let { BetaMessageBatchListPage.of(this, params, it) }
-        }
+            }
+            .let { BetaMessageBatchListPage.of(this, params, it) }
     }
 
     private val deleteHandler: Handler<BetaDeletedMessageBatch> =
@@ -160,15 +157,14 @@ internal constructor(
                 .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                 .build()
                 .prepare(clientOptions, params)
-        return clientOptions.httpClient.execute(request, requestOptions).let { response ->
-            response
-                .use { deleteHandler.handle(it) }
-                .apply {
-                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                        validate()
-                    }
+        val response = clientOptions.httpClient.execute(request, requestOptions)
+        return response
+            .use { deleteHandler.handle(it) }
+            .also {
+                if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                    it.validate()
                 }
-        }
+            }
     }
 
     private val cancelHandler: Handler<BetaMessageBatch> =
@@ -196,15 +192,14 @@ internal constructor(
                 .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                 .build()
                 .prepare(clientOptions, params)
-        return clientOptions.httpClient.execute(request, requestOptions).let { response ->
-            response
-                .use { cancelHandler.handle(it) }
-                .apply {
-                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                        validate()
-                    }
+        val response = clientOptions.httpClient.execute(request, requestOptions)
+        return response
+            .use { cancelHandler.handle(it) }
+            .also {
+                if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                    it.validate()
                 }
-        }
+            }
     }
 
     private val resultsStreamingHandler:
@@ -231,16 +226,15 @@ internal constructor(
                 .putAllHeaders(DEFAULT_HEADERS)
                 .build()
                 .prepare(clientOptions, params)
-        return clientOptions.httpClient.execute(request, requestOptions).let { response ->
-            response
-                .let { resultsStreamingHandler.handle(it) }
-                .let { streamResponse ->
-                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                        streamResponse.map { it.validate() }
-                    } else {
-                        streamResponse
-                    }
+        val response = clientOptions.httpClient.execute(request, requestOptions)
+        return response
+            .let { resultsStreamingHandler.handle(it) }
+            .let { streamResponse ->
+                if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                    streamResponse.map { it.validate() }
+                } else {
+                    streamResponse
                 }
-        }
+            }
     }
 }

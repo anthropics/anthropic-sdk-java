@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 class BetaModelRetrieveParamsTest {
 
     @Test
-    fun createBetaModelRetrieveParams() {
+    fun create() {
         BetaModelRetrieveParams.builder().modelId("model_id").build()
     }
 

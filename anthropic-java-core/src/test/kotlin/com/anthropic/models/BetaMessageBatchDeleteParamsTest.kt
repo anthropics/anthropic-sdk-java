@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 class BetaMessageBatchDeleteParamsTest {
 
     @Test
-    fun createBetaMessageBatchDeleteParams() {
+    fun create() {
         BetaMessageBatchDeleteParams.builder()
             .messageBatchId("message_batch_id")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)

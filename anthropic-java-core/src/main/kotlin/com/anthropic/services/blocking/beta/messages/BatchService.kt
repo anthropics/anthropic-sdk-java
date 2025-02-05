@@ -16,6 +16,7 @@ import com.anthropic.models.BetaMessageBatchListPage
 import com.anthropic.models.BetaMessageBatchListParams
 import com.anthropic.models.BetaMessageBatchResultsParams
 import com.anthropic.models.BetaMessageBatchRetrieveParams
+import com.google.errorprone.annotations.MustBeClosed
 
 interface BatchService {
 
@@ -87,6 +88,7 @@ interface BatchService {
      * `custom_id` field to match results to requests.
      */
     @JvmOverloads
+    @MustBeClosed
     fun resultsStreaming(
         params: BetaMessageBatchResultsParams,
         requestOptions: RequestOptions = RequestOptions.none()

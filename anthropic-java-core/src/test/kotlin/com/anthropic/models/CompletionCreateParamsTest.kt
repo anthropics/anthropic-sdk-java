@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 class CompletionCreateParamsTest {
 
     @Test
-    fun createCompletionCreateParams() {
+    fun create() {
         CompletionCreateParams.builder()
             .maxTokensToSample(256L)
             .model(Model.CLAUDE_3_5_HAIKU_LATEST)

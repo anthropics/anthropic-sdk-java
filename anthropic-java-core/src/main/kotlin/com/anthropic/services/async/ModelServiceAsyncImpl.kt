@@ -49,9 +49,9 @@ internal constructor(
             .thenApply { response ->
                 response
                     .use { retrieveHandler.handle(it) }
-                    .apply {
+                    .also {
                         if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                            validate()
+                            it.validate()
                         }
                     }
             }
@@ -82,9 +82,9 @@ internal constructor(
             .thenApply { response ->
                 response
                     .use { listHandler.handle(it) }
-                    .apply {
+                    .also {
                         if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                            validate()
+                            it.validate()
                         }
                     }
                     .let { ModelListPageAsync.of(this, params, it) }

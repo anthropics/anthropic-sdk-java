@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 class BetaMessageBatchRetrieveParamsTest {
 
     @Test
-    fun createBetaMessageBatchRetrieveParams() {
+    fun create() {
         BetaMessageBatchRetrieveParams.builder()
             .messageBatchId("message_batch_id")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)

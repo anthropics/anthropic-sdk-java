@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 class BetaMessageCreateParamsTest {
 
     @Test
-    fun createBetaMessageCreateParams() {
+    fun create() {
         BetaMessageCreateParams.builder()
             .maxTokens(1024L)
             .addUserMessage("Hello, world")
