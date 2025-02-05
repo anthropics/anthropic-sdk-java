@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 class ModelListParamsTest {
 
     @Test
-    fun createModelListParams() {
+    fun create() {
         ModelListParams.builder().afterId("after_id").beforeId("before_id").limit(1L).build()
     }
 

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 class ModelRetrieveParamsTest {
 
     @Test
-    fun createModelRetrieveParams() {
+    fun create() {
         ModelRetrieveParams.builder().modelId("model_id").build()
     }
 

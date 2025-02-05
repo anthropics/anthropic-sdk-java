@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 class MessageBatchResultsParamsTest {
 
     @Test
-    fun createMessageBatchResultsParams() {
+    fun create() {
         MessageBatchResultsParams.builder().messageBatchId("message_batch_id").build()
     }
 

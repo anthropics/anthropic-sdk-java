@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 class MessageBatchListParamsTest {
 
     @Test
-    fun createMessageBatchListParams() {
+    fun create() {
         MessageBatchListParams.builder().afterId("after_id").beforeId("before_id").limit(1L).build()
     }
 

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 class BetaMessageCountTokensParamsTest {
 
     @Test
-    fun createBetaMessageCountTokensParams() {
+    fun create() {
         BetaMessageCountTokensParams.builder()
             .addUserMessage("string")
             .model(Model.CLAUDE_3_5_HAIKU_LATEST)
