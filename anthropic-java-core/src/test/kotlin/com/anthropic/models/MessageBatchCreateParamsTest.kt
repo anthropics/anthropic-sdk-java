@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 class MessageBatchCreateParamsTest {
 
     @Test
-    fun createMessageBatchCreateParams() {
+    fun create() {
         MessageBatchCreateParams.builder()
             .addRequest(
                 MessageBatchCreateParams.Request.builder()

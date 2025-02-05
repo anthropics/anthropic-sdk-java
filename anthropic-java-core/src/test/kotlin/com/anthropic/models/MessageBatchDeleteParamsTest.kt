@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 class MessageBatchDeleteParamsTest {
 
     @Test
-    fun createMessageBatchDeleteParams() {
+    fun create() {
         MessageBatchDeleteParams.builder().messageBatchId("message_batch_id").build()
     }
 

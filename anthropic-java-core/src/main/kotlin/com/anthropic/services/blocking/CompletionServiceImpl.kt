@@ -53,21 +53,19 @@ internal constructor(
                 .body(json(clientOptions.jsonMapper, params._body()))
                 .build()
                 .prepare(clientOptions, params)
-        return clientOptions.httpClient
-            .execute(
+        val response =
+            clientOptions.httpClient.execute(
                 request,
                 requestOptions.applyDefaults(
                     RequestOptions.builder().timeout(Duration.ofMillis(600000)).build()
                 )
             )
-            .let { response ->
-                response
-                    .use { createHandler.handle(it) }
-                    .apply {
-                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                            validate()
-                        }
-                    }
+        return response
+            .use { createHandler.handle(it) }
+            .also {
+                if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                    it.validate()
+                }
             }
     }
 
@@ -104,23 +102,21 @@ internal constructor(
                 )
                 .build()
                 .prepare(clientOptions, params)
-        return clientOptions.httpClient
-            .execute(
+        val response =
+            clientOptions.httpClient.execute(
                 request,
                 requestOptions.applyDefaults(
                     RequestOptions.builder().timeout(Duration.ofMillis(600000)).build()
                 )
             )
-            .let { response ->
-                response
-                    .let { createStreamingHandler.handle(it) }
-                    .let { streamResponse ->
-                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                            streamResponse.map { it.validate() }
-                        } else {
-                            streamResponse
-                        }
-                    }
+        return response
+            .let { createStreamingHandler.handle(it) }
+            .let { streamResponse ->
+                if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                    streamResponse.map { it.validate() }
+                } else {
+                    streamResponse
+                }
             }
     }
 }
