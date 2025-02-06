@@ -39,7 +39,7 @@ public final class MessagesToolsExample {
                         .type(ToolChoiceTool.Type.TOOL)
                         .name("describe_sdk")
                         .build())
-                .addUserMessage("How amazing is the Anthropic Java SDKs?")
+                .addUserMessage("How amazing is the Anthropic Java SDK?")
                 .build();
 
         client.messages().create(createParams).content().stream()
