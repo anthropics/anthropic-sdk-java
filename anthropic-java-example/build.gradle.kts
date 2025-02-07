@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     implementation(project(":anthropic-java"))
+    implementation(project(":anthropic-java-bedrock"))
 }
 
 tasks.withType<JavaCompile>().configureEach {

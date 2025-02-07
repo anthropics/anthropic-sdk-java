@@ -7,6 +7,7 @@ import com.anthropic.client.AnthropicClientImpl
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.credentials.Credentials
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.net.Proxy
 import java.time.Clock
@@ -31,6 +32,13 @@ class AnthropicOkHttpClient private constructor() {
         // The default timeout for the client is 10 minutes.
         private var timeout: Duration = Duration.ofSeconds(600)
         private var proxy: Proxy? = null
+
+        /**
+         * The optional credentials that may be used for authentication and
+         * authorization when using a service other than the default Anthropic
+         * service.
+         */
+        private var credentials: Credentials? = null
 
         fun baseUrl(baseUrl: String) = apply {
             clientOptions.baseUrl(baseUrl)
@@ -143,6 +151,21 @@ class AnthropicOkHttpClient private constructor() {
 
         fun authToken(authToken: Optional<String>) = authToken(authToken.orElse(null))
 
+        /**
+         * Sets the credentials to be used to authenticate and authorize the
+         * request to an Anthropic service. Implementations of the [Credentials]
+         * interface can define the required credentials for a specific service,
+         * e.g., Amazon Bedrock.
+         *
+         * If connecting to the default Anthropic service, these alternative
+         * credentials are not required.
+         *
+         * @param credentials The credentials to be used.
+         */
+        fun credentials(credentials: Credentials?) = apply {
+            this.credentials = credentials
+        }
+
         fun fromEnv() = apply { clientOptions.fromEnv() }
 
         fun build(): AnthropicClient =
@@ -153,6 +176,7 @@ class AnthropicOkHttpClient private constructor() {
                             .baseUrl(baseUrl)
                             .timeout(timeout)
                             .proxy(proxy)
+                            .credentials(credentials)
                             .build()
                     )
                     .build()
