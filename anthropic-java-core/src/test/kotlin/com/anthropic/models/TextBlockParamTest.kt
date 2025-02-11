@@ -12,12 +12,7 @@ class TextBlockParamTest {
         val textBlockParam =
             TextBlockParam.builder()
                 .text("x")
-                .type(TextBlockParam.Type.TEXT)
-                .cacheControl(
-                    CacheControlEphemeral.builder()
-                        .type(CacheControlEphemeral.Type.EPHEMERAL)
-                        .build()
-                )
+                .cacheControl(CacheControlEphemeral.builder().build())
                 .addCitation(
                     CitationCharLocationParam.builder()
                         .citedText("cited_text")
@@ -25,17 +20,12 @@ class TextBlockParamTest {
                         .documentTitle("x")
                         .endCharIndex(0L)
                         .startCharIndex(0L)
-                        .type(CitationCharLocationParam.Type.CHAR_LOCATION)
                         .build()
                 )
                 .build()
         assertThat(textBlockParam).isNotNull
         assertThat(textBlockParam.text()).isEqualTo("x")
-        assertThat(textBlockParam.type()).isEqualTo(TextBlockParam.Type.TEXT)
-        assertThat(textBlockParam.cacheControl())
-            .contains(
-                CacheControlEphemeral.builder().type(CacheControlEphemeral.Type.EPHEMERAL).build()
-            )
+        assertThat(textBlockParam.cacheControl()).contains(CacheControlEphemeral.builder().build())
         assertThat(textBlockParam.citations().get())
             .containsExactly(
                 TextCitationParam.ofCitationCharLocation(
@@ -45,7 +35,6 @@ class TextBlockParamTest {
                         .documentTitle("x")
                         .endCharIndex(0L)
                         .startCharIndex(0L)
-                        .type(CitationCharLocationParam.Type.CHAR_LOCATION)
                         .build()
                 )
             )

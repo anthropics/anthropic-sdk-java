@@ -9,13 +9,8 @@ class BetaToolChoiceAnyTest {
 
     @Test
     fun createBetaToolChoiceAny() {
-        val betaToolChoiceAny =
-            BetaToolChoiceAny.builder()
-                .type(BetaToolChoiceAny.Type.ANY)
-                .disableParallelToolUse(true)
-                .build()
+        val betaToolChoiceAny = BetaToolChoiceAny.builder().disableParallelToolUse(true).build()
         assertThat(betaToolChoiceAny).isNotNull
-        assertThat(betaToolChoiceAny.type()).isEqualTo(BetaToolChoiceAny.Type.ANY)
         assertThat(betaToolChoiceAny.disableParallelToolUse()).contains(true)
     }
 }

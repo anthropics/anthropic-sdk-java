@@ -9,13 +9,8 @@ class BetaBillingErrorTest {
 
     @Test
     fun createBetaBillingError() {
-        val betaBillingError =
-            BetaBillingError.builder()
-                .message("message")
-                .type(BetaBillingError.Type.BILLING_ERROR)
-                .build()
+        val betaBillingError = BetaBillingError.builder().message("message").build()
         assertThat(betaBillingError).isNotNull
         assertThat(betaBillingError.message()).isEqualTo("message")
-        assertThat(betaBillingError.type()).isEqualTo(BetaBillingError.Type.BILLING_ERROR)
     }
 }

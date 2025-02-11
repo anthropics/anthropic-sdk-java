@@ -14,7 +14,6 @@ class BetaToolTest {
             BetaTool.builder()
                 .inputSchema(
                     BetaTool.InputSchema.builder()
-                        .type(BetaTool.InputSchema.Type.OBJECT)
                         .properties(
                             JsonValue.from(
                                 mapOf(
@@ -36,11 +35,7 @@ class BetaToolTest {
                         .build()
                 )
                 .name("name")
-                .cacheControl(
-                    BetaCacheControlEphemeral.builder()
-                        .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                        .build()
-                )
+                .cacheControl(BetaCacheControlEphemeral.builder().build())
                 .description("Get the current weather in a given location")
                 .type(BetaTool.Type.CUSTOM)
                 .build()
@@ -48,7 +43,6 @@ class BetaToolTest {
         assertThat(betaTool.inputSchema())
             .isEqualTo(
                 BetaTool.InputSchema.builder()
-                    .type(BetaTool.InputSchema.Type.OBJECT)
                     .properties(
                         JsonValue.from(
                             mapOf(
@@ -70,12 +64,7 @@ class BetaToolTest {
                     .build()
             )
         assertThat(betaTool.name()).isEqualTo("name")
-        assertThat(betaTool.cacheControl())
-            .contains(
-                BetaCacheControlEphemeral.builder()
-                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                    .build()
-            )
+        assertThat(betaTool.cacheControl()).contains(BetaCacheControlEphemeral.builder().build())
         assertThat(betaTool.description()).contains("Get the current weather in a given location")
         assertThat(betaTool.type()).contains(BetaTool.Type.CUSTOM)
     }

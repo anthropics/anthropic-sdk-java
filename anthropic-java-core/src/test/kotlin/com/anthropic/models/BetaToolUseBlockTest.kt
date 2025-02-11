@@ -15,12 +15,10 @@ class BetaToolUseBlockTest {
                 .id("id")
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name("x")
-                .type(BetaToolUseBlock.Type.TOOL_USE)
                 .build()
         assertThat(betaToolUseBlock).isNotNull
         assertThat(betaToolUseBlock.id()).isEqualTo("id")
         assertThat(betaToolUseBlock._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
         assertThat(betaToolUseBlock.name()).isEqualTo("x")
-        assertThat(betaToolUseBlock.type()).isEqualTo(BetaToolUseBlock.Type.TOOL_USE)
     }
 }

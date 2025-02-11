@@ -155,12 +155,7 @@ private constructor(
          * expiration.
          */
         fun succeededResult(message: Message) =
-            result(
-                MessageBatchSucceededResult.builder()
-                    .type(MessageBatchSucceededResult.Type.SUCCEEDED)
-                    .message(message)
-                    .build()
-            )
+            result(MessageBatchSucceededResult.builder().message(message).build())
 
         /**
          * Processing result for this request.
@@ -180,12 +175,7 @@ private constructor(
          * expiration.
          */
         fun erroredResult(error: ErrorResponse) =
-            result(
-                MessageBatchErroredResult.builder()
-                    .type(MessageBatchErroredResult.Type.ERRORED)
-                    .error(error)
-                    .build()
-            )
+            result(MessageBatchErroredResult.builder().error(error).build())
 
         /**
          * Processing result for this request.

@@ -9,10 +9,8 @@ class BillingErrorTest {
 
     @Test
     fun createBillingError() {
-        val billingError =
-            BillingError.builder().message("message").type(BillingError.Type.BILLING_ERROR).build()
+        val billingError = BillingError.builder().message("message").build()
         assertThat(billingError).isNotNull
         assertThat(billingError.message()).isEqualTo("message")
-        assertThat(billingError.type()).isEqualTo(BillingError.Type.BILLING_ERROR)
     }
 }

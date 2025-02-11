@@ -10,20 +10,12 @@ class RawContentBlockDeltaEventTest {
     @Test
     fun createRawContentBlockDeltaEvent() {
         val rawContentBlockDeltaEvent =
-            RawContentBlockDeltaEvent.builder()
-                .textDelta("text")
-                .index(0L)
-                .type(RawContentBlockDeltaEvent.Type.CONTENT_BLOCK_DELTA)
-                .build()
+            RawContentBlockDeltaEvent.builder().textDelta("text").index(0L).build()
         assertThat(rawContentBlockDeltaEvent).isNotNull
         assertThat(rawContentBlockDeltaEvent.delta())
             .isEqualTo(
-                RawContentBlockDeltaEvent.Delta.ofText(
-                    TextDelta.builder().text("text").type(TextDelta.Type.TEXT_DELTA).build()
-                )
+                RawContentBlockDeltaEvent.Delta.ofText(TextDelta.builder().text("text").build())
             )
         assertThat(rawContentBlockDeltaEvent.index()).isEqualTo(0L)
-        assertThat(rawContentBlockDeltaEvent.type())
-            .isEqualTo(RawContentBlockDeltaEvent.Type.CONTENT_BLOCK_DELTA)
     }
 }

@@ -17,7 +17,6 @@ class RawMessageDeltaEventTest {
                         .stopSequence("stop_sequence")
                         .build()
                 )
-                .type(RawMessageDeltaEvent.Type.MESSAGE_DELTA)
                 .usage(MessageDeltaUsage.builder().outputTokens(503L).build())
                 .build()
         assertThat(rawMessageDeltaEvent).isNotNull
@@ -28,7 +27,6 @@ class RawMessageDeltaEventTest {
                     .stopSequence("stop_sequence")
                     .build()
             )
-        assertThat(rawMessageDeltaEvent.type()).isEqualTo(RawMessageDeltaEvent.Type.MESSAGE_DELTA)
         assertThat(rawMessageDeltaEvent.usage())
             .isEqualTo(MessageDeltaUsage.builder().outputTokens(503L).build())
     }

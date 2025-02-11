@@ -16,7 +16,6 @@ class BetaCitationCharLocationParamTest {
                 .documentTitle("x")
                 .endCharIndex(0L)
                 .startCharIndex(0L)
-                .type(BetaCitationCharLocationParam.Type.CHAR_LOCATION)
                 .build()
         assertThat(betaCitationCharLocationParam).isNotNull
         assertThat(betaCitationCharLocationParam.citedText()).isEqualTo("cited_text")
@@ -24,7 +23,5 @@ class BetaCitationCharLocationParamTest {
         assertThat(betaCitationCharLocationParam.documentTitle()).contains("x")
         assertThat(betaCitationCharLocationParam.endCharIndex()).isEqualTo(0L)
         assertThat(betaCitationCharLocationParam.startCharIndex()).isEqualTo(0L)
-        assertThat(betaCitationCharLocationParam.type())
-            .isEqualTo(BetaCitationCharLocationParam.Type.CHAR_LOCATION)
     }
 }

@@ -2,13 +2,11 @@
 
 package com.anthropic.models
 
-import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
-import com.anthropic.core.checkRequired
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -24,14 +22,14 @@ import java.util.Optional
 class BetaToolChoiceAny
 @JsonCreator
 private constructor(
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
     @JsonProperty("disable_parallel_tool_use")
     @ExcludeMissing
     private val disableParallelToolUse: JsonField<Boolean> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
-    fun type(): Type = type.getRequired("type")
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
      * Whether to disable parallel tool use.
@@ -40,8 +38,6 @@ private constructor(
      */
     fun disableParallelToolUse(): Optional<Boolean> =
         Optional.ofNullable(disableParallelToolUse.getNullable("disable_parallel_tool_use"))
-
-    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     /**
      * Whether to disable parallel tool use.
@@ -63,7 +59,11 @@ private constructor(
             return@apply
         }
 
-        type()
+        _type().let {
+            if (it != JsonValue.from("any")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
         disableParallelToolUse()
         validated = true
     }
@@ -78,7 +78,7 @@ private constructor(
     /** A builder for [BetaToolChoiceAny]. */
     class Builder internal constructor() {
 
-        private var type: JsonField<Type>? = null
+        private var type: JsonValue = JsonValue.from("any")
         private var disableParallelToolUse: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -89,9 +89,7 @@ private constructor(
             additionalProperties = betaToolChoiceAny.additionalProperties.toMutableMap()
         }
 
-        fun type(type: Type) = type(JsonField.of(type))
-
-        fun type(type: JsonField<Type>) = apply { this.type = type }
+        fun type(type: JsonValue) = apply { this.type = type }
 
         /**
          * Whether to disable parallel tool use.
@@ -131,96 +129,10 @@ private constructor(
 
         fun build(): BetaToolChoiceAny =
             BetaToolChoiceAny(
-                checkRequired("type", type),
+                type,
                 disableParallelToolUse,
                 additionalProperties.toImmutable(),
             )
-    }
-
-    class Type
-    @JsonCreator
-    private constructor(
-        private val value: JsonField<String>,
-    ) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val ANY = of("any")
-
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-        }
-
-        /** An enum containing [Type]'s known values. */
-        enum class Known {
-            ANY,
-        }
-
-        /**
-         * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Type] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            ANY,
-            /** An enum member indicating that [Type] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                ANY -> Value.ANY
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                ANY -> Known.ANY
-                else -> throw AnthropicInvalidDataException("Unknown Type: $value")
-            }
-
-        fun asString(): String = _value().asStringOrThrow()
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return /* spotless:off */ other is Type && value == other.value /* spotless:on */
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
     }
 
     override fun equals(other: Any?): Boolean {

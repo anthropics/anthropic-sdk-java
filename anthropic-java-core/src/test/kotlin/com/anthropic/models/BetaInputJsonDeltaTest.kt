@@ -9,13 +9,8 @@ class BetaInputJsonDeltaTest {
 
     @Test
     fun createBetaInputJsonDelta() {
-        val betaInputJsonDelta =
-            BetaInputJsonDelta.builder()
-                .partialJson("partial_json")
-                .type(BetaInputJsonDelta.Type.INPUT_JSON_DELTA)
-                .build()
+        val betaInputJsonDelta = BetaInputJsonDelta.builder().partialJson("partial_json").build()
         assertThat(betaInputJsonDelta).isNotNull
         assertThat(betaInputJsonDelta.partialJson()).isEqualTo("partial_json")
-        assertThat(betaInputJsonDelta.type()).isEqualTo(BetaInputJsonDelta.Type.INPUT_JSON_DELTA)
     }
 }

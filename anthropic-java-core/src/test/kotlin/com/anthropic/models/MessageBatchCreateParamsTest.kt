@@ -30,12 +30,7 @@ class MessageBatchCreateParamsTest {
                                 listOf(
                                     TextBlockParam.builder()
                                         .text("Today's date is 2024-06-01.")
-                                        .type(TextBlockParam.Type.TEXT)
-                                        .cacheControl(
-                                            CacheControlEphemeral.builder()
-                                                .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                                .build()
-                                        )
+                                        .cacheControl(CacheControlEphemeral.builder().build())
                                         .addCitation(
                                             CitationCharLocationParam.builder()
                                                 .citedText("cited_text")
@@ -43,7 +38,6 @@ class MessageBatchCreateParamsTest {
                                                 .documentTitle("x")
                                                 .endCharIndex(0L)
                                                 .startCharIndex(0L)
-                                                .type(CitationCharLocationParam.Type.CHAR_LOCATION)
                                                 .build()
                                         )
                                         .build()
@@ -51,16 +45,12 @@ class MessageBatchCreateParamsTest {
                             )
                             .temperature(1.0)
                             .toolChoice(
-                                ToolChoiceAuto.builder()
-                                    .type(ToolChoiceAuto.Type.AUTO)
-                                    .disableParallelToolUse(true)
-                                    .build()
+                                ToolChoiceAuto.builder().disableParallelToolUse(true).build()
                             )
                             .addTool(
                                 Tool.builder()
                                     .inputSchema(
                                         Tool.InputSchema.builder()
-                                            .type(Tool.InputSchema.Type.OBJECT)
                                             .properties(
                                                 JsonValue.from(
                                                     mapOf(
@@ -82,11 +72,7 @@ class MessageBatchCreateParamsTest {
                                             .build()
                                     )
                                     .name("name")
-                                    .cacheControl(
-                                        CacheControlEphemeral.builder()
-                                            .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                            .build()
-                                    )
+                                    .cacheControl(CacheControlEphemeral.builder().build())
                                     .description("Get the current weather in a given location")
                                     .build()
                             )
@@ -122,12 +108,7 @@ class MessageBatchCreateParamsTest {
                                     listOf(
                                         TextBlockParam.builder()
                                             .text("Today's date is 2024-06-01.")
-                                            .type(TextBlockParam.Type.TEXT)
-                                            .cacheControl(
-                                                CacheControlEphemeral.builder()
-                                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                                    .build()
-                                            )
+                                            .cacheControl(CacheControlEphemeral.builder().build())
                                             .addCitation(
                                                 CitationCharLocationParam.builder()
                                                     .citedText("cited_text")
@@ -135,9 +116,6 @@ class MessageBatchCreateParamsTest {
                                                     .documentTitle("x")
                                                     .endCharIndex(0L)
                                                     .startCharIndex(0L)
-                                                    .type(
-                                                        CitationCharLocationParam.Type.CHAR_LOCATION
-                                                    )
                                                     .build()
                                             )
                                             .build()
@@ -145,16 +123,12 @@ class MessageBatchCreateParamsTest {
                                 )
                                 .temperature(1.0)
                                 .toolChoice(
-                                    ToolChoiceAuto.builder()
-                                        .type(ToolChoiceAuto.Type.AUTO)
-                                        .disableParallelToolUse(true)
-                                        .build()
+                                    ToolChoiceAuto.builder().disableParallelToolUse(true).build()
                                 )
                                 .addTool(
                                     Tool.builder()
                                         .inputSchema(
                                             Tool.InputSchema.builder()
-                                                .type(Tool.InputSchema.Type.OBJECT)
                                                 .properties(
                                                     JsonValue.from(
                                                         mapOf(
@@ -176,11 +150,7 @@ class MessageBatchCreateParamsTest {
                                                 .build()
                                         )
                                         .name("name")
-                                        .cacheControl(
-                                            CacheControlEphemeral.builder()
-                                                .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                                .build()
-                                        )
+                                        .cacheControl(CacheControlEphemeral.builder().build())
                                         .description("Get the current weather in a given location")
                                         .build()
                                 )
@@ -214,12 +184,7 @@ class MessageBatchCreateParamsTest {
                                     listOf(
                                         TextBlockParam.builder()
                                             .text("Today's date is 2024-06-01.")
-                                            .type(TextBlockParam.Type.TEXT)
-                                            .cacheControl(
-                                                CacheControlEphemeral.builder()
-                                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                                    .build()
-                                            )
+                                            .cacheControl(CacheControlEphemeral.builder().build())
                                             .addCitation(
                                                 CitationCharLocationParam.builder()
                                                     .citedText("cited_text")
@@ -227,9 +192,6 @@ class MessageBatchCreateParamsTest {
                                                     .documentTitle("x")
                                                     .endCharIndex(0L)
                                                     .startCharIndex(0L)
-                                                    .type(
-                                                        CitationCharLocationParam.Type.CHAR_LOCATION
-                                                    )
                                                     .build()
                                             )
                                             .build()
@@ -237,16 +199,12 @@ class MessageBatchCreateParamsTest {
                                 )
                                 .temperature(1.0)
                                 .toolChoice(
-                                    ToolChoiceAuto.builder()
-                                        .type(ToolChoiceAuto.Type.AUTO)
-                                        .disableParallelToolUse(true)
-                                        .build()
+                                    ToolChoiceAuto.builder().disableParallelToolUse(true).build()
                                 )
                                 .addTool(
                                     Tool.builder()
                                         .inputSchema(
                                             Tool.InputSchema.builder()
-                                                .type(Tool.InputSchema.Type.OBJECT)
                                                 .properties(
                                                     JsonValue.from(
                                                         mapOf(
@@ -268,11 +226,7 @@ class MessageBatchCreateParamsTest {
                                                 .build()
                                         )
                                         .name("name")
-                                        .cacheControl(
-                                            CacheControlEphemeral.builder()
-                                                .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                                .build()
-                                        )
+                                        .cacheControl(CacheControlEphemeral.builder().build())
                                         .description("Get the current weather in a given location")
                                         .build()
                                 )

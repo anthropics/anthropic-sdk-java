@@ -30,12 +30,7 @@ class BetaMessageBatchCreateParamsTest {
                                 listOf(
                                     BetaTextBlockParam.builder()
                                         .text("Today's date is 2024-06-01.")
-                                        .type(BetaTextBlockParam.Type.TEXT)
-                                        .cacheControl(
-                                            BetaCacheControlEphemeral.builder()
-                                                .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                                .build()
-                                        )
+                                        .cacheControl(BetaCacheControlEphemeral.builder().build())
                                         .addCitation(
                                             BetaCitationCharLocationParam.builder()
                                                 .citedText("cited_text")
@@ -43,9 +38,6 @@ class BetaMessageBatchCreateParamsTest {
                                                 .documentTitle("x")
                                                 .endCharIndex(0L)
                                                 .startCharIndex(0L)
-                                                .type(
-                                                    BetaCitationCharLocationParam.Type.CHAR_LOCATION
-                                                )
                                                 .build()
                                         )
                                         .build()
@@ -53,16 +45,12 @@ class BetaMessageBatchCreateParamsTest {
                             )
                             .temperature(1.0)
                             .toolChoice(
-                                BetaToolChoiceAuto.builder()
-                                    .type(BetaToolChoiceAuto.Type.AUTO)
-                                    .disableParallelToolUse(true)
-                                    .build()
+                                BetaToolChoiceAuto.builder().disableParallelToolUse(true).build()
                             )
                             .addTool(
                                 BetaTool.builder()
                                     .inputSchema(
                                         BetaTool.InputSchema.builder()
-                                            .type(BetaTool.InputSchema.Type.OBJECT)
                                             .properties(
                                                 JsonValue.from(
                                                     mapOf(
@@ -84,11 +72,7 @@ class BetaMessageBatchCreateParamsTest {
                                             .build()
                                     )
                                     .name("name")
-                                    .cacheControl(
-                                        BetaCacheControlEphemeral.builder()
-                                            .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                            .build()
-                                    )
+                                    .cacheControl(BetaCacheControlEphemeral.builder().build())
                                     .description("Get the current weather in a given location")
                                     .type(BetaTool.Type.CUSTOM)
                                     .build()
@@ -126,11 +110,8 @@ class BetaMessageBatchCreateParamsTest {
                                     listOf(
                                         BetaTextBlockParam.builder()
                                             .text("Today's date is 2024-06-01.")
-                                            .type(BetaTextBlockParam.Type.TEXT)
                                             .cacheControl(
-                                                BetaCacheControlEphemeral.builder()
-                                                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                                    .build()
+                                                BetaCacheControlEphemeral.builder().build()
                                             )
                                             .addCitation(
                                                 BetaCitationCharLocationParam.builder()
@@ -139,10 +120,6 @@ class BetaMessageBatchCreateParamsTest {
                                                     .documentTitle("x")
                                                     .endCharIndex(0L)
                                                     .startCharIndex(0L)
-                                                    .type(
-                                                        BetaCitationCharLocationParam.Type
-                                                            .CHAR_LOCATION
-                                                    )
                                                     .build()
                                             )
                                             .build()
@@ -151,7 +128,6 @@ class BetaMessageBatchCreateParamsTest {
                                 .temperature(1.0)
                                 .toolChoice(
                                     BetaToolChoiceAuto.builder()
-                                        .type(BetaToolChoiceAuto.Type.AUTO)
                                         .disableParallelToolUse(true)
                                         .build()
                                 )
@@ -159,7 +135,6 @@ class BetaMessageBatchCreateParamsTest {
                                     BetaTool.builder()
                                         .inputSchema(
                                             BetaTool.InputSchema.builder()
-                                                .type(BetaTool.InputSchema.Type.OBJECT)
                                                 .properties(
                                                     JsonValue.from(
                                                         mapOf(
@@ -181,11 +156,7 @@ class BetaMessageBatchCreateParamsTest {
                                                 .build()
                                         )
                                         .name("name")
-                                        .cacheControl(
-                                            BetaCacheControlEphemeral.builder()
-                                                .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                                .build()
-                                        )
+                                        .cacheControl(BetaCacheControlEphemeral.builder().build())
                                         .description("Get the current weather in a given location")
                                         .type(BetaTool.Type.CUSTOM)
                                         .build()
@@ -221,11 +192,8 @@ class BetaMessageBatchCreateParamsTest {
                                     listOf(
                                         BetaTextBlockParam.builder()
                                             .text("Today's date is 2024-06-01.")
-                                            .type(BetaTextBlockParam.Type.TEXT)
                                             .cacheControl(
-                                                BetaCacheControlEphemeral.builder()
-                                                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                                    .build()
+                                                BetaCacheControlEphemeral.builder().build()
                                             )
                                             .addCitation(
                                                 BetaCitationCharLocationParam.builder()
@@ -234,10 +202,6 @@ class BetaMessageBatchCreateParamsTest {
                                                     .documentTitle("x")
                                                     .endCharIndex(0L)
                                                     .startCharIndex(0L)
-                                                    .type(
-                                                        BetaCitationCharLocationParam.Type
-                                                            .CHAR_LOCATION
-                                                    )
                                                     .build()
                                             )
                                             .build()
@@ -246,7 +210,6 @@ class BetaMessageBatchCreateParamsTest {
                                 .temperature(1.0)
                                 .toolChoice(
                                     BetaToolChoiceAuto.builder()
-                                        .type(BetaToolChoiceAuto.Type.AUTO)
                                         .disableParallelToolUse(true)
                                         .build()
                                 )
@@ -254,7 +217,6 @@ class BetaMessageBatchCreateParamsTest {
                                     BetaTool.builder()
                                         .inputSchema(
                                             BetaTool.InputSchema.builder()
-                                                .type(BetaTool.InputSchema.Type.OBJECT)
                                                 .properties(
                                                     JsonValue.from(
                                                         mapOf(
@@ -276,11 +238,7 @@ class BetaMessageBatchCreateParamsTest {
                                                 .build()
                                         )
                                         .name("name")
-                                        .cacheControl(
-                                            BetaCacheControlEphemeral.builder()
-                                                .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                                .build()
-                                        )
+                                        .cacheControl(BetaCacheControlEphemeral.builder().build())
                                         .description("Get the current weather in a given location")
                                         .type(BetaTool.Type.CUSTOM)
                                         .build()

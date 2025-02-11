@@ -9,12 +9,7 @@ class BetaMessageBatchExpiredResultTest {
 
     @Test
     fun createBetaMessageBatchExpiredResult() {
-        val betaMessageBatchExpiredResult =
-            BetaMessageBatchExpiredResult.builder()
-                .type(BetaMessageBatchExpiredResult.Type.EXPIRED)
-                .build()
+        val betaMessageBatchExpiredResult = BetaMessageBatchExpiredResult.builder().build()
         assertThat(betaMessageBatchExpiredResult).isNotNull
-        assertThat(betaMessageBatchExpiredResult.type())
-            .isEqualTo(BetaMessageBatchExpiredResult.Type.EXPIRED)
     }
 }

@@ -9,13 +9,8 @@ class ToolChoiceAutoTest {
 
     @Test
     fun createToolChoiceAuto() {
-        val toolChoiceAuto =
-            ToolChoiceAuto.builder()
-                .type(ToolChoiceAuto.Type.AUTO)
-                .disableParallelToolUse(true)
-                .build()
+        val toolChoiceAuto = ToolChoiceAuto.builder().disableParallelToolUse(true).build()
         assertThat(toolChoiceAuto).isNotNull
-        assertThat(toolChoiceAuto.type()).isEqualTo(ToolChoiceAuto.Type.AUTO)
         assertThat(toolChoiceAuto.disableParallelToolUse()).contains(true)
     }
 }

@@ -9,13 +9,8 @@ class GatewayTimeoutErrorTest {
 
     @Test
     fun createGatewayTimeoutError() {
-        val gatewayTimeoutError =
-            GatewayTimeoutError.builder()
-                .message("message")
-                .type(GatewayTimeoutError.Type.TIMEOUT_ERROR)
-                .build()
+        val gatewayTimeoutError = GatewayTimeoutError.builder().message("message").build()
         assertThat(gatewayTimeoutError).isNotNull
         assertThat(gatewayTimeoutError.message()).isEqualTo("message")
-        assertThat(gatewayTimeoutError.type()).isEqualTo(GatewayTimeoutError.Type.TIMEOUT_ERROR)
     }
 }

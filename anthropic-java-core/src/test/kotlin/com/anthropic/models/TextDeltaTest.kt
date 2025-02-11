@@ -9,9 +9,8 @@ class TextDeltaTest {
 
     @Test
     fun createTextDelta() {
-        val textDelta = TextDelta.builder().text("text").type(TextDelta.Type.TEXT_DELTA).build()
+        val textDelta = TextDelta.builder().text("text").build()
         assertThat(textDelta).isNotNull
         assertThat(textDelta.text()).isEqualTo("text")
-        assertThat(textDelta.type()).isEqualTo(TextDelta.Type.TEXT_DELTA)
     }
 }

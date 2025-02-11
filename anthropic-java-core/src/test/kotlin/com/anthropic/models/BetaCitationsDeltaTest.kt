@@ -18,10 +18,8 @@ class BetaCitationsDeltaTest {
                         .documentTitle("document_title")
                         .endCharIndex(0L)
                         .startCharIndex(0L)
-                        .type(BetaCitationCharLocation.Type.CHAR_LOCATION)
                         .build()
                 )
-                .type(BetaCitationsDelta.Type.CITATIONS_DELTA)
                 .build()
         assertThat(betaCitationsDelta).isNotNull
         assertThat(betaCitationsDelta.citation())
@@ -33,10 +31,8 @@ class BetaCitationsDeltaTest {
                         .documentTitle("document_title")
                         .endCharIndex(0L)
                         .startCharIndex(0L)
-                        .type(BetaCitationCharLocation.Type.CHAR_LOCATION)
                         .build()
                 )
             )
-        assertThat(betaCitationsDelta.type()).isEqualTo(BetaCitationsDelta.Type.CITATIONS_DELTA)
     }
 }

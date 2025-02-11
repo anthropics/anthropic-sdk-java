@@ -9,13 +9,8 @@ class ToolChoiceAnyTest {
 
     @Test
     fun createToolChoiceAny() {
-        val toolChoiceAny =
-            ToolChoiceAny.builder()
-                .type(ToolChoiceAny.Type.ANY)
-                .disableParallelToolUse(true)
-                .build()
+        val toolChoiceAny = ToolChoiceAny.builder().disableParallelToolUse(true).build()
         assertThat(toolChoiceAny).isNotNull
-        assertThat(toolChoiceAny.type()).isEqualTo(ToolChoiceAny.Type.ANY)
         assertThat(toolChoiceAny.disableParallelToolUse()).contains(true)
     }
 }

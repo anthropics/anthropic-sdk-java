@@ -9,10 +9,8 @@ class ApiErrorObjectTest {
 
     @Test
     fun createApiErrorObject() {
-        val apiErrorObject =
-            ApiErrorObject.builder().message("message").type(ApiErrorObject.Type.API_ERROR).build()
+        val apiErrorObject = ApiErrorObject.builder().message("message").build()
         assertThat(apiErrorObject).isNotNull
         assertThat(apiErrorObject.message()).isEqualTo("message")
-        assertThat(apiErrorObject.type()).isEqualTo(ApiErrorObject.Type.API_ERROR)
     }
 }

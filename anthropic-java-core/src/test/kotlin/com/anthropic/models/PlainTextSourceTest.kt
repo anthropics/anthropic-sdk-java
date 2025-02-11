@@ -9,15 +9,8 @@ class PlainTextSourceTest {
 
     @Test
     fun createPlainTextSource() {
-        val plainTextSource =
-            PlainTextSource.builder()
-                .data("data")
-                .mediaType(PlainTextSource.MediaType.TEXT_PLAIN)
-                .type(PlainTextSource.Type.TEXT)
-                .build()
+        val plainTextSource = PlainTextSource.builder().data("data").build()
         assertThat(plainTextSource).isNotNull
         assertThat(plainTextSource.data()).isEqualTo("data")
-        assertThat(plainTextSource.mediaType()).isEqualTo(PlainTextSource.MediaType.TEXT_PLAIN)
-        assertThat(plainTextSource.type()).isEqualTo(PlainTextSource.Type.TEXT)
     }
 }

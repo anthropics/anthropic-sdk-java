@@ -11,19 +11,8 @@ class BetaBase64PdfBlockTest {
     fun createBetaBase64PdfBlock() {
         val betaBase64PdfBlock =
             BetaBase64PdfBlock.builder()
-                .source(
-                    BetaBase64PdfSource.builder()
-                        .data("U3RhaW5sZXNzIHJvY2tz")
-                        .mediaType(BetaBase64PdfSource.MediaType.APPLICATION_PDF)
-                        .type(BetaBase64PdfSource.Type.BASE64)
-                        .build()
-                )
-                .type(BetaBase64PdfBlock.Type.DOCUMENT)
-                .cacheControl(
-                    BetaCacheControlEphemeral.builder()
-                        .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                        .build()
-                )
+                .betaBase64PdfSource("U3RhaW5sZXNzIHJvY2tz")
+                .cacheControl(BetaCacheControlEphemeral.builder().build())
                 .citations(BetaCitationsConfigParam.builder().enabled(true).build())
                 .context("x")
                 .title("x")
@@ -32,20 +21,11 @@ class BetaBase64PdfBlockTest {
         assertThat(betaBase64PdfBlock.source())
             .isEqualTo(
                 BetaBase64PdfBlock.Source.ofBetaBase64Pdf(
-                    BetaBase64PdfSource.builder()
-                        .data("U3RhaW5sZXNzIHJvY2tz")
-                        .mediaType(BetaBase64PdfSource.MediaType.APPLICATION_PDF)
-                        .type(BetaBase64PdfSource.Type.BASE64)
-                        .build()
+                    BetaBase64PdfSource.builder().data("U3RhaW5sZXNzIHJvY2tz").build()
                 )
             )
-        assertThat(betaBase64PdfBlock.type()).isEqualTo(BetaBase64PdfBlock.Type.DOCUMENT)
         assertThat(betaBase64PdfBlock.cacheControl())
-            .contains(
-                BetaCacheControlEphemeral.builder()
-                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                    .build()
-            )
+            .contains(BetaCacheControlEphemeral.builder().build())
         assertThat(betaBase64PdfBlock.citations())
             .contains(BetaCitationsConfigParam.builder().enabled(true).build())
         assertThat(betaBase64PdfBlock.context()).contains("x")

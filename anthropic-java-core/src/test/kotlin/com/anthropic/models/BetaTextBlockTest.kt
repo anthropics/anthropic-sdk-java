@@ -18,11 +18,9 @@ class BetaTextBlockTest {
                         .documentTitle("document_title")
                         .endCharIndex(0L)
                         .startCharIndex(0L)
-                        .type(BetaCitationCharLocation.Type.CHAR_LOCATION)
                         .build()
                 )
                 .text("text")
-                .type(BetaTextBlock.Type.TEXT)
                 .build()
         assertThat(betaTextBlock).isNotNull
         assertThat(betaTextBlock.citations().get())
@@ -34,11 +32,9 @@ class BetaTextBlockTest {
                         .documentTitle("document_title")
                         .endCharIndex(0L)
                         .startCharIndex(0L)
-                        .type(BetaCitationCharLocation.Type.CHAR_LOCATION)
                         .build()
                 )
             )
         assertThat(betaTextBlock.text()).isEqualTo("text")
-        assertThat(betaTextBlock.type()).isEqualTo(BetaTextBlock.Type.TEXT)
     }
 }

@@ -9,10 +9,8 @@ class BetaApiErrorTest {
 
     @Test
     fun createBetaApiError() {
-        val betaApiError =
-            BetaApiError.builder().message("message").type(BetaApiError.Type.API_ERROR).build()
+        val betaApiError = BetaApiError.builder().message("message").build()
         assertThat(betaApiError).isNotNull
         assertThat(betaApiError.message()).isEqualTo("message")
-        assertThat(betaApiError.type()).isEqualTo(BetaApiError.Type.API_ERROR)
     }
 }

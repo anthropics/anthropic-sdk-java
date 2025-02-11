@@ -9,12 +9,7 @@ class BetaMessageBatchCanceledResultTest {
 
     @Test
     fun createBetaMessageBatchCanceledResult() {
-        val betaMessageBatchCanceledResult =
-            BetaMessageBatchCanceledResult.builder()
-                .type(BetaMessageBatchCanceledResult.Type.CANCELED)
-                .build()
+        val betaMessageBatchCanceledResult = BetaMessageBatchCanceledResult.builder().build()
         assertThat(betaMessageBatchCanceledResult).isNotNull
-        assertThat(betaMessageBatchCanceledResult.type())
-            .isEqualTo(BetaMessageBatchCanceledResult.Type.CANCELED)
     }
 }

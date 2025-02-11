@@ -18,11 +18,9 @@ class TextBlockTest {
                         .documentTitle("document_title")
                         .endCharIndex(0L)
                         .startCharIndex(0L)
-                        .type(CitationCharLocation.Type.CHAR_LOCATION)
                         .build()
                 )
                 .text("text")
-                .type(TextBlock.Type.TEXT)
                 .build()
         assertThat(textBlock).isNotNull
         assertThat(textBlock.citations().get())
@@ -34,11 +32,9 @@ class TextBlockTest {
                         .documentTitle("document_title")
                         .endCharIndex(0L)
                         .startCharIndex(0L)
-                        .type(CitationCharLocation.Type.CHAR_LOCATION)
                         .build()
                 )
             )
         assertThat(textBlock.text()).isEqualTo("text")
-        assertThat(textBlock.type()).isEqualTo(TextBlock.Type.TEXT)
     }
 }
