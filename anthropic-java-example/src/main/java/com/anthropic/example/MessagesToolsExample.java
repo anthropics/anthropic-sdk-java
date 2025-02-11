@@ -19,7 +19,6 @@ public final class MessagesToolsExample {
         AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
         InputSchema schema = InputSchema.builder()
-                .type(InputSchema.Type.OBJECT)
                 .properties(JsonValue.from(Map.of(
                         "robustness",
                         Map.of(
@@ -35,10 +34,7 @@ public final class MessagesToolsExample {
                 .model(Model.CLAUDE_3_5_SONNET_LATEST)
                 .maxTokens(2048)
                 .addTool(Tool.builder().name("describe_sdk").inputSchema(schema).build())
-                .toolChoice(ToolChoiceTool.builder()
-                        .type(ToolChoiceTool.Type.TOOL)
-                        .name("describe_sdk")
-                        .build())
+                .toolChoice(ToolChoiceTool.builder().name("describe_sdk").build())
                 .addUserMessage("How amazing is the Anthropic Java SDK?")
                 .build();
 
