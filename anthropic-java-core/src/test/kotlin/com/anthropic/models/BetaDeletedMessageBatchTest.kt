@@ -10,13 +10,8 @@ class BetaDeletedMessageBatchTest {
     @Test
     fun createBetaDeletedMessageBatch() {
         val betaDeletedMessageBatch =
-            BetaDeletedMessageBatch.builder()
-                .id("msgbatch_013Zva2CMHLNnXjNJJKqJ2EF")
-                .type(BetaDeletedMessageBatch.Type.MESSAGE_BATCH_DELETED)
-                .build()
+            BetaDeletedMessageBatch.builder().id("msgbatch_013Zva2CMHLNnXjNJJKqJ2EF").build()
         assertThat(betaDeletedMessageBatch).isNotNull
         assertThat(betaDeletedMessageBatch.id()).isEqualTo("msgbatch_013Zva2CMHLNnXjNJJKqJ2EF")
-        assertThat(betaDeletedMessageBatch.type())
-            .isEqualTo(BetaDeletedMessageBatch.Type.MESSAGE_BATCH_DELETED)
     }
 }

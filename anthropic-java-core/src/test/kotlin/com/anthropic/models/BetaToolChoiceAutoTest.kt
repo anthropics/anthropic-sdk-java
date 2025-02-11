@@ -9,13 +9,8 @@ class BetaToolChoiceAutoTest {
 
     @Test
     fun createBetaToolChoiceAuto() {
-        val betaToolChoiceAuto =
-            BetaToolChoiceAuto.builder()
-                .type(BetaToolChoiceAuto.Type.AUTO)
-                .disableParallelToolUse(true)
-                .build()
+        val betaToolChoiceAuto = BetaToolChoiceAuto.builder().disableParallelToolUse(true).build()
         assertThat(betaToolChoiceAuto).isNotNull
-        assertThat(betaToolChoiceAuto.type()).isEqualTo(BetaToolChoiceAuto.Type.AUTO)
         assertThat(betaToolChoiceAuto.disableParallelToolUse()).contains(true)
     }
 }

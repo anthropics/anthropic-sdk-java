@@ -16,7 +16,6 @@ class BetaCitationContentBlockLocationTest {
                 .documentTitle("document_title")
                 .endBlockIndex(0L)
                 .startBlockIndex(0L)
-                .type(BetaCitationContentBlockLocation.Type.CONTENT_BLOCK_LOCATION)
                 .build()
         assertThat(betaCitationContentBlockLocation).isNotNull
         assertThat(betaCitationContentBlockLocation.citedText()).isEqualTo("cited_text")
@@ -24,7 +23,5 @@ class BetaCitationContentBlockLocationTest {
         assertThat(betaCitationContentBlockLocation.documentTitle()).contains("document_title")
         assertThat(betaCitationContentBlockLocation.endBlockIndex()).isEqualTo(0L)
         assertThat(betaCitationContentBlockLocation.startBlockIndex()).isEqualTo(0L)
-        assertThat(betaCitationContentBlockLocation.type())
-            .isEqualTo(BetaCitationContentBlockLocation.Type.CONTENT_BLOCK_LOCATION)
     }
 }

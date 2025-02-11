@@ -9,12 +9,7 @@ class BetaRawMessageStopEventTest {
 
     @Test
     fun createBetaRawMessageStopEvent() {
-        val betaRawMessageStopEvent =
-            BetaRawMessageStopEvent.builder()
-                .type(BetaRawMessageStopEvent.Type.MESSAGE_STOP)
-                .build()
+        val betaRawMessageStopEvent = BetaRawMessageStopEvent.builder().build()
         assertThat(betaRawMessageStopEvent).isNotNull
-        assertThat(betaRawMessageStopEvent.type())
-            .isEqualTo(BetaRawMessageStopEvent.Type.MESSAGE_STOP)
     }
 }

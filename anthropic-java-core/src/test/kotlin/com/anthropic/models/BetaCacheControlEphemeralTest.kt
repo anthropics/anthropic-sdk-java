@@ -9,12 +9,7 @@ class BetaCacheControlEphemeralTest {
 
     @Test
     fun createBetaCacheControlEphemeral() {
-        val betaCacheControlEphemeral =
-            BetaCacheControlEphemeral.builder()
-                .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                .build()
+        val betaCacheControlEphemeral = BetaCacheControlEphemeral.builder().build()
         assertThat(betaCacheControlEphemeral).isNotNull
-        assertThat(betaCacheControlEphemeral.type())
-            .isEqualTo(BetaCacheControlEphemeral.Type.EPHEMERAL)
     }
 }

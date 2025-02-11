@@ -10,20 +10,14 @@ class BetaRawContentBlockDeltaEventTest {
     @Test
     fun createBetaRawContentBlockDeltaEvent() {
         val betaRawContentBlockDeltaEvent =
-            BetaRawContentBlockDeltaEvent.builder()
-                .betaTextDelta("text")
-                .index(0L)
-                .type(BetaRawContentBlockDeltaEvent.Type.CONTENT_BLOCK_DELTA)
-                .build()
+            BetaRawContentBlockDeltaEvent.builder().betaTextDelta("text").index(0L).build()
         assertThat(betaRawContentBlockDeltaEvent).isNotNull
         assertThat(betaRawContentBlockDeltaEvent.delta())
             .isEqualTo(
                 BetaRawContentBlockDeltaEvent.Delta.ofBetaText(
-                    BetaTextDelta.builder().text("text").type(BetaTextDelta.Type.TEXT_DELTA).build()
+                    BetaTextDelta.builder().text("text").build()
                 )
             )
         assertThat(betaRawContentBlockDeltaEvent.index()).isEqualTo(0L)
-        assertThat(betaRawContentBlockDeltaEvent.type())
-            .isEqualTo(BetaRawContentBlockDeltaEvent.Type.CONTENT_BLOCK_DELTA)
     }
 }

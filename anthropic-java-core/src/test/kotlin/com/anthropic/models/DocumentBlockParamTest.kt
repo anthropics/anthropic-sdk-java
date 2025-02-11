@@ -11,19 +11,8 @@ class DocumentBlockParamTest {
     fun createDocumentBlockParam() {
         val documentBlockParam =
             DocumentBlockParam.builder()
-                .source(
-                    Base64PdfSource.builder()
-                        .data("U3RhaW5sZXNzIHJvY2tz")
-                        .mediaType(Base64PdfSource.MediaType.APPLICATION_PDF)
-                        .type(Base64PdfSource.Type.BASE64)
-                        .build()
-                )
-                .type(DocumentBlockParam.Type.DOCUMENT)
-                .cacheControl(
-                    CacheControlEphemeral.builder()
-                        .type(CacheControlEphemeral.Type.EPHEMERAL)
-                        .build()
-                )
+                .base64PdfSource("U3RhaW5sZXNzIHJvY2tz")
+                .cacheControl(CacheControlEphemeral.builder().build())
                 .citations(CitationsConfigParam.builder().enabled(true).build())
                 .context("x")
                 .title("x")
@@ -32,18 +21,11 @@ class DocumentBlockParamTest {
         assertThat(documentBlockParam.source())
             .isEqualTo(
                 DocumentBlockParam.Source.ofBase64Pdf(
-                    Base64PdfSource.builder()
-                        .data("U3RhaW5sZXNzIHJvY2tz")
-                        .mediaType(Base64PdfSource.MediaType.APPLICATION_PDF)
-                        .type(Base64PdfSource.Type.BASE64)
-                        .build()
+                    Base64PdfSource.builder().data("U3RhaW5sZXNzIHJvY2tz").build()
                 )
             )
-        assertThat(documentBlockParam.type()).isEqualTo(DocumentBlockParam.Type.DOCUMENT)
         assertThat(documentBlockParam.cacheControl())
-            .contains(
-                CacheControlEphemeral.builder().type(CacheControlEphemeral.Type.EPHEMERAL).build()
-            )
+            .contains(CacheControlEphemeral.builder().build())
         assertThat(documentBlockParam.citations())
             .contains(CitationsConfigParam.builder().enabled(true).build())
         assertThat(documentBlockParam.context()).contains("x")

@@ -31,7 +31,6 @@ class MessageBatchTest {
                 .resultsUrl(
                     "https://api.anthropic.com/v1/messages/batches/msgbatch_013Zva2CMHLNnXjNJJKqJ2EF/results"
                 )
-                .type(MessageBatch.Type.MESSAGE_BATCH)
                 .build()
         assertThat(messageBatch).isNotNull
         assertThat(messageBatch.id()).isEqualTo("msgbatch_013Zva2CMHLNnXjNJJKqJ2EF")
@@ -61,6 +60,5 @@ class MessageBatchTest {
             .contains(
                 "https://api.anthropic.com/v1/messages/batches/msgbatch_013Zva2CMHLNnXjNJJKqJ2EF/results"
             )
-        assertThat(messageBatch.type()).isEqualTo(MessageBatch.Type.MESSAGE_BATCH)
     }
 }

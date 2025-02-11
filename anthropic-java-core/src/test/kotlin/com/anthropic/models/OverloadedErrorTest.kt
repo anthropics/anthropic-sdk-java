@@ -9,13 +9,8 @@ class OverloadedErrorTest {
 
     @Test
     fun createOverloadedError() {
-        val overloadedError =
-            OverloadedError.builder()
-                .message("message")
-                .type(OverloadedError.Type.OVERLOADED_ERROR)
-                .build()
+        val overloadedError = OverloadedError.builder().message("message").build()
         assertThat(overloadedError).isNotNull
         assertThat(overloadedError.message()).isEqualTo("message")
-        assertThat(overloadedError.type()).isEqualTo(OverloadedError.Type.OVERLOADED_ERROR)
     }
 }

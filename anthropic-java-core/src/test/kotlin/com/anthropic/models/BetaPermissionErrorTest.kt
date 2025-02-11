@@ -9,13 +9,8 @@ class BetaPermissionErrorTest {
 
     @Test
     fun createBetaPermissionError() {
-        val betaPermissionError =
-            BetaPermissionError.builder()
-                .message("message")
-                .type(BetaPermissionError.Type.PERMISSION_ERROR)
-                .build()
+        val betaPermissionError = BetaPermissionError.builder().message("message").build()
         assertThat(betaPermissionError).isNotNull
         assertThat(betaPermissionError.message()).isEqualTo("message")
-        assertThat(betaPermissionError.type()).isEqualTo(BetaPermissionError.Type.PERMISSION_ERROR)
     }
 }

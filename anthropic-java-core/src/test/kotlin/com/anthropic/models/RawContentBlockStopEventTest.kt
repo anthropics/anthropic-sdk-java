@@ -9,14 +9,8 @@ class RawContentBlockStopEventTest {
 
     @Test
     fun createRawContentBlockStopEvent() {
-        val rawContentBlockStopEvent =
-            RawContentBlockStopEvent.builder()
-                .index(0L)
-                .type(RawContentBlockStopEvent.Type.CONTENT_BLOCK_STOP)
-                .build()
+        val rawContentBlockStopEvent = RawContentBlockStopEvent.builder().index(0L).build()
         assertThat(rawContentBlockStopEvent).isNotNull
         assertThat(rawContentBlockStopEvent.index()).isEqualTo(0L)
-        assertThat(rawContentBlockStopEvent.type())
-            .isEqualTo(RawContentBlockStopEvent.Type.CONTENT_BLOCK_STOP)
     }
 }

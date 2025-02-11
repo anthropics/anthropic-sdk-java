@@ -9,13 +9,8 @@ class BetaOverloadedErrorTest {
 
     @Test
     fun createBetaOverloadedError() {
-        val betaOverloadedError =
-            BetaOverloadedError.builder()
-                .message("message")
-                .type(BetaOverloadedError.Type.OVERLOADED_ERROR)
-                .build()
+        val betaOverloadedError = BetaOverloadedError.builder().message("message").build()
         assertThat(betaOverloadedError).isNotNull
         assertThat(betaOverloadedError.message()).isEqualTo("message")
-        assertThat(betaOverloadedError.type()).isEqualTo(BetaOverloadedError.Type.OVERLOADED_ERROR)
     }
 }

@@ -9,9 +9,7 @@ class CacheControlEphemeralTest {
 
     @Test
     fun createCacheControlEphemeral() {
-        val cacheControlEphemeral =
-            CacheControlEphemeral.builder().type(CacheControlEphemeral.Type.EPHEMERAL).build()
+        val cacheControlEphemeral = CacheControlEphemeral.builder().build()
         assertThat(cacheControlEphemeral).isNotNull
-        assertThat(cacheControlEphemeral.type()).isEqualTo(CacheControlEphemeral.Type.EPHEMERAL)
     }
 }

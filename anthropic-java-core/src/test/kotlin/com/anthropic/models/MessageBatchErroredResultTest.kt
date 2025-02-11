@@ -11,23 +11,10 @@ class MessageBatchErroredResultTest {
     fun createMessageBatchErroredResult() {
         val messageBatchErroredResult =
             MessageBatchErroredResult.builder()
-                .error(
-                    ErrorResponse.builder()
-                        .invalidRequestErrorError("message")
-                        .type(ErrorResponse.Type.ERROR)
-                        .build()
-                )
-                .type(MessageBatchErroredResult.Type.ERRORED)
+                .error(ErrorResponse.builder().invalidRequestErrorError("message").build())
                 .build()
         assertThat(messageBatchErroredResult).isNotNull
         assertThat(messageBatchErroredResult.error())
-            .isEqualTo(
-                ErrorResponse.builder()
-                    .invalidRequestErrorError("message")
-                    .type(ErrorResponse.Type.ERROR)
-                    .build()
-            )
-        assertThat(messageBatchErroredResult.type())
-            .isEqualTo(MessageBatchErroredResult.Type.ERRORED)
+            .isEqualTo(ErrorResponse.builder().invalidRequestErrorError("message").build())
     }
 }

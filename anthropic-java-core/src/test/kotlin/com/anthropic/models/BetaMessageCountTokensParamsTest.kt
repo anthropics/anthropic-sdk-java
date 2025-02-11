@@ -17,12 +17,7 @@ class BetaMessageCountTokensParamsTest {
                 listOf(
                     BetaTextBlockParam.builder()
                         .text("Today's date is 2024-06-01.")
-                        .type(BetaTextBlockParam.Type.TEXT)
-                        .cacheControl(
-                            BetaCacheControlEphemeral.builder()
-                                .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                .build()
-                        )
+                        .cacheControl(BetaCacheControlEphemeral.builder().build())
                         .addCitation(
                             BetaCitationCharLocationParam.builder()
                                 .citedText("cited_text")
@@ -30,23 +25,16 @@ class BetaMessageCountTokensParamsTest {
                                 .documentTitle("x")
                                 .endCharIndex(0L)
                                 .startCharIndex(0L)
-                                .type(BetaCitationCharLocationParam.Type.CHAR_LOCATION)
                                 .build()
                         )
                         .build()
                 )
             )
-            .toolChoice(
-                BetaToolChoiceAuto.builder()
-                    .type(BetaToolChoiceAuto.Type.AUTO)
-                    .disableParallelToolUse(true)
-                    .build()
-            )
+            .toolChoice(BetaToolChoiceAuto.builder().disableParallelToolUse(true).build())
             .addTool(
                 BetaTool.builder()
                     .inputSchema(
                         BetaTool.InputSchema.builder()
-                            .type(BetaTool.InputSchema.Type.OBJECT)
                             .properties(
                                 JsonValue.from(
                                     mapOf(
@@ -68,11 +56,7 @@ class BetaMessageCountTokensParamsTest {
                             .build()
                     )
                     .name("name")
-                    .cacheControl(
-                        BetaCacheControlEphemeral.builder()
-                            .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                            .build()
-                    )
+                    .cacheControl(BetaCacheControlEphemeral.builder().build())
                     .description("Get the current weather in a given location")
                     .type(BetaTool.Type.CUSTOM)
                     .build()
@@ -91,12 +75,7 @@ class BetaMessageCountTokensParamsTest {
                     listOf(
                         BetaTextBlockParam.builder()
                             .text("Today's date is 2024-06-01.")
-                            .type(BetaTextBlockParam.Type.TEXT)
-                            .cacheControl(
-                                BetaCacheControlEphemeral.builder()
-                                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                    .build()
-                            )
+                            .cacheControl(BetaCacheControlEphemeral.builder().build())
                             .addCitation(
                                 BetaCitationCharLocationParam.builder()
                                     .citedText("cited_text")
@@ -104,23 +83,16 @@ class BetaMessageCountTokensParamsTest {
                                     .documentTitle("x")
                                     .endCharIndex(0L)
                                     .startCharIndex(0L)
-                                    .type(BetaCitationCharLocationParam.Type.CHAR_LOCATION)
                                     .build()
                             )
                             .build()
                     )
                 )
-                .toolChoice(
-                    BetaToolChoiceAuto.builder()
-                        .type(BetaToolChoiceAuto.Type.AUTO)
-                        .disableParallelToolUse(true)
-                        .build()
-                )
+                .toolChoice(BetaToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
                     BetaTool.builder()
                         .inputSchema(
                             BetaTool.InputSchema.builder()
-                                .type(BetaTool.InputSchema.Type.OBJECT)
                                 .properties(
                                     JsonValue.from(
                                         mapOf(
@@ -142,11 +114,7 @@ class BetaMessageCountTokensParamsTest {
                                 .build()
                         )
                         .name("name")
-                        .cacheControl(
-                            BetaCacheControlEphemeral.builder()
-                                .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                .build()
-                        )
+                        .cacheControl(BetaCacheControlEphemeral.builder().build())
                         .description("Get the current weather in a given location")
                         .type(BetaTool.Type.CUSTOM)
                         .build()
@@ -171,12 +139,7 @@ class BetaMessageCountTokensParamsTest {
                     listOf(
                         BetaTextBlockParam.builder()
                             .text("Today's date is 2024-06-01.")
-                            .type(BetaTextBlockParam.Type.TEXT)
-                            .cacheControl(
-                                BetaCacheControlEphemeral.builder()
-                                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                    .build()
-                            )
+                            .cacheControl(BetaCacheControlEphemeral.builder().build())
                             .addCitation(
                                 BetaCitationCharLocationParam.builder()
                                     .citedText("cited_text")
@@ -184,7 +147,6 @@ class BetaMessageCountTokensParamsTest {
                                     .documentTitle("x")
                                     .endCharIndex(0L)
                                     .startCharIndex(0L)
-                                    .type(BetaCitationCharLocationParam.Type.CHAR_LOCATION)
                                     .build()
                             )
                             .build()
@@ -194,10 +156,7 @@ class BetaMessageCountTokensParamsTest {
         assertThat(body.toolChoice())
             .contains(
                 BetaToolChoice.ofAuto(
-                    BetaToolChoiceAuto.builder()
-                        .type(BetaToolChoiceAuto.Type.AUTO)
-                        .disableParallelToolUse(true)
-                        .build()
+                    BetaToolChoiceAuto.builder().disableParallelToolUse(true).build()
                 )
             )
         assertThat(body.tools())
@@ -207,7 +166,6 @@ class BetaMessageCountTokensParamsTest {
                         BetaTool.builder()
                             .inputSchema(
                                 BetaTool.InputSchema.builder()
-                                    .type(BetaTool.InputSchema.Type.OBJECT)
                                     .properties(
                                         JsonValue.from(
                                             mapOf(
@@ -229,11 +187,7 @@ class BetaMessageCountTokensParamsTest {
                                     .build()
                             )
                             .name("name")
-                            .cacheControl(
-                                BetaCacheControlEphemeral.builder()
-                                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                    .build()
-                            )
+                            .cacheControl(BetaCacheControlEphemeral.builder().build())
                             .description("Get the current weather in a given location")
                             .type(BetaTool.Type.CUSTOM)
                             .build()

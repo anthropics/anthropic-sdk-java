@@ -31,7 +31,6 @@ class BetaMessageBatchTest {
                 .resultsUrl(
                     "https://api.anthropic.com/v1/messages/batches/msgbatch_013Zva2CMHLNnXjNJJKqJ2EF/results"
                 )
-                .type(BetaMessageBatch.Type.MESSAGE_BATCH)
                 .build()
         assertThat(betaMessageBatch).isNotNull
         assertThat(betaMessageBatch.id()).isEqualTo("msgbatch_013Zva2CMHLNnXjNJJKqJ2EF")
@@ -61,6 +60,5 @@ class BetaMessageBatchTest {
             .contains(
                 "https://api.anthropic.com/v1/messages/batches/msgbatch_013Zva2CMHLNnXjNJJKqJ2EF/results"
             )
-        assertThat(betaMessageBatch.type()).isEqualTo(BetaMessageBatch.Type.MESSAGE_BATCH)
     }
 }

@@ -9,14 +9,8 @@ class BetaGatewayTimeoutErrorTest {
 
     @Test
     fun createBetaGatewayTimeoutError() {
-        val betaGatewayTimeoutError =
-            BetaGatewayTimeoutError.builder()
-                .message("message")
-                .type(BetaGatewayTimeoutError.Type.TIMEOUT_ERROR)
-                .build()
+        val betaGatewayTimeoutError = BetaGatewayTimeoutError.builder().message("message").build()
         assertThat(betaGatewayTimeoutError).isNotNull
         assertThat(betaGatewayTimeoutError.message()).isEqualTo("message")
-        assertThat(betaGatewayTimeoutError.type())
-            .isEqualTo(BetaGatewayTimeoutError.Type.TIMEOUT_ERROR)
     }
 }

@@ -9,12 +9,7 @@ class MessageBatchCanceledResultTest {
 
     @Test
     fun createMessageBatchCanceledResult() {
-        val messageBatchCanceledResult =
-            MessageBatchCanceledResult.builder()
-                .type(MessageBatchCanceledResult.Type.CANCELED)
-                .build()
+        val messageBatchCanceledResult = MessageBatchCanceledResult.builder().build()
         assertThat(messageBatchCanceledResult).isNotNull
-        assertThat(messageBatchCanceledResult.type())
-            .isEqualTo(MessageBatchCanceledResult.Type.CANCELED)
     }
 }

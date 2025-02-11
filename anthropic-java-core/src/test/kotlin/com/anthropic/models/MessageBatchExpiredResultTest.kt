@@ -9,10 +9,7 @@ class MessageBatchExpiredResultTest {
 
     @Test
     fun createMessageBatchExpiredResult() {
-        val messageBatchExpiredResult =
-            MessageBatchExpiredResult.builder().type(MessageBatchExpiredResult.Type.EXPIRED).build()
+        val messageBatchExpiredResult = MessageBatchExpiredResult.builder().build()
         assertThat(messageBatchExpiredResult).isNotNull
-        assertThat(messageBatchExpiredResult.type())
-            .isEqualTo(MessageBatchExpiredResult.Type.EXPIRED)
     }
 }

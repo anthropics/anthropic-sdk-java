@@ -16,7 +16,6 @@ class CitationContentBlockLocationTest {
                 .documentTitle("document_title")
                 .endBlockIndex(0L)
                 .startBlockIndex(0L)
-                .type(CitationContentBlockLocation.Type.CONTENT_BLOCK_LOCATION)
                 .build()
         assertThat(citationContentBlockLocation).isNotNull
         assertThat(citationContentBlockLocation.citedText()).isEqualTo("cited_text")
@@ -24,7 +23,5 @@ class CitationContentBlockLocationTest {
         assertThat(citationContentBlockLocation.documentTitle()).contains("document_title")
         assertThat(citationContentBlockLocation.endBlockIndex()).isEqualTo(0L)
         assertThat(citationContentBlockLocation.startBlockIndex()).isEqualTo(0L)
-        assertThat(citationContentBlockLocation.type())
-            .isEqualTo(CitationContentBlockLocation.Type.CONTENT_BLOCK_LOCATION)
     }
 }

@@ -9,21 +9,13 @@ class BetaErrorResponseTest {
 
     @Test
     fun createBetaErrorResponse() {
-        val betaErrorResponse =
-            BetaErrorResponse.builder()
-                .invalidRequestError("message")
-                .type(BetaErrorResponse.Type.ERROR)
-                .build()
+        val betaErrorResponse = BetaErrorResponse.builder().invalidRequestError("message").build()
         assertThat(betaErrorResponse).isNotNull
         assertThat(betaErrorResponse.error())
             .isEqualTo(
                 BetaError.ofInvalidRequest(
-                    BetaInvalidRequestError.builder()
-                        .message("message")
-                        .type(BetaInvalidRequestError.Type.INVALID_REQUEST_ERROR)
-                        .build()
+                    BetaInvalidRequestError.builder().message("message").build()
                 )
             )
-        assertThat(betaErrorResponse.type()).isEqualTo(BetaErrorResponse.Type.ERROR)
     }
 }

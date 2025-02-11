@@ -9,21 +9,13 @@ class ErrorResponseTest {
 
     @Test
     fun createErrorResponse() {
-        val errorResponse =
-            ErrorResponse.builder()
-                .invalidRequestErrorError("message")
-                .type(ErrorResponse.Type.ERROR)
-                .build()
+        val errorResponse = ErrorResponse.builder().invalidRequestErrorError("message").build()
         assertThat(errorResponse).isNotNull
         assertThat(errorResponse.error())
             .isEqualTo(
                 ErrorObject.ofInvalidRequestError(
-                    InvalidRequestError.builder()
-                        .message("message")
-                        .type(InvalidRequestError.Type.INVALID_REQUEST_ERROR)
-                        .build()
+                    InvalidRequestError.builder().message("message").build()
                 )
             )
-        assertThat(errorResponse.type()).isEqualTo(ErrorResponse.Type.ERROR)
     }
 }

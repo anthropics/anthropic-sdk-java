@@ -9,13 +9,8 @@ class NotFoundErrorTest {
 
     @Test
     fun createNotFoundError() {
-        val notFoundError =
-            NotFoundError.builder()
-                .message("message")
-                .type(NotFoundError.Type.NOT_FOUND_ERROR)
-                .build()
+        val notFoundError = NotFoundError.builder().message("message").build()
         assertThat(notFoundError).isNotNull
         assertThat(notFoundError.message()).isEqualTo("message")
-        assertThat(notFoundError.type()).isEqualTo(NotFoundError.Type.NOT_FOUND_ERROR)
     }
 }

@@ -12,25 +12,14 @@ class BetaToolResultBlockParamTest {
         val betaToolResultBlockParam =
             BetaToolResultBlockParam.builder()
                 .toolUseId("tool_use_id")
-                .type(BetaToolResultBlockParam.Type.TOOL_RESULT)
-                .cacheControl(
-                    BetaCacheControlEphemeral.builder()
-                        .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                        .build()
-                )
+                .cacheControl(BetaCacheControlEphemeral.builder().build())
                 .content("string")
                 .isError(true)
                 .build()
         assertThat(betaToolResultBlockParam).isNotNull
         assertThat(betaToolResultBlockParam.toolUseId()).isEqualTo("tool_use_id")
-        assertThat(betaToolResultBlockParam.type())
-            .isEqualTo(BetaToolResultBlockParam.Type.TOOL_RESULT)
         assertThat(betaToolResultBlockParam.cacheControl())
-            .contains(
-                BetaCacheControlEphemeral.builder()
-                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                    .build()
-            )
+            .contains(BetaCacheControlEphemeral.builder().build())
         assertThat(betaToolResultBlockParam.content())
             .contains(BetaToolResultBlockParam.Content.ofString("string"))
         assertThat(betaToolResultBlockParam.isError()).contains(true)

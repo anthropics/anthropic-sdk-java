@@ -18,10 +18,8 @@ class CitationsDeltaTest {
                         .documentTitle("document_title")
                         .endCharIndex(0L)
                         .startCharIndex(0L)
-                        .type(CitationCharLocation.Type.CHAR_LOCATION)
                         .build()
                 )
-                .type(CitationsDelta.Type.CITATIONS_DELTA)
                 .build()
         assertThat(citationsDelta).isNotNull
         assertThat(citationsDelta.citation())
@@ -33,10 +31,8 @@ class CitationsDeltaTest {
                         .documentTitle("document_title")
                         .endCharIndex(0L)
                         .startCharIndex(0L)
-                        .type(CitationCharLocation.Type.CHAR_LOCATION)
                         .build()
                 )
             )
-        assertThat(citationsDelta.type()).isEqualTo(CitationsDelta.Type.CITATIONS_DELTA)
     }
 }
