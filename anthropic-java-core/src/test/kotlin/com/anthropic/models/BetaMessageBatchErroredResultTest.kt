@@ -11,23 +11,10 @@ class BetaMessageBatchErroredResultTest {
     fun createBetaMessageBatchErroredResult() {
         val betaMessageBatchErroredResult =
             BetaMessageBatchErroredResult.builder()
-                .error(
-                    BetaErrorResponse.builder()
-                        .invalidRequestError("message")
-                        .type(BetaErrorResponse.Type.ERROR)
-                        .build()
-                )
-                .type(BetaMessageBatchErroredResult.Type.ERRORED)
+                .error(BetaErrorResponse.builder().invalidRequestError("message").build())
                 .build()
         assertThat(betaMessageBatchErroredResult).isNotNull
         assertThat(betaMessageBatchErroredResult.error())
-            .isEqualTo(
-                BetaErrorResponse.builder()
-                    .invalidRequestError("message")
-                    .type(BetaErrorResponse.Type.ERROR)
-                    .build()
-            )
-        assertThat(betaMessageBatchErroredResult.type())
-            .isEqualTo(BetaMessageBatchErroredResult.Type.ERRORED)
+            .isEqualTo(BetaErrorResponse.builder().invalidRequestError("message").build())
     }
 }

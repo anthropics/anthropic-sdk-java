@@ -9,10 +9,8 @@ class BetaTextDeltaTest {
 
     @Test
     fun createBetaTextDelta() {
-        val betaTextDelta =
-            BetaTextDelta.builder().text("text").type(BetaTextDelta.Type.TEXT_DELTA).build()
+        val betaTextDelta = BetaTextDelta.builder().text("text").build()
         assertThat(betaTextDelta).isNotNull
         assertThat(betaTextDelta.text()).isEqualTo("text")
-        assertThat(betaTextDelta.type()).isEqualTo(BetaTextDelta.Type.TEXT_DELTA)
     }
 }

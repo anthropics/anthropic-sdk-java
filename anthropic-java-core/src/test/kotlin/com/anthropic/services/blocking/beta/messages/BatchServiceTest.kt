@@ -54,13 +54,8 @@ class BatchServiceTest {
                                         listOf(
                                             BetaTextBlockParam.builder()
                                                 .text("Today's date is 2024-06-01.")
-                                                .type(BetaTextBlockParam.Type.TEXT)
                                                 .cacheControl(
-                                                    BetaCacheControlEphemeral.builder()
-                                                        .type(
-                                                            BetaCacheControlEphemeral.Type.EPHEMERAL
-                                                        )
-                                                        .build()
+                                                    BetaCacheControlEphemeral.builder().build()
                                                 )
                                                 .addCitation(
                                                     BetaCitationCharLocationParam.builder()
@@ -69,10 +64,6 @@ class BatchServiceTest {
                                                         .documentTitle("x")
                                                         .endCharIndex(0L)
                                                         .startCharIndex(0L)
-                                                        .type(
-                                                            BetaCitationCharLocationParam.Type
-                                                                .CHAR_LOCATION
-                                                        )
                                                         .build()
                                                 )
                                                 .build()
@@ -81,7 +72,6 @@ class BatchServiceTest {
                                     .temperature(1.0)
                                     .toolChoice(
                                         BetaToolChoiceAuto.builder()
-                                            .type(BetaToolChoiceAuto.Type.AUTO)
                                             .disableParallelToolUse(true)
                                             .build()
                                     )
@@ -89,7 +79,6 @@ class BatchServiceTest {
                                         BetaTool.builder()
                                             .inputSchema(
                                                 BetaTool.InputSchema.builder()
-                                                    .type(BetaTool.InputSchema.Type.OBJECT)
                                                     .properties(
                                                         JsonValue.from(
                                                             mapOf(
@@ -112,9 +101,7 @@ class BatchServiceTest {
                                             )
                                             .name("name")
                                             .cacheControl(
-                                                BetaCacheControlEphemeral.builder()
-                                                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                                                    .build()
+                                                BetaCacheControlEphemeral.builder().build()
                                             )
                                             .description(
                                                 "Get the current weather in a given location"

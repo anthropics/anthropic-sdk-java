@@ -9,13 +9,8 @@ class BetaRateLimitErrorTest {
 
     @Test
     fun createBetaRateLimitError() {
-        val betaRateLimitError =
-            BetaRateLimitError.builder()
-                .message("message")
-                .type(BetaRateLimitError.Type.RATE_LIMIT_ERROR)
-                .build()
+        val betaRateLimitError = BetaRateLimitError.builder().message("message").build()
         assertThat(betaRateLimitError).isNotNull
         assertThat(betaRateLimitError.message()).isEqualTo("message")
-        assertThat(betaRateLimitError.type()).isEqualTo(BetaRateLimitError.Type.RATE_LIMIT_ERROR)
     }
 }

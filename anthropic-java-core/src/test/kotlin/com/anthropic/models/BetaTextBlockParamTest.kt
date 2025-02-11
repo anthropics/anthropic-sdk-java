@@ -12,12 +12,7 @@ class BetaTextBlockParamTest {
         val betaTextBlockParam =
             BetaTextBlockParam.builder()
                 .text("x")
-                .type(BetaTextBlockParam.Type.TEXT)
-                .cacheControl(
-                    BetaCacheControlEphemeral.builder()
-                        .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                        .build()
-                )
+                .cacheControl(BetaCacheControlEphemeral.builder().build())
                 .addCitation(
                     BetaCitationCharLocationParam.builder()
                         .citedText("cited_text")
@@ -25,19 +20,13 @@ class BetaTextBlockParamTest {
                         .documentTitle("x")
                         .endCharIndex(0L)
                         .startCharIndex(0L)
-                        .type(BetaCitationCharLocationParam.Type.CHAR_LOCATION)
                         .build()
                 )
                 .build()
         assertThat(betaTextBlockParam).isNotNull
         assertThat(betaTextBlockParam.text()).isEqualTo("x")
-        assertThat(betaTextBlockParam.type()).isEqualTo(BetaTextBlockParam.Type.TEXT)
         assertThat(betaTextBlockParam.cacheControl())
-            .contains(
-                BetaCacheControlEphemeral.builder()
-                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                    .build()
-            )
+            .contains(BetaCacheControlEphemeral.builder().build())
         assertThat(betaTextBlockParam.citations().get())
             .containsExactly(
                 BetaTextCitationParam.ofCitationCharLocation(
@@ -47,7 +36,6 @@ class BetaTextBlockParamTest {
                         .documentTitle("x")
                         .endCharIndex(0L)
                         .startCharIndex(0L)
-                        .type(BetaCitationCharLocationParam.Type.CHAR_LOCATION)
                         .build()
                 )
             )

@@ -158,12 +158,7 @@ private constructor(
          * expiration.
          */
         fun succeededResult(message: BetaMessage) =
-            result(
-                BetaMessageBatchSucceededResult.builder()
-                    .type(BetaMessageBatchSucceededResult.Type.SUCCEEDED)
-                    .message(message)
-                    .build()
-            )
+            result(BetaMessageBatchSucceededResult.builder().message(message).build())
 
         /**
          * Processing result for this request.
@@ -183,12 +178,7 @@ private constructor(
          * expiration.
          */
         fun erroredResult(error: BetaErrorResponse) =
-            result(
-                BetaMessageBatchErroredResult.builder()
-                    .type(BetaMessageBatchErroredResult.Type.ERRORED)
-                    .error(error)
-                    .build()
-            )
+            result(BetaMessageBatchErroredResult.builder().error(error).build())
 
         /**
          * Processing result for this request.

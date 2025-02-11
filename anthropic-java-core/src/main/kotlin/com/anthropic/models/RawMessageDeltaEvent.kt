@@ -24,7 +24,7 @@ class RawMessageDeltaEvent
 @JsonCreator
 private constructor(
     @JsonProperty("delta") @ExcludeMissing private val delta: JsonField<Delta> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
     @JsonProperty("usage")
     @ExcludeMissing
     private val usage: JsonField<MessageDeltaUsage> = JsonMissing.of(),
@@ -33,7 +33,7 @@ private constructor(
 
     fun delta(): Delta = delta.getRequired("delta")
 
-    fun type(): Type = type.getRequired("type")
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
      * Billing and rate-limit usage.
@@ -51,8 +51,6 @@ private constructor(
     fun usage(): MessageDeltaUsage = usage.getRequired("usage")
 
     @JsonProperty("delta") @ExcludeMissing fun _delta(): JsonField<Delta> = delta
-
-    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     /**
      * Billing and rate-limit usage.
@@ -81,7 +79,11 @@ private constructor(
         }
 
         delta().validate()
-        type()
+        _type().let {
+            if (it != JsonValue.from("message_delta")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
         usage().validate()
         validated = true
     }
@@ -97,7 +99,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var delta: JsonField<Delta>? = null
-        private var type: JsonField<Type>? = null
+        private var type: JsonValue = JsonValue.from("message_delta")
         private var usage: JsonField<MessageDeltaUsage>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -113,9 +115,7 @@ private constructor(
 
         fun delta(delta: JsonField<Delta>) = apply { this.delta = delta }
 
-        fun type(type: Type) = type(JsonField.of(type))
-
-        fun type(type: JsonField<Type>) = apply { this.type = type }
+        fun type(type: JsonValue) = apply { this.type = type }
 
         /**
          * Billing and rate-limit usage.
@@ -171,7 +171,7 @@ private constructor(
         fun build(): RawMessageDeltaEvent =
             RawMessageDeltaEvent(
                 checkRequired("delta", delta),
-                checkRequired("type", type),
+                type,
                 checkRequired("usage", usage),
                 additionalProperties.toImmutable(),
             )
@@ -410,92 +410,6 @@ private constructor(
 
         override fun toString() =
             "Delta{stopReason=$stopReason, stopSequence=$stopSequence, additionalProperties=$additionalProperties}"
-    }
-
-    class Type
-    @JsonCreator
-    private constructor(
-        private val value: JsonField<String>,
-    ) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val MESSAGE_DELTA = of("message_delta")
-
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-        }
-
-        /** An enum containing [Type]'s known values. */
-        enum class Known {
-            MESSAGE_DELTA,
-        }
-
-        /**
-         * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Type] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            MESSAGE_DELTA,
-            /** An enum member indicating that [Type] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                MESSAGE_DELTA -> Value.MESSAGE_DELTA
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                MESSAGE_DELTA -> Known.MESSAGE_DELTA
-                else -> throw AnthropicInvalidDataException("Unknown Type: $value")
-            }
-
-        fun asString(): String = _value().asStringOrThrow()
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return /* spotless:off */ other is Type && value == other.value /* spotless:on */
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
     }
 
     override fun equals(other: Any?): Boolean {

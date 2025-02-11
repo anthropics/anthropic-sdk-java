@@ -28,14 +28,14 @@ private constructor(
     @ExcludeMissing
     private val content: JsonField<List<BetaContentBlock>> = JsonMissing.of(),
     @JsonProperty("model") @ExcludeMissing private val model: JsonField<Model> = JsonMissing.of(),
-    @JsonProperty("role") @ExcludeMissing private val role: JsonField<Role> = JsonMissing.of(),
+    @JsonProperty("role") @ExcludeMissing private val role: JsonValue = JsonMissing.of(),
     @JsonProperty("stop_reason")
     @ExcludeMissing
     private val stopReason: JsonField<StopReason> = JsonMissing.of(),
     @JsonProperty("stop_sequence")
     @ExcludeMissing
     private val stopSequence: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
     @JsonProperty("usage")
     @ExcludeMissing
     private val usage: JsonField<BetaUsage> = JsonMissing.of(),
@@ -92,7 +92,7 @@ private constructor(
      *
      * This will always be `"assistant"`.
      */
-    fun role(): Role = role.getRequired("role")
+    @JsonProperty("role") @ExcludeMissing fun _role(): JsonValue = role
 
     /**
      * The reason that we stopped.
@@ -122,7 +122,7 @@ private constructor(
      *
      * For Messages, this is always `"message"`.
      */
-    fun type(): Type = type.getRequired("type")
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
      * Billing and rate-limit usage.
@@ -187,13 +187,6 @@ private constructor(
     @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
 
     /**
-     * Conversational role of the generated message.
-     *
-     * This will always be `"assistant"`.
-     */
-    @JsonProperty("role") @ExcludeMissing fun _role(): JsonField<Role> = role
-
-    /**
      * The reason that we stopped.
      *
      * This may be one the following values:
@@ -217,13 +210,6 @@ private constructor(
     @JsonProperty("stop_sequence")
     @ExcludeMissing
     fun _stopSequence(): JsonField<String> = stopSequence
-
-    /**
-     * Object type.
-     *
-     * For Messages, this is always `"message"`.
-     */
-    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     /**
      * Billing and rate-limit usage.
@@ -251,7 +237,7 @@ private constructor(
                     BetaMessageParam.Content.ofBetaContentBlockParams(it.map { it.toParam() })
                 }
             )
-            .role(_role().map { BetaMessageParam.Role.of(it.toString()) })
+            .role(_role())
             .build()
 
     private var validated: Boolean = false
@@ -264,10 +250,18 @@ private constructor(
         id()
         content().forEach { it.validate() }
         model()
-        role()
+        _role().let {
+            if (it != JsonValue.from("assistant")) {
+                throw AnthropicInvalidDataException("'role' is invalid, received $it")
+            }
+        }
         stopReason()
         stopSequence()
-        type()
+        _type().let {
+            if (it != JsonValue.from("message")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
         usage().validate()
         validated = true
     }
@@ -285,10 +279,10 @@ private constructor(
         private var id: JsonField<String>? = null
         private var content: JsonField<MutableList<BetaContentBlock>>? = null
         private var model: JsonField<Model>? = null
-        private var role: JsonField<Role>? = null
+        private var role: JsonValue = JsonValue.from("assistant")
         private var stopReason: JsonField<StopReason>? = null
         private var stopSequence: JsonField<String>? = null
-        private var type: JsonField<Type>? = null
+        private var type: JsonValue = JsonValue.from("message")
         private var usage: JsonField<BetaUsage>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -518,14 +512,7 @@ private constructor(
          *
          * This will always be `"assistant"`.
          */
-        fun role(role: Role) = role(JsonField.of(role))
-
-        /**
-         * Conversational role of the generated message.
-         *
-         * This will always be `"assistant"`.
-         */
-        fun role(role: JsonField<Role>) = apply { this.role = role }
+        fun role(role: JsonValue) = apply { this.role = role }
 
         /**
          * The reason that we stopped.
@@ -597,14 +584,7 @@ private constructor(
          *
          * For Messages, this is always `"message"`.
          */
-        fun type(type: Type) = type(JsonField.of(type))
-
-        /**
-         * Object type.
-         *
-         * For Messages, this is always `"message"`.
-         */
-        fun type(type: JsonField<Type>) = apply { this.type = type }
+        fun type(type: JsonValue) = apply { this.type = type }
 
         /**
          * Billing and rate-limit usage.
@@ -662,104 +642,13 @@ private constructor(
                 checkRequired("id", id),
                 checkRequired("content", content).map { it.toImmutable() },
                 checkRequired("model", model),
-                checkRequired("role", role),
+                role,
                 checkRequired("stopReason", stopReason),
                 checkRequired("stopSequence", stopSequence),
-                checkRequired("type", type),
+                type,
                 checkRequired("usage", usage),
                 additionalProperties.toImmutable(),
             )
-    }
-
-    /**
-     * Conversational role of the generated message.
-     *
-     * This will always be `"assistant"`.
-     */
-    class Role
-    @JsonCreator
-    private constructor(
-        private val value: JsonField<String>,
-    ) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val ASSISTANT = of("assistant")
-
-            @JvmStatic fun of(value: String) = Role(JsonField.of(value))
-        }
-
-        /** An enum containing [Role]'s known values. */
-        enum class Known {
-            ASSISTANT,
-        }
-
-        /**
-         * An enum containing [Role]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Role] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            ASSISTANT,
-            /** An enum member indicating that [Role] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                ASSISTANT -> Value.ASSISTANT
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                ASSISTANT -> Known.ASSISTANT
-                else -> throw AnthropicInvalidDataException("Unknown Role: $value")
-            }
-
-        fun asString(): String = _value().asStringOrThrow()
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return /* spotless:off */ other is Role && value == other.value /* spotless:on */
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
     }
 
     /**
@@ -873,97 +762,6 @@ private constructor(
             }
 
             return /* spotless:off */ other is StopReason && value == other.value /* spotless:on */
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
-
-    /**
-     * Object type.
-     *
-     * For Messages, this is always `"message"`.
-     */
-    class Type
-    @JsonCreator
-    private constructor(
-        private val value: JsonField<String>,
-    ) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val MESSAGE = of("message")
-
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-        }
-
-        /** An enum containing [Type]'s known values. */
-        enum class Known {
-            MESSAGE,
-        }
-
-        /**
-         * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Type] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            MESSAGE,
-            /** An enum member indicating that [Type] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                MESSAGE -> Value.MESSAGE
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                MESSAGE -> Known.MESSAGE
-                else -> throw AnthropicInvalidDataException("Unknown Type: $value")
-            }
-
-        fun asString(): String = _value().asStringOrThrow()
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return /* spotless:off */ other is Type && value == other.value /* spotless:on */
         }
 
         override fun hashCode() = value.hashCode()

@@ -9,9 +9,7 @@ class RawMessageStopEventTest {
 
     @Test
     fun createRawMessageStopEvent() {
-        val rawMessageStopEvent =
-            RawMessageStopEvent.builder().type(RawMessageStopEvent.Type.MESSAGE_STOP).build()
+        val rawMessageStopEvent = RawMessageStopEvent.builder().build()
         assertThat(rawMessageStopEvent).isNotNull
-        assertThat(rawMessageStopEvent.type()).isEqualTo(RawMessageStopEvent.Type.MESSAGE_STOP)
     }
 }

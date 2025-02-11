@@ -17,7 +17,6 @@ class BetaRawMessageDeltaEventTest {
                         .stopSequence("stop_sequence")
                         .build()
                 )
-                .type(BetaRawMessageDeltaEvent.Type.MESSAGE_DELTA)
                 .usage(BetaMessageDeltaUsage.builder().outputTokens(503L).build())
                 .build()
         assertThat(betaRawMessageDeltaEvent).isNotNull
@@ -28,8 +27,6 @@ class BetaRawMessageDeltaEventTest {
                     .stopSequence("stop_sequence")
                     .build()
             )
-        assertThat(betaRawMessageDeltaEvent.type())
-            .isEqualTo(BetaRawMessageDeltaEvent.Type.MESSAGE_DELTA)
         assertThat(betaRawMessageDeltaEvent.usage())
             .isEqualTo(BetaMessageDeltaUsage.builder().outputTokens(503L).build())
     }

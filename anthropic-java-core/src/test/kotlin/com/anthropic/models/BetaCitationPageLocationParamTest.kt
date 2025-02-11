@@ -16,7 +16,6 @@ class BetaCitationPageLocationParamTest {
                 .documentTitle("x")
                 .endPageNumber(0L)
                 .startPageNumber(1L)
-                .type(BetaCitationPageLocationParam.Type.PAGE_LOCATION)
                 .build()
         assertThat(betaCitationPageLocationParam).isNotNull
         assertThat(betaCitationPageLocationParam.citedText()).isEqualTo("cited_text")
@@ -24,7 +23,5 @@ class BetaCitationPageLocationParamTest {
         assertThat(betaCitationPageLocationParam.documentTitle()).contains("x")
         assertThat(betaCitationPageLocationParam.endPageNumber()).isEqualTo(0L)
         assertThat(betaCitationPageLocationParam.startPageNumber()).isEqualTo(1L)
-        assertThat(betaCitationPageLocationParam.type())
-            .isEqualTo(BetaCitationPageLocationParam.Type.PAGE_LOCATION)
     }
 }

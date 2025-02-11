@@ -9,14 +9,8 @@ class AuthenticationErrorTest {
 
     @Test
     fun createAuthenticationError() {
-        val authenticationError =
-            AuthenticationError.builder()
-                .message("message")
-                .type(AuthenticationError.Type.AUTHENTICATION_ERROR)
-                .build()
+        val authenticationError = AuthenticationError.builder().message("message").build()
         assertThat(authenticationError).isNotNull
         assertThat(authenticationError.message()).isEqualTo("message")
-        assertThat(authenticationError.type())
-            .isEqualTo(AuthenticationError.Type.AUTHENTICATION_ERROR)
     }
 }

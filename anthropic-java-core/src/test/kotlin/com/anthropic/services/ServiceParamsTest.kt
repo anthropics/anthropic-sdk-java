@@ -74,12 +74,7 @@ class ServiceParamsTest {
                     listOf(
                         TextBlockParam.builder()
                             .text("Today's date is 2024-06-01.")
-                            .type(TextBlockParam.Type.TEXT)
-                            .cacheControl(
-                                CacheControlEphemeral.builder()
-                                    .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                    .build()
-                            )
+                            .cacheControl(CacheControlEphemeral.builder().build())
                             .addCitation(
                                 CitationCharLocationParam.builder()
                                     .citedText("cited_text")
@@ -87,24 +82,17 @@ class ServiceParamsTest {
                                     .documentTitle("x")
                                     .endCharIndex(0L)
                                     .startCharIndex(0L)
-                                    .type(CitationCharLocationParam.Type.CHAR_LOCATION)
                                     .build()
                             )
                             .build()
                     )
                 )
                 .temperature(1.0)
-                .toolChoice(
-                    ToolChoiceAuto.builder()
-                        .type(ToolChoiceAuto.Type.AUTO)
-                        .disableParallelToolUse(true)
-                        .build()
-                )
+                .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
                     Tool.builder()
                         .inputSchema(
                             Tool.InputSchema.builder()
-                                .type(Tool.InputSchema.Type.OBJECT)
                                 .properties(
                                     JsonValue.from(
                                         mapOf(
@@ -126,11 +114,7 @@ class ServiceParamsTest {
                                 .build()
                         )
                         .name("name")
-                        .cacheControl(
-                            CacheControlEphemeral.builder()
-                                .type(CacheControlEphemeral.Type.EPHEMERAL)
-                                .build()
-                        )
+                        .cacheControl(CacheControlEphemeral.builder().build())
                         .description("Get the current weather in a given location")
                         .build()
                 )
@@ -153,18 +137,14 @@ class ServiceParamsTest {
                                 .documentTitle("document_title")
                                 .endCharIndex(0L)
                                 .startCharIndex(0L)
-                                .type(CitationCharLocation.Type.CHAR_LOCATION)
                                 .build()
                         )
                         .text("Hi! My name is Claude.")
-                        .type(TextBlock.Type.TEXT)
                         .build()
                 )
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
-                .role(Message.Role.ASSISTANT)
                 .stopReason(Message.StopReason.END_TURN)
                 .stopSequence(null)
-                .type(Message.Type.MESSAGE)
                 .usage(
                     Usage.builder()
                         .cacheCreationInputTokens(2051L)

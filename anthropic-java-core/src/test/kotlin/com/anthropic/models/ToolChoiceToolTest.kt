@@ -10,14 +10,9 @@ class ToolChoiceToolTest {
     @Test
     fun createToolChoiceTool() {
         val toolChoiceTool =
-            ToolChoiceTool.builder()
-                .name("name")
-                .type(ToolChoiceTool.Type.TOOL)
-                .disableParallelToolUse(true)
-                .build()
+            ToolChoiceTool.builder().name("name").disableParallelToolUse(true).build()
         assertThat(toolChoiceTool).isNotNull
         assertThat(toolChoiceTool.name()).isEqualTo("name")
-        assertThat(toolChoiceTool.type()).isEqualTo(ToolChoiceTool.Type.TOOL)
         assertThat(toolChoiceTool.disableParallelToolUse()).contains(true)
     }
 }

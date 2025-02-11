@@ -9,14 +9,8 @@ class BetaAuthenticationErrorTest {
 
     @Test
     fun createBetaAuthenticationError() {
-        val betaAuthenticationError =
-            BetaAuthenticationError.builder()
-                .message("message")
-                .type(BetaAuthenticationError.Type.AUTHENTICATION_ERROR)
-                .build()
+        val betaAuthenticationError = BetaAuthenticationError.builder().message("message").build()
         assertThat(betaAuthenticationError).isNotNull
         assertThat(betaAuthenticationError.message()).isEqualTo("message")
-        assertThat(betaAuthenticationError.type())
-            .isEqualTo(BetaAuthenticationError.Type.AUTHENTICATION_ERROR)
     }
 }

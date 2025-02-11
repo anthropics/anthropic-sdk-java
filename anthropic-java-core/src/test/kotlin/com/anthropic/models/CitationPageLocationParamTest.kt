@@ -16,7 +16,6 @@ class CitationPageLocationParamTest {
                 .documentTitle("x")
                 .endPageNumber(0L)
                 .startPageNumber(1L)
-                .type(CitationPageLocationParam.Type.PAGE_LOCATION)
                 .build()
         assertThat(citationPageLocationParam).isNotNull
         assertThat(citationPageLocationParam.citedText()).isEqualTo("cited_text")
@@ -24,7 +23,5 @@ class CitationPageLocationParamTest {
         assertThat(citationPageLocationParam.documentTitle()).contains("x")
         assertThat(citationPageLocationParam.endPageNumber()).isEqualTo(0L)
         assertThat(citationPageLocationParam.startPageNumber()).isEqualTo(1L)
-        assertThat(citationPageLocationParam.type())
-            .isEqualTo(CitationPageLocationParam.Type.PAGE_LOCATION)
     }
 }

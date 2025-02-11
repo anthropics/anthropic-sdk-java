@@ -14,7 +14,6 @@ class ToolTest {
             Tool.builder()
                 .inputSchema(
                     Tool.InputSchema.builder()
-                        .type(Tool.InputSchema.Type.OBJECT)
                         .properties(
                             JsonValue.from(
                                 mapOf(
@@ -36,18 +35,13 @@ class ToolTest {
                         .build()
                 )
                 .name("name")
-                .cacheControl(
-                    CacheControlEphemeral.builder()
-                        .type(CacheControlEphemeral.Type.EPHEMERAL)
-                        .build()
-                )
+                .cacheControl(CacheControlEphemeral.builder().build())
                 .description("Get the current weather in a given location")
                 .build()
         assertThat(tool).isNotNull
         assertThat(tool.inputSchema())
             .isEqualTo(
                 Tool.InputSchema.builder()
-                    .type(Tool.InputSchema.Type.OBJECT)
                     .properties(
                         JsonValue.from(
                             mapOf(
@@ -69,10 +63,7 @@ class ToolTest {
                     .build()
             )
         assertThat(tool.name()).isEqualTo("name")
-        assertThat(tool.cacheControl())
-            .contains(
-                CacheControlEphemeral.builder().type(CacheControlEphemeral.Type.EPHEMERAL).build()
-            )
+        assertThat(tool.cacheControl()).contains(CacheControlEphemeral.builder().build())
         assertThat(tool.description()).contains("Get the current weather in a given location")
     }
 }

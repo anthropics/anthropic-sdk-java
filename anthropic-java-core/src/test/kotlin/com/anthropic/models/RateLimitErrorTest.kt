@@ -9,13 +9,8 @@ class RateLimitErrorTest {
 
     @Test
     fun createRateLimitError() {
-        val rateLimitError =
-            RateLimitError.builder()
-                .message("message")
-                .type(RateLimitError.Type.RATE_LIMIT_ERROR)
-                .build()
+        val rateLimitError = RateLimitError.builder().message("message").build()
         assertThat(rateLimitError).isNotNull
         assertThat(rateLimitError.message()).isEqualTo("message")
-        assertThat(rateLimitError.type()).isEqualTo(RateLimitError.Type.RATE_LIMIT_ERROR)
     }
 }

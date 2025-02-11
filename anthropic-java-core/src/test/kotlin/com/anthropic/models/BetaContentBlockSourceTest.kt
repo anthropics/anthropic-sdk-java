@@ -9,14 +9,9 @@ class BetaContentBlockSourceTest {
 
     @Test
     fun createBetaContentBlockSource() {
-        val betaContentBlockSource =
-            BetaContentBlockSource.builder()
-                .content("string")
-                .type(BetaContentBlockSource.Type.CONTENT)
-                .build()
+        val betaContentBlockSource = BetaContentBlockSource.builder().content("string").build()
         assertThat(betaContentBlockSource).isNotNull
         assertThat(betaContentBlockSource.content())
             .isEqualTo(BetaContentBlockSource.Content.ofString("string"))
-        assertThat(betaContentBlockSource.type()).isEqualTo(BetaContentBlockSource.Type.CONTENT)
     }
 }

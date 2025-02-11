@@ -16,7 +16,6 @@ class CitationCharLocationParamTest {
                 .documentTitle("x")
                 .endCharIndex(0L)
                 .startCharIndex(0L)
-                .type(CitationCharLocationParam.Type.CHAR_LOCATION)
                 .build()
         assertThat(citationCharLocationParam).isNotNull
         assertThat(citationCharLocationParam.citedText()).isEqualTo("cited_text")
@@ -24,7 +23,5 @@ class CitationCharLocationParamTest {
         assertThat(citationCharLocationParam.documentTitle()).contains("x")
         assertThat(citationCharLocationParam.endCharIndex()).isEqualTo(0L)
         assertThat(citationCharLocationParam.startCharIndex()).isEqualTo(0L)
-        assertThat(citationCharLocationParam.type())
-            .isEqualTo(CitationCharLocationParam.Type.CHAR_LOCATION)
     }
 }

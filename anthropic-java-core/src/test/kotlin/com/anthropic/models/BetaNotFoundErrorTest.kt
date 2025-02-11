@@ -9,13 +9,8 @@ class BetaNotFoundErrorTest {
 
     @Test
     fun createBetaNotFoundError() {
-        val betaNotFoundError =
-            BetaNotFoundError.builder()
-                .message("message")
-                .type(BetaNotFoundError.Type.NOT_FOUND_ERROR)
-                .build()
+        val betaNotFoundError = BetaNotFoundError.builder().message("message").build()
         assertThat(betaNotFoundError).isNotNull
         assertThat(betaNotFoundError.message()).isEqualTo("message")
-        assertThat(betaNotFoundError.type()).isEqualTo(BetaNotFoundError.Type.NOT_FOUND_ERROR)
     }
 }

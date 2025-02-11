@@ -16,7 +16,6 @@ class CitationCharLocationTest {
                 .documentTitle("document_title")
                 .endCharIndex(0L)
                 .startCharIndex(0L)
-                .type(CitationCharLocation.Type.CHAR_LOCATION)
                 .build()
         assertThat(citationCharLocation).isNotNull
         assertThat(citationCharLocation.citedText()).isEqualTo("cited_text")
@@ -24,6 +23,5 @@ class CitationCharLocationTest {
         assertThat(citationCharLocation.documentTitle()).contains("document_title")
         assertThat(citationCharLocation.endCharIndex()).isEqualTo(0L)
         assertThat(citationCharLocation.startCharIndex()).isEqualTo(0L)
-        assertThat(citationCharLocation.type()).isEqualTo(CitationCharLocation.Type.CHAR_LOCATION)
     }
 }

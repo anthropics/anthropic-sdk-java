@@ -15,12 +15,10 @@ class ToolUseBlockTest {
                 .id("id")
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name("x")
-                .type(ToolUseBlock.Type.TOOL_USE)
                 .build()
         assertThat(toolUseBlock).isNotNull
         assertThat(toolUseBlock.id()).isEqualTo("id")
         assertThat(toolUseBlock._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
         assertThat(toolUseBlock.name()).isEqualTo("x")
-        assertThat(toolUseBlock.type()).isEqualTo(ToolUseBlock.Type.TOOL_USE)
     }
 }

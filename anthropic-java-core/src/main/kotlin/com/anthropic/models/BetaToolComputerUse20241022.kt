@@ -2,7 +2,6 @@
 
 package com.anthropic.models
 
-import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
@@ -29,8 +28,8 @@ private constructor(
     @JsonProperty("display_width_px")
     @ExcludeMissing
     private val displayWidthPx: JsonField<Long> = JsonMissing.of(),
-    @JsonProperty("name") @ExcludeMissing private val name: JsonField<Name> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
+    @JsonProperty("name") @ExcludeMissing private val name: JsonValue = JsonMissing.of(),
+    @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
     @JsonProperty("cache_control")
     @ExcludeMissing
     private val cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
@@ -51,9 +50,9 @@ private constructor(
      *
      * This is how the tool will be called by the model and in tool_use blocks.
      */
-    fun name(): Name = name.getRequired("name")
+    @JsonProperty("name") @ExcludeMissing fun _name(): JsonValue = name
 
-    fun type(): Type = type.getRequired("type")
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
@@ -71,15 +70,6 @@ private constructor(
     @JsonProperty("display_width_px")
     @ExcludeMissing
     fun _displayWidthPx(): JsonField<Long> = displayWidthPx
-
-    /**
-     * Name of the tool.
-     *
-     * This is how the tool will be called by the model and in tool_use blocks.
-     */
-    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<Name> = name
-
-    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     @JsonProperty("cache_control")
     @ExcludeMissing
@@ -103,8 +93,16 @@ private constructor(
 
         displayHeightPx()
         displayWidthPx()
-        name()
-        type()
+        _name().let {
+            if (it != JsonValue.from("computer")) {
+                throw AnthropicInvalidDataException("'name' is invalid, received $it")
+            }
+        }
+        _type().let {
+            if (it != JsonValue.from("computer_20241022")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
         cacheControl().ifPresent { it.validate() }
         displayNumber()
         validated = true
@@ -122,8 +120,8 @@ private constructor(
 
         private var displayHeightPx: JsonField<Long>? = null
         private var displayWidthPx: JsonField<Long>? = null
-        private var name: JsonField<Name>? = null
-        private var type: JsonField<Type>? = null
+        private var name: JsonValue = JsonValue.from("computer")
+        private var type: JsonValue = JsonValue.from("computer_20241022")
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var displayNumber: JsonField<Long> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -160,18 +158,9 @@ private constructor(
          *
          * This is how the tool will be called by the model and in tool_use blocks.
          */
-        fun name(name: Name) = name(JsonField.of(name))
+        fun name(name: JsonValue) = apply { this.name = name }
 
-        /**
-         * Name of the tool.
-         *
-         * This is how the tool will be called by the model and in tool_use blocks.
-         */
-        fun name(name: JsonField<Name>) = apply { this.name = name }
-
-        fun type(type: Type) = type(JsonField.of(type))
-
-        fun type(type: JsonField<Type>) = apply { this.type = type }
+        fun type(type: JsonValue) = apply { this.type = type }
 
         fun cacheControl(cacheControl: BetaCacheControlEphemeral?) =
             cacheControl(JsonField.ofNullable(cacheControl))
@@ -222,189 +211,12 @@ private constructor(
             BetaToolComputerUse20241022(
                 checkRequired("displayHeightPx", displayHeightPx),
                 checkRequired("displayWidthPx", displayWidthPx),
-                checkRequired("name", name),
-                checkRequired("type", type),
+                name,
+                type,
                 cacheControl,
                 displayNumber,
                 additionalProperties.toImmutable(),
             )
-    }
-
-    /**
-     * Name of the tool.
-     *
-     * This is how the tool will be called by the model and in tool_use blocks.
-     */
-    class Name
-    @JsonCreator
-    private constructor(
-        private val value: JsonField<String>,
-    ) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val COMPUTER = of("computer")
-
-            @JvmStatic fun of(value: String) = Name(JsonField.of(value))
-        }
-
-        /** An enum containing [Name]'s known values. */
-        enum class Known {
-            COMPUTER,
-        }
-
-        /**
-         * An enum containing [Name]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Name] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            COMPUTER,
-            /** An enum member indicating that [Name] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                COMPUTER -> Value.COMPUTER
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                COMPUTER -> Known.COMPUTER
-                else -> throw AnthropicInvalidDataException("Unknown Name: $value")
-            }
-
-        fun asString(): String = _value().asStringOrThrow()
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return /* spotless:off */ other is Name && value == other.value /* spotless:on */
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
-
-    class Type
-    @JsonCreator
-    private constructor(
-        private val value: JsonField<String>,
-    ) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val COMPUTER_20241022 = of("computer_20241022")
-
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-        }
-
-        /** An enum containing [Type]'s known values. */
-        enum class Known {
-            COMPUTER_20241022,
-        }
-
-        /**
-         * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Type] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            COMPUTER_20241022,
-            /** An enum member indicating that [Type] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                COMPUTER_20241022 -> Value.COMPUTER_20241022
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                COMPUTER_20241022 -> Known.COMPUTER_20241022
-                else -> throw AnthropicInvalidDataException("Unknown Type: $value")
-            }
-
-        fun asString(): String = _value().asStringOrThrow()
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return /* spotless:off */ other is Type && value == other.value /* spotless:on */
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
     }
 
     override fun equals(other: Any?): Boolean {

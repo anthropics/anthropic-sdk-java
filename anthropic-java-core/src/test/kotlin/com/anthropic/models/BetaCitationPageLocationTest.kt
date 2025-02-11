@@ -16,7 +16,6 @@ class BetaCitationPageLocationTest {
                 .documentTitle("document_title")
                 .endPageNumber(0L)
                 .startPageNumber(1L)
-                .type(BetaCitationPageLocation.Type.PAGE_LOCATION)
                 .build()
         assertThat(betaCitationPageLocation).isNotNull
         assertThat(betaCitationPageLocation.citedText()).isEqualTo("cited_text")
@@ -24,7 +23,5 @@ class BetaCitationPageLocationTest {
         assertThat(betaCitationPageLocation.documentTitle()).contains("document_title")
         assertThat(betaCitationPageLocation.endPageNumber()).isEqualTo(0L)
         assertThat(betaCitationPageLocation.startPageNumber()).isEqualTo(1L)
-        assertThat(betaCitationPageLocation.type())
-            .isEqualTo(BetaCitationPageLocation.Type.PAGE_LOCATION)
     }
 }

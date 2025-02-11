@@ -15,15 +15,9 @@ class BetaImageBlockParamTest {
                     BetaImageBlockParam.Source.builder()
                         .data("U3RhaW5sZXNzIHJvY2tz")
                         .mediaType(BetaImageBlockParam.Source.MediaType.IMAGE_JPEG)
-                        .type(BetaImageBlockParam.Source.Type.BASE64)
                         .build()
                 )
-                .type(BetaImageBlockParam.Type.IMAGE)
-                .cacheControl(
-                    BetaCacheControlEphemeral.builder()
-                        .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                        .build()
-                )
+                .cacheControl(BetaCacheControlEphemeral.builder().build())
                 .build()
         assertThat(betaImageBlockParam).isNotNull
         assertThat(betaImageBlockParam.source())
@@ -31,15 +25,9 @@ class BetaImageBlockParamTest {
                 BetaImageBlockParam.Source.builder()
                     .data("U3RhaW5sZXNzIHJvY2tz")
                     .mediaType(BetaImageBlockParam.Source.MediaType.IMAGE_JPEG)
-                    .type(BetaImageBlockParam.Source.Type.BASE64)
                     .build()
             )
-        assertThat(betaImageBlockParam.type()).isEqualTo(BetaImageBlockParam.Type.IMAGE)
         assertThat(betaImageBlockParam.cacheControl())
-            .contains(
-                BetaCacheControlEphemeral.builder()
-                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                    .build()
-            )
+            .contains(BetaCacheControlEphemeral.builder().build())
     }
 }

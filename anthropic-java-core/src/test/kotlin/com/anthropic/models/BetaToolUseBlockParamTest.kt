@@ -15,23 +15,13 @@ class BetaToolUseBlockParamTest {
                 .id("id")
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name("name")
-                .type(BetaToolUseBlockParam.Type.TOOL_USE)
-                .cacheControl(
-                    BetaCacheControlEphemeral.builder()
-                        .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                        .build()
-                )
+                .cacheControl(BetaCacheControlEphemeral.builder().build())
                 .build()
         assertThat(betaToolUseBlockParam).isNotNull
         assertThat(betaToolUseBlockParam.id()).isEqualTo("id")
         assertThat(betaToolUseBlockParam._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
         assertThat(betaToolUseBlockParam.name()).isEqualTo("name")
-        assertThat(betaToolUseBlockParam.type()).isEqualTo(BetaToolUseBlockParam.Type.TOOL_USE)
         assertThat(betaToolUseBlockParam.cacheControl())
-            .contains(
-                BetaCacheControlEphemeral.builder()
-                    .type(BetaCacheControlEphemeral.Type.EPHEMERAL)
-                    .build()
-            )
+            .contains(BetaCacheControlEphemeral.builder().build())
     }
 }

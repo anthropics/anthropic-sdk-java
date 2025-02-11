@@ -9,14 +9,8 @@ class InvalidRequestErrorTest {
 
     @Test
     fun createInvalidRequestError() {
-        val invalidRequestError =
-            InvalidRequestError.builder()
-                .message("message")
-                .type(InvalidRequestError.Type.INVALID_REQUEST_ERROR)
-                .build()
+        val invalidRequestError = InvalidRequestError.builder().message("message").build()
         assertThat(invalidRequestError).isNotNull
         assertThat(invalidRequestError.message()).isEqualTo("message")
-        assertThat(invalidRequestError.type())
-            .isEqualTo(InvalidRequestError.Type.INVALID_REQUEST_ERROR)
     }
 }
