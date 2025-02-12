@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.2.0 (2025-02-12)
+
+Full Changelog: [v0.1.0...v0.2.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0...v0.2.0)
+
+### Features
+
+* **client:** remove unnecessary enums ([899302d](https://github.com/anthropics/anthropic-sdk-java/commit/899302d66120d87a16a0593b198097d547348215))
+* **client:** remove unnecessary enums ([#110](https://github.com/anthropics/anthropic-sdk-java/issues/110)) ([9f62353](https://github.com/anthropics/anthropic-sdk-java/commit/9f6235372e5401c553d95d3541c5eff4b15c483d))
+* **client:** send client-side timeout headers ([#106](https://github.com/anthropics/anthropic-sdk-java/issues/106)) ([b3d911a](https://github.com/anthropics/anthropic-sdk-java/commit/b3d911ad983b308c9be9c51b5e0fc4cd37046148))
+
+
+### Bug Fixes
+
+* **api:** add missing `@MustBeClosed` annotations ([#109](https://github.com/anthropics/anthropic-sdk-java/issues/109)) ([1200422](https://github.com/anthropics/anthropic-sdk-java/commit/1200422e7992c22b57de03a48b10430964d33112))
+* **api:** switch `CompletableFuture&lt;Void&gt;` to `CompletableFuture<Void?>` ([1200422](https://github.com/anthropics/anthropic-sdk-java/commit/1200422e7992c22b57de03a48b10430964d33112))
+* **client:** add missing validation calls on response ([1200422](https://github.com/anthropics/anthropic-sdk-java/commit/1200422e7992c22b57de03a48b10430964d33112))
+* **client:** always provide a body for `PATCH` methods ([1200422](https://github.com/anthropics/anthropic-sdk-java/commit/1200422e7992c22b57de03a48b10430964d33112))
+
+
+### Chores
+
+* **internal:** minor formatting/style changes ([1200422](https://github.com/anthropics/anthropic-sdk-java/commit/1200422e7992c22b57de03a48b10430964d33112))
+* **internal:** rename some tests ([1200422](https://github.com/anthropics/anthropic-sdk-java/commit/1200422e7992c22b57de03a48b10430964d33112))
+
+
+### Documentation
+
+* add tools example ([7183a54](https://github.com/anthropics/anthropic-sdk-java/commit/7183a5495f50bb9e004329e06e2d34a0517b4bf1))
+* fix typo in example ([55662e9](https://github.com/anthropics/anthropic-sdk-java/commit/55662e9c447fffe7a712227e605afcb9d139e84f))
+
 ## 0.1.0 (2025-01-31)
 
 Full Changelog: [v0.1.0-alpha.11...v0.1.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0-alpha.11...v0.1.0)
