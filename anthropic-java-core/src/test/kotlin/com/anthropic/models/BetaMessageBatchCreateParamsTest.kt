@@ -41,18 +41,6 @@ class BetaMessageBatchCreateParamsTest {
                                                 .startCharIndex(0L)
                                                 .build()
                                         )
-                                        .addCitation(
-                                            BetaCitationCharLocationParam.builder()
-                                                .citedText("cited_text")
-                                                .documentIndex(0L)
-                                                .documentTitle("x")
-                                                .endCharIndex(0L)
-                                                .startCharIndex(0L)
-                                                .type(
-                                                    BetaCitationCharLocationParam.Type.CHAR_LOCATION
-                                                )
-                                                .build()
-                                        )
                                         .build()
                                 )
                             )
@@ -133,19 +121,6 @@ class BetaMessageBatchCreateParamsTest {
                                                     .documentTitle("x")
                                                     .endCharIndex(0L)
                                                     .startCharIndex(0L)
-                                                    .build()
-                                            )
-                                            .addCitation(
-                                                BetaCitationCharLocationParam.builder()
-                                                    .citedText("cited_text")
-                                                    .documentIndex(0L)
-                                                    .documentTitle("x")
-                                                    .endCharIndex(0L)
-                                                    .startCharIndex(0L)
-                                                    .type(
-                                                        BetaCitationCharLocationParam.Type
-                                                            .CHAR_LOCATION
-                                                    )
                                                     .build()
                                             )
                                             .build()
@@ -229,19 +204,6 @@ class BetaMessageBatchCreateParamsTest {
                                                     .documentTitle("x")
                                                     .endCharIndex(0L)
                                                     .startCharIndex(0L)
-                                                    .build()
-                                            )
-                                            .addCitation(
-                                                BetaCitationCharLocationParam.builder()
-                                                    .citedText("cited_text")
-                                                    .documentIndex(0L)
-                                                    .documentTitle("x")
-                                                    .endCharIndex(0L)
-                                                    .startCharIndex(0L)
-                                                    .type(
-                                                        BetaCitationCharLocationParam.Type
-                                                            .CHAR_LOCATION
-                                                    )
                                                     .build()
                                             )
                                             .build()

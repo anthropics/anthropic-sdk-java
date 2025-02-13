@@ -65,19 +65,6 @@ class BatchServiceTest {
                                                         .startCharIndex(0L)
                                                         .build()
                                                 )
-                                                .addCitation(
-                                                    CitationCharLocationParam.builder()
-                                                        .citedText("cited_text")
-                                                        .documentIndex(0L)
-                                                        .documentTitle("x")
-                                                        .endCharIndex(0L)
-                                                        .startCharIndex(0L)
-                                                        .type(
-                                                            CitationCharLocationParam.Type
-                                                                .CHAR_LOCATION
-                                                        )
-                                                        .build()
-                                                )
                                                 .build()
                                         )
                                     )
