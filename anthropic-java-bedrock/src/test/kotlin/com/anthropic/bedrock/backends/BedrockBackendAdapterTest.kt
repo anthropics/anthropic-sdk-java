@@ -1,4 +1,4 @@
-package com.anthropic.bedrock.credentials
+package com.anthropic.bedrock.backends
 
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
@@ -15,9 +15,9 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.AwsSessionCredentials
 
 /**
- * Unit tests for the [BedrockCredentials] class.
+ * Unit tests for the [BedrockBackendAdapter] class.
  */
-internal class BedrockCredentialsTest {
+internal class BedrockBackendAdapterTest {
     companion object {
         /** An example of an access key ID. This is *not* a real ID. */
         private const val AWS_ACCESS_KEY_ID = "AKIAIOSFODNN7EXAMPLE"
@@ -56,66 +56,66 @@ internal class BedrockCredentialsTest {
     @Test
     fun awsCredentialsAllMissing() {
         // No system properties are set (see "setUp()").
-        assertThatThrownBy { BedrockCredentials.fromEnv() }
+        assertThatThrownBy { BedrockBackendAdapter.fromEnv() }
             .isExactlyInstanceOf(AnthropicException::class.java)
     }
 
     @Test
     fun awsCredentialsAccessKeyIDMissing() {
         initEnv(false, true, false, true)
-        assertThatThrownBy { BedrockCredentials.fromEnv() }
+        assertThatThrownBy { BedrockBackendAdapter.fromEnv() }
             .isExactlyInstanceOf(AnthropicException::class.java)
     }
 
     @Test
     fun awsCredentialsSecretAccessKeyMissing() {
         initEnv(true, false, false, true)
-        assertThatThrownBy { BedrockCredentials.fromEnv() }
+        assertThatThrownBy { BedrockBackendAdapter.fromEnv() }
             .isExactlyInstanceOf(AnthropicException::class.java)
     }
 
     @Test
     fun awsCredentialsFromEnv() {
         initEnv(true, true, false, true)
-        val credentials = BedrockCredentials.fromEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
 
-        assertThat(credentials.awsCredentials)
+        assertThat(adapter.awsCredentials)
             .isExactlyInstanceOf(AwsBasicCredentials::class.java)
-        assertThat(credentials.awsCredentials.accessKeyId())
+        assertThat(adapter.awsCredentials.accessKeyId())
             .isEqualTo(AWS_ACCESS_KEY_ID)
-        assertThat(credentials.awsCredentials.secretAccessKey())
+        assertThat(adapter.awsCredentials.secretAccessKey())
             .isEqualTo(AWS_SECRET_ACCESS_KEY)
     }
 
     @Test
     fun awsSessionCredentialsAccessKeyIDMissing() {
         initEnv(false, true, true, true)
-        assertThatThrownBy { BedrockCredentials.fromEnv() }
+        assertThatThrownBy { BedrockBackendAdapter.fromEnv() }
             .isExactlyInstanceOf(AnthropicException::class.java)
     }
 
     @Test
     fun awsSessionCredentialsSecretAccessKeyMissing() {
         initEnv(true, false, true, true)
-        assertThatThrownBy { BedrockCredentials.fromEnv() }
+        assertThatThrownBy { BedrockBackendAdapter.fromEnv() }
             .isExactlyInstanceOf(AnthropicException::class.java)
     }
 
     @Test
     fun awsSessionCredentialsFromEnv() {
         initEnv()
-        val credentials = BedrockCredentials.fromEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
 
         // When the session token is present, the provided credentials should
         // have a different type to the type when it is absent.
-        assertThat(credentials.awsCredentials)
+        assertThat(adapter.awsCredentials)
             .isExactlyInstanceOf(AwsSessionCredentials::class.java)
 
-        assertThat(credentials.awsCredentials.accessKeyId())
+        assertThat(adapter.awsCredentials.accessKeyId())
             .isEqualTo(AWS_ACCESS_KEY_ID)
-        assertThat(credentials.awsCredentials.secretAccessKey())
+        assertThat(adapter.awsCredentials.secretAccessKey())
             .isEqualTo(AWS_SECRET_ACCESS_KEY)
-        assertThat((credentials.awsCredentials as AwsSessionCredentials)
+        assertThat((adapter.awsCredentials as AwsSessionCredentials)
             .sessionToken()).isEqualTo(AWS_SESSION_TOKEN)
     }
 
@@ -124,47 +124,47 @@ internal class BedrockCredentialsTest {
         initEnv(true, true, true, false)
         // This test runs slowly for some reason. Perhaps there is a long chain
         // of fall-backs in the region provider used in the class under test.
-        assertThatThrownBy { BedrockCredentials.fromEnv() }
+        assertThatThrownBy { BedrockBackendAdapter.fromEnv() }
             .isExactlyInstanceOf(AnthropicException::class.java)
     }
 
     @Test
     fun regionPresent() {
         initEnv()
-        val credentials = BedrockCredentials.fromEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
 
-        assertThat(credentials.awsCredentials)
+        assertThat(adapter.awsCredentials)
             .isExactlyInstanceOf(AwsSessionCredentials::class.java)
-        assertThat(credentials.region.toString()).isEqualTo(AWS_REGION)
+        assertThat(adapter.region.toString()).isEqualTo(AWS_REGION)
     }
 
     @Test
     fun builderMissingCredentials() {
         // Make credentials available from the environment, but do not use them
-        // when building the credentials.
+        // when building the backend adapter.
         initEnv()
-        assertThatThrownBy { BedrockCredentials.builder().build() }
-            .isExactlyInstanceOf(AnthropicException::class.java)
-            .hasMessageStartingWith("No credentials")
+        assertThatThrownBy { BedrockBackendAdapter.builder().build() }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessageContaining("awsCredentials")
     }
 
     @Test
     fun builderMissingEverything() {
         // Make credentials available from the environment, but do not use them
-        // when building the credentials.
+        // when building the backend adapter.
         initEnv()
-        assertThatThrownBy { BedrockCredentials.builder().build() }
-            .isExactlyInstanceOf(AnthropicException::class.java)
+        assertThatThrownBy { BedrockBackendAdapter.builder().build() }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
     }
 
     @Test
     fun baseUrl() {
         initEnv()
-        val credentials = BedrockCredentials.fromEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
 
-        assertThat(credentials.awsCredentials)
+        assertThat(adapter.awsCredentials)
             .isExactlyInstanceOf(AwsSessionCredentials::class.java)
-        assertThat(credentials.baseUrl())
+        assertThat(adapter.baseUrl())
             .isEqualTo("https://bedrock-runtime.$AWS_REGION.amazonaws.com")
 
         // Try with a *different* region to confirm that it is not hard-coded.
@@ -173,112 +173,112 @@ internal class BedrockCredentialsTest {
         assertThat(AWS_REGION).isNotEqualTo(otherRegion)
         setProperty(PROP_AWS_REGION, otherRegion)
 
-        val credentials2 = BedrockCredentials.fromEnv()
+        val adapter2 = BedrockBackendAdapter.fromEnv()
 
-        assertThat(credentials2.baseUrl())
+        assertThat(adapter2.baseUrl())
             .isEqualTo("https://bedrock-runtime.$otherRegion.amazonaws.com")
     }
 
     @Test
-    fun prepareMissingJSON() {
+    fun prepareRequestMissingJSON() {
         initEnv()
-        val credentials = BedrockCredentials.fromEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
         val request = createRequest(null, "v1", "messages")
 
         assertThat(request.body).isNull()
-        assertThatThrownBy { credentials.prepare(request) }
+        assertThatThrownBy { adapter.prepareRequest(request) }
             .isExactlyInstanceOf(AnthropicException::class.java)
             .hasMessageStartingWith("Request has no body")
     }
 
     @Test
-    fun prepareEmptyJSON() {
+    fun prepareRequestEmptyJSON() {
         initEnv()
-        val credentials = BedrockCredentials.fromEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
         val request = createRequest("{}", "v1", "messages")
 
         assertThat(request.body).isNotNull()
-        assertThatThrownBy { credentials.prepare(request) }
+        assertThatThrownBy { adapter.prepareRequest(request) }
             .isExactlyInstanceOf(AnthropicException::class.java)
             .hasMessageStartingWith("No model found in body")
     }
 
     @Test
-    fun prepareMissingV1() {
+    fun prepareRequestMissingV1() {
         initEnv()
-        val credentials = BedrockCredentials.fromEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
 
         // Request does not contain a "v1" path segment.
         val request1 = createRequest(
             """{"model":"$MODEL_ID"}""", "d1", "messages")
-        assertThatThrownBy { credentials.prepare(request1) }
+        assertThatThrownBy { adapter.prepareRequest(request1) }
             .isExactlyInstanceOf(AnthropicException::class.java)
             .hasMessageStartingWith("Expected first 'v1'")
 
         // Request contains a "v1" path segment, but not in first place.
         val request2 = createRequest(
             """{"model":"$MODEL_ID"}""", "messages", "v1")
-        assertThatThrownBy { credentials.prepare(request2) }
+        assertThatThrownBy { adapter.prepareRequest(request2) }
             .isExactlyInstanceOf(AnthropicException::class.java)
             .hasMessageStartingWith("Expected first 'v1'")
     }
 
     @Test
-    fun prepareMissingServiceName() {
+    fun prepareRequestMissingServiceName() {
         initEnv()
-        val credentials = BedrockCredentials.fromEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
 
         // Request does not contain a "messages" or "complete" path segment.
         val request = createRequest("""{"model":"$MODEL_ID"}""", "v1")
-        assertThatThrownBy { credentials.prepare(request) }
+        assertThatThrownBy { adapter.prepareRequest(request) }
             .isExactlyInstanceOf(AnthropicException::class.java)
             .hasMessageStartingWith("Missing service name")
     }
 
     @Test
-    fun prepareUnsupportedServiceName() {
+    fun prepareRequestUnsupportedServiceName() {
         initEnv()
-        val credentials = BedrockCredentials.fromEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
         val request = createRequest(
             """{"model":"$MODEL_ID"}""", "v1", "not-messages")
 
-        assertThatThrownBy { credentials.prepare(request) }
+        assertThatThrownBy { adapter.prepareRequest(request) }
             .isExactlyInstanceOf(AnthropicException::class.java)
             .hasMessageStartingWith(
                 "Service is not supported for Bedrock: not-messages")
     }
 
     @Test
-    fun prepareMessagesBatchesNotSupported() {
+    fun prepareRequestMessagesBatchesNotSupported() {
         initEnv()
-        val credentials = BedrockCredentials.fromEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
         val request = createRequest(
             """{"model":"$MODEL_ID"}""", "v1", "messages", "batches")
 
-        assertThatThrownBy { credentials.prepare(request) }
+        assertThatThrownBy { adapter.prepareRequest(request) }
             .isExactlyInstanceOf(AnthropicException::class.java)
             .hasMessageStartingWith("Batch API is not supported")
     }
 
     @Test
-    fun prepareMessagesCountTokensNotSupported() {
+    fun prepareRequestMessagesCountTokensNotSupported() {
         initEnv()
-        val credentials = BedrockCredentials.fromEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
         val request = createRequest(
             """{"model":"$MODEL_ID"}""", "v1", "messages", "count_tokens")
 
-        assertThatThrownBy { credentials.prepare(request) }
+        assertThatThrownBy { adapter.prepareRequest(request) }
             .isExactlyInstanceOf(AnthropicException::class.java)
             .hasMessageStartingWith("Token counting is not supported")
     }
 
     @Test
-    fun prepareMessages() {
+    fun prepareRequestMessages() {
         initEnv()
-        val credentials = BedrockCredentials.fromEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
         val request = createRequest(
             """{"model":"$MODEL_ID"}""", "v1", "messages")
-        val preparedRequest = credentials.prepare(request)
+        val preparedRequest = adapter.prepareRequest(request)
         val pathSegments = preparedRequest.pathSegments
 
         // Path segments: "/model/<MODEL_ID>/invoke"
@@ -289,7 +289,7 @@ internal class BedrockCredentialsTest {
 
         // "model" should be removed from JSON body and "anthropic_version"
         // should be added.
-        val json = BedrockCredentials.bodyToJson(preparedRequest.body)
+        val json = BedrockBackendAdapter.bodyToJson(preparedRequest.body)
 
         assertThat(json).isNotNull()
         assertThat(json!!.get("model")).isNull()
@@ -298,13 +298,13 @@ internal class BedrockCredentialsTest {
     }
 
     @Test
-    fun prepareMessagesStreaming() {
+    fun prepareRequestMessagesStreaming() {
         initEnv()
-        val credentials = BedrockCredentials.fromEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
         val request = createRequest(
-            """{"model":"$MODEL_ID", "stream":"stream"}""",
+            """{"model":"$MODEL_ID", "stream":true}""",
             "v1", "messages")
-        val preparedRequest = credentials.prepare(request)
+        val preparedRequest = adapter.prepareRequest(request)
         val pathSegments = preparedRequest.pathSegments
 
         // Path segments: "/model/<MODEL_ID>/invoke-with-response-stream"
@@ -315,7 +315,7 @@ internal class BedrockCredentialsTest {
 
         // "model" and "stream" should be removed from JSON body and
         // "anthropic_version" should be added.
-        val json = BedrockCredentials.bodyToJson(preparedRequest.body)
+        val json = BedrockBackendAdapter.bodyToJson(preparedRequest.body)
 
         assertThat(json).isNotNull()
         assertThat(json!!.get("model")).isNull()
@@ -325,12 +325,12 @@ internal class BedrockCredentialsTest {
     }
 
     @Test
-    fun prepareComplete() {
+    fun prepareRequestComplete() {
         initEnv()
-        val credentials = BedrockCredentials.fromEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
         val request = createRequest(
             """{"model":"$MODEL_ID"}""", "v1", "complete")
-        val preparedRequest = credentials.prepare(request)
+        val preparedRequest = adapter.prepareRequest(request)
         val pathSegments = preparedRequest.pathSegments
 
         // Path segments: "/model/<MODEL_ID>/invoke"
@@ -341,7 +341,7 @@ internal class BedrockCredentialsTest {
 
         // "model" should be removed from JSON body and "anthropic_version"
         // should be added.
-        val json = BedrockCredentials.bodyToJson(preparedRequest.body)
+        val json = BedrockBackendAdapter.bodyToJson(preparedRequest.body)
 
         assertThat(json).isNotNull()
         assertThat(json!!.get("model")).isNull()
@@ -350,13 +350,13 @@ internal class BedrockCredentialsTest {
     }
 
     @Test
-    fun prepareCompleteStreaming() {
+    fun prepareRequestCompleteStreaming() {
         initEnv()
-        val credentials = BedrockCredentials.fromEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
         val request = createRequest(
-            """{"model":"$MODEL_ID", "stream":"stream"}""",
+            """{"model":"$MODEL_ID", "stream":true}""",
             "v1", "complete")
-        val preparedRequest = credentials.prepare(request)
+        val preparedRequest = adapter.prepareRequest(request)
         val pathSegments = preparedRequest.pathSegments
 
         // Path segments: "/model/<MODEL_ID>/invoke-with-response-stream"
@@ -367,7 +367,7 @@ internal class BedrockCredentialsTest {
 
         // "model" and "stream" should be removed from JSON body and
         // "anthropic_version" should be added.
-        val json = BedrockCredentials.bodyToJson(preparedRequest.body)
+        val json = BedrockBackendAdapter.bodyToJson(preparedRequest.body)
 
         assertThat(json).isNotNull()
         assertThat(json!!.get("model")).isNull()
@@ -377,10 +377,10 @@ internal class BedrockCredentialsTest {
     }
 
     @Test
-    fun signContentTypeFromHeaders() {
+    fun signRequestContentTypeFromHeaders() {
         initEnv()
 
-        val credentials = BedrockCredentials.fromEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
         val request = HttpRequest.builder()
             .method(HttpMethod.POST)
             .url("https://bedrock-runtime.us-east-1.amazonaws.com/path1/path2")
@@ -394,7 +394,7 @@ internal class BedrockCredentialsTest {
             .putHeader("X-Test", "header-value-a")
             .putHeader("X-Test", "header-value-b")
             .build()
-        val signedRequest = credentials.sign(request)
+        val signedRequest = adapter.signRequest(request)
 
         // Check that the signed request contains all the same elements that
         // were in the original request plus the new signature-related headers.
@@ -446,10 +446,10 @@ internal class BedrockCredentialsTest {
     }
 
     @Test
-    fun signContentTypeFromBody() {
+    fun signRequestContentTypeFromBody() {
         initEnv()
 
-        val credentials = BedrockCredentials.fromEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
         val request = HttpRequest.builder()
             .method(HttpMethod.POST)
             .url("https://bedrock-runtime.us-east-1.amazonaws.com/path1/path2")
@@ -462,9 +462,9 @@ internal class BedrockCredentialsTest {
             .putHeader("X-Test", "header-value-b")
             // Should create a new body holding the "Content-Type" of
             // "application/json"
-            .body(BedrockCredentials.jsonToBody(json("{}")))
+            .body(BedrockBackendAdapter.jsonToBody(json("{}")))
             .build()
-        val signedRequest = credentials.sign(request)
+        val signedRequest = adapter.signRequest(request)
 
         // Only test the content type; the rest should be the same as the main
         // test of signing.
@@ -479,7 +479,7 @@ internal class BedrockCredentialsTest {
     /**
      * Initializes the environment to simulate the presence of AWS
      * authentication and region values that can be resolved into the
-     * credentials.
+     * credentials of the backend adapter.
      *
      * For the simulation, system properties are set. This tests that the AWS
      * credentials provider is being used, as it will resolve credentials from
@@ -497,8 +497,8 @@ internal class BedrockCredentialsTest {
     /**
      * Initializes the environment to simulate the presence of AWS
      * authentication and region values that can be resolved into the
-     * credentials. See [initEnv] for more details, or to set all properties
-     * together.
+     * credentials of the backend adapter. See [initEnv] for more details,
+     * or to set all properties together.
      *
      * @param isSetAccessKeyID `true` to set the access key ID property, or
      *     `false` to clear that property.
@@ -573,7 +573,7 @@ internal class BedrockCredentialsTest {
             .addPathSegments(*pathSegments)
             .apply {
                 jsonData?.let {
-                    body(BedrockCredentials.jsonToBody(json(it)))
+                    body(BedrockBackendAdapter.jsonToBody(json(it)))
                 }
             }
             .build()

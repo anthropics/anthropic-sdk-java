@@ -1,14 +1,14 @@
 package com.anthropic.example;
 
 import com.anthropic.bedrock.backends.BedrockBackendAdapter;
-import com.anthropic.client.AnthropicClient;
-import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+import com.anthropic.client.AnthropicClientAsync;
+import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync;
 import com.anthropic.models.MessageCreateParams;
 
 /**
  * <p>
  * An example of retrieving messages from an Anthropic model running on the
- * Amazon Bedrock backend.
+ * Amazon Bedrock backend using an asynchronous client.
  * </p>
  * <p>
  * AWS credentials must be configured to access Amazon Bedrock. This example
@@ -30,12 +30,12 @@ import com.anthropic.models.MessageCreateParams;
  *       service.</li>
  * </ul>
  */
-public final class BedrockMessagesExample {
+public final class BedrockMessagesAsyncExample {
     /** Prevent instantiation of this class. */
-    private BedrockMessagesExample() {}
+    private BedrockMessagesAsyncExample() {}
 
     public static void main(String[] args) throws Exception {
-        AnthropicClient client = AnthropicOkHttpClient.builder()
+        AnthropicClientAsync client = AnthropicOkHttpClientAsync.builder()
                 .backendAdapter(BedrockBackendAdapter.fromEnv())
                 .build();
 
@@ -45,10 +45,11 @@ public final class BedrockMessagesExample {
                 .addUserMessage("Tell me a story about building the best SDK!")
                 .build();
 
-        System.out.println(client.messages().create(createParams));
-
-        client.messages().create(createParams).content().stream()
-                .flatMap(contentBlock -> contentBlock.text().stream())
-                .forEach(textBlock -> System.out.println(textBlock.text()));
+        client.messages()
+                .create(createParams)
+                .thenAccept(message -> message.content().stream()
+                        .flatMap(contentBlock -> contentBlock.text().stream())
+                        .forEach(textBlock -> System.out.println(textBlock.text())))
+                .join();
     }
 }

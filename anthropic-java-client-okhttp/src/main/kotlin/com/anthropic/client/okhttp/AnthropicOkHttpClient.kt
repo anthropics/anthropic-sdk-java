@@ -2,12 +2,12 @@
 
 package com.anthropic.client.okhttp
 
+import com.anthropic.backends.BackendAdapter
 import com.anthropic.client.AnthropicClient
 import com.anthropic.client.AnthropicClientImpl
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
-import com.anthropic.credentials.Credentials
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.net.Proxy
 import java.time.Clock
@@ -34,11 +34,11 @@ class AnthropicOkHttpClient private constructor() {
         private var proxy: Proxy? = null
 
         /**
-         * The optional credentials that may be used for authentication and
-         * authorization when using a service other than the default Anthropic
-         * service.
+         * The optional backend adapter that may be used for authentication and
+         * authorization, request processing and response handling when using a
+         * backend service other than the default Anthropic service.
          */
-        private var credentials: Credentials? = null
+        private var backendAdapter: BackendAdapter? = null
 
         fun baseUrl(baseUrl: String) = apply {
             clientOptions.baseUrl(baseUrl)
@@ -152,18 +152,17 @@ class AnthropicOkHttpClient private constructor() {
         fun authToken(authToken: Optional<String>) = authToken(authToken.orElse(null))
 
         /**
-         * Sets the credentials to be used to authenticate and authorize the
-         * request to an Anthropic service. Implementations of the [Credentials]
-         * interface can define the required credentials for a specific service,
-         * e.g., Amazon Bedrock.
+         * Sets the backend adapter to be used for the backend service hosting
+         * Anthropic AI models. Implementations of the [BackendAdapter]
+         * interface can define the required credentials, prepare requests and
+         * handle responses for different backend services.
          *
-         * If connecting to the default Anthropic service, these alternative
-         * credentials are not required.
-         *
-         * @param credentials The credentials to be used.
+         * @param backendAdapter The backend adapter to be used. If connecting
+         *     to the default Anthropic backend service, an adapter is not
+         *     required.
          */
-        fun credentials(credentials: Credentials?) = apply {
-            this.credentials = credentials
+        fun backendAdapter(backendAdapter: BackendAdapter?) = apply {
+            this.backendAdapter = backendAdapter
         }
 
         fun fromEnv() = apply { clientOptions.fromEnv() }
@@ -176,7 +175,7 @@ class AnthropicOkHttpClient private constructor() {
                             .baseUrl(baseUrl)
                             .timeout(timeout)
                             .proxy(proxy)
-                            .credentials(credentials)
+                            .backendAdapter(backendAdapter)
                             .build()
                     )
                     .build()

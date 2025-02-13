@@ -1,5 +1,6 @@
 package com.anthropic.client.okhttp
 
+import com.anthropic.backends.BackendAdapter
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
@@ -27,19 +28,36 @@ import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import okio.BufferedSink
 
-class OkHttpClient
-private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val baseUrl: HttpUrl) :
-    HttpClient {
+class OkHttpClient private constructor(
+    private val okHttpClient: okhttp3.OkHttpClient,
+    private val baseUrl: HttpUrl,
 
-    override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse {
-        val call = newCall(request, requestOptions)
+    /**
+     * [BackendAdapter] (optional) that may be required to authenticate and
+     * authorize requests to an Anthropic service or adapt requests and
+     * responses from different backends to the default Anthropic API.
+     */
+    private val backendAdapter: BackendAdapter?)
+    : HttpClient {
+
+    override fun execute(
+        request: HttpRequest,
+        requestOptions: RequestOptions,
+    ): HttpResponse {
+        val preparedRequest = backendAdapter?.prepareRequest(request) ?: request
+        val signRequest = preparedRequest.resolveUrl()
+        val signedRequest =
+            backendAdapter?.signRequest(signRequest) ?: signRequest
+        val call = newCall(signedRequest, requestOptions)
 
         return try {
-            call.execute().toResponse()
+            val response = call.execute().toResponse()
+
+            backendAdapter?.prepareResponse(response) ?: response
         } catch (e: IOException) {
             throw AnthropicIoException("Request failed", e)
         } finally {
-            request.body?.close()
+            signedRequest.body?.close()
         }
     }
 
@@ -47,15 +65,23 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
         request: HttpRequest,
         requestOptions: RequestOptions,
     ): CompletableFuture<HttpResponse> {
+        val preparedRequest = backendAdapter?.prepareRequest(request) ?: request
+        val signRequest = preparedRequest.resolveUrl()
+        val signedRequest =
+            backendAdapter?.signRequest(signRequest) ?: signRequest
         val future = CompletableFuture<HttpResponse>()
 
-        request.body?.run { future.whenComplete { _, _ -> close() } }
+        signedRequest.body?.run { future.whenComplete { _, _ -> close() } }
 
-        newCall(request, requestOptions)
+        newCall(signedRequest, requestOptions)
             .enqueue(
                 object : Callback {
                     override fun onResponse(call: Call, response: Response) {
-                        future.complete(response.toResponse())
+                        val httpResponse = response.toResponse()
+
+                        future.complete(
+                            backendAdapter?.prepareResponse(httpResponse)
+                                ?: httpResponse)
                     }
 
                     override fun onFailure(call: Call, e: IOException) {
@@ -109,8 +135,7 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
         if (body == null && requiresBody(method)) {
             body = "".toRequestBody()
         }
-
-        val builder = Request.Builder().url(toUrl()).method(method.name, body)
+        val builder = Request.Builder().url(url ?: "").method(method.name, body)
         headers.names().forEach { name ->
             headers.values(name).forEach { builder.header(name, it) }
         }
@@ -142,12 +167,26 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
             else -> false
         }
 
+    /**
+     * Creates a new [HttpRequest] with the [HttpRequest.url] property resolved
+     * from the base URL, credentials, path segments and query parameters. If
+     * the URL is already set, it is not changed.
+     *
+     * @return The new request instance with the URL property set.
+     */
+    private fun HttpRequest.resolveUrl(): HttpRequest {
+        return toBuilder().url(toUrl()).build()
+    }
+
     private fun HttpRequest.toUrl(): String {
         url?.let {
             return it
         }
 
-        val builder = baseUrl.newBuilder()
+        val builder: HttpUrl.Builder =
+            backendAdapter?.baseUrl()?.toHttpUrl()?.newBuilder()
+                ?: baseUrl.newBuilder()
+
         pathSegments.forEach(builder::addPathSegment)
         queryParams.keys().forEach { key ->
             queryParams.values(key).forEach { builder.addQueryParameter(key, it) }
@@ -202,11 +241,31 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
         private var timeout: Duration = Duration.ofSeconds(600)
         private var proxy: Proxy? = null
 
+        /**
+         * [BackendAdapter] that may be required to authenticate and authorize
+         * requests to an Anthropic service running on a different backend.
+         */
+        private var backendAdapter: BackendAdapter? = null
+
         fun baseUrl(baseUrl: String) = apply { this.baseUrl = baseUrl.toHttpUrl() }
 
         fun timeout(timeout: Duration) = apply { this.timeout = timeout }
 
         fun proxy(proxy: Proxy?) = apply { this.proxy = proxy }
+
+        /**
+         * Sets the adapter to be used to manage credentials, prepare requests
+         * and handle responses to an Anthropic model running on an alternative
+         * backend service. Implementations of the [BackendAdapter] interface
+         * can define the required behavior for a specific backend service.
+         *
+         * @param backendAdapter The backend adapter to be used. If connecting
+         *     to the default Anthropic backend service, an adapter is not
+         *     required.
+         */
+        fun backendAdapter(backendAdapter: BackendAdapter?) = apply {
+            this.backendAdapter = backendAdapter
+        }
 
         fun build(): OkHttpClient =
             OkHttpClient(
@@ -218,6 +277,7 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
                     .proxy(proxy)
                     .build(),
                 checkRequired("baseUrl", baseUrl),
+                backendAdapter,
             )
     }
 }

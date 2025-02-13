@@ -3,12 +3,14 @@ package com.anthropic.example;
 import com.anthropic.bedrock.backends.BedrockBackendAdapter;
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+import com.anthropic.core.http.StreamResponse;
 import com.anthropic.models.MessageCreateParams;
+import com.anthropic.models.RawMessageStreamEvent;
 
 /**
  * <p>
- * An example of retrieving messages from an Anthropic model running on the
- * Amazon Bedrock backend.
+ * An example of retrieving messages in a streaming response from an Anthropic
+ * model running on the Amazon Bedrock backend.
  * </p>
  * <p>
  * AWS credentials must be configured to access Amazon Bedrock. This example
@@ -30,9 +32,9 @@ import com.anthropic.models.MessageCreateParams;
  *       service.</li>
  * </ul>
  */
-public final class BedrockMessagesExample {
+public final class BedrockMessagesStreamingExample {
     /** Prevent instantiation of this class. */
-    private BedrockMessagesExample() {}
+    private BedrockMessagesStreamingExample() {}
 
     public static void main(String[] args) throws Exception {
         AnthropicClient client = AnthropicOkHttpClient.builder()
@@ -40,15 +42,17 @@ public final class BedrockMessagesExample {
                 .build();
 
         MessageCreateParams createParams = MessageCreateParams.builder()
-                .model("anthropic.claude-3-5-sonnet-20240620-v1:0")
+                .model("anthropic.claude-3-sonnet-20240229-v1:0")
                 .maxTokens(2048)
                 .addUserMessage("Tell me a story about building the best SDK!")
                 .build();
 
-        System.out.println(client.messages().create(createParams));
-
-        client.messages().create(createParams).content().stream()
-                .flatMap(contentBlock -> contentBlock.text().stream())
-                .forEach(textBlock -> System.out.println(textBlock.text()));
+        try (StreamResponse<RawMessageStreamEvent> streamResponse =
+                client.messages().createStreaming(createParams)) {
+            streamResponse.stream()
+                    .flatMap(event -> event.contentBlockDelta().stream())
+                    .flatMap(deltaEvent -> deltaEvent.delta().text().stream())
+                    .forEach(textDelta -> System.out.print(textDelta.text()));
+        }
     }
 }

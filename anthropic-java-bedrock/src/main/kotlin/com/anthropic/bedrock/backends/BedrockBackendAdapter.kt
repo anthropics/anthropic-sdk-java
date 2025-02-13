@@ -1,14 +1,21 @@
-package com.anthropic.bedrock.credentials
+package com.anthropic.bedrock.backends
 
-import com.anthropic.bedrock.credentials.BedrockCredentials.Builder
+import com.anthropic.backends.BackendAdapter
+import com.anthropic.bedrock.backends.BedrockBackendAdapter.Builder
+import com.anthropic.core.checkRequired
+import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpRequestBody
-import com.anthropic.credentials.Credentials
+import com.anthropic.core.http.HttpResponse
 import com.anthropic.errors.AnthropicException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
 import java.io.ByteArrayOutputStream
+import java.io.InputStream
 import java.io.OutputStream
+import java.io.PipedInputStream
+import java.io.PipedOutputStream
+import java.util.Base64
 import software.amazon.awssdk.auth.credentials.AwsCredentials
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider
 import software.amazon.awssdk.http.ContentStreamProvider
@@ -19,17 +26,19 @@ import software.amazon.awssdk.http.auth.spi.signer.SignRequest
 import software.amazon.awssdk.identity.spi.AwsCredentialsIdentity
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.regions.providers.DefaultAwsRegionProviderChain
+import software.amazon.eventstream.MessageDecoder
 
 /**
- * A holder for credentials required to access an Anthropic AI model on the
- * Amazon Bedrock service.
+ * An adapter for the Amazon Bedrock backend service that manages the AWS
+ * credentials required to access an Anthropic AI model on Bedrock and adapts
+ * requests and responses to Bedrock's requirements.
  *
  * Amazon Bedrock requires cryptographically-signed requests using credentials
  * issued by AWS. These can be provided via system properties, environment
  * variables, or other AWS facilities. They can be resolved by calling
  * [Builder.fromEnv].
  */
-class BedrockCredentials private constructor(
+class BedrockBackendAdapter private constructor(
     /**
      * The AWS credentials required to access the Bedrock service.
      */
@@ -39,7 +48,7 @@ class BedrockCredentials private constructor(
      * The name of the AWS region hosting the Bedrock service.
      */
     @get:JvmName("region")  val region: Region,
-) : Credentials {
+) : BackendAdapter {
 
     companion object {
         /**
@@ -54,27 +63,25 @@ class BedrockCredentials private constructor(
 
         /**
          * Creates a new builder for configuring and creating a new instance of
-         * [BedrockCredentials].
+         * [BedrockBackendAdapter].
          *
          * @return The new builder.
          */
         @JvmStatic fun builder() = Builder()
 
         /**
-         * Creates new [BedrockCredentials] with credentials resolved from the
-         * environment or configuration files.
+         * Creates new [BedrockBackendAdapter] with credentials resolved from
+         * the environment or configuration files.
          *
          * This is a convenience method that is the equivalent of calling:
          *
          * ```
-         * BedrockCredentials.builder().fromEnv().build()
+         * BedrockBackendAdapter.builder().fromEnv().build()
          * ```
-         *
-         * @return The new [BedrockCredentials].
          *
          * @throws AnthropicException See [Builder.build] for details.
          */
-        @JvmStatic fun fromEnv(): BedrockCredentials {
+        @JvmStatic fun fromEnv(): BedrockBackendAdapter {
             return builder().fromEnv().build()
         }
 
@@ -151,8 +158,6 @@ class BedrockCredentials private constructor(
     /**
      * Gets the base URL for the Amazon Bedrock runtime service. The base URL
      * includes the Bedrock runtime service name and the AWS region.
-     *
-     * @return The base URL for the Bedrock runtime service.
      */
     override fun baseUrl(): String =
         // Could use the AWS "BedrockEndpointProvider" in "fromEnv()", but that
@@ -164,7 +169,7 @@ class BedrockCredentials private constructor(
      * Prepares the request for use with Amazon Bedrock.
      *
      * A number of changes are made to support the requirements of AWS requests
-     * to the Bedrock service:
+     * to the Bedrock backend:
      *
      * * The model ID is moved from the JSON body content to the path segments.
      * * The Anthropic version is added to the JSON body content.
@@ -180,7 +185,7 @@ class BedrockCredentials private constructor(
      *     service. If the JSON body is not present. If the request has already
      *     been prepared.
      */
-    override fun prepare(request: HttpRequest): HttpRequest {
+    override fun prepareRequest(request: HttpRequest): HttpRequest {
         val json: ObjectNode? = bodyToJson(request.body)
         val modelId: String
         val isStreaming: Boolean
@@ -191,7 +196,7 @@ class BedrockCredentials private constructor(
                 ?: throw AnthropicException("No model found in body.")
 
             modelId = model.asText()
-            isStreaming = json.remove("stream") != null
+            isStreaming = json.remove("stream")?.asBoolean(false) ?: false
             json.put("anthropic_version", ANTHROPIC_VERSION)
 
             // TODO: Support "anthropic_beta". This may need to be set from a
@@ -250,7 +255,7 @@ class BedrockCredentials private constructor(
      *
      * @return The signed request including the signature headers.
      */
-    override fun sign(request: HttpRequest): HttpRequest {
+    override fun signRequest(request: HttpRequest): HttpRequest {
         val awsSignRequest = SdkHttpRequest.builder()
             .uri(request.url)
             .method(SdkHttpMethod.fromValue(request.method.toString()))
@@ -289,22 +294,6 @@ class BedrockCredentials private constructor(
                     .putProperty(AwsV4HttpSigner.REGION_NAME, region.id())
             }.request()
 
-        return mergeRequests(request, awsSignedRequest)
-    }
-
-    /**
-     * Creates a new [HttpRequest] by merging an existing request with its
-     * corresponding (and abbreviated) signed request.
-     *
-     * @param request The request to be merged with the signed request.
-     * @param awsSignedRequest The signed request to be merged with the request.
-     *
-     * @return A new [HttpRequest] that contains all the details of the given
-     *     request and the signature headers of the AWS signed request.
-     */
-    private fun mergeRequests(
-            request: HttpRequest, awsSignedRequest: SdkHttpRequest)
-            : HttpRequest {
         // Overwrite any headers with the same names already present.
         return request.toBuilder()
             .replaceAllHeaders(awsSignedRequest.headers())
@@ -312,11 +301,95 @@ class BedrockCredentials private constructor(
     }
 
     /**
-     * A builder for [BedrockCredentials].
+     * Prepares a response from an Amazon Bedrock backend service.
+     *
+     * Where the response content type indicates an AWS EventStream, the stream
+     * is translated into a stream of Server-Sent Events, adapting the response
+     * to the Anthropic requirements. For other content types, no changes to the
+     * response are required.
+     *
+     * @param response The response from the Bedrock backend service.
+     *
+     * @return A new response with a body [InputStream] that translates an AWS
+     *     EventStream into an SSE stream, or the given response instance if no
+     *     translation is required.
+     */
+    override fun prepareResponse(response: HttpResponse): HttpResponse {
+        if (!response.headers().values("Content-Type")
+                .contains("application/vnd.amazon.eventstream")) {
+            return response
+        }
+
+        val responseInput = response.body()
+        val pipedInput = PipedInputStream()
+        val pipedOutput = PipedOutputStream(pipedInput)
+
+        // A decoded EventStream message's payload is JSON. It might look like
+        // this (abridged):
+        //
+        //   {"bytes":"eyJ0eXBlIjoi...ZXJlIn19","p":"abcdefghijkl"}
+        //
+        // The value of the "bytes" field is a base-64 encoded JSON string
+        // (UTF-8). When decoded, it might look like this:
+        //
+        //   {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello"}}
+        //
+        // Parse the "type" field to allow the construction of a server-sent
+        // event (SSE) that might look like this:
+        //
+        //   event: content_block_delta
+        //   data: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello"}}
+        //
+        // Print the SSE (with a blank line after) to the piped output stream to
+        // complete the translation process.
+        //
+        // Using a thread is recommended to avoid deadlocking.
+        Thread {
+            responseInput.use { input ->
+                // "use" closes the piped output stream when done, which signals
+                // the end-of-file to the reader of the piped input stream.
+                pipedOutput.use { output ->
+                    val jsonMapper = ObjectMapper()
+                    val messageDecoder = MessageDecoder { message ->
+                        val sseJson = String(Base64.getDecoder().decode(
+                            jsonMapper.readTree(message.payload)
+                                .get("bytes").asText()))
+                        val sseEventType = jsonMapper.readTree(sseJson)
+                            .get("type").asText()
+
+                        output.write("event: $sseEventType\ndata: $sseJson\n\n"
+                            .toByteArray())
+                        output.flush()
+                    }
+
+                    val buffer = ByteArray(4096)
+                    var bytesRead: Int
+                    while (input.read(buffer).also { bytesRead = it } != -1) {
+                        // When fed enough to create a new "Message", the
+                        // "MessageDecoder(Consumer)" (above) is fired.
+                        messageDecoder.feed(buffer, 0, bytesRead)
+                    }
+                }
+            }
+        }.start()
+
+        return object : HttpResponse {
+            override fun statusCode(): Int = response.statusCode()
+
+            override fun headers(): Headers = response.headers()
+
+            override fun body(): InputStream = pipedInput
+
+            override fun close() = pipedInput.close()
+        }
+    }
+
+    /**
+     * A builder for [BedrockBackendAdapter].
      *
      * The credentials can be extracted from the environment and set on the
      * builder by calling [fromEnv] before calling [build] to create the
-     * [BedrockCredentials].
+     * [BedrockBackendAdapter].
      */
     class Builder internal constructor() {
         /**
@@ -330,8 +403,8 @@ class BedrockCredentials private constructor(
         private var region: Region? = null
 
         /**
-         * Creates new [BedrockCredentials] with credential values and the AWS
-         * region resolved automatically. Sources for the values may include
+         * Creates new [BedrockBackendAdapter] with credential values and the
+         * AWS region resolved automatically. Sources for the values may include
          * system properties, environment variables, AWS CLI configuration
          * files, AWS SSO resources, and more.
          *
@@ -348,8 +421,8 @@ class BedrockCredentials private constructor(
          * files, or an error will occur. See the AWS Bedrock documentation for
          * details on how to configure these credentials.
          *
-         * @throws AnthropicException If the access key ID, secret access key,
-         *     or AWS region cannot be resolved from the environment.
+         * @throws IllegalStateException If the access key ID, secret access
+         *     key, or AWS region cannot be resolved from the environment.
          */
         fun fromEnv() = apply {
             try {
@@ -357,7 +430,8 @@ class BedrockCredentials private constructor(
                     DefaultCredentialsProvider.create().resolveCredentials()
             } catch (e: Exception) {
                 throw AnthropicException(
-                    "No AWS access key ID or AWS secret access key found.", e)
+                    "No AWS access key ID or AWS secret access key found.", e
+                )
             }
             try {
                 region = DefaultAwsRegionProviderChain.builder().build().region
@@ -367,25 +441,16 @@ class BedrockCredentials private constructor(
         }
 
         /**
-         * Builds the new [BedrockCredentials] from the data provided to the
+         * Builds the new [BedrockBackendAdapter] from the data provided to the
          * builder.
          *
-         * @return The new credentials.
-         *
-         * @throws AnthropicException If the credentials have not been resolved
-         *     from the environment.
+         * @throws AnthropicException If the required credentials have not been
+         *     resolved from the environment.
          */
-        fun build(): BedrockCredentials {
-            // Copy properties to local variables for thread safety.
-            val myAwsCredentials = awsCredentials
-            val myRegion = region
-
-            if (myAwsCredentials == null || myRegion == null) {
-                throw AnthropicException(
-                    "No credentials set from the environment. Call fromEnv().")
-            }
-
-            return BedrockCredentials(myAwsCredentials, myRegion)
-        }
+        fun build(): BedrockBackendAdapter =
+            BedrockBackendAdapter(
+                checkRequired("awsCredentials", awsCredentials),
+                checkRequired("region", region),
+            )
     }
 }

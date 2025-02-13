@@ -6,12 +6,15 @@ plugins {
 dependencies {
     api(project(":anthropic-java-core"))
 
-    // Elements of the Amazon AWS SDK for Java 2.0. These dependencies provide
-    // low-level operations such as credentials resolution and AWS SigV4 request
-    // signing.
+    // Elements of the Amazon AWS SDK for Java 2.0 providing low-level
+    // operations such as credentials resolution and AWS SigV4 request signing.
+    // The versions of the AWS SDK modules are defined by the AWS SDK BOM.
     implementation(platform("software.amazon.awssdk:bom:2.30.11"))
     implementation("software.amazon.awssdk:auth")
     implementation("software.amazon.awssdk:http-client-spi")
+
+    // Amazon AWS EventStream for parsing Bedrock streaming responses.
+    implementation("software.amazon.eventstream:eventstream:1.0.1")
 
     testImplementation(kotlin("test"))
     testImplementation("org.assertj:assertj-core:3.25.3")

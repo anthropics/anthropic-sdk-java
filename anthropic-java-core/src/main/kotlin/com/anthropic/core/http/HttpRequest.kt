@@ -58,8 +58,6 @@ private constructor(
          * @param pathSegments The path segments that will replace all the
          *     existing path segments added to the `Builder`. If no path
          *     segments are given, all existing path segments are removed.
-         *
-         * @return This `Builder`.
          */
         fun replaceAllPathSegments(vararg pathSegments: String) = apply {
             this.pathSegments = pathSegments.toMutableList()
