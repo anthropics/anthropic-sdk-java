@@ -62,6 +62,44 @@ class BedrockBackendAdapter private constructor(
         private const val ANTHROPIC_VERSION = "bedrock-2023-05-31"
 
         /**
+         * The name of the header that identifies the content type of the data
+         * in the response.
+         */
+        // For HTTP/2 responses, the header names are expected to be lower case.
+        private const val HEADER_CONTENT_TYPE = "content-type"
+
+        /**
+         * The name of the header that identifies the content type for the
+         * "payloads" of AWS _EventStream_ messages in streaming responses from
+         * Bedrock.
+         */
+        private const val HEADER_PAYLOAD_CONTENT_TYPE =
+            "x-amzn-bedrock-content-type"
+
+        /**
+         * The content type for Bedrock responses containing data in the AWS
+         * _EventStream_ format. The value of the [HEADER_PAYLOAD_CONTENT_TYPE]
+         * header identifies the content type of the "payloads" in this stream.
+         */
+        private const val CONTENT_TYPE_AWS_EVENT_STREAM =
+            "application/vnd.amazon.eventstream"
+
+        /**
+         * The content type for Anthropic responses containing data in the
+         * Server-Sent Events (SSE) stream format.
+         */
+        private const val CONTENT_TYPE_SSE_STREAM =
+            "text/event-stream; charset=utf-8"
+
+        /**
+         * The content type for data in JSON format. The bodies of all requests
+         * are expected to have this content type. For responses in using the
+         * AWS _EventStream_ content type, the "payloads" of the event messages
+         * are expected to have this content type.
+         */
+        private const val CONTENT_TYPE_JSON = "application/json"
+
+        /**
          * Creates a new builder for configuring and creating a new instance of
          * [BedrockBackendAdapter].
          *
@@ -119,7 +157,7 @@ class BedrockBackendAdapter private constructor(
                     outputStream.write(serialize())
                 }
 
-                override fun contentType(): String = "application/json"
+                override fun contentType(): String = CONTENT_TYPE_JSON
 
                 override fun contentLength(): Long {
                     return serialize().size.toLong()
@@ -262,9 +300,9 @@ class BedrockBackendAdapter private constructor(
             .apply {
                 // For the signature, copy the content type header from the body
                 // if the request object has no content type header.
-                if (request.headers.values("Content-Type").isEmpty()) {
+                if (request.headers.values(HEADER_CONTENT_TYPE).isEmpty()) {
                     request.body?.contentType().let {
-                        appendHeader("Content-Type", it)
+                        appendHeader(HEADER_CONTENT_TYPE, it)
                     }
                 }
                 request.headers.names().forEach { name ->
@@ -313,11 +351,25 @@ class BedrockBackendAdapter private constructor(
      * @return A new response with a body [InputStream] that translates an AWS
      *     EventStream into an SSE stream, or the given response instance if no
      *     translation is required.
+     *
+     * @throws AnthropicException If the response content type is an AWS
+     *     _EventStream_, but the "payloads" of the messages in that stream are
+     *     not JSON strings.
      */
     override fun prepareResponse(response: HttpResponse): HttpResponse {
-        if (!response.headers().values("Content-Type")
-                .contains("application/vnd.amazon.eventstream")) {
+        if (!response.headers().values(HEADER_CONTENT_TYPE)
+                .contains(CONTENT_TYPE_AWS_EVENT_STREAM)) {
             return response
+        }
+
+        val payloadContentType =
+            response.headers().values(HEADER_PAYLOAD_CONTENT_TYPE)
+
+        if (!payloadContentType.contains(CONTENT_TYPE_JSON)) {
+            throw AnthropicException(
+                "Expected streamed Bedrock events to have content type of " +
+                        "$CONTENT_TYPE_JSON, but was $payloadContentType."
+            )
         }
 
         val responseInput = response.body()
@@ -343,13 +395,18 @@ class BedrockBackendAdapter private constructor(
         // Print the SSE (with a blank line after) to the piped output stream to
         // complete the translation process.
         //
-        // Using a thread is recommended to avoid deadlocking.
+        // A thread avoids deadlocking the pipe. If everything is on the same
+        // thread, a "read" that block waiting for more data to be written,
+        // would block the thread from executing the necessary "write" and cause
+        // a deadlock.
         Thread {
             responseInput.use { input ->
                 // "use" closes the piped output stream when done, which signals
                 // the end-of-file to the reader of the piped input stream.
                 pipedOutput.use { output ->
                     val jsonMapper = ObjectMapper()
+                    // When fed enough data (see loop, below) to create a new
+                    // "Message", the "Consumer.accept" lambda here is fired.
                     val messageDecoder = MessageDecoder { message ->
                         val sseJson = String(Base64.getDecoder().decode(
                             jsonMapper.readTree(message.payload)
@@ -365,8 +422,6 @@ class BedrockBackendAdapter private constructor(
                     val buffer = ByteArray(4096)
                     var bytesRead: Int
                     while (input.read(buffer).also { bytesRead = it } != -1) {
-                        // When fed enough to create a new "Message", the
-                        // "MessageDecoder(Consumer)" (above) is fired.
                         messageDecoder.feed(buffer, 0, bytesRead)
                     }
                 }
@@ -376,7 +431,10 @@ class BedrockBackendAdapter private constructor(
         return object : HttpResponse {
             override fun statusCode(): Int = response.statusCode()
 
-            override fun headers(): Headers = response.headers()
+            override fun headers(): Headers =
+                response.headers().toBuilder()
+                    .replace(HEADER_CONTENT_TYPE, CONTENT_TYPE_SSE_STREAM)
+                    .build()
 
             override fun body(): InputStream = pipedInput
 
