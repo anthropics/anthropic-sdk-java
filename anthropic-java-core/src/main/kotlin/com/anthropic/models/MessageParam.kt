@@ -250,7 +250,7 @@ private constructor(
             override fun serialize(
                 value: Content,
                 generator: JsonGenerator,
-                provider: SerializerProvider
+                provider: SerializerProvider,
             ) {
                 when {
                     value.string != null -> generator.writeObject(value.string)
@@ -262,11 +262,7 @@ private constructor(
         }
     }
 
-    class Role
-    @JsonCreator
-    private constructor(
-        private val value: JsonField<String>,
-    ) : Enum {
+    class Role @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.

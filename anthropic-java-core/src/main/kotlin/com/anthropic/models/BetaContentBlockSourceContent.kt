@@ -158,7 +158,7 @@ private constructor(
         override fun serialize(
             value: BetaContentBlockSourceContent,
             generator: JsonGenerator,
-            provider: SerializerProvider
+            provider: SerializerProvider,
         ) {
             when {
                 value.textBlockParam != null -> generator.writeObject(value.textBlockParam)

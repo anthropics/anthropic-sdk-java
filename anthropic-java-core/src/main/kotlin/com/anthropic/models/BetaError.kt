@@ -321,7 +321,7 @@ private constructor(
         override fun serialize(
             value: BetaError,
             generator: JsonGenerator,
-            provider: SerializerProvider
+            provider: SerializerProvider,
         ) {
             when {
                 value.invalidRequest != null -> generator.writeObject(value.invalidRequest)

@@ -17,10 +17,8 @@ import com.anthropic.models.ModelListPage
 import com.anthropic.models.ModelListParams
 import com.anthropic.models.ModelRetrieveParams
 
-class ModelServiceImpl
-internal constructor(
-    private val clientOptions: ClientOptions,
-) : ModelService {
+class ModelServiceImpl internal constructor(private val clientOptions: ClientOptions) :
+    ModelService {
 
     private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
 

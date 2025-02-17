@@ -264,7 +264,7 @@ private constructor(
         override fun serialize(
             value: RawMessageStreamEvent,
             generator: JsonGenerator,
-            provider: SerializerProvider
+            provider: SerializerProvider,
         ) {
             when {
                 value.start != null -> generator.writeObject(value.start)

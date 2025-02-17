@@ -21,7 +21,7 @@ interface ModelService {
     @JvmOverloads
     fun retrieve(
         params: BetaModelRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaModelInfo
 
     /**
@@ -33,6 +33,6 @@ interface ModelService {
     @JvmOverloads
     fun list(
         params: BetaModelListParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaModelListPage
 }
