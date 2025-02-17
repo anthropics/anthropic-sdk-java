@@ -248,29 +248,6 @@ class BedrockBackendAdapter private constructor(
      *     been prepared.
      */
     override fun prepareRequest(request: HttpRequest): HttpRequest {
-        val json: ObjectNode? = bodyToJson(request.body, jsonMapper)
-        val modelId: String
-        val isStreaming: Boolean
-
-        if (json != null) {
-            val model = json.remove("model")
-                ?: throw AnthropicException("No model found in body.")
-
-            modelId = model.asText()
-            isStreaming = json.remove("stream")?.asBoolean(false) ?: false
-            json.put("anthropic_version", ANTHROPIC_VERSION)
-
-            val betaVersions = request.headers.values(HEADER_ANTHROPIC_BETA)
-                .flatMap { it.split(",") }.distinct()
-
-            if (betaVersions.isNotEmpty()) {
-                json.replace("anthropic_beta",
-                    jsonMapper.valueToTree(betaVersions))
-            }
-        } else {
-            throw AnthropicException("Request has no body")
-        }
-
         val pathSegments = request.pathSegments
 
         // Check that the request is valid has not been prepared already.
@@ -300,10 +277,33 @@ class BedrockBackendAdapter private constructor(
                 "Service is not supported for Bedrock: ${pathSegments[1]}.")
         }
 
+        val json: ObjectNode? = bodyToJson(request.body, jsonMapper)
+        val modelId: String
+        val isStream: Boolean
+
+        if (json != null) {
+            val model = json.remove("model")
+                ?: throw AnthropicException("No model found in body.")
+
+            modelId = model.asText()
+            isStream = json.remove("stream")?.asBoolean(false) ?: false
+            json.put("anthropic_version", ANTHROPIC_VERSION)
+
+            val betaVersions = request.headers.values(HEADER_ANTHROPIC_BETA)
+                .flatMap { it.split(",") }.distinct()
+
+            if (betaVersions.isNotEmpty()) {
+                json.replace("anthropic_beta",
+                    jsonMapper.valueToTree(betaVersions))
+            }
+        } else {
+            throw AnthropicException("Request has no body")
+        }
+
         return request.toBuilder()
             .replaceAllPathSegments("model", modelId)
             .addPathSegment(
-                if (isStreaming) "invoke-with-response-stream" else "invoke")
+                if (isStream) "invoke-with-response-stream" else "invoke")
             .body(jsonToBody(json, jsonMapper))
             .build()
     }
@@ -503,8 +503,8 @@ class BedrockBackendAdapter private constructor(
          * files, or an error will occur. See the AWS Bedrock documentation for
          * details on how to configure these credentials.
          *
-         * @throws IllegalStateException If the access key ID, secret access
-         *     key, or AWS region cannot be resolved from the environment.
+         * @throws AnthropicException If the access key ID, secret access key,
+         *     or AWS region cannot be resolved from the environment.
          */
         fun fromEnv() = apply {
             try {
@@ -526,13 +526,12 @@ class BedrockBackendAdapter private constructor(
          * Builds the new [BedrockBackendAdapter] from the data provided to the
          * builder.
          *
-         * @throws AnthropicException If the required credentials have not been
-         *     resolved from the environment.
+         * @throws IllegalStateException If the required credentials have not
+         *     been resolved from the environment.
          */
-        fun build(): BedrockBackendAdapter =
-            BedrockBackendAdapter(
-                checkRequired("awsCredentials", awsCredentials),
-                checkRequired("region", region),
-            )
+        fun build(): BedrockBackendAdapter = BedrockBackendAdapter(
+            checkRequired("awsCredentials", awsCredentials),
+            checkRequired("region", region),
+        )
     }
 }
