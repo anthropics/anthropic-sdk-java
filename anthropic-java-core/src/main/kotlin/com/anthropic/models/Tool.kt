@@ -310,11 +310,7 @@ private constructor(
             }
 
             fun build(): InputSchema =
-                InputSchema(
-                    type,
-                    properties,
-                    additionalProperties.toImmutable(),
-                )
+                InputSchema(type, properties, additionalProperties.toImmutable())
         }
 
         override fun equals(other: Any?): Boolean {

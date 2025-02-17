@@ -30,7 +30,7 @@ interface BatchServiceAsync {
     @JvmOverloads
     fun create(
         params: MessageBatchCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<MessageBatch>
 
     /**
@@ -40,7 +40,7 @@ interface BatchServiceAsync {
     @JvmOverloads
     fun retrieve(
         params: MessageBatchRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<MessageBatch>
 
     /**
@@ -50,7 +50,7 @@ interface BatchServiceAsync {
     @JvmOverloads
     fun list(
         params: MessageBatchListParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<MessageBatchListPageAsync>
 
     /**
@@ -62,7 +62,7 @@ interface BatchServiceAsync {
     @JvmOverloads
     fun delete(
         params: MessageBatchDeleteParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<DeletedMessageBatch>
 
     /**
@@ -77,7 +77,7 @@ interface BatchServiceAsync {
     @JvmOverloads
     fun cancel(
         params: MessageBatchCancelParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<MessageBatch>
 
     /**
@@ -90,6 +90,6 @@ interface BatchServiceAsync {
     @JvmOverloads
     fun resultsStreaming(
         params: MessageBatchResultsParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): AsyncStreamResponse<MessageBatchIndividualResponse>
 }

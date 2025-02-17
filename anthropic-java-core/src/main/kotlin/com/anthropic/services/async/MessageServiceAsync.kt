@@ -27,7 +27,7 @@ interface MessageServiceAsync {
     @JvmOverloads
     fun create(
         params: MessageCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Message>
 
     /**
@@ -39,7 +39,7 @@ interface MessageServiceAsync {
     @JvmOverloads
     fun createStreaming(
         params: MessageCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): AsyncStreamResponse<RawMessageStreamEvent>
 
     /**
@@ -51,6 +51,6 @@ interface MessageServiceAsync {
     @JvmOverloads
     fun countTokens(
         params: MessageCountTokensParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<MessageTokensCount>
 }

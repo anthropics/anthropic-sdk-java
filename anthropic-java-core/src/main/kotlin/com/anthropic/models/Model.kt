@@ -11,11 +11,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
  * The model that will complete your prompt.\n\nSee
  * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and options.
  */
-class Model
-@JsonCreator
-private constructor(
-    private val value: JsonField<String>,
-) : Enum {
+class Model @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
     /**
      * Returns this class instance's raw value.

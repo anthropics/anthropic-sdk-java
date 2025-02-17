@@ -655,11 +655,7 @@ private constructor(
      * In non-streaming mode this value is always non-null. In streaming mode, it is null in the
      * `message_start` event and non-null otherwise.
      */
-    class StopReason
-    @JsonCreator
-    private constructor(
-        private val value: JsonField<String>,
-    ) : Enum {
+    class StopReason @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.

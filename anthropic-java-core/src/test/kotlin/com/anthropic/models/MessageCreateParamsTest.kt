@@ -46,14 +46,14 @@ class MessageCreateParamsTest {
                                             mapOf(
                                                 "description" to
                                                     "The city and state, e.g. San Francisco, CA",
-                                                "type" to "string"
+                                                "type" to "string",
                                             ),
                                         "unit" to
                                             mapOf(
                                                 "description" to
                                                     "Unit for the output - one of (celsius, fahrenheit)",
-                                                "type" to "string"
-                                            )
+                                                "type" to "string",
+                                            ),
                                     )
                                 )
                             )
@@ -108,14 +108,14 @@ class MessageCreateParamsTest {
                                                 mapOf(
                                                     "description" to
                                                         "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string"
+                                                    "type" to "string",
                                                 ),
                                             "unit" to
                                                 mapOf(
                                                     "description" to
                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string"
-                                                )
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
                                 )
@@ -183,14 +183,14 @@ class MessageCreateParamsTest {
                                                 mapOf(
                                                     "description" to
                                                         "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string"
+                                                    "type" to "string",
                                                 ),
                                             "unit" to
                                                 mapOf(
                                                     "description" to
                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string"
-                                                )
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
                                 )

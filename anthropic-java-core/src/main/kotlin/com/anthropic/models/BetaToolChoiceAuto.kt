@@ -128,11 +128,7 @@ private constructor(
         }
 
         fun build(): BetaToolChoiceAuto =
-            BetaToolChoiceAuto(
-                type,
-                disableParallelToolUse,
-                additionalProperties.toImmutable(),
-            )
+            BetaToolChoiceAuto(type, disableParallelToolUse, additionalProperties.toImmutable())
     }
 
     override fun equals(other: Any?): Boolean {

@@ -104,7 +104,7 @@ private constructor(
         fun build(): BetaMessageTokensCount =
             BetaMessageTokensCount(
                 checkRequired("inputTokens", inputTokens),
-                additionalProperties.toImmutable()
+                additionalProperties.toImmutable(),
             )
     }
 

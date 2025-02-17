@@ -132,12 +132,7 @@ private constructor(
         }
 
         fun build(): BetaToolTextEditor20241022 =
-            BetaToolTextEditor20241022(
-                name,
-                type,
-                cacheControl,
-                additionalProperties.toImmutable(),
-            )
+            BetaToolTextEditor20241022(name, type, cacheControl, additionalProperties.toImmutable())
     }
 
     override fun equals(other: Any?): Boolean {

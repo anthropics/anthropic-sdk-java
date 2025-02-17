@@ -85,13 +85,8 @@ private constructor(
         fun of(
             batchesService: BatchService,
             params: BetaMessageBatchListParams,
-            response: Response
-        ) =
-            BetaMessageBatchListPage(
-                batchesService,
-                params,
-                response,
-            )
+            response: Response,
+        ) = BetaMessageBatchListPage(batchesService, params, response)
     }
 
     @NoAutoDetect
@@ -203,19 +198,11 @@ private constructor(
             }
 
             fun build() =
-                Response(
-                    data,
-                    hasMore,
-                    firstId,
-                    lastId,
-                    additionalProperties.toImmutable(),
-                )
+                Response(data, hasMore, firstId, lastId, additionalProperties.toImmutable())
         }
     }
 
-    class AutoPager(
-        private val firstPage: BetaMessageBatchListPage,
-    ) : Iterable<BetaMessageBatch> {
+    class AutoPager(private val firstPage: BetaMessageBatchListPage) : Iterable<BetaMessageBatch> {
 
         override fun iterator(): Iterator<BetaMessageBatch> = iterator {
             var page = firstPage

@@ -132,12 +132,7 @@ private constructor(
         }
 
         fun build(): BetaToolBash20241022 =
-            BetaToolBash20241022(
-                name,
-                type,
-                cacheControl,
-                additionalProperties.toImmutable(),
-            )
+            BetaToolBash20241022(name, type, cacheControl, additionalProperties.toImmutable())
     }
 
     override fun equals(other: Any?): Boolean {

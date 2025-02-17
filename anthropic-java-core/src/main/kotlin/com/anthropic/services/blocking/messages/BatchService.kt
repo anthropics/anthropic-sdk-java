@@ -30,7 +30,7 @@ interface BatchService {
     @JvmOverloads
     fun create(
         params: MessageBatchCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): MessageBatch
 
     /**
@@ -40,7 +40,7 @@ interface BatchService {
     @JvmOverloads
     fun retrieve(
         params: MessageBatchRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): MessageBatch
 
     /**
@@ -50,7 +50,7 @@ interface BatchService {
     @JvmOverloads
     fun list(
         params: MessageBatchListParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): MessageBatchListPage
 
     /**
@@ -62,7 +62,7 @@ interface BatchService {
     @JvmOverloads
     fun delete(
         params: MessageBatchDeleteParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): DeletedMessageBatch
 
     /**
@@ -77,7 +77,7 @@ interface BatchService {
     @JvmOverloads
     fun cancel(
         params: MessageBatchCancelParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): MessageBatch
 
     /**
@@ -91,6 +91,6 @@ interface BatchService {
     @MustBeClosed
     fun resultsStreaming(
         params: MessageBatchResultsParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): StreamResponse<MessageBatchIndividualResponse>
 }

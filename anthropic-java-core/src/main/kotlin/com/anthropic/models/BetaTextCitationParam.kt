@@ -193,7 +193,7 @@ private constructor(
                         ?.let {
                             return BetaTextCitationParam(
                                 citationContentBlockLocation = it,
-                                _json = json
+                                _json = json,
                             )
                         }
                 }
@@ -209,7 +209,7 @@ private constructor(
         override fun serialize(
             value: BetaTextCitationParam,
             generator: JsonGenerator,
-            provider: SerializerProvider
+            provider: SerializerProvider,
         ) {
             when {
                 value.citationCharLocation != null ->

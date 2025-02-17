@@ -7,11 +7,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 
-class AnthropicBeta
-@JsonCreator
-private constructor(
-    private val value: JsonField<String>,
-) : Enum {
+class AnthropicBeta @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
     /**
      * Returns this class instance's raw value.
