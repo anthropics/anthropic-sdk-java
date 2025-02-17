@@ -35,6 +35,7 @@ class BatchServiceTest {
         val betaMessageBatch =
             batchService.create(
                 BetaMessageBatchCreateParams.builder()
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .addRequest(
                         BetaMessageBatchCreateParams.Request.builder()
                             .customId("my-custom-id-1")
@@ -115,7 +116,6 @@ class BatchServiceTest {
                             )
                             .build()
                     )
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
         println(betaMessageBatch)

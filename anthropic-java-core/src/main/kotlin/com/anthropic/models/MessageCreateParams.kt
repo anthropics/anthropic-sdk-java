@@ -39,7 +39,7 @@ import java.util.Optional
  */
 class MessageCreateParams
 private constructor(
-    private val body: MessageCreateBody,
+    private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -504,16 +504,16 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    @JvmSynthetic internal fun _body(): MessageCreateBody = body
+    @JvmSynthetic internal fun _body(): Body = body
 
     override fun _headers(): Headers = additionalHeaders
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     @NoAutoDetect
-    class MessageCreateBody
+    class Body
     @JsonCreator
-    internal constructor(
+    private constructor(
         @JsonProperty("max_tokens")
         @ExcludeMissing
         private val maxTokens: JsonField<Long> = JsonMissing.of(),
@@ -1028,7 +1028,7 @@ private constructor(
 
         private var validated: Boolean = false
 
-        fun validate(): MessageCreateBody = apply {
+        fun validate(): Body = apply {
             if (validated) {
                 return@apply
             }
@@ -1054,7 +1054,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [MessageCreateBody]. */
+        /** A builder for [Body]. */
         class Builder internal constructor() {
 
             private var maxTokens: JsonField<Long>? = null
@@ -1071,19 +1071,19 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(messageCreateBody: MessageCreateBody) = apply {
-                maxTokens = messageCreateBody.maxTokens
-                messages = messageCreateBody.messages.map { it.toMutableList() }
-                model = messageCreateBody.model
-                metadata = messageCreateBody.metadata
-                stopSequences = messageCreateBody.stopSequences.map { it.toMutableList() }
-                system = messageCreateBody.system
-                temperature = messageCreateBody.temperature
-                toolChoice = messageCreateBody.toolChoice
-                tools = messageCreateBody.tools.map { it.toMutableList() }
-                topK = messageCreateBody.topK
-                topP = messageCreateBody.topP
-                additionalProperties = messageCreateBody.additionalProperties.toMutableMap()
+            internal fun from(body: Body) = apply {
+                maxTokens = body.maxTokens
+                messages = body.messages.map { it.toMutableList() }
+                model = body.model
+                metadata = body.metadata
+                stopSequences = body.stopSequences.map { it.toMutableList() }
+                system = body.system
+                temperature = body.temperature
+                toolChoice = body.toolChoice
+                tools = body.tools.map { it.toMutableList() }
+                topK = body.topK
+                topP = body.topP
+                additionalProperties = body.additionalProperties.toMutableMap()
             }
 
             /**
@@ -2416,8 +2416,8 @@ private constructor(
                 keys.forEach(::removeAdditionalProperty)
             }
 
-            fun build(): MessageCreateBody =
-                MessageCreateBody(
+            fun build(): Body =
+                Body(
                     checkRequired("maxTokens", maxTokens),
                     checkRequired("messages", messages).map { it.toImmutable() },
                     checkRequired("model", model),
@@ -2438,7 +2438,7 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is MessageCreateBody && maxTokens == other.maxTokens && messages == other.messages && model == other.model && metadata == other.metadata && stopSequences == other.stopSequences && system == other.system && temperature == other.temperature && toolChoice == other.toolChoice && tools == other.tools && topK == other.topK && topP == other.topP && additionalProperties == other.additionalProperties /* spotless:on */
+            return /* spotless:off */ other is Body && maxTokens == other.maxTokens && messages == other.messages && model == other.model && metadata == other.metadata && stopSequences == other.stopSequences && system == other.system && temperature == other.temperature && toolChoice == other.toolChoice && tools == other.tools && topK == other.topK && topP == other.topP && additionalProperties == other.additionalProperties /* spotless:on */
         }
 
         /* spotless:off */
@@ -2448,7 +2448,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "MessageCreateBody{maxTokens=$maxTokens, messages=$messages, model=$model, metadata=$metadata, stopSequences=$stopSequences, system=$system, temperature=$temperature, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, metadata=$metadata, stopSequences=$stopSequences, system=$system, temperature=$temperature, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
     }
 
     fun toBuilder() = Builder().from(this)
@@ -2462,7 +2462,7 @@ private constructor(
     @NoAutoDetect
     class Builder internal constructor() {
 
-        private var body: MessageCreateBody.Builder = MessageCreateBody.builder()
+        private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 

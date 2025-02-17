@@ -11,7 +11,8 @@ class BetaMessageCountTokensParamsTest {
     @Test
     fun create() {
         BetaMessageCountTokensParams.builder()
-            .addUserMessage("string")
+            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addUserMessage("Hello, world")
             .model(Model.CLAUDE_3_5_HAIKU_LATEST)
             .systemOfBetaTextBlockParams(
                 listOf(
@@ -61,7 +62,6 @@ class BetaMessageCountTokensParamsTest {
                     .type(BetaTool.Type.CUSTOM)
                     .build()
             )
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .build()
     }
 
@@ -69,7 +69,8 @@ class BetaMessageCountTokensParamsTest {
     fun body() {
         val params =
             BetaMessageCountTokensParams.builder()
-                .addUserMessage("string")
+                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .systemOfBetaTextBlockParams(
                     listOf(
@@ -119,15 +120,16 @@ class BetaMessageCountTokensParamsTest {
                         .type(BetaTool.Type.CUSTOM)
                         .build()
                 )
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
+
         val body = params._body()
+
         assertThat(body).isNotNull
         assertThat(body.messages())
             .isEqualTo(
                 listOf(
                     BetaMessageParam.builder()
-                        .content("string")
+                        .content("Hello, world")
                         .role(BetaMessageParam.Role.USER)
                         .build()
                 )
@@ -200,16 +202,18 @@ class BetaMessageCountTokensParamsTest {
     fun bodyWithoutOptionalFields() {
         val params =
             BetaMessageCountTokensParams.builder()
-                .addUserMessage("string")
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .build()
+
         val body = params._body()
+
         assertThat(body).isNotNull
         assertThat(body.messages())
             .isEqualTo(
                 listOf(
                     BetaMessageParam.builder()
-                        .content("string")
+                        .content("Hello, world")
                         .role(BetaMessageParam.Role.USER)
                         .build()
                 )
