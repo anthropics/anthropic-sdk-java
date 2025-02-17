@@ -2,6 +2,7 @@
 
 package com.anthropic.client.okhttp
 
+import com.anthropic.backends.BackendAdapter
 import com.anthropic.client.AnthropicClient
 import com.anthropic.client.AnthropicClientImpl
 import com.anthropic.core.ClientOptions
@@ -30,6 +31,13 @@ class AnthropicOkHttpClient private constructor() {
         // The default timeout for the client is 10 minutes.
         private var timeout: Duration = Duration.ofSeconds(600)
         private var proxy: Proxy? = null
+
+        /**
+         * The optional backend adapter that may be used for authentication and
+         * authorization, request processing and response handling when using a
+         * backend service other than the default Anthropic service.
+         */
+        private var backendAdapter: BackendAdapter? = null
 
         fun baseUrl(baseUrl: String) = apply {
             clientOptions.baseUrl(baseUrl)
@@ -138,6 +146,20 @@ class AnthropicOkHttpClient private constructor() {
 
         fun authToken(authToken: Optional<String>) = authToken(authToken.orElse(null))
 
+        /**
+         * Sets the backend adapter to be used for the backend service hosting
+         * Anthropic AI models. Implementations of the [BackendAdapter]
+         * interface can define the required credentials, prepare requests and
+         * handle responses for different backend services.
+         *
+         * @param backendAdapter The backend adapter to be used. If connecting
+         *     to the default Anthropic backend service, an adapter is not
+         *     required.
+         */
+        fun backendAdapter(backendAdapter: BackendAdapter?) = apply {
+            this.backendAdapter = backendAdapter
+        }
+
         fun fromEnv() = apply { clientOptions.fromEnv() }
 
         fun build(): AnthropicClient =
@@ -148,6 +170,7 @@ class AnthropicOkHttpClient private constructor() {
                             .baseUrl(baseUrl)
                             .timeout(timeout)
                             .proxy(proxy)
+                            .backendAdapter(backendAdapter)
                             .build()
                     )
                     .build()
