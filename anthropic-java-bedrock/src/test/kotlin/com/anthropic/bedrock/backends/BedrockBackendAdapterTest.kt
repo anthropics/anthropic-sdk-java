@@ -2,6 +2,7 @@ package com.anthropic.bedrock.backends
 
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
+import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
@@ -289,7 +290,8 @@ internal class BedrockBackendAdapterTest {
 
         // "model" should be removed from JSON body and "anthropic_version"
         // should be added.
-        val json = BedrockBackendAdapter.bodyToJson(preparedRequest.body)
+        val json = BedrockBackendAdapter.bodyToJson(
+            preparedRequest.body, jsonMapper())
 
         assertThat(json).isNotNull()
         assertThat(json!!.get("model")).isNull()
@@ -302,8 +304,7 @@ internal class BedrockBackendAdapterTest {
         initEnv()
         val adapter = BedrockBackendAdapter.fromEnv()
         val request = createRequest(
-            """{"model":"$MODEL_ID", "stream":true}""",
-            "v1", "messages")
+            """{"model":"$MODEL_ID", "stream":true}""", "v1", "messages")
         val preparedRequest = adapter.prepareRequest(request)
         val pathSegments = preparedRequest.pathSegments
 
@@ -315,13 +316,37 @@ internal class BedrockBackendAdapterTest {
 
         // "model" and "stream" should be removed from JSON body and
         // "anthropic_version" should be added.
-        val json = BedrockBackendAdapter.bodyToJson(preparedRequest.body)
+        val json = BedrockBackendAdapter.bodyToJson(
+            preparedRequest.body, jsonMapper())
 
         assertThat(json).isNotNull()
         assertThat(json!!.get("model")).isNull()
         assertThat(json.get("stream")).isNull()
         assertThat(json.get("anthropic_version").asText())
             .isEqualTo("bedrock-2023-05-31")
+    }
+
+    @Test
+    fun prepareRequestMessagesStreamingExplicitlyDisabled() {
+        initEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
+        val request = createRequest(
+            """{"model":"$MODEL_ID", "stream":false}""", "v1", "messages")
+        val preparedRequest = adapter.prepareRequest(request)
+        val pathSegments = preparedRequest.pathSegments
+
+        // Check that it is the value of the "stream" property, not its mere
+        // presence that causes a streaming request to be prepared. Similar
+        // request details are tested more completely elsewhere.
+        assertThat(pathSegments.size).isEqualTo(3)
+        assertThat(pathSegments[2]).isEqualTo("invoke")
+
+        // "stream" should be removed from JSON body.
+        val json = BedrockBackendAdapter.bodyToJson(
+            preparedRequest.body, jsonMapper())
+
+        assertThat(json).isNotNull()
+        assertThat(json!!.get("stream")).isNull()
     }
 
     @Test
@@ -341,10 +366,12 @@ internal class BedrockBackendAdapterTest {
 
         // "model" should be removed from JSON body and "anthropic_version"
         // should be added.
-        val json = BedrockBackendAdapter.bodyToJson(preparedRequest.body)
+        val json = BedrockBackendAdapter.bodyToJson(
+            preparedRequest.body, jsonMapper())
 
         assertThat(json).isNotNull()
         assertThat(json!!.get("model")).isNull()
+        assertThat(json.get("stream")).isNull()
         assertThat(json.get("anthropic_version").asText())
             .isEqualTo("bedrock-2023-05-31")
     }
@@ -354,8 +381,7 @@ internal class BedrockBackendAdapterTest {
         initEnv()
         val adapter = BedrockBackendAdapter.fromEnv()
         val request = createRequest(
-            """{"model":"$MODEL_ID", "stream":true}""",
-            "v1", "complete")
+            """{"model":"$MODEL_ID", "stream":true}""", "v1", "complete")
         val preparedRequest = adapter.prepareRequest(request)
         val pathSegments = preparedRequest.pathSegments
 
@@ -367,13 +393,126 @@ internal class BedrockBackendAdapterTest {
 
         // "model" and "stream" should be removed from JSON body and
         // "anthropic_version" should be added.
-        val json = BedrockBackendAdapter.bodyToJson(preparedRequest.body)
+        val json = BedrockBackendAdapter.bodyToJson(
+            preparedRequest.body, jsonMapper())
 
         assertThat(json).isNotNull()
         assertThat(json!!.get("model")).isNull()
         assertThat(json.get("stream")).isNull()
         assertThat(json.get("anthropic_version").asText())
             .isEqualTo("bedrock-2023-05-31")
+    }
+
+    @Test
+    fun prepareRequestNotBeta() {
+        initEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
+        val request = createRequest(
+            """{"model":"$MODEL_ID"}""", "v1", "messages")
+        val preparedRequest = adapter.prepareRequest(request)
+
+        // Only check that there is no header and no property in the body
+        // specifying a beta version. The rest is tested elsewhere.
+        assertThat(preparedRequest.headers.values("anthropic-beta").size)
+            .isEqualTo(0)
+
+        // "model" and "stream" should be removed from JSON body and
+        // "anthropic_version" should be added.
+        val json = BedrockBackendAdapter.bodyToJson(
+            preparedRequest.body, jsonMapper())
+
+        assertThat(json).isNotNull()
+        assertThat(json!!.get("anthropic_beta")).isNull()
+    }
+
+    @Test
+    fun prepareRequestBetaOneHeaderOneVersion() {
+        initEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
+        val request = createRequest(
+            """{"model":"$MODEL_ID"}""", "v1", "messages")
+            .toBuilder()
+            .putHeader("anthropic-beta", "b1")
+            .build()
+        val preparedRequest = adapter.prepareRequest(request)
+
+        // The headers are not modified (that is not tested as it is not
+        // important whether they are or not). The beta versions from headers
+        // should be listed in a JSON array in the body.
+        val json = BedrockBackendAdapter.bodyToJson(
+            preparedRequest.body, jsonMapper())
+
+        assertThat(json).isNotNull()
+
+        val betaJson = json!!.get("anthropic_beta")
+
+        assertThat(betaJson).isNotNull()
+        assertThat(betaJson.size()).isEqualTo(1)
+        assertThat(betaJson[0].asText()).isEqualTo("b1")
+    }
+
+    @Test
+    fun prepareRequestBetaThreeHeadersTwoVersions() {
+        initEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
+        val request = createRequest(
+            """{"model":"$MODEL_ID"}""", "v1", "messages")
+            .toBuilder()
+            .putHeader("anthropic-beta", "b1")
+            .putHeader("anthropic-beta", "b2")
+            .putHeader("anthropic-beta", "b2") // Deliberate duplicate
+            .build()
+        val preparedRequest = adapter.prepareRequest(request)
+        val json = BedrockBackendAdapter.bodyToJson(
+            preparedRequest.body, jsonMapper())
+
+        assertThat(json).isNotNull()
+
+        val betaJson = json!!.get("anthropic_beta")
+
+        assertThat(betaJson).isNotNull()
+
+        // The order of the versions is indeterminate, so convert to a list (not
+        // a set, as we want to see if duplicates were removed) and check that
+        // the expected values are contained.
+        val betaVersions = betaJson.map { it.asText() }.toList()
+
+        assertThat(betaVersions.size).isEqualTo(2) // Duplicate removed
+        assertThat(betaVersions).contains("b1")
+        assertThat(betaVersions).contains("b2")
+    }
+
+    @Test
+    fun prepareRequestBetaFourHeadersSixVersions() {
+        initEnv()
+        val adapter = BedrockBackendAdapter.fromEnv()
+        val request = createRequest(
+            """{"model":"$MODEL_ID"}""", "v1", "messages")
+            .toBuilder()
+            .putHeader("anthropic-beta", "b1,b5,b6")
+            .putHeader("anthropic-beta", "b3,b4,b2,b2")
+            .putHeader("anthropic-beta", "b2")
+            .putHeader("anthropic-beta", "b5")
+            .build()
+        val preparedRequest = adapter.prepareRequest(request)
+        val json = BedrockBackendAdapter.bodyToJson(
+            preparedRequest.body, jsonMapper())
+
+        assertThat(json).isNotNull()
+
+        val betaJson = json!!.get("anthropic_beta")
+
+        assertThat(betaJson).isNotNull()
+
+        val betaVersions = betaJson.map { it.asText() }.toList()
+
+        assertThat(betaVersions.size).isEqualTo(6)
+        assertThat(betaVersions).contains("b1")
+        assertThat(betaVersions).contains("b2")
+        assertThat(betaVersions).contains("b3")
+        assertThat(betaVersions).contains("b4")
+        assertThat(betaVersions).contains("b5")
+        assertThat(betaVersions).contains("b6")
     }
 
     @Test
@@ -390,7 +529,7 @@ internal class BedrockBackendAdapterTest {
             .putQueryParam("param-1", "param-value-1b")
             .putQueryParam("param-2", "param-value-2")
             // Content type in a header will be used in the signed request.
-            .putHeader("Content-Type", "on/request")
+            .putHeader("content-type", "on/request")
             .putHeader("X-Test", "header-value-a")
             .putHeader("X-Test", "header-value-b")
             .build()
@@ -423,9 +562,9 @@ internal class BedrockBackendAdapterTest {
 
         val headers = signedRequest.headers
 
-        assertThat(headers.names()).contains("Content-Type")
-        assertThat(headers.values("Content-Type").size).isEqualTo(1)
-        assertThat(headers.values("Content-Type")[0]).isEqualTo("on/request")
+        assertThat(headers.names()).contains("content-type")
+        assertThat(headers.values("content-type").size).isEqualTo(1)
+        assertThat(headers.values("content-type")[0]).isEqualTo("on/request")
 
         // Check that headers with more than one value were properly preserved.
         // There is an assumption here that headers with multiple values store
@@ -460,9 +599,9 @@ internal class BedrockBackendAdapterTest {
             .putQueryParam("param-2", "param-value-2")
             .putHeader("X-Test", "header-value-a")
             .putHeader("X-Test", "header-value-b")
-            // Should create a new body holding the "Content-Type" of
+            // Should create a new body holding the "content-type" of
             // "application/json"
-            .body(BedrockBackendAdapter.jsonToBody(json("{}")))
+            .body(BedrockBackendAdapter.jsonToBody(json("{}"), jsonMapper()))
             .build()
         val signedRequest = adapter.signRequest(request)
 
@@ -470,9 +609,9 @@ internal class BedrockBackendAdapterTest {
         // test of signing.
         val headers = signedRequest.headers
 
-        assertThat(headers.names()).contains("Content-Type")
-        assertThat(headers.values("Content-Type").size).isEqualTo(1)
-        assertThat(headers.values("Content-Type")[0])
+        assertThat(headers.names()).contains("content-type")
+        assertThat(headers.values("content-type").size).isEqualTo(1)
+        assertThat(headers.values("content-type")[0])
             .isEqualTo("application/json")
     }
 
@@ -573,7 +712,8 @@ internal class BedrockBackendAdapterTest {
             .addPathSegments(*pathSegments)
             .apply {
                 jsonData?.let {
-                    body(BedrockBackendAdapter.jsonToBody(json(it)))
+                    body(BedrockBackendAdapter.jsonToBody(
+                        json(it), jsonMapper()))
                 }
             }
             .build()

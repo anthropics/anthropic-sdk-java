@@ -7,6 +7,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpRequestBody
 import com.anthropic.core.http.HttpResponse
+import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
@@ -50,6 +51,12 @@ class BedrockBackendAdapter private constructor(
     @get:JvmName("region")  val region: Region,
 ) : BackendAdapter {
 
+    /**
+     * A mapper for serializing and deserializing JSON data. For efficiency,
+     * this is created once and then reused for the life of this instance.
+     */
+    private val jsonMapper = jsonMapper()
+
     companion object {
         /**
          * The Amazon Bedrock service name used for model inferences.
@@ -62,10 +69,18 @@ class BedrockBackendAdapter private constructor(
         private const val ANTHROPIC_VERSION = "bedrock-2023-05-31"
 
         /**
+         * The name of the header that identifies the Anthropic beta versions.
+         * To specify multiple beta versions, there can be more than one header,
+         * or the value of a header can be a comma-separated list of beta
+         * versions.
+         */
+        // For HTTP/2 responses, the header names are expected to be lower case.
+        private const val HEADER_ANTHROPIC_BETA = "anthropic-beta"
+
+        /**
          * The name of the header that identifies the content type of the data
          * in the response.
          */
-        // For HTTP/2 responses, the header names are expected to be lower case.
         private const val HEADER_CONTENT_TYPE = "content-type"
 
         /**
@@ -85,17 +100,18 @@ class BedrockBackendAdapter private constructor(
             "application/vnd.amazon.eventstream"
 
         /**
-         * The content type for Anthropic responses containing data in the
-         * Server-Sent Events (SSE) stream format.
+         * The content type for Anthropic responses containing Bedrock data
+         * after it has been translated into the Server-Sent Events (SSE) stream
+         * format.
          */
         private const val CONTENT_TYPE_SSE_STREAM =
             "text/event-stream; charset=utf-8"
 
         /**
          * The content type for data in JSON format. The bodies of all requests
-         * are expected to have this content type. For responses in using the
-         * AWS _EventStream_ content type, the "payloads" of the event messages
-         * are expected to have this content type.
+         * are expected to have this content type. For responses using the AWS
+         * _EventStream_ content type, the "payloads" of the event messages are
+         * expected to have this content type.
          */
         private const val CONTENT_TYPE_JSON = "application/json"
 
@@ -127,6 +143,7 @@ class BedrockBackendAdapter private constructor(
          * Creates a [HttpRequestBody] holding JSON object data.
          *
          * @param json The JSON object data to form the request body.
+         * @param jsonMapper The mapper to use to serialize the JSON data.
          *
          * @return A new request body holding the JSON data. The content type
          *     will be set to `application/json`.
@@ -134,7 +151,8 @@ class BedrockBackendAdapter private constructor(
         // NOTE: "internal" visibility allows this method to be used in unit
         // tests to create test fixtures.
         @JvmSynthetic
-        internal fun jsonToBody(json: ObjectNode): HttpRequestBody {
+        internal fun jsonToBody(
+                json: ObjectNode, jsonMapper: ObjectMapper): HttpRequestBody {
             // TODO: Code copied from "HttpRequestBodies.json", an "internal"
             //   function. Should that function be made visible for use here?
             return object : HttpRequestBody {
@@ -145,7 +163,7 @@ class BedrockBackendAdapter private constructor(
 
                     val buffer = ByteArrayOutputStream()
                     try {
-                        ObjectMapper().writeValue(buffer, json)
+                        jsonMapper.writeValue(buffer, json)
                         cachedBytes = buffer.toByteArray()
                         return cachedBytes!!
                     } catch (e: Exception) {
@@ -174,6 +192,7 @@ class BedrockBackendAdapter private constructor(
          * [HttpRequestBody].
          *
          * @param body A new request body holding the JSON data.
+         * @param jsonMapper The mapper to use to deserialize the JSON data.
          *
          * @return The JSON object data to form the request body, or `null` if
          *     the request does not have a body or if the body is empty.
@@ -181,12 +200,13 @@ class BedrockBackendAdapter private constructor(
         // NOTE: "internal" visibility allows this method to be used in unit
         // tests to create test fixtures.
         @JvmSynthetic
-        internal fun bodyToJson(body: HttpRequestBody?): ObjectNode? {
+        internal fun bodyToJson(
+                body: HttpRequestBody?, jsonMapper: ObjectMapper): ObjectNode? {
             val jsonData = ByteArrayOutputStream()
 
             body?.writeTo(jsonData)
             if (jsonData.size() > 0) {
-                return ObjectMapper().readValue(
+                return jsonMapper.readValue(
                     jsonData.toByteArray(), ObjectNode::class.java)
             }
             return null
@@ -210,8 +230,12 @@ class BedrockBackendAdapter private constructor(
      * to the Bedrock backend:
      *
      * * The model ID is moved from the JSON body content to the path segments.
-     * * The Anthropic version is added to the JSON body content.
      * * The AWS action to be performed is added to the path segments.
+     * * The Anthropic version is added to the JSON body content.
+     * * The Anthropic beta versions (if present) are copied from the headers
+     *     to the JSON body content. Beta versions are specified in (optional)
+     *     `anthropic-beta` headers. There can be more than one header with more
+     *     than one version per header (comma-separated).
      *
      * @param request The request to prepare. This request will not be modified.
      *
@@ -224,11 +248,10 @@ class BedrockBackendAdapter private constructor(
      *     been prepared.
      */
     override fun prepareRequest(request: HttpRequest): HttpRequest {
-        val json: ObjectNode? = bodyToJson(request.body)
+        val json: ObjectNode? = bodyToJson(request.body, jsonMapper)
         val modelId: String
         val isStreaming: Boolean
 
-        // Interpret and modify the JSON body.
         if (json != null) {
             val model = json.remove("model")
                 ?: throw AnthropicException("No model found in body.")
@@ -237,48 +260,51 @@ class BedrockBackendAdapter private constructor(
             isStreaming = json.remove("stream")?.asBoolean(false) ?: false
             json.put("anthropic_version", ANTHROPIC_VERSION)
 
-            // TODO: Support "anthropic_beta". This may need to be set from a
-            //   value in a request header. See the Python code.
+            val betaVersions = request.headers.values(HEADER_ANTHROPIC_BETA)
+                .flatMap { it.split(",") }.distinct()
+
+            if (betaVersions.isNotEmpty()) {
+                json.replace("anthropic_beta",
+                    jsonMapper.valueToTree(betaVersions))
+            }
         } else {
             throw AnthropicException("Request has no body")
         }
 
         val pathSegments = request.pathSegments
 
-        // Checks that the request is valid has not been prepared already.
+        // Check that the request is valid has not been prepared already.
         if (pathSegments.isEmpty() || pathSegments[0] != "v1") {
             throw AnthropicException("Expected first 'v1' path segment.")
         }
 
-        // Validate the supported path segments.
-        if (pathSegments.size > 1) {
-            if (pathSegments[1] == "messages") {
-                if (pathSegments.size > 2) {
-                    if (pathSegments[2] == "batches") {
-                        throw AnthropicException(
-                            "Batch API is not supported for Bedrock.")
-                    }
-                    if (pathSegments[2] == "count_tokens") {
-                        throw AnthropicException(
-                            "Token counting is not supported for Bedrock.")
-                    }
-                    // For now, ignore any other path segments.
-                }
-            } else if (pathSegments[1] != "complete") {
-                throw AnthropicException(
-                    "Service is not supported for Bedrock: ${pathSegments[1]}.")
-            }
-        } else {
+        if (pathSegments.size <= 1) {
             throw AnthropicException("Missing service name from request URL.")
         }
 
-        // Build a new, modified HttpRequest with the appropriate changes made
-        // to the path segments and the body to support Anthropic on Bedrock.
+        when (pathSegments[1]) {
+            "messages" -> {
+                if (pathSegments.size > 2) {
+                    when (pathSegments[2]) {
+                        "batches" -> throw AnthropicException(
+                            "Batch API is not supported for Bedrock.")
+                        "count_tokens" -> throw AnthropicException(
+                            "Token counting is not supported for Bedrock.")
+                    } // For now, ignore any other path segments.
+                }
+            }
+            "complete" -> {
+                // Do nothing special.
+            }
+            else -> throw AnthropicException(
+                "Service is not supported for Bedrock: ${pathSegments[1]}.")
+        }
+
         return request.toBuilder()
             .replaceAllPathSegments("model", modelId)
             .addPathSegment(
                 if (isStreaming) "invoke-with-response-stream" else "invoke")
-            .body(jsonToBody(json))
+            .body(jsonToBody(json, jsonMapper))
             .build()
     }
 
@@ -325,10 +351,9 @@ class BedrockBackendAdapter private constructor(
                     .payload(ContentStreamProvider.fromByteArray(
                         bodyData.toByteArray()))
                     // The service signing name "bedrock" is not the same as the
-                    // service name in the URL "bedrock-runtime".
+                    // service name in the URL ("bedrock-runtime").
                     .putProperty(
-                        AwsV4HttpSigner.SERVICE_SIGNING_NAME, "bedrock"
-                    )
+                        AwsV4HttpSigner.SERVICE_SIGNING_NAME, "bedrock")
                     .putProperty(AwsV4HttpSigner.REGION_NAME, region.id())
             }.request()
 
@@ -376,8 +401,8 @@ class BedrockBackendAdapter private constructor(
         val pipedInput = PipedInputStream()
         val pipedOutput = PipedOutputStream(pipedInput)
 
-        // A decoded EventStream message's payload is JSON. It might look like
-        // this (abridged):
+        // A decoded AWS EventStream message's payload is JSON. It might look
+        // like this (abridged):
         //
         //   {"bytes":"eyJ0eXBlIjoi...ZXJlIn19","p":"abcdefghijkl"}
         //
@@ -396,7 +421,7 @@ class BedrockBackendAdapter private constructor(
         // complete the translation process.
         //
         // A thread avoids deadlocking the pipe. If everything is on the same
-        // thread, a "read" that block waiting for more data to be written,
+        // thread, a "read" that blocks waiting for more data to be written,
         // would block the thread from executing the necessary "write" and cause
         // a deadlock.
         Thread {
@@ -404,7 +429,6 @@ class BedrockBackendAdapter private constructor(
                 // "use" closes the piped output stream when done, which signals
                 // the end-of-file to the reader of the piped input stream.
                 pipedOutput.use { output ->
-                    val jsonMapper = ObjectMapper()
                     // When fed enough data (see loop, below) to create a new
                     // "Message", the "Consumer.accept" lambda here is fired.
                     val messageDecoder = MessageDecoder { message ->
