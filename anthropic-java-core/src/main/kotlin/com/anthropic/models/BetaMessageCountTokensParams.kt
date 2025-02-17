@@ -40,7 +40,7 @@ import java.util.Optional
 class BetaMessageCountTokensParams
 private constructor(
     private val betas: List<AnthropicBeta>?,
-    private val body: BetaMessageCountTokensBody,
+    private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -390,7 +390,7 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    @JvmSynthetic internal fun _body(): BetaMessageCountTokensBody = body
+    @JvmSynthetic internal fun _body(): Body = body
 
     override fun _headers(): Headers {
         val headers = Headers.builder()
@@ -402,9 +402,9 @@ private constructor(
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     @NoAutoDetect
-    class BetaMessageCountTokensBody
+    class Body
     @JsonCreator
-    internal constructor(
+    private constructor(
         @JsonProperty("messages")
         @ExcludeMissing
         private val messages: JsonField<List<BetaMessageParam>> = JsonMissing.of(),
@@ -779,7 +779,7 @@ private constructor(
 
         private var validated: Boolean = false
 
-        fun validate(): BetaMessageCountTokensBody = apply {
+        fun validate(): Body = apply {
             if (validated) {
                 return@apply
             }
@@ -799,7 +799,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [BetaMessageCountTokensBody]. */
+        /** A builder for [Body]. */
         class Builder internal constructor() {
 
             private var messages: JsonField<MutableList<BetaMessageParam>>? = null
@@ -810,14 +810,13 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(betaMessageCountTokensBody: BetaMessageCountTokensBody) = apply {
-                messages = betaMessageCountTokensBody.messages.map { it.toMutableList() }
-                model = betaMessageCountTokensBody.model
-                system = betaMessageCountTokensBody.system
-                toolChoice = betaMessageCountTokensBody.toolChoice
-                tools = betaMessageCountTokensBody.tools.map { it.toMutableList() }
-                additionalProperties =
-                    betaMessageCountTokensBody.additionalProperties.toMutableMap()
+            internal fun from(body: Body) = apply {
+                messages = body.messages.map { it.toMutableList() }
+                model = body.model
+                system = body.system
+                toolChoice = body.toolChoice
+                tools = body.tools.map { it.toMutableList() }
+                additionalProperties = body.additionalProperties.toMutableMap()
             }
 
             /**
@@ -2286,8 +2285,8 @@ private constructor(
                 keys.forEach(::removeAdditionalProperty)
             }
 
-            fun build(): BetaMessageCountTokensBody =
-                BetaMessageCountTokensBody(
+            fun build(): Body =
+                Body(
                     checkRequired("messages", messages).map { it.toImmutable() },
                     checkRequired("model", model),
                     system,
@@ -2302,7 +2301,7 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is BetaMessageCountTokensBody && messages == other.messages && model == other.model && system == other.system && toolChoice == other.toolChoice && tools == other.tools && additionalProperties == other.additionalProperties /* spotless:on */
+            return /* spotless:off */ other is Body && messages == other.messages && model == other.model && system == other.system && toolChoice == other.toolChoice && tools == other.tools && additionalProperties == other.additionalProperties /* spotless:on */
         }
 
         /* spotless:off */
@@ -2312,7 +2311,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "BetaMessageCountTokensBody{messages=$messages, model=$model, system=$system, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
+            "Body{messages=$messages, model=$model, system=$system, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
     }
 
     fun toBuilder() = Builder().from(this)
@@ -2327,7 +2326,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var betas: MutableList<AnthropicBeta>? = null
-        private var body: BetaMessageCountTokensBody.Builder = BetaMessageCountTokensBody.builder()
+        private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 

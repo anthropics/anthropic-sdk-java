@@ -34,7 +34,9 @@ class CompletionCreateParamsTest {
                 .topK(5L)
                 .topP(0.7)
                 .build()
+
         val body = params._body()
+
         assertThat(body).isNotNull
         assertThat(body.maxTokensToSample()).isEqualTo(256L)
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
@@ -55,7 +57,9 @@ class CompletionCreateParamsTest {
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
                 .build()
+
         val body = params._body()
+
         assertThat(body).isNotNull
         assertThat(body.maxTokensToSample()).isEqualTo(256L)
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)

@@ -40,7 +40,7 @@ import java.util.Optional
 class BetaMessageCreateParams
 private constructor(
     private val betas: List<AnthropicBeta>?,
-    private val body: BetaMessageCreateBody,
+    private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -508,7 +508,7 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    @JvmSynthetic internal fun _body(): BetaMessageCreateBody = body
+    @JvmSynthetic internal fun _body(): Body = body
 
     override fun _headers(): Headers {
         val headers = Headers.builder()
@@ -520,9 +520,9 @@ private constructor(
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     @NoAutoDetect
-    class BetaMessageCreateBody
+    class Body
     @JsonCreator
-    internal constructor(
+    private constructor(
         @JsonProperty("max_tokens")
         @ExcludeMissing
         private val maxTokens: JsonField<Long> = JsonMissing.of(),
@@ -1040,7 +1040,7 @@ private constructor(
 
         private var validated: Boolean = false
 
-        fun validate(): BetaMessageCreateBody = apply {
+        fun validate(): Body = apply {
             if (validated) {
                 return@apply
             }
@@ -1066,7 +1066,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [BetaMessageCreateBody]. */
+        /** A builder for [Body]. */
         class Builder internal constructor() {
 
             private var maxTokens: JsonField<Long>? = null
@@ -1083,19 +1083,19 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(betaMessageCreateBody: BetaMessageCreateBody) = apply {
-                maxTokens = betaMessageCreateBody.maxTokens
-                messages = betaMessageCreateBody.messages.map { it.toMutableList() }
-                model = betaMessageCreateBody.model
-                metadata = betaMessageCreateBody.metadata
-                stopSequences = betaMessageCreateBody.stopSequences.map { it.toMutableList() }
-                system = betaMessageCreateBody.system
-                temperature = betaMessageCreateBody.temperature
-                toolChoice = betaMessageCreateBody.toolChoice
-                tools = betaMessageCreateBody.tools.map { it.toMutableList() }
-                topK = betaMessageCreateBody.topK
-                topP = betaMessageCreateBody.topP
-                additionalProperties = betaMessageCreateBody.additionalProperties.toMutableMap()
+            internal fun from(body: Body) = apply {
+                maxTokens = body.maxTokens
+                messages = body.messages.map { it.toMutableList() }
+                model = body.model
+                metadata = body.metadata
+                stopSequences = body.stopSequences.map { it.toMutableList() }
+                system = body.system
+                temperature = body.temperature
+                toolChoice = body.toolChoice
+                tools = body.tools.map { it.toMutableList() }
+                topK = body.topK
+                topP = body.topP
+                additionalProperties = body.additionalProperties.toMutableMap()
             }
 
             /**
@@ -2713,8 +2713,8 @@ private constructor(
                 keys.forEach(::removeAdditionalProperty)
             }
 
-            fun build(): BetaMessageCreateBody =
-                BetaMessageCreateBody(
+            fun build(): Body =
+                Body(
                     checkRequired("maxTokens", maxTokens),
                     checkRequired("messages", messages).map { it.toImmutable() },
                     checkRequired("model", model),
@@ -2735,7 +2735,7 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is BetaMessageCreateBody && maxTokens == other.maxTokens && messages == other.messages && model == other.model && metadata == other.metadata && stopSequences == other.stopSequences && system == other.system && temperature == other.temperature && toolChoice == other.toolChoice && tools == other.tools && topK == other.topK && topP == other.topP && additionalProperties == other.additionalProperties /* spotless:on */
+            return /* spotless:off */ other is Body && maxTokens == other.maxTokens && messages == other.messages && model == other.model && metadata == other.metadata && stopSequences == other.stopSequences && system == other.system && temperature == other.temperature && toolChoice == other.toolChoice && tools == other.tools && topK == other.topK && topP == other.topP && additionalProperties == other.additionalProperties /* spotless:on */
         }
 
         /* spotless:off */
@@ -2745,7 +2745,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "BetaMessageCreateBody{maxTokens=$maxTokens, messages=$messages, model=$model, metadata=$metadata, stopSequences=$stopSequences, system=$system, temperature=$temperature, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, metadata=$metadata, stopSequences=$stopSequences, system=$system, temperature=$temperature, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
     }
 
     fun toBuilder() = Builder().from(this)
@@ -2760,7 +2760,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var betas: MutableList<AnthropicBeta>? = null
-        private var body: BetaMessageCreateBody.Builder = BetaMessageCreateBody.builder()
+        private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 

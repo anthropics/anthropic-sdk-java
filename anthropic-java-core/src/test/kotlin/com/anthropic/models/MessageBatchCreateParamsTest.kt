@@ -161,7 +161,9 @@ class MessageBatchCreateParamsTest {
                         .build()
                 )
                 .build()
+
         val body = params._body()
+
         assertThat(body).isNotNull
         assertThat(body.requests())
             .isEqualTo(
@@ -256,7 +258,9 @@ class MessageBatchCreateParamsTest {
                         .build()
                 )
                 .build()
+
         val body = params._body()
+
         assertThat(body).isNotNull
         assertThat(body.requests())
             .isEqualTo(
