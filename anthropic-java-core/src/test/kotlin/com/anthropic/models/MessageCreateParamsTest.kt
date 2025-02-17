@@ -129,7 +129,9 @@ class MessageCreateParamsTest {
                 .topK(5L)
                 .topP(0.7)
                 .build()
+
         val body = params._body()
+
         assertThat(body).isNotNull
         assertThat(body.maxTokens()).isEqualTo(1024L)
         assertThat(body.messages())
@@ -214,7 +216,9 @@ class MessageCreateParamsTest {
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .build()
+
         val body = params._body()
+
         assertThat(body).isNotNull
         assertThat(body.maxTokens()).isEqualTo(1024L)
         assertThat(body.messages())

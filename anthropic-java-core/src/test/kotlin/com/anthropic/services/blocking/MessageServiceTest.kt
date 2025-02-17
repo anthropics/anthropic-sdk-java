@@ -185,7 +185,7 @@ class MessageServiceTest {
         val messageTokensCount =
             messageService.countTokens(
                 MessageCountTokensParams.builder()
-                    .addUserMessage("string")
+                    .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                     .systemOfTextBlockParams(
                         listOf(

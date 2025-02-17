@@ -41,7 +41,7 @@ import java.util.Optional
 class BetaMessageBatchCreateParams
 private constructor(
     private val betas: List<AnthropicBeta>?,
-    private val body: BetaMessageBatchCreateBody,
+    private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -65,7 +65,7 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    @JvmSynthetic internal fun _body(): BetaMessageBatchCreateBody = body
+    @JvmSynthetic internal fun _body(): Body = body
 
     override fun _headers(): Headers {
         val headers = Headers.builder()
@@ -77,9 +77,9 @@ private constructor(
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     @NoAutoDetect
-    class BetaMessageBatchCreateBody
+    class Body
     @JsonCreator
-    internal constructor(
+    private constructor(
         @JsonProperty("requests")
         @ExcludeMissing
         private val requests: JsonField<List<Request>> = JsonMissing.of(),
@@ -107,7 +107,7 @@ private constructor(
 
         private var validated: Boolean = false
 
-        fun validate(): BetaMessageBatchCreateBody = apply {
+        fun validate(): Body = apply {
             if (validated) {
                 return@apply
             }
@@ -123,17 +123,16 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [BetaMessageBatchCreateBody]. */
+        /** A builder for [Body]. */
         class Builder internal constructor() {
 
             private var requests: JsonField<MutableList<Request>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(betaMessageBatchCreateBody: BetaMessageBatchCreateBody) = apply {
-                requests = betaMessageBatchCreateBody.requests.map { it.toMutableList() }
-                additionalProperties =
-                    betaMessageBatchCreateBody.additionalProperties.toMutableMap()
+            internal fun from(body: Body) = apply {
+                requests = body.requests.map { it.toMutableList() }
+                additionalProperties = body.additionalProperties.toMutableMap()
             }
 
             /**
@@ -186,8 +185,8 @@ private constructor(
                 keys.forEach(::removeAdditionalProperty)
             }
 
-            fun build(): BetaMessageBatchCreateBody =
-                BetaMessageBatchCreateBody(
+            fun build(): Body =
+                Body(
                     checkRequired("requests", requests).map { it.toImmutable() },
                     additionalProperties.toImmutable(),
                 )
@@ -198,7 +197,7 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is BetaMessageBatchCreateBody && requests == other.requests && additionalProperties == other.additionalProperties /* spotless:on */
+            return /* spotless:off */ other is Body && requests == other.requests && additionalProperties == other.additionalProperties /* spotless:on */
         }
 
         /* spotless:off */
@@ -208,7 +207,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "BetaMessageBatchCreateBody{requests=$requests, additionalProperties=$additionalProperties}"
+            "Body{requests=$requests, additionalProperties=$additionalProperties}"
     }
 
     fun toBuilder() = Builder().from(this)
@@ -223,7 +222,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var betas: MutableList<AnthropicBeta>? = null
-        private var body: BetaMessageBatchCreateBody.Builder = BetaMessageBatchCreateBody.builder()
+        private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
