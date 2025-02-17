@@ -460,11 +460,8 @@ private constructor(
     }
 
     /** Processing status of the Message Batch. */
-    class ProcessingStatus
-    @JsonCreator
-    private constructor(
-        private val value: JsonField<String>,
-    ) : Enum {
+    class ProcessingStatus @JsonCreator private constructor(private val value: JsonField<String>) :
+        Enum {
 
         /**
          * Returns this class instance's raw value.

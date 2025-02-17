@@ -99,11 +99,7 @@ private constructor(
         }
 
         fun build(): TextDelta =
-            TextDelta(
-                checkRequired("text", text),
-                type,
-                additionalProperties.toImmutable(),
-            )
+            TextDelta(checkRequired("text", text), type, additionalProperties.toImmutable())
     }
 
     override fun equals(other: Any?): Boolean {

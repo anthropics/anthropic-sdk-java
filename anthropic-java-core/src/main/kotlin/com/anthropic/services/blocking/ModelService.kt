@@ -21,7 +21,7 @@ interface ModelService {
     @JvmOverloads
     fun retrieve(
         params: ModelRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): ModelInfo
 
     /**
@@ -33,6 +33,6 @@ interface ModelService {
     @JvmOverloads
     fun list(
         params: ModelListParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): ModelListPage
 }

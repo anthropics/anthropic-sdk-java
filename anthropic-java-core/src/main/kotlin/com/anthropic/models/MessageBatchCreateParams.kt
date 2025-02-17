@@ -179,7 +179,7 @@ private constructor(
             fun build(): MessageBatchCreateBody =
                 MessageBatchCreateBody(
                     checkRequired("requests", requests).map { it.toImmutable() },
-                    additionalProperties.toImmutable()
+                    additionalProperties.toImmutable(),
                 )
         }
 
@@ -2631,7 +2631,7 @@ private constructor(
                     override fun serialize(
                         value: System,
                         generator: JsonGenerator,
-                        provider: SerializerProvider
+                        provider: SerializerProvider,
                     ) {
                         when {
                             value.string != null -> generator.writeObject(value.string)

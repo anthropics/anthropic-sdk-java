@@ -216,7 +216,7 @@ private constructor(
         override fun serialize(
             value: MessageBatchResult,
             generator: JsonGenerator,
-            provider: SerializerProvider
+            provider: SerializerProvider,
         ) {
             when {
                 value.succeeded != null -> generator.writeObject(value.succeeded)

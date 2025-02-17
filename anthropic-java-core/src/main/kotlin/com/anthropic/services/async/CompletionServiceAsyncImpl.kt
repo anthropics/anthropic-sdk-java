@@ -25,10 +25,8 @@ import com.anthropic.models.CompletionCreateParams
 import java.time.Duration
 import java.util.concurrent.CompletableFuture
 
-class CompletionServiceAsyncImpl
-internal constructor(
-    private val clientOptions: ClientOptions,
-) : CompletionServiceAsync {
+class CompletionServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
+    CompletionServiceAsync {
 
     private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
 
@@ -47,7 +45,7 @@ internal constructor(
      */
     override fun create(
         params: CompletionCreateParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<Completion> {
         val request =
             HttpRequest.builder()
@@ -62,7 +60,7 @@ internal constructor(
                     it,
                     requestOptions.applyDefaults(
                         RequestOptions.builder().timeout(Duration.ofMillis(600000)).build()
-                    )
+                    ),
                 )
             }
             .thenApply { response ->
@@ -91,7 +89,7 @@ internal constructor(
      */
     override fun createStreaming(
         params: CompletionCreateParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): AsyncStreamResponse<Completion> {
         val request =
             HttpRequest.builder()
@@ -104,7 +102,7 @@ internal constructor(
                             ._body()
                             .toBuilder()
                             .putAdditionalProperty("stream", JsonValue.from(true))
-                            .build()
+                            .build(),
                     )
                 )
                 .build()
@@ -115,7 +113,7 @@ internal constructor(
                     it,
                     requestOptions.applyDefaults(
                         RequestOptions.builder().timeout(Duration.ofMillis(600000)).build()
-                    )
+                    ),
                 )
             }
             .thenApply { response ->

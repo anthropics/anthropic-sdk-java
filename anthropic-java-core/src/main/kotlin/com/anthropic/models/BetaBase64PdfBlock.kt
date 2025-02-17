@@ -390,7 +390,7 @@ private constructor(
             override fun serialize(
                 value: Source,
                 generator: JsonGenerator,
-                provider: SerializerProvider
+                provider: SerializerProvider,
             ) {
                 when {
                     value.betaBase64Pdf != null -> generator.writeObject(value.betaBase64Pdf)

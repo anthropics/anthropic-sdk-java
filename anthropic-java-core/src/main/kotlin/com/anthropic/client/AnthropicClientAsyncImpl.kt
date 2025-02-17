@@ -13,9 +13,7 @@ import com.anthropic.services.async.MessageServiceAsyncImpl
 import com.anthropic.services.async.ModelServiceAsync
 import com.anthropic.services.async.ModelServiceAsyncImpl
 
-class AnthropicClientAsyncImpl(
-    private val clientOptions: ClientOptions,
-) : AnthropicClientAsync {
+class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : AnthropicClientAsync {
 
     private val clientOptionsWithUserAgent =
         if (clientOptions.headers.names().contains("User-Agent")) clientOptions

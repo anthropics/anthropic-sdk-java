@@ -30,10 +30,8 @@ import com.anthropic.services.async.beta.messages.BatchServiceAsyncImpl
 import java.time.Duration
 import java.util.concurrent.CompletableFuture
 
-class MessageServiceAsyncImpl
-internal constructor(
-    private val clientOptions: ClientOptions,
-) : MessageServiceAsync {
+class MessageServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
+    MessageServiceAsync {
 
     private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
 
@@ -52,7 +50,7 @@ internal constructor(
      */
     override fun create(
         params: BetaMessageCreateParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<BetaMessage> {
         val request =
             HttpRequest.builder()
@@ -68,7 +66,7 @@ internal constructor(
                     it,
                     requestOptions.applyDefaults(
                         RequestOptions.builder().timeout(Duration.ofMillis(600000)).build()
-                    )
+                    ),
                 )
             }
             .thenApply { response ->
@@ -95,7 +93,7 @@ internal constructor(
      */
     override fun createStreaming(
         params: BetaMessageCreateParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): AsyncStreamResponse<BetaRawMessageStreamEvent> {
         val request =
             HttpRequest.builder()
@@ -109,7 +107,7 @@ internal constructor(
                             ._body()
                             .toBuilder()
                             .putAdditionalProperty("stream", JsonValue.from(true))
-                            .build()
+                            .build(),
                     )
                 )
                 .build()
@@ -120,7 +118,7 @@ internal constructor(
                     it,
                     requestOptions.applyDefaults(
                         RequestOptions.builder().timeout(Duration.ofMillis(600000)).build()
-                    )
+                    ),
                 )
             }
             .thenApply { response ->
@@ -148,7 +146,7 @@ internal constructor(
      */
     override fun countTokens(
         params: BetaMessageCountTokensParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<BetaMessageTokensCount> {
         val request =
             HttpRequest.builder()

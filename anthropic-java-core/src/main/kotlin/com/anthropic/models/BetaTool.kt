@@ -326,11 +326,7 @@ private constructor(
             }
 
             fun build(): InputSchema =
-                InputSchema(
-                    type,
-                    properties,
-                    additionalProperties.toImmutable(),
-                )
+                InputSchema(type, properties, additionalProperties.toImmutable())
         }
 
         override fun equals(other: Any?): Boolean {
@@ -351,11 +347,7 @@ private constructor(
             "InputSchema{type=$type, properties=$properties, additionalProperties=$additionalProperties}"
     }
 
-    class Type
-    @JsonCreator
-    private constructor(
-        private val value: JsonField<String>,
-    ) : Enum {
+    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -376,7 +368,7 @@ private constructor(
 
         /** An enum containing [Type]'s known values. */
         enum class Known {
-            CUSTOM,
+            CUSTOM
         }
 
         /**

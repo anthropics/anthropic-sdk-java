@@ -299,7 +299,7 @@ private constructor(
             override fun serialize(
                 value: Content,
                 generator: JsonGenerator,
-                provider: SerializerProvider
+                provider: SerializerProvider,
             ) {
                 when {
                     value.string != null -> generator.writeObject(value.string)
@@ -447,7 +447,7 @@ private constructor(
                 override fun serialize(
                     value: Block,
                     generator: JsonGenerator,
-                    provider: SerializerProvider
+                    provider: SerializerProvider,
                 ) {
                     when {
                         value.textBlockParam != null -> generator.writeObject(value.textBlockParam)

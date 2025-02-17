@@ -27,7 +27,7 @@ interface MessageService {
     @JvmOverloads
     fun create(
         params: MessageCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): Message
 
     /**
@@ -40,7 +40,7 @@ interface MessageService {
     @MustBeClosed
     fun createStreaming(
         params: MessageCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): StreamResponse<RawMessageStreamEvent>
 
     /**
@@ -52,6 +52,6 @@ interface MessageService {
     @JvmOverloads
     fun countTokens(
         params: MessageCountTokensParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): MessageTokensCount
 }

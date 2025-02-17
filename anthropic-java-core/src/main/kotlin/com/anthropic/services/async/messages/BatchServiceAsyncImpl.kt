@@ -30,10 +30,8 @@ import com.anthropic.models.MessageBatchResultsParams
 import com.anthropic.models.MessageBatchRetrieveParams
 import java.util.concurrent.CompletableFuture
 
-class BatchServiceAsyncImpl
-internal constructor(
-    private val clientOptions: ClientOptions,
-) : BatchServiceAsync {
+class BatchServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
+    BatchServiceAsync {
 
     private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
 
@@ -49,7 +47,7 @@ internal constructor(
      */
     override fun create(
         params: MessageBatchCreateParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<MessageBatch> {
         val request =
             HttpRequest.builder()
@@ -80,7 +78,7 @@ internal constructor(
      */
     override fun retrieve(
         params: MessageBatchRetrieveParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<MessageBatch> {
         val request =
             HttpRequest.builder()
@@ -111,7 +109,7 @@ internal constructor(
      */
     override fun list(
         params: MessageBatchListParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<MessageBatchListPageAsync> {
         val request =
             HttpRequest.builder()
@@ -144,7 +142,7 @@ internal constructor(
      */
     override fun delete(
         params: MessageBatchDeleteParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<DeletedMessageBatch> {
         val request =
             HttpRequest.builder()
@@ -180,7 +178,7 @@ internal constructor(
      */
     override fun cancel(
         params: MessageBatchCancelParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<MessageBatch> {
         val request =
             HttpRequest.builder()
@@ -215,7 +213,7 @@ internal constructor(
      */
     override fun resultsStreaming(
         params: MessageBatchResultsParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): AsyncStreamResponse<MessageBatchIndividualResponse> {
         val request =
             HttpRequest.builder()

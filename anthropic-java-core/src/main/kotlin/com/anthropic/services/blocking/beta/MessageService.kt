@@ -27,7 +27,7 @@ interface MessageService {
     @JvmOverloads
     fun create(
         params: BetaMessageCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaMessage
 
     /**
@@ -40,7 +40,7 @@ interface MessageService {
     @MustBeClosed
     fun createStreaming(
         params: BetaMessageCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): StreamResponse<BetaRawMessageStreamEvent>
 
     /**
@@ -52,6 +52,6 @@ interface MessageService {
     @JvmOverloads
     fun countTokens(
         params: BetaMessageCountTokensParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaMessageTokensCount
 }
