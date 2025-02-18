@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.AwsSessionCredentials
+import software.amazon.awssdk.regions.Region
 
 /**
  * Unit tests for the [BedrockBackendAdapter] class.
@@ -121,10 +122,38 @@ internal class BedrockBackendAdapterTest {
     }
 
     @Test
+    fun awsCredentialsExplicitWithoutRegion() {
+        assertThatThrownBy {
+            BedrockBackendAdapter.builder()
+                .awsCredentials(AwsBasicCredentials.create(
+                    AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY))
+                .build()
+        }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessageContaining("region")
+    }
+
+    @Test
+    fun awsCredentialsExplicitWithRegion() {
+        val adapter = BedrockBackendAdapter.builder()
+            .awsCredentials(AwsBasicCredentials.create(
+                AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY))
+            .region(Region.EU_WEST_1)
+            .build()
+
+        assertThat(adapter.awsCredentials.accessKeyId())
+            .isEqualTo(AWS_ACCESS_KEY_ID)
+        assertThat(adapter.awsCredentials.secretAccessKey())
+            .isEqualTo(AWS_SECRET_ACCESS_KEY)
+        assertThat(adapter.region).isEqualTo(Region.EU_WEST_1)
+    }
+
+    @Test
     fun regionMissing() {
         initEnv(true, true, true, false)
         // This test runs slowly for some reason. Perhaps there is a long chain
-        // of fall-backs in the region provider used in the class under test.
+        // of fall-backs in the region provider used in the class under test, or
+        // some step in the chain performs some slow network operation.
         assertThatThrownBy { BedrockBackendAdapter.fromEnv() }
             .isExactlyInstanceOf(AnthropicException::class.java)
     }
@@ -156,6 +185,17 @@ internal class BedrockBackendAdapterTest {
         initEnv()
         assertThatThrownBy { BedrockBackendAdapter.builder().build() }
             .isExactlyInstanceOf(IllegalStateException::class.java)
+    }
+
+    @Test
+    fun regionExplicitWithoutAwsCredentials() {
+        assertThatThrownBy {
+            BedrockBackendAdapter.builder()
+                .region(Region.US_EAST_1)
+                .build()
+        }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessageContaining("awsCredentials")
     }
 
     @Test
