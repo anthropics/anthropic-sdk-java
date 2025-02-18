@@ -1,6 +1,6 @@
 package com.anthropic.example;
 
-import com.anthropic.bedrock.backends.BedrockBackendAdapter;
+import com.anthropic.bedrock.backends.BedrockBackend;
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.models.MessageCreateParams;
@@ -38,7 +38,7 @@ public final class BedrockMessagesExample {
 
     public static void main(String[] args) throws Exception {
         AnthropicClient client = AnthropicOkHttpClient.builder()
-                .backendAdapter(BedrockBackendAdapter.fromEnv())
+                .backend(BedrockBackend.fromEnv())
                 .build();
 
         MessageCreateParams createParams = MessageCreateParams.builder()

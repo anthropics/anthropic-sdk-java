@@ -1,13 +1,10 @@
 package com.anthropic.example;
 
-import com.anthropic.bedrock.backends.BedrockBackendAdapter;
-import com.anthropic.client.AnthropicClient;
+import com.anthropic.bedrock.backends.BedrockBackend;
 import com.anthropic.client.AnthropicClientAsync;
-import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync;
 import com.anthropic.core.http.AsyncStreamResponse;
 import com.anthropic.models.MessageCreateParams;
-import com.anthropic.models.Model;
 import com.anthropic.models.RawMessageStreamEvent;
 
 import java.util.Optional;
@@ -43,7 +40,7 @@ public final class BedrockMessagesStreamingAsyncExample {
 
     public static void main(String[] args) {
         AnthropicClientAsync client = AnthropicOkHttpClientAsync.builder()
-                .backendAdapter(BedrockBackendAdapter.fromEnv())
+                .backend(BedrockBackend.fromEnv())
                 .build();
 
         MessageCreateParams createParams = MessageCreateParams.builder()

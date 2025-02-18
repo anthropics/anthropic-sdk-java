@@ -1,6 +1,6 @@
 package com.anthropic.example;
 
-import com.anthropic.bedrock.backends.BedrockBackendAdapter;
+import com.anthropic.bedrock.backends.BedrockBackend;
 import com.anthropic.client.AnthropicClientAsync;
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync;
 import com.anthropic.models.MessageCreateParams;
@@ -41,11 +41,10 @@ public final class BedrockMessagesAsyncExample {
                 System.getenv("AWS_SECRET_ACCESS_KEY"));
 
         AnthropicClientAsync client = AnthropicOkHttpClientAsync.builder()
-                .backendAdapter(
-                        BedrockBackendAdapter.builder()
-                                .awsCredentials(awsCredentials)
-                                .region(Region.US_EAST_1)
-                                .build())
+                .backend(BedrockBackend.builder()
+                        .awsCredentials(awsCredentials)
+                        .region(Region.US_EAST_1)
+                        .build())
                 .build();
 
         MessageCreateParams createParams = MessageCreateParams.builder()
