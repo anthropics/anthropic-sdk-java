@@ -2,7 +2,7 @@
 
 package com.anthropic.client.okhttp
 
-import com.anthropic.backends.BackendAdapter
+import com.anthropic.backends.Backend
 import com.anthropic.client.AnthropicClientAsync
 import com.anthropic.client.AnthropicClientAsyncImpl
 import com.anthropic.core.ClientOptions
@@ -34,11 +34,11 @@ class AnthropicOkHttpClientAsync private constructor() {
         private var proxy: Proxy? = null
 
         /**
-         * The optional backend adapter that may be used for authentication and
-         * authorization, request processing and response handling when using a
-         * backend service other than the default Anthropic service.
+         * The optional backend that may be used for authentication and
+         * authorization, request processing and response handling when using
+         * a backend service other than the default Anthropic service.
          */
-        private var backendAdapter: BackendAdapter? = null
+        private var backend: Backend? = null
 
         fun baseUrl(baseUrl: String) = apply {
             clientOptions.baseUrl(baseUrl)
@@ -152,18 +152,15 @@ class AnthropicOkHttpClientAsync private constructor() {
         fun authToken(authToken: Optional<String>) = authToken(authToken.orElse(null))
 
         /**
-         * Sets the backend adapter to be used for the backend service hosting
-         * Anthropic AI models. Implementations of the [BackendAdapter]
-         * interface can define the required credentials, prepare requests and
-         * handle responses for different backend services.
+         * Sets the backend to be used for the backend service hosting Anthropic
+         * AI models. Implementations of the [Backend] interface can define the
+         * required credentials, prepare requests and handle responses for
+         * different backend services.
          *
-         * @param backendAdapter The backend adapter to be used. If connecting
-         *     to the default Anthropic backend service, an adapter is not
-         *     required.
+         * @param backend The backend to be used. If connecting to the default
+         *     Anthropic backend service, a custom backend is not required.
          */
-        fun backendAdapter(backendAdapter: BackendAdapter?) = apply {
-            this.backendAdapter = backendAdapter
-        }
+        fun backend(backend: Backend?) = apply { this.backend = backend }
 
         fun fromEnv() = apply { clientOptions.fromEnv() }
 
@@ -175,7 +172,7 @@ class AnthropicOkHttpClientAsync private constructor() {
                             .baseUrl(baseUrl)
                             .timeout(timeout)
                             .proxy(proxy)
-                            .backendAdapter(backendAdapter)
+                            .backend(backend)
                             .build()
                     )
                     .build()

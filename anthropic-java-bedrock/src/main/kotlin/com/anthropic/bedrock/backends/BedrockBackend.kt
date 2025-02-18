@@ -1,7 +1,7 @@
 package com.anthropic.bedrock.backends
 
-import com.anthropic.backends.BackendAdapter
-import com.anthropic.bedrock.backends.BedrockBackendAdapter.Builder
+import com.anthropic.backends.Backend
+import com.anthropic.bedrock.backends.BedrockBackend.Builder
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpRequest
@@ -30,9 +30,9 @@ import software.amazon.awssdk.regions.providers.DefaultAwsRegionProviderChain
 import software.amazon.eventstream.MessageDecoder
 
 /**
- * An adapter for the Amazon Bedrock backend service that manages the AWS
- * credentials required to access an Anthropic AI model on Bedrock and adapts
- * requests and responses to Bedrock's requirements.
+ * The Amazon Bedrock backend that manages the AWS credentials required to
+ * access an Anthropic AI model on the Bedrock service and adapts requests and
+ * responses to Bedrock's requirements.
  *
  * Amazon Bedrock requires cryptographically-signed requests using credentials
  * issued by AWS. These can be provided via system properties, environment
@@ -42,7 +42,7 @@ import software.amazon.eventstream.MessageDecoder
  * [Builder.awsCredentials] and [Builder.region] should an alternative method
  * of resolution be required.
  */
-class BedrockBackendAdapter private constructor(
+class BedrockBackend private constructor(
     /**
      * The AWS credentials required to access the Bedrock service.
      */
@@ -52,11 +52,12 @@ class BedrockBackendAdapter private constructor(
      * The name of the AWS region hosting the Bedrock service.
      */
     @get:JvmName("region")  val region: Region,
-) : BackendAdapter {
+) : Backend {
 
     /**
      * A mapper for serializing and deserializing JSON data. For efficiency,
-     * this is created once and then reused for the life of this instance.
+     * this is created once and then reused for the life of this instance. The
+     * instance is thread-safe.
      */
     private val jsonMapper = jsonMapper()
 
@@ -120,23 +121,25 @@ class BedrockBackendAdapter private constructor(
 
         /**
          * Creates a new builder for configuring and creating a new instance of
-         * [BedrockBackendAdapter].
+         * [BedrockBackend].
          */
         @JvmStatic fun builder() = Builder()
 
         /**
-         * Creates new [BedrockBackendAdapter] with credentials resolved from
+         * Creates new [BedrockBackend] with credentials resolved from
          * the environment or configuration files.
          *
          * This is a convenience method that is the equivalent of calling:
          *
          * ```
-         * BedrockBackendAdapter.builder().fromEnv().build()
+         * BedrockBackend.builder().fromEnv().build()
          * ```
+         *
+         * See [Builder.fromEnv] for more details.
          *
          * @throws AnthropicException See [Builder.build] for details.
          */
-        @JvmStatic fun fromEnv(): BedrockBackendAdapter {
+        @JvmStatic fun fromEnv(): BedrockBackend {
             return builder().fromEnv().build()
         }
 
@@ -468,14 +471,13 @@ class BedrockBackendAdapter private constructor(
     }
 
     /**
-     * A builder for a [BedrockBackendAdapter] used to connect an Anthropic
-     * client to an Amazon Bedrock backend service.
+     * A builder for a [BedrockBackend] used to connect an Anthropic client to
+     * an Amazon Bedrock backend service.
      *
      * The AWS credentials and region can be extracted from the environment and
      * set on the builder by calling [fromEnv] before calling [build] to create
-     * the [BedrockBackendAdapter]. Alternatively, set the AWS credentials and
-     * region explicitly via [awsCredentials] and [region] before calling
-     * [build].
+     * the [BedrockBackend]. Alternatively, set the AWS credentials and region
+     * explicitly via [awsCredentials] and [region] before calling [build].
      */
     class Builder internal constructor() {
         /**
@@ -489,8 +491,8 @@ class BedrockBackendAdapter private constructor(
         private var region: Region? = null
 
         /**
-         * Creates new [BedrockBackendAdapter] with credential values and the
-         * AWS region resolved automatically. Sources for the values may include
+         * Creates new [BedrockBackend] with credential values and the AWS
+         * region resolved automatically. Sources for the values may include
          * system properties, environment variables, AWS CLI configuration
          * files, AWS SSO resources, and more.
          *
@@ -576,7 +578,7 @@ class BedrockBackendAdapter private constructor(
         }
 
         /**
-         * Builds the new [BedrockBackendAdapter] from the data provided to the
+         * Builds the new [BedrockBackend] from the data provided to the
          * builder.
          *
          * @throws IllegalStateException If the required AWS credentials and
@@ -584,7 +586,7 @@ class BedrockBackendAdapter private constructor(
          *     [fromEnv]; or, alternatively, have not been passed explicitly by
          *     calling [awsCredentials] or [region].
          */
-        fun build(): BedrockBackendAdapter = BedrockBackendAdapter(
+        fun build(): BedrockBackend = BedrockBackend(
             checkRequired("awsCredentials", awsCredentials),
             checkRequired("region", region),
         )

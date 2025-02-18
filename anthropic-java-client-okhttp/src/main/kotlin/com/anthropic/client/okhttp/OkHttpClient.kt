@@ -1,6 +1,6 @@
 package com.anthropic.client.okhttp
 
-import com.anthropic.backends.BackendAdapter
+import com.anthropic.backends.Backend
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
@@ -33,27 +33,26 @@ class OkHttpClient private constructor(
     private val baseUrl: HttpUrl,
 
     /**
-     * [BackendAdapter] (optional) that may be required to authenticate and
-     * authorize requests to an Anthropic service or adapt requests and
-     * responses from different backends to the default Anthropic API.
+     * [Backend] (optional) that may be required to authenticate and authorize
+     * requests to an Anthropic service or adapt requests and responses from
+     * different backends to the default Anthropic API.
      */
-    private val backendAdapter: BackendAdapter?)
+    private val backend: Backend?)
     : HttpClient {
 
     override fun execute(
         request: HttpRequest,
         requestOptions: RequestOptions,
     ): HttpResponse {
-        val preparedRequest = backendAdapter?.prepareRequest(request) ?: request
+        val preparedRequest = backend?.prepareRequest(request) ?: request
         val signRequest = preparedRequest.resolveUrl()
-        val signedRequest =
-            backendAdapter?.signRequest(signRequest) ?: signRequest
+        val signedRequest = backend?.signRequest(signRequest) ?: signRequest
         val call = newCall(signedRequest, requestOptions)
 
         return try {
             val response = call.execute().toResponse()
 
-            backendAdapter?.prepareResponse(response) ?: response
+            backend?.prepareResponse(response) ?: response
         } catch (e: IOException) {
             throw AnthropicIoException("Request failed", e)
         } finally {
@@ -65,10 +64,9 @@ class OkHttpClient private constructor(
         request: HttpRequest,
         requestOptions: RequestOptions,
     ): CompletableFuture<HttpResponse> {
-        val preparedRequest = backendAdapter?.prepareRequest(request) ?: request
+        val preparedRequest = backend?.prepareRequest(request) ?: request
         val signRequest = preparedRequest.resolveUrl()
-        val signedRequest =
-            backendAdapter?.signRequest(signRequest) ?: signRequest
+        val signedRequest = backend?.signRequest(signRequest) ?: signRequest
         val future = CompletableFuture<HttpResponse>()
 
         signedRequest.body?.run { future.whenComplete { _, _ -> close() } }
@@ -80,7 +78,7 @@ class OkHttpClient private constructor(
                         val httpResponse = response.toResponse()
 
                         future.complete(
-                            backendAdapter?.prepareResponse(httpResponse)
+                            backend?.prepareResponse(httpResponse)
                                 ?: httpResponse)
                     }
 
@@ -184,7 +182,7 @@ class OkHttpClient private constructor(
         }
 
         val builder: HttpUrl.Builder =
-            backendAdapter?.baseUrl()?.toHttpUrl()?.newBuilder()
+            backend?.baseUrl()?.toHttpUrl()?.newBuilder()
                 ?: baseUrl.newBuilder()
 
         pathSegments.forEach(builder::addPathSegment)
@@ -242,10 +240,10 @@ class OkHttpClient private constructor(
         private var proxy: Proxy? = null
 
         /**
-         * [BackendAdapter] that may be required to authenticate and authorize
+         * [Backend] that may be required to authenticate and authorize
          * requests to an Anthropic service running on a different backend.
          */
-        private var backendAdapter: BackendAdapter? = null
+        private var backend: Backend? = null
 
         fun baseUrl(baseUrl: String) = apply { this.baseUrl = baseUrl.toHttpUrl() }
 
@@ -254,18 +252,15 @@ class OkHttpClient private constructor(
         fun proxy(proxy: Proxy?) = apply { this.proxy = proxy }
 
         /**
-         * Sets the adapter to be used to manage credentials, prepare requests
+         * Sets the backend to be used to manage credentials, prepare requests
          * and handle responses to an Anthropic model running on an alternative
-         * backend service. Implementations of the [BackendAdapter] interface
-         * can define the required behavior for a specific backend service.
+         * backend service. Implementations of the [Backend] interface can
+         * define the required behavior for a specific backend service.
          *
-         * @param backendAdapter The backend adapter to be used. If connecting
-         *     to the default Anthropic backend service, an adapter is not
-         *     required.
+         * @param backend The backend to be used. If connecting to the default
+         *     Anthropic backend service, a custom backend is not required.
          */
-        fun backendAdapter(backendAdapter: BackendAdapter?) = apply {
-            this.backendAdapter = backendAdapter
-        }
+        fun backend(backend: Backend?) = apply { this.backend = backend }
 
         fun build(): OkHttpClient =
             OkHttpClient(
@@ -277,7 +272,7 @@ class OkHttpClient private constructor(
                     .proxy(proxy)
                     .build(),
                 checkRequired("baseUrl", baseUrl),
-                backendAdapter,
+                backend,
             )
     }
 }

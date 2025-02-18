@@ -10,12 +10,12 @@ import com.anthropic.core.http.HttpResponse
  * Implementations of this interface may define the information and handling
  * appropriate for each backend service.
  */
-interface BackendAdapter {
+interface Backend {
     /**
      * Gets the backend service's base URL (endpoint).
      *
      * @return The backend base URL, the endpoint identifying the service that
-     *     can be accessed by this adapter..
+     *     will be accessed by this backend.
      */
     fun baseUrl(): String
 
@@ -39,14 +39,15 @@ interface BackendAdapter {
     /**
      * Signs the given request and returns the new signed request.
      *
-     * In addition to adding signature headers, the request may be modified in
-     * other ways to adapt it to the requirements of the backend service. For
-     * example, there may be changes to the URL path segments, non-signature
-     * headers, or other elements of the request.
+     * In addition to adding signature headers or authorization headers, the
+     * request may be modified in other ways to adapt it to the requirements of
+     * the backend service. For example, there may be changes to the URL path
+     * segments, non-signature headers, or other elements of the request.
+     * However, most such changes should be performed by [prepareRequest].
      *
-     * Where a backend does not require request signatures or other changes to
-     * the request, the given [HttpRequest] may be returned unchanged. This is
-     * the behavior of the default implementation.
+     * Where a backend does not require request signatures or other related
+     * changes to the request, the given [HttpRequest] may be returned
+     * unchanged. This is the behavior of the default implementation.
      *
      * @param request The request to be signed. This will not be modified; if
      *     any changes are required, a modified copy will be returned.
@@ -63,7 +64,7 @@ interface BackendAdapter {
      * Prepares the response returned by the backend service. This allows
      * changes to be made to the response to adapt it for backend services other
      * than the default Anthropic backend service. The adaptations make the
-     * response appear to come from that Anthropic backend.
+     * response appear to come from that default Anthropic backend.
      *
      * If no changes are required, the given response can be returned unchanged,
      * which is the behavior of the default implementation of this method.
