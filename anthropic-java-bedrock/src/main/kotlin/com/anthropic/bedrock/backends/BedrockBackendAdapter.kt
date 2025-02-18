@@ -36,8 +36,11 @@ import software.amazon.eventstream.MessageDecoder
  *
  * Amazon Bedrock requires cryptographically-signed requests using credentials
  * issued by AWS. These can be provided via system properties, environment
- * variables, or other AWS facilities. They can be resolved by calling
- * [Builder.fromEnv].
+ * variables, or other AWS facilities. They can be resolved automatically by
+ * the default AWS provider chains by calling [Builder.fromEnv]. Alternatively,
+ * the AWS credentials and region can be resolved independently and passed to
+ * [Builder.awsCredentials] and [Builder.region] should an alternative method
+ * of resolution be required.
  */
 class BedrockBackendAdapter private constructor(
     /**
@@ -118,8 +121,6 @@ class BedrockBackendAdapter private constructor(
         /**
          * Creates a new builder for configuring and creating a new instance of
          * [BedrockBackendAdapter].
-         *
-         * @return The new builder.
          */
         @JvmStatic fun builder() = Builder()
 
@@ -467,11 +468,14 @@ class BedrockBackendAdapter private constructor(
     }
 
     /**
-     * A builder for [BedrockBackendAdapter].
+     * A builder for a [BedrockBackendAdapter] used to connect an Anthropic
+     * client to an Amazon Bedrock backend service.
      *
-     * The credentials can be extracted from the environment and set on the
-     * builder by calling [fromEnv] before calling [build] to create the
-     * [BedrockBackendAdapter].
+     * The AWS credentials and region can be extracted from the environment and
+     * set on the builder by calling [fromEnv] before calling [build] to create
+     * the [BedrockBackendAdapter]. Alternatively, set the AWS credentials and
+     * region explicitly via [awsCredentials] and [region] before calling
+     * [build].
      */
     class Builder internal constructor() {
         /**
@@ -491,7 +495,7 @@ class BedrockBackendAdapter private constructor(
          * files, AWS SSO resources, and more.
          *
          * If available from the environment, this method will identify the
-         * following AWS credentials:
+         * following:
          *
          *  * Access key ID
          *  * Secret access key
@@ -500,8 +504,22 @@ class BedrockBackendAdapter private constructor(
          *
          * The session token is optional, but the other credentials *must* all
          * be set in the environment or in the appropriate AWS configuration
-         * files, or an error will occur. See the AWS Bedrock documentation for
-         * details on how to configure these credentials.
+         * files, or an error will occur. For the credentials, resolution
+         * follows the default AWS credentials provider chain. For the region,
+         * it follows the default AWS region provider chain. See the AWS Bedrock
+         * documentation for details on how to configure the credentials and
+         * region.
+         *
+         * Alternatively, set the AWS credentials and region explicitly using
+         * the [awsCredentials] and [region] methods. In that case, there is no
+         * need to call [fromEnv]. Instead, resolve or create the AWS
+         * credentials and set them on the builder along with the region before
+         * calling [build].
+         *
+         * If [fromEnv] is called after calling either [awsCredentials] or
+         * [region], it will override the values of _both_ of those properties.
+         * If either of the latter two methods is called after [fromEnv], each
+         * will override only that element resolved by [fromEnv].
          *
          * @throws AnthropicException If the access key ID, secret access key,
          *     or AWS region cannot be resolved from the environment.
@@ -523,11 +541,48 @@ class BedrockBackendAdapter private constructor(
         }
 
         /**
+         * Sets the AWS credentials to use to authenticate and authorize
+         * requests to the Bedrock service.
+         *
+         * Alternatively, use [fromEnv] to resolve the credentials automatically
+         * from the environment or local AWS configuration.
+         *
+         * If this method is called after [fromEnv] it will override any AWS
+         * credentials resolved by that method. If this method is called before
+         * [fromEnv], the latter will override the credentials passed here.
+         *
+         * @param awsCredentials The AWS credentials. See the AWS documentation
+         *     for details on how to configure and resolve or create AWS
+         *     credentials.
+         */
+        fun awsCredentials(awsCredentials: AwsCredentials) = apply {
+            this.awsCredentials = awsCredentials
+        }
+
+        /**
+         * Sets the AWS region hosting the Bedrock service.
+         *
+         * Alternatively, use [fromEnv] to resolve the region automatically from
+         * the environment or local AWS configuration.
+         *
+         * If this method is called after [fromEnv] it will override any AWS
+         * region resolved by that method. If this method is called before
+         * [fromEnv], the latter will override the region passed here.
+         *
+         * @param region The AWS region to be used.
+         */
+        fun region(region: Region) = apply {
+            this.region = region
+        }
+
+        /**
          * Builds the new [BedrockBackendAdapter] from the data provided to the
          * builder.
          *
-         * @throws IllegalStateException If the required credentials have not
-         *     been resolved from the environment.
+         * @throws IllegalStateException If the required AWS credentials and
+         *     AWS region have not been resolved from the environment by calling
+         *     [fromEnv]; or, alternatively, have not been passed explicitly by
+         *     calling [awsCredentials] or [region].
          */
         fun build(): BedrockBackendAdapter = BedrockBackendAdapter(
             checkRequired("awsCredentials", awsCredentials),
