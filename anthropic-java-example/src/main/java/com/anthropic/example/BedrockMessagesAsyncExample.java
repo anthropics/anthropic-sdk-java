@@ -4,6 +4,9 @@ import com.anthropic.bedrock.backends.BedrockBackendAdapter;
 import com.anthropic.client.AnthropicClientAsync;
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync;
 import com.anthropic.models.MessageCreateParams;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.regions.Region;
 
 /**
  * <p>
@@ -12,17 +15,15 @@ import com.anthropic.models.MessageCreateParams;
  * </p>
  * <p>
  * AWS credentials must be configured to access Amazon Bedrock. This example
- * resolves the required credentials from the environment. The credentials can
- * be in system properties, environment variables, AWS CLI configuration files,
- * an AWS SSO configuration, etc. See AWS documentation for details.
+ * sets the required credentials explicitly from a combination of environment
+ * variables and hard-coded values. Alternatively, these values can be resolved
+ * automatically. See {@link BedrockMessagesExample} for comparison.
  * </p>
  * <p>
- * With an Anthropic model deployed on a Bedrock service, it may be sufficient
- * to set the following environment variables to run this example:
+ * To run this example, set the following environment variables which will be
+ * accessed directly from the code (the region is hard-coded):
  * </p>
  * <ul>
- *   <li>{@code AWS_REGION}:
- *       The name of the AWS region hosting the service.</li>
  *   <li>{@code AWS_ACCESS_KEY_ID}:
  *       The AWS access key ID identifying the service user.</li>
  *   <li>{@code AWS_SECRET_ACCESS_KEY}:
@@ -35,8 +36,16 @@ public final class BedrockMessagesAsyncExample {
     private BedrockMessagesAsyncExample() {}
 
     public static void main(String[] args) throws Exception {
+        AwsCredentials awsCredentials = AwsBasicCredentials.create(
+                System.getenv("AWS_ACCESS_KEY_ID"),
+                System.getenv("AWS_SECRET_ACCESS_KEY"));
+
         AnthropicClientAsync client = AnthropicOkHttpClientAsync.builder()
-                .backendAdapter(BedrockBackendAdapter.fromEnv())
+                .backendAdapter(
+                        BedrockBackendAdapter.builder()
+                                .awsCredentials(awsCredentials)
+                                .region(Region.US_EAST_1)
+                                .build())
                 .build();
 
         MessageCreateParams createParams = MessageCreateParams.builder()
