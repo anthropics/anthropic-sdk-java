@@ -8,9 +8,11 @@ dependencies {
 
     // Elements of the Amazon AWS SDK for Java 2.0 providing low-level
     // operations such as credentials resolution and AWS SigV4 request signing.
-    // The versions of the AWS SDK modules are defined by the AWS SDK BOM.
-    implementation(platform("software.amazon.awssdk:bom:2.30.11"))
-    implementation("software.amazon.awssdk:auth")
+    // The versions of the AWS SDK modules are defined by the AWS SDK BOM. The
+    // BOM must be declared as an "api" dependency if any of its modules are
+    // declared as "api" dependencies.
+    api(platform("software.amazon.awssdk:bom:2.30.11"))
+    api("software.amazon.awssdk:auth")
     implementation("software.amazon.awssdk:http-client-spi")
 
     // Amazon AWS EventStream for parsing Bedrock streaming responses.

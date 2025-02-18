@@ -12,9 +12,11 @@ import com.anthropic.models.MessageCreateParams;
  * </p>
  * <p>
  * AWS credentials must be configured to access Amazon Bedrock. This example
- * resolves the required credentials from the environment. The credentials can
- * be in system properties, environment variables, AWS CLI configuration files,
- * an AWS SSO configuration, etc. See AWS documentation for details.
+ * resolves the required credentials automatically from the environment. The
+ * credentials can be in system properties, environment variables, AWS CLI
+ * configuration files, an AWS SSO configuration, etc. See AWS documentation
+ * for details. Alternatively, the credentials and region can be set manually
+ * from other sources. See {@link BedrockMessagesAsyncExample} for comparison.
  * </p>
  * <p>
  * With an Anthropic model deployed on a Bedrock service, it may be sufficient
