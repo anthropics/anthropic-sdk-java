@@ -723,11 +723,9 @@ internal class BedrockBackendAdapterTest {
     }
 
     /**
-     * Parses the given JSON data (in string form) to a JSON object model..
+     * Parses the given JSON data (in string form) to a JSON object model.
      *
      * @param jsonData The JSON data in string form.
-     *
-     * @return The JSON data as an object model.
      */
     private fun json(jsonData: String): ObjectNode {
         return ObjectMapper().readValue(jsonData, ObjectNode::class.java)
@@ -742,8 +740,6 @@ internal class BedrockBackendAdapterTest {
      *     occur.
      * @param pathSegments The path segments to add to the new request. May be
      *     empty if none are required.
-     *
-     * @return A new request with the given path segments and body.
      */
     private fun createRequest(
             jsonData: String?, vararg pathSegments: String): HttpRequest {
