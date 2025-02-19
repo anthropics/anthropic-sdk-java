@@ -2,6 +2,7 @@ package com.anthropic.bedrock.backends
 
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
+import com.anthropic.core.json
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicException
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -632,7 +633,7 @@ internal class BedrockBackendTest {
             .putHeader("X-Test", "header-value-b")
             // Should create a new body holding the "content-type" of
             // "application/json"
-            .body(BedrockBackend.jsonToBody(json("{}"), jsonMapper()))
+            .body(json(jsonMapper(), parseJson("{}")))
             .build()
         val signedRequest = backend.signRequest(request)
 
@@ -718,7 +719,7 @@ internal class BedrockBackendTest {
      *
      * @param jsonData The JSON data in string form.
      */
-    private fun json(jsonData: String): ObjectNode {
+    private fun parseJson(jsonData: String): ObjectNode {
         return ObjectMapper().readValue(jsonData, ObjectNode::class.java)
     }
 
@@ -737,12 +738,7 @@ internal class BedrockBackendTest {
         return HttpRequest.builder()
             .method(HttpMethod.POST) // A method is required.
             .addPathSegments(*pathSegments)
-            .apply {
-                jsonData?.let {
-                    body(BedrockBackend.jsonToBody(
-                        json(it), jsonMapper()))
-                }
-            }
+            .apply { jsonData?.let { body(json(jsonMapper(), parseJson(it))) } }
             .build()
     }
 }

@@ -92,6 +92,7 @@ class OkHttpClient private constructor(
     }
 
     override fun close() {
+        backend?.close()
         okHttpClient.dispatcher.executorService.shutdown()
         okHttpClient.connectionPool.evictAll()
         okHttpClient.cache?.close()

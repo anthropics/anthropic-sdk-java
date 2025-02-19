@@ -16,6 +16,10 @@ import java.util.concurrent.CompletableFuture;
  * an Anthropic model running on the Amazon Bedrock backend.
  * </p>
  * <p>
+ * To use the [BedrockBackend], the SDK module for Bedrock must be added to the
+ * dependencies. See the SDK documentation for details.
+ * </p>
+ * <p>
  * AWS credentials must be configured to access Amazon Bedrock. This example
  * resolves the required credentials from the environment. The credentials can
  * be in system properties, environment variables, AWS CLI configuration files,

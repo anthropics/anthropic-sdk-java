@@ -2,6 +2,7 @@ package com.anthropic.backends
 
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse
+import java.io.Closeable
 
 /**
  * An interface that represents adaptations required to support different
@@ -10,12 +11,13 @@ import com.anthropic.core.http.HttpResponse
  * Implementations of this interface may define the information and handling
  * appropriate for each backend service.
  */
-interface Backend {
+// TODO: Decide if this should extend "AutoCloseable" instead of "Closeable".
+//   As "Backend.close()" will be called from an implementation of
+//   "HttpClient.close()", perhaps "Closeable" is more correct.
+interface Backend : Closeable {
     /**
-     * Gets the backend service's base URL (endpoint).
-     *
-     * @return The backend base URL, the endpoint identifying the service that
-     *     will be accessed by this backend.
+     * Gets the backend service's base URL (endpoint) identifying the service
+     * that will be accessed by this backend.
      */
     fun baseUrl(): String
 
@@ -78,4 +80,14 @@ interface Backend {
     fun prepareResponse(response: HttpResponse): HttpResponse {
         return response
     }
+
+    /**
+     * Closes any streams and releases any resources used by this backend. This
+     * is called when [HttpClient.close()] is called. For example, an
+     * implementation might use this to shut down a thread pool that will no
+     * longer be needed.
+     *
+     * The default implementation does nothing.
+     */
+    override fun close() {}
 }

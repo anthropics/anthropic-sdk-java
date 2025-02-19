@@ -9,8 +9,25 @@ import java.io.ByteArrayOutputStream
 import java.io.OutputStream
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder
 
+/**
+ * Creates a new [HttpRequestBody] containing the given value serialized to a
+ * JSON string.
+ *
+ * The use of this method is _not supported_ as part of the public API of the
+ * Anthropic SDK. This method may change or be removed without any prior notice.
+ *
+ * @param jsonMapper The mapper to use to serialize the JSON data.
+ * @param value The data to form the request body. This may be any object; it is
+ *     not limited to JSON objects or nodes.
+ *
+ * @return A new request body holding the JSON data. The content type will be
+ *     set to `application/json` and will use UTF-8 encoding.
+ */
 @JvmSynthetic
-internal inline fun <reified T> json(jsonMapper: JsonMapper, value: T): HttpRequestBody {
+public inline fun <reified T> json(
+    jsonMapper: JsonMapper,
+    value: T,
+): HttpRequestBody {
     return object : HttpRequestBody {
         private var cachedBytes: ByteArray? = null
 

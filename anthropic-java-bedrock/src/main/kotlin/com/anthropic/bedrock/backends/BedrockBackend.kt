@@ -7,16 +7,19 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpRequestBody
 import com.anthropic.core.http.HttpResponse
+import com.anthropic.core.json
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
-import java.io.OutputStream
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import java.util.Base64
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
 import software.amazon.awssdk.auth.credentials.AwsCredentials
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider
 import software.amazon.awssdk.http.ContentStreamProvider
@@ -61,15 +64,31 @@ class BedrockBackend private constructor(
      */
     private val jsonMapper = jsonMapper()
 
+    /**
+     * A counter for threads created in the thread pool. This is used when
+     * constructing the name of each pooled thread, so each thread can be
+     * identified in stack traces, debuggers, profilers, etc.
+     */
+    private val threadCount = AtomicInteger(0)
+
+    /**
+     * The thread pool used by [prepareResponse] for piped I/O that translates
+     * AWS _EventStream_ data into Server-Sent Events (SSE) data. When this
+     * backend is done, calling [close] will shut down this thread pool.
+     *
+     * This thread pool will grow as necessary to ensure that there is never a
+     * wait for a thread to become available.
+     */
+    private val threadPool = Executors.newCachedThreadPool({
+        Thread().apply { name = "bedrock-sse-${threadCount.getAndIncrement()}" }
+    })
+
     companion object {
         /**
          * The Amazon Bedrock service name used for model inferences.
          */
         private const val SERVICE_NAME = "bedrock-runtime"
 
-        /**
-         * The Anthropic version for the Bedrock service.
-         */
         private const val ANTHROPIC_VERSION = "bedrock-2023-05-31"
 
         /**
@@ -78,13 +97,8 @@ class BedrockBackend private constructor(
          * or the value of a header can be a comma-separated list of beta
          * versions.
          */
-        // For HTTP/2 responses, the header names are expected to be lower case.
         private const val HEADER_ANTHROPIC_BETA = "anthropic-beta"
 
-        /**
-         * The name of the header that identifies the content type of the data
-         * in the response.
-         */
         private const val HEADER_CONTENT_TYPE = "content-type"
 
         /**
@@ -144,54 +158,6 @@ class BedrockBackend private constructor(
         }
 
         /**
-         * Creates a [HttpRequestBody] holding JSON object data.
-         *
-         * @param json The JSON object data to form the request body.
-         * @param jsonMapper The mapper to use to serialize the JSON data.
-         *
-         * @return A new request body holding the JSON data. The content type
-         *     will be set to `application/json`.
-         */
-        // NOTE: "internal" visibility allows this method to be used in unit
-        // tests to create test fixtures.
-        @JvmSynthetic
-        internal fun jsonToBody(
-                json: ObjectNode, jsonMapper: ObjectMapper): HttpRequestBody {
-            // TODO: Code copied from "HttpRequestBodies.json", an "internal"
-            //   function. Should that function be made visible for use here?
-            return object : HttpRequestBody {
-                private var cachedBytes: ByteArray? = null
-
-                private fun serialize(): ByteArray {
-                    if (cachedBytes != null) return cachedBytes!!
-
-                    val buffer = ByteArrayOutputStream()
-                    try {
-                        jsonMapper.writeValue(buffer, json)
-                        cachedBytes = buffer.toByteArray()
-                        return cachedBytes!!
-                    } catch (e: Exception) {
-                        throw AnthropicException("Error writing request", e)
-                    }
-                }
-
-                override fun writeTo(outputStream: OutputStream) {
-                    outputStream.write(serialize())
-                }
-
-                override fun contentType(): String = CONTENT_TYPE_JSON
-
-                override fun contentLength(): Long {
-                    return serialize().size.toLong()
-                }
-
-                override fun repeatable(): Boolean = true
-
-                override fun close() {}
-            }
-        }
-
-        /**
          * Creates a JSON [ObjectNode] representing the JSON data parsed from a
          * [HttpRequestBody].
          *
@@ -203,8 +169,7 @@ class BedrockBackend private constructor(
          */
         // NOTE: "internal" visibility allows this method to be used in unit
         // tests to create test fixtures.
-        @JvmSynthetic
-        internal fun bodyToJson(
+        @JvmSynthetic internal fun bodyToJson(
                 body: HttpRequestBody?, jsonMapper: ObjectMapper): ObjectNode? {
             val jsonData = ByteArrayOutputStream()
 
@@ -281,34 +246,29 @@ class BedrockBackend private constructor(
                 "Service is not supported for Bedrock: ${pathSegments[1]}.")
         }
 
-        val json: ObjectNode? = bodyToJson(request.body, jsonMapper)
-        val modelId: String
-        val isStream: Boolean
+        val jsonBody: ObjectNode = bodyToJson(request.body, jsonMapper)
+            ?: throw AnthropicException("Request has no body")
 
-        if (json != null) {
-            val model = json.remove("model")
-                ?: throw AnthropicException("No model found in body.")
+        jsonBody.put("anthropic_version", ANTHROPIC_VERSION)
 
-            modelId = model.asText()
-            isStream = json.remove("stream")?.asBoolean(false) ?: false
-            json.put("anthropic_version", ANTHROPIC_VERSION)
+        val betaVersions = request.headers.values(HEADER_ANTHROPIC_BETA)
+            .flatMap { it.split(",") }.distinct()
 
-            val betaVersions = request.headers.values(HEADER_ANTHROPIC_BETA)
-                .flatMap { it.split(",") }.distinct()
-
-            if (betaVersions.isNotEmpty()) {
-                json.replace("anthropic_beta",
-                    jsonMapper.valueToTree(betaVersions))
-            }
-        } else {
-            throw AnthropicException("Request has no body")
+        if (betaVersions.isNotEmpty()) {
+            jsonBody.replace(
+                "anthropic_beta", jsonMapper.valueToTree(betaVersions))
         }
+
+        val model = jsonBody.remove("model")
+            ?: throw AnthropicException("No model found in body.")
+        val modelId = model.asText()
+        val isStream = jsonBody.remove("stream")?.asBoolean() ?: false
 
         return request.toBuilder()
             .replaceAllPathSegments("model", modelId)
             .addPathSegment(
                 if (isStream) "invoke-with-response-stream" else "invoke")
-            .body(jsonToBody(json, jsonMapper))
+            .body(json(jsonMapper, jsonBody))
             .build()
     }
 
@@ -343,19 +303,19 @@ class BedrockBackend private constructor(
             }
             .build()
 
-        val signer: AwsV4HttpSigner = AwsV4HttpSigner.create()
         val bodyData = ByteArrayOutputStream()
 
         request.body?.writeTo(bodyData)
 
         val awsSignedRequest: SdkHttpRequest =
-            signer.sign { r: SignRequest.Builder<AwsCredentialsIdentity?> ->
+            AwsV4HttpSigner.create().sign {
+                    r: SignRequest.Builder<AwsCredentialsIdentity?> ->
                 r.identity(awsCredentials)
                     .request(awsSignRequest)
                     .payload(ContentStreamProvider.fromByteArray(
                         bodyData.toByteArray()))
-                    // The service signing name "bedrock" is not the same as the
-                    // service name in the URL ("bedrock-runtime").
+                    // The service *signing* name "bedrock" is not the same as
+                    // the service name in the URL ("bedrock-runtime").
                     .putProperty(
                         AwsV4HttpSigner.SERVICE_SIGNING_NAME, "bedrock")
                     .putProperty(AwsV4HttpSigner.REGION_NAME, region.id())
@@ -428,7 +388,7 @@ class BedrockBackend private constructor(
         // thread, a "read" that blocks waiting for more data to be written,
         // would block the thread from executing the necessary "write" and cause
         // a deadlock.
-        Thread {
+        threadPool.execute {
             responseInput.use { input ->
                 // "use" closes the piped output stream when done, which signals
                 // the end-of-file to the reader of the piped input stream.
@@ -454,7 +414,7 @@ class BedrockBackend private constructor(
                     }
                 }
             }
-        }.start()
+        }
 
         return object : HttpResponse {
             override fun statusCode(): Int = response.statusCode()
@@ -468,6 +428,16 @@ class BedrockBackend private constructor(
 
             override fun close() = pipedInput.close()
         }
+    }
+
+    /**
+     * Releases resources used by this backend when they are no longer needed.
+     * This method may block for up to 30 seconds in the unlikely event that
+     * some responses are still be prepared when this is called.
+     */
+    override fun close() {
+        threadPool.shutdown()
+        threadPool.awaitTermination(30, TimeUnit.SECONDS)
     }
 
     /**

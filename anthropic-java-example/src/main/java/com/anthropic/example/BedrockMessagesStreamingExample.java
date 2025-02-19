@@ -13,6 +13,10 @@ import com.anthropic.models.RawMessageStreamEvent;
  * model running on the Amazon Bedrock backend.
  * </p>
  * <p>
+ * To use the [BedrockBackend], the SDK module for Bedrock must be added to the
+ * dependencies. See the SDK documentation for details.
+ * </p>
+ * <p>
  * AWS credentials must be configured to access Amazon Bedrock. This example
  * resolves the required credentials from the environment. The credentials can
  * be in system properties, environment variables, AWS CLI configuration files,
@@ -33,7 +37,6 @@ import com.anthropic.models.RawMessageStreamEvent;
  * </ul>
  */
 public final class BedrockMessagesStreamingExample {
-    /** Prevent instantiation of this class. */
     private BedrockMessagesStreamingExample() {}
 
     public static void main(String[] args) throws Exception {
