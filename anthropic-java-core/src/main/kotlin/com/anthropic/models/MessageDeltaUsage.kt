@@ -96,7 +96,7 @@ private constructor(
         fun build(): MessageDeltaUsage =
             MessageDeltaUsage(
                 checkRequired("outputTokens", outputTokens),
-                additionalProperties.toImmutable()
+                additionalProperties.toImmutable(),
             )
     }
 

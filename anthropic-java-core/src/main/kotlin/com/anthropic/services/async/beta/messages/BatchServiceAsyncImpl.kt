@@ -31,10 +31,8 @@ import com.anthropic.models.BetaMessageBatchResultsParams
 import com.anthropic.models.BetaMessageBatchRetrieveParams
 import java.util.concurrent.CompletableFuture
 
-class BatchServiceAsyncImpl
-internal constructor(
-    private val clientOptions: ClientOptions,
-) : BatchServiceAsync {
+class BatchServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
+    BatchServiceAsync {
 
     companion object {
 
@@ -56,7 +54,7 @@ internal constructor(
      */
     override fun create(
         params: BetaMessageBatchCreateParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<BetaMessageBatch> {
         val request =
             HttpRequest.builder()
@@ -89,7 +87,7 @@ internal constructor(
      */
     override fun retrieve(
         params: BetaMessageBatchRetrieveParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<BetaMessageBatch> {
         val request =
             HttpRequest.builder()
@@ -122,7 +120,7 @@ internal constructor(
      */
     override fun list(
         params: BetaMessageBatchListParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<BetaMessageBatchListPageAsync> {
         val request =
             HttpRequest.builder()
@@ -158,7 +156,7 @@ internal constructor(
      */
     override fun delete(
         params: BetaMessageBatchDeleteParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<BetaDeletedMessageBatch> {
         val request =
             HttpRequest.builder()
@@ -196,7 +194,7 @@ internal constructor(
      */
     override fun cancel(
         params: BetaMessageBatchCancelParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<BetaMessageBatch> {
         val request =
             HttpRequest.builder()
@@ -234,7 +232,7 @@ internal constructor(
      */
     override fun resultsStreaming(
         params: BetaMessageBatchResultsParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): AsyncStreamResponse<BetaMessageBatchIndividualResponse> {
         val request =
             HttpRequest.builder()

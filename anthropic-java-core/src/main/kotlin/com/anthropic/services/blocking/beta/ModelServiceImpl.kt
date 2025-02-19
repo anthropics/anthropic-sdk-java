@@ -17,10 +17,8 @@ import com.anthropic.models.BetaModelListPage
 import com.anthropic.models.BetaModelListParams
 import com.anthropic.models.BetaModelRetrieveParams
 
-class ModelServiceImpl
-internal constructor(
-    private val clientOptions: ClientOptions,
-) : ModelService {
+class ModelServiceImpl internal constructor(private val clientOptions: ClientOptions) :
+    ModelService {
 
     private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
 
@@ -35,7 +33,7 @@ internal constructor(
      */
     override fun retrieve(
         params: BetaModelRetrieveParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): BetaModelInfo {
         val request =
             HttpRequest.builder()
@@ -66,7 +64,7 @@ internal constructor(
      */
     override fun list(
         params: BetaModelListParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): BetaModelListPage {
         val request =
             HttpRequest.builder()

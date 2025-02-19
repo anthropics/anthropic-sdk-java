@@ -13,9 +13,7 @@ import com.anthropic.services.blocking.MessageServiceImpl
 import com.anthropic.services.blocking.ModelService
 import com.anthropic.services.blocking.ModelServiceImpl
 
-class AnthropicClientImpl(
-    private val clientOptions: ClientOptions,
-) : AnthropicClient {
+class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicClient {
 
     private val clientOptionsWithUserAgent =
         if (clientOptions.headers.names().contains("User-Agent")) clientOptions

@@ -326,11 +326,7 @@ private constructor(
             }
 
             fun build(): InputSchema =
-                InputSchema(
-                    type,
-                    properties,
-                    additionalProperties.toImmutable(),
-                )
+                InputSchema(type, properties, additionalProperties.toImmutable())
         }
 
         override fun equals(other: Any?): Boolean {
@@ -351,11 +347,7 @@ private constructor(
             "InputSchema{type=$type, properties=$properties, additionalProperties=$additionalProperties}"
     }
 
-    class Type
-    @JsonCreator
-    private constructor(
-        private val value: JsonField<String>,
-    ) : Enum {
+    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -376,7 +368,7 @@ private constructor(
 
         /** An enum containing [Type]'s known values. */
         enum class Known {
-            CUSTOM,
+            CUSTOM
         }
 
         /**
@@ -422,7 +414,19 @@ private constructor(
                 else -> throw AnthropicInvalidDataException("Unknown Type: $value")
             }
 
-        fun asString(): String = _value().asStringOrThrow()
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

@@ -102,14 +102,14 @@ class ErrorHandlingTest {
                                                 mapOf(
                                                     "description" to
                                                         "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string"
+                                                    "type" to "string",
                                                 ),
                                             "unit" to
                                                 mapOf(
                                                     "description" to
                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string"
-                                                )
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
                                 )
@@ -198,14 +198,14 @@ class ErrorHandlingTest {
                                                 mapOf(
                                                     "description" to
                                                         "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string"
+                                                    "type" to "string",
                                                 ),
                                             "unit" to
                                                 mapOf(
                                                     "description" to
                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string"
-                                                )
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
                                 )
@@ -270,14 +270,14 @@ class ErrorHandlingTest {
                                                 mapOf(
                                                     "description" to
                                                         "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string"
+                                                    "type" to "string",
                                                 ),
                                             "unit" to
                                                 mapOf(
                                                     "description" to
                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string"
-                                                )
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
                                 )
@@ -342,14 +342,14 @@ class ErrorHandlingTest {
                                                 mapOf(
                                                     "description" to
                                                         "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string"
+                                                    "type" to "string",
                                                 ),
                                             "unit" to
                                                 mapOf(
                                                     "description" to
                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string"
-                                                )
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
                                 )
@@ -374,7 +374,7 @@ class ErrorHandlingTest {
                 assertPermissionDenied(
                     e,
                     Headers.builder().put("Foo", "Bar").build(),
-                    ANTHROPIC_ERROR
+                    ANTHROPIC_ERROR,
                 )
             })
     }
@@ -418,14 +418,14 @@ class ErrorHandlingTest {
                                                 mapOf(
                                                     "description" to
                                                         "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string"
+                                                    "type" to "string",
                                                 ),
                                             "unit" to
                                                 mapOf(
                                                     "description" to
                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string"
-                                                )
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
                                 )
@@ -490,14 +490,14 @@ class ErrorHandlingTest {
                                                 mapOf(
                                                     "description" to
                                                         "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string"
+                                                    "type" to "string",
                                                 ),
                                             "unit" to
                                                 mapOf(
                                                     "description" to
                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string"
-                                                )
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
                                 )
@@ -522,7 +522,7 @@ class ErrorHandlingTest {
                 assertUnprocessableEntity(
                     e,
                     Headers.builder().put("Foo", "Bar").build(),
-                    ANTHROPIC_ERROR
+                    ANTHROPIC_ERROR,
                 )
             })
     }
@@ -566,14 +566,14 @@ class ErrorHandlingTest {
                                                 mapOf(
                                                     "description" to
                                                         "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string"
+                                                    "type" to "string",
                                                 ),
                                             "unit" to
                                                 mapOf(
                                                     "description" to
                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string"
-                                                )
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
                                 )
@@ -638,14 +638,14 @@ class ErrorHandlingTest {
                                                 mapOf(
                                                     "description" to
                                                         "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string"
+                                                    "type" to "string",
                                                 ),
                                             "unit" to
                                                 mapOf(
                                                     "description" to
                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string"
-                                                )
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
                                 )
@@ -670,7 +670,7 @@ class ErrorHandlingTest {
                 assertInternalServer(
                     e,
                     Headers.builder().put("Foo", "Bar").build(),
-                    ANTHROPIC_ERROR
+                    ANTHROPIC_ERROR,
                 )
             })
     }
@@ -714,14 +714,14 @@ class ErrorHandlingTest {
                                                 mapOf(
                                                     "description" to
                                                         "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string"
+                                                    "type" to "string",
                                                 ),
                                             "unit" to
                                                 mapOf(
                                                     "description" to
                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string"
-                                                )
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
                                 )
@@ -747,7 +747,7 @@ class ErrorHandlingTest {
                     e,
                     999,
                     Headers.builder().put("Foo", "Bar").build(),
-                    toJson(ANTHROPIC_ERROR)
+                    toJson(ANTHROPIC_ERROR),
                 )
             })
     }
@@ -791,14 +791,14 @@ class ErrorHandlingTest {
                                                 mapOf(
                                                     "description" to
                                                         "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string"
+                                                    "type" to "string",
                                                 ),
                                             "unit" to
                                                 mapOf(
                                                     "description" to
                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string"
-                                                )
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
                                 )
@@ -862,14 +862,14 @@ class ErrorHandlingTest {
                                                 mapOf(
                                                     "description" to
                                                         "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string"
+                                                    "type" to "string",
                                                 ),
                                             "unit" to
                                                 mapOf(
                                                     "description" to
                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string"
-                                                )
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
                                 )
@@ -900,7 +900,7 @@ class ErrorHandlingTest {
         throwable: Throwable,
         statusCode: Int,
         headers: Headers,
-        responseBody: ByteArray
+        responseBody: ByteArray,
     ) {
         assertThat(throwable)
             .asInstanceOf(
@@ -936,7 +936,7 @@ class ErrorHandlingTest {
     private fun assertPermissionDenied(
         throwable: Throwable,
         headers: Headers,
-        error: AnthropicError
+        error: AnthropicError,
     ) {
         assertThat(throwable)
             .asInstanceOf(
@@ -962,7 +962,7 @@ class ErrorHandlingTest {
     private fun assertUnprocessableEntity(
         throwable: Throwable,
         headers: Headers,
-        error: AnthropicError
+        error: AnthropicError,
     ) {
         assertThat(throwable)
             .asInstanceOf(
@@ -988,7 +988,7 @@ class ErrorHandlingTest {
     private fun assertInternalServer(
         throwable: Throwable,
         headers: Headers,
-        error: AnthropicError
+        error: AnthropicError,
     ) {
         assertThat(throwable)
             .asInstanceOf(InstanceOfAssertFactories.throwable(InternalServerException::class.java))

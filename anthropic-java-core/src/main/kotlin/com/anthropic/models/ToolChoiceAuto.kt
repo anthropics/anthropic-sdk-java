@@ -128,11 +128,7 @@ private constructor(
         }
 
         fun build(): ToolChoiceAuto =
-            ToolChoiceAuto(
-                type,
-                disableParallelToolUse,
-                additionalProperties.toImmutable(),
-            )
+            ToolChoiceAuto(type, disableParallelToolUse, additionalProperties.toImmutable())
     }
 
     override fun equals(other: Any?): Boolean {

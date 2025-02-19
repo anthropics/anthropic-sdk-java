@@ -27,10 +27,8 @@ import com.anthropic.services.blocking.messages.BatchService
 import com.anthropic.services.blocking.messages.BatchServiceImpl
 import java.time.Duration
 
-class MessageServiceImpl
-internal constructor(
-    private val clientOptions: ClientOptions,
-) : MessageService {
+class MessageServiceImpl internal constructor(private val clientOptions: ClientOptions) :
+    MessageService {
 
     private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
 
@@ -60,7 +58,7 @@ internal constructor(
                 request,
                 requestOptions.applyDefaults(
                     RequestOptions.builder().timeout(Duration.ofMillis(600000)).build()
-                )
+                ),
             )
         return response
             .use { createHandler.handle(it) }
@@ -84,7 +82,7 @@ internal constructor(
      */
     override fun createStreaming(
         params: MessageCreateParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): StreamResponse<RawMessageStreamEvent> {
         val request =
             HttpRequest.builder()
@@ -97,7 +95,7 @@ internal constructor(
                             ._body()
                             .toBuilder()
                             .putAdditionalProperty("stream", JsonValue.from(true))
-                            .build()
+                            .build(),
                     )
                 )
                 .build()
@@ -107,7 +105,7 @@ internal constructor(
                 request,
                 requestOptions.applyDefaults(
                     RequestOptions.builder().timeout(Duration.ofMillis(600000)).build()
-                )
+                ),
             )
         return response
             .let { createStreamingHandler.handle(it) }
@@ -131,7 +129,7 @@ internal constructor(
      */
     override fun countTokens(
         params: MessageCountTokensParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): MessageTokensCount {
         val request =
             HttpRequest.builder()

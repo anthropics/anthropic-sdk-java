@@ -30,7 +30,7 @@ interface BatchService {
     @JvmOverloads
     fun create(
         params: BetaMessageBatchCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaMessageBatch
 
     /**
@@ -40,7 +40,7 @@ interface BatchService {
     @JvmOverloads
     fun retrieve(
         params: BetaMessageBatchRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaMessageBatch
 
     /**
@@ -50,7 +50,7 @@ interface BatchService {
     @JvmOverloads
     fun list(
         params: BetaMessageBatchListParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaMessageBatchListPage
 
     /**
@@ -62,7 +62,7 @@ interface BatchService {
     @JvmOverloads
     fun delete(
         params: BetaMessageBatchDeleteParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaDeletedMessageBatch
 
     /**
@@ -77,7 +77,7 @@ interface BatchService {
     @JvmOverloads
     fun cancel(
         params: BetaMessageBatchCancelParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaMessageBatch
 
     /**
@@ -91,6 +91,6 @@ interface BatchService {
     @MustBeClosed
     fun resultsStreaming(
         params: BetaMessageBatchResultsParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): StreamResponse<BetaMessageBatchIndividualResponse>
 }

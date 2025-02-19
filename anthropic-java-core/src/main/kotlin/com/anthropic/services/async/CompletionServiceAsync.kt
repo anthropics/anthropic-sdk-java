@@ -25,7 +25,7 @@ interface CompletionServiceAsync {
     @JvmOverloads
     fun create(
         params: CompletionCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Completion>
 
     /**
@@ -41,6 +41,6 @@ interface CompletionServiceAsync {
     @JvmOverloads
     fun createStreaming(
         params: CompletionCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): AsyncStreamResponse<Completion>
 }

@@ -19,7 +19,7 @@ class SseHandlerTest {
     enum class TestCase(
         internal val body: String,
         internal val expectedMessages: List<SseMessage>? = null,
-        internal val expectedException: Exception? = null
+        internal val expectedException: Exception? = null,
     ) {
         EVENT_AND_DATA(
             buildString {
@@ -27,14 +27,14 @@ class SseHandlerTest {
                 append("data: {\"foo\":true}\n")
                 append("\n")
             },
-            listOf(sseMessageBuilder().event("completion").data("{\"foo\":true}").build())
+            listOf(sseMessageBuilder().event("completion").data("{\"foo\":true}").build()),
         ),
         EVENT_MISSING_DATA(
             buildString {
                 append("event: completion\n")
                 append("\n")
             },
-            listOf(sseMessageBuilder().event("completion").build())
+            listOf(sseMessageBuilder().event("completion").build()),
         ),
         MULTIPLE_EVENTS_AND_DATA(
             buildString {
@@ -47,8 +47,8 @@ class SseHandlerTest {
             },
             listOf(
                 sseMessageBuilder().event("completion").data("{\"foo\":true}").build(),
-                sseMessageBuilder().event("message_start").data("{\"bar\":false}").build()
-            )
+                sseMessageBuilder().event("message_start").data("{\"bar\":false}").build(),
+            ),
         ),
         MULTIPLE_EVENTS_MISSING_DATA(
             buildString {
@@ -59,8 +59,8 @@ class SseHandlerTest {
             },
             listOf(
                 sseMessageBuilder().event("completion").build(),
-                sseMessageBuilder().event("message_start").build()
-            )
+                sseMessageBuilder().event("message_start").build(),
+            ),
         ),
         DATA_JSON_ESCAPED_DOUBLE_NEW_LINE(
             buildString {
@@ -70,7 +70,7 @@ class SseHandlerTest {
                 append("data: true}\n")
                 append("\n\n")
             },
-            listOf(sseMessageBuilder().event("completion").data("{\n\"foo\":\ntrue}").build())
+            listOf(sseMessageBuilder().event("completion").data("{\n\"foo\":\ntrue}").build()),
         ),
         MULTIPLE_DATA_LINES(
             buildString {
@@ -80,7 +80,7 @@ class SseHandlerTest {
                 append("data: true}\n")
                 append("\n\n")
             },
-            listOf(sseMessageBuilder().event("completion").data("{\n\"foo\":\ntrue}").build())
+            listOf(sseMessageBuilder().event("completion").data("{\n\"foo\":\ntrue}").build()),
         ),
         SPECIAL_NEW_LINE_CHARACTER(
             buildString {
@@ -100,8 +100,8 @@ class SseHandlerTest {
                     .event("message_start")
                     .data("{\"content\":\" \u2028\"}")
                     .build(),
-                sseMessageBuilder().event("completion").data("{\"content\":\"foo\"}").build()
-            )
+                sseMessageBuilder().event("completion").data("{\"content\":\"foo\"}").build(),
+            ),
         ),
         MULTI_BYTE_CHARACTER(
             buildString {
@@ -111,8 +111,8 @@ class SseHandlerTest {
             },
             listOf(
                 sseMessageBuilder().event("completion").data("{\"content\":\"известни\"}").build()
-            )
-        )
+            ),
+        ),
     }
 
     @ParameterizedTest

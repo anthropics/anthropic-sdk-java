@@ -27,10 +27,8 @@ import com.anthropic.services.blocking.beta.messages.BatchService
 import com.anthropic.services.blocking.beta.messages.BatchServiceImpl
 import java.time.Duration
 
-class MessageServiceImpl
-internal constructor(
-    private val clientOptions: ClientOptions,
-) : MessageService {
+class MessageServiceImpl internal constructor(private val clientOptions: ClientOptions) :
+    MessageService {
 
     private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
 
@@ -49,7 +47,7 @@ internal constructor(
      */
     override fun create(
         params: BetaMessageCreateParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): BetaMessage {
         val request =
             HttpRequest.builder()
@@ -64,7 +62,7 @@ internal constructor(
                 request,
                 requestOptions.applyDefaults(
                     RequestOptions.builder().timeout(Duration.ofMillis(600000)).build()
-                )
+                ),
             )
         return response
             .use { createHandler.handle(it) }
@@ -88,7 +86,7 @@ internal constructor(
      */
     override fun createStreaming(
         params: BetaMessageCreateParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): StreamResponse<BetaRawMessageStreamEvent> {
         val request =
             HttpRequest.builder()
@@ -102,7 +100,7 @@ internal constructor(
                             ._body()
                             .toBuilder()
                             .putAdditionalProperty("stream", JsonValue.from(true))
-                            .build()
+                            .build(),
                     )
                 )
                 .build()
@@ -112,7 +110,7 @@ internal constructor(
                 request,
                 requestOptions.applyDefaults(
                     RequestOptions.builder().timeout(Duration.ofMillis(600000)).build()
-                )
+                ),
             )
         return response
             .let { createStreamingHandler.handle(it) }
@@ -136,7 +134,7 @@ internal constructor(
      */
     override fun countTokens(
         params: BetaMessageCountTokensParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): BetaMessageTokensCount {
         val request =
             HttpRequest.builder()

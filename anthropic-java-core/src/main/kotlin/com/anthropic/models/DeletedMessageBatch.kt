@@ -113,11 +113,7 @@ private constructor(
         }
 
         fun build(): DeletedMessageBatch =
-            DeletedMessageBatch(
-                checkRequired("id", id),
-                type,
-                additionalProperties.toImmutable(),
-            )
+            DeletedMessageBatch(checkRequired("id", id), type, additionalProperties.toImmutable())
     }
 
     override fun equals(other: Any?): Boolean {

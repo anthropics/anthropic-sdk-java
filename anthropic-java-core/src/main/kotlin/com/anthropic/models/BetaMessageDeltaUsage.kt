@@ -96,7 +96,7 @@ private constructor(
         fun build(): BetaMessageDeltaUsage =
             BetaMessageDeltaUsage(
                 checkRequired("outputTokens", outputTokens),
-                additionalProperties.toImmutable()
+                additionalProperties.toImmutable(),
             )
     }
 

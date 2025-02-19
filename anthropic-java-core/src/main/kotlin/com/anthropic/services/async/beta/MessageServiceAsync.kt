@@ -27,7 +27,7 @@ interface MessageServiceAsync {
     @JvmOverloads
     fun create(
         params: BetaMessageCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaMessage>
 
     /**
@@ -39,7 +39,7 @@ interface MessageServiceAsync {
     @JvmOverloads
     fun createStreaming(
         params: BetaMessageCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): AsyncStreamResponse<BetaRawMessageStreamEvent>
 
     /**
@@ -51,6 +51,6 @@ interface MessageServiceAsync {
     @JvmOverloads
     fun countTokens(
         params: BetaMessageCountTokensParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaMessageTokensCount>
 }

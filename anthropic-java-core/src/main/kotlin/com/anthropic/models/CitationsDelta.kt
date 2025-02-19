@@ -301,7 +301,7 @@ private constructor(
             override fun serialize(
                 value: Citation,
                 generator: JsonGenerator,
-                provider: SerializerProvider
+                provider: SerializerProvider,
             ) {
                 when {
                     value.charLocation != null -> generator.writeObject(value.charLocation)

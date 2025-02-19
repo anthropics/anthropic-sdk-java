@@ -32,6 +32,7 @@ class MessageServiceTest {
         val betaMessage =
             messageService.create(
                 BetaMessageCreateParams.builder()
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
@@ -71,14 +72,14 @@ class MessageServiceTest {
                                                     mapOf(
                                                         "description" to
                                                             "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string"
+                                                        "type" to "string",
                                                     ),
                                                 "unit" to
                                                     mapOf(
                                                         "description" to
                                                             "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string"
-                                                    )
+                                                        "type" to "string",
+                                                    ),
                                             )
                                         )
                                     )
@@ -92,7 +93,6 @@ class MessageServiceTest {
                     )
                     .topK(5L)
                     .topP(0.7)
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
         println(betaMessage)
@@ -111,6 +111,7 @@ class MessageServiceTest {
         val betaMessageStream =
             messageService.createStreaming(
                 BetaMessageCreateParams.builder()
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
@@ -150,14 +151,14 @@ class MessageServiceTest {
                                                     mapOf(
                                                         "description" to
                                                             "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string"
+                                                        "type" to "string",
                                                     ),
                                                 "unit" to
                                                     mapOf(
                                                         "description" to
                                                             "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string"
-                                                    )
+                                                        "type" to "string",
+                                                    ),
                                             )
                                         )
                                     )
@@ -171,7 +172,6 @@ class MessageServiceTest {
                     )
                     .topK(5L)
                     .topP(0.7)
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
 
@@ -194,7 +194,8 @@ class MessageServiceTest {
         val betaMessageTokensCount =
             messageService.countTokens(
                 BetaMessageCountTokensParams.builder()
-                    .addUserMessage("string")
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                     .systemOfBetaTextBlockParams(
                         listOf(
@@ -225,14 +226,14 @@ class MessageServiceTest {
                                                     mapOf(
                                                         "description" to
                                                             "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string"
+                                                        "type" to "string",
                                                     ),
                                                 "unit" to
                                                     mapOf(
                                                         "description" to
                                                             "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string"
-                                                    )
+                                                        "type" to "string",
+                                                    ),
                                             )
                                         )
                                     )
@@ -244,7 +245,6 @@ class MessageServiceTest {
                             .type(BetaTool.Type.CUSTOM)
                             .build()
                     )
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
         println(betaMessageTokensCount)

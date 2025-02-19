@@ -27,10 +27,8 @@ import com.anthropic.models.MessageBatchListParams
 import com.anthropic.models.MessageBatchResultsParams
 import com.anthropic.models.MessageBatchRetrieveParams
 
-class BatchServiceImpl
-internal constructor(
-    private val clientOptions: ClientOptions,
-) : BatchService {
+class BatchServiceImpl internal constructor(private val clientOptions: ClientOptions) :
+    BatchService {
 
     private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
 
@@ -46,7 +44,7 @@ internal constructor(
      */
     override fun create(
         params: MessageBatchCreateParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): MessageBatch {
         val request =
             HttpRequest.builder()
@@ -74,7 +72,7 @@ internal constructor(
      */
     override fun retrieve(
         params: MessageBatchRetrieveParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): MessageBatch {
         val request =
             HttpRequest.builder()
@@ -102,7 +100,7 @@ internal constructor(
      */
     override fun list(
         params: MessageBatchListParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): MessageBatchListPage {
         val request =
             HttpRequest.builder()
@@ -132,7 +130,7 @@ internal constructor(
      */
     override fun delete(
         params: MessageBatchDeleteParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): DeletedMessageBatch {
         val request =
             HttpRequest.builder()
@@ -165,7 +163,7 @@ internal constructor(
      */
     override fun cancel(
         params: MessageBatchCancelParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): MessageBatch {
         val request =
             HttpRequest.builder()
@@ -197,7 +195,7 @@ internal constructor(
      */
     override fun resultsStreaming(
         params: MessageBatchResultsParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): StreamResponse<MessageBatchIndividualResponse> {
         val request =
             HttpRequest.builder()

@@ -8,10 +8,7 @@ import com.anthropic.services.blocking.beta.MessageServiceImpl
 import com.anthropic.services.blocking.beta.ModelService
 import com.anthropic.services.blocking.beta.ModelServiceImpl
 
-class BetaServiceImpl
-internal constructor(
-    private val clientOptions: ClientOptions,
-) : BetaService {
+class BetaServiceImpl internal constructor(private val clientOptions: ClientOptions) : BetaService {
 
     private val models: ModelService by lazy { ModelServiceImpl(clientOptions) }
 

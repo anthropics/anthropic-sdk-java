@@ -330,7 +330,7 @@ private constructor(
         override fun serialize(
             value: ErrorObject,
             generator: JsonGenerator,
-            provider: SerializerProvider
+            provider: SerializerProvider,
         ) {
             when {
                 value.invalidRequestError != null ->

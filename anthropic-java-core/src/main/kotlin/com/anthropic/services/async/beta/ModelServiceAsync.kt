@@ -22,7 +22,7 @@ interface ModelServiceAsync {
     @JvmOverloads
     fun retrieve(
         params: BetaModelRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaModelInfo>
 
     /**
@@ -34,6 +34,6 @@ interface ModelServiceAsync {
     @JvmOverloads
     fun list(
         params: BetaModelListParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaModelListPageAsync>
 }

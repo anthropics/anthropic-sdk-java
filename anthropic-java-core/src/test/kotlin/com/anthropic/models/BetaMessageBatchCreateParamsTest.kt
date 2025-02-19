@@ -11,6 +11,7 @@ class BetaMessageBatchCreateParamsTest {
     @Test
     fun create() {
         BetaMessageBatchCreateParams.builder()
+            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .addRequest(
                 BetaMessageBatchCreateParams.Request.builder()
                     .customId("my-custom-id-1")
@@ -58,14 +59,14 @@ class BetaMessageBatchCreateParamsTest {
                                                             mapOf(
                                                                 "description" to
                                                                     "The city and state, e.g. San Francisco, CA",
-                                                                "type" to "string"
+                                                                "type" to "string",
                                                             ),
                                                         "unit" to
                                                             mapOf(
                                                                 "description" to
                                                                     "Unit for the output - one of (celsius, fahrenheit)",
-                                                                "type" to "string"
-                                                            )
+                                                                "type" to "string",
+                                                            ),
                                                     )
                                                 )
                                             )
@@ -83,7 +84,6 @@ class BetaMessageBatchCreateParamsTest {
                     )
                     .build()
             )
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .build()
     }
 
@@ -91,6 +91,7 @@ class BetaMessageBatchCreateParamsTest {
     fun body() {
         val params =
             BetaMessageBatchCreateParams.builder()
+                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .addRequest(
                     BetaMessageBatchCreateParams.Request.builder()
                         .customId("my-custom-id-1")
@@ -142,14 +143,14 @@ class BetaMessageBatchCreateParamsTest {
                                                                 mapOf(
                                                                     "description" to
                                                                         "The city and state, e.g. San Francisco, CA",
-                                                                    "type" to "string"
+                                                                    "type" to "string",
                                                                 ),
                                                             "unit" to
                                                                 mapOf(
                                                                     "description" to
                                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                                    "type" to "string"
-                                                                )
+                                                                    "type" to "string",
+                                                                ),
                                                         )
                                                     )
                                                 )
@@ -167,9 +168,10 @@ class BetaMessageBatchCreateParamsTest {
                         )
                         .build()
                 )
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
+
         val body = params._body()
+
         assertThat(body).isNotNull
         assertThat(body.requests())
             .isEqualTo(
@@ -224,14 +226,14 @@ class BetaMessageBatchCreateParamsTest {
                                                                 mapOf(
                                                                     "description" to
                                                                         "The city and state, e.g. San Francisco, CA",
-                                                                    "type" to "string"
+                                                                    "type" to "string",
                                                                 ),
                                                             "unit" to
                                                                 mapOf(
                                                                     "description" to
                                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                                    "type" to "string"
-                                                                )
+                                                                    "type" to "string",
+                                                                ),
                                                         )
                                                     )
                                                 )
@@ -269,7 +271,9 @@ class BetaMessageBatchCreateParamsTest {
                         .build()
                 )
                 .build()
+
         val body = params._body()
+
         assertThat(body).isNotNull
         assertThat(body.requests())
             .isEqualTo(

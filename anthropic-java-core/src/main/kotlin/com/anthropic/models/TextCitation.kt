@@ -194,7 +194,7 @@ private constructor(
         override fun serialize(
             value: TextCitation,
             generator: JsonGenerator,
-            provider: SerializerProvider
+            provider: SerializerProvider,
         ) {
             when {
                 value.citationCharLocation != null ->

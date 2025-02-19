@@ -11,7 +11,7 @@ class MessageCountTokensParamsTest {
     @Test
     fun create() {
         MessageCountTokensParams.builder()
-            .addUserMessage("string")
+            .addUserMessage("Hello, world")
             .model(Model.CLAUDE_3_5_HAIKU_LATEST)
             .systemOfTextBlockParams(
                 listOf(
@@ -42,14 +42,14 @@ class MessageCountTokensParamsTest {
                                             mapOf(
                                                 "description" to
                                                     "The city and state, e.g. San Francisco, CA",
-                                                "type" to "string"
+                                                "type" to "string",
                                             ),
                                         "unit" to
                                             mapOf(
                                                 "description" to
                                                     "Unit for the output - one of (celsius, fahrenheit)",
-                                                "type" to "string"
-                                            )
+                                                "type" to "string",
+                                            ),
                                     )
                                 )
                             )
@@ -67,7 +67,7 @@ class MessageCountTokensParamsTest {
     fun body() {
         val params =
             MessageCountTokensParams.builder()
-                .addUserMessage("string")
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .systemOfTextBlockParams(
                     listOf(
@@ -98,14 +98,14 @@ class MessageCountTokensParamsTest {
                                                 mapOf(
                                                     "description" to
                                                         "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string"
+                                                    "type" to "string",
                                                 ),
                                             "unit" to
                                                 mapOf(
                                                     "description" to
                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string"
-                                                )
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
                                 )
@@ -117,12 +117,17 @@ class MessageCountTokensParamsTest {
                         .build()
                 )
                 .build()
+
         val body = params._body()
+
         assertThat(body).isNotNull
         assertThat(body.messages())
             .isEqualTo(
                 listOf(
-                    MessageParam.builder().content("string").role(MessageParam.Role.USER).build()
+                    MessageParam.builder()
+                        .content("Hello, world")
+                        .role(MessageParam.Role.USER)
+                        .build()
                 )
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
@@ -163,14 +168,14 @@ class MessageCountTokensParamsTest {
                                                 mapOf(
                                                     "description" to
                                                         "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string"
+                                                    "type" to "string",
                                                 ),
                                             "unit" to
                                                 mapOf(
                                                     "description" to
                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string"
-                                                )
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
                                 )
@@ -188,15 +193,20 @@ class MessageCountTokensParamsTest {
     fun bodyWithoutOptionalFields() {
         val params =
             MessageCountTokensParams.builder()
-                .addUserMessage("string")
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .build()
+
         val body = params._body()
+
         assertThat(body).isNotNull
         assertThat(body.messages())
             .isEqualTo(
                 listOf(
-                    MessageParam.builder().content("string").role(MessageParam.Role.USER).build()
+                    MessageParam.builder()
+                        .content("Hello, world")
+                        .role(MessageParam.Role.USER)
+                        .build()
                 )
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)

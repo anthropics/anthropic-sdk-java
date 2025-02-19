@@ -5,7 +5,7 @@ import com.anthropic.core.toImmutable
 class QueryParams
 private constructor(
     private val map: Map<String, List<String>>,
-    @get:JvmName("size") val size: Int
+    @get:JvmName("size") val size: Int,
 ) {
 
     fun isEmpty(): Boolean = map.isEmpty()

@@ -46,14 +46,14 @@ class MessageCreateParamsTest {
                                             mapOf(
                                                 "description" to
                                                     "The city and state, e.g. San Francisco, CA",
-                                                "type" to "string"
+                                                "type" to "string",
                                             ),
                                         "unit" to
                                             mapOf(
                                                 "description" to
                                                     "Unit for the output - one of (celsius, fahrenheit)",
-                                                "type" to "string"
-                                            )
+                                                "type" to "string",
+                                            ),
                                     )
                                 )
                             )
@@ -108,14 +108,14 @@ class MessageCreateParamsTest {
                                                 mapOf(
                                                     "description" to
                                                         "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string"
+                                                    "type" to "string",
                                                 ),
                                             "unit" to
                                                 mapOf(
                                                     "description" to
                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string"
-                                                )
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
                                 )
@@ -129,7 +129,9 @@ class MessageCreateParamsTest {
                 .topK(5L)
                 .topP(0.7)
                 .build()
+
         val body = params._body()
+
         assertThat(body).isNotNull
         assertThat(body.maxTokens()).isEqualTo(1024L)
         assertThat(body.messages())
@@ -183,14 +185,14 @@ class MessageCreateParamsTest {
                                                 mapOf(
                                                     "description" to
                                                         "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string"
+                                                    "type" to "string",
                                                 ),
                                             "unit" to
                                                 mapOf(
                                                     "description" to
                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string"
-                                                )
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
                                 )
@@ -214,7 +216,9 @@ class MessageCreateParamsTest {
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .build()
+
         val body = params._body()
+
         assertThat(body).isNotNull
         assertThat(body.maxTokens()).isEqualTo(1024L)
         assertThat(body.messages())

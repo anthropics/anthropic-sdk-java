@@ -8,10 +8,8 @@ import com.anthropic.services.async.beta.MessageServiceAsyncImpl
 import com.anthropic.services.async.beta.ModelServiceAsync
 import com.anthropic.services.async.beta.ModelServiceAsyncImpl
 
-class BetaServiceAsyncImpl
-internal constructor(
-    private val clientOptions: ClientOptions,
-) : BetaServiceAsync {
+class BetaServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
+    BetaServiceAsync {
 
     private val models: ModelServiceAsync by lazy { ModelServiceAsyncImpl(clientOptions) }
 

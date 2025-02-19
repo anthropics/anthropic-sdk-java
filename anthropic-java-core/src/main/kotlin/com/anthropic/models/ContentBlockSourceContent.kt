@@ -156,7 +156,7 @@ private constructor(
         override fun serialize(
             value: ContentBlockSourceContent,
             generator: JsonGenerator,
-            provider: SerializerProvider
+            provider: SerializerProvider,
         ) {
             when {
                 value.textBlockParam != null -> generator.writeObject(value.textBlockParam)

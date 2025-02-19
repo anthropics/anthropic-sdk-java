@@ -151,11 +151,7 @@ private constructor(
         }
 
         fun build(): ErrorResponse =
-            ErrorResponse(
-                checkRequired("error", error),
-                type,
-                additionalProperties.toImmutable(),
-            )
+            ErrorResponse(checkRequired("error", error), type, additionalProperties.toImmutable())
     }
 
     override fun equals(other: Any?): Boolean {

@@ -28,10 +28,8 @@ import com.anthropic.models.BetaMessageBatchListParams
 import com.anthropic.models.BetaMessageBatchResultsParams
 import com.anthropic.models.BetaMessageBatchRetrieveParams
 
-class BatchServiceImpl
-internal constructor(
-    private val clientOptions: ClientOptions,
-) : BatchService {
+class BatchServiceImpl internal constructor(private val clientOptions: ClientOptions) :
+    BatchService {
 
     companion object {
 
@@ -53,7 +51,7 @@ internal constructor(
      */
     override fun create(
         params: BetaMessageBatchCreateParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): BetaMessageBatch {
         val request =
             HttpRequest.builder()
@@ -83,7 +81,7 @@ internal constructor(
      */
     override fun retrieve(
         params: BetaMessageBatchRetrieveParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): BetaMessageBatch {
         val request =
             HttpRequest.builder()
@@ -113,7 +111,7 @@ internal constructor(
      */
     override fun list(
         params: BetaMessageBatchListParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): BetaMessageBatchListPage {
         val request =
             HttpRequest.builder()
@@ -146,7 +144,7 @@ internal constructor(
      */
     override fun delete(
         params: BetaMessageBatchDeleteParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): BetaDeletedMessageBatch {
         val request =
             HttpRequest.builder()
@@ -181,7 +179,7 @@ internal constructor(
      */
     override fun cancel(
         params: BetaMessageBatchCancelParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): BetaMessageBatch {
         val request =
             HttpRequest.builder()
@@ -216,7 +214,7 @@ internal constructor(
      */
     override fun resultsStreaming(
         params: BetaMessageBatchResultsParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): StreamResponse<BetaMessageBatchIndividualResponse> {
         val request =
             HttpRequest.builder()

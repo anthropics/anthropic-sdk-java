@@ -192,7 +192,7 @@ private constructor(
                         ?.let {
                             return TextCitationParam(
                                 citationContentBlockLocation = it,
-                                _json = json
+                                _json = json,
                             )
                         }
                 }
@@ -207,7 +207,7 @@ private constructor(
         override fun serialize(
             value: TextCitationParam,
             generator: JsonGenerator,
-            provider: SerializerProvider
+            provider: SerializerProvider,
         ) {
             when {
                 value.citationCharLocation != null ->

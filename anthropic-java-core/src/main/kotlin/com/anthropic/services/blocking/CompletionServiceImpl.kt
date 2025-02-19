@@ -22,10 +22,8 @@ import com.anthropic.models.Completion
 import com.anthropic.models.CompletionCreateParams
 import java.time.Duration
 
-class CompletionServiceImpl
-internal constructor(
-    private val clientOptions: ClientOptions,
-) : CompletionService {
+class CompletionServiceImpl internal constructor(private val clientOptions: ClientOptions) :
+    CompletionService {
 
     private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
 
@@ -44,7 +42,7 @@ internal constructor(
      */
     override fun create(
         params: CompletionCreateParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): Completion {
         val request =
             HttpRequest.builder()
@@ -58,7 +56,7 @@ internal constructor(
                 request,
                 requestOptions.applyDefaults(
                     RequestOptions.builder().timeout(Duration.ofMillis(600000)).build()
-                )
+                ),
             )
         return response
             .use { createHandler.handle(it) }
@@ -84,7 +82,7 @@ internal constructor(
      */
     override fun createStreaming(
         params: CompletionCreateParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): StreamResponse<Completion> {
         val request =
             HttpRequest.builder()
@@ -97,7 +95,7 @@ internal constructor(
                             ._body()
                             .toBuilder()
                             .putAdditionalProperty("stream", JsonValue.from(true))
-                            .build()
+                            .build(),
                     )
                 )
                 .build()
@@ -107,7 +105,7 @@ internal constructor(
                 request,
                 requestOptions.applyDefaults(
                     RequestOptions.builder().timeout(Duration.ofMillis(600000)).build()
-                )
+                ),
             )
         return response
             .let { createStreamingHandler.handle(it) }

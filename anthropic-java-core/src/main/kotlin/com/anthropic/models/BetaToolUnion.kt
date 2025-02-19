@@ -196,7 +196,7 @@ private constructor(
         override fun serialize(
             value: BetaToolUnion,
             generator: JsonGenerator,
-            provider: SerializerProvider
+            provider: SerializerProvider,
         ) {
             when {
                 value.betaTool != null -> generator.writeObject(value.betaTool)

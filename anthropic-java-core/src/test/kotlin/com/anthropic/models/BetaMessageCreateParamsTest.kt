@@ -11,6 +11,7 @@ class BetaMessageCreateParamsTest {
     @Test
     fun create() {
         BetaMessageCreateParams.builder()
+            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .maxTokens(1024L)
             .addUserMessage("Hello, world")
             .model(Model.CLAUDE_3_5_HAIKU_LATEST)
@@ -46,14 +47,14 @@ class BetaMessageCreateParamsTest {
                                             mapOf(
                                                 "description" to
                                                     "The city and state, e.g. San Francisco, CA",
-                                                "type" to "string"
+                                                "type" to "string",
                                             ),
                                         "unit" to
                                             mapOf(
                                                 "description" to
                                                     "Unit for the output - one of (celsius, fahrenheit)",
-                                                "type" to "string"
-                                            )
+                                                "type" to "string",
+                                            ),
                                     )
                                 )
                             )
@@ -67,7 +68,6 @@ class BetaMessageCreateParamsTest {
             )
             .topK(5L)
             .topP(0.7)
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .build()
     }
 
@@ -75,6 +75,7 @@ class BetaMessageCreateParamsTest {
     fun body() {
         val params =
             BetaMessageCreateParams.builder()
+                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
@@ -112,14 +113,14 @@ class BetaMessageCreateParamsTest {
                                                 mapOf(
                                                     "description" to
                                                         "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string"
+                                                    "type" to "string",
                                                 ),
                                             "unit" to
                                                 mapOf(
                                                     "description" to
                                                         "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string"
-                                                )
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
                                 )
@@ -133,9 +134,10 @@ class BetaMessageCreateParamsTest {
                 )
                 .topK(5L)
                 .topP(0.7)
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
+
         val body = params._body()
+
         assertThat(body).isNotNull
         assertThat(body.maxTokens()).isEqualTo(1024L)
         assertThat(body.messages())
@@ -192,14 +194,14 @@ class BetaMessageCreateParamsTest {
                                                     mapOf(
                                                         "description" to
                                                             "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string"
+                                                        "type" to "string",
                                                     ),
                                                 "unit" to
                                                     mapOf(
                                                         "description" to
                                                             "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string"
-                                                    )
+                                                        "type" to "string",
+                                                    ),
                                             )
                                         )
                                     )
@@ -225,7 +227,9 @@ class BetaMessageCreateParamsTest {
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_5_HAIKU_LATEST)
                 .build()
+
         val body = params._body()
+
         assertThat(body).isNotNull
         assertThat(body.maxTokens()).isEqualTo(1024L)
         assertThat(body.messages())

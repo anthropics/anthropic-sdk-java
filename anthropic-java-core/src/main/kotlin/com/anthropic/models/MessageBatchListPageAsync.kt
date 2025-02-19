@@ -88,13 +88,8 @@ private constructor(
         fun of(
             batchesService: BatchServiceAsync,
             params: MessageBatchListParams,
-            response: Response
-        ) =
-            MessageBatchListPageAsync(
-                batchesService,
-                params,
-                response,
-            )
+            response: Response,
+        ) = MessageBatchListPageAsync(batchesService, params, response)
     }
 
     @NoAutoDetect
@@ -205,24 +200,16 @@ private constructor(
             }
 
             fun build() =
-                Response(
-                    data,
-                    hasMore,
-                    firstId,
-                    lastId,
-                    additionalProperties.toImmutable(),
-                )
+                Response(data, hasMore, firstId, lastId, additionalProperties.toImmutable())
         }
     }
 
-    class AutoPager(
-        private val firstPage: MessageBatchListPageAsync,
-    ) {
+    class AutoPager(private val firstPage: MessageBatchListPageAsync) {
 
         fun forEach(action: Predicate<MessageBatch>, executor: Executor): CompletableFuture<Void> {
             fun CompletableFuture<Optional<MessageBatchListPageAsync>>.forEach(
                 action: (MessageBatch) -> Boolean,
-                executor: Executor
+                executor: Executor,
             ): CompletableFuture<Void> =
                 thenComposeAsync(
                     { page ->
@@ -231,7 +218,7 @@ private constructor(
                             .map { it.getNextPage().forEach(action, executor) }
                             .orElseGet { CompletableFuture.completedFuture(null) }
                     },
-                    executor
+                    executor,
                 )
             return CompletableFuture.completedFuture(Optional.of(firstPage))
                 .forEach(action::test, executor)

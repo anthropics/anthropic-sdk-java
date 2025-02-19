@@ -32,7 +32,7 @@ import java.util.Optional
  */
 class CompletionCreateParams
 private constructor(
-    private val body: CompletionCreateBody,
+    private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -189,16 +189,16 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    @JvmSynthetic internal fun _body(): CompletionCreateBody = body
+    @JvmSynthetic internal fun _body(): Body = body
 
     override fun _headers(): Headers = additionalHeaders
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     @NoAutoDetect
-    class CompletionCreateBody
+    class Body
     @JsonCreator
-    internal constructor(
+    private constructor(
         @JsonProperty("max_tokens_to_sample")
         @ExcludeMissing
         private val maxTokensToSample: JsonField<Long> = JsonMissing.of(),
@@ -387,7 +387,7 @@ private constructor(
 
         private var validated: Boolean = false
 
-        fun validate(): CompletionCreateBody = apply {
+        fun validate(): Body = apply {
             if (validated) {
                 return@apply
             }
@@ -410,7 +410,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [CompletionCreateBody]. */
+        /** A builder for [Body]. */
         class Builder internal constructor() {
 
             private var maxTokensToSample: JsonField<Long>? = null
@@ -424,16 +424,16 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(completionCreateBody: CompletionCreateBody) = apply {
-                maxTokensToSample = completionCreateBody.maxTokensToSample
-                model = completionCreateBody.model
-                prompt = completionCreateBody.prompt
-                metadata = completionCreateBody.metadata
-                stopSequences = completionCreateBody.stopSequences.map { it.toMutableList() }
-                temperature = completionCreateBody.temperature
-                topK = completionCreateBody.topK
-                topP = completionCreateBody.topP
-                additionalProperties = completionCreateBody.additionalProperties.toMutableMap()
+            internal fun from(body: Body) = apply {
+                maxTokensToSample = body.maxTokensToSample
+                model = body.model
+                prompt = body.prompt
+                metadata = body.metadata
+                stopSequences = body.stopSequences.map { it.toMutableList() }
+                temperature = body.temperature
+                topK = body.topK
+                topP = body.topP
+                additionalProperties = body.additionalProperties.toMutableMap()
             }
 
             /**
@@ -640,8 +640,8 @@ private constructor(
                 keys.forEach(::removeAdditionalProperty)
             }
 
-            fun build(): CompletionCreateBody =
-                CompletionCreateBody(
+            fun build(): Body =
+                Body(
                     checkRequired("maxTokensToSample", maxTokensToSample),
                     checkRequired("model", model),
                     checkRequired("prompt", prompt),
@@ -659,7 +659,7 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is CompletionCreateBody && maxTokensToSample == other.maxTokensToSample && model == other.model && prompt == other.prompt && metadata == other.metadata && stopSequences == other.stopSequences && temperature == other.temperature && topK == other.topK && topP == other.topP && additionalProperties == other.additionalProperties /* spotless:on */
+            return /* spotless:off */ other is Body && maxTokensToSample == other.maxTokensToSample && model == other.model && prompt == other.prompt && metadata == other.metadata && stopSequences == other.stopSequences && temperature == other.temperature && topK == other.topK && topP == other.topP && additionalProperties == other.additionalProperties /* spotless:on */
         }
 
         /* spotless:off */
@@ -669,7 +669,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "CompletionCreateBody{maxTokensToSample=$maxTokensToSample, model=$model, prompt=$prompt, metadata=$metadata, stopSequences=$stopSequences, temperature=$temperature, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+            "Body{maxTokensToSample=$maxTokensToSample, model=$model, prompt=$prompt, metadata=$metadata, stopSequences=$stopSequences, temperature=$temperature, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
     }
 
     fun toBuilder() = Builder().from(this)
@@ -683,7 +683,7 @@ private constructor(
     @NoAutoDetect
     class Builder internal constructor() {
 
-        private var body: CompletionCreateBody.Builder = CompletionCreateBody.builder()
+        private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
