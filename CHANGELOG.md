@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.3.0 (2025-02-19)
+
+Full Changelog: [v0.2.0...v0.3.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.2.0...v0.3.0)
+
+### Features
+
+* **client:** support `JsonField#asX()` for known values ([#118](https://github.com/anthropics/anthropic-sdk-java/issues/118)) ([f3eb6d4](https://github.com/anthropics/anthropic-sdk-java/commit/f3eb6d43c4f9a0ec1024322192155936e6eb7c47))
+* **client:** update enum `asX` methods ([#117](https://github.com/anthropics/anthropic-sdk-java/issues/117)) ([d7ce356](https://github.com/anthropics/anthropic-sdk-java/commit/d7ce356315b40e869851292bf74c9cbee76d10c5))
+
+
+### Chores
+
+* **internal:** make body class constructors private ([ac8128c](https://github.com/anthropics/anthropic-sdk-java/commit/ac8128c92f8d849ec7954a808866399f6b48bbf6))
+* **internal:** make body classes for multipart requests ([ac8128c](https://github.com/anthropics/anthropic-sdk-java/commit/ac8128c92f8d849ec7954a808866399f6b48bbf6))
+* **internal:** misc formatting changes ([ac8128c](https://github.com/anthropics/anthropic-sdk-java/commit/ac8128c92f8d849ec7954a808866399f6b48bbf6))
+* **internal:** optimize build and test perf ([d14a7b6](https://github.com/anthropics/anthropic-sdk-java/commit/d14a7b6b2b157fb7533e7db1359eff116563c83d))
+* **internal:** refactor `PhantomReachableClosingAsyncStreamResponse` impl ([#112](https://github.com/anthropics/anthropic-sdk-java/issues/112)) ([a87231c](https://github.com/anthropics/anthropic-sdk-java/commit/a87231c5eef48120b28d3de4e3c1b12f78bafec0))
+* **internal:** rename internal body classes ([ac8128c](https://github.com/anthropics/anthropic-sdk-java/commit/ac8128c92f8d849ec7954a808866399f6b48bbf6))
+* **internal:** update formatter ([#115](https://github.com/anthropics/anthropic-sdk-java/issues/115)) ([d14a7b6](https://github.com/anthropics/anthropic-sdk-java/commit/d14a7b6b2b157fb7533e7db1359eff116563c83d))
+* **internal:** update some formatting in `Values.kt` ([f3eb6d4](https://github.com/anthropics/anthropic-sdk-java/commit/f3eb6d43c4f9a0ec1024322192155936e6eb7c47))
+* **internal:** use better test example values ([#116](https://github.com/anthropics/anthropic-sdk-java/issues/116)) ([ac8128c](https://github.com/anthropics/anthropic-sdk-java/commit/ac8128c92f8d849ec7954a808866399f6b48bbf6))
+
+
+### Documentation
+
+* add more phantom reachability docs ([a87231c](https://github.com/anthropics/anthropic-sdk-java/commit/a87231c5eef48120b28d3de4e3c1b12f78bafec0))
+
 ## 0.2.0 (2025-02-12)
 
 Full Changelog: [v0.1.0...v0.2.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0...v0.2.0)
