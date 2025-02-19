@@ -1,9 +1,16 @@
 # Anthropic Java API Library
 
+> [!NOTE]  
+> The Anthropic Java API Library is currently in _beta_.
+>
+> There may be minor breaking changes.
+>
+> Have thoughts or feedback? [File an issue](https://github.com/anthropics/anthropic-sdk-java/issues/new) or comment on [this discussion](https://github.com/anthropics/anthropic-sdk-java/discussions/95). 
+
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java/0.0.1-alpha.0)
-[![javadoc](https://javadoc.io/badge2/com.anthropic/anthropic-java/0.0.1-alpha.0/javadoc.svg)](https://javadoc.io/doc/com.anthropic/anthropic-java/0.0.1-alpha.0)
+[![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java/0.2.0)
+[![javadoc](https://javadoc.io/badge2/com.anthropic/anthropic-java/0.2.0/javadoc.svg)](https://javadoc.io/doc/com.anthropic/anthropic-java/0.2.0)
 
 <!-- x-release-please-end -->
 
@@ -18,7 +25,7 @@ The REST API documentation can be found on [docs.anthropic.com](https://docs.ant
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java:0.0.1-alpha.0")
+implementation("com.anthropic:anthropic-java:0.2.0")
 ```
 
 ### Maven
@@ -27,7 +34,7 @@ implementation("com.anthropic:anthropic-java:0.0.1-alpha.0")
 <dependency>
     <groupId>com.anthropic</groupId>
     <artifactId>anthropic-java</artifactId>
-    <version>0.0.1-alpha.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
@@ -38,6 +45,8 @@ implementation("com.anthropic:anthropic-java:0.0.1-alpha.0")
 This library requires Java 8 or later.
 
 ## Usage
+
+See the [`anthropic-java-example`](anthropic-java-example/src/main/java/com/anthropic/example) directory for complete and runnable examples.
 
 ### Configure the client
 

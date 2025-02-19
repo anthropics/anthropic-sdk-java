@@ -10,9 +10,9 @@ dependencies {
 
 tasks.withType<JavaCompile>().configureEach {
     // Allow using more modern APIs, like `List.of` and `Map.of`, in examples.
-    options.release.set(9)
+    options.release.set(11)
 }
 
 application {
-    mainClass = "com.anthropic.example.Main"
+    mainClass = "com.anthropic.example.MessagesExample"
 }
