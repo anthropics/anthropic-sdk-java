@@ -3,6 +3,7 @@
 package com.anthropic.models
 
 import com.anthropic.core.JsonValue
+import kotlin.test.assertNotNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -172,7 +173,7 @@ class BetaMessageBatchCreateParamsTest {
 
         val body = params._body()
 
-        assertThat(body).isNotNull
+        assertNotNull(body)
         assertThat(body.requests())
             .isEqualTo(
                 listOf(
@@ -274,7 +275,7 @@ class BetaMessageBatchCreateParamsTest {
 
         val body = params._body()
 
-        assertThat(body).isNotNull
+        assertNotNull(body)
         assertThat(body.requests())
             .isEqualTo(
                 listOf(

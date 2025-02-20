@@ -3,6 +3,7 @@
 package com.anthropic.models
 
 import com.anthropic.core.JsonValue
+import kotlin.test.assertNotNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -120,7 +121,7 @@ class MessageCountTokensParamsTest {
 
         val body = params._body()
 
-        assertThat(body).isNotNull
+        assertNotNull(body)
         assertThat(body.messages())
             .isEqualTo(
                 listOf(
@@ -199,7 +200,7 @@ class MessageCountTokensParamsTest {
 
         val body = params._body()
 
-        assertThat(body).isNotNull
+        assertNotNull(body)
         assertThat(body.messages())
             .isEqualTo(
                 listOf(
