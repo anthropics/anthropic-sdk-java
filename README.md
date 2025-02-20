@@ -209,10 +209,25 @@ client.async().messages().createStreaming(params).subscribe(new AsyncStreamRespo
             System.out.println("Something went wrong!");
             throw new RuntimeException(error.get());
         } else {
-            System.out.println("Something went wrong!");
+            System.out.println("No more chunks!");
         }
     }
 });
+
+// Or use futures
+client.async().messages().createStreaming(params)
+    .subscribe(chunk -> {
+        System.out.println(chunk);
+    })
+    .onCompleteFuture();
+    .whenComplete((unused, error) -> {
+        if (error != null) {
+            System.out.println("Something went wrong!");
+            throw new RuntimeException(error);
+        } else {
+            System.out.println("No more chunks!");
+        }
+    });
 ```
 
 Async streaming uses a dedicated per-client cached thread pool `Executor` to stream without blocking the current thread. This default is suitable for most purposes.
