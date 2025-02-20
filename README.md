@@ -182,9 +182,6 @@ try (StreamResponse<RawMessageStreamEvent> streamResponse = client.messages().cr
         System.out.println(chunk);
     });
     System.out.println("No more chunks!");
-} catch (Exception e) {
-    System.out.println("Something went wrong!");
-    throw new RuntimeException(e);
 }
 ```
 
