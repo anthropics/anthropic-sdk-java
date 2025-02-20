@@ -2,10 +2,8 @@ package com.anthropic.example;
 
 import com.anthropic.client.AnthropicClientAsync;
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync;
-import com.anthropic.core.http.AsyncStreamResponse;
 import com.anthropic.models.*;
 import com.anthropic.models.MessageBatch.ProcessingStatus;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public final class BatchAsyncExample {
@@ -40,33 +38,21 @@ public final class BatchAsyncExample {
                 .thenComposeAsync(batch -> pollBatch(client, batch))
                 .thenComposeAsync(batch -> {
                     System.out.println();
-
-                    CompletableFuture<MessageBatch> batchFuture = new CompletableFuture<>();
-
-                    // TODO: Update this example once we support expose an `onCompleteFuture()` method.
-                    client.messages()
+                    return client.messages()
                             .batches()
                             .resultsStreaming(MessageBatchResultsParams.builder()
                                     .messageBatchId(batch.id())
                                     .build())
-                            .subscribe(new AsyncStreamResponse.Handler<>() {
-                                @Override
-                                public void onNext(MessageBatchIndividualResponse response) {
-                                    System.out.println(response.customId());
-                                    Message message =
-                                            response.result().asSucceeded().message();
-                                    message.content().stream()
-                                            .flatMap(contentBlock -> contentBlock.text().stream())
-                                            .forEach(textBlock -> System.out.println(textBlock.text()));
-                                }
-
-                                @Override
-                                public void onComplete(Optional<Throwable> error) {
-                                    error.ifPresentOrElse(
-                                            batchFuture::completeExceptionally, () -> batchFuture.complete(batch));
-                                }
-                            });
-                    return batchFuture;
+                            .subscribe(response -> {
+                                System.out.println(response.customId());
+                                Message message =
+                                        response.result().asSucceeded().message();
+                                message.content().stream()
+                                        .flatMap(contentBlock -> contentBlock.text().stream())
+                                        .forEach(textBlock -> System.out.println(textBlock.text()));
+                            })
+                            .onCompleteFuture()
+                            .thenApply(unused -> batch);
                 })
                 .thenComposeAsync(batch -> client.messages()
                         .batches()
