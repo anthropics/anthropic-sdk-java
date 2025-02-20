@@ -34,7 +34,7 @@ class OkHttpClient private constructor(
 
     /**
      * [Backend] (optional) that may be required to authenticate and authorize
-     * requests to an Anthropic service or adapt requests and responses from
+     * requests to an Anthropic service or adapt requests to and responses from
      * different backends to the default Anthropic API.
      */
     private val backend: Backend?)
@@ -45,9 +45,10 @@ class OkHttpClient private constructor(
         requestOptions: RequestOptions,
     ): HttpResponse {
         val preparedRequest = backend?.prepareRequest(request) ?: request
-        val signRequest = preparedRequest.resolveUrl()
-        val signedRequest = backend?.signRequest(signRequest) ?: signRequest
-        val call = newCall(signedRequest, requestOptions)
+        val resolvedRequest = preparedRequest.resolveUrl()
+        val authorizedRequest =
+            backend?.authorizeRequest(resolvedRequest) ?: resolvedRequest
+        val call = newCall(authorizedRequest, requestOptions)
 
         return try {
             val response = call.execute().toResponse()
@@ -56,7 +57,7 @@ class OkHttpClient private constructor(
         } catch (e: IOException) {
             throw AnthropicIoException("Request failed", e)
         } finally {
-            signedRequest.body?.close()
+            authorizedRequest.body?.close()
         }
     }
 
@@ -65,13 +66,14 @@ class OkHttpClient private constructor(
         requestOptions: RequestOptions,
     ): CompletableFuture<HttpResponse> {
         val preparedRequest = backend?.prepareRequest(request) ?: request
-        val signRequest = preparedRequest.resolveUrl()
-        val signedRequest = backend?.signRequest(signRequest) ?: signRequest
+        val resolvedRequest = preparedRequest.resolveUrl()
+        val authorizedRequest =
+            backend?.authorizeRequest(resolvedRequest) ?: resolvedRequest
         val future = CompletableFuture<HttpResponse>()
 
-        signedRequest.body?.run { future.whenComplete { _, _ -> close() } }
+        authorizedRequest.body?.run { future.whenComplete { _, _ -> close() } }
 
-        newCall(signedRequest, requestOptions)
+        newCall(authorizedRequest, requestOptions)
             .enqueue(
                 object : Callback {
                     override fun onResponse(call: Call, response: Response) {

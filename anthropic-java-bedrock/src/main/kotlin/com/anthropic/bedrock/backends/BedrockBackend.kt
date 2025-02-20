@@ -54,7 +54,7 @@ class BedrockBackend private constructor(
     /**
      * The name of the AWS region hosting the Bedrock service.
      */
-    @get:JvmName("region")  val region: Region,
+    @get:JvmName("region") val region: Region,
 ) : Backend {
 
     /**
@@ -84,12 +84,12 @@ class BedrockBackend private constructor(
     })
 
     companion object {
+        private const val ANTHROPIC_VERSION = "bedrock-2023-05-31"
+
         /**
          * The Amazon Bedrock service name used for model inferences.
          */
         private const val SERVICE_NAME = "bedrock-runtime"
-
-        private const val ANTHROPIC_VERSION = "bedrock-2023-05-31"
 
         /**
          * The name of the header that identifies the Anthropic beta versions.
@@ -140,8 +140,8 @@ class BedrockBackend private constructor(
         @JvmStatic fun builder() = Builder()
 
         /**
-         * Creates new [BedrockBackend] with credentials resolved from
-         * the environment or configuration files.
+         * Creates new [BedrockBackend] with credentials resolved from the
+         * environment or configuration files.
          *
          * This is a convenience method that is the equivalent of calling:
          *
@@ -262,6 +262,8 @@ class BedrockBackend private constructor(
         val model = jsonBody.remove("model")
             ?: throw AnthropicException("No model found in body.")
         val modelId = model.asText()
+        // For Bedrock, the "stream" property must be removed from the body.
+        // This differs from Vertex where the property is retained.
         val isStream = jsonBody.remove("stream")?.asBoolean() ?: false
 
         return request.toBuilder()
@@ -273,26 +275,43 @@ class BedrockBackend private constructor(
     }
 
     /**
-     * Signs the Amazon Bedrock request. Requests to AWS services are signed
-     * using the AWS secret access key (one of the required credentials). This
-     * operation adds new headers to the request that allow AWS to detect
-     * tampering or replay attacks.
+     * Signs and authorizes an Amazon Bedrock request. Requests to AWS services
+     * are signed using the AWS secret access key (one of the required
+     * credentials). This operation adds new headers to the request that allow
+     * AWS to detect tampering or replay attacks.
      *
-     * @param request The request to be signed. This will not be modified; it
-     *     will be copied and the modified copy will be returned.
+     * @param request The request to be signed and authorized. This will not be
+     *     modified; it will be copied and the modified copy will be returned.
      *
-     * @return The signed request including the signature headers.
+     * @return The signed request including the signature and authorization
+     *     headers.
+     *
+     * @throws AnthropicException If the request has already been authorized as
+     *     evidenced by the existing presence of an authorization header.
      */
-    override fun signRequest(request: HttpRequest): HttpRequest {
+    override fun authorizeRequest(request: HttpRequest): HttpRequest {
+        if (request.headers.names().contains("Authorization")) {
+            throw AnthropicException("Request is already authorized.")
+        }
+
         val awsSignRequest = SdkHttpRequest.builder()
             .uri(request.url)
             .method(SdkHttpMethod.fromValue(request.method.toString()))
             .apply {
                 // For the signature, copy the content type header from the body
-                // if the request object has no content type header.
+                // if the request object has no content type header. If there is
+                // no content type header, die. There needs to be one, otherwise
+                // the "sign()" call later will add a "content-type" header with
+                // a "null" value and crash "replaceAllHeaders". It is better to
+                // provide a meaningful error earlier in the execution.
                 if (request.headers.values(HEADER_CONTENT_TYPE).isEmpty()) {
-                    request.body?.contentType().let {
-                        appendHeader(HEADER_CONTENT_TYPE, it)
+                    if (request.body != null
+                        && request.body!!.contentType() != null) {
+                        appendHeader(HEADER_CONTENT_TYPE,
+                            request.body!!.contentType())
+                    } else {
+                        throw AnthropicException(
+                            "No content type in request headers or body.")
                     }
                 }
                 request.headers.names().forEach { name ->
@@ -347,7 +366,8 @@ class BedrockBackend private constructor(
      */
     override fun prepareResponse(response: HttpResponse): HttpResponse {
         if (!response.headers().values(HEADER_CONTENT_TYPE)
-                .contains(CONTENT_TYPE_AWS_EVENT_STREAM)) {
+                .contains(CONTENT_TYPE_AWS_EVENT_STREAM)
+        ) {
             return response
         }
 
@@ -388,7 +408,8 @@ class BedrockBackend private constructor(
         // thread, a "read" that blocks waiting for more data to be written,
         // would block the thread from executing the necessary "write" and cause
         // a deadlock.
-        threadPool.execute {
+//        threadPool.execute { // FIXME: Thread pool is not working!
+        Thread {
             responseInput.use { input ->
                 // "use" closes the piped output stream when done, which signals
                 // the end-of-file to the reader of the piped input stream.
@@ -396,14 +417,19 @@ class BedrockBackend private constructor(
                     // When fed enough data (see loop, below) to create a new
                     // "Message", the "Consumer.accept" lambda here is fired.
                     val messageDecoder = MessageDecoder { message ->
-                        val sseJson = String(Base64.getDecoder().decode(
-                            jsonMapper.readTree(message.payload)
-                                .get("bytes").asText()))
+                        val sseJson = String(
+                            Base64.getDecoder().decode(
+                                jsonMapper.readTree(message.payload)
+                                    .get("bytes").asText()
+                            )
+                        )
                         val sseEventType = jsonMapper.readTree(sseJson)
                             .get("type").asText()
 
-                        output.write("event: $sseEventType\ndata: $sseJson\n\n"
-                            .toByteArray())
+                        output.write(
+                            "event: $sseEventType\ndata: $sseJson\n\n"
+                                .toByteArray()
+                        )
                         output.flush()
                     }
 
@@ -414,7 +440,8 @@ class BedrockBackend private constructor(
                     }
                 }
             }
-        }
+        }.start()
+//        } // FIXME: Thead pool is not working!
 
         return object : HttpResponse {
             override fun statusCode(): Int = response.statusCode()
@@ -433,7 +460,7 @@ class BedrockBackend private constructor(
     /**
      * Releases resources used by this backend when they are no longer needed.
      * This method may block for up to 30 seconds in the unlikely event that
-     * some responses are still be prepared when this is called.
+     * some responses are still being prepared when this is called.
      */
     override fun close() {
         threadPool.shutdown()
@@ -461,7 +488,7 @@ class BedrockBackend private constructor(
         private var region: Region? = null
 
         /**
-         * Creates new [BedrockBackend] with credential values and the AWS
+         * Creates a new [BedrockBackend] with credential values and the AWS
          * region resolved automatically. Sources for the values may include
          * system properties, environment variables, AWS CLI configuration
          * files, AWS SSO resources, and more.

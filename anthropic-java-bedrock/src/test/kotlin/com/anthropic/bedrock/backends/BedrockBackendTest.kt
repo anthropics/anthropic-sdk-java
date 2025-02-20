@@ -5,7 +5,6 @@ import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.json
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicException
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
 import java.lang.System.clearProperty
 import java.lang.System.setProperty
@@ -243,6 +242,18 @@ internal class BedrockBackendTest {
         assertThatThrownBy { backend.prepareRequest(request) }
             .isExactlyInstanceOf(AnthropicException::class.java)
             .hasMessageStartingWith("No model found in body")
+    }
+
+    @Test
+    fun prepareRequestNoPathSegments() {
+        initEnv()
+        val backend = BedrockBackend.fromEnv()
+
+        // Request does not contain any path segments.
+        val request = createRequest("""{"model":"$MODEL_ID"}""")
+        assertThatThrownBy { backend.prepareRequest(request) }
+            .isExactlyInstanceOf(AnthropicException::class.java)
+            .hasMessageStartingWith("Expected first 'v1'")
     }
 
     @Test
@@ -546,11 +557,28 @@ internal class BedrockBackendTest {
         assertThat(betaVersions).contains("b5")
         assertThat(betaVersions).contains("b6")
     }
+    @Test
+    fun authorizeRequestAlreadyAuthorized() {
+        initEnv()
+        val backend = BedrockBackend.fromEnv()
+        val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .url("https://bedrock-runtime.us-east-1.amazonaws.com/path1/path2")
+            .addPathSegment("path-1")
+            .putQueryParam("param-1", "param-value-1")
+            .putHeader("content-type", "on/request")
+            .putHeader("X-Test", "header-value")
+            .build()
+        val authorizedRequest = backend.authorizeRequest(request)
+
+        assertThatThrownBy { backend.authorizeRequest(authorizedRequest) }
+            .isExactlyInstanceOf(AnthropicException::class.java)
+            .hasMessage("Request is already authorized.")
+    }
 
     @Test
-    fun signRequestContentTypeFromHeaders() {
+    fun authorizeRequestContentTypeFromHeaders() {
         initEnv()
-
         val backend = BedrockBackend.fromEnv()
         val request = HttpRequest.builder()
             .method(HttpMethod.POST)
@@ -565,7 +593,7 @@ internal class BedrockBackendTest {
             .putHeader("X-Test", "header-value-a")
             .putHeader("X-Test", "header-value-b")
             .build()
-        val signedRequest = backend.signRequest(request)
+        val signedRequest = backend.authorizeRequest(request)
 
         // Check that the signed request contains all the same elements that
         // were in the original request plus the new signature-related headers.
@@ -617,9 +645,8 @@ internal class BedrockBackendTest {
     }
 
     @Test
-    fun signRequestContentTypeFromBody() {
+    fun authorizeRequestContentTypeFromBody() {
         initEnv()
-
         val backend = BedrockBackend.fromEnv()
         val request = HttpRequest.builder()
             .method(HttpMethod.POST)
@@ -635,7 +662,7 @@ internal class BedrockBackendTest {
             // "application/json"
             .body(json(jsonMapper(), parseJson("{}")))
             .build()
-        val signedRequest = backend.signRequest(request)
+        val signedRequest = backend.authorizeRequest(request)
 
         // Only test the content type; the rest should be the same as the main
         // test of signing.
@@ -645,6 +672,27 @@ internal class BedrockBackendTest {
         assertThat(headers.values("content-type").size).isEqualTo(1)
         assertThat(headers.values("content-type")[0])
             .isEqualTo("application/json")
+    }
+
+    @Test
+    fun authorizeRequestNoBodyNoContentType() {
+        initEnv()
+        val backend = BedrockBackend.fromEnv()
+        val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .url("https://bedrock-runtime.us-east-1.amazonaws.com/path1/path2")
+            .addPathSegment("path-1")
+            .putQueryParam("param-1", "param-value-1")
+            .putHeader("X-Test", "header-value-a")
+            .build()
+
+        // Only test the content type; the rest should be the same as the main
+        // test of signing. If the request does not have a body and the request
+        // does not have a content type, then no content type can be inferred.
+        // This is should be a fatal condition.
+        assertThatThrownBy { backend.authorizeRequest(request) }
+            .isExactlyInstanceOf(AnthropicException::class.java)
+            .hasMessageStartingWith("No content type")
     }
 
     /**
@@ -720,7 +768,7 @@ internal class BedrockBackendTest {
      * @param jsonData The JSON data in string form.
      */
     private fun parseJson(jsonData: String): ObjectNode {
-        return ObjectMapper().readValue(jsonData, ObjectNode::class.java)
+        return jsonMapper().readValue(jsonData, ObjectNode::class.java)
     }
 
     /**
