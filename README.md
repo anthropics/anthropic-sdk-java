@@ -48,42 +48,15 @@ This library requires Java 8 or later.
 
 See the [`anthropic-java-example`](anthropic-java-example/src/main/java/com/anthropic/example) directory for complete and runnable examples.
 
-### Configure the client
-
-Use `AnthropicOkHttpClient.builder()` to configure the client.
-
-Alternately, set the environment with `ANTHROPIC_API_KEY` or `ANTHROPIC_AUTH_TOKEN`, and use `AnthropicOkHttpClient.fromEnv()` to read from the environment.
-
 ```java
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
-
-AnthropicClient client = AnthropicOkHttpClient.fromEnv();
-
-// Note: you can also call fromEnv() from the client builder, for example if you need to set additional properties
-AnthropicClient client = AnthropicOkHttpClient.builder()
-    .fromEnv()
-    // ... set properties on the builder
-    .build();
-```
-
-| Property  | Environment variable   | Required | Default value |
-| --------- | ---------------------- | -------- | ------------- |
-| apiKey    | `ANTHROPIC_API_KEY`    | false    | —             |
-| authToken | `ANTHROPIC_AUTH_TOKEN` | false    | —             |
-
-Read the documentation for more configuration options.
-
----
-
-### Example: creating a resource
-
-To create a new message, first use the `MessageCreateParams` builder to specify attributes, then pass that to the `create` method of the `messages` service.
-
-```java
 import com.anthropic.models.Message;
 import com.anthropic.models.MessageCreateParams;
 import com.anthropic.models.Model;
+
+// Configures using the `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` environment variables
+AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
@@ -93,104 +66,127 @@ MessageCreateParams params = MessageCreateParams.builder()
 Message message = client.messages().create(params);
 ```
 
-### Example: listing resources
+## Client configuration
 
-The Anthropic API provides a `list` method to get a paginated list of batches. You can retrieve the first page by:
+Configure the client using environment variables:
 
 ```java
-import com.anthropic.models.BetaMessageBatch;
-import com.anthropic.models.BetaMessageBatchListPage;
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 
-BetaMessageBatchListPage page = client.beta().messages().batches().list();
-for (BetaMessageBatch batch : page.data()) {
-    System.out.println(batch);
-}
+// Configures using the `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` environment variables
+AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 ```
 
-Use the `BetaMessageBatchListParams` builder to set parameters:
+Or manually:
 
 ```java
-import com.anthropic.models.AnthropicBeta;
-import com.anthropic.models.BetaMessageBatchListPage;
-import com.anthropic.models.BetaMessageBatchListParams;
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 
-BetaMessageBatchListParams params = BetaMessageBatchListParams.builder()
-    .afterId("after_id")
-    .beforeId("before_id")
-    .limit(20L)
-    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+AnthropicClient client = AnthropicOkHttpClient.builder()
+    .apiKey("my-anthropic-api-key")
     .build();
-BetaMessageBatchListPage page1 = client.beta().messages().batches().list(params);
-
-// Using the `from` method of the builder you can reuse previous params values:
-BetaMessageBatchListPage page2 = client.beta().messages().batches().list(BetaMessageBatchListParams.builder()
-    .from(params)
-    .lastId("abc123...")
-    .build());
-
-// Or easily get params for the next page by using the helper `getNextPageParams`:
-BetaMessageBatchListPage page3 = client.beta().messages().batches().list(params.getNextPageParams(page2));
 ```
 
-See [Pagination](#pagination) below for more information on transparently working with lists of objects without worrying about fetching each page.
-
----
-
-## Requests
-
-### Parameters and bodies
-
-To make a request to the Anthropic API, you generally build an instance of the appropriate `Params` class.
-
-See [Undocumented request params](#undocumented-request-params) for how to send arbitrary parameters.
-
-## Responses
-
-### Response validation
-
-When receiving a response, the Anthropic Java SDK will deserialize it into instances of the typed model classes. In rare cases, the API may return a response property that doesn't match the expected Java type. If you directly access the mistaken property, the SDK will throw an unchecked `AnthropicInvalidDataException` at runtime. If you would prefer to check in advance that that response is completely well-typed, call `.validate()` on the returned model.
+Or using a combination of the two approaches:
 
 ```java
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+
+AnthropicClient client = AnthropicOkHttpClient.builder()
+    // Configures using the `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` environment variables
+    .fromEnv()
+    .apiKey("my-anthropic-api-key")
+    .build();
+```
+
+See this table for the available options:
+
+| Setter      | Environment variable   | Required | Default value |
+| ----------- | ---------------------- | -------- | ------------- |
+| `apiKey`    | `ANTHROPIC_API_KEY`    | false    | -             |
+| `authToken` | `ANTHROPIC_AUTH_TOKEN` | false    | -             |
+
+> [!TIP]
+> Don't create more than one client in the same application. Each client has a connection pool and
+> thread pools, which are more efficient to share between requests.
+
+## Requests and responses
+
+To send a request to the Anthropic API, build an instance of some `Params` class and pass it to the corresponding client method. When the response is received, it will be deserialized into an instance of a Java class.
+
+For example, `client.messages().create(...)` should be called with an instance of `MessageCreateParams`, and it will return an instance of `Message`.
+
+## Asynchronous execution
+
+The default client is synchronous. To switch to asynchronous execution, call the `async()` method:
+
+```java
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.models.Message;
+import com.anthropic.models.MessageCreateParams;
+import com.anthropic.models.Model;
+import java.util.concurrent.CompletableFuture;
 
-Message message = client.messages().create().validate();
+// Configures using the `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` environment variables
+AnthropicClient client = AnthropicOkHttpClient.fromEnv();
+
+MessageCreateParams params = MessageCreateParams.builder()
+    .maxTokens(1024L)
+    .addUserMessage("Hello, Claude")
+    .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+    .build();
+CompletableFuture<Message> message = client.async().messages().create(params);
 ```
 
-### Response properties as JSON
-
-In rare cases, you may want to access the underlying JSON value for a response property rather than using the typed version provided by this SDK. Each model property has a corresponding JSON version, with an underscore before the method name, which returns a `JsonField` value.
+Or create an asynchronous client from the beginning:
 
 ```java
-import com.anthropic.core.JsonField;
-import java.util.Optional;
+import com.anthropic.client.AnthropicClientAsync;
+import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync;
+import com.anthropic.models.Message;
+import com.anthropic.models.MessageCreateParams;
+import com.anthropic.models.Model;
+import java.util.concurrent.CompletableFuture;
 
-JsonField field = responseObj._field();
+// Configures using the `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` environment variables
+AnthropicClientAsync client = AnthropicOkHttpClientAsync.fromEnv();
 
-if (field.isMissing()) {
-  // Value was not specified in the JSON response
-} else if (field.isNull()) {
-  // Value was provided as a literal null
-} else {
-  // See if value was provided as a string
-  Optional<String> jsonString = field.asString();
-
-  // If the value given by the API did not match the shape that the SDK expects
-  // you can deserialise into a custom type
-  MyClass myObj = responseObj._field().asUnknown().orElseThrow().convert(MyClass.class);
-}
+MessageCreateParams params = MessageCreateParams.builder()
+    .maxTokens(1024L)
+    .addUserMessage("Hello, Claude")
+    .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+    .build();
+CompletableFuture<Message> message = client.messages().create(params);
 ```
 
-### Additional model properties
+The asynchronous client supports the same options as the synchronous one, except most methods return `CompletableFuture`s.
 
-Sometimes, the server response may include additional properties that are not yet available in this library's types. You can access them using the model's `_additionalProperties` method:
+## Error handling
 
-```java
-import com.anthropic.core.JsonValue;
+The SDK throws custom unchecked exception types:
 
-JsonValue secret = apiErrorObject._additionalProperties().get("secret_field");
-```
+- `AnthropicServiceException`: Base class for HTTP errors. See this table for which exception subclass is thrown for each HTTP status code:
 
----
+  | Status | Exception                       |
+  | ------ | ------------------------------- |
+  | 400    | `BadRequestException`           |
+  | 401    | `AuthenticationException`       |
+  | 403    | `PermissionDeniedException`     |
+  | 404    | `NotFoundException`             |
+  | 422    | `UnprocessableEntityException`  |
+  | 429    | `RateLimitException`            |
+  | 5xx    | `InternalServerException`       |
+  | others | `UnexpectedStatusCodeException` |
+
+- `AnthropicIoException`: I/O networking errors.
+
+- `AnthropicInvalidDataException`: Failure to interpret successfully parsed data. For example, when accessing a property that's supposed to be required, but the API unexpectedly omitted it from the response.
+
+- `AnthropicException`: Base class for all exceptions. Most errors will result in one of the previously mentioned ones, but completely generic errors may be thrown using the base class.
 
 ## Pagination
 
@@ -244,36 +240,39 @@ while (page != null) {
 }
 ```
 
----
+## Logging
 
-## Error handling
+The SDK uses the standard [OkHttp logging interceptor](https://github.com/square/okhttp/tree/master/okhttp-logging-interceptor).
 
-This library throws exceptions in a single hierarchy for easy handling:
+Enable logging by setting the `ANTHROPIC_LOG` environment variable to `info`:
 
-- **`AnthropicException`** - Base exception for all exceptions
+```sh
+$ export ANTHROPIC_LOG=info
+```
 
-- **`AnthropicServiceException`** - HTTP errors with a well-formed response body we were able to parse. The exception message and the `.debuggingRequestId()` will be set by the server.
+Or to `debug` for more verbose logging:
 
-  | 400    | BadRequestException           |
-  | ------ | ----------------------------- |
-  | 401    | AuthenticationException       |
-  | 403    | PermissionDeniedException     |
-  | 404    | NotFoundException             |
-  | 422    | UnprocessableEntityException  |
-  | 429    | RateLimitException            |
-  | 5xx    | InternalServerException       |
-  | others | UnexpectedStatusCodeException |
-
-- **`AnthropicIoException`** - I/O networking errors
-- **`AnthropicInvalidDataException`** - any other exceptions on the client side, e.g.:
-  - We failed to serialize the request body
-  - We failed to parse the response body (has access to response code and body)
+```sh
+$ export ANTHROPIC_LOG=debug
+```
 
 ## Network options
 
 ### Retries
 
-Requests that experience certain errors are automatically retried 2 times by default, with a short exponential backoff. Connection errors (for example, due to a network connectivity problem), 408 Request Timeout, 409 Conflict, 429 Rate Limit, and >=500 Internal errors will all be retried by default. You can provide a `maxRetries` on the client builder to configure this:
+The SDK automatically retries 2 times by default, with a short exponential backoff.
+
+Only the following error types are retried:
+
+- Connection errors (for example, due to a network connectivity problem)
+- 408 Request Timeout
+- 409 Conflict
+- 429 Rate Limit
+- 5xx Internal
+
+The API may also explicitly instruct the SDK to retry or not retry a response.
+
+To set a custom number of retries, configure the client using the `maxRetries` method:
 
 ```java
 import com.anthropic.client.AnthropicClient;
@@ -287,7 +286,21 @@ AnthropicClient client = AnthropicOkHttpClient.builder()
 
 ### Timeouts
 
-Requests time out after 10 minutes by default. You can configure this on the client builder:
+Requests time out after 10 minutes by default.
+
+To set a custom timeout, configure the method call using the `timeout` method:
+
+```java
+import com.anthropic.models.Message;
+import com.anthropic.models.MessageCreateParams;
+import com.anthropic.models.Model;
+
+Message message = client.messages().create(
+  params, RequestOptions.builder().timeout(Duration.ofSeconds(30)).build()
+);
+```
+
+Or configure the default for all method calls at the client level:
 
 ```java
 import com.anthropic.client.AnthropicClient;
@@ -302,7 +315,7 @@ AnthropicClient client = AnthropicOkHttpClient.builder()
 
 ### Proxies
 
-Requests can be routed through a proxy. You can configure this on the client builder:
+To route requests through a proxy, configure the client using the `proxy` method:
 
 ```java
 import com.anthropic.client.AnthropicClient;
@@ -312,19 +325,21 @@ import java.net.Proxy;
 
 AnthropicClient client = AnthropicOkHttpClient.builder()
     .fromEnv()
-    .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("example.com", 8080)))
+    .proxy(new Proxy(
+      Proxy.Type.HTTP, new InetSocketAddress(
+        "https://example.com", 8080
+      )
+    ))
     .build();
 ```
 
-## Making custom/undocumented requests
+## Undocumented API functionality
 
-This library is typed for convenient access to the documented API. If you need to access undocumented params or response properties, the library can still be used.
+The SDK is typed for convenient usage of the documented API. However, it also supports working with undocumented or not yet supported parts of the API.
 
-### Undocumented request params
+### Parameters
 
-In [Example: creating a resource](#example-creating-a-resource) above, we used the `MessageCreateParams.builder()` to pass to the `create` method of the `messages` service.
-
-Sometimes, the API may support other properties that are not yet supported in the Java SDK types. In that case, you can attach them using raw setters:
+To set undocumented parameters, call the `putAdditionalHeader`, `putAdditionalQueryParam`, or `putAdditionalBodyProperty` methods on any `Params` class:
 
 ```java
 import com.anthropic.core.JsonValue;
@@ -337,26 +352,112 @@ MessageCreateParams params = MessageCreateParams.builder()
     .build();
 ```
 
-You can also use the `putAdditionalProperty` method on nested headers, query params, or body objects.
+These can be accessed on the built object later using the `_additionalHeaders()`, `_additionalQueryParams()`, and `_additionalBodyProperties()` methods. You can also set undocumented parameters on nested headers, query params, or body classes using the `putAdditionalProperty` method. These properties can be accessed on the built object later using the `_additionalProperties()` method.
 
-### Undocumented response properties
+To set a documented parameter or property to an undocumented or not yet supported _value_, pass a `JsonValue` object to its setter:
 
-To access undocumented response properties, you can use `res._additionalProperties()` on a response object to get a map of untyped fields of type `Map<String, JsonValue>`. You can then access fields like `res._additionalProperties().get("secret_prop").asString()` or use other helpers defined on the `JsonValue` class to extract it to a desired type.
+```java
+import com.anthropic.core.JsonValue;
+import com.anthropic.models.MessageCreateParams;
+import com.anthropic.models.Model;
 
-## Logging
-
-We use the standard [OkHttp logging interceptor](https://github.com/square/okhttp/tree/master/okhttp-logging-interceptor).
-
-You can enable logging by setting the environment variable `ANTHROPIC_LOG` to `info`.
-
-```sh
-$ export ANTHROPIC_LOG=info
+MessageCreateParams params = MessageCreateParams.builder()
+    .maxTokens(JsonValue.from(3.14))
+    .addUserMessage("Hello, Claude")
+    .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+    .build();
 ```
 
-Or to `debug` for more verbose logging.
+### Response properties
 
-```sh
-$ export ANTHROPIC_LOG=debug
+To access undocumented response properties, call the `_additionalProperties()` method:
+
+```java
+import com.anthropic.core.JsonValue;
+import java.util.Map;
+
+Map<String, JsonValue> additionalProperties = client.messages().create(params)._additionalProperties();
+JsonValue secretPropertyValue = additionalProperties.get("secretProperty");
+
+String result = secretPropertyValue.accept(new JsonValue.Visitor<>() {
+    @Override
+    public String visitNull() {
+        return "It's null!";
+    }
+
+    @Override
+    public String visitBoolean(boolean value) {
+        return "It's a boolean!";
+    }
+
+    @Override
+    public String visitNumber(Number value) {
+        return "It's a number!";
+    }
+
+    // Other methods include `visitMissing`, `visitString`, `visitArray`, and `visitObject`
+    // The default implementation of each unimplemented method delegates to `visitDefault`, which throws by default, but can also be overridden
+});
+```
+
+To access a property's raw JSON value, which may be undocumented, call its `_` prefixed method:
+
+```java
+import com.anthropic.core.JsonField;
+import java.util.Optional;
+
+JsonField<Long> maxTokens = client.messages().create(params)._maxTokens();
+
+if (maxTokens.isMissing()) {
+  // The property is absent from the JSON response
+} else if (maxTokens.isNull()) {
+  // The property was set to literal null
+} else {
+  // Check if value was provided as a string
+  // Other methods include `asNumber()`, `asBoolean()`, etc.
+  Optional<String> jsonString = maxTokens.asString();
+
+  // Try to deserialize into a custom type
+  MyClass myObject = maxTokens.asUnknown().orElseThrow().convert(MyClass.class);
+}
+```
+
+### Response validation
+
+In rare cases, the API may return a response that doesn't match the expected type. For example, the SDK may expect a property to contain a `String`, but the API could return something else.
+
+By default, the SDK will not throw an exception in this case. It will throw `AnthropicInvalidDataException` only if you directly access the property.
+
+If you would prefer to check that the response is completely well-typed upfront, then either call `validate()`:
+
+```java
+import com.anthropic.models.Message;
+
+Message message = client.messages().create(params).validate();
+```
+
+Or configure the method call to validate the response using the `responseValidation` method:
+
+```java
+import com.anthropic.models.Message;
+import com.anthropic.models.MessageCreateParams;
+import com.anthropic.models.Model;
+
+Message message = client.messages().create(
+  params, RequestOptions.builder().responseValidation(true).build()
+);
+```
+
+Or configure the default for all method calls at the client level:
+
+```java
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+
+AnthropicClient client = AnthropicOkHttpClient.builder()
+    .fromEnv()
+    .responseValidation(true)
+    .build();
 ```
 
 ## Semantic versioning
