@@ -18,8 +18,9 @@ import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import java.util.Base64
 import java.util.concurrent.Executors
+import java.util.concurrent.ThreadFactory
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicLong
 import software.amazon.awssdk.auth.credentials.AwsCredentials
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider
 import software.amazon.awssdk.http.ContentStreamProvider
@@ -65,13 +66,6 @@ class BedrockBackend private constructor(
     private val jsonMapper = jsonMapper()
 
     /**
-     * A counter for threads created in the thread pool. This is used when
-     * constructing the name of each pooled thread, so each thread can be
-     * identified in stack traces, debuggers, profilers, etc.
-     */
-    private val threadCount = AtomicInteger(0)
-
-    /**
      * The thread pool used by [prepareResponse] for piped I/O that translates
      * AWS _EventStream_ data into Server-Sent Events (SSE) data. When this
      * backend is done, calling [close] will shut down this thread pool.
@@ -79,9 +73,17 @@ class BedrockBackend private constructor(
      * This thread pool will grow as necessary to ensure that there is never a
      * wait for a thread to become available.
      */
-    private val threadPool = Executors.newCachedThreadPool({
-        Thread().apply { name = "bedrock-sse-${threadCount.getAndIncrement()}" }
-    })
+    private val threadPool = Executors.newCachedThreadPool(
+        object : ThreadFactory {
+            private val threadFactory = Executors.defaultThreadFactory()
+            private val count = AtomicLong(0)
+
+            override fun newThread(runnable: Runnable): Thread =
+                threadFactory.newThread(runnable).apply {
+                    name = "bedrock-sse-pipeline-${count.getAndIncrement()}"
+                }
+        }
+    )
 
     companion object {
         private const val ANTHROPIC_VERSION = "bedrock-2023-05-31"
@@ -408,8 +410,7 @@ class BedrockBackend private constructor(
         // thread, a "read" that blocks waiting for more data to be written,
         // would block the thread from executing the necessary "write" and cause
         // a deadlock.
-//        threadPool.execute { // FIXME: Thread pool is not working!
-        Thread {
+        threadPool.execute {
             responseInput.use { input ->
                 // "use" closes the piped output stream when done, which signals
                 // the end-of-file to the reader of the piped input stream.
@@ -440,8 +441,7 @@ class BedrockBackend private constructor(
                     }
                 }
             }
-        }.start()
-//        } // FIXME: Thead pool is not working!
+        }
 
         return object : HttpResponse {
             override fun statusCode(): Int = response.statusCode()
