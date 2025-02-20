@@ -10,7 +10,7 @@ import com.anthropic.models.RawMessageStreamEvent;
 public final class MessagesStreamingExample {
     private MessagesStreamingExample() {}
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         // Configures using the `ANTHROPIC_API_KEY` environment variable
         AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 

@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 public final class BatchAsyncExample {
     private BatchAsyncExample() {}
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         // Configures using the `ANTHROPIC_API_KEY` environment variable
         AnthropicClientAsync client = AnthropicOkHttpClientAsync.fromEnv();
 
