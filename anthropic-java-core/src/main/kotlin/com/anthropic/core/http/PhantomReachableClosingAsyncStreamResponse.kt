@@ -3,6 +3,7 @@ package com.anthropic.core.http
 import com.anthropic.core.closeWhenPhantomReachable
 import com.anthropic.core.http.AsyncStreamResponse.Handler
 import java.util.Optional
+import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 
 /**
@@ -32,6 +33,9 @@ internal class PhantomReachableClosingAsyncStreamResponse<T>(
         apply {
             asyncStreamResponse.subscribe(TrackedHandler(handler, reachabilityTracker), executor)
         }
+
+    override fun onCompleteFuture(): CompletableFuture<Void?> =
+        asyncStreamResponse.onCompleteFuture()
 
     override fun close() = asyncStreamResponse.close()
 }
