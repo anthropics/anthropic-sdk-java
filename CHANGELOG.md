@@ -1,5 +1,52 @@
 # Changelog
 
+## 0.3.0 (2025-02-21)
+
+Full Changelog: [v0.2.0...v0.3.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.2.0...v0.3.0)
+
+### Features
+
+* **client:** add an `AsyncStreamResponse#onCompleteFuture()` method ([#126](https://github.com/anthropics/anthropic-sdk-java/issues/126)) ([36473c8](https://github.com/anthropics/anthropic-sdk-java/commit/36473c86ebc32d83273e4fd92b136a9a4d81d90f))
+* **client:** get rid of annoying checked exceptions ([#124](https://github.com/anthropics/anthropic-sdk-java/issues/124)) ([da9d44d](https://github.com/anthropics/anthropic-sdk-java/commit/da9d44d1d704ad2fabea8f5c3664e21a0002e88d))
+* **client:** support `JsonField#asX()` for known values ([#118](https://github.com/anthropics/anthropic-sdk-java/issues/118)) ([f3eb6d4](https://github.com/anthropics/anthropic-sdk-java/commit/f3eb6d43c4f9a0ec1024322192155936e6eb7c47))
+* **client:** update enum `asX` methods ([#117](https://github.com/anthropics/anthropic-sdk-java/issues/117)) ([d7ce356](https://github.com/anthropics/anthropic-sdk-java/commit/d7ce356315b40e869851292bf74c9cbee76d10c5))
+
+
+### Bug Fixes
+
+* **client:** add missing `streamHandlerExecutor` method ([#121](https://github.com/anthropics/anthropic-sdk-java/issues/121)) ([d7eee9f](https://github.com/anthropics/anthropic-sdk-java/commit/d7eee9f2dc066deb0bde222bfa35aa83007aa1f9))
+* **client:** prevent `IOException` when closing stream early ([#128](https://github.com/anthropics/anthropic-sdk-java/issues/128)) ([25405b3](https://github.com/anthropics/anthropic-sdk-java/commit/25405b3562a71a0a0d3e62194d8e37d7464cd6c7))
+
+
+### Chores
+
+* **ci:** update gradle actions to v4 ([#123](https://github.com/anthropics/anthropic-sdk-java/issues/123)) ([1d0d249](https://github.com/anthropics/anthropic-sdk-java/commit/1d0d249137c44dc4c7fa4d35da3bd2e57d9cbd56))
+* **docs:** add faq to readme ([#127](https://github.com/anthropics/anthropic-sdk-java/issues/127)) ([8c74fb4](https://github.com/anthropics/anthropic-sdk-java/commit/8c74fb4d06c8e9bcd5301f499524a65439401ede))
+* **docs:** add streaming info to readme ([d7eee9f](https://github.com/anthropics/anthropic-sdk-java/commit/d7eee9f2dc066deb0bde222bfa35aa83007aa1f9))
+* **docs:** reorganize readme ([#119](https://github.com/anthropics/anthropic-sdk-java/issues/119)) ([64dc7b9](https://github.com/anthropics/anthropic-sdk-java/commit/64dc7b9395ad81b90057e45ec5bed74b64cdafd2))
+* **internal:** get rid of configuration cache ([#122](https://github.com/anthropics/anthropic-sdk-java/issues/122)) ([632b4fd](https://github.com/anthropics/anthropic-sdk-java/commit/632b4fd1f2b918167db20568fba861a367dadbfd))
+* **internal:** make body class constructors private ([ac8128c](https://github.com/anthropics/anthropic-sdk-java/commit/ac8128c92f8d849ec7954a808866399f6b48bbf6))
+* **internal:** make body classes for multipart requests ([ac8128c](https://github.com/anthropics/anthropic-sdk-java/commit/ac8128c92f8d849ec7954a808866399f6b48bbf6))
+* **internal:** misc formatting changes ([ac8128c](https://github.com/anthropics/anthropic-sdk-java/commit/ac8128c92f8d849ec7954a808866399f6b48bbf6))
+* **internal:** optimize build and test perf ([d14a7b6](https://github.com/anthropics/anthropic-sdk-java/commit/d14a7b6b2b157fb7533e7db1359eff116563c83d))
+* **internal:** refactor `PhantomReachableClosingAsyncStreamResponse` impl ([#112](https://github.com/anthropics/anthropic-sdk-java/issues/112)) ([a87231c](https://github.com/anthropics/anthropic-sdk-java/commit/a87231c5eef48120b28d3de4e3c1b12f78bafec0))
+* **internal:** rename internal body classes ([ac8128c](https://github.com/anthropics/anthropic-sdk-java/commit/ac8128c92f8d849ec7954a808866399f6b48bbf6))
+* **internal:** update formatter ([#115](https://github.com/anthropics/anthropic-sdk-java/issues/115)) ([d14a7b6](https://github.com/anthropics/anthropic-sdk-java/commit/d14a7b6b2b157fb7533e7db1359eff116563c83d))
+* **internal:** update some formatting in `Values.kt` ([f3eb6d4](https://github.com/anthropics/anthropic-sdk-java/commit/f3eb6d43c4f9a0ec1024322192155936e6eb7c47))
+* **internal:** use better test example values ([#116](https://github.com/anthropics/anthropic-sdk-java/issues/116)) ([ac8128c](https://github.com/anthropics/anthropic-sdk-java/commit/ac8128c92f8d849ec7954a808866399f6b48bbf6))
+
+
+### Documentation
+
+* add immutability explanation to readme ([#130](https://github.com/anthropics/anthropic-sdk-java/issues/130)) ([81915c1](https://github.com/anthropics/anthropic-sdk-java/commit/81915c1df9c17192f6940dd7982325c7cc6c38d0))
+* add more documentation to `AsyncStreamResponse` ([36473c8](https://github.com/anthropics/anthropic-sdk-java/commit/36473c86ebc32d83273e4fd92b136a9a4d81d90f))
+* add more phantom reachability docs ([a87231c](https://github.com/anthropics/anthropic-sdk-java/commit/a87231c5eef48120b28d3de4e3c1b12f78bafec0))
+* add stream cancellation example ([520fe0c](https://github.com/anthropics/anthropic-sdk-java/commit/520fe0c6a86cb0576585a0f71015d4943a4b6075))
+* add token counting example ([9d029a3](https://github.com/anthropics/anthropic-sdk-java/commit/9d029a305c02f4010ede74007215515607cb03d5))
+* remove unnecessary catch clauses in readme ([#125](https://github.com/anthropics/anthropic-sdk-java/issues/125)) ([a49f55a](https://github.com/anthropics/anthropic-sdk-java/commit/a49f55ae97273da3373d8d490cd356072ee72f7e))
+* remove unnecessary checked exception signatures ([5bb9829](https://github.com/anthropics/anthropic-sdk-java/commit/5bb98291b390ff3708467413ed0428acc4d050f1))
+* use `onCompleteFuture()` in examples ([8c45c54](https://github.com/anthropics/anthropic-sdk-java/commit/8c45c54d3382cdc02e6e90f7cf1af358ce403f1a))
+
 ## 0.2.0 (2025-02-12)
 
 Full Changelog: [v0.1.0...v0.2.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.1.0...v0.2.0)
