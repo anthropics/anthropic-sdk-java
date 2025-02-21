@@ -7,6 +7,7 @@ import com.anthropic.core.http.HttpRequestBody
 import com.anthropic.core.json
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicException
+import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.vertex.backends.VertexBackend.Builder
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
@@ -90,9 +91,7 @@ class VertexBackend private constructor(
          *
          * @throws AnthropicException See [Builder.build] for details.
          */
-        @JvmStatic fun fromEnv(): VertexBackend {
-            return builder().fromEnv().build()
-        }
+        @JvmStatic fun fromEnv(): VertexBackend = builder().fromEnv().build()
 
         /**
          * Creates a JSON [ObjectNode] representing the JSON data parsed from a
@@ -144,26 +143,32 @@ class VertexBackend private constructor(
      *
      * @throws AnthropicException If the path segments describe an operation
      *     that is not yet supported by Anthropic models hosted on the Vertex AI
-     *     service. If the JSON body is not present. If the request has already
-     *     been prepared.
+     *     service.
+     * @throws AnthropicInvalidDataException If the JSON body is not present.
+     *     If the model ID is missing from the JSON body. If the request has
+     *     already been prepared. If the service name is missing from the path
+     *     segments.
      */
     override fun prepareRequest(request: HttpRequest): HttpRequest {
         val pathSegments = request.pathSegments
 
         // Check that the request is valid has not been prepared already.
         if (pathSegments.isEmpty() || pathSegments[0] != "v1") {
-            throw AnthropicException("Expected first 'v1' path segment.")
+            throw AnthropicInvalidDataException(
+                "Expected first 'v1' path segment.")
         }
 
         if (pathSegments.size <= 1) {
-            throw AnthropicException("Missing service name from request URL.")
+            throw AnthropicInvalidDataException(
+                "Missing service name from request URL.")
         }
 
         var isCountTokens = false
 
         when (pathSegments[1]) {
             "projects" -> {
-                throw AnthropicException("Request already prepared for Vertex.")
+                throw AnthropicInvalidDataException(
+                    "Request already prepared for Vertex.")
             }
             "messages" -> {
                 if (pathSegments.size > 2) {
@@ -186,7 +191,7 @@ class VertexBackend private constructor(
         if (jsonBody != null) {
             jsonBody.put("anthropic_version", ANTHROPIC_VERSION)
         } else {
-            throw AnthropicException("Request has no body")
+            throw AnthropicInvalidDataException("Request has no body")
         }
 
         val endpoint: String
@@ -195,7 +200,8 @@ class VertexBackend private constructor(
             endpoint = "count-tokens:rawPredict"
         } else {
             val model = jsonBody.remove("model")
-                ?: throw AnthropicException("No model found in body.")
+                ?: throw AnthropicInvalidDataException(
+                    "No model found in body.")
             val modelId = model.asText()
             // For Vertex, the "stream" property must be retained in the body.
             // This differs from Bedrock where the property is removed.
@@ -226,14 +232,16 @@ class VertexBackend private constructor(
      *
      * @return A new request including the authorization header.
      *
-     * @throws AnthropicException If the request has already been authorized as
-     *     evidenced by the existing presence of an authorization header.
+     * @throws AnthropicInvalidDataException If the request has already been
+     *     authorized as evidenced by the existing presence of an authorization
+     *     header.
      */
     override fun authorizeRequest(request: HttpRequest): HttpRequest {
         googleCredentials.refreshIfExpired()
 
         if (request.headers.names().contains(HEADER_AUTHORIZATION)) {
-            throw AnthropicException("Request is already authorized.")
+            throw AnthropicInvalidDataException(
+                "Request is already authorized.")
         }
 
         return request.toBuilder()

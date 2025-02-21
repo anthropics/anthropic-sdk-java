@@ -5,6 +5,7 @@ import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.json
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicException
+import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.databind.node.ObjectNode
 import java.lang.System.clearProperty
 import java.lang.System.setProperty
@@ -64,21 +65,38 @@ internal class BedrockBackendTest {
 
     @Test
     fun awsCredentialsAccessKeyIDMissing() {
-        initEnv(false, true, false, true)
+        initEnv(
+            isSetAccessKeyID = false,
+            isSetSecretAccessKey = true,
+            isSetSessionToken = false,
+            isSetRegion = true
+        )
+
         assertThatThrownBy { BedrockBackend.fromEnv() }
             .isExactlyInstanceOf(AnthropicException::class.java)
     }
 
     @Test
     fun awsCredentialsSecretAccessKeyMissing() {
-        initEnv(true, false, false, true)
+        initEnv(
+            isSetAccessKeyID = true,
+            isSetSecretAccessKey = false,
+            isSetSessionToken = false,
+            isSetRegion = true
+        )
+
         assertThatThrownBy { BedrockBackend.fromEnv() }
             .isExactlyInstanceOf(AnthropicException::class.java)
     }
 
     @Test
     fun awsCredentialsFromEnv() {
-        initEnv(true, true, false, true)
+        initEnv(
+            isSetAccessKeyID = true,
+            isSetSecretAccessKey = true,
+            isSetSessionToken = false,
+            isSetRegion = true
+        )
         val backend = BedrockBackend.fromEnv()
 
         assertThat(backend.awsCredentials)
@@ -91,14 +109,26 @@ internal class BedrockBackendTest {
 
     @Test
     fun awsSessionCredentialsAccessKeyIDMissing() {
-        initEnv(false, true, true, true)
+        initEnv(
+            isSetAccessKeyID = false,
+            isSetSecretAccessKey = true,
+            isSetSessionToken = true,
+            isSetRegion = true
+        )
+
         assertThatThrownBy { BedrockBackend.fromEnv() }
             .isExactlyInstanceOf(AnthropicException::class.java)
     }
 
     @Test
     fun awsSessionCredentialsSecretAccessKeyMissing() {
-        initEnv(true, false, true, true)
+        initEnv(
+            isSetAccessKeyID = true,
+            isSetSecretAccessKey = false,
+            isSetSessionToken = true,
+            isSetRegion = true
+        )
+
         assertThatThrownBy { BedrockBackend.fromEnv() }
             .isExactlyInstanceOf(AnthropicException::class.java)
     }
@@ -150,7 +180,13 @@ internal class BedrockBackendTest {
 
     @Test
     fun regionMissing() {
-        initEnv(true, true, true, false)
+        initEnv(
+            isSetAccessKeyID = true,
+            isSetSecretAccessKey = true,
+            isSetSessionToken = true,
+            isSetRegion = false
+        )
+
         // This test runs slowly for some reason. Perhaps there is a long chain
         // of fall-backs in the region provider used in the class under test, or
         // some step in the chain performs some slow network operation.
@@ -173,6 +209,7 @@ internal class BedrockBackendTest {
         // Make credentials available from the environment, but do not use them
         // when building the backend.
         initEnv()
+
         assertThatThrownBy { BedrockBackend.builder().build() }
             .isExactlyInstanceOf(IllegalStateException::class.java)
             .hasMessageContaining("awsCredentials")
@@ -183,6 +220,7 @@ internal class BedrockBackendTest {
         // Make credentials available from the environment, but do not use them
         // when building the backend.
         initEnv()
+
         assertThatThrownBy { BedrockBackend.builder().build() }
             .isExactlyInstanceOf(IllegalStateException::class.java)
     }
@@ -207,16 +245,18 @@ internal class BedrockBackendTest {
             .isExactlyInstanceOf(AwsSessionCredentials::class.java)
         assertThat(backend.baseUrl())
             .isEqualTo("https://bedrock-runtime.$AWS_REGION.amazonaws.com")
+    }
 
+    @Test
+    fun baseUrlOtherRegion() {
+        initEnv()
         // Try with a *different* region to confirm that it is not hard-coded.
         val otherRegion = "eu-west-1"
+        setProperty(PROP_AWS_REGION, otherRegion)
+        val backend = BedrockBackend.fromEnv()
 
         assertThat(AWS_REGION).isNotEqualTo(otherRegion)
-        setProperty(PROP_AWS_REGION, otherRegion)
-
-        val backend2 = BedrockBackend.fromEnv()
-
-        assertThat(backend2.baseUrl())
+        assertThat(backend.baseUrl())
             .isEqualTo("https://bedrock-runtime.$otherRegion.amazonaws.com")
     }
 
@@ -228,7 +268,7 @@ internal class BedrockBackendTest {
 
         assertThat(request.body).isNull()
         assertThatThrownBy { backend.prepareRequest(request) }
-            .isExactlyInstanceOf(AnthropicException::class.java)
+            .isExactlyInstanceOf(AnthropicInvalidDataException::class.java)
             .hasMessageStartingWith("Request has no body")
     }
 
@@ -240,7 +280,7 @@ internal class BedrockBackendTest {
 
         assertThat(request.body).isNotNull()
         assertThatThrownBy { backend.prepareRequest(request) }
-            .isExactlyInstanceOf(AnthropicException::class.java)
+            .isExactlyInstanceOf(AnthropicInvalidDataException::class.java)
             .hasMessageStartingWith("No model found in body")
     }
 
@@ -248,11 +288,11 @@ internal class BedrockBackendTest {
     fun prepareRequestNoPathSegments() {
         initEnv()
         val backend = BedrockBackend.fromEnv()
-
         // Request does not contain any path segments.
         val request = createRequest("""{"model":"$MODEL_ID"}""")
+
         assertThatThrownBy { backend.prepareRequest(request) }
-            .isExactlyInstanceOf(AnthropicException::class.java)
+            .isExactlyInstanceOf(AnthropicInvalidDataException::class.java)
             .hasMessageStartingWith("Expected first 'v1'")
     }
 
@@ -260,19 +300,20 @@ internal class BedrockBackendTest {
     fun prepareRequestMissingV1() {
         initEnv()
         val backend = BedrockBackend.fromEnv()
-
         // Request does not contain a "v1" path segment.
         val request1 = createRequest(
             """{"model":"$MODEL_ID"}""", "d1", "messages")
+
         assertThatThrownBy { backend.prepareRequest(request1) }
-            .isExactlyInstanceOf(AnthropicException::class.java)
+            .isExactlyInstanceOf(AnthropicInvalidDataException::class.java)
             .hasMessageStartingWith("Expected first 'v1'")
 
         // Request contains a "v1" path segment, but not in first place.
         val request2 = createRequest(
             """{"model":"$MODEL_ID"}""", "messages", "v1")
+
         assertThatThrownBy { backend.prepareRequest(request2) }
-            .isExactlyInstanceOf(AnthropicException::class.java)
+            .isExactlyInstanceOf(AnthropicInvalidDataException::class.java)
             .hasMessageStartingWith("Expected first 'v1'")
     }
 
@@ -280,11 +321,11 @@ internal class BedrockBackendTest {
     fun prepareRequestMissingServiceName() {
         initEnv()
         val backend = BedrockBackend.fromEnv()
-
         // Request does not contain a "messages" or "complete" path segment.
         val request = createRequest("""{"model":"$MODEL_ID"}""", "v1")
+
         assertThatThrownBy { backend.prepareRequest(request) }
-            .isExactlyInstanceOf(AnthropicException::class.java)
+            .isExactlyInstanceOf(AnthropicInvalidDataException::class.java)
             .hasMessageStartingWith("Missing service name")
     }
 
@@ -384,6 +425,7 @@ internal class BedrockBackendTest {
             """{"model":"$MODEL_ID", "stream":false}""", "v1", "messages")
         val preparedRequest = backend.prepareRequest(request)
         val pathSegments = preparedRequest.pathSegments
+        val json = BedrockBackend.bodyToJson(preparedRequest.body, jsonMapper())
 
         // Check that it is the value of the "stream" property, not its mere
         // presence that causes a streaming request to be prepared. Similar
@@ -392,8 +434,6 @@ internal class BedrockBackendTest {
         assertThat(pathSegments[2]).isEqualTo("invoke")
 
         // "stream" should be removed from JSON body.
-        val json = BedrockBackend.bodyToJson(preparedRequest.body, jsonMapper())
-
         assertThat(json).isNotNull()
         assertThat(json!!.get("stream")).isNull()
     }
@@ -406,6 +446,7 @@ internal class BedrockBackendTest {
             """{"model":"$MODEL_ID"}""", "v1", "complete")
         val preparedRequest = backend.prepareRequest(request)
         val pathSegments = preparedRequest.pathSegments
+        val json = BedrockBackend.bodyToJson(preparedRequest.body, jsonMapper())
 
         // Path segments: "/model/<MODEL_ID>/invoke"
         assertThat(pathSegments.size).isEqualTo(3)
@@ -415,8 +456,6 @@ internal class BedrockBackendTest {
 
         // "model" should be removed from JSON body and "anthropic_version"
         // should be added.
-        val json = BedrockBackend.bodyToJson(preparedRequest.body, jsonMapper())
-
         assertThat(json).isNotNull()
         assertThat(json!!.get("model")).isNull()
         assertThat(json.get("stream")).isNull()
@@ -432,6 +471,7 @@ internal class BedrockBackendTest {
             """{"model":"$MODEL_ID", "stream":true}""", "v1", "complete")
         val preparedRequest = backend.prepareRequest(request)
         val pathSegments = preparedRequest.pathSegments
+        val json = BedrockBackend.bodyToJson(preparedRequest.body, jsonMapper())
 
         // Path segments: "/model/<MODEL_ID>/invoke-with-response-stream"
         assertThat(pathSegments.size).isEqualTo(3)
@@ -441,8 +481,6 @@ internal class BedrockBackendTest {
 
         // "model" and "stream" should be removed from JSON body and
         // "anthropic_version" should be added.
-        val json = BedrockBackend.bodyToJson(preparedRequest.body, jsonMapper())
-
         assertThat(json).isNotNull()
         assertThat(json!!.get("model")).isNull()
         assertThat(json.get("stream")).isNull()
@@ -457,6 +495,7 @@ internal class BedrockBackendTest {
         val request = createRequest(
             """{"model":"$MODEL_ID"}""", "v1", "messages")
         val preparedRequest = backend.prepareRequest(request)
+        val json = BedrockBackend.bodyToJson(preparedRequest.body, jsonMapper())
 
         // Only check that there is no header and no property in the body
         // specifying a beta version. The rest is tested elsewhere.
@@ -465,8 +504,6 @@ internal class BedrockBackendTest {
 
         // "model" and "stream" should be removed from JSON body and
         // "anthropic_version" should be added.
-        val json = BedrockBackend.bodyToJson(preparedRequest.body, jsonMapper())
-
         assertThat(json).isNotNull()
         assertThat(json!!.get("anthropic_beta")).isNull()
     }
@@ -481,16 +518,15 @@ internal class BedrockBackendTest {
             .putHeader("anthropic-beta", "b1")
             .build()
         val preparedRequest = backend.prepareRequest(request)
-
-        // The headers are not modified (that is not tested as it is not
-        // important whether they are or not). The beta versions from headers
-        // should be listed in a JSON array in the body.
         val json = BedrockBackend.bodyToJson(preparedRequest.body, jsonMapper())
 
         assertThat(json).isNotNull()
 
         val betaJson = json!!.get("anthropic_beta")
 
+        // The headers are not modified (that is not tested as it is not
+        // important whether they are or not). The beta versions from headers
+        // should be listed in a JSON array in the body.
         assertThat(betaJson).isNotNull()
         assertThat(betaJson.size()).isEqualTo(1)
         assertThat(betaJson[0].asText()).isEqualTo("b1")
@@ -572,7 +608,7 @@ internal class BedrockBackendTest {
         val authorizedRequest = backend.authorizeRequest(request)
 
         assertThatThrownBy { backend.authorizeRequest(authorizedRequest) }
-            .isExactlyInstanceOf(AnthropicException::class.java)
+            .isExactlyInstanceOf(AnthropicInvalidDataException::class.java)
             .hasMessage("Request is already authorized.")
     }
 
@@ -594,6 +630,7 @@ internal class BedrockBackendTest {
             .putHeader("X-Test", "header-value-b")
             .build()
         val signedRequest = backend.authorizeRequest(request)
+        val headers = signedRequest.headers
 
         // Check that the signed request contains all the same elements that
         // were in the original request plus the new signature-related headers.
@@ -619,8 +656,6 @@ internal class BedrockBackendTest {
             .isEqualTo(1)
         assertThat(signedRequest.queryParams.values("param-2")[0])
             .isEqualTo("param-value-2")
-
-        val headers = signedRequest.headers
 
         assertThat(headers.names()).contains("content-type")
         assertThat(headers.values("content-type").size).isEqualTo(1)
@@ -663,11 +698,10 @@ internal class BedrockBackendTest {
             .body(json(jsonMapper(), parseJson("{}")))
             .build()
         val signedRequest = backend.authorizeRequest(request)
+        val headers = signedRequest.headers
 
         // Only test the content type; the rest should be the same as the main
         // test of signing.
-        val headers = signedRequest.headers
-
         assertThat(headers.names()).contains("content-type")
         assertThat(headers.values("content-type").size).isEqualTo(1)
         assertThat(headers.values("content-type")[0])
@@ -691,7 +725,7 @@ internal class BedrockBackendTest {
         // does not have a content type, then no content type can be inferred.
         // This is should be a fatal condition.
         assertThatThrownBy { backend.authorizeRequest(request) }
-            .isExactlyInstanceOf(AnthropicException::class.java)
+            .isExactlyInstanceOf(AnthropicInvalidDataException::class.java)
             .hasMessageStartingWith("No content type")
     }
 
@@ -710,7 +744,12 @@ internal class BedrockBackendTest {
      * properties more selectively, see the other [initEnv] method.
      */
     private fun initEnv() {
-        initEnv(true, true, true, true)
+        initEnv(
+            isSetAccessKeyID = true,
+            isSetSecretAccessKey = true,
+            isSetSessionToken = true,
+            isSetRegion = true
+        )
     }
 
     /**
@@ -759,7 +798,12 @@ internal class BedrockBackendTest {
      * Clears all system properties set by [initEnv].
      */
     private fun clearEnv() {
-        initEnv(false, false, false, false)
+        initEnv(
+            isSetAccessKeyID = false,
+            isSetSecretAccessKey = false,
+            isSetSessionToken = false,
+            isSetRegion = false
+        )
     }
 
     /**
@@ -767,9 +811,8 @@ internal class BedrockBackendTest {
      *
      * @param jsonData The JSON data in string form.
      */
-    private fun parseJson(jsonData: String): ObjectNode {
-        return jsonMapper().readValue(jsonData, ObjectNode::class.java)
-    }
+    private fun parseJson(jsonData: String): ObjectNode =
+        jsonMapper().readValue(jsonData, ObjectNode::class.java)
 
     /**
      * Creates a new [HttpRequest] with the given path segments and JSON body.
@@ -782,11 +825,10 @@ internal class BedrockBackendTest {
      *     empty if none are required.
      */
     private fun createRequest(
-            jsonData: String?, vararg pathSegments: String): HttpRequest {
-        return HttpRequest.builder()
+            jsonData: String?, vararg pathSegments: String): HttpRequest =
+        HttpRequest.builder()
             .method(HttpMethod.POST) // A method is required.
             .addPathSegments(*pathSegments)
             .apply { jsonData?.let { body(json(jsonMapper(), parseJson(it))) } }
             .build()
-    }
 }

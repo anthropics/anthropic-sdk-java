@@ -162,6 +162,18 @@ class AnthropicOkHttpClientAsync private constructor() {
          */
         fun backend(backend: Backend?) = apply { this.backend = backend }
 
+        /**
+         * Sets the optional backend to be used for the backend service hosting
+         * Anthropic AI models. Implementations of the [Backend] interface can
+         * define the required credentials, prepare requests and handle
+         * responses for different backend services.
+         *
+         * @param backend The optional backend to be used. If connecting to the
+         *     default Anthropic backend service, a custom backend is not
+         *     required.
+         */
+        fun backend(backend: Optional<Backend>) = backend(backend.orElse(null))
+
         fun fromEnv() = apply { clientOptions.fromEnv() }
 
         fun build(): AnthropicClientAsync =

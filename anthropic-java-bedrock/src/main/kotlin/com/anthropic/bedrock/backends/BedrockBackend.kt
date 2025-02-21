@@ -10,6 +10,7 @@ import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.json
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicException
+import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
 import java.io.ByteArrayOutputStream
@@ -155,9 +156,7 @@ class BedrockBackend private constructor(
          *
          * @throws AnthropicException See [Builder.build] for details.
          */
-        @JvmStatic fun fromEnv(): BedrockBackend {
-            return builder().fromEnv().build()
-        }
+        @JvmStatic fun fromEnv(): BedrockBackend = builder().fromEnv().build()
 
         /**
          * Creates a JSON [ObjectNode] representing the JSON data parsed from a
@@ -215,19 +214,24 @@ class BedrockBackend private constructor(
      *
      * @throws AnthropicException If the path segments describe an operation
      *     that is not yet supported by Anthropic models hosted on the Bedrock
-     *     service. If the JSON body is not present. If the request has already
-     *     been prepared.
+     *     service.
+     * @throws AnthropicInvalidDataException If the JSON body is not present.
+     *     If the model ID is missing from the JSON body. If the request has
+     *     already been prepared. If the service name is missing from the path
+     *     segments.
      */
     override fun prepareRequest(request: HttpRequest): HttpRequest {
         val pathSegments = request.pathSegments
 
         // Check that the request is valid has not been prepared already.
         if (pathSegments.isEmpty() || pathSegments[0] != "v1") {
-            throw AnthropicException("Expected first 'v1' path segment.")
+            throw AnthropicInvalidDataException(
+                "Expected first 'v1' path segment.")
         }
 
         if (pathSegments.size <= 1) {
-            throw AnthropicException("Missing service name from request URL.")
+            throw AnthropicInvalidDataException(
+                "Missing service name from request URL.")
         }
 
         when (pathSegments[1]) {
@@ -249,7 +253,7 @@ class BedrockBackend private constructor(
         }
 
         val jsonBody: ObjectNode = bodyToJson(request.body, jsonMapper)
-            ?: throw AnthropicException("Request has no body")
+            ?: throw AnthropicInvalidDataException("Request has no body")
 
         jsonBody.put("anthropic_version", ANTHROPIC_VERSION)
 
@@ -262,7 +266,7 @@ class BedrockBackend private constructor(
         }
 
         val model = jsonBody.remove("model")
-            ?: throw AnthropicException("No model found in body.")
+            ?: throw AnthropicInvalidDataException("No model found in body.")
         val modelId = model.asText()
         // For Bedrock, the "stream" property must be removed from the body.
         // This differs from Vertex where the property is retained.
@@ -288,12 +292,15 @@ class BedrockBackend private constructor(
      * @return The signed request including the signature and authorization
      *     headers.
      *
-     * @throws AnthropicException If the request has already been authorized as
-     *     evidenced by the existing presence of an authorization header.
+     * @throws AnthropicInvalidDataException If the request has already been
+     *     authorized as evidenced by the existing presence of an authorization
+     *     header. If there is no content type header either on the request or
+     *     on the request body.
      */
     override fun authorizeRequest(request: HttpRequest): HttpRequest {
         if (request.headers.names().contains("Authorization")) {
-            throw AnthropicException("Request is already authorized.")
+            throw AnthropicInvalidDataException(
+                "Request is already authorized.")
         }
 
         val awsSignRequest = SdkHttpRequest.builder()
@@ -307,12 +314,11 @@ class BedrockBackend private constructor(
                 // a "null" value and crash "replaceAllHeaders". It is better to
                 // provide a meaningful error earlier in the execution.
                 if (request.headers.values(HEADER_CONTENT_TYPE).isEmpty()) {
-                    if (request.body != null
-                        && request.body!!.contentType() != null) {
+                    if (request.body?.contentType() != null) {
                         appendHeader(HEADER_CONTENT_TYPE,
                             request.body!!.contentType())
                     } else {
-                        throw AnthropicException(
+                        throw AnthropicInvalidDataException(
                             "No content type in request headers or body.")
                     }
                 }
@@ -362,14 +368,13 @@ class BedrockBackend private constructor(
      *     EventStream into an SSE stream, or the given response instance if no
      *     translation is required.
      *
-     * @throws AnthropicException If the response content type is an AWS
-     *     _EventStream_, but the "payloads" of the messages in that stream are
-     *     not JSON strings.
+     * @throws AnthropicInvalidDataException If the response content type is an
+     *     AWS _EventStream_, but the "payloads" of the messages in that stream
+     *     are not JSON strings.
      */
     override fun prepareResponse(response: HttpResponse): HttpResponse {
         if (!response.headers().values(HEADER_CONTENT_TYPE)
-                .contains(CONTENT_TYPE_AWS_EVENT_STREAM)
-        ) {
+                .contains(CONTENT_TYPE_AWS_EVENT_STREAM)) {
             return response
         }
 
@@ -377,10 +382,9 @@ class BedrockBackend private constructor(
             response.headers().values(HEADER_PAYLOAD_CONTENT_TYPE)
 
         if (!payloadContentType.contains(CONTENT_TYPE_JSON)) {
-            throw AnthropicException(
+            throw AnthropicInvalidDataException(
                 "Expected streamed Bedrock events to have content type of " +
-                        "$CONTENT_TYPE_JSON, but was $payloadContentType."
-            )
+                        "$CONTENT_TYPE_JSON, but was $payloadContentType.")
         }
 
         val responseInput = response.body()
@@ -459,12 +463,9 @@ class BedrockBackend private constructor(
 
     /**
      * Releases resources used by this backend when they are no longer needed.
-     * This method may block for up to 30 seconds in the unlikely event that
-     * some responses are still being prepared when this is called.
      */
     override fun close() {
         threadPool.shutdown()
-        threadPool.awaitTermination(30, TimeUnit.SECONDS)
     }
 
     /**
@@ -570,9 +571,7 @@ class BedrockBackend private constructor(
          *
          * @param region The AWS region to be used.
          */
-        fun region(region: Region) = apply {
-            this.region = region
-        }
+        fun region(region: Region) = apply { this.region = region }
 
         /**
          * Builds the new [BedrockBackend] from the data provided to the

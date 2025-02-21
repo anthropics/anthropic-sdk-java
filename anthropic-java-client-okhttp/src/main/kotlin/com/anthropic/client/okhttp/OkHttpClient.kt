@@ -44,11 +44,8 @@ class OkHttpClient private constructor(
         request: HttpRequest,
         requestOptions: RequestOptions,
     ): HttpResponse {
-        val preparedRequest = backend?.prepareRequest(request) ?: request
-        val resolvedRequest = preparedRequest.resolveUrl()
-        val authorizedRequest =
-            backend?.authorizeRequest(resolvedRequest) ?: resolvedRequest
-        val call = newCall(authorizedRequest, requestOptions)
+        val preparedRequest = prepareRequest(request)
+        val call = newCall(preparedRequest, requestOptions)
 
         return try {
             val response = call.execute().toResponse()
@@ -57,7 +54,7 @@ class OkHttpClient private constructor(
         } catch (e: IOException) {
             throw AnthropicIoException("Request failed", e)
         } finally {
-            authorizedRequest.body?.close()
+            preparedRequest.body?.close()
         }
     }
 
@@ -65,15 +62,12 @@ class OkHttpClient private constructor(
         request: HttpRequest,
         requestOptions: RequestOptions,
     ): CompletableFuture<HttpResponse> {
-        val preparedRequest = backend?.prepareRequest(request) ?: request
-        val resolvedRequest = preparedRequest.resolveUrl()
-        val authorizedRequest =
-            backend?.authorizeRequest(resolvedRequest) ?: resolvedRequest
+        val preparedRequest = prepareRequest(request)
         val future = CompletableFuture<HttpResponse>()
 
-        authorizedRequest.body?.run { future.whenComplete { _, _ -> close() } }
+        preparedRequest.body?.run { future.whenComplete { _, _ -> close() } }
 
-        newCall(authorizedRequest, requestOptions)
+        newCall(preparedRequest, requestOptions)
             .enqueue(
                 object : Callback {
                     override fun onResponse(call: Call, response: Response) {
@@ -98,6 +92,26 @@ class OkHttpClient private constructor(
         okHttpClient.dispatcher.executorService.shutdown()
         okHttpClient.connectionPool.evictAll()
         okHttpClient.cache?.close()
+    }
+
+    /**
+     * Prepares a request for execution. The request is prepared for the
+     * configured service backend (if any), its URL if fully resolved, and it
+     * is authorized by adding headers or signatures appropriate to the backend.
+     *
+     * @param request The "unprepared" request that should be prepared. This
+     *     will not be modified.
+     *
+     * @return A new "prepared" request instance, or the given request instance
+     *     if no preparation was required.
+     */
+    private fun prepareRequest(request: HttpRequest): HttpRequest {
+        val preparedRequest = backend?.prepareRequest(request) ?: request
+        val resolvedRequest = preparedRequest.resolveUrl()
+        val authorizedRequest =
+            backend?.authorizeRequest(resolvedRequest) ?: resolvedRequest
+
+        return authorizedRequest
     }
 
     private fun newCall(request: HttpRequest, requestOptions: RequestOptions): Call {
