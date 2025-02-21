@@ -2,6 +2,7 @@
 
 package com.anthropic.client.okhttp
 
+import com.anthropic.backends.Backend
 import com.anthropic.client.AnthropicClient
 import com.anthropic.client.AnthropicClientImpl
 import com.anthropic.core.ClientOptions
@@ -31,6 +32,13 @@ class AnthropicOkHttpClient private constructor() {
         // The default timeout for the client is 10 minutes.
         private var timeout: Duration = Duration.ofSeconds(600)
         private var proxy: Proxy? = null
+
+        /**
+         * The optional backend that may be used for authentication and
+         * authorization, request processing and response handling when using
+         * a backend service other than the default Anthropic service.
+         */
+        private var backend: Backend? = null
 
         fun baseUrl(baseUrl: String) = apply {
             clientOptions.baseUrl(baseUrl)
@@ -143,6 +151,29 @@ class AnthropicOkHttpClient private constructor() {
 
         fun authToken(authToken: Optional<String>) = authToken(authToken.orElse(null))
 
+        /**
+         * Sets the backend to be used for the backend service hosting Anthropic
+         * AI models. Implementations of the [Backend] interface can define the
+         * required credentials, prepare requests and handle responses for
+         * different backend services.
+         *
+         * @param backend The backend to be used. If connecting to the default
+         *     Anthropic backend service, a custom backend is not required.
+         */
+        fun backend(backend: Backend?) = apply { this.backend = backend }
+
+        /**
+         * Sets the optional backend to be used for the backend service hosting
+         * Anthropic AI models. Implementations of the [Backend] interface can
+         * define the required credentials, prepare requests and handle
+         * responses for different backend services.
+         *
+         * @param backend The optional backend to be used. If connecting to the
+         *     default Anthropic backend service, a custom backend is not
+         *     required.
+         */
+        fun backend(backend: Optional<Backend>) = backend(backend.orElse(null))
+
         fun fromEnv() = apply { clientOptions.fromEnv() }
 
         fun build(): AnthropicClient =
@@ -153,6 +184,7 @@ class AnthropicOkHttpClient private constructor() {
                             .baseUrl(baseUrl)
                             .timeout(timeout)
                             .proxy(proxy)
+                            .backend(backend)
                             .build()
                     )
                     .build()

@@ -51,6 +51,18 @@ private constructor(
             this.pathSegments.addAll(pathSegments)
         }
 
+        /**
+         * Replaces all path segments already set on this `Builder` with the
+         * given path segments.
+         *
+         * @param pathSegments The path segments that will replace all the
+         *     existing path segments added to the `Builder`. If no path
+         *     segments are given, all existing path segments are removed.
+         */
+        fun replaceAllPathSegments(vararg pathSegments: String) = apply {
+            this.pathSegments = pathSegments.toMutableList()
+        }
+
         fun headers(headers: Headers) = apply {
             this.headers.clear()
             putAllHeaders(headers)
