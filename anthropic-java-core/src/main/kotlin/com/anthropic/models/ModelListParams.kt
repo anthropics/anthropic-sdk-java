@@ -62,6 +62,10 @@ private constructor(
 
     companion object {
 
+        private val NONE = builder().build()
+
+        @JvmStatic fun none() = NONE
+
         @JvmStatic fun builder() = Builder()
     }
 

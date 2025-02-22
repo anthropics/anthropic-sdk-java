@@ -33,7 +33,7 @@ interface ModelServiceAsync {
      */
     @JvmOverloads
     fun list(
-        params: ModelListParams,
+        params: ModelListParams = ModelListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ModelListPageAsync>
 }
