@@ -32,7 +32,7 @@ interface ModelService {
      */
     @JvmOverloads
     fun list(
-        params: ModelListParams,
+        params: ModelListParams = ModelListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ModelListPage
 }
