@@ -170,7 +170,7 @@ The SDK defines methods that return response "chunk" streams, where each chunk c
 
 Some of these methods may have streaming and non-streaming variants, but a streaming method will always have a `Streaming` suffix in its name, even if it doesn't have a non-streaming variant.
 
-These streaming methods return `StreamResponse` for synchronous clients:
+These streaming methods return [`StreamResponse`](anthropic-java-core/src/main/kotlin/com/anthropic/core/http/StreamResponse.kt) for synchronous clients:
 
 ```java
 import com.anthropic.core.http.StreamResponse;
@@ -184,7 +184,7 @@ try (StreamResponse<RawMessageStreamEvent> streamResponse = client.messages().cr
 }
 ```
 
-Or `AsyncStreamResponse` for asynchronous clients:
+Or [`AsyncStreamResponse`](anthropic-java-core/src/main/kotlin/com/anthropic/core/http/AsyncStreamResponse.kt) for asynchronous clients:
 
 ```java
 import com.anthropic.core.http.AsyncStreamResponse;
@@ -229,7 +229,7 @@ client.async().messages().createStreaming(params)
     });
 ```
 
-Async streaming uses a dedicated per-client cached thread pool `Executor` to stream without blocking the current thread. This default is suitable for most purposes.
+Async streaming uses a dedicated per-client cached thread pool [`Executor`](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html) to stream without blocking the current thread. This default is suitable for most purposes.
 
 To use a different `Executor`, configure the subscription using the `executor` parameter:
 
@@ -260,7 +260,7 @@ AnthropicClient client = AnthropicOkHttpClient.builder()
 
 The SDK throws custom unchecked exception types:
 
-- `AnthropicServiceException`: Base class for HTTP errors. See this table for which exception subclass is thrown for each HTTP status code:
+- [`AnthropicServiceException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/AnthropicServiceException.kt): Base class for HTTP errors. See this table for which exception subclass is thrown for each HTTP status code:
 
   | Status | Exception                       |
   | ------ | ------------------------------- |
@@ -273,11 +273,11 @@ The SDK throws custom unchecked exception types:
   | 5xx    | `InternalServerException`       |
   | others | `UnexpectedStatusCodeException` |
 
-- `AnthropicIoException`: I/O networking errors.
+- [`AnthropicIoException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/AnthropicIoException.kt): I/O networking errors.
 
-- `AnthropicInvalidDataException`: Failure to interpret successfully parsed data. For example, when accessing a property that's supposed to be required, but the API unexpectedly omitted it from the response.
+- [`AnthropicInvalidDataException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/AnthropicInvalidDataException.kt): Failure to interpret successfully parsed data. For example, when accessing a property that's supposed to be required, but the API unexpectedly omitted it from the response.
 
-- `AnthropicException`: Base class for all exceptions. Most errors will result in one of the previously mentioned ones, but completely generic errors may be thrown using the base class.
+- [`AnthropicException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/AnthropicException.kt): Base class for all exceptions. Most errors will result in one of the previously mentioned ones, but completely generic errors may be thrown using the base class.
 
 ## Pagination
 
@@ -445,7 +445,7 @@ MessageCreateParams params = MessageCreateParams.builder()
 
 These can be accessed on the built object later using the `_additionalHeaders()`, `_additionalQueryParams()`, and `_additionalBodyProperties()` methods. You can also set undocumented parameters on nested headers, query params, or body classes using the `putAdditionalProperty` method. These properties can be accessed on the built object later using the `_additionalProperties()` method.
 
-To set a documented parameter or property to an undocumented or not yet supported _value_, pass a `JsonValue` object to its setter:
+To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](anthropic-java-core/src/main/kotlin/com/anthropic/core/JsonValue.kt) object to its setter:
 
 ```java
 import com.anthropic.core.JsonValue;
@@ -517,7 +517,7 @@ if (maxTokens.isMissing()) {
 
 In rare cases, the API may return a response that doesn't match the expected type. For example, the SDK may expect a property to contain a `String`, but the API could return something else.
 
-By default, the SDK will not throw an exception in this case. It will throw `AnthropicInvalidDataException` only if you directly access the property.
+By default, the SDK will not throw an exception in this case. It will throw [`AnthropicInvalidDataException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/AnthropicInvalidDataException.kt) only if you directly access the property.
 
 If you would prefer to check that the response is completely well-typed upfront, then either call `validate()`:
 
