@@ -47,6 +47,9 @@ private constructor(
      * request or response.
      *
      * For example, `output_tokens` will be non-zero, even for an empty string response from Claude.
+     *
+     * Total input tokens in a request is the summation of `input_tokens`,
+     * `cache_creation_input_tokens`, and `cache_read_input_tokens`.
      */
     fun usage(): BetaMessageDeltaUsage = usage.getRequired("usage")
 
@@ -64,6 +67,9 @@ private constructor(
      * request or response.
      *
      * For example, `output_tokens` will be non-zero, even for an empty string response from Claude.
+     *
+     * Total input tokens in a request is the summation of `input_tokens`,
+     * `cache_creation_input_tokens`, and `cache_read_input_tokens`.
      */
     @JsonProperty("usage") @ExcludeMissing fun _usage(): JsonField<BetaMessageDeltaUsage> = usage
 
@@ -130,6 +136,9 @@ private constructor(
          *
          * For example, `output_tokens` will be non-zero, even for an empty string response from
          * Claude.
+         *
+         * Total input tokens in a request is the summation of `input_tokens`,
+         * `cache_creation_input_tokens`, and `cache_read_input_tokens`.
          */
         fun usage(usage: BetaMessageDeltaUsage) = usage(JsonField.of(usage))
 
@@ -146,6 +155,9 @@ private constructor(
          *
          * For example, `output_tokens` will be non-zero, even for an empty string response from
          * Claude.
+         *
+         * Total input tokens in a request is the summation of `input_tokens`,
+         * `cache_creation_input_tokens`, and `cache_read_input_tokens`.
          */
         fun usage(usage: JsonField<BetaMessageDeltaUsage>) = apply { this.usage = usage }
 

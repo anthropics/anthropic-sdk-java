@@ -24,6 +24,8 @@ class BetaContentBlock
 private constructor(
     private val text: BetaTextBlock? = null,
     private val toolUse: BetaToolUseBlock? = null,
+    private val thinking: BetaThinkingBlock? = null,
+    private val redactedThinking: BetaRedactedThinkingBlock? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -35,6 +37,14 @@ private constructor(
 
                 override fun visitToolUse(toolUse: BetaToolUseBlock): BetaContentBlockParam =
                     BetaContentBlockParam.ofToolUse(toolUse.toParam())
+
+                override fun visitThinking(thinking: BetaThinkingBlock): BetaContentBlockParam =
+                    BetaContentBlockParam.ofThinking(thinking.toParam())
+
+                override fun visitRedactedThinking(
+                    redactedThinking: BetaRedactedThinkingBlock
+                ): BetaContentBlockParam =
+                    BetaContentBlockParam.ofRedactedThinking(redactedThinking.toParam())
             }
         )
 
@@ -42,13 +52,27 @@ private constructor(
 
     fun toolUse(): Optional<BetaToolUseBlock> = Optional.ofNullable(toolUse)
 
+    fun thinking(): Optional<BetaThinkingBlock> = Optional.ofNullable(thinking)
+
+    fun redactedThinking(): Optional<BetaRedactedThinkingBlock> =
+        Optional.ofNullable(redactedThinking)
+
     fun isText(): Boolean = text != null
 
     fun isToolUse(): Boolean = toolUse != null
 
+    fun isThinking(): Boolean = thinking != null
+
+    fun isRedactedThinking(): Boolean = redactedThinking != null
+
     fun asText(): BetaTextBlock = text.getOrThrow("text")
 
     fun asToolUse(): BetaToolUseBlock = toolUse.getOrThrow("toolUse")
+
+    fun asThinking(): BetaThinkingBlock = thinking.getOrThrow("thinking")
+
+    fun asRedactedThinking(): BetaRedactedThinkingBlock =
+        redactedThinking.getOrThrow("redactedThinking")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -56,6 +80,8 @@ private constructor(
         return when {
             text != null -> visitor.visitText(text)
             toolUse != null -> visitor.visitToolUse(toolUse)
+            thinking != null -> visitor.visitThinking(thinking)
+            redactedThinking != null -> visitor.visitRedactedThinking(redactedThinking)
             else -> visitor.unknown(_json)
         }
     }
@@ -76,6 +102,14 @@ private constructor(
                 override fun visitToolUse(toolUse: BetaToolUseBlock) {
                     toolUse.validate()
                 }
+
+                override fun visitThinking(thinking: BetaThinkingBlock) {
+                    thinking.validate()
+                }
+
+                override fun visitRedactedThinking(redactedThinking: BetaRedactedThinkingBlock) {
+                    redactedThinking.validate()
+                }
             }
         )
         validated = true
@@ -86,15 +120,17 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaContentBlock && text == other.text && toolUse == other.toolUse /* spotless:on */
+        return /* spotless:off */ other is BetaContentBlock && text == other.text && toolUse == other.toolUse && thinking == other.thinking && redactedThinking == other.redactedThinking /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, toolUse) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, toolUse, thinking, redactedThinking) /* spotless:on */
 
     override fun toString(): String =
         when {
             text != null -> "BetaContentBlock{text=$text}"
             toolUse != null -> "BetaContentBlock{toolUse=$toolUse}"
+            thinking != null -> "BetaContentBlock{thinking=$thinking}"
+            redactedThinking != null -> "BetaContentBlock{redactedThinking=$redactedThinking}"
             _json != null -> "BetaContentBlock{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaContentBlock")
         }
@@ -104,6 +140,13 @@ private constructor(
         @JvmStatic fun ofText(text: BetaTextBlock) = BetaContentBlock(text = text)
 
         @JvmStatic fun ofToolUse(toolUse: BetaToolUseBlock) = BetaContentBlock(toolUse = toolUse)
+
+        @JvmStatic
+        fun ofThinking(thinking: BetaThinkingBlock) = BetaContentBlock(thinking = thinking)
+
+        @JvmStatic
+        fun ofRedactedThinking(redactedThinking: BetaRedactedThinkingBlock) =
+            BetaContentBlock(redactedThinking = redactedThinking)
     }
 
     /**
@@ -115,6 +158,10 @@ private constructor(
         fun visitText(text: BetaTextBlock): T
 
         fun visitToolUse(toolUse: BetaToolUseBlock): T
+
+        fun visitThinking(thinking: BetaThinkingBlock): T
+
+        fun visitRedactedThinking(redactedThinking: BetaRedactedThinkingBlock): T
 
         /**
          * Maps an unknown variant of [BetaContentBlock] to a value of type [T].
@@ -150,6 +197,20 @@ private constructor(
                             return BetaContentBlock(toolUse = it, _json = json)
                         }
                 }
+                "thinking" -> {
+                    tryDeserialize(node, jacksonTypeRef<BetaThinkingBlock>()) { it.validate() }
+                        ?.let {
+                            return BetaContentBlock(thinking = it, _json = json)
+                        }
+                }
+                "redacted_thinking" -> {
+                    tryDeserialize(node, jacksonTypeRef<BetaRedactedThinkingBlock>()) {
+                            it.validate()
+                        }
+                        ?.let {
+                            return BetaContentBlock(redactedThinking = it, _json = json)
+                        }
+                }
             }
 
             return BetaContentBlock(_json = json)
@@ -166,6 +227,8 @@ private constructor(
             when {
                 value.text != null -> generator.writeObject(value.text)
                 value.toolUse != null -> generator.writeObject(value.toolUse)
+                value.thinking != null -> generator.writeObject(value.thinking)
+                value.redactedThinking != null -> generator.writeObject(value.redactedThinking)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaContentBlock")
             }

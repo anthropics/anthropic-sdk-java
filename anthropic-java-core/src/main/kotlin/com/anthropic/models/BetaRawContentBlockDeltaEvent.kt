@@ -128,6 +128,16 @@ private constructor(
                 )
             )
 
+        fun delta(betaThinking: BetaThinkingDelta) = delta(Delta.ofBetaThinking(betaThinking))
+
+        fun betaThinkingDelta(thinking: String) =
+            delta(BetaThinkingDelta.builder().thinking(thinking).build())
+
+        fun delta(betaSignature: BetaSignatureDelta) = delta(Delta.ofBetaSignature(betaSignature))
+
+        fun betaSignatureDelta(signature: String) =
+            delta(BetaSignatureDelta.builder().signature(signature).build())
+
         fun index(index: Long) = index(JsonField.of(index))
 
         fun index(index: JsonField<Long>) = apply { this.index = index }
@@ -169,6 +179,8 @@ private constructor(
         private val betaText: BetaTextDelta? = null,
         private val betaInputJson: BetaInputJsonDelta? = null,
         private val betaCitations: BetaCitationsDelta? = null,
+        private val betaThinking: BetaThinkingDelta? = null,
+        private val betaSignature: BetaSignatureDelta? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -178,17 +190,29 @@ private constructor(
 
         fun betaCitations(): Optional<BetaCitationsDelta> = Optional.ofNullable(betaCitations)
 
+        fun betaThinking(): Optional<BetaThinkingDelta> = Optional.ofNullable(betaThinking)
+
+        fun betaSignature(): Optional<BetaSignatureDelta> = Optional.ofNullable(betaSignature)
+
         fun isBetaText(): Boolean = betaText != null
 
         fun isBetaInputJson(): Boolean = betaInputJson != null
 
         fun isBetaCitations(): Boolean = betaCitations != null
 
+        fun isBetaThinking(): Boolean = betaThinking != null
+
+        fun isBetaSignature(): Boolean = betaSignature != null
+
         fun asBetaText(): BetaTextDelta = betaText.getOrThrow("betaText")
 
         fun asBetaInputJson(): BetaInputJsonDelta = betaInputJson.getOrThrow("betaInputJson")
 
         fun asBetaCitations(): BetaCitationsDelta = betaCitations.getOrThrow("betaCitations")
+
+        fun asBetaThinking(): BetaThinkingDelta = betaThinking.getOrThrow("betaThinking")
+
+        fun asBetaSignature(): BetaSignatureDelta = betaSignature.getOrThrow("betaSignature")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -197,6 +221,8 @@ private constructor(
                 betaText != null -> visitor.visitBetaText(betaText)
                 betaInputJson != null -> visitor.visitBetaInputJson(betaInputJson)
                 betaCitations != null -> visitor.visitBetaCitations(betaCitations)
+                betaThinking != null -> visitor.visitBetaThinking(betaThinking)
+                betaSignature != null -> visitor.visitBetaSignature(betaSignature)
                 else -> visitor.unknown(_json)
             }
         }
@@ -221,6 +247,14 @@ private constructor(
                     override fun visitBetaCitations(betaCitations: BetaCitationsDelta) {
                         betaCitations.validate()
                     }
+
+                    override fun visitBetaThinking(betaThinking: BetaThinkingDelta) {
+                        betaThinking.validate()
+                    }
+
+                    override fun visitBetaSignature(betaSignature: BetaSignatureDelta) {
+                        betaSignature.validate()
+                    }
                 }
             )
             validated = true
@@ -231,16 +265,18 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Delta && betaText == other.betaText && betaInputJson == other.betaInputJson && betaCitations == other.betaCitations /* spotless:on */
+            return /* spotless:off */ other is Delta && betaText == other.betaText && betaInputJson == other.betaInputJson && betaCitations == other.betaCitations && betaThinking == other.betaThinking && betaSignature == other.betaSignature /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaText, betaInputJson, betaCitations) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaText, betaInputJson, betaCitations, betaThinking, betaSignature) /* spotless:on */
 
         override fun toString(): String =
             when {
                 betaText != null -> "Delta{betaText=$betaText}"
                 betaInputJson != null -> "Delta{betaInputJson=$betaInputJson}"
                 betaCitations != null -> "Delta{betaCitations=$betaCitations}"
+                betaThinking != null -> "Delta{betaThinking=$betaThinking}"
+                betaSignature != null -> "Delta{betaSignature=$betaSignature}"
                 _json != null -> "Delta{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Delta")
             }
@@ -256,6 +292,13 @@ private constructor(
             @JvmStatic
             fun ofBetaCitations(betaCitations: BetaCitationsDelta) =
                 Delta(betaCitations = betaCitations)
+
+            @JvmStatic
+            fun ofBetaThinking(betaThinking: BetaThinkingDelta) = Delta(betaThinking = betaThinking)
+
+            @JvmStatic
+            fun ofBetaSignature(betaSignature: BetaSignatureDelta) =
+                Delta(betaSignature = betaSignature)
         }
 
         /** An interface that defines how to map each variant of [Delta] to a value of type [T]. */
@@ -266,6 +309,10 @@ private constructor(
             fun visitBetaInputJson(betaInputJson: BetaInputJsonDelta): T
 
             fun visitBetaCitations(betaCitations: BetaCitationsDelta): T
+
+            fun visitBetaThinking(betaThinking: BetaThinkingDelta): T
+
+            fun visitBetaSignature(betaSignature: BetaSignatureDelta): T
 
             /**
              * Maps an unknown variant of [Delta] to a value of type [T].
@@ -307,6 +354,18 @@ private constructor(
                                 return Delta(betaCitations = it, _json = json)
                             }
                     }
+                    "thinking_delta" -> {
+                        tryDeserialize(node, jacksonTypeRef<BetaThinkingDelta>()) { it.validate() }
+                            ?.let {
+                                return Delta(betaThinking = it, _json = json)
+                            }
+                    }
+                    "signature_delta" -> {
+                        tryDeserialize(node, jacksonTypeRef<BetaSignatureDelta>()) { it.validate() }
+                            ?.let {
+                                return Delta(betaSignature = it, _json = json)
+                            }
+                    }
                 }
 
                 return Delta(_json = json)
@@ -324,6 +383,8 @@ private constructor(
                     value.betaText != null -> generator.writeObject(value.betaText)
                     value.betaInputJson != null -> generator.writeObject(value.betaInputJson)
                     value.betaCitations != null -> generator.writeObject(value.betaCitations)
+                    value.betaThinking != null -> generator.writeObject(value.betaThinking)
+                    value.betaSignature != null -> generator.writeObject(value.betaSignature)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Delta")
                 }

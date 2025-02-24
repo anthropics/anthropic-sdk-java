@@ -11,6 +11,9 @@ import java.util.Optional
 
 /**
  * List all Message Batches within a Workspace. Most recently created batches are returned first.
+ *
+ * Learn more about the Message Batches API in our
+ * [user guide](/en/docs/build-with-claude/batch-processing)
  */
 class MessageBatchListParams
 private constructor(

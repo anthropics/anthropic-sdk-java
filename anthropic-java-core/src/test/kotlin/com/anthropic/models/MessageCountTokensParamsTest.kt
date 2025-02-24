@@ -2,7 +2,6 @@
 
 package com.anthropic.models
 
-import com.anthropic.core.JsonValue
 import kotlin.test.assertNotNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -13,7 +12,7 @@ class MessageCountTokensParamsTest {
     fun create() {
         MessageCountTokensParams.builder()
             .addUserMessage("Hello, world")
-            .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+            .model(Model.CLAUDE_3_7_SONNET_LATEST)
             .systemOfTextBlockParams(
                 listOf(
                     TextBlockParam.builder()
@@ -31,34 +30,11 @@ class MessageCountTokensParamsTest {
                         .build()
                 )
             )
+            .enabledThinking(1024L)
             .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
             .addTool(
-                Tool.builder()
-                    .inputSchema(
-                        Tool.InputSchema.builder()
-                            .properties(
-                                JsonValue.from(
-                                    mapOf(
-                                        "location" to
-                                            mapOf(
-                                                "description" to
-                                                    "The city and state, e.g. San Francisco, CA",
-                                                "type" to "string",
-                                            ),
-                                        "unit" to
-                                            mapOf(
-                                                "description" to
-                                                    "Unit for the output - one of (celsius, fahrenheit)",
-                                                "type" to "string",
-                                            ),
-                                    )
-                                )
-                            )
-                            .build()
-                    )
-                    .name("name")
+                ToolBash20250124.builder()
                     .cacheControl(CacheControlEphemeral.builder().build())
-                    .description("Get the current weather in a given location")
                     .build()
             )
             .build()
@@ -69,7 +45,7 @@ class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+                .model(Model.CLAUDE_3_7_SONNET_LATEST)
                 .systemOfTextBlockParams(
                     listOf(
                         TextBlockParam.builder()
@@ -87,34 +63,11 @@ class MessageCountTokensParamsTest {
                             .build()
                     )
                 )
+                .enabledThinking(1024L)
                 .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
-                    Tool.builder()
-                        .inputSchema(
-                            Tool.InputSchema.builder()
-                                .properties(
-                                    JsonValue.from(
-                                        mapOf(
-                                            "location" to
-                                                mapOf(
-                                                    "description" to
-                                                        "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string",
-                                                ),
-                                            "unit" to
-                                                mapOf(
-                                                    "description" to
-                                                        "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string",
-                                                ),
-                                        )
-                                    )
-                                )
-                                .build()
-                        )
-                        .name("name")
+                    ToolBash20250124.builder()
                         .cacheControl(CacheControlEphemeral.builder().build())
-                        .description("Get the current weather in a given location")
                         .build()
                 )
                 .build()
@@ -131,7 +84,7 @@ class MessageCountTokensParamsTest {
                         .build()
                 )
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
         assertThat(body.system())
             .contains(
                 MessageCountTokensParams.System.ofTextBlockParams(
@@ -152,6 +105,12 @@ class MessageCountTokensParamsTest {
                     )
                 )
             )
+        assertThat(body.thinking())
+            .contains(
+                ThinkingConfigParam.ofEnabled(
+                    ThinkingConfigEnabled.builder().budgetTokens(1024L).build()
+                )
+            )
         assertThat(body.toolChoice())
             .contains(
                 ToolChoice.ofAuto(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
@@ -159,33 +118,11 @@ class MessageCountTokensParamsTest {
         assertThat(body.tools())
             .contains(
                 listOf(
-                    Tool.builder()
-                        .inputSchema(
-                            Tool.InputSchema.builder()
-                                .properties(
-                                    JsonValue.from(
-                                        mapOf(
-                                            "location" to
-                                                mapOf(
-                                                    "description" to
-                                                        "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string",
-                                                ),
-                                            "unit" to
-                                                mapOf(
-                                                    "description" to
-                                                        "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string",
-                                                ),
-                                        )
-                                    )
-                                )
-                                .build()
-                        )
-                        .name("name")
-                        .cacheControl(CacheControlEphemeral.builder().build())
-                        .description("Get the current weather in a given location")
-                        .build()
+                    MessageCountTokensTool.ofToolBash20250124(
+                        ToolBash20250124.builder()
+                            .cacheControl(CacheControlEphemeral.builder().build())
+                            .build()
+                    )
                 )
             )
     }
@@ -195,7 +132,7 @@ class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+                .model(Model.CLAUDE_3_7_SONNET_LATEST)
                 .build()
 
         val body = params._body()
@@ -210,6 +147,6 @@ class MessageCountTokensParamsTest {
                         .build()
                 )
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
     }
 }

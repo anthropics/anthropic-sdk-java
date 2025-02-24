@@ -27,6 +27,8 @@ private constructor(
     private val toolUse: ToolUseBlockParam? = null,
     private val toolResult: ToolResultBlockParam? = null,
     private val document: DocumentBlockParam? = null,
+    private val thinking: ThinkingBlockParam? = null,
+    private val redactedThinking: RedactedThinkingBlockParam? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -40,6 +42,11 @@ private constructor(
 
     fun document(): Optional<DocumentBlockParam> = Optional.ofNullable(document)
 
+    fun thinking(): Optional<ThinkingBlockParam> = Optional.ofNullable(thinking)
+
+    fun redactedThinking(): Optional<RedactedThinkingBlockParam> =
+        Optional.ofNullable(redactedThinking)
+
     fun isText(): Boolean = text != null
 
     fun isImage(): Boolean = image != null
@@ -49,6 +56,10 @@ private constructor(
     fun isToolResult(): Boolean = toolResult != null
 
     fun isDocument(): Boolean = document != null
+
+    fun isThinking(): Boolean = thinking != null
+
+    fun isRedactedThinking(): Boolean = redactedThinking != null
 
     fun asText(): TextBlockParam = text.getOrThrow("text")
 
@@ -60,6 +71,11 @@ private constructor(
 
     fun asDocument(): DocumentBlockParam = document.getOrThrow("document")
 
+    fun asThinking(): ThinkingBlockParam = thinking.getOrThrow("thinking")
+
+    fun asRedactedThinking(): RedactedThinkingBlockParam =
+        redactedThinking.getOrThrow("redactedThinking")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
@@ -69,6 +85,8 @@ private constructor(
             toolUse != null -> visitor.visitToolUse(toolUse)
             toolResult != null -> visitor.visitToolResult(toolResult)
             document != null -> visitor.visitDocument(document)
+            thinking != null -> visitor.visitThinking(thinking)
+            redactedThinking != null -> visitor.visitRedactedThinking(redactedThinking)
             else -> visitor.unknown(_json)
         }
     }
@@ -101,6 +119,14 @@ private constructor(
                 override fun visitDocument(document: DocumentBlockParam) {
                     document.validate()
                 }
+
+                override fun visitThinking(thinking: ThinkingBlockParam) {
+                    thinking.validate()
+                }
+
+                override fun visitRedactedThinking(redactedThinking: RedactedThinkingBlockParam) {
+                    redactedThinking.validate()
+                }
             }
         )
         validated = true
@@ -111,10 +137,10 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ContentBlockParam && text == other.text && image == other.image && toolUse == other.toolUse && toolResult == other.toolResult && document == other.document /* spotless:on */
+        return /* spotless:off */ other is ContentBlockParam && text == other.text && image == other.image && toolUse == other.toolUse && toolResult == other.toolResult && document == other.document && thinking == other.thinking && redactedThinking == other.redactedThinking /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image, toolUse, toolResult, document) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image, toolUse, toolResult, document, thinking, redactedThinking) /* spotless:on */
 
     override fun toString(): String =
         when {
@@ -123,6 +149,8 @@ private constructor(
             toolUse != null -> "ContentBlockParam{toolUse=$toolUse}"
             toolResult != null -> "ContentBlockParam{toolResult=$toolResult}"
             document != null -> "ContentBlockParam{document=$document}"
+            thinking != null -> "ContentBlockParam{thinking=$thinking}"
+            redactedThinking != null -> "ContentBlockParam{redactedThinking=$redactedThinking}"
             _json != null -> "ContentBlockParam{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid ContentBlockParam")
         }
@@ -141,6 +169,13 @@ private constructor(
 
         @JvmStatic
         fun ofDocument(document: DocumentBlockParam) = ContentBlockParam(document = document)
+
+        @JvmStatic
+        fun ofThinking(thinking: ThinkingBlockParam) = ContentBlockParam(thinking = thinking)
+
+        @JvmStatic
+        fun ofRedactedThinking(redactedThinking: RedactedThinkingBlockParam) =
+            ContentBlockParam(redactedThinking = redactedThinking)
     }
 
     /**
@@ -158,6 +193,10 @@ private constructor(
         fun visitToolResult(toolResult: ToolResultBlockParam): T
 
         fun visitDocument(document: DocumentBlockParam): T
+
+        fun visitThinking(thinking: ThinkingBlockParam): T
+
+        fun visitRedactedThinking(redactedThinking: RedactedThinkingBlockParam): T
 
         /**
          * Maps an unknown variant of [ContentBlockParam] to a value of type [T].
@@ -211,6 +250,20 @@ private constructor(
                             return ContentBlockParam(document = it, _json = json)
                         }
                 }
+                "thinking" -> {
+                    tryDeserialize(node, jacksonTypeRef<ThinkingBlockParam>()) { it.validate() }
+                        ?.let {
+                            return ContentBlockParam(thinking = it, _json = json)
+                        }
+                }
+                "redacted_thinking" -> {
+                    tryDeserialize(node, jacksonTypeRef<RedactedThinkingBlockParam>()) {
+                            it.validate()
+                        }
+                        ?.let {
+                            return ContentBlockParam(redactedThinking = it, _json = json)
+                        }
+                }
             }
 
             return ContentBlockParam(_json = json)
@@ -230,6 +283,8 @@ private constructor(
                 value.toolUse != null -> generator.writeObject(value.toolUse)
                 value.toolResult != null -> generator.writeObject(value.toolResult)
                 value.document != null -> generator.writeObject(value.document)
+                value.thinking != null -> generator.writeObject(value.thinking)
+                value.redactedThinking != null -> generator.writeObject(value.redactedThinking)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid ContentBlockParam")
             }

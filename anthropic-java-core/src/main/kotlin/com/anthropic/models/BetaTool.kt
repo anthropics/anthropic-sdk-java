@@ -38,7 +38,7 @@ private constructor(
 ) {
 
     /**
-     * [JSON schema](https://json-schema.org/) for this tool's input.
+     * [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
      *
      * This defines the shape of the `input` that your tool accepts and that the model will produce.
      */
@@ -67,7 +67,7 @@ private constructor(
     fun type(): Optional<Type> = Optional.ofNullable(type.getNullable("type"))
 
     /**
-     * [JSON schema](https://json-schema.org/) for this tool's input.
+     * [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
      *
      * This defines the shape of the `input` that your tool accepts and that the model will produce.
      */
@@ -144,7 +144,7 @@ private constructor(
         }
 
         /**
-         * [JSON schema](https://json-schema.org/) for this tool's input.
+         * [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
          *
          * This defines the shape of the `input` that your tool accepts and that the model will
          * produce.
@@ -152,7 +152,7 @@ private constructor(
         fun inputSchema(inputSchema: InputSchema) = inputSchema(JsonField.of(inputSchema))
 
         /**
-         * [JSON schema](https://json-schema.org/) for this tool's input.
+         * [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
          *
          * This defines the shape of the `input` that your tool accepts and that the model will
          * produce.
@@ -242,7 +242,7 @@ private constructor(
     }
 
     /**
-     * [JSON schema](https://json-schema.org/) for this tool's input.
+     * [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
      *
      * This defines the shape of the `input` that your tool accepts and that the model will produce.
      */

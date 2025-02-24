@@ -4,7 +4,6 @@ package com.anthropic.services.blocking.beta.messages
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
-import com.anthropic.core.JsonValue
 import com.anthropic.models.AnthropicBeta
 import com.anthropic.models.BetaCacheControlEphemeral
 import com.anthropic.models.BetaCitationCharLocationParam
@@ -15,8 +14,8 @@ import com.anthropic.models.BetaMessageBatchListParams
 import com.anthropic.models.BetaMessageBatchRetrieveParams
 import com.anthropic.models.BetaMetadata
 import com.anthropic.models.BetaTextBlockParam
-import com.anthropic.models.BetaTool
 import com.anthropic.models.BetaToolChoiceAuto
+import com.anthropic.models.BetaToolComputerUse20241022
 import com.anthropic.models.Model
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -43,7 +42,7 @@ class BatchServiceTest {
                                 BetaMessageBatchCreateParams.Request.Params.builder()
                                     .maxTokens(1024L)
                                     .addUserMessage("Hello, world")
-                                    .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+                                    .model(Model.CLAUDE_3_7_SONNET_LATEST)
                                     .metadata(
                                         BetaMetadata.builder()
                                             .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
@@ -71,43 +70,20 @@ class BatchServiceTest {
                                         )
                                     )
                                     .temperature(1.0)
+                                    .enabledThinking(1024L)
                                     .toolChoice(
                                         BetaToolChoiceAuto.builder()
                                             .disableParallelToolUse(true)
                                             .build()
                                     )
                                     .addTool(
-                                        BetaTool.builder()
-                                            .inputSchema(
-                                                BetaTool.InputSchema.builder()
-                                                    .properties(
-                                                        JsonValue.from(
-                                                            mapOf(
-                                                                "location" to
-                                                                    mapOf(
-                                                                        "description" to
-                                                                            "The city and state, e.g. San Francisco, CA",
-                                                                        "type" to "string",
-                                                                    ),
-                                                                "unit" to
-                                                                    mapOf(
-                                                                        "description" to
-                                                                            "Unit for the output - one of (celsius, fahrenheit)",
-                                                                        "type" to "string",
-                                                                    ),
-                                                            )
-                                                        )
-                                                    )
-                                                    .build()
-                                            )
-                                            .name("name")
+                                        BetaToolComputerUse20241022.builder()
+                                            .displayHeightPx(1L)
+                                            .displayWidthPx(1L)
                                             .cacheControl(
                                                 BetaCacheControlEphemeral.builder().build()
                                             )
-                                            .description(
-                                                "Get the current weather in a given location"
-                                            )
-                                            .type(BetaTool.Type.CUSTOM)
+                                            .displayNumber(0L)
                                             .build()
                                     )
                                     .topK(5L)

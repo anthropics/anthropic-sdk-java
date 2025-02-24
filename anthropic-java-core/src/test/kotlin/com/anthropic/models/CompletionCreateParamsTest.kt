@@ -12,7 +12,7 @@ class CompletionCreateParamsTest {
     fun create() {
         CompletionCreateParams.builder()
             .maxTokensToSample(256L)
-            .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+            .model(Model.CLAUDE_3_7_SONNET_LATEST)
             .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
             .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
             .addStopSequence("string")
@@ -27,7 +27,7 @@ class CompletionCreateParamsTest {
         val params =
             CompletionCreateParams.builder()
                 .maxTokensToSample(256L)
-                .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+                .model(Model.CLAUDE_3_7_SONNET_LATEST)
                 .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .addStopSequence("string")
@@ -40,7 +40,7 @@ class CompletionCreateParamsTest {
 
         assertNotNull(body)
         assertThat(body.maxTokensToSample()).isEqualTo(256L)
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
         assertThat(body.prompt()).isEqualTo("\n\nHuman: Hello, world!\n\nAssistant:")
         assertThat(body.metadata())
             .contains(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
@@ -55,7 +55,7 @@ class CompletionCreateParamsTest {
         val params =
             CompletionCreateParams.builder()
                 .maxTokensToSample(256L)
-                .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+                .model(Model.CLAUDE_3_7_SONNET_LATEST)
                 .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
                 .build()
 
@@ -63,7 +63,7 @@ class CompletionCreateParamsTest {
 
         assertNotNull(body)
         assertThat(body.maxTokensToSample()).isEqualTo(256L)
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
         assertThat(body.prompt()).isEqualTo("\n\nHuman: Hello, world!\n\nAssistant:")
     }
 }

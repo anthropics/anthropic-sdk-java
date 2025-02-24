@@ -108,6 +108,15 @@ private constructor(
         fun contentBlock(betaToolUse: BetaToolUseBlock) =
             contentBlock(ContentBlock.ofBetaToolUse(betaToolUse))
 
+        fun contentBlock(betaThinking: BetaThinkingBlock) =
+            contentBlock(ContentBlock.ofBetaThinking(betaThinking))
+
+        fun contentBlock(betaRedactedThinking: BetaRedactedThinkingBlock) =
+            contentBlock(ContentBlock.ofBetaRedactedThinking(betaRedactedThinking))
+
+        fun betaRedactedThinkingContentBlock(data: String) =
+            contentBlock(BetaRedactedThinkingBlock.builder().data(data).build())
+
         fun index(index: Long) = index(JsonField.of(index))
 
         fun index(index: JsonField<Long>) = apply { this.index = index }
@@ -148,6 +157,8 @@ private constructor(
     private constructor(
         private val betaText: BetaTextBlock? = null,
         private val betaToolUse: BetaToolUseBlock? = null,
+        private val betaThinking: BetaThinkingBlock? = null,
+        private val betaRedactedThinking: BetaRedactedThinkingBlock? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -155,13 +166,27 @@ private constructor(
 
         fun betaToolUse(): Optional<BetaToolUseBlock> = Optional.ofNullable(betaToolUse)
 
+        fun betaThinking(): Optional<BetaThinkingBlock> = Optional.ofNullable(betaThinking)
+
+        fun betaRedactedThinking(): Optional<BetaRedactedThinkingBlock> =
+            Optional.ofNullable(betaRedactedThinking)
+
         fun isBetaText(): Boolean = betaText != null
 
         fun isBetaToolUse(): Boolean = betaToolUse != null
 
+        fun isBetaThinking(): Boolean = betaThinking != null
+
+        fun isBetaRedactedThinking(): Boolean = betaRedactedThinking != null
+
         fun asBetaText(): BetaTextBlock = betaText.getOrThrow("betaText")
 
         fun asBetaToolUse(): BetaToolUseBlock = betaToolUse.getOrThrow("betaToolUse")
+
+        fun asBetaThinking(): BetaThinkingBlock = betaThinking.getOrThrow("betaThinking")
+
+        fun asBetaRedactedThinking(): BetaRedactedThinkingBlock =
+            betaRedactedThinking.getOrThrow("betaRedactedThinking")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -169,6 +194,9 @@ private constructor(
             return when {
                 betaText != null -> visitor.visitBetaText(betaText)
                 betaToolUse != null -> visitor.visitBetaToolUse(betaToolUse)
+                betaThinking != null -> visitor.visitBetaThinking(betaThinking)
+                betaRedactedThinking != null ->
+                    visitor.visitBetaRedactedThinking(betaRedactedThinking)
                 else -> visitor.unknown(_json)
             }
         }
@@ -189,6 +217,16 @@ private constructor(
                     override fun visitBetaToolUse(betaToolUse: BetaToolUseBlock) {
                         betaToolUse.validate()
                     }
+
+                    override fun visitBetaThinking(betaThinking: BetaThinkingBlock) {
+                        betaThinking.validate()
+                    }
+
+                    override fun visitBetaRedactedThinking(
+                        betaRedactedThinking: BetaRedactedThinkingBlock
+                    ) {
+                        betaRedactedThinking.validate()
+                    }
                 }
             )
             validated = true
@@ -199,15 +237,18 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is ContentBlock && betaText == other.betaText && betaToolUse == other.betaToolUse /* spotless:on */
+            return /* spotless:off */ other is ContentBlock && betaText == other.betaText && betaToolUse == other.betaToolUse && betaThinking == other.betaThinking && betaRedactedThinking == other.betaRedactedThinking /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaText, betaToolUse) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaText, betaToolUse, betaThinking, betaRedactedThinking) /* spotless:on */
 
         override fun toString(): String =
             when {
                 betaText != null -> "ContentBlock{betaText=$betaText}"
                 betaToolUse != null -> "ContentBlock{betaToolUse=$betaToolUse}"
+                betaThinking != null -> "ContentBlock{betaThinking=$betaThinking}"
+                betaRedactedThinking != null ->
+                    "ContentBlock{betaRedactedThinking=$betaRedactedThinking}"
                 _json != null -> "ContentBlock{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid ContentBlock")
             }
@@ -219,6 +260,14 @@ private constructor(
             @JvmStatic
             fun ofBetaToolUse(betaToolUse: BetaToolUseBlock) =
                 ContentBlock(betaToolUse = betaToolUse)
+
+            @JvmStatic
+            fun ofBetaThinking(betaThinking: BetaThinkingBlock) =
+                ContentBlock(betaThinking = betaThinking)
+
+            @JvmStatic
+            fun ofBetaRedactedThinking(betaRedactedThinking: BetaRedactedThinkingBlock) =
+                ContentBlock(betaRedactedThinking = betaRedactedThinking)
         }
 
         /**
@@ -230,6 +279,10 @@ private constructor(
             fun visitBetaText(betaText: BetaTextBlock): T
 
             fun visitBetaToolUse(betaToolUse: BetaToolUseBlock): T
+
+            fun visitBetaThinking(betaThinking: BetaThinkingBlock): T
+
+            fun visitBetaRedactedThinking(betaRedactedThinking: BetaRedactedThinkingBlock): T
 
             /**
              * Maps an unknown variant of [ContentBlock] to a value of type [T].
@@ -265,6 +318,20 @@ private constructor(
                                 return ContentBlock(betaToolUse = it, _json = json)
                             }
                     }
+                    "thinking" -> {
+                        tryDeserialize(node, jacksonTypeRef<BetaThinkingBlock>()) { it.validate() }
+                            ?.let {
+                                return ContentBlock(betaThinking = it, _json = json)
+                            }
+                    }
+                    "redacted_thinking" -> {
+                        tryDeserialize(node, jacksonTypeRef<BetaRedactedThinkingBlock>()) {
+                                it.validate()
+                            }
+                            ?.let {
+                                return ContentBlock(betaRedactedThinking = it, _json = json)
+                            }
+                    }
                 }
 
                 return ContentBlock(_json = json)
@@ -281,6 +348,9 @@ private constructor(
                 when {
                     value.betaText != null -> generator.writeObject(value.betaText)
                     value.betaToolUse != null -> generator.writeObject(value.betaToolUse)
+                    value.betaThinking != null -> generator.writeObject(value.betaThinking)
+                    value.betaRedactedThinking != null ->
+                        generator.writeObject(value.betaRedactedThinking)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid ContentBlock")
                 }
