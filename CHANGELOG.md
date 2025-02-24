@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0 (2025-02-24)
+
+Full Changelog: [v0.3.0...v0.4.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.3.0...v0.4.0)
+
+### Features
+
+* **api:** add claude-3.7 + support for thinking ([ff25a37](https://github.com/anthropics/anthropic-sdk-java/commit/ff25a379cd981af94be9858c55eb293f06519639))
+
 ## 0.3.0 (2025-02-21)
 
 Full Changelog: [v0.2.0...v0.3.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.2.0...v0.3.0)
