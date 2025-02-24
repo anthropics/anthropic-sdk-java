@@ -26,7 +26,7 @@ class MessageTest {
                         .text("Hi! My name is Claude.")
                         .build()
                 )
-                .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+                .model(Model.CLAUDE_3_7_SONNET_LATEST)
                 .stopReason(Message.StopReason.END_TURN)
                 .stopSequence(null)
                 .usage(
@@ -57,7 +57,7 @@ class MessageTest {
                         .build()
                 )
             )
-        assertThat(message.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
+        assertThat(message.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
         assertThat(message.stopReason()).contains(Message.StopReason.END_TURN)
         assertThat(message.stopSequence()).isEmpty
         assertThat(message.usage())

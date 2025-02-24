@@ -23,6 +23,8 @@ interface MessageServiceAsync {
      * generate the next message in the conversation.
      *
      * The Messages API can be used for either single queries or stateless multi-turn conversations.
+     *
+     * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
      */
     @JvmOverloads
     fun create(
@@ -35,6 +37,8 @@ interface MessageServiceAsync {
      * generate the next message in the conversation.
      *
      * The Messages API can be used for either single queries or stateless multi-turn conversations.
+     *
+     * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
      */
     @JvmOverloads
     fun createStreaming(
@@ -47,6 +51,9 @@ interface MessageServiceAsync {
      *
      * The Token Count API can be used to count the number of tokens in a Message, including tools,
      * images, and documents, without creating it.
+     *
+     * Learn more about token counting in our
+     * [user guide](/en/docs/build-with-claude/token-counting)
      */
     @JvmOverloads
     fun countTokens(

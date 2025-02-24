@@ -28,7 +28,7 @@ class BetaMessageBatchSucceededResultTest {
                                 .text("Hi! My name is Claude.")
                                 .build()
                         )
-                        .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+                        .model(Model.CLAUDE_3_7_SONNET_LATEST)
                         .stopReason(BetaMessage.StopReason.END_TURN)
                         .stopSequence(null)
                         .usage(
@@ -61,7 +61,7 @@ class BetaMessageBatchSucceededResultTest {
                             .text("Hi! My name is Claude.")
                             .build()
                     )
-                    .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+                    .model(Model.CLAUDE_3_7_SONNET_LATEST)
                     .stopReason(BetaMessage.StopReason.END_TURN)
                     .stopSequence(null)
                     .usage(

@@ -52,7 +52,7 @@ AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+    .model(Model.CLAUDE_3_7_SONNET_LATEST)
     .build();
 Message message = client.messages().create(params);
 ```
@@ -136,7 +136,7 @@ AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+    .model(Model.CLAUDE_3_7_SONNET_LATEST)
     .build();
 CompletableFuture<Message> message = client.async().messages().create(params);
 ```
@@ -157,7 +157,7 @@ AnthropicClientAsync client = AnthropicOkHttpClientAsync.fromEnv();
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+    .model(Model.CLAUDE_3_7_SONNET_LATEST)
     .build();
 CompletableFuture<Message> message = client.messages().create(params);
 ```
@@ -455,7 +455,7 @@ import com.anthropic.models.Model;
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(JsonValue.from(3.14))
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+    .model(Model.CLAUDE_3_7_SONNET_LATEST)
     .build();
 ```
 

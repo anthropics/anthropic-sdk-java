@@ -44,6 +44,8 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
      * generate the next message in the conversation.
      *
      * The Messages API can be used for either single queries or stateless multi-turn conversations.
+     *
+     * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
      */
     override fun create(
         params: BetaMessageCreateParams,
@@ -83,6 +85,8 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
      * generate the next message in the conversation.
      *
      * The Messages API can be used for either single queries or stateless multi-turn conversations.
+     *
+     * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
      */
     override fun createStreaming(
         params: BetaMessageCreateParams,
@@ -131,6 +135,9 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
      *
      * The Token Count API can be used to count the number of tokens in a Message, including tools,
      * images, and documents, without creating it.
+     *
+     * Learn more about token counting in our
+     * [user guide](/en/docs/build-with-claude/token-counting)
      */
     override fun countTokens(
         params: BetaMessageCountTokensParams,

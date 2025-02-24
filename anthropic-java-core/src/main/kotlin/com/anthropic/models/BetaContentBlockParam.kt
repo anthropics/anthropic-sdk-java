@@ -27,6 +27,8 @@ private constructor(
     private val toolUse: BetaToolUseBlockParam? = null,
     private val toolResult: BetaToolResultBlockParam? = null,
     private val base64PdfBlock: BetaBase64PdfBlock? = null,
+    private val thinking: BetaThinkingBlockParam? = null,
+    private val redactedThinking: BetaRedactedThinkingBlockParam? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -40,6 +42,11 @@ private constructor(
 
     fun base64PdfBlock(): Optional<BetaBase64PdfBlock> = Optional.ofNullable(base64PdfBlock)
 
+    fun thinking(): Optional<BetaThinkingBlockParam> = Optional.ofNullable(thinking)
+
+    fun redactedThinking(): Optional<BetaRedactedThinkingBlockParam> =
+        Optional.ofNullable(redactedThinking)
+
     fun isText(): Boolean = text != null
 
     fun isImage(): Boolean = image != null
@@ -49,6 +56,10 @@ private constructor(
     fun isToolResult(): Boolean = toolResult != null
 
     fun isBase64PdfBlock(): Boolean = base64PdfBlock != null
+
+    fun isThinking(): Boolean = thinking != null
+
+    fun isRedactedThinking(): Boolean = redactedThinking != null
 
     fun asText(): BetaTextBlockParam = text.getOrThrow("text")
 
@@ -60,6 +71,11 @@ private constructor(
 
     fun asBase64PdfBlock(): BetaBase64PdfBlock = base64PdfBlock.getOrThrow("base64PdfBlock")
 
+    fun asThinking(): BetaThinkingBlockParam = thinking.getOrThrow("thinking")
+
+    fun asRedactedThinking(): BetaRedactedThinkingBlockParam =
+        redactedThinking.getOrThrow("redactedThinking")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
@@ -69,6 +85,8 @@ private constructor(
             toolUse != null -> visitor.visitToolUse(toolUse)
             toolResult != null -> visitor.visitToolResult(toolResult)
             base64PdfBlock != null -> visitor.visitBase64PdfBlock(base64PdfBlock)
+            thinking != null -> visitor.visitThinking(thinking)
+            redactedThinking != null -> visitor.visitRedactedThinking(redactedThinking)
             else -> visitor.unknown(_json)
         }
     }
@@ -101,6 +119,16 @@ private constructor(
                 override fun visitBase64PdfBlock(base64PdfBlock: BetaBase64PdfBlock) {
                     base64PdfBlock.validate()
                 }
+
+                override fun visitThinking(thinking: BetaThinkingBlockParam) {
+                    thinking.validate()
+                }
+
+                override fun visitRedactedThinking(
+                    redactedThinking: BetaRedactedThinkingBlockParam
+                ) {
+                    redactedThinking.validate()
+                }
             }
         )
         validated = true
@@ -111,10 +139,10 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaContentBlockParam && text == other.text && image == other.image && toolUse == other.toolUse && toolResult == other.toolResult && base64PdfBlock == other.base64PdfBlock /* spotless:on */
+        return /* spotless:off */ other is BetaContentBlockParam && text == other.text && image == other.image && toolUse == other.toolUse && toolResult == other.toolResult && base64PdfBlock == other.base64PdfBlock && thinking == other.thinking && redactedThinking == other.redactedThinking /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image, toolUse, toolResult, base64PdfBlock) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image, toolUse, toolResult, base64PdfBlock, thinking, redactedThinking) /* spotless:on */
 
     override fun toString(): String =
         when {
@@ -123,6 +151,8 @@ private constructor(
             toolUse != null -> "BetaContentBlockParam{toolUse=$toolUse}"
             toolResult != null -> "BetaContentBlockParam{toolResult=$toolResult}"
             base64PdfBlock != null -> "BetaContentBlockParam{base64PdfBlock=$base64PdfBlock}"
+            thinking != null -> "BetaContentBlockParam{thinking=$thinking}"
+            redactedThinking != null -> "BetaContentBlockParam{redactedThinking=$redactedThinking}"
             _json != null -> "BetaContentBlockParam{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaContentBlockParam")
         }
@@ -143,6 +173,14 @@ private constructor(
         @JvmStatic
         fun ofBase64PdfBlock(base64PdfBlock: BetaBase64PdfBlock) =
             BetaContentBlockParam(base64PdfBlock = base64PdfBlock)
+
+        @JvmStatic
+        fun ofThinking(thinking: BetaThinkingBlockParam) =
+            BetaContentBlockParam(thinking = thinking)
+
+        @JvmStatic
+        fun ofRedactedThinking(redactedThinking: BetaRedactedThinkingBlockParam) =
+            BetaContentBlockParam(redactedThinking = redactedThinking)
     }
 
     /**
@@ -160,6 +198,10 @@ private constructor(
         fun visitToolResult(toolResult: BetaToolResultBlockParam): T
 
         fun visitBase64PdfBlock(base64PdfBlock: BetaBase64PdfBlock): T
+
+        fun visitThinking(thinking: BetaThinkingBlockParam): T
+
+        fun visitRedactedThinking(redactedThinking: BetaRedactedThinkingBlockParam): T
 
         /**
          * Maps an unknown variant of [BetaContentBlockParam] to a value of type [T].
@@ -216,6 +258,20 @@ private constructor(
                             return BetaContentBlockParam(base64PdfBlock = it, _json = json)
                         }
                 }
+                "thinking" -> {
+                    tryDeserialize(node, jacksonTypeRef<BetaThinkingBlockParam>()) { it.validate() }
+                        ?.let {
+                            return BetaContentBlockParam(thinking = it, _json = json)
+                        }
+                }
+                "redacted_thinking" -> {
+                    tryDeserialize(node, jacksonTypeRef<BetaRedactedThinkingBlockParam>()) {
+                            it.validate()
+                        }
+                        ?.let {
+                            return BetaContentBlockParam(redactedThinking = it, _json = json)
+                        }
+                }
             }
 
             return BetaContentBlockParam(_json = json)
@@ -236,6 +292,8 @@ private constructor(
                 value.toolUse != null -> generator.writeObject(value.toolUse)
                 value.toolResult != null -> generator.writeObject(value.toolResult)
                 value.base64PdfBlock != null -> generator.writeObject(value.base64PdfBlock)
+                value.thinking != null -> generator.writeObject(value.thinking)
+                value.redactedThinking != null -> generator.writeObject(value.redactedThinking)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaContentBlockParam")
             }

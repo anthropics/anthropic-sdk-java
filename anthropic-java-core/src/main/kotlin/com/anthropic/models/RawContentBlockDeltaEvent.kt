@@ -120,6 +120,16 @@ private constructor(
         fun citationsDelta(contentBlockLocation: CitationContentBlockLocation) =
             citationsDelta(CitationsDelta.Citation.ofContentBlockLocation(contentBlockLocation))
 
+        fun delta(thinking: ThinkingDelta) = delta(Delta.ofThinking(thinking))
+
+        fun thinkingDelta(thinking: String) =
+            delta(ThinkingDelta.builder().thinking(thinking).build())
+
+        fun delta(signature: SignatureDelta) = delta(Delta.ofSignature(signature))
+
+        fun signatureDelta(signature: String) =
+            delta(SignatureDelta.builder().signature(signature).build())
+
         fun index(index: Long) = index(JsonField.of(index))
 
         fun index(index: JsonField<Long>) = apply { this.index = index }
@@ -161,6 +171,8 @@ private constructor(
         private val text: TextDelta? = null,
         private val inputJson: InputJsonDelta? = null,
         private val citations: CitationsDelta? = null,
+        private val thinking: ThinkingDelta? = null,
+        private val signature: SignatureDelta? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -170,17 +182,29 @@ private constructor(
 
         fun citations(): Optional<CitationsDelta> = Optional.ofNullable(citations)
 
+        fun thinking(): Optional<ThinkingDelta> = Optional.ofNullable(thinking)
+
+        fun signature(): Optional<SignatureDelta> = Optional.ofNullable(signature)
+
         fun isText(): Boolean = text != null
 
         fun isInputJson(): Boolean = inputJson != null
 
         fun isCitations(): Boolean = citations != null
 
+        fun isThinking(): Boolean = thinking != null
+
+        fun isSignature(): Boolean = signature != null
+
         fun asText(): TextDelta = text.getOrThrow("text")
 
         fun asInputJson(): InputJsonDelta = inputJson.getOrThrow("inputJson")
 
         fun asCitations(): CitationsDelta = citations.getOrThrow("citations")
+
+        fun asThinking(): ThinkingDelta = thinking.getOrThrow("thinking")
+
+        fun asSignature(): SignatureDelta = signature.getOrThrow("signature")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -189,6 +213,8 @@ private constructor(
                 text != null -> visitor.visitText(text)
                 inputJson != null -> visitor.visitInputJson(inputJson)
                 citations != null -> visitor.visitCitations(citations)
+                thinking != null -> visitor.visitThinking(thinking)
+                signature != null -> visitor.visitSignature(signature)
                 else -> visitor.unknown(_json)
             }
         }
@@ -213,6 +239,14 @@ private constructor(
                     override fun visitCitations(citations: CitationsDelta) {
                         citations.validate()
                     }
+
+                    override fun visitThinking(thinking: ThinkingDelta) {
+                        thinking.validate()
+                    }
+
+                    override fun visitSignature(signature: SignatureDelta) {
+                        signature.validate()
+                    }
                 }
             )
             validated = true
@@ -223,16 +257,18 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Delta && text == other.text && inputJson == other.inputJson && citations == other.citations /* spotless:on */
+            return /* spotless:off */ other is Delta && text == other.text && inputJson == other.inputJson && citations == other.citations && thinking == other.thinking && signature == other.signature /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, inputJson, citations) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, inputJson, citations, thinking, signature) /* spotless:on */
 
         override fun toString(): String =
             when {
                 text != null -> "Delta{text=$text}"
                 inputJson != null -> "Delta{inputJson=$inputJson}"
                 citations != null -> "Delta{citations=$citations}"
+                thinking != null -> "Delta{thinking=$thinking}"
+                signature != null -> "Delta{signature=$signature}"
                 _json != null -> "Delta{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Delta")
             }
@@ -244,6 +280,10 @@ private constructor(
             @JvmStatic fun ofInputJson(inputJson: InputJsonDelta) = Delta(inputJson = inputJson)
 
             @JvmStatic fun ofCitations(citations: CitationsDelta) = Delta(citations = citations)
+
+            @JvmStatic fun ofThinking(thinking: ThinkingDelta) = Delta(thinking = thinking)
+
+            @JvmStatic fun ofSignature(signature: SignatureDelta) = Delta(signature = signature)
         }
 
         /** An interface that defines how to map each variant of [Delta] to a value of type [T]. */
@@ -254,6 +294,10 @@ private constructor(
             fun visitInputJson(inputJson: InputJsonDelta): T
 
             fun visitCitations(citations: CitationsDelta): T
+
+            fun visitThinking(thinking: ThinkingDelta): T
+
+            fun visitSignature(signature: SignatureDelta): T
 
             /**
              * Maps an unknown variant of [Delta] to a value of type [T].
@@ -295,6 +339,18 @@ private constructor(
                                 return Delta(citations = it, _json = json)
                             }
                     }
+                    "thinking_delta" -> {
+                        tryDeserialize(node, jacksonTypeRef<ThinkingDelta>()) { it.validate() }
+                            ?.let {
+                                return Delta(thinking = it, _json = json)
+                            }
+                    }
+                    "signature_delta" -> {
+                        tryDeserialize(node, jacksonTypeRef<SignatureDelta>()) { it.validate() }
+                            ?.let {
+                                return Delta(signature = it, _json = json)
+                            }
+                    }
                 }
 
                 return Delta(_json = json)
@@ -312,6 +368,8 @@ private constructor(
                     value.text != null -> generator.writeObject(value.text)
                     value.inputJson != null -> generator.writeObject(value.inputJson)
                     value.citations != null -> generator.writeObject(value.citations)
+                    value.thinking != null -> generator.writeObject(value.thinking)
+                    value.signature != null -> generator.writeObject(value.signature)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Delta")
                 }

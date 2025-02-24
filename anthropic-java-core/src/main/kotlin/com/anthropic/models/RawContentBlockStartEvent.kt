@@ -107,6 +107,14 @@ private constructor(
 
         fun contentBlock(toolUse: ToolUseBlock) = contentBlock(ContentBlock.ofToolUse(toolUse))
 
+        fun contentBlock(thinking: ThinkingBlock) = contentBlock(ContentBlock.ofThinking(thinking))
+
+        fun contentBlock(redactedThinking: RedactedThinkingBlock) =
+            contentBlock(ContentBlock.ofRedactedThinking(redactedThinking))
+
+        fun redactedThinkingContentBlock(data: String) =
+            contentBlock(RedactedThinkingBlock.builder().data(data).build())
+
         fun index(index: Long) = index(JsonField.of(index))
 
         fun index(index: JsonField<Long>) = apply { this.index = index }
@@ -147,6 +155,8 @@ private constructor(
     private constructor(
         private val text: TextBlock? = null,
         private val toolUse: ToolUseBlock? = null,
+        private val thinking: ThinkingBlock? = null,
+        private val redactedThinking: RedactedThinkingBlock? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -154,13 +164,27 @@ private constructor(
 
         fun toolUse(): Optional<ToolUseBlock> = Optional.ofNullable(toolUse)
 
+        fun thinking(): Optional<ThinkingBlock> = Optional.ofNullable(thinking)
+
+        fun redactedThinking(): Optional<RedactedThinkingBlock> =
+            Optional.ofNullable(redactedThinking)
+
         fun isText(): Boolean = text != null
 
         fun isToolUse(): Boolean = toolUse != null
 
+        fun isThinking(): Boolean = thinking != null
+
+        fun isRedactedThinking(): Boolean = redactedThinking != null
+
         fun asText(): TextBlock = text.getOrThrow("text")
 
         fun asToolUse(): ToolUseBlock = toolUse.getOrThrow("toolUse")
+
+        fun asThinking(): ThinkingBlock = thinking.getOrThrow("thinking")
+
+        fun asRedactedThinking(): RedactedThinkingBlock =
+            redactedThinking.getOrThrow("redactedThinking")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -168,6 +192,8 @@ private constructor(
             return when {
                 text != null -> visitor.visitText(text)
                 toolUse != null -> visitor.visitToolUse(toolUse)
+                thinking != null -> visitor.visitThinking(thinking)
+                redactedThinking != null -> visitor.visitRedactedThinking(redactedThinking)
                 else -> visitor.unknown(_json)
             }
         }
@@ -188,6 +214,14 @@ private constructor(
                     override fun visitToolUse(toolUse: ToolUseBlock) {
                         toolUse.validate()
                     }
+
+                    override fun visitThinking(thinking: ThinkingBlock) {
+                        thinking.validate()
+                    }
+
+                    override fun visitRedactedThinking(redactedThinking: RedactedThinkingBlock) {
+                        redactedThinking.validate()
+                    }
                 }
             )
             validated = true
@@ -198,15 +232,17 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is ContentBlock && text == other.text && toolUse == other.toolUse /* spotless:on */
+            return /* spotless:off */ other is ContentBlock && text == other.text && toolUse == other.toolUse && thinking == other.thinking && redactedThinking == other.redactedThinking /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, toolUse) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, toolUse, thinking, redactedThinking) /* spotless:on */
 
         override fun toString(): String =
             when {
                 text != null -> "ContentBlock{text=$text}"
                 toolUse != null -> "ContentBlock{toolUse=$toolUse}"
+                thinking != null -> "ContentBlock{thinking=$thinking}"
+                redactedThinking != null -> "ContentBlock{redactedThinking=$redactedThinking}"
                 _json != null -> "ContentBlock{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid ContentBlock")
             }
@@ -216,6 +252,12 @@ private constructor(
             @JvmStatic fun ofText(text: TextBlock) = ContentBlock(text = text)
 
             @JvmStatic fun ofToolUse(toolUse: ToolUseBlock) = ContentBlock(toolUse = toolUse)
+
+            @JvmStatic fun ofThinking(thinking: ThinkingBlock) = ContentBlock(thinking = thinking)
+
+            @JvmStatic
+            fun ofRedactedThinking(redactedThinking: RedactedThinkingBlock) =
+                ContentBlock(redactedThinking = redactedThinking)
         }
 
         /**
@@ -227,6 +269,10 @@ private constructor(
             fun visitText(text: TextBlock): T
 
             fun visitToolUse(toolUse: ToolUseBlock): T
+
+            fun visitThinking(thinking: ThinkingBlock): T
+
+            fun visitRedactedThinking(redactedThinking: RedactedThinkingBlock): T
 
             /**
              * Maps an unknown variant of [ContentBlock] to a value of type [T].
@@ -262,6 +308,20 @@ private constructor(
                                 return ContentBlock(toolUse = it, _json = json)
                             }
                     }
+                    "thinking" -> {
+                        tryDeserialize(node, jacksonTypeRef<ThinkingBlock>()) { it.validate() }
+                            ?.let {
+                                return ContentBlock(thinking = it, _json = json)
+                            }
+                    }
+                    "redacted_thinking" -> {
+                        tryDeserialize(node, jacksonTypeRef<RedactedThinkingBlock>()) {
+                                it.validate()
+                            }
+                            ?.let {
+                                return ContentBlock(redactedThinking = it, _json = json)
+                            }
+                    }
                 }
 
                 return ContentBlock(_json = json)
@@ -278,6 +338,8 @@ private constructor(
                 when {
                     value.text != null -> generator.writeObject(value.text)
                     value.toolUse != null -> generator.writeObject(value.toolUse)
+                    value.thinking != null -> generator.writeObject(value.thinking)
+                    value.redactedThinking != null -> generator.writeObject(value.redactedThinking)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid ContentBlock")
                 }
