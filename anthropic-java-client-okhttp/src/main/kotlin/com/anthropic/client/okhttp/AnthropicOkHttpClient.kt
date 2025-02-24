@@ -5,6 +5,7 @@ package com.anthropic.client.okhttp
 import com.anthropic.client.AnthropicClient
 import com.anthropic.client.AnthropicClientImpl
 import com.anthropic.core.ClientOptions
+import com.anthropic.core.Timeout
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.fasterxml.jackson.databind.json.JsonMapper
@@ -28,8 +29,7 @@ class AnthropicOkHttpClient private constructor() {
 
         private var clientOptions: ClientOptions.Builder = ClientOptions.builder()
         private var baseUrl: String = ClientOptions.PRODUCTION_URL
-        // The default timeout for the client is 10 minutes.
-        private var timeout: Duration = Duration.ofSeconds(600)
+        private var timeout: Timeout = Timeout.default()
         private var proxy: Proxy? = null
 
         fun baseUrl(baseUrl: String) = apply {
@@ -125,7 +125,9 @@ class AnthropicOkHttpClient private constructor() {
             clientOptions.removeAllQueryParams(keys)
         }
 
-        fun timeout(timeout: Duration) = apply { this.timeout = timeout }
+        fun timeout(timeout: Timeout) = apply { this.timeout = timeout }
+
+        fun timeout(timeout: Duration) = timeout(Timeout.builder().total(timeout).build())
 
         fun maxRetries(maxRetries: Int) = apply { clientOptions.maxRetries(maxRetries) }
 

@@ -25,7 +25,7 @@ class CompletionServiceTest {
             completionService.create(
                 CompletionCreateParams.builder()
                     .maxTokensToSample(256L)
-                    .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+                    .model(Model.CLAUDE_3_7_SONNET_LATEST)
                     .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
                     .metadata(
                         Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
@@ -53,7 +53,7 @@ class CompletionServiceTest {
             completionService.createStreaming(
                 CompletionCreateParams.builder()
                     .maxTokensToSample(256L)
-                    .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+                    .model(Model.CLAUDE_3_7_SONNET_LATEST)
                     .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
                     .metadata(
                         Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()

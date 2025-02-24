@@ -36,6 +36,8 @@ import java.util.Optional
  *
  * The Token Count API can be used to count the number of tokens in a Message, including tools,
  * images, and documents, without creating it.
+ *
+ * Learn more about token counting in our [user guide](/en/docs/build-with-claude/token-counting)
  */
 class MessageCountTokensParams
 private constructor(
@@ -141,6 +143,19 @@ private constructor(
     fun system(): Optional<System> = body.system()
 
     /**
+     * Configuration for enabling Claude's extended thinking.
+     *
+     * When enabled, responses include `thinking` content blocks showing Claude's thinking process
+     * before the final answer. Requires a minimum budget of 1,024 tokens and counts towards your
+     * `max_tokens` limit.
+     *
+     * See
+     * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+     * for details.
+     */
+    fun thinking(): Optional<ThinkingConfigParam> = body.thinking()
+
+    /**
      * How the model should use the provided tools. The model can use a specific tool, any available
      * tool, or decide by itself.
      */
@@ -157,8 +172,8 @@ private constructor(
      * Each tool definition includes:
      * - `name`: Name of the tool.
      * - `description`: Optional, but strongly-recommended description of the tool.
-     * - `input_schema`: [JSON schema](https://json-schema.org/) for the tool `input` shape that the
-     *   model will produce in `tool_use` output content blocks.
+     * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool `input`
+     *   shape that the model will produce in `tool_use` output content blocks.
      *
      * For example, if you defined `tools` as:
      * ```json
@@ -210,7 +225,7 @@ private constructor(
      *
      * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
      */
-    fun tools(): Optional<List<Tool>> = body.tools()
+    fun tools(): Optional<List<MessageCountTokensTool>> = body.tools()
 
     /**
      * Input messages.
@@ -309,6 +324,19 @@ private constructor(
     fun _system(): JsonField<System> = body._system()
 
     /**
+     * Configuration for enabling Claude's extended thinking.
+     *
+     * When enabled, responses include `thinking` content blocks showing Claude's thinking process
+     * before the final answer. Requires a minimum budget of 1,024 tokens and counts towards your
+     * `max_tokens` limit.
+     *
+     * See
+     * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+     * for details.
+     */
+    fun _thinking(): JsonField<ThinkingConfigParam> = body._thinking()
+
+    /**
      * How the model should use the provided tools. The model can use a specific tool, any available
      * tool, or decide by itself.
      */
@@ -325,8 +353,8 @@ private constructor(
      * Each tool definition includes:
      * - `name`: Name of the tool.
      * - `description`: Optional, but strongly-recommended description of the tool.
-     * - `input_schema`: [JSON schema](https://json-schema.org/) for the tool `input` shape that the
-     *   model will produce in `tool_use` output content blocks.
+     * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool `input`
+     *   shape that the model will produce in `tool_use` output content blocks.
      *
      * For example, if you defined `tools` as:
      * ```json
@@ -378,7 +406,7 @@ private constructor(
      *
      * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
      */
-    fun _tools(): JsonField<List<Tool>> = body._tools()
+    fun _tools(): JsonField<List<MessageCountTokensTool>> = body._tools()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -405,12 +433,15 @@ private constructor(
         @JsonProperty("system")
         @ExcludeMissing
         private val system: JsonField<System> = JsonMissing.of(),
+        @JsonProperty("thinking")
+        @ExcludeMissing
+        private val thinking: JsonField<ThinkingConfigParam> = JsonMissing.of(),
         @JsonProperty("tool_choice")
         @ExcludeMissing
         private val toolChoice: JsonField<ToolChoice> = JsonMissing.of(),
         @JsonProperty("tools")
         @ExcludeMissing
-        private val tools: JsonField<List<Tool>> = JsonMissing.of(),
+        private val tools: JsonField<List<MessageCountTokensTool>> = JsonMissing.of(),
         @JsonAnySetter
         private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
     ) {
@@ -515,6 +546,20 @@ private constructor(
         fun system(): Optional<System> = Optional.ofNullable(system.getNullable("system"))
 
         /**
+         * Configuration for enabling Claude's extended thinking.
+         *
+         * When enabled, responses include `thinking` content blocks showing Claude's thinking
+         * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
+         * towards your `max_tokens` limit.
+         *
+         * See
+         * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+         * for details.
+         */
+        fun thinking(): Optional<ThinkingConfigParam> =
+            Optional.ofNullable(thinking.getNullable("thinking"))
+
+        /**
          * How the model should use the provided tools. The model can use a specific tool, any
          * available tool, or decide by itself.
          */
@@ -532,8 +577,8 @@ private constructor(
          * Each tool definition includes:
          * - `name`: Name of the tool.
          * - `description`: Optional, but strongly-recommended description of the tool.
-         * - `input_schema`: [JSON schema](https://json-schema.org/) for the tool `input` shape that
-         *   the model will produce in `tool_use` output content blocks.
+         * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
+         *   `input` shape that the model will produce in `tool_use` output content blocks.
          *
          * For example, if you defined `tools` as:
          * ```json
@@ -586,7 +631,8 @@ private constructor(
          *
          * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
          */
-        fun tools(): Optional<List<Tool>> = Optional.ofNullable(tools.getNullable("tools"))
+        fun tools(): Optional<List<MessageCountTokensTool>> =
+            Optional.ofNullable(tools.getNullable("tools"))
 
         /**
          * Input messages.
@@ -690,6 +736,21 @@ private constructor(
         @JsonProperty("system") @ExcludeMissing fun _system(): JsonField<System> = system
 
         /**
+         * Configuration for enabling Claude's extended thinking.
+         *
+         * When enabled, responses include `thinking` content blocks showing Claude's thinking
+         * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
+         * towards your `max_tokens` limit.
+         *
+         * See
+         * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+         * for details.
+         */
+        @JsonProperty("thinking")
+        @ExcludeMissing
+        fun _thinking(): JsonField<ThinkingConfigParam> = thinking
+
+        /**
          * How the model should use the provided tools. The model can use a specific tool, any
          * available tool, or decide by itself.
          */
@@ -708,8 +769,8 @@ private constructor(
          * Each tool definition includes:
          * - `name`: Name of the tool.
          * - `description`: Optional, but strongly-recommended description of the tool.
-         * - `input_schema`: [JSON schema](https://json-schema.org/) for the tool `input` shape that
-         *   the model will produce in `tool_use` output content blocks.
+         * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
+         *   `input` shape that the model will produce in `tool_use` output content blocks.
          *
          * For example, if you defined `tools` as:
          * ```json
@@ -762,7 +823,9 @@ private constructor(
          *
          * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
          */
-        @JsonProperty("tools") @ExcludeMissing fun _tools(): JsonField<List<Tool>> = tools
+        @JsonProperty("tools")
+        @ExcludeMissing
+        fun _tools(): JsonField<List<MessageCountTokensTool>> = tools
 
         @JsonAnyGetter
         @ExcludeMissing
@@ -778,6 +841,7 @@ private constructor(
             messages().forEach { it.validate() }
             model()
             system().ifPresent { it.validate() }
+            thinking().ifPresent { it.validate() }
             toolChoice().ifPresent { it.validate() }
             tools().ifPresent { it.forEach { it.validate() } }
             validated = true
@@ -796,8 +860,9 @@ private constructor(
             private var messages: JsonField<MutableList<MessageParam>>? = null
             private var model: JsonField<Model>? = null
             private var system: JsonField<System> = JsonMissing.of()
+            private var thinking: JsonField<ThinkingConfigParam> = JsonMissing.of()
             private var toolChoice: JsonField<ToolChoice> = JsonMissing.of()
-            private var tools: JsonField<MutableList<Tool>>? = null
+            private var tools: JsonField<MutableList<MessageCountTokensTool>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -805,6 +870,7 @@ private constructor(
                 messages = body.messages.map { it.toMutableList() }
                 model = body.model
                 system = body.system
+                thinking = body.thinking
                 toolChoice = body.toolChoice
                 tools = body.tools.map { it.toMutableList() }
                 additionalProperties = body.additionalProperties.toMutableMap()
@@ -1732,6 +1798,76 @@ private constructor(
                 system(System.ofTextBlockParams(textBlockParams))
 
             /**
+             * Configuration for enabling Claude's extended thinking.
+             *
+             * When enabled, responses include `thinking` content blocks showing Claude's thinking
+             * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
+             * towards your `max_tokens` limit.
+             *
+             * See
+             * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+             * for details.
+             */
+            fun thinking(thinking: ThinkingConfigParam) = thinking(JsonField.of(thinking))
+
+            /**
+             * Configuration for enabling Claude's extended thinking.
+             *
+             * When enabled, responses include `thinking` content blocks showing Claude's thinking
+             * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
+             * towards your `max_tokens` limit.
+             *
+             * See
+             * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+             * for details.
+             */
+            fun thinking(thinking: JsonField<ThinkingConfigParam>) = apply {
+                this.thinking = thinking
+            }
+
+            /**
+             * Configuration for enabling Claude's extended thinking.
+             *
+             * When enabled, responses include `thinking` content blocks showing Claude's thinking
+             * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
+             * towards your `max_tokens` limit.
+             *
+             * See
+             * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+             * for details.
+             */
+            fun thinking(enabled: ThinkingConfigEnabled) =
+                thinking(ThinkingConfigParam.ofEnabled(enabled))
+
+            /**
+             * Configuration for enabling Claude's extended thinking.
+             *
+             * When enabled, responses include `thinking` content blocks showing Claude's thinking
+             * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
+             * towards your `max_tokens` limit.
+             *
+             * See
+             * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+             * for details.
+             */
+            fun enabledThinking(budgetTokens: Long) =
+                thinking(ThinkingConfigEnabled.builder().budgetTokens(budgetTokens).build())
+
+            /**
+             * Configuration for enabling Claude's extended thinking.
+             *
+             * When enabled, responses include `thinking` content blocks showing Claude's thinking
+             * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
+             * towards your `max_tokens` limit.
+             *
+             * See
+             * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+             * for details.
+             */
+            fun thinking(disabled: ThinkingConfigDisabled) =
+                thinking(ThinkingConfigParam.ofDisabled(disabled))
+
+            /**
              * How the model should use the provided tools. The model can use a specific tool, any
              * available tool, or decide by itself.
              */
@@ -1769,8 +1905,8 @@ private constructor(
              * Each tool definition includes:
              * - `name`: Name of the tool.
              * - `description`: Optional, but strongly-recommended description of the tool.
-             * - `input_schema`: [JSON schema](https://json-schema.org/) for the tool `input` shape
-             *   that the model will produce in `tool_use` output content blocks.
+             * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
+             *   `input` shape that the model will produce in `tool_use` output content blocks.
              *
              * For example, if you defined `tools` as:
              * ```json
@@ -1823,7 +1959,7 @@ private constructor(
              *
              * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
              */
-            fun tools(tools: List<Tool>) = tools(JsonField.of(tools))
+            fun tools(tools: List<MessageCountTokensTool>) = tools(JsonField.of(tools))
 
             /**
              * Definitions of tools that the model may use.
@@ -1836,8 +1972,8 @@ private constructor(
              * Each tool definition includes:
              * - `name`: Name of the tool.
              * - `description`: Optional, but strongly-recommended description of the tool.
-             * - `input_schema`: [JSON schema](https://json-schema.org/) for the tool `input` shape
-             *   that the model will produce in `tool_use` output content blocks.
+             * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
+             *   `input` shape that the model will produce in `tool_use` output content blocks.
              *
              * For example, if you defined `tools` as:
              * ```json
@@ -1890,7 +2026,7 @@ private constructor(
              *
              * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
              */
-            fun tools(tools: JsonField<List<Tool>>) = apply {
+            fun tools(tools: JsonField<List<MessageCountTokensTool>>) = apply {
                 this.tools = tools.map { it.toMutableList() }
             }
 
@@ -1905,8 +2041,8 @@ private constructor(
              * Each tool definition includes:
              * - `name`: Name of the tool.
              * - `description`: Optional, but strongly-recommended description of the tool.
-             * - `input_schema`: [JSON schema](https://json-schema.org/) for the tool `input` shape
-             *   that the model will produce in `tool_use` output content blocks.
+             * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
+             *   `input` shape that the model will produce in `tool_use` output content blocks.
              *
              * For example, if you defined `tools` as:
              * ```json
@@ -1959,7 +2095,7 @@ private constructor(
              *
              * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
              */
-            fun addTool(tool: Tool) = apply {
+            fun addTool(tool: MessageCountTokensTool) = apply {
                 tools =
                     (tools ?: JsonField.of(mutableListOf())).apply {
                         asKnown()
@@ -1971,6 +2107,209 @@ private constructor(
                             .add(tool)
                     }
             }
+
+            /**
+             * Definitions of tools that the model may use.
+             *
+             * If you include `tools` in your API request, the model may return `tool_use` content
+             * blocks that represent the model's use of those tools. You can then run those tools
+             * using the tool input generated by the model and then optionally return results back
+             * to the model using `tool_result` content blocks.
+             *
+             * Each tool definition includes:
+             * - `name`: Name of the tool.
+             * - `description`: Optional, but strongly-recommended description of the tool.
+             * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
+             *   `input` shape that the model will produce in `tool_use` output content blocks.
+             *
+             * For example, if you defined `tools` as:
+             * ```json
+             * [
+             *   {
+             *     "name": "get_stock_price",
+             *     "description": "Get the current stock price for a given ticker symbol.",
+             *     "input_schema": {
+             *       "type": "object",
+             *       "properties": {
+             *         "ticker": {
+             *           "type": "string",
+             *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
+             *         }
+             *       },
+             *       "required": ["ticker"]
+             *     }
+             *   }
+             * ]
+             * ```
+             *
+             * And then asked the model "What's the S&P 500 at today?", the model might produce
+             * `tool_use` content blocks in the response like this:
+             * ```json
+             * [
+             *   {
+             *     "type": "tool_use",
+             *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+             *     "name": "get_stock_price",
+             *     "input": { "ticker": "^GSPC" }
+             *   }
+             * ]
+             * ```
+             *
+             * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an
+             * input, and return the following back to the model in a subsequent `user` message:
+             * ```json
+             * [
+             *   {
+             *     "type": "tool_result",
+             *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+             *     "content": "259.75 USD"
+             *   }
+             * ]
+             * ```
+             *
+             * Tools can be used for workflows that include running client-side tools and functions,
+             * or more generally whenever you want the model to produce a particular JSON structure
+             * of output.
+             *
+             * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+             */
+            fun addTool(toolBash20250124: ToolBash20250124) =
+                addTool(MessageCountTokensTool.ofToolBash20250124(toolBash20250124))
+
+            /**
+             * Definitions of tools that the model may use.
+             *
+             * If you include `tools` in your API request, the model may return `tool_use` content
+             * blocks that represent the model's use of those tools. You can then run those tools
+             * using the tool input generated by the model and then optionally return results back
+             * to the model using `tool_result` content blocks.
+             *
+             * Each tool definition includes:
+             * - `name`: Name of the tool.
+             * - `description`: Optional, but strongly-recommended description of the tool.
+             * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
+             *   `input` shape that the model will produce in `tool_use` output content blocks.
+             *
+             * For example, if you defined `tools` as:
+             * ```json
+             * [
+             *   {
+             *     "name": "get_stock_price",
+             *     "description": "Get the current stock price for a given ticker symbol.",
+             *     "input_schema": {
+             *       "type": "object",
+             *       "properties": {
+             *         "ticker": {
+             *           "type": "string",
+             *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
+             *         }
+             *       },
+             *       "required": ["ticker"]
+             *     }
+             *   }
+             * ]
+             * ```
+             *
+             * And then asked the model "What's the S&P 500 at today?", the model might produce
+             * `tool_use` content blocks in the response like this:
+             * ```json
+             * [
+             *   {
+             *     "type": "tool_use",
+             *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+             *     "name": "get_stock_price",
+             *     "input": { "ticker": "^GSPC" }
+             *   }
+             * ]
+             * ```
+             *
+             * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an
+             * input, and return the following back to the model in a subsequent `user` message:
+             * ```json
+             * [
+             *   {
+             *     "type": "tool_result",
+             *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+             *     "content": "259.75 USD"
+             *   }
+             * ]
+             * ```
+             *
+             * Tools can be used for workflows that include running client-side tools and functions,
+             * or more generally whenever you want the model to produce a particular JSON structure
+             * of output.
+             *
+             * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+             */
+            fun addTool(toolTextEditor20250124: ToolTextEditor20250124) =
+                addTool(MessageCountTokensTool.ofToolTextEditor20250124(toolTextEditor20250124))
+
+            /**
+             * Definitions of tools that the model may use.
+             *
+             * If you include `tools` in your API request, the model may return `tool_use` content
+             * blocks that represent the model's use of those tools. You can then run those tools
+             * using the tool input generated by the model and then optionally return results back
+             * to the model using `tool_result` content blocks.
+             *
+             * Each tool definition includes:
+             * - `name`: Name of the tool.
+             * - `description`: Optional, but strongly-recommended description of the tool.
+             * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
+             *   `input` shape that the model will produce in `tool_use` output content blocks.
+             *
+             * For example, if you defined `tools` as:
+             * ```json
+             * [
+             *   {
+             *     "name": "get_stock_price",
+             *     "description": "Get the current stock price for a given ticker symbol.",
+             *     "input_schema": {
+             *       "type": "object",
+             *       "properties": {
+             *         "ticker": {
+             *           "type": "string",
+             *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
+             *         }
+             *       },
+             *       "required": ["ticker"]
+             *     }
+             *   }
+             * ]
+             * ```
+             *
+             * And then asked the model "What's the S&P 500 at today?", the model might produce
+             * `tool_use` content blocks in the response like this:
+             * ```json
+             * [
+             *   {
+             *     "type": "tool_use",
+             *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+             *     "name": "get_stock_price",
+             *     "input": { "ticker": "^GSPC" }
+             *   }
+             * ]
+             * ```
+             *
+             * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an
+             * input, and return the following back to the model in a subsequent `user` message:
+             * ```json
+             * [
+             *   {
+             *     "type": "tool_result",
+             *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+             *     "content": "259.75 USD"
+             *   }
+             * ]
+             * ```
+             *
+             * Tools can be used for workflows that include running client-side tools and functions,
+             * or more generally whenever you want the model to produce a particular JSON structure
+             * of output.
+             *
+             * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+             */
+            fun addTool(tool: Tool) = addTool(MessageCountTokensTool.ofTool(tool))
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -1996,6 +2335,7 @@ private constructor(
                     checkRequired("messages", messages).map { it.toImmutable() },
                     checkRequired("model", model),
                     system,
+                    thinking,
                     toolChoice,
                     (tools ?: JsonMissing.of()).map { it.toImmutable() },
                     additionalProperties.toImmutable(),
@@ -2007,17 +2347,17 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Body && messages == other.messages && model == other.model && system == other.system && toolChoice == other.toolChoice && tools == other.tools && additionalProperties == other.additionalProperties /* spotless:on */
+            return /* spotless:off */ other is Body && messages == other.messages && model == other.model && system == other.system && thinking == other.thinking && toolChoice == other.toolChoice && tools == other.tools && additionalProperties == other.additionalProperties /* spotless:on */
         }
 
         /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(messages, model, system, toolChoice, tools, additionalProperties) }
+        private val hashCode: Int by lazy { Objects.hash(messages, model, system, thinking, toolChoice, tools, additionalProperties) }
         /* spotless:on */
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{messages=$messages, model=$model, system=$system, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
+            "Body{messages=$messages, model=$model, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
     }
 
     fun toBuilder() = Builder().from(this)
@@ -2938,6 +3278,71 @@ private constructor(
         }
 
         /**
+         * Configuration for enabling Claude's extended thinking.
+         *
+         * When enabled, responses include `thinking` content blocks showing Claude's thinking
+         * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
+         * towards your `max_tokens` limit.
+         *
+         * See
+         * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+         * for details.
+         */
+        fun thinking(thinking: ThinkingConfigParam) = apply { body.thinking(thinking) }
+
+        /**
+         * Configuration for enabling Claude's extended thinking.
+         *
+         * When enabled, responses include `thinking` content blocks showing Claude's thinking
+         * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
+         * towards your `max_tokens` limit.
+         *
+         * See
+         * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+         * for details.
+         */
+        fun thinking(thinking: JsonField<ThinkingConfigParam>) = apply { body.thinking(thinking) }
+
+        /**
+         * Configuration for enabling Claude's extended thinking.
+         *
+         * When enabled, responses include `thinking` content blocks showing Claude's thinking
+         * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
+         * towards your `max_tokens` limit.
+         *
+         * See
+         * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+         * for details.
+         */
+        fun thinking(enabled: ThinkingConfigEnabled) = apply { body.thinking(enabled) }
+
+        /**
+         * Configuration for enabling Claude's extended thinking.
+         *
+         * When enabled, responses include `thinking` content blocks showing Claude's thinking
+         * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
+         * towards your `max_tokens` limit.
+         *
+         * See
+         * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+         * for details.
+         */
+        fun enabledThinking(budgetTokens: Long) = apply { body.enabledThinking(budgetTokens) }
+
+        /**
+         * Configuration for enabling Claude's extended thinking.
+         *
+         * When enabled, responses include `thinking` content blocks showing Claude's thinking
+         * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
+         * towards your `max_tokens` limit.
+         *
+         * See
+         * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+         * for details.
+         */
+        fun thinking(disabled: ThinkingConfigDisabled) = apply { body.thinking(disabled) }
+
+        /**
          * How the model should use the provided tools. The model can use a specific tool, any
          * available tool, or decide by itself.
          */
@@ -2972,8 +3377,8 @@ private constructor(
          * Each tool definition includes:
          * - `name`: Name of the tool.
          * - `description`: Optional, but strongly-recommended description of the tool.
-         * - `input_schema`: [JSON schema](https://json-schema.org/) for the tool `input` shape that
-         *   the model will produce in `tool_use` output content blocks.
+         * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
+         *   `input` shape that the model will produce in `tool_use` output content blocks.
          *
          * For example, if you defined `tools` as:
          * ```json
@@ -3026,7 +3431,7 @@ private constructor(
          *
          * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
          */
-        fun tools(tools: List<Tool>) = apply { body.tools(tools) }
+        fun tools(tools: List<MessageCountTokensTool>) = apply { body.tools(tools) }
 
         /**
          * Definitions of tools that the model may use.
@@ -3039,8 +3444,8 @@ private constructor(
          * Each tool definition includes:
          * - `name`: Name of the tool.
          * - `description`: Optional, but strongly-recommended description of the tool.
-         * - `input_schema`: [JSON schema](https://json-schema.org/) for the tool `input` shape that
-         *   the model will produce in `tool_use` output content blocks.
+         * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
+         *   `input` shape that the model will produce in `tool_use` output content blocks.
          *
          * For example, if you defined `tools` as:
          * ```json
@@ -3093,7 +3498,7 @@ private constructor(
          *
          * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
          */
-        fun tools(tools: JsonField<List<Tool>>) = apply { body.tools(tools) }
+        fun tools(tools: JsonField<List<MessageCountTokensTool>>) = apply { body.tools(tools) }
 
         /**
          * Definitions of tools that the model may use.
@@ -3106,8 +3511,211 @@ private constructor(
          * Each tool definition includes:
          * - `name`: Name of the tool.
          * - `description`: Optional, but strongly-recommended description of the tool.
-         * - `input_schema`: [JSON schema](https://json-schema.org/) for the tool `input` shape that
-         *   the model will produce in `tool_use` output content blocks.
+         * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
+         *   `input` shape that the model will produce in `tool_use` output content blocks.
+         *
+         * For example, if you defined `tools` as:
+         * ```json
+         * [
+         *   {
+         *     "name": "get_stock_price",
+         *     "description": "Get the current stock price for a given ticker symbol.",
+         *     "input_schema": {
+         *       "type": "object",
+         *       "properties": {
+         *         "ticker": {
+         *           "type": "string",
+         *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
+         *         }
+         *       },
+         *       "required": ["ticker"]
+         *     }
+         *   }
+         * ]
+         * ```
+         *
+         * And then asked the model "What's the S&P 500 at today?", the model might produce
+         * `tool_use` content blocks in the response like this:
+         * ```json
+         * [
+         *   {
+         *     "type": "tool_use",
+         *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+         *     "name": "get_stock_price",
+         *     "input": { "ticker": "^GSPC" }
+         *   }
+         * ]
+         * ```
+         *
+         * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an input,
+         * and return the following back to the model in a subsequent `user` message:
+         * ```json
+         * [
+         *   {
+         *     "type": "tool_result",
+         *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+         *     "content": "259.75 USD"
+         *   }
+         * ]
+         * ```
+         *
+         * Tools can be used for workflows that include running client-side tools and functions, or
+         * more generally whenever you want the model to produce a particular JSON structure of
+         * output.
+         *
+         * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+         */
+        fun addTool(tool: MessageCountTokensTool) = apply { body.addTool(tool) }
+
+        /**
+         * Definitions of tools that the model may use.
+         *
+         * If you include `tools` in your API request, the model may return `tool_use` content
+         * blocks that represent the model's use of those tools. You can then run those tools using
+         * the tool input generated by the model and then optionally return results back to the
+         * model using `tool_result` content blocks.
+         *
+         * Each tool definition includes:
+         * - `name`: Name of the tool.
+         * - `description`: Optional, but strongly-recommended description of the tool.
+         * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
+         *   `input` shape that the model will produce in `tool_use` output content blocks.
+         *
+         * For example, if you defined `tools` as:
+         * ```json
+         * [
+         *   {
+         *     "name": "get_stock_price",
+         *     "description": "Get the current stock price for a given ticker symbol.",
+         *     "input_schema": {
+         *       "type": "object",
+         *       "properties": {
+         *         "ticker": {
+         *           "type": "string",
+         *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
+         *         }
+         *       },
+         *       "required": ["ticker"]
+         *     }
+         *   }
+         * ]
+         * ```
+         *
+         * And then asked the model "What's the S&P 500 at today?", the model might produce
+         * `tool_use` content blocks in the response like this:
+         * ```json
+         * [
+         *   {
+         *     "type": "tool_use",
+         *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+         *     "name": "get_stock_price",
+         *     "input": { "ticker": "^GSPC" }
+         *   }
+         * ]
+         * ```
+         *
+         * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an input,
+         * and return the following back to the model in a subsequent `user` message:
+         * ```json
+         * [
+         *   {
+         *     "type": "tool_result",
+         *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+         *     "content": "259.75 USD"
+         *   }
+         * ]
+         * ```
+         *
+         * Tools can be used for workflows that include running client-side tools and functions, or
+         * more generally whenever you want the model to produce a particular JSON structure of
+         * output.
+         *
+         * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+         */
+        fun addTool(toolBash20250124: ToolBash20250124) = apply { body.addTool(toolBash20250124) }
+
+        /**
+         * Definitions of tools that the model may use.
+         *
+         * If you include `tools` in your API request, the model may return `tool_use` content
+         * blocks that represent the model's use of those tools. You can then run those tools using
+         * the tool input generated by the model and then optionally return results back to the
+         * model using `tool_result` content blocks.
+         *
+         * Each tool definition includes:
+         * - `name`: Name of the tool.
+         * - `description`: Optional, but strongly-recommended description of the tool.
+         * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
+         *   `input` shape that the model will produce in `tool_use` output content blocks.
+         *
+         * For example, if you defined `tools` as:
+         * ```json
+         * [
+         *   {
+         *     "name": "get_stock_price",
+         *     "description": "Get the current stock price for a given ticker symbol.",
+         *     "input_schema": {
+         *       "type": "object",
+         *       "properties": {
+         *         "ticker": {
+         *           "type": "string",
+         *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
+         *         }
+         *       },
+         *       "required": ["ticker"]
+         *     }
+         *   }
+         * ]
+         * ```
+         *
+         * And then asked the model "What's the S&P 500 at today?", the model might produce
+         * `tool_use` content blocks in the response like this:
+         * ```json
+         * [
+         *   {
+         *     "type": "tool_use",
+         *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+         *     "name": "get_stock_price",
+         *     "input": { "ticker": "^GSPC" }
+         *   }
+         * ]
+         * ```
+         *
+         * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an input,
+         * and return the following back to the model in a subsequent `user` message:
+         * ```json
+         * [
+         *   {
+         *     "type": "tool_result",
+         *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
+         *     "content": "259.75 USD"
+         *   }
+         * ]
+         * ```
+         *
+         * Tools can be used for workflows that include running client-side tools and functions, or
+         * more generally whenever you want the model to produce a particular JSON structure of
+         * output.
+         *
+         * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+         */
+        fun addTool(toolTextEditor20250124: ToolTextEditor20250124) = apply {
+            body.addTool(toolTextEditor20250124)
+        }
+
+        /**
+         * Definitions of tools that the model may use.
+         *
+         * If you include `tools` in your API request, the model may return `tool_use` content
+         * blocks that represent the model's use of those tools. You can then run those tools using
+         * the tool input generated by the model and then optionally return results back to the
+         * model using `tool_result` content blocks.
+         *
+         * Each tool definition includes:
+         * - `name`: Name of the tool.
+         * - `description`: Optional, but strongly-recommended description of the tool.
+         * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
+         *   `input` shape that the model will produce in `tool_use` output content blocks.
          *
          * For example, if you defined `tools` as:
          * ```json

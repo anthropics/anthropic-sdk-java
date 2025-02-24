@@ -27,7 +27,6 @@ import com.anthropic.models.MessageTokensCount
 import com.anthropic.models.RawMessageStreamEvent
 import com.anthropic.services.async.messages.BatchServiceAsync
 import com.anthropic.services.async.messages.BatchServiceAsyncImpl
-import java.time.Duration
 import java.util.concurrent.CompletableFuture
 
 class MessageServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -47,6 +46,8 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
      * generate the next message in the conversation.
      *
      * The Messages API can be used for either single queries or stateless multi-turn conversations.
+     *
+     * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
      */
     override fun create(
         params: MessageCreateParams,
@@ -63,8 +64,9 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
             .thenComposeAsync {
                 clientOptions.httpClient.executeAsync(
                     it,
-                    requestOptions.applyDefaults(
-                        RequestOptions.builder().timeout(Duration.ofMillis(600000)).build()
+                    requestOptions.applyDefaultTimeoutFromMaxTokens(
+                        params.maxTokens(),
+                        isStreaming = false,
                     ),
                 )
             }
@@ -89,6 +91,8 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
      * generate the next message in the conversation.
      *
      * The Messages API can be used for either single queries or stateless multi-turn conversations.
+     *
+     * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
      */
     override fun createStreaming(
         params: MessageCreateParams,
@@ -114,8 +118,9 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
             .thenComposeAsync {
                 clientOptions.httpClient.executeAsync(
                     it,
-                    requestOptions.applyDefaults(
-                        RequestOptions.builder().timeout(Duration.ofMillis(600000)).build()
+                    requestOptions.applyDefaultTimeoutFromMaxTokens(
+                        params.maxTokens(),
+                        isStreaming = true,
                     ),
                 )
             }
@@ -141,6 +146,9 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
      *
      * The Token Count API can be used to count the number of tokens in a Message, including tools,
      * images, and documents, without creating it.
+     *
+     * Learn more about token counting in our
+     * [user guide](/en/docs/build-with-claude/token-counting)
      */
     override fun countTokens(
         params: MessageCountTokensParams,

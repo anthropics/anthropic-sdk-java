@@ -61,7 +61,7 @@ AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+    .model(Model.CLAUDE_3_7_SONNET_LATEST)
     .build();
 Message message = client.messages().create(params);
 ```
@@ -119,6 +119,15 @@ To send a request to the Anthropic API, build an instance of some `Params` class
 
 For example, `client.messages().create(...)` should be called with an instance of `MessageCreateParams`, and it will return an instance of `Message`.
 
+### Long requests
+
+> [!IMPORTANT]  
+> We highly encourage you to use [streaming](#streaming) for longer running requests.
+
+We do not recommend setting a large `maxTokens` value without using streaming. Some networks may drop idle connections after a certain period of time, which can cause the request to fail or [timeout](#timeouts) without receiving a response from Anthropic. We periodically ping the API to keep the connection alive and reduce the impact of these networks.
+
+The SDK throws an error if a non-streaming request is expected to take longer than 10 minutes. Using a [streaming method](#streaming) or [overriding the timeout](#timeouts) at the client or request level disables the error.
+
 ## Immutability
 
 Each class in the SDK has an associated [builder](https://blogs.oracle.com/javamagazine/post/exploring-joshua-blochs-builder-design-pattern-in-java) or factory method for constructing it.
@@ -145,7 +154,7 @@ AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+    .model(Model.CLAUDE_3_7_SONNET_LATEST)
     .build();
 CompletableFuture<Message> message = client.async().messages().create(params);
 ```
@@ -166,7 +175,7 @@ AnthropicClientAsync client = AnthropicOkHttpClientAsync.fromEnv();
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+    .model(Model.CLAUDE_3_7_SONNET_LATEST)
     .build();
 CompletableFuture<Message> message = client.messages().create(params);
 ```
@@ -388,6 +397,22 @@ AnthropicClient client = AnthropicOkHttpClient.builder()
 
 Requests time out after 10 minutes by default.
 
+However, for methods that accept `maxTokens`, if you specify a large `maxTokens` value and are *not* streaming, then the default timeout will be calculated dynamically using this formula:
+
+```java
+Duration.ofSeconds(
+    Math.min(
+        60 * 60, // 1 hour max
+        Math.max(
+            10 * 60, // 10 minute minimum
+            60 * 60 * maxTokens / 128_000
+        )
+    )
+)
+```
+
+Which results in a timeout of up to 60 minutes, scaled by the `maxTokens` parameter, unless overridden.
+
 To set a custom timeout, configure the method call using the `timeout` method:
 
 ```java
@@ -464,7 +489,7 @@ import com.anthropic.models.Model;
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(JsonValue.from(3.14))
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+    .model(Model.CLAUDE_3_7_SONNET_LATEST)
     .build();
 ```
 

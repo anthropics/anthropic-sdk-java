@@ -2,7 +2,6 @@
 
 package com.anthropic.models
 
-import com.anthropic.core.JsonValue
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -13,7 +12,7 @@ class BetaMessageCountTokensParamsTest {
         BetaMessageCountTokensParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .addUserMessage("Hello, world")
-            .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+            .model(Model.CLAUDE_3_7_SONNET_LATEST)
             .systemOfBetaTextBlockParams(
                 listOf(
                     BetaTextBlockParam.builder()
@@ -31,35 +30,14 @@ class BetaMessageCountTokensParamsTest {
                         .build()
                 )
             )
+            .enabledThinking(1024L)
             .toolChoice(BetaToolChoiceAuto.builder().disableParallelToolUse(true).build())
             .addTool(
-                BetaTool.builder()
-                    .inputSchema(
-                        BetaTool.InputSchema.builder()
-                            .properties(
-                                JsonValue.from(
-                                    mapOf(
-                                        "location" to
-                                            mapOf(
-                                                "description" to
-                                                    "The city and state, e.g. San Francisco, CA",
-                                                "type" to "string",
-                                            ),
-                                        "unit" to
-                                            mapOf(
-                                                "description" to
-                                                    "Unit for the output - one of (celsius, fahrenheit)",
-                                                "type" to "string",
-                                            ),
-                                    )
-                                )
-                            )
-                            .build()
-                    )
-                    .name("name")
+                BetaToolComputerUse20241022.builder()
+                    .displayHeightPx(1L)
+                    .displayWidthPx(1L)
                     .cacheControl(BetaCacheControlEphemeral.builder().build())
-                    .description("Get the current weather in a given location")
-                    .type(BetaTool.Type.CUSTOM)
+                    .displayNumber(0L)
                     .build()
             )
             .build()
@@ -71,7 +49,7 @@ class BetaMessageCountTokensParamsTest {
             BetaMessageCountTokensParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+                .model(Model.CLAUDE_3_7_SONNET_LATEST)
                 .systemOfBetaTextBlockParams(
                     listOf(
                         BetaTextBlockParam.builder()
@@ -89,35 +67,14 @@ class BetaMessageCountTokensParamsTest {
                             .build()
                     )
                 )
+                .enabledThinking(1024L)
                 .toolChoice(BetaToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
-                    BetaTool.builder()
-                        .inputSchema(
-                            BetaTool.InputSchema.builder()
-                                .properties(
-                                    JsonValue.from(
-                                        mapOf(
-                                            "location" to
-                                                mapOf(
-                                                    "description" to
-                                                        "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string",
-                                                ),
-                                            "unit" to
-                                                mapOf(
-                                                    "description" to
-                                                        "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string",
-                                                ),
-                                        )
-                                    )
-                                )
-                                .build()
-                        )
-                        .name("name")
+                    BetaToolComputerUse20241022.builder()
+                        .displayHeightPx(1L)
+                        .displayWidthPx(1L)
                         .cacheControl(BetaCacheControlEphemeral.builder().build())
-                        .description("Get the current weather in a given location")
-                        .type(BetaTool.Type.CUSTOM)
+                        .displayNumber(0L)
                         .build()
                 )
                 .build()
@@ -134,7 +91,7 @@ class BetaMessageCountTokensParamsTest {
                         .build()
                 )
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
         assertThat(body.system())
             .contains(
                 BetaMessageCountTokensParams.System.ofBetaTextBlockParams(
@@ -155,6 +112,12 @@ class BetaMessageCountTokensParamsTest {
                     )
                 )
             )
+        assertThat(body.thinking())
+            .contains(
+                BetaThinkingConfigParam.ofEnabled(
+                    BetaThinkingConfigEnabled.builder().budgetTokens(1024L).build()
+                )
+            )
         assertThat(body.toolChoice())
             .contains(
                 BetaToolChoice.ofAuto(
@@ -164,34 +127,12 @@ class BetaMessageCountTokensParamsTest {
         assertThat(body.tools())
             .contains(
                 listOf(
-                    BetaMessageCountTokensParams.Tool.ofBeta(
-                        BetaTool.builder()
-                            .inputSchema(
-                                BetaTool.InputSchema.builder()
-                                    .properties(
-                                        JsonValue.from(
-                                            mapOf(
-                                                "location" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string",
-                                                    ),
-                                                "unit" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string",
-                                                    ),
-                                            )
-                                        )
-                                    )
-                                    .build()
-                            )
-                            .name("name")
+                    BetaMessageCountTokensParams.Tool.ofBetaToolComputerUse20241022(
+                        BetaToolComputerUse20241022.builder()
+                            .displayHeightPx(1L)
+                            .displayWidthPx(1L)
                             .cacheControl(BetaCacheControlEphemeral.builder().build())
-                            .description("Get the current weather in a given location")
-                            .type(BetaTool.Type.CUSTOM)
+                            .displayNumber(0L)
                             .build()
                     )
                 )
@@ -203,7 +144,7 @@ class BetaMessageCountTokensParamsTest {
         val params =
             BetaMessageCountTokensParams.builder()
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+                .model(Model.CLAUDE_3_7_SONNET_LATEST)
                 .build()
 
         val body = params._body()
@@ -218,6 +159,6 @@ class BetaMessageCountTokensParamsTest {
                         .build()
                 )
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
     }
 }

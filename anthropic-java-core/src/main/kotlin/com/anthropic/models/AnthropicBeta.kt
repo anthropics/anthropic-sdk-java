@@ -26,9 +26,15 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
 
         @JvmField val COMPUTER_USE_2024_10_22 = of("computer-use-2024-10-22")
 
+        @JvmField val COMPUTER_USE_2025_01_24 = of("computer-use-2025-01-24")
+
         @JvmField val PDFS_2024_09_25 = of("pdfs-2024-09-25")
 
         @JvmField val TOKEN_COUNTING_2024_11_01 = of("token-counting-2024-11-01")
+
+        @JvmField val TOKEN_EFFICIENT_TOOLS_2025_02_19 = of("token-efficient-tools-2025-02-19")
+
+        @JvmField val OUTPUT_128K_2025_02_19 = of("output-128k-2025-02-19")
 
         @JvmStatic fun of(value: String) = AnthropicBeta(JsonField.of(value))
     }
@@ -38,8 +44,11 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         MESSAGE_BATCHES_2024_09_24,
         PROMPT_CACHING_2024_07_31,
         COMPUTER_USE_2024_10_22,
+        COMPUTER_USE_2025_01_24,
         PDFS_2024_09_25,
         TOKEN_COUNTING_2024_11_01,
+        TOKEN_EFFICIENT_TOOLS_2025_02_19,
+        OUTPUT_128K_2025_02_19,
     }
 
     /**
@@ -55,8 +64,11 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         MESSAGE_BATCHES_2024_09_24,
         PROMPT_CACHING_2024_07_31,
         COMPUTER_USE_2024_10_22,
+        COMPUTER_USE_2025_01_24,
         PDFS_2024_09_25,
         TOKEN_COUNTING_2024_11_01,
+        TOKEN_EFFICIENT_TOOLS_2025_02_19,
+        OUTPUT_128K_2025_02_19,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
          */
@@ -75,8 +87,11 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             MESSAGE_BATCHES_2024_09_24 -> Value.MESSAGE_BATCHES_2024_09_24
             PROMPT_CACHING_2024_07_31 -> Value.PROMPT_CACHING_2024_07_31
             COMPUTER_USE_2024_10_22 -> Value.COMPUTER_USE_2024_10_22
+            COMPUTER_USE_2025_01_24 -> Value.COMPUTER_USE_2025_01_24
             PDFS_2024_09_25 -> Value.PDFS_2024_09_25
             TOKEN_COUNTING_2024_11_01 -> Value.TOKEN_COUNTING_2024_11_01
+            TOKEN_EFFICIENT_TOOLS_2025_02_19 -> Value.TOKEN_EFFICIENT_TOOLS_2025_02_19
+            OUTPUT_128K_2025_02_19 -> Value.OUTPUT_128K_2025_02_19
             else -> Value._UNKNOWN
         }
 
@@ -93,8 +108,11 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             MESSAGE_BATCHES_2024_09_24 -> Known.MESSAGE_BATCHES_2024_09_24
             PROMPT_CACHING_2024_07_31 -> Known.PROMPT_CACHING_2024_07_31
             COMPUTER_USE_2024_10_22 -> Known.COMPUTER_USE_2024_10_22
+            COMPUTER_USE_2025_01_24 -> Known.COMPUTER_USE_2025_01_24
             PDFS_2024_09_25 -> Known.PDFS_2024_09_25
             TOKEN_COUNTING_2024_11_01 -> Known.TOKEN_COUNTING_2024_11_01
+            TOKEN_EFFICIENT_TOOLS_2025_02_19 -> Known.TOKEN_EFFICIENT_TOOLS_2025_02_19
+            OUTPUT_128K_2025_02_19 -> Known.OUTPUT_128K_2025_02_19
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }
 

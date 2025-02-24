@@ -24,19 +24,24 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
 
     companion object {
 
-        /** Fast and cost-effective model */
+        /** Our most intelligent model */
+        @JvmField val CLAUDE_3_7_SONNET_LATEST = of("claude-3-7-sonnet-latest")
+
+        /** Our most intelligent model */
+        @JvmField val CLAUDE_3_7_SONNET_20250219 = of("claude-3-7-sonnet-20250219")
+
+        /** Fastest and most compact model for near-instant responsiveness */
         @JvmField val CLAUDE_3_5_HAIKU_LATEST = of("claude-3-5-haiku-latest")
 
-        /** Fast and cost-effective model */
+        /** Our fastest model */
         @JvmField val CLAUDE_3_5_HAIKU_20241022 = of("claude-3-5-haiku-20241022")
 
-        /** Our most intelligent model */
+        /** Our previous most intelligent model */
         @JvmField val CLAUDE_3_5_SONNET_LATEST = of("claude-3-5-sonnet-latest")
 
-        /** Our most intelligent model */
+        /** Our previous most intelligent model */
         @JvmField val CLAUDE_3_5_SONNET_20241022 = of("claude-3-5-sonnet-20241022")
 
-        /** Our previous most intelligent model */
         @JvmField val CLAUDE_3_5_SONNET_20240620 = of("claude-3-5-sonnet-20240620")
 
         /** Excels at writing and complex tasks */
@@ -52,7 +57,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         @JvmField
         val CLAUDE_3_SONNET_20240229 = of("claude-3-sonnet-20240229")
 
-        /** Our previous fast and cost-effective */
+        /** Our previous most fast and cost-effective */
         @JvmField val CLAUDE_3_HAIKU_20240307 = of("claude-3-haiku-20240307")
 
         @Deprecated(
@@ -72,15 +77,18 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
 
     /** An enum containing [Model]'s known values. */
     enum class Known {
-        /** Fast and cost-effective model */
+        /** Our most intelligent model */
+        CLAUDE_3_7_SONNET_LATEST,
+        /** Our most intelligent model */
+        CLAUDE_3_7_SONNET_20250219,
+        /** Fastest and most compact model for near-instant responsiveness */
         CLAUDE_3_5_HAIKU_LATEST,
-        /** Fast and cost-effective model */
+        /** Our fastest model */
         CLAUDE_3_5_HAIKU_20241022,
-        /** Our most intelligent model */
-        CLAUDE_3_5_SONNET_LATEST,
-        /** Our most intelligent model */
-        CLAUDE_3_5_SONNET_20241022,
         /** Our previous most intelligent model */
+        CLAUDE_3_5_SONNET_LATEST,
+        /** Our previous most intelligent model */
+        CLAUDE_3_5_SONNET_20241022,
         CLAUDE_3_5_SONNET_20240620,
         /** Excels at writing and complex tasks */
         CLAUDE_3_OPUS_LATEST,
@@ -91,7 +99,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         )
         /** Balance of speed and intelligence */
         CLAUDE_3_SONNET_20240229,
-        /** Our previous fast and cost-effective */
+        /** Our previous most fast and cost-effective */
         CLAUDE_3_HAIKU_20240307,
         @Deprecated(
             "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
@@ -113,15 +121,18 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
-        /** Fast and cost-effective model */
+        /** Our most intelligent model */
+        CLAUDE_3_7_SONNET_LATEST,
+        /** Our most intelligent model */
+        CLAUDE_3_7_SONNET_20250219,
+        /** Fastest and most compact model for near-instant responsiveness */
         CLAUDE_3_5_HAIKU_LATEST,
-        /** Fast and cost-effective model */
+        /** Our fastest model */
         CLAUDE_3_5_HAIKU_20241022,
-        /** Our most intelligent model */
-        CLAUDE_3_5_SONNET_LATEST,
-        /** Our most intelligent model */
-        CLAUDE_3_5_SONNET_20241022,
         /** Our previous most intelligent model */
+        CLAUDE_3_5_SONNET_LATEST,
+        /** Our previous most intelligent model */
+        CLAUDE_3_5_SONNET_20241022,
         CLAUDE_3_5_SONNET_20240620,
         /** Excels at writing and complex tasks */
         CLAUDE_3_OPUS_LATEST,
@@ -132,7 +143,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         )
         /** Balance of speed and intelligence */
         CLAUDE_3_SONNET_20240229,
-        /** Our previous fast and cost-effective */
+        /** Our previous most fast and cost-effective */
         CLAUDE_3_HAIKU_20240307,
         @Deprecated(
             "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
@@ -155,6 +166,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      */
     fun value(): Value =
         when (this) {
+            CLAUDE_3_7_SONNET_LATEST -> Value.CLAUDE_3_7_SONNET_LATEST
+            CLAUDE_3_7_SONNET_20250219 -> Value.CLAUDE_3_7_SONNET_20250219
             CLAUDE_3_5_HAIKU_LATEST -> Value.CLAUDE_3_5_HAIKU_LATEST
             CLAUDE_3_5_HAIKU_20241022 -> Value.CLAUDE_3_5_HAIKU_20241022
             CLAUDE_3_5_SONNET_LATEST -> Value.CLAUDE_3_5_SONNET_LATEST
@@ -179,6 +192,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      */
     fun known(): Known =
         when (this) {
+            CLAUDE_3_7_SONNET_LATEST -> Known.CLAUDE_3_7_SONNET_LATEST
+            CLAUDE_3_7_SONNET_20250219 -> Known.CLAUDE_3_7_SONNET_20250219
             CLAUDE_3_5_HAIKU_LATEST -> Known.CLAUDE_3_5_HAIKU_LATEST
             CLAUDE_3_5_HAIKU_20241022 -> Known.CLAUDE_3_5_HAIKU_20241022
             CLAUDE_3_5_SONNET_LATEST -> Known.CLAUDE_3_5_SONNET_LATEST

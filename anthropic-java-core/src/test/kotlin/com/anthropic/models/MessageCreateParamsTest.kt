@@ -2,7 +2,6 @@
 
 package com.anthropic.models
 
-import com.anthropic.core.JsonValue
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -13,7 +12,7 @@ class MessageCreateParamsTest {
         MessageCreateParams.builder()
             .maxTokens(1024L)
             .addUserMessage("Hello, world")
-            .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+            .model(Model.CLAUDE_3_7_SONNET_LATEST)
             .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
             .addStopSequence("string")
             .systemOfTextBlockParams(
@@ -34,34 +33,11 @@ class MessageCreateParamsTest {
                 )
             )
             .temperature(1.0)
+            .enabledThinking(1024L)
             .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
             .addTool(
-                Tool.builder()
-                    .inputSchema(
-                        Tool.InputSchema.builder()
-                            .properties(
-                                JsonValue.from(
-                                    mapOf(
-                                        "location" to
-                                            mapOf(
-                                                "description" to
-                                                    "The city and state, e.g. San Francisco, CA",
-                                                "type" to "string",
-                                            ),
-                                        "unit" to
-                                            mapOf(
-                                                "description" to
-                                                    "Unit for the output - one of (celsius, fahrenheit)",
-                                                "type" to "string",
-                                            ),
-                                    )
-                                )
-                            )
-                            .build()
-                    )
-                    .name("name")
+                ToolBash20250124.builder()
                     .cacheControl(CacheControlEphemeral.builder().build())
-                    .description("Get the current weather in a given location")
                     .build()
             )
             .topK(5L)
@@ -75,7 +51,7 @@ class MessageCreateParamsTest {
             MessageCreateParams.builder()
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+                .model(Model.CLAUDE_3_7_SONNET_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .addStopSequence("string")
                 .systemOfTextBlockParams(
@@ -96,34 +72,11 @@ class MessageCreateParamsTest {
                     )
                 )
                 .temperature(1.0)
+                .enabledThinking(1024L)
                 .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
-                    Tool.builder()
-                        .inputSchema(
-                            Tool.InputSchema.builder()
-                                .properties(
-                                    JsonValue.from(
-                                        mapOf(
-                                            "location" to
-                                                mapOf(
-                                                    "description" to
-                                                        "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string",
-                                                ),
-                                            "unit" to
-                                                mapOf(
-                                                    "description" to
-                                                        "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string",
-                                                ),
-                                        )
-                                    )
-                                )
-                                .build()
-                        )
-                        .name("name")
+                    ToolBash20250124.builder()
                         .cacheControl(CacheControlEphemeral.builder().build())
-                        .description("Get the current weather in a given location")
                         .build()
                 )
                 .topK(5L)
@@ -143,7 +96,7 @@ class MessageCreateParamsTest {
                         .build()
                 )
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
         assertThat(body.metadata())
             .contains(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
         assertThat(body.stopSequences()).contains(listOf("string"))
@@ -168,6 +121,12 @@ class MessageCreateParamsTest {
                 )
             )
         assertThat(body.temperature()).contains(1.0)
+        assertThat(body.thinking())
+            .contains(
+                ThinkingConfigParam.ofEnabled(
+                    ThinkingConfigEnabled.builder().budgetTokens(1024L).build()
+                )
+            )
         assertThat(body.toolChoice())
             .contains(
                 ToolChoice.ofAuto(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
@@ -175,33 +134,11 @@ class MessageCreateParamsTest {
         assertThat(body.tools())
             .contains(
                 listOf(
-                    Tool.builder()
-                        .inputSchema(
-                            Tool.InputSchema.builder()
-                                .properties(
-                                    JsonValue.from(
-                                        mapOf(
-                                            "location" to
-                                                mapOf(
-                                                    "description" to
-                                                        "The city and state, e.g. San Francisco, CA",
-                                                    "type" to "string",
-                                                ),
-                                            "unit" to
-                                                mapOf(
-                                                    "description" to
-                                                        "Unit for the output - one of (celsius, fahrenheit)",
-                                                    "type" to "string",
-                                                ),
-                                        )
-                                    )
-                                )
-                                .build()
-                        )
-                        .name("name")
-                        .cacheControl(CacheControlEphemeral.builder().build())
-                        .description("Get the current weather in a given location")
-                        .build()
+                    ToolUnion.ofBash20250124(
+                        ToolBash20250124.builder()
+                            .cacheControl(CacheControlEphemeral.builder().build())
+                            .build()
+                    )
                 )
             )
         assertThat(body.topK()).contains(5L)
@@ -214,7 +151,7 @@ class MessageCreateParamsTest {
             MessageCreateParams.builder()
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_3_5_HAIKU_LATEST)
+                .model(Model.CLAUDE_3_7_SONNET_LATEST)
                 .build()
 
         val body = params._body()
@@ -230,6 +167,6 @@ class MessageCreateParamsTest {
                         .build()
                 )
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_3_5_HAIKU_LATEST)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
     }
 }

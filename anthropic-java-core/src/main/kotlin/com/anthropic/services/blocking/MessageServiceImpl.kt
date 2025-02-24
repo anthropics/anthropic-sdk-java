@@ -25,7 +25,6 @@ import com.anthropic.models.MessageTokensCount
 import com.anthropic.models.RawMessageStreamEvent
 import com.anthropic.services.blocking.messages.BatchService
 import com.anthropic.services.blocking.messages.BatchServiceImpl
-import java.time.Duration
 
 class MessageServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     MessageService {
@@ -44,6 +43,8 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
      * generate the next message in the conversation.
      *
      * The Messages API can be used for either single queries or stateless multi-turn conversations.
+     *
+     * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
      */
     override fun create(params: MessageCreateParams, requestOptions: RequestOptions): Message {
         val request =
@@ -56,8 +57,9 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
         val response =
             clientOptions.httpClient.execute(
                 request,
-                requestOptions.applyDefaults(
-                    RequestOptions.builder().timeout(Duration.ofMillis(600000)).build()
+                requestOptions.applyDefaultTimeoutFromMaxTokens(
+                    params.maxTokens(),
+                    isStreaming = false,
                 ),
             )
         return response
@@ -79,6 +81,8 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
      * generate the next message in the conversation.
      *
      * The Messages API can be used for either single queries or stateless multi-turn conversations.
+     *
+     * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
      */
     override fun createStreaming(
         params: MessageCreateParams,
@@ -103,8 +107,9 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
         val response =
             clientOptions.httpClient.execute(
                 request,
-                requestOptions.applyDefaults(
-                    RequestOptions.builder().timeout(Duration.ofMillis(600000)).build()
+                requestOptions.applyDefaultTimeoutFromMaxTokens(
+                    params.maxTokens(),
+                    isStreaming = true,
                 ),
             )
         return response
@@ -126,6 +131,9 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
      *
      * The Token Count API can be used to count the number of tokens in a Message, including tools,
      * images, and documents, without creating it.
+     *
+     * Learn more about token counting in our
+     * [user guide](/en/docs/build-with-claude/token-counting)
      */
     override fun countTokens(
         params: MessageCountTokensParams,

@@ -1,6 +1,7 @@
 package com.anthropic.client.okhttp
 
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.Timeout
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpClient
@@ -91,13 +92,12 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
             )
         }
 
-        val timeout = requestOptions.timeout
-        if (timeout != null) {
+        requestOptions.timeout?.let {
             clientBuilder
-                .connectTimeout(timeout)
-                .readTimeout(timeout)
-                .writeTimeout(timeout)
-                .callTimeout(if (timeout.seconds == 0L) timeout else timeout.plusSeconds(30))
+                .connectTimeout(it.connect)
+                .readTimeout(it.read)
+                .writeTimeout(it.write)
+                .callTimeout(it.total)
         }
 
         val client = clientBuilder.build()
@@ -198,23 +198,25 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
     class Builder internal constructor() {
 
         private var baseUrl: HttpUrl? = null
-        // The default timeout is 10 minutes.
-        private var timeout: Duration = Duration.ofSeconds(600)
+        private var timeout: Timeout = Timeout.default()
         private var proxy: Proxy? = null
 
         fun baseUrl(baseUrl: String) = apply { this.baseUrl = baseUrl.toHttpUrl() }
 
-        fun timeout(timeout: Duration) = apply { this.timeout = timeout }
+        fun timeout(timeout: Timeout) = apply { this.timeout = timeout }
+
+        fun timeout(timeout: Duration) = timeout(Timeout.builder().total(timeout).build())
 
         fun proxy(proxy: Proxy?) = apply { this.proxy = proxy }
 
         fun build(): OkHttpClient =
             OkHttpClient(
                 okhttp3.OkHttpClient.Builder()
-                    .connectTimeout(timeout)
-                    .readTimeout(timeout)
-                    .writeTimeout(timeout)
-                    .callTimeout(if (timeout.seconds == 0L) timeout else timeout.plusSeconds(30))
+                    .pingInterval(Duration.ofMinutes(1))
+                    .connectTimeout(timeout.connect)
+                    .readTimeout(timeout.read)
+                    .writeTimeout(timeout.write)
+                    .callTimeout(timeout.total)
                     .proxy(proxy)
                     .build(),
                 checkRequired("baseUrl", baseUrl),
