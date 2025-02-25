@@ -58,9 +58,19 @@ interface BatchServiceAsync {
      */
     @JvmOverloads
     fun list(
-        params: MessageBatchListParams,
+        params: MessageBatchListParams = MessageBatchListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<MessageBatchListPageAsync>
+
+    /**
+     * List all Message Batches within a Workspace. Most recently created batches are returned
+     * first.
+     *
+     * Learn more about the Message Batches API in our
+     * [user guide](/en/docs/build-with-claude/batch-processing)
+     */
+    fun list(requestOptions: RequestOptions): CompletableFuture<MessageBatchListPageAsync> =
+        list(MessageBatchListParams.none(), requestOptions)
 
     /**
      * Delete a Message Batch.

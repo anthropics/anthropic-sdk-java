@@ -9,7 +9,6 @@ import com.anthropic.models.CitationCharLocationParam
 import com.anthropic.models.MessageBatchCancelParams
 import com.anthropic.models.MessageBatchCreateParams
 import com.anthropic.models.MessageBatchDeleteParams
-import com.anthropic.models.MessageBatchListParams
 import com.anthropic.models.MessageBatchRetrieveParams
 import com.anthropic.models.Metadata
 import com.anthropic.models.Model
@@ -115,7 +114,7 @@ class BatchServiceTest {
                 .apiKey("my-anthropic-api-key")
                 .build()
         val batchService = client.messages().batches()
-        val listResponseMessageBatch = batchService.list(MessageBatchListParams.builder().build())
+        val listResponseMessageBatch = batchService.list()
         println(listResponseMessageBatch)
         listResponseMessageBatch.data().forEach { it.validate() }
     }
