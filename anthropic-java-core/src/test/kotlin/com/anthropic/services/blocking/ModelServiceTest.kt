@@ -4,7 +4,6 @@ package com.anthropic.services.blocking
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
-import com.anthropic.models.ModelListParams
 import com.anthropic.models.ModelRetrieveParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -34,7 +33,7 @@ class ModelServiceTest {
                 .apiKey("my-anthropic-api-key")
                 .build()
         val modelService = client.models()
-        val listResponseModelInfo = modelService.list(ModelListParams.builder().build())
+        val listResponseModelInfo = modelService.list()
         println(listResponseModelInfo)
         listResponseModelInfo.data().forEach { it.validate() }
     }

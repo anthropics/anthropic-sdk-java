@@ -33,7 +33,16 @@ interface ModelServiceAsync {
      */
     @JvmOverloads
     fun list(
-        params: BetaModelListParams,
+        params: BetaModelListParams = BetaModelListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaModelListPageAsync>
+
+    /**
+     * List available models.
+     *
+     * The Models API response can be used to determine which models are available for use in the
+     * API. More recently released models are listed first.
+     */
+    fun list(requestOptions: RequestOptions): CompletableFuture<BetaModelListPageAsync> =
+        list(BetaModelListParams.none(), requestOptions)
 }

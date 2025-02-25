@@ -10,7 +10,6 @@ import com.anthropic.models.BetaCitationCharLocationParam
 import com.anthropic.models.BetaMessageBatchCancelParams
 import com.anthropic.models.BetaMessageBatchCreateParams
 import com.anthropic.models.BetaMessageBatchDeleteParams
-import com.anthropic.models.BetaMessageBatchListParams
 import com.anthropic.models.BetaMessageBatchRetrieveParams
 import com.anthropic.models.BetaMetadata
 import com.anthropic.models.BetaTextBlockParam
@@ -125,8 +124,7 @@ class BatchServiceTest {
                 .apiKey("my-anthropic-api-key")
                 .build()
         val batchService = client.beta().messages().batches()
-        val betaListResponseMessageBatch =
-            batchService.list(BetaMessageBatchListParams.builder().build())
+        val betaListResponseMessageBatch = batchService.list()
         println(betaListResponseMessageBatch)
         betaListResponseMessageBatch.data().forEach { it.validate() }
     }

@@ -58,9 +58,19 @@ interface BatchService {
      */
     @JvmOverloads
     fun list(
-        params: BetaMessageBatchListParams,
+        params: BetaMessageBatchListParams = BetaMessageBatchListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaMessageBatchListPage
+
+    /**
+     * List all Message Batches within a Workspace. Most recently created batches are returned
+     * first.
+     *
+     * Learn more about the Message Batches API in our
+     * [user guide](/en/docs/build-with-claude/batch-processing)
+     */
+    fun list(requestOptions: RequestOptions): BetaMessageBatchListPage =
+        list(BetaMessageBatchListParams.none(), requestOptions)
 
     /**
      * Delete a Message Batch.

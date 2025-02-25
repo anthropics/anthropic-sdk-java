@@ -32,7 +32,16 @@ interface ModelService {
      */
     @JvmOverloads
     fun list(
-        params: BetaModelListParams,
+        params: BetaModelListParams = BetaModelListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaModelListPage
+
+    /**
+     * List available models.
+     *
+     * The Models API response can be used to determine which models are available for use in the
+     * API. More recently released models are listed first.
+     */
+    fun list(requestOptions: RequestOptions): BetaModelListPage =
+        list(BetaModelListParams.none(), requestOptions)
 }
