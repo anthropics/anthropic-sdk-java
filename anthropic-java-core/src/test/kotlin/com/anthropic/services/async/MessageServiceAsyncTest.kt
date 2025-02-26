@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.services.blocking
+package com.anthropic.services.async
 
 import com.anthropic.TestServerExtension
-import com.anthropic.client.okhttp.AnthropicOkHttpClient
+import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
 import com.anthropic.models.CacheControlEphemeral
 import com.anthropic.models.CitationCharLocationParam
 import com.anthropic.models.MessageCountTokensParams
@@ -17,19 +17,19 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(TestServerExtension::class)
-class MessageServiceTest {
+class MessageServiceAsyncTest {
 
     @Test
     fun create() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val messageService = client.messages()
+        val messageServiceAsync = client.messages()
 
-        val message =
-            messageService.create(
+        val messageFuture =
+            messageServiceAsync.create(
                 MessageCreateParams.builder()
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
@@ -68,20 +68,21 @@ class MessageServiceTest {
                     .build()
             )
 
+        val message = messageFuture.get()
         message.validate()
     }
 
     @Test
     fun createStreaming() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val messageService = client.messages()
+        val messageServiceAsync = client.messages()
 
         val messageStreamResponse =
-            messageService.createStreaming(
+            messageServiceAsync.createStreaming(
                 MessageCreateParams.builder()
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
@@ -120,22 +121,22 @@ class MessageServiceTest {
                     .build()
             )
 
-        messageStreamResponse.use {
-            messageStreamResponse.stream().forEach { message -> message.validate() }
-        }
+        val onCompleteFuture =
+            messageStreamResponse.subscribe { message -> message.validate() }.onCompleteFuture()
+        onCompleteFuture.get()
     }
 
     @Test
     fun countTokens() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val messageService = client.messages()
+        val messageServiceAsync = client.messages()
 
-        val messageTokensCount =
-            messageService.countTokens(
+        val messageTokensCountFuture =
+            messageServiceAsync.countTokens(
                 MessageCountTokensParams.builder()
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_3_7_SONNET_LATEST)
@@ -166,6 +167,7 @@ class MessageServiceTest {
                     .build()
             )
 
+        val messageTokensCount = messageTokensCountFuture.get()
         messageTokensCount.validate()
     }
 }

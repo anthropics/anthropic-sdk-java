@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.services.blocking.messages
+package com.anthropic.services.async.messages
 
 import com.anthropic.TestServerExtension
-import com.anthropic.client.okhttp.AnthropicOkHttpClient
+import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
 import com.anthropic.models.CacheControlEphemeral
 import com.anthropic.models.CitationCharLocationParam
 import com.anthropic.models.MessageBatchCancelParams
@@ -21,19 +21,19 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(TestServerExtension::class)
-class BatchServiceTest {
+class BatchServiceAsyncTest {
 
     @Test
     fun create() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val batchService = client.messages().batches()
+        val batchServiceAsync = client.messages().batches()
 
-        val messageBatch =
-            batchService.create(
+        val messageBatchFuture =
+            batchServiceAsync.create(
                 MessageBatchCreateParams.builder()
                     .addRequest(
                         MessageBatchCreateParams.Request.builder()
@@ -90,71 +90,76 @@ class BatchServiceTest {
                     .build()
             )
 
+        val messageBatch = messageBatchFuture.get()
         messageBatch.validate()
     }
 
     @Test
     fun retrieve() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val batchService = client.messages().batches()
+        val batchServiceAsync = client.messages().batches()
 
-        val messageBatch =
-            batchService.retrieve(
+        val messageBatchFuture =
+            batchServiceAsync.retrieve(
                 MessageBatchRetrieveParams.builder().messageBatchId("message_batch_id").build()
             )
 
+        val messageBatch = messageBatchFuture.get()
         messageBatch.validate()
     }
 
     @Test
     fun list() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val batchService = client.messages().batches()
+        val batchServiceAsync = client.messages().batches()
 
-        val page = batchService.list()
+        val pageFuture = batchServiceAsync.list()
 
+        val page = pageFuture.get()
         page.response().validate()
     }
 
     @Test
     fun delete() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val batchService = client.messages().batches()
+        val batchServiceAsync = client.messages().batches()
 
-        val deletedMessageBatch =
-            batchService.delete(
+        val deletedMessageBatchFuture =
+            batchServiceAsync.delete(
                 MessageBatchDeleteParams.builder().messageBatchId("message_batch_id").build()
             )
 
+        val deletedMessageBatch = deletedMessageBatchFuture.get()
         deletedMessageBatch.validate()
     }
 
     @Test
     fun cancel() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val batchService = client.messages().batches()
+        val batchServiceAsync = client.messages().batches()
 
-        val messageBatch =
-            batchService.cancel(
+        val messageBatchFuture =
+            batchServiceAsync.cancel(
                 MessageBatchCancelParams.builder().messageBatchId("message_batch_id").build()
             )
 
+        val messageBatch = messageBatchFuture.get()
         messageBatch.validate()
     }
 
@@ -162,22 +167,23 @@ class BatchServiceTest {
     @Test
     fun resultsStreaming() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val batchService = client.messages().batches()
+        val batchServiceAsync = client.messages().batches()
 
         val messageBatchIndividualResponseStreamResponse =
-            batchService.resultsStreaming(
+            batchServiceAsync.resultsStreaming(
                 MessageBatchResultsParams.builder().messageBatchId("message_batch_id").build()
             )
 
-        messageBatchIndividualResponseStreamResponse.use {
-            messageBatchIndividualResponseStreamResponse.stream().forEach {
-                messageBatchIndividualResponse ->
-                messageBatchIndividualResponse.validate()
-            }
-        }
+        val onCompleteFuture =
+            messageBatchIndividualResponseStreamResponse
+                .subscribe { messageBatchIndividualResponse ->
+                    messageBatchIndividualResponse.validate()
+                }
+                .onCompleteFuture()
+        onCompleteFuture.get()
     }
 }
