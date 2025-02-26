@@ -72,7 +72,7 @@ private constructor(
 
     companion object {
 
-        fun none(): BetaMessageBatchListParams = builder().build()
+        @JvmStatic fun none(): BetaMessageBatchListParams = builder().build()
 
         @JvmStatic fun builder() = Builder()
     }
