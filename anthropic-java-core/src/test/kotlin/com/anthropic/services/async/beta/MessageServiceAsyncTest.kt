@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.services.blocking.beta
+package com.anthropic.services.async.beta
 
 import com.anthropic.TestServerExtension
-import com.anthropic.client.okhttp.AnthropicOkHttpClient
+import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
 import com.anthropic.models.AnthropicBeta
 import com.anthropic.models.BetaCacheControlEphemeral
 import com.anthropic.models.BetaCitationCharLocationParam
@@ -18,19 +18,19 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(TestServerExtension::class)
-class MessageServiceTest {
+class MessageServiceAsyncTest {
 
     @Test
     fun create() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val messageService = client.beta().messages()
+        val messageServiceAsync = client.beta().messages()
 
-        val betaMessage =
-            messageService.create(
+        val betaMessageFuture =
+            messageServiceAsync.create(
                 BetaMessageCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .maxTokens(1024L)
@@ -75,20 +75,21 @@ class MessageServiceTest {
                     .build()
             )
 
+        val betaMessage = betaMessageFuture.get()
         betaMessage.validate()
     }
 
     @Test
     fun createStreaming() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val messageService = client.beta().messages()
+        val messageServiceAsync = client.beta().messages()
 
         val betaMessageStreamResponse =
-            messageService.createStreaming(
+            messageServiceAsync.createStreaming(
                 BetaMessageCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .maxTokens(1024L)
@@ -133,22 +134,24 @@ class MessageServiceTest {
                     .build()
             )
 
-        betaMessageStreamResponse.use {
-            betaMessageStreamResponse.stream().forEach { betaMessage -> betaMessage.validate() }
-        }
+        val onCompleteFuture =
+            betaMessageStreamResponse
+                .subscribe { betaMessage -> betaMessage.validate() }
+                .onCompleteFuture()
+        onCompleteFuture.get()
     }
 
     @Test
     fun countTokens() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val messageService = client.beta().messages()
+        val messageServiceAsync = client.beta().messages()
 
-        val betaMessageTokensCount =
-            messageService.countTokens(
+        val betaMessageTokensCountFuture =
+            messageServiceAsync.countTokens(
                 BetaMessageCountTokensParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .addUserMessage("Hello, world")
@@ -183,6 +186,7 @@ class MessageServiceTest {
                     .build()
             )
 
+        val betaMessageTokensCount = betaMessageTokensCountFuture.get()
         betaMessageTokensCount.validate()
     }
 }

@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.services.blocking
+package com.anthropic.services.async
 
 import com.anthropic.TestServerExtension
-import com.anthropic.client.okhttp.AnthropicOkHttpClient
+import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
 import com.anthropic.models.CompletionCreateParams
 import com.anthropic.models.Metadata
 import com.anthropic.models.Model
@@ -11,19 +11,19 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(TestServerExtension::class)
-class CompletionServiceTest {
+class CompletionServiceAsyncTest {
 
     @Test
     fun create() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val completionService = client.completions()
+        val completionServiceAsync = client.completions()
 
-        val completion =
-            completionService.create(
+        val completionFuture =
+            completionServiceAsync.create(
                 CompletionCreateParams.builder()
                     .maxTokensToSample(256L)
                     .model(Model.CLAUDE_3_7_SONNET_LATEST)
@@ -38,20 +38,21 @@ class CompletionServiceTest {
                     .build()
             )
 
+        val completion = completionFuture.get()
         completion.validate()
     }
 
     @Test
     fun createStreaming() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val completionService = client.completions()
+        val completionServiceAsync = client.completions()
 
         val completionStreamResponse =
-            completionService.createStreaming(
+            completionServiceAsync.createStreaming(
                 CompletionCreateParams.builder()
                     .maxTokensToSample(256L)
                     .model(Model.CLAUDE_3_7_SONNET_LATEST)
@@ -66,8 +67,10 @@ class CompletionServiceTest {
                     .build()
             )
 
-        completionStreamResponse.use {
-            completionStreamResponse.stream().forEach { completion -> completion.validate() }
-        }
+        val onCompleteFuture =
+            completionStreamResponse
+                .subscribe { completion -> completion.validate() }
+                .onCompleteFuture()
+        onCompleteFuture.get()
     }
 }

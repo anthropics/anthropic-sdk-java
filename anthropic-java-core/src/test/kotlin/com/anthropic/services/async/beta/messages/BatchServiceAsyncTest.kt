@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.services.blocking.beta.messages
+package com.anthropic.services.async.beta.messages
 
 import com.anthropic.TestServerExtension
-import com.anthropic.client.okhttp.AnthropicOkHttpClient
+import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
 import com.anthropic.models.AnthropicBeta
 import com.anthropic.models.BetaCacheControlEphemeral
 import com.anthropic.models.BetaCitationCharLocationParam
@@ -22,19 +22,19 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(TestServerExtension::class)
-class BatchServiceTest {
+class BatchServiceAsyncTest {
 
     @Test
     fun create() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val batchService = client.beta().messages().batches()
+        val batchServiceAsync = client.beta().messages().batches()
 
-        val betaMessageBatch =
-            batchService.create(
+        val betaMessageBatchFuture =
+            batchServiceAsync.create(
                 BetaMessageBatchCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .addRequest(
@@ -97,80 +97,85 @@ class BatchServiceTest {
                     .build()
             )
 
+        val betaMessageBatch = betaMessageBatchFuture.get()
         betaMessageBatch.validate()
     }
 
     @Test
     fun retrieve() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val batchService = client.beta().messages().batches()
+        val batchServiceAsync = client.beta().messages().batches()
 
-        val betaMessageBatch =
-            batchService.retrieve(
+        val betaMessageBatchFuture =
+            batchServiceAsync.retrieve(
                 BetaMessageBatchRetrieveParams.builder()
                     .messageBatchId("message_batch_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
 
+        val betaMessageBatch = betaMessageBatchFuture.get()
         betaMessageBatch.validate()
     }
 
     @Test
     fun list() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val batchService = client.beta().messages().batches()
+        val batchServiceAsync = client.beta().messages().batches()
 
-        val page = batchService.list()
+        val pageFuture = batchServiceAsync.list()
 
+        val page = pageFuture.get()
         page.response().validate()
     }
 
     @Test
     fun delete() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val batchService = client.beta().messages().batches()
+        val batchServiceAsync = client.beta().messages().batches()
 
-        val betaDeletedMessageBatch =
-            batchService.delete(
+        val betaDeletedMessageBatchFuture =
+            batchServiceAsync.delete(
                 BetaMessageBatchDeleteParams.builder()
                     .messageBatchId("message_batch_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
 
+        val betaDeletedMessageBatch = betaDeletedMessageBatchFuture.get()
         betaDeletedMessageBatch.validate()
     }
 
     @Test
     fun cancel() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val batchService = client.beta().messages().batches()
+        val batchServiceAsync = client.beta().messages().batches()
 
-        val betaMessageBatch =
-            batchService.cancel(
+        val betaMessageBatchFuture =
+            batchServiceAsync.cancel(
                 BetaMessageBatchCancelParams.builder()
                     .messageBatchId("message_batch_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
 
+        val betaMessageBatch = betaMessageBatchFuture.get()
         betaMessageBatch.validate()
     }
 
@@ -178,25 +183,26 @@ class BatchServiceTest {
     @Test
     fun resultsStreaming() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val batchService = client.beta().messages().batches()
+        val batchServiceAsync = client.beta().messages().batches()
 
         val betaMessageBatchIndividualResponseStreamResponse =
-            batchService.resultsStreaming(
+            batchServiceAsync.resultsStreaming(
                 BetaMessageBatchResultsParams.builder()
                     .messageBatchId("message_batch_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
 
-        betaMessageBatchIndividualResponseStreamResponse.use {
-            betaMessageBatchIndividualResponseStreamResponse.stream().forEach {
-                betaMessageBatchIndividualResponse ->
-                betaMessageBatchIndividualResponse.validate()
-            }
-        }
+        val onCompleteFuture =
+            betaMessageBatchIndividualResponseStreamResponse
+                .subscribe { betaMessageBatchIndividualResponse ->
+                    betaMessageBatchIndividualResponse.validate()
+                }
+                .onCompleteFuture()
+        onCompleteFuture.get()
     }
 }

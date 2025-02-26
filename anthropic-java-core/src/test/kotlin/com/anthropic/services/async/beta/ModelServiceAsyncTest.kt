@@ -1,42 +1,46 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.services.blocking.beta
+package com.anthropic.services.async.beta
 
 import com.anthropic.TestServerExtension
-import com.anthropic.client.okhttp.AnthropicOkHttpClient
+import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
 import com.anthropic.models.BetaModelRetrieveParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(TestServerExtension::class)
-class ModelServiceTest {
+class ModelServiceAsyncTest {
 
     @Test
     fun retrieve() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val modelService = client.beta().models()
+        val modelServiceAsync = client.beta().models()
 
-        val betaModelInfo =
-            modelService.retrieve(BetaModelRetrieveParams.builder().modelId("model_id").build())
+        val betaModelInfoFuture =
+            modelServiceAsync.retrieve(
+                BetaModelRetrieveParams.builder().modelId("model_id").build()
+            )
 
+        val betaModelInfo = betaModelInfoFuture.get()
         betaModelInfo.validate()
     }
 
     @Test
     fun list() {
         val client =
-            AnthropicOkHttpClient.builder()
+            AnthropicOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .apiKey("my-anthropic-api-key")
                 .build()
-        val modelService = client.beta().models()
+        val modelServiceAsync = client.beta().models()
 
-        val page = modelService.list()
+        val pageFuture = modelServiceAsync.list()
 
+        val page = pageFuture.get()
         page.response().validate()
     }
 }
