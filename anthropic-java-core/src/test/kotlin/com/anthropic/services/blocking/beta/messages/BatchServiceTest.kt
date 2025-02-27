@@ -4,6 +4,7 @@ package com.anthropic.services.blocking.beta.messages
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
+import com.anthropic.core.JsonValue
 import com.anthropic.models.AnthropicBeta
 import com.anthropic.models.BetaCacheControlEphemeral
 import com.anthropic.models.BetaCitationCharLocationParam
@@ -14,8 +15,8 @@ import com.anthropic.models.BetaMessageBatchResultsParams
 import com.anthropic.models.BetaMessageBatchRetrieveParams
 import com.anthropic.models.BetaMetadata
 import com.anthropic.models.BetaTextBlockParam
+import com.anthropic.models.BetaTool
 import com.anthropic.models.BetaToolChoiceAuto
-import com.anthropic.models.BetaToolComputerUse20241022
 import com.anthropic.models.Model
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -79,13 +80,37 @@ class BatchServiceTest {
                                             .build()
                                     )
                                     .addTool(
-                                        BetaToolComputerUse20241022.builder()
-                                            .displayHeightPx(1L)
-                                            .displayWidthPx(1L)
+                                        BetaTool.builder()
+                                            .inputSchema(
+                                                BetaTool.InputSchema.builder()
+                                                    .properties(
+                                                        JsonValue.from(
+                                                            mapOf(
+                                                                "location" to
+                                                                    mapOf(
+                                                                        "description" to
+                                                                            "The city and state, e.g. San Francisco, CA",
+                                                                        "type" to "string",
+                                                                    ),
+                                                                "unit" to
+                                                                    mapOf(
+                                                                        "description" to
+                                                                            "Unit for the output - one of (celsius, fahrenheit)",
+                                                                        "type" to "string",
+                                                                    ),
+                                                            )
+                                                        )
+                                                    )
+                                                    .build()
+                                            )
+                                            .name("name")
                                             .cacheControl(
                                                 BetaCacheControlEphemeral.builder().build()
                                             )
-                                            .displayNumber(0L)
+                                            .description(
+                                                "Get the current weather in a given location"
+                                            )
+                                            .type(BetaTool.Type.CUSTOM)
                                             .build()
                                     )
                                     .topK(5L)

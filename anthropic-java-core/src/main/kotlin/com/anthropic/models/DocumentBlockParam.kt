@@ -154,6 +154,10 @@ private constructor(
         fun contentBlockSourceOfBlockSource(blockSource: List<ContentBlockSourceContent>) =
             contentBlockSource(ContentBlockSource.Content.ofBlockSource(blockSource))
 
+        fun source(urlPdf: UrlPdfSource) = source(Source.ofUrlPdf(urlPdf))
+
+        fun urlPdfSource(url: String) = source(UrlPdfSource.builder().url(url).build())
+
         fun type(type: JsonValue) = apply { this.type = type }
 
         fun cacheControl(cacheControl: CacheControlEphemeral?) =
@@ -222,6 +226,7 @@ private constructor(
         private val base64Pdf: Base64PdfSource? = null,
         private val plainText: PlainTextSource? = null,
         private val contentBlock: ContentBlockSource? = null,
+        private val urlPdf: UrlPdfSource? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -231,17 +236,23 @@ private constructor(
 
         fun contentBlock(): Optional<ContentBlockSource> = Optional.ofNullable(contentBlock)
 
+        fun urlPdf(): Optional<UrlPdfSource> = Optional.ofNullable(urlPdf)
+
         fun isBase64Pdf(): Boolean = base64Pdf != null
 
         fun isPlainText(): Boolean = plainText != null
 
         fun isContentBlock(): Boolean = contentBlock != null
 
+        fun isUrlPdf(): Boolean = urlPdf != null
+
         fun asBase64Pdf(): Base64PdfSource = base64Pdf.getOrThrow("base64Pdf")
 
         fun asPlainText(): PlainTextSource = plainText.getOrThrow("plainText")
 
         fun asContentBlock(): ContentBlockSource = contentBlock.getOrThrow("contentBlock")
+
+        fun asUrlPdf(): UrlPdfSource = urlPdf.getOrThrow("urlPdf")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -250,6 +261,7 @@ private constructor(
                 base64Pdf != null -> visitor.visitBase64Pdf(base64Pdf)
                 plainText != null -> visitor.visitPlainText(plainText)
                 contentBlock != null -> visitor.visitContentBlock(contentBlock)
+                urlPdf != null -> visitor.visitUrlPdf(urlPdf)
                 else -> visitor.unknown(_json)
             }
         }
@@ -274,6 +286,10 @@ private constructor(
                     override fun visitContentBlock(contentBlock: ContentBlockSource) {
                         contentBlock.validate()
                     }
+
+                    override fun visitUrlPdf(urlPdf: UrlPdfSource) {
+                        urlPdf.validate()
+                    }
                 }
             )
             validated = true
@@ -284,16 +300,17 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Source && base64Pdf == other.base64Pdf && plainText == other.plainText && contentBlock == other.contentBlock /* spotless:on */
+            return /* spotless:off */ other is Source && base64Pdf == other.base64Pdf && plainText == other.plainText && contentBlock == other.contentBlock && urlPdf == other.urlPdf /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(base64Pdf, plainText, contentBlock) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(base64Pdf, plainText, contentBlock, urlPdf) /* spotless:on */
 
         override fun toString(): String =
             when {
                 base64Pdf != null -> "Source{base64Pdf=$base64Pdf}"
                 plainText != null -> "Source{plainText=$plainText}"
                 contentBlock != null -> "Source{contentBlock=$contentBlock}"
+                urlPdf != null -> "Source{urlPdf=$urlPdf}"
                 _json != null -> "Source{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Source")
             }
@@ -307,6 +324,8 @@ private constructor(
             @JvmStatic
             fun ofContentBlock(contentBlock: ContentBlockSource) =
                 Source(contentBlock = contentBlock)
+
+            @JvmStatic fun ofUrlPdf(urlPdf: UrlPdfSource) = Source(urlPdf = urlPdf)
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */
@@ -317,6 +336,8 @@ private constructor(
             fun visitPlainText(plainText: PlainTextSource): T
 
             fun visitContentBlock(contentBlock: ContentBlockSource): T
+
+            fun visitUrlPdf(urlPdf: UrlPdfSource): T
 
             /**
              * Maps an unknown variant of [Source] to a value of type [T].
@@ -358,6 +379,12 @@ private constructor(
                                 return Source(contentBlock = it, _json = json)
                             }
                     }
+                    "url" -> {
+                        tryDeserialize(node, jacksonTypeRef<UrlPdfSource>()) { it.validate() }
+                            ?.let {
+                                return Source(urlPdf = it, _json = json)
+                            }
+                    }
                 }
 
                 return Source(_json = json)
@@ -375,6 +402,7 @@ private constructor(
                     value.base64Pdf != null -> generator.writeObject(value.base64Pdf)
                     value.plainText != null -> generator.writeObject(value.plainText)
                     value.contentBlock != null -> generator.writeObject(value.contentBlock)
+                    value.urlPdf != null -> generator.writeObject(value.urlPdf)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Source")
                 }

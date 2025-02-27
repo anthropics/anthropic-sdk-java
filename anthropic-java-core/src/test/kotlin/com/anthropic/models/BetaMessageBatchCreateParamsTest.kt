@@ -2,6 +2,7 @@
 
 package com.anthropic.models
 
+import com.anthropic.core.JsonValue
 import kotlin.test.assertNotNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -50,11 +51,33 @@ class BetaMessageBatchCreateParamsTest {
                                 BetaToolChoiceAuto.builder().disableParallelToolUse(true).build()
                             )
                             .addTool(
-                                BetaToolComputerUse20241022.builder()
-                                    .displayHeightPx(1L)
-                                    .displayWidthPx(1L)
+                                BetaTool.builder()
+                                    .inputSchema(
+                                        BetaTool.InputSchema.builder()
+                                            .properties(
+                                                JsonValue.from(
+                                                    mapOf(
+                                                        "location" to
+                                                            mapOf(
+                                                                "description" to
+                                                                    "The city and state, e.g. San Francisco, CA",
+                                                                "type" to "string",
+                                                            ),
+                                                        "unit" to
+                                                            mapOf(
+                                                                "description" to
+                                                                    "Unit for the output - one of (celsius, fahrenheit)",
+                                                                "type" to "string",
+                                                            ),
+                                                    )
+                                                )
+                                            )
+                                            .build()
+                                    )
+                                    .name("name")
                                     .cacheControl(BetaCacheControlEphemeral.builder().build())
-                                    .displayNumber(0L)
+                                    .description("Get the current weather in a given location")
+                                    .type(BetaTool.Type.CUSTOM)
                                     .build()
                             )
                             .topK(5L)
@@ -113,11 +136,33 @@ class BetaMessageBatchCreateParamsTest {
                                         .build()
                                 )
                                 .addTool(
-                                    BetaToolComputerUse20241022.builder()
-                                        .displayHeightPx(1L)
-                                        .displayWidthPx(1L)
+                                    BetaTool.builder()
+                                        .inputSchema(
+                                            BetaTool.InputSchema.builder()
+                                                .properties(
+                                                    JsonValue.from(
+                                                        mapOf(
+                                                            "location" to
+                                                                mapOf(
+                                                                    "description" to
+                                                                        "The city and state, e.g. San Francisco, CA",
+                                                                    "type" to "string",
+                                                                ),
+                                                            "unit" to
+                                                                mapOf(
+                                                                    "description" to
+                                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                                    "type" to "string",
+                                                                ),
+                                                        )
+                                                    )
+                                                )
+                                                .build()
+                                        )
+                                        .name("name")
                                         .cacheControl(BetaCacheControlEphemeral.builder().build())
-                                        .displayNumber(0L)
+                                        .description("Get the current weather in a given location")
+                                        .type(BetaTool.Type.CUSTOM)
                                         .build()
                                 )
                                 .topK(5L)
@@ -175,11 +220,33 @@ class BetaMessageBatchCreateParamsTest {
                                         .build()
                                 )
                                 .addTool(
-                                    BetaToolComputerUse20241022.builder()
-                                        .displayHeightPx(1L)
-                                        .displayWidthPx(1L)
+                                    BetaTool.builder()
+                                        .inputSchema(
+                                            BetaTool.InputSchema.builder()
+                                                .properties(
+                                                    JsonValue.from(
+                                                        mapOf(
+                                                            "location" to
+                                                                mapOf(
+                                                                    "description" to
+                                                                        "The city and state, e.g. San Francisco, CA",
+                                                                    "type" to "string",
+                                                                ),
+                                                            "unit" to
+                                                                mapOf(
+                                                                    "description" to
+                                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                                    "type" to "string",
+                                                                ),
+                                                        )
+                                                    )
+                                                )
+                                                .build()
+                                        )
+                                        .name("name")
                                         .cacheControl(BetaCacheControlEphemeral.builder().build())
-                                        .displayNumber(0L)
+                                        .description("Get the current weather in a given location")
+                                        .type(BetaTool.Type.CUSTOM)
                                         .build()
                                 )
                                 .topK(5L)
