@@ -26,7 +26,7 @@ import com.anthropic.models.Metadata
 import com.anthropic.models.Model
 import com.anthropic.models.TextBlock
 import com.anthropic.models.TextBlockParam
-import com.anthropic.models.ToolBash20250124
+import com.anthropic.models.Tool
 import com.anthropic.models.ToolChoiceAuto
 import com.anthropic.models.Usage
 import com.fasterxml.jackson.databind.json.JsonMapper
@@ -93,8 +93,32 @@ class ErrorHandlingTest {
                 .enabledThinking(1024L)
                 .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
-                    ToolBash20250124.builder()
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string",
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string",
+                                                ),
+                                        )
+                                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
                         .cacheControl(CacheControlEphemeral.builder().build())
+                        .description("Get the current weather in a given location")
                         .build()
                 )
                 .topK(5L)
@@ -166,8 +190,32 @@ class ErrorHandlingTest {
                 .enabledThinking(1024L)
                 .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
-                    ToolBash20250124.builder()
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string",
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string",
+                                                ),
+                                        )
+                                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
                         .cacheControl(CacheControlEphemeral.builder().build())
+                        .description("Get the current weather in a given location")
                         .build()
                 )
                 .topK(5L)
@@ -215,8 +263,32 @@ class ErrorHandlingTest {
                 .enabledThinking(1024L)
                 .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
-                    ToolBash20250124.builder()
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string",
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string",
+                                                ),
+                                        )
+                                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
                         .cacheControl(CacheControlEphemeral.builder().build())
+                        .description("Get the current weather in a given location")
                         .build()
                 )
                 .topK(5L)
@@ -264,8 +336,32 @@ class ErrorHandlingTest {
                 .enabledThinking(1024L)
                 .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
-                    ToolBash20250124.builder()
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string",
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string",
+                                                ),
+                                        )
+                                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
                         .cacheControl(CacheControlEphemeral.builder().build())
+                        .description("Get the current weather in a given location")
                         .build()
                 )
                 .topK(5L)
@@ -317,8 +413,32 @@ class ErrorHandlingTest {
                 .enabledThinking(1024L)
                 .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
-                    ToolBash20250124.builder()
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string",
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string",
+                                                ),
+                                        )
+                                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
                         .cacheControl(CacheControlEphemeral.builder().build())
+                        .description("Get the current weather in a given location")
                         .build()
                 )
                 .topK(5L)
@@ -366,8 +486,32 @@ class ErrorHandlingTest {
                 .enabledThinking(1024L)
                 .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
-                    ToolBash20250124.builder()
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string",
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string",
+                                                ),
+                                        )
+                                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
                         .cacheControl(CacheControlEphemeral.builder().build())
+                        .description("Get the current weather in a given location")
                         .build()
                 )
                 .topK(5L)
@@ -419,8 +563,32 @@ class ErrorHandlingTest {
                 .enabledThinking(1024L)
                 .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
-                    ToolBash20250124.builder()
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string",
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string",
+                                                ),
+                                        )
+                                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
                         .cacheControl(CacheControlEphemeral.builder().build())
+                        .description("Get the current weather in a given location")
                         .build()
                 )
                 .topK(5L)
@@ -468,8 +636,32 @@ class ErrorHandlingTest {
                 .enabledThinking(1024L)
                 .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
-                    ToolBash20250124.builder()
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string",
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string",
+                                                ),
+                                        )
+                                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
                         .cacheControl(CacheControlEphemeral.builder().build())
+                        .description("Get the current weather in a given location")
                         .build()
                 )
                 .topK(5L)
@@ -521,8 +713,32 @@ class ErrorHandlingTest {
                 .enabledThinking(1024L)
                 .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
-                    ToolBash20250124.builder()
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string",
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string",
+                                                ),
+                                        )
+                                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
                         .cacheControl(CacheControlEphemeral.builder().build())
+                        .description("Get the current weather in a given location")
                         .build()
                 )
                 .topK(5L)
@@ -575,8 +791,32 @@ class ErrorHandlingTest {
                 .enabledThinking(1024L)
                 .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
-                    ToolBash20250124.builder()
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string",
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string",
+                                                ),
+                                        )
+                                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
                         .cacheControl(CacheControlEphemeral.builder().build())
+                        .description("Get the current weather in a given location")
                         .build()
                 )
                 .topK(5L)
@@ -623,8 +863,32 @@ class ErrorHandlingTest {
                 .enabledThinking(1024L)
                 .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
-                    ToolBash20250124.builder()
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string",
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string",
+                                                ),
+                                        )
+                                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
                         .cacheControl(CacheControlEphemeral.builder().build())
+                        .description("Get the current weather in a given location")
                         .build()
                 )
                 .topK(5L)

@@ -12,9 +12,9 @@ class ImageBlockParamTest {
         val imageBlockParam =
             ImageBlockParam.builder()
                 .source(
-                    ImageBlockParam.Source.builder()
+                    Base64ImageSource.builder()
                         .data("U3RhaW5sZXNzIHJvY2tz")
-                        .mediaType(ImageBlockParam.Source.MediaType.IMAGE_JPEG)
+                        .mediaType(Base64ImageSource.MediaType.IMAGE_JPEG)
                         .build()
                 )
                 .cacheControl(CacheControlEphemeral.builder().build())
@@ -22,10 +22,12 @@ class ImageBlockParamTest {
         assertThat(imageBlockParam).isNotNull
         assertThat(imageBlockParam.source())
             .isEqualTo(
-                ImageBlockParam.Source.builder()
-                    .data("U3RhaW5sZXNzIHJvY2tz")
-                    .mediaType(ImageBlockParam.Source.MediaType.IMAGE_JPEG)
-                    .build()
+                ImageBlockParam.Source.ofBase64Image(
+                    Base64ImageSource.builder()
+                        .data("U3RhaW5sZXNzIHJvY2tz")
+                        .mediaType(Base64ImageSource.MediaType.IMAGE_JPEG)
+                        .build()
+                )
             )
         assertThat(imageBlockParam.cacheControl()).contains(CacheControlEphemeral.builder().build())
     }

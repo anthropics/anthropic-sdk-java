@@ -21,40 +21,40 @@ import java.util.Optional
 @JsonSerialize(using = MessageCountTokensTool.Serializer::class)
 class MessageCountTokensTool
 private constructor(
+    private val tool: Tool? = null,
     private val toolBash20250124: ToolBash20250124? = null,
     private val toolTextEditor20250124: ToolTextEditor20250124? = null,
-    private val tool: Tool? = null,
     private val _json: JsonValue? = null,
 ) {
+
+    fun tool(): Optional<Tool> = Optional.ofNullable(tool)
 
     fun toolBash20250124(): Optional<ToolBash20250124> = Optional.ofNullable(toolBash20250124)
 
     fun toolTextEditor20250124(): Optional<ToolTextEditor20250124> =
         Optional.ofNullable(toolTextEditor20250124)
 
-    fun tool(): Optional<Tool> = Optional.ofNullable(tool)
+    fun isTool(): Boolean = tool != null
 
     fun isToolBash20250124(): Boolean = toolBash20250124 != null
 
     fun isToolTextEditor20250124(): Boolean = toolTextEditor20250124 != null
 
-    fun isTool(): Boolean = tool != null
+    fun asTool(): Tool = tool.getOrThrow("tool")
 
     fun asToolBash20250124(): ToolBash20250124 = toolBash20250124.getOrThrow("toolBash20250124")
 
     fun asToolTextEditor20250124(): ToolTextEditor20250124 =
         toolTextEditor20250124.getOrThrow("toolTextEditor20250124")
 
-    fun asTool(): Tool = tool.getOrThrow("tool")
-
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
         return when {
+            tool != null -> visitor.visitTool(tool)
             toolBash20250124 != null -> visitor.visitToolBash20250124(toolBash20250124)
             toolTextEditor20250124 != null ->
                 visitor.visitToolTextEditor20250124(toolTextEditor20250124)
-            tool != null -> visitor.visitTool(tool)
             else -> visitor.unknown(_json)
         }
     }
@@ -68,6 +68,10 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
+                override fun visitTool(tool: Tool) {
+                    tool.validate()
+                }
+
                 override fun visitToolBash20250124(toolBash20250124: ToolBash20250124) {
                     toolBash20250124.validate()
                 }
@@ -76,10 +80,6 @@ private constructor(
                     toolTextEditor20250124: ToolTextEditor20250124
                 ) {
                     toolTextEditor20250124.validate()
-                }
-
-                override fun visitTool(tool: Tool) {
-                    tool.validate()
                 }
             }
         )
@@ -91,22 +91,24 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is MessageCountTokensTool && toolBash20250124 == other.toolBash20250124 && toolTextEditor20250124 == other.toolTextEditor20250124 && tool == other.tool /* spotless:on */
+        return /* spotless:off */ other is MessageCountTokensTool && tool == other.tool && toolBash20250124 == other.toolBash20250124 && toolTextEditor20250124 == other.toolTextEditor20250124 /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(toolBash20250124, toolTextEditor20250124, tool) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(tool, toolBash20250124, toolTextEditor20250124) /* spotless:on */
 
     override fun toString(): String =
         when {
+            tool != null -> "MessageCountTokensTool{tool=$tool}"
             toolBash20250124 != null -> "MessageCountTokensTool{toolBash20250124=$toolBash20250124}"
             toolTextEditor20250124 != null ->
                 "MessageCountTokensTool{toolTextEditor20250124=$toolTextEditor20250124}"
-            tool != null -> "MessageCountTokensTool{tool=$tool}"
             _json != null -> "MessageCountTokensTool{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid MessageCountTokensTool")
         }
 
     companion object {
+
+        @JvmStatic fun ofTool(tool: Tool) = MessageCountTokensTool(tool = tool)
 
         @JvmStatic
         fun ofToolBash20250124(toolBash20250124: ToolBash20250124) =
@@ -115,8 +117,6 @@ private constructor(
         @JvmStatic
         fun ofToolTextEditor20250124(toolTextEditor20250124: ToolTextEditor20250124) =
             MessageCountTokensTool(toolTextEditor20250124 = toolTextEditor20250124)
-
-        @JvmStatic fun ofTool(tool: Tool) = MessageCountTokensTool(tool = tool)
     }
 
     /**
@@ -125,11 +125,11 @@ private constructor(
      */
     interface Visitor<out T> {
 
+        fun visitTool(tool: Tool): T
+
         fun visitToolBash20250124(toolBash20250124: ToolBash20250124): T
 
         fun visitToolTextEditor20250124(toolTextEditor20250124: ToolTextEditor20250124): T
-
-        fun visitTool(tool: Tool): T
 
         /**
          * Maps an unknown variant of [MessageCountTokensTool] to a value of type [T].
@@ -152,6 +152,10 @@ private constructor(
         override fun ObjectCodec.deserialize(node: JsonNode): MessageCountTokensTool {
             val json = JsonValue.fromJsonNode(node)
 
+            tryDeserialize(node, jacksonTypeRef<Tool>()) { it.validate() }
+                ?.let {
+                    return MessageCountTokensTool(tool = it, _json = json)
+                }
             tryDeserialize(node, jacksonTypeRef<ToolBash20250124>()) { it.validate() }
                 ?.let {
                     return MessageCountTokensTool(toolBash20250124 = it, _json = json)
@@ -159,10 +163,6 @@ private constructor(
             tryDeserialize(node, jacksonTypeRef<ToolTextEditor20250124>()) { it.validate() }
                 ?.let {
                     return MessageCountTokensTool(toolTextEditor20250124 = it, _json = json)
-                }
-            tryDeserialize(node, jacksonTypeRef<Tool>()) { it.validate() }
-                ?.let {
-                    return MessageCountTokensTool(tool = it, _json = json)
                 }
 
             return MessageCountTokensTool(_json = json)
@@ -178,10 +178,10 @@ private constructor(
             provider: SerializerProvider,
         ) {
             when {
+                value.tool != null -> generator.writeObject(value.tool)
                 value.toolBash20250124 != null -> generator.writeObject(value.toolBash20250124)
                 value.toolTextEditor20250124 != null ->
                     generator.writeObject(value.toolTextEditor20250124)
-                value.tool != null -> generator.writeObject(value.tool)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid MessageCountTokensTool")
             }
