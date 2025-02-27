@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.5.0 (2025-02-27)
+
+Full Changelog: [v0.4.0...v0.5.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.4.0...v0.5.0)
+
+### Features
+
+* **api:** add URL source blocks for images and PDFs ([#143](https://github.com/anthropics/anthropic-sdk-java/issues/143)) ([1664d96](https://github.com/anthropics/anthropic-sdk-java/commit/1664d96aca824d3272c4b26e3b5701beec98142b))
+* **client:** allow omitting params object when none required ([#138](https://github.com/anthropics/anthropic-sdk-java/issues/138)) ([bb32e01](https://github.com/anthropics/anthropic-sdk-java/commit/bb32e01917891afa85bf68776708f25873f7c510))
+
+
+### Bug Fixes
+
+* **api:** support `.list()` without arguments. ([#131](https://github.com/anthropics/anthropic-sdk-java/issues/131)) ([617a61e](https://github.com/anthropics/anthropic-sdk-java/commit/617a61e3a0720d99f281a964cd1e01ead95c2ae4))
+* **client:** add missing `@JvmStatic` ([#139](https://github.com/anthropics/anthropic-sdk-java/issues/139)) ([22911b2](https://github.com/anthropics/anthropic-sdk-java/commit/22911b210b10cfa1f4dd157aa1fe659ddf76113c))
+
+
+### Chores
+
+* **client:** use deep identity methods for primitive array types ([#141](https://github.com/anthropics/anthropic-sdk-java/issues/141)) ([b63432c](https://github.com/anthropics/anthropic-sdk-java/commit/b63432cc1dbb0184004f4033ac676276787a42f8))
+* **internal:** add async service tests ([#140](https://github.com/anthropics/anthropic-sdk-java/issues/140)) ([4cea171](https://github.com/anthropics/anthropic-sdk-java/commit/4cea17133eaa308f2ff5fb47db0e2842ebbf1975))
+* **internal:** improve sync service tests ([4cea171](https://github.com/anthropics/anthropic-sdk-java/commit/4cea17133eaa308f2ff5fb47db0e2842ebbf1975))
+* **internal:** refactor `ServiceParamsTest` ([#142](https://github.com/anthropics/anthropic-sdk-java/issues/142)) ([382a795](https://github.com/anthropics/anthropic-sdk-java/commit/382a795d6907951674a9d52002da8aacb0350552))
+* **internal:** update spec ([#134](https://github.com/anthropics/anthropic-sdk-java/issues/134)) ([5fd7122](https://github.com/anthropics/anthropic-sdk-java/commit/5fd71229e9b996af7178a0ee2e332780d97e0c4b))
+
+
+### Documentation
+
+* add source file links to readme ([#137](https://github.com/anthropics/anthropic-sdk-java/issues/137)) ([2fbdb1c](https://github.com/anthropics/anthropic-sdk-java/commit/2fbdb1c0fe3c6d775528b0645b5335e219267319))
+* add thinking examples ([eea6f93](https://github.com/anthropics/anthropic-sdk-java/commit/eea6f9327aa80e2e8323a8a0a6f5a50e1d8b4c26))
+* readme parameter tweaks ([4cea171](https://github.com/anthropics/anthropic-sdk-java/commit/4cea17133eaa308f2ff5fb47db0e2842ebbf1975))
+
 ## 0.4.0 (2025-02-24)
 
 Full Changelog: [v0.3.0...v0.4.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.3.0...v0.4.0)
