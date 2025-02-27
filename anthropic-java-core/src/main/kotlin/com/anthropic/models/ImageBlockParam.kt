@@ -2,13 +2,15 @@
 
 package com.anthropic.models
 
-import com.anthropic.core.Enum
+import com.anthropic.core.BaseDeserializer
+import com.anthropic.core.BaseSerializer
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
+import com.anthropic.core.getOrThrow
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -16,8 +18,16 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.core.ObjectCodec
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 @NoAutoDetect
 class ImageBlockParam
@@ -94,6 +104,12 @@ private constructor(
 
         fun source(source: JsonField<Source>) = apply { this.source = source }
 
+        fun source(base64Image: Base64ImageSource) = source(Source.ofBase64Image(base64Image))
+
+        fun source(urlImage: UrlImageSource) = source(Source.ofUrlImage(urlImage))
+
+        fun urlImageSource(url: String) = source(UrlImageSource.builder().url(url).build())
+
         fun type(type: JsonValue) = apply { this.type = type }
 
         fun cacheControl(cacheControl: CacheControlEphemeral?) =
@@ -134,36 +150,36 @@ private constructor(
             )
     }
 
-    @NoAutoDetect
+    @JsonDeserialize(using = Source.Deserializer::class)
+    @JsonSerialize(using = Source.Serializer::class)
     class Source
-    @JsonCreator
     private constructor(
-        @JsonProperty("data")
-        @ExcludeMissing
-        private val data: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("media_type")
-        @ExcludeMissing
-        private val mediaType: JsonField<MediaType> = JsonMissing.of(),
-        @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
-        @JsonAnySetter
-        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+        private val base64Image: Base64ImageSource? = null,
+        private val urlImage: UrlImageSource? = null,
+        private val _json: JsonValue? = null,
     ) {
 
-        fun data(): String = data.getRequired("data")
+        fun base64Image(): Optional<Base64ImageSource> = Optional.ofNullable(base64Image)
 
-        fun mediaType(): MediaType = mediaType.getRequired("media_type")
+        fun urlImage(): Optional<UrlImageSource> = Optional.ofNullable(urlImage)
 
-        @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
+        fun isBase64Image(): Boolean = base64Image != null
 
-        @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<String> = data
+        fun isUrlImage(): Boolean = urlImage != null
 
-        @JsonProperty("media_type")
-        @ExcludeMissing
-        fun _mediaType(): JsonField<MediaType> = mediaType
+        fun asBase64Image(): Base64ImageSource = base64Image.getOrThrow("base64Image")
 
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+        fun asUrlImage(): UrlImageSource = urlImage.getOrThrow("urlImage")
+
+        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+        fun <T> accept(visitor: Visitor<T>): T {
+            return when {
+                base64Image != null -> visitor.visitBase64Image(base64Image)
+                urlImage != null -> visitor.visitUrlImage(urlImage)
+                else -> visitor.unknown(_json)
+            }
+        }
 
         private var validated: Boolean = false
 
@@ -172,191 +188,18 @@ private constructor(
                 return@apply
             }
 
-            data()
-            mediaType()
-            _type().let {
-                if (it != JsonValue.from("base64")) {
-                    throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitBase64Image(base64Image: Base64ImageSource) {
+                        base64Image.validate()
+                    }
+
+                    override fun visitUrlImage(urlImage: UrlImageSource) {
+                        urlImage.validate()
+                    }
                 }
-            }
+            )
             validated = true
-        }
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [Source]. */
-        class Builder internal constructor() {
-
-            private var data: JsonField<String>? = null
-            private var mediaType: JsonField<MediaType>? = null
-            private var type: JsonValue = JsonValue.from("base64")
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(source: Source) = apply {
-                data = source.data
-                mediaType = source.mediaType
-                type = source.type
-                additionalProperties = source.additionalProperties.toMutableMap()
-            }
-
-            fun data(data: String) = data(JsonField.of(data))
-
-            fun data(data: JsonField<String>) = apply { this.data = data }
-
-            fun mediaType(mediaType: MediaType) = mediaType(JsonField.of(mediaType))
-
-            fun mediaType(mediaType: JsonField<MediaType>) = apply { this.mediaType = mediaType }
-
-            fun type(type: JsonValue) = apply { this.type = type }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            fun build(): Source =
-                Source(
-                    checkRequired("data", data),
-                    checkRequired("mediaType", mediaType),
-                    type,
-                    additionalProperties.toImmutable(),
-                )
-        }
-
-        class MediaType @JsonCreator private constructor(private val value: JsonField<String>) :
-            Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-            companion object {
-
-                @JvmField val IMAGE_JPEG = of("image/jpeg")
-
-                @JvmField val IMAGE_PNG = of("image/png")
-
-                @JvmField val IMAGE_GIF = of("image/gif")
-
-                @JvmField val IMAGE_WEBP = of("image/webp")
-
-                @JvmStatic fun of(value: String) = MediaType(JsonField.of(value))
-            }
-
-            /** An enum containing [MediaType]'s known values. */
-            enum class Known {
-                IMAGE_JPEG,
-                IMAGE_PNG,
-                IMAGE_GIF,
-                IMAGE_WEBP,
-            }
-
-            /**
-             * An enum containing [MediaType]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [MediaType] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                IMAGE_JPEG,
-                IMAGE_PNG,
-                IMAGE_GIF,
-                IMAGE_WEBP,
-                /**
-                 * An enum member indicating that [MediaType] was instantiated with an unknown
-                 * value.
-                 */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    IMAGE_JPEG -> Value.IMAGE_JPEG
-                    IMAGE_PNG -> Value.IMAGE_PNG
-                    IMAGE_GIF -> Value.IMAGE_GIF
-                    IMAGE_WEBP -> Value.IMAGE_WEBP
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-             *   member.
-             */
-            fun known(): Known =
-                when (this) {
-                    IMAGE_JPEG -> Known.IMAGE_JPEG
-                    IMAGE_PNG -> Known.IMAGE_PNG
-                    IMAGE_GIF -> Known.IMAGE_GIF
-                    IMAGE_WEBP -> Known.IMAGE_WEBP
-                    else -> throw AnthropicInvalidDataException("Unknown MediaType: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
-             *
-             * @throws AnthropicInvalidDataException if this class instance's value does not have
-             *   the expected primitive type.
-             */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    AnthropicInvalidDataException("Value is not a String")
-                }
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return /* spotless:off */ other is MediaType && value == other.value /* spotless:on */
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
         }
 
         override fun equals(other: Any?): Boolean {
@@ -364,17 +207,89 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Source && data == other.data && mediaType == other.mediaType && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
+            return /* spotless:off */ other is Source && base64Image == other.base64Image && urlImage == other.urlImage /* spotless:on */
         }
 
-        /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(data, mediaType, type, additionalProperties) }
-        /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(base64Image, urlImage) /* spotless:on */
 
-        override fun hashCode(): Int = hashCode
+        override fun toString(): String =
+            when {
+                base64Image != null -> "Source{base64Image=$base64Image}"
+                urlImage != null -> "Source{urlImage=$urlImage}"
+                _json != null -> "Source{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid Source")
+            }
 
-        override fun toString() =
-            "Source{data=$data, mediaType=$mediaType, type=$type, additionalProperties=$additionalProperties}"
+        companion object {
+
+            @JvmStatic
+            fun ofBase64Image(base64Image: Base64ImageSource) = Source(base64Image = base64Image)
+
+            @JvmStatic fun ofUrlImage(urlImage: UrlImageSource) = Source(urlImage = urlImage)
+        }
+
+        /** An interface that defines how to map each variant of [Source] to a value of type [T]. */
+        interface Visitor<out T> {
+
+            fun visitBase64Image(base64Image: Base64ImageSource): T
+
+            fun visitUrlImage(urlImage: UrlImageSource): T
+
+            /**
+             * Maps an unknown variant of [Source] to a value of type [T].
+             *
+             * An instance of [Source] can contain an unknown variant if it was deserialized from
+             * data that doesn't match any known variant. For example, if the SDK is on an older
+             * version than the API, then the API may respond with new variants that the SDK is
+             * unaware of.
+             *
+             * @throws AnthropicInvalidDataException in the default implementation.
+             */
+            fun unknown(json: JsonValue?): T {
+                throw AnthropicInvalidDataException("Unknown Source: $json")
+            }
+        }
+
+        internal class Deserializer : BaseDeserializer<Source>(Source::class) {
+
+            override fun ObjectCodec.deserialize(node: JsonNode): Source {
+                val json = JsonValue.fromJsonNode(node)
+                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+
+                when (type) {
+                    "base64" -> {
+                        tryDeserialize(node, jacksonTypeRef<Base64ImageSource>()) { it.validate() }
+                            ?.let {
+                                return Source(base64Image = it, _json = json)
+                            }
+                    }
+                    "url" -> {
+                        tryDeserialize(node, jacksonTypeRef<UrlImageSource>()) { it.validate() }
+                            ?.let {
+                                return Source(urlImage = it, _json = json)
+                            }
+                    }
+                }
+
+                return Source(_json = json)
+            }
+        }
+
+        internal class Serializer : BaseSerializer<Source>(Source::class) {
+
+            override fun serialize(
+                value: Source,
+                generator: JsonGenerator,
+                provider: SerializerProvider,
+            ) {
+                when {
+                    value.base64Image != null -> generator.writeObject(value.base64Image)
+                    value.urlImage != null -> generator.writeObject(value.urlImage)
+                    value._json != null -> generator.writeObject(value._json)
+                    else -> throw IllegalStateException("Invalid Source")
+                }
+            }
+        }
     }
 
     override fun equals(other: Any?): Boolean {

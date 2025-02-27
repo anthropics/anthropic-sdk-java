@@ -12,9 +12,9 @@ class BetaImageBlockParamTest {
         val betaImageBlockParam =
             BetaImageBlockParam.builder()
                 .source(
-                    BetaImageBlockParam.Source.builder()
+                    BetaBase64ImageSource.builder()
                         .data("U3RhaW5sZXNzIHJvY2tz")
-                        .mediaType(BetaImageBlockParam.Source.MediaType.IMAGE_JPEG)
+                        .mediaType(BetaBase64ImageSource.MediaType.IMAGE_JPEG)
                         .build()
                 )
                 .cacheControl(BetaCacheControlEphemeral.builder().build())
@@ -22,10 +22,12 @@ class BetaImageBlockParamTest {
         assertThat(betaImageBlockParam).isNotNull
         assertThat(betaImageBlockParam.source())
             .isEqualTo(
-                BetaImageBlockParam.Source.builder()
-                    .data("U3RhaW5sZXNzIHJvY2tz")
-                    .mediaType(BetaImageBlockParam.Source.MediaType.IMAGE_JPEG)
-                    .build()
+                BetaImageBlockParam.Source.ofBetaBase64Image(
+                    BetaBase64ImageSource.builder()
+                        .data("U3RhaW5sZXNzIHJvY2tz")
+                        .mediaType(BetaBase64ImageSource.MediaType.IMAGE_JPEG)
+                        .build()
+                )
             )
         assertThat(betaImageBlockParam.cacheControl())
             .contains(BetaCacheControlEphemeral.builder().build())

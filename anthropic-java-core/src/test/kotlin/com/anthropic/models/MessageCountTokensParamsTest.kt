@@ -2,6 +2,7 @@
 
 package com.anthropic.models
 
+import com.anthropic.core.JsonValue
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -32,8 +33,32 @@ class MessageCountTokensParamsTest {
             .enabledThinking(1024L)
             .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
             .addTool(
-                ToolBash20250124.builder()
+                Tool.builder()
+                    .inputSchema(
+                        Tool.InputSchema.builder()
+                            .properties(
+                                JsonValue.from(
+                                    mapOf(
+                                        "location" to
+                                            mapOf(
+                                                "description" to
+                                                    "The city and state, e.g. San Francisco, CA",
+                                                "type" to "string",
+                                            ),
+                                        "unit" to
+                                            mapOf(
+                                                "description" to
+                                                    "Unit for the output - one of (celsius, fahrenheit)",
+                                                "type" to "string",
+                                            ),
+                                    )
+                                )
+                            )
+                            .build()
+                    )
+                    .name("name")
                     .cacheControl(CacheControlEphemeral.builder().build())
+                    .description("Get the current weather in a given location")
                     .build()
             )
             .build()
@@ -65,8 +90,32 @@ class MessageCountTokensParamsTest {
                 .enabledThinking(1024L)
                 .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
-                    ToolBash20250124.builder()
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string",
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string",
+                                                ),
+                                        )
+                                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
                         .cacheControl(CacheControlEphemeral.builder().build())
+                        .description("Get the current weather in a given location")
                         .build()
                 )
                 .build()
@@ -117,9 +166,33 @@ class MessageCountTokensParamsTest {
         assertThat(body.tools())
             .contains(
                 listOf(
-                    MessageCountTokensTool.ofToolBash20250124(
-                        ToolBash20250124.builder()
+                    MessageCountTokensTool.ofTool(
+                        Tool.builder()
+                            .inputSchema(
+                                Tool.InputSchema.builder()
+                                    .properties(
+                                        JsonValue.from(
+                                            mapOf(
+                                                "location" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "The city and state, e.g. San Francisco, CA",
+                                                        "type" to "string",
+                                                    ),
+                                                "unit" to
+                                                    mapOf(
+                                                        "description" to
+                                                            "Unit for the output - one of (celsius, fahrenheit)",
+                                                        "type" to "string",
+                                                    ),
+                                            )
+                                        )
+                                    )
+                                    .build()
+                            )
+                            .name("name")
                             .cacheControl(CacheControlEphemeral.builder().build())
+                            .description("Get the current weather in a given location")
                             .build()
                     )
                 )

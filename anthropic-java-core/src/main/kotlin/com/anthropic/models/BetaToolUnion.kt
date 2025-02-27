@@ -21,15 +21,17 @@ import java.util.Optional
 @JsonSerialize(using = BetaToolUnion.Serializer::class)
 class BetaToolUnion
 private constructor(
+    private val betaTool: BetaTool? = null,
     private val computerUse20241022: BetaToolComputerUse20241022? = null,
     private val bash20241022: BetaToolBash20241022? = null,
     private val textEditor20241022: BetaToolTextEditor20241022? = null,
     private val computerUse20250124: BetaToolComputerUse20250124? = null,
     private val bash20250124: BetaToolBash20250124? = null,
     private val textEditor20250124: BetaToolTextEditor20250124? = null,
-    private val betaTool: BetaTool? = null,
     private val _json: JsonValue? = null,
 ) {
+
+    fun betaTool(): Optional<BetaTool> = Optional.ofNullable(betaTool)
 
     fun computerUse20241022(): Optional<BetaToolComputerUse20241022> =
         Optional.ofNullable(computerUse20241022)
@@ -47,7 +49,7 @@ private constructor(
     fun textEditor20250124(): Optional<BetaToolTextEditor20250124> =
         Optional.ofNullable(textEditor20250124)
 
-    fun betaTool(): Optional<BetaTool> = Optional.ofNullable(betaTool)
+    fun isBetaTool(): Boolean = betaTool != null
 
     fun isComputerUse20241022(): Boolean = computerUse20241022 != null
 
@@ -61,7 +63,7 @@ private constructor(
 
     fun isTextEditor20250124(): Boolean = textEditor20250124 != null
 
-    fun isBetaTool(): Boolean = betaTool != null
+    fun asBetaTool(): BetaTool = betaTool.getOrThrow("betaTool")
 
     fun asComputerUse20241022(): BetaToolComputerUse20241022 =
         computerUse20241022.getOrThrow("computerUse20241022")
@@ -79,19 +81,17 @@ private constructor(
     fun asTextEditor20250124(): BetaToolTextEditor20250124 =
         textEditor20250124.getOrThrow("textEditor20250124")
 
-    fun asBetaTool(): BetaTool = betaTool.getOrThrow("betaTool")
-
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
         return when {
+            betaTool != null -> visitor.visitBetaTool(betaTool)
             computerUse20241022 != null -> visitor.visitComputerUse20241022(computerUse20241022)
             bash20241022 != null -> visitor.visitBash20241022(bash20241022)
             textEditor20241022 != null -> visitor.visitTextEditor20241022(textEditor20241022)
             computerUse20250124 != null -> visitor.visitComputerUse20250124(computerUse20250124)
             bash20250124 != null -> visitor.visitBash20250124(bash20250124)
             textEditor20250124 != null -> visitor.visitTextEditor20250124(textEditor20250124)
-            betaTool != null -> visitor.visitBetaTool(betaTool)
             else -> visitor.unknown(_json)
         }
     }
@@ -105,6 +105,10 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
+                override fun visitBetaTool(betaTool: BetaTool) {
+                    betaTool.validate()
+                }
+
                 override fun visitComputerUse20241022(
                     computerUse20241022: BetaToolComputerUse20241022
                 ) {
@@ -136,10 +140,6 @@ private constructor(
                 ) {
                     textEditor20250124.validate()
                 }
-
-                override fun visitBetaTool(betaTool: BetaTool) {
-                    betaTool.validate()
-                }
             }
         )
         validated = true
@@ -150,25 +150,27 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaToolUnion && computerUse20241022 == other.computerUse20241022 && bash20241022 == other.bash20241022 && textEditor20241022 == other.textEditor20241022 && computerUse20250124 == other.computerUse20250124 && bash20250124 == other.bash20250124 && textEditor20250124 == other.textEditor20250124 && betaTool == other.betaTool /* spotless:on */
+        return /* spotless:off */ other is BetaToolUnion && betaTool == other.betaTool && computerUse20241022 == other.computerUse20241022 && bash20241022 == other.bash20241022 && textEditor20241022 == other.textEditor20241022 && computerUse20250124 == other.computerUse20250124 && bash20250124 == other.bash20250124 && textEditor20250124 == other.textEditor20250124 /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(computerUse20241022, bash20241022, textEditor20241022, computerUse20250124, bash20250124, textEditor20250124, betaTool) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaTool, computerUse20241022, bash20241022, textEditor20241022, computerUse20250124, bash20250124, textEditor20250124) /* spotless:on */
 
     override fun toString(): String =
         when {
+            betaTool != null -> "BetaToolUnion{betaTool=$betaTool}"
             computerUse20241022 != null -> "BetaToolUnion{computerUse20241022=$computerUse20241022}"
             bash20241022 != null -> "BetaToolUnion{bash20241022=$bash20241022}"
             textEditor20241022 != null -> "BetaToolUnion{textEditor20241022=$textEditor20241022}"
             computerUse20250124 != null -> "BetaToolUnion{computerUse20250124=$computerUse20250124}"
             bash20250124 != null -> "BetaToolUnion{bash20250124=$bash20250124}"
             textEditor20250124 != null -> "BetaToolUnion{textEditor20250124=$textEditor20250124}"
-            betaTool != null -> "BetaToolUnion{betaTool=$betaTool}"
             _json != null -> "BetaToolUnion{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaToolUnion")
         }
 
     companion object {
+
+        @JvmStatic fun ofBetaTool(betaTool: BetaTool) = BetaToolUnion(betaTool = betaTool)
 
         @JvmStatic
         fun ofComputerUse20241022(computerUse20241022: BetaToolComputerUse20241022) =
@@ -193,14 +195,14 @@ private constructor(
         @JvmStatic
         fun ofTextEditor20250124(textEditor20250124: BetaToolTextEditor20250124) =
             BetaToolUnion(textEditor20250124 = textEditor20250124)
-
-        @JvmStatic fun ofBetaTool(betaTool: BetaTool) = BetaToolUnion(betaTool = betaTool)
     }
 
     /**
      * An interface that defines how to map each variant of [BetaToolUnion] to a value of type [T].
      */
     interface Visitor<out T> {
+
+        fun visitBetaTool(betaTool: BetaTool): T
 
         fun visitComputerUse20241022(computerUse20241022: BetaToolComputerUse20241022): T
 
@@ -213,8 +215,6 @@ private constructor(
         fun visitBash20250124(bash20250124: BetaToolBash20250124): T
 
         fun visitTextEditor20250124(textEditor20250124: BetaToolTextEditor20250124): T
-
-        fun visitBetaTool(betaTool: BetaTool): T
 
         /**
          * Maps an unknown variant of [BetaToolUnion] to a value of type [T].
@@ -235,6 +235,10 @@ private constructor(
         override fun ObjectCodec.deserialize(node: JsonNode): BetaToolUnion {
             val json = JsonValue.fromJsonNode(node)
 
+            tryDeserialize(node, jacksonTypeRef<BetaTool>()) { it.validate() }
+                ?.let {
+                    return BetaToolUnion(betaTool = it, _json = json)
+                }
             tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20241022>()) { it.validate() }
                 ?.let {
                     return BetaToolUnion(computerUse20241022 = it, _json = json)
@@ -259,10 +263,6 @@ private constructor(
                 ?.let {
                     return BetaToolUnion(textEditor20250124 = it, _json = json)
                 }
-            tryDeserialize(node, jacksonTypeRef<BetaTool>()) { it.validate() }
-                ?.let {
-                    return BetaToolUnion(betaTool = it, _json = json)
-                }
 
             return BetaToolUnion(_json = json)
         }
@@ -276,6 +276,7 @@ private constructor(
             provider: SerializerProvider,
         ) {
             when {
+                value.betaTool != null -> generator.writeObject(value.betaTool)
                 value.computerUse20241022 != null ->
                     generator.writeObject(value.computerUse20241022)
                 value.bash20241022 != null -> generator.writeObject(value.bash20241022)
@@ -284,7 +285,6 @@ private constructor(
                     generator.writeObject(value.computerUse20250124)
                 value.bash20250124 != null -> generator.writeObject(value.bash20250124)
                 value.textEditor20250124 != null -> generator.writeObject(value.textEditor20250124)
-                value.betaTool != null -> generator.writeObject(value.betaTool)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaToolUnion")
             }
