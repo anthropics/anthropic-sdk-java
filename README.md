@@ -349,6 +349,174 @@ while (page != null) {
 }
 ```
 
+## Amazon Bedrock
+
+This SDK also provides support for the
+[Anthropic Bedrock API](https://aws.amazon.com/bedrock/claude/). This support
+requires the `anthropic-java-bedrock` library dependency.
+
+<!-- x-release-please-start-version -->
+
+### Gradle
+
+```kotlin
+implementation("com.anthropic:anthropic-java-bedrock:0.3.0")
+```
+
+### Maven
+
+```xml
+<dependency>
+    <groupId>com.anthropic</groupId>
+    <artifactId>anthropic-java-bedrock</artifactId>
+    <version>0.3.0</version>
+</dependency>
+```
+
+<!-- x-release-please-end -->
+
+### Usage
+
+To use Anthropic on Bedrock, create the Anthropic client with the 
+`BedrockBackend`. Usage of the API is otherwise the same.
+
+```java
+import com.anthropic.bedrock.backends.BedrockBackend;
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+
+AnthropicClient client = AnthropicOkHttpClient.builder()
+        .backend(BedrockBackend.fromEnv())
+        .build();
+```
+
+`BedrockBackend.fromEnv()` automatically resolves the AWS credentials using the
+[AWS default credentials provider chain](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials-chain.html)
+and resolves the AWS region using the
+[AWS default region provider chain](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html).
+See those AWS documents for details on how to configure the AWS credentials and 
+AWS region for resolution by those provider chains.
+
+Instead of resolving the AWS credentials and AWS region using the default AWS
+provider chains, you can resolve them independently using any provider, or any
+scheme of your choice, and pass them directly to the `BedrockBackend` during
+building. For example, you can resolve the AWS credentials directly from 
+environment variables and hard-code the AWS region:
+
+```java
+import com.anthropic.bedrock.backends.BedrockBackend;
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.regions.Region;
+
+AwsCredentials awsCredentials = AwsBasicCredentials.create(
+        System.getenv("AWS_ACCESS_KEY_ID"),
+        System.getenv("AWS_SECRET_ACCESS_KEY"));
+
+AnthropicClient client = AnthropicOkHttpClient.builder()
+        .backend(BedrockBackend.builder()
+                .awsCredentials(awsCredentials)
+                .region(Region.US_EAST_1)
+                .build())
+        .build();
+```
+
+The AWS classes used above are included automatically as transitive dependencies
+of the `anthropic-java-bedrock` library dependency. For other resolution 
+schemes, you may need additional AWS dependencies. 
+
+Currently, the Bedrock backend does _not_ support the following:
+
+* Anthropic Batch API
+* Anthropic Token Counting API
+
+## Google Cloud Vertex AI
+
+This SDK also provides support for Anthropic models on the 
+[Google Cloud Vertex AI](https://cloud.google.com/vertex-ai?hl=en) platform.
+This support requires the `anthropic-java-vertex` library dependency.
+
+<!-- x-release-please-start-version -->
+
+### Gradle
+
+```kotlin
+implementation("com.anthropic:anthropic-java-vertex:0.3.0")
+```
+
+### Maven
+
+```xml
+<dependency>
+    <groupId>com.anthropic</groupId>
+    <artifactId>anthropic-java-vertex</artifactId>
+    <version>0.3.0</version>
+</dependency>
+```
+
+<!-- x-release-please-end -->
+
+### Usage
+
+To use Anthropic on Vertex AI, create the Anthropic client with the
+`VertexBackend`. Usage of the API is otherwise the same.
+
+```java
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+import com.anthropic.vertex.backends.VertexBackend;
+
+AnthropicClient client = AnthropicOkHttpClient.builder()
+        .backend(VertexBackend.fromEnv())
+        .build();
+```
+
+`VertexBackend.fromEnv()` automatically resolves the Google OAuth2 credentials 
+from your configured Google Cloud
+[Application Default Credentials](https://cloud.google.com/docs/authentication/provide-credentials-adc)
+(ADC), the Google Cloud region from the `CLOUD_ML_REGION` environment variable,
+and the Google Cloud project ID from `ANTHROPIC_VERTEX_PROJECT_ID` environment 
+variable. See the Google documentation for details on how to configure your ADC.
+
+Instead of resolving the Google ADC, region and project ID automatically using
+`fromEnv()`, you can resolve them independently using an alternative Google
+Cloud facility, or any scheme of your choice, and pass them directly to the
+`VertexBackend` during building. For example, you could resolve the Google
+credentials and project ID directly from environment variables and hard-code the
+Google Cloud region:
+
+```java
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+import com.anthropic.vertex.backends.VertexBackend;
+import com.google.auth.oauth2.AccessToken;
+import com.google.auth.oauth2.GoogleCredentials;
+
+String accessToken = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
+String project = System.getenv("ANTHROPIC_VERTEX_PROJECT_ID");
+
+GoogleCredentials googleCredentials = GoogleCredentials.create(
+        AccessToken.newBuilder().setTokenValue(accessToken).build());
+
+AnthropicClient client = AnthropicOkHttpClient.builder()
+        .backend(VertexBackend.builder()
+                .googleCredentials(googleCredentials)
+                .region("us-central1")
+                .project(project)
+                .build())
+        .build();
+```
+
+The Google Cloud classes used above are included automatically as transitive 
+dependencies of the `anthropic-java-vertex` library dependency. For other 
+resolution schemes, you may need additional Google Cloud dependencies.
+
+Currently, the Vertex backend does _not_ support the following:
+
+* Anthropic Batch API
+
 ## Logging
 
 The SDK uses the standard [OkHttp logging interceptor](https://github.com/square/okhttp/tree/master/okhttp-logging-interceptor).

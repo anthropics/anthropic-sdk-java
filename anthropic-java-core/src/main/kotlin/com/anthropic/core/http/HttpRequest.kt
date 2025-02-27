@@ -51,6 +51,10 @@ private constructor(
             this.pathSegments.addAll(pathSegments)
         }
 
+        fun replaceAllPathSegments(vararg pathSegments: String) = apply {
+            this.pathSegments = pathSegments.toMutableList()
+        }
+
         fun headers(headers: Headers) = apply {
             this.headers.clear()
             putAllHeaders(headers)

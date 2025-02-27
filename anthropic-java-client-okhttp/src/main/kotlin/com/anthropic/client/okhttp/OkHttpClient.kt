@@ -1,5 +1,6 @@
 package com.anthropic.client.okhttp
 
+import com.anthropic.backends.Backend
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.Timeout
 import com.anthropic.core.checkRequired
@@ -17,7 +18,6 @@ import java.time.Duration
 import java.util.concurrent.CompletableFuture
 import okhttp3.Call
 import okhttp3.Callback
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
@@ -29,18 +29,19 @@ import okhttp3.logging.HttpLoggingInterceptor
 import okio.BufferedSink
 
 class OkHttpClient
-private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val baseUrl: HttpUrl) :
+private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val backend: Backend) :
     HttpClient {
 
     override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse {
-        val call = newCall(request, requestOptions)
+        val preparedRequest = prepareRequest(request)
+        val call = newCall(preparedRequest, requestOptions)
 
         return try {
-            call.execute().toResponse()
+            backend.prepareResponse(call.execute().toResponse())
         } catch (e: IOException) {
             throw AnthropicIoException("Request failed", e)
         } finally {
-            request.body?.close()
+            preparedRequest.body?.close()
         }
     }
 
@@ -48,15 +49,16 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
         request: HttpRequest,
         requestOptions: RequestOptions,
     ): CompletableFuture<HttpResponse> {
+        val preparedRequest = prepareRequest(request)
         val future = CompletableFuture<HttpResponse>()
 
-        request.body?.run { future.whenComplete { _, _ -> close() } }
+        preparedRequest.body?.run { future.whenComplete { _, _ -> close() } }
 
-        newCall(request, requestOptions)
+        newCall(preparedRequest, requestOptions)
             .enqueue(
                 object : Callback {
                     override fun onResponse(call: Call, response: Response) {
-                        future.complete(response.toResponse())
+                        future.complete(backend.prepareResponse(response.toResponse()))
                     }
 
                     override fun onFailure(call: Call, e: IOException) {
@@ -69,9 +71,18 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
     }
 
     override fun close() {
+        backend.close()
         okHttpClient.dispatcher.executorService.shutdown()
         okHttpClient.connectionPool.evictAll()
         okHttpClient.cache?.close()
+    }
+
+    private fun prepareRequest(request: HttpRequest): HttpRequest {
+        val preparedRequest = backend.prepareRequest(request)
+        val resolvedRequest = preparedRequest.resolveUrl()
+        val authorizedRequest = backend.authorizeRequest(resolvedRequest)
+
+        return authorizedRequest
     }
 
     private fun newCall(request: HttpRequest, requestOptions: RequestOptions): Call {
@@ -109,8 +120,7 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
         if (body == null && requiresBody(method)) {
             body = "".toRequestBody()
         }
-
-        val builder = Request.Builder().url(toUrl()).method(method.name, body)
+        val builder = Request.Builder().url(url ?: "").method(method.name, body)
         headers.names().forEach { name ->
             headers.values(name).forEach { builder.header(name, it) }
         }
@@ -142,12 +152,17 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
             else -> false
         }
 
+    private fun HttpRequest.resolveUrl(): HttpRequest {
+        return toBuilder().url(toUrl()).build()
+    }
+
     private fun HttpRequest.toUrl(): String {
         url?.let {
             return it
         }
 
-        val builder = baseUrl.newBuilder()
+        val builder = backend.baseUrl().toHttpUrl().newBuilder()
+
         pathSegments.forEach(builder::addPathSegment)
         queryParams.keys().forEach { key ->
             queryParams.values(key).forEach { builder.addQueryParameter(key, it) }
@@ -197,17 +212,17 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
 
     class Builder internal constructor() {
 
-        private var baseUrl: HttpUrl? = null
         private var timeout: Timeout = Timeout.default()
         private var proxy: Proxy? = null
-
-        fun baseUrl(baseUrl: String) = apply { this.baseUrl = baseUrl.toHttpUrl() }
+        private var backend: Backend? = null
 
         fun timeout(timeout: Timeout) = apply { this.timeout = timeout }
 
         fun timeout(timeout: Duration) = timeout(Timeout.builder().total(timeout).build())
 
         fun proxy(proxy: Proxy?) = apply { this.proxy = proxy }
+
+        fun backend(backend: Backend) = apply { this.backend = backend }
 
         fun build(): OkHttpClient =
             OkHttpClient(
@@ -219,7 +234,7 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
                     .callTimeout(timeout.total)
                     .proxy(proxy)
                     .build(),
-                checkRequired("baseUrl", baseUrl),
+                checkRequired("backend", backend),
             )
     }
 }
