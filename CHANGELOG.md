@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.6.0 (2025-02-28)
+
+Full Changelog: [v0.5.0...v0.6.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.5.0...v0.6.0)
+
+### Features
+
+* **api:** add support for disabling tool calls ([#147](https://github.com/anthropics/anthropic-sdk-java/issues/147)) ([584abcf](https://github.com/anthropics/anthropic-sdk-java/commit/584abcfc4c6695e2f7181bbe8970e3d90b912bfe))
+* **client:** add Bedrock and Vertex support ([#111](https://github.com/anthropics/anthropic-sdk-java/issues/111)) ([e637f76](https://github.com/anthropics/anthropic-sdk-java/commit/e637f760d15e30f209464b3ae160bf22de586b82))
+
+
+### Chores
+
+* **internal:** fix bedrock test when AWS_REGION env is set ([06bd99e](https://github.com/anthropics/anthropic-sdk-java/commit/06bd99e9b6bd3b6436c31aafd886748808e0bf71))
+
+
+### Documentation
+
+* update URLs from stainlessapi.com to stainless.com ([#146](https://github.com/anthropics/anthropic-sdk-java/issues/146)) ([562878a](https://github.com/anthropics/anthropic-sdk-java/commit/562878aeb3e03ebecc6d40ce9163e5844735589f))
+
 ## 0.5.0 (2025-02-27)
 
 Full Changelog: [v0.4.0...v0.5.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.4.0...v0.5.0)
