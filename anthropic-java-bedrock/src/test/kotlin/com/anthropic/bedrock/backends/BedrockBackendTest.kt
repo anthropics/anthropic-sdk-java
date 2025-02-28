@@ -159,6 +159,11 @@ internal class BedrockBackendTest {
 
     @Test
     fun regionMissing() {
+        if (System.getenv("AWS_REGION") != null) {
+            // Can't run this test case because we have `AWS_REGION` in the environment.
+            return
+        }
+
         initEnv(
             isSetAccessKeyID = true,
             isSetSecretAccessKey = true,
