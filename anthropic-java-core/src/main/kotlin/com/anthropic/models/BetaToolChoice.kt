@@ -20,7 +20,7 @@ import kotlin.jvm.optionals.getOrNull
 
 /**
  * How the model should use the provided tools. The model can use a specific tool, any available
- * tool, or decide by itself.
+ * tool, decide by itself, or not use tools at all.
  */
 @JsonDeserialize(using = BetaToolChoice.Deserializer::class)
 @JsonSerialize(using = BetaToolChoice.Serializer::class)
@@ -29,6 +29,7 @@ private constructor(
     private val auto: BetaToolChoiceAuto? = null,
     private val any: BetaToolChoiceAny? = null,
     private val tool: BetaToolChoiceTool? = null,
+    private val none: BetaToolChoiceNone? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -41,11 +42,16 @@ private constructor(
     /** The model will use the specified tool with `tool_choice.name`. */
     fun tool(): Optional<BetaToolChoiceTool> = Optional.ofNullable(tool)
 
+    /** The model will not be allowed to use tools. */
+    fun none(): Optional<BetaToolChoiceNone> = Optional.ofNullable(none)
+
     fun isAuto(): Boolean = auto != null
 
     fun isAny(): Boolean = any != null
 
     fun isTool(): Boolean = tool != null
+
+    fun isNone(): Boolean = none != null
 
     /** The model will automatically decide whether to use tools. */
     fun asAuto(): BetaToolChoiceAuto = auto.getOrThrow("auto")
@@ -56,6 +62,9 @@ private constructor(
     /** The model will use the specified tool with `tool_choice.name`. */
     fun asTool(): BetaToolChoiceTool = tool.getOrThrow("tool")
 
+    /** The model will not be allowed to use tools. */
+    fun asNone(): BetaToolChoiceNone = none.getOrThrow("none")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
@@ -63,6 +72,7 @@ private constructor(
             auto != null -> visitor.visitAuto(auto)
             any != null -> visitor.visitAny(any)
             tool != null -> visitor.visitTool(tool)
+            none != null -> visitor.visitNone(none)
             else -> visitor.unknown(_json)
         }
     }
@@ -87,6 +97,10 @@ private constructor(
                 override fun visitTool(tool: BetaToolChoiceTool) {
                     tool.validate()
                 }
+
+                override fun visitNone(none: BetaToolChoiceNone) {
+                    none.validate()
+                }
             }
         )
         validated = true
@@ -97,16 +111,17 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaToolChoice && auto == other.auto && any == other.any && tool == other.tool /* spotless:on */
+        return /* spotless:off */ other is BetaToolChoice && auto == other.auto && any == other.any && tool == other.tool && none == other.none /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(auto, any, tool) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(auto, any, tool, none) /* spotless:on */
 
     override fun toString(): String =
         when {
             auto != null -> "BetaToolChoice{auto=$auto}"
             any != null -> "BetaToolChoice{any=$any}"
             tool != null -> "BetaToolChoice{tool=$tool}"
+            none != null -> "BetaToolChoice{none=$none}"
             _json != null -> "BetaToolChoice{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaToolChoice")
         }
@@ -121,6 +136,9 @@ private constructor(
 
         /** The model will use the specified tool with `tool_choice.name`. */
         @JvmStatic fun ofTool(tool: BetaToolChoiceTool) = BetaToolChoice(tool = tool)
+
+        /** The model will not be allowed to use tools. */
+        @JvmStatic fun ofNone(none: BetaToolChoiceNone) = BetaToolChoice(none = none)
     }
 
     /**
@@ -136,6 +154,9 @@ private constructor(
 
         /** The model will use the specified tool with `tool_choice.name`. */
         fun visitTool(tool: BetaToolChoiceTool): T
+
+        /** The model will not be allowed to use tools. */
+        fun visitNone(none: BetaToolChoiceNone): T
 
         /**
          * Maps an unknown variant of [BetaToolChoice] to a value of type [T].
@@ -177,6 +198,12 @@ private constructor(
                             return BetaToolChoice(tool = it, _json = json)
                         }
                 }
+                "none" -> {
+                    tryDeserialize(node, jacksonTypeRef<BetaToolChoiceNone>()) { it.validate() }
+                        ?.let {
+                            return BetaToolChoice(none = it, _json = json)
+                        }
+                }
             }
 
             return BetaToolChoice(_json = json)
@@ -194,6 +221,7 @@ private constructor(
                 value.auto != null -> generator.writeObject(value.auto)
                 value.any != null -> generator.writeObject(value.any)
                 value.tool != null -> generator.writeObject(value.tool)
+                value.none != null -> generator.writeObject(value.none)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaToolChoice")
             }

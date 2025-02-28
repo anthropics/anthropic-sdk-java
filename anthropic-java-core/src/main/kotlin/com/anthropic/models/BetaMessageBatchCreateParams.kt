@@ -754,7 +754,7 @@ private constructor(
 
             /**
              * How the model should use the provided tools. The model can use a specific tool, any
-             * available tool, or decide by itself.
+             * available tool, decide by itself, or not use tools at all.
              */
             fun toolChoice(): Optional<BetaToolChoice> =
                 Optional.ofNullable(toolChoice.getNullable("tool_choice"))
@@ -1021,7 +1021,7 @@ private constructor(
 
             /**
              * How the model should use the provided tools. The model can use a specific tool, any
-             * available tool, or decide by itself.
+             * available tool, decide by itself, or not use tools at all.
              */
             @JsonProperty("tool_choice")
             @ExcludeMissing
@@ -2318,13 +2318,13 @@ private constructor(
 
                 /**
                  * How the model should use the provided tools. The model can use a specific tool,
-                 * any available tool, or decide by itself.
+                 * any available tool, decide by itself, or not use tools at all.
                  */
                 fun toolChoice(toolChoice: BetaToolChoice) = toolChoice(JsonField.of(toolChoice))
 
                 /**
                  * How the model should use the provided tools. The model can use a specific tool,
-                 * any available tool, or decide by itself.
+                 * any available tool, decide by itself, or not use tools at all.
                  */
                 fun toolChoice(toolChoice: JsonField<BetaToolChoice>) = apply {
                     this.toolChoice = toolChoice
@@ -2342,6 +2342,9 @@ private constructor(
                 /** The model will use the specified tool with `tool_choice.name`. */
                 fun toolToolChoice(name: String) =
                     toolChoice(BetaToolChoiceTool.builder().name(name).build())
+
+                /** The model will not be allowed to use tools. */
+                fun toolChoice(none: BetaToolChoiceNone) = toolChoice(BetaToolChoice.ofNone(none))
 
                 /**
                  * Definitions of tools that the model may use.
