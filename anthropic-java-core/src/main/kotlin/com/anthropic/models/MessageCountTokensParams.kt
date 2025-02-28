@@ -157,7 +157,7 @@ private constructor(
 
     /**
      * How the model should use the provided tools. The model can use a specific tool, any available
-     * tool, or decide by itself.
+     * tool, decide by itself, or not use tools at all.
      */
     fun toolChoice(): Optional<ToolChoice> = body.toolChoice()
 
@@ -338,7 +338,7 @@ private constructor(
 
     /**
      * How the model should use the provided tools. The model can use a specific tool, any available
-     * tool, or decide by itself.
+     * tool, decide by itself, or not use tools at all.
      */
     fun _toolChoice(): JsonField<ToolChoice> = body._toolChoice()
 
@@ -561,7 +561,7 @@ private constructor(
 
         /**
          * How the model should use the provided tools. The model can use a specific tool, any
-         * available tool, or decide by itself.
+         * available tool, decide by itself, or not use tools at all.
          */
         fun toolChoice(): Optional<ToolChoice> =
             Optional.ofNullable(toolChoice.getNullable("tool_choice"))
@@ -752,7 +752,7 @@ private constructor(
 
         /**
          * How the model should use the provided tools. The model can use a specific tool, any
-         * available tool, or decide by itself.
+         * available tool, decide by itself, or not use tools at all.
          */
         @JsonProperty("tool_choice")
         @ExcludeMissing
@@ -1869,13 +1869,13 @@ private constructor(
 
             /**
              * How the model should use the provided tools. The model can use a specific tool, any
-             * available tool, or decide by itself.
+             * available tool, decide by itself, or not use tools at all.
              */
             fun toolChoice(toolChoice: ToolChoice) = toolChoice(JsonField.of(toolChoice))
 
             /**
              * How the model should use the provided tools. The model can use a specific tool, any
-             * available tool, or decide by itself.
+             * available tool, decide by itself, or not use tools at all.
              */
             fun toolChoice(toolChoice: JsonField<ToolChoice>) = apply {
                 this.toolChoice = toolChoice
@@ -1893,6 +1893,9 @@ private constructor(
             /** The model will use the specified tool with `tool_choice.name`. */
             fun toolToolChoice(name: String) =
                 toolChoice(ToolChoiceTool.builder().name(name).build())
+
+            /** The model will not be allowed to use tools. */
+            fun toolChoice(none: ToolChoiceNone) = toolChoice(ToolChoice.ofNone(none))
 
             /**
              * Definitions of tools that the model may use.
@@ -3344,13 +3347,13 @@ private constructor(
 
         /**
          * How the model should use the provided tools. The model can use a specific tool, any
-         * available tool, or decide by itself.
+         * available tool, decide by itself, or not use tools at all.
          */
         fun toolChoice(toolChoice: ToolChoice) = apply { body.toolChoice(toolChoice) }
 
         /**
          * How the model should use the provided tools. The model can use a specific tool, any
-         * available tool, or decide by itself.
+         * available tool, decide by itself, or not use tools at all.
          */
         fun toolChoice(toolChoice: JsonField<ToolChoice>) = apply { body.toolChoice(toolChoice) }
 
@@ -3365,6 +3368,9 @@ private constructor(
 
         /** The model will use the specified tool with `tool_choice.name`. */
         fun toolToolChoice(name: String) = apply { body.toolToolChoice(name) }
+
+        /** The model will not be allowed to use tools. */
+        fun toolChoice(none: ToolChoiceNone) = apply { body.toolChoice(none) }
 
         /**
          * Definitions of tools that the model may use.

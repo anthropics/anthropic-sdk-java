@@ -20,7 +20,7 @@ import kotlin.jvm.optionals.getOrNull
 
 /**
  * How the model should use the provided tools. The model can use a specific tool, any available
- * tool, or decide by itself.
+ * tool, decide by itself, or not use tools at all.
  */
 @JsonDeserialize(using = ToolChoice.Deserializer::class)
 @JsonSerialize(using = ToolChoice.Serializer::class)
@@ -29,6 +29,7 @@ private constructor(
     private val auto: ToolChoiceAuto? = null,
     private val any: ToolChoiceAny? = null,
     private val tool: ToolChoiceTool? = null,
+    private val none: ToolChoiceNone? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -41,11 +42,16 @@ private constructor(
     /** The model will use the specified tool with `tool_choice.name`. */
     fun tool(): Optional<ToolChoiceTool> = Optional.ofNullable(tool)
 
+    /** The model will not be allowed to use tools. */
+    fun none(): Optional<ToolChoiceNone> = Optional.ofNullable(none)
+
     fun isAuto(): Boolean = auto != null
 
     fun isAny(): Boolean = any != null
 
     fun isTool(): Boolean = tool != null
+
+    fun isNone(): Boolean = none != null
 
     /** The model will automatically decide whether to use tools. */
     fun asAuto(): ToolChoiceAuto = auto.getOrThrow("auto")
@@ -56,6 +62,9 @@ private constructor(
     /** The model will use the specified tool with `tool_choice.name`. */
     fun asTool(): ToolChoiceTool = tool.getOrThrow("tool")
 
+    /** The model will not be allowed to use tools. */
+    fun asNone(): ToolChoiceNone = none.getOrThrow("none")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T {
@@ -63,6 +72,7 @@ private constructor(
             auto != null -> visitor.visitAuto(auto)
             any != null -> visitor.visitAny(any)
             tool != null -> visitor.visitTool(tool)
+            none != null -> visitor.visitNone(none)
             else -> visitor.unknown(_json)
         }
     }
@@ -87,6 +97,10 @@ private constructor(
                 override fun visitTool(tool: ToolChoiceTool) {
                     tool.validate()
                 }
+
+                override fun visitNone(none: ToolChoiceNone) {
+                    none.validate()
+                }
             }
         )
         validated = true
@@ -97,16 +111,17 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ToolChoice && auto == other.auto && any == other.any && tool == other.tool /* spotless:on */
+        return /* spotless:off */ other is ToolChoice && auto == other.auto && any == other.any && tool == other.tool && none == other.none /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(auto, any, tool) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(auto, any, tool, none) /* spotless:on */
 
     override fun toString(): String =
         when {
             auto != null -> "ToolChoice{auto=$auto}"
             any != null -> "ToolChoice{any=$any}"
             tool != null -> "ToolChoice{tool=$tool}"
+            none != null -> "ToolChoice{none=$none}"
             _json != null -> "ToolChoice{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid ToolChoice")
         }
@@ -121,6 +136,9 @@ private constructor(
 
         /** The model will use the specified tool with `tool_choice.name`. */
         @JvmStatic fun ofTool(tool: ToolChoiceTool) = ToolChoice(tool = tool)
+
+        /** The model will not be allowed to use tools. */
+        @JvmStatic fun ofNone(none: ToolChoiceNone) = ToolChoice(none = none)
     }
 
     /** An interface that defines how to map each variant of [ToolChoice] to a value of type [T]. */
@@ -134,6 +152,9 @@ private constructor(
 
         /** The model will use the specified tool with `tool_choice.name`. */
         fun visitTool(tool: ToolChoiceTool): T
+
+        /** The model will not be allowed to use tools. */
+        fun visitNone(none: ToolChoiceNone): T
 
         /**
          * Maps an unknown variant of [ToolChoice] to a value of type [T].
@@ -174,6 +195,12 @@ private constructor(
                             return ToolChoice(tool = it, _json = json)
                         }
                 }
+                "none" -> {
+                    tryDeserialize(node, jacksonTypeRef<ToolChoiceNone>()) { it.validate() }
+                        ?.let {
+                            return ToolChoice(none = it, _json = json)
+                        }
+                }
             }
 
             return ToolChoice(_json = json)
@@ -191,6 +218,7 @@ private constructor(
                 value.auto != null -> generator.writeObject(value.auto)
                 value.any != null -> generator.writeObject(value.any)
                 value.tool != null -> generator.writeObject(value.tool)
+                value.none != null -> generator.writeObject(value.none)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid ToolChoice")
             }
