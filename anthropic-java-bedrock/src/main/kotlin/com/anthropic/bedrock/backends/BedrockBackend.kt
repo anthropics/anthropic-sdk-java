@@ -2,12 +2,12 @@ package com.anthropic.bedrock.backends
 
 import com.anthropic.backends.Backend
 import com.anthropic.bedrock.backends.BedrockBackend.Builder
-import com.anthropic.core.bodyToJson
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse
-import com.anthropic.core.json
+import com.anthropic.core.http.bodyToJson
+import com.anthropic.core.http.json
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicException
 import com.anthropic.errors.AnthropicInvalidDataException

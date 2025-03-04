@@ -10,6 +10,7 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.Params
+import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.http.Headers
@@ -149,14 +150,8 @@ private constructor(
              */
             fun addRequest(request: Request) = apply {
                 requests =
-                    (requests ?: JsonField.of(mutableListOf())).apply {
-                        asKnown()
-                            .orElseThrow {
-                                IllegalStateException(
-                                    "Field was set to non-list type: ${javaClass.simpleName}"
-                                )
-                            }
-                            .add(request)
+                    (requests ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("requests", it).add(request)
                     }
             }
 
@@ -1435,14 +1430,8 @@ private constructor(
                  */
                 fun addMessage(message: MessageParam) = apply {
                     messages =
-                        (messages ?: JsonField.of(mutableListOf())).apply {
-                            asKnown()
-                                .orElseThrow {
-                                    IllegalStateException(
-                                        "Field was set to non-list type: ${javaClass.simpleName}"
-                                    )
-                                }
-                                .add(message)
+                        (messages ?: JsonField.of(mutableListOf())).also {
+                            checkKnown("messages", it).add(message)
                         }
                 }
 
@@ -2113,14 +2102,8 @@ private constructor(
                  */
                 fun addStopSequence(stopSequence: String) = apply {
                     stopSequences =
-                        (stopSequences ?: JsonField.of(mutableListOf())).apply {
-                            asKnown()
-                                .orElseThrow {
-                                    IllegalStateException(
-                                        "Field was set to non-list type: ${javaClass.simpleName}"
-                                    )
-                                }
-                                .add(stopSequence)
+                        (stopSequences ?: JsonField.of(mutableListOf())).also {
+                            checkKnown("stopSequences", it).add(stopSequence)
                         }
                 }
 
@@ -2509,14 +2492,8 @@ private constructor(
                  */
                 fun addTool(tool: ToolUnion) = apply {
                     tools =
-                        (tools ?: JsonField.of(mutableListOf())).apply {
-                            asKnown()
-                                .orElseThrow {
-                                    IllegalStateException(
-                                        "Field was set to non-list type: ${javaClass.simpleName}"
-                                    )
-                                }
-                                .add(tool)
+                        (tools ?: JsonField.of(mutableListOf())).also {
+                            checkKnown("tools", it).add(tool)
                         }
                 }
 
