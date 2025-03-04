@@ -4,6 +4,7 @@ package com.anthropic.models
 
 import com.anthropic.core.JsonValue
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 
 class BetaMessageCreateParamsTest {
@@ -140,7 +141,7 @@ class BetaMessageCreateParamsTest {
 
         val body = params._body()
 
-        assertThat(body).isNotNull
+        assertNotNull(body)
         assertThat(body.maxTokens()).isEqualTo(1024L)
         assertThat(body.messages())
             .isEqualTo(
@@ -238,7 +239,7 @@ class BetaMessageCreateParamsTest {
 
         val body = params._body()
 
-        assertThat(body).isNotNull
+        assertNotNull(body)
         assertThat(body.maxTokens()).isEqualTo(1024L)
         assertThat(body.messages())
             .isEqualTo(

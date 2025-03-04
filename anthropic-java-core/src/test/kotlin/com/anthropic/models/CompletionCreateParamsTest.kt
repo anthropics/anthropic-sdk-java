@@ -3,6 +3,7 @@
 package com.anthropic.models
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 
 class CompletionCreateParamsTest {
@@ -37,7 +38,7 @@ class CompletionCreateParamsTest {
 
         val body = params._body()
 
-        assertThat(body).isNotNull
+        assertNotNull(body)
         assertThat(body.maxTokensToSample()).isEqualTo(256L)
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
         assertThat(body.prompt()).isEqualTo("\n\nHuman: Hello, world!\n\nAssistant:")
@@ -60,7 +61,7 @@ class CompletionCreateParamsTest {
 
         val body = params._body()
 
-        assertThat(body).isNotNull
+        assertNotNull(body)
         assertThat(body.maxTokensToSample()).isEqualTo(256L)
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
         assertThat(body.prompt()).isEqualTo("\n\nHuman: Hello, world!\n\nAssistant:")
