@@ -5,6 +5,7 @@
 package com.anthropic.services.blocking.messages
 
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
 import com.anthropic.models.DeletedMessageBatch
 import com.anthropic.models.MessageBatch
@@ -19,6 +20,11 @@ import com.anthropic.models.MessageBatchRetrieveParams
 import com.google.errorprone.annotations.MustBeClosed
 
 interface BatchService {
+
+    /**
+     * Returns a view of this service that provides access to raw HTTP responses for each method.
+     */
+    fun withRawResponse(): WithRawResponse
 
     /**
      * Send a batch of Message creation requests.
@@ -121,4 +127,82 @@ interface BatchService {
         params: MessageBatchResultsParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): StreamResponse<MessageBatchIndividualResponse>
+
+    /** A view of [BatchService] that provides access to raw HTTP responses for each method. */
+    interface WithRawResponse {
+
+        /**
+         * Returns a raw HTTP response for `post /v1/messages/batches`, but is otherwise the same as
+         * [BatchService.create].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun create(
+            params: MessageBatchCreateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<MessageBatch>
+
+        /**
+         * Returns a raw HTTP response for `get /v1/messages/batches/{message_batch_id}`, but is
+         * otherwise the same as [BatchService.retrieve].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun retrieve(
+            params: MessageBatchRetrieveParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<MessageBatch>
+
+        /**
+         * Returns a raw HTTP response for `get /v1/messages/batches`, but is otherwise the same as
+         * [BatchService.list].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun list(
+            params: MessageBatchListParams = MessageBatchListParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<MessageBatchListPage>
+
+        /**
+         * Returns a raw HTTP response for `get /v1/messages/batches`, but is otherwise the same as
+         * [BatchService.list].
+         */
+        @MustBeClosed
+        fun list(requestOptions: RequestOptions): HttpResponseFor<MessageBatchListPage> =
+            list(MessageBatchListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `delete /v1/messages/batches/{message_batch_id}`, but is
+         * otherwise the same as [BatchService.delete].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun delete(
+            params: MessageBatchDeleteParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<DeletedMessageBatch>
+
+        /**
+         * Returns a raw HTTP response for `post /v1/messages/batches/{message_batch_id}/cancel`,
+         * but is otherwise the same as [BatchService.cancel].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun cancel(
+            params: MessageBatchCancelParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<MessageBatch>
+
+        /**
+         * Returns a raw HTTP response for `get /v1/messages/batches/{message_batch_id}/results`,
+         * but is otherwise the same as [BatchService.resultsStreaming].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun resultsStreaming(
+            params: MessageBatchResultsParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<StreamResponse<MessageBatchIndividualResponse>>
+    }
 }

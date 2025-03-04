@@ -10,6 +10,8 @@ import com.anthropic.core.handlers.withErrorHandler
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse.Handler
+import com.anthropic.core.http.HttpResponseFor
+import com.anthropic.core.http.parseable
 import com.anthropic.core.prepare
 import com.anthropic.errors.AnthropicError
 import com.anthropic.models.BetaModelInfo
@@ -20,69 +22,85 @@ import com.anthropic.models.BetaModelRetrieveParams
 class ModelServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     ModelService {
 
-    private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
+    private val withRawResponse: ModelService.WithRawResponse by lazy {
+        WithRawResponseImpl(clientOptions)
+    }
 
-    private val retrieveHandler: Handler<BetaModelInfo> =
-        jsonHandler<BetaModelInfo>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+    override fun withRawResponse(): ModelService.WithRawResponse = withRawResponse
 
-    /**
-     * Get a specific model.
-     *
-     * The Models API response can be used to determine information about a specific model or
-     * resolve a model alias to a model ID.
-     */
     override fun retrieve(
         params: BetaModelRetrieveParams,
         requestOptions: RequestOptions,
-    ): BetaModelInfo {
-        val request =
-            HttpRequest.builder()
-                .method(HttpMethod.GET)
-                .addPathSegments("v1", "models", params.getPathParam(0))
-                .putQueryParam("beta", "true")
-                .build()
-                .prepare(clientOptions, params)
-        val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-        val response = clientOptions.httpClient.execute(request, requestOptions)
-        return response
-            .use { retrieveHandler.handle(it) }
-            .also {
-                if (requestOptions.responseValidation!!) {
-                    it.validate()
-                }
-            }
-    }
+    ): BetaModelInfo =
+        // get /v1/models/{model_id}?beta=true
+        withRawResponse().retrieve(params, requestOptions).parse()
 
-    private val listHandler: Handler<BetaModelListPage.Response> =
-        jsonHandler<BetaModelListPage.Response>(clientOptions.jsonMapper)
-            .withErrorHandler(errorHandler)
-
-    /**
-     * List available models.
-     *
-     * The Models API response can be used to determine which models are available for use in the
-     * API. More recently released models are listed first.
-     */
     override fun list(
         params: BetaModelListParams,
         requestOptions: RequestOptions,
-    ): BetaModelListPage {
-        val request =
-            HttpRequest.builder()
-                .method(HttpMethod.GET)
-                .addPathSegments("v1", "models")
-                .putQueryParam("beta", "true")
-                .build()
-                .prepare(clientOptions, params)
-        val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-        val response = clientOptions.httpClient.execute(request, requestOptions)
-        return response
-            .use { listHandler.handle(it) }
-            .also {
-                if (requestOptions.responseValidation!!) {
-                    it.validate()
-                }
+    ): BetaModelListPage =
+        // get /v1/models?beta=true
+        withRawResponse().list(params, requestOptions).parse()
+
+    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
+        ModelService.WithRawResponse {
+
+        private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
+
+        private val retrieveHandler: Handler<BetaModelInfo> =
+            jsonHandler<BetaModelInfo>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+
+        override fun retrieve(
+            params: BetaModelRetrieveParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<BetaModelInfo> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .addPathSegments("v1", "models", params.getPathParam(0))
+                    .putQueryParam("beta", "true")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return response.parseable {
+                response
+                    .use { retrieveHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
             }
-            .let { BetaModelListPage.of(this, params, it) }
+        }
+
+        private val listHandler: Handler<BetaModelListPage.Response> =
+            jsonHandler<BetaModelListPage.Response>(clientOptions.jsonMapper)
+                .withErrorHandler(errorHandler)
+
+        override fun list(
+            params: BetaModelListParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<BetaModelListPage> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .addPathSegments("v1", "models")
+                    .putQueryParam("beta", "true")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return response.parseable {
+                response
+                    .use { listHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+                    .let { BetaModelListPage.of(ModelServiceImpl(clientOptions), params, it) }
+            }
+        }
     }
 }

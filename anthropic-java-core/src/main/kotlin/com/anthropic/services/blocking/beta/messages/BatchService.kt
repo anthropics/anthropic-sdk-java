@@ -5,6 +5,7 @@
 package com.anthropic.services.blocking.beta.messages
 
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
 import com.anthropic.models.BetaDeletedMessageBatch
 import com.anthropic.models.BetaMessageBatch
@@ -19,6 +20,11 @@ import com.anthropic.models.BetaMessageBatchRetrieveParams
 import com.google.errorprone.annotations.MustBeClosed
 
 interface BatchService {
+
+    /**
+     * Returns a view of this service that provides access to raw HTTP responses for each method.
+     */
+    fun withRawResponse(): WithRawResponse
 
     /**
      * Send a batch of Message creation requests.
@@ -121,4 +127,85 @@ interface BatchService {
         params: BetaMessageBatchResultsParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): StreamResponse<BetaMessageBatchIndividualResponse>
+
+    /** A view of [BatchService] that provides access to raw HTTP responses for each method. */
+    interface WithRawResponse {
+
+        /**
+         * Returns a raw HTTP response for `post /v1/messages/batches?beta=true`, but is otherwise
+         * the same as [BatchService.create].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun create(
+            params: BetaMessageBatchCreateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<BetaMessageBatch>
+
+        /**
+         * Returns a raw HTTP response for `get /v1/messages/batches/{message_batch_id}?beta=true`,
+         * but is otherwise the same as [BatchService.retrieve].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun retrieve(
+            params: BetaMessageBatchRetrieveParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<BetaMessageBatch>
+
+        /**
+         * Returns a raw HTTP response for `get /v1/messages/batches?beta=true`, but is otherwise
+         * the same as [BatchService.list].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun list(
+            params: BetaMessageBatchListParams = BetaMessageBatchListParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<BetaMessageBatchListPage>
+
+        /**
+         * Returns a raw HTTP response for `get /v1/messages/batches?beta=true`, but is otherwise
+         * the same as [BatchService.list].
+         */
+        @MustBeClosed
+        fun list(requestOptions: RequestOptions): HttpResponseFor<BetaMessageBatchListPage> =
+            list(BetaMessageBatchListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `delete
+         * /v1/messages/batches/{message_batch_id}?beta=true`, but is otherwise the same as
+         * [BatchService.delete].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun delete(
+            params: BetaMessageBatchDeleteParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<BetaDeletedMessageBatch>
+
+        /**
+         * Returns a raw HTTP response for `post
+         * /v1/messages/batches/{message_batch_id}/cancel?beta=true`, but is otherwise the same as
+         * [BatchService.cancel].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun cancel(
+            params: BetaMessageBatchCancelParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<BetaMessageBatch>
+
+        /**
+         * Returns a raw HTTP response for `get
+         * /v1/messages/batches/{message_batch_id}/results?beta=true`, but is otherwise the same as
+         * [BatchService.resultsStreaming].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun resultsStreaming(
+            params: BetaMessageBatchResultsParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<StreamResponse<BetaMessageBatchIndividualResponse>>
+    }
 }

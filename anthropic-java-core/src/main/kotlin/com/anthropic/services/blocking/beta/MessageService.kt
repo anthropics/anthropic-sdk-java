@@ -5,6 +5,7 @@
 package com.anthropic.services.blocking.beta
 
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
 import com.anthropic.models.BetaMessage
 import com.anthropic.models.BetaMessageCountTokensParams
@@ -15,6 +16,11 @@ import com.anthropic.services.blocking.beta.messages.BatchService
 import com.google.errorprone.annotations.MustBeClosed
 
 interface MessageService {
+
+    /**
+     * Returns a view of this service that provides access to raw HTTP responses for each method.
+     */
+    fun withRawResponse(): WithRawResponse
 
     fun batches(): BatchService
 
@@ -61,4 +67,43 @@ interface MessageService {
         params: BetaMessageCountTokensParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaMessageTokensCount
+
+    /** A view of [MessageService] that provides access to raw HTTP responses for each method. */
+    interface WithRawResponse {
+
+        fun batches(): BatchService.WithRawResponse
+
+        /**
+         * Returns a raw HTTP response for `post /v1/messages?beta=true`, but is otherwise the same
+         * as [MessageService.create].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun create(
+            params: BetaMessageCreateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<BetaMessage>
+
+        /**
+         * Returns a raw HTTP response for `post /v1/messages?beta=true`, but is otherwise the same
+         * as [MessageService.createStreaming].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun createStreaming(
+            params: BetaMessageCreateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<StreamResponse<BetaRawMessageStreamEvent>>
+
+        /**
+         * Returns a raw HTTP response for `post /v1/messages/count_tokens?beta=true`, but is
+         * otherwise the same as [MessageService.countTokens].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun countTokens(
+            params: BetaMessageCountTokensParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<BetaMessageTokensCount>
+    }
 }

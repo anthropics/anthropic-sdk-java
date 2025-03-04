@@ -6,6 +6,8 @@ package com.anthropic.services.async.messages
 
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.AsyncStreamResponse
+import com.anthropic.core.http.HttpResponseFor
+import com.anthropic.core.http.StreamResponse
 import com.anthropic.models.DeletedMessageBatch
 import com.anthropic.models.MessageBatch
 import com.anthropic.models.MessageBatchCancelParams
@@ -16,9 +18,15 @@ import com.anthropic.models.MessageBatchListPageAsync
 import com.anthropic.models.MessageBatchListParams
 import com.anthropic.models.MessageBatchResultsParams
 import com.anthropic.models.MessageBatchRetrieveParams
+import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 
 interface BatchServiceAsync {
+
+    /**
+     * Returns a view of this service that provides access to raw HTTP responses for each method.
+     */
+    fun withRawResponse(): WithRawResponse
 
     /**
      * Send a batch of Message creation requests.
@@ -120,4 +128,84 @@ interface BatchServiceAsync {
         params: MessageBatchResultsParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AsyncStreamResponse<MessageBatchIndividualResponse>
+
+    /** A view of [BatchServiceAsync] that provides access to raw HTTP responses for each method. */
+    interface WithRawResponse {
+
+        /**
+         * Returns a raw HTTP response for `post /v1/messages/batches`, but is otherwise the same as
+         * [BatchServiceAsync.create].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun create(
+            params: MessageBatchCreateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<MessageBatch>>
+
+        /**
+         * Returns a raw HTTP response for `get /v1/messages/batches/{message_batch_id}`, but is
+         * otherwise the same as [BatchServiceAsync.retrieve].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun retrieve(
+            params: MessageBatchRetrieveParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<MessageBatch>>
+
+        /**
+         * Returns a raw HTTP response for `get /v1/messages/batches`, but is otherwise the same as
+         * [BatchServiceAsync.list].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun list(
+            params: MessageBatchListParams = MessageBatchListParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<MessageBatchListPageAsync>>
+
+        /**
+         * Returns a raw HTTP response for `get /v1/messages/batches`, but is otherwise the same as
+         * [BatchServiceAsync.list].
+         */
+        @MustBeClosed
+        fun list(
+            requestOptions: RequestOptions
+        ): CompletableFuture<HttpResponseFor<MessageBatchListPageAsync>> =
+            list(MessageBatchListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `delete /v1/messages/batches/{message_batch_id}`, but is
+         * otherwise the same as [BatchServiceAsync.delete].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun delete(
+            params: MessageBatchDeleteParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<DeletedMessageBatch>>
+
+        /**
+         * Returns a raw HTTP response for `post /v1/messages/batches/{message_batch_id}/cancel`,
+         * but is otherwise the same as [BatchServiceAsync.cancel].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun cancel(
+            params: MessageBatchCancelParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<MessageBatch>>
+
+        /**
+         * Returns a raw HTTP response for `get /v1/messages/batches/{message_batch_id}/results`,
+         * but is otherwise the same as [BatchServiceAsync.resultsStreaming].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun resultsStreaming(
+            params: MessageBatchResultsParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<StreamResponse<MessageBatchIndividualResponse>>>
+    }
 }
