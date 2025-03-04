@@ -124,6 +124,14 @@ private constructor(
 
         companion object {
 
+            /**
+             * Returns a mutable builder for constructing an instance of [Body].
+             *
+             * The following fields are required:
+             * ```java
+             * .requests()
+             * ```
+             */
             @JvmStatic fun builder() = Builder()
         }
 
@@ -212,6 +220,14 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaMessageBatchCreateParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .requests()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -456,6 +472,15 @@ private constructor(
 
         companion object {
 
+            /**
+             * Returns a mutable builder for constructing an instance of [Request].
+             *
+             * The following fields are required:
+             * ```java
+             * .customId()
+             * .params()
+             * ```
+             */
             @JvmStatic fun builder() = Builder()
         }
 
@@ -1144,6 +1169,16 @@ private constructor(
 
             companion object {
 
+                /**
+                 * Returns a mutable builder for constructing an instance of [Params].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .maxTokens()
+                 * .messages()
+                 * .model()
+                 * ```
+                 */
                 @JvmStatic fun builder() = Builder()
             }
 

@@ -19,6 +19,7 @@ class AnthropicOkHttpClient private constructor() {
 
     companion object {
 
+        /** Returns a mutable builder for constructing an instance of [AnthropicOkHttpClient]. */
         @JvmStatic fun builder() = Builder()
 
         @JvmStatic fun fromEnv(): AnthropicClient = builder().fromEnv().build()

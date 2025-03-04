@@ -68,6 +68,16 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaToolUseBlock].
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * .input()
+         * .name()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

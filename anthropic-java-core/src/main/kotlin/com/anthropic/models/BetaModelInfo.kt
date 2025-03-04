@@ -94,6 +94,16 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaModelInfo].
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * .createdAt()
+         * .displayName()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

@@ -56,6 +56,14 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [UrlPdfSource].
+         *
+         * The following fields are required:
+         * ```java
+         * .url()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
