@@ -8,6 +8,7 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.Params
+import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
@@ -542,14 +543,8 @@ private constructor(
              */
             fun addStopSequence(stopSequence: String) = apply {
                 stopSequences =
-                    (stopSequences ?: JsonField.of(mutableListOf())).apply {
-                        asKnown()
-                            .orElseThrow {
-                                IllegalStateException(
-                                    "Field was set to non-list type: ${javaClass.simpleName}"
-                                )
-                            }
-                            .add(stopSequence)
+                    (stopSequences ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("stopSequences", it).add(stopSequence)
                     }
             }
 
