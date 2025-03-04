@@ -42,13 +42,14 @@ class ModelServiceAsyncImpl internal constructor(private val clientOptions: Clie
                 .addPathSegments("v1", "models", params.getPathParam(0))
                 .build()
                 .prepareAsync(clientOptions, params)
+        val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
         return request
             .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
             .thenApply { response ->
                 response
                     .use { retrieveHandler.handle(it) }
                     .also {
-                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                        if (requestOptions.responseValidation!!) {
                             it.validate()
                         }
                     }
@@ -75,13 +76,14 @@ class ModelServiceAsyncImpl internal constructor(private val clientOptions: Clie
                 .addPathSegments("v1", "models")
                 .build()
                 .prepareAsync(clientOptions, params)
+        val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
         return request
             .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
             .thenApply { response ->
                 response
                     .use { listHandler.handle(it) }
                     .also {
-                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                        if (requestOptions.responseValidation!!) {
                             it.validate()
                         }
                     }
