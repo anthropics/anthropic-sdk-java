@@ -3,11 +3,21 @@ package com.anthropic.core
 import java.time.Duration
 
 class RequestOptions private constructor(val responseValidation: Boolean?, val timeout: Timeout?) {
-    fun applyDefaults(options: RequestOptions): RequestOptions {
-        return RequestOptions(
-            responseValidation = this.responseValidation ?: options.responseValidation,
-            timeout = this.timeout ?: options.timeout,
-        )
+
+    companion object {
+
+        private val NONE = builder().build()
+
+        @JvmStatic fun none() = NONE
+
+        @JvmSynthetic
+        internal fun from(clientOptions: ClientOptions): RequestOptions =
+            builder()
+                .responseValidation(clientOptions.responseValidation)
+                .timeout(clientOptions.timeout)
+                .build()
+
+        @JvmStatic fun builder() = Builder()
     }
 
     @JvmSynthetic
@@ -16,12 +26,12 @@ class RequestOptions private constructor(val responseValidation: Boolean?, val t
         isStreaming: Boolean,
     ): RequestOptions {
         if (timeout != null) {
-            // We only want to warn below if the user didn't set a custom timeout.
+            // We only want to throw below if the user didn't set a custom timeout.
             return this
         }
 
         val requestOptions = applyDefaults(builder().timeoutFromMaxTokens(maxTokens).build())
-        require(isStreaming || requestOptions.timeout!!.total <= Duration.ofMinutes(10)) {
+        require(isStreaming || requestOptions.timeout!!.request() <= Duration.ofMinutes(10)) {
             """
                 Streaming is required for operations that may take longer than 10 minutes.
 
@@ -33,14 +43,13 @@ class RequestOptions private constructor(val responseValidation: Boolean?, val t
         return requestOptions
     }
 
-    companion object {
-
-        private val NONE = builder().build()
-
-        @JvmStatic fun none() = NONE
-
-        @JvmStatic fun builder() = Builder()
-    }
+    fun applyDefaults(options: RequestOptions): RequestOptions =
+        RequestOptions(
+            responseValidation = responseValidation ?: options.responseValidation,
+            timeout =
+                if (options.timeout != null && timeout != null) timeout.assign(options.timeout)
+                else timeout ?: options.timeout,
+        )
 
     class Builder internal constructor() {
 
@@ -53,7 +62,7 @@ class RequestOptions private constructor(val responseValidation: Boolean?, val t
 
         fun timeout(timeout: Timeout) = apply { this.timeout = timeout }
 
-        fun timeout(timeout: Duration) = timeout(Timeout.builder().total(timeout).build())
+        fun timeout(timeout: Duration) = timeout(Timeout.builder().request(timeout).build())
 
         @JvmSynthetic
         internal fun timeoutFromMaxTokens(maxTokens: Long) = apply {
@@ -69,11 +78,9 @@ class RequestOptions private constructor(val responseValidation: Boolean?, val t
                         ),
                     )
                 )
-            timeout(Timeout.builder().read(timeout).total(timeout).build())
+            timeout(Timeout.builder().read(timeout).request(timeout).build())
         }
 
-        fun build(): RequestOptions {
-            return RequestOptions(responseValidation, timeout)
-        }
+        fun build(): RequestOptions = RequestOptions(responseValidation, timeout)
     }
 }

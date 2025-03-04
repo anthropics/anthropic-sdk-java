@@ -105,10 +105,10 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
 
         requestOptions.timeout?.let {
             clientBuilder
-                .connectTimeout(it.connect)
-                .readTimeout(it.read)
-                .writeTimeout(it.write)
-                .callTimeout(it.total)
+                .connectTimeout(it.connect())
+                .readTimeout(it.read())
+                .writeTimeout(it.write())
+                .callTimeout(it.request())
         }
 
         val client = clientBuilder.build()
@@ -218,7 +218,7 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
 
         fun timeout(timeout: Timeout) = apply { this.timeout = timeout }
 
-        fun timeout(timeout: Duration) = timeout(Timeout.builder().total(timeout).build())
+        fun timeout(timeout: Duration) = timeout(Timeout.builder().request(timeout).build())
 
         fun proxy(proxy: Proxy?) = apply { this.proxy = proxy }
 
@@ -228,10 +228,10 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
             OkHttpClient(
                 okhttp3.OkHttpClient.Builder()
                     .pingInterval(Duration.ofMinutes(1))
-                    .connectTimeout(timeout.connect)
-                    .readTimeout(timeout.read)
-                    .writeTimeout(timeout.write)
-                    .callTimeout(timeout.total)
+                    .connectTimeout(timeout.connect())
+                    .readTimeout(timeout.read())
+                    .writeTimeout(timeout.write())
+                    .callTimeout(timeout.request())
                     .proxy(proxy)
                     .build(),
                 checkRequired("backend", backend),

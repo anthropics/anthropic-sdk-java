@@ -60,21 +60,17 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 .body(json(clientOptions.jsonMapper, params._body()))
                 .build()
                 .prepareAsync(clientOptions, params)
+        val requestOptions =
+            requestOptions
+                .applyDefaults(RequestOptions.from(clientOptions))
+                .applyDefaultTimeoutFromMaxTokens(params.maxTokens(), isStreaming = false)
         return request
-            .thenComposeAsync {
-                clientOptions.httpClient.executeAsync(
-                    it,
-                    requestOptions.applyDefaultTimeoutFromMaxTokens(
-                        params.maxTokens(),
-                        isStreaming = false,
-                    ),
-                )
-            }
+            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
             .thenApply { response ->
                 response
                     .use { createHandler.handle(it) }
                     .also {
-                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                        if (requestOptions.responseValidation!!) {
                             it.validate()
                         }
                     }
@@ -114,21 +110,17 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 )
                 .build()
                 .prepareAsync(clientOptions, params)
+        val requestOptions =
+            requestOptions
+                .applyDefaults(RequestOptions.from(clientOptions))
+                .applyDefaultTimeoutFromMaxTokens(params.maxTokens(), isStreaming = true)
         return request
-            .thenComposeAsync {
-                clientOptions.httpClient.executeAsync(
-                    it,
-                    requestOptions.applyDefaultTimeoutFromMaxTokens(
-                        params.maxTokens(),
-                        isStreaming = true,
-                    ),
-                )
-            }
+            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
             .thenApply { response ->
                 response
                     .let { createStreamingHandler.handle(it) }
                     .let { streamResponse ->
-                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                        if (requestOptions.responseValidation!!) {
                             streamResponse.map { it.validate() }
                         } else {
                             streamResponse
@@ -161,13 +153,14 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 .body(json(clientOptions.jsonMapper, params._body()))
                 .build()
                 .prepareAsync(clientOptions, params)
+        val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
         return request
             .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
             .thenApply { response ->
                 response
                     .use { countTokensHandler.handle(it) }
                     .also {
-                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                        if (requestOptions.responseValidation!!) {
                             it.validate()
                         }
                     }

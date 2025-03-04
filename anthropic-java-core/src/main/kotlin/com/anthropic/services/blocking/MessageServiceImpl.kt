@@ -54,18 +54,15 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                 .body(json(clientOptions.jsonMapper, params._body()))
                 .build()
                 .prepare(clientOptions, params)
-        val response =
-            clientOptions.httpClient.execute(
-                request,
-                requestOptions.applyDefaultTimeoutFromMaxTokens(
-                    params.maxTokens(),
-                    isStreaming = false,
-                ),
-            )
+        val requestOptions =
+            requestOptions
+                .applyDefaults(RequestOptions.from(clientOptions))
+                .applyDefaultTimeoutFromMaxTokens(params.maxTokens(), isStreaming = false)
+        val response = clientOptions.httpClient.execute(request, requestOptions)
         return response
             .use { createHandler.handle(it) }
             .also {
-                if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                if (requestOptions.responseValidation!!) {
                     it.validate()
                 }
             }
@@ -104,18 +101,15 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                 )
                 .build()
                 .prepare(clientOptions, params)
-        val response =
-            clientOptions.httpClient.execute(
-                request,
-                requestOptions.applyDefaultTimeoutFromMaxTokens(
-                    params.maxTokens(),
-                    isStreaming = true,
-                ),
-            )
+        val requestOptions =
+            requestOptions
+                .applyDefaults(RequestOptions.from(clientOptions))
+                .applyDefaultTimeoutFromMaxTokens(params.maxTokens(), isStreaming = true)
+        val response = clientOptions.httpClient.execute(request, requestOptions)
         return response
             .let { createStreamingHandler.handle(it) }
             .let { streamResponse ->
-                if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                if (requestOptions.responseValidation!!) {
                     streamResponse.map { it.validate() }
                 } else {
                     streamResponse
@@ -146,11 +140,12 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                 .body(json(clientOptions.jsonMapper, params._body()))
                 .build()
                 .prepare(clientOptions, params)
+        val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
         val response = clientOptions.httpClient.execute(request, requestOptions)
         return response
             .use { countTokensHandler.handle(it) }
             .also {
-                if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                if (requestOptions.responseValidation!!) {
                     it.validate()
                 }
             }
