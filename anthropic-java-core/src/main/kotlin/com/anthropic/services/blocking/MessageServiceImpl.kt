@@ -13,8 +13,10 @@ import com.anthropic.core.handlers.withErrorHandler
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse.Handler
+import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
 import com.anthropic.core.http.map
+import com.anthropic.core.http.parseable
 import com.anthropic.core.json
 import com.anthropic.core.prepare
 import com.anthropic.errors.AnthropicError
@@ -30,125 +32,143 @@ import java.time.Duration
 class MessageServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     MessageService {
 
-    private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
+    private val withRawResponse: MessageService.WithRawResponse by lazy {
+        WithRawResponseImpl(clientOptions)
+    }
 
     private val batches: BatchService by lazy { BatchServiceImpl(clientOptions) }
 
+    override fun withRawResponse(): MessageService.WithRawResponse = withRawResponse
+
     override fun batches(): BatchService = batches
 
-    private val createHandler: Handler<Message> =
-        jsonHandler<Message>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+    override fun create(params: MessageCreateParams, requestOptions: RequestOptions): Message =
+        // post /v1/messages
+        withRawResponse().create(params, requestOptions).parse()
 
-    /**
-     * Send a structured list of input messages with text and/or image content, and the model will
-     * generate the next message in the conversation.
-     *
-     * The Messages API can be used for either single queries or stateless multi-turn conversations.
-     *
-     * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
-     */
-    override fun create(params: MessageCreateParams, requestOptions: RequestOptions): Message {
-        val request =
-            HttpRequest.builder()
-                .method(HttpMethod.POST)
-                .addPathSegments("v1", "messages")
-                .body(json(clientOptions.jsonMapper, params._body()))
-                .build()
-                .prepare(clientOptions, params)
-        val requestOptions =
-            requestOptions
-                .applyDefaults(RequestOptions.from(clientOptions))
-                .applyDefaults(RequestOptions.builder().timeout(Duration.ofMinutes(10)).build())
-        val response = clientOptions.httpClient.execute(request, requestOptions)
-        return response
-            .use { createHandler.handle(it) }
-            .also {
-                if (requestOptions.responseValidation!!) {
-                    it.validate()
-                }
-            }
-    }
-
-    private val createStreamingHandler: Handler<StreamResponse<RawMessageStreamEvent>> =
-        sseHandler(clientOptions.jsonMapper)
-            .mapJson<RawMessageStreamEvent>()
-            .withErrorHandler(errorHandler)
-
-    /**
-     * Send a structured list of input messages with text and/or image content, and the model will
-     * generate the next message in the conversation.
-     *
-     * The Messages API can be used for either single queries or stateless multi-turn conversations.
-     *
-     * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
-     */
     override fun createStreaming(
         params: MessageCreateParams,
         requestOptions: RequestOptions,
-    ): StreamResponse<RawMessageStreamEvent> {
-        val request =
-            HttpRequest.builder()
-                .method(HttpMethod.POST)
-                .addPathSegments("v1", "messages")
-                .body(
-                    json(
-                        clientOptions.jsonMapper,
-                        params
-                            ._body()
-                            .toBuilder()
-                            .putAdditionalProperty("stream", JsonValue.from(true))
-                            .build(),
-                    )
-                )
-                .build()
-                .prepare(clientOptions, params)
-        val requestOptions =
-            requestOptions
-                .applyDefaults(RequestOptions.from(clientOptions))
-                .applyDefaults(RequestOptions.builder().timeout(Duration.ofMinutes(10)).build())
-        val response = clientOptions.httpClient.execute(request, requestOptions)
-        return response
-            .let { createStreamingHandler.handle(it) }
-            .let { streamResponse ->
-                if (requestOptions.responseValidation!!) {
-                    streamResponse.map { it.validate() }
-                } else {
-                    streamResponse
-                }
-            }
-    }
+    ): StreamResponse<RawMessageStreamEvent> =
+        // post /v1/messages
+        withRawResponse().createStreaming(params, requestOptions).parse()
 
-    private val countTokensHandler: Handler<MessageTokensCount> =
-        jsonHandler<MessageTokensCount>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
-
-    /**
-     * Count the number of tokens in a Message.
-     *
-     * The Token Count API can be used to count the number of tokens in a Message, including tools,
-     * images, and documents, without creating it.
-     *
-     * Learn more about token counting in our
-     * [user guide](/en/docs/build-with-claude/token-counting)
-     */
     override fun countTokens(
         params: MessageCountTokensParams,
         requestOptions: RequestOptions,
-    ): MessageTokensCount {
-        val request =
-            HttpRequest.builder()
-                .method(HttpMethod.POST)
-                .addPathSegments("v1", "messages", "count_tokens")
-                .body(json(clientOptions.jsonMapper, params._body()))
-                .build()
-                .prepare(clientOptions, params)
-        val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-        val response = clientOptions.httpClient.execute(request, requestOptions)
-        return response
-            .use { countTokensHandler.handle(it) }
-            .also {
-                if (requestOptions.responseValidation!!) {
-                    it.validate()
-                }
+    ): MessageTokensCount =
+        // post /v1/messages/count_tokens
+        withRawResponse().countTokens(params, requestOptions).parse()
+
+    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
+        MessageService.WithRawResponse {
+
+        private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
+
+        private val batches: BatchService.WithRawResponse by lazy {
+            BatchServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        override fun batches(): BatchService.WithRawResponse = batches
+
+        private val createHandler: Handler<Message> =
+            jsonHandler<Message>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+
+        override fun create(
+            params: MessageCreateParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<Message> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .addPathSegments("v1", "messages")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .applyDefaults(RequestOptions.builder().timeout(Duration.ofMinutes(10)).build())
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return response.parseable {
+                response
+                    .use { createHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
             }
+        }
+
+        private val createStreamingHandler: Handler<StreamResponse<RawMessageStreamEvent>> =
+            sseHandler(clientOptions.jsonMapper)
+                .mapJson<RawMessageStreamEvent>()
+                .withErrorHandler(errorHandler)
+
+        override fun createStreaming(
+            params: MessageCreateParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<StreamResponse<RawMessageStreamEvent>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .addPathSegments("v1", "messages")
+                    .body(
+                        json(
+                            clientOptions.jsonMapper,
+                            params
+                                ._body()
+                                .toBuilder()
+                                .putAdditionalProperty("stream", JsonValue.from(true))
+                                .build(),
+                        )
+                    )
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .applyDefaults(RequestOptions.builder().timeout(Duration.ofMinutes(10)).build())
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return response.parseable {
+                response
+                    .let { createStreamingHandler.handle(it) }
+                    .let { streamResponse ->
+                        if (requestOptions.responseValidation!!) {
+                            streamResponse.map { it.validate() }
+                        } else {
+                            streamResponse
+                        }
+                    }
+            }
+        }
+
+        private val countTokensHandler: Handler<MessageTokensCount> =
+            jsonHandler<MessageTokensCount>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+
+        override fun countTokens(
+            params: MessageCountTokensParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<MessageTokensCount> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .addPathSegments("v1", "messages", "count_tokens")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return response.parseable {
+                response
+                    .use { countTokensHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
     }
 }

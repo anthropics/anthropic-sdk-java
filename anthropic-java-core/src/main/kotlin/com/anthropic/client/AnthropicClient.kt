@@ -31,6 +31,11 @@ interface AnthropicClient {
      */
     fun async(): AnthropicClientAsync
 
+    /**
+     * Returns a view of this service that provides access to raw HTTP responses for each method.
+     */
+    fun withRawResponse(): WithRawResponse
+
     fun completions(): CompletionService
 
     fun messages(): MessageService
@@ -51,4 +56,16 @@ interface AnthropicClient {
      * method.
      */
     fun close()
+
+    /** A view of [AnthropicClient] that provides access to raw HTTP responses for each method. */
+    interface WithRawResponse {
+
+        fun completions(): CompletionService.WithRawResponse
+
+        fun messages(): MessageService.WithRawResponse
+
+        fun models(): ModelService.WithRawResponse
+
+        fun beta(): BetaService.WithRawResponse
+    }
 }

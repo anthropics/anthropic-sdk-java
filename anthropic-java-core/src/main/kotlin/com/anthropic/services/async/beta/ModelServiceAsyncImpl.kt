@@ -10,6 +10,8 @@ import com.anthropic.core.handlers.withErrorHandler
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse.Handler
+import com.anthropic.core.http.HttpResponseFor
+import com.anthropic.core.http.parseable
 import com.anthropic.core.prepareAsync
 import com.anthropic.errors.AnthropicError
 import com.anthropic.models.BetaModelInfo
@@ -21,75 +23,97 @@ import java.util.concurrent.CompletableFuture
 class ModelServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     ModelServiceAsync {
 
-    private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
+    private val withRawResponse: ModelServiceAsync.WithRawResponse by lazy {
+        WithRawResponseImpl(clientOptions)
+    }
 
-    private val retrieveHandler: Handler<BetaModelInfo> =
-        jsonHandler<BetaModelInfo>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+    override fun withRawResponse(): ModelServiceAsync.WithRawResponse = withRawResponse
 
-    /**
-     * Get a specific model.
-     *
-     * The Models API response can be used to determine information about a specific model or
-     * resolve a model alias to a model ID.
-     */
     override fun retrieve(
         params: BetaModelRetrieveParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<BetaModelInfo> {
-        val request =
-            HttpRequest.builder()
-                .method(HttpMethod.GET)
-                .addPathSegments("v1", "models", params.getPathParam(0))
-                .putQueryParam("beta", "true")
-                .build()
-                .prepareAsync(clientOptions, params)
-        val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-        return request
-            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-            .thenApply { response ->
-                response
-                    .use { retrieveHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
-    }
+    ): CompletableFuture<BetaModelInfo> =
+        // get /v1/models/{model_id}?beta=true
+        withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
-    private val listHandler: Handler<BetaModelListPageAsync.Response> =
-        jsonHandler<BetaModelListPageAsync.Response>(clientOptions.jsonMapper)
-            .withErrorHandler(errorHandler)
-
-    /**
-     * List available models.
-     *
-     * The Models API response can be used to determine which models are available for use in the
-     * API. More recently released models are listed first.
-     */
     override fun list(
         params: BetaModelListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<BetaModelListPageAsync> {
-        val request =
-            HttpRequest.builder()
-                .method(HttpMethod.GET)
-                .addPathSegments("v1", "models")
-                .putQueryParam("beta", "true")
-                .build()
-                .prepareAsync(clientOptions, params)
-        val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-        return request
-            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-            .thenApply { response ->
-                response
-                    .use { listHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
+    ): CompletableFuture<BetaModelListPageAsync> =
+        // get /v1/models?beta=true
+        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+
+    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
+        ModelServiceAsync.WithRawResponse {
+
+        private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
+
+        private val retrieveHandler: Handler<BetaModelInfo> =
+            jsonHandler<BetaModelInfo>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+
+        override fun retrieve(
+            params: BetaModelRetrieveParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<BetaModelInfo>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .addPathSegments("v1", "models", params.getPathParam(0))
+                    .putQueryParam("beta", "true")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .use { retrieveHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
                     }
-                    .let { BetaModelListPageAsync.of(this, params, it) }
-            }
+                }
+        }
+
+        private val listHandler: Handler<BetaModelListPageAsync.Response> =
+            jsonHandler<BetaModelListPageAsync.Response>(clientOptions.jsonMapper)
+                .withErrorHandler(errorHandler)
+
+        override fun list(
+            params: BetaModelListParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<BetaModelListPageAsync>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .addPathSegments("v1", "models")
+                    .putQueryParam("beta", "true")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .use { listHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                            .let {
+                                BetaModelListPageAsync.of(
+                                    ModelServiceAsyncImpl(clientOptions),
+                                    params,
+                                    it,
+                                )
+                            }
+                    }
+                }
+        }
     }
 }

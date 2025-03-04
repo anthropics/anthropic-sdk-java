@@ -6,11 +6,19 @@ package com.anthropic.services.async
 
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.AsyncStreamResponse
+import com.anthropic.core.http.HttpResponseFor
+import com.anthropic.core.http.StreamResponse
 import com.anthropic.models.Completion
 import com.anthropic.models.CompletionCreateParams
+import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 
 interface CompletionServiceAsync {
+
+    /**
+     * Returns a view of this service that provides access to raw HTTP responses for each method.
+     */
+    fun withRawResponse(): WithRawResponse
 
     /**
      * [Legacy] Create a Text Completion.
@@ -43,4 +51,33 @@ interface CompletionServiceAsync {
         params: CompletionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AsyncStreamResponse<Completion>
+
+    /**
+     * A view of [CompletionServiceAsync] that provides access to raw HTTP responses for each
+     * method.
+     */
+    interface WithRawResponse {
+
+        /**
+         * Returns a raw HTTP response for `post /v1/complete`, but is otherwise the same as
+         * [CompletionServiceAsync.create].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun create(
+            params: CompletionCreateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<Completion>>
+
+        /**
+         * Returns a raw HTTP response for `post /v1/complete`, but is otherwise the same as
+         * [CompletionServiceAsync.createStreaming].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun createStreaming(
+            params: CompletionCreateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<StreamResponse<Completion>>>
+    }
 }
