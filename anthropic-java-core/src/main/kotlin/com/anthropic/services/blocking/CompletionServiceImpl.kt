@@ -13,8 +13,10 @@ import com.anthropic.core.handlers.withErrorHandler
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse.Handler
+import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
 import com.anthropic.core.http.map
+import com.anthropic.core.http.parseable
 import com.anthropic.core.json
 import com.anthropic.core.prepare
 import com.anthropic.errors.AnthropicError
@@ -25,92 +27,102 @@ import java.time.Duration
 class CompletionServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     CompletionService {
 
-    private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
+    private val withRawResponse: CompletionService.WithRawResponse by lazy {
+        WithRawResponseImpl(clientOptions)
+    }
 
-    private val createHandler: Handler<Completion> =
-        jsonHandler<Completion>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+    override fun withRawResponse(): CompletionService.WithRawResponse = withRawResponse
 
-    /**
-     * [Legacy] Create a Text Completion.
-     *
-     * The Text Completions API is a legacy API. We recommend using the
-     * [Messages API](https://docs.anthropic.com/en/api/messages) going forward.
-     *
-     * Future models and features will not be compatible with Text Completions. See our
-     * [migration guide](https://docs.anthropic.com/en/api/migrating-from-text-completions-to-messages)
-     * for guidance in migrating from Text Completions to Messages.
-     */
     override fun create(
         params: CompletionCreateParams,
         requestOptions: RequestOptions,
-    ): Completion {
-        val request =
-            HttpRequest.builder()
-                .method(HttpMethod.POST)
-                .addPathSegments("v1", "complete")
-                .body(json(clientOptions.jsonMapper, params._body()))
-                .build()
-                .prepare(clientOptions, params)
-        val requestOptions =
-            requestOptions
-                .applyDefaults(RequestOptions.from(clientOptions))
-                .applyDefaults(RequestOptions.builder().timeout(Duration.ofMinutes(10)).build())
-        val response = clientOptions.httpClient.execute(request, requestOptions)
-        return response
-            .use { createHandler.handle(it) }
-            .also {
-                if (requestOptions.responseValidation!!) {
-                    it.validate()
-                }
-            }
-    }
+    ): Completion =
+        // post /v1/complete
+        withRawResponse().create(params, requestOptions).parse()
 
-    private val createStreamingHandler: Handler<StreamResponse<Completion>> =
-        sseHandler(clientOptions.jsonMapper).mapJson<Completion>().withErrorHandler(errorHandler)
-
-    /**
-     * [Legacy] Create a Text Completion.
-     *
-     * The Text Completions API is a legacy API. We recommend using the
-     * [Messages API](https://docs.anthropic.com/en/api/messages) going forward.
-     *
-     * Future models and features will not be compatible with Text Completions. See our
-     * [migration guide](https://docs.anthropic.com/en/api/migrating-from-text-completions-to-messages)
-     * for guidance in migrating from Text Completions to Messages.
-     */
     override fun createStreaming(
         params: CompletionCreateParams,
         requestOptions: RequestOptions,
-    ): StreamResponse<Completion> {
-        val request =
-            HttpRequest.builder()
-                .method(HttpMethod.POST)
-                .addPathSegments("v1", "complete")
-                .body(
-                    json(
-                        clientOptions.jsonMapper,
-                        params
-                            ._body()
-                            .toBuilder()
-                            .putAdditionalProperty("stream", JsonValue.from(true))
-                            .build(),
-                    )
-                )
-                .build()
-                .prepare(clientOptions, params)
-        val requestOptions =
-            requestOptions
-                .applyDefaults(RequestOptions.from(clientOptions))
-                .applyDefaults(RequestOptions.builder().timeout(Duration.ofMinutes(10)).build())
-        val response = clientOptions.httpClient.execute(request, requestOptions)
-        return response
-            .let { createStreamingHandler.handle(it) }
-            .let { streamResponse ->
-                if (requestOptions.responseValidation!!) {
-                    streamResponse.map { it.validate() }
-                } else {
-                    streamResponse
-                }
+    ): StreamResponse<Completion> =
+        // post /v1/complete
+        withRawResponse().createStreaming(params, requestOptions).parse()
+
+    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
+        CompletionService.WithRawResponse {
+
+        private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
+
+        private val createHandler: Handler<Completion> =
+            jsonHandler<Completion>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+
+        override fun create(
+            params: CompletionCreateParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<Completion> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .addPathSegments("v1", "complete")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .applyDefaults(RequestOptions.builder().timeout(Duration.ofMinutes(10)).build())
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return response.parseable {
+                response
+                    .use { createHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
             }
+        }
+
+        private val createStreamingHandler: Handler<StreamResponse<Completion>> =
+            sseHandler(clientOptions.jsonMapper)
+                .mapJson<Completion>()
+                .withErrorHandler(errorHandler)
+
+        override fun createStreaming(
+            params: CompletionCreateParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<StreamResponse<Completion>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .addPathSegments("v1", "complete")
+                    .body(
+                        json(
+                            clientOptions.jsonMapper,
+                            params
+                                ._body()
+                                .toBuilder()
+                                .putAdditionalProperty("stream", JsonValue.from(true))
+                                .build(),
+                        )
+                    )
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .applyDefaults(RequestOptions.builder().timeout(Duration.ofMinutes(10)).build())
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return response.parseable {
+                response
+                    .let { createStreamingHandler.handle(it) }
+                    .let { streamResponse ->
+                        if (requestOptions.responseValidation!!) {
+                            streamResponse.map { it.validate() }
+                        } else {
+                            streamResponse
+                        }
+                    }
+            }
+        }
     }
 }

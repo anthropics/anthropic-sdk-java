@@ -26,6 +26,10 @@ class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : Anthr
     // Pass the original clientOptions so that this client sets its own User-Agent.
     private val sync: AnthropicClient by lazy { AnthropicClientImpl(clientOptions) }
 
+    private val withRawResponse: AnthropicClientAsync.WithRawResponse by lazy {
+        WithRawResponseImpl(clientOptions)
+    }
+
     private val completions: CompletionServiceAsync by lazy {
         CompletionServiceAsyncImpl(clientOptionsWithUserAgent)
     }
@@ -42,6 +46,8 @@ class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : Anthr
 
     override fun sync(): AnthropicClient = sync
 
+    override fun withRawResponse(): AnthropicClientAsync.WithRawResponse = withRawResponse
+
     override fun completions(): CompletionServiceAsync = completions
 
     override fun messages(): MessageServiceAsync = messages
@@ -51,4 +57,32 @@ class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : Anthr
     override fun beta(): BetaServiceAsync = beta
 
     override fun close() = clientOptions.httpClient.close()
+
+    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
+        AnthropicClientAsync.WithRawResponse {
+
+        private val completions: CompletionServiceAsync.WithRawResponse by lazy {
+            CompletionServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val messages: MessageServiceAsync.WithRawResponse by lazy {
+            MessageServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val models: ModelServiceAsync.WithRawResponse by lazy {
+            ModelServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val beta: BetaServiceAsync.WithRawResponse by lazy {
+            BetaServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        override fun completions(): CompletionServiceAsync.WithRawResponse = completions
+
+        override fun messages(): MessageServiceAsync.WithRawResponse = messages
+
+        override fun models(): ModelServiceAsync.WithRawResponse = models
+
+        override fun beta(): BetaServiceAsync.WithRawResponse = beta
+    }
 }

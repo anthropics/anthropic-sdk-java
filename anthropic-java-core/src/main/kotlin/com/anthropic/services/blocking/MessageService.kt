@@ -5,6 +5,7 @@
 package com.anthropic.services.blocking
 
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
 import com.anthropic.models.Message
 import com.anthropic.models.MessageCountTokensParams
@@ -15,6 +16,11 @@ import com.anthropic.services.blocking.messages.BatchService
 import com.google.errorprone.annotations.MustBeClosed
 
 interface MessageService {
+
+    /**
+     * Returns a view of this service that provides access to raw HTTP responses for each method.
+     */
+    fun withRawResponse(): WithRawResponse
 
     fun batches(): BatchService
 
@@ -61,4 +67,43 @@ interface MessageService {
         params: MessageCountTokensParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): MessageTokensCount
+
+    /** A view of [MessageService] that provides access to raw HTTP responses for each method. */
+    interface WithRawResponse {
+
+        fun batches(): BatchService.WithRawResponse
+
+        /**
+         * Returns a raw HTTP response for `post /v1/messages`, but is otherwise the same as
+         * [MessageService.create].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun create(
+            params: MessageCreateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<Message>
+
+        /**
+         * Returns a raw HTTP response for `post /v1/messages`, but is otherwise the same as
+         * [MessageService.createStreaming].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun createStreaming(
+            params: MessageCreateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<StreamResponse<RawMessageStreamEvent>>
+
+        /**
+         * Returns a raw HTTP response for `post /v1/messages/count_tokens`, but is otherwise the
+         * same as [MessageService.countTokens].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun countTokens(
+            params: MessageCountTokensParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<MessageTokensCount>
+    }
 }

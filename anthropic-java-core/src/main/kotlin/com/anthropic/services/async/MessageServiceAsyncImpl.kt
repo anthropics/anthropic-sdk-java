@@ -14,8 +14,10 @@ import com.anthropic.core.http.AsyncStreamResponse
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse.Handler
+import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
 import com.anthropic.core.http.map
+import com.anthropic.core.http.parseable
 import com.anthropic.core.http.toAsync
 import com.anthropic.core.json
 import com.anthropic.core.prepareAsync
@@ -32,138 +34,158 @@ import java.util.concurrent.CompletableFuture
 class MessageServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     MessageServiceAsync {
 
-    private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
+    private val withRawResponse: MessageServiceAsync.WithRawResponse by lazy {
+        WithRawResponseImpl(clientOptions)
+    }
 
     private val batches: BatchServiceAsync by lazy { BatchServiceAsyncImpl(clientOptions) }
 
+    override fun withRawResponse(): MessageServiceAsync.WithRawResponse = withRawResponse
+
     override fun batches(): BatchServiceAsync = batches
 
-    private val createHandler: Handler<Message> =
-        jsonHandler<Message>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
-
-    /**
-     * Send a structured list of input messages with text and/or image content, and the model will
-     * generate the next message in the conversation.
-     *
-     * The Messages API can be used for either single queries or stateless multi-turn conversations.
-     *
-     * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
-     */
     override fun create(
         params: MessageCreateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<Message> {
-        val request =
-            HttpRequest.builder()
-                .method(HttpMethod.POST)
-                .addPathSegments("v1", "messages")
-                .body(json(clientOptions.jsonMapper, params._body()))
-                .build()
-                .prepareAsync(clientOptions, params)
-        val requestOptions =
-            requestOptions
-                .applyDefaults(RequestOptions.from(clientOptions))
-                .applyDefaultTimeoutFromMaxTokens(params.maxTokens(), isStreaming = false)
-        return request
-            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-            .thenApply { response ->
-                response
-                    .use { createHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
-    }
+    ): CompletableFuture<Message> =
+        // post /v1/messages
+        withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
-    private val createStreamingHandler: Handler<StreamResponse<RawMessageStreamEvent>> =
-        sseHandler(clientOptions.jsonMapper)
-            .mapJson<RawMessageStreamEvent>()
-            .withErrorHandler(errorHandler)
-
-    /**
-     * Send a structured list of input messages with text and/or image content, and the model will
-     * generate the next message in the conversation.
-     *
-     * The Messages API can be used for either single queries or stateless multi-turn conversations.
-     *
-     * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
-     */
     override fun createStreaming(
         params: MessageCreateParams,
         requestOptions: RequestOptions,
-    ): AsyncStreamResponse<RawMessageStreamEvent> {
-        val request =
-            HttpRequest.builder()
-                .method(HttpMethod.POST)
-                .addPathSegments("v1", "messages")
-                .body(
-                    json(
-                        clientOptions.jsonMapper,
-                        params
-                            ._body()
-                            .toBuilder()
-                            .putAdditionalProperty("stream", JsonValue.from(true))
-                            .build(),
-                    )
-                )
-                .build()
-                .prepareAsync(clientOptions, params)
-        val requestOptions =
-            requestOptions
-                .applyDefaults(RequestOptions.from(clientOptions))
-                .applyDefaultTimeoutFromMaxTokens(params.maxTokens(), isStreaming = true)
-        return request
-            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-            .thenApply { response ->
-                response
-                    .let { createStreamingHandler.handle(it) }
-                    .let { streamResponse ->
-                        if (requestOptions.responseValidation!!) {
-                            streamResponse.map { it.validate() }
-                        } else {
-                            streamResponse
-                        }
-                    }
-            }
+    ): AsyncStreamResponse<RawMessageStreamEvent> =
+        // post /v1/messages
+        withRawResponse()
+            .createStreaming(params, requestOptions)
+            .thenApply { it.parse() }
             .toAsync(clientOptions.streamHandlerExecutor)
-    }
 
-    private val countTokensHandler: Handler<MessageTokensCount> =
-        jsonHandler<MessageTokensCount>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
-
-    /**
-     * Count the number of tokens in a Message.
-     *
-     * The Token Count API can be used to count the number of tokens in a Message, including tools,
-     * images, and documents, without creating it.
-     *
-     * Learn more about token counting in our
-     * [user guide](/en/docs/build-with-claude/token-counting)
-     */
     override fun countTokens(
         params: MessageCountTokensParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<MessageTokensCount> {
-        val request =
-            HttpRequest.builder()
-                .method(HttpMethod.POST)
-                .addPathSegments("v1", "messages", "count_tokens")
-                .body(json(clientOptions.jsonMapper, params._body()))
-                .build()
-                .prepareAsync(clientOptions, params)
-        val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-        return request
-            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-            .thenApply { response ->
-                response
-                    .use { countTokensHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
+    ): CompletableFuture<MessageTokensCount> =
+        // post /v1/messages/count_tokens
+        withRawResponse().countTokens(params, requestOptions).thenApply { it.parse() }
+
+    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
+        MessageServiceAsync.WithRawResponse {
+
+        private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
+
+        private val batches: BatchServiceAsync.WithRawResponse by lazy {
+            BatchServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        override fun batches(): BatchServiceAsync.WithRawResponse = batches
+
+        private val createHandler: Handler<Message> =
+            jsonHandler<Message>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+
+        override fun create(
+            params: MessageCreateParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<Message>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .addPathSegments("v1", "messages")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .applyDefaultTimeoutFromMaxTokens(params.maxTokens(), isStreaming = false)
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .use { createHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
                     }
-            }
+                }
+        }
+
+        private val createStreamingHandler: Handler<StreamResponse<RawMessageStreamEvent>> =
+            sseHandler(clientOptions.jsonMapper)
+                .mapJson<RawMessageStreamEvent>()
+                .withErrorHandler(errorHandler)
+
+        override fun createStreaming(
+            params: MessageCreateParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<StreamResponse<RawMessageStreamEvent>>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .addPathSegments("v1", "messages")
+                    .body(
+                        json(
+                            clientOptions.jsonMapper,
+                            params
+                                ._body()
+                                .toBuilder()
+                                .putAdditionalProperty("stream", JsonValue.from(true))
+                                .build(),
+                        )
+                    )
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .applyDefaultTimeoutFromMaxTokens(params.maxTokens(), isStreaming = true)
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .let { createStreamingHandler.handle(it) }
+                            .let { streamResponse ->
+                                if (requestOptions.responseValidation!!) {
+                                    streamResponse.map { it.validate() }
+                                } else {
+                                    streamResponse
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val countTokensHandler: Handler<MessageTokensCount> =
+            jsonHandler<MessageTokensCount>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+
+        override fun countTokens(
+            params: MessageCountTokensParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<MessageTokensCount>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .addPathSegments("v1", "messages", "count_tokens")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .use { countTokensHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
     }
 }

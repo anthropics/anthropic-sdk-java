@@ -13,8 +13,10 @@ import com.anthropic.core.handlers.withErrorHandler
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse.Handler
+import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
 import com.anthropic.core.http.map
+import com.anthropic.core.http.parseable
 import com.anthropic.core.json
 import com.anthropic.core.prepare
 import com.anthropic.errors.AnthropicError
@@ -29,131 +31,150 @@ import com.anthropic.services.blocking.beta.messages.BatchServiceImpl
 class MessageServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     MessageService {
 
-    private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
+    private val withRawResponse: MessageService.WithRawResponse by lazy {
+        WithRawResponseImpl(clientOptions)
+    }
 
     private val batches: BatchService by lazy { BatchServiceImpl(clientOptions) }
 
+    override fun withRawResponse(): MessageService.WithRawResponse = withRawResponse
+
     override fun batches(): BatchService = batches
 
-    private val createHandler: Handler<BetaMessage> =
-        jsonHandler<BetaMessage>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
-
-    /**
-     * Send a structured list of input messages with text and/or image content, and the model will
-     * generate the next message in the conversation.
-     *
-     * The Messages API can be used for either single queries or stateless multi-turn conversations.
-     *
-     * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
-     */
     override fun create(
         params: BetaMessageCreateParams,
         requestOptions: RequestOptions,
-    ): BetaMessage {
-        val request =
-            HttpRequest.builder()
-                .method(HttpMethod.POST)
-                .addPathSegments("v1", "messages")
-                .putQueryParam("beta", "true")
-                .body(json(clientOptions.jsonMapper, params._body()))
-                .build()
-                .prepare(clientOptions, params)
-        val requestOptions =
-            requestOptions
-                .applyDefaults(RequestOptions.from(clientOptions))
-                .applyDefaultTimeoutFromMaxTokens(params.maxTokens(), isStreaming = false)
-        val response = clientOptions.httpClient.execute(request, requestOptions)
-        return response
-            .use { createHandler.handle(it) }
-            .also {
-                if (requestOptions.responseValidation!!) {
-                    it.validate()
-                }
-            }
-    }
+    ): BetaMessage =
+        // post /v1/messages?beta=true
+        withRawResponse().create(params, requestOptions).parse()
 
-    private val createStreamingHandler: Handler<StreamResponse<BetaRawMessageStreamEvent>> =
-        sseHandler(clientOptions.jsonMapper)
-            .mapJson<BetaRawMessageStreamEvent>()
-            .withErrorHandler(errorHandler)
-
-    /**
-     * Send a structured list of input messages with text and/or image content, and the model will
-     * generate the next message in the conversation.
-     *
-     * The Messages API can be used for either single queries or stateless multi-turn conversations.
-     *
-     * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
-     */
     override fun createStreaming(
         params: BetaMessageCreateParams,
         requestOptions: RequestOptions,
-    ): StreamResponse<BetaRawMessageStreamEvent> {
-        val request =
-            HttpRequest.builder()
-                .method(HttpMethod.POST)
-                .addPathSegments("v1", "messages")
-                .putQueryParam("beta", "true")
-                .body(
-                    json(
-                        clientOptions.jsonMapper,
-                        params
-                            ._body()
-                            .toBuilder()
-                            .putAdditionalProperty("stream", JsonValue.from(true))
-                            .build(),
-                    )
-                )
-                .build()
-                .prepare(clientOptions, params)
-        val requestOptions =
-            requestOptions
-                .applyDefaults(RequestOptions.from(clientOptions))
-                .applyDefaultTimeoutFromMaxTokens(params.maxTokens(), isStreaming = true)
-        val response = clientOptions.httpClient.execute(request, requestOptions)
-        return response
-            .let { createStreamingHandler.handle(it) }
-            .let { streamResponse ->
-                if (requestOptions.responseValidation!!) {
-                    streamResponse.map { it.validate() }
-                } else {
-                    streamResponse
-                }
-            }
-    }
+    ): StreamResponse<BetaRawMessageStreamEvent> =
+        // post /v1/messages?beta=true
+        withRawResponse().createStreaming(params, requestOptions).parse()
 
-    private val countTokensHandler: Handler<BetaMessageTokensCount> =
-        jsonHandler<BetaMessageTokensCount>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
-
-    /**
-     * Count the number of tokens in a Message.
-     *
-     * The Token Count API can be used to count the number of tokens in a Message, including tools,
-     * images, and documents, without creating it.
-     *
-     * Learn more about token counting in our
-     * [user guide](/en/docs/build-with-claude/token-counting)
-     */
     override fun countTokens(
         params: BetaMessageCountTokensParams,
         requestOptions: RequestOptions,
-    ): BetaMessageTokensCount {
-        val request =
-            HttpRequest.builder()
-                .method(HttpMethod.POST)
-                .addPathSegments("v1", "messages", "count_tokens")
-                .putQueryParam("beta", "true")
-                .body(json(clientOptions.jsonMapper, params._body()))
-                .build()
-                .prepare(clientOptions, params)
-        val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-        val response = clientOptions.httpClient.execute(request, requestOptions)
-        return response
-            .use { countTokensHandler.handle(it) }
-            .also {
-                if (requestOptions.responseValidation!!) {
-                    it.validate()
-                }
+    ): BetaMessageTokensCount =
+        // post /v1/messages/count_tokens?beta=true
+        withRawResponse().countTokens(params, requestOptions).parse()
+
+    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
+        MessageService.WithRawResponse {
+
+        private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
+
+        private val batches: BatchService.WithRawResponse by lazy {
+            BatchServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        override fun batches(): BatchService.WithRawResponse = batches
+
+        private val createHandler: Handler<BetaMessage> =
+            jsonHandler<BetaMessage>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+
+        override fun create(
+            params: BetaMessageCreateParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<BetaMessage> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .addPathSegments("v1", "messages")
+                    .putQueryParam("beta", "true")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .applyDefaultTimeoutFromMaxTokens(params.maxTokens(), isStreaming = false)
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return response.parseable {
+                response
+                    .use { createHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
             }
+        }
+
+        private val createStreamingHandler: Handler<StreamResponse<BetaRawMessageStreamEvent>> =
+            sseHandler(clientOptions.jsonMapper)
+                .mapJson<BetaRawMessageStreamEvent>()
+                .withErrorHandler(errorHandler)
+
+        override fun createStreaming(
+            params: BetaMessageCreateParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<StreamResponse<BetaRawMessageStreamEvent>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .addPathSegments("v1", "messages")
+                    .putQueryParam("beta", "true")
+                    .body(
+                        json(
+                            clientOptions.jsonMapper,
+                            params
+                                ._body()
+                                .toBuilder()
+                                .putAdditionalProperty("stream", JsonValue.from(true))
+                                .build(),
+                        )
+                    )
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .applyDefaultTimeoutFromMaxTokens(params.maxTokens(), isStreaming = true)
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return response.parseable {
+                response
+                    .let { createStreamingHandler.handle(it) }
+                    .let { streamResponse ->
+                        if (requestOptions.responseValidation!!) {
+                            streamResponse.map { it.validate() }
+                        } else {
+                            streamResponse
+                        }
+                    }
+            }
+        }
+
+        private val countTokensHandler: Handler<BetaMessageTokensCount> =
+            jsonHandler<BetaMessageTokensCount>(clientOptions.jsonMapper)
+                .withErrorHandler(errorHandler)
+
+        override fun countTokens(
+            params: BetaMessageCountTokensParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<BetaMessageTokensCount> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .addPathSegments("v1", "messages", "count_tokens")
+                    .putQueryParam("beta", "true")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return response.parseable {
+                response
+                    .use { countTokensHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
     }
 }
