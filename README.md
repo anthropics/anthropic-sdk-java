@@ -256,6 +256,38 @@ AnthropicClient client = AnthropicOkHttpClient.builder()
     .build();
 ```
 
+## Raw responses
+
+The SDK defines methods that deserialize responses into instances of Java classes. However, these methods don't provide access to the response headers, status code, or the raw response body.
+
+To access this data, prefix any HTTP method call on a client or service with `withRawResponse()`:
+
+```java
+import com.anthropic.core.http.Headers;
+import com.anthropic.core.http.HttpResponseFor;
+import com.anthropic.models.Message;
+import com.anthropic.models.MessageCreateParams;
+import com.anthropic.models.Model;
+
+MessageCreateParams params = MessageCreateParams.builder()
+    .maxTokens(1024L)
+    .addUserMessage("Hello, Claude")
+    .model(Model.CLAUDE_3_7_SONNET_LATEST)
+    .build();
+HttpResponseFor<Message> message = client.messages().withRawResponse().create(params);
+
+int statusCode = message.statusCode();
+Headers headers = message.headers();
+```
+
+You can still deserialize the response into an instance of a Java class if needed:
+
+```java
+import com.anthropic.models.Message;
+
+Message parsedMessage = message.parse();
+```
+
 ## Error handling
 
 The SDK throws custom unchecked exception types:
