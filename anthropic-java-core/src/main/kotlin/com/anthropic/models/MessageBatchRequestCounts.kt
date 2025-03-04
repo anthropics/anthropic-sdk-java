@@ -123,6 +123,18 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [MessageBatchRequestCounts].
+         *
+         * The following fields are required:
+         * ```java
+         * .canceled()
+         * .errored()
+         * .expired()
+         * .processing()
+         * .succeeded()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

@@ -60,6 +60,14 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [InputJsonDelta].
+         *
+         * The following fields are required:
+         * ```java
+         * .partialJson()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

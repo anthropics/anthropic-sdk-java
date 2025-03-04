@@ -100,6 +100,18 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [CitationPageLocationParam].
+         *
+         * The following fields are required:
+         * ```java
+         * .citedText()
+         * .documentIndex()
+         * .documentTitle()
+         * .endPageNumber()
+         * .startPageNumber()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

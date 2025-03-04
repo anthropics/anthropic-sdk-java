@@ -53,6 +53,14 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaMessageDeltaUsage].
+         *
+         * The following fields are required:
+         * ```java
+         * .outputTokens()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

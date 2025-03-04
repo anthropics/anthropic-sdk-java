@@ -85,6 +85,15 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaTextBlock].
+         *
+         * The following fields are required:
+         * ```java
+         * .citations()
+         * .text()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

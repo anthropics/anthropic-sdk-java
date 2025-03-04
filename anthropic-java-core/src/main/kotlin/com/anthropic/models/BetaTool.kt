@@ -120,6 +120,15 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaTool].
+         *
+         * The following fields are required:
+         * ```java
+         * .inputSchema()
+         * .name()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -285,6 +294,7 @@ private constructor(
 
         companion object {
 
+            /** Returns a mutable builder for constructing an instance of [InputSchema]. */
             @JvmStatic fun builder() = Builder()
         }
 

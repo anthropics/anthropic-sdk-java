@@ -78,6 +78,16 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of
+         * [BetaRawContentBlockStartEvent].
+         *
+         * The following fields are required:
+         * ```java
+         * .contentBlock()
+         * .index()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

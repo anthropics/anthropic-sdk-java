@@ -85,6 +85,16 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of
+         * [MessageBatchIndividualResponse].
+         *
+         * The following fields are required:
+         * ```java
+         * .customId()
+         * .result()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

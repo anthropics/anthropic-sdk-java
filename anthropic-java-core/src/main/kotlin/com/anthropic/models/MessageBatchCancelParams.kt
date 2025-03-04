@@ -60,6 +60,14 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [MessageBatchCancelParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .messageBatchId()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

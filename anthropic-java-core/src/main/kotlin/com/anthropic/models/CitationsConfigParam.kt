@@ -49,6 +49,7 @@ private constructor(
 
     companion object {
 
+        /** Returns a mutable builder for constructing an instance of [CitationsConfigParam]. */
         @JvmStatic fun builder() = Builder()
     }
 

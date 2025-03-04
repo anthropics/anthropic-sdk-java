@@ -408,6 +408,16 @@ private constructor(
 
         companion object {
 
+            /**
+             * Returns a mutable builder for constructing an instance of [Body].
+             *
+             * The following fields are required:
+             * ```java
+             * .maxTokensToSample()
+             * .model()
+             * .prompt()
+             * ```
+             */
             @JvmStatic fun builder() = Builder()
         }
 
@@ -671,6 +681,16 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [CompletionCreateParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .maxTokensToSample()
+         * .model()
+         * .prompt()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

@@ -97,6 +97,14 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaToolResultBlockParam].
+         *
+         * The following fields are required:
+         * ```java
+         * .toolUseId()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

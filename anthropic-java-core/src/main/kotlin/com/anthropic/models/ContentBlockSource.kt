@@ -69,6 +69,14 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [ContentBlockSource].
+         *
+         * The following fields are required:
+         * ```java
+         * .content()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
