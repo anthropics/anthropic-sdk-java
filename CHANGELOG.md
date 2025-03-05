@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.6.0 (2025-03-05)
+
+Full Changelog: [v0.5.0...v0.6.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.5.0...v0.6.0)
+
+### ⚠ BREAKING CHANGES
+
+* **client:** refactor multipart formdata impl ([#152](https://github.com/anthropics/anthropic-sdk-java/issues/152))
+
+### Features
+
+* **api:** add support for disabling tool calls ([#147](https://github.com/anthropics/anthropic-sdk-java/issues/147)) ([584abcf](https://github.com/anthropics/anthropic-sdk-java/commit/584abcfc4c6695e2f7181bbe8970e3d90b912bfe))
+* **client:** add Bedrock and Vertex support ([#111](https://github.com/anthropics/anthropic-sdk-java/issues/111)) ([e637f76](https://github.com/anthropics/anthropic-sdk-java/commit/e637f760d15e30f209464b3ae160bf22de586b82))
+* **client:** allow configuring timeouts granularly ([#149](https://github.com/anthropics/anthropic-sdk-java/issues/149)) ([273e179](https://github.com/anthropics/anthropic-sdk-java/commit/273e179a2835e8cd6821f3004d5285fa8aa93783))
+* **client:** support raw response access ([#151](https://github.com/anthropics/anthropic-sdk-java/issues/151)) ([2c2ad9b](https://github.com/anthropics/anthropic-sdk-java/commit/2c2ad9beef9d5ab7f2fb7360808d0acaf96b7b01))
+
+
+### Chores
+
+* **client:** refactor multipart formdata impl ([#152](https://github.com/anthropics/anthropic-sdk-java/issues/152)) ([b6af3af](https://github.com/anthropics/anthropic-sdk-java/commit/b6af3af6435016bfe38168a17253e7b92a400e0c))
+* **internal:** fix bedrock test when AWS_REGION env is set ([06bd99e](https://github.com/anthropics/anthropic-sdk-java/commit/06bd99e9b6bd3b6436c31aafd886748808e0bf71))
+* **internal:** refactor `ErrorHandlingTest` ([#148](https://github.com/anthropics/anthropic-sdk-java/issues/148)) ([d6973c0](https://github.com/anthropics/anthropic-sdk-java/commit/d6973c082319a36ed6311ca3385be9dc444db16f))
+* **internal:** use `assertNotNull` in tests ([b049ff4](https://github.com/anthropics/anthropic-sdk-java/commit/b049ff4eddb328af821ecf86730f6135c896419c))
+
+
+### Documentation
+
+* add raw response readme documentation ([#153](https://github.com/anthropics/anthropic-sdk-java/issues/153)) ([17144cc](https://github.com/anthropics/anthropic-sdk-java/commit/17144cc8f0b0857dea653061005df5bfb0029e5d))
+* update URLs from stainlessapi.com to stainless.com ([#146](https://github.com/anthropics/anthropic-sdk-java/issues/146)) ([562878a](https://github.com/anthropics/anthropic-sdk-java/commit/562878aeb3e03ebecc6d40ce9163e5844735589f))
+
 ## 0.5.0 (2025-02-27)
 
 Full Changelog: [v0.4.0...v0.5.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.4.0...v0.5.0)
