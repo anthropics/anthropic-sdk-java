@@ -58,6 +58,14 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [ErrorResponse].
+         *
+         * The following fields are required:
+         * ```java
+         * .error()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

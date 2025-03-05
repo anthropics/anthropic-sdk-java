@@ -58,6 +58,14 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaOverloadedError].
+         *
+         * The following fields are required:
+         * ```java
+         * .message()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

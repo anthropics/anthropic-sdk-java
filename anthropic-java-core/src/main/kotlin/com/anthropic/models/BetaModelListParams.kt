@@ -64,6 +64,7 @@ private constructor(
 
         @JvmStatic fun none(): BetaModelListParams = builder().build()
 
+        /** Returns a mutable builder for constructing an instance of [BetaModelListParams]. */
         @JvmStatic fun builder() = Builder()
     }
 

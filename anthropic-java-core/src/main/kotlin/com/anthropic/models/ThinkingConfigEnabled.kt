@@ -80,6 +80,14 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [ThinkingConfigEnabled].
+         *
+         * The following fields are required:
+         * ```java
+         * .budgetTokens()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

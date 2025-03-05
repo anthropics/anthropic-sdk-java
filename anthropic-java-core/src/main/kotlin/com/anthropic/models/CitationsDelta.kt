@@ -70,6 +70,14 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [CitationsDelta].
+         *
+         * The following fields are required:
+         * ```java
+         * .citation()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

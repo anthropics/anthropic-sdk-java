@@ -58,6 +58,14 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaThinkingDelta].
+         *
+         * The following fields are required:
+         * ```java
+         * .thinking()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

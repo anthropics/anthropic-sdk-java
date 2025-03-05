@@ -74,6 +74,15 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [RawContentBlockDeltaEvent].
+         *
+         * The following fields are required:
+         * ```java
+         * .delta()
+         * .index()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

@@ -98,6 +98,15 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaRawMessageDeltaEvent].
+         *
+         * The following fields are required:
+         * ```java
+         * .delta()
+         * .usage()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -237,6 +246,15 @@ private constructor(
 
         companion object {
 
+            /**
+             * Returns a mutable builder for constructing an instance of [Delta].
+             *
+             * The following fields are required:
+             * ```java
+             * .stopReason()
+             * .stopSequence()
+             * ```
+             */
             @JvmStatic fun builder() = Builder()
         }
 

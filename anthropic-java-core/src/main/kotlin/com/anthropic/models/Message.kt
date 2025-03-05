@@ -269,6 +269,19 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [Message].
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * .content()
+         * .model()
+         * .stopReason()
+         * .stopSequence()
+         * .usage()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

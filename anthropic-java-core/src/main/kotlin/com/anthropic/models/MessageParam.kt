@@ -68,6 +68,15 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [MessageParam].
+         *
+         * The following fields are required:
+         * ```java
+         * .content()
+         * .role()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

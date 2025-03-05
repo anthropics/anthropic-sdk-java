@@ -31,6 +31,15 @@ private constructor(
     fun toBuilder() = Builder().from(this)
 
     companion object {
+
+        /**
+         * Returns a mutable builder for constructing an instance of [ClientOptions].
+         *
+         * The following fields are required:
+         * ```java
+         * .httpClient()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

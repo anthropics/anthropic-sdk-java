@@ -64,6 +64,7 @@ private constructor(
 
         @JvmStatic fun none(): MessageBatchListParams = builder().build()
 
+        /** Returns a mutable builder for constructing an instance of [MessageBatchListParams]. */
         @JvmStatic fun builder() = Builder()
     }
 

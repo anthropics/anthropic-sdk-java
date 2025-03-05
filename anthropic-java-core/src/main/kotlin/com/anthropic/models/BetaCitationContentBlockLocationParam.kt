@@ -100,6 +100,19 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of
+         * [BetaCitationContentBlockLocationParam].
+         *
+         * The following fields are required:
+         * ```java
+         * .citedText()
+         * .documentIndex()
+         * .documentTitle()
+         * .endBlockIndex()
+         * .startBlockIndex()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

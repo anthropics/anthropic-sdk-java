@@ -44,6 +44,14 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaModelRetrieveParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .modelId()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

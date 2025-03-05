@@ -74,6 +74,9 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaToolTextEditor20250124].
+         */
         @JvmStatic fun builder() = Builder()
     }
 

@@ -48,6 +48,7 @@ private constructor(
 
     companion object {
 
+        /** Returns a mutable builder for constructing an instance of [RawMessageStopEvent]. */
         @JvmStatic fun builder() = Builder()
     }
 

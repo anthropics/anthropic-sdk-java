@@ -69,6 +69,15 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaThinkingBlock].
+         *
+         * The following fields are required:
+         * ```java
+         * .signature()
+         * .thinking()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

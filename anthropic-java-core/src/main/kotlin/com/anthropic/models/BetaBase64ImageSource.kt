@@ -65,6 +65,15 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaBase64ImageSource].
+         *
+         * The following fields are required:
+         * ```java
+         * .data()
+         * .mediaType()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

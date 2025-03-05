@@ -112,6 +112,15 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaToolComputerUse20241022].
+         *
+         * The following fields are required:
+         * ```java
+         * .displayHeightPx()
+         * .displayWidthPx()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

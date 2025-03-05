@@ -90,6 +90,17 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [Usage].
+         *
+         * The following fields are required:
+         * ```java
+         * .cacheCreationInputTokens()
+         * .cacheReadInputTokens()
+         * .inputTokens()
+         * .outputTokens()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

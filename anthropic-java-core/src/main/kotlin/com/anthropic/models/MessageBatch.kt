@@ -222,6 +222,22 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [MessageBatch].
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * .archivedAt()
+         * .cancelInitiatedAt()
+         * .createdAt()
+         * .endedAt()
+         * .expiresAt()
+         * .processingStatus()
+         * .requestCounts()
+         * .resultsUrl()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

@@ -58,6 +58,14 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [SignatureDelta].
+         *
+         * The following fields are required:
+         * ```java
+         * .signature()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
