@@ -19,7 +19,6 @@ public final class MessagesExample {
                 .build();
 
         client.messages().create(createParams).content().stream()
-                .peek(System.out::println)
                 .flatMap(contentBlock -> contentBlock.text().stream())
                 .forEach(textBlock -> System.out.println(textBlock.text()));
     }
