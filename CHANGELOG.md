@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.7.0 (2025-03-06)
+
+Full Changelog: [v0.6.0...v0.7.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.6.0...v0.7.0)
+
+### Features
+
+* **client:** accept `InputStream` and `Path` for file params ([#162](https://github.com/anthropics/anthropic-sdk-java/issues/162)) ([803e738](https://github.com/anthropics/anthropic-sdk-java/commit/803e7389c5704943e3b2092e6a9bdd678455d97c))
+* **client:** detect binary incompatible jackson versions ([#164](https://github.com/anthropics/anthropic-sdk-java/issues/164)) ([2bb461b](https://github.com/anthropics/anthropic-sdk-java/commit/2bb461b2a3017796fca523765e35b9a63636cc86))
+
+
+### Chores
+
+* **ci:** actually run more examples ([d3bd8ef](https://github.com/anthropics/anthropic-sdk-java/commit/d3bd8ef397ef6e6965cf0887bcb59f74f2fe6adc))
+* **ci:** run more examples ([25cdaa0](https://github.com/anthropics/anthropic-sdk-java/commit/25cdaa0360b9fa79f628a93b6ec8db63a641f344))
+* **client:** expose `Optional`, not nullable, from `ClientOptions` ([#158](https://github.com/anthropics/anthropic-sdk-java/issues/158)) ([2b96d8e](https://github.com/anthropics/anthropic-sdk-java/commit/2b96d8e549e9aaad15c3bac5a0ced8df00b75aff))
+
+
+### Documentation
+
+* note required fields in `builder` javadoc ([#156](https://github.com/anthropics/anthropic-sdk-java/issues/156)) ([f3b9086](https://github.com/anthropics/anthropic-sdk-java/commit/f3b9086ae4239fe98b24a7c54885257b90e55176))
+* remove extra example stuff ([c21759b](https://github.com/anthropics/anthropic-sdk-java/commit/c21759ba68a032fb8f9ba3977904b5d169698c7f))
+
 ## 0.6.0 (2025-03-05)
 
 Full Changelog: [v0.5.0...v0.6.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.5.0...v0.6.0)
