@@ -16,5 +16,5 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 application {
-    mainClass = "com.anthropic.example.MessagesExample"
+    mainClass = "com.anthropic.example.Main"
 }
