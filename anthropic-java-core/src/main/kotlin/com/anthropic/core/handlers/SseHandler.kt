@@ -111,11 +111,5 @@ internal inline fun <reified T> Handler<StreamResponse<SseMessage>>.mapJson():
     Handler<StreamResponse<T>> =
     object : Handler<StreamResponse<T>> {
         override fun handle(response: HttpResponse): StreamResponse<T> =
-            this@mapJson.handle(response).map {
-                try {
-                    it.json<T>()
-                } catch (e: Exception) {
-                    throw AnthropicException("Error reading response", e)
-                }
-            }
+            this@mapJson.handle(response).map { it.json<T>() }
     }

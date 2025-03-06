@@ -2,7 +2,7 @@
 
 package com.anthropic.core.http
 
-import com.anthropic.errors.AnthropicException
+import com.anthropic.core.enhanceJacksonException
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Objects
@@ -41,13 +41,18 @@ private constructor(
         fun build(): SseMessage = SseMessage(jsonMapper!!, event, data, id, retry)
     }
 
-    inline fun <reified T> json(): T = jsonMapper.readerFor(jacksonTypeRef<T>()).readValue(jsonNode)
+    inline fun <reified T> json(): T =
+        try {
+            jsonMapper.readerFor(jacksonTypeRef<T>()).readValue(jsonNode)
+        } catch (e: Exception) {
+            throw enhanceJacksonException("Error reading response", e)
+        }
 
     private val jsonNode by lazy {
         try {
             jsonMapper.readTree(data)
         } catch (e: Exception) {
-            throw AnthropicException("Error deserializing json", e)
+            throw enhanceJacksonException("Error reading response", e)
         }
     }
 
