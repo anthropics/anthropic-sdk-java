@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package com.anthropic.services.async.beta.messages
 
 import com.anthropic.core.RequestOptions
@@ -38,7 +36,10 @@ interface BatchServiceAsync {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    @JvmOverloads
+    fun create(params: BetaMessageBatchCreateParams): CompletableFuture<BetaMessageBatch> =
+        create(params, RequestOptions.none())
+
+    /** @see [create] */
     fun create(
         params: BetaMessageBatchCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -51,7 +52,10 @@ interface BatchServiceAsync {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    @JvmOverloads
+    fun retrieve(params: BetaMessageBatchRetrieveParams): CompletableFuture<BetaMessageBatch> =
+        retrieve(params, RequestOptions.none())
+
+    /** @see [retrieve] */
     fun retrieve(
         params: BetaMessageBatchRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -64,19 +68,21 @@ interface BatchServiceAsync {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    @JvmOverloads
+    fun list(): CompletableFuture<BetaMessageBatchListPageAsync> =
+        list(BetaMessageBatchListParams.none())
+
+    /** @see [list] */
     fun list(
         params: BetaMessageBatchListParams = BetaMessageBatchListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaMessageBatchListPageAsync>
 
-    /**
-     * List all Message Batches within a Workspace. Most recently created batches are returned
-     * first.
-     *
-     * Learn more about the Message Batches API in our
-     * [user guide](/en/docs/build-with-claude/batch-processing)
-     */
+    /** @see [list] */
+    fun list(
+        params: BetaMessageBatchListParams = BetaMessageBatchListParams.none()
+    ): CompletableFuture<BetaMessageBatchListPageAsync> = list(params, RequestOptions.none())
+
+    /** @see [list] */
     fun list(requestOptions: RequestOptions): CompletableFuture<BetaMessageBatchListPageAsync> =
         list(BetaMessageBatchListParams.none(), requestOptions)
 
@@ -89,7 +95,10 @@ interface BatchServiceAsync {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    @JvmOverloads
+    fun delete(params: BetaMessageBatchDeleteParams): CompletableFuture<BetaDeletedMessageBatch> =
+        delete(params, RequestOptions.none())
+
+    /** @see [delete] */
     fun delete(
         params: BetaMessageBatchDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -107,7 +116,10 @@ interface BatchServiceAsync {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    @JvmOverloads
+    fun cancel(params: BetaMessageBatchCancelParams): CompletableFuture<BetaMessageBatch> =
+        cancel(params, RequestOptions.none())
+
+    /** @see [cancel] */
     fun cancel(
         params: BetaMessageBatchCancelParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -123,7 +135,12 @@ interface BatchServiceAsync {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    @JvmOverloads
+    fun resultsStreaming(
+        params: BetaMessageBatchResultsParams
+    ): AsyncStreamResponse<BetaMessageBatchIndividualResponse> =
+        resultsStreaming(params, RequestOptions.none())
+
+    /** @see [resultsStreaming] */
     fun resultsStreaming(
         params: BetaMessageBatchResultsParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -136,7 +153,13 @@ interface BatchServiceAsync {
          * Returns a raw HTTP response for `post /v1/messages/batches?beta=true`, but is otherwise
          * the same as [BatchServiceAsync.create].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun create(
+            params: BetaMessageBatchCreateParams
+        ): CompletableFuture<HttpResponseFor<BetaMessageBatch>> =
+            create(params, RequestOptions.none())
+
+        /** @see [create] */
         @MustBeClosed
         fun create(
             params: BetaMessageBatchCreateParams,
@@ -147,7 +170,13 @@ interface BatchServiceAsync {
          * Returns a raw HTTP response for `get /v1/messages/batches/{message_batch_id}?beta=true`,
          * but is otherwise the same as [BatchServiceAsync.retrieve].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun retrieve(
+            params: BetaMessageBatchRetrieveParams
+        ): CompletableFuture<HttpResponseFor<BetaMessageBatch>> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see [retrieve] */
         @MustBeClosed
         fun retrieve(
             params: BetaMessageBatchRetrieveParams,
@@ -158,17 +187,25 @@ interface BatchServiceAsync {
          * Returns a raw HTTP response for `get /v1/messages/batches?beta=true`, but is otherwise
          * the same as [BatchServiceAsync.list].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun list(): CompletableFuture<HttpResponseFor<BetaMessageBatchListPageAsync>> =
+            list(BetaMessageBatchListParams.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             params: BetaMessageBatchListParams = BetaMessageBatchListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<BetaMessageBatchListPageAsync>>
 
-        /**
-         * Returns a raw HTTP response for `get /v1/messages/batches?beta=true`, but is otherwise
-         * the same as [BatchServiceAsync.list].
-         */
+        /** @see [list] */
+        @MustBeClosed
+        fun list(
+            params: BetaMessageBatchListParams = BetaMessageBatchListParams.none()
+        ): CompletableFuture<HttpResponseFor<BetaMessageBatchListPageAsync>> =
+            list(params, RequestOptions.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             requestOptions: RequestOptions
@@ -180,7 +217,13 @@ interface BatchServiceAsync {
          * /v1/messages/batches/{message_batch_id}?beta=true`, but is otherwise the same as
          * [BatchServiceAsync.delete].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun delete(
+            params: BetaMessageBatchDeleteParams
+        ): CompletableFuture<HttpResponseFor<BetaDeletedMessageBatch>> =
+            delete(params, RequestOptions.none())
+
+        /** @see [delete] */
         @MustBeClosed
         fun delete(
             params: BetaMessageBatchDeleteParams,
@@ -192,7 +235,13 @@ interface BatchServiceAsync {
          * /v1/messages/batches/{message_batch_id}/cancel?beta=true`, but is otherwise the same as
          * [BatchServiceAsync.cancel].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun cancel(
+            params: BetaMessageBatchCancelParams
+        ): CompletableFuture<HttpResponseFor<BetaMessageBatch>> =
+            cancel(params, RequestOptions.none())
+
+        /** @see [cancel] */
         @MustBeClosed
         fun cancel(
             params: BetaMessageBatchCancelParams,
@@ -204,7 +253,13 @@ interface BatchServiceAsync {
          * /v1/messages/batches/{message_batch_id}/results?beta=true`, but is otherwise the same as
          * [BatchServiceAsync.resultsStreaming].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun resultsStreaming(
+            params: BetaMessageBatchResultsParams
+        ): CompletableFuture<HttpResponseFor<StreamResponse<BetaMessageBatchIndividualResponse>>> =
+            resultsStreaming(params, RequestOptions.none())
+
+        /** @see [resultsStreaming] */
         @MustBeClosed
         fun resultsStreaming(
             params: BetaMessageBatchResultsParams,
