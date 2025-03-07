@@ -9,6 +9,7 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * List all Message Batches within a Workspace. Most recently created batches are returned first.
@@ -111,7 +112,7 @@ private constructor(
          * ID of the object to use as a cursor for pagination. When provided, returns the page of
          * results immediately after this object.
          */
-        fun afterId(afterId: Optional<String>) = afterId(afterId.orElse(null))
+        fun afterId(afterId: Optional<String>) = afterId(afterId.getOrNull())
 
         /**
          * ID of the object to use as a cursor for pagination. When provided, returns the page of
@@ -123,7 +124,7 @@ private constructor(
          * ID of the object to use as a cursor for pagination. When provided, returns the page of
          * results immediately before this object.
          */
-        fun beforeId(beforeId: Optional<String>) = beforeId(beforeId.orElse(null))
+        fun beforeId(beforeId: Optional<String>) = beforeId(beforeId.getOrNull())
 
         /**
          * Number of items to return per page.
@@ -144,14 +145,13 @@ private constructor(
          *
          * Defaults to `20`. Ranges from `1` to `1000`.
          */
-        @Suppress("USELESS_CAST") // See https://youtrack.jetbrains.com/issue/KT-74228
-        fun limit(limit: Optional<Long>) = limit(limit.orElse(null) as Long?)
+        fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
 
         /** Optional header to specify the beta version(s) you want to use. */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
 
         /** Optional header to specify the beta version(s) you want to use. */
-        fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.orElse(null))
+        fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.getOrNull())
 
         /** Optional header to specify the beta version(s) you want to use. */
         fun addBeta(beta: AnthropicBeta) = apply {

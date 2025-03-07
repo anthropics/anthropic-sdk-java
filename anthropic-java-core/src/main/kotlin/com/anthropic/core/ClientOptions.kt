@@ -14,6 +14,7 @@ import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicLong
+import kotlin.jvm.optionals.getOrNull
 
 class ClientOptions
 private constructor(
@@ -109,11 +110,11 @@ private constructor(
 
         fun apiKey(apiKey: String?) = apply { this.apiKey = apiKey }
 
-        fun apiKey(apiKey: Optional<String>) = apiKey(apiKey.orElse(null))
+        fun apiKey(apiKey: Optional<String>) = apiKey(apiKey.getOrNull())
 
         fun authToken(authToken: String?) = apply { this.authToken = authToken }
 
-        fun authToken(authToken: Optional<String>) = authToken(authToken.orElse(null))
+        fun authToken(authToken: Optional<String>) = authToken(authToken.getOrNull())
 
         fun headers(headers: Headers) = apply {
             this.headers.clear()

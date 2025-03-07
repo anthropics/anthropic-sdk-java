@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 @NoAutoDetect
 class Usage
@@ -131,9 +132,8 @@ private constructor(
             cacheCreationInputTokens(cacheCreationInputTokens as Long?)
 
         /** The number of input tokens used to create the cache entry. */
-        @Suppress("USELESS_CAST") // See https://youtrack.jetbrains.com/issue/KT-74228
         fun cacheCreationInputTokens(cacheCreationInputTokens: Optional<Long>) =
-            cacheCreationInputTokens(cacheCreationInputTokens.orElse(null) as Long?)
+            cacheCreationInputTokens(cacheCreationInputTokens.getOrNull())
 
         /** The number of input tokens used to create the cache entry. */
         fun cacheCreationInputTokens(cacheCreationInputTokens: JsonField<Long>) = apply {
@@ -149,9 +149,8 @@ private constructor(
             cacheReadInputTokens(cacheReadInputTokens as Long?)
 
         /** The number of input tokens read from the cache. */
-        @Suppress("USELESS_CAST") // See https://youtrack.jetbrains.com/issue/KT-74228
         fun cacheReadInputTokens(cacheReadInputTokens: Optional<Long>) =
-            cacheReadInputTokens(cacheReadInputTokens.orElse(null) as Long?)
+            cacheReadInputTokens(cacheReadInputTokens.getOrNull())
 
         /** The number of input tokens read from the cache. */
         fun cacheReadInputTokens(cacheReadInputTokens: JsonField<Long>) = apply {

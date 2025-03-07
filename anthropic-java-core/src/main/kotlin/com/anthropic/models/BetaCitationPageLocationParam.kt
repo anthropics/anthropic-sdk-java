@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 @NoAutoDetect
 class BetaCitationPageLocationParam
@@ -152,7 +153,7 @@ private constructor(
             documentTitle(JsonField.ofNullable(documentTitle))
 
         fun documentTitle(documentTitle: Optional<String>) =
-            documentTitle(documentTitle.orElse(null))
+            documentTitle(documentTitle.getOrNull())
 
         fun documentTitle(documentTitle: JsonField<String>) = apply {
             this.documentTitle = documentTitle
