@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.AwsSessionCredentials
 import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.regions.providers.DefaultAwsRegionProviderChain
 
 internal class BedrockBackendTest {
     companion object {
@@ -159,17 +160,17 @@ internal class BedrockBackendTest {
 
     @Test
     fun regionMissing() {
-        if (System.getenv("AWS_REGION") != null) {
-            // Can't run this test case because we have `AWS_REGION` in the environment.
-            return
-        }
-
         initEnv(
             isSetAccessKeyID = true,
             isSetSecretAccessKey = true,
             isSetSessionToken = true,
             isSetRegion = false,
         )
+        try {
+            DefaultAwsRegionProviderChain.builder().build().region
+            // If the region is set in the environment, then we cannot run this test.
+            return
+        } catch (_: Exception) {}
 
         // This test runs slowly for some reason. Perhaps there is a long chain
         // of fall-backs in the region provider used in the class under test, or
