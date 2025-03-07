@@ -29,7 +29,6 @@ import com.anthropic.models.BetaMessageTokensCount
 import com.anthropic.models.BetaRawMessageStreamEvent
 import com.anthropic.services.async.beta.messages.BatchServiceAsync
 import com.anthropic.services.async.beta.messages.BatchServiceAsyncImpl
-import java.time.Duration
 import java.util.concurrent.CompletableFuture
 
 class MessageServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -98,7 +97,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
             val requestOptions =
                 requestOptions
                     .applyDefaults(RequestOptions.from(clientOptions))
-                    .applyDefaults(RequestOptions.builder().timeout(Duration.ofMinutes(10)).build())
+                    .applyDefaultTimeoutFromMaxTokens(params.maxTokens(), isStreaming = false)
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
@@ -143,7 +142,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
             val requestOptions =
                 requestOptions
                     .applyDefaults(RequestOptions.from(clientOptions))
-                    .applyDefaults(RequestOptions.builder().timeout(Duration.ofMinutes(10)).build())
+                    .applyDefaultTimeoutFromMaxTokens(params.maxTokens(), isStreaming = true)
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
