@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package com.anthropic.services.async.messages
 
 import com.anthropic.core.RequestOptions
@@ -38,7 +36,10 @@ interface BatchServiceAsync {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    @JvmOverloads
+    fun create(params: MessageBatchCreateParams): CompletableFuture<MessageBatch> =
+        create(params, RequestOptions.none())
+
+    /** @see [create] */
     fun create(
         params: MessageBatchCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -51,7 +52,10 @@ interface BatchServiceAsync {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    @JvmOverloads
+    fun retrieve(params: MessageBatchRetrieveParams): CompletableFuture<MessageBatch> =
+        retrieve(params, RequestOptions.none())
+
+    /** @see [retrieve] */
     fun retrieve(
         params: MessageBatchRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -64,19 +68,20 @@ interface BatchServiceAsync {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    @JvmOverloads
+    fun list(): CompletableFuture<MessageBatchListPageAsync> = list(MessageBatchListParams.none())
+
+    /** @see [list] */
     fun list(
         params: MessageBatchListParams = MessageBatchListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<MessageBatchListPageAsync>
 
-    /**
-     * List all Message Batches within a Workspace. Most recently created batches are returned
-     * first.
-     *
-     * Learn more about the Message Batches API in our
-     * [user guide](/en/docs/build-with-claude/batch-processing)
-     */
+    /** @see [list] */
+    fun list(
+        params: MessageBatchListParams = MessageBatchListParams.none()
+    ): CompletableFuture<MessageBatchListPageAsync> = list(params, RequestOptions.none())
+
+    /** @see [list] */
     fun list(requestOptions: RequestOptions): CompletableFuture<MessageBatchListPageAsync> =
         list(MessageBatchListParams.none(), requestOptions)
 
@@ -89,7 +94,10 @@ interface BatchServiceAsync {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    @JvmOverloads
+    fun delete(params: MessageBatchDeleteParams): CompletableFuture<DeletedMessageBatch> =
+        delete(params, RequestOptions.none())
+
+    /** @see [delete] */
     fun delete(
         params: MessageBatchDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -107,7 +115,10 @@ interface BatchServiceAsync {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    @JvmOverloads
+    fun cancel(params: MessageBatchCancelParams): CompletableFuture<MessageBatch> =
+        cancel(params, RequestOptions.none())
+
+    /** @see [cancel] */
     fun cancel(
         params: MessageBatchCancelParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -123,7 +134,12 @@ interface BatchServiceAsync {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    @JvmOverloads
+    fun resultsStreaming(
+        params: MessageBatchResultsParams
+    ): AsyncStreamResponse<MessageBatchIndividualResponse> =
+        resultsStreaming(params, RequestOptions.none())
+
+    /** @see [resultsStreaming] */
     fun resultsStreaming(
         params: MessageBatchResultsParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -136,7 +152,12 @@ interface BatchServiceAsync {
          * Returns a raw HTTP response for `post /v1/messages/batches`, but is otherwise the same as
          * [BatchServiceAsync.create].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun create(
+            params: MessageBatchCreateParams
+        ): CompletableFuture<HttpResponseFor<MessageBatch>> = create(params, RequestOptions.none())
+
+        /** @see [create] */
         @MustBeClosed
         fun create(
             params: MessageBatchCreateParams,
@@ -147,7 +168,13 @@ interface BatchServiceAsync {
          * Returns a raw HTTP response for `get /v1/messages/batches/{message_batch_id}`, but is
          * otherwise the same as [BatchServiceAsync.retrieve].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun retrieve(
+            params: MessageBatchRetrieveParams
+        ): CompletableFuture<HttpResponseFor<MessageBatch>> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see [retrieve] */
         @MustBeClosed
         fun retrieve(
             params: MessageBatchRetrieveParams,
@@ -158,17 +185,25 @@ interface BatchServiceAsync {
          * Returns a raw HTTP response for `get /v1/messages/batches`, but is otherwise the same as
          * [BatchServiceAsync.list].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun list(): CompletableFuture<HttpResponseFor<MessageBatchListPageAsync>> =
+            list(MessageBatchListParams.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             params: MessageBatchListParams = MessageBatchListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<MessageBatchListPageAsync>>
 
-        /**
-         * Returns a raw HTTP response for `get /v1/messages/batches`, but is otherwise the same as
-         * [BatchServiceAsync.list].
-         */
+        /** @see [list] */
+        @MustBeClosed
+        fun list(
+            params: MessageBatchListParams = MessageBatchListParams.none()
+        ): CompletableFuture<HttpResponseFor<MessageBatchListPageAsync>> =
+            list(params, RequestOptions.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             requestOptions: RequestOptions
@@ -179,7 +214,13 @@ interface BatchServiceAsync {
          * Returns a raw HTTP response for `delete /v1/messages/batches/{message_batch_id}`, but is
          * otherwise the same as [BatchServiceAsync.delete].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun delete(
+            params: MessageBatchDeleteParams
+        ): CompletableFuture<HttpResponseFor<DeletedMessageBatch>> =
+            delete(params, RequestOptions.none())
+
+        /** @see [delete] */
         @MustBeClosed
         fun delete(
             params: MessageBatchDeleteParams,
@@ -190,7 +231,12 @@ interface BatchServiceAsync {
          * Returns a raw HTTP response for `post /v1/messages/batches/{message_batch_id}/cancel`,
          * but is otherwise the same as [BatchServiceAsync.cancel].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun cancel(
+            params: MessageBatchCancelParams
+        ): CompletableFuture<HttpResponseFor<MessageBatch>> = cancel(params, RequestOptions.none())
+
+        /** @see [cancel] */
         @MustBeClosed
         fun cancel(
             params: MessageBatchCancelParams,
@@ -201,7 +247,13 @@ interface BatchServiceAsync {
          * Returns a raw HTTP response for `get /v1/messages/batches/{message_batch_id}/results`,
          * but is otherwise the same as [BatchServiceAsync.resultsStreaming].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun resultsStreaming(
+            params: MessageBatchResultsParams
+        ): CompletableFuture<HttpResponseFor<StreamResponse<MessageBatchIndividualResponse>>> =
+            resultsStreaming(params, RequestOptions.none())
+
+        /** @see [resultsStreaming] */
         @MustBeClosed
         fun resultsStreaming(
             params: MessageBatchResultsParams,

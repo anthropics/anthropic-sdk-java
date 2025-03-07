@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package com.anthropic.services.blocking.messages
 
 import com.anthropic.core.RequestOptions
@@ -36,7 +34,10 @@ interface BatchService {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    @JvmOverloads
+    fun create(params: MessageBatchCreateParams): MessageBatch =
+        create(params, RequestOptions.none())
+
+    /** @see [create] */
     fun create(
         params: MessageBatchCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -49,7 +50,10 @@ interface BatchService {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    @JvmOverloads
+    fun retrieve(params: MessageBatchRetrieveParams): MessageBatch =
+        retrieve(params, RequestOptions.none())
+
+    /** @see [retrieve] */
     fun retrieve(
         params: MessageBatchRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -62,19 +66,19 @@ interface BatchService {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    @JvmOverloads
+    fun list(): MessageBatchListPage = list(MessageBatchListParams.none())
+
+    /** @see [list] */
     fun list(
         params: MessageBatchListParams = MessageBatchListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): MessageBatchListPage
 
-    /**
-     * List all Message Batches within a Workspace. Most recently created batches are returned
-     * first.
-     *
-     * Learn more about the Message Batches API in our
-     * [user guide](/en/docs/build-with-claude/batch-processing)
-     */
+    /** @see [list] */
+    fun list(params: MessageBatchListParams = MessageBatchListParams.none()): MessageBatchListPage =
+        list(params, RequestOptions.none())
+
+    /** @see [list] */
     fun list(requestOptions: RequestOptions): MessageBatchListPage =
         list(MessageBatchListParams.none(), requestOptions)
 
@@ -87,7 +91,10 @@ interface BatchService {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    @JvmOverloads
+    fun delete(params: MessageBatchDeleteParams): DeletedMessageBatch =
+        delete(params, RequestOptions.none())
+
+    /** @see [delete] */
     fun delete(
         params: MessageBatchDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -105,7 +112,10 @@ interface BatchService {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    @JvmOverloads
+    fun cancel(params: MessageBatchCancelParams): MessageBatch =
+        cancel(params, RequestOptions.none())
+
+    /** @see [cancel] */
     fun cancel(
         params: MessageBatchCancelParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -121,7 +131,13 @@ interface BatchService {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    @JvmOverloads
+    @MustBeClosed
+    fun resultsStreaming(
+        params: MessageBatchResultsParams
+    ): StreamResponse<MessageBatchIndividualResponse> =
+        resultsStreaming(params, RequestOptions.none())
+
+    /** @see [resultsStreaming] */
     @MustBeClosed
     fun resultsStreaming(
         params: MessageBatchResultsParams,
@@ -135,7 +151,11 @@ interface BatchService {
          * Returns a raw HTTP response for `post /v1/messages/batches`, but is otherwise the same as
          * [BatchService.create].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun create(params: MessageBatchCreateParams): HttpResponseFor<MessageBatch> =
+            create(params, RequestOptions.none())
+
+        /** @see [create] */
         @MustBeClosed
         fun create(
             params: MessageBatchCreateParams,
@@ -146,7 +166,11 @@ interface BatchService {
          * Returns a raw HTTP response for `get /v1/messages/batches/{message_batch_id}`, but is
          * otherwise the same as [BatchService.retrieve].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun retrieve(params: MessageBatchRetrieveParams): HttpResponseFor<MessageBatch> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see [retrieve] */
         @MustBeClosed
         fun retrieve(
             params: MessageBatchRetrieveParams,
@@ -157,17 +181,23 @@ interface BatchService {
          * Returns a raw HTTP response for `get /v1/messages/batches`, but is otherwise the same as
          * [BatchService.list].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun list(): HttpResponseFor<MessageBatchListPage> = list(MessageBatchListParams.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             params: MessageBatchListParams = MessageBatchListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<MessageBatchListPage>
 
-        /**
-         * Returns a raw HTTP response for `get /v1/messages/batches`, but is otherwise the same as
-         * [BatchService.list].
-         */
+        /** @see [list] */
+        @MustBeClosed
+        fun list(
+            params: MessageBatchListParams = MessageBatchListParams.none()
+        ): HttpResponseFor<MessageBatchListPage> = list(params, RequestOptions.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<MessageBatchListPage> =
             list(MessageBatchListParams.none(), requestOptions)
@@ -176,7 +206,11 @@ interface BatchService {
          * Returns a raw HTTP response for `delete /v1/messages/batches/{message_batch_id}`, but is
          * otherwise the same as [BatchService.delete].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun delete(params: MessageBatchDeleteParams): HttpResponseFor<DeletedMessageBatch> =
+            delete(params, RequestOptions.none())
+
+        /** @see [delete] */
         @MustBeClosed
         fun delete(
             params: MessageBatchDeleteParams,
@@ -187,7 +221,11 @@ interface BatchService {
          * Returns a raw HTTP response for `post /v1/messages/batches/{message_batch_id}/cancel`,
          * but is otherwise the same as [BatchService.cancel].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun cancel(params: MessageBatchCancelParams): HttpResponseFor<MessageBatch> =
+            cancel(params, RequestOptions.none())
+
+        /** @see [cancel] */
         @MustBeClosed
         fun cancel(
             params: MessageBatchCancelParams,
@@ -198,7 +236,13 @@ interface BatchService {
          * Returns a raw HTTP response for `get /v1/messages/batches/{message_batch_id}/results`,
          * but is otherwise the same as [BatchService.resultsStreaming].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun resultsStreaming(
+            params: MessageBatchResultsParams
+        ): HttpResponseFor<StreamResponse<MessageBatchIndividualResponse>> =
+            resultsStreaming(params, RequestOptions.none())
+
+        /** @see [resultsStreaming] */
         @MustBeClosed
         fun resultsStreaming(
             params: MessageBatchResultsParams,
