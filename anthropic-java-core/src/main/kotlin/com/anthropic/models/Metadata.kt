@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 @NoAutoDetect
 class Metadata
@@ -95,7 +96,7 @@ private constructor(
          * to help detect abuse. Do not include any identifying information such as name, email
          * address, or phone number.
          */
-        fun userId(userId: Optional<String>) = userId(userId.orElse(null))
+        fun userId(userId: Optional<String>) = userId(userId.getOrNull())
 
         /**
          * An external identifier for the user who is associated with the request.
