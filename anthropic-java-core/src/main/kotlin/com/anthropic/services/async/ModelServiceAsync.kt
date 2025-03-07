@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package com.anthropic.services.async
 
 import com.anthropic.core.RequestOptions
@@ -26,7 +24,10 @@ interface ModelServiceAsync {
      * The Models API response can be used to determine information about a specific model or
      * resolve a model alias to a model ID.
      */
-    @JvmOverloads
+    fun retrieve(params: ModelRetrieveParams): CompletableFuture<ModelInfo> =
+        retrieve(params, RequestOptions.none())
+
+    /** @see [retrieve] */
     fun retrieve(
         params: ModelRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -38,18 +39,20 @@ interface ModelServiceAsync {
      * The Models API response can be used to determine which models are available for use in the
      * API. More recently released models are listed first.
      */
-    @JvmOverloads
+    fun list(): CompletableFuture<ModelListPageAsync> = list(ModelListParams.none())
+
+    /** @see [list] */
     fun list(
         params: ModelListParams = ModelListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ModelListPageAsync>
 
-    /**
-     * List available models.
-     *
-     * The Models API response can be used to determine which models are available for use in the
-     * API. More recently released models are listed first.
-     */
+    /** @see [list] */
+    fun list(
+        params: ModelListParams = ModelListParams.none()
+    ): CompletableFuture<ModelListPageAsync> = list(params, RequestOptions.none())
+
+    /** @see [list] */
     fun list(requestOptions: RequestOptions): CompletableFuture<ModelListPageAsync> =
         list(ModelListParams.none(), requestOptions)
 
@@ -60,7 +63,11 @@ interface ModelServiceAsync {
          * Returns a raw HTTP response for `get /v1/models/{model_id}`, but is otherwise the same as
          * [ModelServiceAsync.retrieve].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun retrieve(params: ModelRetrieveParams): CompletableFuture<HttpResponseFor<ModelInfo>> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see [retrieve] */
         @MustBeClosed
         fun retrieve(
             params: ModelRetrieveParams,
@@ -71,17 +78,25 @@ interface ModelServiceAsync {
          * Returns a raw HTTP response for `get /v1/models`, but is otherwise the same as
          * [ModelServiceAsync.list].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun list(): CompletableFuture<HttpResponseFor<ModelListPageAsync>> =
+            list(ModelListParams.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             params: ModelListParams = ModelListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ModelListPageAsync>>
 
-        /**
-         * Returns a raw HTTP response for `get /v1/models`, but is otherwise the same as
-         * [ModelServiceAsync.list].
-         */
+        /** @see [list] */
+        @MustBeClosed
+        fun list(
+            params: ModelListParams = ModelListParams.none()
+        ): CompletableFuture<HttpResponseFor<ModelListPageAsync>> =
+            list(params, RequestOptions.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             requestOptions: RequestOptions

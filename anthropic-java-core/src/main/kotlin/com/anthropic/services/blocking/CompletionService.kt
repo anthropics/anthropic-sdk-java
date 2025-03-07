@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package com.anthropic.services.blocking
 
 import com.anthropic.core.RequestOptions
@@ -28,7 +26,9 @@ interface CompletionService {
      * [migration guide](https://docs.anthropic.com/en/api/migrating-from-text-completions-to-messages)
      * for guidance in migrating from Text Completions to Messages.
      */
-    @JvmOverloads
+    fun create(params: CompletionCreateParams): Completion = create(params, RequestOptions.none())
+
+    /** @see [create] */
     fun create(
         params: CompletionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -44,7 +44,11 @@ interface CompletionService {
      * [migration guide](https://docs.anthropic.com/en/api/migrating-from-text-completions-to-messages)
      * for guidance in migrating from Text Completions to Messages.
      */
-    @JvmOverloads
+    @MustBeClosed
+    fun createStreaming(params: CompletionCreateParams): StreamResponse<Completion> =
+        createStreaming(params, RequestOptions.none())
+
+    /** @see [createStreaming] */
     @MustBeClosed
     fun createStreaming(
         params: CompletionCreateParams,
@@ -58,7 +62,11 @@ interface CompletionService {
          * Returns a raw HTTP response for `post /v1/complete`, but is otherwise the same as
          * [CompletionService.create].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun create(params: CompletionCreateParams): HttpResponseFor<Completion> =
+            create(params, RequestOptions.none())
+
+        /** @see [create] */
         @MustBeClosed
         fun create(
             params: CompletionCreateParams,
@@ -69,7 +77,13 @@ interface CompletionService {
          * Returns a raw HTTP response for `post /v1/complete`, but is otherwise the same as
          * [CompletionService.createStreaming].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun createStreaming(
+            params: CompletionCreateParams
+        ): HttpResponseFor<StreamResponse<Completion>> =
+            createStreaming(params, RequestOptions.none())
+
+        /** @see [createStreaming] */
         @MustBeClosed
         fun createStreaming(
             params: CompletionCreateParams,
