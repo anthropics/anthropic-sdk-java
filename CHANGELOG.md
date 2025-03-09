@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.1 (2025-03-09)
+
+Full Changelog: [v0.7.0...v0.7.1](https://github.com/anthropics/anthropic-sdk-java/compare/v0.7.0...v0.7.1)
+
+### Chores
+
+* **internal:** add `.kotlin` to `.gitignore` ([#165](https://github.com/anthropics/anthropic-sdk-java/issues/165)) ([31f4b52](https://github.com/anthropics/anthropic-sdk-java/commit/31f4b5243a27de6b785a951f93829048752b81ad))
+* **internal:** make `regionMissing` test more robust ([23989ce](https://github.com/anthropics/anthropic-sdk-java/commit/23989ce7eb7c43a2458d8c25513c5adb2a0529f8))
+
 ## 0.7.0 (2025-03-06)
 
 Full Changelog: [v0.6.0...v0.7.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.6.0...v0.7.0)
