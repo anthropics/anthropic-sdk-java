@@ -475,7 +475,23 @@ MessageCreateParams params = MessageCreateParams.builder()
     .build();
 ```
 
-These can be accessed on the built object later using the `_additionalHeaders()`, `_additionalQueryParams()`, and `_additionalBodyProperties()` methods. You can also set undocumented parameters on nested headers, query params, or body classes using the `putAdditionalProperty` method. These properties can be accessed on the built object later using the `_additionalProperties()` method.
+These can be accessed on the built object later using the `_additionalHeaders()`, `_additionalQueryParams()`, and `_additionalBodyProperties()` methods.
+
+To set undocumented parameters on _nested_ headers, query params, or body classes, call the `putAdditionalProperty` method on the nested class:
+
+```java
+import com.anthropic.core.JsonValue;
+import com.anthropic.models.CompletionCreateParams;
+import com.anthropic.models.Metadata;
+
+CompletionCreateParams params = CompletionCreateParams.builder()
+    .metadata(Metadata.builder()
+        .putAdditionalProperty("secretProperty", JsonValue.from("42"))
+        .build())
+    .build();
+```
+
+These properties can be accessed on the nested built object later using the `_additionalProperties()` method.
 
 To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](anthropic-java-core/src/main/kotlin/com/anthropic/core/JsonValue.kt) object to its setter:
 
