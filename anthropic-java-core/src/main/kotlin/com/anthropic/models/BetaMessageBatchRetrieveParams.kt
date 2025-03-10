@@ -10,6 +10,7 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * This endpoint is idempotent and can be used to poll for Message Batch completion. To access the
@@ -92,7 +93,7 @@ private constructor(
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
 
         /** Optional header to specify the beta version(s) you want to use. */
-        fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.orElse(null))
+        fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.getOrNull())
 
         /** Optional header to specify the beta version(s) you want to use. */
         fun addBeta(beta: AnthropicBeta) = apply {

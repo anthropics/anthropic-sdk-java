@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 @NoAutoDetect
 class BetaToolUseBlockParam
@@ -126,7 +127,7 @@ private constructor(
             cacheControl(JsonField.ofNullable(cacheControl))
 
         fun cacheControl(cacheControl: Optional<BetaCacheControlEphemeral>) =
-            cacheControl(cacheControl.orElse(null))
+            cacheControl(cacheControl.getOrNull())
 
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl

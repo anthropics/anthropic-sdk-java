@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 @NoAutoDetect
 class BetaRawMessageDeltaEvent
@@ -274,7 +275,7 @@ private constructor(
 
             fun stopReason(stopReason: StopReason?) = stopReason(JsonField.ofNullable(stopReason))
 
-            fun stopReason(stopReason: Optional<StopReason>) = stopReason(stopReason.orElse(null))
+            fun stopReason(stopReason: Optional<StopReason>) = stopReason(stopReason.getOrNull())
 
             fun stopReason(stopReason: JsonField<StopReason>) = apply {
                 this.stopReason = stopReason
@@ -284,7 +285,7 @@ private constructor(
                 stopSequence(JsonField.ofNullable(stopSequence))
 
             fun stopSequence(stopSequence: Optional<String>) =
-                stopSequence(stopSequence.orElse(null))
+                stopSequence(stopSequence.getOrNull())
 
             fun stopSequence(stopSequence: JsonField<String>) = apply {
                 this.stopSequence = stopSequence

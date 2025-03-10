@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package com.anthropic.services.async.beta
 
 import com.anthropic.core.RequestOptions
@@ -26,7 +24,10 @@ interface ModelServiceAsync {
      * The Models API response can be used to determine information about a specific model or
      * resolve a model alias to a model ID.
      */
-    @JvmOverloads
+    fun retrieve(params: BetaModelRetrieveParams): CompletableFuture<BetaModelInfo> =
+        retrieve(params, RequestOptions.none())
+
+    /** @see [retrieve] */
     fun retrieve(
         params: BetaModelRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -38,18 +39,20 @@ interface ModelServiceAsync {
      * The Models API response can be used to determine which models are available for use in the
      * API. More recently released models are listed first.
      */
-    @JvmOverloads
+    fun list(): CompletableFuture<BetaModelListPageAsync> = list(BetaModelListParams.none())
+
+    /** @see [list] */
     fun list(
         params: BetaModelListParams = BetaModelListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaModelListPageAsync>
 
-    /**
-     * List available models.
-     *
-     * The Models API response can be used to determine which models are available for use in the
-     * API. More recently released models are listed first.
-     */
+    /** @see [list] */
+    fun list(
+        params: BetaModelListParams = BetaModelListParams.none()
+    ): CompletableFuture<BetaModelListPageAsync> = list(params, RequestOptions.none())
+
+    /** @see [list] */
     fun list(requestOptions: RequestOptions): CompletableFuture<BetaModelListPageAsync> =
         list(BetaModelListParams.none(), requestOptions)
 
@@ -60,7 +63,13 @@ interface ModelServiceAsync {
          * Returns a raw HTTP response for `get /v1/models/{model_id}?beta=true`, but is otherwise
          * the same as [ModelServiceAsync.retrieve].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun retrieve(
+            params: BetaModelRetrieveParams
+        ): CompletableFuture<HttpResponseFor<BetaModelInfo>> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see [retrieve] */
         @MustBeClosed
         fun retrieve(
             params: BetaModelRetrieveParams,
@@ -71,17 +80,25 @@ interface ModelServiceAsync {
          * Returns a raw HTTP response for `get /v1/models?beta=true`, but is otherwise the same as
          * [ModelServiceAsync.list].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun list(): CompletableFuture<HttpResponseFor<BetaModelListPageAsync>> =
+            list(BetaModelListParams.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             params: BetaModelListParams = BetaModelListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<BetaModelListPageAsync>>
 
-        /**
-         * Returns a raw HTTP response for `get /v1/models?beta=true`, but is otherwise the same as
-         * [ModelServiceAsync.list].
-         */
+        /** @see [list] */
+        @MustBeClosed
+        fun list(
+            params: BetaModelListParams = BetaModelListParams.none()
+        ): CompletableFuture<HttpResponseFor<BetaModelListPageAsync>> =
+            list(params, RequestOptions.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             requestOptions: RequestOptions

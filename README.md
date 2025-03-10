@@ -9,8 +9,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java/0.7.0)
-[![javadoc](https://javadoc.io/badge2/com.anthropic/anthropic-java/0.7.0/javadoc.svg)](https://javadoc.io/doc/com.anthropic/anthropic-java/0.7.0)
+[![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java/0.7.1)
+[![javadoc](https://javadoc.io/badge2/com.anthropic/anthropic-java/0.7.1/javadoc.svg)](https://javadoc.io/doc/com.anthropic/anthropic-java/0.7.1)
 
 <!-- x-release-please-end -->
 
@@ -25,7 +25,7 @@ The REST API documentation can be found on [docs.anthropic.com](https://docs.ant
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java:0.7.0")
+implementation("com.anthropic:anthropic-java:0.7.1")
 ```
 
 ### Maven
@@ -34,7 +34,7 @@ implementation("com.anthropic:anthropic-java:0.7.0")
 <dependency>
     <groupId>com.anthropic</groupId>
     <artifactId>anthropic-java</artifactId>
-    <version>0.7.0</version>
+    <version>0.7.1</version>
 </dependency>
 ```
 
@@ -392,7 +392,7 @@ requires the `anthropic-java-bedrock` library dependency.
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java-bedrock:0.7.0")
+implementation("com.anthropic:anthropic-java-bedrock:0.7.1")
 ```
 
 ### Maven
@@ -401,7 +401,7 @@ implementation("com.anthropic:anthropic-java-bedrock:0.7.0")
 <dependency>
     <groupId>com.anthropic</groupId>
     <artifactId>anthropic-java-bedrock</artifactId>
-    <version>0.7.0</version>
+    <version>0.7.1</version>
 </dependency>
 ```
 
@@ -475,7 +475,7 @@ This support requires the `anthropic-java-vertex` library dependency.
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java-vertex:0.7.0")
+implementation("com.anthropic:anthropic-java-vertex:0.7.1")
 ```
 
 ### Maven
@@ -484,7 +484,7 @@ implementation("com.anthropic:anthropic-java-vertex:0.7.0")
 <dependency>
     <groupId>com.anthropic</groupId>
     <artifactId>anthropic-java-vertex</artifactId>
-    <version>0.7.0</version>
+    <version>0.7.1</version>
 </dependency>
 ```
 
@@ -677,9 +677,25 @@ MessageCreateParams params = MessageCreateParams.builder()
     .build();
 ```
 
-These can be accessed on the built object later using the `_additionalHeaders()`, `_additionalQueryParams()`, and `_additionalBodyProperties()` methods. You can also set undocumented parameters on nested headers, query params, or body classes using the `putAdditionalProperty` method. These properties can be accessed on the built object later using the `_additionalProperties()` method.
+These can be accessed on the built object later using the `_additionalHeaders()`, `_additionalQueryParams()`, and `_additionalBodyProperties()` methods.
 
-To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](anthropic-java-core/src/main/kotlin/com/anthropic/core/JsonValue.kt) object to its setter:
+To set undocumented parameters on _nested_ headers, query params, or body classes, call the `putAdditionalProperty` method on the nested class:
+
+```java
+import com.anthropic.core.JsonValue;
+import com.anthropic.models.CompletionCreateParams;
+import com.anthropic.models.Metadata;
+
+CompletionCreateParams params = CompletionCreateParams.builder()
+    .metadata(Metadata.builder()
+        .putAdditionalProperty("secretProperty", JsonValue.from("42"))
+        .build())
+    .build();
+```
+
+These properties can be accessed on the nested built object later using the `_additionalProperties()` method.
+
+To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](anthropic-java-core/src/main/kotlin/com/anthropic/core/Values.kt) object to its setter:
 
 ```java
 import com.anthropic.core.JsonValue;
@@ -691,6 +707,45 @@ MessageCreateParams params = MessageCreateParams.builder()
     .addUserMessage("Hello, Claude")
     .model(Model.CLAUDE_3_7_SONNET_LATEST)
     .build();
+```
+
+The most straightforward way to create a [`JsonValue`](anthropic-java-core/src/main/kotlin/com/anthropic/core/Values.kt) is using its `from(...)` method:
+
+```java
+import com.anthropic.core.JsonValue;
+import java.util.List;
+import java.util.Map;
+
+// Create primitive JSON values
+JsonValue nullValue = JsonValue.from(null);
+JsonValue booleanValue = JsonValue.from(true);
+JsonValue numberValue = JsonValue.from(42);
+JsonValue stringValue = JsonValue.from("Hello World!");
+
+// Create a JSON array value equivalent to `["Hello", "World"]`
+JsonValue arrayValue = JsonValue.from(List.of(
+  "Hello", "World"
+));
+
+// Create a JSON object value equivalent to `{ "a": 1, "b": 2 }`
+JsonValue objectValue = JsonValue.from(Map.of(
+  "a", 1,
+  "b", 2
+));
+
+// Create an arbitrarily nested JSON equivalent to:
+// {
+//   "a": [1, 2],
+//   "b": [3, 4]
+// }
+JsonValue complexValue = JsonValue.from(Map.of(
+  "a", List.of(
+    1, 2
+  ),
+  "b", List.of(
+    3, 4
+  )
+));
 ```
 
 ### Response properties

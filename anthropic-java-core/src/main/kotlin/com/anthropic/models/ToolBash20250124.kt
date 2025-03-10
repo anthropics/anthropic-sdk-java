@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 @NoAutoDetect
 class ToolBash20250124
@@ -107,7 +108,7 @@ private constructor(
             cacheControl(JsonField.ofNullable(cacheControl))
 
         fun cacheControl(cacheControl: Optional<CacheControlEphemeral>) =
-            cacheControl(cacheControl.orElse(null))
+            cacheControl(cacheControl.getOrNull())
 
         fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl

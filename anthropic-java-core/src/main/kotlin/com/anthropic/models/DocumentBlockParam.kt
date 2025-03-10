@@ -172,7 +172,7 @@ private constructor(
             cacheControl(JsonField.ofNullable(cacheControl))
 
         fun cacheControl(cacheControl: Optional<CacheControlEphemeral>) =
-            cacheControl(cacheControl.orElse(null))
+            cacheControl(cacheControl.getOrNull())
 
         fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
@@ -186,13 +186,13 @@ private constructor(
 
         fun context(context: String?) = context(JsonField.ofNullable(context))
 
-        fun context(context: Optional<String>) = context(context.orElse(null))
+        fun context(context: Optional<String>) = context(context.getOrNull())
 
         fun context(context: JsonField<String>) = apply { this.context = context }
 
         fun title(title: String?) = title(JsonField.ofNullable(title))
 
-        fun title(title: Optional<String>) = title(title.orElse(null))
+        fun title(title: Optional<String>) = title(title.getOrNull())
 
         fun title(title: JsonField<String>) = apply { this.title = title }
 

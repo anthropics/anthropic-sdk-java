@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package com.anthropic.services.blocking
 
 import com.anthropic.core.RequestOptions
@@ -25,7 +23,9 @@ interface ModelService {
      * The Models API response can be used to determine information about a specific model or
      * resolve a model alias to a model ID.
      */
-    @JvmOverloads
+    fun retrieve(params: ModelRetrieveParams): ModelInfo = retrieve(params, RequestOptions.none())
+
+    /** @see [retrieve] */
     fun retrieve(
         params: ModelRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -37,18 +37,19 @@ interface ModelService {
      * The Models API response can be used to determine which models are available for use in the
      * API. More recently released models are listed first.
      */
-    @JvmOverloads
+    fun list(): ModelListPage = list(ModelListParams.none())
+
+    /** @see [list] */
     fun list(
         params: ModelListParams = ModelListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ModelListPage
 
-    /**
-     * List available models.
-     *
-     * The Models API response can be used to determine which models are available for use in the
-     * API. More recently released models are listed first.
-     */
+    /** @see [list] */
+    fun list(params: ModelListParams = ModelListParams.none()): ModelListPage =
+        list(params, RequestOptions.none())
+
+    /** @see [list] */
     fun list(requestOptions: RequestOptions): ModelListPage =
         list(ModelListParams.none(), requestOptions)
 
@@ -59,7 +60,11 @@ interface ModelService {
          * Returns a raw HTTP response for `get /v1/models/{model_id}`, but is otherwise the same as
          * [ModelService.retrieve].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun retrieve(params: ModelRetrieveParams): HttpResponseFor<ModelInfo> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see [retrieve] */
         @MustBeClosed
         fun retrieve(
             params: ModelRetrieveParams,
@@ -70,17 +75,21 @@ interface ModelService {
          * Returns a raw HTTP response for `get /v1/models`, but is otherwise the same as
          * [ModelService.list].
          */
-        @JvmOverloads
+        @MustBeClosed fun list(): HttpResponseFor<ModelListPage> = list(ModelListParams.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             params: ModelListParams = ModelListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<ModelListPage>
 
-        /**
-         * Returns a raw HTTP response for `get /v1/models`, but is otherwise the same as
-         * [ModelService.list].
-         */
+        /** @see [list] */
+        @MustBeClosed
+        fun list(params: ModelListParams = ModelListParams.none()): HttpResponseFor<ModelListPage> =
+            list(params, RequestOptions.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<ModelListPage> =
             list(ModelListParams.none(), requestOptions)

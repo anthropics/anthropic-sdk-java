@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 @NoAutoDetect
 class BetaToolComputerUse20250124
@@ -175,7 +176,7 @@ private constructor(
             cacheControl(JsonField.ofNullable(cacheControl))
 
         fun cacheControl(cacheControl: Optional<BetaCacheControlEphemeral>) =
-            cacheControl(cacheControl.orElse(null))
+            cacheControl(cacheControl.getOrNull())
 
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
@@ -188,9 +189,7 @@ private constructor(
         fun displayNumber(displayNumber: Long) = displayNumber(displayNumber as Long?)
 
         /** The X11 display number (e.g. 0, 1) for the display. */
-        @Suppress("USELESS_CAST") // See https://youtrack.jetbrains.com/issue/KT-74228
-        fun displayNumber(displayNumber: Optional<Long>) =
-            displayNumber(displayNumber.orElse(null) as Long?)
+        fun displayNumber(displayNumber: Optional<Long>) = displayNumber(displayNumber.getOrNull())
 
         /** The X11 display number (e.g. 0, 1) for the display. */
         fun displayNumber(displayNumber: JsonField<Long>) = apply {

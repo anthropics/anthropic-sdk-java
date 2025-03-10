@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 @NoAutoDetect
 class TextBlockParam
@@ -119,7 +120,7 @@ private constructor(
             cacheControl(JsonField.ofNullable(cacheControl))
 
         fun cacheControl(cacheControl: Optional<CacheControlEphemeral>) =
-            cacheControl(cacheControl.orElse(null))
+            cacheControl(cacheControl.getOrNull())
 
         fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
@@ -129,7 +130,7 @@ private constructor(
             citations(JsonField.ofNullable(citations))
 
         fun citations(citations: Optional<List<TextCitationParam>>) =
-            citations(citations.orElse(null))
+            citations(citations.getOrNull())
 
         fun citations(citations: JsonField<List<TextCitationParam>>) = apply {
             this.citations = citations.map { it.toMutableList() }

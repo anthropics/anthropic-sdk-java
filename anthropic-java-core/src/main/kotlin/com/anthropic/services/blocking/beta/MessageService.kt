@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package com.anthropic.services.blocking.beta
 
 import com.anthropic.core.RequestOptions
@@ -32,7 +30,9 @@ interface MessageService {
      *
      * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
      */
-    @JvmOverloads
+    fun create(params: BetaMessageCreateParams): BetaMessage = create(params, RequestOptions.none())
+
+    /** @see [create] */
     fun create(
         params: BetaMessageCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -46,7 +46,12 @@ interface MessageService {
      *
      * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
      */
-    @JvmOverloads
+    @MustBeClosed
+    fun createStreaming(
+        params: BetaMessageCreateParams
+    ): StreamResponse<BetaRawMessageStreamEvent> = createStreaming(params, RequestOptions.none())
+
+    /** @see [createStreaming] */
     @MustBeClosed
     fun createStreaming(
         params: BetaMessageCreateParams,
@@ -62,7 +67,10 @@ interface MessageService {
      * Learn more about token counting in our
      * [user guide](/en/docs/build-with-claude/token-counting)
      */
-    @JvmOverloads
+    fun countTokens(params: BetaMessageCountTokensParams): BetaMessageTokensCount =
+        countTokens(params, RequestOptions.none())
+
+    /** @see [countTokens] */
     fun countTokens(
         params: BetaMessageCountTokensParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -77,7 +85,11 @@ interface MessageService {
          * Returns a raw HTTP response for `post /v1/messages?beta=true`, but is otherwise the same
          * as [MessageService.create].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun create(params: BetaMessageCreateParams): HttpResponseFor<BetaMessage> =
+            create(params, RequestOptions.none())
+
+        /** @see [create] */
         @MustBeClosed
         fun create(
             params: BetaMessageCreateParams,
@@ -88,7 +100,13 @@ interface MessageService {
          * Returns a raw HTTP response for `post /v1/messages?beta=true`, but is otherwise the same
          * as [MessageService.createStreaming].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun createStreaming(
+            params: BetaMessageCreateParams
+        ): HttpResponseFor<StreamResponse<BetaRawMessageStreamEvent>> =
+            createStreaming(params, RequestOptions.none())
+
+        /** @see [createStreaming] */
         @MustBeClosed
         fun createStreaming(
             params: BetaMessageCreateParams,
@@ -99,7 +117,12 @@ interface MessageService {
          * Returns a raw HTTP response for `post /v1/messages/count_tokens?beta=true`, but is
          * otherwise the same as [MessageService.countTokens].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun countTokens(
+            params: BetaMessageCountTokensParams
+        ): HttpResponseFor<BetaMessageTokensCount> = countTokens(params, RequestOptions.none())
+
+        /** @see [countTokens] */
         @MustBeClosed
         fun countTokens(
             params: BetaMessageCountTokensParams,

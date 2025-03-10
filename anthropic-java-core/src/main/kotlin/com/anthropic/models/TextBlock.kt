@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 @NoAutoDetect
 class TextBlock
@@ -129,7 +130,7 @@ private constructor(
          * PDF results in `page_location`, plain text results in `char_location`, and content
          * document results in `content_block_location`.
          */
-        fun citations(citations: Optional<List<TextCitation>>) = citations(citations.orElse(null))
+        fun citations(citations: Optional<List<TextCitation>>) = citations(citations.getOrNull())
 
         /**
          * Citations supporting the text block.

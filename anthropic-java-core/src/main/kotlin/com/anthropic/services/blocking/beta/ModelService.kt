@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package com.anthropic.services.blocking.beta
 
 import com.anthropic.core.RequestOptions
@@ -25,7 +23,10 @@ interface ModelService {
      * The Models API response can be used to determine information about a specific model or
      * resolve a model alias to a model ID.
      */
-    @JvmOverloads
+    fun retrieve(params: BetaModelRetrieveParams): BetaModelInfo =
+        retrieve(params, RequestOptions.none())
+
+    /** @see [retrieve] */
     fun retrieve(
         params: BetaModelRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -37,18 +38,19 @@ interface ModelService {
      * The Models API response can be used to determine which models are available for use in the
      * API. More recently released models are listed first.
      */
-    @JvmOverloads
+    fun list(): BetaModelListPage = list(BetaModelListParams.none())
+
+    /** @see [list] */
     fun list(
         params: BetaModelListParams = BetaModelListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaModelListPage
 
-    /**
-     * List available models.
-     *
-     * The Models API response can be used to determine which models are available for use in the
-     * API. More recently released models are listed first.
-     */
+    /** @see [list] */
+    fun list(params: BetaModelListParams = BetaModelListParams.none()): BetaModelListPage =
+        list(params, RequestOptions.none())
+
+    /** @see [list] */
     fun list(requestOptions: RequestOptions): BetaModelListPage =
         list(BetaModelListParams.none(), requestOptions)
 
@@ -59,7 +61,11 @@ interface ModelService {
          * Returns a raw HTTP response for `get /v1/models/{model_id}?beta=true`, but is otherwise
          * the same as [ModelService.retrieve].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun retrieve(params: BetaModelRetrieveParams): HttpResponseFor<BetaModelInfo> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see [retrieve] */
         @MustBeClosed
         fun retrieve(
             params: BetaModelRetrieveParams,
@@ -70,17 +76,23 @@ interface ModelService {
          * Returns a raw HTTP response for `get /v1/models?beta=true`, but is otherwise the same as
          * [ModelService.list].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun list(): HttpResponseFor<BetaModelListPage> = list(BetaModelListParams.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             params: BetaModelListParams = BetaModelListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<BetaModelListPage>
 
-        /**
-         * Returns a raw HTTP response for `get /v1/models?beta=true`, but is otherwise the same as
-         * [ModelService.list].
-         */
+        /** @see [list] */
+        @MustBeClosed
+        fun list(
+            params: BetaModelListParams = BetaModelListParams.none()
+        ): HttpResponseFor<BetaModelListPage> = list(params, RequestOptions.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<BetaModelListPage> =
             list(BetaModelListParams.none(), requestOptions)

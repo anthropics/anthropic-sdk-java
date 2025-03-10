@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 @NoAutoDetect
 class BetaTextBlock
@@ -131,7 +132,7 @@ private constructor(
          * document results in `content_block_location`.
          */
         fun citations(citations: Optional<List<BetaTextCitation>>) =
-            citations(citations.orElse(null))
+            citations(citations.getOrNull())
 
         /**
          * Citations supporting the text block.

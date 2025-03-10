@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 @NoAutoDetect
 class Completion
@@ -215,7 +216,7 @@ private constructor(
          *   `stop_sequences` parameter, or a stop sequence built into the model
          * - `"max_tokens"`: we exceeded `max_tokens_to_sample` or the model's maximum
          */
-        fun stopReason(stopReason: Optional<String>) = stopReason(stopReason.orElse(null))
+        fun stopReason(stopReason: Optional<String>) = stopReason(stopReason.getOrNull())
 
         /**
          * The reason that we stopped.
