@@ -4,7 +4,7 @@ package com.anthropic.services.async.beta
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
-import com.anthropic.models.BetaModelRetrieveParams
+import com.anthropic.models.beta.models.ModelRetrieveParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -21,9 +21,7 @@ class ModelServiceAsyncTest {
         val modelServiceAsync = client.beta().models()
 
         val betaModelInfoFuture =
-            modelServiceAsync.retrieve(
-                BetaModelRetrieveParams.builder().modelId("model_id").build()
-            )
+            modelServiceAsync.retrieve(ModelRetrieveParams.builder().modelId("model_id").build())
 
         val betaModelInfo = betaModelInfoFuture.get()
         betaModelInfo.validate()

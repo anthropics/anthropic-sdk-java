@@ -18,16 +18,16 @@ import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
 import com.anthropic.core.prepare
 import com.anthropic.errors.AnthropicError
-import com.anthropic.models.DeletedMessageBatch
-import com.anthropic.models.MessageBatch
-import com.anthropic.models.MessageBatchCancelParams
-import com.anthropic.models.MessageBatchCreateParams
-import com.anthropic.models.MessageBatchDeleteParams
-import com.anthropic.models.MessageBatchIndividualResponse
-import com.anthropic.models.MessageBatchListPage
-import com.anthropic.models.MessageBatchListParams
-import com.anthropic.models.MessageBatchResultsParams
-import com.anthropic.models.MessageBatchRetrieveParams
+import com.anthropic.models.messages.batches.BatchCancelParams
+import com.anthropic.models.messages.batches.BatchCreateParams
+import com.anthropic.models.messages.batches.BatchDeleteParams
+import com.anthropic.models.messages.batches.BatchListPage
+import com.anthropic.models.messages.batches.BatchListParams
+import com.anthropic.models.messages.batches.BatchResultsParams
+import com.anthropic.models.messages.batches.BatchRetrieveParams
+import com.anthropic.models.messages.batches.DeletedMessageBatch
+import com.anthropic.models.messages.batches.MessageBatch
+import com.anthropic.models.messages.batches.MessageBatchIndividualResponse
 
 class BatchServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     BatchService {
@@ -38,43 +38,34 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
 
     override fun withRawResponse(): BatchService.WithRawResponse = withRawResponse
 
-    override fun create(
-        params: MessageBatchCreateParams,
-        requestOptions: RequestOptions,
-    ): MessageBatch =
+    override fun create(params: BatchCreateParams, requestOptions: RequestOptions): MessageBatch =
         // post /v1/messages/batches
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
-        params: MessageBatchRetrieveParams,
+        params: BatchRetrieveParams,
         requestOptions: RequestOptions,
     ): MessageBatch =
         // get /v1/messages/batches/{message_batch_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
-    override fun list(
-        params: MessageBatchListParams,
-        requestOptions: RequestOptions,
-    ): MessageBatchListPage =
+    override fun list(params: BatchListParams, requestOptions: RequestOptions): BatchListPage =
         // get /v1/messages/batches
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
-        params: MessageBatchDeleteParams,
+        params: BatchDeleteParams,
         requestOptions: RequestOptions,
     ): DeletedMessageBatch =
         // delete /v1/messages/batches/{message_batch_id}
         withRawResponse().delete(params, requestOptions).parse()
 
-    override fun cancel(
-        params: MessageBatchCancelParams,
-        requestOptions: RequestOptions,
-    ): MessageBatch =
+    override fun cancel(params: BatchCancelParams, requestOptions: RequestOptions): MessageBatch =
         // post /v1/messages/batches/{message_batch_id}/cancel
         withRawResponse().cancel(params, requestOptions).parse()
 
     override fun resultsStreaming(
-        params: MessageBatchResultsParams,
+        params: BatchResultsParams,
         requestOptions: RequestOptions,
     ): StreamResponse<MessageBatchIndividualResponse> =
         // get /v1/messages/batches/{message_batch_id}/results
@@ -89,7 +80,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             jsonHandler<MessageBatch>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
         override fun create(
-            params: MessageBatchCreateParams,
+            params: BatchCreateParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<MessageBatch> {
             val request =
@@ -116,7 +107,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             jsonHandler<MessageBatch>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
         override fun retrieve(
-            params: MessageBatchRetrieveParams,
+            params: BatchRetrieveParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<MessageBatch> {
             val request =
@@ -138,14 +129,14 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             }
         }
 
-        private val listHandler: Handler<MessageBatchListPage.Response> =
-            jsonHandler<MessageBatchListPage.Response>(clientOptions.jsonMapper)
+        private val listHandler: Handler<BatchListPage.Response> =
+            jsonHandler<BatchListPage.Response>(clientOptions.jsonMapper)
                 .withErrorHandler(errorHandler)
 
         override fun list(
-            params: MessageBatchListParams,
+            params: BatchListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<MessageBatchListPage> {
+        ): HttpResponseFor<BatchListPage> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -162,7 +153,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                             it.validate()
                         }
                     }
-                    .let { MessageBatchListPage.of(BatchServiceImpl(clientOptions), params, it) }
+                    .let { BatchListPage.of(BatchServiceImpl(clientOptions), params, it) }
             }
         }
 
@@ -171,7 +162,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                 .withErrorHandler(errorHandler)
 
         override fun delete(
-            params: MessageBatchDeleteParams,
+            params: BatchDeleteParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<DeletedMessageBatch> {
             val request =
@@ -198,7 +189,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             jsonHandler<MessageBatch>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
         override fun cancel(
-            params: MessageBatchCancelParams,
+            params: BatchCancelParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<MessageBatch> {
             val request =
@@ -227,7 +218,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                 .withErrorHandler(errorHandler)
 
         override fun resultsStreaming(
-            params: MessageBatchResultsParams,
+            params: BatchResultsParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<StreamResponse<MessageBatchIndividualResponse>> {
             val request =

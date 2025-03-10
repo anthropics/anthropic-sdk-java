@@ -5,11 +5,11 @@ package com.anthropic.services.blocking.beta
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
-import com.anthropic.models.BetaMessage
-import com.anthropic.models.BetaMessageCountTokensParams
-import com.anthropic.models.BetaMessageCreateParams
-import com.anthropic.models.BetaMessageTokensCount
-import com.anthropic.models.BetaRawMessageStreamEvent
+import com.anthropic.models.beta.messages.BetaMessage
+import com.anthropic.models.beta.messages.BetaMessageTokensCount
+import com.anthropic.models.beta.messages.BetaRawMessageStreamEvent
+import com.anthropic.models.beta.messages.MessageCountTokensParams
+import com.anthropic.models.beta.messages.MessageCreateParams
 import com.anthropic.services.blocking.beta.messages.BatchService
 import com.google.errorprone.annotations.MustBeClosed
 
@@ -30,11 +30,11 @@ interface MessageService {
      *
      * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
      */
-    fun create(params: BetaMessageCreateParams): BetaMessage = create(params, RequestOptions.none())
+    fun create(params: MessageCreateParams): BetaMessage = create(params, RequestOptions.none())
 
     /** @see [create] */
     fun create(
-        params: BetaMessageCreateParams,
+        params: MessageCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaMessage
 
@@ -47,14 +47,13 @@ interface MessageService {
      * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
      */
     @MustBeClosed
-    fun createStreaming(
-        params: BetaMessageCreateParams
-    ): StreamResponse<BetaRawMessageStreamEvent> = createStreaming(params, RequestOptions.none())
+    fun createStreaming(params: MessageCreateParams): StreamResponse<BetaRawMessageStreamEvent> =
+        createStreaming(params, RequestOptions.none())
 
     /** @see [createStreaming] */
     @MustBeClosed
     fun createStreaming(
-        params: BetaMessageCreateParams,
+        params: MessageCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): StreamResponse<BetaRawMessageStreamEvent>
 
@@ -67,12 +66,12 @@ interface MessageService {
      * Learn more about token counting in our
      * [user guide](/en/docs/build-with-claude/token-counting)
      */
-    fun countTokens(params: BetaMessageCountTokensParams): BetaMessageTokensCount =
+    fun countTokens(params: MessageCountTokensParams): BetaMessageTokensCount =
         countTokens(params, RequestOptions.none())
 
     /** @see [countTokens] */
     fun countTokens(
-        params: BetaMessageCountTokensParams,
+        params: MessageCountTokensParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaMessageTokensCount
 
@@ -86,13 +85,13 @@ interface MessageService {
          * as [MessageService.create].
          */
         @MustBeClosed
-        fun create(params: BetaMessageCreateParams): HttpResponseFor<BetaMessage> =
+        fun create(params: MessageCreateParams): HttpResponseFor<BetaMessage> =
             create(params, RequestOptions.none())
 
         /** @see [create] */
         @MustBeClosed
         fun create(
-            params: BetaMessageCreateParams,
+            params: MessageCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<BetaMessage>
 
@@ -102,14 +101,14 @@ interface MessageService {
          */
         @MustBeClosed
         fun createStreaming(
-            params: BetaMessageCreateParams
+            params: MessageCreateParams
         ): HttpResponseFor<StreamResponse<BetaRawMessageStreamEvent>> =
             createStreaming(params, RequestOptions.none())
 
         /** @see [createStreaming] */
         @MustBeClosed
         fun createStreaming(
-            params: BetaMessageCreateParams,
+            params: MessageCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<StreamResponse<BetaRawMessageStreamEvent>>
 
@@ -118,14 +117,13 @@ interface MessageService {
          * otherwise the same as [MessageService.countTokens].
          */
         @MustBeClosed
-        fun countTokens(
-            params: BetaMessageCountTokensParams
-        ): HttpResponseFor<BetaMessageTokensCount> = countTokens(params, RequestOptions.none())
+        fun countTokens(params: MessageCountTokensParams): HttpResponseFor<BetaMessageTokensCount> =
+            countTokens(params, RequestOptions.none())
 
         /** @see [countTokens] */
         @MustBeClosed
         fun countTokens(
-            params: BetaMessageCountTokensParams,
+            params: MessageCountTokensParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<BetaMessageTokensCount>
     }
