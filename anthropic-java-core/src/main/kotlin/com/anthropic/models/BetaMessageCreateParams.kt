@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * Send a structured list of input messages with text and/or image content, and the model will
@@ -3120,7 +3121,7 @@ private constructor(
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
 
         /** Optional header to specify the beta version(s) you want to use. */
-        fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.orElse(null))
+        fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.getOrNull())
 
         /** Optional header to specify the beta version(s) you want to use. */
         fun addBeta(beta: AnthropicBeta) = apply {

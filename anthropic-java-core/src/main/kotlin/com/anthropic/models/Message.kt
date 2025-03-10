@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 @NoAutoDetect
 class Message
@@ -644,7 +645,7 @@ private constructor(
          * In non-streaming mode this value is always non-null. In streaming mode, it is null in the
          * `message_start` event and non-null otherwise.
          */
-        fun stopReason(stopReason: Optional<StopReason>) = stopReason(stopReason.orElse(null))
+        fun stopReason(stopReason: Optional<StopReason>) = stopReason(stopReason.getOrNull())
 
         /**
          * The reason that we stopped.
@@ -672,7 +673,7 @@ private constructor(
          *
          * This value will be a non-null string if one of your custom stop sequences was generated.
          */
-        fun stopSequence(stopSequence: Optional<String>) = stopSequence(stopSequence.orElse(null))
+        fun stopSequence(stopSequence: Optional<String>) = stopSequence(stopSequence.getOrNull())
 
         /**
          * Which custom stop sequence was generated, if any.

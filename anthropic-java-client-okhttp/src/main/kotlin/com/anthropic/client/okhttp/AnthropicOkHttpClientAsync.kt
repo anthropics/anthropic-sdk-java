@@ -16,6 +16,7 @@ import java.time.Clock
 import java.time.Duration
 import java.util.Optional
 import java.util.concurrent.Executor
+import kotlin.jvm.optionals.getOrNull
 
 class AnthropicOkHttpClientAsync private constructor() {
 
@@ -154,13 +155,13 @@ class AnthropicOkHttpClientAsync private constructor() {
 
         fun apiKey(apiKey: String?) = apply { ensureDefaultBackendBuilder("apiKey").apiKey(apiKey) }
 
-        fun apiKey(apiKey: Optional<String>) = apiKey(apiKey.orElse(null))
+        fun apiKey(apiKey: Optional<String>) = apiKey(apiKey.getOrNull())
 
         fun authToken(authToken: String?) = apply {
             ensureDefaultBackendBuilder("authToken").authToken(authToken)
         }
 
-        fun authToken(authToken: Optional<String>) = authToken(authToken.orElse(null))
+        fun authToken(authToken: Optional<String>) = authToken(authToken.getOrNull())
 
         fun backend(backend: Backend) = apply {
             check(defaultBackendBuilder == null) {

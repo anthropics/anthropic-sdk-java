@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 @NoAutoDetect
 class MessageBatch
@@ -295,7 +296,7 @@ private constructor(
          * RFC 3339 datetime string representing the time at which the Message Batch was archived
          * and its results became unavailable.
          */
-        fun archivedAt(archivedAt: Optional<OffsetDateTime>) = archivedAt(archivedAt.orElse(null))
+        fun archivedAt(archivedAt: Optional<OffsetDateTime>) = archivedAt(archivedAt.getOrNull())
 
         /**
          * RFC 3339 datetime string representing the time at which the Message Batch was archived
@@ -317,7 +318,7 @@ private constructor(
          * the Message Batch. Specified only if cancellation was initiated.
          */
         fun cancelInitiatedAt(cancelInitiatedAt: Optional<OffsetDateTime>) =
-            cancelInitiatedAt(cancelInitiatedAt.orElse(null))
+            cancelInitiatedAt(cancelInitiatedAt.getOrNull())
 
         /**
          * RFC 3339 datetime string representing the time at which cancellation was initiated for
@@ -353,7 +354,7 @@ private constructor(
          * Processing ends when every request in a Message Batch has either succeeded, errored,
          * canceled, or expired.
          */
-        fun endedAt(endedAt: Optional<OffsetDateTime>) = endedAt(endedAt.orElse(null))
+        fun endedAt(endedAt: Optional<OffsetDateTime>) = endedAt(endedAt.getOrNull())
 
         /**
          * RFC 3339 datetime string representing the time at which processing for the Message Batch
@@ -422,7 +423,7 @@ private constructor(
          * Results in the file are not guaranteed to be in the same order as requests. Use the
          * `custom_id` field to match results to requests.
          */
-        fun resultsUrl(resultsUrl: Optional<String>) = resultsUrl(resultsUrl.orElse(null))
+        fun resultsUrl(resultsUrl: Optional<String>) = resultsUrl(resultsUrl.getOrNull())
 
         /**
          * URL to a `.jsonl` file containing the results of the Message Batch requests. Specified
