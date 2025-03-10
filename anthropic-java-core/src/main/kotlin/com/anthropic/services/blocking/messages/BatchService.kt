@@ -5,16 +5,16 @@ package com.anthropic.services.blocking.messages
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
-import com.anthropic.models.DeletedMessageBatch
-import com.anthropic.models.MessageBatch
-import com.anthropic.models.MessageBatchCancelParams
-import com.anthropic.models.MessageBatchCreateParams
-import com.anthropic.models.MessageBatchDeleteParams
-import com.anthropic.models.MessageBatchIndividualResponse
-import com.anthropic.models.MessageBatchListPage
-import com.anthropic.models.MessageBatchListParams
-import com.anthropic.models.MessageBatchResultsParams
-import com.anthropic.models.MessageBatchRetrieveParams
+import com.anthropic.models.messages.batches.BatchCancelParams
+import com.anthropic.models.messages.batches.BatchCreateParams
+import com.anthropic.models.messages.batches.BatchDeleteParams
+import com.anthropic.models.messages.batches.BatchListPage
+import com.anthropic.models.messages.batches.BatchListParams
+import com.anthropic.models.messages.batches.BatchResultsParams
+import com.anthropic.models.messages.batches.BatchRetrieveParams
+import com.anthropic.models.messages.batches.DeletedMessageBatch
+import com.anthropic.models.messages.batches.MessageBatch
+import com.anthropic.models.messages.batches.MessageBatchIndividualResponse
 import com.google.errorprone.annotations.MustBeClosed
 
 interface BatchService {
@@ -34,12 +34,11 @@ interface BatchService {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    fun create(params: MessageBatchCreateParams): MessageBatch =
-        create(params, RequestOptions.none())
+    fun create(params: BatchCreateParams): MessageBatch = create(params, RequestOptions.none())
 
     /** @see [create] */
     fun create(
-        params: MessageBatchCreateParams,
+        params: BatchCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): MessageBatch
 
@@ -50,12 +49,12 @@ interface BatchService {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    fun retrieve(params: MessageBatchRetrieveParams): MessageBatch =
+    fun retrieve(params: BatchRetrieveParams): MessageBatch =
         retrieve(params, RequestOptions.none())
 
     /** @see [retrieve] */
     fun retrieve(
-        params: MessageBatchRetrieveParams,
+        params: BatchRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): MessageBatch
 
@@ -66,21 +65,21 @@ interface BatchService {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    fun list(): MessageBatchListPage = list(MessageBatchListParams.none())
+    fun list(): BatchListPage = list(BatchListParams.none())
 
     /** @see [list] */
     fun list(
-        params: MessageBatchListParams = MessageBatchListParams.none(),
+        params: BatchListParams = BatchListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): MessageBatchListPage
+    ): BatchListPage
 
     /** @see [list] */
-    fun list(params: MessageBatchListParams = MessageBatchListParams.none()): MessageBatchListPage =
+    fun list(params: BatchListParams = BatchListParams.none()): BatchListPage =
         list(params, RequestOptions.none())
 
     /** @see [list] */
-    fun list(requestOptions: RequestOptions): MessageBatchListPage =
-        list(MessageBatchListParams.none(), requestOptions)
+    fun list(requestOptions: RequestOptions): BatchListPage =
+        list(BatchListParams.none(), requestOptions)
 
     /**
      * Delete a Message Batch.
@@ -91,12 +90,12 @@ interface BatchService {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    fun delete(params: MessageBatchDeleteParams): DeletedMessageBatch =
+    fun delete(params: BatchDeleteParams): DeletedMessageBatch =
         delete(params, RequestOptions.none())
 
     /** @see [delete] */
     fun delete(
-        params: MessageBatchDeleteParams,
+        params: BatchDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): DeletedMessageBatch
 
@@ -112,12 +111,11 @@ interface BatchService {
      * Learn more about the Message Batches API in our
      * [user guide](/en/docs/build-with-claude/batch-processing)
      */
-    fun cancel(params: MessageBatchCancelParams): MessageBatch =
-        cancel(params, RequestOptions.none())
+    fun cancel(params: BatchCancelParams): MessageBatch = cancel(params, RequestOptions.none())
 
     /** @see [cancel] */
     fun cancel(
-        params: MessageBatchCancelParams,
+        params: BatchCancelParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): MessageBatch
 
@@ -133,14 +131,14 @@ interface BatchService {
      */
     @MustBeClosed
     fun resultsStreaming(
-        params: MessageBatchResultsParams
+        params: BatchResultsParams
     ): StreamResponse<MessageBatchIndividualResponse> =
         resultsStreaming(params, RequestOptions.none())
 
     /** @see [resultsStreaming] */
     @MustBeClosed
     fun resultsStreaming(
-        params: MessageBatchResultsParams,
+        params: BatchResultsParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): StreamResponse<MessageBatchIndividualResponse>
 
@@ -152,13 +150,13 @@ interface BatchService {
          * [BatchService.create].
          */
         @MustBeClosed
-        fun create(params: MessageBatchCreateParams): HttpResponseFor<MessageBatch> =
+        fun create(params: BatchCreateParams): HttpResponseFor<MessageBatch> =
             create(params, RequestOptions.none())
 
         /** @see [create] */
         @MustBeClosed
         fun create(
-            params: MessageBatchCreateParams,
+            params: BatchCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<MessageBatch>
 
@@ -167,13 +165,13 @@ interface BatchService {
          * otherwise the same as [BatchService.retrieve].
          */
         @MustBeClosed
-        fun retrieve(params: MessageBatchRetrieveParams): HttpResponseFor<MessageBatch> =
+        fun retrieve(params: BatchRetrieveParams): HttpResponseFor<MessageBatch> =
             retrieve(params, RequestOptions.none())
 
         /** @see [retrieve] */
         @MustBeClosed
         fun retrieve(
-            params: MessageBatchRetrieveParams,
+            params: BatchRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<MessageBatch>
 
@@ -181,39 +179,37 @@ interface BatchService {
          * Returns a raw HTTP response for `get /v1/messages/batches`, but is otherwise the same as
          * [BatchService.list].
          */
-        @MustBeClosed
-        fun list(): HttpResponseFor<MessageBatchListPage> = list(MessageBatchListParams.none())
+        @MustBeClosed fun list(): HttpResponseFor<BatchListPage> = list(BatchListParams.none())
 
         /** @see [list] */
         @MustBeClosed
         fun list(
-            params: MessageBatchListParams = MessageBatchListParams.none(),
+            params: BatchListParams = BatchListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<MessageBatchListPage>
+        ): HttpResponseFor<BatchListPage>
 
         /** @see [list] */
         @MustBeClosed
-        fun list(
-            params: MessageBatchListParams = MessageBatchListParams.none()
-        ): HttpResponseFor<MessageBatchListPage> = list(params, RequestOptions.none())
+        fun list(params: BatchListParams = BatchListParams.none()): HttpResponseFor<BatchListPage> =
+            list(params, RequestOptions.none())
 
         /** @see [list] */
         @MustBeClosed
-        fun list(requestOptions: RequestOptions): HttpResponseFor<MessageBatchListPage> =
-            list(MessageBatchListParams.none(), requestOptions)
+        fun list(requestOptions: RequestOptions): HttpResponseFor<BatchListPage> =
+            list(BatchListParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `delete /v1/messages/batches/{message_batch_id}`, but is
          * otherwise the same as [BatchService.delete].
          */
         @MustBeClosed
-        fun delete(params: MessageBatchDeleteParams): HttpResponseFor<DeletedMessageBatch> =
+        fun delete(params: BatchDeleteParams): HttpResponseFor<DeletedMessageBatch> =
             delete(params, RequestOptions.none())
 
         /** @see [delete] */
         @MustBeClosed
         fun delete(
-            params: MessageBatchDeleteParams,
+            params: BatchDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<DeletedMessageBatch>
 
@@ -222,13 +218,13 @@ interface BatchService {
          * but is otherwise the same as [BatchService.cancel].
          */
         @MustBeClosed
-        fun cancel(params: MessageBatchCancelParams): HttpResponseFor<MessageBatch> =
+        fun cancel(params: BatchCancelParams): HttpResponseFor<MessageBatch> =
             cancel(params, RequestOptions.none())
 
         /** @see [cancel] */
         @MustBeClosed
         fun cancel(
-            params: MessageBatchCancelParams,
+            params: BatchCancelParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<MessageBatch>
 
@@ -238,14 +234,14 @@ interface BatchService {
          */
         @MustBeClosed
         fun resultsStreaming(
-            params: MessageBatchResultsParams
+            params: BatchResultsParams
         ): HttpResponseFor<StreamResponse<MessageBatchIndividualResponse>> =
             resultsStreaming(params, RequestOptions.none())
 
         /** @see [resultsStreaming] */
         @MustBeClosed
         fun resultsStreaming(
-            params: MessageBatchResultsParams,
+            params: BatchResultsParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<StreamResponse<MessageBatchIndividualResponse>>
     }

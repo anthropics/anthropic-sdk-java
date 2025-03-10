@@ -42,9 +42,9 @@ This library requires Java 8 or later.
 ```java
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
-import com.anthropic.models.Message;
-import com.anthropic.models.MessageCreateParams;
-import com.anthropic.models.Model;
+import com.anthropic.models.messages.Message;
+import com.anthropic.models.messages.MessageCreateParams;
+import com.anthropic.models.messages.Model;
 
 // Configures using the `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` environment variables
 AnthropicClient client = AnthropicOkHttpClient.fromEnv();
@@ -125,9 +125,9 @@ The default client is synchronous. To switch to asynchronous execution, call the
 ```java
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
-import com.anthropic.models.Message;
-import com.anthropic.models.MessageCreateParams;
-import com.anthropic.models.Model;
+import com.anthropic.models.messages.Message;
+import com.anthropic.models.messages.MessageCreateParams;
+import com.anthropic.models.messages.Model;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` environment variables
@@ -146,9 +146,9 @@ Or create an asynchronous client from the beginning:
 ```java
 import com.anthropic.client.AnthropicClientAsync;
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync;
-import com.anthropic.models.Message;
-import com.anthropic.models.MessageCreateParams;
-import com.anthropic.models.Model;
+import com.anthropic.models.messages.Message;
+import com.anthropic.models.messages.MessageCreateParams;
+import com.anthropic.models.messages.Model;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` environment variables
@@ -174,7 +174,7 @@ These streaming methods return [`StreamResponse`](anthropic-java-core/src/main/k
 
 ```java
 import com.anthropic.core.http.StreamResponse;
-import com.anthropic.models.RawMessageStreamEvent;
+import com.anthropic.models.messages.RawMessageStreamEvent;
 
 try (StreamResponse<RawMessageStreamEvent> streamResponse = client.messages().createStreaming(params)) {
     streamResponse.stream().forEach(chunk -> {
@@ -188,7 +188,7 @@ Or [`AsyncStreamResponse`](anthropic-java-core/src/main/kotlin/com/anthropic/cor
 
 ```java
 import com.anthropic.core.http.AsyncStreamResponse;
-import com.anthropic.models.RawMessageStreamEvent;
+import com.anthropic.models.messages.RawMessageStreamEvent;
 import java.util.Optional;
 
 client.async().messages().createStreaming(params).subscribe(chunk -> {
@@ -265,9 +265,9 @@ To access this data, prefix any HTTP method call on a client or service with `wi
 ```java
 import com.anthropic.core.http.Headers;
 import com.anthropic.core.http.HttpResponseFor;
-import com.anthropic.models.Message;
-import com.anthropic.models.MessageCreateParams;
-import com.anthropic.models.Model;
+import com.anthropic.models.messages.Message;
+import com.anthropic.models.messages.MessageCreateParams;
+import com.anthropic.models.messages.Model;
 
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
@@ -283,7 +283,7 @@ Headers headers = message.headers();
 You can still deserialize the response into an instance of a Java class if needed:
 
 ```java
-import com.anthropic.models.Message;
+import com.anthropic.models.messages.Message;
 
 Message parsedMessage = message.parse();
 ```
@@ -322,11 +322,11 @@ To iterate through all results across all pages, you can use `autoPager`, which 
 ### Synchronous
 
 ```java
-import com.anthropic.models.BetaMessageBatch;
-import com.anthropic.models.BetaMessageBatchListPage;
+import com.anthropic.models.beta.messages.batches.BatchListPage;
+import com.anthropic.models.beta.messages.batches.BetaMessageBatch;
 
 // As an Iterable:
-BetaMessageBatchListPage page = client.beta().messages().batches().list(params);
+BatchListPage page = client.beta().messages().batches().list(params);
 for (BetaMessageBatch batch : page.autoPager()) {
     System.out.println(batch);
 };
@@ -350,10 +350,10 @@ asyncClient.beta().messages().batches().list(params).autoPager()
 If none of the above helpers meet your needs, you can also manually request pages one-by-one. A page of results has a `data()` method to fetch the list of objects, as well as top-level `response` and other methods to fetch top-level data about the page. It also has methods `hasNextPage`, `getNextPage`, and `getNextPageParams` methods to help with pagination.
 
 ```java
-import com.anthropic.models.BetaMessageBatch;
-import com.anthropic.models.BetaMessageBatchListPage;
+import com.anthropic.models.beta.messages.batches.BatchListPage;
+import com.anthropic.models.beta.messages.batches.BetaMessageBatch;
 
-BetaMessageBatchListPage page = client.beta().messages().batches().list(params);
+BatchListPage page = client.beta().messages().batches().list(params);
 while (page != null) {
     for (BetaMessageBatch batch : page.data()) {
         System.out.println(batch);
@@ -414,9 +414,9 @@ Requests time out after 10 minutes by default.
 To set a custom timeout, configure the method call using the `timeout` method:
 
 ```java
-import com.anthropic.models.Message;
-import com.anthropic.models.MessageCreateParams;
-import com.anthropic.models.Model;
+import com.anthropic.models.messages.Message;
+import com.anthropic.models.messages.MessageCreateParams;
+import com.anthropic.models.messages.Model;
 
 Message message = client.messages().create(
   params, RequestOptions.builder().timeout(Duration.ofSeconds(30)).build()
@@ -466,7 +466,7 @@ To set undocumented parameters, call the `putAdditionalHeader`, `putAdditionalQu
 
 ```java
 import com.anthropic.core.JsonValue;
-import com.anthropic.models.MessageCreateParams;
+import com.anthropic.models.messages.MessageCreateParams;
 
 MessageCreateParams params = MessageCreateParams.builder()
     .putAdditionalHeader("Secret-Header", "42")
@@ -481,8 +481,8 @@ To set undocumented parameters on _nested_ headers, query params, or body classe
 
 ```java
 import com.anthropic.core.JsonValue;
-import com.anthropic.models.CompletionCreateParams;
-import com.anthropic.models.Metadata;
+import com.anthropic.models.completions.CompletionCreateParams;
+import com.anthropic.models.messages.Metadata;
 
 CompletionCreateParams params = CompletionCreateParams.builder()
     .metadata(Metadata.builder()
@@ -497,8 +497,8 @@ To set a documented parameter or property to an undocumented or not yet supporte
 
 ```java
 import com.anthropic.core.JsonValue;
-import com.anthropic.models.MessageCreateParams;
-import com.anthropic.models.Model;
+import com.anthropic.models.messages.MessageCreateParams;
+import com.anthropic.models.messages.Model;
 
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(JsonValue.from(3.14))
@@ -609,7 +609,7 @@ By default, the SDK will not throw an exception in this case. It will throw [`An
 If you would prefer to check that the response is completely well-typed upfront, then either call `validate()`:
 
 ```java
-import com.anthropic.models.Message;
+import com.anthropic.models.messages.Message;
 
 Message message = client.messages().create(params).validate();
 ```
@@ -617,9 +617,9 @@ Message message = client.messages().create(params).validate();
 Or configure the method call to validate the response using the `responseValidation` method:
 
 ```java
-import com.anthropic.models.Message;
-import com.anthropic.models.MessageCreateParams;
-import com.anthropic.models.Model;
+import com.anthropic.models.messages.Message;
+import com.anthropic.models.messages.MessageCreateParams;
+import com.anthropic.models.messages.Model;
 
 Message message = client.messages().create(
   params, RequestOptions.builder().responseValidation(true).build()

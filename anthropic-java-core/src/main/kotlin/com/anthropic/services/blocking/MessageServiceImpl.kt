@@ -20,11 +20,11 @@ import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
 import com.anthropic.core.prepare
 import com.anthropic.errors.AnthropicError
-import com.anthropic.models.Message
-import com.anthropic.models.MessageCountTokensParams
-import com.anthropic.models.MessageCreateParams
-import com.anthropic.models.MessageTokensCount
-import com.anthropic.models.RawMessageStreamEvent
+import com.anthropic.models.messages.Message
+import com.anthropic.models.messages.MessageCountTokensParams
+import com.anthropic.models.messages.MessageCreateParams
+import com.anthropic.models.messages.MessageTokensCount
+import com.anthropic.models.messages.RawMessageStreamEvent
 import com.anthropic.services.blocking.messages.BatchService
 import com.anthropic.services.blocking.messages.BatchServiceImpl
 import java.time.Duration

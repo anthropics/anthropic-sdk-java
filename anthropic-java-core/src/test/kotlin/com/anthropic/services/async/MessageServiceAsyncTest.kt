@@ -5,15 +5,15 @@ package com.anthropic.services.async
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
 import com.anthropic.core.JsonValue
-import com.anthropic.models.CacheControlEphemeral
-import com.anthropic.models.CitationCharLocationParam
-import com.anthropic.models.MessageCountTokensParams
-import com.anthropic.models.MessageCreateParams
-import com.anthropic.models.Metadata
-import com.anthropic.models.Model
-import com.anthropic.models.TextBlockParam
-import com.anthropic.models.Tool
-import com.anthropic.models.ToolChoiceAuto
+import com.anthropic.models.messages.CacheControlEphemeral
+import com.anthropic.models.messages.CitationCharLocationParam
+import com.anthropic.models.messages.MessageCountTokensParams
+import com.anthropic.models.messages.MessageCreateParams
+import com.anthropic.models.messages.Metadata
+import com.anthropic.models.messages.Model
+import com.anthropic.models.messages.TextBlockParam
+import com.anthropic.models.messages.Tool
+import com.anthropic.models.messages.ToolChoiceAuto
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 

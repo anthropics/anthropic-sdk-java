@@ -4,7 +4,7 @@ package com.anthropic.services.blocking.beta
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
-import com.anthropic.models.BetaModelRetrieveParams
+import com.anthropic.models.beta.models.ModelRetrieveParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -21,7 +21,7 @@ class ModelServiceTest {
         val modelService = client.beta().models()
 
         val betaModelInfo =
-            modelService.retrieve(BetaModelRetrieveParams.builder().modelId("model_id").build())
+            modelService.retrieve(ModelRetrieveParams.builder().modelId("model_id").build())
 
         betaModelInfo.validate()
     }

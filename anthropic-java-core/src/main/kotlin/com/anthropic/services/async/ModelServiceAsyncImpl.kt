@@ -14,10 +14,10 @@ import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.parseable
 import com.anthropic.core.prepareAsync
 import com.anthropic.errors.AnthropicError
-import com.anthropic.models.ModelInfo
-import com.anthropic.models.ModelListPageAsync
-import com.anthropic.models.ModelListParams
-import com.anthropic.models.ModelRetrieveParams
+import com.anthropic.models.models.ModelInfo
+import com.anthropic.models.models.ModelListPageAsync
+import com.anthropic.models.models.ModelListParams
+import com.anthropic.models.models.ModelRetrieveParams
 import java.util.concurrent.CompletableFuture
 
 class ModelServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :

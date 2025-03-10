@@ -14,10 +14,10 @@ import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.parseable
 import com.anthropic.core.prepare
 import com.anthropic.errors.AnthropicError
-import com.anthropic.models.ModelInfo
-import com.anthropic.models.ModelListPage
-import com.anthropic.models.ModelListParams
-import com.anthropic.models.ModelRetrieveParams
+import com.anthropic.models.models.ModelInfo
+import com.anthropic.models.models.ModelListPage
+import com.anthropic.models.models.ModelListParams
+import com.anthropic.models.models.ModelRetrieveParams
 
 class ModelServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     ModelService {

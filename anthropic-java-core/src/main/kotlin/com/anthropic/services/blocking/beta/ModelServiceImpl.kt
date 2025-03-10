@@ -14,10 +14,10 @@ import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.parseable
 import com.anthropic.core.prepare
 import com.anthropic.errors.AnthropicError
-import com.anthropic.models.BetaModelInfo
-import com.anthropic.models.BetaModelListPage
-import com.anthropic.models.BetaModelListParams
-import com.anthropic.models.BetaModelRetrieveParams
+import com.anthropic.models.beta.models.BetaModelInfo
+import com.anthropic.models.beta.models.ModelListPage
+import com.anthropic.models.beta.models.ModelListParams
+import com.anthropic.models.beta.models.ModelRetrieveParams
 
 class ModelServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     ModelService {
@@ -29,16 +29,13 @@ class ModelServiceImpl internal constructor(private val clientOptions: ClientOpt
     override fun withRawResponse(): ModelService.WithRawResponse = withRawResponse
 
     override fun retrieve(
-        params: BetaModelRetrieveParams,
+        params: ModelRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaModelInfo =
         // get /v1/models/{model_id}?beta=true
         withRawResponse().retrieve(params, requestOptions).parse()
 
-    override fun list(
-        params: BetaModelListParams,
-        requestOptions: RequestOptions,
-    ): BetaModelListPage =
+    override fun list(params: ModelListParams, requestOptions: RequestOptions): ModelListPage =
         // get /v1/models?beta=true
         withRawResponse().list(params, requestOptions).parse()
 
@@ -51,7 +48,7 @@ class ModelServiceImpl internal constructor(private val clientOptions: ClientOpt
             jsonHandler<BetaModelInfo>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
         override fun retrieve(
-            params: BetaModelRetrieveParams,
+            params: ModelRetrieveParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<BetaModelInfo> {
             val request =
@@ -74,14 +71,14 @@ class ModelServiceImpl internal constructor(private val clientOptions: ClientOpt
             }
         }
 
-        private val listHandler: Handler<BetaModelListPage.Response> =
-            jsonHandler<BetaModelListPage.Response>(clientOptions.jsonMapper)
+        private val listHandler: Handler<ModelListPage.Response> =
+            jsonHandler<ModelListPage.Response>(clientOptions.jsonMapper)
                 .withErrorHandler(errorHandler)
 
         override fun list(
-            params: BetaModelListParams,
+            params: ModelListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<BetaModelListPage> {
+        ): HttpResponseFor<ModelListPage> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -99,7 +96,7 @@ class ModelServiceImpl internal constructor(private val clientOptions: ClientOpt
                             it.validate()
                         }
                     }
-                    .let { BetaModelListPage.of(ModelServiceImpl(clientOptions), params, it) }
+                    .let { ModelListPage.of(ModelServiceImpl(clientOptions), params, it) }
             }
         }
     }

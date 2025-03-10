@@ -14,10 +14,10 @@ import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.parseable
 import com.anthropic.core.prepareAsync
 import com.anthropic.errors.AnthropicError
-import com.anthropic.models.BetaModelInfo
-import com.anthropic.models.BetaModelListPageAsync
-import com.anthropic.models.BetaModelListParams
-import com.anthropic.models.BetaModelRetrieveParams
+import com.anthropic.models.beta.models.BetaModelInfo
+import com.anthropic.models.beta.models.ModelListPageAsync
+import com.anthropic.models.beta.models.ModelListParams
+import com.anthropic.models.beta.models.ModelRetrieveParams
 import java.util.concurrent.CompletableFuture
 
 class ModelServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -30,16 +30,16 @@ class ModelServiceAsyncImpl internal constructor(private val clientOptions: Clie
     override fun withRawResponse(): ModelServiceAsync.WithRawResponse = withRawResponse
 
     override fun retrieve(
-        params: BetaModelRetrieveParams,
+        params: ModelRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaModelInfo> =
         // get /v1/models/{model_id}?beta=true
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
     override fun list(
-        params: BetaModelListParams,
+        params: ModelListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<BetaModelListPageAsync> =
+    ): CompletableFuture<ModelListPageAsync> =
         // get /v1/models?beta=true
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
@@ -52,7 +52,7 @@ class ModelServiceAsyncImpl internal constructor(private val clientOptions: Clie
             jsonHandler<BetaModelInfo>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
         override fun retrieve(
-            params: BetaModelRetrieveParams,
+            params: ModelRetrieveParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<BetaModelInfo>> {
             val request =
@@ -78,14 +78,14 @@ class ModelServiceAsyncImpl internal constructor(private val clientOptions: Clie
                 }
         }
 
-        private val listHandler: Handler<BetaModelListPageAsync.Response> =
-            jsonHandler<BetaModelListPageAsync.Response>(clientOptions.jsonMapper)
+        private val listHandler: Handler<ModelListPageAsync.Response> =
+            jsonHandler<ModelListPageAsync.Response>(clientOptions.jsonMapper)
                 .withErrorHandler(errorHandler)
 
         override fun list(
-            params: BetaModelListParams,
+            params: ModelListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<BetaModelListPageAsync>> {
+        ): CompletableFuture<HttpResponseFor<ModelListPageAsync>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -106,7 +106,7 @@ class ModelServiceAsyncImpl internal constructor(private val clientOptions: Clie
                                 }
                             }
                             .let {
-                                BetaModelListPageAsync.of(
+                                ModelListPageAsync.of(
                                     ModelServiceAsyncImpl(clientOptions),
                                     params,
                                     it,
