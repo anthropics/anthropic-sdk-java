@@ -19,16 +19,16 @@ import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
 import com.anthropic.core.prepare
 import com.anthropic.errors.AnthropicError
-import com.anthropic.models.BetaDeletedMessageBatch
-import com.anthropic.models.BetaMessageBatch
-import com.anthropic.models.BetaMessageBatchCancelParams
-import com.anthropic.models.BetaMessageBatchCreateParams
-import com.anthropic.models.BetaMessageBatchDeleteParams
-import com.anthropic.models.BetaMessageBatchIndividualResponse
-import com.anthropic.models.BetaMessageBatchListPage
-import com.anthropic.models.BetaMessageBatchListParams
-import com.anthropic.models.BetaMessageBatchResultsParams
-import com.anthropic.models.BetaMessageBatchRetrieveParams
+import com.anthropic.models.beta.messages.batches.BatchCancelParams
+import com.anthropic.models.beta.messages.batches.BatchCreateParams
+import com.anthropic.models.beta.messages.batches.BatchDeleteParams
+import com.anthropic.models.beta.messages.batches.BatchListPage
+import com.anthropic.models.beta.messages.batches.BatchListParams
+import com.anthropic.models.beta.messages.batches.BatchResultsParams
+import com.anthropic.models.beta.messages.batches.BatchRetrieveParams
+import com.anthropic.models.beta.messages.batches.BetaDeletedMessageBatch
+import com.anthropic.models.beta.messages.batches.BetaMessageBatch
+import com.anthropic.models.beta.messages.batches.BetaMessageBatchIndividualResponse
 
 class BatchServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     BatchService {
@@ -46,42 +46,39 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
     override fun withRawResponse(): BatchService.WithRawResponse = withRawResponse
 
     override fun create(
-        params: BetaMessageBatchCreateParams,
+        params: BatchCreateParams,
         requestOptions: RequestOptions,
     ): BetaMessageBatch =
         // post /v1/messages/batches?beta=true
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
-        params: BetaMessageBatchRetrieveParams,
+        params: BatchRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaMessageBatch =
         // get /v1/messages/batches/{message_batch_id}?beta=true
         withRawResponse().retrieve(params, requestOptions).parse()
 
-    override fun list(
-        params: BetaMessageBatchListParams,
-        requestOptions: RequestOptions,
-    ): BetaMessageBatchListPage =
+    override fun list(params: BatchListParams, requestOptions: RequestOptions): BatchListPage =
         // get /v1/messages/batches?beta=true
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
-        params: BetaMessageBatchDeleteParams,
+        params: BatchDeleteParams,
         requestOptions: RequestOptions,
     ): BetaDeletedMessageBatch =
         // delete /v1/messages/batches/{message_batch_id}?beta=true
         withRawResponse().delete(params, requestOptions).parse()
 
     override fun cancel(
-        params: BetaMessageBatchCancelParams,
+        params: BatchCancelParams,
         requestOptions: RequestOptions,
     ): BetaMessageBatch =
         // post /v1/messages/batches/{message_batch_id}/cancel?beta=true
         withRawResponse().cancel(params, requestOptions).parse()
 
     override fun resultsStreaming(
-        params: BetaMessageBatchResultsParams,
+        params: BatchResultsParams,
         requestOptions: RequestOptions,
     ): StreamResponse<BetaMessageBatchIndividualResponse> =
         // get /v1/messages/batches/{message_batch_id}/results?beta=true
@@ -96,7 +93,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             jsonHandler<BetaMessageBatch>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
         override fun create(
-            params: BetaMessageBatchCreateParams,
+            params: BatchCreateParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<BetaMessageBatch> {
             val request =
@@ -125,7 +122,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             jsonHandler<BetaMessageBatch>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
         override fun retrieve(
-            params: BetaMessageBatchRetrieveParams,
+            params: BatchRetrieveParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<BetaMessageBatch> {
             val request =
@@ -149,14 +146,14 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             }
         }
 
-        private val listHandler: Handler<BetaMessageBatchListPage.Response> =
-            jsonHandler<BetaMessageBatchListPage.Response>(clientOptions.jsonMapper)
+        private val listHandler: Handler<BatchListPage.Response> =
+            jsonHandler<BatchListPage.Response>(clientOptions.jsonMapper)
                 .withErrorHandler(errorHandler)
 
         override fun list(
-            params: BetaMessageBatchListParams,
+            params: BatchListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<BetaMessageBatchListPage> {
+        ): HttpResponseFor<BatchListPage> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -175,9 +172,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                             it.validate()
                         }
                     }
-                    .let {
-                        BetaMessageBatchListPage.of(BatchServiceImpl(clientOptions), params, it)
-                    }
+                    .let { BatchListPage.of(BatchServiceImpl(clientOptions), params, it) }
             }
         }
 
@@ -186,7 +181,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                 .withErrorHandler(errorHandler)
 
         override fun delete(
-            params: BetaMessageBatchDeleteParams,
+            params: BatchDeleteParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<BetaDeletedMessageBatch> {
             val request =
@@ -215,7 +210,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             jsonHandler<BetaMessageBatch>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
         override fun cancel(
-            params: BetaMessageBatchCancelParams,
+            params: BatchCancelParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<BetaMessageBatch> {
             val request =
@@ -246,7 +241,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                 .withErrorHandler(errorHandler)
 
         override fun resultsStreaming(
-            params: BetaMessageBatchResultsParams,
+            params: BatchResultsParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<StreamResponse<BetaMessageBatchIndividualResponse>> {
             val request =

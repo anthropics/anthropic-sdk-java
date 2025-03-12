@@ -5,11 +5,11 @@ package com.anthropic.services.blocking
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
-import com.anthropic.models.Message
-import com.anthropic.models.MessageCountTokensParams
-import com.anthropic.models.MessageCreateParams
-import com.anthropic.models.MessageTokensCount
-import com.anthropic.models.RawMessageStreamEvent
+import com.anthropic.models.messages.Message
+import com.anthropic.models.messages.MessageCountTokensParams
+import com.anthropic.models.messages.MessageCreateParams
+import com.anthropic.models.messages.MessageTokensCount
+import com.anthropic.models.messages.RawMessageStreamEvent
 import com.anthropic.services.blocking.messages.BatchService
 import com.google.errorprone.annotations.MustBeClosed
 

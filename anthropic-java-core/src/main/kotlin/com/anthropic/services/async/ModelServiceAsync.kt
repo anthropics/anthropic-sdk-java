@@ -4,10 +4,10 @@ package com.anthropic.services.async
 
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
-import com.anthropic.models.ModelInfo
-import com.anthropic.models.ModelListPageAsync
-import com.anthropic.models.ModelListParams
-import com.anthropic.models.ModelRetrieveParams
+import com.anthropic.models.models.ModelInfo
+import com.anthropic.models.models.ModelListPageAsync
+import com.anthropic.models.models.ModelListParams
+import com.anthropic.models.models.ModelRetrieveParams
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 

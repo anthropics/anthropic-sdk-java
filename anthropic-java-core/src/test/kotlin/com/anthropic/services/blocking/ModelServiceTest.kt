@@ -4,7 +4,7 @@ package com.anthropic.services.blocking
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
-import com.anthropic.models.ModelRetrieveParams
+import com.anthropic.models.models.ModelRetrieveParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 

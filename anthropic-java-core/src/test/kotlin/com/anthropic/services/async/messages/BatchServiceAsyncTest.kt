@@ -5,18 +5,18 @@ package com.anthropic.services.async.messages
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
 import com.anthropic.core.JsonValue
-import com.anthropic.models.CacheControlEphemeral
-import com.anthropic.models.CitationCharLocationParam
-import com.anthropic.models.MessageBatchCancelParams
-import com.anthropic.models.MessageBatchCreateParams
-import com.anthropic.models.MessageBatchDeleteParams
-import com.anthropic.models.MessageBatchResultsParams
-import com.anthropic.models.MessageBatchRetrieveParams
-import com.anthropic.models.Metadata
-import com.anthropic.models.Model
-import com.anthropic.models.TextBlockParam
-import com.anthropic.models.Tool
-import com.anthropic.models.ToolChoiceAuto
+import com.anthropic.models.messages.CacheControlEphemeral
+import com.anthropic.models.messages.CitationCharLocationParam
+import com.anthropic.models.messages.Metadata
+import com.anthropic.models.messages.Model
+import com.anthropic.models.messages.TextBlockParam
+import com.anthropic.models.messages.Tool
+import com.anthropic.models.messages.ToolChoiceAuto
+import com.anthropic.models.messages.batches.BatchCancelParams
+import com.anthropic.models.messages.batches.BatchCreateParams
+import com.anthropic.models.messages.batches.BatchDeleteParams
+import com.anthropic.models.messages.batches.BatchResultsParams
+import com.anthropic.models.messages.batches.BatchRetrieveParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -35,12 +35,12 @@ class BatchServiceAsyncTest {
 
         val messageBatchFuture =
             batchServiceAsync.create(
-                MessageBatchCreateParams.builder()
+                BatchCreateParams.builder()
                     .addRequest(
-                        MessageBatchCreateParams.Request.builder()
+                        BatchCreateParams.Request.builder()
                             .customId("my-custom-id-1")
                             .params(
-                                MessageBatchCreateParams.Request.Params.builder()
+                                BatchCreateParams.Request.Params.builder()
                                     .maxTokens(1024L)
                                     .addUserMessage("Hello, world")
                                     .model(Model.CLAUDE_3_7_SONNET_LATEST)
@@ -132,7 +132,7 @@ class BatchServiceAsyncTest {
 
         val messageBatchFuture =
             batchServiceAsync.retrieve(
-                MessageBatchRetrieveParams.builder().messageBatchId("message_batch_id").build()
+                BatchRetrieveParams.builder().messageBatchId("message_batch_id").build()
             )
 
         val messageBatch = messageBatchFuture.get()
@@ -165,7 +165,7 @@ class BatchServiceAsyncTest {
 
         val deletedMessageBatchFuture =
             batchServiceAsync.delete(
-                MessageBatchDeleteParams.builder().messageBatchId("message_batch_id").build()
+                BatchDeleteParams.builder().messageBatchId("message_batch_id").build()
             )
 
         val deletedMessageBatch = deletedMessageBatchFuture.get()
@@ -183,7 +183,7 @@ class BatchServiceAsyncTest {
 
         val messageBatchFuture =
             batchServiceAsync.cancel(
-                MessageBatchCancelParams.builder().messageBatchId("message_batch_id").build()
+                BatchCancelParams.builder().messageBatchId("message_batch_id").build()
             )
 
         val messageBatch = messageBatchFuture.get()
@@ -202,7 +202,7 @@ class BatchServiceAsyncTest {
 
         val messageBatchIndividualResponseStreamResponse =
             batchServiceAsync.resultsStreaming(
-                MessageBatchResultsParams.builder().messageBatchId("message_batch_id").build()
+                BatchResultsParams.builder().messageBatchId("message_batch_id").build()
             )
 
         val onCompleteFuture =

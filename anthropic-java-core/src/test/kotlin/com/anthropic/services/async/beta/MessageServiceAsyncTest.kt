@@ -5,16 +5,16 @@ package com.anthropic.services.async.beta
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
 import com.anthropic.core.JsonValue
-import com.anthropic.models.AnthropicBeta
-import com.anthropic.models.BetaCacheControlEphemeral
-import com.anthropic.models.BetaCitationCharLocationParam
-import com.anthropic.models.BetaMessageCountTokensParams
-import com.anthropic.models.BetaMessageCreateParams
-import com.anthropic.models.BetaMetadata
-import com.anthropic.models.BetaTextBlockParam
-import com.anthropic.models.BetaTool
-import com.anthropic.models.BetaToolChoiceAuto
-import com.anthropic.models.Model
+import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.messages.BetaCacheControlEphemeral
+import com.anthropic.models.beta.messages.BetaCitationCharLocationParam
+import com.anthropic.models.beta.messages.BetaMetadata
+import com.anthropic.models.beta.messages.BetaTextBlockParam
+import com.anthropic.models.beta.messages.BetaTool
+import com.anthropic.models.beta.messages.BetaToolChoiceAuto
+import com.anthropic.models.beta.messages.MessageCountTokensParams
+import com.anthropic.models.beta.messages.MessageCreateParams
+import com.anthropic.models.messages.Model
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -32,7 +32,7 @@ class MessageServiceAsyncTest {
 
         val betaMessageFuture =
             messageServiceAsync.create(
-                BetaMessageCreateParams.builder()
+                MessageCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
@@ -113,7 +113,7 @@ class MessageServiceAsyncTest {
 
         val betaMessageStreamResponse =
             messageServiceAsync.createStreaming(
-                BetaMessageCreateParams.builder()
+                MessageCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
@@ -197,7 +197,7 @@ class MessageServiceAsyncTest {
 
         val betaMessageTokensCountFuture =
             messageServiceAsync.countTokens(
-                BetaMessageCountTokensParams.builder()
+                MessageCountTokensParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_3_7_SONNET_LATEST)

@@ -4,10 +4,10 @@ package com.anthropic.services.blocking
 
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
-import com.anthropic.models.ModelInfo
-import com.anthropic.models.ModelListPage
-import com.anthropic.models.ModelListParams
-import com.anthropic.models.ModelRetrieveParams
+import com.anthropic.models.models.ModelInfo
+import com.anthropic.models.models.ModelListPage
+import com.anthropic.models.models.ModelListParams
+import com.anthropic.models.models.ModelRetrieveParams
 import com.google.errorprone.annotations.MustBeClosed
 
 interface ModelService {

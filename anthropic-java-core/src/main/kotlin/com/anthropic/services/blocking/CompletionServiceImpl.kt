@@ -20,8 +20,8 @@ import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
 import com.anthropic.core.prepare
 import com.anthropic.errors.AnthropicError
-import com.anthropic.models.Completion
-import com.anthropic.models.CompletionCreateParams
+import com.anthropic.models.completions.Completion
+import com.anthropic.models.completions.CompletionCreateParams
 import java.time.Duration
 
 class CompletionServiceImpl internal constructor(private val clientOptions: ClientOptions) :

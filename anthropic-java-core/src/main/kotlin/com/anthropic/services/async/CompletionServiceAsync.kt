@@ -6,8 +6,8 @@ import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.AsyncStreamResponse
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
-import com.anthropic.models.Completion
-import com.anthropic.models.CompletionCreateParams
+import com.anthropic.models.completions.Completion
+import com.anthropic.models.completions.CompletionCreateParams
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 

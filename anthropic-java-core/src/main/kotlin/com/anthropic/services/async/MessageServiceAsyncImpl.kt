@@ -22,11 +22,11 @@ import com.anthropic.core.http.parseable
 import com.anthropic.core.http.toAsync
 import com.anthropic.core.prepareAsync
 import com.anthropic.errors.AnthropicError
-import com.anthropic.models.Message
-import com.anthropic.models.MessageCountTokensParams
-import com.anthropic.models.MessageCreateParams
-import com.anthropic.models.MessageTokensCount
-import com.anthropic.models.RawMessageStreamEvent
+import com.anthropic.models.messages.Message
+import com.anthropic.models.messages.MessageCountTokensParams
+import com.anthropic.models.messages.MessageCreateParams
+import com.anthropic.models.messages.MessageTokensCount
+import com.anthropic.models.messages.RawMessageStreamEvent
 import com.anthropic.services.async.messages.BatchServiceAsync
 import com.anthropic.services.async.messages.BatchServiceAsyncImpl
 import java.util.concurrent.CompletableFuture

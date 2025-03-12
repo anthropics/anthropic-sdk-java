@@ -20,11 +20,11 @@ import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
 import com.anthropic.core.prepare
 import com.anthropic.errors.AnthropicError
-import com.anthropic.models.BetaMessage
-import com.anthropic.models.BetaMessageCountTokensParams
-import com.anthropic.models.BetaMessageCreateParams
-import com.anthropic.models.BetaMessageTokensCount
-import com.anthropic.models.BetaRawMessageStreamEvent
+import com.anthropic.models.beta.messages.BetaMessage
+import com.anthropic.models.beta.messages.BetaMessageTokensCount
+import com.anthropic.models.beta.messages.BetaRawMessageStreamEvent
+import com.anthropic.models.beta.messages.MessageCountTokensParams
+import com.anthropic.models.beta.messages.MessageCreateParams
 import com.anthropic.services.blocking.beta.messages.BatchService
 import com.anthropic.services.blocking.beta.messages.BatchServiceImpl
 
@@ -41,22 +41,19 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
 
     override fun batches(): BatchService = batches
 
-    override fun create(
-        params: BetaMessageCreateParams,
-        requestOptions: RequestOptions,
-    ): BetaMessage =
+    override fun create(params: MessageCreateParams, requestOptions: RequestOptions): BetaMessage =
         // post /v1/messages?beta=true
         withRawResponse().create(params, requestOptions).parse()
 
     override fun createStreaming(
-        params: BetaMessageCreateParams,
+        params: MessageCreateParams,
         requestOptions: RequestOptions,
     ): StreamResponse<BetaRawMessageStreamEvent> =
         // post /v1/messages?beta=true
         withRawResponse().createStreaming(params, requestOptions).parse()
 
     override fun countTokens(
-        params: BetaMessageCountTokensParams,
+        params: MessageCountTokensParams,
         requestOptions: RequestOptions,
     ): BetaMessageTokensCount =
         // post /v1/messages/count_tokens?beta=true
@@ -77,7 +74,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
             jsonHandler<BetaMessage>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
         override fun create(
-            params: BetaMessageCreateParams,
+            params: MessageCreateParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<BetaMessage> {
             val request =
@@ -110,7 +107,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                 .withErrorHandler(errorHandler)
 
         override fun createStreaming(
-            params: BetaMessageCreateParams,
+            params: MessageCreateParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<StreamResponse<BetaRawMessageStreamEvent>> {
             val request =
@@ -153,7 +150,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                 .withErrorHandler(errorHandler)
 
         override fun countTokens(
-            params: BetaMessageCountTokensParams,
+            params: MessageCountTokensParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<BetaMessageTokensCount> {
             val request =
