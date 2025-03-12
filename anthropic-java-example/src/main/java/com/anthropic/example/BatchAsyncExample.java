@@ -2,8 +2,9 @@ package com.anthropic.example;
 
 import com.anthropic.client.AnthropicClientAsync;
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync;
-import com.anthropic.models.*;
-import com.anthropic.models.MessageBatch.ProcessingStatus;
+import com.anthropic.models.messages.Message;
+import com.anthropic.models.messages.Model;
+import com.anthropic.models.messages.batches.*;
 import java.util.concurrent.CompletableFuture;
 
 public final class BatchAsyncExample {
@@ -13,18 +14,18 @@ public final class BatchAsyncExample {
         // Configures using the `ANTHROPIC_API_KEY` environment variable
         AnthropicClientAsync client = AnthropicOkHttpClientAsync.fromEnv();
 
-        MessageBatchCreateParams createParams = MessageBatchCreateParams.builder()
-                .addRequest(MessageBatchCreateParams.Request.builder()
+        BatchCreateParams createParams = BatchCreateParams.builder()
+                .addRequest(BatchCreateParams.Request.builder()
                         .customId("best-sdk")
-                        .params(MessageBatchCreateParams.Request.Params.builder()
+                        .params(BatchCreateParams.Request.Params.builder()
                                 .model(Model.CLAUDE_3_5_SONNET_LATEST)
                                 .maxTokens(2048)
                                 .addUserMessage("Tell me a story about building the best SDK!")
                                 .build())
                         .build())
-                .addRequest(MessageBatchCreateParams.Request.builder()
+                .addRequest(BatchCreateParams.Request.builder()
                         .customId("sdk-company")
-                        .params(MessageBatchCreateParams.Request.Params.builder()
+                        .params(BatchCreateParams.Request.Params.builder()
                                 .model(Model.CLAUDE_3_5_SONNET_LATEST)
                                 .maxTokens(2048)
                                 .addUserMessage("Which company made of metal generates SDKs?")
@@ -40,7 +41,7 @@ public final class BatchAsyncExample {
                     System.out.println();
                     return client.messages()
                             .batches()
-                            .resultsStreaming(MessageBatchResultsParams.builder()
+                            .resultsStreaming(BatchResultsParams.builder()
                                     .messageBatchId(batch.id())
                                     .build())
                             .subscribe(response -> {
@@ -56,7 +57,7 @@ public final class BatchAsyncExample {
                 })
                 .thenComposeAsync(batch -> client.messages()
                         .batches()
-                        .delete(MessageBatchDeleteParams.builder()
+                        .delete(BatchDeleteParams.builder()
                                 .messageBatchId(batch.id())
                                 .build()))
                 .thenAccept(deletedMessageBatch -> System.out.println("Batch deleted: " + deletedMessageBatch.id()))
@@ -64,7 +65,7 @@ public final class BatchAsyncExample {
     }
 
     private static CompletableFuture<MessageBatch> pollBatch(AnthropicClientAsync client, MessageBatch batch) {
-        if (!batch.processingStatus().equals(ProcessingStatus.IN_PROGRESS)) {
+        if (!batch.processingStatus().equals(MessageBatch.ProcessingStatus.IN_PROGRESS)) {
             return CompletableFuture.completedFuture(batch);
         }
 
@@ -77,9 +78,8 @@ public final class BatchAsyncExample {
 
         return client.messages()
                 .batches()
-                .retrieve(MessageBatchRetrieveParams.builder()
-                        .messageBatchId(batch.id())
-                        .build())
+                .retrieve(
+                        BatchRetrieveParams.builder().messageBatchId(batch.id()).build())
                 .thenComposeAsync(newBatch -> pollBatch(client, newBatch));
     }
 }

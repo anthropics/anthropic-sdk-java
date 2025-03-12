@@ -3,7 +3,11 @@ package com.anthropic.example;
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.core.http.StreamResponse;
-import com.anthropic.models.*;
+import com.anthropic.models.messages.MessageCreateParams;
+import com.anthropic.models.messages.Model;
+import com.anthropic.models.messages.RawContentBlockDeltaEvent;
+import com.anthropic.models.messages.RawMessageStreamEvent;
+import com.anthropic.models.messages.ThinkingConfigEnabled;
 
 public final class ThinkingStreamingExample {
     private ThinkingStreamingExample() {}

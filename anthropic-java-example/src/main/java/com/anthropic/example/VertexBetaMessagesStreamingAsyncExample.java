@@ -2,7 +2,7 @@ package com.anthropic.example;
 
 import com.anthropic.client.AnthropicClientAsync;
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync;
-import com.anthropic.models.BetaMessageCreateParams;
+import com.anthropic.models.beta.messages.MessageCreateParams;
 import com.anthropic.vertex.backends.VertexBackend;
 
 /**
@@ -45,7 +45,7 @@ public final class VertexBetaMessagesStreamingAsyncExample {
                 .backend(VertexBackend.fromEnv())
                 .build();
 
-        BetaMessageCreateParams createParams = BetaMessageCreateParams.builder()
+        MessageCreateParams createParams = MessageCreateParams.builder()
                 .model("claude-3-sonnet")
                 .maxTokens(2048)
                 .addUserMessage("Tell me a story about building the best SDK!")

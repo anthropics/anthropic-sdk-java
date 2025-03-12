@@ -3,8 +3,9 @@ package com.anthropic.example;
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.core.http.StreamResponse;
-import com.anthropic.models.*;
-import com.anthropic.models.MessageBatch.ProcessingStatus;
+import com.anthropic.models.messages.Message;
+import com.anthropic.models.messages.Model;
+import com.anthropic.models.messages.batches.*;
 
 public final class BatchExample {
     private BatchExample() {}
@@ -13,18 +14,18 @@ public final class BatchExample {
         // Configures using the `ANTHROPIC_API_KEY` environment variable
         AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
-        MessageBatchCreateParams createParams = MessageBatchCreateParams.builder()
-                .addRequest(MessageBatchCreateParams.Request.builder()
+        BatchCreateParams createParams = BatchCreateParams.builder()
+                .addRequest(BatchCreateParams.Request.builder()
                         .customId("best-sdk")
-                        .params(MessageBatchCreateParams.Request.Params.builder()
+                        .params(BatchCreateParams.Request.Params.builder()
                                 .model(Model.CLAUDE_3_5_SONNET_LATEST)
                                 .maxTokens(2048)
                                 .addUserMessage("Tell me a story about building the best SDK!")
                                 .build())
                         .build())
-                .addRequest(MessageBatchCreateParams.Request.builder()
+                .addRequest(BatchCreateParams.Request.builder()
                         .customId("sdk-company")
-                        .params(MessageBatchCreateParams.Request.Params.builder()
+                        .params(BatchCreateParams.Request.Params.builder()
                                 .model(Model.CLAUDE_3_5_SONNET_LATEST)
                                 .maxTokens(2048)
                                 .addUserMessage("Which company made of metal generates SDKs?")
@@ -33,12 +34,12 @@ public final class BatchExample {
                 .build();
 
         MessageBatch batch = client.messages().batches().create(createParams);
-        while (batch.processingStatus().equals(ProcessingStatus.IN_PROGRESS)) {
+        while (batch.processingStatus().equals(MessageBatch.ProcessingStatus.IN_PROGRESS)) {
             System.out.println("Polling batch...");
             Thread.sleep(2000);
             batch = client.messages()
                     .batches()
-                    .retrieve(MessageBatchRetrieveParams.builder()
+                    .retrieve(BatchRetrieveParams.builder()
                             .messageBatchId(batch.id())
                             .build());
         }
@@ -46,9 +47,8 @@ public final class BatchExample {
 
         try (StreamResponse<MessageBatchIndividualResponse> streamResponse = client.messages()
                 .batches()
-                .resultsStreaming(MessageBatchResultsParams.builder()
-                        .messageBatchId(batch.id())
-                        .build())) {
+                .resultsStreaming(
+                        BatchResultsParams.builder().messageBatchId(batch.id()).build())) {
             streamResponse.stream().forEach(response -> {
                 System.out.println(response.customId());
                 Message message = response.result().asSucceeded().message();
@@ -61,9 +61,7 @@ public final class BatchExample {
 
         DeletedMessageBatch deletedMessageBatch = client.messages()
                 .batches()
-                .delete(MessageBatchDeleteParams.builder()
-                        .messageBatchId(batch.id())
-                        .build());
+                .delete(BatchDeleteParams.builder().messageBatchId(batch.id()).build());
         System.out.println("Batch deleted: " + deletedMessageBatch.id());
     }
 }

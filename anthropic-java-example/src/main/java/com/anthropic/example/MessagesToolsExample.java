@@ -3,11 +3,11 @@ package com.anthropic.example;
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.core.JsonValue;
-import com.anthropic.models.MessageCreateParams;
-import com.anthropic.models.Model;
-import com.anthropic.models.Tool;
-import com.anthropic.models.Tool.InputSchema;
-import com.anthropic.models.ToolChoiceTool;
+import com.anthropic.models.messages.MessageCreateParams;
+import com.anthropic.models.messages.Model;
+import com.anthropic.models.messages.Tool;
+import com.anthropic.models.messages.Tool.InputSchema;
+import com.anthropic.models.messages.ToolChoiceTool;
 import java.util.List;
 import java.util.Map;
 

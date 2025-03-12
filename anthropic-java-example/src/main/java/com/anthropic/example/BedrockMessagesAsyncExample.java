@@ -3,7 +3,7 @@ package com.anthropic.example;
 import com.anthropic.bedrock.backends.BedrockBackend;
 import com.anthropic.client.AnthropicClientAsync;
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync;
-import com.anthropic.models.MessageCreateParams;
+import com.anthropic.models.messages.MessageCreateParams;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentials;
 import software.amazon.awssdk.regions.Region;

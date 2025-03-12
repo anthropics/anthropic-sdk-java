@@ -2,7 +2,7 @@ package com.anthropic.example;
 
 import com.anthropic.client.AnthropicClientAsync;
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync;
-import com.anthropic.models.ModelListPageAsync;
+import com.anthropic.models.models.ModelListPageAsync;
 import java.util.concurrent.CompletableFuture;
 
 public final class ModelListAsyncExample {

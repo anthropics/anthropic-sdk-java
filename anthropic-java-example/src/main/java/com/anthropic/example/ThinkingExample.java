@@ -2,10 +2,10 @@ package com.anthropic.example;
 
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
-import com.anthropic.models.ContentBlock;
-import com.anthropic.models.MessageCreateParams;
-import com.anthropic.models.Model;
-import com.anthropic.models.ThinkingConfigEnabled;
+import com.anthropic.models.messages.ContentBlock;
+import com.anthropic.models.messages.MessageCreateParams;
+import com.anthropic.models.messages.Model;
+import com.anthropic.models.messages.ThinkingConfigEnabled;
 import java.util.List;
 
 public final class ThinkingExample {

@@ -2,7 +2,7 @@ package com.anthropic.example;
 
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
-import com.anthropic.models.MessageCreateParams;
+import com.anthropic.models.messages.MessageCreateParams;
 import com.anthropic.vertex.backends.VertexBackend;
 import com.google.auth.oauth2.AccessToken;
 import com.google.auth.oauth2.GoogleCredentials;

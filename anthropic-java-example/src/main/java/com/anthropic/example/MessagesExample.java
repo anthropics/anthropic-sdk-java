@@ -2,8 +2,8 @@ package com.anthropic.example;
 
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
-import com.anthropic.models.MessageCreateParams;
-import com.anthropic.models.Model;
+import com.anthropic.models.messages.MessageCreateParams;
+import com.anthropic.models.messages.Model;
 
 public final class MessagesExample {
     private MessagesExample() {}
