@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.8.0 (2025-03-13)
+
+Full Changelog: [v0.7.0...v0.8.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.7.0...v0.8.0)
+
+### ⚠ BREAKING CHANGES
+
+* **client:** move classes into subpackages and shorten names ([#173](https://github.com/anthropics/anthropic-sdk-java/issues/173))
+
+### Chores
+
+* **client:** move classes into subpackages and shorten names ([#173](https://github.com/anthropics/anthropic-sdk-java/issues/173)) ([f5edb0c](https://github.com/anthropics/anthropic-sdk-java/commit/f5edb0cbba8fc3601d83fdb7f9c6483abdd1b121))
+* **internal:** add `.kotlin` to `.gitignore` ([#165](https://github.com/anthropics/anthropic-sdk-java/issues/165)) ([31f4b52](https://github.com/anthropics/anthropic-sdk-java/commit/31f4b5243a27de6b785a951f93829048752b81ad))
+* **internal:** don't use `JvmOverloads` in interfaces ([1193767](https://github.com/anthropics/anthropic-sdk-java/commit/11937673640ce034896912881ae8db89087e4b19))
+* **internal:** make `regionMissing` test more robust ([23989ce](https://github.com/anthropics/anthropic-sdk-java/commit/23989ce7eb7c43a2458d8c25513c5adb2a0529f8))
+* **internal:** reenable warnings as errors ([#169](https://github.com/anthropics/anthropic-sdk-java/issues/169)) ([1193767](https://github.com/anthropics/anthropic-sdk-java/commit/11937673640ce034896912881ae8db89087e4b19))
+* **internal:** remove extra empty newlines ([#175](https://github.com/anthropics/anthropic-sdk-java/issues/175)) ([a372a5f](https://github.com/anthropics/anthropic-sdk-java/commit/a372a5f06586959948d8a6bb47b38aff484cce86))
+* **internal:** use `getOrNull` instead of `orElse(null)` ([#167](https://github.com/anthropics/anthropic-sdk-java/issues/167)) ([898c39b](https://github.com/anthropics/anthropic-sdk-java/commit/898c39b10a7c9491ddd7284ee59cd65572f0642a))
+
+
+### Documentation
+
+* document `JsonValue` construction in readme ([#172](https://github.com/anthropics/anthropic-sdk-java/issues/172)) ([19de052](https://github.com/anthropics/anthropic-sdk-java/commit/19de0521dda6504c49836014bb46dd05aa353826))
+* revise readme docs about nested params ([#171](https://github.com/anthropics/anthropic-sdk-java/issues/171)) ([96d79ec](https://github.com/anthropics/anthropic-sdk-java/commit/96d79ecc315efb94fd23734ffec1713c910870c4))
+* update examples ([61a5d0b](https://github.com/anthropics/anthropic-sdk-java/commit/61a5d0b996f588d48919930f52d7ac214827146f))
+
 ## 0.7.0 (2025-03-06)
 
 Full Changelog: [v0.6.0...v0.7.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.6.0...v0.7.0)
