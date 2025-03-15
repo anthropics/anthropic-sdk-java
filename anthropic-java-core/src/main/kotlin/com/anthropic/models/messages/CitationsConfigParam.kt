@@ -9,6 +9,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
+import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -26,8 +27,17 @@ private constructor(
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun enabled(): Optional<Boolean> = Optional.ofNullable(enabled.getNullable("enabled"))
 
+    /**
+     * Returns the raw JSON value of [enabled].
+     *
+     * Unlike [enabled], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("enabled") @ExcludeMissing fun _enabled(): JsonField<Boolean> = enabled
 
     @JsonAnyGetter
@@ -67,6 +77,12 @@ private constructor(
 
         fun enabled(enabled: Boolean) = enabled(JsonField.of(enabled))
 
+        /**
+         * Sets [Builder.enabled] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.enabled] with a well-typed [Boolean] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun enabled(enabled: JsonField<Boolean>) = apply { this.enabled = enabled }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

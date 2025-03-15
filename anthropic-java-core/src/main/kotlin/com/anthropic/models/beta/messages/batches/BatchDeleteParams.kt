@@ -104,15 +104,25 @@ private constructor(
         /** Optional header to specify the beta version(s) you want to use. */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
 
-        /** Optional header to specify the beta version(s) you want to use. */
+        /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */
         fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.getOrNull())
 
-        /** Optional header to specify the beta version(s) you want to use. */
+        /**
+         * Adds a single [AnthropicBeta] to [betas].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
         fun addBeta(beta: AnthropicBeta) = apply {
             betas = (betas ?: mutableListOf()).apply { add(beta) }
         }
 
-        /** Optional header to specify the beta version(s) you want to use. */
+        /**
+         * Sets [addBeta] to an arbitrary [String].
+         *
+         * You should usually call [addBeta] with a well-typed [AnthropicBeta] constant instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {

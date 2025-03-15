@@ -10,6 +10,7 @@ import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
+import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -37,34 +38,72 @@ private constructor(
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
-    /** The number of input tokens used to create the cache entry. */
+    /**
+     * The number of input tokens used to create the cache entry.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun cacheCreationInputTokens(): Optional<Long> =
         Optional.ofNullable(cacheCreationInputTokens.getNullable("cache_creation_input_tokens"))
 
-    /** The number of input tokens read from the cache. */
+    /**
+     * The number of input tokens read from the cache.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun cacheReadInputTokens(): Optional<Long> =
         Optional.ofNullable(cacheReadInputTokens.getNullable("cache_read_input_tokens"))
 
-    /** The number of input tokens which were used. */
+    /**
+     * The number of input tokens which were used.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun inputTokens(): Long = inputTokens.getRequired("input_tokens")
 
-    /** The number of output tokens which were used. */
+    /**
+     * The number of output tokens which were used.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun outputTokens(): Long = outputTokens.getRequired("output_tokens")
 
-    /** The number of input tokens used to create the cache entry. */
+    /**
+     * Returns the raw JSON value of [cacheCreationInputTokens].
+     *
+     * Unlike [cacheCreationInputTokens], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
     @JsonProperty("cache_creation_input_tokens")
     @ExcludeMissing
     fun _cacheCreationInputTokens(): JsonField<Long> = cacheCreationInputTokens
 
-    /** The number of input tokens read from the cache. */
+    /**
+     * Returns the raw JSON value of [cacheReadInputTokens].
+     *
+     * Unlike [cacheReadInputTokens], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
     @JsonProperty("cache_read_input_tokens")
     @ExcludeMissing
     fun _cacheReadInputTokens(): JsonField<Long> = cacheReadInputTokens
 
-    /** The number of input tokens which were used. */
+    /**
+     * Returns the raw JSON value of [inputTokens].
+     *
+     * Unlike [inputTokens], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("input_tokens") @ExcludeMissing fun _inputTokens(): JsonField<Long> = inputTokens
 
-    /** The number of output tokens which were used. */
+    /**
+     * Returns the raw JSON value of [outputTokens].
+     *
+     * Unlike [outputTokens], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("output_tokens")
     @ExcludeMissing
     fun _outputTokens(): JsonField<Long> = outputTokens
@@ -127,15 +166,28 @@ private constructor(
         fun cacheCreationInputTokens(cacheCreationInputTokens: Long?) =
             cacheCreationInputTokens(JsonField.ofNullable(cacheCreationInputTokens))
 
-        /** The number of input tokens used to create the cache entry. */
+        /**
+         * Alias for [Builder.cacheCreationInputTokens].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
         fun cacheCreationInputTokens(cacheCreationInputTokens: Long) =
             cacheCreationInputTokens(cacheCreationInputTokens as Long?)
 
-        /** The number of input tokens used to create the cache entry. */
+        /**
+         * Alias for calling [Builder.cacheCreationInputTokens] with
+         * `cacheCreationInputTokens.orElse(null)`.
+         */
         fun cacheCreationInputTokens(cacheCreationInputTokens: Optional<Long>) =
             cacheCreationInputTokens(cacheCreationInputTokens.getOrNull())
 
-        /** The number of input tokens used to create the cache entry. */
+        /**
+         * Sets [Builder.cacheCreationInputTokens] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.cacheCreationInputTokens] with a well-typed [Long] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
         fun cacheCreationInputTokens(cacheCreationInputTokens: JsonField<Long>) = apply {
             this.cacheCreationInputTokens = cacheCreationInputTokens
         }
@@ -144,15 +196,28 @@ private constructor(
         fun cacheReadInputTokens(cacheReadInputTokens: Long?) =
             cacheReadInputTokens(JsonField.ofNullable(cacheReadInputTokens))
 
-        /** The number of input tokens read from the cache. */
+        /**
+         * Alias for [Builder.cacheReadInputTokens].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
         fun cacheReadInputTokens(cacheReadInputTokens: Long) =
             cacheReadInputTokens(cacheReadInputTokens as Long?)
 
-        /** The number of input tokens read from the cache. */
+        /**
+         * Alias for calling [Builder.cacheReadInputTokens] with
+         * `cacheReadInputTokens.orElse(null)`.
+         */
         fun cacheReadInputTokens(cacheReadInputTokens: Optional<Long>) =
             cacheReadInputTokens(cacheReadInputTokens.getOrNull())
 
-        /** The number of input tokens read from the cache. */
+        /**
+         * Sets [Builder.cacheReadInputTokens] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.cacheReadInputTokens] with a well-typed [Long] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
         fun cacheReadInputTokens(cacheReadInputTokens: JsonField<Long>) = apply {
             this.cacheReadInputTokens = cacheReadInputTokens
         }
@@ -160,13 +225,25 @@ private constructor(
         /** The number of input tokens which were used. */
         fun inputTokens(inputTokens: Long) = inputTokens(JsonField.of(inputTokens))
 
-        /** The number of input tokens which were used. */
+        /**
+         * Sets [Builder.inputTokens] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.inputTokens] with a well-typed [Long] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun inputTokens(inputTokens: JsonField<Long>) = apply { this.inputTokens = inputTokens }
 
         /** The number of output tokens which were used. */
         fun outputTokens(outputTokens: Long) = outputTokens(JsonField.of(outputTokens))
 
-        /** The number of output tokens which were used. */
+        /**
+         * Sets [Builder.outputTokens] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.outputTokens] with a well-typed [Long] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun outputTokens(outputTokens: JsonField<Long>) = apply { this.outputTokens = outputTokens }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

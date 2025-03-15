@@ -10,6 +10,7 @@ import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
+import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -42,6 +43,9 @@ private constructor(
      * Number of requests in the Message Batch that have been canceled.
      *
      * This is zero until processing of the entire Message Batch has ended.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun canceled(): Long = canceled.getRequired("canceled")
 
@@ -49,6 +53,9 @@ private constructor(
      * Number of requests in the Message Batch that encountered an error.
      *
      * This is zero until processing of the entire Message Batch has ended.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun errored(): Long = errored.getRequired("errored")
 
@@ -56,47 +63,62 @@ private constructor(
      * Number of requests in the Message Batch that have expired.
      *
      * This is zero until processing of the entire Message Batch has ended.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun expired(): Long = expired.getRequired("expired")
 
-    /** Number of requests in the Message Batch that are processing. */
+    /**
+     * Number of requests in the Message Batch that are processing.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun processing(): Long = processing.getRequired("processing")
 
     /**
      * Number of requests in the Message Batch that have completed successfully.
      *
      * This is zero until processing of the entire Message Batch has ended.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun succeeded(): Long = succeeded.getRequired("succeeded")
 
     /**
-     * Number of requests in the Message Batch that have been canceled.
+     * Returns the raw JSON value of [canceled].
      *
-     * This is zero until processing of the entire Message Batch has ended.
+     * Unlike [canceled], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("canceled") @ExcludeMissing fun _canceled(): JsonField<Long> = canceled
 
     /**
-     * Number of requests in the Message Batch that encountered an error.
+     * Returns the raw JSON value of [errored].
      *
-     * This is zero until processing of the entire Message Batch has ended.
+     * Unlike [errored], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("errored") @ExcludeMissing fun _errored(): JsonField<Long> = errored
 
     /**
-     * Number of requests in the Message Batch that have expired.
+     * Returns the raw JSON value of [expired].
      *
-     * This is zero until processing of the entire Message Batch has ended.
+     * Unlike [expired], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("expired") @ExcludeMissing fun _expired(): JsonField<Long> = expired
 
-    /** Number of requests in the Message Batch that are processing. */
+    /**
+     * Returns the raw JSON value of [processing].
+     *
+     * Unlike [processing], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("processing") @ExcludeMissing fun _processing(): JsonField<Long> = processing
 
     /**
-     * Number of requests in the Message Batch that have completed successfully.
+     * Returns the raw JSON value of [succeeded].
      *
-     * This is zero until processing of the entire Message Batch has ended.
+     * Unlike [succeeded], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("succeeded") @ExcludeMissing fun _succeeded(): JsonField<Long> = succeeded
 
@@ -166,9 +188,10 @@ private constructor(
         fun canceled(canceled: Long) = canceled(JsonField.of(canceled))
 
         /**
-         * Number of requests in the Message Batch that have been canceled.
+         * Sets [Builder.canceled] to an arbitrary JSON value.
          *
-         * This is zero until processing of the entire Message Batch has ended.
+         * You should usually call [Builder.canceled] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun canceled(canceled: JsonField<Long>) = apply { this.canceled = canceled }
 
@@ -180,9 +203,10 @@ private constructor(
         fun errored(errored: Long) = errored(JsonField.of(errored))
 
         /**
-         * Number of requests in the Message Batch that encountered an error.
+         * Sets [Builder.errored] to an arbitrary JSON value.
          *
-         * This is zero until processing of the entire Message Batch has ended.
+         * You should usually call [Builder.errored] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun errored(errored: JsonField<Long>) = apply { this.errored = errored }
 
@@ -194,16 +218,22 @@ private constructor(
         fun expired(expired: Long) = expired(JsonField.of(expired))
 
         /**
-         * Number of requests in the Message Batch that have expired.
+         * Sets [Builder.expired] to an arbitrary JSON value.
          *
-         * This is zero until processing of the entire Message Batch has ended.
+         * You should usually call [Builder.expired] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun expired(expired: JsonField<Long>) = apply { this.expired = expired }
 
         /** Number of requests in the Message Batch that are processing. */
         fun processing(processing: Long) = processing(JsonField.of(processing))
 
-        /** Number of requests in the Message Batch that are processing. */
+        /**
+         * Sets [Builder.processing] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.processing] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun processing(processing: JsonField<Long>) = apply { this.processing = processing }
 
         /**
@@ -214,9 +244,10 @@ private constructor(
         fun succeeded(succeeded: Long) = succeeded(JsonField.of(succeeded))
 
         /**
-         * Number of requests in the Message Batch that have completed successfully.
+         * Sets [Builder.succeeded] to an arbitrary JSON value.
          *
-         * This is zero until processing of the entire Message Batch has ended.
+         * You should usually call [Builder.succeeded] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun succeeded(succeeded: JsonField<Long>) = apply { this.succeeded = succeeded }
 

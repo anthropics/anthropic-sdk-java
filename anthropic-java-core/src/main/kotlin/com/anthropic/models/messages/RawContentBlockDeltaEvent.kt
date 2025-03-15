@@ -39,14 +39,41 @@ private constructor(
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun delta(): Delta = delta.getRequired("delta")
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun index(): Long = index.getRequired("index")
 
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("content_block_delta")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
+    /**
+     * Returns the raw JSON value of [delta].
+     *
+     * Unlike [delta], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("delta") @ExcludeMissing fun _delta(): JsonField<Delta> = delta
 
+    /**
+     * Returns the raw JSON value of [index].
+     *
+     * Unlike [index], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("index") @ExcludeMissing fun _index(): JsonField<Long> = index
 
     @JsonAnyGetter
@@ -104,45 +131,126 @@ private constructor(
 
         fun delta(delta: Delta) = delta(JsonField.of(delta))
 
+        /**
+         * Sets [Builder.delta] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.delta] with a well-typed [Delta] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun delta(delta: JsonField<Delta>) = apply { this.delta = delta }
 
+        /** Alias for calling [delta] with `Delta.ofText(text)`. */
         fun delta(text: TextDelta) = delta(Delta.ofText(text))
 
+        /**
+         * Alias for calling [delta] with the following:
+         * ```java
+         * TextDelta.builder()
+         *     .text(text)
+         *     .build()
+         * ```
+         */
         fun textDelta(text: String) = delta(TextDelta.builder().text(text).build())
 
+        /** Alias for calling [delta] with `Delta.ofInputJson(inputJson)`. */
         fun delta(inputJson: InputJsonDelta) = delta(Delta.ofInputJson(inputJson))
 
+        /**
+         * Alias for calling [delta] with the following:
+         * ```java
+         * InputJsonDelta.builder()
+         *     .partialJson(partialJson)
+         *     .build()
+         * ```
+         */
         fun inputJsonDelta(partialJson: String) =
             delta(InputJsonDelta.builder().partialJson(partialJson).build())
 
+        /** Alias for calling [delta] with `Delta.ofCitations(citations)`. */
         fun delta(citations: CitationsDelta) = delta(Delta.ofCitations(citations))
 
+        /**
+         * Alias for calling [delta] with the following:
+         * ```java
+         * CitationsDelta.builder()
+         *     .citation(citation)
+         *     .build()
+         * ```
+         */
         fun citationsDelta(citation: CitationsDelta.Citation) =
             delta(CitationsDelta.builder().citation(citation).build())
 
+        /**
+         * Alias for calling [citationsDelta] with
+         * `CitationsDelta.Citation.ofCharLocation(charLocation)`.
+         */
         fun citationsDelta(charLocation: CitationCharLocation) =
             citationsDelta(CitationsDelta.Citation.ofCharLocation(charLocation))
 
+        /**
+         * Alias for calling [citationsDelta] with
+         * `CitationsDelta.Citation.ofPageLocation(pageLocation)`.
+         */
         fun citationsDelta(pageLocation: CitationPageLocation) =
             citationsDelta(CitationsDelta.Citation.ofPageLocation(pageLocation))
 
+        /**
+         * Alias for calling [citationsDelta] with
+         * `CitationsDelta.Citation.ofContentBlockLocation(contentBlockLocation)`.
+         */
         fun citationsDelta(contentBlockLocation: CitationContentBlockLocation) =
             citationsDelta(CitationsDelta.Citation.ofContentBlockLocation(contentBlockLocation))
 
+        /** Alias for calling [delta] with `Delta.ofThinking(thinking)`. */
         fun delta(thinking: ThinkingDelta) = delta(Delta.ofThinking(thinking))
 
+        /**
+         * Alias for calling [delta] with the following:
+         * ```java
+         * ThinkingDelta.builder()
+         *     .thinking(thinking)
+         *     .build()
+         * ```
+         */
         fun thinkingDelta(thinking: String) =
             delta(ThinkingDelta.builder().thinking(thinking).build())
 
+        /** Alias for calling [delta] with `Delta.ofSignature(signature)`. */
         fun delta(signature: SignatureDelta) = delta(Delta.ofSignature(signature))
 
+        /**
+         * Alias for calling [delta] with the following:
+         * ```java
+         * SignatureDelta.builder()
+         *     .signature(signature)
+         *     .build()
+         * ```
+         */
         fun signatureDelta(signature: String) =
             delta(SignatureDelta.builder().signature(signature).build())
 
         fun index(index: Long) = index(JsonField.of(index))
 
+        /**
+         * Sets [Builder.index] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.index] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun index(index: JsonField<Long>) = apply { this.index = index }
 
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("content_block_delta")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun type(type: JsonValue) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

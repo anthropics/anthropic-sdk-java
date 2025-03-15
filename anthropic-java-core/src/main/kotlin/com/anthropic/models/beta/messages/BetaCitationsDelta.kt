@@ -40,10 +40,28 @@ private constructor(
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun citation(): Citation = citation.getRequired("citation")
 
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("citations_delta")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
+    /**
+     * Returns the raw JSON value of [citation].
+     *
+     * Unlike [citation], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("citation") @ExcludeMissing fun _citation(): JsonField<Citation> = citation
 
     @JsonAnyGetter
@@ -97,17 +115,48 @@ private constructor(
 
         fun citation(citation: Citation) = citation(JsonField.of(citation))
 
+        /**
+         * Sets [Builder.citation] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.citation] with a well-typed [Citation] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun citation(citation: JsonField<Citation>) = apply { this.citation = citation }
 
+        /**
+         * Alias for calling [citation] with
+         * `Citation.ofBetaCitationCharLocation(betaCitationCharLocation)`.
+         */
         fun citation(betaCitationCharLocation: BetaCitationCharLocation) =
             citation(Citation.ofBetaCitationCharLocation(betaCitationCharLocation))
 
+        /**
+         * Alias for calling [citation] with
+         * `Citation.ofBetaCitationPageLocation(betaCitationPageLocation)`.
+         */
         fun citation(betaCitationPageLocation: BetaCitationPageLocation) =
             citation(Citation.ofBetaCitationPageLocation(betaCitationPageLocation))
 
+        /**
+         * Alias for calling [citation] with
+         * `Citation.ofBetaCitationContentBlockLocation(betaCitationContentBlockLocation)`.
+         */
         fun citation(betaCitationContentBlockLocation: BetaCitationContentBlockLocation) =
             citation(Citation.ofBetaCitationContentBlockLocation(betaCitationContentBlockLocation))
 
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("citations_delta")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun type(type: JsonValue) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

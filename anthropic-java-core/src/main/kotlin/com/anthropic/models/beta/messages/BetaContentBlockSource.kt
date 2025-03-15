@@ -39,10 +39,28 @@ private constructor(
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun content(): Content = content.getRequired("content")
 
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("content")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
+    /**
+     * Returns the raw JSON value of [content].
+     *
+     * Unlike [content], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("content") @ExcludeMissing fun _content(): JsonField<Content> = content
 
     @JsonAnyGetter
@@ -96,14 +114,37 @@ private constructor(
 
         fun content(content: Content) = content(JsonField.of(content))
 
+        /**
+         * Sets [Builder.content] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.content] with a well-typed [Content] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun content(content: JsonField<Content>) = apply { this.content = content }
 
+        /** Alias for calling [content] with `Content.ofString(string)`. */
         fun content(string: String) = content(Content.ofString(string))
 
+        /**
+         * Alias for calling [content] with
+         * `Content.ofBetaContentBlockSource(betaContentBlockSource)`.
+         */
         fun contentOfBetaContentBlockSource(
             betaContentBlockSource: List<BetaContentBlockSourceContent>
         ) = content(Content.ofBetaContentBlockSource(betaContentBlockSource))
 
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("content")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun type(type: JsonValue) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

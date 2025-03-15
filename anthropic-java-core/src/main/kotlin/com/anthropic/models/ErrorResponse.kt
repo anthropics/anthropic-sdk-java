@@ -28,10 +28,28 @@ private constructor(
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun error(): ErrorObject = error.getRequired("error")
 
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("error")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
+    /**
+     * Returns the raw JSON value of [error].
+     *
+     * Unlike [error], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("error") @ExcludeMissing fun _error(): JsonField<ErrorObject> = error
 
     @JsonAnyGetter
@@ -85,58 +103,164 @@ private constructor(
 
         fun error(error: ErrorObject) = error(JsonField.of(error))
 
+        /**
+         * Sets [Builder.error] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.error] with a well-typed [ErrorObject] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun error(error: JsonField<ErrorObject>) = apply { this.error = error }
 
+        /**
+         * Alias for calling [error] with `ErrorObject.ofInvalidRequestError(invalidRequestError)`.
+         */
         fun error(invalidRequestError: InvalidRequestError) =
             error(ErrorObject.ofInvalidRequestError(invalidRequestError))
 
+        /**
+         * Alias for calling [error] with the following:
+         * ```java
+         * InvalidRequestError.builder()
+         *     .message(message)
+         *     .build()
+         * ```
+         */
         fun invalidRequestErrorError(message: String) =
             error(InvalidRequestError.builder().message(message).build())
 
+        /**
+         * Alias for calling [error] with `ErrorObject.ofAuthenticationError(authenticationError)`.
+         */
         fun error(authenticationError: AuthenticationError) =
             error(ErrorObject.ofAuthenticationError(authenticationError))
 
+        /**
+         * Alias for calling [error] with the following:
+         * ```java
+         * AuthenticationError.builder()
+         *     .message(message)
+         *     .build()
+         * ```
+         */
         fun authenticationErrorError(message: String) =
             error(AuthenticationError.builder().message(message).build())
 
+        /** Alias for calling [error] with `ErrorObject.ofBillingError(billingError)`. */
         fun error(billingError: BillingError) = error(ErrorObject.ofBillingError(billingError))
 
+        /**
+         * Alias for calling [error] with the following:
+         * ```java
+         * BillingError.builder()
+         *     .message(message)
+         *     .build()
+         * ```
+         */
         fun billingErrorError(message: String) =
             error(BillingError.builder().message(message).build())
 
+        /** Alias for calling [error] with `ErrorObject.ofPermissionError(permissionError)`. */
         fun error(permissionError: PermissionError) =
             error(ErrorObject.ofPermissionError(permissionError))
 
+        /**
+         * Alias for calling [error] with the following:
+         * ```java
+         * PermissionError.builder()
+         *     .message(message)
+         *     .build()
+         * ```
+         */
         fun permissionErrorError(message: String) =
             error(PermissionError.builder().message(message).build())
 
+        /** Alias for calling [error] with `ErrorObject.ofNotFoundError(notFoundError)`. */
         fun error(notFoundError: NotFoundError) = error(ErrorObject.ofNotFoundError(notFoundError))
 
+        /**
+         * Alias for calling [error] with the following:
+         * ```java
+         * NotFoundError.builder()
+         *     .message(message)
+         *     .build()
+         * ```
+         */
         fun notFoundErrorError(message: String) =
             error(NotFoundError.builder().message(message).build())
 
+        /** Alias for calling [error] with `ErrorObject.ofRateLimitError(rateLimitError)`. */
         fun error(rateLimitError: RateLimitError) =
             error(ErrorObject.ofRateLimitError(rateLimitError))
 
+        /**
+         * Alias for calling [error] with the following:
+         * ```java
+         * RateLimitError.builder()
+         *     .message(message)
+         *     .build()
+         * ```
+         */
         fun rateLimitErrorError(message: String) =
             error(RateLimitError.builder().message(message).build())
 
+        /**
+         * Alias for calling [error] with `ErrorObject.ofGatewayTimeoutError(gatewayTimeoutError)`.
+         */
         fun error(gatewayTimeoutError: GatewayTimeoutError) =
             error(ErrorObject.ofGatewayTimeoutError(gatewayTimeoutError))
 
+        /**
+         * Alias for calling [error] with the following:
+         * ```java
+         * GatewayTimeoutError.builder()
+         *     .message(message)
+         *     .build()
+         * ```
+         */
         fun gatewayTimeoutErrorError(message: String) =
             error(GatewayTimeoutError.builder().message(message).build())
 
+        /** Alias for calling [error] with `ErrorObject.ofApi(api)`. */
         fun error(api: ApiErrorObject) = error(ErrorObject.ofApi(api))
 
+        /**
+         * Alias for calling [error] with the following:
+         * ```java
+         * ApiErrorObject.builder()
+         *     .message(message)
+         *     .build()
+         * ```
+         */
         fun apiError(message: String) = error(ApiErrorObject.builder().message(message).build())
 
+        /** Alias for calling [error] with `ErrorObject.ofOverloadedError(overloadedError)`. */
         fun error(overloadedError: OverloadedError) =
             error(ErrorObject.ofOverloadedError(overloadedError))
 
+        /**
+         * Alias for calling [error] with the following:
+         * ```java
+         * OverloadedError.builder()
+         *     .message(message)
+         *     .build()
+         * ```
+         */
         fun overloadedErrorError(message: String) =
             error(OverloadedError.builder().message(message).build())
 
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("error")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun type(type: JsonValue) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

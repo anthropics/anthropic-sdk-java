@@ -40,12 +40,30 @@ private constructor(
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun content(): Content = content.getRequired("content")
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun role(): Role = role.getRequired("role")
 
+    /**
+     * Returns the raw JSON value of [content].
+     *
+     * Unlike [content], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("content") @ExcludeMissing fun _content(): JsonField<Content> = content
 
+    /**
+     * Returns the raw JSON value of [role].
+     *
+     * Unlike [role], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("role") @ExcludeMissing fun _role(): JsonField<Role> = role
 
     @JsonAnyGetter
@@ -96,15 +114,32 @@ private constructor(
 
         fun content(content: Content) = content(JsonField.of(content))
 
+        /**
+         * Sets [Builder.content] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.content] with a well-typed [Content] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun content(content: JsonField<Content>) = apply { this.content = content }
 
+        /** Alias for calling [content] with `Content.ofString(string)`. */
         fun content(string: String) = content(Content.ofString(string))
 
+        /**
+         * Alias for calling [content] with
+         * `Content.ofBetaContentBlockParams(betaContentBlockParams)`.
+         */
         fun contentOfBetaContentBlockParams(betaContentBlockParams: List<BetaContentBlockParam>) =
             content(Content.ofBetaContentBlockParams(betaContentBlockParams))
 
         fun role(role: Role) = role(JsonField.of(role))
 
+        /**
+         * Sets [Builder.role] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.role] with a well-typed [Role] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun role(role: JsonField<Role>) = apply { this.role = role }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

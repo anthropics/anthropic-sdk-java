@@ -42,6 +42,9 @@ private constructor(
      * [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
      *
      * This defines the shape of the `input` that your tool accepts and that the model will produce.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun inputSchema(): InputSchema = inputSchema.getRequired("input_schema")
 
@@ -49,9 +52,16 @@ private constructor(
      * Name of the tool.
      *
      * This is how the tool will be called by the model and in tool_use blocks.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun name(): String = name.getRequired("name")
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
@@ -61,41 +71,56 @@ private constructor(
      * Tool descriptions should be as detailed as possible. The more information that the model has
      * about what the tool is and how to use it, the better it will perform. You can use natural
      * language descriptions to reinforce important aspects of the tool input JSON schema.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
     fun description(): Optional<String> =
         Optional.ofNullable(description.getNullable("description"))
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun type(): Optional<Type> = Optional.ofNullable(type.getNullable("type"))
 
     /**
-     * [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
+     * Returns the raw JSON value of [inputSchema].
      *
-     * This defines the shape of the `input` that your tool accepts and that the model will produce.
+     * Unlike [inputSchema], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("input_schema")
     @ExcludeMissing
     fun _inputSchema(): JsonField<InputSchema> = inputSchema
 
     /**
-     * Name of the tool.
+     * Returns the raw JSON value of [name].
      *
-     * This is how the tool will be called by the model and in tool_use blocks.
+     * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
 
+    /**
+     * Returns the raw JSON value of [cacheControl].
+     *
+     * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("cache_control")
     @ExcludeMissing
     fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
 
     /**
-     * Description of what this tool does.
+     * Returns the raw JSON value of [description].
      *
-     * Tool descriptions should be as detailed as possible. The more information that the model has
-     * about what the tool is and how to use it, the better it will perform. You can use natural
-     * language descriptions to reinforce important aspects of the tool input JSON schema.
+     * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
 
+    /**
+     * Returns the raw JSON value of [type].
+     *
+     * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     @JsonAnyGetter
@@ -162,10 +187,11 @@ private constructor(
         fun inputSchema(inputSchema: InputSchema) = inputSchema(JsonField.of(inputSchema))
 
         /**
-         * [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
+         * Sets [Builder.inputSchema] to an arbitrary JSON value.
          *
-         * This defines the shape of the `input` that your tool accepts and that the model will
-         * produce.
+         * You should usually call [Builder.inputSchema] with a well-typed [InputSchema] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         fun inputSchema(inputSchema: JsonField<InputSchema>) = apply {
             this.inputSchema = inputSchema
@@ -179,18 +205,27 @@ private constructor(
         fun name(name: String) = name(JsonField.of(name))
 
         /**
-         * Name of the tool.
+         * Sets [Builder.name] to an arbitrary JSON value.
          *
-         * This is how the tool will be called by the model and in tool_use blocks.
+         * You should usually call [Builder.name] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun name(name: JsonField<String>) = apply { this.name = name }
 
         fun cacheControl(cacheControl: BetaCacheControlEphemeral?) =
             cacheControl(JsonField.ofNullable(cacheControl))
 
+        /** Alias for calling [Builder.cacheControl] with `cacheControl.orElse(null)`. */
         fun cacheControl(cacheControl: Optional<BetaCacheControlEphemeral>) =
             cacheControl(cacheControl.getOrNull())
 
+        /**
+         * Sets [Builder.cacheControl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.cacheControl] with a well-typed
+         * [BetaCacheControlEphemeral] value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
+         */
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
@@ -206,19 +241,25 @@ private constructor(
         fun description(description: String) = description(JsonField.of(description))
 
         /**
-         * Description of what this tool does.
+         * Sets [Builder.description] to an arbitrary JSON value.
          *
-         * Tool descriptions should be as detailed as possible. The more information that the model
-         * has about what the tool is and how to use it, the better it will perform. You can use
-         * natural language descriptions to reinforce important aspects of the tool input JSON
-         * schema.
+         * You should usually call [Builder.description] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
         fun description(description: JsonField<String>) = apply { this.description = description }
 
         fun type(type: Type?) = type(JsonField.ofNullable(type))
 
+        /** Alias for calling [Builder.type] with `type.orElse(null)`. */
         fun type(type: Optional<Type>) = type(type.getOrNull())
 
+        /**
+         * Sets [Builder.type] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.type] with a well-typed [Type] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -268,6 +309,15 @@ private constructor(
         private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
     ) {
 
+        /**
+         * Expected to always return the following:
+         * ```java
+         * JsonValue.from("object")
+         * ```
+         *
+         * However, this method can be useful for debugging and logging (e.g. if the server
+         * responded with an unexpected value).
+         */
         @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
         @JsonProperty("properties") @ExcludeMissing fun _properties(): JsonValue = properties
@@ -313,6 +363,18 @@ private constructor(
                 additionalProperties = inputSchema.additionalProperties.toMutableMap()
             }
 
+            /**
+             * Sets the field to an arbitrary JSON value.
+             *
+             * It is usually unnecessary to call this method because the field defaults to the
+             * following:
+             * ```java
+             * JsonValue.from("object")
+             * ```
+             *
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
             fun type(type: JsonValue) = apply { this.type = type }
 
             fun properties(properties: JsonValue) = apply { this.properties = properties }

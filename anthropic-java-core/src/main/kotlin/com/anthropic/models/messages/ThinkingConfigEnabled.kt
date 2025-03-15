@@ -37,20 +37,27 @@ private constructor(
      * See
      * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
      * for details.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun budgetTokens(): Long = budgetTokens.getRequired("budget_tokens")
 
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("enabled")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
-     * Determines how many tokens Claude can use for its internal reasoning process. Larger budgets
-     * can enable more thorough analysis for complex problems, improving response quality.
+     * Returns the raw JSON value of [budgetTokens].
      *
-     * Must be ≥1024 and less than `max_tokens`.
-     *
-     * See
-     * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
-     * for details.
+     * Unlike [budgetTokens], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("budget_tokens")
     @ExcludeMissing
@@ -119,18 +126,26 @@ private constructor(
         fun budgetTokens(budgetTokens: Long) = budgetTokens(JsonField.of(budgetTokens))
 
         /**
-         * Determines how many tokens Claude can use for its internal reasoning process. Larger
-         * budgets can enable more thorough analysis for complex problems, improving response
-         * quality.
+         * Sets [Builder.budgetTokens] to an arbitrary JSON value.
          *
-         * Must be ≥1024 and less than `max_tokens`.
-         *
-         * See
-         * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
-         * for details.
+         * You should usually call [Builder.budgetTokens] with a well-typed [Long] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
         fun budgetTokens(budgetTokens: JsonField<Long>) = apply { this.budgetTokens = budgetTokens }
 
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("enabled")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun type(type: JsonValue) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

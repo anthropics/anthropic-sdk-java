@@ -41,16 +41,43 @@ private constructor(
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun contentBlock(): ContentBlock = contentBlock.getRequired("content_block")
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun index(): Long = index.getRequired("index")
 
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("content_block_start")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
+    /**
+     * Returns the raw JSON value of [contentBlock].
+     *
+     * Unlike [contentBlock], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("content_block")
     @ExcludeMissing
     fun _contentBlock(): JsonField<ContentBlock> = contentBlock
 
+    /**
+     * Returns the raw JSON value of [index].
+     *
+     * Unlike [index], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("index") @ExcludeMissing fun _index(): JsonField<Long> = index
 
     @JsonAnyGetter
@@ -109,28 +136,68 @@ private constructor(
 
         fun contentBlock(contentBlock: ContentBlock) = contentBlock(JsonField.of(contentBlock))
 
+        /**
+         * Sets [Builder.contentBlock] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.contentBlock] with a well-typed [ContentBlock] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
         fun contentBlock(contentBlock: JsonField<ContentBlock>) = apply {
             this.contentBlock = contentBlock
         }
 
+        /** Alias for calling [contentBlock] with `ContentBlock.ofBetaText(betaText)`. */
         fun contentBlock(betaText: BetaTextBlock) = contentBlock(ContentBlock.ofBetaText(betaText))
 
+        /** Alias for calling [contentBlock] with `ContentBlock.ofBetaToolUse(betaToolUse)`. */
         fun contentBlock(betaToolUse: BetaToolUseBlock) =
             contentBlock(ContentBlock.ofBetaToolUse(betaToolUse))
 
+        /** Alias for calling [contentBlock] with `ContentBlock.ofBetaThinking(betaThinking)`. */
         fun contentBlock(betaThinking: BetaThinkingBlock) =
             contentBlock(ContentBlock.ofBetaThinking(betaThinking))
 
+        /**
+         * Alias for calling [contentBlock] with
+         * `ContentBlock.ofBetaRedactedThinking(betaRedactedThinking)`.
+         */
         fun contentBlock(betaRedactedThinking: BetaRedactedThinkingBlock) =
             contentBlock(ContentBlock.ofBetaRedactedThinking(betaRedactedThinking))
 
+        /**
+         * Alias for calling [contentBlock] with the following:
+         * ```java
+         * BetaRedactedThinkingBlock.builder()
+         *     .data(data)
+         *     .build()
+         * ```
+         */
         fun betaRedactedThinkingContentBlock(data: String) =
             contentBlock(BetaRedactedThinkingBlock.builder().data(data).build())
 
         fun index(index: Long) = index(JsonField.of(index))
 
+        /**
+         * Sets [Builder.index] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.index] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun index(index: JsonField<Long>) = apply { this.index = index }
 
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("content_block_start")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun type(type: JsonValue) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

@@ -50,32 +50,86 @@ private constructor(
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun source(): Source = source.getRequired("source")
 
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("document")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun citations(): Optional<BetaCitationsConfigParam> =
         Optional.ofNullable(citations.getNullable("citations"))
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun context(): Optional<String> = Optional.ofNullable(context.getNullable("context"))
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun title(): Optional<String> = Optional.ofNullable(title.getNullable("title"))
 
+    /**
+     * Returns the raw JSON value of [source].
+     *
+     * Unlike [source], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("source") @ExcludeMissing fun _source(): JsonField<Source> = source
 
+    /**
+     * Returns the raw JSON value of [cacheControl].
+     *
+     * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("cache_control")
     @ExcludeMissing
     fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
 
+    /**
+     * Returns the raw JSON value of [citations].
+     *
+     * Unlike [citations], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("citations")
     @ExcludeMissing
     fun _citations(): JsonField<BetaCitationsConfigParam> = citations
 
+    /**
+     * Returns the raw JSON value of [context].
+     *
+     * Unlike [context], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("context") @ExcludeMissing fun _context(): JsonField<String> = context
 
+    /**
+     * Returns the raw JSON value of [title].
+     *
+     * Unlike [title], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("title") @ExcludeMissing fun _title(): JsonField<String> = title
 
     @JsonAnyGetter
@@ -141,29 +195,70 @@ private constructor(
 
         fun source(source: Source) = source(JsonField.of(source))
 
+        /**
+         * Sets [Builder.source] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.source] with a well-typed [Source] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun source(source: JsonField<Source>) = apply { this.source = source }
 
+        /** Alias for calling [source] with `Source.ofBetaBase64Pdf(betaBase64Pdf)`. */
         fun source(betaBase64Pdf: BetaBase64PdfSource) =
             source(Source.ofBetaBase64Pdf(betaBase64Pdf))
 
+        /**
+         * Alias for calling [source] with the following:
+         * ```java
+         * BetaBase64PdfSource.builder()
+         *     .data(data)
+         *     .build()
+         * ```
+         */
         fun betaBase64PdfSource(data: String) =
             source(BetaBase64PdfSource.builder().data(data).build())
 
+        /** Alias for calling [source] with `Source.ofBetaPlainText(betaPlainText)`. */
         fun source(betaPlainText: BetaPlainTextSource) =
             source(Source.ofBetaPlainText(betaPlainText))
 
+        /**
+         * Alias for calling [source] with the following:
+         * ```java
+         * BetaPlainTextSource.builder()
+         *     .data(data)
+         *     .build()
+         * ```
+         */
         fun betaPlainTextSource(data: String) =
             source(BetaPlainTextSource.builder().data(data).build())
 
+        /** Alias for calling [source] with `Source.ofBetaContentBlock(betaContentBlock)`. */
         fun source(betaContentBlock: BetaContentBlockSource) =
             source(Source.ofBetaContentBlock(betaContentBlock))
 
+        /**
+         * Alias for calling [source] with the following:
+         * ```java
+         * BetaContentBlockSource.builder()
+         *     .content(content)
+         *     .build()
+         * ```
+         */
         fun betaContentBlockSource(content: BetaContentBlockSource.Content) =
             source(BetaContentBlockSource.builder().content(content).build())
 
+        /**
+         * Alias for calling [betaContentBlockSource] with
+         * `BetaContentBlockSource.Content.ofString(string)`.
+         */
         fun betaContentBlockSource(string: String) =
             betaContentBlockSource(BetaContentBlockSource.Content.ofString(string))
 
+        /**
+         * Alias for calling [Builder.betaContentBlockSource] with
+         * `BetaContentBlockSource.Content.ofBetaContentBlockSource(betaContentBlockSource)`.
+         */
         fun betaContentBlockSourceOfBetaContentBlockSource(
             betaContentBlockSource: List<BetaContentBlockSourceContent>
         ) =
@@ -171,38 +266,88 @@ private constructor(
                 BetaContentBlockSource.Content.ofBetaContentBlockSource(betaContentBlockSource)
             )
 
+        /** Alias for calling [source] with `Source.ofBetaUrlPdf(betaUrlPdf)`. */
         fun source(betaUrlPdf: BetaUrlPdfSource) = source(Source.ofBetaUrlPdf(betaUrlPdf))
 
+        /**
+         * Alias for calling [source] with the following:
+         * ```java
+         * BetaUrlPdfSource.builder()
+         *     .url(url)
+         *     .build()
+         * ```
+         */
         fun betaUrlPdfSource(url: String) = source(BetaUrlPdfSource.builder().url(url).build())
 
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("document")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun type(type: JsonValue) = apply { this.type = type }
 
         fun cacheControl(cacheControl: BetaCacheControlEphemeral?) =
             cacheControl(JsonField.ofNullable(cacheControl))
 
+        /** Alias for calling [Builder.cacheControl] with `cacheControl.orElse(null)`. */
         fun cacheControl(cacheControl: Optional<BetaCacheControlEphemeral>) =
             cacheControl(cacheControl.getOrNull())
 
+        /**
+         * Sets [Builder.cacheControl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.cacheControl] with a well-typed
+         * [BetaCacheControlEphemeral] value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
+         */
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
 
         fun citations(citations: BetaCitationsConfigParam) = citations(JsonField.of(citations))
 
+        /**
+         * Sets [Builder.citations] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.citations] with a well-typed [BetaCitationsConfigParam]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
         fun citations(citations: JsonField<BetaCitationsConfigParam>) = apply {
             this.citations = citations
         }
 
         fun context(context: String?) = context(JsonField.ofNullable(context))
 
+        /** Alias for calling [Builder.context] with `context.orElse(null)`. */
         fun context(context: Optional<String>) = context(context.getOrNull())
 
+        /**
+         * Sets [Builder.context] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.context] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun context(context: JsonField<String>) = apply { this.context = context }
 
         fun title(title: String?) = title(JsonField.ofNullable(title))
 
+        /** Alias for calling [Builder.title] with `title.orElse(null)`. */
         fun title(title: Optional<String>) = title(title.getOrNull())
 
+        /**
+         * Sets [Builder.title] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.title] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun title(title: JsonField<String>) = apply { this.title = title }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

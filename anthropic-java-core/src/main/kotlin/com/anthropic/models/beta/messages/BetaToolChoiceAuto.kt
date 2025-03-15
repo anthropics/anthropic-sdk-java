@@ -29,20 +29,33 @@ private constructor(
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("auto")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
      * Whether to disable parallel tool use.
      *
      * Defaults to `false`. If set to `true`, the model will output at most one tool use.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
     fun disableParallelToolUse(): Optional<Boolean> =
         Optional.ofNullable(disableParallelToolUse.getNullable("disable_parallel_tool_use"))
 
     /**
-     * Whether to disable parallel tool use.
+     * Returns the raw JSON value of [disableParallelToolUse].
      *
-     * Defaults to `false`. If set to `true`, the model will output at most one tool use.
+     * Unlike [disableParallelToolUse], this method doesn't throw if the JSON field has an
+     * unexpected type.
      */
     @JsonProperty("disable_parallel_tool_use")
     @ExcludeMissing
@@ -90,6 +103,18 @@ private constructor(
             additionalProperties = betaToolChoiceAuto.additionalProperties.toMutableMap()
         }
 
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("auto")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun type(type: JsonValue) = apply { this.type = type }
 
         /**
@@ -101,9 +126,11 @@ private constructor(
             disableParallelToolUse(JsonField.of(disableParallelToolUse))
 
         /**
-         * Whether to disable parallel tool use.
+         * Sets [Builder.disableParallelToolUse] to an arbitrary JSON value.
          *
-         * Defaults to `false`. If set to `true`, the model will output at most one tool use.
+         * You should usually call [Builder.disableParallelToolUse] with a well-typed [Boolean]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
          */
         fun disableParallelToolUse(disableParallelToolUse: JsonField<Boolean>) = apply {
             this.disableParallelToolUse = disableParallelToolUse

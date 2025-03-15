@@ -35,22 +35,58 @@ private constructor(
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun text(): String = text.getRequired("text")
 
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("text")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun cacheControl(): Optional<CacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun citations(): Optional<List<TextCitationParam>> =
         Optional.ofNullable(citations.getNullable("citations"))
 
+    /**
+     * Returns the raw JSON value of [text].
+     *
+     * Unlike [text], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("text") @ExcludeMissing fun _text(): JsonField<String> = text
 
+    /**
+     * Returns the raw JSON value of [cacheControl].
+     *
+     * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("cache_control")
     @ExcludeMissing
     fun _cacheControl(): JsonField<CacheControlEphemeral> = cacheControl
 
+    /**
+     * Returns the raw JSON value of [citations].
+     *
+     * Unlike [citations], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("citations")
     @ExcludeMissing
     fun _citations(): JsonField<List<TextCitationParam>> = citations
@@ -112,16 +148,42 @@ private constructor(
 
         fun text(text: String) = text(JsonField.of(text))
 
+        /**
+         * Sets [Builder.text] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.text] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun text(text: JsonField<String>) = apply { this.text = text }
 
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("text")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun type(type: JsonValue) = apply { this.type = type }
 
         fun cacheControl(cacheControl: CacheControlEphemeral?) =
             cacheControl(JsonField.ofNullable(cacheControl))
 
+        /** Alias for calling [Builder.cacheControl] with `cacheControl.orElse(null)`. */
         fun cacheControl(cacheControl: Optional<CacheControlEphemeral>) =
             cacheControl(cacheControl.getOrNull())
 
+        /**
+         * Sets [Builder.cacheControl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.cacheControl] with a well-typed [CacheControlEphemeral]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
         fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
@@ -129,13 +191,26 @@ private constructor(
         fun citations(citations: List<TextCitationParam>?) =
             citations(JsonField.ofNullable(citations))
 
+        /** Alias for calling [Builder.citations] with `citations.orElse(null)`. */
         fun citations(citations: Optional<List<TextCitationParam>>) =
             citations(citations.getOrNull())
 
+        /**
+         * Sets [Builder.citations] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.citations] with a well-typed `List<TextCitationParam>`
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
         fun citations(citations: JsonField<List<TextCitationParam>>) = apply {
             this.citations = citations.map { it.toMutableList() }
         }
 
+        /**
+         * Adds a single [TextCitationParam] to [citations].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
         fun addCitation(citation: TextCitationParam) = apply {
             citations =
                 (citations ?: JsonField.of(mutableListOf())).also {
@@ -143,12 +218,24 @@ private constructor(
                 }
         }
 
+        /**
+         * Alias for calling [addCitation] with
+         * `TextCitationParam.ofCitationCharLocation(citationCharLocation)`.
+         */
         fun addCitation(citationCharLocation: CitationCharLocationParam) =
             addCitation(TextCitationParam.ofCitationCharLocation(citationCharLocation))
 
+        /**
+         * Alias for calling [addCitation] with
+         * `TextCitationParam.ofCitationPageLocation(citationPageLocation)`.
+         */
         fun addCitation(citationPageLocation: CitationPageLocationParam) =
             addCitation(TextCitationParam.ofCitationPageLocation(citationPageLocation))
 
+        /**
+         * Alias for calling [addCitation] with
+         * `TextCitationParam.ofCitationContentBlockLocation(citationContentBlockLocation)`.
+         */
         fun addCitation(citationContentBlockLocation: CitationContentBlockLocationParam) =
             addCitation(
                 TextCitationParam.ofCitationContentBlockLocation(citationContentBlockLocation)
