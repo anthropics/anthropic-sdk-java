@@ -42,33 +42,87 @@ private constructor(
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun citedText(): String = citedText.getRequired("cited_text")
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun documentIndex(): Long = documentIndex.getRequired("document_index")
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun documentTitle(): Optional<String> =
         Optional.ofNullable(documentTitle.getNullable("document_title"))
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun endPageNumber(): Long = endPageNumber.getRequired("end_page_number")
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun startPageNumber(): Long = startPageNumber.getRequired("start_page_number")
 
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("page_location")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
+    /**
+     * Returns the raw JSON value of [citedText].
+     *
+     * Unlike [citedText], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("cited_text") @ExcludeMissing fun _citedText(): JsonField<String> = citedText
 
+    /**
+     * Returns the raw JSON value of [documentIndex].
+     *
+     * Unlike [documentIndex], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("document_index")
     @ExcludeMissing
     fun _documentIndex(): JsonField<Long> = documentIndex
 
+    /**
+     * Returns the raw JSON value of [documentTitle].
+     *
+     * Unlike [documentTitle], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("document_title")
     @ExcludeMissing
     fun _documentTitle(): JsonField<String> = documentTitle
 
+    /**
+     * Returns the raw JSON value of [endPageNumber].
+     *
+     * Unlike [endPageNumber], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("end_page_number")
     @ExcludeMissing
     fun _endPageNumber(): JsonField<Long> = endPageNumber
 
+    /**
+     * Returns the raw JSON value of [startPageNumber].
+     *
+     * Unlike [startPageNumber], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("start_page_number")
     @ExcludeMissing
     fun _startPageNumber(): JsonField<Long> = startPageNumber
@@ -141,10 +195,24 @@ private constructor(
 
         fun citedText(citedText: String) = citedText(JsonField.of(citedText))
 
+        /**
+         * Sets [Builder.citedText] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.citedText] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun citedText(citedText: JsonField<String>) = apply { this.citedText = citedText }
 
         fun documentIndex(documentIndex: Long) = documentIndex(JsonField.of(documentIndex))
 
+        /**
+         * Sets [Builder.documentIndex] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.documentIndex] with a well-typed [Long] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun documentIndex(documentIndex: JsonField<Long>) = apply {
             this.documentIndex = documentIndex
         }
@@ -152,25 +220,59 @@ private constructor(
         fun documentTitle(documentTitle: String?) =
             documentTitle(JsonField.ofNullable(documentTitle))
 
+        /** Alias for calling [Builder.documentTitle] with `documentTitle.orElse(null)`. */
         fun documentTitle(documentTitle: Optional<String>) =
             documentTitle(documentTitle.getOrNull())
 
+        /**
+         * Sets [Builder.documentTitle] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.documentTitle] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun documentTitle(documentTitle: JsonField<String>) = apply {
             this.documentTitle = documentTitle
         }
 
         fun endPageNumber(endPageNumber: Long) = endPageNumber(JsonField.of(endPageNumber))
 
+        /**
+         * Sets [Builder.endPageNumber] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.endPageNumber] with a well-typed [Long] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun endPageNumber(endPageNumber: JsonField<Long>) = apply {
             this.endPageNumber = endPageNumber
         }
 
         fun startPageNumber(startPageNumber: Long) = startPageNumber(JsonField.of(startPageNumber))
 
+        /**
+         * Sets [Builder.startPageNumber] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.startPageNumber] with a well-typed [Long] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun startPageNumber(startPageNumber: JsonField<Long>) = apply {
             this.startPageNumber = startPageNumber
         }
 
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("page_location")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun type(type: JsonValue) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

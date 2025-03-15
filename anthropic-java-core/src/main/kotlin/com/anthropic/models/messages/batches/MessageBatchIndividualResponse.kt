@@ -10,6 +10,7 @@ import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
+import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.ErrorResponse
 import com.anthropic.models.messages.Message
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -40,6 +41,9 @@ private constructor(
      * results to requests, as results may be given out of request order.
      *
      * Must be unique for each request within the Message Batch.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun customId(): String = customId.getRequired("custom_id")
 
@@ -48,22 +52,23 @@ private constructor(
      *
      * Contains a Message output if processing was successful, an error response if processing
      * failed, or the reason why processing was not attempted, such as cancellation or expiration.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun result(): MessageBatchResult = result.getRequired("result")
 
     /**
-     * Developer-provided ID created for each request in a Message Batch. Useful for matching
-     * results to requests, as results may be given out of request order.
+     * Returns the raw JSON value of [customId].
      *
-     * Must be unique for each request within the Message Batch.
+     * Unlike [customId], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("custom_id") @ExcludeMissing fun _customId(): JsonField<String> = customId
 
     /**
-     * Processing result for this request.
+     * Returns the raw JSON value of [result].
      *
-     * Contains a Message output if processing was successful, an error response if processing
-     * failed, or the reason why processing was not attempted, such as cancellation or expiration.
+     * Unlike [result], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("result") @ExcludeMissing fun _result(): JsonField<MessageBatchResult> = result
 
@@ -124,10 +129,10 @@ private constructor(
         fun customId(customId: String) = customId(JsonField.of(customId))
 
         /**
-         * Developer-provided ID created for each request in a Message Batch. Useful for matching
-         * results to requests, as results may be given out of request order.
+         * Sets [Builder.customId] to an arbitrary JSON value.
          *
-         * Must be unique for each request within the Message Batch.
+         * You should usually call [Builder.customId] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun customId(customId: JsonField<String>) = apply { this.customId = customId }
 
@@ -141,71 +146,49 @@ private constructor(
         fun result(result: MessageBatchResult) = result(JsonField.of(result))
 
         /**
-         * Processing result for this request.
+         * Sets [Builder.result] to an arbitrary JSON value.
          *
-         * Contains a Message output if processing was successful, an error response if processing
-         * failed, or the reason why processing was not attempted, such as cancellation or
-         * expiration.
+         * You should usually call [Builder.result] with a well-typed [MessageBatchResult] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         fun result(result: JsonField<MessageBatchResult>) = apply { this.result = result }
 
-        /**
-         * Processing result for this request.
-         *
-         * Contains a Message output if processing was successful, an error response if processing
-         * failed, or the reason why processing was not attempted, such as cancellation or
-         * expiration.
-         */
+        /** Alias for calling [result] with `MessageBatchResult.ofSucceeded(succeeded)`. */
         fun result(succeeded: MessageBatchSucceededResult) =
             result(MessageBatchResult.ofSucceeded(succeeded))
 
         /**
-         * Processing result for this request.
-         *
-         * Contains a Message output if processing was successful, an error response if processing
-         * failed, or the reason why processing was not attempted, such as cancellation or
-         * expiration.
+         * Alias for calling [result] with the following:
+         * ```java
+         * MessageBatchSucceededResult.builder()
+         *     .message(message)
+         *     .build()
+         * ```
          */
         fun succeededResult(message: Message) =
             result(MessageBatchSucceededResult.builder().message(message).build())
 
-        /**
-         * Processing result for this request.
-         *
-         * Contains a Message output if processing was successful, an error response if processing
-         * failed, or the reason why processing was not attempted, such as cancellation or
-         * expiration.
-         */
+        /** Alias for calling [result] with `MessageBatchResult.ofErrored(errored)`. */
         fun result(errored: MessageBatchErroredResult) =
             result(MessageBatchResult.ofErrored(errored))
 
         /**
-         * Processing result for this request.
-         *
-         * Contains a Message output if processing was successful, an error response if processing
-         * failed, or the reason why processing was not attempted, such as cancellation or
-         * expiration.
+         * Alias for calling [result] with the following:
+         * ```java
+         * MessageBatchErroredResult.builder()
+         *     .error(error)
+         *     .build()
+         * ```
          */
         fun erroredResult(error: ErrorResponse) =
             result(MessageBatchErroredResult.builder().error(error).build())
 
-        /**
-         * Processing result for this request.
-         *
-         * Contains a Message output if processing was successful, an error response if processing
-         * failed, or the reason why processing was not attempted, such as cancellation or
-         * expiration.
-         */
+        /** Alias for calling [result] with `MessageBatchResult.ofCanceled(canceled)`. */
         fun result(canceled: MessageBatchCanceledResult) =
             result(MessageBatchResult.ofCanceled(canceled))
 
-        /**
-         * Processing result for this request.
-         *
-         * Contains a Message output if processing was successful, an error response if processing
-         * failed, or the reason why processing was not attempted, such as cancellation or
-         * expiration.
-         */
+        /** Alias for calling [result] with `MessageBatchResult.ofExpired(expired)`. */
         fun result(expired: MessageBatchExpiredResult) =
             result(MessageBatchResult.ofExpired(expired))
 

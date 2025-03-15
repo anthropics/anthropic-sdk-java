@@ -39,14 +39,41 @@ private constructor(
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun delta(): Delta = delta.getRequired("delta")
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun index(): Long = index.getRequired("index")
 
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("content_block_delta")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
+    /**
+     * Returns the raw JSON value of [delta].
+     *
+     * Unlike [delta], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("delta") @ExcludeMissing fun _delta(): JsonField<Delta> = delta
 
+    /**
+     * Returns the raw JSON value of [index].
+     *
+     * Unlike [index], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("index") @ExcludeMissing fun _index(): JsonField<Long> = index
 
     @JsonAnyGetter
@@ -105,32 +132,77 @@ private constructor(
 
         fun delta(delta: Delta) = delta(JsonField.of(delta))
 
+        /**
+         * Sets [Builder.delta] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.delta] with a well-typed [Delta] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun delta(delta: JsonField<Delta>) = apply { this.delta = delta }
 
+        /** Alias for calling [delta] with `Delta.ofBetaText(betaText)`. */
         fun delta(betaText: BetaTextDelta) = delta(Delta.ofBetaText(betaText))
 
+        /**
+         * Alias for calling [delta] with the following:
+         * ```java
+         * BetaTextDelta.builder()
+         *     .text(text)
+         *     .build()
+         * ```
+         */
         fun betaTextDelta(text: String) = delta(BetaTextDelta.builder().text(text).build())
 
+        /** Alias for calling [delta] with `Delta.ofBetaInputJson(betaInputJson)`. */
         fun delta(betaInputJson: BetaInputJsonDelta) = delta(Delta.ofBetaInputJson(betaInputJson))
 
+        /**
+         * Alias for calling [delta] with the following:
+         * ```java
+         * BetaInputJsonDelta.builder()
+         *     .partialJson(partialJson)
+         *     .build()
+         * ```
+         */
         fun betaInputJsonDelta(partialJson: String) =
             delta(BetaInputJsonDelta.builder().partialJson(partialJson).build())
 
+        /** Alias for calling [delta] with `Delta.ofBetaCitations(betaCitations)`. */
         fun delta(betaCitations: BetaCitationsDelta) = delta(Delta.ofBetaCitations(betaCitations))
 
+        /**
+         * Alias for calling [delta] with the following:
+         * ```java
+         * BetaCitationsDelta.builder()
+         *     .citation(citation)
+         *     .build()
+         * ```
+         */
         fun betaCitationsDelta(citation: BetaCitationsDelta.Citation) =
             delta(BetaCitationsDelta.builder().citation(citation).build())
 
+        /**
+         * Alias for calling [betaCitationsDelta] with
+         * `BetaCitationsDelta.Citation.ofBetaCitationCharLocation(betaCitationCharLocation)`.
+         */
         fun betaCitationsDelta(betaCitationCharLocation: BetaCitationCharLocation) =
             betaCitationsDelta(
                 BetaCitationsDelta.Citation.ofBetaCitationCharLocation(betaCitationCharLocation)
             )
 
+        /**
+         * Alias for calling [betaCitationsDelta] with
+         * `BetaCitationsDelta.Citation.ofBetaCitationPageLocation(betaCitationPageLocation)`.
+         */
         fun betaCitationsDelta(betaCitationPageLocation: BetaCitationPageLocation) =
             betaCitationsDelta(
                 BetaCitationsDelta.Citation.ofBetaCitationPageLocation(betaCitationPageLocation)
             )
 
+        /**
+         * Alias for calling [betaCitationsDelta] with
+         * `BetaCitationsDelta.Citation.ofBetaCitationContentBlockLocation(betaCitationContentBlockLocation)`.
+         */
         fun betaCitationsDelta(betaCitationContentBlockLocation: BetaCitationContentBlockLocation) =
             betaCitationsDelta(
                 BetaCitationsDelta.Citation.ofBetaCitationContentBlockLocation(
@@ -138,20 +210,56 @@ private constructor(
                 )
             )
 
+        /** Alias for calling [delta] with `Delta.ofBetaThinking(betaThinking)`. */
         fun delta(betaThinking: BetaThinkingDelta) = delta(Delta.ofBetaThinking(betaThinking))
 
+        /**
+         * Alias for calling [delta] with the following:
+         * ```java
+         * BetaThinkingDelta.builder()
+         *     .thinking(thinking)
+         *     .build()
+         * ```
+         */
         fun betaThinkingDelta(thinking: String) =
             delta(BetaThinkingDelta.builder().thinking(thinking).build())
 
+        /** Alias for calling [delta] with `Delta.ofBetaSignature(betaSignature)`. */
         fun delta(betaSignature: BetaSignatureDelta) = delta(Delta.ofBetaSignature(betaSignature))
 
+        /**
+         * Alias for calling [delta] with the following:
+         * ```java
+         * BetaSignatureDelta.builder()
+         *     .signature(signature)
+         *     .build()
+         * ```
+         */
         fun betaSignatureDelta(signature: String) =
             delta(BetaSignatureDelta.builder().signature(signature).build())
 
         fun index(index: Long) = index(JsonField.of(index))
 
+        /**
+         * Sets [Builder.index] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.index] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun index(index: JsonField<Long>) = apply { this.index = index }
 
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("content_block_delta")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun type(type: JsonValue) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

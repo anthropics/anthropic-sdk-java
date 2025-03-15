@@ -49,25 +49,70 @@ private constructor(
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun toolUseId(): String = toolUseId.getRequired("tool_use_id")
 
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("tool_result")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun content(): Optional<Content> = Optional.ofNullable(content.getNullable("content"))
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun isError(): Optional<Boolean> = Optional.ofNullable(isError.getNullable("is_error"))
 
+    /**
+     * Returns the raw JSON value of [toolUseId].
+     *
+     * Unlike [toolUseId], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("tool_use_id") @ExcludeMissing fun _toolUseId(): JsonField<String> = toolUseId
 
+    /**
+     * Returns the raw JSON value of [cacheControl].
+     *
+     * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("cache_control")
     @ExcludeMissing
     fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
 
+    /**
+     * Returns the raw JSON value of [content].
+     *
+     * Unlike [content], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("content") @ExcludeMissing fun _content(): JsonField<Content> = content
 
+    /**
+     * Returns the raw JSON value of [isError].
+     *
+     * Unlike [isError], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("is_error") @ExcludeMissing fun _isError(): JsonField<Boolean> = isError
 
     @JsonAnyGetter
@@ -130,30 +175,71 @@ private constructor(
 
         fun toolUseId(toolUseId: String) = toolUseId(JsonField.of(toolUseId))
 
+        /**
+         * Sets [Builder.toolUseId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.toolUseId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun toolUseId(toolUseId: JsonField<String>) = apply { this.toolUseId = toolUseId }
 
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("tool_result")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun type(type: JsonValue) = apply { this.type = type }
 
         fun cacheControl(cacheControl: BetaCacheControlEphemeral?) =
             cacheControl(JsonField.ofNullable(cacheControl))
 
+        /** Alias for calling [Builder.cacheControl] with `cacheControl.orElse(null)`. */
         fun cacheControl(cacheControl: Optional<BetaCacheControlEphemeral>) =
             cacheControl(cacheControl.getOrNull())
 
+        /**
+         * Sets [Builder.cacheControl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.cacheControl] with a well-typed
+         * [BetaCacheControlEphemeral] value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
+         */
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
 
         fun content(content: Content) = content(JsonField.of(content))
 
+        /**
+         * Sets [Builder.content] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.content] with a well-typed [Content] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun content(content: JsonField<Content>) = apply { this.content = content }
 
+        /** Alias for calling [content] with `Content.ofString(string)`. */
         fun content(string: String) = content(Content.ofString(string))
 
+        /** Alias for calling [content] with `Content.ofBlocks(blocks)`. */
         fun contentOfBlocks(blocks: List<Content.Block>) = content(Content.ofBlocks(blocks))
 
         fun isError(isError: Boolean) = isError(JsonField.of(isError))
 
+        /**
+         * Sets [Builder.isError] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.isError] with a well-typed [Boolean] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun isError(isError: JsonField<Boolean>) = apply { this.isError = isError }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

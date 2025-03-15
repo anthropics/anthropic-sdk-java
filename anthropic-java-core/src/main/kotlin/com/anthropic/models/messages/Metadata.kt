@@ -9,6 +9,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
+import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -33,15 +34,16 @@ private constructor(
      * This should be a uuid, hash value, or other opaque identifier. Anthropic may use this id to
      * help detect abuse. Do not include any identifying information such as name, email address, or
      * phone number.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
     fun userId(): Optional<String> = Optional.ofNullable(userId.getNullable("user_id"))
 
     /**
-     * An external identifier for the user who is associated with the request.
+     * Returns the raw JSON value of [userId].
      *
-     * This should be a uuid, hash value, or other opaque identifier. Anthropic may use this id to
-     * help detect abuse. Do not include any identifying information such as name, email address, or
-     * phone number.
+     * Unlike [userId], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("user_id") @ExcludeMissing fun _userId(): JsonField<String> = userId
 
@@ -89,21 +91,14 @@ private constructor(
          */
         fun userId(userId: String?) = userId(JsonField.ofNullable(userId))
 
-        /**
-         * An external identifier for the user who is associated with the request.
-         *
-         * This should be a uuid, hash value, or other opaque identifier. Anthropic may use this id
-         * to help detect abuse. Do not include any identifying information such as name, email
-         * address, or phone number.
-         */
+        /** Alias for calling [Builder.userId] with `userId.orElse(null)`. */
         fun userId(userId: Optional<String>) = userId(userId.getOrNull())
 
         /**
-         * An external identifier for the user who is associated with the request.
+         * Sets [Builder.userId] to an arbitrary JSON value.
          *
-         * This should be a uuid, hash value, or other opaque identifier. Anthropic may use this id
-         * to help detect abuse. Do not include any identifying information such as name, email
-         * address, or phone number.
+         * You should usually call [Builder.userId] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun userId(userId: JsonField<String>) = apply { this.userId = userId }
 

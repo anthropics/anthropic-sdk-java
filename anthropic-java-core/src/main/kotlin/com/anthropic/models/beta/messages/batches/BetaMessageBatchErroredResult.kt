@@ -29,10 +29,28 @@ private constructor(
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun error(): BetaErrorResponse = error.getRequired("error")
 
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("errored")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
+    /**
+     * Returns the raw JSON value of [error].
+     *
+     * Unlike [error], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("error") @ExcludeMissing fun _error(): JsonField<BetaErrorResponse> = error
 
     @JsonAnyGetter
@@ -87,8 +105,27 @@ private constructor(
 
         fun error(error: BetaErrorResponse) = error(JsonField.of(error))
 
+        /**
+         * Sets [Builder.error] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.error] with a well-typed [BetaErrorResponse] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
         fun error(error: JsonField<BetaErrorResponse>) = apply { this.error = error }
 
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("errored")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun type(type: JsonValue) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

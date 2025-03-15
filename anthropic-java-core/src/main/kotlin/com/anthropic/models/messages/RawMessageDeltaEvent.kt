@@ -32,8 +32,21 @@ private constructor(
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun delta(): Delta = delta.getRequired("delta")
 
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("message_delta")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
@@ -51,26 +64,23 @@ private constructor(
      *
      * Total input tokens in a request is the summation of `input_tokens`,
      * `cache_creation_input_tokens`, and `cache_read_input_tokens`.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun usage(): MessageDeltaUsage = usage.getRequired("usage")
 
+    /**
+     * Returns the raw JSON value of [delta].
+     *
+     * Unlike [delta], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("delta") @ExcludeMissing fun _delta(): JsonField<Delta> = delta
 
     /**
-     * Billing and rate-limit usage.
+     * Returns the raw JSON value of [usage].
      *
-     * Anthropic's API bills and rate-limits by token counts, as tokens represent the underlying
-     * cost to our systems.
-     *
-     * Under the hood, the API transforms requests into a format suitable for the model. The model's
-     * output then goes through a parsing stage before becoming an API response. As a result, the
-     * token counts in `usage` will not match one-to-one with the exact visible content of an API
-     * request or response.
-     *
-     * For example, `output_tokens` will be non-zero, even for an empty string response from Claude.
-     *
-     * Total input tokens in a request is the summation of `input_tokens`,
-     * `cache_creation_input_tokens`, and `cache_read_input_tokens`.
+     * Unlike [usage], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("usage") @ExcludeMissing fun _usage(): JsonField<MessageDeltaUsage> = usage
 
@@ -129,8 +139,26 @@ private constructor(
 
         fun delta(delta: Delta) = delta(JsonField.of(delta))
 
+        /**
+         * Sets [Builder.delta] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.delta] with a well-typed [Delta] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun delta(delta: JsonField<Delta>) = apply { this.delta = delta }
 
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("message_delta")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun type(type: JsonValue) = apply { this.type = type }
 
         /**
@@ -153,21 +181,11 @@ private constructor(
         fun usage(usage: MessageDeltaUsage) = usage(JsonField.of(usage))
 
         /**
-         * Billing and rate-limit usage.
+         * Sets [Builder.usage] to an arbitrary JSON value.
          *
-         * Anthropic's API bills and rate-limits by token counts, as tokens represent the underlying
-         * cost to our systems.
-         *
-         * Under the hood, the API transforms requests into a format suitable for the model. The
-         * model's output then goes through a parsing stage before becoming an API response. As a
-         * result, the token counts in `usage` will not match one-to-one with the exact visible
-         * content of an API request or response.
-         *
-         * For example, `output_tokens` will be non-zero, even for an empty string response from
-         * Claude.
-         *
-         * Total input tokens in a request is the summation of `input_tokens`,
-         * `cache_creation_input_tokens`, and `cache_read_input_tokens`.
+         * You should usually call [Builder.usage] with a well-typed [MessageDeltaUsage] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         fun usage(usage: JsonField<MessageDeltaUsage>) = apply { this.usage = usage }
 
@@ -213,16 +231,35 @@ private constructor(
         private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
     ) {
 
+        /**
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
         fun stopReason(): Optional<StopReason> =
             Optional.ofNullable(stopReason.getNullable("stop_reason"))
 
+        /**
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
         fun stopSequence(): Optional<String> =
             Optional.ofNullable(stopSequence.getNullable("stop_sequence"))
 
+        /**
+         * Returns the raw JSON value of [stopReason].
+         *
+         * Unlike [stopReason], this method doesn't throw if the JSON field has an unexpected type.
+         */
         @JsonProperty("stop_reason")
         @ExcludeMissing
         fun _stopReason(): JsonField<StopReason> = stopReason
 
+        /**
+         * Returns the raw JSON value of [stopSequence].
+         *
+         * Unlike [stopSequence], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
         @JsonProperty("stop_sequence")
         @ExcludeMissing
         fun _stopSequence(): JsonField<String> = stopSequence
@@ -275,8 +312,16 @@ private constructor(
 
             fun stopReason(stopReason: StopReason?) = stopReason(JsonField.ofNullable(stopReason))
 
+            /** Alias for calling [Builder.stopReason] with `stopReason.orElse(null)`. */
             fun stopReason(stopReason: Optional<StopReason>) = stopReason(stopReason.getOrNull())
 
+            /**
+             * Sets [Builder.stopReason] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.stopReason] with a well-typed [StopReason] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
             fun stopReason(stopReason: JsonField<StopReason>) = apply {
                 this.stopReason = stopReason
             }
@@ -284,9 +329,17 @@ private constructor(
             fun stopSequence(stopSequence: String?) =
                 stopSequence(JsonField.ofNullable(stopSequence))
 
+            /** Alias for calling [Builder.stopSequence] with `stopSequence.orElse(null)`. */
             fun stopSequence(stopSequence: Optional<String>) =
                 stopSequence(stopSequence.getOrNull())
 
+            /**
+             * Sets [Builder.stopSequence] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.stopSequence] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
             fun stopSequence(stopSequence: JsonField<String>) = apply {
                 this.stopSequence = stopSequence
             }

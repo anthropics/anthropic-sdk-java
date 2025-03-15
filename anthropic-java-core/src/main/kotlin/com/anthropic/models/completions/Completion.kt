@@ -40,16 +40,27 @@ private constructor(
      * Unique object identifier.
      *
      * The format and length of IDs may change over time.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun id(): String = id.getRequired("id")
 
-    /** The resulting completion up to and excluding the stop sequences. */
+    /**
+     * The resulting completion up to and excluding the stop sequences.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun completion(): String = completion.getRequired("completion")
 
     /**
      * The model that will complete your prompt.\n\nSee
      * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
      * options.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun model(): Model = model.getRequired("model")
 
@@ -60,6 +71,9 @@ private constructor(
      * - `"stop_sequence"`: we reached a stop sequence — either provided by you via the
      *   `stop_sequences` parameter, or a stop sequence built into the model
      * - `"max_tokens"`: we exceeded `max_tokens_to_sample` or the model's maximum
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
     fun stopReason(): Optional<String> = Optional.ofNullable(stopReason.getNullable("stop_reason"))
 
@@ -67,33 +81,42 @@ private constructor(
      * Object type.
      *
      * For Text Completions, this is always `"completion"`.
+     *
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("completion")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
      */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
-     * Unique object identifier.
+     * Returns the raw JSON value of [id].
      *
-     * The format and length of IDs may change over time.
+     * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
-    /** The resulting completion up to and excluding the stop sequences. */
+    /**
+     * Returns the raw JSON value of [completion].
+     *
+     * Unlike [completion], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("completion") @ExcludeMissing fun _completion(): JsonField<String> = completion
 
     /**
-     * The model that will complete your prompt.\n\nSee
-     * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
-     * options.
+     * Returns the raw JSON value of [model].
+     *
+     * Unlike [model], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
 
     /**
-     * The reason that we stopped.
+     * Returns the raw JSON value of [stopReason].
      *
-     * This may be one the following values:
-     * - `"stop_sequence"`: we reached a stop sequence — either provided by you via the
-     *   `stop_sequences` parameter, or a stop sequence built into the model
-     * - `"max_tokens"`: we exceeded `max_tokens_to_sample` or the model's maximum
+     * Unlike [stopReason], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("stop_reason") @ExcludeMissing fun _stopReason(): JsonField<String> = stopReason
 
@@ -166,16 +189,23 @@ private constructor(
         fun id(id: String) = id(JsonField.of(id))
 
         /**
-         * Unique object identifier.
+         * Sets [Builder.id] to an arbitrary JSON value.
          *
-         * The format and length of IDs may change over time.
+         * You should usually call [Builder.id] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
         /** The resulting completion up to and excluding the stop sequences. */
         fun completion(completion: String) = completion(JsonField.of(completion))
 
-        /** The resulting completion up to and excluding the stop sequences. */
+        /**
+         * Sets [Builder.completion] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.completion] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun completion(completion: JsonField<String>) = apply { this.completion = completion }
 
         /**
@@ -186,16 +216,18 @@ private constructor(
         fun model(model: Model) = model(JsonField.of(model))
 
         /**
-         * The model that will complete your prompt.\n\nSee
-         * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
-         * options.
+         * Sets [Builder.model] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.model] with a well-typed [Model] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun model(model: JsonField<Model>) = apply { this.model = model }
 
         /**
-         * The model that will complete your prompt.\n\nSee
-         * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
-         * options.
+         * Sets [model] to an arbitrary [String].
+         *
+         * You should usually call [model] with a well-typed [Model] constant instead. This method
+         * is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun model(value: String) = model(Model.of(value))
 
@@ -209,30 +241,29 @@ private constructor(
          */
         fun stopReason(stopReason: String?) = stopReason(JsonField.ofNullable(stopReason))
 
-        /**
-         * The reason that we stopped.
-         *
-         * This may be one the following values:
-         * - `"stop_sequence"`: we reached a stop sequence — either provided by you via the
-         *   `stop_sequences` parameter, or a stop sequence built into the model
-         * - `"max_tokens"`: we exceeded `max_tokens_to_sample` or the model's maximum
-         */
+        /** Alias for calling [Builder.stopReason] with `stopReason.orElse(null)`. */
         fun stopReason(stopReason: Optional<String>) = stopReason(stopReason.getOrNull())
 
         /**
-         * The reason that we stopped.
+         * Sets [Builder.stopReason] to an arbitrary JSON value.
          *
-         * This may be one the following values:
-         * - `"stop_sequence"`: we reached a stop sequence — either provided by you via the
-         *   `stop_sequences` parameter, or a stop sequence built into the model
-         * - `"max_tokens"`: we exceeded `max_tokens_to_sample` or the model's maximum
+         * You should usually call [Builder.stopReason] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
         fun stopReason(stopReason: JsonField<String>) = apply { this.stopReason = stopReason }
 
         /**
-         * Object type.
+         * Sets the field to an arbitrary JSON value.
          *
-         * For Text Completions, this is always `"completion"`.
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("completion")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
         fun type(type: JsonValue) = apply { this.type = type }
 

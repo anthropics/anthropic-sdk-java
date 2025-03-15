@@ -58,12 +58,18 @@ private constructor(
      * Unique object identifier.
      *
      * The format and length of IDs may change over time.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun id(): String = id.getRequired("id")
 
     /**
      * RFC 3339 datetime string representing the time at which the Message Batch was archived and
      * its results became unavailable.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
     fun archivedAt(): Optional<OffsetDateTime> =
         Optional.ofNullable(archivedAt.getNullable("archived_at"))
@@ -71,11 +77,19 @@ private constructor(
     /**
      * RFC 3339 datetime string representing the time at which cancellation was initiated for the
      * Message Batch. Specified only if cancellation was initiated.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
     fun cancelInitiatedAt(): Optional<OffsetDateTime> =
         Optional.ofNullable(cancelInitiatedAt.getNullable("cancel_initiated_at"))
 
-    /** RFC 3339 datetime string representing the time at which the Message Batch was created. */
+    /**
+     * RFC 3339 datetime string representing the time at which the Message Batch was created.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
@@ -84,16 +98,27 @@ private constructor(
      *
      * Processing ends when every request in a Message Batch has either succeeded, errored,
      * canceled, or expired.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
     fun endedAt(): Optional<OffsetDateTime> = Optional.ofNullable(endedAt.getNullable("ended_at"))
 
     /**
      * RFC 3339 datetime string representing the time at which the Message Batch will expire and end
      * processing, which is 24 hours after creation.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun expiresAt(): OffsetDateTime = expiresAt.getRequired("expires_at")
 
-    /** Processing status of the Message Batch. */
+    /**
+     * Processing status of the Message Batch.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun processingStatus(): ProcessingStatus = processingStatus.getRequired("processing_status")
 
     /**
@@ -102,6 +127,9 @@ private constructor(
      * Requests start as `processing` and move to one of the other statuses only once processing of
      * the entire batch ends. The sum of all values always matches the total number of requests in
      * the batch.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun requestCounts(): BetaMessageBatchRequestCounts = requestCounts.getRequired("request_counts")
 
@@ -111,6 +139,9 @@ private constructor(
      *
      * Results in the file are not guaranteed to be in the same order as requests. Use the
      * `custom_id` field to match results to requests.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
     fun resultsUrl(): Optional<String> = Optional.ofNullable(resultsUrl.getNullable("results_url"))
 
@@ -118,76 +149,91 @@ private constructor(
      * Object type.
      *
      * For Message Batches, this is always `"message_batch"`.
+     *
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("message_batch")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
      */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
-     * Unique object identifier.
+     * Returns the raw JSON value of [id].
      *
-     * The format and length of IDs may change over time.
+     * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
     /**
-     * RFC 3339 datetime string representing the time at which the Message Batch was archived and
-     * its results became unavailable.
+     * Returns the raw JSON value of [archivedAt].
+     *
+     * Unlike [archivedAt], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("archived_at")
     @ExcludeMissing
     fun _archivedAt(): JsonField<OffsetDateTime> = archivedAt
 
     /**
-     * RFC 3339 datetime string representing the time at which cancellation was initiated for the
-     * Message Batch. Specified only if cancellation was initiated.
+     * Returns the raw JSON value of [cancelInitiatedAt].
+     *
+     * Unlike [cancelInitiatedAt], this method doesn't throw if the JSON field has an unexpected
+     * type.
      */
     @JsonProperty("cancel_initiated_at")
     @ExcludeMissing
     fun _cancelInitiatedAt(): JsonField<OffsetDateTime> = cancelInitiatedAt
 
-    /** RFC 3339 datetime string representing the time at which the Message Batch was created. */
+    /**
+     * Returns the raw JSON value of [createdAt].
+     *
+     * Unlike [createdAt], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("created_at")
     @ExcludeMissing
     fun _createdAt(): JsonField<OffsetDateTime> = createdAt
 
     /**
-     * RFC 3339 datetime string representing the time at which processing for the Message Batch
-     * ended. Specified only once processing ends.
+     * Returns the raw JSON value of [endedAt].
      *
-     * Processing ends when every request in a Message Batch has either succeeded, errored,
-     * canceled, or expired.
+     * Unlike [endedAt], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("ended_at") @ExcludeMissing fun _endedAt(): JsonField<OffsetDateTime> = endedAt
 
     /**
-     * RFC 3339 datetime string representing the time at which the Message Batch will expire and end
-     * processing, which is 24 hours after creation.
+     * Returns the raw JSON value of [expiresAt].
+     *
+     * Unlike [expiresAt], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("expires_at")
     @ExcludeMissing
     fun _expiresAt(): JsonField<OffsetDateTime> = expiresAt
 
-    /** Processing status of the Message Batch. */
+    /**
+     * Returns the raw JSON value of [processingStatus].
+     *
+     * Unlike [processingStatus], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
     @JsonProperty("processing_status")
     @ExcludeMissing
     fun _processingStatus(): JsonField<ProcessingStatus> = processingStatus
 
     /**
-     * Tallies requests within the Message Batch, categorized by their status.
+     * Returns the raw JSON value of [requestCounts].
      *
-     * Requests start as `processing` and move to one of the other statuses only once processing of
-     * the entire batch ends. The sum of all values always matches the total number of requests in
-     * the batch.
+     * Unlike [requestCounts], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("request_counts")
     @ExcludeMissing
     fun _requestCounts(): JsonField<BetaMessageBatchRequestCounts> = requestCounts
 
     /**
-     * URL to a `.jsonl` file containing the results of the Message Batch requests. Specified only
-     * once processing ends.
+     * Returns the raw JSON value of [resultsUrl].
      *
-     * Results in the file are not guaranteed to be in the same order as requests. Use the
-     * `custom_id` field to match results to requests.
+     * Unlike [resultsUrl], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("results_url") @ExcludeMissing fun _resultsUrl(): JsonField<String> = resultsUrl
 
@@ -280,9 +326,10 @@ private constructor(
         fun id(id: String) = id(JsonField.of(id))
 
         /**
-         * Unique object identifier.
+         * Sets [Builder.id] to an arbitrary JSON value.
          *
-         * The format and length of IDs may change over time.
+         * You should usually call [Builder.id] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
@@ -292,15 +339,15 @@ private constructor(
          */
         fun archivedAt(archivedAt: OffsetDateTime?) = archivedAt(JsonField.ofNullable(archivedAt))
 
-        /**
-         * RFC 3339 datetime string representing the time at which the Message Batch was archived
-         * and its results became unavailable.
-         */
+        /** Alias for calling [Builder.archivedAt] with `archivedAt.orElse(null)`. */
         fun archivedAt(archivedAt: Optional<OffsetDateTime>) = archivedAt(archivedAt.getOrNull())
 
         /**
-         * RFC 3339 datetime string representing the time at which the Message Batch was archived
-         * and its results became unavailable.
+         * Sets [Builder.archivedAt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.archivedAt] with a well-typed [OffsetDateTime] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         fun archivedAt(archivedAt: JsonField<OffsetDateTime>) = apply {
             this.archivedAt = archivedAt
@@ -313,16 +360,16 @@ private constructor(
         fun cancelInitiatedAt(cancelInitiatedAt: OffsetDateTime?) =
             cancelInitiatedAt(JsonField.ofNullable(cancelInitiatedAt))
 
-        /**
-         * RFC 3339 datetime string representing the time at which cancellation was initiated for
-         * the Message Batch. Specified only if cancellation was initiated.
-         */
+        /** Alias for calling [Builder.cancelInitiatedAt] with `cancelInitiatedAt.orElse(null)`. */
         fun cancelInitiatedAt(cancelInitiatedAt: Optional<OffsetDateTime>) =
             cancelInitiatedAt(cancelInitiatedAt.getOrNull())
 
         /**
-         * RFC 3339 datetime string representing the time at which cancellation was initiated for
-         * the Message Batch. Specified only if cancellation was initiated.
+         * Sets [Builder.cancelInitiatedAt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.cancelInitiatedAt] with a well-typed [OffsetDateTime]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
          */
         fun cancelInitiatedAt(cancelInitiatedAt: JsonField<OffsetDateTime>) = apply {
             this.cancelInitiatedAt = cancelInitiatedAt
@@ -334,7 +381,11 @@ private constructor(
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
         /**
-         * RFC 3339 datetime string representing the time at which the Message Batch was created.
+         * Sets [Builder.createdAt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
@@ -347,21 +398,15 @@ private constructor(
          */
         fun endedAt(endedAt: OffsetDateTime?) = endedAt(JsonField.ofNullable(endedAt))
 
-        /**
-         * RFC 3339 datetime string representing the time at which processing for the Message Batch
-         * ended. Specified only once processing ends.
-         *
-         * Processing ends when every request in a Message Batch has either succeeded, errored,
-         * canceled, or expired.
-         */
+        /** Alias for calling [Builder.endedAt] with `endedAt.orElse(null)`. */
         fun endedAt(endedAt: Optional<OffsetDateTime>) = endedAt(endedAt.getOrNull())
 
         /**
-         * RFC 3339 datetime string representing the time at which processing for the Message Batch
-         * ended. Specified only once processing ends.
+         * Sets [Builder.endedAt] to an arbitrary JSON value.
          *
-         * Processing ends when every request in a Message Batch has either succeeded, errored,
-         * canceled, or expired.
+         * You should usually call [Builder.endedAt] with a well-typed [OffsetDateTime] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         fun endedAt(endedAt: JsonField<OffsetDateTime>) = apply { this.endedAt = endedAt }
 
@@ -372,8 +417,11 @@ private constructor(
         fun expiresAt(expiresAt: OffsetDateTime) = expiresAt(JsonField.of(expiresAt))
 
         /**
-         * RFC 3339 datetime string representing the time at which the Message Batch will expire and
-         * end processing, which is 24 hours after creation.
+         * Sets [Builder.expiresAt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.expiresAt] with a well-typed [OffsetDateTime] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         fun expiresAt(expiresAt: JsonField<OffsetDateTime>) = apply { this.expiresAt = expiresAt }
 
@@ -381,7 +429,13 @@ private constructor(
         fun processingStatus(processingStatus: ProcessingStatus) =
             processingStatus(JsonField.of(processingStatus))
 
-        /** Processing status of the Message Batch. */
+        /**
+         * Sets [Builder.processingStatus] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.processingStatus] with a well-typed [ProcessingStatus]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
         fun processingStatus(processingStatus: JsonField<ProcessingStatus>) = apply {
             this.processingStatus = processingStatus
         }
@@ -397,11 +451,11 @@ private constructor(
             requestCounts(JsonField.of(requestCounts))
 
         /**
-         * Tallies requests within the Message Batch, categorized by their status.
+         * Sets [Builder.requestCounts] to an arbitrary JSON value.
          *
-         * Requests start as `processing` and move to one of the other statuses only once processing
-         * of the entire batch ends. The sum of all values always matches the total number of
-         * requests in the batch.
+         * You should usually call [Builder.requestCounts] with a well-typed
+         * [BetaMessageBatchRequestCounts] value instead. This method is primarily for setting the
+         * field to an undocumented or not yet supported value.
          */
         fun requestCounts(requestCounts: JsonField<BetaMessageBatchRequestCounts>) = apply {
             this.requestCounts = requestCounts
@@ -416,28 +470,29 @@ private constructor(
          */
         fun resultsUrl(resultsUrl: String?) = resultsUrl(JsonField.ofNullable(resultsUrl))
 
-        /**
-         * URL to a `.jsonl` file containing the results of the Message Batch requests. Specified
-         * only once processing ends.
-         *
-         * Results in the file are not guaranteed to be in the same order as requests. Use the
-         * `custom_id` field to match results to requests.
-         */
+        /** Alias for calling [Builder.resultsUrl] with `resultsUrl.orElse(null)`. */
         fun resultsUrl(resultsUrl: Optional<String>) = resultsUrl(resultsUrl.getOrNull())
 
         /**
-         * URL to a `.jsonl` file containing the results of the Message Batch requests. Specified
-         * only once processing ends.
+         * Sets [Builder.resultsUrl] to an arbitrary JSON value.
          *
-         * Results in the file are not guaranteed to be in the same order as requests. Use the
-         * `custom_id` field to match results to requests.
+         * You should usually call [Builder.resultsUrl] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
         fun resultsUrl(resultsUrl: JsonField<String>) = apply { this.resultsUrl = resultsUrl }
 
         /**
-         * Object type.
+         * Sets the field to an arbitrary JSON value.
          *
-         * For Message Batches, this is always `"message_batch"`.
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("message_batch")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
         fun type(type: JsonValue) = apply { this.type = type }
 

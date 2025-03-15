@@ -110,10 +110,12 @@ private constructor(
 
         fun apiKey(apiKey: String?) = apply { this.apiKey = apiKey }
 
+        /** Alias for calling [Builder.apiKey] with `apiKey.orElse(null)`. */
         fun apiKey(apiKey: Optional<String>) = apiKey(apiKey.getOrNull())
 
         fun authToken(authToken: String?) = apply { this.authToken = authToken }
 
+        /** Alias for calling [Builder.authToken] with `authToken.orElse(null)`. */
         fun authToken(authToken: Optional<String>) = authToken(authToken.getOrNull())
 
         fun headers(headers: Headers) = apply {

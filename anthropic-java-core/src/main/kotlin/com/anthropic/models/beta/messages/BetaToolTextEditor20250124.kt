@@ -34,14 +34,40 @@ private constructor(
      * Name of the tool.
      *
      * This is how the tool will be called by the model and in tool_use blocks.
+     *
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("str_replace_editor")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
      */
     @JsonProperty("name") @ExcludeMissing fun _name(): JsonValue = name
 
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("text_editor_20250124")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
+    /**
+     * Returns the raw JSON value of [cacheControl].
+     *
+     * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("cache_control")
     @ExcludeMissing
     fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
@@ -98,20 +124,47 @@ private constructor(
         }
 
         /**
-         * Name of the tool.
+         * Sets the field to an arbitrary JSON value.
          *
-         * This is how the tool will be called by the model and in tool_use blocks.
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("str_replace_editor")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
         fun name(name: JsonValue) = apply { this.name = name }
 
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("text_editor_20250124")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun type(type: JsonValue) = apply { this.type = type }
 
         fun cacheControl(cacheControl: BetaCacheControlEphemeral?) =
             cacheControl(JsonField.ofNullable(cacheControl))
 
+        /** Alias for calling [Builder.cacheControl] with `cacheControl.orElse(null)`. */
         fun cacheControl(cacheControl: Optional<BetaCacheControlEphemeral>) =
             cacheControl(cacheControl.getOrNull())
 
+        /**
+         * Sets [Builder.cacheControl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.cacheControl] with a well-typed
+         * [BetaCacheControlEphemeral] value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
+         */
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }

@@ -62,6 +62,9 @@ private constructor(
      *
      * Different models have different maximum values for this parameter. See
      * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun maxTokens(): Long = body.maxTokens()
 
@@ -142,6 +145,9 @@ private constructor(
      * Note that if you want to include a
      * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the top-level
      * `system` parameter — there is no `"system"` role for input messages in the Messages API.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun messages(): List<BetaMessageParam> = body.messages()
 
@@ -149,10 +155,18 @@ private constructor(
      * The model that will complete your prompt.\n\nSee
      * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
      * options.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun model(): Model = body.model()
 
-    /** An object describing metadata about the request. */
+    /**
+     * An object describing metadata about the request.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun metadata(): Optional<BetaMetadata> = body.metadata()
 
     /**
@@ -165,6 +179,9 @@ private constructor(
      * use the `stop_sequences` parameter. If the model encounters one of the custom sequences, the
      * response `stop_reason` value will be `"stop_sequence"` and the response `stop_sequence` value
      * will contain the matched stop sequence.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
     fun stopSequences(): Optional<List<String>> = body.stopSequences()
 
@@ -174,6 +191,9 @@ private constructor(
      * A system prompt is a way of providing context and instructions to Claude, such as specifying
      * a particular goal or role. See our
      * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
     fun system(): Optional<System> = body.system()
 
@@ -184,6 +204,9 @@ private constructor(
      * analytical / multiple choice, and closer to `1.0` for creative and generative tasks.
      *
      * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
     fun temperature(): Optional<Double> = body.temperature()
 
@@ -197,12 +220,18 @@ private constructor(
      * See
      * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
      * for details.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
     fun thinking(): Optional<BetaThinkingConfigParam> = body.thinking()
 
     /**
      * How the model should use the provided tools. The model can use a specific tool, any available
      * tool, decide by itself, or not use tools at all.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
     fun toolChoice(): Optional<BetaToolChoice> = body.toolChoice()
 
@@ -269,6 +298,9 @@ private constructor(
      * generally whenever you want the model to produce a particular JSON structure of output.
      *
      * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
     fun tools(): Optional<List<BetaToolUnion>> = body.tools()
 
@@ -279,6 +311,9 @@ private constructor(
      * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
      *
      * Recommended for advanced use cases only. You usually only need to use `temperature`.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
     fun topK(): Optional<Long> = body.topK()
 
@@ -291,246 +326,93 @@ private constructor(
      * both.
      *
      * Recommended for advanced use cases only. You usually only need to use `temperature`.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
     fun topP(): Optional<Double> = body.topP()
 
     /**
-     * The maximum number of tokens to generate before stopping.
+     * Returns the raw JSON value of [maxTokens].
      *
-     * Note that our models may stop _before_ reaching this maximum. This parameter only specifies
-     * the absolute maximum number of tokens to generate.
-     *
-     * Different models have different maximum values for this parameter. See
-     * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
+     * Unlike [maxTokens], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _maxTokens(): JsonField<Long> = body._maxTokens()
 
     /**
-     * Input messages.
+     * Returns the raw JSON value of [messages].
      *
-     * Our models are trained to operate on alternating `user` and `assistant` conversational turns.
-     * When creating a new `Message`, you specify the prior conversational turns with the `messages`
-     * parameter, and the model then generates the next `Message` in the conversation. Consecutive
-     * `user` or `assistant` turns in your request will be combined into a single turn.
-     *
-     * Each input message must be an object with a `role` and `content`. You can specify a single
-     * `user`-role message, or you can include multiple `user` and `assistant` messages.
-     *
-     * If the final message uses the `assistant` role, the response content will continue
-     * immediately from the content in that message. This can be used to constrain part of the
-     * model's response.
-     *
-     * Example with a single `user` message:
-     * ```json
-     * [{ "role": "user", "content": "Hello, Claude" }]
-     * ```
-     *
-     * Example with multiple conversational turns:
-     * ```json
-     * [
-     *   { "role": "user", "content": "Hello there." },
-     *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-     *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-     * ]
-     * ```
-     *
-     * Example with a partially-filled response from Claude:
-     * ```json
-     * [
-     *   {
-     *     "role": "user",
-     *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-     *   },
-     *   { "role": "assistant", "content": "The best answer is (" }
-     * ]
-     * ```
-     *
-     * Each input message `content` may be either a single `string` or an array of content blocks,
-     * where each block has a specific `type`. Using a `string` for `content` is shorthand for an
-     * array of one content block of type `"text"`. The following input messages are equivalent:
-     * ```json
-     * { "role": "user", "content": "Hello, Claude" }
-     * ```
-     * ```json
-     * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-     * ```
-     *
-     * Starting with Claude 3 models, you can also send image content blocks:
-     * ```json
-     * {
-     *   "role": "user",
-     *   "content": [
-     *     {
-     *       "type": "image",
-     *       "source": {
-     *         "type": "base64",
-     *         "media_type": "image/jpeg",
-     *         "data": "/9j/4AAQSkZJRg..."
-     *       }
-     *     },
-     *     { "type": "text", "text": "What is in this image?" }
-     *   ]
-     * }
-     * ```
-     *
-     * We currently support the `base64` source type for images, and the `image/jpeg`, `image/png`,
-     * `image/gif`, and `image/webp` media types.
-     *
-     * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more input
-     * examples.
-     *
-     * Note that if you want to include a
-     * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the top-level
-     * `system` parameter — there is no `"system"` role for input messages in the Messages API.
+     * Unlike [messages], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _messages(): JsonField<List<BetaMessageParam>> = body._messages()
 
     /**
-     * The model that will complete your prompt.\n\nSee
-     * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
-     * options.
+     * Returns the raw JSON value of [model].
+     *
+     * Unlike [model], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _model(): JsonField<Model> = body._model()
 
-    /** An object describing metadata about the request. */
+    /**
+     * Returns the raw JSON value of [metadata].
+     *
+     * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
+     */
     fun _metadata(): JsonField<BetaMetadata> = body._metadata()
 
     /**
-     * Custom text sequences that will cause the model to stop generating.
+     * Returns the raw JSON value of [stopSequences].
      *
-     * Our models will normally stop when they have naturally completed their turn, which will
-     * result in a response `stop_reason` of `"end_turn"`.
-     *
-     * If you want the model to stop generating when it encounters custom strings of text, you can
-     * use the `stop_sequences` parameter. If the model encounters one of the custom sequences, the
-     * response `stop_reason` value will be `"stop_sequence"` and the response `stop_sequence` value
-     * will contain the matched stop sequence.
+     * Unlike [stopSequences], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _stopSequences(): JsonField<List<String>> = body._stopSequences()
 
     /**
-     * System prompt.
+     * Returns the raw JSON value of [system].
      *
-     * A system prompt is a way of providing context and instructions to Claude, such as specifying
-     * a particular goal or role. See our
-     * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+     * Unlike [system], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _system(): JsonField<System> = body._system()
 
     /**
-     * Amount of randomness injected into the response.
+     * Returns the raw JSON value of [temperature].
      *
-     * Defaults to `1.0`. Ranges from `0.0` to `1.0`. Use `temperature` closer to `0.0` for
-     * analytical / multiple choice, and closer to `1.0` for creative and generative tasks.
-     *
-     * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
+     * Unlike [temperature], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _temperature(): JsonField<Double> = body._temperature()
 
     /**
-     * Configuration for enabling Claude's extended thinking.
+     * Returns the raw JSON value of [thinking].
      *
-     * When enabled, responses include `thinking` content blocks showing Claude's thinking process
-     * before the final answer. Requires a minimum budget of 1,024 tokens and counts towards your
-     * `max_tokens` limit.
-     *
-     * See
-     * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
-     * for details.
+     * Unlike [thinking], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _thinking(): JsonField<BetaThinkingConfigParam> = body._thinking()
 
     /**
-     * How the model should use the provided tools. The model can use a specific tool, any available
-     * tool, decide by itself, or not use tools at all.
+     * Returns the raw JSON value of [toolChoice].
+     *
+     * Unlike [toolChoice], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _toolChoice(): JsonField<BetaToolChoice> = body._toolChoice()
 
     /**
-     * Definitions of tools that the model may use.
+     * Returns the raw JSON value of [tools].
      *
-     * If you include `tools` in your API request, the model may return `tool_use` content blocks
-     * that represent the model's use of those tools. You can then run those tools using the tool
-     * input generated by the model and then optionally return results back to the model using
-     * `tool_result` content blocks.
-     *
-     * Each tool definition includes:
-     * - `name`: Name of the tool.
-     * - `description`: Optional, but strongly-recommended description of the tool.
-     * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool `input`
-     *   shape that the model will produce in `tool_use` output content blocks.
-     *
-     * For example, if you defined `tools` as:
-     * ```json
-     * [
-     *   {
-     *     "name": "get_stock_price",
-     *     "description": "Get the current stock price for a given ticker symbol.",
-     *     "input_schema": {
-     *       "type": "object",
-     *       "properties": {
-     *         "ticker": {
-     *           "type": "string",
-     *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-     *         }
-     *       },
-     *       "required": ["ticker"]
-     *     }
-     *   }
-     * ]
-     * ```
-     *
-     * And then asked the model "What's the S&P 500 at today?", the model might produce `tool_use`
-     * content blocks in the response like this:
-     * ```json
-     * [
-     *   {
-     *     "type": "tool_use",
-     *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-     *     "name": "get_stock_price",
-     *     "input": { "ticker": "^GSPC" }
-     *   }
-     * ]
-     * ```
-     *
-     * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an input, and
-     * return the following back to the model in a subsequent `user` message:
-     * ```json
-     * [
-     *   {
-     *     "type": "tool_result",
-     *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-     *     "content": "259.75 USD"
-     *   }
-     * ]
-     * ```
-     *
-     * Tools can be used for workflows that include running client-side tools and functions, or more
-     * generally whenever you want the model to produce a particular JSON structure of output.
-     *
-     * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+     * Unlike [tools], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _tools(): JsonField<List<BetaToolUnion>> = body._tools()
 
     /**
-     * Only sample from the top K options for each subsequent token.
+     * Returns the raw JSON value of [topK].
      *
-     * Used to remove "long tail" low probability responses.
-     * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
-     *
-     * Recommended for advanced use cases only. You usually only need to use `temperature`.
+     * Unlike [topK], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _topK(): JsonField<Long> = body._topK()
 
     /**
-     * Use nucleus sampling.
+     * Returns the raw JSON value of [topP].
      *
-     * In nucleus sampling, we compute the cumulative distribution over all the options for each
-     * subsequent token in decreasing probability order and cut it off once it reaches a particular
-     * probability specified by `top_p`. You should either alter `temperature` or `top_p`, but not
-     * both.
-     *
-     * Recommended for advanced use cases only. You usually only need to use `temperature`.
+     * Unlike [topP], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _topP(): JsonField<Double> = body._topP()
 
@@ -601,6 +483,9 @@ private constructor(
          *
          * Different models have different maximum values for this parameter. See
          * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun maxTokens(): Long = maxTokens.getRequired("max_tokens")
 
@@ -684,6 +569,9 @@ private constructor(
          * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
          * top-level `system` parameter — there is no `"system"` role for input messages in the
          * Messages API.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun messages(): List<BetaMessageParam> = messages.getRequired("messages")
 
@@ -691,10 +579,18 @@ private constructor(
          * The model that will complete your prompt.\n\nSee
          * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
          * options.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun model(): Model = model.getRequired("model")
 
-        /** An object describing metadata about the request. */
+        /**
+         * An object describing metadata about the request.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
         fun metadata(): Optional<BetaMetadata> =
             Optional.ofNullable(metadata.getNullable("metadata"))
 
@@ -708,6 +604,9 @@ private constructor(
          * can use the `stop_sequences` parameter. If the model encounters one of the custom
          * sequences, the response `stop_reason` value will be `"stop_sequence"` and the response
          * `stop_sequence` value will contain the matched stop sequence.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
          */
         fun stopSequences(): Optional<List<String>> =
             Optional.ofNullable(stopSequences.getNullable("stop_sequences"))
@@ -718,6 +617,9 @@ private constructor(
          * A system prompt is a way of providing context and instructions to Claude, such as
          * specifying a particular goal or role. See our
          * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
          */
         fun system(): Optional<System> = Optional.ofNullable(system.getNullable("system"))
 
@@ -728,6 +630,9 @@ private constructor(
          * analytical / multiple choice, and closer to `1.0` for creative and generative tasks.
          *
          * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
          */
         fun temperature(): Optional<Double> =
             Optional.ofNullable(temperature.getNullable("temperature"))
@@ -742,6 +647,9 @@ private constructor(
          * See
          * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
          * for details.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
          */
         fun thinking(): Optional<BetaThinkingConfigParam> =
             Optional.ofNullable(thinking.getNullable("thinking"))
@@ -749,6 +657,9 @@ private constructor(
         /**
          * How the model should use the provided tools. The model can use a specific tool, any
          * available tool, decide by itself, or not use tools at all.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
          */
         fun toolChoice(): Optional<BetaToolChoice> =
             Optional.ofNullable(toolChoice.getNullable("tool_choice"))
@@ -817,6 +728,9 @@ private constructor(
          * output.
          *
          * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
          */
         fun tools(): Optional<List<BetaToolUnion>> = Optional.ofNullable(tools.getNullable("tools"))
 
@@ -827,6 +741,9 @@ private constructor(
          * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
          */
         fun topK(): Optional<Long> = Optional.ofNullable(topK.getNullable("top_k"))
 
@@ -839,262 +756,106 @@ private constructor(
          * `top_p`, but not both.
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
          */
         fun topP(): Optional<Double> = Optional.ofNullable(topP.getNullable("top_p"))
 
         /**
-         * The maximum number of tokens to generate before stopping.
+         * Returns the raw JSON value of [maxTokens].
          *
-         * Note that our models may stop _before_ reaching this maximum. This parameter only
-         * specifies the absolute maximum number of tokens to generate.
-         *
-         * Different models have different maximum values for this parameter. See
-         * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
+         * Unlike [maxTokens], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("max_tokens") @ExcludeMissing fun _maxTokens(): JsonField<Long> = maxTokens
 
         /**
-         * Input messages.
+         * Returns the raw JSON value of [messages].
          *
-         * Our models are trained to operate on alternating `user` and `assistant` conversational
-         * turns. When creating a new `Message`, you specify the prior conversational turns with the
-         * `messages` parameter, and the model then generates the next `Message` in the
-         * conversation. Consecutive `user` or `assistant` turns in your request will be combined
-         * into a single turn.
-         *
-         * Each input message must be an object with a `role` and `content`. You can specify a
-         * single `user`-role message, or you can include multiple `user` and `assistant` messages.
-         *
-         * If the final message uses the `assistant` role, the response content will continue
-         * immediately from the content in that message. This can be used to constrain part of the
-         * model's response.
-         *
-         * Example with a single `user` message:
-         * ```json
-         * [{ "role": "user", "content": "Hello, Claude" }]
-         * ```
-         *
-         * Example with multiple conversational turns:
-         * ```json
-         * [
-         *   { "role": "user", "content": "Hello there." },
-         *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-         *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-         * ]
-         * ```
-         *
-         * Example with a partially-filled response from Claude:
-         * ```json
-         * [
-         *   {
-         *     "role": "user",
-         *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-         *   },
-         *   { "role": "assistant", "content": "The best answer is (" }
-         * ]
-         * ```
-         *
-         * Each input message `content` may be either a single `string` or an array of content
-         * blocks, where each block has a specific `type`. Using a `string` for `content` is
-         * shorthand for an array of one content block of type `"text"`. The following input
-         * messages are equivalent:
-         * ```json
-         * { "role": "user", "content": "Hello, Claude" }
-         * ```
-         * ```json
-         * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-         * ```
-         *
-         * Starting with Claude 3 models, you can also send image content blocks:
-         * ```json
-         * {
-         *   "role": "user",
-         *   "content": [
-         *     {
-         *       "type": "image",
-         *       "source": {
-         *         "type": "base64",
-         *         "media_type": "image/jpeg",
-         *         "data": "/9j/4AAQSkZJRg..."
-         *       }
-         *     },
-         *     { "type": "text", "text": "What is in this image?" }
-         *   ]
-         * }
-         * ```
-         *
-         * We currently support the `base64` source type for images, and the `image/jpeg`,
-         * `image/png`, `image/gif`, and `image/webp` media types.
-         *
-         * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more input
-         * examples.
-         *
-         * Note that if you want to include a
-         * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
-         * top-level `system` parameter — there is no `"system"` role for input messages in the
-         * Messages API.
+         * Unlike [messages], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("messages")
         @ExcludeMissing
         fun _messages(): JsonField<List<BetaMessageParam>> = messages
 
         /**
-         * The model that will complete your prompt.\n\nSee
-         * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
-         * options.
+         * Returns the raw JSON value of [model].
+         *
+         * Unlike [model], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
 
-        /** An object describing metadata about the request. */
+        /**
+         * Returns the raw JSON value of [metadata].
+         *
+         * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
+         */
         @JsonProperty("metadata")
         @ExcludeMissing
         fun _metadata(): JsonField<BetaMetadata> = metadata
 
         /**
-         * Custom text sequences that will cause the model to stop generating.
+         * Returns the raw JSON value of [stopSequences].
          *
-         * Our models will normally stop when they have naturally completed their turn, which will
-         * result in a response `stop_reason` of `"end_turn"`.
-         *
-         * If you want the model to stop generating when it encounters custom strings of text, you
-         * can use the `stop_sequences` parameter. If the model encounters one of the custom
-         * sequences, the response `stop_reason` value will be `"stop_sequence"` and the response
-         * `stop_sequence` value will contain the matched stop sequence.
+         * Unlike [stopSequences], this method doesn't throw if the JSON field has an unexpected
+         * type.
          */
         @JsonProperty("stop_sequences")
         @ExcludeMissing
         fun _stopSequences(): JsonField<List<String>> = stopSequences
 
         /**
-         * System prompt.
+         * Returns the raw JSON value of [system].
          *
-         * A system prompt is a way of providing context and instructions to Claude, such as
-         * specifying a particular goal or role. See our
-         * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+         * Unlike [system], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("system") @ExcludeMissing fun _system(): JsonField<System> = system
 
         /**
-         * Amount of randomness injected into the response.
+         * Returns the raw JSON value of [temperature].
          *
-         * Defaults to `1.0`. Ranges from `0.0` to `1.0`. Use `temperature` closer to `0.0` for
-         * analytical / multiple choice, and closer to `1.0` for creative and generative tasks.
-         *
-         * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
+         * Unlike [temperature], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("temperature")
         @ExcludeMissing
         fun _temperature(): JsonField<Double> = temperature
 
         /**
-         * Configuration for enabling Claude's extended thinking.
+         * Returns the raw JSON value of [thinking].
          *
-         * When enabled, responses include `thinking` content blocks showing Claude's thinking
-         * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
-         * towards your `max_tokens` limit.
-         *
-         * See
-         * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
-         * for details.
+         * Unlike [thinking], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("thinking")
         @ExcludeMissing
         fun _thinking(): JsonField<BetaThinkingConfigParam> = thinking
 
         /**
-         * How the model should use the provided tools. The model can use a specific tool, any
-         * available tool, decide by itself, or not use tools at all.
+         * Returns the raw JSON value of [toolChoice].
+         *
+         * Unlike [toolChoice], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("tool_choice")
         @ExcludeMissing
         fun _toolChoice(): JsonField<BetaToolChoice> = toolChoice
 
         /**
-         * Definitions of tools that the model may use.
+         * Returns the raw JSON value of [tools].
          *
-         * If you include `tools` in your API request, the model may return `tool_use` content
-         * blocks that represent the model's use of those tools. You can then run those tools using
-         * the tool input generated by the model and then optionally return results back to the
-         * model using `tool_result` content blocks.
-         *
-         * Each tool definition includes:
-         * - `name`: Name of the tool.
-         * - `description`: Optional, but strongly-recommended description of the tool.
-         * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
-         *   `input` shape that the model will produce in `tool_use` output content blocks.
-         *
-         * For example, if you defined `tools` as:
-         * ```json
-         * [
-         *   {
-         *     "name": "get_stock_price",
-         *     "description": "Get the current stock price for a given ticker symbol.",
-         *     "input_schema": {
-         *       "type": "object",
-         *       "properties": {
-         *         "ticker": {
-         *           "type": "string",
-         *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-         *         }
-         *       },
-         *       "required": ["ticker"]
-         *     }
-         *   }
-         * ]
-         * ```
-         *
-         * And then asked the model "What's the S&P 500 at today?", the model might produce
-         * `tool_use` content blocks in the response like this:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_use",
-         *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "name": "get_stock_price",
-         *     "input": { "ticker": "^GSPC" }
-         *   }
-         * ]
-         * ```
-         *
-         * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an input,
-         * and return the following back to the model in a subsequent `user` message:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_result",
-         *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "content": "259.75 USD"
-         *   }
-         * ]
-         * ```
-         *
-         * Tools can be used for workflows that include running client-side tools and functions, or
-         * more generally whenever you want the model to produce a particular JSON structure of
-         * output.
-         *
-         * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+         * Unlike [tools], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("tools") @ExcludeMissing fun _tools(): JsonField<List<BetaToolUnion>> = tools
 
         /**
-         * Only sample from the top K options for each subsequent token.
+         * Returns the raw JSON value of [topK].
          *
-         * Used to remove "long tail" low probability responses.
-         * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
-         *
-         * Recommended for advanced use cases only. You usually only need to use `temperature`.
+         * Unlike [topK], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("top_k") @ExcludeMissing fun _topK(): JsonField<Long> = topK
 
         /**
-         * Use nucleus sampling.
+         * Returns the raw JSON value of [topP].
          *
-         * In nucleus sampling, we compute the cumulative distribution over all the options for each
-         * subsequent token in decreasing probability order and cut it off once it reaches a
-         * particular probability specified by `top_p`. You should either alter `temperature` or
-         * `top_p`, but not both.
-         *
-         * Recommended for advanced use cases only. You usually only need to use `temperature`.
+         * Unlike [topP], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("top_p") @ExcludeMissing fun _topP(): JsonField<Double> = topP
 
@@ -1187,13 +948,11 @@ private constructor(
             fun maxTokens(maxTokens: Long) = maxTokens(JsonField.of(maxTokens))
 
             /**
-             * The maximum number of tokens to generate before stopping.
+             * Sets [Builder.maxTokens] to an arbitrary JSON value.
              *
-             * Note that our models may stop _before_ reaching this maximum. This parameter only
-             * specifies the absolute maximum number of tokens to generate.
-             *
-             * Different models have different maximum values for this parameter. See
-             * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
+             * You should usually call [Builder.maxTokens] with a well-typed [Long] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
             fun maxTokens(maxTokens: JsonField<Long>) = apply { this.maxTokens = maxTokens }
 
@@ -1282,172 +1041,20 @@ private constructor(
             fun messages(messages: List<BetaMessageParam>) = messages(JsonField.of(messages))
 
             /**
-             * Input messages.
+             * Sets [Builder.messages] to an arbitrary JSON value.
              *
-             * Our models are trained to operate on alternating `user` and `assistant`
-             * conversational turns. When creating a new `Message`, you specify the prior
-             * conversational turns with the `messages` parameter, and the model then generates the
-             * next `Message` in the conversation. Consecutive `user` or `assistant` turns in your
-             * request will be combined into a single turn.
-             *
-             * Each input message must be an object with a `role` and `content`. You can specify a
-             * single `user`-role message, or you can include multiple `user` and `assistant`
-             * messages.
-             *
-             * If the final message uses the `assistant` role, the response content will continue
-             * immediately from the content in that message. This can be used to constrain part of
-             * the model's response.
-             *
-             * Example with a single `user` message:
-             * ```json
-             * [{ "role": "user", "content": "Hello, Claude" }]
-             * ```
-             *
-             * Example with multiple conversational turns:
-             * ```json
-             * [
-             *   { "role": "user", "content": "Hello there." },
-             *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-             *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-             * ]
-             * ```
-             *
-             * Example with a partially-filled response from Claude:
-             * ```json
-             * [
-             *   {
-             *     "role": "user",
-             *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-             *   },
-             *   { "role": "assistant", "content": "The best answer is (" }
-             * ]
-             * ```
-             *
-             * Each input message `content` may be either a single `string` or an array of content
-             * blocks, where each block has a specific `type`. Using a `string` for `content` is
-             * shorthand for an array of one content block of type `"text"`. The following input
-             * messages are equivalent:
-             * ```json
-             * { "role": "user", "content": "Hello, Claude" }
-             * ```
-             * ```json
-             * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-             * ```
-             *
-             * Starting with Claude 3 models, you can also send image content blocks:
-             * ```json
-             * {
-             *   "role": "user",
-             *   "content": [
-             *     {
-             *       "type": "image",
-             *       "source": {
-             *         "type": "base64",
-             *         "media_type": "image/jpeg",
-             *         "data": "/9j/4AAQSkZJRg..."
-             *       }
-             *     },
-             *     { "type": "text", "text": "What is in this image?" }
-             *   ]
-             * }
-             * ```
-             *
-             * We currently support the `base64` source type for images, and the `image/jpeg`,
-             * `image/png`, `image/gif`, and `image/webp` media types.
-             *
-             * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more
-             * input examples.
-             *
-             * Note that if you want to include a
-             * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
-             * top-level `system` parameter — there is no `"system"` role for input messages in the
-             * Messages API.
+             * You should usually call [Builder.messages] with a well-typed `List<BetaMessageParam>`
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
              */
             fun messages(messages: JsonField<List<BetaMessageParam>>) = apply {
                 this.messages = messages.map { it.toMutableList() }
             }
 
             /**
-             * Input messages.
+             * Adds a single [BetaMessageParam] to [messages].
              *
-             * Our models are trained to operate on alternating `user` and `assistant`
-             * conversational turns. When creating a new `Message`, you specify the prior
-             * conversational turns with the `messages` parameter, and the model then generates the
-             * next `Message` in the conversation. Consecutive `user` or `assistant` turns in your
-             * request will be combined into a single turn.
-             *
-             * Each input message must be an object with a `role` and `content`. You can specify a
-             * single `user`-role message, or you can include multiple `user` and `assistant`
-             * messages.
-             *
-             * If the final message uses the `assistant` role, the response content will continue
-             * immediately from the content in that message. This can be used to constrain part of
-             * the model's response.
-             *
-             * Example with a single `user` message:
-             * ```json
-             * [{ "role": "user", "content": "Hello, Claude" }]
-             * ```
-             *
-             * Example with multiple conversational turns:
-             * ```json
-             * [
-             *   { "role": "user", "content": "Hello there." },
-             *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-             *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-             * ]
-             * ```
-             *
-             * Example with a partially-filled response from Claude:
-             * ```json
-             * [
-             *   {
-             *     "role": "user",
-             *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-             *   },
-             *   { "role": "assistant", "content": "The best answer is (" }
-             * ]
-             * ```
-             *
-             * Each input message `content` may be either a single `string` or an array of content
-             * blocks, where each block has a specific `type`. Using a `string` for `content` is
-             * shorthand for an array of one content block of type `"text"`. The following input
-             * messages are equivalent:
-             * ```json
-             * { "role": "user", "content": "Hello, Claude" }
-             * ```
-             * ```json
-             * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-             * ```
-             *
-             * Starting with Claude 3 models, you can also send image content blocks:
-             * ```json
-             * {
-             *   "role": "user",
-             *   "content": [
-             *     {
-             *       "type": "image",
-             *       "source": {
-             *         "type": "base64",
-             *         "media_type": "image/jpeg",
-             *         "data": "/9j/4AAQSkZJRg..."
-             *       }
-             *     },
-             *     { "type": "text", "text": "What is in this image?" }
-             *   ]
-             * }
-             * ```
-             *
-             * We currently support the `base64` source type for images, and the `image/jpeg`,
-             * `image/png`, `image/gif`, and `image/webp` media types.
-             *
-             * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more
-             * input examples.
-             *
-             * Note that if you want to include a
-             * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
-             * top-level `system` parameter — there is no `"system"` role for input messages in the
-             * Messages API.
+             * @throws IllegalStateException if the field was previously set to a non-list.
              */
             fun addMessage(message: BetaMessageParam) = apply {
                 messages =
@@ -1456,171 +1063,17 @@ private constructor(
                     }
             }
 
-            /**
-             * Input messages.
-             *
-             * Our models are trained to operate on alternating `user` and `assistant`
-             * conversational turns. When creating a new `Message`, you specify the prior
-             * conversational turns with the `messages` parameter, and the model then generates the
-             * next `Message` in the conversation. Consecutive `user` or `assistant` turns in your
-             * request will be combined into a single turn.
-             *
-             * Each input message must be an object with a `role` and `content`. You can specify a
-             * single `user`-role message, or you can include multiple `user` and `assistant`
-             * messages.
-             *
-             * If the final message uses the `assistant` role, the response content will continue
-             * immediately from the content in that message. This can be used to constrain part of
-             * the model's response.
-             *
-             * Example with a single `user` message:
-             * ```json
-             * [{ "role": "user", "content": "Hello, Claude" }]
-             * ```
-             *
-             * Example with multiple conversational turns:
-             * ```json
-             * [
-             *   { "role": "user", "content": "Hello there." },
-             *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-             *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-             * ]
-             * ```
-             *
-             * Example with a partially-filled response from Claude:
-             * ```json
-             * [
-             *   {
-             *     "role": "user",
-             *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-             *   },
-             *   { "role": "assistant", "content": "The best answer is (" }
-             * ]
-             * ```
-             *
-             * Each input message `content` may be either a single `string` or an array of content
-             * blocks, where each block has a specific `type`. Using a `string` for `content` is
-             * shorthand for an array of one content block of type `"text"`. The following input
-             * messages are equivalent:
-             * ```json
-             * { "role": "user", "content": "Hello, Claude" }
-             * ```
-             * ```json
-             * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-             * ```
-             *
-             * Starting with Claude 3 models, you can also send image content blocks:
-             * ```json
-             * {
-             *   "role": "user",
-             *   "content": [
-             *     {
-             *       "type": "image",
-             *       "source": {
-             *         "type": "base64",
-             *         "media_type": "image/jpeg",
-             *         "data": "/9j/4AAQSkZJRg..."
-             *       }
-             *     },
-             *     { "type": "text", "text": "What is in this image?" }
-             *   ]
-             * }
-             * ```
-             *
-             * We currently support the `base64` source type for images, and the `image/jpeg`,
-             * `image/png`, `image/gif`, and `image/webp` media types.
-             *
-             * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more
-             * input examples.
-             *
-             * Note that if you want to include a
-             * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
-             * top-level `system` parameter — there is no `"system"` role for input messages in the
-             * Messages API.
-             */
+            /** Alias for calling [addMessage] with `message.toParam()`. */
             fun addMessage(message: BetaMessage) = addMessage(message.toParam())
 
             /**
-             * Input messages.
-             *
-             * Our models are trained to operate on alternating `user` and `assistant`
-             * conversational turns. When creating a new `Message`, you specify the prior
-             * conversational turns with the `messages` parameter, and the model then generates the
-             * next `Message` in the conversation. Consecutive `user` or `assistant` turns in your
-             * request will be combined into a single turn.
-             *
-             * Each input message must be an object with a `role` and `content`. You can specify a
-             * single `user`-role message, or you can include multiple `user` and `assistant`
-             * messages.
-             *
-             * If the final message uses the `assistant` role, the response content will continue
-             * immediately from the content in that message. This can be used to constrain part of
-             * the model's response.
-             *
-             * Example with a single `user` message:
-             * ```json
-             * [{ "role": "user", "content": "Hello, Claude" }]
+             * Alias for calling [addMessage] with the following:
+             * ```java
+             * BetaMessageParam.builder()
+             *     .role(BetaMessageParam.Role.USER)
+             *     .content(content)
+             *     .build()
              * ```
-             *
-             * Example with multiple conversational turns:
-             * ```json
-             * [
-             *   { "role": "user", "content": "Hello there." },
-             *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-             *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-             * ]
-             * ```
-             *
-             * Example with a partially-filled response from Claude:
-             * ```json
-             * [
-             *   {
-             *     "role": "user",
-             *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-             *   },
-             *   { "role": "assistant", "content": "The best answer is (" }
-             * ]
-             * ```
-             *
-             * Each input message `content` may be either a single `string` or an array of content
-             * blocks, where each block has a specific `type`. Using a `string` for `content` is
-             * shorthand for an array of one content block of type `"text"`. The following input
-             * messages are equivalent:
-             * ```json
-             * { "role": "user", "content": "Hello, Claude" }
-             * ```
-             * ```json
-             * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-             * ```
-             *
-             * Starting with Claude 3 models, you can also send image content blocks:
-             * ```json
-             * {
-             *   "role": "user",
-             *   "content": [
-             *     {
-             *       "type": "image",
-             *       "source": {
-             *         "type": "base64",
-             *         "media_type": "image/jpeg",
-             *         "data": "/9j/4AAQSkZJRg..."
-             *       }
-             *     },
-             *     { "type": "text", "text": "What is in this image?" }
-             *   ]
-             * }
-             * ```
-             *
-             * We currently support the `base64` source type for images, and the `image/jpeg`,
-             * `image/png`, `image/gif`, and `image/webp` media types.
-             *
-             * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more
-             * input examples.
-             *
-             * Note that if you want to include a
-             * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
-             * top-level `system` parameter — there is no `"system"` role for input messages in the
-             * Messages API.
              */
             fun addUserMessage(content: BetaMessageParam.Content) =
                 addMessage(
@@ -1631,171 +1084,14 @@ private constructor(
                 )
 
             /**
-             * Input messages.
-             *
-             * Our models are trained to operate on alternating `user` and `assistant`
-             * conversational turns. When creating a new `Message`, you specify the prior
-             * conversational turns with the `messages` parameter, and the model then generates the
-             * next `Message` in the conversation. Consecutive `user` or `assistant` turns in your
-             * request will be combined into a single turn.
-             *
-             * Each input message must be an object with a `role` and `content`. You can specify a
-             * single `user`-role message, or you can include multiple `user` and `assistant`
-             * messages.
-             *
-             * If the final message uses the `assistant` role, the response content will continue
-             * immediately from the content in that message. This can be used to constrain part of
-             * the model's response.
-             *
-             * Example with a single `user` message:
-             * ```json
-             * [{ "role": "user", "content": "Hello, Claude" }]
-             * ```
-             *
-             * Example with multiple conversational turns:
-             * ```json
-             * [
-             *   { "role": "user", "content": "Hello there." },
-             *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-             *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-             * ]
-             * ```
-             *
-             * Example with a partially-filled response from Claude:
-             * ```json
-             * [
-             *   {
-             *     "role": "user",
-             *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-             *   },
-             *   { "role": "assistant", "content": "The best answer is (" }
-             * ]
-             * ```
-             *
-             * Each input message `content` may be either a single `string` or an array of content
-             * blocks, where each block has a specific `type`. Using a `string` for `content` is
-             * shorthand for an array of one content block of type `"text"`. The following input
-             * messages are equivalent:
-             * ```json
-             * { "role": "user", "content": "Hello, Claude" }
-             * ```
-             * ```json
-             * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-             * ```
-             *
-             * Starting with Claude 3 models, you can also send image content blocks:
-             * ```json
-             * {
-             *   "role": "user",
-             *   "content": [
-             *     {
-             *       "type": "image",
-             *       "source": {
-             *         "type": "base64",
-             *         "media_type": "image/jpeg",
-             *         "data": "/9j/4AAQSkZJRg..."
-             *       }
-             *     },
-             *     { "type": "text", "text": "What is in this image?" }
-             *   ]
-             * }
-             * ```
-             *
-             * We currently support the `base64` source type for images, and the `image/jpeg`,
-             * `image/png`, `image/gif`, and `image/webp` media types.
-             *
-             * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more
-             * input examples.
-             *
-             * Note that if you want to include a
-             * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
-             * top-level `system` parameter — there is no `"system"` role for input messages in the
-             * Messages API.
+             * Alias for calling [addUserMessage] with `BetaMessageParam.Content.ofString(string)`.
              */
             fun addUserMessage(string: String) =
                 addUserMessage(BetaMessageParam.Content.ofString(string))
 
             /**
-             * Input messages.
-             *
-             * Our models are trained to operate on alternating `user` and `assistant`
-             * conversational turns. When creating a new `Message`, you specify the prior
-             * conversational turns with the `messages` parameter, and the model then generates the
-             * next `Message` in the conversation. Consecutive `user` or `assistant` turns in your
-             * request will be combined into a single turn.
-             *
-             * Each input message must be an object with a `role` and `content`. You can specify a
-             * single `user`-role message, or you can include multiple `user` and `assistant`
-             * messages.
-             *
-             * If the final message uses the `assistant` role, the response content will continue
-             * immediately from the content in that message. This can be used to constrain part of
-             * the model's response.
-             *
-             * Example with a single `user` message:
-             * ```json
-             * [{ "role": "user", "content": "Hello, Claude" }]
-             * ```
-             *
-             * Example with multiple conversational turns:
-             * ```json
-             * [
-             *   { "role": "user", "content": "Hello there." },
-             *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-             *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-             * ]
-             * ```
-             *
-             * Example with a partially-filled response from Claude:
-             * ```json
-             * [
-             *   {
-             *     "role": "user",
-             *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-             *   },
-             *   { "role": "assistant", "content": "The best answer is (" }
-             * ]
-             * ```
-             *
-             * Each input message `content` may be either a single `string` or an array of content
-             * blocks, where each block has a specific `type`. Using a `string` for `content` is
-             * shorthand for an array of one content block of type `"text"`. The following input
-             * messages are equivalent:
-             * ```json
-             * { "role": "user", "content": "Hello, Claude" }
-             * ```
-             * ```json
-             * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-             * ```
-             *
-             * Starting with Claude 3 models, you can also send image content blocks:
-             * ```json
-             * {
-             *   "role": "user",
-             *   "content": [
-             *     {
-             *       "type": "image",
-             *       "source": {
-             *         "type": "base64",
-             *         "media_type": "image/jpeg",
-             *         "data": "/9j/4AAQSkZJRg..."
-             *       }
-             *     },
-             *     { "type": "text", "text": "What is in this image?" }
-             *   ]
-             * }
-             * ```
-             *
-             * We currently support the `base64` source type for images, and the `image/jpeg`,
-             * `image/png`, `image/gif`, and `image/webp` media types.
-             *
-             * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more
-             * input examples.
-             *
-             * Note that if you want to include a
-             * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
-             * top-level `system` parameter — there is no `"system"` role for input messages in the
-             * Messages API.
+             * Alias for calling [addUserMessage] with
+             * `BetaMessageParam.Content.ofBetaContentBlockParams(betaContentBlockParams)`.
              */
             fun addUserMessageOfBetaContentBlockParams(
                 betaContentBlockParams: List<BetaContentBlockParam>
@@ -1805,86 +1101,13 @@ private constructor(
                 )
 
             /**
-             * Input messages.
-             *
-             * Our models are trained to operate on alternating `user` and `assistant`
-             * conversational turns. When creating a new `Message`, you specify the prior
-             * conversational turns with the `messages` parameter, and the model then generates the
-             * next `Message` in the conversation. Consecutive `user` or `assistant` turns in your
-             * request will be combined into a single turn.
-             *
-             * Each input message must be an object with a `role` and `content`. You can specify a
-             * single `user`-role message, or you can include multiple `user` and `assistant`
-             * messages.
-             *
-             * If the final message uses the `assistant` role, the response content will continue
-             * immediately from the content in that message. This can be used to constrain part of
-             * the model's response.
-             *
-             * Example with a single `user` message:
-             * ```json
-             * [{ "role": "user", "content": "Hello, Claude" }]
+             * Alias for calling [addMessage] with the following:
+             * ```java
+             * BetaMessageParam.builder()
+             *     .role(BetaMessageParam.Role.USER)
+             *     .content(content)
+             *     .build()
              * ```
-             *
-             * Example with multiple conversational turns:
-             * ```json
-             * [
-             *   { "role": "user", "content": "Hello there." },
-             *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-             *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-             * ]
-             * ```
-             *
-             * Example with a partially-filled response from Claude:
-             * ```json
-             * [
-             *   {
-             *     "role": "user",
-             *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-             *   },
-             *   { "role": "assistant", "content": "The best answer is (" }
-             * ]
-             * ```
-             *
-             * Each input message `content` may be either a single `string` or an array of content
-             * blocks, where each block has a specific `type`. Using a `string` for `content` is
-             * shorthand for an array of one content block of type `"text"`. The following input
-             * messages are equivalent:
-             * ```json
-             * { "role": "user", "content": "Hello, Claude" }
-             * ```
-             * ```json
-             * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-             * ```
-             *
-             * Starting with Claude 3 models, you can also send image content blocks:
-             * ```json
-             * {
-             *   "role": "user",
-             *   "content": [
-             *     {
-             *       "type": "image",
-             *       "source": {
-             *         "type": "base64",
-             *         "media_type": "image/jpeg",
-             *         "data": "/9j/4AAQSkZJRg..."
-             *       }
-             *     },
-             *     { "type": "text", "text": "What is in this image?" }
-             *   ]
-             * }
-             * ```
-             *
-             * We currently support the `base64` source type for images, and the `image/jpeg`,
-             * `image/png`, `image/gif`, and `image/webp` media types.
-             *
-             * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more
-             * input examples.
-             *
-             * Note that if you want to include a
-             * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
-             * top-level `system` parameter — there is no `"system"` role for input messages in the
-             * Messages API.
              */
             fun addAssistantMessage(content: BetaMessageParam.Content) =
                 addMessage(
@@ -1895,171 +1118,15 @@ private constructor(
                 )
 
             /**
-             * Input messages.
-             *
-             * Our models are trained to operate on alternating `user` and `assistant`
-             * conversational turns. When creating a new `Message`, you specify the prior
-             * conversational turns with the `messages` parameter, and the model then generates the
-             * next `Message` in the conversation. Consecutive `user` or `assistant` turns in your
-             * request will be combined into a single turn.
-             *
-             * Each input message must be an object with a `role` and `content`. You can specify a
-             * single `user`-role message, or you can include multiple `user` and `assistant`
-             * messages.
-             *
-             * If the final message uses the `assistant` role, the response content will continue
-             * immediately from the content in that message. This can be used to constrain part of
-             * the model's response.
-             *
-             * Example with a single `user` message:
-             * ```json
-             * [{ "role": "user", "content": "Hello, Claude" }]
-             * ```
-             *
-             * Example with multiple conversational turns:
-             * ```json
-             * [
-             *   { "role": "user", "content": "Hello there." },
-             *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-             *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-             * ]
-             * ```
-             *
-             * Example with a partially-filled response from Claude:
-             * ```json
-             * [
-             *   {
-             *     "role": "user",
-             *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-             *   },
-             *   { "role": "assistant", "content": "The best answer is (" }
-             * ]
-             * ```
-             *
-             * Each input message `content` may be either a single `string` or an array of content
-             * blocks, where each block has a specific `type`. Using a `string` for `content` is
-             * shorthand for an array of one content block of type `"text"`. The following input
-             * messages are equivalent:
-             * ```json
-             * { "role": "user", "content": "Hello, Claude" }
-             * ```
-             * ```json
-             * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-             * ```
-             *
-             * Starting with Claude 3 models, you can also send image content blocks:
-             * ```json
-             * {
-             *   "role": "user",
-             *   "content": [
-             *     {
-             *       "type": "image",
-             *       "source": {
-             *         "type": "base64",
-             *         "media_type": "image/jpeg",
-             *         "data": "/9j/4AAQSkZJRg..."
-             *       }
-             *     },
-             *     { "type": "text", "text": "What is in this image?" }
-             *   ]
-             * }
-             * ```
-             *
-             * We currently support the `base64` source type for images, and the `image/jpeg`,
-             * `image/png`, `image/gif`, and `image/webp` media types.
-             *
-             * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more
-             * input examples.
-             *
-             * Note that if you want to include a
-             * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
-             * top-level `system` parameter — there is no `"system"` role for input messages in the
-             * Messages API.
+             * Alias for calling [addAssistantMessage] with
+             * `BetaMessageParam.Content.ofString(string)`.
              */
             fun addAssistantMessage(string: String) =
                 addAssistantMessage(BetaMessageParam.Content.ofString(string))
 
             /**
-             * Input messages.
-             *
-             * Our models are trained to operate on alternating `user` and `assistant`
-             * conversational turns. When creating a new `Message`, you specify the prior
-             * conversational turns with the `messages` parameter, and the model then generates the
-             * next `Message` in the conversation. Consecutive `user` or `assistant` turns in your
-             * request will be combined into a single turn.
-             *
-             * Each input message must be an object with a `role` and `content`. You can specify a
-             * single `user`-role message, or you can include multiple `user` and `assistant`
-             * messages.
-             *
-             * If the final message uses the `assistant` role, the response content will continue
-             * immediately from the content in that message. This can be used to constrain part of
-             * the model's response.
-             *
-             * Example with a single `user` message:
-             * ```json
-             * [{ "role": "user", "content": "Hello, Claude" }]
-             * ```
-             *
-             * Example with multiple conversational turns:
-             * ```json
-             * [
-             *   { "role": "user", "content": "Hello there." },
-             *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-             *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-             * ]
-             * ```
-             *
-             * Example with a partially-filled response from Claude:
-             * ```json
-             * [
-             *   {
-             *     "role": "user",
-             *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-             *   },
-             *   { "role": "assistant", "content": "The best answer is (" }
-             * ]
-             * ```
-             *
-             * Each input message `content` may be either a single `string` or an array of content
-             * blocks, where each block has a specific `type`. Using a `string` for `content` is
-             * shorthand for an array of one content block of type `"text"`. The following input
-             * messages are equivalent:
-             * ```json
-             * { "role": "user", "content": "Hello, Claude" }
-             * ```
-             * ```json
-             * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-             * ```
-             *
-             * Starting with Claude 3 models, you can also send image content blocks:
-             * ```json
-             * {
-             *   "role": "user",
-             *   "content": [
-             *     {
-             *       "type": "image",
-             *       "source": {
-             *         "type": "base64",
-             *         "media_type": "image/jpeg",
-             *         "data": "/9j/4AAQSkZJRg..."
-             *       }
-             *     },
-             *     { "type": "text", "text": "What is in this image?" }
-             *   ]
-             * }
-             * ```
-             *
-             * We currently support the `base64` source type for images, and the `image/jpeg`,
-             * `image/png`, `image/gif`, and `image/webp` media types.
-             *
-             * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more
-             * input examples.
-             *
-             * Note that if you want to include a
-             * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
-             * top-level `system` parameter — there is no `"system"` role for input messages in the
-             * Messages API.
+             * Alias for calling [addAssistantMessage] with
+             * `BetaMessageParam.Content.ofBetaContentBlockParams(betaContentBlockParams)`.
              */
             fun addAssistantMessageOfBetaContentBlockParams(
                 betaContentBlockParams: List<BetaContentBlockParam>
@@ -2076,23 +1143,33 @@ private constructor(
             fun model(model: Model) = model(JsonField.of(model))
 
             /**
-             * The model that will complete your prompt.\n\nSee
-             * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
-             * and options.
+             * Sets [Builder.model] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.model] with a well-typed [Model] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
              */
             fun model(model: JsonField<Model>) = apply { this.model = model }
 
             /**
-             * The model that will complete your prompt.\n\nSee
-             * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
-             * and options.
+             * Sets [model] to an arbitrary [String].
+             *
+             * You should usually call [model] with a well-typed [Model] constant instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
              */
             fun model(value: String) = model(Model.of(value))
 
             /** An object describing metadata about the request. */
             fun metadata(metadata: BetaMetadata) = metadata(JsonField.of(metadata))
 
-            /** An object describing metadata about the request. */
+            /**
+             * Sets [Builder.metadata] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.metadata] with a well-typed [BetaMetadata] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
             fun metadata(metadata: JsonField<BetaMetadata>) = apply { this.metadata = metadata }
 
             /**
@@ -2110,30 +1187,20 @@ private constructor(
                 stopSequences(JsonField.of(stopSequences))
 
             /**
-             * Custom text sequences that will cause the model to stop generating.
+             * Sets [Builder.stopSequences] to an arbitrary JSON value.
              *
-             * Our models will normally stop when they have naturally completed their turn, which
-             * will result in a response `stop_reason` of `"end_turn"`.
-             *
-             * If you want the model to stop generating when it encounters custom strings of text,
-             * you can use the `stop_sequences` parameter. If the model encounters one of the custom
-             * sequences, the response `stop_reason` value will be `"stop_sequence"` and the
-             * response `stop_sequence` value will contain the matched stop sequence.
+             * You should usually call [Builder.stopSequences] with a well-typed `List<String>`
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
              */
             fun stopSequences(stopSequences: JsonField<List<String>>) = apply {
                 this.stopSequences = stopSequences.map { it.toMutableList() }
             }
 
             /**
-             * Custom text sequences that will cause the model to stop generating.
+             * Adds a single [String] to [stopSequences].
              *
-             * Our models will normally stop when they have naturally completed their turn, which
-             * will result in a response `stop_reason` of `"end_turn"`.
-             *
-             * If you want the model to stop generating when it encounters custom strings of text,
-             * you can use the `stop_sequences` parameter. If the model encounters one of the custom
-             * sequences, the response `stop_reason` value will be `"stop_sequence"` and the
-             * response `stop_sequence` value will contain the matched stop sequence.
+             * @throws IllegalStateException if the field was previously set to a non-list.
              */
             fun addStopSequence(stopSequence: String) = apply {
                 stopSequences =
@@ -2152,29 +1219,19 @@ private constructor(
             fun system(system: System) = system(JsonField.of(system))
 
             /**
-             * System prompt.
+             * Sets [Builder.system] to an arbitrary JSON value.
              *
-             * A system prompt is a way of providing context and instructions to Claude, such as
-             * specifying a particular goal or role. See our
-             * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+             * You should usually call [Builder.system] with a well-typed [System] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
             fun system(system: JsonField<System>) = apply { this.system = system }
 
-            /**
-             * System prompt.
-             *
-             * A system prompt is a way of providing context and instructions to Claude, such as
-             * specifying a particular goal or role. See our
-             * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
-             */
+            /** Alias for calling [system] with `System.ofString(string)`. */
             fun system(string: String) = system(System.ofString(string))
 
             /**
-             * System prompt.
-             *
-             * A system prompt is a way of providing context and instructions to Claude, such as
-             * specifying a particular goal or role. See our
-             * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+             * Alias for calling [system] with `System.ofBetaTextBlockParams(betaTextBlockParams)`.
              */
             fun systemOfBetaTextBlockParams(betaTextBlockParams: List<BetaTextBlockParam>) =
                 system(System.ofBetaTextBlockParams(betaTextBlockParams))
@@ -2191,13 +1248,11 @@ private constructor(
             fun temperature(temperature: Double) = temperature(JsonField.of(temperature))
 
             /**
-             * Amount of randomness injected into the response.
+             * Sets [Builder.temperature] to an arbitrary JSON value.
              *
-             * Defaults to `1.0`. Ranges from `0.0` to `1.0`. Use `temperature` closer to `0.0` for
-             * analytical / multiple choice, and closer to `1.0` for creative and generative tasks.
-             *
-             * Note that even with `temperature` of `0.0`, the results will not be fully
-             * deterministic.
+             * You should usually call [Builder.temperature] with a well-typed [Double] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
             fun temperature(temperature: JsonField<Double>) = apply {
                 this.temperature = temperature
@@ -2217,59 +1272,32 @@ private constructor(
             fun thinking(thinking: BetaThinkingConfigParam) = thinking(JsonField.of(thinking))
 
             /**
-             * Configuration for enabling Claude's extended thinking.
+             * Sets [Builder.thinking] to an arbitrary JSON value.
              *
-             * When enabled, responses include `thinking` content blocks showing Claude's thinking
-             * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
-             * towards your `max_tokens` limit.
-             *
-             * See
-             * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
-             * for details.
+             * You should usually call [Builder.thinking] with a well-typed
+             * [BetaThinkingConfigParam] value instead. This method is primarily for setting the
+             * field to an undocumented or not yet supported value.
              */
             fun thinking(thinking: JsonField<BetaThinkingConfigParam>) = apply {
                 this.thinking = thinking
             }
 
-            /**
-             * Configuration for enabling Claude's extended thinking.
-             *
-             * When enabled, responses include `thinking` content blocks showing Claude's thinking
-             * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
-             * towards your `max_tokens` limit.
-             *
-             * See
-             * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
-             * for details.
-             */
+            /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofEnabled(enabled)`. */
             fun thinking(enabled: BetaThinkingConfigEnabled) =
                 thinking(BetaThinkingConfigParam.ofEnabled(enabled))
 
             /**
-             * Configuration for enabling Claude's extended thinking.
-             *
-             * When enabled, responses include `thinking` content blocks showing Claude's thinking
-             * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
-             * towards your `max_tokens` limit.
-             *
-             * See
-             * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
-             * for details.
+             * Alias for calling [thinking] with the following:
+             * ```java
+             * BetaThinkingConfigEnabled.builder()
+             *     .budgetTokens(budgetTokens)
+             *     .build()
+             * ```
              */
             fun enabledThinking(budgetTokens: Long) =
                 thinking(BetaThinkingConfigEnabled.builder().budgetTokens(budgetTokens).build())
 
-            /**
-             * Configuration for enabling Claude's extended thinking.
-             *
-             * When enabled, responses include `thinking` content blocks showing Claude's thinking
-             * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
-             * towards your `max_tokens` limit.
-             *
-             * See
-             * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
-             * for details.
-             */
+            /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofDisabled(disabled)`. */
             fun thinking(disabled: BetaThinkingConfigDisabled) =
                 thinking(BetaThinkingConfigParam.ofDisabled(disabled))
 
@@ -2280,27 +1308,37 @@ private constructor(
             fun toolChoice(toolChoice: BetaToolChoice) = toolChoice(JsonField.of(toolChoice))
 
             /**
-             * How the model should use the provided tools. The model can use a specific tool, any
-             * available tool, decide by itself, or not use tools at all.
+             * Sets [Builder.toolChoice] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.toolChoice] with a well-typed [BetaToolChoice] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
             fun toolChoice(toolChoice: JsonField<BetaToolChoice>) = apply {
                 this.toolChoice = toolChoice
             }
 
-            /** The model will automatically decide whether to use tools. */
+            /** Alias for calling [toolChoice] with `BetaToolChoice.ofAuto(auto)`. */
             fun toolChoice(auto: BetaToolChoiceAuto) = toolChoice(BetaToolChoice.ofAuto(auto))
 
-            /** The model will use any available tools. */
+            /** Alias for calling [toolChoice] with `BetaToolChoice.ofAny(any)`. */
             fun toolChoice(any: BetaToolChoiceAny) = toolChoice(BetaToolChoice.ofAny(any))
 
-            /** The model will use the specified tool with `tool_choice.name`. */
+            /** Alias for calling [toolChoice] with `BetaToolChoice.ofTool(tool)`. */
             fun toolChoice(tool: BetaToolChoiceTool) = toolChoice(BetaToolChoice.ofTool(tool))
 
-            /** The model will use the specified tool with `tool_choice.name`. */
+            /**
+             * Alias for calling [toolChoice] with the following:
+             * ```java
+             * BetaToolChoiceTool.builder()
+             *     .name(name)
+             *     .build()
+             * ```
+             */
             fun toolToolChoice(name: String) =
                 toolChoice(BetaToolChoiceTool.builder().name(name).build())
 
-            /** The model will not be allowed to use tools. */
+            /** Alias for calling [toolChoice] with `BetaToolChoice.ofNone(none)`. */
             fun toolChoice(none: BetaToolChoiceNone) = toolChoice(BetaToolChoice.ofNone(none))
 
             /**
@@ -2371,138 +1409,20 @@ private constructor(
             fun tools(tools: List<BetaToolUnion>) = tools(JsonField.of(tools))
 
             /**
-             * Definitions of tools that the model may use.
+             * Sets [Builder.tools] to an arbitrary JSON value.
              *
-             * If you include `tools` in your API request, the model may return `tool_use` content
-             * blocks that represent the model's use of those tools. You can then run those tools
-             * using the tool input generated by the model and then optionally return results back
-             * to the model using `tool_result` content blocks.
-             *
-             * Each tool definition includes:
-             * - `name`: Name of the tool.
-             * - `description`: Optional, but strongly-recommended description of the tool.
-             * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
-             *   `input` shape that the model will produce in `tool_use` output content blocks.
-             *
-             * For example, if you defined `tools` as:
-             * ```json
-             * [
-             *   {
-             *     "name": "get_stock_price",
-             *     "description": "Get the current stock price for a given ticker symbol.",
-             *     "input_schema": {
-             *       "type": "object",
-             *       "properties": {
-             *         "ticker": {
-             *           "type": "string",
-             *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-             *         }
-             *       },
-             *       "required": ["ticker"]
-             *     }
-             *   }
-             * ]
-             * ```
-             *
-             * And then asked the model "What's the S&P 500 at today?", the model might produce
-             * `tool_use` content blocks in the response like this:
-             * ```json
-             * [
-             *   {
-             *     "type": "tool_use",
-             *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-             *     "name": "get_stock_price",
-             *     "input": { "ticker": "^GSPC" }
-             *   }
-             * ]
-             * ```
-             *
-             * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an
-             * input, and return the following back to the model in a subsequent `user` message:
-             * ```json
-             * [
-             *   {
-             *     "type": "tool_result",
-             *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-             *     "content": "259.75 USD"
-             *   }
-             * ]
-             * ```
-             *
-             * Tools can be used for workflows that include running client-side tools and functions,
-             * or more generally whenever you want the model to produce a particular JSON structure
-             * of output.
-             *
-             * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+             * You should usually call [Builder.tools] with a well-typed `List<BetaToolUnion>` value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
             fun tools(tools: JsonField<List<BetaToolUnion>>) = apply {
                 this.tools = tools.map { it.toMutableList() }
             }
 
             /**
-             * Definitions of tools that the model may use.
+             * Adds a single [BetaToolUnion] to [tools].
              *
-             * If you include `tools` in your API request, the model may return `tool_use` content
-             * blocks that represent the model's use of those tools. You can then run those tools
-             * using the tool input generated by the model and then optionally return results back
-             * to the model using `tool_result` content blocks.
-             *
-             * Each tool definition includes:
-             * - `name`: Name of the tool.
-             * - `description`: Optional, but strongly-recommended description of the tool.
-             * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
-             *   `input` shape that the model will produce in `tool_use` output content blocks.
-             *
-             * For example, if you defined `tools` as:
-             * ```json
-             * [
-             *   {
-             *     "name": "get_stock_price",
-             *     "description": "Get the current stock price for a given ticker symbol.",
-             *     "input_schema": {
-             *       "type": "object",
-             *       "properties": {
-             *         "ticker": {
-             *           "type": "string",
-             *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-             *         }
-             *       },
-             *       "required": ["ticker"]
-             *     }
-             *   }
-             * ]
-             * ```
-             *
-             * And then asked the model "What's the S&P 500 at today?", the model might produce
-             * `tool_use` content blocks in the response like this:
-             * ```json
-             * [
-             *   {
-             *     "type": "tool_use",
-             *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-             *     "name": "get_stock_price",
-             *     "input": { "ticker": "^GSPC" }
-             *   }
-             * ]
-             * ```
-             *
-             * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an
-             * input, and return the following back to the model in a subsequent `user` message:
-             * ```json
-             * [
-             *   {
-             *     "type": "tool_result",
-             *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-             *     "content": "259.75 USD"
-             *   }
-             * ]
-             * ```
-             *
-             * Tools can be used for workflows that include running client-side tools and functions,
-             * or more generally whenever you want the model to produce a particular JSON structure
-             * of output.
-             *
-             * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+             * @throws IllegalStateException if the field was previously set to a non-list.
              */
             fun addTool(tool: BetaToolUnion) = apply {
                 tools =
@@ -2511,477 +1431,41 @@ private constructor(
                     }
             }
 
-            /**
-             * Definitions of tools that the model may use.
-             *
-             * If you include `tools` in your API request, the model may return `tool_use` content
-             * blocks that represent the model's use of those tools. You can then run those tools
-             * using the tool input generated by the model and then optionally return results back
-             * to the model using `tool_result` content blocks.
-             *
-             * Each tool definition includes:
-             * - `name`: Name of the tool.
-             * - `description`: Optional, but strongly-recommended description of the tool.
-             * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
-             *   `input` shape that the model will produce in `tool_use` output content blocks.
-             *
-             * For example, if you defined `tools` as:
-             * ```json
-             * [
-             *   {
-             *     "name": "get_stock_price",
-             *     "description": "Get the current stock price for a given ticker symbol.",
-             *     "input_schema": {
-             *       "type": "object",
-             *       "properties": {
-             *         "ticker": {
-             *           "type": "string",
-             *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-             *         }
-             *       },
-             *       "required": ["ticker"]
-             *     }
-             *   }
-             * ]
-             * ```
-             *
-             * And then asked the model "What's the S&P 500 at today?", the model might produce
-             * `tool_use` content blocks in the response like this:
-             * ```json
-             * [
-             *   {
-             *     "type": "tool_use",
-             *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-             *     "name": "get_stock_price",
-             *     "input": { "ticker": "^GSPC" }
-             *   }
-             * ]
-             * ```
-             *
-             * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an
-             * input, and return the following back to the model in a subsequent `user` message:
-             * ```json
-             * [
-             *   {
-             *     "type": "tool_result",
-             *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-             *     "content": "259.75 USD"
-             *   }
-             * ]
-             * ```
-             *
-             * Tools can be used for workflows that include running client-side tools and functions,
-             * or more generally whenever you want the model to produce a particular JSON structure
-             * of output.
-             *
-             * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
-             */
+            /** Alias for calling [addTool] with `BetaToolUnion.ofBetaTool(betaTool)`. */
             fun addTool(betaTool: BetaTool) = addTool(BetaToolUnion.ofBetaTool(betaTool))
 
             /**
-             * Definitions of tools that the model may use.
-             *
-             * If you include `tools` in your API request, the model may return `tool_use` content
-             * blocks that represent the model's use of those tools. You can then run those tools
-             * using the tool input generated by the model and then optionally return results back
-             * to the model using `tool_result` content blocks.
-             *
-             * Each tool definition includes:
-             * - `name`: Name of the tool.
-             * - `description`: Optional, but strongly-recommended description of the tool.
-             * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
-             *   `input` shape that the model will produce in `tool_use` output content blocks.
-             *
-             * For example, if you defined `tools` as:
-             * ```json
-             * [
-             *   {
-             *     "name": "get_stock_price",
-             *     "description": "Get the current stock price for a given ticker symbol.",
-             *     "input_schema": {
-             *       "type": "object",
-             *       "properties": {
-             *         "ticker": {
-             *           "type": "string",
-             *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-             *         }
-             *       },
-             *       "required": ["ticker"]
-             *     }
-             *   }
-             * ]
-             * ```
-             *
-             * And then asked the model "What's the S&P 500 at today?", the model might produce
-             * `tool_use` content blocks in the response like this:
-             * ```json
-             * [
-             *   {
-             *     "type": "tool_use",
-             *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-             *     "name": "get_stock_price",
-             *     "input": { "ticker": "^GSPC" }
-             *   }
-             * ]
-             * ```
-             *
-             * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an
-             * input, and return the following back to the model in a subsequent `user` message:
-             * ```json
-             * [
-             *   {
-             *     "type": "tool_result",
-             *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-             *     "content": "259.75 USD"
-             *   }
-             * ]
-             * ```
-             *
-             * Tools can be used for workflows that include running client-side tools and functions,
-             * or more generally whenever you want the model to produce a particular JSON structure
-             * of output.
-             *
-             * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+             * Alias for calling [addTool] with
+             * `BetaToolUnion.ofComputerUse20241022(computerUse20241022)`.
              */
             fun addTool(computerUse20241022: BetaToolComputerUse20241022) =
                 addTool(BetaToolUnion.ofComputerUse20241022(computerUse20241022))
 
-            /**
-             * Definitions of tools that the model may use.
-             *
-             * If you include `tools` in your API request, the model may return `tool_use` content
-             * blocks that represent the model's use of those tools. You can then run those tools
-             * using the tool input generated by the model and then optionally return results back
-             * to the model using `tool_result` content blocks.
-             *
-             * Each tool definition includes:
-             * - `name`: Name of the tool.
-             * - `description`: Optional, but strongly-recommended description of the tool.
-             * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
-             *   `input` shape that the model will produce in `tool_use` output content blocks.
-             *
-             * For example, if you defined `tools` as:
-             * ```json
-             * [
-             *   {
-             *     "name": "get_stock_price",
-             *     "description": "Get the current stock price for a given ticker symbol.",
-             *     "input_schema": {
-             *       "type": "object",
-             *       "properties": {
-             *         "ticker": {
-             *           "type": "string",
-             *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-             *         }
-             *       },
-             *       "required": ["ticker"]
-             *     }
-             *   }
-             * ]
-             * ```
-             *
-             * And then asked the model "What's the S&P 500 at today?", the model might produce
-             * `tool_use` content blocks in the response like this:
-             * ```json
-             * [
-             *   {
-             *     "type": "tool_use",
-             *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-             *     "name": "get_stock_price",
-             *     "input": { "ticker": "^GSPC" }
-             *   }
-             * ]
-             * ```
-             *
-             * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an
-             * input, and return the following back to the model in a subsequent `user` message:
-             * ```json
-             * [
-             *   {
-             *     "type": "tool_result",
-             *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-             *     "content": "259.75 USD"
-             *   }
-             * ]
-             * ```
-             *
-             * Tools can be used for workflows that include running client-side tools and functions,
-             * or more generally whenever you want the model to produce a particular JSON structure
-             * of output.
-             *
-             * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
-             */
+            /** Alias for calling [addTool] with `BetaToolUnion.ofBash20241022(bash20241022)`. */
             fun addTool(bash20241022: BetaToolBash20241022) =
                 addTool(BetaToolUnion.ofBash20241022(bash20241022))
 
             /**
-             * Definitions of tools that the model may use.
-             *
-             * If you include `tools` in your API request, the model may return `tool_use` content
-             * blocks that represent the model's use of those tools. You can then run those tools
-             * using the tool input generated by the model and then optionally return results back
-             * to the model using `tool_result` content blocks.
-             *
-             * Each tool definition includes:
-             * - `name`: Name of the tool.
-             * - `description`: Optional, but strongly-recommended description of the tool.
-             * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
-             *   `input` shape that the model will produce in `tool_use` output content blocks.
-             *
-             * For example, if you defined `tools` as:
-             * ```json
-             * [
-             *   {
-             *     "name": "get_stock_price",
-             *     "description": "Get the current stock price for a given ticker symbol.",
-             *     "input_schema": {
-             *       "type": "object",
-             *       "properties": {
-             *         "ticker": {
-             *           "type": "string",
-             *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-             *         }
-             *       },
-             *       "required": ["ticker"]
-             *     }
-             *   }
-             * ]
-             * ```
-             *
-             * And then asked the model "What's the S&P 500 at today?", the model might produce
-             * `tool_use` content blocks in the response like this:
-             * ```json
-             * [
-             *   {
-             *     "type": "tool_use",
-             *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-             *     "name": "get_stock_price",
-             *     "input": { "ticker": "^GSPC" }
-             *   }
-             * ]
-             * ```
-             *
-             * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an
-             * input, and return the following back to the model in a subsequent `user` message:
-             * ```json
-             * [
-             *   {
-             *     "type": "tool_result",
-             *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-             *     "content": "259.75 USD"
-             *   }
-             * ]
-             * ```
-             *
-             * Tools can be used for workflows that include running client-side tools and functions,
-             * or more generally whenever you want the model to produce a particular JSON structure
-             * of output.
-             *
-             * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+             * Alias for calling [addTool] with
+             * `BetaToolUnion.ofTextEditor20241022(textEditor20241022)`.
              */
             fun addTool(textEditor20241022: BetaToolTextEditor20241022) =
                 addTool(BetaToolUnion.ofTextEditor20241022(textEditor20241022))
 
             /**
-             * Definitions of tools that the model may use.
-             *
-             * If you include `tools` in your API request, the model may return `tool_use` content
-             * blocks that represent the model's use of those tools. You can then run those tools
-             * using the tool input generated by the model and then optionally return results back
-             * to the model using `tool_result` content blocks.
-             *
-             * Each tool definition includes:
-             * - `name`: Name of the tool.
-             * - `description`: Optional, but strongly-recommended description of the tool.
-             * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
-             *   `input` shape that the model will produce in `tool_use` output content blocks.
-             *
-             * For example, if you defined `tools` as:
-             * ```json
-             * [
-             *   {
-             *     "name": "get_stock_price",
-             *     "description": "Get the current stock price for a given ticker symbol.",
-             *     "input_schema": {
-             *       "type": "object",
-             *       "properties": {
-             *         "ticker": {
-             *           "type": "string",
-             *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-             *         }
-             *       },
-             *       "required": ["ticker"]
-             *     }
-             *   }
-             * ]
-             * ```
-             *
-             * And then asked the model "What's the S&P 500 at today?", the model might produce
-             * `tool_use` content blocks in the response like this:
-             * ```json
-             * [
-             *   {
-             *     "type": "tool_use",
-             *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-             *     "name": "get_stock_price",
-             *     "input": { "ticker": "^GSPC" }
-             *   }
-             * ]
-             * ```
-             *
-             * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an
-             * input, and return the following back to the model in a subsequent `user` message:
-             * ```json
-             * [
-             *   {
-             *     "type": "tool_result",
-             *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-             *     "content": "259.75 USD"
-             *   }
-             * ]
-             * ```
-             *
-             * Tools can be used for workflows that include running client-side tools and functions,
-             * or more generally whenever you want the model to produce a particular JSON structure
-             * of output.
-             *
-             * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+             * Alias for calling [addTool] with
+             * `BetaToolUnion.ofComputerUse20250124(computerUse20250124)`.
              */
             fun addTool(computerUse20250124: BetaToolComputerUse20250124) =
                 addTool(BetaToolUnion.ofComputerUse20250124(computerUse20250124))
 
-            /**
-             * Definitions of tools that the model may use.
-             *
-             * If you include `tools` in your API request, the model may return `tool_use` content
-             * blocks that represent the model's use of those tools. You can then run those tools
-             * using the tool input generated by the model and then optionally return results back
-             * to the model using `tool_result` content blocks.
-             *
-             * Each tool definition includes:
-             * - `name`: Name of the tool.
-             * - `description`: Optional, but strongly-recommended description of the tool.
-             * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
-             *   `input` shape that the model will produce in `tool_use` output content blocks.
-             *
-             * For example, if you defined `tools` as:
-             * ```json
-             * [
-             *   {
-             *     "name": "get_stock_price",
-             *     "description": "Get the current stock price for a given ticker symbol.",
-             *     "input_schema": {
-             *       "type": "object",
-             *       "properties": {
-             *         "ticker": {
-             *           "type": "string",
-             *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-             *         }
-             *       },
-             *       "required": ["ticker"]
-             *     }
-             *   }
-             * ]
-             * ```
-             *
-             * And then asked the model "What's the S&P 500 at today?", the model might produce
-             * `tool_use` content blocks in the response like this:
-             * ```json
-             * [
-             *   {
-             *     "type": "tool_use",
-             *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-             *     "name": "get_stock_price",
-             *     "input": { "ticker": "^GSPC" }
-             *   }
-             * ]
-             * ```
-             *
-             * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an
-             * input, and return the following back to the model in a subsequent `user` message:
-             * ```json
-             * [
-             *   {
-             *     "type": "tool_result",
-             *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-             *     "content": "259.75 USD"
-             *   }
-             * ]
-             * ```
-             *
-             * Tools can be used for workflows that include running client-side tools and functions,
-             * or more generally whenever you want the model to produce a particular JSON structure
-             * of output.
-             *
-             * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
-             */
+            /** Alias for calling [addTool] with `BetaToolUnion.ofBash20250124(bash20250124)`. */
             fun addTool(bash20250124: BetaToolBash20250124) =
                 addTool(BetaToolUnion.ofBash20250124(bash20250124))
 
             /**
-             * Definitions of tools that the model may use.
-             *
-             * If you include `tools` in your API request, the model may return `tool_use` content
-             * blocks that represent the model's use of those tools. You can then run those tools
-             * using the tool input generated by the model and then optionally return results back
-             * to the model using `tool_result` content blocks.
-             *
-             * Each tool definition includes:
-             * - `name`: Name of the tool.
-             * - `description`: Optional, but strongly-recommended description of the tool.
-             * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
-             *   `input` shape that the model will produce in `tool_use` output content blocks.
-             *
-             * For example, if you defined `tools` as:
-             * ```json
-             * [
-             *   {
-             *     "name": "get_stock_price",
-             *     "description": "Get the current stock price for a given ticker symbol.",
-             *     "input_schema": {
-             *       "type": "object",
-             *       "properties": {
-             *         "ticker": {
-             *           "type": "string",
-             *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-             *         }
-             *       },
-             *       "required": ["ticker"]
-             *     }
-             *   }
-             * ]
-             * ```
-             *
-             * And then asked the model "What's the S&P 500 at today?", the model might produce
-             * `tool_use` content blocks in the response like this:
-             * ```json
-             * [
-             *   {
-             *     "type": "tool_use",
-             *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-             *     "name": "get_stock_price",
-             *     "input": { "ticker": "^GSPC" }
-             *   }
-             * ]
-             * ```
-             *
-             * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an
-             * input, and return the following back to the model in a subsequent `user` message:
-             * ```json
-             * [
-             *   {
-             *     "type": "tool_result",
-             *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-             *     "content": "259.75 USD"
-             *   }
-             * ]
-             * ```
-             *
-             * Tools can be used for workflows that include running client-side tools and functions,
-             * or more generally whenever you want the model to produce a particular JSON structure
-             * of output.
-             *
-             * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+             * Alias for calling [addTool] with
+             * `BetaToolUnion.ofTextEditor20250124(textEditor20250124)`.
              */
             fun addTool(textEditor20250124: BetaToolTextEditor20250124) =
                 addTool(BetaToolUnion.ofTextEditor20250124(textEditor20250124))
@@ -2997,12 +1481,11 @@ private constructor(
             fun topK(topK: Long) = topK(JsonField.of(topK))
 
             /**
-             * Only sample from the top K options for each subsequent token.
+             * Sets [Builder.topK] to an arbitrary JSON value.
              *
-             * Used to remove "long tail" low probability responses.
-             * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
-             *
-             * Recommended for advanced use cases only. You usually only need to use `temperature`.
+             * You should usually call [Builder.topK] with a well-typed [Long] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
              */
             fun topK(topK: JsonField<Long>) = apply { this.topK = topK }
 
@@ -3019,14 +1502,11 @@ private constructor(
             fun topP(topP: Double) = topP(JsonField.of(topP))
 
             /**
-             * Use nucleus sampling.
+             * Sets [Builder.topP] to an arbitrary JSON value.
              *
-             * In nucleus sampling, we compute the cumulative distribution over all the options for
-             * each subsequent token in decreasing probability order and cut it off once it reaches
-             * a particular probability specified by `top_p`. You should either alter `temperature`
-             * or `top_p`, but not both.
-             *
-             * Recommended for advanced use cases only. You usually only need to use `temperature`.
+             * You should usually call [Builder.topP] with a well-typed [Double] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
              */
             fun topP(topP: JsonField<Double>) = apply { this.topP = topP }
 
@@ -3122,15 +1602,25 @@ private constructor(
         /** Optional header to specify the beta version(s) you want to use. */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
 
-        /** Optional header to specify the beta version(s) you want to use. */
+        /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */
         fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.getOrNull())
 
-        /** Optional header to specify the beta version(s) you want to use. */
+        /**
+         * Adds a single [AnthropicBeta] to [betas].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
         fun addBeta(beta: AnthropicBeta) = apply {
             betas = (betas ?: mutableListOf()).apply { add(beta) }
         }
 
-        /** Optional header to specify the beta version(s) you want to use. */
+        /**
+         * Sets [addBeta] to an arbitrary [String].
+         *
+         * You should usually call [addBeta] with a well-typed [AnthropicBeta] constant instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
         /**
@@ -3145,13 +1635,10 @@ private constructor(
         fun maxTokens(maxTokens: Long) = apply { body.maxTokens(maxTokens) }
 
         /**
-         * The maximum number of tokens to generate before stopping.
+         * Sets [Builder.maxTokens] to an arbitrary JSON value.
          *
-         * Note that our models may stop _before_ reaching this maximum. This parameter only
-         * specifies the absolute maximum number of tokens to generate.
-         *
-         * Different models have different maximum values for this parameter. See
-         * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
+         * You should usually call [Builder.maxTokens] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun maxTokens(maxTokens: JsonField<Long>) = apply { body.maxTokens(maxTokens) }
 
@@ -3239,757 +1726,71 @@ private constructor(
         fun messages(messages: List<BetaMessageParam>) = apply { body.messages(messages) }
 
         /**
-         * Input messages.
+         * Sets [Builder.messages] to an arbitrary JSON value.
          *
-         * Our models are trained to operate on alternating `user` and `assistant` conversational
-         * turns. When creating a new `Message`, you specify the prior conversational turns with the
-         * `messages` parameter, and the model then generates the next `Message` in the
-         * conversation. Consecutive `user` or `assistant` turns in your request will be combined
-         * into a single turn.
-         *
-         * Each input message must be an object with a `role` and `content`. You can specify a
-         * single `user`-role message, or you can include multiple `user` and `assistant` messages.
-         *
-         * If the final message uses the `assistant` role, the response content will continue
-         * immediately from the content in that message. This can be used to constrain part of the
-         * model's response.
-         *
-         * Example with a single `user` message:
-         * ```json
-         * [{ "role": "user", "content": "Hello, Claude" }]
-         * ```
-         *
-         * Example with multiple conversational turns:
-         * ```json
-         * [
-         *   { "role": "user", "content": "Hello there." },
-         *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-         *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-         * ]
-         * ```
-         *
-         * Example with a partially-filled response from Claude:
-         * ```json
-         * [
-         *   {
-         *     "role": "user",
-         *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-         *   },
-         *   { "role": "assistant", "content": "The best answer is (" }
-         * ]
-         * ```
-         *
-         * Each input message `content` may be either a single `string` or an array of content
-         * blocks, where each block has a specific `type`. Using a `string` for `content` is
-         * shorthand for an array of one content block of type `"text"`. The following input
-         * messages are equivalent:
-         * ```json
-         * { "role": "user", "content": "Hello, Claude" }
-         * ```
-         * ```json
-         * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-         * ```
-         *
-         * Starting with Claude 3 models, you can also send image content blocks:
-         * ```json
-         * {
-         *   "role": "user",
-         *   "content": [
-         *     {
-         *       "type": "image",
-         *       "source": {
-         *         "type": "base64",
-         *         "media_type": "image/jpeg",
-         *         "data": "/9j/4AAQSkZJRg..."
-         *       }
-         *     },
-         *     { "type": "text", "text": "What is in this image?" }
-         *   ]
-         * }
-         * ```
-         *
-         * We currently support the `base64` source type for images, and the `image/jpeg`,
-         * `image/png`, `image/gif`, and `image/webp` media types.
-         *
-         * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more input
-         * examples.
-         *
-         * Note that if you want to include a
-         * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
-         * top-level `system` parameter — there is no `"system"` role for input messages in the
-         * Messages API.
+         * You should usually call [Builder.messages] with a well-typed `List<BetaMessageParam>`
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
          */
         fun messages(messages: JsonField<List<BetaMessageParam>>) = apply {
             body.messages(messages)
         }
 
         /**
-         * Input messages.
+         * Adds a single [BetaMessageParam] to [messages].
          *
-         * Our models are trained to operate on alternating `user` and `assistant` conversational
-         * turns. When creating a new `Message`, you specify the prior conversational turns with the
-         * `messages` parameter, and the model then generates the next `Message` in the
-         * conversation. Consecutive `user` or `assistant` turns in your request will be combined
-         * into a single turn.
-         *
-         * Each input message must be an object with a `role` and `content`. You can specify a
-         * single `user`-role message, or you can include multiple `user` and `assistant` messages.
-         *
-         * If the final message uses the `assistant` role, the response content will continue
-         * immediately from the content in that message. This can be used to constrain part of the
-         * model's response.
-         *
-         * Example with a single `user` message:
-         * ```json
-         * [{ "role": "user", "content": "Hello, Claude" }]
-         * ```
-         *
-         * Example with multiple conversational turns:
-         * ```json
-         * [
-         *   { "role": "user", "content": "Hello there." },
-         *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-         *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-         * ]
-         * ```
-         *
-         * Example with a partially-filled response from Claude:
-         * ```json
-         * [
-         *   {
-         *     "role": "user",
-         *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-         *   },
-         *   { "role": "assistant", "content": "The best answer is (" }
-         * ]
-         * ```
-         *
-         * Each input message `content` may be either a single `string` or an array of content
-         * blocks, where each block has a specific `type`. Using a `string` for `content` is
-         * shorthand for an array of one content block of type `"text"`. The following input
-         * messages are equivalent:
-         * ```json
-         * { "role": "user", "content": "Hello, Claude" }
-         * ```
-         * ```json
-         * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-         * ```
-         *
-         * Starting with Claude 3 models, you can also send image content blocks:
-         * ```json
-         * {
-         *   "role": "user",
-         *   "content": [
-         *     {
-         *       "type": "image",
-         *       "source": {
-         *         "type": "base64",
-         *         "media_type": "image/jpeg",
-         *         "data": "/9j/4AAQSkZJRg..."
-         *       }
-         *     },
-         *     { "type": "text", "text": "What is in this image?" }
-         *   ]
-         * }
-         * ```
-         *
-         * We currently support the `base64` source type for images, and the `image/jpeg`,
-         * `image/png`, `image/gif`, and `image/webp` media types.
-         *
-         * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more input
-         * examples.
-         *
-         * Note that if you want to include a
-         * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
-         * top-level `system` parameter — there is no `"system"` role for input messages in the
-         * Messages API.
+         * @throws IllegalStateException if the field was previously set to a non-list.
          */
         fun addMessage(message: BetaMessageParam) = apply { body.addMessage(message) }
 
-        /**
-         * Input messages.
-         *
-         * Our models are trained to operate on alternating `user` and `assistant` conversational
-         * turns. When creating a new `Message`, you specify the prior conversational turns with the
-         * `messages` parameter, and the model then generates the next `Message` in the
-         * conversation. Consecutive `user` or `assistant` turns in your request will be combined
-         * into a single turn.
-         *
-         * Each input message must be an object with a `role` and `content`. You can specify a
-         * single `user`-role message, or you can include multiple `user` and `assistant` messages.
-         *
-         * If the final message uses the `assistant` role, the response content will continue
-         * immediately from the content in that message. This can be used to constrain part of the
-         * model's response.
-         *
-         * Example with a single `user` message:
-         * ```json
-         * [{ "role": "user", "content": "Hello, Claude" }]
-         * ```
-         *
-         * Example with multiple conversational turns:
-         * ```json
-         * [
-         *   { "role": "user", "content": "Hello there." },
-         *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-         *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-         * ]
-         * ```
-         *
-         * Example with a partially-filled response from Claude:
-         * ```json
-         * [
-         *   {
-         *     "role": "user",
-         *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-         *   },
-         *   { "role": "assistant", "content": "The best answer is (" }
-         * ]
-         * ```
-         *
-         * Each input message `content` may be either a single `string` or an array of content
-         * blocks, where each block has a specific `type`. Using a `string` for `content` is
-         * shorthand for an array of one content block of type `"text"`. The following input
-         * messages are equivalent:
-         * ```json
-         * { "role": "user", "content": "Hello, Claude" }
-         * ```
-         * ```json
-         * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-         * ```
-         *
-         * Starting with Claude 3 models, you can also send image content blocks:
-         * ```json
-         * {
-         *   "role": "user",
-         *   "content": [
-         *     {
-         *       "type": "image",
-         *       "source": {
-         *         "type": "base64",
-         *         "media_type": "image/jpeg",
-         *         "data": "/9j/4AAQSkZJRg..."
-         *       }
-         *     },
-         *     { "type": "text", "text": "What is in this image?" }
-         *   ]
-         * }
-         * ```
-         *
-         * We currently support the `base64` source type for images, and the `image/jpeg`,
-         * `image/png`, `image/gif`, and `image/webp` media types.
-         *
-         * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more input
-         * examples.
-         *
-         * Note that if you want to include a
-         * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
-         * top-level `system` parameter — there is no `"system"` role for input messages in the
-         * Messages API.
-         */
+        /** Alias for calling [addMessage] with `message.toParam()`. */
         fun addMessage(message: BetaMessage) = apply { body.addMessage(message) }
 
         /**
-         * Input messages.
-         *
-         * Our models are trained to operate on alternating `user` and `assistant` conversational
-         * turns. When creating a new `Message`, you specify the prior conversational turns with the
-         * `messages` parameter, and the model then generates the next `Message` in the
-         * conversation. Consecutive `user` or `assistant` turns in your request will be combined
-         * into a single turn.
-         *
-         * Each input message must be an object with a `role` and `content`. You can specify a
-         * single `user`-role message, or you can include multiple `user` and `assistant` messages.
-         *
-         * If the final message uses the `assistant` role, the response content will continue
-         * immediately from the content in that message. This can be used to constrain part of the
-         * model's response.
-         *
-         * Example with a single `user` message:
-         * ```json
-         * [{ "role": "user", "content": "Hello, Claude" }]
+         * Alias for calling [addMessage] with the following:
+         * ```java
+         * BetaMessageParam.builder()
+         *     .role(BetaMessageParam.Role.USER)
+         *     .content(content)
+         *     .build()
          * ```
-         *
-         * Example with multiple conversational turns:
-         * ```json
-         * [
-         *   { "role": "user", "content": "Hello there." },
-         *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-         *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-         * ]
-         * ```
-         *
-         * Example with a partially-filled response from Claude:
-         * ```json
-         * [
-         *   {
-         *     "role": "user",
-         *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-         *   },
-         *   { "role": "assistant", "content": "The best answer is (" }
-         * ]
-         * ```
-         *
-         * Each input message `content` may be either a single `string` or an array of content
-         * blocks, where each block has a specific `type`. Using a `string` for `content` is
-         * shorthand for an array of one content block of type `"text"`. The following input
-         * messages are equivalent:
-         * ```json
-         * { "role": "user", "content": "Hello, Claude" }
-         * ```
-         * ```json
-         * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-         * ```
-         *
-         * Starting with Claude 3 models, you can also send image content blocks:
-         * ```json
-         * {
-         *   "role": "user",
-         *   "content": [
-         *     {
-         *       "type": "image",
-         *       "source": {
-         *         "type": "base64",
-         *         "media_type": "image/jpeg",
-         *         "data": "/9j/4AAQSkZJRg..."
-         *       }
-         *     },
-         *     { "type": "text", "text": "What is in this image?" }
-         *   ]
-         * }
-         * ```
-         *
-         * We currently support the `base64` source type for images, and the `image/jpeg`,
-         * `image/png`, `image/gif`, and `image/webp` media types.
-         *
-         * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more input
-         * examples.
-         *
-         * Note that if you want to include a
-         * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
-         * top-level `system` parameter — there is no `"system"` role for input messages in the
-         * Messages API.
          */
         fun addUserMessage(content: BetaMessageParam.Content) = apply {
             body.addUserMessage(content)
         }
 
-        /**
-         * Input messages.
-         *
-         * Our models are trained to operate on alternating `user` and `assistant` conversational
-         * turns. When creating a new `Message`, you specify the prior conversational turns with the
-         * `messages` parameter, and the model then generates the next `Message` in the
-         * conversation. Consecutive `user` or `assistant` turns in your request will be combined
-         * into a single turn.
-         *
-         * Each input message must be an object with a `role` and `content`. You can specify a
-         * single `user`-role message, or you can include multiple `user` and `assistant` messages.
-         *
-         * If the final message uses the `assistant` role, the response content will continue
-         * immediately from the content in that message. This can be used to constrain part of the
-         * model's response.
-         *
-         * Example with a single `user` message:
-         * ```json
-         * [{ "role": "user", "content": "Hello, Claude" }]
-         * ```
-         *
-         * Example with multiple conversational turns:
-         * ```json
-         * [
-         *   { "role": "user", "content": "Hello there." },
-         *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-         *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-         * ]
-         * ```
-         *
-         * Example with a partially-filled response from Claude:
-         * ```json
-         * [
-         *   {
-         *     "role": "user",
-         *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-         *   },
-         *   { "role": "assistant", "content": "The best answer is (" }
-         * ]
-         * ```
-         *
-         * Each input message `content` may be either a single `string` or an array of content
-         * blocks, where each block has a specific `type`. Using a `string` for `content` is
-         * shorthand for an array of one content block of type `"text"`. The following input
-         * messages are equivalent:
-         * ```json
-         * { "role": "user", "content": "Hello, Claude" }
-         * ```
-         * ```json
-         * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-         * ```
-         *
-         * Starting with Claude 3 models, you can also send image content blocks:
-         * ```json
-         * {
-         *   "role": "user",
-         *   "content": [
-         *     {
-         *       "type": "image",
-         *       "source": {
-         *         "type": "base64",
-         *         "media_type": "image/jpeg",
-         *         "data": "/9j/4AAQSkZJRg..."
-         *       }
-         *     },
-         *     { "type": "text", "text": "What is in this image?" }
-         *   ]
-         * }
-         * ```
-         *
-         * We currently support the `base64` source type for images, and the `image/jpeg`,
-         * `image/png`, `image/gif`, and `image/webp` media types.
-         *
-         * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more input
-         * examples.
-         *
-         * Note that if you want to include a
-         * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
-         * top-level `system` parameter — there is no `"system"` role for input messages in the
-         * Messages API.
-         */
+        /** Alias for calling [addUserMessage] with `BetaMessageParam.Content.ofString(string)`. */
         fun addUserMessage(string: String) = apply { body.addUserMessage(string) }
 
         /**
-         * Input messages.
-         *
-         * Our models are trained to operate on alternating `user` and `assistant` conversational
-         * turns. When creating a new `Message`, you specify the prior conversational turns with the
-         * `messages` parameter, and the model then generates the next `Message` in the
-         * conversation. Consecutive `user` or `assistant` turns in your request will be combined
-         * into a single turn.
-         *
-         * Each input message must be an object with a `role` and `content`. You can specify a
-         * single `user`-role message, or you can include multiple `user` and `assistant` messages.
-         *
-         * If the final message uses the `assistant` role, the response content will continue
-         * immediately from the content in that message. This can be used to constrain part of the
-         * model's response.
-         *
-         * Example with a single `user` message:
-         * ```json
-         * [{ "role": "user", "content": "Hello, Claude" }]
-         * ```
-         *
-         * Example with multiple conversational turns:
-         * ```json
-         * [
-         *   { "role": "user", "content": "Hello there." },
-         *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-         *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-         * ]
-         * ```
-         *
-         * Example with a partially-filled response from Claude:
-         * ```json
-         * [
-         *   {
-         *     "role": "user",
-         *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-         *   },
-         *   { "role": "assistant", "content": "The best answer is (" }
-         * ]
-         * ```
-         *
-         * Each input message `content` may be either a single `string` or an array of content
-         * blocks, where each block has a specific `type`. Using a `string` for `content` is
-         * shorthand for an array of one content block of type `"text"`. The following input
-         * messages are equivalent:
-         * ```json
-         * { "role": "user", "content": "Hello, Claude" }
-         * ```
-         * ```json
-         * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-         * ```
-         *
-         * Starting with Claude 3 models, you can also send image content blocks:
-         * ```json
-         * {
-         *   "role": "user",
-         *   "content": [
-         *     {
-         *       "type": "image",
-         *       "source": {
-         *         "type": "base64",
-         *         "media_type": "image/jpeg",
-         *         "data": "/9j/4AAQSkZJRg..."
-         *       }
-         *     },
-         *     { "type": "text", "text": "What is in this image?" }
-         *   ]
-         * }
-         * ```
-         *
-         * We currently support the `base64` source type for images, and the `image/jpeg`,
-         * `image/png`, `image/gif`, and `image/webp` media types.
-         *
-         * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more input
-         * examples.
-         *
-         * Note that if you want to include a
-         * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
-         * top-level `system` parameter — there is no `"system"` role for input messages in the
-         * Messages API.
+         * Alias for calling [addUserMessage] with
+         * `BetaMessageParam.Content.ofBetaContentBlockParams(betaContentBlockParams)`.
          */
         fun addUserMessageOfBetaContentBlockParams(
             betaContentBlockParams: List<BetaContentBlockParam>
         ) = apply { body.addUserMessageOfBetaContentBlockParams(betaContentBlockParams) }
 
         /**
-         * Input messages.
-         *
-         * Our models are trained to operate on alternating `user` and `assistant` conversational
-         * turns. When creating a new `Message`, you specify the prior conversational turns with the
-         * `messages` parameter, and the model then generates the next `Message` in the
-         * conversation. Consecutive `user` or `assistant` turns in your request will be combined
-         * into a single turn.
-         *
-         * Each input message must be an object with a `role` and `content`. You can specify a
-         * single `user`-role message, or you can include multiple `user` and `assistant` messages.
-         *
-         * If the final message uses the `assistant` role, the response content will continue
-         * immediately from the content in that message. This can be used to constrain part of the
-         * model's response.
-         *
-         * Example with a single `user` message:
-         * ```json
-         * [{ "role": "user", "content": "Hello, Claude" }]
+         * Alias for calling [addMessage] with the following:
+         * ```java
+         * BetaMessageParam.builder()
+         *     .role(BetaMessageParam.Role.USER)
+         *     .content(content)
+         *     .build()
          * ```
-         *
-         * Example with multiple conversational turns:
-         * ```json
-         * [
-         *   { "role": "user", "content": "Hello there." },
-         *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-         *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-         * ]
-         * ```
-         *
-         * Example with a partially-filled response from Claude:
-         * ```json
-         * [
-         *   {
-         *     "role": "user",
-         *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-         *   },
-         *   { "role": "assistant", "content": "The best answer is (" }
-         * ]
-         * ```
-         *
-         * Each input message `content` may be either a single `string` or an array of content
-         * blocks, where each block has a specific `type`. Using a `string` for `content` is
-         * shorthand for an array of one content block of type `"text"`. The following input
-         * messages are equivalent:
-         * ```json
-         * { "role": "user", "content": "Hello, Claude" }
-         * ```
-         * ```json
-         * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-         * ```
-         *
-         * Starting with Claude 3 models, you can also send image content blocks:
-         * ```json
-         * {
-         *   "role": "user",
-         *   "content": [
-         *     {
-         *       "type": "image",
-         *       "source": {
-         *         "type": "base64",
-         *         "media_type": "image/jpeg",
-         *         "data": "/9j/4AAQSkZJRg..."
-         *       }
-         *     },
-         *     { "type": "text", "text": "What is in this image?" }
-         *   ]
-         * }
-         * ```
-         *
-         * We currently support the `base64` source type for images, and the `image/jpeg`,
-         * `image/png`, `image/gif`, and `image/webp` media types.
-         *
-         * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more input
-         * examples.
-         *
-         * Note that if you want to include a
-         * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
-         * top-level `system` parameter — there is no `"system"` role for input messages in the
-         * Messages API.
          */
         fun addAssistantMessage(content: BetaMessageParam.Content) = apply {
             body.addAssistantMessage(content)
         }
 
         /**
-         * Input messages.
-         *
-         * Our models are trained to operate on alternating `user` and `assistant` conversational
-         * turns. When creating a new `Message`, you specify the prior conversational turns with the
-         * `messages` parameter, and the model then generates the next `Message` in the
-         * conversation. Consecutive `user` or `assistant` turns in your request will be combined
-         * into a single turn.
-         *
-         * Each input message must be an object with a `role` and `content`. You can specify a
-         * single `user`-role message, or you can include multiple `user` and `assistant` messages.
-         *
-         * If the final message uses the `assistant` role, the response content will continue
-         * immediately from the content in that message. This can be used to constrain part of the
-         * model's response.
-         *
-         * Example with a single `user` message:
-         * ```json
-         * [{ "role": "user", "content": "Hello, Claude" }]
-         * ```
-         *
-         * Example with multiple conversational turns:
-         * ```json
-         * [
-         *   { "role": "user", "content": "Hello there." },
-         *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-         *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-         * ]
-         * ```
-         *
-         * Example with a partially-filled response from Claude:
-         * ```json
-         * [
-         *   {
-         *     "role": "user",
-         *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-         *   },
-         *   { "role": "assistant", "content": "The best answer is (" }
-         * ]
-         * ```
-         *
-         * Each input message `content` may be either a single `string` or an array of content
-         * blocks, where each block has a specific `type`. Using a `string` for `content` is
-         * shorthand for an array of one content block of type `"text"`. The following input
-         * messages are equivalent:
-         * ```json
-         * { "role": "user", "content": "Hello, Claude" }
-         * ```
-         * ```json
-         * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-         * ```
-         *
-         * Starting with Claude 3 models, you can also send image content blocks:
-         * ```json
-         * {
-         *   "role": "user",
-         *   "content": [
-         *     {
-         *       "type": "image",
-         *       "source": {
-         *         "type": "base64",
-         *         "media_type": "image/jpeg",
-         *         "data": "/9j/4AAQSkZJRg..."
-         *       }
-         *     },
-         *     { "type": "text", "text": "What is in this image?" }
-         *   ]
-         * }
-         * ```
-         *
-         * We currently support the `base64` source type for images, and the `image/jpeg`,
-         * `image/png`, `image/gif`, and `image/webp` media types.
-         *
-         * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more input
-         * examples.
-         *
-         * Note that if you want to include a
-         * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
-         * top-level `system` parameter — there is no `"system"` role for input messages in the
-         * Messages API.
+         * Alias for calling [addAssistantMessage] with `BetaMessageParam.Content.ofString(string)`.
          */
         fun addAssistantMessage(string: String) = apply { body.addAssistantMessage(string) }
 
         /**
-         * Input messages.
-         *
-         * Our models are trained to operate on alternating `user` and `assistant` conversational
-         * turns. When creating a new `Message`, you specify the prior conversational turns with the
-         * `messages` parameter, and the model then generates the next `Message` in the
-         * conversation. Consecutive `user` or `assistant` turns in your request will be combined
-         * into a single turn.
-         *
-         * Each input message must be an object with a `role` and `content`. You can specify a
-         * single `user`-role message, or you can include multiple `user` and `assistant` messages.
-         *
-         * If the final message uses the `assistant` role, the response content will continue
-         * immediately from the content in that message. This can be used to constrain part of the
-         * model's response.
-         *
-         * Example with a single `user` message:
-         * ```json
-         * [{ "role": "user", "content": "Hello, Claude" }]
-         * ```
-         *
-         * Example with multiple conversational turns:
-         * ```json
-         * [
-         *   { "role": "user", "content": "Hello there." },
-         *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
-         *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
-         * ]
-         * ```
-         *
-         * Example with a partially-filled response from Claude:
-         * ```json
-         * [
-         *   {
-         *     "role": "user",
-         *     "content": "What's the Greek name for Sun? (A) Sol (B) Helios (C) Sun"
-         *   },
-         *   { "role": "assistant", "content": "The best answer is (" }
-         * ]
-         * ```
-         *
-         * Each input message `content` may be either a single `string` or an array of content
-         * blocks, where each block has a specific `type`. Using a `string` for `content` is
-         * shorthand for an array of one content block of type `"text"`. The following input
-         * messages are equivalent:
-         * ```json
-         * { "role": "user", "content": "Hello, Claude" }
-         * ```
-         * ```json
-         * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
-         * ```
-         *
-         * Starting with Claude 3 models, you can also send image content blocks:
-         * ```json
-         * {
-         *   "role": "user",
-         *   "content": [
-         *     {
-         *       "type": "image",
-         *       "source": {
-         *         "type": "base64",
-         *         "media_type": "image/jpeg",
-         *         "data": "/9j/4AAQSkZJRg..."
-         *       }
-         *     },
-         *     { "type": "text", "text": "What is in this image?" }
-         *   ]
-         * }
-         * ```
-         *
-         * We currently support the `base64` source type for images, and the `image/jpeg`,
-         * `image/png`, `image/gif`, and `image/webp` media types.
-         *
-         * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more input
-         * examples.
-         *
-         * Note that if you want to include a
-         * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
-         * top-level `system` parameter — there is no `"system"` role for input messages in the
-         * Messages API.
+         * Alias for calling [addAssistantMessage] with
+         * `BetaMessageParam.Content.ofBetaContentBlockParams(betaContentBlockParams)`.
          */
         fun addAssistantMessageOfBetaContentBlockParams(
             betaContentBlockParams: List<BetaContentBlockParam>
@@ -4003,23 +1804,31 @@ private constructor(
         fun model(model: Model) = apply { body.model(model) }
 
         /**
-         * The model that will complete your prompt.\n\nSee
-         * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
-         * options.
+         * Sets [Builder.model] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.model] with a well-typed [Model] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun model(model: JsonField<Model>) = apply { body.model(model) }
 
         /**
-         * The model that will complete your prompt.\n\nSee
-         * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
-         * options.
+         * Sets [model] to an arbitrary [String].
+         *
+         * You should usually call [model] with a well-typed [Model] constant instead. This method
+         * is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun model(value: String) = apply { body.model(value) }
 
         /** An object describing metadata about the request. */
         fun metadata(metadata: BetaMetadata) = apply { body.metadata(metadata) }
 
-        /** An object describing metadata about the request. */
+        /**
+         * Sets [Builder.metadata] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.metadata] with a well-typed [BetaMetadata] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
         fun metadata(metadata: JsonField<BetaMetadata>) = apply { body.metadata(metadata) }
 
         /**
@@ -4036,30 +1845,20 @@ private constructor(
         fun stopSequences(stopSequences: List<String>) = apply { body.stopSequences(stopSequences) }
 
         /**
-         * Custom text sequences that will cause the model to stop generating.
+         * Sets [Builder.stopSequences] to an arbitrary JSON value.
          *
-         * Our models will normally stop when they have naturally completed their turn, which will
-         * result in a response `stop_reason` of `"end_turn"`.
-         *
-         * If you want the model to stop generating when it encounters custom strings of text, you
-         * can use the `stop_sequences` parameter. If the model encounters one of the custom
-         * sequences, the response `stop_reason` value will be `"stop_sequence"` and the response
-         * `stop_sequence` value will contain the matched stop sequence.
+         * You should usually call [Builder.stopSequences] with a well-typed `List<String>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         fun stopSequences(stopSequences: JsonField<List<String>>) = apply {
             body.stopSequences(stopSequences)
         }
 
         /**
-         * Custom text sequences that will cause the model to stop generating.
+         * Adds a single [String] to [stopSequences].
          *
-         * Our models will normally stop when they have naturally completed their turn, which will
-         * result in a response `stop_reason` of `"end_turn"`.
-         *
-         * If you want the model to stop generating when it encounters custom strings of text, you
-         * can use the `stop_sequences` parameter. If the model encounters one of the custom
-         * sequences, the response `stop_reason` value will be `"stop_sequence"` and the response
-         * `stop_sequence` value will contain the matched stop sequence.
+         * @throws IllegalStateException if the field was previously set to a non-list.
          */
         fun addStopSequence(stopSequence: String) = apply { body.addStopSequence(stopSequence) }
 
@@ -4073,30 +1872,17 @@ private constructor(
         fun system(system: System) = apply { body.system(system) }
 
         /**
-         * System prompt.
+         * Sets [Builder.system] to an arbitrary JSON value.
          *
-         * A system prompt is a way of providing context and instructions to Claude, such as
-         * specifying a particular goal or role. See our
-         * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+         * You should usually call [Builder.system] with a well-typed [System] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun system(system: JsonField<System>) = apply { body.system(system) }
 
-        /**
-         * System prompt.
-         *
-         * A system prompt is a way of providing context and instructions to Claude, such as
-         * specifying a particular goal or role. See our
-         * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
-         */
+        /** Alias for calling [system] with `System.ofString(string)`. */
         fun system(string: String) = apply { body.system(string) }
 
-        /**
-         * System prompt.
-         *
-         * A system prompt is a way of providing context and instructions to Claude, such as
-         * specifying a particular goal or role. See our
-         * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
-         */
+        /** Alias for calling [system] with `System.ofBetaTextBlockParams(betaTextBlockParams)`. */
         fun systemOfBetaTextBlockParams(betaTextBlockParams: List<BetaTextBlockParam>) = apply {
             body.systemOfBetaTextBlockParams(betaTextBlockParams)
         }
@@ -4112,12 +1898,11 @@ private constructor(
         fun temperature(temperature: Double) = apply { body.temperature(temperature) }
 
         /**
-         * Amount of randomness injected into the response.
+         * Sets [Builder.temperature] to an arbitrary JSON value.
          *
-         * Defaults to `1.0`. Ranges from `0.0` to `1.0`. Use `temperature` closer to `0.0` for
-         * analytical / multiple choice, and closer to `1.0` for creative and generative tasks.
-         *
-         * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
+         * You should usually call [Builder.temperature] with a well-typed [Double] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
         fun temperature(temperature: JsonField<Double>) = apply { body.temperature(temperature) }
 
@@ -4135,57 +1920,30 @@ private constructor(
         fun thinking(thinking: BetaThinkingConfigParam) = apply { body.thinking(thinking) }
 
         /**
-         * Configuration for enabling Claude's extended thinking.
+         * Sets [Builder.thinking] to an arbitrary JSON value.
          *
-         * When enabled, responses include `thinking` content blocks showing Claude's thinking
-         * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
-         * towards your `max_tokens` limit.
-         *
-         * See
-         * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
-         * for details.
+         * You should usually call [Builder.thinking] with a well-typed [BetaThinkingConfigParam]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
          */
         fun thinking(thinking: JsonField<BetaThinkingConfigParam>) = apply {
             body.thinking(thinking)
         }
 
-        /**
-         * Configuration for enabling Claude's extended thinking.
-         *
-         * When enabled, responses include `thinking` content blocks showing Claude's thinking
-         * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
-         * towards your `max_tokens` limit.
-         *
-         * See
-         * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
-         * for details.
-         */
+        /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofEnabled(enabled)`. */
         fun thinking(enabled: BetaThinkingConfigEnabled) = apply { body.thinking(enabled) }
 
         /**
-         * Configuration for enabling Claude's extended thinking.
-         *
-         * When enabled, responses include `thinking` content blocks showing Claude's thinking
-         * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
-         * towards your `max_tokens` limit.
-         *
-         * See
-         * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
-         * for details.
+         * Alias for calling [thinking] with the following:
+         * ```java
+         * BetaThinkingConfigEnabled.builder()
+         *     .budgetTokens(budgetTokens)
+         *     .build()
+         * ```
          */
         fun enabledThinking(budgetTokens: Long) = apply { body.enabledThinking(budgetTokens) }
 
-        /**
-         * Configuration for enabling Claude's extended thinking.
-         *
-         * When enabled, responses include `thinking` content blocks showing Claude's thinking
-         * process before the final answer. Requires a minimum budget of 1,024 tokens and counts
-         * towards your `max_tokens` limit.
-         *
-         * See
-         * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
-         * for details.
-         */
+        /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofDisabled(disabled)`. */
         fun thinking(disabled: BetaThinkingConfigDisabled) = apply { body.thinking(disabled) }
 
         /**
@@ -4195,26 +1953,36 @@ private constructor(
         fun toolChoice(toolChoice: BetaToolChoice) = apply { body.toolChoice(toolChoice) }
 
         /**
-         * How the model should use the provided tools. The model can use a specific tool, any
-         * available tool, decide by itself, or not use tools at all.
+         * Sets [Builder.toolChoice] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.toolChoice] with a well-typed [BetaToolChoice] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         fun toolChoice(toolChoice: JsonField<BetaToolChoice>) = apply {
             body.toolChoice(toolChoice)
         }
 
-        /** The model will automatically decide whether to use tools. */
+        /** Alias for calling [toolChoice] with `BetaToolChoice.ofAuto(auto)`. */
         fun toolChoice(auto: BetaToolChoiceAuto) = apply { body.toolChoice(auto) }
 
-        /** The model will use any available tools. */
+        /** Alias for calling [toolChoice] with `BetaToolChoice.ofAny(any)`. */
         fun toolChoice(any: BetaToolChoiceAny) = apply { body.toolChoice(any) }
 
-        /** The model will use the specified tool with `tool_choice.name`. */
+        /** Alias for calling [toolChoice] with `BetaToolChoice.ofTool(tool)`. */
         fun toolChoice(tool: BetaToolChoiceTool) = apply { body.toolChoice(tool) }
 
-        /** The model will use the specified tool with `tool_choice.name`. */
+        /**
+         * Alias for calling [toolChoice] with the following:
+         * ```java
+         * BetaToolChoiceTool.builder()
+         *     .name(name)
+         *     .build()
+         * ```
+         */
         fun toolToolChoice(name: String) = apply { body.toolToolChoice(name) }
 
-        /** The model will not be allowed to use tools. */
+        /** Alias for calling [toolChoice] with `BetaToolChoice.ofNone(none)`. */
         fun toolChoice(none: BetaToolChoiceNone) = apply { body.toolChoice(none) }
 
         /**
@@ -4285,611 +2053,57 @@ private constructor(
         fun tools(tools: List<BetaToolUnion>) = apply { body.tools(tools) }
 
         /**
-         * Definitions of tools that the model may use.
+         * Sets [Builder.tools] to an arbitrary JSON value.
          *
-         * If you include `tools` in your API request, the model may return `tool_use` content
-         * blocks that represent the model's use of those tools. You can then run those tools using
-         * the tool input generated by the model and then optionally return results back to the
-         * model using `tool_result` content blocks.
-         *
-         * Each tool definition includes:
-         * - `name`: Name of the tool.
-         * - `description`: Optional, but strongly-recommended description of the tool.
-         * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
-         *   `input` shape that the model will produce in `tool_use` output content blocks.
-         *
-         * For example, if you defined `tools` as:
-         * ```json
-         * [
-         *   {
-         *     "name": "get_stock_price",
-         *     "description": "Get the current stock price for a given ticker symbol.",
-         *     "input_schema": {
-         *       "type": "object",
-         *       "properties": {
-         *         "ticker": {
-         *           "type": "string",
-         *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-         *         }
-         *       },
-         *       "required": ["ticker"]
-         *     }
-         *   }
-         * ]
-         * ```
-         *
-         * And then asked the model "What's the S&P 500 at today?", the model might produce
-         * `tool_use` content blocks in the response like this:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_use",
-         *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "name": "get_stock_price",
-         *     "input": { "ticker": "^GSPC" }
-         *   }
-         * ]
-         * ```
-         *
-         * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an input,
-         * and return the following back to the model in a subsequent `user` message:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_result",
-         *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "content": "259.75 USD"
-         *   }
-         * ]
-         * ```
-         *
-         * Tools can be used for workflows that include running client-side tools and functions, or
-         * more generally whenever you want the model to produce a particular JSON structure of
-         * output.
-         *
-         * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+         * You should usually call [Builder.tools] with a well-typed `List<BetaToolUnion>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         fun tools(tools: JsonField<List<BetaToolUnion>>) = apply { body.tools(tools) }
 
         /**
-         * Definitions of tools that the model may use.
+         * Adds a single [BetaToolUnion] to [tools].
          *
-         * If you include `tools` in your API request, the model may return `tool_use` content
-         * blocks that represent the model's use of those tools. You can then run those tools using
-         * the tool input generated by the model and then optionally return results back to the
-         * model using `tool_result` content blocks.
-         *
-         * Each tool definition includes:
-         * - `name`: Name of the tool.
-         * - `description`: Optional, but strongly-recommended description of the tool.
-         * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
-         *   `input` shape that the model will produce in `tool_use` output content blocks.
-         *
-         * For example, if you defined `tools` as:
-         * ```json
-         * [
-         *   {
-         *     "name": "get_stock_price",
-         *     "description": "Get the current stock price for a given ticker symbol.",
-         *     "input_schema": {
-         *       "type": "object",
-         *       "properties": {
-         *         "ticker": {
-         *           "type": "string",
-         *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-         *         }
-         *       },
-         *       "required": ["ticker"]
-         *     }
-         *   }
-         * ]
-         * ```
-         *
-         * And then asked the model "What's the S&P 500 at today?", the model might produce
-         * `tool_use` content blocks in the response like this:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_use",
-         *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "name": "get_stock_price",
-         *     "input": { "ticker": "^GSPC" }
-         *   }
-         * ]
-         * ```
-         *
-         * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an input,
-         * and return the following back to the model in a subsequent `user` message:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_result",
-         *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "content": "259.75 USD"
-         *   }
-         * ]
-         * ```
-         *
-         * Tools can be used for workflows that include running client-side tools and functions, or
-         * more generally whenever you want the model to produce a particular JSON structure of
-         * output.
-         *
-         * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+         * @throws IllegalStateException if the field was previously set to a non-list.
          */
         fun addTool(tool: BetaToolUnion) = apply { body.addTool(tool) }
 
-        /**
-         * Definitions of tools that the model may use.
-         *
-         * If you include `tools` in your API request, the model may return `tool_use` content
-         * blocks that represent the model's use of those tools. You can then run those tools using
-         * the tool input generated by the model and then optionally return results back to the
-         * model using `tool_result` content blocks.
-         *
-         * Each tool definition includes:
-         * - `name`: Name of the tool.
-         * - `description`: Optional, but strongly-recommended description of the tool.
-         * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
-         *   `input` shape that the model will produce in `tool_use` output content blocks.
-         *
-         * For example, if you defined `tools` as:
-         * ```json
-         * [
-         *   {
-         *     "name": "get_stock_price",
-         *     "description": "Get the current stock price for a given ticker symbol.",
-         *     "input_schema": {
-         *       "type": "object",
-         *       "properties": {
-         *         "ticker": {
-         *           "type": "string",
-         *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-         *         }
-         *       },
-         *       "required": ["ticker"]
-         *     }
-         *   }
-         * ]
-         * ```
-         *
-         * And then asked the model "What's the S&P 500 at today?", the model might produce
-         * `tool_use` content blocks in the response like this:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_use",
-         *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "name": "get_stock_price",
-         *     "input": { "ticker": "^GSPC" }
-         *   }
-         * ]
-         * ```
-         *
-         * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an input,
-         * and return the following back to the model in a subsequent `user` message:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_result",
-         *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "content": "259.75 USD"
-         *   }
-         * ]
-         * ```
-         *
-         * Tools can be used for workflows that include running client-side tools and functions, or
-         * more generally whenever you want the model to produce a particular JSON structure of
-         * output.
-         *
-         * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
-         */
+        /** Alias for calling [addTool] with `BetaToolUnion.ofBetaTool(betaTool)`. */
         fun addTool(betaTool: BetaTool) = apply { body.addTool(betaTool) }
 
         /**
-         * Definitions of tools that the model may use.
-         *
-         * If you include `tools` in your API request, the model may return `tool_use` content
-         * blocks that represent the model's use of those tools. You can then run those tools using
-         * the tool input generated by the model and then optionally return results back to the
-         * model using `tool_result` content blocks.
-         *
-         * Each tool definition includes:
-         * - `name`: Name of the tool.
-         * - `description`: Optional, but strongly-recommended description of the tool.
-         * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
-         *   `input` shape that the model will produce in `tool_use` output content blocks.
-         *
-         * For example, if you defined `tools` as:
-         * ```json
-         * [
-         *   {
-         *     "name": "get_stock_price",
-         *     "description": "Get the current stock price for a given ticker symbol.",
-         *     "input_schema": {
-         *       "type": "object",
-         *       "properties": {
-         *         "ticker": {
-         *           "type": "string",
-         *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-         *         }
-         *       },
-         *       "required": ["ticker"]
-         *     }
-         *   }
-         * ]
-         * ```
-         *
-         * And then asked the model "What's the S&P 500 at today?", the model might produce
-         * `tool_use` content blocks in the response like this:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_use",
-         *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "name": "get_stock_price",
-         *     "input": { "ticker": "^GSPC" }
-         *   }
-         * ]
-         * ```
-         *
-         * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an input,
-         * and return the following back to the model in a subsequent `user` message:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_result",
-         *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "content": "259.75 USD"
-         *   }
-         * ]
-         * ```
-         *
-         * Tools can be used for workflows that include running client-side tools and functions, or
-         * more generally whenever you want the model to produce a particular JSON structure of
-         * output.
-         *
-         * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+         * Alias for calling [addTool] with
+         * `BetaToolUnion.ofComputerUse20241022(computerUse20241022)`.
          */
         fun addTool(computerUse20241022: BetaToolComputerUse20241022) = apply {
             body.addTool(computerUse20241022)
         }
 
-        /**
-         * Definitions of tools that the model may use.
-         *
-         * If you include `tools` in your API request, the model may return `tool_use` content
-         * blocks that represent the model's use of those tools. You can then run those tools using
-         * the tool input generated by the model and then optionally return results back to the
-         * model using `tool_result` content blocks.
-         *
-         * Each tool definition includes:
-         * - `name`: Name of the tool.
-         * - `description`: Optional, but strongly-recommended description of the tool.
-         * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
-         *   `input` shape that the model will produce in `tool_use` output content blocks.
-         *
-         * For example, if you defined `tools` as:
-         * ```json
-         * [
-         *   {
-         *     "name": "get_stock_price",
-         *     "description": "Get the current stock price for a given ticker symbol.",
-         *     "input_schema": {
-         *       "type": "object",
-         *       "properties": {
-         *         "ticker": {
-         *           "type": "string",
-         *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-         *         }
-         *       },
-         *       "required": ["ticker"]
-         *     }
-         *   }
-         * ]
-         * ```
-         *
-         * And then asked the model "What's the S&P 500 at today?", the model might produce
-         * `tool_use` content blocks in the response like this:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_use",
-         *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "name": "get_stock_price",
-         *     "input": { "ticker": "^GSPC" }
-         *   }
-         * ]
-         * ```
-         *
-         * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an input,
-         * and return the following back to the model in a subsequent `user` message:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_result",
-         *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "content": "259.75 USD"
-         *   }
-         * ]
-         * ```
-         *
-         * Tools can be used for workflows that include running client-side tools and functions, or
-         * more generally whenever you want the model to produce a particular JSON structure of
-         * output.
-         *
-         * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
-         */
+        /** Alias for calling [addTool] with `BetaToolUnion.ofBash20241022(bash20241022)`. */
         fun addTool(bash20241022: BetaToolBash20241022) = apply { body.addTool(bash20241022) }
 
         /**
-         * Definitions of tools that the model may use.
-         *
-         * If you include `tools` in your API request, the model may return `tool_use` content
-         * blocks that represent the model's use of those tools. You can then run those tools using
-         * the tool input generated by the model and then optionally return results back to the
-         * model using `tool_result` content blocks.
-         *
-         * Each tool definition includes:
-         * - `name`: Name of the tool.
-         * - `description`: Optional, but strongly-recommended description of the tool.
-         * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
-         *   `input` shape that the model will produce in `tool_use` output content blocks.
-         *
-         * For example, if you defined `tools` as:
-         * ```json
-         * [
-         *   {
-         *     "name": "get_stock_price",
-         *     "description": "Get the current stock price for a given ticker symbol.",
-         *     "input_schema": {
-         *       "type": "object",
-         *       "properties": {
-         *         "ticker": {
-         *           "type": "string",
-         *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-         *         }
-         *       },
-         *       "required": ["ticker"]
-         *     }
-         *   }
-         * ]
-         * ```
-         *
-         * And then asked the model "What's the S&P 500 at today?", the model might produce
-         * `tool_use` content blocks in the response like this:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_use",
-         *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "name": "get_stock_price",
-         *     "input": { "ticker": "^GSPC" }
-         *   }
-         * ]
-         * ```
-         *
-         * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an input,
-         * and return the following back to the model in a subsequent `user` message:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_result",
-         *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "content": "259.75 USD"
-         *   }
-         * ]
-         * ```
-         *
-         * Tools can be used for workflows that include running client-side tools and functions, or
-         * more generally whenever you want the model to produce a particular JSON structure of
-         * output.
-         *
-         * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+         * Alias for calling [addTool] with
+         * `BetaToolUnion.ofTextEditor20241022(textEditor20241022)`.
          */
         fun addTool(textEditor20241022: BetaToolTextEditor20241022) = apply {
             body.addTool(textEditor20241022)
         }
 
         /**
-         * Definitions of tools that the model may use.
-         *
-         * If you include `tools` in your API request, the model may return `tool_use` content
-         * blocks that represent the model's use of those tools. You can then run those tools using
-         * the tool input generated by the model and then optionally return results back to the
-         * model using `tool_result` content blocks.
-         *
-         * Each tool definition includes:
-         * - `name`: Name of the tool.
-         * - `description`: Optional, but strongly-recommended description of the tool.
-         * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
-         *   `input` shape that the model will produce in `tool_use` output content blocks.
-         *
-         * For example, if you defined `tools` as:
-         * ```json
-         * [
-         *   {
-         *     "name": "get_stock_price",
-         *     "description": "Get the current stock price for a given ticker symbol.",
-         *     "input_schema": {
-         *       "type": "object",
-         *       "properties": {
-         *         "ticker": {
-         *           "type": "string",
-         *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-         *         }
-         *       },
-         *       "required": ["ticker"]
-         *     }
-         *   }
-         * ]
-         * ```
-         *
-         * And then asked the model "What's the S&P 500 at today?", the model might produce
-         * `tool_use` content blocks in the response like this:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_use",
-         *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "name": "get_stock_price",
-         *     "input": { "ticker": "^GSPC" }
-         *   }
-         * ]
-         * ```
-         *
-         * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an input,
-         * and return the following back to the model in a subsequent `user` message:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_result",
-         *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "content": "259.75 USD"
-         *   }
-         * ]
-         * ```
-         *
-         * Tools can be used for workflows that include running client-side tools and functions, or
-         * more generally whenever you want the model to produce a particular JSON structure of
-         * output.
-         *
-         * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+         * Alias for calling [addTool] with
+         * `BetaToolUnion.ofComputerUse20250124(computerUse20250124)`.
          */
         fun addTool(computerUse20250124: BetaToolComputerUse20250124) = apply {
             body.addTool(computerUse20250124)
         }
 
-        /**
-         * Definitions of tools that the model may use.
-         *
-         * If you include `tools` in your API request, the model may return `tool_use` content
-         * blocks that represent the model's use of those tools. You can then run those tools using
-         * the tool input generated by the model and then optionally return results back to the
-         * model using `tool_result` content blocks.
-         *
-         * Each tool definition includes:
-         * - `name`: Name of the tool.
-         * - `description`: Optional, but strongly-recommended description of the tool.
-         * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
-         *   `input` shape that the model will produce in `tool_use` output content blocks.
-         *
-         * For example, if you defined `tools` as:
-         * ```json
-         * [
-         *   {
-         *     "name": "get_stock_price",
-         *     "description": "Get the current stock price for a given ticker symbol.",
-         *     "input_schema": {
-         *       "type": "object",
-         *       "properties": {
-         *         "ticker": {
-         *           "type": "string",
-         *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-         *         }
-         *       },
-         *       "required": ["ticker"]
-         *     }
-         *   }
-         * ]
-         * ```
-         *
-         * And then asked the model "What's the S&P 500 at today?", the model might produce
-         * `tool_use` content blocks in the response like this:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_use",
-         *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "name": "get_stock_price",
-         *     "input": { "ticker": "^GSPC" }
-         *   }
-         * ]
-         * ```
-         *
-         * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an input,
-         * and return the following back to the model in a subsequent `user` message:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_result",
-         *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "content": "259.75 USD"
-         *   }
-         * ]
-         * ```
-         *
-         * Tools can be used for workflows that include running client-side tools and functions, or
-         * more generally whenever you want the model to produce a particular JSON structure of
-         * output.
-         *
-         * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
-         */
+        /** Alias for calling [addTool] with `BetaToolUnion.ofBash20250124(bash20250124)`. */
         fun addTool(bash20250124: BetaToolBash20250124) = apply { body.addTool(bash20250124) }
 
         /**
-         * Definitions of tools that the model may use.
-         *
-         * If you include `tools` in your API request, the model may return `tool_use` content
-         * blocks that represent the model's use of those tools. You can then run those tools using
-         * the tool input generated by the model and then optionally return results back to the
-         * model using `tool_result` content blocks.
-         *
-         * Each tool definition includes:
-         * - `name`: Name of the tool.
-         * - `description`: Optional, but strongly-recommended description of the tool.
-         * - `input_schema`: [JSON schema](https://json-schema.org/draft/2020-12) for the tool
-         *   `input` shape that the model will produce in `tool_use` output content blocks.
-         *
-         * For example, if you defined `tools` as:
-         * ```json
-         * [
-         *   {
-         *     "name": "get_stock_price",
-         *     "description": "Get the current stock price for a given ticker symbol.",
-         *     "input_schema": {
-         *       "type": "object",
-         *       "properties": {
-         *         "ticker": {
-         *           "type": "string",
-         *           "description": "The stock ticker symbol, e.g. AAPL for Apple Inc."
-         *         }
-         *       },
-         *       "required": ["ticker"]
-         *     }
-         *   }
-         * ]
-         * ```
-         *
-         * And then asked the model "What's the S&P 500 at today?", the model might produce
-         * `tool_use` content blocks in the response like this:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_use",
-         *     "id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "name": "get_stock_price",
-         *     "input": { "ticker": "^GSPC" }
-         *   }
-         * ]
-         * ```
-         *
-         * You might then run your `get_stock_price` tool with `{"ticker": "^GSPC"}` as an input,
-         * and return the following back to the model in a subsequent `user` message:
-         * ```json
-         * [
-         *   {
-         *     "type": "tool_result",
-         *     "tool_use_id": "toolu_01D7FLrfh4GYq7yT1ULFeyMV",
-         *     "content": "259.75 USD"
-         *   }
-         * ]
-         * ```
-         *
-         * Tools can be used for workflows that include running client-side tools and functions, or
-         * more generally whenever you want the model to produce a particular JSON structure of
-         * output.
-         *
-         * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+         * Alias for calling [addTool] with
+         * `BetaToolUnion.ofTextEditor20250124(textEditor20250124)`.
          */
         fun addTool(textEditor20250124: BetaToolTextEditor20250124) = apply {
             body.addTool(textEditor20250124)
@@ -4906,12 +2120,10 @@ private constructor(
         fun topK(topK: Long) = apply { body.topK(topK) }
 
         /**
-         * Only sample from the top K options for each subsequent token.
+         * Sets [Builder.topK] to an arbitrary JSON value.
          *
-         * Used to remove "long tail" low probability responses.
-         * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
-         *
-         * Recommended for advanced use cases only. You usually only need to use `temperature`.
+         * You should usually call [Builder.topK] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun topK(topK: JsonField<Long>) = apply { body.topK(topK) }
 
@@ -4928,14 +2140,10 @@ private constructor(
         fun topP(topP: Double) = apply { body.topP(topP) }
 
         /**
-         * Use nucleus sampling.
+         * Sets [Builder.topP] to an arbitrary JSON value.
          *
-         * In nucleus sampling, we compute the cumulative distribution over all the options for each
-         * subsequent token in decreasing probability order and cut it off once it reaches a
-         * particular probability specified by `top_p`. You should either alter `temperature` or
-         * `top_p`, but not both.
-         *
-         * Recommended for advanced use cases only. You usually only need to use `temperature`.
+         * You should usually call [Builder.topP] with a well-typed [Double] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun topP(topP: JsonField<Double>) = apply { body.topP(topP) }
 

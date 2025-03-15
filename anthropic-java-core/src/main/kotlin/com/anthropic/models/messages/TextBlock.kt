@@ -38,25 +38,44 @@ private constructor(
      * The type of citation returned will depend on the type of document being cited. Citing a PDF
      * results in `page_location`, plain text results in `char_location`, and content document
      * results in `content_block_location`.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
     fun citations(): Optional<List<TextCitation>> =
         Optional.ofNullable(citations.getNullable("citations"))
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun text(): String = text.getRequired("text")
 
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("text")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
-     * Citations supporting the text block.
+     * Returns the raw JSON value of [citations].
      *
-     * The type of citation returned will depend on the type of document being cited. Citing a PDF
-     * results in `page_location`, plain text results in `char_location`, and content document
-     * results in `content_block_location`.
+     * Unlike [citations], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("citations")
     @ExcludeMissing
     fun _citations(): JsonField<List<TextCitation>> = citations
 
+    /**
+     * Returns the raw JSON value of [text].
+     *
+     * Unlike [text], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("text") @ExcludeMissing fun _text(): JsonField<String> = text
 
     @JsonAnyGetter
@@ -123,32 +142,24 @@ private constructor(
          */
         fun citations(citations: List<TextCitation>?) = citations(JsonField.ofNullable(citations))
 
-        /**
-         * Citations supporting the text block.
-         *
-         * The type of citation returned will depend on the type of document being cited. Citing a
-         * PDF results in `page_location`, plain text results in `char_location`, and content
-         * document results in `content_block_location`.
-         */
+        /** Alias for calling [Builder.citations] with `citations.orElse(null)`. */
         fun citations(citations: Optional<List<TextCitation>>) = citations(citations.getOrNull())
 
         /**
-         * Citations supporting the text block.
+         * Sets [Builder.citations] to an arbitrary JSON value.
          *
-         * The type of citation returned will depend on the type of document being cited. Citing a
-         * PDF results in `page_location`, plain text results in `char_location`, and content
-         * document results in `content_block_location`.
+         * You should usually call [Builder.citations] with a well-typed `List<TextCitation>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         fun citations(citations: JsonField<List<TextCitation>>) = apply {
             this.citations = citations.map { it.toMutableList() }
         }
 
         /**
-         * Citations supporting the text block.
+         * Adds a single [TextCitation] to [citations].
          *
-         * The type of citation returned will depend on the type of document being cited. Citing a
-         * PDF results in `page_location`, plain text results in `char_location`, and content
-         * document results in `content_block_location`.
+         * @throws IllegalStateException if the field was previously set to a non-list.
          */
         fun addCitation(citation: TextCitation) = apply {
             citations =
@@ -158,39 +169,48 @@ private constructor(
         }
 
         /**
-         * Citations supporting the text block.
-         *
-         * The type of citation returned will depend on the type of document being cited. Citing a
-         * PDF results in `page_location`, plain text results in `char_location`, and content
-         * document results in `content_block_location`.
+         * Alias for calling [addCitation] with
+         * `TextCitation.ofCitationCharLocation(citationCharLocation)`.
          */
         fun addCitation(citationCharLocation: CitationCharLocation) =
             addCitation(TextCitation.ofCitationCharLocation(citationCharLocation))
 
         /**
-         * Citations supporting the text block.
-         *
-         * The type of citation returned will depend on the type of document being cited. Citing a
-         * PDF results in `page_location`, plain text results in `char_location`, and content
-         * document results in `content_block_location`.
+         * Alias for calling [addCitation] with
+         * `TextCitation.ofCitationPageLocation(citationPageLocation)`.
          */
         fun addCitation(citationPageLocation: CitationPageLocation) =
             addCitation(TextCitation.ofCitationPageLocation(citationPageLocation))
 
         /**
-         * Citations supporting the text block.
-         *
-         * The type of citation returned will depend on the type of document being cited. Citing a
-         * PDF results in `page_location`, plain text results in `char_location`, and content
-         * document results in `content_block_location`.
+         * Alias for calling [addCitation] with
+         * `TextCitation.ofCitationContentBlockLocation(citationContentBlockLocation)`.
          */
         fun addCitation(citationContentBlockLocation: CitationContentBlockLocation) =
             addCitation(TextCitation.ofCitationContentBlockLocation(citationContentBlockLocation))
 
         fun text(text: String) = text(JsonField.of(text))
 
+        /**
+         * Sets [Builder.text] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.text] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun text(text: JsonField<String>) = apply { this.text = text }
 
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("text")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun type(type: JsonValue) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

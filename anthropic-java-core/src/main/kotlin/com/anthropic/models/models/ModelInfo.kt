@@ -33,37 +33,67 @@ private constructor(
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
-    /** Unique model identifier. */
+    /**
+     * Unique model identifier.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun id(): String = id.getRequired("id")
 
     /**
      * RFC 3339 datetime string representing the time at which the model was released. May be set to
      * an epoch value if the release date is unknown.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
-    /** A human-readable name for the model. */
+    /**
+     * A human-readable name for the model.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun displayName(): String = displayName.getRequired("display_name")
 
     /**
      * Object type.
      *
      * For Models, this is always `"model"`.
+     *
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("model")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
      */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
-    /** Unique model identifier. */
+    /**
+     * Returns the raw JSON value of [id].
+     *
+     * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
     /**
-     * RFC 3339 datetime string representing the time at which the model was released. May be set to
-     * an epoch value if the release date is unknown.
+     * Returns the raw JSON value of [createdAt].
+     *
+     * Unlike [createdAt], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("created_at")
     @ExcludeMissing
     fun _createdAt(): JsonField<OffsetDateTime> = createdAt
 
-    /** A human-readable name for the model. */
+    /**
+     * Returns the raw JSON value of [displayName].
+     *
+     * Unlike [displayName], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("display_name")
     @ExcludeMissing
     fun _displayName(): JsonField<String> = displayName
@@ -128,7 +158,12 @@ private constructor(
         /** Unique model identifier. */
         fun id(id: String) = id(JsonField.of(id))
 
-        /** Unique model identifier. */
+        /**
+         * Sets [Builder.id] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.id] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
         /**
@@ -138,21 +173,37 @@ private constructor(
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
         /**
-         * RFC 3339 datetime string representing the time at which the model was released. May be
-         * set to an epoch value if the release date is unknown.
+         * Sets [Builder.createdAt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
         /** A human-readable name for the model. */
         fun displayName(displayName: String) = displayName(JsonField.of(displayName))
 
-        /** A human-readable name for the model. */
+        /**
+         * Sets [Builder.displayName] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.displayName] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun displayName(displayName: JsonField<String>) = apply { this.displayName = displayName }
 
         /**
-         * Object type.
+         * Sets the field to an arbitrary JSON value.
          *
-         * For Models, this is always `"model"`.
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("model")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
         fun type(type: JsonValue) = apply { this.type = type }
 

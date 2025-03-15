@@ -40,43 +40,96 @@ private constructor(
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
-    /** The height of the display in pixels. */
+    /**
+     * The height of the display in pixels.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun displayHeightPx(): Long = displayHeightPx.getRequired("display_height_px")
 
-    /** The width of the display in pixels. */
+    /**
+     * The width of the display in pixels.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun displayWidthPx(): Long = displayWidthPx.getRequired("display_width_px")
 
     /**
      * Name of the tool.
      *
      * This is how the tool will be called by the model and in tool_use blocks.
+     *
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("computer")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
      */
     @JsonProperty("name") @ExcludeMissing fun _name(): JsonValue = name
 
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("computer_20250124")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
-    /** The X11 display number (e.g. 0, 1) for the display. */
+    /**
+     * The X11 display number (e.g. 0, 1) for the display.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun displayNumber(): Optional<Long> =
         Optional.ofNullable(displayNumber.getNullable("display_number"))
 
-    /** The height of the display in pixels. */
+    /**
+     * Returns the raw JSON value of [displayHeightPx].
+     *
+     * Unlike [displayHeightPx], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("display_height_px")
     @ExcludeMissing
     fun _displayHeightPx(): JsonField<Long> = displayHeightPx
 
-    /** The width of the display in pixels. */
+    /**
+     * Returns the raw JSON value of [displayWidthPx].
+     *
+     * Unlike [displayWidthPx], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("display_width_px")
     @ExcludeMissing
     fun _displayWidthPx(): JsonField<Long> = displayWidthPx
 
+    /**
+     * Returns the raw JSON value of [cacheControl].
+     *
+     * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("cache_control")
     @ExcludeMissing
     fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
 
-    /** The X11 display number (e.g. 0, 1) for the display. */
+    /**
+     * Returns the raw JSON value of [displayNumber].
+     *
+     * Unlike [displayNumber], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("display_number")
     @ExcludeMissing
     fun _displayNumber(): JsonField<Long> = displayNumber
@@ -150,7 +203,13 @@ private constructor(
         /** The height of the display in pixels. */
         fun displayHeightPx(displayHeightPx: Long) = displayHeightPx(JsonField.of(displayHeightPx))
 
-        /** The height of the display in pixels. */
+        /**
+         * Sets [Builder.displayHeightPx] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.displayHeightPx] with a well-typed [Long] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun displayHeightPx(displayHeightPx: JsonField<Long>) = apply {
             this.displayHeightPx = displayHeightPx
         }
@@ -158,26 +217,59 @@ private constructor(
         /** The width of the display in pixels. */
         fun displayWidthPx(displayWidthPx: Long) = displayWidthPx(JsonField.of(displayWidthPx))
 
-        /** The width of the display in pixels. */
+        /**
+         * Sets [Builder.displayWidthPx] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.displayWidthPx] with a well-typed [Long] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun displayWidthPx(displayWidthPx: JsonField<Long>) = apply {
             this.displayWidthPx = displayWidthPx
         }
 
         /**
-         * Name of the tool.
+         * Sets the field to an arbitrary JSON value.
          *
-         * This is how the tool will be called by the model and in tool_use blocks.
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("computer")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
         fun name(name: JsonValue) = apply { this.name = name }
 
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("computer_20250124")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun type(type: JsonValue) = apply { this.type = type }
 
         fun cacheControl(cacheControl: BetaCacheControlEphemeral?) =
             cacheControl(JsonField.ofNullable(cacheControl))
 
+        /** Alias for calling [Builder.cacheControl] with `cacheControl.orElse(null)`. */
         fun cacheControl(cacheControl: Optional<BetaCacheControlEphemeral>) =
             cacheControl(cacheControl.getOrNull())
 
+        /**
+         * Sets [Builder.cacheControl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.cacheControl] with a well-typed
+         * [BetaCacheControlEphemeral] value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
+         */
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
@@ -185,13 +277,23 @@ private constructor(
         /** The X11 display number (e.g. 0, 1) for the display. */
         fun displayNumber(displayNumber: Long?) = displayNumber(JsonField.ofNullable(displayNumber))
 
-        /** The X11 display number (e.g. 0, 1) for the display. */
+        /**
+         * Alias for [Builder.displayNumber].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
         fun displayNumber(displayNumber: Long) = displayNumber(displayNumber as Long?)
 
-        /** The X11 display number (e.g. 0, 1) for the display. */
+        /** Alias for calling [Builder.displayNumber] with `displayNumber.orElse(null)`. */
         fun displayNumber(displayNumber: Optional<Long>) = displayNumber(displayNumber.getOrNull())
 
-        /** The X11 display number (e.g. 0, 1) for the display. */
+        /**
+         * Sets [Builder.displayNumber] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.displayNumber] with a well-typed [Long] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun displayNumber(displayNumber: JsonField<Long>) = apply {
             this.displayNumber = displayNumber
         }

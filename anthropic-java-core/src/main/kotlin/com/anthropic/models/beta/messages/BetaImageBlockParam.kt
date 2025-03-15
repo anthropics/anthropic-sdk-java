@@ -43,15 +43,42 @@ private constructor(
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
     fun source(): Source = source.getRequired("source")
 
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("image")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         Optional.ofNullable(cacheControl.getNullable("cache_control"))
 
+    /**
+     * Returns the raw JSON value of [source].
+     *
+     * Unlike [source], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("source") @ExcludeMissing fun _source(): JsonField<Source> = source
 
+    /**
+     * Returns the raw JSON value of [cacheControl].
+     *
+     * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected type.
+     */
     @JsonProperty("cache_control")
     @ExcludeMissing
     fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
@@ -110,23 +137,59 @@ private constructor(
 
         fun source(source: Source) = source(JsonField.of(source))
 
+        /**
+         * Sets [Builder.source] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.source] with a well-typed [Source] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
         fun source(source: JsonField<Source>) = apply { this.source = source }
 
+        /** Alias for calling [source] with `Source.ofBetaBase64Image(betaBase64Image)`. */
         fun source(betaBase64Image: BetaBase64ImageSource) =
             source(Source.ofBetaBase64Image(betaBase64Image))
 
+        /** Alias for calling [source] with `Source.ofBetaUrlImage(betaUrlImage)`. */
         fun source(betaUrlImage: BetaUrlImageSource) = source(Source.ofBetaUrlImage(betaUrlImage))
 
+        /**
+         * Alias for calling [source] with the following:
+         * ```java
+         * BetaUrlImageSource.builder()
+         *     .url(url)
+         *     .build()
+         * ```
+         */
         fun betaUrlImageSource(url: String) = source(BetaUrlImageSource.builder().url(url).build())
 
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("image")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun type(type: JsonValue) = apply { this.type = type }
 
         fun cacheControl(cacheControl: BetaCacheControlEphemeral?) =
             cacheControl(JsonField.ofNullable(cacheControl))
 
+        /** Alias for calling [Builder.cacheControl] with `cacheControl.orElse(null)`. */
         fun cacheControl(cacheControl: Optional<BetaCacheControlEphemeral>) =
             cacheControl(cacheControl.getOrNull())
 
+        /**
+         * Sets [Builder.cacheControl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.cacheControl] with a well-typed
+         * [BetaCacheControlEphemeral] value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
+         */
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
