@@ -7,6 +7,7 @@ import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.messages.Model
 import kotlin.test.assertNotNull
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 
 class MessageCountTokensParamsTest {

@@ -1,5 +1,6 @@
 package com.anthropic.core.http
 
+import com.anthropic.backends.Backend
 import com.anthropic.client.okhttp.OkHttpClient
 import com.anthropic.core.RequestOptions
 import com.github.tomakehurst.wiremock.client.WireMock.*
@@ -19,9 +20,16 @@ internal class RetryingHttpClientTest {
     private var openResponseCount = 0
     private lateinit var httpClient: HttpClient
 
+    private class TestBackend(private val baseUrl: String) : Backend {
+        override fun baseUrl(): String = baseUrl
+
+        override fun close() {}
+    }
+
     @BeforeEach
     fun beforeEach(wmRuntimeInfo: WireMockRuntimeInfo) {
-        val okHttpClient = OkHttpClient.builder().baseUrl(wmRuntimeInfo.httpBaseUrl).build()
+        val okHttpClient =
+            OkHttpClient.builder().backend(TestBackend(wmRuntimeInfo.httpBaseUrl)).build()
         httpClient =
             object : HttpClient {
                 override fun execute(

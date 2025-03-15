@@ -6,6 +6,7 @@ import com.anthropic.models.messages.Metadata
 import com.anthropic.models.messages.Model
 import kotlin.test.assertNotNull
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 
 class CompletionCreateParamsTest {

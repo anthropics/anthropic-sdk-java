@@ -1,9 +1,16 @@
 # Anthropic Java API Library
 
+> [!NOTE]  
+> The Anthropic Java API Library is currently in _beta_.
+>
+> There may be minor breaking changes.
+>
+> Have thoughts or feedback? [File an issue](https://github.com/anthropics/anthropic-sdk-java/issues/new) or comment on [this discussion](https://github.com/anthropics/anthropic-sdk-java/discussions/95). 
+
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java/0.0.1-alpha.0)
-[![javadoc](https://javadoc.io/badge2/com.anthropic/anthropic-java/0.0.1-alpha.0/javadoc.svg)](https://javadoc.io/doc/com.anthropic/anthropic-java/0.0.1-alpha.0)
+[![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java/0.8.0)
+[![javadoc](https://javadoc.io/badge2/com.anthropic/anthropic-java/0.8.0/javadoc.svg)](https://javadoc.io/doc/com.anthropic/anthropic-java/0.8.0)
 
 <!-- x-release-please-end -->
 
@@ -18,7 +25,7 @@ The REST API documentation can be found on [docs.anthropic.com](https://docs.ant
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java:0.0.1-alpha.0")
+implementation("com.anthropic:anthropic-java:0.8.0")
 ```
 
 ### Maven
@@ -27,7 +34,7 @@ implementation("com.anthropic:anthropic-java:0.0.1-alpha.0")
 <dependency>
     <groupId>com.anthropic</groupId>
     <artifactId>anthropic-java</artifactId>
-    <version>0.0.1-alpha.0</version>
+    <version>0.8.0</version>
 </dependency>
 ```
 
@@ -38,6 +45,8 @@ implementation("com.anthropic:anthropic-java:0.0.1-alpha.0")
 This library requires Java 8 or later.
 
 ## Usage
+
+See the [`anthropic-java-example`](anthropic-java-example/src/main/java/com/anthropic/example) directory for complete and runnable examples.
 
 ```java
 import com.anthropic.client.AnthropicClient;
@@ -109,6 +118,15 @@ See this table for the available options:
 To send a request to the Anthropic API, build an instance of some `Params` class and pass it to the corresponding client method. When the response is received, it will be deserialized into an instance of a Java class.
 
 For example, `client.messages().create(...)` should be called with an instance of `MessageCreateParams`, and it will return an instance of `Message`.
+
+### Long requests
+
+> [!IMPORTANT]  
+> We highly encourage you to use [streaming](#streaming) for longer running requests.
+
+We do not recommend setting a large `maxTokens` value without using streaming. Some networks may drop idle connections after a certain period of time, which can cause the request to fail or [timeout](#timeouts) without receiving a response from Anthropic. We periodically ping the API to keep the connection alive and reduce the impact of these networks.
+
+The SDK throws an error if a non-streaming request is expected to take longer than 10 minutes. Using a [streaming method](#streaming) or [overriding the timeout](#timeouts) at the client or request level disables the error.
 
 ## Immutability
 
@@ -363,6 +381,174 @@ while (page != null) {
 }
 ```
 
+## Amazon Bedrock
+
+This SDK also provides support for the
+[Anthropic Bedrock API](https://aws.amazon.com/bedrock/claude/). This support
+requires the `anthropic-java-bedrock` library dependency.
+
+<!-- x-release-please-start-version -->
+
+### Gradle
+
+```kotlin
+implementation("com.anthropic:anthropic-java-bedrock:0.8.0")
+```
+
+### Maven
+
+```xml
+<dependency>
+    <groupId>com.anthropic</groupId>
+    <artifactId>anthropic-java-bedrock</artifactId>
+    <version>0.8.0</version>
+</dependency>
+```
+
+<!-- x-release-please-end -->
+
+### Usage
+
+To use Anthropic on Bedrock, create the Anthropic client with the 
+`BedrockBackend`. Usage of the API is otherwise the same.
+
+```java
+import com.anthropic.bedrock.backends.BedrockBackend;
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+
+AnthropicClient client = AnthropicOkHttpClient.builder()
+        .backend(BedrockBackend.fromEnv())
+        .build();
+```
+
+`BedrockBackend.fromEnv()` automatically resolves the AWS credentials using the
+[AWS default credentials provider chain](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials-chain.html)
+and resolves the AWS region using the
+[AWS default region provider chain](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html).
+See those AWS documents for details on how to configure the AWS credentials and 
+AWS region for resolution by those provider chains.
+
+Instead of resolving the AWS credentials and AWS region using the default AWS
+provider chains, you can resolve them independently using any provider, or any
+scheme of your choice, and pass them directly to the `BedrockBackend` during
+building. For example, you can resolve the AWS credentials directly from 
+environment variables and hard-code the AWS region:
+
+```java
+import com.anthropic.bedrock.backends.BedrockBackend;
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.regions.Region;
+
+AwsCredentials awsCredentials = AwsBasicCredentials.create(
+        System.getenv("AWS_ACCESS_KEY_ID"),
+        System.getenv("AWS_SECRET_ACCESS_KEY"));
+
+AnthropicClient client = AnthropicOkHttpClient.builder()
+        .backend(BedrockBackend.builder()
+                .awsCredentials(awsCredentials)
+                .region(Region.US_EAST_1)
+                .build())
+        .build();
+```
+
+The AWS classes used above are included automatically as transitive dependencies
+of the `anthropic-java-bedrock` library dependency. For other resolution 
+schemes, you may need additional AWS dependencies. 
+
+Currently, the Bedrock backend does _not_ support the following:
+
+* Anthropic Batch API
+* Anthropic Token Counting API
+
+## Google Cloud Vertex AI
+
+This SDK also provides support for Anthropic models on the 
+[Google Cloud Vertex AI](https://cloud.google.com/vertex-ai?hl=en) platform.
+This support requires the `anthropic-java-vertex` library dependency.
+
+<!-- x-release-please-start-version -->
+
+### Gradle
+
+```kotlin
+implementation("com.anthropic:anthropic-java-vertex:0.8.0")
+```
+
+### Maven
+
+```xml
+<dependency>
+    <groupId>com.anthropic</groupId>
+    <artifactId>anthropic-java-vertex</artifactId>
+    <version>0.8.0</version>
+</dependency>
+```
+
+<!-- x-release-please-end -->
+
+### Usage
+
+To use Anthropic on Vertex AI, create the Anthropic client with the
+`VertexBackend`. Usage of the API is otherwise the same.
+
+```java
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+import com.anthropic.vertex.backends.VertexBackend;
+
+AnthropicClient client = AnthropicOkHttpClient.builder()
+        .backend(VertexBackend.fromEnv())
+        .build();
+```
+
+`VertexBackend.fromEnv()` automatically resolves the Google OAuth2 credentials 
+from your configured Google Cloud
+[Application Default Credentials](https://cloud.google.com/docs/authentication/provide-credentials-adc)
+(ADC), the Google Cloud region from the `CLOUD_ML_REGION` environment variable,
+and the Google Cloud project ID from `ANTHROPIC_VERTEX_PROJECT_ID` environment 
+variable. See the Google documentation for details on how to configure your ADC.
+
+Instead of resolving the Google ADC, region and project ID automatically using
+`fromEnv()`, you can resolve them independently using an alternative Google
+Cloud facility, or any scheme of your choice, and pass them directly to the
+`VertexBackend` during building. For example, you could resolve the Google
+credentials and project ID directly from environment variables and hard-code the
+Google Cloud region:
+
+```java
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+import com.anthropic.vertex.backends.VertexBackend;
+import com.google.auth.oauth2.AccessToken;
+import com.google.auth.oauth2.GoogleCredentials;
+
+String accessToken = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
+String project = System.getenv("ANTHROPIC_VERTEX_PROJECT_ID");
+
+GoogleCredentials googleCredentials = GoogleCredentials.create(
+        AccessToken.newBuilder().setTokenValue(accessToken).build());
+
+AnthropicClient client = AnthropicOkHttpClient.builder()
+        .backend(VertexBackend.builder()
+                .googleCredentials(googleCredentials)
+                .region("us-central1")
+                .project(project)
+                .build())
+        .build();
+```
+
+The Google Cloud classes used above are included automatically as transitive 
+dependencies of the `anthropic-java-vertex` library dependency. For other 
+resolution schemes, you may need additional Google Cloud dependencies.
+
+Currently, the Vertex backend does _not_ support the following:
+
+* Anthropic Batch API
+
 ## Logging
 
 The SDK uses the standard [OkHttp logging interceptor](https://github.com/square/okhttp/tree/master/okhttp-logging-interceptor).
@@ -410,6 +596,22 @@ AnthropicClient client = AnthropicOkHttpClient.builder()
 ### Timeouts
 
 Requests time out after 10 minutes by default.
+
+However, for methods that accept `maxTokens`, if you specify a large `maxTokens` value and are *not* streaming, then the default timeout will be calculated dynamically using this formula:
+
+```java
+Duration.ofSeconds(
+    Math.min(
+        60 * 60, // 1 hour max
+        Math.max(
+            10 * 60, // 10 minute minimum
+            60 * 60 * maxTokens / 128_000
+        )
+    )
+)
+```
+
+Which results in a timeout of up to 60 minutes, scaled by the `maxTokens` parameter, unless overridden.
 
 To set a custom timeout, configure the method call using the `timeout` method:
 

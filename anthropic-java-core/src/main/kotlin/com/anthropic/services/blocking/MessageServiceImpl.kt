@@ -27,7 +27,6 @@ import com.anthropic.models.messages.MessageTokensCount
 import com.anthropic.models.messages.RawMessageStreamEvent
 import com.anthropic.services.blocking.messages.BatchService
 import com.anthropic.services.blocking.messages.BatchServiceImpl
-import java.time.Duration
 
 class MessageServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     MessageService {
@@ -88,7 +87,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
             val requestOptions =
                 requestOptions
                     .applyDefaults(RequestOptions.from(clientOptions))
-                    .applyDefaults(RequestOptions.builder().timeout(Duration.ofMinutes(10)).build())
+                    .applyDefaultTimeoutFromMaxTokens(params.maxTokens(), isStreaming = false)
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return response.parseable {
                 response
@@ -129,7 +128,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
             val requestOptions =
                 requestOptions
                     .applyDefaults(RequestOptions.from(clientOptions))
-                    .applyDefaults(RequestOptions.builder().timeout(Duration.ofMinutes(10)).build())
+                    .applyDefaultTimeoutFromMaxTokens(params.maxTokens(), isStreaming = true)
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return response.parseable {
                 response
