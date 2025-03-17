@@ -5,7 +5,7 @@ package com.anthropic.models.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class ToolChoiceToolTest {
+internal class ToolChoiceToolTest {
 
     @Test
     fun createToolChoiceTool() {

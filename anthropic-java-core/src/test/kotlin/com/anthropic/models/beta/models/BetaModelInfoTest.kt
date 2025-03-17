@@ -6,7 +6,7 @@ import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaModelInfoTest {
+internal class BetaModelInfoTest {
 
     @Test
     fun createBetaModelInfo() {

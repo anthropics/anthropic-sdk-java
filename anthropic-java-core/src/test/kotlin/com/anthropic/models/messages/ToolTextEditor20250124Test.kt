@@ -5,7 +5,7 @@ package com.anthropic.models.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class ToolTextEditor20250124Test {
+internal class ToolTextEditor20250124Test {
 
     @Test
     fun createToolTextEditor20250124() {

@@ -6,7 +6,7 @@ import com.anthropic.models.ErrorResponse
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class MessageBatchErroredResultTest {
+internal class MessageBatchErroredResultTest {
 
     @Test
     fun createMessageBatchErroredResult() {

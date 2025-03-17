@@ -5,7 +5,7 @@ package com.anthropic.models.messages.batches
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BatchDeleteParamsTest {
+internal class BatchDeleteParamsTest {
 
     @Test
     fun create() {

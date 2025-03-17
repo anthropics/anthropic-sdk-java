@@ -5,7 +5,7 @@ package com.anthropic.models.beta.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaBase64ImageSourceTest {
+internal class BetaBase64ImageSourceTest {
 
     @Test
     fun createBetaBase64ImageSource() {

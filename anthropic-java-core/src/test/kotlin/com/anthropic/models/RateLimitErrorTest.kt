@@ -5,7 +5,7 @@ package com.anthropic.models
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class RateLimitErrorTest {
+internal class RateLimitErrorTest {
 
     @Test
     fun createRateLimitError() {

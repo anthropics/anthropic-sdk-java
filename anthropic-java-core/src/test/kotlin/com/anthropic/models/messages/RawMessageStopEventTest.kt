@@ -5,7 +5,7 @@ package com.anthropic.models.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class RawMessageStopEventTest {
+internal class RawMessageStopEventTest {
 
     @Test
     fun createRawMessageStopEvent() {

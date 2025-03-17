@@ -5,7 +5,7 @@ package com.anthropic.models.messages.batches
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class DeletedMessageBatchTest {
+internal class DeletedMessageBatchTest {
 
     @Test
     fun createDeletedMessageBatch() {
