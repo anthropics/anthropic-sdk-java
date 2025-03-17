@@ -54,21 +54,23 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    override fun _headers(): Headers {
-        val headers = Headers.builder()
-        this.betas?.let { headers.put("anthropic-beta", it.map(Any::toString)) }
-        headers.putAll(additionalHeaders)
-        return headers.build()
-    }
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                betas?.forEach { put("anthropic-beta", it.asString()) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
-    override fun _queryParams(): QueryParams {
-        val queryParams = QueryParams.builder()
-        this.afterId?.let { queryParams.put("after_id", listOf(it.toString())) }
-        this.beforeId?.let { queryParams.put("before_id", listOf(it.toString())) }
-        this.limit?.let { queryParams.put("limit", listOf(it.toString())) }
-        queryParams.putAll(additionalQueryParams)
-        return queryParams.build()
-    }
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                afterId?.let { put("after_id", it) }
+                beforeId?.let { put("before_id", it) }
+                limit?.let { put("limit", it.toString()) }
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     fun toBuilder() = Builder().from(this)
 

@@ -51,12 +51,13 @@ private constructor(
     internal fun _body(): Optional<Map<String, JsonValue>> =
         Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
 
-    override fun _headers(): Headers {
-        val headers = Headers.builder()
-        this.betas?.let { headers.put("anthropic-beta", it.map(Any::toString)) }
-        headers.putAll(additionalHeaders)
-        return headers.build()
-    }
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                betas?.forEach { put("anthropic-beta", it.asString()) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
