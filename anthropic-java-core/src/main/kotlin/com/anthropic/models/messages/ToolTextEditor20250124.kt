@@ -186,6 +186,11 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
+        /**
+         * Returns an immutable instance of [ToolTextEditor20250124].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         */
         fun build(): ToolTextEditor20250124 =
             ToolTextEditor20250124(name, type, cacheControl, additionalProperties.toImmutable())
     }

@@ -360,6 +360,18 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
+        /**
+         * Returns an immutable instance of [DocumentBlockParam].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .source()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
         fun build(): DocumentBlockParam =
             DocumentBlockParam(
                 checkRequired("source", source),

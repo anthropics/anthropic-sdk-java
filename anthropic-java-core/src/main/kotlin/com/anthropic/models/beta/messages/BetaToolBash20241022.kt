@@ -186,6 +186,11 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
+        /**
+         * Returns an immutable instance of [BetaToolBash20241022].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         */
         fun build(): BetaToolBash20241022 =
             BetaToolBash20241022(name, type, cacheControl, additionalProperties.toImmutable())
     }

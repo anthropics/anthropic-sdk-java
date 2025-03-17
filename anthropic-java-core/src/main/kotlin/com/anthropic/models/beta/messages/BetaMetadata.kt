@@ -121,6 +121,11 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
+        /**
+         * Returns an immutable instance of [BetaMetadata].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         */
         fun build(): BetaMetadata = BetaMetadata(userId, additionalProperties.toImmutable())
     }
 

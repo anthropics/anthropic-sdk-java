@@ -317,6 +317,19 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
+        /**
+         * Returns an immutable instance of [BetaToolComputerUse20241022].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .displayHeightPx()
+         * .displayWidthPx()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
         fun build(): BetaToolComputerUse20241022 =
             BetaToolComputerUse20241022(
                 checkRequired("displayHeightPx", displayHeightPx),

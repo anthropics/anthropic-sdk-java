@@ -203,6 +203,18 @@ private constructor(
             System.getenv("ANTHROPIC_AUTH_TOKEN")?.let { authToken(it) }
         }
 
+        /**
+         * Returns an immutable instance of [ClientOptions].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .httpClient()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
         fun build(): ClientOptions {
             val httpClient = checkRequired("httpClient", httpClient)
 

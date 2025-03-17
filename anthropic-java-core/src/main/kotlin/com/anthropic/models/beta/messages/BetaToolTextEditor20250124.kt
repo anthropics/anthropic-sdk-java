@@ -188,6 +188,11 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
+        /**
+         * Returns an immutable instance of [BetaToolTextEditor20250124].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         */
         fun build(): BetaToolTextEditor20250124 =
             BetaToolTextEditor20250124(name, type, cacheControl, additionalProperties.toImmutable())
     }

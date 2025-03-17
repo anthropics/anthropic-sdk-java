@@ -186,6 +186,11 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
+        /**
+         * Returns an immutable instance of [ToolBash20250124].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         */
         fun build(): ToolBash20250124 =
             ToolBash20250124(name, type, cacheControl, additionalProperties.toImmutable())
     }

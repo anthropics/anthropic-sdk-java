@@ -214,6 +214,19 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
+        /**
+         * Returns an immutable instance of [BetaMessageBatchIndividualResponse].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .customId()
+         * .result()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
         fun build(): BetaMessageBatchIndividualResponse =
             BetaMessageBatchIndividualResponse(
                 checkRequired("customId", customId),

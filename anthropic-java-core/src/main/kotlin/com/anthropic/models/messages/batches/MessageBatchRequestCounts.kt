@@ -270,6 +270,22 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
+        /**
+         * Returns an immutable instance of [MessageBatchRequestCounts].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .canceled()
+         * .errored()
+         * .expired()
+         * .processing()
+         * .succeeded()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
         fun build(): MessageBatchRequestCounts =
             MessageBatchRequestCounts(
                 checkRequired("canceled", canceled),
