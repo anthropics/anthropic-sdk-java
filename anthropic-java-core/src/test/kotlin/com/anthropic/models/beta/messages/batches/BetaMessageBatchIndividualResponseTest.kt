@@ -10,7 +10,7 @@ import com.anthropic.models.messages.Model
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaMessageBatchIndividualResponseTest {
+internal class BetaMessageBatchIndividualResponseTest {
 
     @Test
     fun createBetaMessageBatchIndividualResponse() {

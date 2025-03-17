@@ -5,7 +5,7 @@ package com.anthropic.models.beta.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaToolComputerUse20250124Test {
+internal class BetaToolComputerUse20250124Test {
 
     @Test
     fun createBetaToolComputerUse20250124() {

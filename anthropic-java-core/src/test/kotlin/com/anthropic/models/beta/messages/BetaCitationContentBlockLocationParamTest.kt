@@ -5,7 +5,7 @@ package com.anthropic.models.beta.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaCitationContentBlockLocationParamTest {
+internal class BetaCitationContentBlockLocationParamTest {
 
     @Test
     fun createBetaCitationContentBlockLocationParam() {

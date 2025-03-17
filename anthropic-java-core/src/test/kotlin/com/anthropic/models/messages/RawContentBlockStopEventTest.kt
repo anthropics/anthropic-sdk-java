@@ -5,7 +5,7 @@ package com.anthropic.models.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class RawContentBlockStopEventTest {
+internal class RawContentBlockStopEventTest {
 
     @Test
     fun createRawContentBlockStopEvent() {

@@ -6,7 +6,7 @@ import com.anthropic.core.JsonValue
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaToolUseBlockParamTest {
+internal class BetaToolUseBlockParamTest {
 
     @Test
     fun createBetaToolUseBlockParam() {

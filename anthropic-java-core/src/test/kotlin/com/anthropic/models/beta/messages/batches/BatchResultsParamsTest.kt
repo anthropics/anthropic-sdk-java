@@ -6,7 +6,7 @@ import com.anthropic.models.beta.AnthropicBeta
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BatchResultsParamsTest {
+internal class BatchResultsParamsTest {
 
     @Test
     fun create() {

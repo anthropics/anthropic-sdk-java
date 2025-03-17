@@ -6,7 +6,7 @@ import com.anthropic.core.JsonValue
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaToolTest {
+internal class BetaToolTest {
 
     @Test
     fun createBetaTool() {

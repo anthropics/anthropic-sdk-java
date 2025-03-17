@@ -5,7 +5,7 @@ package com.anthropic.models.beta
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaPermissionErrorTest {
+internal class BetaPermissionErrorTest {
 
     @Test
     fun createBetaPermissionError() {

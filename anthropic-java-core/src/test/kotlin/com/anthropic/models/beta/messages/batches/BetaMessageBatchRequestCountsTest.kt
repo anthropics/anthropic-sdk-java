@@ -5,7 +5,7 @@ package com.anthropic.models.beta.messages.batches
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaMessageBatchRequestCountsTest {
+internal class BetaMessageBatchRequestCountsTest {
 
     @Test
     fun createBetaMessageBatchRequestCounts() {

@@ -5,7 +5,7 @@ package com.anthropic.models.beta.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaMetadataTest {
+internal class BetaMetadataTest {
 
     @Test
     fun createBetaMetadata() {

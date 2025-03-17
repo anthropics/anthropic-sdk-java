@@ -5,7 +5,7 @@ package com.anthropic.models.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class ToolBash20250124Test {
+internal class ToolBash20250124Test {
 
     @Test
     fun createToolBash20250124() {

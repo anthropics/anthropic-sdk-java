@@ -5,7 +5,7 @@ package com.anthropic.models.beta
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaRateLimitErrorTest {
+internal class BetaRateLimitErrorTest {
 
     @Test
     fun createBetaRateLimitError() {
