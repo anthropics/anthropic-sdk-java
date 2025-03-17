@@ -294,6 +294,22 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
+        /**
+         * Returns an immutable instance of [BetaCitationPageLocationParam].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .citedText()
+         * .documentIndex()
+         * .documentTitle()
+         * .endPageNumber()
+         * .startPageNumber()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
         fun build(): BetaCitationPageLocationParam =
             BetaCitationPageLocationParam(
                 checkRequired("citedText", citedText),

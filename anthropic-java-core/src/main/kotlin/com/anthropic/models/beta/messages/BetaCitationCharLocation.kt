@@ -291,6 +291,22 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
+        /**
+         * Returns an immutable instance of [BetaCitationCharLocation].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .citedText()
+         * .documentIndex()
+         * .documentTitle()
+         * .endCharIndex()
+         * .startCharIndex()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
         fun build(): BetaCitationCharLocation =
             BetaCitationCharLocation(
                 checkRequired("citedText", citedText),

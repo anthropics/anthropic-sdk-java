@@ -515,6 +515,26 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
+        /**
+         * Returns an immutable instance of [MessageBatch].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * .archivedAt()
+         * .cancelInitiatedAt()
+         * .createdAt()
+         * .endedAt()
+         * .expiresAt()
+         * .processingStatus()
+         * .requestCounts()
+         * .resultsUrl()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
         fun build(): MessageBatch =
             MessageBatch(
                 checkRequired("id", id),

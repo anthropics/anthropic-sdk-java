@@ -291,6 +291,22 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
+        /**
+         * Returns an immutable instance of [CitationCharLocationParam].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .citedText()
+         * .documentIndex()
+         * .documentTitle()
+         * .endCharIndex()
+         * .startCharIndex()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
         fun build(): CitationCharLocationParam =
             CitationCharLocationParam(
                 checkRequired("citedText", citedText),

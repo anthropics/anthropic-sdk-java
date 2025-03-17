@@ -250,6 +250,19 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
+        /**
+         * Returns an immutable instance of [Tool].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .inputSchema()
+         * .name()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
         fun build(): Tool =
             Tool(
                 checkRequired("inputSchema", inputSchema),
@@ -366,6 +379,11 @@ private constructor(
                 keys.forEach(::removeAdditionalProperty)
             }
 
+            /**
+             * Returns an immutable instance of [InputSchema].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
             fun build(): InputSchema =
                 InputSchema(type, properties, additionalProperties.toImmutable())
         }

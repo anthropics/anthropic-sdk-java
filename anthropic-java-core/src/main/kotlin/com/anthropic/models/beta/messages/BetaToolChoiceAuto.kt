@@ -155,6 +155,11 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
+        /**
+         * Returns an immutable instance of [BetaToolChoiceAuto].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         */
         fun build(): BetaToolChoiceAuto =
             BetaToolChoiceAuto(type, disableParallelToolUse, additionalProperties.toImmutable())
     }
