@@ -17,17 +17,25 @@ internal class BatchListParamsTest {
     fun queryParams() {
         val params =
             BatchListParams.builder().afterId("after_id").beforeId("before_id").limit(1L).build()
-        val expected = QueryParams.builder()
-        expected.put("after_id", "after_id")
-        expected.put("before_id", "before_id")
-        expected.put("limit", "1")
-        assertThat(params._queryParams()).isEqualTo(expected.build())
+
+        val queryParams = params._queryParams()
+
+        assertThat(queryParams)
+            .isEqualTo(
+                QueryParams.builder()
+                    .put("after_id", "after_id")
+                    .put("before_id", "before_id")
+                    .put("limit", "1")
+                    .build()
+            )
     }
 
     @Test
     fun queryParamsWithoutOptionalFields() {
         val params = BatchListParams.builder().build()
-        val expected = QueryParams.builder()
-        assertThat(params._queryParams()).isEqualTo(expected.build())
+
+        val queryParams = params._queryParams()
+
+        assertThat(queryParams).isEqualTo(QueryParams.builder().build())
     }
 }
