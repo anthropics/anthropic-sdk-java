@@ -41,6 +41,12 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
+    fun _pathParam(index: Int): String =
+        when (index) {
+            0 -> messageBatchId
+            else -> ""
+        }
+
     override fun _headers(): Headers =
         Headers.builder()
             .apply {
@@ -50,13 +56,6 @@ private constructor(
             .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
-
-    fun getPathParam(index: Int): String {
-        return when (index) {
-            0 -> messageBatchId
-            else -> ""
-        }
-    }
 
     fun toBuilder() = Builder().from(this)
 

@@ -5,6 +5,7 @@ package com.anthropic.models.beta.messages
 import com.anthropic.core.JsonValue
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.messages.Model
+import kotlin.jvm.optionals.getOrNull
 import kotlin.test.assertNotNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -131,13 +132,11 @@ internal class MessageCountTokensParamsTest {
 
         assertNotNull(body)
         assertThat(body.messages())
-            .isEqualTo(
-                listOf(
-                    BetaMessageParam.builder()
-                        .content("Hello, world")
-                        .role(BetaMessageParam.Role.USER)
-                        .build()
-                )
+            .containsExactly(
+                BetaMessageParam.builder()
+                    .content("Hello, world")
+                    .role(BetaMessageParam.Role.USER)
+                    .build()
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
         assertThat(body.system())
@@ -172,39 +171,37 @@ internal class MessageCountTokensParamsTest {
                     BetaToolChoiceAuto.builder().disableParallelToolUse(true).build()
                 )
             )
-        assertThat(body.tools())
-            .contains(
-                listOf(
-                    MessageCountTokensParams.Tool.ofBeta(
-                        BetaTool.builder()
-                            .inputSchema(
-                                BetaTool.InputSchema.builder()
-                                    .properties(
-                                        JsonValue.from(
-                                            mapOf(
-                                                "location" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string",
-                                                    ),
-                                                "unit" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string",
-                                                    ),
-                                            )
+        assertThat(body.tools().getOrNull())
+            .containsExactly(
+                MessageCountTokensParams.Tool.ofBeta(
+                    BetaTool.builder()
+                        .inputSchema(
+                            BetaTool.InputSchema.builder()
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string",
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
-                                    .build()
-                            )
-                            .name("name")
-                            .cacheControl(BetaCacheControlEphemeral.builder().build())
-                            .description("Get the current weather in a given location")
-                            .type(BetaTool.Type.CUSTOM)
-                            .build()
-                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
+                        .cacheControl(BetaCacheControlEphemeral.builder().build())
+                        .description("Get the current weather in a given location")
+                        .type(BetaTool.Type.CUSTOM)
+                        .build()
                 )
             )
     }
@@ -221,13 +218,11 @@ internal class MessageCountTokensParamsTest {
 
         assertNotNull(body)
         assertThat(body.messages())
-            .isEqualTo(
-                listOf(
-                    BetaMessageParam.builder()
-                        .content("Hello, world")
-                        .role(BetaMessageParam.Role.USER)
-                        .build()
-                )
+            .containsExactly(
+                BetaMessageParam.builder()
+                    .content("Hello, world")
+                    .role(BetaMessageParam.Role.USER)
+                    .build()
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
     }

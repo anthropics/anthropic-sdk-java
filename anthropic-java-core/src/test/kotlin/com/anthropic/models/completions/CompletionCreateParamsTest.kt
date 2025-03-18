@@ -4,6 +4,7 @@ package com.anthropic.models.completions
 
 import com.anthropic.models.messages.Metadata
 import com.anthropic.models.messages.Model
+import kotlin.jvm.optionals.getOrNull
 import kotlin.test.assertNotNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -46,7 +47,7 @@ internal class CompletionCreateParamsTest {
         assertThat(body.prompt()).isEqualTo("\n\nHuman: Hello, world!\n\nAssistant:")
         assertThat(body.metadata())
             .contains(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
-        assertThat(body.stopSequences()).contains(listOf("string"))
+        assertThat(body.stopSequences().getOrNull()).containsExactly("string")
         assertThat(body.temperature()).contains(1.0)
         assertThat(body.topK()).contains(5L)
         assertThat(body.topP()).contains(0.7)
