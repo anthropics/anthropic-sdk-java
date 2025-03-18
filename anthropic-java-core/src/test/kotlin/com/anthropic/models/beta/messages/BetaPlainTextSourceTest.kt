@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class BetaPlainTextSourceTest {
 
     @Test
-    fun createBetaPlainTextSource() {
+    fun create() {
         val betaPlainTextSource = BetaPlainTextSource.builder().data("data").build()
-        assertThat(betaPlainTextSource).isNotNull
+
         assertThat(betaPlainTextSource.data()).isEqualTo("data")
     }
 }

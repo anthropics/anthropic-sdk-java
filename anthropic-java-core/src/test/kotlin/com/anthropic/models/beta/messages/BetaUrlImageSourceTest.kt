@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class BetaUrlImageSourceTest {
 
     @Test
-    fun createBetaUrlImageSource() {
+    fun create() {
         val betaUrlImageSource = BetaUrlImageSource.builder().url("url").build()
-        assertThat(betaUrlImageSource).isNotNull
+
         assertThat(betaUrlImageSource.url()).isEqualTo("url")
     }
 }

@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test
 internal class BetaRawContentBlockDeltaEventTest {
 
     @Test
-    fun createBetaRawContentBlockDeltaEvent() {
+    fun create() {
         val betaRawContentBlockDeltaEvent =
             BetaRawContentBlockDeltaEvent.builder().betaTextDelta("text").index(0L).build()
-        assertThat(betaRawContentBlockDeltaEvent).isNotNull
+
         assertThat(betaRawContentBlockDeltaEvent.delta())
             .isEqualTo(
                 BetaRawContentBlockDeltaEvent.Delta.ofBetaText(

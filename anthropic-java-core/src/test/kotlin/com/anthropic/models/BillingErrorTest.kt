@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class BillingErrorTest {
 
     @Test
-    fun createBillingError() {
+    fun create() {
         val billingError = BillingError.builder().message("message").build()
-        assertThat(billingError).isNotNull
+
         assertThat(billingError.message()).isEqualTo("message")
     }
 }

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 internal class MessageBatchTest {
 
     @Test
-    fun createMessageBatch() {
+    fun create() {
         val messageBatch =
             MessageBatch.builder()
                 .id("msgbatch_013Zva2CMHLNnXjNJJKqJ2EF")
@@ -32,7 +32,7 @@ internal class MessageBatchTest {
                     "https://api.anthropic.com/v1/messages/batches/msgbatch_013Zva2CMHLNnXjNJJKqJ2EF/results"
                 )
                 .build()
-        assertThat(messageBatch).isNotNull
+
         assertThat(messageBatch.id()).isEqualTo("msgbatch_013Zva2CMHLNnXjNJJKqJ2EF")
         assertThat(messageBatch.archivedAt())
             .contains(OffsetDateTime.parse("2024-08-20T18:37:24.100435Z"))

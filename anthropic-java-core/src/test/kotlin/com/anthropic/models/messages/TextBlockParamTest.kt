@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 internal class TextBlockParamTest {
 
     @Test
-    fun createTextBlockParam() {
+    fun create() {
         val textBlockParam =
             TextBlockParam.builder()
                 .text("x")
@@ -24,7 +24,7 @@ internal class TextBlockParamTest {
                         .build()
                 )
                 .build()
-        assertThat(textBlockParam).isNotNull
+
         assertThat(textBlockParam.text()).isEqualTo("x")
         assertThat(textBlockParam.cacheControl()).contains(CacheControlEphemeral.builder().build())
         assertThat(textBlockParam.citations().getOrNull())

@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class BetaNotFoundErrorTest {
 
     @Test
-    fun createBetaNotFoundError() {
+    fun create() {
         val betaNotFoundError = BetaNotFoundError.builder().message("message").build()
-        assertThat(betaNotFoundError).isNotNull
+
         assertThat(betaNotFoundError.message()).isEqualTo("message")
     }
 }

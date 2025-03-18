@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 internal class BetaToolTest {
 
     @Test
-    fun createBetaTool() {
+    fun create() {
         val betaTool =
             BetaTool.builder()
                 .inputSchema(
@@ -39,7 +39,7 @@ internal class BetaToolTest {
                 .description("Get the current weather in a given location")
                 .type(BetaTool.Type.CUSTOM)
                 .build()
-        assertThat(betaTool).isNotNull
+
         assertThat(betaTool.inputSchema())
             .isEqualTo(
                 BetaTool.InputSchema.builder()

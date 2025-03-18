@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class BetaUrlPdfSourceTest {
 
     @Test
-    fun createBetaUrlPdfSource() {
+    fun create() {
         val betaUrlPdfSource = BetaUrlPdfSource.builder().url("url").build()
-        assertThat(betaUrlPdfSource).isNotNull
+
         assertThat(betaUrlPdfSource.url()).isEqualTo("url")
     }
 }

@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class InvalidRequestErrorTest {
 
     @Test
-    fun createInvalidRequestError() {
+    fun create() {
         val invalidRequestError = InvalidRequestError.builder().message("message").build()
-        assertThat(invalidRequestError).isNotNull
+
         assertThat(invalidRequestError.message()).isEqualTo("message")
     }
 }

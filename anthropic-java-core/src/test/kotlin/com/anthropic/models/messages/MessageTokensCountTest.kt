@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class MessageTokensCountTest {
 
     @Test
-    fun createMessageTokensCount() {
+    fun create() {
         val messageTokensCount = MessageTokensCount.builder().inputTokens(2095L).build()
-        assertThat(messageTokensCount).isNotNull
+
         assertThat(messageTokensCount.inputTokens()).isEqualTo(2095L)
     }
 }

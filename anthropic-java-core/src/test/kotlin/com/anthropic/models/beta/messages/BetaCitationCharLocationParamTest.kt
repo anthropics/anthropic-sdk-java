@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 internal class BetaCitationCharLocationParamTest {
 
     @Test
-    fun createBetaCitationCharLocationParam() {
+    fun create() {
         val betaCitationCharLocationParam =
             BetaCitationCharLocationParam.builder()
                 .citedText("cited_text")
@@ -17,7 +17,7 @@ internal class BetaCitationCharLocationParamTest {
                 .endCharIndex(0L)
                 .startCharIndex(0L)
                 .build()
-        assertThat(betaCitationCharLocationParam).isNotNull
+
         assertThat(betaCitationCharLocationParam.citedText()).isEqualTo("cited_text")
         assertThat(betaCitationCharLocationParam.documentIndex()).isEqualTo(0L)
         assertThat(betaCitationCharLocationParam.documentTitle()).contains("x")

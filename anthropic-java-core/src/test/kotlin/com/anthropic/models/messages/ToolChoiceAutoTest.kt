@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class ToolChoiceAutoTest {
 
     @Test
-    fun createToolChoiceAuto() {
+    fun create() {
         val toolChoiceAuto = ToolChoiceAuto.builder().disableParallelToolUse(true).build()
-        assertThat(toolChoiceAuto).isNotNull
+
         assertThat(toolChoiceAuto.disableParallelToolUse()).contains(true)
     }
 }

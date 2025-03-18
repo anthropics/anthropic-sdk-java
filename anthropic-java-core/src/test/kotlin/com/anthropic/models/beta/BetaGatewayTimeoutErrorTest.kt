@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class BetaGatewayTimeoutErrorTest {
 
     @Test
-    fun createBetaGatewayTimeoutError() {
+    fun create() {
         val betaGatewayTimeoutError = BetaGatewayTimeoutError.builder().message("message").build()
-        assertThat(betaGatewayTimeoutError).isNotNull
+
         assertThat(betaGatewayTimeoutError.message()).isEqualTo("message")
     }
 }

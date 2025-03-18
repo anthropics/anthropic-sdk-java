@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class GatewayTimeoutErrorTest {
 
     @Test
-    fun createGatewayTimeoutError() {
+    fun create() {
         val gatewayTimeoutError = GatewayTimeoutError.builder().message("message").build()
-        assertThat(gatewayTimeoutError).isNotNull
+
         assertThat(gatewayTimeoutError.message()).isEqualTo("message")
     }
 }

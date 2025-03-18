@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 internal class ToolUseBlockParamTest {
 
     @Test
-    fun createToolUseBlockParam() {
+    fun create() {
         val toolUseBlockParam =
             ToolUseBlockParam.builder()
                 .id("id")
@@ -17,7 +17,7 @@ internal class ToolUseBlockParamTest {
                 .name("name")
                 .cacheControl(CacheControlEphemeral.builder().build())
                 .build()
-        assertThat(toolUseBlockParam).isNotNull
+
         assertThat(toolUseBlockParam.id()).isEqualTo("id")
         assertThat(toolUseBlockParam._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
         assertThat(toolUseBlockParam.name()).isEqualTo("name")

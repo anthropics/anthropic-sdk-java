@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 internal class BetaRawContentBlockStartEventTest {
 
     @Test
-    fun createBetaRawContentBlockStartEvent() {
+    fun create() {
         val betaRawContentBlockStartEvent =
             BetaRawContentBlockStartEvent.builder()
                 .contentBlock(
@@ -27,7 +27,7 @@ internal class BetaRawContentBlockStartEventTest {
                 )
                 .index(0L)
                 .build()
-        assertThat(betaRawContentBlockStartEvent).isNotNull
+
         assertThat(betaRawContentBlockStartEvent.contentBlock())
             .isEqualTo(
                 BetaRawContentBlockStartEvent.ContentBlock.ofBetaText(

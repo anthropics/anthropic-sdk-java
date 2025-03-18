@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class OverloadedErrorTest {
 
     @Test
-    fun createOverloadedError() {
+    fun create() {
         val overloadedError = OverloadedError.builder().message("message").build()
-        assertThat(overloadedError).isNotNull
+
         assertThat(overloadedError.message()).isEqualTo("message")
     }
 }

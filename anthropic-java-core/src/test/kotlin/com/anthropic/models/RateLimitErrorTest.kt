@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class RateLimitErrorTest {
 
     @Test
-    fun createRateLimitError() {
+    fun create() {
         val rateLimitError = RateLimitError.builder().message("message").build()
-        assertThat(rateLimitError).isNotNull
+
         assertThat(rateLimitError.message()).isEqualTo("message")
     }
 }

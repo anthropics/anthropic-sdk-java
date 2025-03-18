@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class BetaToolChoiceAnyTest {
 
     @Test
-    fun createBetaToolChoiceAny() {
+    fun create() {
         val betaToolChoiceAny = BetaToolChoiceAny.builder().disableParallelToolUse(true).build()
-        assertThat(betaToolChoiceAny).isNotNull
+
         assertThat(betaToolChoiceAny.disableParallelToolUse()).contains(true)
     }
 }

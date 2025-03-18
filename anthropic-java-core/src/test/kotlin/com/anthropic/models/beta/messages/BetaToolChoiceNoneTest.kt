@@ -2,14 +2,12 @@
 
 package com.anthropic.models.beta.messages
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class BetaToolChoiceNoneTest {
 
     @Test
-    fun createBetaToolChoiceNone() {
+    fun create() {
         val betaToolChoiceNone = BetaToolChoiceNone.builder().build()
-        assertThat(betaToolChoiceNone).isNotNull
     }
 }

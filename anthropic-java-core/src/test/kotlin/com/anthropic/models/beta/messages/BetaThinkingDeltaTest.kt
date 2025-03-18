@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class BetaThinkingDeltaTest {
 
     @Test
-    fun createBetaThinkingDelta() {
+    fun create() {
         val betaThinkingDelta = BetaThinkingDelta.builder().thinking("thinking").build()
-        assertThat(betaThinkingDelta).isNotNull
+
         assertThat(betaThinkingDelta.thinking()).isEqualTo("thinking")
     }
 }

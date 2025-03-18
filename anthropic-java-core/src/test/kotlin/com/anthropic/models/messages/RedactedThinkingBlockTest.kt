@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class RedactedThinkingBlockTest {
 
     @Test
-    fun createRedactedThinkingBlock() {
+    fun create() {
         val redactedThinkingBlock = RedactedThinkingBlock.builder().data("data").build()
-        assertThat(redactedThinkingBlock).isNotNull
+
         assertThat(redactedThinkingBlock.data()).isEqualTo("data")
     }
 }

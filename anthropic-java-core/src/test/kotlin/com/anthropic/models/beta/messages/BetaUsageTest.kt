@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 internal class BetaUsageTest {
 
     @Test
-    fun createBetaUsage() {
+    fun create() {
         val betaUsage =
             BetaUsage.builder()
                 .cacheCreationInputTokens(2051L)
@@ -16,7 +16,7 @@ internal class BetaUsageTest {
                 .inputTokens(2095L)
                 .outputTokens(503L)
                 .build()
-        assertThat(betaUsage).isNotNull
+
         assertThat(betaUsage.cacheCreationInputTokens()).contains(2051L)
         assertThat(betaUsage.cacheReadInputTokens()).contains(2051L)
         assertThat(betaUsage.inputTokens()).isEqualTo(2095L)

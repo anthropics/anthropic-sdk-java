@@ -2,14 +2,12 @@
 
 package com.anthropic.models.messages
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class CacheControlEphemeralTest {
 
     @Test
-    fun createCacheControlEphemeral() {
+    fun create() {
         val cacheControlEphemeral = CacheControlEphemeral.builder().build()
-        assertThat(cacheControlEphemeral).isNotNull
     }
 }

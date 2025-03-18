@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 internal class BetaMessageBatchSucceededResultTest {
 
     @Test
-    fun createBetaMessageBatchSucceededResult() {
+    fun create() {
         val betaMessageBatchSucceededResult =
             BetaMessageBatchSucceededResult.builder()
                 .message(
@@ -47,7 +47,7 @@ internal class BetaMessageBatchSucceededResultTest {
                         .build()
                 )
                 .build()
-        assertThat(betaMessageBatchSucceededResult).isNotNull
+
         assertThat(betaMessageBatchSucceededResult.message())
             .isEqualTo(
                 BetaMessage.builder()

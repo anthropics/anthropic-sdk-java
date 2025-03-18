@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class BetaPermissionErrorTest {
 
     @Test
-    fun createBetaPermissionError() {
+    fun create() {
         val betaPermissionError = BetaPermissionError.builder().message("message").build()
-        assertThat(betaPermissionError).isNotNull
+
         assertThat(betaPermissionError.message()).isEqualTo("message")
     }
 }

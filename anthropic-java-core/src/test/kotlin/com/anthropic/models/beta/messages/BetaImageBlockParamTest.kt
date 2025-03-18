@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 internal class BetaImageBlockParamTest {
 
     @Test
-    fun createBetaImageBlockParam() {
+    fun create() {
         val betaImageBlockParam =
             BetaImageBlockParam.builder()
                 .source(
@@ -19,7 +19,7 @@ internal class BetaImageBlockParamTest {
                 )
                 .cacheControl(BetaCacheControlEphemeral.builder().build())
                 .build()
-        assertThat(betaImageBlockParam).isNotNull
+
         assertThat(betaImageBlockParam.source())
             .isEqualTo(
                 BetaImageBlockParam.Source.ofBetaBase64Image(

@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class BetaApiErrorTest {
 
     @Test
-    fun createBetaApiError() {
+    fun create() {
         val betaApiError = BetaApiError.builder().message("message").build()
-        assertThat(betaApiError).isNotNull
+
         assertThat(betaApiError.message()).isEqualTo("message")
     }
 }

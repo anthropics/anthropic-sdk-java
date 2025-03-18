@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class NotFoundErrorTest {
 
     @Test
-    fun createNotFoundError() {
+    fun create() {
         val notFoundError = NotFoundError.builder().message("message").build()
-        assertThat(notFoundError).isNotNull
+
         assertThat(notFoundError.message()).isEqualTo("message")
     }
 }

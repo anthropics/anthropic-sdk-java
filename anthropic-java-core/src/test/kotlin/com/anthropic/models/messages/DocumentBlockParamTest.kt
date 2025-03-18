@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 internal class DocumentBlockParamTest {
 
     @Test
-    fun createDocumentBlockParam() {
+    fun create() {
         val documentBlockParam =
             DocumentBlockParam.builder()
                 .base64PdfSource("U3RhaW5sZXNzIHJvY2tz")
@@ -17,7 +17,7 @@ internal class DocumentBlockParamTest {
                 .context("x")
                 .title("x")
                 .build()
-        assertThat(documentBlockParam).isNotNull
+
         assertThat(documentBlockParam.source())
             .isEqualTo(
                 DocumentBlockParam.Source.ofBase64Pdf(
