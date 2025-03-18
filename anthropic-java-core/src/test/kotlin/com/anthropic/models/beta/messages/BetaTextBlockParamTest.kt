@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 internal class BetaTextBlockParamTest {
 
     @Test
-    fun createBetaTextBlockParam() {
+    fun create() {
         val betaTextBlockParam =
             BetaTextBlockParam.builder()
                 .text("x")
@@ -24,7 +24,7 @@ internal class BetaTextBlockParamTest {
                         .build()
                 )
                 .build()
-        assertThat(betaTextBlockParam).isNotNull
+
         assertThat(betaTextBlockParam.text()).isEqualTo("x")
         assertThat(betaTextBlockParam.cacheControl())
             .contains(BetaCacheControlEphemeral.builder().build())

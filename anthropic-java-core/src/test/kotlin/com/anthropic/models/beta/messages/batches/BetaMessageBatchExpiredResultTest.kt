@@ -2,14 +2,12 @@
 
 package com.anthropic.models.beta.messages.batches
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class BetaMessageBatchExpiredResultTest {
 
     @Test
-    fun createBetaMessageBatchExpiredResult() {
+    fun create() {
         val betaMessageBatchExpiredResult = BetaMessageBatchExpiredResult.builder().build()
-        assertThat(betaMessageBatchExpiredResult).isNotNull
     }
 }

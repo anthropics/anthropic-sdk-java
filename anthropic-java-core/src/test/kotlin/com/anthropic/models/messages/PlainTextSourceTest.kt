@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class PlainTextSourceTest {
 
     @Test
-    fun createPlainTextSource() {
+    fun create() {
         val plainTextSource = PlainTextSource.builder().data("data").build()
-        assertThat(plainTextSource).isNotNull
+
         assertThat(plainTextSource.data()).isEqualTo("data")
     }
 }

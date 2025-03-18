@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class BetaRawContentBlockStopEventTest {
 
     @Test
-    fun createBetaRawContentBlockStopEvent() {
+    fun create() {
         val betaRawContentBlockStopEvent = BetaRawContentBlockStopEvent.builder().index(0L).build()
-        assertThat(betaRawContentBlockStopEvent).isNotNull
+
         assertThat(betaRawContentBlockStopEvent.index()).isEqualTo(0L)
     }
 }

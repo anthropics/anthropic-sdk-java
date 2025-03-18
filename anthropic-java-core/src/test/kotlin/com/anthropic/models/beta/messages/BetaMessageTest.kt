@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 internal class BetaMessageTest {
 
     @Test
-    fun createBetaMessage() {
+    fun create() {
         val betaMessage =
             BetaMessage.builder()
                 .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
@@ -39,7 +39,7 @@ internal class BetaMessageTest {
                         .build()
                 )
                 .build()
-        assertThat(betaMessage).isNotNull
+
         assertThat(betaMessage.id()).isEqualTo("msg_013Zva2CMHLNnXjNJJKqJ2EF")
         assertThat(betaMessage.content())
             .containsExactly(

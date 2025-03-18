@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test
 internal class BetaThinkingBlockTest {
 
     @Test
-    fun createBetaThinkingBlock() {
+    fun create() {
         val betaThinkingBlock =
             BetaThinkingBlock.builder().signature("signature").thinking("thinking").build()
-        assertThat(betaThinkingBlock).isNotNull
+
         assertThat(betaThinkingBlock.signature()).isEqualTo("signature")
         assertThat(betaThinkingBlock.thinking()).isEqualTo("thinking")
     }

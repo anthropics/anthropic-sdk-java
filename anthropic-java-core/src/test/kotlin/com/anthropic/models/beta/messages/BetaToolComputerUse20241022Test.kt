@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 internal class BetaToolComputerUse20241022Test {
 
     @Test
-    fun createBetaToolComputerUse20241022() {
+    fun create() {
         val betaToolComputerUse20241022 =
             BetaToolComputerUse20241022.builder()
                 .displayHeightPx(1L)
@@ -16,7 +16,7 @@ internal class BetaToolComputerUse20241022Test {
                 .cacheControl(BetaCacheControlEphemeral.builder().build())
                 .displayNumber(0L)
                 .build()
-        assertThat(betaToolComputerUse20241022).isNotNull
+
         assertThat(betaToolComputerUse20241022.displayHeightPx()).isEqualTo(1L)
         assertThat(betaToolComputerUse20241022.displayWidthPx()).isEqualTo(1L)
         assertThat(betaToolComputerUse20241022.cacheControl())

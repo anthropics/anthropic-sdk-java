@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class BetaTextDeltaTest {
 
     @Test
-    fun createBetaTextDelta() {
+    fun create() {
         val betaTextDelta = BetaTextDelta.builder().text("text").build()
-        assertThat(betaTextDelta).isNotNull
+
         assertThat(betaTextDelta.text()).isEqualTo("text")
     }
 }

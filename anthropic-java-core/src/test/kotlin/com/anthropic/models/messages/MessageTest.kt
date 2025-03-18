@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 internal class MessageTest {
 
     @Test
-    fun createMessage() {
+    fun create() {
         val message =
             Message.builder()
                 .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
@@ -38,7 +38,7 @@ internal class MessageTest {
                         .build()
                 )
                 .build()
-        assertThat(message).isNotNull
+
         assertThat(message.id()).isEqualTo("msg_013Zva2CMHLNnXjNJJKqJ2EF")
         assertThat(message.content())
             .containsExactly(

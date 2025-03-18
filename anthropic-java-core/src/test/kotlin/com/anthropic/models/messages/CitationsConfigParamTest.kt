@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class CitationsConfigParamTest {
 
     @Test
-    fun createCitationsConfigParam() {
+    fun create() {
         val citationsConfigParam = CitationsConfigParam.builder().enabled(true).build()
-        assertThat(citationsConfigParam).isNotNull
+
         assertThat(citationsConfigParam.enabled()).contains(true)
     }
 }

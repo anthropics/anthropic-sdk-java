@@ -9,14 +9,14 @@ import org.junit.jupiter.api.Test
 internal class BetaModelInfoTest {
 
     @Test
-    fun createBetaModelInfo() {
+    fun create() {
         val betaModelInfo =
             BetaModelInfo.builder()
                 .id("claude-3-7-sonnet-20250219")
                 .createdAt(OffsetDateTime.parse("2025-02-19T00:00:00Z"))
                 .displayName("Claude 3.7 Sonnet")
                 .build()
-        assertThat(betaModelInfo).isNotNull
+
         assertThat(betaModelInfo.id()).isEqualTo("claude-3-7-sonnet-20250219")
         assertThat(betaModelInfo.createdAt())
             .isEqualTo(OffsetDateTime.parse("2025-02-19T00:00:00Z"))

@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 internal class BetaMessageBatchIndividualResponseTest {
 
     @Test
-    fun createBetaMessageBatchIndividualResponse() {
+    fun create() {
         val betaMessageBatchIndividualResponse =
             BetaMessageBatchIndividualResponse.builder()
                 .customId("my-custom-id-1")
@@ -48,7 +48,7 @@ internal class BetaMessageBatchIndividualResponseTest {
                         .build()
                 )
                 .build()
-        assertThat(betaMessageBatchIndividualResponse).isNotNull
+
         assertThat(betaMessageBatchIndividualResponse.customId()).isEqualTo("my-custom-id-1")
         assertThat(betaMessageBatchIndividualResponse.result())
             .isEqualTo(

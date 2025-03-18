@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 internal class CitationContentBlockLocationParamTest {
 
     @Test
-    fun createCitationContentBlockLocationParam() {
+    fun create() {
         val citationContentBlockLocationParam =
             CitationContentBlockLocationParam.builder()
                 .citedText("cited_text")
@@ -17,7 +17,7 @@ internal class CitationContentBlockLocationParamTest {
                 .endBlockIndex(0L)
                 .startBlockIndex(0L)
                 .build()
-        assertThat(citationContentBlockLocationParam).isNotNull
+
         assertThat(citationContentBlockLocationParam.citedText()).isEqualTo("cited_text")
         assertThat(citationContentBlockLocationParam.documentIndex()).isEqualTo(0L)
         assertThat(citationContentBlockLocationParam.documentTitle()).contains("x")

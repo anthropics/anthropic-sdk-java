@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class AuthenticationErrorTest {
 
     @Test
-    fun createAuthenticationError() {
+    fun create() {
         val authenticationError = AuthenticationError.builder().message("message").build()
-        assertThat(authenticationError).isNotNull
+
         assertThat(authenticationError.message()).isEqualTo("message")
     }
 }

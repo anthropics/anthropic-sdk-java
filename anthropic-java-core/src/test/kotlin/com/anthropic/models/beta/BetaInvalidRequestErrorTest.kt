@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class BetaInvalidRequestErrorTest {
 
     @Test
-    fun createBetaInvalidRequestError() {
+    fun create() {
         val betaInvalidRequestError = BetaInvalidRequestError.builder().message("message").build()
-        assertThat(betaInvalidRequestError).isNotNull
+
         assertThat(betaInvalidRequestError.message()).isEqualTo("message")
     }
 }

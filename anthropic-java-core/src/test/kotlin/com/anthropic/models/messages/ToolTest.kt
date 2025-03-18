@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 internal class ToolTest {
 
     @Test
-    fun createTool() {
+    fun create() {
         val tool =
             Tool.builder()
                 .inputSchema(
@@ -38,7 +38,7 @@ internal class ToolTest {
                 .cacheControl(CacheControlEphemeral.builder().build())
                 .description("Get the current weather in a given location")
                 .build()
-        assertThat(tool).isNotNull
+
         assertThat(tool.inputSchema())
             .isEqualTo(
                 Tool.InputSchema.builder()

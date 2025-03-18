@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class BetaInputJsonDeltaTest {
 
     @Test
-    fun createBetaInputJsonDelta() {
+    fun create() {
         val betaInputJsonDelta = BetaInputJsonDelta.builder().partialJson("partial_json").build()
-        assertThat(betaInputJsonDelta).isNotNull
+
         assertThat(betaInputJsonDelta.partialJson()).isEqualTo("partial_json")
     }
 }

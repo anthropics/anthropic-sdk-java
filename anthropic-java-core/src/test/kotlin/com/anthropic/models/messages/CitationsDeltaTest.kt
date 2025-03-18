@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 internal class CitationsDeltaTest {
 
     @Test
-    fun createCitationsDelta() {
+    fun create() {
         val citationsDelta =
             CitationsDelta.builder()
                 .citation(
@@ -21,7 +21,7 @@ internal class CitationsDeltaTest {
                         .build()
                 )
                 .build()
-        assertThat(citationsDelta).isNotNull
+
         assertThat(citationsDelta.citation())
             .isEqualTo(
                 CitationsDelta.Citation.ofCharLocation(

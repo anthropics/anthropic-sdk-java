@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class ApiErrorObjectTest {
 
     @Test
-    fun createApiErrorObject() {
+    fun create() {
         val apiErrorObject = ApiErrorObject.builder().message("message").build()
-        assertThat(apiErrorObject).isNotNull
+
         assertThat(apiErrorObject.message()).isEqualTo("message")
     }
 }

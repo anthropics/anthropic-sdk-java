@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test
 internal class ThinkingBlockParamTest {
 
     @Test
-    fun createThinkingBlockParam() {
+    fun create() {
         val thinkingBlockParam =
             ThinkingBlockParam.builder().signature("signature").thinking("thinking").build()
-        assertThat(thinkingBlockParam).isNotNull
+
         assertThat(thinkingBlockParam.signature()).isEqualTo("signature")
         assertThat(thinkingBlockParam.thinking()).isEqualTo("thinking")
     }

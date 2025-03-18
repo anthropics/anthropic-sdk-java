@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 internal class BetaMessageBatchRequestCountsTest {
 
     @Test
-    fun createBetaMessageBatchRequestCounts() {
+    fun create() {
         val betaMessageBatchRequestCounts =
             BetaMessageBatchRequestCounts.builder()
                 .canceled(10L)
@@ -17,7 +17,7 @@ internal class BetaMessageBatchRequestCountsTest {
                 .processing(100L)
                 .succeeded(50L)
                 .build()
-        assertThat(betaMessageBatchRequestCounts).isNotNull
+
         assertThat(betaMessageBatchRequestCounts.canceled()).isEqualTo(10L)
         assertThat(betaMessageBatchRequestCounts.errored()).isEqualTo(30L)
         assertThat(betaMessageBatchRequestCounts.expired()).isEqualTo(10L)

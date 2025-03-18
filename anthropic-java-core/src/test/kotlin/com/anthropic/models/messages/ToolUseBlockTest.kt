@@ -9,14 +9,14 @@ import org.junit.jupiter.api.Test
 internal class ToolUseBlockTest {
 
     @Test
-    fun createToolUseBlock() {
+    fun create() {
         val toolUseBlock =
             ToolUseBlock.builder()
                 .id("id")
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name("x")
                 .build()
-        assertThat(toolUseBlock).isNotNull
+
         assertThat(toolUseBlock.id()).isEqualTo("id")
         assertThat(toolUseBlock._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
         assertThat(toolUseBlock.name()).isEqualTo("x")

@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class PermissionErrorTest {
 
     @Test
-    fun createPermissionError() {
+    fun create() {
         val permissionError = PermissionError.builder().message("message").build()
-        assertThat(permissionError).isNotNull
+
         assertThat(permissionError.message()).isEqualTo("message")
     }
 }

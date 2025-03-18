@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 internal class ImageBlockParamTest {
 
     @Test
-    fun createImageBlockParam() {
+    fun create() {
         val imageBlockParam =
             ImageBlockParam.builder()
                 .source(
@@ -19,7 +19,7 @@ internal class ImageBlockParamTest {
                 )
                 .cacheControl(CacheControlEphemeral.builder().build())
                 .build()
-        assertThat(imageBlockParam).isNotNull
+
         assertThat(imageBlockParam.source())
             .isEqualTo(
                 ImageBlockParam.Source.ofBase64Image(

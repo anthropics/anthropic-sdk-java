@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class ContentBlockSourceTest {
 
     @Test
-    fun createContentBlockSource() {
+    fun create() {
         val contentBlockSource = ContentBlockSource.builder().content("string").build()
-        assertThat(contentBlockSource).isNotNull
+
         assertThat(contentBlockSource.content())
             .isEqualTo(ContentBlockSource.Content.ofString("string"))
     }

@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test
 internal class BetaDeletedMessageBatchTest {
 
     @Test
-    fun createBetaDeletedMessageBatch() {
+    fun create() {
         val betaDeletedMessageBatch =
             BetaDeletedMessageBatch.builder().id("msgbatch_013Zva2CMHLNnXjNJJKqJ2EF").build()
-        assertThat(betaDeletedMessageBatch).isNotNull
+
         assertThat(betaDeletedMessageBatch.id()).isEqualTo("msgbatch_013Zva2CMHLNnXjNJJKqJ2EF")
     }
 }

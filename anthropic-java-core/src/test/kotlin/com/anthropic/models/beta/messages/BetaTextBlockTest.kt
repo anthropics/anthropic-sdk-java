@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 internal class BetaTextBlockTest {
 
     @Test
-    fun createBetaTextBlock() {
+    fun create() {
         val betaTextBlock =
             BetaTextBlock.builder()
                 .addCitation(
@@ -23,7 +23,7 @@ internal class BetaTextBlockTest {
                 )
                 .text("text")
                 .build()
-        assertThat(betaTextBlock).isNotNull
+
         assertThat(betaTextBlock.citations().getOrNull())
             .containsExactly(
                 BetaTextCitation.ofCitationCharLocation(

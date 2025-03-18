@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 internal class TextBlockTest {
 
     @Test
-    fun createTextBlock() {
+    fun create() {
         val textBlock =
             TextBlock.builder()
                 .addCitation(
@@ -23,7 +23,7 @@ internal class TextBlockTest {
                 )
                 .text("text")
                 .build()
-        assertThat(textBlock).isNotNull
+
         assertThat(textBlock.citations().getOrNull())
             .containsExactly(
                 TextCitation.ofCitationCharLocation(

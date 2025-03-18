@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class ThinkingConfigEnabledTest {
 
     @Test
-    fun createThinkingConfigEnabled() {
+    fun create() {
         val thinkingConfigEnabled = ThinkingConfigEnabled.builder().budgetTokens(1024L).build()
-        assertThat(thinkingConfigEnabled).isNotNull
+
         assertThat(thinkingConfigEnabled.budgetTokens()).isEqualTo(1024L)
     }
 }

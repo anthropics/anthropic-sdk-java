@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test
 internal class BetaRedactedThinkingBlockParamTest {
 
     @Test
-    fun createBetaRedactedThinkingBlockParam() {
+    fun create() {
         val betaRedactedThinkingBlockParam =
             BetaRedactedThinkingBlockParam.builder().data("data").build()
-        assertThat(betaRedactedThinkingBlockParam).isNotNull
+
         assertThat(betaRedactedThinkingBlockParam.data()).isEqualTo("data")
     }
 }

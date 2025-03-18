@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 internal class BetaRawMessageStartEventTest {
 
     @Test
-    fun createBetaRawMessageStartEvent() {
+    fun create() {
         val betaRawMessageStartEvent =
             BetaRawMessageStartEvent.builder()
                 .message(
@@ -43,7 +43,7 @@ internal class BetaRawMessageStartEventTest {
                         .build()
                 )
                 .build()
-        assertThat(betaRawMessageStartEvent).isNotNull
+
         assertThat(betaRawMessageStartEvent.message())
             .isEqualTo(
                 BetaMessage.builder()

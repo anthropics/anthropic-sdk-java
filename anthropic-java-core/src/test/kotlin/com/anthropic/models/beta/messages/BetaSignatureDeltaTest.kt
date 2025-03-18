@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class BetaSignatureDeltaTest {
 
     @Test
-    fun createBetaSignatureDelta() {
+    fun create() {
         val betaSignatureDelta = BetaSignatureDelta.builder().signature("signature").build()
-        assertThat(betaSignatureDelta).isNotNull
+
         assertThat(betaSignatureDelta.signature()).isEqualTo("signature")
     }
 }

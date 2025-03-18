@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class BetaMessageDeltaUsageTest {
 
     @Test
-    fun createBetaMessageDeltaUsage() {
+    fun create() {
         val betaMessageDeltaUsage = BetaMessageDeltaUsage.builder().outputTokens(503L).build()
-        assertThat(betaMessageDeltaUsage).isNotNull
+
         assertThat(betaMessageDeltaUsage.outputTokens()).isEqualTo(503L)
     }
 }

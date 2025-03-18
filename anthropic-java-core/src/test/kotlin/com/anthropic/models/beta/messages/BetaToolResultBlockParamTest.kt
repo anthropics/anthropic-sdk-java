@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 internal class BetaToolResultBlockParamTest {
 
     @Test
-    fun createBetaToolResultBlockParam() {
+    fun create() {
         val betaToolResultBlockParam =
             BetaToolResultBlockParam.builder()
                 .toolUseId("tool_use_id")
@@ -16,7 +16,7 @@ internal class BetaToolResultBlockParamTest {
                 .content("string")
                 .isError(true)
                 .build()
-        assertThat(betaToolResultBlockParam).isNotNull
+
         assertThat(betaToolResultBlockParam.toolUseId()).isEqualTo("tool_use_id")
         assertThat(betaToolResultBlockParam.cacheControl())
             .contains(BetaCacheControlEphemeral.builder().build())

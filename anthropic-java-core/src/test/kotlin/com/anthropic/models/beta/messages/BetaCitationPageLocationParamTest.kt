@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 internal class BetaCitationPageLocationParamTest {
 
     @Test
-    fun createBetaCitationPageLocationParam() {
+    fun create() {
         val betaCitationPageLocationParam =
             BetaCitationPageLocationParam.builder()
                 .citedText("cited_text")
@@ -17,7 +17,7 @@ internal class BetaCitationPageLocationParamTest {
                 .endPageNumber(0L)
                 .startPageNumber(1L)
                 .build()
-        assertThat(betaCitationPageLocationParam).isNotNull
+
         assertThat(betaCitationPageLocationParam.citedText()).isEqualTo("cited_text")
         assertThat(betaCitationPageLocationParam.documentIndex()).isEqualTo(0L)
         assertThat(betaCitationPageLocationParam.documentTitle()).contains("x")

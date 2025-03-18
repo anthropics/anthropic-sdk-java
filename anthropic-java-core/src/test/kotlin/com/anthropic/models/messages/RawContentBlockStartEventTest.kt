@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 internal class RawContentBlockStartEventTest {
 
     @Test
-    fun createRawContentBlockStartEvent() {
+    fun create() {
         val rawContentBlockStartEvent =
             RawContentBlockStartEvent.builder()
                 .contentBlock(
@@ -27,7 +27,7 @@ internal class RawContentBlockStartEventTest {
                 )
                 .index(0L)
                 .build()
-        assertThat(rawContentBlockStartEvent).isNotNull
+
         assertThat(rawContentBlockStartEvent.contentBlock())
             .isEqualTo(
                 RawContentBlockStartEvent.ContentBlock.ofText(

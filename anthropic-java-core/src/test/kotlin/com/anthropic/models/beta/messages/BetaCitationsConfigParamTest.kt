@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class BetaCitationsConfigParamTest {
 
     @Test
-    fun createBetaCitationsConfigParam() {
+    fun create() {
         val betaCitationsConfigParam = BetaCitationsConfigParam.builder().enabled(true).build()
-        assertThat(betaCitationsConfigParam).isNotNull
+
         assertThat(betaCitationsConfigParam.enabled()).contains(true)
     }
 }

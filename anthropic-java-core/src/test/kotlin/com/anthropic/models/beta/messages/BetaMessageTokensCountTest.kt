@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 internal class BetaMessageTokensCountTest {
 
     @Test
-    fun createBetaMessageTokensCount() {
+    fun create() {
         val betaMessageTokensCount = BetaMessageTokensCount.builder().inputTokens(2095L).build()
-        assertThat(betaMessageTokensCount).isNotNull
+
         assertThat(betaMessageTokensCount.inputTokens()).isEqualTo(2095L)
     }
 }

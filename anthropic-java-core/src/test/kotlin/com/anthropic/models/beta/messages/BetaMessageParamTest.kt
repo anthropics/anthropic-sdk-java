@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test
 internal class BetaMessageParamTest {
 
     @Test
-    fun createBetaMessageParam() {
+    fun create() {
         val betaMessageParam =
             BetaMessageParam.builder().content("string").role(BetaMessageParam.Role.USER).build()
-        assertThat(betaMessageParam).isNotNull
+
         assertThat(betaMessageParam.content())
             .isEqualTo(BetaMessageParam.Content.ofString("string"))
         assertThat(betaMessageParam.role()).isEqualTo(BetaMessageParam.Role.USER)
