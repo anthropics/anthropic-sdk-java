@@ -17,12 +17,11 @@ internal class BatchResultsParamsTest {
     }
 
     @Test
-    fun getPathParam() {
+    fun pathParams() {
         val params = BatchResultsParams.builder().messageBatchId("message_batch_id").build()
-        assertThat(params).isNotNull
-        // path param "messageBatchId"
-        assertThat(params.getPathParam(0)).isEqualTo("message_batch_id")
+
+        assertThat(params._pathParam(0)).isEqualTo("message_batch_id")
         // out-of-bound path param
-        assertThat(params.getPathParam(1)).isEqualTo("")
+        assertThat(params._pathParam(1)).isEqualTo("")
     }
 }

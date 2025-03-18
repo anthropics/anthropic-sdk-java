@@ -3,6 +3,7 @@
 package com.anthropic.models.messages
 
 import com.anthropic.core.JsonValue
+import kotlin.jvm.optionals.getOrNull
 import kotlin.test.assertNotNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -138,18 +139,13 @@ internal class MessageCreateParamsTest {
         assertNotNull(body)
         assertThat(body.maxTokens()).isEqualTo(1024L)
         assertThat(body.messages())
-            .isEqualTo(
-                listOf(
-                    MessageParam.builder()
-                        .content("Hello, world")
-                        .role(MessageParam.Role.USER)
-                        .build()
-                )
+            .containsExactly(
+                MessageParam.builder().content("Hello, world").role(MessageParam.Role.USER).build()
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
         assertThat(body.metadata())
             .contains(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
-        assertThat(body.stopSequences()).contains(listOf("string"))
+        assertThat(body.stopSequences().getOrNull()).containsExactly("string")
         assertThat(body.system())
             .contains(
                 MessageCreateParams.System.ofTextBlockParams(
@@ -181,38 +177,36 @@ internal class MessageCreateParamsTest {
             .contains(
                 ToolChoice.ofAuto(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
             )
-        assertThat(body.tools())
-            .contains(
-                listOf(
-                    ToolUnion.ofTool(
-                        Tool.builder()
-                            .inputSchema(
-                                Tool.InputSchema.builder()
-                                    .properties(
-                                        JsonValue.from(
-                                            mapOf(
-                                                "location" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string",
-                                                    ),
-                                                "unit" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string",
-                                                    ),
-                                            )
+        assertThat(body.tools().getOrNull())
+            .containsExactly(
+                ToolUnion.ofTool(
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string",
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
-                                    .build()
-                            )
-                            .name("name")
-                            .cacheControl(CacheControlEphemeral.builder().build())
-                            .description("Get the current weather in a given location")
-                            .build()
-                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
+                        .cacheControl(CacheControlEphemeral.builder().build())
+                        .description("Get the current weather in a given location")
+                        .build()
                 )
             )
         assertThat(body.topK()).contains(5L)
@@ -233,13 +227,8 @@ internal class MessageCreateParamsTest {
         assertNotNull(body)
         assertThat(body.maxTokens()).isEqualTo(1024L)
         assertThat(body.messages())
-            .isEqualTo(
-                listOf(
-                    MessageParam.builder()
-                        .content("Hello, world")
-                        .role(MessageParam.Role.USER)
-                        .build()
-                )
+            .containsExactly(
+                MessageParam.builder().content("Hello, world").role(MessageParam.Role.USER).build()
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
     }

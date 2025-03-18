@@ -2,6 +2,7 @@
 
 package com.anthropic.models.beta.messages
 
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -27,7 +28,7 @@ internal class BetaTextBlockParamTest {
         assertThat(betaTextBlockParam.text()).isEqualTo("x")
         assertThat(betaTextBlockParam.cacheControl())
             .contains(BetaCacheControlEphemeral.builder().build())
-        assertThat(betaTextBlockParam.citations().get())
+        assertThat(betaTextBlockParam.citations().getOrNull())
             .containsExactly(
                 BetaTextCitationParam.ofCitationCharLocation(
                     BetaCitationCharLocationParam.builder()

@@ -140,7 +140,7 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
-                    .addPathSegments("v1", "messages", "batches", params.getPathParam(0))
+                    .addPathSegments("v1", "messages", "batches", params._pathParam(0))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -211,7 +211,7 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
-                    .addPathSegments("v1", "messages", "batches", params.getPathParam(0))
+                    .addPathSegments("v1", "messages", "batches", params._pathParam(0))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
@@ -243,7 +243,7 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
-                    .addPathSegments("v1", "messages", "batches", params.getPathParam(0), "cancel")
+                    .addPathSegments("v1", "messages", "batches", params._pathParam(0), "cancel")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
@@ -277,7 +277,7 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
-                    .addPathSegments("v1", "messages", "batches", params.getPathParam(0), "results")
+                    .addPathSegments("v1", "messages", "batches", params._pathParam(0), "results")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
