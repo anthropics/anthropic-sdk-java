@@ -10,7 +10,6 @@ import com.anthropic.models.messages.Model
 import com.anthropic.models.messages.TextBlockParam
 import com.anthropic.models.messages.Tool
 import com.anthropic.models.messages.ToolChoiceAuto
-import kotlin.test.assertNotNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -174,7 +173,6 @@ internal class BatchCreateParamsTest {
 
         val body = params._body()
 
-        assertNotNull(body)
         assertThat(body.requests())
             .containsExactly(
                 BatchCreateParams.Request.builder()
@@ -270,7 +268,6 @@ internal class BatchCreateParamsTest {
 
         val body = params._body()
 
-        assertNotNull(body)
         assertThat(body.requests())
             .containsExactly(
                 BatchCreateParams.Request.builder()

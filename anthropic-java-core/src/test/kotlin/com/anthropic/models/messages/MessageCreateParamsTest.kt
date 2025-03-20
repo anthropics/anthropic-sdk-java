@@ -4,7 +4,6 @@ package com.anthropic.models.messages
 
 import com.anthropic.core.JsonValue
 import kotlin.jvm.optionals.getOrNull
-import kotlin.test.assertNotNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -136,7 +135,6 @@ internal class MessageCreateParamsTest {
 
         val body = params._body()
 
-        assertNotNull(body)
         assertThat(body.maxTokens()).isEqualTo(1024L)
         assertThat(body.messages())
             .containsExactly(
@@ -224,7 +222,6 @@ internal class MessageCreateParamsTest {
 
         val body = params._body()
 
-        assertNotNull(body)
         assertThat(body.maxTokens()).isEqualTo(1024L)
         assertThat(body.messages())
             .containsExactly(
