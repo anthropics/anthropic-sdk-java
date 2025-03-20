@@ -60,7 +60,7 @@ private constructor(
     override fun _headers(): Headers =
         Headers.builder()
             .apply {
-                betas?.forEach { put("anthropic-beta", it.asString()) }
+                betas?.forEach { put("anthropic-beta", it.toString()) }
                 putAll(additionalHeaders)
             }
             .build()

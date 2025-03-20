@@ -3,6 +3,7 @@
 package com.anthropic.services.blocking.beta
 
 import com.anthropic.core.ClientOptions
+import com.anthropic.core.JsonValue
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
@@ -13,7 +14,6 @@ import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.parseable
 import com.anthropic.core.prepare
-import com.anthropic.errors.AnthropicError
 import com.anthropic.models.beta.models.BetaModelInfo
 import com.anthropic.models.beta.models.ModelListPage
 import com.anthropic.models.beta.models.ModelListParams
@@ -42,7 +42,7 @@ class ModelServiceImpl internal constructor(private val clientOptions: ClientOpt
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         ModelService.WithRawResponse {
 
-        private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
+        private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
 
         private val retrieveHandler: Handler<BetaModelInfo> =
             jsonHandler<BetaModelInfo>(clientOptions.jsonMapper).withErrorHandler(errorHandler)

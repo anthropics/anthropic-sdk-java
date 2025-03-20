@@ -19,7 +19,6 @@ import com.anthropic.core.http.json
 import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
 import com.anthropic.core.prepare
-import com.anthropic.errors.AnthropicError
 import com.anthropic.models.beta.messages.BetaMessage
 import com.anthropic.models.beta.messages.BetaMessageTokensCount
 import com.anthropic.models.beta.messages.BetaRawMessageStreamEvent
@@ -63,7 +62,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         MessageService.WithRawResponse {
 
-        private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
+        private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
 
         private val batches: BatchService.WithRawResponse by lazy {
             BatchServiceImpl.WithRawResponseImpl(clientOptions)

@@ -3,6 +3,7 @@
 package com.anthropic.services.async.messages
 
 import com.anthropic.core.ClientOptions
+import com.anthropic.core.JsonValue
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
@@ -19,7 +20,6 @@ import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
 import com.anthropic.core.http.toAsync
 import com.anthropic.core.prepareAsync
-import com.anthropic.errors.AnthropicError
 import com.anthropic.models.messages.batches.BatchCancelParams
 import com.anthropic.models.messages.batches.BatchCreateParams
 import com.anthropic.models.messages.batches.BatchDeleteParams
@@ -89,7 +89,7 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         BatchServiceAsync.WithRawResponse {
 
-        private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
+        private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
 
         private val createHandler: Handler<MessageBatch> =
             jsonHandler<MessageBatch>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
