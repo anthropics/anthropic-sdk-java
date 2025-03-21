@@ -298,16 +298,18 @@ The SDK throws custom unchecked exception types:
 
 - [`AnthropicServiceException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/AnthropicServiceException.kt): Base class for HTTP errors. See this table for which exception subclass is thrown for each HTTP status code:
 
-  | Status | Exception                       |
-  | ------ | ------------------------------- |
-  | 400    | `BadRequestException`           |
-  | 401    | `AuthenticationException`       |
-  | 403    | `PermissionDeniedException`     |
-  | 404    | `NotFoundException`             |
-  | 422    | `UnprocessableEntityException`  |
-  | 429    | `RateLimitException`            |
-  | 5xx    | `InternalServerException`       |
-  | others | `UnexpectedStatusCodeException` |
+  | Status | Exception                                                                                                                    |
+  | ------ | ---------------------------------------------------------------------------------------------------------------------------- |
+  | 400    | [`BadRequestException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/BadRequestException.kt)                     |
+  | 401    | [`UnauthorizedException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/UnauthorizedException.kt)                 |
+  | 403    | [`PermissionDeniedException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/PermissionDeniedException.kt)         |
+  | 404    | [`NotFoundException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/NotFoundException.kt)                         |
+  | 422    | [`UnprocessableEntityException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/UnprocessableEntityException.kt)   |
+  | 429    | [`RateLimitException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/RateLimitException.kt)                       |
+  | 5xx    | [`InternalServerException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/InternalServerException.kt)             |
+  | others | [`UnexpectedStatusCodeException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/UnexpectedStatusCodeException.kt) |
+
+  [`SseException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/SseException.kt) is thrown for errors encountered during [SSE streaming](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events) after a successful initial HTTP response.
 
 - [`AnthropicIoException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/AnthropicIoException.kt): I/O networking errors.
 
