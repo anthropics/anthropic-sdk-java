@@ -7,8 +7,11 @@ package com.anthropic.core.http
 import com.anthropic.core.MultipartField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.node.JsonNodeType
+import com.fasterxml.jackson.databind.node.ObjectNode
+import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 import kotlin.jvm.optionals.getOrNull
@@ -16,8 +19,18 @@ import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder
 import org.apache.hc.core5.http.ContentType
 import org.apache.hc.core5.http.HttpEntity
 
+/**
+ * Creates a new [HttpRequestBody] containing the given value serialized to a JSON string. The
+ * content type will be set to `application/json` and will use UTF-8 encoding.
+ *
+ * The use of this method is _not supported_ as part of the public API of the Anthropic SDK. This
+ * method may change or be removed without any prior notice.
+ *
+ * @param value The data to form the request body. This may be any object; it is not limited to JSON
+ *   objects or nodes.
+ */
 @JvmSynthetic
-internal inline fun <reified T> json(jsonMapper: JsonMapper, value: T): HttpRequestBody =
+inline fun <reified T> json(jsonMapper: JsonMapper, value: T): HttpRequestBody =
     object : HttpRequestBody {
         private val bytes: ByteArray by lazy { jsonMapper.writeValueAsBytes(value) }
 
@@ -31,6 +44,23 @@ internal inline fun <reified T> json(jsonMapper: JsonMapper, value: T): HttpRequ
 
         override fun close() {}
     }
+
+/**
+ * Creates a JSON [ObjectNode] representing the JSON data parsed from a [HttpRequestBody].
+ *
+ * The use of this method is _not supported_ as part of the public API of the Anthropic SDK. This
+ * method may change or be removed without any prior notice.
+ */
+@JvmSynthetic
+fun bodyToJson(jsonMapper: ObjectMapper, body: HttpRequestBody?): ObjectNode? {
+    val jsonData = ByteArrayOutputStream()
+
+    body?.writeTo(jsonData)
+    if (jsonData.size() > 0) {
+        return jsonMapper.readValue(jsonData.toByteArray(), ObjectNode::class.java)
+    }
+    return null
+}
 
 @JvmSynthetic
 internal fun multipartFormData(

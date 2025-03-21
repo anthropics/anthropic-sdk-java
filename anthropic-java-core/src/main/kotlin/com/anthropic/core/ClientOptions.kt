@@ -9,12 +9,10 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.http.RetryingHttpClient
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.time.Clock
-import java.util.Optional
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicLong
-import kotlin.jvm.optionals.getOrNull
 
 class ClientOptions
 private constructor(
@@ -23,25 +21,16 @@ private constructor(
     @get:JvmName("jsonMapper") val jsonMapper: JsonMapper,
     @get:JvmName("streamHandlerExecutor") val streamHandlerExecutor: Executor,
     @get:JvmName("clock") val clock: Clock,
-    @get:JvmName("baseUrl") val baseUrl: String,
     @get:JvmName("headers") val headers: Headers,
     @get:JvmName("queryParams") val queryParams: QueryParams,
     @get:JvmName("responseValidation") val responseValidation: Boolean,
     @get:JvmName("timeout") val timeout: Timeout,
     @get:JvmName("maxRetries") val maxRetries: Int,
-    private val apiKey: String?,
-    private val authToken: String?,
 ) {
-
-    fun apiKey(): Optional<String> = Optional.ofNullable(apiKey)
-
-    fun authToken(): Optional<String> = Optional.ofNullable(authToken)
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
-
-        const val PRODUCTION_URL = "https://api.anthropic.com"
 
         /**
          * Returns a mutable builder for constructing an instance of [ClientOptions].
@@ -52,8 +41,6 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
-
-        @JvmStatic fun fromEnv(): ClientOptions = builder().fromEnv().build()
     }
 
     /** A builder for [ClientOptions]. */
@@ -63,14 +50,11 @@ private constructor(
         private var jsonMapper: JsonMapper = jsonMapper()
         private var streamHandlerExecutor: Executor? = null
         private var clock: Clock = Clock.systemUTC()
-        private var baseUrl: String = PRODUCTION_URL
         private var headers: Headers.Builder = Headers.builder()
         private var queryParams: QueryParams.Builder = QueryParams.builder()
         private var responseValidation: Boolean = false
         private var timeout: Timeout = Timeout.default()
         private var maxRetries: Int = 2
-        private var apiKey: String? = null
-        private var authToken: String? = null
 
         @JvmSynthetic
         internal fun from(clientOptions: ClientOptions) = apply {
@@ -78,14 +62,11 @@ private constructor(
             jsonMapper = clientOptions.jsonMapper
             streamHandlerExecutor = clientOptions.streamHandlerExecutor
             clock = clientOptions.clock
-            baseUrl = clientOptions.baseUrl
             headers = clientOptions.headers.toBuilder()
             queryParams = clientOptions.queryParams.toBuilder()
             responseValidation = clientOptions.responseValidation
             timeout = clientOptions.timeout
             maxRetries = clientOptions.maxRetries
-            apiKey = clientOptions.apiKey
-            authToken = clientOptions.authToken
         }
 
         fun httpClient(httpClient: HttpClient) = apply { this.httpClient = httpClient }
@@ -98,8 +79,6 @@ private constructor(
 
         fun clock(clock: Clock) = apply { this.clock = clock }
 
-        fun baseUrl(baseUrl: String) = apply { this.baseUrl = baseUrl }
-
         fun responseValidation(responseValidation: Boolean) = apply {
             this.responseValidation = responseValidation
         }
@@ -107,16 +86,6 @@ private constructor(
         fun timeout(timeout: Timeout) = apply { this.timeout = timeout }
 
         fun maxRetries(maxRetries: Int) = apply { this.maxRetries = maxRetries }
-
-        fun apiKey(apiKey: String?) = apply { this.apiKey = apiKey }
-
-        /** Alias for calling [Builder.apiKey] with `apiKey.orElse(null)`. */
-        fun apiKey(apiKey: Optional<String>) = apiKey(apiKey.getOrNull())
-
-        fun authToken(authToken: String?) = apply { this.authToken = authToken }
-
-        /** Alias for calling [Builder.authToken] with `authToken.orElse(null)`. */
-        fun authToken(authToken: Optional<String>) = authToken(authToken.getOrNull())
 
         fun headers(headers: Headers) = apply {
             this.headers.clear()
@@ -198,11 +167,6 @@ private constructor(
 
         fun removeAllQueryParams(keys: Set<String>) = apply { queryParams.removeAll(keys) }
 
-        fun fromEnv() = apply {
-            System.getenv("ANTHROPIC_API_KEY")?.let { apiKey(it) }
-            System.getenv("ANTHROPIC_AUTH_TOKEN")?.let { authToken(it) }
-        }
-
         /**
          * Returns an immutable instance of [ClientOptions].
          *
@@ -227,17 +191,6 @@ private constructor(
             headers.put("X-Stainless-Package-Version", getPackageVersion())
             headers.put("X-Stainless-Runtime", "JRE")
             headers.put("X-Stainless-Runtime-Version", getJavaVersion())
-            headers.put("anthropic-version", "2023-06-01")
-            apiKey?.let {
-                if (!it.isEmpty()) {
-                    headers.put("X-Api-Key", it)
-                }
-            }
-            authToken?.let {
-                if (!it.isEmpty()) {
-                    headers.put("Authorization", "Bearer $it")
-                }
-            }
             headers.replaceAll(this.headers.build())
             queryParams.replaceAll(this.queryParams.build())
 
@@ -267,14 +220,11 @@ private constructor(
                         }
                     ),
                 clock,
-                baseUrl,
                 headers.build(),
                 queryParams.build(),
                 responseValidation,
                 timeout,
                 maxRetries,
-                apiKey,
-                authToken,
             )
         }
     }
