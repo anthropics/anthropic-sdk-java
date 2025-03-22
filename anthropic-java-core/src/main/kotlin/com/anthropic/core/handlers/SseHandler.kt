@@ -4,17 +4,19 @@
 
 package com.anthropic.core.handlers
 
+import com.anthropic.core.JsonMissing
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.SseMessage
 import com.anthropic.core.http.StreamResponse
 import com.anthropic.core.http.map
-import com.anthropic.errors.AnthropicException
+import com.anthropic.errors.SseException
 import com.fasterxml.jackson.databind.json.JsonMapper
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 
 @JvmSynthetic
 internal fun sseHandler(jsonMapper: JsonMapper): Handler<StreamResponse<SseMessage>> =
-    streamHandler { lines ->
+    streamHandler { response, lines ->
         val state = SseState(jsonMapper)
         for (line in lines) {
             val message = state.decode(line) ?: continue
@@ -28,7 +30,19 @@ internal fun sseHandler(jsonMapper: JsonMapper): Handler<StreamResponse<SseMessa
                 "content_block_delta",
                 "content_block_stop" -> yield(message)
                 "ping" -> continue
-                "error" -> throw AnthropicException("Error while streaming: ${message.data}")
+                "error" -> {
+                    throw SseException.builder()
+                        .statusCode(response.statusCode())
+                        .headers(response.headers())
+                        .body(
+                            try {
+                                jsonMapper.readValue(message.data, jacksonTypeRef())
+                            } catch (e: Exception) {
+                                JsonMissing.of()
+                            }
+                        )
+                        .build()
+                }
             }
         }
     }

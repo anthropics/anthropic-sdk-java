@@ -5,12 +5,12 @@ package com.anthropic.models.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class ToolChoiceAutoTest {
+internal class ToolChoiceAutoTest {
 
     @Test
-    fun createToolChoiceAuto() {
+    fun create() {
         val toolChoiceAuto = ToolChoiceAuto.builder().disableParallelToolUse(true).build()
-        assertThat(toolChoiceAuto).isNotNull
+
         assertThat(toolChoiceAuto.disableParallelToolUse()).contains(true)
     }
 }

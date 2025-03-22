@@ -5,12 +5,12 @@ package com.anthropic.models.beta.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaMessageDeltaUsageTest {
+internal class BetaMessageDeltaUsageTest {
 
     @Test
-    fun createBetaMessageDeltaUsage() {
+    fun create() {
         val betaMessageDeltaUsage = BetaMessageDeltaUsage.builder().outputTokens(503L).build()
-        assertThat(betaMessageDeltaUsage).isNotNull
+
         assertThat(betaMessageDeltaUsage.outputTokens()).isEqualTo(503L)
     }
 }

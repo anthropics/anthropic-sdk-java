@@ -6,10 +6,10 @@ import com.anthropic.models.messages.Model
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaMessageTest {
+internal class BetaMessageTest {
 
     @Test
-    fun createBetaMessage() {
+    fun create() {
         val betaMessage =
             BetaMessage.builder()
                 .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
@@ -39,7 +39,7 @@ class BetaMessageTest {
                         .build()
                 )
                 .build()
-        assertThat(betaMessage).isNotNull
+
         assertThat(betaMessage.id()).isEqualTo("msg_013Zva2CMHLNnXjNJJKqJ2EF")
         assertThat(betaMessage.content())
             .containsExactly(

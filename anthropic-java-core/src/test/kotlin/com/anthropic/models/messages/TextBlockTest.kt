@@ -2,13 +2,14 @@
 
 package com.anthropic.models.messages
 
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class TextBlockTest {
+internal class TextBlockTest {
 
     @Test
-    fun createTextBlock() {
+    fun create() {
         val textBlock =
             TextBlock.builder()
                 .addCitation(
@@ -22,8 +23,8 @@ class TextBlockTest {
                 )
                 .text("text")
                 .build()
-        assertThat(textBlock).isNotNull
-        assertThat(textBlock.citations().get())
+
+        assertThat(textBlock.citations().getOrNull())
             .containsExactly(
                 TextCitation.ofCitationCharLocation(
                     CitationCharLocation.builder()

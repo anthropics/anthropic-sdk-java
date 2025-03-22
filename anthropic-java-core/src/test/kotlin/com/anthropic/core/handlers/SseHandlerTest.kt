@@ -1,12 +1,14 @@
+// File generated from our OpenAPI spec by Stainless.
+
 package com.anthropic.core.handlers
 
+import com.anthropic.core.JsonValue
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.SseMessage
 import com.anthropic.core.jsonMapper
-import java.io.ByteArrayInputStream
+import com.anthropic.errors.SseException
 import java.io.InputStream
-import java.nio.charset.StandardCharsets
 import java.util.stream.Collectors.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
@@ -14,7 +16,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 
-class SseHandlerTest {
+internal class SseHandlerTest {
 
     enum class TestCase(
         internal val body: String,
@@ -113,6 +115,19 @@ class SseHandlerTest {
                 sseMessageBuilder().event("completion").data("{\"content\":\"известни\"}").build()
             ),
         ),
+        ERROR_EVENT(
+            buildString {
+                append("event: error\n")
+                append("data: {\"errorProperty\":\"42\"}\n")
+                append("\n")
+            },
+            expectedException =
+                SseException.builder()
+                    .statusCode(0)
+                    .headers(Headers.builder().build())
+                    .body(JsonValue.from(mapOf("errorProperty" to "42")))
+                    .build(),
+        ),
     }
 
     @ParameterizedTest
@@ -159,8 +174,7 @@ private fun httpResponse(body: String): HttpResponse =
 
         override fun headers(): Headers = Headers.builder().build()
 
-        override fun body(): InputStream =
-            ByteArrayInputStream(body.toByteArray(StandardCharsets.UTF_8))
+        override fun body(): InputStream = body.toByteArray().inputStream()
 
         override fun close() {}
     }

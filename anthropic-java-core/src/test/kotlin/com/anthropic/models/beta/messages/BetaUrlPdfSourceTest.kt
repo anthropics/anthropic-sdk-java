@@ -5,12 +5,12 @@ package com.anthropic.models.beta.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaUrlPdfSourceTest {
+internal class BetaUrlPdfSourceTest {
 
     @Test
-    fun createBetaUrlPdfSource() {
+    fun create() {
         val betaUrlPdfSource = BetaUrlPdfSource.builder().url("url").build()
-        assertThat(betaUrlPdfSource).isNotNull
+
         assertThat(betaUrlPdfSource.url()).isEqualTo("url")
     }
 }

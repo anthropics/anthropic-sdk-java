@@ -5,12 +5,12 @@ package com.anthropic.models.beta
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaGatewayTimeoutErrorTest {
+internal class BetaGatewayTimeoutErrorTest {
 
     @Test
-    fun createBetaGatewayTimeoutError() {
+    fun create() {
         val betaGatewayTimeoutError = BetaGatewayTimeoutError.builder().message("message").build()
-        assertThat(betaGatewayTimeoutError).isNotNull
+
         assertThat(betaGatewayTimeoutError.message()).isEqualTo("message")
     }
 }

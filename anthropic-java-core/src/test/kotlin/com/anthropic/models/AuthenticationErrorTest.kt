@@ -5,12 +5,12 @@ package com.anthropic.models
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class AuthenticationErrorTest {
+internal class AuthenticationErrorTest {
 
     @Test
-    fun createAuthenticationError() {
+    fun create() {
         val authenticationError = AuthenticationError.builder().message("message").build()
-        assertThat(authenticationError).isNotNull
+
         assertThat(authenticationError.message()).isEqualTo("message")
     }
 }

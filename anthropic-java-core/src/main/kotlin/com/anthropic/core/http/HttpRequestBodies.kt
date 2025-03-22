@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.node.JsonNodeType
 import com.fasterxml.jackson.databind.node.ObjectNode
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.io.OutputStream
@@ -104,12 +103,12 @@ internal fun multipartFormData(
             when (node.nodeType) {
                 JsonNodeType.MISSING,
                 JsonNodeType.NULL -> emptySequence()
-                JsonNodeType.BINARY -> sequenceOf(name to ByteArrayInputStream(node.binaryValue()))
-                JsonNodeType.STRING -> sequenceOf(name to node.textValue().toInputStream())
+                JsonNodeType.BINARY -> sequenceOf(name to node.binaryValue().inputStream())
+                JsonNodeType.STRING -> sequenceOf(name to node.textValue().inputStream())
                 JsonNodeType.BOOLEAN ->
-                    sequenceOf(name to node.booleanValue().toString().toInputStream())
+                    sequenceOf(name to node.booleanValue().toString().inputStream())
                 JsonNodeType.NUMBER ->
-                    sequenceOf(name to node.numberValue().toString().toInputStream())
+                    sequenceOf(name to node.numberValue().toString().inputStream())
                 JsonNodeType.ARRAY ->
                     sequenceOf(
                         name to
@@ -134,7 +133,7 @@ internal fun multipartFormData(
                                     }
                                 }
                                 .joinToString(",")
-                                .toInputStream()
+                                .inputStream()
                     )
                 JsonNodeType.OBJECT ->
                     node.fields().asSequence().flatMap { (key, value) ->
@@ -147,7 +146,7 @@ internal fun multipartFormData(
                     )
             }
 
-        private fun String.toInputStream(): InputStream = ByteArrayInputStream(toByteArray())
+        private fun String.inputStream(): InputStream = toByteArray().inputStream()
 
         override fun writeTo(outputStream: OutputStream) = entity.writeTo(outputStream)
 

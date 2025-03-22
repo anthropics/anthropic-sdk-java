@@ -5,10 +5,10 @@ package com.anthropic.models.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class ToolResultBlockParamTest {
+internal class ToolResultBlockParamTest {
 
     @Test
-    fun createToolResultBlockParam() {
+    fun create() {
         val toolResultBlockParam =
             ToolResultBlockParam.builder()
                 .toolUseId("tool_use_id")
@@ -16,7 +16,7 @@ class ToolResultBlockParamTest {
                 .content("string")
                 .isError(true)
                 .build()
-        assertThat(toolResultBlockParam).isNotNull
+
         assertThat(toolResultBlockParam.toolUseId()).isEqualTo("tool_use_id")
         assertThat(toolResultBlockParam.cacheControl())
             .contains(CacheControlEphemeral.builder().build())

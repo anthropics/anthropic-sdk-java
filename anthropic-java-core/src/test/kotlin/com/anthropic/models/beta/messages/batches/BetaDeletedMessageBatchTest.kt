@@ -5,13 +5,13 @@ package com.anthropic.models.beta.messages.batches
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaDeletedMessageBatchTest {
+internal class BetaDeletedMessageBatchTest {
 
     @Test
-    fun createBetaDeletedMessageBatch() {
+    fun create() {
         val betaDeletedMessageBatch =
             BetaDeletedMessageBatch.builder().id("msgbatch_013Zva2CMHLNnXjNJJKqJ2EF").build()
-        assertThat(betaDeletedMessageBatch).isNotNull
+
         assertThat(betaDeletedMessageBatch.id()).isEqualTo("msgbatch_013Zva2CMHLNnXjNJJKqJ2EF")
     }
 }

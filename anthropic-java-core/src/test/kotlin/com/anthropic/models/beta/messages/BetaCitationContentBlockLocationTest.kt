@@ -5,10 +5,10 @@ package com.anthropic.models.beta.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaCitationContentBlockLocationTest {
+internal class BetaCitationContentBlockLocationTest {
 
     @Test
-    fun createBetaCitationContentBlockLocation() {
+    fun create() {
         val betaCitationContentBlockLocation =
             BetaCitationContentBlockLocation.builder()
                 .citedText("cited_text")
@@ -17,7 +17,7 @@ class BetaCitationContentBlockLocationTest {
                 .endBlockIndex(0L)
                 .startBlockIndex(0L)
                 .build()
-        assertThat(betaCitationContentBlockLocation).isNotNull
+
         assertThat(betaCitationContentBlockLocation.citedText()).isEqualTo("cited_text")
         assertThat(betaCitationContentBlockLocation.documentIndex()).isEqualTo(0L)
         assertThat(betaCitationContentBlockLocation.documentTitle()).contains("document_title")

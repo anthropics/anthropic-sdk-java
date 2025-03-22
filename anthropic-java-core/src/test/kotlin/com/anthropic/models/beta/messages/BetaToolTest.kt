@@ -6,10 +6,10 @@ import com.anthropic.core.JsonValue
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaToolTest {
+internal class BetaToolTest {
 
     @Test
-    fun createBetaTool() {
+    fun create() {
         val betaTool =
             BetaTool.builder()
                 .inputSchema(
@@ -39,7 +39,7 @@ class BetaToolTest {
                 .description("Get the current weather in a given location")
                 .type(BetaTool.Type.CUSTOM)
                 .build()
-        assertThat(betaTool).isNotNull
+
         assertThat(betaTool.inputSchema())
             .isEqualTo(
                 BetaTool.InputSchema.builder()

@@ -5,10 +5,10 @@ package com.anthropic.models.beta.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaCitationsDeltaTest {
+internal class BetaCitationsDeltaTest {
 
     @Test
-    fun createBetaCitationsDelta() {
+    fun create() {
         val betaCitationsDelta =
             BetaCitationsDelta.builder()
                 .citation(
@@ -21,7 +21,7 @@ class BetaCitationsDeltaTest {
                         .build()
                 )
                 .build()
-        assertThat(betaCitationsDelta).isNotNull
+
         assertThat(betaCitationsDelta.citation())
             .isEqualTo(
                 BetaCitationsDelta.Citation.ofBetaCitationCharLocation(

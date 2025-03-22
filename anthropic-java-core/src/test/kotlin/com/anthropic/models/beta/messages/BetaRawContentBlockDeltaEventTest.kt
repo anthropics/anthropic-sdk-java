@@ -5,13 +5,13 @@ package com.anthropic.models.beta.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaRawContentBlockDeltaEventTest {
+internal class BetaRawContentBlockDeltaEventTest {
 
     @Test
-    fun createBetaRawContentBlockDeltaEvent() {
+    fun create() {
         val betaRawContentBlockDeltaEvent =
             BetaRawContentBlockDeltaEvent.builder().betaTextDelta("text").index(0L).build()
-        assertThat(betaRawContentBlockDeltaEvent).isNotNull
+
         assertThat(betaRawContentBlockDeltaEvent.delta())
             .isEqualTo(
                 BetaRawContentBlockDeltaEvent.Delta.ofBetaText(

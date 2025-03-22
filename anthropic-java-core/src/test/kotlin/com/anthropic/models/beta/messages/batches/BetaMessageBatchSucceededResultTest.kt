@@ -10,10 +10,10 @@ import com.anthropic.models.messages.Model
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaMessageBatchSucceededResultTest {
+internal class BetaMessageBatchSucceededResultTest {
 
     @Test
-    fun createBetaMessageBatchSucceededResult() {
+    fun create() {
         val betaMessageBatchSucceededResult =
             BetaMessageBatchSucceededResult.builder()
                 .message(
@@ -47,7 +47,7 @@ class BetaMessageBatchSucceededResultTest {
                         .build()
                 )
                 .build()
-        assertThat(betaMessageBatchSucceededResult).isNotNull
+
         assertThat(betaMessageBatchSucceededResult.message())
             .isEqualTo(
                 BetaMessage.builder()

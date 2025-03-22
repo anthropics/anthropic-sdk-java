@@ -5,12 +5,12 @@ package com.anthropic.models.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class ThinkingConfigEnabledTest {
+internal class ThinkingConfigEnabledTest {
 
     @Test
-    fun createThinkingConfigEnabled() {
+    fun create() {
         val thinkingConfigEnabled = ThinkingConfigEnabled.builder().budgetTokens(1024L).build()
-        assertThat(thinkingConfigEnabled).isNotNull
+
         assertThat(thinkingConfigEnabled.budgetTokens()).isEqualTo(1024L)
     }
 }

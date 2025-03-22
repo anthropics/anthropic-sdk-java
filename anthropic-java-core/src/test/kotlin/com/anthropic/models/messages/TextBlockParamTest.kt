@@ -2,13 +2,14 @@
 
 package com.anthropic.models.messages
 
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class TextBlockParamTest {
+internal class TextBlockParamTest {
 
     @Test
-    fun createTextBlockParam() {
+    fun create() {
         val textBlockParam =
             TextBlockParam.builder()
                 .text("x")
@@ -23,10 +24,10 @@ class TextBlockParamTest {
                         .build()
                 )
                 .build()
-        assertThat(textBlockParam).isNotNull
+
         assertThat(textBlockParam.text()).isEqualTo("x")
         assertThat(textBlockParam.cacheControl()).contains(CacheControlEphemeral.builder().build())
-        assertThat(textBlockParam.citations().get())
+        assertThat(textBlockParam.citations().getOrNull())
             .containsExactly(
                 TextCitationParam.ofCitationCharLocation(
                     CitationCharLocationParam.builder()

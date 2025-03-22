@@ -5,10 +5,10 @@ package com.anthropic.models.beta.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaBase64PdfBlockTest {
+internal class BetaBase64PdfBlockTest {
 
     @Test
-    fun createBetaBase64PdfBlock() {
+    fun create() {
         val betaBase64PdfBlock =
             BetaBase64PdfBlock.builder()
                 .betaBase64PdfSource("U3RhaW5sZXNzIHJvY2tz")
@@ -17,7 +17,7 @@ class BetaBase64PdfBlockTest {
                 .context("x")
                 .title("x")
                 .build()
-        assertThat(betaBase64PdfBlock).isNotNull
+
         assertThat(betaBase64PdfBlock.source())
             .isEqualTo(
                 BetaBase64PdfBlock.Source.ofBetaBase64Pdf(

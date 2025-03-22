@@ -5,10 +5,10 @@ package com.anthropic.models.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class CitationContentBlockLocationTest {
+internal class CitationContentBlockLocationTest {
 
     @Test
-    fun createCitationContentBlockLocation() {
+    fun create() {
         val citationContentBlockLocation =
             CitationContentBlockLocation.builder()
                 .citedText("cited_text")
@@ -17,7 +17,7 @@ class CitationContentBlockLocationTest {
                 .endBlockIndex(0L)
                 .startBlockIndex(0L)
                 .build()
-        assertThat(citationContentBlockLocation).isNotNull
+
         assertThat(citationContentBlockLocation.citedText()).isEqualTo("cited_text")
         assertThat(citationContentBlockLocation.documentIndex()).isEqualTo(0L)
         assertThat(citationContentBlockLocation.documentTitle()).contains("document_title")

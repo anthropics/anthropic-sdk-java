@@ -3,11 +3,11 @@
 package com.anthropic.models.messages
 
 import com.anthropic.core.JsonValue
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 
-class MessageCountTokensParamsTest {
+internal class MessageCountTokensParamsTest {
 
     @Test
     fun create() {
@@ -123,15 +123,9 @@ class MessageCountTokensParamsTest {
 
         val body = params._body()
 
-        assertNotNull(body)
         assertThat(body.messages())
-            .isEqualTo(
-                listOf(
-                    MessageParam.builder()
-                        .content("Hello, world")
-                        .role(MessageParam.Role.USER)
-                        .build()
-                )
+            .containsExactly(
+                MessageParam.builder().content("Hello, world").role(MessageParam.Role.USER).build()
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
         assertThat(body.system())
@@ -164,38 +158,36 @@ class MessageCountTokensParamsTest {
             .contains(
                 ToolChoice.ofAuto(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
             )
-        assertThat(body.tools())
-            .contains(
-                listOf(
-                    MessageCountTokensTool.ofTool(
-                        Tool.builder()
-                            .inputSchema(
-                                Tool.InputSchema.builder()
-                                    .properties(
-                                        JsonValue.from(
-                                            mapOf(
-                                                "location" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "The city and state, e.g. San Francisco, CA",
-                                                        "type" to "string",
-                                                    ),
-                                                "unit" to
-                                                    mapOf(
-                                                        "description" to
-                                                            "Unit for the output - one of (celsius, fahrenheit)",
-                                                        "type" to "string",
-                                                    ),
-                                            )
+        assertThat(body.tools().getOrNull())
+            .containsExactly(
+                MessageCountTokensTool.ofTool(
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .properties(
+                                    JsonValue.from(
+                                        mapOf(
+                                            "location" to
+                                                mapOf(
+                                                    "description" to
+                                                        "The city and state, e.g. San Francisco, CA",
+                                                    "type" to "string",
+                                                ),
+                                            "unit" to
+                                                mapOf(
+                                                    "description" to
+                                                        "Unit for the output - one of (celsius, fahrenheit)",
+                                                    "type" to "string",
+                                                ),
                                         )
                                     )
-                                    .build()
-                            )
-                            .name("name")
-                            .cacheControl(CacheControlEphemeral.builder().build())
-                            .description("Get the current weather in a given location")
-                            .build()
-                    )
+                                )
+                                .build()
+                        )
+                        .name("name")
+                        .cacheControl(CacheControlEphemeral.builder().build())
+                        .description("Get the current weather in a given location")
+                        .build()
                 )
             )
     }
@@ -210,15 +202,9 @@ class MessageCountTokensParamsTest {
 
         val body = params._body()
 
-        assertNotNull(body)
         assertThat(body.messages())
-            .isEqualTo(
-                listOf(
-                    MessageParam.builder()
-                        .content("Hello, world")
-                        .role(MessageParam.Role.USER)
-                        .build()
-                )
+            .containsExactly(
+                MessageParam.builder().content("Hello, world").role(MessageParam.Role.USER).build()
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
     }

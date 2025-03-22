@@ -5,12 +5,12 @@ package com.anthropic.models
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class NotFoundErrorTest {
+internal class NotFoundErrorTest {
 
     @Test
-    fun createNotFoundError() {
+    fun create() {
         val notFoundError = NotFoundError.builder().message("message").build()
-        assertThat(notFoundError).isNotNull
+
         assertThat(notFoundError.message()).isEqualTo("message")
     }
 }

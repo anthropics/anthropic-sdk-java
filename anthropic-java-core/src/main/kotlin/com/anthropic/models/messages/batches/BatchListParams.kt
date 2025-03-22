@@ -50,14 +50,15 @@ private constructor(
 
     override fun _headers(): Headers = additionalHeaders
 
-    override fun _queryParams(): QueryParams {
-        val queryParams = QueryParams.builder()
-        this.afterId?.let { queryParams.put("after_id", listOf(it.toString())) }
-        this.beforeId?.let { queryParams.put("before_id", listOf(it.toString())) }
-        this.limit?.let { queryParams.put("limit", listOf(it.toString())) }
-        queryParams.putAll(additionalQueryParams)
-        return queryParams.build()
-    }
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                afterId?.let { put("after_id", it) }
+                beforeId?.let { put("before_id", it) }
+                limit?.let { put("limit", it.toString()) }
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     fun toBuilder() = Builder().from(this)
 
@@ -94,10 +95,7 @@ private constructor(
          */
         fun afterId(afterId: String?) = apply { this.afterId = afterId }
 
-        /**
-         * ID of the object to use as a cursor for pagination. When provided, returns the page of
-         * results immediately after this object.
-         */
+        /** Alias for calling [Builder.afterId] with `afterId.orElse(null)`. */
         fun afterId(afterId: Optional<String>) = afterId(afterId.getOrNull())
 
         /**
@@ -106,10 +104,7 @@ private constructor(
          */
         fun beforeId(beforeId: String?) = apply { this.beforeId = beforeId }
 
-        /**
-         * ID of the object to use as a cursor for pagination. When provided, returns the page of
-         * results immediately before this object.
-         */
+        /** Alias for calling [Builder.beforeId] with `beforeId.orElse(null)`. */
         fun beforeId(beforeId: Optional<String>) = beforeId(beforeId.getOrNull())
 
         /**
@@ -120,17 +115,13 @@ private constructor(
         fun limit(limit: Long?) = apply { this.limit = limit }
 
         /**
-         * Number of items to return per page.
+         * Alias for [Builder.limit].
          *
-         * Defaults to `20`. Ranges from `1` to `1000`.
+         * This unboxed primitive overload exists for backwards compatibility.
          */
         fun limit(limit: Long) = limit(limit as Long?)
 
-        /**
-         * Number of items to return per page.
-         *
-         * Defaults to `20`. Ranges from `1` to `1000`.
-         */
+        /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
@@ -231,6 +222,11 @@ private constructor(
             additionalQueryParams.removeAll(keys)
         }
 
+        /**
+         * Returns an immutable instance of [BatchListParams].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         */
         fun build(): BatchListParams =
             BatchListParams(
                 afterId,

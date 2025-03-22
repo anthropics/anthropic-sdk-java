@@ -5,12 +5,12 @@ package com.anthropic.models
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class InvalidRequestErrorTest {
+internal class InvalidRequestErrorTest {
 
     @Test
-    fun createInvalidRequestError() {
+    fun create() {
         val invalidRequestError = InvalidRequestError.builder().message("message").build()
-        assertThat(invalidRequestError).isNotNull
+
         assertThat(invalidRequestError.message()).isEqualTo("message")
     }
 }

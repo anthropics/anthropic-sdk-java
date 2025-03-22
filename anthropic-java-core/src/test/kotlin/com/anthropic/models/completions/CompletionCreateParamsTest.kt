@@ -4,12 +4,11 @@ package com.anthropic.models.completions
 
 import com.anthropic.models.messages.Metadata
 import com.anthropic.models.messages.Model
-import kotlin.test.assertNotNull
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 
-class CompletionCreateParamsTest {
+internal class CompletionCreateParamsTest {
 
     @Test
     fun create() {
@@ -41,13 +40,12 @@ class CompletionCreateParamsTest {
 
         val body = params._body()
 
-        assertNotNull(body)
         assertThat(body.maxTokensToSample()).isEqualTo(256L)
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
         assertThat(body.prompt()).isEqualTo("\n\nHuman: Hello, world!\n\nAssistant:")
         assertThat(body.metadata())
             .contains(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
-        assertThat(body.stopSequences()).contains(listOf("string"))
+        assertThat(body.stopSequences().getOrNull()).containsExactly("string")
         assertThat(body.temperature()).contains(1.0)
         assertThat(body.topK()).contains(5L)
         assertThat(body.topP()).contains(0.7)
@@ -64,7 +62,6 @@ class CompletionCreateParamsTest {
 
         val body = params._body()
 
-        assertNotNull(body)
         assertThat(body.maxTokensToSample()).isEqualTo(256L)
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
         assertThat(body.prompt()).isEqualTo("\n\nHuman: Hello, world!\n\nAssistant:")

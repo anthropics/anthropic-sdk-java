@@ -10,10 +10,10 @@ import com.anthropic.models.messages.Usage
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class MessageBatchIndividualResponseTest {
+internal class MessageBatchIndividualResponseTest {
 
     @Test
-    fun createMessageBatchIndividualResponse() {
+    fun create() {
         val messageBatchIndividualResponse =
             MessageBatchIndividualResponse.builder()
                 .customId("my-custom-id-1")
@@ -48,7 +48,7 @@ class MessageBatchIndividualResponseTest {
                         .build()
                 )
                 .build()
-        assertThat(messageBatchIndividualResponse).isNotNull
+
         assertThat(messageBatchIndividualResponse.customId()).isEqualTo("my-custom-id-1")
         assertThat(messageBatchIndividualResponse.result())
             .isEqualTo(

@@ -5,10 +5,10 @@ package com.anthropic.models.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class RawMessageDeltaEventTest {
+internal class RawMessageDeltaEventTest {
 
     @Test
-    fun createRawMessageDeltaEvent() {
+    fun create() {
         val rawMessageDeltaEvent =
             RawMessageDeltaEvent.builder()
                 .delta(
@@ -19,7 +19,7 @@ class RawMessageDeltaEventTest {
                 )
                 .usage(MessageDeltaUsage.builder().outputTokens(503L).build())
                 .build()
-        assertThat(rawMessageDeltaEvent).isNotNull
+
         assertThat(rawMessageDeltaEvent.delta())
             .isEqualTo(
                 RawMessageDeltaEvent.Delta.builder()

@@ -41,21 +41,21 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    override fun _headers(): Headers {
-        val headers = Headers.builder()
-        this.betas?.let { headers.put("anthropic-beta", it.map(Any::toString)) }
-        headers.putAll(additionalHeaders)
-        return headers.build()
-    }
-
-    override fun _queryParams(): QueryParams = additionalQueryParams
-
-    fun getPathParam(index: Int): String {
-        return when (index) {
+    fun _pathParam(index: Int): String =
+        when (index) {
             0 -> messageBatchId
             else -> ""
         }
-    }
+
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                betas?.forEach { put("anthropic-beta", it.toString()) }
+                putAll(additionalHeaders)
+            }
+            .build()
+
+    override fun _queryParams(): QueryParams = additionalQueryParams
 
     fun toBuilder() = Builder().from(this)
 
@@ -95,15 +95,25 @@ private constructor(
         /** Optional header to specify the beta version(s) you want to use. */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
 
-        /** Optional header to specify the beta version(s) you want to use. */
+        /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */
         fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.getOrNull())
 
-        /** Optional header to specify the beta version(s) you want to use. */
+        /**
+         * Adds a single [AnthropicBeta] to [betas].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
         fun addBeta(beta: AnthropicBeta) = apply {
             betas = (betas ?: mutableListOf()).apply { add(beta) }
         }
 
-        /** Optional header to specify the beta version(s) you want to use. */
+        /**
+         * Sets [addBeta] to an arbitrary [String].
+         *
+         * You should usually call [addBeta] with a well-typed [AnthropicBeta] constant instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
@@ -204,6 +214,18 @@ private constructor(
             additionalQueryParams.removeAll(keys)
         }
 
+        /**
+         * Returns an immutable instance of [BatchResultsParams].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .messageBatchId()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
         fun build(): BatchResultsParams =
             BatchResultsParams(
                 checkRequired("messageBatchId", messageBatchId),

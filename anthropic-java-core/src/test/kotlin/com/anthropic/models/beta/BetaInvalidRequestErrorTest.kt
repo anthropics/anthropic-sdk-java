@@ -5,12 +5,12 @@ package com.anthropic.models.beta
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaInvalidRequestErrorTest {
+internal class BetaInvalidRequestErrorTest {
 
     @Test
-    fun createBetaInvalidRequestError() {
+    fun create() {
         val betaInvalidRequestError = BetaInvalidRequestError.builder().message("message").build()
-        assertThat(betaInvalidRequestError).isNotNull
+
         assertThat(betaInvalidRequestError.message()).isEqualTo("message")
     }
 }

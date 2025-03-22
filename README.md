@@ -9,14 +9,18 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java/0.8.0)
-[![javadoc](https://javadoc.io/badge2/com.anthropic/anthropic-java/0.8.0/javadoc.svg)](https://javadoc.io/doc/com.anthropic/anthropic-java/0.8.0)
+[![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java/0.9.0)
+[![javadoc](https://javadoc.io/badge2/com.anthropic/anthropic-java/0.9.0/javadoc.svg)](https://javadoc.io/doc/com.anthropic/anthropic-java/0.9.0)
 
 <!-- x-release-please-end -->
 
 The Anthropic Java SDK provides convenient access to the Anthropic REST API from applications written in Java.
 
-The REST API documentation can be found on [docs.anthropic.com](https://docs.anthropic.com/claude/reference/). Javadocs are also available on [javadoc.io](https://javadoc.io/doc/com.anthropic/anthropic-java/0.0.1-alpha.0).
+<!-- x-release-please-start-version -->
+
+The REST API documentation can be found on [docs.anthropic.com](https://docs.anthropic.com/claude/reference/). Javadocs are also available on [javadoc.io](https://javadoc.io/doc/com.anthropic/anthropic-java/0.9.0).
+
+<!-- x-release-please-end -->
 
 ## Installation
 
@@ -25,7 +29,7 @@ The REST API documentation can be found on [docs.anthropic.com](https://docs.ant
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java:0.8.0")
+implementation("com.anthropic:anthropic-java:0.9.0")
 ```
 
 ### Maven
@@ -34,7 +38,7 @@ implementation("com.anthropic:anthropic-java:0.8.0")
 <dependency>
     <groupId>com.anthropic</groupId>
     <artifactId>anthropic-java</artifactId>
-    <version>0.8.0</version>
+    <version>0.9.0</version>
 </dependency>
 ```
 
@@ -274,6 +278,62 @@ AnthropicClient client = AnthropicOkHttpClient.builder()
     .build();
 ```
 
+### Streaming helpers
+
+The SDK provides conveniences for streamed messages. A 
+[`MessageAccumulator`](anthropic-java-core/src/main/kotlin/com/anthropic/helpers/MessageAccumulator.kt)
+can record the stream of events in the response as they are processed and accumulate a 
+[`Message`](anthropic-java-core/src/main/kotlin/com/anthropic/models/messages/Message.kt) object
+similar to that which would have been returned by the non-streaming API.
+
+A [`BetaMessageAccumulator`](anthropic-java-core/src/main/kotlin/com/anthropic/helpers/BetaMessageAccumulator.kt)
+is also available for the accumulation of a
+[`BetaMessage`](anthropic-java-core/src/main/kotlin/com/anthropic/models/beta/messages/BetaMessage.kt)
+object. It is used in the same manner as the `MessageAccumulator`.
+
+For a synchronous response add a
+[`Stream.peek()`](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#peek-java.util.function.Consumer-)
+call to the stream pipeline to accumulate each event:
+
+```java
+import com.anthropic.core.http.StreamResponse;
+import com.anthropic.helpers.MessageAccumulator;
+import com.anthropic.models.messages.Message;
+import com.anthropic.models.messages.RawMessageStreamEvent;
+
+MessageAccumulator messageAccumulator = MessageAccumulator.create();
+
+try (StreamResponse<RawMessageStreamEvent> streamResponse =
+         client.messages().createStreaming(createParams)) {
+    streamResponse.stream()
+            .peek(MessageAccumulator::accumulate)
+            .flatMap(event -> event.contentBlockDelta().stream())
+            .flatMap(deltaEvent -> deltaEvent.delta().text().stream())
+            .forEach(textDelta -> System.out.print(textDelta.text()));
+}
+
+Message message = messageAccumulator.message();
+```
+
+For an asynchronous response, add the `MessageAccumulator` to the `subscribe()` call:
+
+```java
+import com.anthropic.helpers.MessageAccumulator;
+import com.anthropic.models.messages.Message;
+
+MessageAccumulator messageAccumulator = MessageAccumulator.create();
+
+client.messages()
+        .createStreaming(createParams)
+        .subscribe(event -> messageAccumulator.accumulate(event).contentBlockDelta().stream()
+                .flatMap(deltaEvent -> deltaEvent.delta().text().stream())
+                .forEach(textDelta -> System.out.print(textDelta.text())))
+        .onCompleteFuture()
+        .join();
+
+Message message = messageAccumulator.message();
+```
+
 ## Raw responses
 
 The SDK defines methods that deserialize responses into instances of Java classes. However, these methods don't provide access to the response headers, status code, or the raw response body.
@@ -312,16 +372,18 @@ The SDK throws custom unchecked exception types:
 
 - [`AnthropicServiceException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/AnthropicServiceException.kt): Base class for HTTP errors. See this table for which exception subclass is thrown for each HTTP status code:
 
-  | Status | Exception                       |
-  | ------ | ------------------------------- |
-  | 400    | `BadRequestException`           |
-  | 401    | `AuthenticationException`       |
-  | 403    | `PermissionDeniedException`     |
-  | 404    | `NotFoundException`             |
-  | 422    | `UnprocessableEntityException`  |
-  | 429    | `RateLimitException`            |
-  | 5xx    | `InternalServerException`       |
-  | others | `UnexpectedStatusCodeException` |
+  | Status | Exception                                                                                                                    |
+  | ------ | ---------------------------------------------------------------------------------------------------------------------------- |
+  | 400    | [`BadRequestException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/BadRequestException.kt)                     |
+  | 401    | [`UnauthorizedException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/UnauthorizedException.kt)                 |
+  | 403    | [`PermissionDeniedException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/PermissionDeniedException.kt)         |
+  | 404    | [`NotFoundException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/NotFoundException.kt)                         |
+  | 422    | [`UnprocessableEntityException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/UnprocessableEntityException.kt)   |
+  | 429    | [`RateLimitException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/RateLimitException.kt)                       |
+  | 5xx    | [`InternalServerException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/InternalServerException.kt)             |
+  | others | [`UnexpectedStatusCodeException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/UnexpectedStatusCodeException.kt) |
+
+  [`SseException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/SseException.kt) is thrown for errors encountered during [SSE streaming](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events) after a successful initial HTTP response.
 
 - [`AnthropicIoException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/AnthropicIoException.kt): I/O networking errors.
 
@@ -392,7 +454,7 @@ requires the `anthropic-java-bedrock` library dependency.
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java-bedrock:0.8.0")
+implementation("com.anthropic:anthropic-java-bedrock:0.9.0")
 ```
 
 ### Maven
@@ -401,7 +463,7 @@ implementation("com.anthropic:anthropic-java-bedrock:0.8.0")
 <dependency>
     <groupId>com.anthropic</groupId>
     <artifactId>anthropic-java-bedrock</artifactId>
-    <version>0.8.0</version>
+    <version>0.9.0</version>
 </dependency>
 ```
 
@@ -475,7 +537,7 @@ This support requires the `anthropic-java-vertex` library dependency.
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java-vertex:0.8.0")
+implementation("com.anthropic:anthropic-java-vertex:0.9.0")
 ```
 
 ### Maven
@@ -484,7 +546,7 @@ implementation("com.anthropic:anthropic-java-vertex:0.8.0")
 <dependency>
     <groupId>com.anthropic</groupId>
     <artifactId>anthropic-java-vertex</artifactId>
-    <version>0.8.0</version>
+    <version>0.9.0</version>
 </dependency>
 ```
 

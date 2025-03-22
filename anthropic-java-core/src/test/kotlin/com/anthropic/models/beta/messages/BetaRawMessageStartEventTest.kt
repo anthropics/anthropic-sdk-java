@@ -6,10 +6,10 @@ import com.anthropic.models.messages.Model
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaRawMessageStartEventTest {
+internal class BetaRawMessageStartEventTest {
 
     @Test
-    fun createBetaRawMessageStartEvent() {
+    fun create() {
         val betaRawMessageStartEvent =
             BetaRawMessageStartEvent.builder()
                 .message(
@@ -43,7 +43,7 @@ class BetaRawMessageStartEventTest {
                         .build()
                 )
                 .build()
-        assertThat(betaRawMessageStartEvent).isNotNull
+
         assertThat(betaRawMessageStartEvent.message())
             .isEqualTo(
                 BetaMessage.builder()

@@ -5,12 +5,12 @@ package com.anthropic.models.beta
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaRateLimitErrorTest {
+internal class BetaRateLimitErrorTest {
 
     @Test
-    fun createBetaRateLimitError() {
+    fun create() {
         val betaRateLimitError = BetaRateLimitError.builder().message("message").build()
-        assertThat(betaRateLimitError).isNotNull
+
         assertThat(betaRateLimitError.message()).isEqualTo("message")
     }
 }

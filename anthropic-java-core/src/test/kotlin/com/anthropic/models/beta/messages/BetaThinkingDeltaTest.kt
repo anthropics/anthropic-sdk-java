@@ -5,12 +5,12 @@ package com.anthropic.models.beta.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaThinkingDeltaTest {
+internal class BetaThinkingDeltaTest {
 
     @Test
-    fun createBetaThinkingDelta() {
+    fun create() {
         val betaThinkingDelta = BetaThinkingDelta.builder().thinking("thinking").build()
-        assertThat(betaThinkingDelta).isNotNull
+
         assertThat(betaThinkingDelta.thinking()).isEqualTo("thinking")
     }
 }

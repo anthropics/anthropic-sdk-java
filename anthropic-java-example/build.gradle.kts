@@ -1,7 +1,10 @@
 plugins {
-    id("anthropic.kotlin")
-    id("java")
+    id("anthropic.java")
     application
+}
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {

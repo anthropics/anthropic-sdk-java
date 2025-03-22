@@ -5,13 +5,13 @@ package com.anthropic.models.beta.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaRedactedThinkingBlockParamTest {
+internal class BetaRedactedThinkingBlockParamTest {
 
     @Test
-    fun createBetaRedactedThinkingBlockParam() {
+    fun create() {
         val betaRedactedThinkingBlockParam =
             BetaRedactedThinkingBlockParam.builder().data("data").build()
-        assertThat(betaRedactedThinkingBlockParam).isNotNull
+
         assertThat(betaRedactedThinkingBlockParam.data()).isEqualTo("data")
     }
 }

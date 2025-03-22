@@ -5,12 +5,12 @@ package com.anthropic.models.beta
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaNotFoundErrorTest {
+internal class BetaNotFoundErrorTest {
 
     @Test
-    fun createBetaNotFoundError() {
+    fun create() {
         val betaNotFoundError = BetaNotFoundError.builder().message("message").build()
-        assertThat(betaNotFoundError).isNotNull
+
         assertThat(betaNotFoundError.message()).isEqualTo("message")
     }
 }

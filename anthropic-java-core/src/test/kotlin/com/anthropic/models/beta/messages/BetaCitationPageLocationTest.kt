@@ -5,10 +5,10 @@ package com.anthropic.models.beta.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaCitationPageLocationTest {
+internal class BetaCitationPageLocationTest {
 
     @Test
-    fun createBetaCitationPageLocation() {
+    fun create() {
         val betaCitationPageLocation =
             BetaCitationPageLocation.builder()
                 .citedText("cited_text")
@@ -17,7 +17,7 @@ class BetaCitationPageLocationTest {
                 .endPageNumber(0L)
                 .startPageNumber(1L)
                 .build()
-        assertThat(betaCitationPageLocation).isNotNull
+
         assertThat(betaCitationPageLocation.citedText()).isEqualTo("cited_text")
         assertThat(betaCitationPageLocation.documentIndex()).isEqualTo(0L)
         assertThat(betaCitationPageLocation.documentTitle()).contains("document_title")

@@ -6,17 +6,17 @@ import com.anthropic.core.JsonValue
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaToolUseBlockTest {
+internal class BetaToolUseBlockTest {
 
     @Test
-    fun createBetaToolUseBlock() {
+    fun create() {
         val betaToolUseBlock =
             BetaToolUseBlock.builder()
                 .id("id")
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name("x")
                 .build()
-        assertThat(betaToolUseBlock).isNotNull
+
         assertThat(betaToolUseBlock.id()).isEqualTo("id")
         assertThat(betaToolUseBlock._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
         assertThat(betaToolUseBlock.name()).isEqualTo("x")

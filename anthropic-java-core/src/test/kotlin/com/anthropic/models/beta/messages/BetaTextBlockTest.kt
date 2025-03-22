@@ -2,13 +2,14 @@
 
 package com.anthropic.models.beta.messages
 
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaTextBlockTest {
+internal class BetaTextBlockTest {
 
     @Test
-    fun createBetaTextBlock() {
+    fun create() {
         val betaTextBlock =
             BetaTextBlock.builder()
                 .addCitation(
@@ -22,8 +23,8 @@ class BetaTextBlockTest {
                 )
                 .text("text")
                 .build()
-        assertThat(betaTextBlock).isNotNull
-        assertThat(betaTextBlock.citations().get())
+
+        assertThat(betaTextBlock.citations().getOrNull())
             .containsExactly(
                 BetaTextCitation.ofCitationCharLocation(
                     BetaCitationCharLocation.builder()

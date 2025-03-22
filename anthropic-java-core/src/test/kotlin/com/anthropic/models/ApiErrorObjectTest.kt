@@ -5,12 +5,12 @@ package com.anthropic.models
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class ApiErrorObjectTest {
+internal class ApiErrorObjectTest {
 
     @Test
-    fun createApiErrorObject() {
+    fun create() {
         val apiErrorObject = ApiErrorObject.builder().message("message").build()
-        assertThat(apiErrorObject).isNotNull
+
         assertThat(apiErrorObject.message()).isEqualTo("message")
     }
 }

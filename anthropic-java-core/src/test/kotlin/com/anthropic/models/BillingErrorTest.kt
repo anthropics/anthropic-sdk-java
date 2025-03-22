@@ -5,12 +5,12 @@ package com.anthropic.models
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BillingErrorTest {
+internal class BillingErrorTest {
 
     @Test
-    fun createBillingError() {
+    fun create() {
         val billingError = BillingError.builder().message("message").build()
-        assertThat(billingError).isNotNull
+
         assertThat(billingError.message()).isEqualTo("message")
     }
 }

@@ -5,12 +5,12 @@ package com.anthropic.models.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class TextDeltaTest {
+internal class TextDeltaTest {
 
     @Test
-    fun createTextDelta() {
+    fun create() {
         val textDelta = TextDelta.builder().text("text").build()
-        assertThat(textDelta).isNotNull
+
         assertThat(textDelta.text()).isEqualTo("text")
     }
 }

@@ -5,12 +5,12 @@ package com.anthropic.models.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class UrlImageSourceTest {
+internal class UrlImageSourceTest {
 
     @Test
-    fun createUrlImageSource() {
+    fun create() {
         val urlImageSource = UrlImageSource.builder().url("url").build()
-        assertThat(urlImageSource).isNotNull
+
         assertThat(urlImageSource.url()).isEqualTo("url")
     }
 }

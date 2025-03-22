@@ -5,12 +5,12 @@ package com.anthropic.models
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class PermissionErrorTest {
+internal class PermissionErrorTest {
 
     @Test
-    fun createPermissionError() {
+    fun create() {
         val permissionError = PermissionError.builder().message("message").build()
-        assertThat(permissionError).isNotNull
+
         assertThat(permissionError.message()).isEqualTo("message")
     }
 }

@@ -5,10 +5,10 @@ package com.anthropic.models.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class RawContentBlockStartEventTest {
+internal class RawContentBlockStartEventTest {
 
     @Test
-    fun createRawContentBlockStartEvent() {
+    fun create() {
         val rawContentBlockStartEvent =
             RawContentBlockStartEvent.builder()
                 .contentBlock(
@@ -27,7 +27,7 @@ class RawContentBlockStartEventTest {
                 )
                 .index(0L)
                 .build()
-        assertThat(rawContentBlockStartEvent).isNotNull
+
         assertThat(rawContentBlockStartEvent.contentBlock())
             .isEqualTo(
                 RawContentBlockStartEvent.ContentBlock.ofText(

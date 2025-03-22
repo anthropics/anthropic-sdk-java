@@ -2,14 +2,12 @@
 
 package com.anthropic.models.messages.batches
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class MessageBatchCanceledResultTest {
+internal class MessageBatchCanceledResultTest {
 
     @Test
-    fun createMessageBatchCanceledResult() {
+    fun create() {
         val messageBatchCanceledResult = MessageBatchCanceledResult.builder().build()
-        assertThat(messageBatchCanceledResult).isNotNull
     }
 }

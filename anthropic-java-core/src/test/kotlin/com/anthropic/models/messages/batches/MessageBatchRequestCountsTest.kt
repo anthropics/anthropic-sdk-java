@@ -5,10 +5,10 @@ package com.anthropic.models.messages.batches
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class MessageBatchRequestCountsTest {
+internal class MessageBatchRequestCountsTest {
 
     @Test
-    fun createMessageBatchRequestCounts() {
+    fun create() {
         val messageBatchRequestCounts =
             MessageBatchRequestCounts.builder()
                 .canceled(10L)
@@ -17,7 +17,7 @@ class MessageBatchRequestCountsTest {
                 .processing(100L)
                 .succeeded(50L)
                 .build()
-        assertThat(messageBatchRequestCounts).isNotNull
+
         assertThat(messageBatchRequestCounts.canceled()).isEqualTo(10L)
         assertThat(messageBatchRequestCounts.errored()).isEqualTo(30L)
         assertThat(messageBatchRequestCounts.expired()).isEqualTo(10L)

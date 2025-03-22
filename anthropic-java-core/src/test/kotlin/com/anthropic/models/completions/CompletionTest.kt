@@ -6,10 +6,10 @@ import com.anthropic.models.messages.Model
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class CompletionTest {
+internal class CompletionTest {
 
     @Test
-    fun createCompletion() {
+    fun create() {
         val completion =
             Completion.builder()
                 .id("compl_018CKm6gsux7P8yMcwZbeCPw")
@@ -17,7 +17,7 @@ class CompletionTest {
                 .model(Model.CLAUDE_3_7_SONNET_LATEST)
                 .stopReason("stop_sequence")
                 .build()
-        assertThat(completion).isNotNull
+
         assertThat(completion.id()).isEqualTo("compl_018CKm6gsux7P8yMcwZbeCPw")
         assertThat(completion.completion()).isEqualTo(" Hello! My name is Claude.")
         assertThat(completion.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)

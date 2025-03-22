@@ -5,12 +5,12 @@ package com.anthropic.models.beta.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaPlainTextSourceTest {
+internal class BetaPlainTextSourceTest {
 
     @Test
-    fun createBetaPlainTextSource() {
+    fun create() {
         val betaPlainTextSource = BetaPlainTextSource.builder().data("data").build()
-        assertThat(betaPlainTextSource).isNotNull
+
         assertThat(betaPlainTextSource.data()).isEqualTo("data")
     }
 }

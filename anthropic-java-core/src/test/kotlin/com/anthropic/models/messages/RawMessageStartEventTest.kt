@@ -5,10 +5,10 @@ package com.anthropic.models.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class RawMessageStartEventTest {
+internal class RawMessageStartEventTest {
 
     @Test
-    fun createRawMessageStartEvent() {
+    fun create() {
         val rawMessageStartEvent =
             RawMessageStartEvent.builder()
                 .message(
@@ -42,7 +42,7 @@ class RawMessageStartEventTest {
                         .build()
                 )
                 .build()
-        assertThat(rawMessageStartEvent).isNotNull
+
         assertThat(rawMessageStartEvent.message())
             .isEqualTo(
                 Message.builder()

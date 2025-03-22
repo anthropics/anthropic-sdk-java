@@ -5,12 +5,12 @@ package com.anthropic.models.beta.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaRawContentBlockStopEventTest {
+internal class BetaRawContentBlockStopEventTest {
 
     @Test
-    fun createBetaRawContentBlockStopEvent() {
+    fun create() {
         val betaRawContentBlockStopEvent = BetaRawContentBlockStopEvent.builder().index(0L).build()
-        assertThat(betaRawContentBlockStopEvent).isNotNull
+
         assertThat(betaRawContentBlockStopEvent.index()).isEqualTo(0L)
     }
 }

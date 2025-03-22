@@ -5,12 +5,12 @@ package com.anthropic.models.beta
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaOverloadedErrorTest {
+internal class BetaOverloadedErrorTest {
 
     @Test
-    fun createBetaOverloadedError() {
+    fun create() {
         val betaOverloadedError = BetaOverloadedError.builder().message("message").build()
-        assertThat(betaOverloadedError).isNotNull
+
         assertThat(betaOverloadedError.message()).isEqualTo("message")
     }
 }

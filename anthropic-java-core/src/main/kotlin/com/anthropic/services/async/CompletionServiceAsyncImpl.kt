@@ -21,7 +21,6 @@ import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
 import com.anthropic.core.http.toAsync
 import com.anthropic.core.prepareAsync
-import com.anthropic.errors.AnthropicError
 import com.anthropic.models.completions.Completion
 import com.anthropic.models.completions.CompletionCreateParams
 import java.time.Duration
@@ -56,7 +55,7 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         CompletionServiceAsync.WithRawResponse {
 
-        private val errorHandler: Handler<AnthropicError> = errorHandler(clientOptions.jsonMapper)
+        private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
 
         private val createHandler: Handler<Completion> =
             jsonHandler<Completion>(clientOptions.jsonMapper).withErrorHandler(errorHandler)

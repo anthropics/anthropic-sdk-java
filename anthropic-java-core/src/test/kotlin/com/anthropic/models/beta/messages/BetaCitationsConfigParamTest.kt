@@ -5,12 +5,12 @@ package com.anthropic.models.beta.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaCitationsConfigParamTest {
+internal class BetaCitationsConfigParamTest {
 
     @Test
-    fun createBetaCitationsConfigParam() {
+    fun create() {
         val betaCitationsConfigParam = BetaCitationsConfigParam.builder().enabled(true).build()
-        assertThat(betaCitationsConfigParam).isNotNull
+
         assertThat(betaCitationsConfigParam.enabled()).contains(true)
     }
 }

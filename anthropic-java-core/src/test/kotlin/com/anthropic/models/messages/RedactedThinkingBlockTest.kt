@@ -5,12 +5,12 @@ package com.anthropic.models.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class RedactedThinkingBlockTest {
+internal class RedactedThinkingBlockTest {
 
     @Test
-    fun createRedactedThinkingBlock() {
+    fun create() {
         val redactedThinkingBlock = RedactedThinkingBlock.builder().data("data").build()
-        assertThat(redactedThinkingBlock).isNotNull
+
         assertThat(redactedThinkingBlock.data()).isEqualTo("data")
     }
 }

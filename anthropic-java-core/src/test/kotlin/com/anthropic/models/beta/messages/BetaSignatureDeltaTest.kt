@@ -5,12 +5,12 @@ package com.anthropic.models.beta.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaSignatureDeltaTest {
+internal class BetaSignatureDeltaTest {
 
     @Test
-    fun createBetaSignatureDelta() {
+    fun create() {
         val betaSignatureDelta = BetaSignatureDelta.builder().signature("signature").build()
-        assertThat(betaSignatureDelta).isNotNull
+
         assertThat(betaSignatureDelta.signature()).isEqualTo("signature")
     }
 }

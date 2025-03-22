@@ -5,12 +5,12 @@ package com.anthropic.models
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class RateLimitErrorTest {
+internal class RateLimitErrorTest {
 
     @Test
-    fun createRateLimitError() {
+    fun create() {
         val rateLimitError = RateLimitError.builder().message("message").build()
-        assertThat(rateLimitError).isNotNull
+
         assertThat(rateLimitError.message()).isEqualTo("message")
     }
 }

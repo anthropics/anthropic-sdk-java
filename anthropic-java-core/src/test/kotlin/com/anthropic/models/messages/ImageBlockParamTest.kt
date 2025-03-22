@@ -5,10 +5,10 @@ package com.anthropic.models.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class ImageBlockParamTest {
+internal class ImageBlockParamTest {
 
     @Test
-    fun createImageBlockParam() {
+    fun create() {
         val imageBlockParam =
             ImageBlockParam.builder()
                 .source(
@@ -19,7 +19,7 @@ class ImageBlockParamTest {
                 )
                 .cacheControl(CacheControlEphemeral.builder().build())
                 .build()
-        assertThat(imageBlockParam).isNotNull
+
         assertThat(imageBlockParam.source())
             .isEqualTo(
                 ImageBlockParam.Source.ofBase64Image(

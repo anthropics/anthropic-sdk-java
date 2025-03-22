@@ -5,12 +5,12 @@ package com.anthropic.models.beta.messages
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BetaUrlImageSourceTest {
+internal class BetaUrlImageSourceTest {
 
     @Test
-    fun createBetaUrlImageSource() {
+    fun create() {
         val betaUrlImageSource = BetaUrlImageSource.builder().url("url").build()
-        assertThat(betaUrlImageSource).isNotNull
+
         assertThat(betaUrlImageSource.url()).isEqualTo("url")
     }
 }
