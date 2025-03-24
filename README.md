@@ -306,7 +306,7 @@ MessageAccumulator messageAccumulator = MessageAccumulator.create();
 try (StreamResponse<RawMessageStreamEvent> streamResponse =
          client.messages().createStreaming(createParams)) {
     streamResponse.stream()
-            .peek(MessageAccumulator::accumulate)
+            .peek(messageAccumulator::accumulate)
             .flatMap(event -> event.contentBlockDelta().stream())
             .flatMap(deltaEvent -> deltaEvent.delta().text().stream())
             .forEach(textDelta -> System.out.print(textDelta.text()));
