@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.9.1 (2025-03-25)
+
+Full Changelog: [v0.9.0...v0.9.1](https://github.com/anthropics/anthropic-sdk-java/compare/v0.9.0...v0.9.1)
+
+### Bug Fixes
+
+* **client:** incorrect property value in helper method ([#209](https://github.com/anthropics/anthropic-sdk-java/issues/209)) ([f670f18](https://github.com/anthropics/anthropic-sdk-java/commit/f670f186d055fc58c88f98f7f3b9d35b2a1cd639))
+
+
+### Documentation
+
+* add image example ([1a33058](https://github.com/anthropics/anthropic-sdk-java/commit/1a33058e3f840477d35052351f9f2b981b2aff65))
+
 ## 0.9.0 (2025-03-25)
 
 Full Changelog: [v0.8.0...v0.9.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.8.0...v0.9.0)
