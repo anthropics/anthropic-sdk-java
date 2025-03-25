@@ -1390,7 +1390,7 @@ private constructor(
                  * Alias for calling [addMessage] with the following:
                  * ```java
                  * BetaMessageParam.builder()
-                 *     .role(BetaMessageParam.Role.USER)
+                 *     .role(BetaMessageParam.Role.ASSISTANT)
                  *     .content(content)
                  *     .build()
                  * ```
@@ -1398,7 +1398,7 @@ private constructor(
                 fun addAssistantMessage(content: BetaMessageParam.Content) =
                     addMessage(
                         BetaMessageParam.builder()
-                            .role(BetaMessageParam.Role.USER)
+                            .role(BetaMessageParam.Role.ASSISTANT)
                             .content(content)
                             .build()
                     )

@@ -1336,14 +1336,17 @@ private constructor(
                  * Alias for calling [addMessage] with the following:
                  * ```java
                  * MessageParam.builder()
-                 *     .role(MessageParam.Role.USER)
+                 *     .role(MessageParam.Role.ASSISTANT)
                  *     .content(content)
                  *     .build()
                  * ```
                  */
                 fun addAssistantMessage(content: MessageParam.Content) =
                     addMessage(
-                        MessageParam.builder().role(MessageParam.Role.USER).content(content).build()
+                        MessageParam.builder()
+                            .role(MessageParam.Role.ASSISTANT)
+                            .content(content)
+                            .build()
                     )
 
                 /**
