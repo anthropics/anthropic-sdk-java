@@ -7,30 +7,33 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-@NoAutoDetect
 class RawMessageDeltaEvent
-@JsonCreator
 private constructor(
-    @JsonProperty("delta") @ExcludeMissing private val delta: JsonField<Delta> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
-    @JsonProperty("usage")
-    @ExcludeMissing
-    private val usage: JsonField<MessageDeltaUsage> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val delta: JsonField<Delta>,
+    private val type: JsonValue,
+    private val usage: JsonField<MessageDeltaUsage>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("delta") @ExcludeMissing delta: JsonField<Delta> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+        @JsonProperty("usage")
+        @ExcludeMissing
+        usage: JsonField<MessageDeltaUsage> = JsonMissing.of(),
+    ) : this(delta, type, usage, mutableMapOf())
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -84,26 +87,15 @@ private constructor(
      */
     @JsonProperty("usage") @ExcludeMissing fun _usage(): JsonField<MessageDeltaUsage> = usage
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): RawMessageDeltaEvent = apply {
-        if (validated) {
-            return@apply
-        }
-
-        delta().validate()
-        _type().let {
-            if (it != JsonValue.from("message_delta")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
-            }
-        }
-        usage().validate()
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -226,23 +218,43 @@ private constructor(
                 checkRequired("delta", delta),
                 type,
                 checkRequired("usage", usage),
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
     }
 
-    @NoAutoDetect
+    private var validated: Boolean = false
+
+    fun validate(): RawMessageDeltaEvent = apply {
+        if (validated) {
+            return@apply
+        }
+
+        delta().validate()
+        _type().let {
+            if (it != JsonValue.from("message_delta")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
+        usage().validate()
+        validated = true
+    }
+
     class Delta
-    @JsonCreator
     private constructor(
-        @JsonProperty("stop_reason")
-        @ExcludeMissing
-        private val stopReason: JsonField<StopReason> = JsonMissing.of(),
-        @JsonProperty("stop_sequence")
-        @ExcludeMissing
-        private val stopSequence: JsonField<String> = JsonMissing.of(),
-        @JsonAnySetter
-        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+        private val stopReason: JsonField<StopReason>,
+        private val stopSequence: JsonField<String>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("stop_reason")
+            @ExcludeMissing
+            stopReason: JsonField<StopReason> = JsonMissing.of(),
+            @JsonProperty("stop_sequence")
+            @ExcludeMissing
+            stopSequence: JsonField<String> = JsonMissing.of(),
+        ) : this(stopReason, stopSequence, mutableMapOf())
 
         /**
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -277,21 +289,15 @@ private constructor(
         @ExcludeMissing
         fun _stopSequence(): JsonField<String> = stopSequence
 
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-        private var validated: Boolean = false
-
-        fun validate(): Delta = apply {
-            if (validated) {
-                return@apply
-            }
-
-            stopReason()
-            stopSequence()
-            validated = true
-        }
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -393,8 +399,20 @@ private constructor(
                 Delta(
                     checkRequired("stopReason", stopReason),
                     checkRequired("stopSequence", stopSequence),
-                    additionalProperties.toImmutable(),
+                    additionalProperties.toMutableMap(),
                 )
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): Delta = apply {
+            if (validated) {
+                return@apply
+            }
+
+            stopReason()
+            stopSequence()
+            validated = true
         }
 
         class StopReason @JsonCreator private constructor(private val value: JsonField<String>) :

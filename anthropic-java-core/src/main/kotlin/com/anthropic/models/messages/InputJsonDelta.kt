@@ -6,27 +6,29 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 
-@NoAutoDetect
 class InputJsonDelta
-@JsonCreator
 private constructor(
-    @JsonProperty("partial_json")
-    @ExcludeMissing
-    private val partialJson: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val partialJson: JsonField<String>,
+    private val type: JsonValue,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("partial_json")
+        @ExcludeMissing
+        partialJson: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+    ) : this(partialJson, type, mutableMapOf())
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -54,25 +56,15 @@ private constructor(
     @ExcludeMissing
     fun _partialJson(): JsonField<String> = partialJson
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): InputJsonDelta = apply {
-        if (validated) {
-            return@apply
-        }
-
-        partialJson()
-        _type().let {
-            if (it != JsonValue.from("input_json_delta")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
-            }
-        }
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -163,8 +155,24 @@ private constructor(
             InputJsonDelta(
                 checkRequired("partialJson", partialJson),
                 type,
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): InputJsonDelta = apply {
+        if (validated) {
+            return@apply
+        }
+
+        partialJson()
+        _type().let {
+            if (it != JsonValue.from("input_json_delta")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

@@ -6,37 +6,47 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-@NoAutoDetect
 class BetaUsage
-@JsonCreator
 private constructor(
-    @JsonProperty("cache_creation_input_tokens")
-    @ExcludeMissing
-    private val cacheCreationInputTokens: JsonField<Long> = JsonMissing.of(),
-    @JsonProperty("cache_read_input_tokens")
-    @ExcludeMissing
-    private val cacheReadInputTokens: JsonField<Long> = JsonMissing.of(),
-    @JsonProperty("input_tokens")
-    @ExcludeMissing
-    private val inputTokens: JsonField<Long> = JsonMissing.of(),
-    @JsonProperty("output_tokens")
-    @ExcludeMissing
-    private val outputTokens: JsonField<Long> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val cacheCreationInputTokens: JsonField<Long>,
+    private val cacheReadInputTokens: JsonField<Long>,
+    private val inputTokens: JsonField<Long>,
+    private val outputTokens: JsonField<Long>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("cache_creation_input_tokens")
+        @ExcludeMissing
+        cacheCreationInputTokens: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("cache_read_input_tokens")
+        @ExcludeMissing
+        cacheReadInputTokens: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("input_tokens")
+        @ExcludeMissing
+        inputTokens: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("output_tokens")
+        @ExcludeMissing
+        outputTokens: JsonField<Long> = JsonMissing.of(),
+    ) : this(
+        cacheCreationInputTokens,
+        cacheReadInputTokens,
+        inputTokens,
+        outputTokens,
+        mutableMapOf(),
+    )
 
     /**
      * The number of input tokens used to create the cache entry.
@@ -108,23 +118,15 @@ private constructor(
     @ExcludeMissing
     fun _outputTokens(): JsonField<Long> = outputTokens
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): BetaUsage = apply {
-        if (validated) {
-            return@apply
-        }
-
-        cacheCreationInputTokens()
-        cacheReadInputTokens()
-        inputTokens()
-        outputTokens()
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -286,8 +288,22 @@ private constructor(
                 checkRequired("cacheReadInputTokens", cacheReadInputTokens),
                 checkRequired("inputTokens", inputTokens),
                 checkRequired("outputTokens", outputTokens),
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): BetaUsage = apply {
+        if (validated) {
+            return@apply
+        }
+
+        cacheCreationInputTokens()
+        cacheReadInputTokens()
+        inputTokens()
+        outputTokens()
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

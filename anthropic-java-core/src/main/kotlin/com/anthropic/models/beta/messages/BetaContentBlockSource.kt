@@ -8,11 +8,8 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -25,19 +22,22 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 
-@NoAutoDetect
 class BetaContentBlockSource
-@JsonCreator
 private constructor(
-    @JsonProperty("content")
-    @ExcludeMissing
-    private val content: JsonField<Content> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val content: JsonField<Content>,
+    private val type: JsonValue,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("content") @ExcludeMissing content: JsonField<Content> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+    ) : this(content, type, mutableMapOf())
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -63,25 +63,15 @@ private constructor(
      */
     @JsonProperty("content") @ExcludeMissing fun _content(): JsonField<Content> = content
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): BetaContentBlockSource = apply {
-        if (validated) {
-            return@apply
-        }
-
-        content().validate()
-        _type().let {
-            if (it != JsonValue.from("content")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
-            }
-        }
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -182,8 +172,24 @@ private constructor(
             BetaContentBlockSource(
                 checkRequired("content", content),
                 type,
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): BetaContentBlockSource = apply {
+        if (validated) {
+            return@apply
+        }
+
+        content().validate()
+        _type().let {
+            if (it != JsonValue.from("content")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
+        validated = true
     }
 
     @JsonDeserialize(using = Content.Deserializer::class)

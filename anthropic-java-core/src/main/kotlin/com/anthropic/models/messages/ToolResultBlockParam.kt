@@ -8,11 +8,8 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -25,29 +22,33 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-@NoAutoDetect
 class ToolResultBlockParam
-@JsonCreator
 private constructor(
-    @JsonProperty("tool_use_id")
-    @ExcludeMissing
-    private val toolUseId: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
-    @JsonProperty("cache_control")
-    @ExcludeMissing
-    private val cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of(),
-    @JsonProperty("content")
-    @ExcludeMissing
-    private val content: JsonField<Content> = JsonMissing.of(),
-    @JsonProperty("is_error")
-    @ExcludeMissing
-    private val isError: JsonField<Boolean> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val toolUseId: JsonField<String>,
+    private val type: JsonValue,
+    private val cacheControl: JsonField<CacheControlEphemeral>,
+    private val content: JsonField<Content>,
+    private val isError: JsonField<Boolean>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("tool_use_id")
+        @ExcludeMissing
+        toolUseId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+        @JsonProperty("cache_control")
+        @ExcludeMissing
+        cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of(),
+        @JsonProperty("content") @ExcludeMissing content: JsonField<Content> = JsonMissing.of(),
+        @JsonProperty("is_error") @ExcludeMissing isError: JsonField<Boolean> = JsonMissing.of(),
+    ) : this(toolUseId, type, cacheControl, content, isError, mutableMapOf())
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -115,28 +116,15 @@ private constructor(
      */
     @JsonProperty("is_error") @ExcludeMissing fun _isError(): JsonField<Boolean> = isError
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): ToolResultBlockParam = apply {
-        if (validated) {
-            return@apply
-        }
-
-        toolUseId()
-        _type().let {
-            if (it != JsonValue.from("tool_result")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
-            }
-        }
-        cacheControl().ifPresent { it.validate() }
-        content().ifPresent { it.validate() }
-        isError()
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -280,8 +268,27 @@ private constructor(
                 cacheControl,
                 content,
                 isError,
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): ToolResultBlockParam = apply {
+        if (validated) {
+            return@apply
+        }
+
+        toolUseId()
+        _type().let {
+            if (it != JsonValue.from("tool_result")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
+        cacheControl().ifPresent { it.validate() }
+        content().ifPresent { it.validate() }
+        isError()
+        validated = true
     }
 
     @JsonDeserialize(using = Content.Deserializer::class)

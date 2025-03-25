@@ -7,10 +7,8 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
-import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.messages.Model
@@ -18,32 +16,51 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-@NoAutoDetect
 class BetaMessage
-@JsonCreator
 private constructor(
-    @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("content")
-    @ExcludeMissing
-    private val content: JsonField<List<BetaContentBlock>> = JsonMissing.of(),
-    @JsonProperty("model") @ExcludeMissing private val model: JsonField<Model> = JsonMissing.of(),
-    @JsonProperty("role") @ExcludeMissing private val role: JsonValue = JsonMissing.of(),
-    @JsonProperty("stop_reason")
-    @ExcludeMissing
-    private val stopReason: JsonField<StopReason> = JsonMissing.of(),
-    @JsonProperty("stop_sequence")
-    @ExcludeMissing
-    private val stopSequence: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
-    @JsonProperty("usage")
-    @ExcludeMissing
-    private val usage: JsonField<BetaUsage> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val id: JsonField<String>,
+    private val content: JsonField<List<BetaContentBlock>>,
+    private val model: JsonField<Model>,
+    private val role: JsonValue,
+    private val stopReason: JsonField<StopReason>,
+    private val stopSequence: JsonField<String>,
+    private val type: JsonValue,
+    private val usage: JsonField<BetaUsage>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("content")
+        @ExcludeMissing
+        content: JsonField<List<BetaContentBlock>> = JsonMissing.of(),
+        @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
+        @JsonProperty("role") @ExcludeMissing role: JsonValue = JsonMissing.of(),
+        @JsonProperty("stop_reason")
+        @ExcludeMissing
+        stopReason: JsonField<StopReason> = JsonMissing.of(),
+        @JsonProperty("stop_sequence")
+        @ExcludeMissing
+        stopSequence: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+        @JsonProperty("usage") @ExcludeMissing usage: JsonField<BetaUsage> = JsonMissing.of(),
+    ) : this(id, content, model, role, stopReason, stopSequence, type, usage, mutableMapOf())
+
+    fun toParam(): BetaMessageParam =
+        BetaMessageParam.builder()
+            .content(
+                _content().map {
+                    BetaMessageParam.Content.ofBetaContentBlockParams(it.map { it.toParam() })
+                }
+            )
+            .role(_role())
+            .build()
 
     /**
      * Unique object identifier.
@@ -227,45 +244,15 @@ private constructor(
      */
     @JsonProperty("usage") @ExcludeMissing fun _usage(): JsonField<BetaUsage> = usage
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    fun toParam(): BetaMessageParam =
-        BetaMessageParam.builder()
-            .content(
-                _content().map {
-                    BetaMessageParam.Content.ofBetaContentBlockParams(it.map { it.toParam() })
-                }
-            )
-            .role(_role())
-            .build()
-
-    private var validated: Boolean = false
-
-    fun validate(): BetaMessage = apply {
-        if (validated) {
-            return@apply
-        }
-
-        id()
-        content().forEach { it.validate() }
-        model()
-        _role().let {
-            if (it != JsonValue.from("assistant")) {
-                throw AnthropicInvalidDataException("'role' is invalid, received $it")
-            }
-        }
-        stopReason()
-        stopSequence()
-        _type().let {
-            if (it != JsonValue.from("message")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
-            }
-        }
-        usage().validate()
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -582,8 +569,34 @@ private constructor(
                 checkRequired("stopSequence", stopSequence),
                 type,
                 checkRequired("usage", usage),
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): BetaMessage = apply {
+        if (validated) {
+            return@apply
+        }
+
+        id()
+        content().forEach { it.validate() }
+        model()
+        _role().let {
+            if (it != JsonValue.from("assistant")) {
+                throw AnthropicInvalidDataException("'role' is invalid, received $it")
+            }
+        }
+        stopReason()
+        stopSequence()
+        _type().let {
+            if (it != JsonValue.from("message")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
+        usage().validate()
+        validated = true
     }
 
     /**

@@ -6,39 +6,53 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-@NoAutoDetect
 class BetaToolComputerUse20241022
-@JsonCreator
 private constructor(
-    @JsonProperty("display_height_px")
-    @ExcludeMissing
-    private val displayHeightPx: JsonField<Long> = JsonMissing.of(),
-    @JsonProperty("display_width_px")
-    @ExcludeMissing
-    private val displayWidthPx: JsonField<Long> = JsonMissing.of(),
-    @JsonProperty("name") @ExcludeMissing private val name: JsonValue = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
-    @JsonProperty("cache_control")
-    @ExcludeMissing
-    private val cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
-    @JsonProperty("display_number")
-    @ExcludeMissing
-    private val displayNumber: JsonField<Long> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val displayHeightPx: JsonField<Long>,
+    private val displayWidthPx: JsonField<Long>,
+    private val name: JsonValue,
+    private val type: JsonValue,
+    private val cacheControl: JsonField<BetaCacheControlEphemeral>,
+    private val displayNumber: JsonField<Long>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("display_height_px")
+        @ExcludeMissing
+        displayHeightPx: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("display_width_px")
+        @ExcludeMissing
+        displayWidthPx: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("name") @ExcludeMissing name: JsonValue = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+        @JsonProperty("cache_control")
+        @ExcludeMissing
+        cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
+        @JsonProperty("display_number")
+        @ExcludeMissing
+        displayNumber: JsonField<Long> = JsonMissing.of(),
+    ) : this(
+        displayHeightPx,
+        displayWidthPx,
+        name,
+        type,
+        cacheControl,
+        displayNumber,
+        mutableMapOf(),
+    )
 
     /**
      * The height of the display in pixels.
@@ -134,33 +148,15 @@ private constructor(
     @ExcludeMissing
     fun _displayNumber(): JsonField<Long> = displayNumber
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): BetaToolComputerUse20241022 = apply {
-        if (validated) {
-            return@apply
-        }
-
-        displayHeightPx()
-        displayWidthPx()
-        _name().let {
-            if (it != JsonValue.from("computer")) {
-                throw AnthropicInvalidDataException("'name' is invalid, received $it")
-            }
-        }
-        _type().let {
-            if (it != JsonValue.from("computer_20241022")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
-            }
-        }
-        cacheControl().ifPresent { it.validate() }
-        displayNumber()
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -338,8 +334,32 @@ private constructor(
                 type,
                 cacheControl,
                 displayNumber,
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): BetaToolComputerUse20241022 = apply {
+        if (validated) {
+            return@apply
+        }
+
+        displayHeightPx()
+        displayWidthPx()
+        _name().let {
+            if (it != JsonValue.from("computer")) {
+                throw AnthropicInvalidDataException("'name' is invalid, received $it")
+            }
+        }
+        _type().let {
+            if (it != JsonValue.from("computer_20241022")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
+        cacheControl().ifPresent { it.validate() }
+        displayNumber()
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

@@ -6,41 +6,53 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-@NoAutoDetect
 class BetaCitationCharLocation
-@JsonCreator
 private constructor(
-    @JsonProperty("cited_text")
-    @ExcludeMissing
-    private val citedText: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("document_index")
-    @ExcludeMissing
-    private val documentIndex: JsonField<Long> = JsonMissing.of(),
-    @JsonProperty("document_title")
-    @ExcludeMissing
-    private val documentTitle: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("end_char_index")
-    @ExcludeMissing
-    private val endCharIndex: JsonField<Long> = JsonMissing.of(),
-    @JsonProperty("start_char_index")
-    @ExcludeMissing
-    private val startCharIndex: JsonField<Long> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val citedText: JsonField<String>,
+    private val documentIndex: JsonField<Long>,
+    private val documentTitle: JsonField<String>,
+    private val endCharIndex: JsonField<Long>,
+    private val startCharIndex: JsonField<Long>,
+    private val type: JsonValue,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("cited_text") @ExcludeMissing citedText: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("document_index")
+        @ExcludeMissing
+        documentIndex: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("document_title")
+        @ExcludeMissing
+        documentTitle: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("end_char_index")
+        @ExcludeMissing
+        endCharIndex: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("start_char_index")
+        @ExcludeMissing
+        startCharIndex: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+    ) : this(
+        citedText,
+        documentIndex,
+        documentTitle,
+        endCharIndex,
+        startCharIndex,
+        type,
+        mutableMapOf(),
+    )
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -127,29 +139,15 @@ private constructor(
     @ExcludeMissing
     fun _startCharIndex(): JsonField<Long> = startCharIndex
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): BetaCitationCharLocation = apply {
-        if (validated) {
-            return@apply
-        }
-
-        citedText()
-        documentIndex()
-        documentTitle()
-        endCharIndex()
-        startCharIndex()
-        _type().let {
-            if (it != JsonValue.from("char_location")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
-            }
-        }
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -315,8 +313,28 @@ private constructor(
                 checkRequired("endCharIndex", endCharIndex),
                 checkRequired("startCharIndex", startCharIndex),
                 type,
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): BetaCitationCharLocation = apply {
+        if (validated) {
+            return@apply
+        }
+
+        citedText()
+        documentIndex()
+        documentTitle()
+        endCharIndex()
+        startCharIndex()
+        _type().let {
+            if (it != JsonValue.from("char_location")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {
