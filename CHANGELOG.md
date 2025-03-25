@@ -1,5 +1,47 @@
 # Changelog
 
+## 0.9.0 (2025-03-25)
+
+Full Changelog: [v0.8.0...v0.9.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.8.0...v0.9.0)
+
+### Features
+
+* **client:** add convenience methods for some response headers ([#196](https://github.com/anthropics/anthropic-sdk-java/issues/196)) ([a6bad98](https://github.com/anthropics/anthropic-sdk-java/commit/a6bad98ad22e4078e2a790b042275481b0664c20))
+* **client:** add message accumulator helper ([6031ac3](https://github.com/anthropics/anthropic-sdk-java/commit/6031ac3de776a7b83818a13a983c4155dfa81bff))
+* **client:** add sse exception type ([#197](https://github.com/anthropics/anthropic-sdk-java/issues/197)) ([ecb7c02](https://github.com/anthropics/anthropic-sdk-java/commit/ecb7c029af66c01dcd3e5929ed651ccf4b123348))
+* **client:** support a lower jackson version ([#201](https://github.com/anthropics/anthropic-sdk-java/issues/201)) ([cd51a6d](https://github.com/anthropics/anthropic-sdk-java/commit/cd51a6d6b3ba354e512b473ec77b4a49176b542b))
+* **client:** throw on incompatible jackson version ([cd51a6d](https://github.com/anthropics/anthropic-sdk-java/commit/cd51a6d6b3ba354e512b473ec77b4a49176b542b))
+
+
+### Chores
+
+* **client:** delete unused enums ([#190](https://github.com/anthropics/anthropic-sdk-java/issues/190)) ([8385e32](https://github.com/anthropics/anthropic-sdk-java/commit/8385e32d00d6f49ecb1e7396c216aa91e84a392c))
+* **internal:** add generated comment ([#181](https://github.com/anthropics/anthropic-sdk-java/issues/181)) ([ba94b91](https://github.com/anthropics/anthropic-sdk-java/commit/ba94b91162eddc432b37683872ebdfa8f357e553))
+* **internal:** add some tests for union classes ([#188](https://github.com/anthropics/anthropic-sdk-java/issues/188)) ([ba17044](https://github.com/anthropics/anthropic-sdk-java/commit/ba1704417557f069cb18e55bc4d4b372d7d55427))
+* **internal:** add tests for `_headers()` ([#186](https://github.com/anthropics/anthropic-sdk-java/issues/186)) ([4d7c8b0](https://github.com/anthropics/anthropic-sdk-java/commit/4d7c8b04bee7e43b8e0352d1ba66190dbcbed41e))
+* **internal:** delete duplicate tests ([03c696c](https://github.com/anthropics/anthropic-sdk-java/commit/03c696c530ad131290300b582d148e9146588a13))
+* **internal:** fix example formatting ([#194](https://github.com/anthropics/anthropic-sdk-java/issues/194)) ([fb9fedc](https://github.com/anthropics/anthropic-sdk-java/commit/fb9fedce66ceb96e0112f4e082c241544f42c82b))
+* **internal:** generate more tests ([fec918b](https://github.com/anthropics/anthropic-sdk-java/commit/fec918b389692cf51bbe76f2a6f2e1931bb9fa59))
+* **internal:** make multipart assertions more robust ([9799aee](https://github.com/anthropics/anthropic-sdk-java/commit/9799aee94846a5daca1967d2c8e9fd3f047cf3f4))
+* **internal:** make test classes internal ([#180](https://github.com/anthropics/anthropic-sdk-java/issues/180)) ([c7df54f](https://github.com/anthropics/anthropic-sdk-java/commit/c7df54fe0c94faad36d9be82125bf21e53c35484))
+* **internal:** refactor query param serialization impl and tests ([#184](https://github.com/anthropics/anthropic-sdk-java/issues/184)) ([71df800](https://github.com/anthropics/anthropic-sdk-java/commit/71df800c076b9b267af28258ce7e9cdb8d5542ad))
+* **internal:** refactor some test assertions ([03c696c](https://github.com/anthropics/anthropic-sdk-java/commit/03c696c530ad131290300b582d148e9146588a13))
+* **internal:** reformat some tests ([#187](https://github.com/anthropics/anthropic-sdk-java/issues/187)) ([fec918b](https://github.com/anthropics/anthropic-sdk-java/commit/fec918b389692cf51bbe76f2a6f2e1931bb9fa59))
+* **internal:** remove unnecessary `assertNotNull` calls ([9799aee](https://github.com/anthropics/anthropic-sdk-java/commit/9799aee94846a5daca1967d2c8e9fd3f047cf3f4))
+* **internal:** remove unnecessary import ([a6bad98](https://github.com/anthropics/anthropic-sdk-java/commit/a6bad98ad22e4078e2a790b042275481b0664c20))
+* **internal:** rename `getPathParam` ([#185](https://github.com/anthropics/anthropic-sdk-java/issues/185)) ([03c696c](https://github.com/anthropics/anthropic-sdk-java/commit/03c696c530ad131290300b582d148e9146588a13))
+* **internal:** reorder some params methodsc ([03c696c](https://github.com/anthropics/anthropic-sdk-java/commit/03c696c530ad131290300b582d148e9146588a13))
+
+
+### Documentation
+
+* add `build` method comments ([#182](https://github.com/anthropics/anthropic-sdk-java/issues/182)) ([90be423](https://github.com/anthropics/anthropic-sdk-java/commit/90be4238d274d449a9c6bb0f59d23804d4f4ce6f))
+* deduplicate and refine comments ([#176](https://github.com/anthropics/anthropic-sdk-java/issues/176)) ([709270e](https://github.com/anthropics/anthropic-sdk-java/commit/709270ea812864cb9b611986848507a4447b530e))
+* fix streaming helpers code snippet ([#200](https://github.com/anthropics/anthropic-sdk-java/issues/200)) ([7e90def](https://github.com/anthropics/anthropic-sdk-java/commit/7e90deff6596f1e52b2229815e1026f234516f2c))
+* minor readme tweak ([#198](https://github.com/anthropics/anthropic-sdk-java/issues/198)) ([4bfd861](https://github.com/anthropics/anthropic-sdk-java/commit/4bfd861ebb8d43dd54bd436581b0476a1c8c1ab4))
+* refine comments on multipart params ([#192](https://github.com/anthropics/anthropic-sdk-java/issues/192)) ([9799aee](https://github.com/anthropics/anthropic-sdk-java/commit/9799aee94846a5daca1967d2c8e9fd3f047cf3f4))
+* update readme exception docs ([ecb7c02](https://github.com/anthropics/anthropic-sdk-java/commit/ecb7c029af66c01dcd3e5929ed651ccf4b123348))
+
 ## 0.8.0 (2025-03-13)
 
 Full Changelog: [v0.7.0...v0.8.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.7.0...v0.8.0)
