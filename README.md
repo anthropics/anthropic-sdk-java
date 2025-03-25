@@ -14,7 +14,7 @@
 
 <!-- x-release-please-end -->
 
-The Anthropic Java SDK provides convenient access to the Anthropic REST API from applications written in Java.
+The Anthropic Java SDK provides convenient access to the [Anthropic REST API](https://docs.anthropic.com/claude/reference/) from applications written in Java.
 
 <!-- x-release-please-start-version -->
 
@@ -36,9 +36,9 @@ implementation("com.anthropic:anthropic-java:0.8.0")
 
 ```xml
 <dependency>
-    <groupId>com.anthropic</groupId>
-    <artifactId>anthropic-java</artifactId>
-    <version>0.8.0</version>
+  <groupId>com.anthropic</groupId>
+  <artifactId>anthropic-java</artifactId>
+  <version>0.8.0</version>
 </dependency>
 ```
 
