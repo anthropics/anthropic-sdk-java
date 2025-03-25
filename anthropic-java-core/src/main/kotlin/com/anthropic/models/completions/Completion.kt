@@ -6,35 +6,40 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-@NoAutoDetect
 class Completion
-@JsonCreator
 private constructor(
-    @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("completion")
-    @ExcludeMissing
-    private val completion: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("model") @ExcludeMissing private val model: JsonField<Model> = JsonMissing.of(),
-    @JsonProperty("stop_reason")
-    @ExcludeMissing
-    private val stopReason: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val id: JsonField<String>,
+    private val completion: JsonField<String>,
+    private val model: JsonField<Model>,
+    private val stopReason: JsonField<String>,
+    private val type: JsonValue,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("completion")
+        @ExcludeMissing
+        completion: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
+        @JsonProperty("stop_reason")
+        @ExcludeMissing
+        stopReason: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+    ) : this(id, completion, model, stopReason, type, mutableMapOf())
 
     /**
      * Unique object identifier.
@@ -120,28 +125,15 @@ private constructor(
      */
     @JsonProperty("stop_reason") @ExcludeMissing fun _stopReason(): JsonField<String> = stopReason
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): Completion = apply {
-        if (validated) {
-            return@apply
-        }
-
-        id()
-        completion()
-        model()
-        stopReason()
-        _type().let {
-            if (it != JsonValue.from("completion")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
-            }
-        }
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -308,8 +300,27 @@ private constructor(
                 checkRequired("model", model),
                 checkRequired("stopReason", stopReason),
                 type,
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): Completion = apply {
+        if (validated) {
+            return@apply
+        }
+
+        id()
+        completion()
+        model()
+        stopReason()
+        _type().let {
+            if (it != JsonValue.from("completion")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

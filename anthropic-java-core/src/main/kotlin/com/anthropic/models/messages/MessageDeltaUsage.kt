@@ -6,26 +6,27 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 
-@NoAutoDetect
 class MessageDeltaUsage
-@JsonCreator
 private constructor(
-    @JsonProperty("output_tokens")
-    @ExcludeMissing
-    private val outputTokens: JsonField<Long> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val outputTokens: JsonField<Long>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("output_tokens")
+        @ExcludeMissing
+        outputTokens: JsonField<Long> = JsonMissing.of()
+    ) : this(outputTokens, mutableMapOf())
 
     /**
      * The cumulative number of output tokens which were used.
@@ -44,20 +45,15 @@ private constructor(
     @ExcludeMissing
     fun _outputTokens(): JsonField<Long> = outputTokens
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): MessageDeltaUsage = apply {
-        if (validated) {
-            return@apply
-        }
-
-        outputTokens()
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -132,8 +128,19 @@ private constructor(
         fun build(): MessageDeltaUsage =
             MessageDeltaUsage(
                 checkRequired("outputTokens", outputTokens),
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): MessageDeltaUsage = apply {
+        if (validated) {
+            return@apply
+        }
+
+        outputTokens()
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

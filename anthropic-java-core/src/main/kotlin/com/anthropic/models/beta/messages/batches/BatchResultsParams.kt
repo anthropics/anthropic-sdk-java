@@ -2,7 +2,6 @@
 
 package com.anthropic.models.beta.messages.batches
 
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
@@ -41,22 +40,6 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    fun _pathParam(index: Int): String =
-        when (index) {
-            0 -> messageBatchId
-            else -> ""
-        }
-
-    override fun _headers(): Headers =
-        Headers.builder()
-            .apply {
-                betas?.forEach { put("anthropic-beta", it.toString()) }
-                putAll(additionalHeaders)
-            }
-            .build()
-
-    override fun _queryParams(): QueryParams = additionalQueryParams
-
     fun toBuilder() = Builder().from(this)
 
     companion object {
@@ -73,7 +56,6 @@ private constructor(
     }
 
     /** A builder for [BatchResultsParams]. */
-    @NoAutoDetect
     class Builder internal constructor() {
 
         private var messageBatchId: String? = null
@@ -234,6 +216,22 @@ private constructor(
                 additionalQueryParams.build(),
             )
     }
+
+    fun _pathParam(index: Int): String =
+        when (index) {
+            0 -> messageBatchId
+            else -> ""
+        }
+
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                betas?.forEach { put("anthropic-beta", it.toString()) }
+                putAll(additionalHeaders)
+            }
+            .build()
+
+    override fun _queryParams(): QueryParams = additionalQueryParams
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

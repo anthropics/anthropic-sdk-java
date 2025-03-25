@@ -6,26 +6,27 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 
-@NoAutoDetect
 class BetaMessageTokensCount
-@JsonCreator
 private constructor(
-    @JsonProperty("input_tokens")
-    @ExcludeMissing
-    private val inputTokens: JsonField<Long> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val inputTokens: JsonField<Long>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("input_tokens")
+        @ExcludeMissing
+        inputTokens: JsonField<Long> = JsonMissing.of()
+    ) : this(inputTokens, mutableMapOf())
 
     /**
      * The total number of tokens across the provided list of messages, system prompt, and tools.
@@ -42,20 +43,15 @@ private constructor(
      */
     @JsonProperty("input_tokens") @ExcludeMissing fun _inputTokens(): JsonField<Long> = inputTokens
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): BetaMessageTokensCount = apply {
-        if (validated) {
-            return@apply
-        }
-
-        inputTokens()
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -133,8 +129,19 @@ private constructor(
         fun build(): BetaMessageTokensCount =
             BetaMessageTokensCount(
                 checkRequired("inputTokens", inputTokens),
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): BetaMessageTokensCount = apply {
+        if (validated) {
+            return@apply
+        }
+
+        inputTokens()
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

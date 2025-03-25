@@ -12,11 +12,11 @@ class UnprocessableEntityException
 private constructor(private val headers: Headers, private val body: JsonValue, cause: Throwable?) :
     AnthropicServiceException("422: $body", cause) {
 
+    override fun statusCode(): Int = 422
+
     override fun headers(): Headers = headers
 
     override fun body(): JsonValue = body
-
-    override fun statusCode(): Int = 422
 
     fun toBuilder() = Builder().from(this)
 

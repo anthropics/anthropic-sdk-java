@@ -7,36 +7,41 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-@NoAutoDetect
 class BetaTool
-@JsonCreator
 private constructor(
-    @JsonProperty("input_schema")
-    @ExcludeMissing
-    private val inputSchema: JsonField<InputSchema> = JsonMissing.of(),
-    @JsonProperty("name") @ExcludeMissing private val name: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("cache_control")
-    @ExcludeMissing
-    private val cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
-    @JsonProperty("description")
-    @ExcludeMissing
-    private val description: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonField<Type> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val inputSchema: JsonField<InputSchema>,
+    private val name: JsonField<String>,
+    private val cacheControl: JsonField<BetaCacheControlEphemeral>,
+    private val description: JsonField<String>,
+    private val type: JsonField<Type>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("input_schema")
+        @ExcludeMissing
+        inputSchema: JsonField<InputSchema> = JsonMissing.of(),
+        @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("cache_control")
+        @ExcludeMissing
+        cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
+        @JsonProperty("description")
+        @ExcludeMissing
+        description: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+    ) : this(inputSchema, name, cacheControl, description, type, mutableMapOf())
 
     /**
      * [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
@@ -123,24 +128,15 @@ private constructor(
      */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): BetaTool = apply {
-        if (validated) {
-            return@apply
-        }
-
-        inputSchema().validate()
-        name()
-        cacheControl().ifPresent { it.validate() }
-        description()
-        type()
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -301,8 +297,23 @@ private constructor(
                 cacheControl,
                 description,
                 type,
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): BetaTool = apply {
+        if (validated) {
+            return@apply
+        }
+
+        inputSchema().validate()
+        name()
+        cacheControl().ifPresent { it.validate() }
+        description()
+        type()
+        validated = true
     }
 
     /**
@@ -310,17 +321,18 @@ private constructor(
      *
      * This defines the shape of the `input` that your tool accepts and that the model will produce.
      */
-    @NoAutoDetect
     class InputSchema
-    @JsonCreator
     private constructor(
-        @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
-        @JsonProperty("properties")
-        @ExcludeMissing
-        private val properties: JsonValue = JsonMissing.of(),
-        @JsonAnySetter
-        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+        private val type: JsonValue,
+        private val properties: JsonValue,
+        private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+            @JsonProperty("properties") @ExcludeMissing properties: JsonValue = JsonMissing.of(),
+        ) : this(type, properties, mutableMapOf())
 
         /**
          * Expected to always return the following:
@@ -335,24 +347,15 @@ private constructor(
 
         @JsonProperty("properties") @ExcludeMissing fun _properties(): JsonValue = properties
 
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-        private var validated: Boolean = false
-
-        fun validate(): InputSchema = apply {
-            if (validated) {
-                return@apply
-            }
-
-            _type().let {
-                if (it != JsonValue.from("object")) {
-                    throw AnthropicInvalidDataException("'type' is invalid, received $it")
-                }
-            }
-            validated = true
-        }
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -417,7 +420,22 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              */
             fun build(): InputSchema =
-                InputSchema(type, properties, additionalProperties.toImmutable())
+                InputSchema(type, properties, additionalProperties.toMutableMap())
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): InputSchema = apply {
+            if (validated) {
+                return@apply
+            }
+
+            _type().let {
+                if (it != JsonValue.from("object")) {
+                    throw AnthropicInvalidDataException("'type' is invalid, received $it")
+                }
+            }
+            validated = true
         }
 
         override fun equals(other: Any?): Boolean {

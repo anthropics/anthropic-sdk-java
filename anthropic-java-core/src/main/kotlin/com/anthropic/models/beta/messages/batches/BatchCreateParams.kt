@@ -8,14 +8,12 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.Params
 import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
-import com.anthropic.core.immutableEmptyMap
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
@@ -52,6 +50,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -98,174 +97,6 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    @JvmSynthetic internal fun _body(): Body = body
-
-    override fun _headers(): Headers =
-        Headers.builder()
-            .apply {
-                betas?.forEach { put("anthropic-beta", it.toString()) }
-                putAll(additionalHeaders)
-            }
-            .build()
-
-    override fun _queryParams(): QueryParams = additionalQueryParams
-
-    @NoAutoDetect
-    class Body
-    @JsonCreator
-    private constructor(
-        @JsonProperty("requests")
-        @ExcludeMissing
-        private val requests: JsonField<List<Request>> = JsonMissing.of(),
-        @JsonAnySetter
-        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
-    ) {
-
-        /**
-         * List of requests for prompt completion. Each is an individual request to create a
-         * Message.
-         *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun requests(): List<Request> = requests.getRequired("requests")
-
-        /**
-         * Returns the raw JSON value of [requests].
-         *
-         * Unlike [requests], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("requests")
-        @ExcludeMissing
-        fun _requests(): JsonField<List<Request>> = requests
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-        private var validated: Boolean = false
-
-        fun validate(): Body = apply {
-            if (validated) {
-                return@apply
-            }
-
-            requests().forEach { it.validate() }
-            validated = true
-        }
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /**
-             * Returns a mutable builder for constructing an instance of [Body].
-             *
-             * The following fields are required:
-             * ```java
-             * .requests()
-             * ```
-             */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [Body]. */
-        class Builder internal constructor() {
-
-            private var requests: JsonField<MutableList<Request>>? = null
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(body: Body) = apply {
-                requests = body.requests.map { it.toMutableList() }
-                additionalProperties = body.additionalProperties.toMutableMap()
-            }
-
-            /**
-             * List of requests for prompt completion. Each is an individual request to create a
-             * Message.
-             */
-            fun requests(requests: List<Request>) = requests(JsonField.of(requests))
-
-            /**
-             * Sets [Builder.requests] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.requests] with a well-typed `List<Request>` value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun requests(requests: JsonField<List<Request>>) = apply {
-                this.requests = requests.map { it.toMutableList() }
-            }
-
-            /**
-             * Adds a single [Request] to [requests].
-             *
-             * @throws IllegalStateException if the field was previously set to a non-list.
-             */
-            fun addRequest(request: Request) = apply {
-                requests =
-                    (requests ?: JsonField.of(mutableListOf())).also {
-                        checkKnown("requests", it).add(request)
-                    }
-            }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [Body].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```java
-             * .requests()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
-             */
-            fun build(): Body =
-                Body(
-                    checkRequired("requests", requests).map { it.toImmutable() },
-                    additionalProperties.toImmutable(),
-                )
-        }
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return /* spotless:off */ other is Body && requests == other.requests && additionalProperties == other.additionalProperties /* spotless:on */
-        }
-
-        /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(requests, additionalProperties) }
-        /* spotless:on */
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() =
-            "Body{requests=$requests, additionalProperties=$additionalProperties}"
-    }
-
     fun toBuilder() = Builder().from(this)
 
     companion object {
@@ -282,7 +113,6 @@ private constructor(
     }
 
     /** A builder for [BatchCreateParams]. */
-    @NoAutoDetect
     class Builder internal constructor() {
 
         private var betas: MutableList<AnthropicBeta>? = null
@@ -482,19 +312,196 @@ private constructor(
             )
     }
 
-    @NoAutoDetect
-    class Request
-    @JsonCreator
+    @JvmSynthetic internal fun _body(): Body = body
+
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                betas?.forEach { put("anthropic-beta", it.toString()) }
+                putAll(additionalHeaders)
+            }
+            .build()
+
+    override fun _queryParams(): QueryParams = additionalQueryParams
+
+    class Body
     private constructor(
-        @JsonProperty("custom_id")
-        @ExcludeMissing
-        private val customId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("params")
-        @ExcludeMissing
-        private val params: JsonField<Params> = JsonMissing.of(),
-        @JsonAnySetter
-        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+        private val requests: JsonField<List<Request>>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("requests")
+            @ExcludeMissing
+            requests: JsonField<List<Request>> = JsonMissing.of()
+        ) : this(requests, mutableMapOf())
+
+        /**
+         * List of requests for prompt completion. Each is an individual request to create a
+         * Message.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun requests(): List<Request> = requests.getRequired("requests")
+
+        /**
+         * Returns the raw JSON value of [requests].
+         *
+         * Unlike [requests], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("requests")
+        @ExcludeMissing
+        fun _requests(): JsonField<List<Request>> = requests
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [Body].
+             *
+             * The following fields are required:
+             * ```java
+             * .requests()
+             * ```
+             */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Body]. */
+        class Builder internal constructor() {
+
+            private var requests: JsonField<MutableList<Request>>? = null
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(body: Body) = apply {
+                requests = body.requests.map { it.toMutableList() }
+                additionalProperties = body.additionalProperties.toMutableMap()
+            }
+
+            /**
+             * List of requests for prompt completion. Each is an individual request to create a
+             * Message.
+             */
+            fun requests(requests: List<Request>) = requests(JsonField.of(requests))
+
+            /**
+             * Sets [Builder.requests] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.requests] with a well-typed `List<Request>` value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun requests(requests: JsonField<List<Request>>) = apply {
+                this.requests = requests.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [Request] to [requests].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addRequest(request: Request) = apply {
+                requests =
+                    (requests ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("requests", it).add(request)
+                    }
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Body].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .requests()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): Body =
+                Body(
+                    checkRequired("requests", requests).map { it.toImmutable() },
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): Body = apply {
+            if (validated) {
+                return@apply
+            }
+
+            requests().forEach { it.validate() }
+            validated = true
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return /* spotless:off */ other is Body && requests == other.requests && additionalProperties == other.additionalProperties /* spotless:on */
+        }
+
+        /* spotless:off */
+        private val hashCode: Int by lazy { Objects.hash(requests, additionalProperties) }
+        /* spotless:on */
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "Body{requests=$requests, additionalProperties=$additionalProperties}"
+    }
+
+    class Request
+    private constructor(
+        private val customId: JsonField<String>,
+        private val params: JsonField<Params>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("custom_id")
+            @ExcludeMissing
+            customId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("params") @ExcludeMissing params: JsonField<Params> = JsonMissing.of(),
+        ) : this(customId, params, mutableMapOf())
 
         /**
          * Developer-provided ID created for each request in a Message Batch. Useful for matching
@@ -532,21 +539,15 @@ private constructor(
          */
         @JsonProperty("params") @ExcludeMissing fun _params(): JsonField<Params> = params
 
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-        private var validated: Boolean = false
-
-        fun validate(): Request = apply {
-            if (validated) {
-                return@apply
-            }
-
-            customId()
-            params().validate()
-            validated = true
-        }
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -648,8 +649,20 @@ private constructor(
                 Request(
                     checkRequired("customId", customId),
                     checkRequired("params", params),
-                    additionalProperties.toImmutable(),
+                    additionalProperties.toMutableMap(),
                 )
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): Request = apply {
+            if (validated) {
+                return@apply
+            }
+
+            customId()
+            params().validate()
+            validated = true
         }
 
         /**
@@ -658,52 +671,75 @@ private constructor(
          * See the [Messages API reference](/en/api/messages) for full documentation on available
          * parameters.
          */
-        @NoAutoDetect
         class Params
-        @JsonCreator
         private constructor(
-            @JsonProperty("max_tokens")
-            @ExcludeMissing
-            private val maxTokens: JsonField<Long> = JsonMissing.of(),
-            @JsonProperty("messages")
-            @ExcludeMissing
-            private val messages: JsonField<List<BetaMessageParam>> = JsonMissing.of(),
-            @JsonProperty("model")
-            @ExcludeMissing
-            private val model: JsonField<Model> = JsonMissing.of(),
-            @JsonProperty("metadata")
-            @ExcludeMissing
-            private val metadata: JsonField<BetaMetadata> = JsonMissing.of(),
-            @JsonProperty("stop_sequences")
-            @ExcludeMissing
-            private val stopSequences: JsonField<List<String>> = JsonMissing.of(),
-            @JsonProperty("stream")
-            @ExcludeMissing
-            private val stream: JsonField<Boolean> = JsonMissing.of(),
-            @JsonProperty("system")
-            @ExcludeMissing
-            private val system: JsonField<System> = JsonMissing.of(),
-            @JsonProperty("temperature")
-            @ExcludeMissing
-            private val temperature: JsonField<Double> = JsonMissing.of(),
-            @JsonProperty("thinking")
-            @ExcludeMissing
-            private val thinking: JsonField<BetaThinkingConfigParam> = JsonMissing.of(),
-            @JsonProperty("tool_choice")
-            @ExcludeMissing
-            private val toolChoice: JsonField<BetaToolChoice> = JsonMissing.of(),
-            @JsonProperty("tools")
-            @ExcludeMissing
-            private val tools: JsonField<List<BetaToolUnion>> = JsonMissing.of(),
-            @JsonProperty("top_k")
-            @ExcludeMissing
-            private val topK: JsonField<Long> = JsonMissing.of(),
-            @JsonProperty("top_p")
-            @ExcludeMissing
-            private val topP: JsonField<Double> = JsonMissing.of(),
-            @JsonAnySetter
-            private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+            private val maxTokens: JsonField<Long>,
+            private val messages: JsonField<List<BetaMessageParam>>,
+            private val model: JsonField<Model>,
+            private val metadata: JsonField<BetaMetadata>,
+            private val stopSequences: JsonField<List<String>>,
+            private val stream: JsonField<Boolean>,
+            private val system: JsonField<System>,
+            private val temperature: JsonField<Double>,
+            private val thinking: JsonField<BetaThinkingConfigParam>,
+            private val toolChoice: JsonField<BetaToolChoice>,
+            private val tools: JsonField<List<BetaToolUnion>>,
+            private val topK: JsonField<Long>,
+            private val topP: JsonField<Double>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("max_tokens")
+                @ExcludeMissing
+                maxTokens: JsonField<Long> = JsonMissing.of(),
+                @JsonProperty("messages")
+                @ExcludeMissing
+                messages: JsonField<List<BetaMessageParam>> = JsonMissing.of(),
+                @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
+                @JsonProperty("metadata")
+                @ExcludeMissing
+                metadata: JsonField<BetaMetadata> = JsonMissing.of(),
+                @JsonProperty("stop_sequences")
+                @ExcludeMissing
+                stopSequences: JsonField<List<String>> = JsonMissing.of(),
+                @JsonProperty("stream")
+                @ExcludeMissing
+                stream: JsonField<Boolean> = JsonMissing.of(),
+                @JsonProperty("system")
+                @ExcludeMissing
+                system: JsonField<System> = JsonMissing.of(),
+                @JsonProperty("temperature")
+                @ExcludeMissing
+                temperature: JsonField<Double> = JsonMissing.of(),
+                @JsonProperty("thinking")
+                @ExcludeMissing
+                thinking: JsonField<BetaThinkingConfigParam> = JsonMissing.of(),
+                @JsonProperty("tool_choice")
+                @ExcludeMissing
+                toolChoice: JsonField<BetaToolChoice> = JsonMissing.of(),
+                @JsonProperty("tools")
+                @ExcludeMissing
+                tools: JsonField<List<BetaToolUnion>> = JsonMissing.of(),
+                @JsonProperty("top_k") @ExcludeMissing topK: JsonField<Long> = JsonMissing.of(),
+                @JsonProperty("top_p") @ExcludeMissing topP: JsonField<Double> = JsonMissing.of(),
+            ) : this(
+                maxTokens,
+                messages,
+                model,
+                metadata,
+                stopSequences,
+                stream,
+                system,
+                temperature,
+                thinking,
+                toolChoice,
+                tools,
+                topK,
+                topP,
+                mutableMapOf(),
+            )
 
             /**
              * The maximum number of tokens to generate before stopping.
@@ -1122,32 +1158,15 @@ private constructor(
              */
             @JsonProperty("top_p") @ExcludeMissing fun _topP(): JsonField<Double> = topP
 
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
             @JsonAnyGetter
             @ExcludeMissing
-            fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-            private var validated: Boolean = false
-
-            fun validate(): Params = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                maxTokens()
-                messages().forEach { it.validate() }
-                model()
-                metadata().ifPresent { it.validate() }
-                stopSequences()
-                stream()
-                system().ifPresent { it.validate() }
-                temperature()
-                thinking().ifPresent { it.validate() }
-                toolChoice().ifPresent { it.validate() }
-                tools().ifPresent { it.forEach { it.validate() } }
-                topK()
-                topP()
-                validated = true
-            }
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
 
             fun toBuilder() = Builder().from(this)
 
@@ -1858,8 +1877,31 @@ private constructor(
                         (tools ?: JsonMissing.of()).map { it.toImmutable() },
                         topK,
                         topP,
-                        additionalProperties.toImmutable(),
+                        additionalProperties.toMutableMap(),
                     )
+            }
+
+            private var validated: Boolean = false
+
+            fun validate(): Params = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                maxTokens()
+                messages().forEach { it.validate() }
+                model()
+                metadata().ifPresent { it.validate() }
+                stopSequences()
+                stream()
+                system().ifPresent { it.validate() }
+                temperature()
+                thinking().ifPresent { it.validate() }
+                toolChoice().ifPresent { it.validate() }
+                tools().ifPresent { it.forEach { it.validate() } }
+                topK()
+                topP()
+                validated = true
             }
 
             /**
