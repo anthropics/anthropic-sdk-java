@@ -7,52 +7,74 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-@NoAutoDetect
 class MessageBatch
-@JsonCreator
 private constructor(
-    @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("archived_at")
-    @ExcludeMissing
-    private val archivedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    @JsonProperty("cancel_initiated_at")
-    @ExcludeMissing
-    private val cancelInitiatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    @JsonProperty("created_at")
-    @ExcludeMissing
-    private val createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    @JsonProperty("ended_at")
-    @ExcludeMissing
-    private val endedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    @JsonProperty("expires_at")
-    @ExcludeMissing
-    private val expiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    @JsonProperty("processing_status")
-    @ExcludeMissing
-    private val processingStatus: JsonField<ProcessingStatus> = JsonMissing.of(),
-    @JsonProperty("request_counts")
-    @ExcludeMissing
-    private val requestCounts: JsonField<MessageBatchRequestCounts> = JsonMissing.of(),
-    @JsonProperty("results_url")
-    @ExcludeMissing
-    private val resultsUrl: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val id: JsonField<String>,
+    private val archivedAt: JsonField<OffsetDateTime>,
+    private val cancelInitiatedAt: JsonField<OffsetDateTime>,
+    private val createdAt: JsonField<OffsetDateTime>,
+    private val endedAt: JsonField<OffsetDateTime>,
+    private val expiresAt: JsonField<OffsetDateTime>,
+    private val processingStatus: JsonField<ProcessingStatus>,
+    private val requestCounts: JsonField<MessageBatchRequestCounts>,
+    private val resultsUrl: JsonField<String>,
+    private val type: JsonValue,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("archived_at")
+        @ExcludeMissing
+        archivedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("cancel_initiated_at")
+        @ExcludeMissing
+        cancelInitiatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("created_at")
+        @ExcludeMissing
+        createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("ended_at")
+        @ExcludeMissing
+        endedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("expires_at")
+        @ExcludeMissing
+        expiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("processing_status")
+        @ExcludeMissing
+        processingStatus: JsonField<ProcessingStatus> = JsonMissing.of(),
+        @JsonProperty("request_counts")
+        @ExcludeMissing
+        requestCounts: JsonField<MessageBatchRequestCounts> = JsonMissing.of(),
+        @JsonProperty("results_url")
+        @ExcludeMissing
+        resultsUrl: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+    ) : this(
+        id,
+        archivedAt,
+        cancelInitiatedAt,
+        createdAt,
+        endedAt,
+        expiresAt,
+        processingStatus,
+        requestCounts,
+        resultsUrl,
+        type,
+        mutableMapOf(),
+    )
 
     /**
      * Unique object identifier.
@@ -237,33 +259,15 @@ private constructor(
      */
     @JsonProperty("results_url") @ExcludeMissing fun _resultsUrl(): JsonField<String> = resultsUrl
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): MessageBatch = apply {
-        if (validated) {
-            return@apply
-        }
-
-        id()
-        archivedAt()
-        cancelInitiatedAt()
-        createdAt()
-        endedAt()
-        expiresAt()
-        processingStatus()
-        requestCounts().validate()
-        resultsUrl()
-        _type().let {
-            if (it != JsonValue.from("message_batch")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
-            }
-        }
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -547,8 +551,32 @@ private constructor(
                 checkRequired("requestCounts", requestCounts),
                 checkRequired("resultsUrl", resultsUrl),
                 type,
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): MessageBatch = apply {
+        if (validated) {
+            return@apply
+        }
+
+        id()
+        archivedAt()
+        cancelInitiatedAt()
+        createdAt()
+        endedAt()
+        expiresAt()
+        processingStatus()
+        requestCounts().validate()
+        resultsUrl()
+        _type().let {
+            if (it != JsonValue.from("message_batch")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
+        validated = true
     }
 
     /** Processing status of the Message Batch. */

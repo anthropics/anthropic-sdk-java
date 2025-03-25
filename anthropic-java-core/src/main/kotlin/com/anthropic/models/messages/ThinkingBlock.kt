@@ -6,30 +6,32 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 
-@NoAutoDetect
 class ThinkingBlock
-@JsonCreator
 private constructor(
-    @JsonProperty("signature")
-    @ExcludeMissing
-    private val signature: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("thinking")
-    @ExcludeMissing
-    private val thinking: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val signature: JsonField<String>,
+    private val thinking: JsonField<String>,
+    private val type: JsonValue,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("signature") @ExcludeMissing signature: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("thinking") @ExcludeMissing thinking: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+    ) : this(signature, thinking, type, mutableMapOf())
+
+    fun toParam(): ThinkingBlockParam =
+        ThinkingBlockParam.builder().signature(_signature()).thinking(_thinking()).build()
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -68,29 +70,15 @@ private constructor(
      */
     @JsonProperty("thinking") @ExcludeMissing fun _thinking(): JsonField<String> = thinking
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    fun toParam(): ThinkingBlockParam =
-        ThinkingBlockParam.builder().signature(_signature()).thinking(_thinking()).build()
-
-    private var validated: Boolean = false
-
-    fun validate(): ThinkingBlock = apply {
-        if (validated) {
-            return@apply
-        }
-
-        signature()
-        thinking()
-        _type().let {
-            if (it != JsonValue.from("thinking")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
-            }
-        }
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -196,8 +184,25 @@ private constructor(
                 checkRequired("signature", signature),
                 checkRequired("thinking", thinking),
                 type,
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): ThinkingBlock = apply {
+        if (validated) {
+            return@apply
+        }
+
+        signature()
+        thinking()
+        _type().let {
+            if (it != JsonValue.from("thinking")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

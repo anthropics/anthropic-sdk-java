@@ -6,10 +6,7 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.ErrorResponse
 import com.anthropic.models.messages.Message
@@ -17,24 +14,27 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 
 /**
  * This is a single line in the response `.jsonl` file and does not represent the response as a
  * whole.
  */
-@NoAutoDetect
 class MessageBatchIndividualResponse
-@JsonCreator
 private constructor(
-    @JsonProperty("custom_id")
-    @ExcludeMissing
-    private val customId: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("result")
-    @ExcludeMissing
-    private val result: JsonField<MessageBatchResult> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val customId: JsonField<String>,
+    private val result: JsonField<MessageBatchResult>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("custom_id") @ExcludeMissing customId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("result")
+        @ExcludeMissing
+        result: JsonField<MessageBatchResult> = JsonMissing.of(),
+    ) : this(customId, result, mutableMapOf())
 
     /**
      * Developer-provided ID created for each request in a Message Batch. Useful for matching
@@ -72,21 +72,15 @@ private constructor(
      */
     @JsonProperty("result") @ExcludeMissing fun _result(): JsonField<MessageBatchResult> = result
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): MessageBatchIndividualResponse = apply {
-        if (validated) {
-            return@apply
-        }
-
-        customId()
-        result().validate()
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -228,8 +222,20 @@ private constructor(
             MessageBatchIndividualResponse(
                 checkRequired("customId", customId),
                 checkRequired("result", result),
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): MessageBatchIndividualResponse = apply {
+        if (validated) {
+            return@apply
+        }
+
+        customId()
+        result().validate()
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

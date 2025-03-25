@@ -12,11 +12,11 @@ class PermissionDeniedException
 private constructor(private val headers: Headers, private val body: JsonValue, cause: Throwable?) :
     AnthropicServiceException("403: $body", cause) {
 
+    override fun statusCode(): Int = 403
+
     override fun headers(): Headers = headers
 
     override fun body(): JsonValue = body
-
-    override fun statusCode(): Int = 403
 
     fun toBuilder() = Builder().from(this)
 

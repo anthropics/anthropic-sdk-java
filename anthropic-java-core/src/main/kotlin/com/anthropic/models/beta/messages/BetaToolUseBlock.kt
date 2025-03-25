@@ -6,27 +6,34 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 
-@NoAutoDetect
 class BetaToolUseBlock
-@JsonCreator
 private constructor(
-    @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("input") @ExcludeMissing private val input: JsonValue = JsonMissing.of(),
-    @JsonProperty("name") @ExcludeMissing private val name: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val id: JsonField<String>,
+    private val input: JsonValue,
+    private val name: JsonField<String>,
+    private val type: JsonValue,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("input") @ExcludeMissing input: JsonValue = JsonMissing.of(),
+        @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+    ) : this(id, input, name, type, mutableMapOf())
+
+    fun toParam(): BetaToolUseBlockParam =
+        BetaToolUseBlockParam.builder().id(_id()).input(_input()).name(_name()).build()
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -67,29 +74,15 @@ private constructor(
      */
     @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    fun toParam(): BetaToolUseBlockParam =
-        BetaToolUseBlockParam.builder().id(_id()).input(_input()).name(_name()).build()
-
-    private var validated: Boolean = false
-
-    fun validate(): BetaToolUseBlock = apply {
-        if (validated) {
-            return@apply
-        }
-
-        id()
-        name()
-        _type().let {
-            if (it != JsonValue.from("tool_use")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
-            }
-        }
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -201,8 +194,25 @@ private constructor(
                 checkRequired("input", input),
                 checkRequired("name", name),
                 type,
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): BetaToolUseBlock = apply {
+        if (validated) {
+            return@apply
+        }
+
+        id()
+        name()
+        _type().let {
+            if (it != JsonValue.from("tool_use")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

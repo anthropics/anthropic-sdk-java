@@ -2,7 +2,7 @@
 
 package com.anthropic.core.http
 
-import com.anthropic.core.enhanceJacksonException
+import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Objects
@@ -45,14 +45,14 @@ private constructor(
         try {
             jsonMapper.readerFor(jacksonTypeRef<T>()).readValue(jsonNode)
         } catch (e: Exception) {
-            throw enhanceJacksonException("Error reading response", e)
+            throw AnthropicInvalidDataException("Error reading response", e)
         }
 
     private val jsonNode by lazy {
         try {
             jsonMapper.readTree(data)
         } catch (e: Exception) {
-            throw enhanceJacksonException("Error reading response", e)
+            throw AnthropicInvalidDataException("Error reading response", e)
         }
     }
 

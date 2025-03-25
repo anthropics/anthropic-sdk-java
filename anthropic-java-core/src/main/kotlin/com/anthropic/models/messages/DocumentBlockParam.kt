@@ -8,11 +8,8 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -25,30 +22,35 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-@NoAutoDetect
 class DocumentBlockParam
-@JsonCreator
 private constructor(
-    @JsonProperty("source")
-    @ExcludeMissing
-    private val source: JsonField<Source> = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
-    @JsonProperty("cache_control")
-    @ExcludeMissing
-    private val cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of(),
-    @JsonProperty("citations")
-    @ExcludeMissing
-    private val citations: JsonField<CitationsConfigParam> = JsonMissing.of(),
-    @JsonProperty("context")
-    @ExcludeMissing
-    private val context: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("title") @ExcludeMissing private val title: JsonField<String> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val source: JsonField<Source>,
+    private val type: JsonValue,
+    private val cacheControl: JsonField<CacheControlEphemeral>,
+    private val citations: JsonField<CitationsConfigParam>,
+    private val context: JsonField<String>,
+    private val title: JsonField<String>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("source") @ExcludeMissing source: JsonField<Source> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+        @JsonProperty("cache_control")
+        @ExcludeMissing
+        cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of(),
+        @JsonProperty("citations")
+        @ExcludeMissing
+        citations: JsonField<CitationsConfigParam> = JsonMissing.of(),
+        @JsonProperty("context") @ExcludeMissing context: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("title") @ExcludeMissing title: JsonField<String> = JsonMissing.of(),
+    ) : this(source, type, cacheControl, citations, context, title, mutableMapOf())
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -132,29 +134,15 @@ private constructor(
      */
     @JsonProperty("title") @ExcludeMissing fun _title(): JsonField<String> = title
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): DocumentBlockParam = apply {
-        if (validated) {
-            return@apply
-        }
-
-        source().validate()
-        _type().let {
-            if (it != JsonValue.from("document")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
-            }
-        }
-        cacheControl().ifPresent { it.validate() }
-        citations().ifPresent { it.validate() }
-        context()
-        title()
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -380,8 +368,28 @@ private constructor(
                 citations,
                 context,
                 title,
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): DocumentBlockParam = apply {
+        if (validated) {
+            return@apply
+        }
+
+        source().validate()
+        _type().let {
+            if (it != JsonValue.from("document")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
+        cacheControl().ifPresent { it.validate() }
+        citations().ifPresent { it.validate() }
+        context()
+        title()
+        validated = true
     }
 
     @JsonDeserialize(using = Source.Deserializer::class)

@@ -6,28 +6,30 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 
 /** The model will automatically decide whether to use tools. */
-@NoAutoDetect
 class BetaToolChoiceAuto
-@JsonCreator
 private constructor(
-    @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
-    @JsonProperty("disable_parallel_tool_use")
-    @ExcludeMissing
-    private val disableParallelToolUse: JsonField<Boolean> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val type: JsonValue,
+    private val disableParallelToolUse: JsonField<Boolean>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+        @JsonProperty("disable_parallel_tool_use")
+        @ExcludeMissing
+        disableParallelToolUse: JsonField<Boolean> = JsonMissing.of(),
+    ) : this(type, disableParallelToolUse, mutableMapOf())
 
     /**
      * Expected to always return the following:
@@ -61,25 +63,15 @@ private constructor(
     @ExcludeMissing
     fun _disableParallelToolUse(): JsonField<Boolean> = disableParallelToolUse
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): BetaToolChoiceAuto = apply {
-        if (validated) {
-            return@apply
-        }
-
-        _type().let {
-            if (it != JsonValue.from("auto")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
-            }
-        }
-        disableParallelToolUse()
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -161,7 +153,23 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          */
         fun build(): BetaToolChoiceAuto =
-            BetaToolChoiceAuto(type, disableParallelToolUse, additionalProperties.toImmutable())
+            BetaToolChoiceAuto(type, disableParallelToolUse, additionalProperties.toMutableMap())
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): BetaToolChoiceAuto = apply {
+        if (validated) {
+            return@apply
+        }
+
+        _type().let {
+            if (it != JsonValue.from("auto")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
+        disableParallelToolUse()
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

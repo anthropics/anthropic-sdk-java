@@ -9,11 +9,8 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -26,19 +23,22 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 
-@NoAutoDetect
 class BetaMessageParam
-@JsonCreator
 private constructor(
-    @JsonProperty("content")
-    @ExcludeMissing
-    private val content: JsonField<Content> = JsonMissing.of(),
-    @JsonProperty("role") @ExcludeMissing private val role: JsonField<Role> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val content: JsonField<Content>,
+    private val role: JsonField<Role>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("content") @ExcludeMissing content: JsonField<Content> = JsonMissing.of(),
+        @JsonProperty("role") @ExcludeMissing role: JsonField<Role> = JsonMissing.of(),
+    ) : this(content, role, mutableMapOf())
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -66,21 +66,15 @@ private constructor(
      */
     @JsonProperty("role") @ExcludeMissing fun _role(): JsonField<Role> = role
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): BetaMessageParam = apply {
-        if (validated) {
-            return@apply
-        }
-
-        content().validate()
-        role()
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -178,8 +172,20 @@ private constructor(
             BetaMessageParam(
                 checkRequired("content", content),
                 checkRequired("role", role),
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): BetaMessageParam = apply {
+        if (validated) {
+            return@apply
+        }
+
+        content().validate()
+        role()
+        validated = true
     }
 
     @JsonDeserialize(using = Content.Deserializer::class)

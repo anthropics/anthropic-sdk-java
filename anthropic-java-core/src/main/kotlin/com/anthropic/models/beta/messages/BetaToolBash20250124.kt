@@ -6,29 +6,32 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-@NoAutoDetect
 class BetaToolBash20250124
-@JsonCreator
 private constructor(
-    @JsonProperty("name") @ExcludeMissing private val name: JsonValue = JsonMissing.of(),
-    @JsonProperty("type") @ExcludeMissing private val type: JsonValue = JsonMissing.of(),
-    @JsonProperty("cache_control")
-    @ExcludeMissing
-    private val cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val name: JsonValue,
+    private val type: JsonValue,
+    private val cacheControl: JsonField<BetaCacheControlEphemeral>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("name") @ExcludeMissing name: JsonValue = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+        @JsonProperty("cache_control")
+        @ExcludeMissing
+        cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
+    ) : this(name, type, cacheControl, mutableMapOf())
 
     /**
      * Name of the tool.
@@ -72,30 +75,15 @@ private constructor(
     @ExcludeMissing
     fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): BetaToolBash20250124 = apply {
-        if (validated) {
-            return@apply
-        }
-
-        _name().let {
-            if (it != JsonValue.from("bash")) {
-                throw AnthropicInvalidDataException("'name' is invalid, received $it")
-            }
-        }
-        _type().let {
-            if (it != JsonValue.from("bash_20250124")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
-            }
-        }
-        cacheControl().ifPresent { it.validate() }
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -192,7 +180,28 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          */
         fun build(): BetaToolBash20250124 =
-            BetaToolBash20250124(name, type, cacheControl, additionalProperties.toImmutable())
+            BetaToolBash20250124(name, type, cacheControl, additionalProperties.toMutableMap())
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): BetaToolBash20250124 = apply {
+        if (validated) {
+            return@apply
+        }
+
+        _name().let {
+            if (it != JsonValue.from("bash")) {
+                throw AnthropicInvalidDataException("'name' is invalid, received $it")
+            }
+        }
+        _type().let {
+            if (it != JsonValue.from("bash_20250124")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
+        cacheControl().ifPresent { it.validate() }
+        validated = true
     }
 
     override fun equals(other: Any?): Boolean {

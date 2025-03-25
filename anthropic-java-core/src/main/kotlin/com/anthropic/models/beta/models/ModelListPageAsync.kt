@@ -6,14 +6,12 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.NoAutoDetect
-import com.anthropic.core.immutableEmptyMap
-import com.anthropic.core.toImmutable
 import com.anthropic.services.async.beta.ModelServiceAsync
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import java.util.concurrent.CompletableFuture
@@ -92,17 +90,21 @@ private constructor(
             ModelListPageAsync(modelsService, params, response)
     }
 
-    @NoAutoDetect
-    class Response
-    @JsonCreator
-    constructor(
-        @JsonProperty("data") private val data: JsonField<List<BetaModelInfo>> = JsonMissing.of(),
-        @JsonProperty("has_more") private val hasMore: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("first_id") private val firstId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("last_id") private val lastId: JsonField<String> = JsonMissing.of(),
-        @JsonAnySetter
-        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    class Response(
+        private val data: JsonField<List<BetaModelInfo>>,
+        private val hasMore: JsonField<Boolean>,
+        private val firstId: JsonField<String>,
+        private val lastId: JsonField<String>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("data") data: JsonField<List<BetaModelInfo>> = JsonMissing.of(),
+            @JsonProperty("has_more") hasMore: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("first_id") firstId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("last_id") lastId: JsonField<String> = JsonMissing.of(),
+        ) : this(data, hasMore, firstId, lastId, mutableMapOf())
 
         fun data(): List<BetaModelInfo> = data.getNullable("data") ?: listOf()
 
@@ -124,9 +126,15 @@ private constructor(
         @JsonProperty("last_id")
         fun _lastId(): Optional<JsonField<String>> = Optional.ofNullable(lastId)
 
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
 
         private var validated: Boolean = false
 
@@ -206,7 +214,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              */
             fun build(): Response =
-                Response(data, hasMore, firstId, lastId, additionalProperties.toImmutable())
+                Response(data, hasMore, firstId, lastId, additionalProperties.toMutableMap())
         }
     }
 
