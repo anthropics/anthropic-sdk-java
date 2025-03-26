@@ -5,6 +5,7 @@ package com.anthropic.models.messages.batches
 import com.anthropic.models.messages.CitationCharLocation
 import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.Model
+import com.anthropic.models.messages.StopReason
 import com.anthropic.models.messages.TextBlock
 import com.anthropic.models.messages.Usage
 import org.assertj.core.api.Assertions.assertThat
@@ -34,7 +35,7 @@ internal class MessageBatchSucceededResultTest {
                                 .build()
                         )
                         .model(Model.CLAUDE_3_7_SONNET_LATEST)
-                        .stopReason(Message.StopReason.END_TURN)
+                        .stopReason(StopReason.END_TURN)
                         .stopSequence(null)
                         .usage(
                             Usage.builder()
@@ -67,7 +68,7 @@ internal class MessageBatchSucceededResultTest {
                             .build()
                     )
                     .model(Model.CLAUDE_3_7_SONNET_LATEST)
-                    .stopReason(Message.StopReason.END_TURN)
+                    .stopReason(StopReason.END_TURN)
                     .stopSequence(null)
                     .usage(
                         Usage.builder()

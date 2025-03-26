@@ -29,7 +29,7 @@ internal class RawMessageStreamEventTest {
                                 .build()
                         )
                         .model(Model.CLAUDE_3_7_SONNET_LATEST)
-                        .stopReason(Message.StopReason.END_TURN)
+                        .stopReason(StopReason.END_TURN)
                         .stopSequence(null)
                         .usage(
                             Usage.builder()
@@ -59,7 +59,7 @@ internal class RawMessageStreamEventTest {
             RawMessageDeltaEvent.builder()
                 .delta(
                     RawMessageDeltaEvent.Delta.builder()
-                        .stopReason(RawMessageDeltaEvent.Delta.StopReason.END_TURN)
+                        .stopReason(StopReason.END_TURN)
                         .stopSequence("stop_sequence")
                         .build()
                 )
