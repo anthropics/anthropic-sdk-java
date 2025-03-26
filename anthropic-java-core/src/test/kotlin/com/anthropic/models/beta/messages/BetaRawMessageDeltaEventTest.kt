@@ -13,7 +13,7 @@ internal class BetaRawMessageDeltaEventTest {
             BetaRawMessageDeltaEvent.builder()
                 .delta(
                     BetaRawMessageDeltaEvent.Delta.builder()
-                        .stopReason(BetaRawMessageDeltaEvent.Delta.StopReason.END_TURN)
+                        .stopReason(BetaStopReason.END_TURN)
                         .stopSequence("stop_sequence")
                         .build()
                 )
@@ -23,7 +23,7 @@ internal class BetaRawMessageDeltaEventTest {
         assertThat(betaRawMessageDeltaEvent.delta())
             .isEqualTo(
                 BetaRawMessageDeltaEvent.Delta.builder()
-                    .stopReason(BetaRawMessageDeltaEvent.Delta.StopReason.END_TURN)
+                    .stopReason(BetaStopReason.END_TURN)
                     .stopSequence("stop_sequence")
                     .build()
             )

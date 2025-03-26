@@ -28,7 +28,7 @@ internal class BetaMessageTest {
                         .build()
                 )
                 .model(Model.CLAUDE_3_7_SONNET_LATEST)
-                .stopReason(BetaMessage.StopReason.END_TURN)
+                .stopReason(BetaStopReason.END_TURN)
                 .stopSequence(null)
                 .usage(
                     BetaUsage.builder()
@@ -59,7 +59,7 @@ internal class BetaMessageTest {
                 )
             )
         assertThat(betaMessage.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
-        assertThat(betaMessage.stopReason()).contains(BetaMessage.StopReason.END_TURN)
+        assertThat(betaMessage.stopReason()).contains(BetaStopReason.END_TURN)
         assertThat(betaMessage.stopSequence()).isEmpty
         assertThat(betaMessage.usage())
             .isEqualTo(

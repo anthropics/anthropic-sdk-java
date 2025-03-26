@@ -2,7 +2,6 @@
 
 package com.anthropic.models.beta.messages
 
-import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
@@ -241,7 +240,7 @@ private constructor(
 
     class Delta
     private constructor(
-        private val stopReason: JsonField<StopReason>,
+        private val stopReason: JsonField<BetaStopReason>,
         private val stopSequence: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -250,7 +249,7 @@ private constructor(
         private constructor(
             @JsonProperty("stop_reason")
             @ExcludeMissing
-            stopReason: JsonField<StopReason> = JsonMissing.of(),
+            stopReason: JsonField<BetaStopReason> = JsonMissing.of(),
             @JsonProperty("stop_sequence")
             @ExcludeMissing
             stopSequence: JsonField<String> = JsonMissing.of(),
@@ -260,7 +259,7 @@ private constructor(
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun stopReason(): Optional<StopReason> =
+        fun stopReason(): Optional<BetaStopReason> =
             Optional.ofNullable(stopReason.getNullable("stop_reason"))
 
         /**
@@ -277,7 +276,7 @@ private constructor(
          */
         @JsonProperty("stop_reason")
         @ExcludeMissing
-        fun _stopReason(): JsonField<StopReason> = stopReason
+        fun _stopReason(): JsonField<BetaStopReason> = stopReason
 
         /**
          * Returns the raw JSON value of [stopSequence].
@@ -318,7 +317,7 @@ private constructor(
         /** A builder for [Delta]. */
         class Builder internal constructor() {
 
-            private var stopReason: JsonField<StopReason>? = null
+            private var stopReason: JsonField<BetaStopReason>? = null
             private var stopSequence: JsonField<String>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -329,19 +328,21 @@ private constructor(
                 additionalProperties = delta.additionalProperties.toMutableMap()
             }
 
-            fun stopReason(stopReason: StopReason?) = stopReason(JsonField.ofNullable(stopReason))
+            fun stopReason(stopReason: BetaStopReason?) =
+                stopReason(JsonField.ofNullable(stopReason))
 
             /** Alias for calling [Builder.stopReason] with `stopReason.orElse(null)`. */
-            fun stopReason(stopReason: Optional<StopReason>) = stopReason(stopReason.getOrNull())
+            fun stopReason(stopReason: Optional<BetaStopReason>) =
+                stopReason(stopReason.getOrNull())
 
             /**
              * Sets [Builder.stopReason] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.stopReason] with a well-typed [StopReason] value
+             * You should usually call [Builder.stopReason] with a well-typed [BetaStopReason] value
              * instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun stopReason(stopReason: JsonField<StopReason>) = apply {
+            fun stopReason(stopReason: JsonField<BetaStopReason>) = apply {
                 this.stopReason = stopReason
             }
 
@@ -413,122 +414,6 @@ private constructor(
             stopReason()
             stopSequence()
             validated = true
-        }
-
-        class StopReason @JsonCreator private constructor(private val value: JsonField<String>) :
-            Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-            companion object {
-
-                @JvmField val END_TURN = of("end_turn")
-
-                @JvmField val MAX_TOKENS = of("max_tokens")
-
-                @JvmField val STOP_SEQUENCE = of("stop_sequence")
-
-                @JvmField val TOOL_USE = of("tool_use")
-
-                @JvmStatic fun of(value: String) = StopReason(JsonField.of(value))
-            }
-
-            /** An enum containing [StopReason]'s known values. */
-            enum class Known {
-                END_TURN,
-                MAX_TOKENS,
-                STOP_SEQUENCE,
-                TOOL_USE,
-            }
-
-            /**
-             * An enum containing [StopReason]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [StopReason] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                END_TURN,
-                MAX_TOKENS,
-                STOP_SEQUENCE,
-                TOOL_USE,
-                /**
-                 * An enum member indicating that [StopReason] was instantiated with an unknown
-                 * value.
-                 */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    END_TURN -> Value.END_TURN
-                    MAX_TOKENS -> Value.MAX_TOKENS
-                    STOP_SEQUENCE -> Value.STOP_SEQUENCE
-                    TOOL_USE -> Value.TOOL_USE
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-             *   member.
-             */
-            fun known(): Known =
-                when (this) {
-                    END_TURN -> Known.END_TURN
-                    MAX_TOKENS -> Known.MAX_TOKENS
-                    STOP_SEQUENCE -> Known.STOP_SEQUENCE
-                    TOOL_USE -> Known.TOOL_USE
-                    else -> throw AnthropicInvalidDataException("Unknown StopReason: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
-             *
-             * @throws AnthropicInvalidDataException if this class instance's value does not have
-             *   the expected primitive type.
-             */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    AnthropicInvalidDataException("Value is not a String")
-                }
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return /* spotless:off */ other is StopReason && value == other.value /* spotless:on */
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
         }
 
         override fun equals(other: Any?): Boolean {
