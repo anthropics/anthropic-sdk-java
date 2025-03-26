@@ -5,33 +5,8 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonNull
 import com.anthropic.core.JsonString
 import com.anthropic.errors.AnthropicInvalidDataException
-import com.anthropic.models.messages.CitationCharLocation
-import com.anthropic.models.messages.CitationContentBlockLocation
-import com.anthropic.models.messages.CitationPageLocation
-import com.anthropic.models.messages.CitationsDelta
-import com.anthropic.models.messages.InputJsonDelta
-import com.anthropic.models.messages.Message
-import com.anthropic.models.messages.MessageDeltaUsage
-import com.anthropic.models.messages.Model
-import com.anthropic.models.messages.RawContentBlockDeltaEvent
-import com.anthropic.models.messages.RawContentBlockStartEvent
+import com.anthropic.models.messages.*
 import com.anthropic.models.messages.RawContentBlockStartEvent.ContentBlock
-import com.anthropic.models.messages.RawContentBlockStopEvent
-import com.anthropic.models.messages.RawMessageDeltaEvent
-import com.anthropic.models.messages.RawMessageDeltaEvent.Delta.StopReason
-import com.anthropic.models.messages.RawMessageStartEvent
-import com.anthropic.models.messages.RawMessageStopEvent
-import com.anthropic.models.messages.RawMessageStreamEvent
-import com.anthropic.models.messages.RedactedThinkingBlock
-import com.anthropic.models.messages.SignatureDelta
-import com.anthropic.models.messages.TextBlock
-import com.anthropic.models.messages.TextCitation
-import com.anthropic.models.messages.TextDelta
-import com.anthropic.models.messages.ThinkingBlock
-import com.anthropic.models.messages.ThinkingDelta
-import com.anthropic.models.messages.ToolUseBlock
-import com.anthropic.models.messages.Usage
-import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatNoException
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -354,10 +329,7 @@ internal class MessageAccumulatorTest {
 
         assertThat(message.content()).isEmpty()
 
-        assertThat(message.stopReason()).isPresent()
-        // "Message.StopReason" and "RawMessageDeltaEvent.Delta.StopReason" are not the same thing!
-        assertThat(message.stopReason().get()).isEqualTo(Message.StopReason.END_TURN)
-
+        assertThat(message.stopReason()).hasValue(StopReason.END_TURN)
         assertThat(message.stopSequence()).isNotPresent()
 
         assertThat(message.usage().inputTokens()).isEqualTo(INPUT_TOKENS)
@@ -376,7 +348,7 @@ internal class MessageAccumulatorTest {
         // Check both the non-public "raw" JSON value and the public `Optional` value (which will
         // be `null` if the "raw" value is missing).
         assertThat(accumulator.message()._stopReason().isMissing()).isEqualTo(true)
-        assertThat(accumulator.message().stopReason().getOrNull()).isNull()
+        assertThat(accumulator.message().stopReason()).isEmpty()
     }
 
     @Test
@@ -392,7 +364,7 @@ internal class MessageAccumulatorTest {
 
         assertThat(accumulator.message()._stopReason().isMissing()).isEqualTo(false)
         assertThat(accumulator.message()._stopReason().isNull()).isEqualTo(true)
-        assertThat(accumulator.message().stopReason().getOrNull()).isNull()
+        assertThat(accumulator.message().stopReason()).isEmpty()
     }
 
     @Test
@@ -408,7 +380,7 @@ internal class MessageAccumulatorTest {
 
         assertThat(accumulator.message()._stopReason().isMissing()).isEqualTo(false)
         assertThat(accumulator.message()._stopReason().isNull()).isEqualTo(false)
-        assertThat(accumulator.message().stopReason().get()).isEqualTo(Message.StopReason.END_TURN)
+        assertThat(accumulator.message().stopReason()).hasValue(StopReason.END_TURN)
     }
 
     @Test
@@ -421,7 +393,7 @@ internal class MessageAccumulatorTest {
         // Check both the non-public "raw" JSON value and the public `Optional` value (which will
         // be `null` if the "raw" value is missing).
         assertThat(accumulator.message()._stopSequence().isMissing()).isEqualTo(true)
-        assertThat(accumulator.message().stopSequence().getOrNull()).isNull()
+        assertThat(accumulator.message().stopSequence()).isEmpty()
     }
 
     @Test
@@ -437,7 +409,7 @@ internal class MessageAccumulatorTest {
 
         assertThat(accumulator.message()._stopSequence().isMissing()).isEqualTo(false)
         assertThat(accumulator.message()._stopSequence().isNull()).isEqualTo(true)
-        assertThat(accumulator.message().stopSequence().getOrNull()).isNull()
+        assertThat(accumulator.message().stopSequence()).isEmpty()
     }
 
     @Test
@@ -453,7 +425,7 @@ internal class MessageAccumulatorTest {
 
         assertThat(accumulator.message()._stopSequence().isMissing()).isEqualTo(false)
         assertThat(accumulator.message()._stopSequence().isNull()).isEqualTo(false)
-        assertThat(accumulator.message().stopSequence().get()).isEqualTo("hello world")
+        assertThat(accumulator.message().stopSequence()).hasValue("hello world")
     }
 
     @Test
@@ -542,19 +514,19 @@ internal class MessageAccumulatorTest {
         val message = accumulator.message()
         val content = message.content()
 
-        assertThat(message.stopSequence().getOrNull()).isNull()
-        assertThat(message.stopReason().get()).isEqualTo(Message.StopReason.END_TURN)
+        assertThat(message.stopSequence()).isEmpty()
+        assertThat(message.stopReason()).hasValue(StopReason.END_TURN)
         assertThat(message.usage().inputTokens()).isEqualTo(INPUT_TOKENS)
         assertThat(message.usage().outputTokens()).isEqualTo(99L)
 
         assertThat(content.size).isEqualTo(2)
         assertThat(content[0].asText().text()).isEqualTo("1-ONE.1-TWO.1-THREE.")
-        assertThat(content[0].asText().citations().get())
-            .isEqualTo(listOf(textCitation(987L), textCitation(654L)))
+        assertThat(content[0].asText().citations())
+            .hasValue(listOf(textCitation(987L), textCitation(654L)))
 
         assertThat(content[1].asText().text()).isEqualTo("3-ONE.3-TWO.3-THREE.")
-        assertThat(content[1].asText().citations().get())
-            .isEqualTo(listOf(textCitation(234L), textCitation(123L)))
+        assertThat(content[1].asText().citations())
+            .hasValue(listOf(textCitation(234L), textCitation(123L)))
     }
 
     @Test
@@ -601,8 +573,8 @@ internal class MessageAccumulatorTest {
         val message = accumulator.message()
         val content = message.content()
 
-        assertThat(message.stopSequence().getOrNull()).isNull()
-        assertThat(message.stopReason().get()).isEqualTo(Message.StopReason.TOOL_USE)
+        assertThat(message.stopSequence()).isEmpty()
+        assertThat(message.stopReason()).hasValue(StopReason.TOOL_USE)
         assertThat(message.usage().inputTokens()).isEqualTo(INPUT_TOKENS)
         assertThat(message.usage().outputTokens()).isEqualTo(88L)
 
@@ -612,7 +584,7 @@ internal class MessageAccumulatorTest {
             .isEqualTo(JsonString.of("world"))
 
         assertThat(content[1].asText().text()).isEqualTo("3-ONE.3-TWO.3-THREE.")
-        assertThat(content[1].asText().citations().get()).isEqualTo(listOf(textCitation(234L)))
+        assertThat(content[1].asText().citations()).hasValue(listOf(textCitation(234L)))
     }
 
     @Test
@@ -643,8 +615,8 @@ internal class MessageAccumulatorTest {
         val message = accumulator.message()
         val content = message.content()
 
-        assertThat(message.stopSequence().getOrNull()).isNull()
-        assertThat(message.stopReason().get()).isEqualTo(Message.StopReason.END_TURN)
+        assertThat(message.stopSequence()).isEmpty()
+        assertThat(message.stopReason()).hasValue(StopReason.END_TURN)
         assertThat(message.usage().inputTokens()).isEqualTo(INPUT_TOKENS)
         assertThat(message.usage().outputTokens()).isEqualTo(88L)
 
@@ -653,7 +625,7 @@ internal class MessageAccumulatorTest {
         assertThat(content[0].asThinking().signature()).isEqualTo("a-signature")
 
         assertThat(content[1].asText().text()).isEqualTo("3-ONE.3-TWO.3-THREE.")
-        assertThat(content[1].asText().citations().get()).isEqualTo(listOf(textCitation(234L)))
+        assertThat(content[1].asText().citations()).hasValue(listOf(textCitation(234L)))
     }
 
     @Test
@@ -682,8 +654,8 @@ internal class MessageAccumulatorTest {
         val message = accumulator.message()
         val content = message.content()
 
-        assertThat(message.stopSequence().getOrNull()).isNull()
-        assertThat(message.stopReason().get()).isEqualTo(Message.StopReason.END_TURN)
+        assertThat(message.stopSequence()).isEmpty()
+        assertThat(message.stopReason()).hasValue(StopReason.END_TURN)
         assertThat(message.usage().inputTokens()).isEqualTo(INPUT_TOKENS)
         assertThat(message.usage().outputTokens()).isEqualTo(88L)
 
@@ -691,7 +663,7 @@ internal class MessageAccumulatorTest {
         assertThat(content[0].asRedactedThinking().data()).isEqualTo("1-ONE.")
 
         assertThat(content[1].asText().text()).isEqualTo("3-ONE.3-TWO.3-THREE.")
-        assertThat(content[1].asText().citations().get()).isEqualTo(listOf(textCitation(234L)))
+        assertThat(content[1].asText().citations()).hasValue(listOf(textCitation(234L)))
     }
 
     @Test

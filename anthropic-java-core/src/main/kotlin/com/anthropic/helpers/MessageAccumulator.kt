@@ -215,8 +215,7 @@ class MessageAccumulator private constructor() {
                     if (delta._stopReason().isNull()) {
                         requireMessageBuilder().stopReason(null)
                     } else if (!delta._stopReason().isMissing()) {
-                        requireMessageBuilder()
-                            .stopReason(Message.StopReason.of(delta.stopReason().get().asString()))
+                        requireMessageBuilder().stopReason(delta.stopReason())
                     }
 
                     // The same applies to the `stop_sequence` string; only the last value will

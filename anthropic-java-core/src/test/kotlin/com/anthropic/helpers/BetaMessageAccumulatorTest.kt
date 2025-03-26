@@ -5,33 +5,9 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonNull
 import com.anthropic.core.JsonString
 import com.anthropic.errors.AnthropicInvalidDataException
-import com.anthropic.models.beta.messages.BetaCitationCharLocation
-import com.anthropic.models.beta.messages.BetaCitationContentBlockLocation
-import com.anthropic.models.beta.messages.BetaCitationPageLocation
-import com.anthropic.models.beta.messages.BetaCitationsDelta
-import com.anthropic.models.beta.messages.BetaInputJsonDelta
-import com.anthropic.models.beta.messages.BetaMessage
-import com.anthropic.models.beta.messages.BetaMessageDeltaUsage
-import com.anthropic.models.beta.messages.BetaRawContentBlockDeltaEvent
-import com.anthropic.models.beta.messages.BetaRawContentBlockStartEvent
+import com.anthropic.models.beta.messages.*
 import com.anthropic.models.beta.messages.BetaRawContentBlockStartEvent.ContentBlock
-import com.anthropic.models.beta.messages.BetaRawContentBlockStopEvent
-import com.anthropic.models.beta.messages.BetaRawMessageDeltaEvent
-import com.anthropic.models.beta.messages.BetaRawMessageDeltaEvent.Delta.StopReason
-import com.anthropic.models.beta.messages.BetaRawMessageStartEvent
-import com.anthropic.models.beta.messages.BetaRawMessageStopEvent
-import com.anthropic.models.beta.messages.BetaRawMessageStreamEvent
-import com.anthropic.models.beta.messages.BetaRedactedThinkingBlock
-import com.anthropic.models.beta.messages.BetaSignatureDelta
-import com.anthropic.models.beta.messages.BetaTextBlock
-import com.anthropic.models.beta.messages.BetaTextCitation
-import com.anthropic.models.beta.messages.BetaTextDelta
-import com.anthropic.models.beta.messages.BetaThinkingBlock
-import com.anthropic.models.beta.messages.BetaThinkingDelta
-import com.anthropic.models.beta.messages.BetaToolUseBlock
-import com.anthropic.models.beta.messages.BetaUsage
 import com.anthropic.models.messages.Model
-import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatNoException
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -343,7 +319,7 @@ internal class BetaMessageAccumulatorTest {
 
         accumulator.accumulate(messageStartEvent())
         accumulator.accumulate(
-            messageDeltaEvent(JsonField.of(StopReason.END_TURN), outputTokens = 96L)
+            messageDeltaEvent(JsonField.of(BetaStopReason.END_TURN), outputTokens = 96L)
         )
         accumulator.accumulate(messageStopEvent())
 
@@ -356,10 +332,7 @@ internal class BetaMessageAccumulatorTest {
 
         assertThat(message.content()).isEmpty()
 
-        assertThat(message.stopReason()).isPresent()
-        // "Message.StopReason" and "RawMessageDeltaEvent.Delta.StopReason" are not the same thing!
-        assertThat(message.stopReason().get()).isEqualTo(BetaMessage.StopReason.END_TURN)
-
+        assertThat(message.stopReason()).hasValue(BetaStopReason.END_TURN)
         assertThat(message.stopSequence()).isNotPresent()
 
         assertThat(message.usage().inputTokens()).isEqualTo(INPUT_TOKENS)
@@ -369,7 +342,7 @@ internal class BetaMessageAccumulatorTest {
     }
 
     @Test
-    fun messageStopReasonDefaultsToMissing() {
+    fun messageBetaStopReasonDefaultsToMissing() {
         val accumulator = BetaMessageAccumulator.create()
 
         accumulator.accumulate(messageStartEvent())
@@ -378,11 +351,11 @@ internal class BetaMessageAccumulatorTest {
         // Check both the non-public "raw" JSON value and the public `Optional` value (which will
         // be `null` if the "raw" value is missing).
         assertThat(accumulator.message()._stopReason().isMissing()).isEqualTo(true)
-        assertThat(accumulator.message().stopReason().getOrNull()).isNull()
+        assertThat(accumulator.message().stopReason()).isEmpty()
     }
 
     @Test
-    fun messageDeltaWithNullStopReason() {
+    fun messageDeltaWithNullBetaStopReason() {
         // The default stop reason is `JsonMissing`. See if an explicit `null` works instead and
         // that an explicit `JsonMissing` does not override the `null`.
         val accumulator = BetaMessageAccumulator.create()
@@ -394,24 +367,25 @@ internal class BetaMessageAccumulatorTest {
 
         assertThat(accumulator.message()._stopReason().isMissing()).isEqualTo(false)
         assertThat(accumulator.message()._stopReason().isNull()).isEqualTo(true)
-        assertThat(accumulator.message().stopReason().getOrNull()).isNull()
+        assertThat(accumulator.message().stopReason()).isEmpty()
     }
 
     @Test
-    fun messageDeltaWithNonNullStopReason() {
+    fun messageDeltaWithNonNullBetaStopReason() {
         val accumulator = BetaMessageAccumulator.create()
 
         accumulator.accumulate(messageStartEvent())
         // The last non-missing value should "win".
         accumulator.accumulate(messageDeltaEvent(stopReason = SET_TO_NULL))
         accumulator.accumulate(messageDeltaEvent(stopReason = NOT_SET)) // Should be ignored.
-        accumulator.accumulate(messageDeltaEvent(stopReason = JsonField.of(StopReason.END_TURN)))
+        accumulator.accumulate(
+            messageDeltaEvent(stopReason = JsonField.of(BetaStopReason.END_TURN))
+        )
         accumulator.accumulate(messageStopEvent())
 
         assertThat(accumulator.message()._stopReason().isMissing()).isEqualTo(false)
         assertThat(accumulator.message()._stopReason().isNull()).isEqualTo(false)
-        assertThat(accumulator.message().stopReason().get())
-            .isEqualTo(BetaMessage.StopReason.END_TURN)
+        assertThat(accumulator.message().stopReason()).hasValue(BetaStopReason.END_TURN)
     }
 
     @Test
@@ -424,7 +398,7 @@ internal class BetaMessageAccumulatorTest {
         // Check both the non-public "raw" JSON value and the public `Optional` value (which will
         // be `null` if the "raw" value is missing).
         assertThat(accumulator.message()._stopSequence().isMissing()).isEqualTo(true)
-        assertThat(accumulator.message().stopSequence().getOrNull()).isNull()
+        assertThat(accumulator.message().stopSequence()).isEmpty()
     }
 
     @Test
@@ -440,7 +414,7 @@ internal class BetaMessageAccumulatorTest {
 
         assertThat(accumulator.message()._stopSequence().isMissing()).isEqualTo(false)
         assertThat(accumulator.message()._stopSequence().isNull()).isEqualTo(true)
-        assertThat(accumulator.message().stopSequence().getOrNull()).isNull()
+        assertThat(accumulator.message().stopSequence()).isEmpty()
     }
 
     @Test
@@ -456,7 +430,7 @@ internal class BetaMessageAccumulatorTest {
 
         assertThat(accumulator.message()._stopSequence().isMissing()).isEqualTo(false)
         assertThat(accumulator.message()._stopSequence().isNull()).isEqualTo(false)
-        assertThat(accumulator.message().stopSequence().get()).isEqualTo("hello world")
+        assertThat(accumulator.message().stopSequence()).hasValue("hello world")
     }
 
     @Test
@@ -538,26 +512,29 @@ internal class BetaMessageAccumulatorTest {
         accumulator.accumulate(contentBlockStopEvent(1L))
 
         accumulator.accumulate(
-            messageDeltaEvent(stopReason = JsonField.of(StopReason.END_TURN), outputTokens = 99L)
+            messageDeltaEvent(
+                stopReason = JsonField.of(BetaStopReason.END_TURN),
+                outputTokens = 99L,
+            )
         )
         accumulator.accumulate(messageStopEvent())
 
         val message = accumulator.message()
         val content = message.content()
 
-        assertThat(message.stopSequence().getOrNull()).isNull()
-        assertThat(message.stopReason().get()).isEqualTo(BetaMessage.StopReason.END_TURN)
+        assertThat(message.stopSequence()).isEmpty()
+        assertThat(message.stopReason()).hasValue(BetaStopReason.END_TURN)
         assertThat(message.usage().inputTokens()).isEqualTo(INPUT_TOKENS)
         assertThat(message.usage().outputTokens()).isEqualTo(99L)
 
         assertThat(content.size).isEqualTo(2)
         assertThat(content[0].asText().text()).isEqualTo("1-ONE.1-TWO.1-THREE.")
-        assertThat(content[0].asText().citations().get())
-            .isEqualTo(listOf(textCitation(987L), textCitation(654L)))
+        assertThat(content[0].asText().citations())
+            .hasValue(listOf(textCitation(987L), textCitation(654L)))
 
         assertThat(content[1].asText().text()).isEqualTo("3-ONE.3-TWO.3-THREE.")
-        assertThat(content[1].asText().citations().get())
-            .isEqualTo(listOf(textCitation(234L), textCitation(123L)))
+        assertThat(content[1].asText().citations())
+            .hasValue(listOf(textCitation(234L), textCitation(123L)))
     }
 
     @Test
@@ -597,15 +574,18 @@ internal class BetaMessageAccumulatorTest {
         accumulator.accumulate(contentBlockStopEvent(1L))
 
         accumulator.accumulate(
-            messageDeltaEvent(stopReason = JsonField.of(StopReason.TOOL_USE), outputTokens = 88L)
+            messageDeltaEvent(
+                stopReason = JsonField.of(BetaStopReason.TOOL_USE),
+                outputTokens = 88L,
+            )
         )
         accumulator.accumulate(messageStopEvent())
 
         val message = accumulator.message()
         val content = message.content()
 
-        assertThat(message.stopSequence().getOrNull()).isNull()
-        assertThat(message.stopReason().get()).isEqualTo(BetaMessage.StopReason.TOOL_USE)
+        assertThat(message.stopSequence()).isEmpty()
+        assertThat(message.stopReason()).hasValue(BetaStopReason.TOOL_USE)
         assertThat(message.usage().inputTokens()).isEqualTo(INPUT_TOKENS)
         assertThat(message.usage().outputTokens()).isEqualTo(88L)
 
@@ -615,7 +595,7 @@ internal class BetaMessageAccumulatorTest {
             .isEqualTo(JsonString.of("world"))
 
         assertThat(content[1].asText().text()).isEqualTo("3-ONE.3-TWO.3-THREE.")
-        assertThat(content[1].asText().citations().get()).isEqualTo(listOf(textCitation(234L)))
+        assertThat(content[1].asText().citations()).hasValue(listOf(textCitation(234L)))
     }
 
     @Test
@@ -639,15 +619,18 @@ internal class BetaMessageAccumulatorTest {
         accumulator.accumulate(contentBlockStopEvent(1L))
 
         accumulator.accumulate(
-            messageDeltaEvent(stopReason = JsonField.of(StopReason.END_TURN), outputTokens = 88L)
+            messageDeltaEvent(
+                stopReason = JsonField.of(BetaStopReason.END_TURN),
+                outputTokens = 88L,
+            )
         )
         accumulator.accumulate(messageStopEvent())
 
         val message = accumulator.message()
         val content = message.content()
 
-        assertThat(message.stopSequence().getOrNull()).isNull()
-        assertThat(message.stopReason().get()).isEqualTo(BetaMessage.StopReason.END_TURN)
+        assertThat(message.stopSequence()).isEmpty()
+        assertThat(message.stopReason()).hasValue(BetaStopReason.END_TURN)
         assertThat(message.usage().inputTokens()).isEqualTo(INPUT_TOKENS)
         assertThat(message.usage().outputTokens()).isEqualTo(88L)
 
@@ -656,7 +639,7 @@ internal class BetaMessageAccumulatorTest {
         assertThat(content[0].asThinking().signature()).isEqualTo("a-signature")
 
         assertThat(content[1].asText().text()).isEqualTo("3-ONE.3-TWO.3-THREE.")
-        assertThat(content[1].asText().citations().get()).isEqualTo(listOf(textCitation(234L)))
+        assertThat(content[1].asText().citations()).hasValue(listOf(textCitation(234L)))
     }
 
     @Test
@@ -678,15 +661,18 @@ internal class BetaMessageAccumulatorTest {
         accumulator.accumulate(contentBlockStopEvent(1L))
 
         accumulator.accumulate(
-            messageDeltaEvent(stopReason = JsonField.of(StopReason.END_TURN), outputTokens = 88L)
+            messageDeltaEvent(
+                stopReason = JsonField.of(BetaStopReason.END_TURN),
+                outputTokens = 88L,
+            )
         )
         accumulator.accumulate(messageStopEvent())
 
         val message = accumulator.message()
         val content = message.content()
 
-        assertThat(message.stopSequence().getOrNull()).isNull()
-        assertThat(message.stopReason().get()).isEqualTo(BetaMessage.StopReason.END_TURN)
+        assertThat(message.stopSequence()).isEmpty()
+        assertThat(message.stopReason()).hasValue(BetaStopReason.END_TURN)
         assertThat(message.usage().inputTokens()).isEqualTo(INPUT_TOKENS)
         assertThat(message.usage().outputTokens()).isEqualTo(88L)
 
@@ -694,7 +680,7 @@ internal class BetaMessageAccumulatorTest {
         assertThat(content[0].asRedactedThinking().data()).isEqualTo("1-ONE.")
 
         assertThat(content[1].asText().text()).isEqualTo("3-ONE.3-TWO.3-THREE.")
-        assertThat(content[1].asText().citations().get()).isEqualTo(listOf(textCitation(234L)))
+        assertThat(content[1].asText().citations()).hasValue(listOf(textCitation(234L)))
     }
 
     @Test
@@ -706,15 +692,21 @@ internal class BetaMessageAccumulatorTest {
         assertThatNoException().isThrownBy { messageStartEvent() }
 
         assertThatNoException().isThrownBy {
-            messageDeltaEvent(stopReason = JsonField.of(StopReason.END_TURN))
+            messageDeltaEvent(stopReason = JsonField.of(BetaStopReason.END_TURN))
         }
         assertThatNoException().isThrownBy { messageDeltaEvent(outputTokens = 99) }
         assertThatNoException().isThrownBy {
-            messageDeltaEvent(JsonField.of(StopReason.STOP_SEQUENCE), JsonField.of("stop sequence"))
+            messageDeltaEvent(
+                JsonField.of(BetaStopReason.STOP_SEQUENCE),
+                JsonField.of("stop sequence"),
+            )
         }
         // Expect no enforcement of requiring `stop_sequence` if `stop_reason` is `"stop_sequence"`.
         assertThatNoException().isThrownBy {
-            messageDeltaEvent(JsonField.of(StopReason.STOP_SEQUENCE), stopSequence = SET_TO_NULL)
+            messageDeltaEvent(
+                JsonField.of(BetaStopReason.STOP_SEQUENCE),
+                stopSequence = SET_TO_NULL,
+            )
         }
         // Expect no enforcement of requiring `stop_reason` is `"stop_sequence"` when
         // `stop_sequence` is set.
@@ -722,7 +714,7 @@ internal class BetaMessageAccumulatorTest {
             messageDeltaEvent(stopReason = SET_TO_NULL, JsonField.of("stop sequence"))
         }
         assertThatNoException().isThrownBy {
-            messageDeltaEvent(JsonField.of(StopReason.END_TURN), JsonField.of("stop sequence"))
+            messageDeltaEvent(JsonField.of(BetaStopReason.END_TURN), JsonField.of("stop sequence"))
         }
 
         assertThatNoException().isThrownBy { messageStopEvent() }
@@ -797,7 +789,7 @@ internal class BetaMessageAccumulatorTest {
      *   tokens already accumulated by the message.
      */
     private fun messageDeltaEvent(
-        stopReason: JsonField<StopReason> = NOT_SET,
+        stopReason: JsonField<BetaStopReason> = NOT_SET,
         stopSequence: JsonField<String> = NOT_SET,
         outputTokens: Long = 0L,
     ) =
