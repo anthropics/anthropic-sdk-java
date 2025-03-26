@@ -2,15 +2,12 @@
 
 package com.anthropic.models.messages.batches
 
-import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
-import com.fasterxml.jackson.annotation.JsonAnyGetter
-import com.fasterxml.jackson.annotation.JsonAnySetter
-import java.util.Collections
+import com.anthropic.core.toImmutable
 import java.util.Objects
 import java.util.Optional
 
@@ -31,25 +28,17 @@ private constructor(
     private val messageBatchId: String,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
-    private val additionalBodyProperties: MutableMap<String, JsonValue>,
+    private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
     /** ID of the Message Batch. */
     fun messageBatchId(): String = messageBatchId
 
+    fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
+
     fun _additionalHeaders(): Headers = additionalHeaders
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
-
-    @JsonAnySetter
-    private fun putAdditionalBodyProperty(key: String, value: JsonValue) {
-        additionalBodyProperties.put(key, value)
-    }
-
-    @JsonAnyGetter
-    @ExcludeMissing
-    fun _additionalBodyProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalBodyProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -222,7 +211,7 @@ private constructor(
                 checkRequired("messageBatchId", messageBatchId),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
-                additionalBodyProperties.toMutableMap(),
+                additionalBodyProperties.toImmutable(),
             )
     }
 
