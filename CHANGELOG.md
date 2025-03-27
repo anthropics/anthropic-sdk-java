@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.9.2 (2025-03-27)
+
+Full Changelog: [v0.9.1...v0.9.2](https://github.com/anthropics/anthropic-sdk-java/compare/v0.9.1...v0.9.2)
+
+### Bug Fixes
+
+* **client:** deduplicate stop reason type ([d0c9ef4](https://github.com/anthropics/anthropic-sdk-java/commit/d0c9ef4d8978272bdc49b85c50a4f393168157ff))
+* **client:** deduplicate stop reason type ([#212](https://github.com/anthropics/anthropic-sdk-java/issues/212)) ([19ed57d](https://github.com/anthropics/anthropic-sdk-java/commit/19ed57da116f6818f21bc8a979ccb3a7d4ac5f7e))
+* **client:** map deserialization bug ([658fd88](https://github.com/anthropics/anthropic-sdk-java/commit/658fd888485427e0de1d03a3c24ba6336dc1d18b))
+
+
+### Chores
+
+* add hash of OpenAPI spec/config inputs to .stats.yml ([#210](https://github.com/anthropics/anthropic-sdk-java/issues/210)) ([8d3cbd4](https://github.com/anthropics/anthropic-sdk-java/commit/8d3cbd4bc4e34375cb020553a3ec3c051cd8ad6f))
+* **internal:** delete unused methods and annotations ([#213](https://github.com/anthropics/anthropic-sdk-java/issues/213)) ([658fd88](https://github.com/anthropics/anthropic-sdk-java/commit/658fd888485427e0de1d03a3c24ba6336dc1d18b))
+
 ## 0.9.1 (2025-03-25)
 
 Full Changelog: [v0.9.0...v0.9.1](https://github.com/anthropics/anthropic-sdk-java/compare/v0.9.0...v0.9.1)
