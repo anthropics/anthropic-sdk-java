@@ -27,7 +27,7 @@ internal class MessageTest {
                         .build()
                 )
                 .model(Model.CLAUDE_3_7_SONNET_LATEST)
-                .stopReason(StopReason.END_TURN)
+                .stopReason(Message.StopReason.END_TURN)
                 .stopSequence(null)
                 .usage(
                     Usage.builder()
@@ -58,7 +58,7 @@ internal class MessageTest {
                 )
             )
         assertThat(message.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
-        assertThat(message.stopReason()).contains(StopReason.END_TURN)
+        assertThat(message.stopReason()).contains(Message.StopReason.END_TURN)
         assertThat(message.stopSequence()).isEmpty
         assertThat(message.usage())
             .isEqualTo(

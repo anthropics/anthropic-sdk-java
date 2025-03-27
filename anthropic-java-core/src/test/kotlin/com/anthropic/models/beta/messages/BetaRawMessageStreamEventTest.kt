@@ -30,7 +30,7 @@ internal class BetaRawMessageStreamEventTest {
                                 .build()
                         )
                         .model(Model.CLAUDE_3_7_SONNET_LATEST)
-                        .stopReason(BetaStopReason.END_TURN)
+                        .stopReason(BetaMessage.StopReason.END_TURN)
                         .stopSequence(null)
                         .usage(
                             BetaUsage.builder()
@@ -60,7 +60,7 @@ internal class BetaRawMessageStreamEventTest {
             BetaRawMessageDeltaEvent.builder()
                 .delta(
                     BetaRawMessageDeltaEvent.Delta.builder()
-                        .stopReason(BetaStopReason.END_TURN)
+                        .stopReason(BetaRawMessageDeltaEvent.Delta.StopReason.END_TURN)
                         .stopSequence("stop_sequence")
                         .build()
                 )
