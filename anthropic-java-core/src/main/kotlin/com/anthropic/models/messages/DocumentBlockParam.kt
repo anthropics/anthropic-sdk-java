@@ -535,28 +535,28 @@ private constructor(
 
                 when (type) {
                     "base64" -> {
-                        tryDeserialize(node, jacksonTypeRef<Base64PdfSource>()) { it.validate() }
-                            ?.let {
-                                return Source(base64Pdf = it, _json = json)
-                            }
+                        return Source(
+                            base64Pdf = deserialize(node, jacksonTypeRef<Base64PdfSource>()),
+                            _json = json,
+                        )
                     }
                     "text" -> {
-                        tryDeserialize(node, jacksonTypeRef<PlainTextSource>()) { it.validate() }
-                            ?.let {
-                                return Source(plainText = it, _json = json)
-                            }
+                        return Source(
+                            plainText = deserialize(node, jacksonTypeRef<PlainTextSource>()),
+                            _json = json,
+                        )
                     }
                     "content" -> {
-                        tryDeserialize(node, jacksonTypeRef<ContentBlockSource>()) { it.validate() }
-                            ?.let {
-                                return Source(contentBlock = it, _json = json)
-                            }
+                        return Source(
+                            contentBlock = deserialize(node, jacksonTypeRef<ContentBlockSource>()),
+                            _json = json,
+                        )
                     }
                     "url" -> {
-                        tryDeserialize(node, jacksonTypeRef<UrlPdfSource>()) { it.validate() }
-                            ?.let {
-                                return Source(urlPdf = it, _json = json)
-                            }
+                        return Source(
+                            urlPdf = deserialize(node, jacksonTypeRef<UrlPdfSource>()),
+                            _json = json,
+                        )
                     }
                 }
 

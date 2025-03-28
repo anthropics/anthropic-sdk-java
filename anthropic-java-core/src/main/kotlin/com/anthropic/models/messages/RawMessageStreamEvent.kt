@@ -211,46 +211,43 @@ private constructor(
 
             when (type) {
                 "message_start" -> {
-                    tryDeserialize(node, jacksonTypeRef<RawMessageStartEvent>()) { it.validate() }
-                        ?.let {
-                            return RawMessageStreamEvent(start = it, _json = json)
-                        }
+                    return RawMessageStreamEvent(
+                        start = deserialize(node, jacksonTypeRef<RawMessageStartEvent>()),
+                        _json = json,
+                    )
                 }
                 "message_delta" -> {
-                    tryDeserialize(node, jacksonTypeRef<RawMessageDeltaEvent>()) { it.validate() }
-                        ?.let {
-                            return RawMessageStreamEvent(delta = it, _json = json)
-                        }
+                    return RawMessageStreamEvent(
+                        delta = deserialize(node, jacksonTypeRef<RawMessageDeltaEvent>()),
+                        _json = json,
+                    )
                 }
                 "message_stop" -> {
-                    tryDeserialize(node, jacksonTypeRef<RawMessageStopEvent>()) { it.validate() }
-                        ?.let {
-                            return RawMessageStreamEvent(stop = it, _json = json)
-                        }
+                    return RawMessageStreamEvent(
+                        stop = deserialize(node, jacksonTypeRef<RawMessageStopEvent>()),
+                        _json = json,
+                    )
                 }
                 "content_block_start" -> {
-                    tryDeserialize(node, jacksonTypeRef<RawContentBlockStartEvent>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return RawMessageStreamEvent(contentBlockStart = it, _json = json)
-                        }
+                    return RawMessageStreamEvent(
+                        contentBlockStart =
+                            deserialize(node, jacksonTypeRef<RawContentBlockStartEvent>()),
+                        _json = json,
+                    )
                 }
                 "content_block_delta" -> {
-                    tryDeserialize(node, jacksonTypeRef<RawContentBlockDeltaEvent>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return RawMessageStreamEvent(contentBlockDelta = it, _json = json)
-                        }
+                    return RawMessageStreamEvent(
+                        contentBlockDelta =
+                            deserialize(node, jacksonTypeRef<RawContentBlockDeltaEvent>()),
+                        _json = json,
+                    )
                 }
                 "content_block_stop" -> {
-                    tryDeserialize(node, jacksonTypeRef<RawContentBlockStopEvent>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return RawMessageStreamEvent(contentBlockStop = it, _json = json)
-                        }
+                    return RawMessageStreamEvent(
+                        contentBlockStop =
+                            deserialize(node, jacksonTypeRef<RawContentBlockStopEvent>()),
+                        _json = json,
+                    )
                 }
             }
 

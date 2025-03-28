@@ -182,28 +182,29 @@ private constructor(
 
             when (type) {
                 "text" -> {
-                    tryDeserialize(node, jacksonTypeRef<TextBlock>()) { it.validate() }
-                        ?.let {
-                            return ContentBlock(text = it, _json = json)
-                        }
+                    return ContentBlock(
+                        text = deserialize(node, jacksonTypeRef<TextBlock>()),
+                        _json = json,
+                    )
                 }
                 "tool_use" -> {
-                    tryDeserialize(node, jacksonTypeRef<ToolUseBlock>()) { it.validate() }
-                        ?.let {
-                            return ContentBlock(toolUse = it, _json = json)
-                        }
+                    return ContentBlock(
+                        toolUse = deserialize(node, jacksonTypeRef<ToolUseBlock>()),
+                        _json = json,
+                    )
                 }
                 "thinking" -> {
-                    tryDeserialize(node, jacksonTypeRef<ThinkingBlock>()) { it.validate() }
-                        ?.let {
-                            return ContentBlock(thinking = it, _json = json)
-                        }
+                    return ContentBlock(
+                        thinking = deserialize(node, jacksonTypeRef<ThinkingBlock>()),
+                        _json = json,
+                    )
                 }
                 "redacted_thinking" -> {
-                    tryDeserialize(node, jacksonTypeRef<RedactedThinkingBlock>()) { it.validate() }
-                        ?.let {
-                            return ContentBlock(redactedThinking = it, _json = json)
-                        }
+                    return ContentBlock(
+                        redactedThinking =
+                            deserialize(node, jacksonTypeRef<RedactedThinkingBlock>()),
+                        _json = json,
+                    )
                 }
             }
 
