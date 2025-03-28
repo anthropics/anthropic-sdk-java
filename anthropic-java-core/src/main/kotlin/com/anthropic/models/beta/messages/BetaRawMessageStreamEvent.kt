@@ -219,52 +219,43 @@ private constructor(
 
             when (type) {
                 "message_start" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaRawMessageStartEvent>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaRawMessageStreamEvent(start = it, _json = json)
-                        }
+                    return BetaRawMessageStreamEvent(
+                        start = deserialize(node, jacksonTypeRef<BetaRawMessageStartEvent>()),
+                        _json = json,
+                    )
                 }
                 "message_delta" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaRawMessageDeltaEvent>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaRawMessageStreamEvent(delta = it, _json = json)
-                        }
+                    return BetaRawMessageStreamEvent(
+                        delta = deserialize(node, jacksonTypeRef<BetaRawMessageDeltaEvent>()),
+                        _json = json,
+                    )
                 }
                 "message_stop" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaRawMessageStopEvent>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaRawMessageStreamEvent(stop = it, _json = json)
-                        }
+                    return BetaRawMessageStreamEvent(
+                        stop = deserialize(node, jacksonTypeRef<BetaRawMessageStopEvent>()),
+                        _json = json,
+                    )
                 }
                 "content_block_start" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaRawContentBlockStartEvent>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaRawMessageStreamEvent(contentBlockStart = it, _json = json)
-                        }
+                    return BetaRawMessageStreamEvent(
+                        contentBlockStart =
+                            deserialize(node, jacksonTypeRef<BetaRawContentBlockStartEvent>()),
+                        _json = json,
+                    )
                 }
                 "content_block_delta" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaRawContentBlockDeltaEvent>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaRawMessageStreamEvent(contentBlockDelta = it, _json = json)
-                        }
+                    return BetaRawMessageStreamEvent(
+                        contentBlockDelta =
+                            deserialize(node, jacksonTypeRef<BetaRawContentBlockDeltaEvent>()),
+                        _json = json,
+                    )
                 }
                 "content_block_stop" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaRawContentBlockStopEvent>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaRawMessageStreamEvent(contentBlockStop = it, _json = json)
-                        }
+                    return BetaRawMessageStreamEvent(
+                        contentBlockStop =
+                            deserialize(node, jacksonTypeRef<BetaRawContentBlockStopEvent>()),
+                        _json = json,
+                    )
                 }
             }
 

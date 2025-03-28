@@ -170,31 +170,25 @@ private constructor(
 
             when (type) {
                 "char_location" -> {
-                    tryDeserialize(node, jacksonTypeRef<CitationCharLocationParam>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return TextCitationParam(citationCharLocation = it, _json = json)
-                        }
+                    return TextCitationParam(
+                        citationCharLocation =
+                            deserialize(node, jacksonTypeRef<CitationCharLocationParam>()),
+                        _json = json,
+                    )
                 }
                 "page_location" -> {
-                    tryDeserialize(node, jacksonTypeRef<CitationPageLocationParam>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return TextCitationParam(citationPageLocation = it, _json = json)
-                        }
+                    return TextCitationParam(
+                        citationPageLocation =
+                            deserialize(node, jacksonTypeRef<CitationPageLocationParam>()),
+                        _json = json,
+                    )
                 }
                 "content_block_location" -> {
-                    tryDeserialize(node, jacksonTypeRef<CitationContentBlockLocationParam>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return TextCitationParam(
-                                citationContentBlockLocation = it,
-                                _json = json,
-                            )
-                        }
+                    return TextCitationParam(
+                        citationContentBlockLocation =
+                            deserialize(node, jacksonTypeRef<CitationContentBlockLocationParam>()),
+                        _json = json,
+                    )
                 }
             }
 

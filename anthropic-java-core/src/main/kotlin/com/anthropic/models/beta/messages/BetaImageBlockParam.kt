@@ -354,18 +354,17 @@ private constructor(
 
                 when (type) {
                     "base64" -> {
-                        tryDeserialize(node, jacksonTypeRef<BetaBase64ImageSource>()) {
-                                it.validate()
-                            }
-                            ?.let {
-                                return Source(betaBase64Image = it, _json = json)
-                            }
+                        return Source(
+                            betaBase64Image =
+                                deserialize(node, jacksonTypeRef<BetaBase64ImageSource>()),
+                            _json = json,
+                        )
                     }
                     "url" -> {
-                        tryDeserialize(node, jacksonTypeRef<BetaUrlImageSource>()) { it.validate() }
-                            ?.let {
-                                return Source(betaUrlImage = it, _json = json)
-                            }
+                        return Source(
+                            betaUrlImage = deserialize(node, jacksonTypeRef<BetaUrlImageSource>()),
+                            _json = json,
+                        )
                     }
                 }
 

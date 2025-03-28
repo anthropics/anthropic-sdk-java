@@ -186,30 +186,29 @@ private constructor(
 
             when (type) {
                 "text" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaTextBlock>()) { it.validate() }
-                        ?.let {
-                            return BetaContentBlock(text = it, _json = json)
-                        }
+                    return BetaContentBlock(
+                        text = deserialize(node, jacksonTypeRef<BetaTextBlock>()),
+                        _json = json,
+                    )
                 }
                 "tool_use" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaToolUseBlock>()) { it.validate() }
-                        ?.let {
-                            return BetaContentBlock(toolUse = it, _json = json)
-                        }
+                    return BetaContentBlock(
+                        toolUse = deserialize(node, jacksonTypeRef<BetaToolUseBlock>()),
+                        _json = json,
+                    )
                 }
                 "thinking" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaThinkingBlock>()) { it.validate() }
-                        ?.let {
-                            return BetaContentBlock(thinking = it, _json = json)
-                        }
+                    return BetaContentBlock(
+                        thinking = deserialize(node, jacksonTypeRef<BetaThinkingBlock>()),
+                        _json = json,
+                    )
                 }
                 "redacted_thinking" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaRedactedThinkingBlock>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaContentBlock(redactedThinking = it, _json = json)
-                        }
+                    return BetaContentBlock(
+                        redactedThinking =
+                            deserialize(node, jacksonTypeRef<BetaRedactedThinkingBlock>()),
+                        _json = json,
+                    )
                 }
             }
 
