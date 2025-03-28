@@ -366,6 +366,23 @@ import com.anthropic.models.messages.Message;
 Message parsedMessage = message.parse();
 ```
 
+### Request IDs
+
+> For more information on debugging requests, see [the API docs](https://docs.anthropic.com/en/api/errors#request-id).
+
+When using raw responses, you can access the `request-id` response header using the `requestId()` method:
+
+```java
+import com.anthropic.core.http.HttpResponseFor;
+import com.anthropic.models.messages.Message;
+import java.util.Optional;
+
+HttpResponseFor<Message> message = client.messages().withRawResponse().create(params);
+Optional<String> requestId = message.requestId();
+```
+
+This can be used to quickly log failing requests and report them back to Anthropic.
+
 ## Error handling
 
 The SDK throws custom unchecked exception types:
