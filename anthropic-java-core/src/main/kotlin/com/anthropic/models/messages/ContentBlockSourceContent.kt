@@ -133,16 +133,16 @@ private constructor(
 
             when (type) {
                 "text" -> {
-                    tryDeserialize(node, jacksonTypeRef<TextBlockParam>()) { it.validate() }
-                        ?.let {
-                            return ContentBlockSourceContent(textBlockParam = it, _json = json)
-                        }
+                    return ContentBlockSourceContent(
+                        textBlockParam = deserialize(node, jacksonTypeRef<TextBlockParam>()),
+                        _json = json,
+                    )
                 }
                 "image" -> {
-                    tryDeserialize(node, jacksonTypeRef<ImageBlockParam>()) { it.validate() }
-                        ?.let {
-                            return ContentBlockSourceContent(imageBlockParam = it, _json = json)
-                        }
+                    return ContentBlockSourceContent(
+                        imageBlockParam = deserialize(node, jacksonTypeRef<ImageBlockParam>()),
+                        _json = json,
+                    )
                 }
             }
 

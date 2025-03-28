@@ -221,48 +221,47 @@ private constructor(
 
             when (type) {
                 "text" -> {
-                    tryDeserialize(node, jacksonTypeRef<TextBlockParam>()) { it.validate() }
-                        ?.let {
-                            return ContentBlockParam(text = it, _json = json)
-                        }
+                    return ContentBlockParam(
+                        text = deserialize(node, jacksonTypeRef<TextBlockParam>()),
+                        _json = json,
+                    )
                 }
                 "image" -> {
-                    tryDeserialize(node, jacksonTypeRef<ImageBlockParam>()) { it.validate() }
-                        ?.let {
-                            return ContentBlockParam(image = it, _json = json)
-                        }
+                    return ContentBlockParam(
+                        image = deserialize(node, jacksonTypeRef<ImageBlockParam>()),
+                        _json = json,
+                    )
                 }
                 "tool_use" -> {
-                    tryDeserialize(node, jacksonTypeRef<ToolUseBlockParam>()) { it.validate() }
-                        ?.let {
-                            return ContentBlockParam(toolUse = it, _json = json)
-                        }
+                    return ContentBlockParam(
+                        toolUse = deserialize(node, jacksonTypeRef<ToolUseBlockParam>()),
+                        _json = json,
+                    )
                 }
                 "tool_result" -> {
-                    tryDeserialize(node, jacksonTypeRef<ToolResultBlockParam>()) { it.validate() }
-                        ?.let {
-                            return ContentBlockParam(toolResult = it, _json = json)
-                        }
+                    return ContentBlockParam(
+                        toolResult = deserialize(node, jacksonTypeRef<ToolResultBlockParam>()),
+                        _json = json,
+                    )
                 }
                 "document" -> {
-                    tryDeserialize(node, jacksonTypeRef<DocumentBlockParam>()) { it.validate() }
-                        ?.let {
-                            return ContentBlockParam(document = it, _json = json)
-                        }
+                    return ContentBlockParam(
+                        document = deserialize(node, jacksonTypeRef<DocumentBlockParam>()),
+                        _json = json,
+                    )
                 }
                 "thinking" -> {
-                    tryDeserialize(node, jacksonTypeRef<ThinkingBlockParam>()) { it.validate() }
-                        ?.let {
-                            return ContentBlockParam(thinking = it, _json = json)
-                        }
+                    return ContentBlockParam(
+                        thinking = deserialize(node, jacksonTypeRef<ThinkingBlockParam>()),
+                        _json = json,
+                    )
                 }
                 "redacted_thinking" -> {
-                    tryDeserialize(node, jacksonTypeRef<RedactedThinkingBlockParam>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return ContentBlockParam(redactedThinking = it, _json = json)
-                        }
+                    return ContentBlockParam(
+                        redactedThinking =
+                            deserialize(node, jacksonTypeRef<RedactedThinkingBlockParam>()),
+                        _json = json,
+                    )
                 }
             }
 
