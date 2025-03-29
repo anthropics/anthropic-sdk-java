@@ -9,8 +9,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java/0.9.2)
-[![javadoc](https://javadoc.io/badge2/com.anthropic/anthropic-java/0.9.2/javadoc.svg)](https://javadoc.io/doc/com.anthropic/anthropic-java/0.9.2)
+[![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java/0.9.3)
+[![javadoc](https://javadoc.io/badge2/com.anthropic/anthropic-java/0.9.3/javadoc.svg)](https://javadoc.io/doc/com.anthropic/anthropic-java/0.9.3)
 
 <!-- x-release-please-end -->
 
@@ -18,7 +18,7 @@ The Anthropic Java SDK provides convenient access to the [Anthropic REST API](ht
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [docs.anthropic.com](https://docs.anthropic.com/claude/reference/). Javadocs are also available on [javadoc.io](https://javadoc.io/doc/com.anthropic/anthropic-java/0.9.2).
+The REST API documentation can be found on [docs.anthropic.com](https://docs.anthropic.com/claude/reference/). Javadocs are also available on [javadoc.io](https://javadoc.io/doc/com.anthropic/anthropic-java/0.9.3).
 
 <!-- x-release-please-end -->
 
@@ -29,7 +29,7 @@ The REST API documentation can be found on [docs.anthropic.com](https://docs.ant
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java:0.9.2")
+implementation("com.anthropic:anthropic-java:0.9.3")
 ```
 
 ### Maven
@@ -38,7 +38,7 @@ implementation("com.anthropic:anthropic-java:0.9.2")
 <dependency>
   <groupId>com.anthropic</groupId>
   <artifactId>anthropic-java</artifactId>
-  <version>0.9.2</version>
+  <version>0.9.3</version>
 </dependency>
 ```
 
@@ -471,7 +471,7 @@ requires the `anthropic-java-bedrock` library dependency.
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java-bedrock:0.9.2")
+implementation("com.anthropic:anthropic-java-bedrock:0.9.3")
 ```
 
 ### Maven
@@ -480,7 +480,7 @@ implementation("com.anthropic:anthropic-java-bedrock:0.9.2")
 <dependency>
     <groupId>com.anthropic</groupId>
     <artifactId>anthropic-java-bedrock</artifactId>
-    <version>0.9.2</version>
+    <version>0.9.3</version>
 </dependency>
 ```
 
@@ -554,7 +554,7 @@ This support requires the `anthropic-java-vertex` library dependency.
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java-vertex:0.9.2")
+implementation("com.anthropic:anthropic-java-vertex:0.9.3")
 ```
 
 ### Maven
@@ -563,7 +563,7 @@ implementation("com.anthropic:anthropic-java-vertex:0.9.2")
 <dependency>
     <groupId>com.anthropic</groupId>
     <artifactId>anthropic-java-vertex</artifactId>
-    <version>0.9.2</version>
+    <version>0.9.3</version>
 </dependency>
 ```
 
