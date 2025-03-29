@@ -406,30 +406,29 @@ private constructor(
 
                 when (type) {
                     "text" -> {
-                        tryDeserialize(node, jacksonTypeRef<BetaTextBlock>()) { it.validate() }
-                            ?.let {
-                                return ContentBlock(betaText = it, _json = json)
-                            }
+                        return ContentBlock(
+                            betaText = deserialize(node, jacksonTypeRef<BetaTextBlock>()),
+                            _json = json,
+                        )
                     }
                     "tool_use" -> {
-                        tryDeserialize(node, jacksonTypeRef<BetaToolUseBlock>()) { it.validate() }
-                            ?.let {
-                                return ContentBlock(betaToolUse = it, _json = json)
-                            }
+                        return ContentBlock(
+                            betaToolUse = deserialize(node, jacksonTypeRef<BetaToolUseBlock>()),
+                            _json = json,
+                        )
                     }
                     "thinking" -> {
-                        tryDeserialize(node, jacksonTypeRef<BetaThinkingBlock>()) { it.validate() }
-                            ?.let {
-                                return ContentBlock(betaThinking = it, _json = json)
-                            }
+                        return ContentBlock(
+                            betaThinking = deserialize(node, jacksonTypeRef<BetaThinkingBlock>()),
+                            _json = json,
+                        )
                     }
                     "redacted_thinking" -> {
-                        tryDeserialize(node, jacksonTypeRef<BetaRedactedThinkingBlock>()) {
-                                it.validate()
-                            }
-                            ?.let {
-                                return ContentBlock(betaRedactedThinking = it, _json = json)
-                            }
+                        return ContentBlock(
+                            betaRedactedThinking =
+                                deserialize(node, jacksonTypeRef<BetaRedactedThinkingBlock>()),
+                            _json = json,
+                        )
                     }
                 }
 

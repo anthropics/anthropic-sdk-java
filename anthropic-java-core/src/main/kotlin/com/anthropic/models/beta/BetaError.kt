@@ -251,64 +251,61 @@ private constructor(
 
             when (type) {
                 "invalid_request_error" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaInvalidRequestError>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaError(invalidRequest = it, _json = json)
-                        }
+                    return BetaError(
+                        invalidRequest =
+                            deserialize(node, jacksonTypeRef<BetaInvalidRequestError>()),
+                        _json = json,
+                    )
                 }
                 "authentication_error" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaAuthenticationError>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaError(authentication = it, _json = json)
-                        }
+                    return BetaError(
+                        authentication =
+                            deserialize(node, jacksonTypeRef<BetaAuthenticationError>()),
+                        _json = json,
+                    )
                 }
                 "billing_error" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaBillingError>()) { it.validate() }
-                        ?.let {
-                            return BetaError(billing = it, _json = json)
-                        }
+                    return BetaError(
+                        billing = deserialize(node, jacksonTypeRef<BetaBillingError>()),
+                        _json = json,
+                    )
                 }
                 "permission_error" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaPermissionError>()) { it.validate() }
-                        ?.let {
-                            return BetaError(permission = it, _json = json)
-                        }
+                    return BetaError(
+                        permission = deserialize(node, jacksonTypeRef<BetaPermissionError>()),
+                        _json = json,
+                    )
                 }
                 "not_found_error" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaNotFoundError>()) { it.validate() }
-                        ?.let {
-                            return BetaError(notFound = it, _json = json)
-                        }
+                    return BetaError(
+                        notFound = deserialize(node, jacksonTypeRef<BetaNotFoundError>()),
+                        _json = json,
+                    )
                 }
                 "rate_limit_error" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaRateLimitError>()) { it.validate() }
-                        ?.let {
-                            return BetaError(rateLimit = it, _json = json)
-                        }
+                    return BetaError(
+                        rateLimit = deserialize(node, jacksonTypeRef<BetaRateLimitError>()),
+                        _json = json,
+                    )
                 }
                 "timeout_error" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaGatewayTimeoutError>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaError(gatewayTimeout = it, _json = json)
-                        }
+                    return BetaError(
+                        gatewayTimeout =
+                            deserialize(node, jacksonTypeRef<BetaGatewayTimeoutError>()),
+                        _json = json,
+                    )
                 }
                 "api_error" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaApiError>()) { it.validate() }
-                        ?.let {
-                            return BetaError(api = it, _json = json)
-                        }
+                    return BetaError(
+                        api = deserialize(node, jacksonTypeRef<BetaApiError>()),
+                        _json = json,
+                    )
                 }
                 "overloaded_error" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaOverloadedError>()) { it.validate() }
-                        ?.let {
-                            return BetaError(overloaded = it, _json = json)
-                        }
+                    return BetaError(
+                        overloaded = deserialize(node, jacksonTypeRef<BetaOverloadedError>()),
+                        _json = json,
+                    )
                 }
             }
 

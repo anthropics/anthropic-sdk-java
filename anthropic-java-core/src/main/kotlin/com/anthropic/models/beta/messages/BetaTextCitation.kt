@@ -170,28 +170,25 @@ private constructor(
 
             when (type) {
                 "char_location" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaCitationCharLocation>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaTextCitation(citationCharLocation = it, _json = json)
-                        }
+                    return BetaTextCitation(
+                        citationCharLocation =
+                            deserialize(node, jacksonTypeRef<BetaCitationCharLocation>()),
+                        _json = json,
+                    )
                 }
                 "page_location" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaCitationPageLocation>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaTextCitation(citationPageLocation = it, _json = json)
-                        }
+                    return BetaTextCitation(
+                        citationPageLocation =
+                            deserialize(node, jacksonTypeRef<BetaCitationPageLocation>()),
+                        _json = json,
+                    )
                 }
                 "content_block_location" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaCitationContentBlockLocation>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaTextCitation(citationContentBlockLocation = it, _json = json)
-                        }
+                    return BetaTextCitation(
+                        citationContentBlockLocation =
+                            deserialize(node, jacksonTypeRef<BetaCitationContentBlockLocation>()),
+                        _json = json,
+                    )
                 }
             }
 

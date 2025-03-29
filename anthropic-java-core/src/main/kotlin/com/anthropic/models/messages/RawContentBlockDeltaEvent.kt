@@ -461,34 +461,34 @@ private constructor(
 
                 when (type) {
                     "text_delta" -> {
-                        tryDeserialize(node, jacksonTypeRef<TextDelta>()) { it.validate() }
-                            ?.let {
-                                return Delta(text = it, _json = json)
-                            }
+                        return Delta(
+                            text = deserialize(node, jacksonTypeRef<TextDelta>()),
+                            _json = json,
+                        )
                     }
                     "input_json_delta" -> {
-                        tryDeserialize(node, jacksonTypeRef<InputJsonDelta>()) { it.validate() }
-                            ?.let {
-                                return Delta(inputJson = it, _json = json)
-                            }
+                        return Delta(
+                            inputJson = deserialize(node, jacksonTypeRef<InputJsonDelta>()),
+                            _json = json,
+                        )
                     }
                     "citations_delta" -> {
-                        tryDeserialize(node, jacksonTypeRef<CitationsDelta>()) { it.validate() }
-                            ?.let {
-                                return Delta(citations = it, _json = json)
-                            }
+                        return Delta(
+                            citations = deserialize(node, jacksonTypeRef<CitationsDelta>()),
+                            _json = json,
+                        )
                     }
                     "thinking_delta" -> {
-                        tryDeserialize(node, jacksonTypeRef<ThinkingDelta>()) { it.validate() }
-                            ?.let {
-                                return Delta(thinking = it, _json = json)
-                            }
+                        return Delta(
+                            thinking = deserialize(node, jacksonTypeRef<ThinkingDelta>()),
+                            _json = json,
+                        )
                     }
                     "signature_delta" -> {
-                        tryDeserialize(node, jacksonTypeRef<SignatureDelta>()) { it.validate() }
-                            ?.let {
-                                return Delta(signature = it, _json = json)
-                            }
+                        return Delta(
+                            signature = deserialize(node, jacksonTypeRef<SignatureDelta>()),
+                            _json = json,
+                        )
                     }
                 }
 

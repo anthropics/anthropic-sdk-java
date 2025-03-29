@@ -266,58 +266,61 @@ private constructor(
 
             when (type) {
                 "invalid_request_error" -> {
-                    tryDeserialize(node, jacksonTypeRef<InvalidRequestError>()) { it.validate() }
-                        ?.let {
-                            return ErrorObject(invalidRequestError = it, _json = json)
-                        }
+                    return ErrorObject(
+                        invalidRequestError =
+                            deserialize(node, jacksonTypeRef<InvalidRequestError>()),
+                        _json = json,
+                    )
                 }
                 "authentication_error" -> {
-                    tryDeserialize(node, jacksonTypeRef<AuthenticationError>()) { it.validate() }
-                        ?.let {
-                            return ErrorObject(authenticationError = it, _json = json)
-                        }
+                    return ErrorObject(
+                        authenticationError =
+                            deserialize(node, jacksonTypeRef<AuthenticationError>()),
+                        _json = json,
+                    )
                 }
                 "billing_error" -> {
-                    tryDeserialize(node, jacksonTypeRef<BillingError>()) { it.validate() }
-                        ?.let {
-                            return ErrorObject(billingError = it, _json = json)
-                        }
+                    return ErrorObject(
+                        billingError = deserialize(node, jacksonTypeRef<BillingError>()),
+                        _json = json,
+                    )
                 }
                 "permission_error" -> {
-                    tryDeserialize(node, jacksonTypeRef<PermissionError>()) { it.validate() }
-                        ?.let {
-                            return ErrorObject(permissionError = it, _json = json)
-                        }
+                    return ErrorObject(
+                        permissionError = deserialize(node, jacksonTypeRef<PermissionError>()),
+                        _json = json,
+                    )
                 }
                 "not_found_error" -> {
-                    tryDeserialize(node, jacksonTypeRef<NotFoundError>()) { it.validate() }
-                        ?.let {
-                            return ErrorObject(notFoundError = it, _json = json)
-                        }
+                    return ErrorObject(
+                        notFoundError = deserialize(node, jacksonTypeRef<NotFoundError>()),
+                        _json = json,
+                    )
                 }
                 "rate_limit_error" -> {
-                    tryDeserialize(node, jacksonTypeRef<RateLimitError>()) { it.validate() }
-                        ?.let {
-                            return ErrorObject(rateLimitError = it, _json = json)
-                        }
+                    return ErrorObject(
+                        rateLimitError = deserialize(node, jacksonTypeRef<RateLimitError>()),
+                        _json = json,
+                    )
                 }
                 "timeout_error" -> {
-                    tryDeserialize(node, jacksonTypeRef<GatewayTimeoutError>()) { it.validate() }
-                        ?.let {
-                            return ErrorObject(gatewayTimeoutError = it, _json = json)
-                        }
+                    return ErrorObject(
+                        gatewayTimeoutError =
+                            deserialize(node, jacksonTypeRef<GatewayTimeoutError>()),
+                        _json = json,
+                    )
                 }
                 "api_error" -> {
-                    tryDeserialize(node, jacksonTypeRef<ApiErrorObject>()) { it.validate() }
-                        ?.let {
-                            return ErrorObject(api = it, _json = json)
-                        }
+                    return ErrorObject(
+                        api = deserialize(node, jacksonTypeRef<ApiErrorObject>()),
+                        _json = json,
+                    )
                 }
                 "overloaded_error" -> {
-                    tryDeserialize(node, jacksonTypeRef<OverloadedError>()) { it.validate() }
-                        ?.let {
-                            return ErrorObject(overloadedError = it, _json = json)
-                        }
+                    return ErrorObject(
+                        overloadedError = deserialize(node, jacksonTypeRef<OverloadedError>()),
+                        _json = json,
+                    )
                 }
             }
 

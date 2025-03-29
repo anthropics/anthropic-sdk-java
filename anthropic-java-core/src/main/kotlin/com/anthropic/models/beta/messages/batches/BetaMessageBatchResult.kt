@@ -177,36 +177,32 @@ private constructor(
 
             when (type) {
                 "succeeded" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaMessageBatchSucceededResult>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaMessageBatchResult(succeeded = it, _json = json)
-                        }
+                    return BetaMessageBatchResult(
+                        succeeded =
+                            deserialize(node, jacksonTypeRef<BetaMessageBatchSucceededResult>()),
+                        _json = json,
+                    )
                 }
                 "errored" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaMessageBatchErroredResult>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaMessageBatchResult(errored = it, _json = json)
-                        }
+                    return BetaMessageBatchResult(
+                        errored =
+                            deserialize(node, jacksonTypeRef<BetaMessageBatchErroredResult>()),
+                        _json = json,
+                    )
                 }
                 "canceled" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaMessageBatchCanceledResult>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaMessageBatchResult(canceled = it, _json = json)
-                        }
+                    return BetaMessageBatchResult(
+                        canceled =
+                            deserialize(node, jacksonTypeRef<BetaMessageBatchCanceledResult>()),
+                        _json = json,
+                    )
                 }
                 "expired" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaMessageBatchExpiredResult>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaMessageBatchResult(expired = it, _json = json)
-                        }
+                    return BetaMessageBatchResult(
+                        expired =
+                            deserialize(node, jacksonTypeRef<BetaMessageBatchExpiredResult>()),
+                        _json = json,
+                    )
                 }
             }
 

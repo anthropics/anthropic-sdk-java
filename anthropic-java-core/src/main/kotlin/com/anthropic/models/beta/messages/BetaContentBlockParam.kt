@@ -227,50 +227,47 @@ private constructor(
 
             when (type) {
                 "text" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaTextBlockParam>()) { it.validate() }
-                        ?.let {
-                            return BetaContentBlockParam(text = it, _json = json)
-                        }
+                    return BetaContentBlockParam(
+                        text = deserialize(node, jacksonTypeRef<BetaTextBlockParam>()),
+                        _json = json,
+                    )
                 }
                 "image" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaImageBlockParam>()) { it.validate() }
-                        ?.let {
-                            return BetaContentBlockParam(image = it, _json = json)
-                        }
+                    return BetaContentBlockParam(
+                        image = deserialize(node, jacksonTypeRef<BetaImageBlockParam>()),
+                        _json = json,
+                    )
                 }
                 "tool_use" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaToolUseBlockParam>()) { it.validate() }
-                        ?.let {
-                            return BetaContentBlockParam(toolUse = it, _json = json)
-                        }
+                    return BetaContentBlockParam(
+                        toolUse = deserialize(node, jacksonTypeRef<BetaToolUseBlockParam>()),
+                        _json = json,
+                    )
                 }
                 "tool_result" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaToolResultBlockParam>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaContentBlockParam(toolResult = it, _json = json)
-                        }
+                    return BetaContentBlockParam(
+                        toolResult = deserialize(node, jacksonTypeRef<BetaToolResultBlockParam>()),
+                        _json = json,
+                    )
                 }
                 "document" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaBase64PdfBlock>()) { it.validate() }
-                        ?.let {
-                            return BetaContentBlockParam(base64PdfBlock = it, _json = json)
-                        }
+                    return BetaContentBlockParam(
+                        base64PdfBlock = deserialize(node, jacksonTypeRef<BetaBase64PdfBlock>()),
+                        _json = json,
+                    )
                 }
                 "thinking" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaThinkingBlockParam>()) { it.validate() }
-                        ?.let {
-                            return BetaContentBlockParam(thinking = it, _json = json)
-                        }
+                    return BetaContentBlockParam(
+                        thinking = deserialize(node, jacksonTypeRef<BetaThinkingBlockParam>()),
+                        _json = json,
+                    )
                 }
                 "redacted_thinking" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaRedactedThinkingBlockParam>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaContentBlockParam(redactedThinking = it, _json = json)
-                        }
+                    return BetaContentBlockParam(
+                        redactedThinking =
+                            deserialize(node, jacksonTypeRef<BetaRedactedThinkingBlockParam>()),
+                        _json = json,
+                    )
                 }
             }
 

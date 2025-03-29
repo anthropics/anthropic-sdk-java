@@ -181,28 +181,28 @@ private constructor(
 
             when (type) {
                 "auto" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaToolChoiceAuto>()) { it.validate() }
-                        ?.let {
-                            return BetaToolChoice(auto = it, _json = json)
-                        }
+                    return BetaToolChoice(
+                        auto = deserialize(node, jacksonTypeRef<BetaToolChoiceAuto>()),
+                        _json = json,
+                    )
                 }
                 "any" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaToolChoiceAny>()) { it.validate() }
-                        ?.let {
-                            return BetaToolChoice(any = it, _json = json)
-                        }
+                    return BetaToolChoice(
+                        any = deserialize(node, jacksonTypeRef<BetaToolChoiceAny>()),
+                        _json = json,
+                    )
                 }
                 "tool" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaToolChoiceTool>()) { it.validate() }
-                        ?.let {
-                            return BetaToolChoice(tool = it, _json = json)
-                        }
+                    return BetaToolChoice(
+                        tool = deserialize(node, jacksonTypeRef<BetaToolChoiceTool>()),
+                        _json = json,
+                    )
                 }
                 "none" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaToolChoiceNone>()) { it.validate() }
-                        ?.let {
-                            return BetaToolChoice(none = it, _json = json)
-                        }
+                    return BetaToolChoice(
+                        none = deserialize(node, jacksonTypeRef<BetaToolChoiceNone>()),
+                        _json = json,
+                    )
                 }
             }
 

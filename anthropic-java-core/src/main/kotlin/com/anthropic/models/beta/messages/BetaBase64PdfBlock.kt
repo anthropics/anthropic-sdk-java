@@ -551,34 +551,31 @@ private constructor(
 
                 when (type) {
                     "base64" -> {
-                        tryDeserialize(node, jacksonTypeRef<BetaBase64PdfSource>()) {
-                                it.validate()
-                            }
-                            ?.let {
-                                return Source(betaBase64Pdf = it, _json = json)
-                            }
+                        return Source(
+                            betaBase64Pdf =
+                                deserialize(node, jacksonTypeRef<BetaBase64PdfSource>()),
+                            _json = json,
+                        )
                     }
                     "text" -> {
-                        tryDeserialize(node, jacksonTypeRef<BetaPlainTextSource>()) {
-                                it.validate()
-                            }
-                            ?.let {
-                                return Source(betaPlainText = it, _json = json)
-                            }
+                        return Source(
+                            betaPlainText =
+                                deserialize(node, jacksonTypeRef<BetaPlainTextSource>()),
+                            _json = json,
+                        )
                     }
                     "content" -> {
-                        tryDeserialize(node, jacksonTypeRef<BetaContentBlockSource>()) {
-                                it.validate()
-                            }
-                            ?.let {
-                                return Source(betaContentBlock = it, _json = json)
-                            }
+                        return Source(
+                            betaContentBlock =
+                                deserialize(node, jacksonTypeRef<BetaContentBlockSource>()),
+                            _json = json,
+                        )
                     }
                     "url" -> {
-                        tryDeserialize(node, jacksonTypeRef<BetaUrlPdfSource>()) { it.validate() }
-                            ?.let {
-                                return Source(betaUrlPdf = it, _json = json)
-                            }
+                        return Source(
+                            betaUrlPdf = deserialize(node, jacksonTypeRef<BetaUrlPdfSource>()),
+                            _json = json,
+                        )
                     }
                 }
 

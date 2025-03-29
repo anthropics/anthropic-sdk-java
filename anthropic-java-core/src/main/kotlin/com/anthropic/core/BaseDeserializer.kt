@@ -1,5 +1,6 @@
 package com.anthropic.core
 
+import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.ObjectCodec
 import com.fasterxml.jackson.core.type.TypeReference
@@ -28,6 +29,13 @@ abstract class BaseDeserializer<T : Any>(type: KClass<T>) :
     }
 
     protected abstract fun ObjectCodec.deserialize(node: JsonNode): T
+
+    protected fun <T> ObjectCodec.deserialize(node: JsonNode, type: TypeReference<T>): T =
+        try {
+            readValue(treeAsTokens(node), type)
+        } catch (e: Exception) {
+            throw AnthropicInvalidDataException("Error deserializing", e)
+        }
 
     protected fun <T> ObjectCodec.tryDeserialize(
         node: JsonNode,

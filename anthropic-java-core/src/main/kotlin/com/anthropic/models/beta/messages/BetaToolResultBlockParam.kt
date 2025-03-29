@@ -546,20 +546,18 @@ private constructor(
 
                     when (type) {
                         "text" -> {
-                            tryDeserialize(node, jacksonTypeRef<BetaTextBlockParam>()) {
-                                    it.validate()
-                                }
-                                ?.let {
-                                    return Block(betaTextBlockParam = it, _json = json)
-                                }
+                            return Block(
+                                betaTextBlockParam =
+                                    deserialize(node, jacksonTypeRef<BetaTextBlockParam>()),
+                                _json = json,
+                            )
                         }
                         "image" -> {
-                            tryDeserialize(node, jacksonTypeRef<BetaImageBlockParam>()) {
-                                    it.validate()
-                                }
-                                ?.let {
-                                    return Block(betaImageBlockParam = it, _json = json)
-                                }
+                            return Block(
+                                betaImageBlockParam =
+                                    deserialize(node, jacksonTypeRef<BetaImageBlockParam>()),
+                                _json = json,
+                            )
                         }
                     }
 

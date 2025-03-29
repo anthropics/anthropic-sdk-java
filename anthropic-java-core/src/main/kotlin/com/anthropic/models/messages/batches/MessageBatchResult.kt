@@ -174,36 +174,29 @@ private constructor(
 
             when (type) {
                 "succeeded" -> {
-                    tryDeserialize(node, jacksonTypeRef<MessageBatchSucceededResult>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return MessageBatchResult(succeeded = it, _json = json)
-                        }
+                    return MessageBatchResult(
+                        succeeded =
+                            deserialize(node, jacksonTypeRef<MessageBatchSucceededResult>()),
+                        _json = json,
+                    )
                 }
                 "errored" -> {
-                    tryDeserialize(node, jacksonTypeRef<MessageBatchErroredResult>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return MessageBatchResult(errored = it, _json = json)
-                        }
+                    return MessageBatchResult(
+                        errored = deserialize(node, jacksonTypeRef<MessageBatchErroredResult>()),
+                        _json = json,
+                    )
                 }
                 "canceled" -> {
-                    tryDeserialize(node, jacksonTypeRef<MessageBatchCanceledResult>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return MessageBatchResult(canceled = it, _json = json)
-                        }
+                    return MessageBatchResult(
+                        canceled = deserialize(node, jacksonTypeRef<MessageBatchCanceledResult>()),
+                        _json = json,
+                    )
                 }
                 "expired" -> {
-                    tryDeserialize(node, jacksonTypeRef<MessageBatchExpiredResult>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return MessageBatchResult(expired = it, _json = json)
-                        }
+                    return MessageBatchResult(
+                        expired = deserialize(node, jacksonTypeRef<MessageBatchExpiredResult>()),
+                        _json = json,
+                    )
                 }
             }
 

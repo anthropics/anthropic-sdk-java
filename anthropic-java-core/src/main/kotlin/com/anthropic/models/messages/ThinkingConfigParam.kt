@@ -141,16 +141,16 @@ private constructor(
 
             when (type) {
                 "enabled" -> {
-                    tryDeserialize(node, jacksonTypeRef<ThinkingConfigEnabled>()) { it.validate() }
-                        ?.let {
-                            return ThinkingConfigParam(enabled = it, _json = json)
-                        }
+                    return ThinkingConfigParam(
+                        enabled = deserialize(node, jacksonTypeRef<ThinkingConfigEnabled>()),
+                        _json = json,
+                    )
                 }
                 "disabled" -> {
-                    tryDeserialize(node, jacksonTypeRef<ThinkingConfigDisabled>()) { it.validate() }
-                        ?.let {
-                            return ThinkingConfigParam(disabled = it, _json = json)
-                        }
+                    return ThinkingConfigParam(
+                        disabled = deserialize(node, jacksonTypeRef<ThinkingConfigDisabled>()),
+                        _json = json,
+                    )
                 }
             }
 

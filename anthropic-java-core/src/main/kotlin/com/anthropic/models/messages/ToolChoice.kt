@@ -178,28 +178,28 @@ private constructor(
 
             when (type) {
                 "auto" -> {
-                    tryDeserialize(node, jacksonTypeRef<ToolChoiceAuto>()) { it.validate() }
-                        ?.let {
-                            return ToolChoice(auto = it, _json = json)
-                        }
+                    return ToolChoice(
+                        auto = deserialize(node, jacksonTypeRef<ToolChoiceAuto>()),
+                        _json = json,
+                    )
                 }
                 "any" -> {
-                    tryDeserialize(node, jacksonTypeRef<ToolChoiceAny>()) { it.validate() }
-                        ?.let {
-                            return ToolChoice(any = it, _json = json)
-                        }
+                    return ToolChoice(
+                        any = deserialize(node, jacksonTypeRef<ToolChoiceAny>()),
+                        _json = json,
+                    )
                 }
                 "tool" -> {
-                    tryDeserialize(node, jacksonTypeRef<ToolChoiceTool>()) { it.validate() }
-                        ?.let {
-                            return ToolChoice(tool = it, _json = json)
-                        }
+                    return ToolChoice(
+                        tool = deserialize(node, jacksonTypeRef<ToolChoiceTool>()),
+                        _json = json,
+                    )
                 }
                 "none" -> {
-                    tryDeserialize(node, jacksonTypeRef<ToolChoiceNone>()) { it.validate() }
-                        ?.let {
-                            return ToolChoice(none = it, _json = json)
-                        }
+                    return ToolChoice(
+                        none = deserialize(node, jacksonTypeRef<ToolChoiceNone>()),
+                        _json = json,
+                    )
                 }
             }
 

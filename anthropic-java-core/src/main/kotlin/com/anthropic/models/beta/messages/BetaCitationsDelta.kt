@@ -357,28 +357,28 @@ private constructor(
 
                 when (type) {
                     "char_location" -> {
-                        tryDeserialize(node, jacksonTypeRef<BetaCitationCharLocation>()) {
-                                it.validate()
-                            }
-                            ?.let {
-                                return Citation(betaCitationCharLocation = it, _json = json)
-                            }
+                        return Citation(
+                            betaCitationCharLocation =
+                                deserialize(node, jacksonTypeRef<BetaCitationCharLocation>()),
+                            _json = json,
+                        )
                     }
                     "page_location" -> {
-                        tryDeserialize(node, jacksonTypeRef<BetaCitationPageLocation>()) {
-                                it.validate()
-                            }
-                            ?.let {
-                                return Citation(betaCitationPageLocation = it, _json = json)
-                            }
+                        return Citation(
+                            betaCitationPageLocation =
+                                deserialize(node, jacksonTypeRef<BetaCitationPageLocation>()),
+                            _json = json,
+                        )
                     }
                     "content_block_location" -> {
-                        tryDeserialize(node, jacksonTypeRef<BetaCitationContentBlockLocation>()) {
-                                it.validate()
-                            }
-                            ?.let {
-                                return Citation(betaCitationContentBlockLocation = it, _json = json)
-                            }
+                        return Citation(
+                            betaCitationContentBlockLocation =
+                                deserialize(
+                                    node,
+                                    jacksonTypeRef<BetaCitationContentBlockLocation>(),
+                                ),
+                            _json = json,
+                        )
                     }
                 }
 

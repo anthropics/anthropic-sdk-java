@@ -143,20 +143,16 @@ private constructor(
 
             when (type) {
                 "enabled" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaThinkingConfigEnabled>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaThinkingConfigParam(enabled = it, _json = json)
-                        }
+                    return BetaThinkingConfigParam(
+                        enabled = deserialize(node, jacksonTypeRef<BetaThinkingConfigEnabled>()),
+                        _json = json,
+                    )
                 }
                 "disabled" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaThinkingConfigDisabled>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaThinkingConfigParam(disabled = it, _json = json)
-                        }
+                    return BetaThinkingConfigParam(
+                        disabled = deserialize(node, jacksonTypeRef<BetaThinkingConfigDisabled>()),
+                        _json = json,
+                    )
                 }
             }
 

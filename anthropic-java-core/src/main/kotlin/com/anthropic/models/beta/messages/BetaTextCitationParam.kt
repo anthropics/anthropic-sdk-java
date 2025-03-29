@@ -171,31 +171,28 @@ private constructor(
 
             when (type) {
                 "char_location" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaCitationCharLocationParam>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaTextCitationParam(citationCharLocation = it, _json = json)
-                        }
+                    return BetaTextCitationParam(
+                        citationCharLocation =
+                            deserialize(node, jacksonTypeRef<BetaCitationCharLocationParam>()),
+                        _json = json,
+                    )
                 }
                 "page_location" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaCitationPageLocationParam>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaTextCitationParam(citationPageLocation = it, _json = json)
-                        }
+                    return BetaTextCitationParam(
+                        citationPageLocation =
+                            deserialize(node, jacksonTypeRef<BetaCitationPageLocationParam>()),
+                        _json = json,
+                    )
                 }
                 "content_block_location" -> {
-                    tryDeserialize(node, jacksonTypeRef<BetaCitationContentBlockLocationParam>()) {
-                            it.validate()
-                        }
-                        ?.let {
-                            return BetaTextCitationParam(
-                                citationContentBlockLocation = it,
-                                _json = json,
-                            )
-                        }
+                    return BetaTextCitationParam(
+                        citationContentBlockLocation =
+                            deserialize(
+                                node,
+                                jacksonTypeRef<BetaCitationContentBlockLocationParam>(),
+                            ),
+                        _json = json,
+                    )
                 }
             }
 

@@ -336,28 +336,25 @@ private constructor(
 
                 when (type) {
                     "char_location" -> {
-                        tryDeserialize(node, jacksonTypeRef<CitationCharLocation>()) {
-                                it.validate()
-                            }
-                            ?.let {
-                                return Citation(charLocation = it, _json = json)
-                            }
+                        return Citation(
+                            charLocation =
+                                deserialize(node, jacksonTypeRef<CitationCharLocation>()),
+                            _json = json,
+                        )
                     }
                     "page_location" -> {
-                        tryDeserialize(node, jacksonTypeRef<CitationPageLocation>()) {
-                                it.validate()
-                            }
-                            ?.let {
-                                return Citation(pageLocation = it, _json = json)
-                            }
+                        return Citation(
+                            pageLocation =
+                                deserialize(node, jacksonTypeRef<CitationPageLocation>()),
+                            _json = json,
+                        )
                     }
                     "content_block_location" -> {
-                        tryDeserialize(node, jacksonTypeRef<CitationContentBlockLocation>()) {
-                                it.validate()
-                            }
-                            ?.let {
-                                return Citation(contentBlockLocation = it, _json = json)
-                            }
+                        return Citation(
+                            contentBlockLocation =
+                                deserialize(node, jacksonTypeRef<CitationContentBlockLocation>()),
+                            _json = json,
+                        )
                     }
                 }
 
