@@ -1,12 +1,5 @@
 # Anthropic Java API Library
 
-> [!NOTE]  
-> The Anthropic Java API Library is currently in _beta_.
->
-> There may be minor breaking changes.
->
-> Have thoughts or feedback? [File an issue](https://github.com/anthropics/anthropic-sdk-java/issues/new) or comment on [this discussion](https://github.com/anthropics/anthropic-sdk-java/discussions/95). 
-
 <!-- x-release-please-start-version -->
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java/0.9.2)
