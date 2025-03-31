@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.0.0 (2025-03-31)
+
+Full Changelog: [v0.9.2...v1.0.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.9.2...v1.0.0)
+
+### Bug Fixes
+
+* **client:** don't call `validate()` during deserialization if we don't have to ([#219](https://github.com/anthropics/anthropic-sdk-java/issues/219)) ([061bd9b](https://github.com/anthropics/anthropic-sdk-java/commit/061bd9b2d503ef32cf180c6bbaea2b9b0427c604))
+
+
+### Chores
+
+* **internal:** add back release workflow ([be2b431](https://github.com/anthropics/anthropic-sdk-java/commit/be2b431d0fcab85feb9573a163e2582c0365f9ea))
+* **internal:** remove CI condition ([#218](https://github.com/anthropics/anthropic-sdk-java/issues/218)) ([e73c68c](https://github.com/anthropics/anthropic-sdk-java/commit/e73c68c8cb9261f872736903d15c38ed027cd8c7))
+* **internal:** update config ([#215](https://github.com/anthropics/anthropic-sdk-java/issues/215)) ([f12e3fe](https://github.com/anthropics/anthropic-sdk-java/commit/f12e3fefd6dde0bc9e0520ebf42532b14dcd46ff))
+
+
+### Documentation
+
+* add comment on response header methods ([#220](https://github.com/anthropics/anthropic-sdk-java/issues/220)) ([9bc3401](https://github.com/anthropics/anthropic-sdk-java/commit/9bc34018f2a88fa7ba06bc2aea5b6aaeb0d26a94))
+* document request IDs ([d083d5c](https://github.com/anthropics/anthropic-sdk-java/commit/d083d5c0e11aefccf850b3a278c50e6aef5199e1))
+* remove beta readme note ([9d00d0f](https://github.com/anthropics/anthropic-sdk-java/commit/9d00d0f1eeec1132968f61e6d00b9d4ea69a9d99))
+
 ## 0.9.2 (2025-03-27)
 
 Full Changelog: [v0.9.1...v0.9.2](https://github.com/anthropics/anthropic-sdk-java/compare/v0.9.1...v0.9.2)
