@@ -126,7 +126,7 @@ internal class BetaRawMessageStreamEventTest {
     @Test
     fun ofContentBlockDelta() {
         val contentBlockDelta =
-            BetaRawContentBlockDeltaEvent.builder().betaTextDelta("text").index(0L).build()
+            BetaRawContentBlockDeltaEvent.builder().textDelta("text").index(0L).build()
 
         val betaRawMessageStreamEvent =
             BetaRawMessageStreamEvent.ofContentBlockDelta(contentBlockDelta)
