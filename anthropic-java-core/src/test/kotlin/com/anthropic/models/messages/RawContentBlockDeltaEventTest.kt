@@ -13,9 +13,7 @@ internal class RawContentBlockDeltaEventTest {
             RawContentBlockDeltaEvent.builder().textDelta("text").index(0L).build()
 
         assertThat(rawContentBlockDeltaEvent.delta())
-            .isEqualTo(
-                RawContentBlockDeltaEvent.Delta.ofText(TextDelta.builder().text("text").build())
-            )
+            .isEqualTo(RawContentBlockDelta.ofText(TextDelta.builder().text("text").build()))
         assertThat(rawContentBlockDeltaEvent.index()).isEqualTo(0L)
     }
 }
