@@ -3,30 +3,7 @@ package com.anthropic.helpers
 import com.anthropic.core.JsonObject
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
-import com.anthropic.models.beta.messages.BetaCitationCharLocation
-import com.anthropic.models.beta.messages.BetaCitationContentBlockLocation
-import com.anthropic.models.beta.messages.BetaCitationPageLocation
-import com.anthropic.models.beta.messages.BetaCitationsDelta
-import com.anthropic.models.beta.messages.BetaContentBlock
-import com.anthropic.models.beta.messages.BetaInputJsonDelta
-import com.anthropic.models.beta.messages.BetaMessage
-import com.anthropic.models.beta.messages.BetaMessageDeltaUsage
-import com.anthropic.models.beta.messages.BetaRawContentBlockDeltaEvent
-import com.anthropic.models.beta.messages.BetaRawContentBlockStartEvent
-import com.anthropic.models.beta.messages.BetaRawContentBlockStopEvent
-import com.anthropic.models.beta.messages.BetaRawMessageDeltaEvent
-import com.anthropic.models.beta.messages.BetaRawMessageStartEvent
-import com.anthropic.models.beta.messages.BetaRawMessageStopEvent
-import com.anthropic.models.beta.messages.BetaRawMessageStreamEvent
-import com.anthropic.models.beta.messages.BetaRedactedThinkingBlock
-import com.anthropic.models.beta.messages.BetaSignatureDelta
-import com.anthropic.models.beta.messages.BetaTextBlock
-import com.anthropic.models.beta.messages.BetaTextCitation
-import com.anthropic.models.beta.messages.BetaTextDelta
-import com.anthropic.models.beta.messages.BetaThinkingBlock
-import com.anthropic.models.beta.messages.BetaThinkingDelta
-import com.anthropic.models.beta.messages.BetaToolUseBlock
-import com.anthropic.models.beta.messages.BetaUsage
+import com.anthropic.models.beta.messages.*
 
 /**
  * An accumulator that constructs a [BetaMessage] from a sequence of streamed events. Pass all
@@ -267,21 +244,22 @@ class BetaMessageAccumulator private constructor() {
                                     BetaRawContentBlockStartEvent.ContentBlock.Visitor<
                                         BetaContentBlock
                                     > {
-                                    override fun visitBetaText(text: BetaTextBlock) =
-                                        BetaContentBlock.ofText(text)
+                                    override fun visitBetaText(betaText: BetaTextBlock) =
+                                        BetaContentBlock.ofText(betaText)
 
-                                    override fun visitBetaToolUse(toolUse: BetaToolUseBlock) =
-                                        BetaContentBlock.ofToolUse(toolUse)
+                                    override fun visitBetaToolUse(betaToolUse: BetaToolUseBlock) =
+                                        BetaContentBlock.ofToolUse(betaToolUse)
 
-                                    override fun visitBetaThinking(thinking: BetaThinkingBlock) =
-                                        BetaContentBlock.ofThinking(thinking)
+                                    override fun visitBetaThinking(
+                                        betaThinking: BetaThinkingBlock
+                                    ) = BetaContentBlock.ofThinking(betaThinking)
 
                                     // Anthropic Extended Thinking API specification:
                                     // "`redacted_thinking` blocks will not have any deltas
                                     // associated and will be sent as a single event."
                                     override fun visitBetaRedactedThinking(
-                                        redactedThinking: BetaRedactedThinkingBlock
-                                    ) = BetaContentBlock.ofRedactedThinking(redactedThinking)
+                                        betaRedactedThinking: BetaRedactedThinkingBlock
+                                    ) = BetaContentBlock.ofRedactedThinking(betaRedactedThinking)
                                 }
                             )
                 }
@@ -300,12 +278,11 @@ class BetaMessageAccumulator private constructor() {
                         contentBlockDelta
                             .delta()
                             .accept(
-                                object :
-                                    BetaRawContentBlockDeltaEvent.Delta.Visitor<BetaContentBlock> {
-                                    override fun visitBetaText(text: BetaTextDelta) =
+                                object : BetaRawContentBlockDelta.Visitor<BetaContentBlock> {
+                                    override fun visitText(text: BetaTextDelta) =
                                         mergeTextDelta(oldContentBlock, text)
 
-                                    override fun visitBetaInputJson(inputJson: BetaInputJsonDelta) =
+                                    override fun visitInputJson(inputJson: BetaInputJsonDelta) =
                                         run {
                                             val oldInputJson = messageContentInputJson[index]
 
@@ -315,13 +292,13 @@ class BetaMessageAccumulator private constructor() {
                                             oldContentBlock // Unchanged until stop event.
                                         }
 
-                                    override fun visitBetaCitations(citations: BetaCitationsDelta) =
+                                    override fun visitCitations(citations: BetaCitationsDelta) =
                                         mergeCitationsDelta(oldContentBlock, citations)
 
-                                    override fun visitBetaThinking(thinking: BetaThinkingDelta) =
+                                    override fun visitThinking(thinking: BetaThinkingDelta) =
                                         mergeThinkingDelta(oldContentBlock, thinking)
 
-                                    override fun visitBetaSignature(signature: BetaSignatureDelta) =
+                                    override fun visitSignature(signature: BetaSignatureDelta) =
                                         mergeSignatureDelta(oldContentBlock, signature)
                                 }
                             )

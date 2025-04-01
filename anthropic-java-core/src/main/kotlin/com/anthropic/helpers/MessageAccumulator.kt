@@ -3,30 +3,7 @@ package com.anthropic.helpers
 import com.anthropic.core.JsonObject
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
-import com.anthropic.models.messages.CitationCharLocation
-import com.anthropic.models.messages.CitationContentBlockLocation
-import com.anthropic.models.messages.CitationPageLocation
-import com.anthropic.models.messages.CitationsDelta
-import com.anthropic.models.messages.ContentBlock
-import com.anthropic.models.messages.InputJsonDelta
-import com.anthropic.models.messages.Message
-import com.anthropic.models.messages.MessageDeltaUsage
-import com.anthropic.models.messages.RawContentBlockDeltaEvent
-import com.anthropic.models.messages.RawContentBlockStartEvent
-import com.anthropic.models.messages.RawContentBlockStopEvent
-import com.anthropic.models.messages.RawMessageDeltaEvent
-import com.anthropic.models.messages.RawMessageStartEvent
-import com.anthropic.models.messages.RawMessageStopEvent
-import com.anthropic.models.messages.RawMessageStreamEvent
-import com.anthropic.models.messages.RedactedThinkingBlock
-import com.anthropic.models.messages.SignatureDelta
-import com.anthropic.models.messages.TextBlock
-import com.anthropic.models.messages.TextCitation
-import com.anthropic.models.messages.TextDelta
-import com.anthropic.models.messages.ThinkingBlock
-import com.anthropic.models.messages.ThinkingDelta
-import com.anthropic.models.messages.ToolUseBlock
-import com.anthropic.models.messages.Usage
+import com.anthropic.models.messages.*
 
 /**
  * An accumulator that constructs a [Message] from a sequence of streamed events. Pass all events
@@ -292,7 +269,7 @@ class MessageAccumulator private constructor() {
                         contentBlockDelta
                             .delta()
                             .accept(
-                                object : RawContentBlockDeltaEvent.Delta.Visitor<ContentBlock> {
+                                object : RawContentBlockDelta.Visitor<ContentBlock> {
                                     override fun visitText(text: TextDelta) =
                                         mergeTextDelta(oldContentBlock, text)
 
