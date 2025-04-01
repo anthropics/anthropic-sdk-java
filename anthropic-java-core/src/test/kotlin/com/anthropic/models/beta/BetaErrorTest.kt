@@ -2,8 +2,15 @@
 
 package com.anthropic.models.beta
 
+import com.anthropic.core.JsonValue
+import com.anthropic.core.jsonMapper
+import com.anthropic.errors.AnthropicInvalidDataException
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 
 internal class BetaErrorTest {
 
@@ -25,6 +32,21 @@ internal class BetaErrorTest {
     }
 
     @Test
+    fun ofInvalidRequestRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaError =
+            BetaError.ofInvalidRequest(BetaInvalidRequestError.builder().message("message").build())
+
+        val roundtrippedBetaError =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaError),
+                jacksonTypeRef<BetaError>(),
+            )
+
+        assertThat(roundtrippedBetaError).isEqualTo(betaError)
+    }
+
+    @Test
     fun ofAuthentication() {
         val authentication = BetaAuthenticationError.builder().message("message").build()
 
@@ -39,6 +61,21 @@ internal class BetaErrorTest {
         assertThat(betaError.gatewayTimeout()).isEmpty
         assertThat(betaError.api()).isEmpty
         assertThat(betaError.overloaded()).isEmpty
+    }
+
+    @Test
+    fun ofAuthenticationRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaError =
+            BetaError.ofAuthentication(BetaAuthenticationError.builder().message("message").build())
+
+        val roundtrippedBetaError =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaError),
+                jacksonTypeRef<BetaError>(),
+            )
+
+        assertThat(roundtrippedBetaError).isEqualTo(betaError)
     }
 
     @Test
@@ -59,6 +96,20 @@ internal class BetaErrorTest {
     }
 
     @Test
+    fun ofBillingRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaError = BetaError.ofBilling(BetaBillingError.builder().message("message").build())
+
+        val roundtrippedBetaError =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaError),
+                jacksonTypeRef<BetaError>(),
+            )
+
+        assertThat(roundtrippedBetaError).isEqualTo(betaError)
+    }
+
+    @Test
     fun ofPermission() {
         val permission = BetaPermissionError.builder().message("message").build()
 
@@ -73,6 +124,21 @@ internal class BetaErrorTest {
         assertThat(betaError.gatewayTimeout()).isEmpty
         assertThat(betaError.api()).isEmpty
         assertThat(betaError.overloaded()).isEmpty
+    }
+
+    @Test
+    fun ofPermissionRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaError =
+            BetaError.ofPermission(BetaPermissionError.builder().message("message").build())
+
+        val roundtrippedBetaError =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaError),
+                jacksonTypeRef<BetaError>(),
+            )
+
+        assertThat(roundtrippedBetaError).isEqualTo(betaError)
     }
 
     @Test
@@ -93,6 +159,20 @@ internal class BetaErrorTest {
     }
 
     @Test
+    fun ofNotFoundRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaError = BetaError.ofNotFound(BetaNotFoundError.builder().message("message").build())
+
+        val roundtrippedBetaError =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaError),
+                jacksonTypeRef<BetaError>(),
+            )
+
+        assertThat(roundtrippedBetaError).isEqualTo(betaError)
+    }
+
+    @Test
     fun ofRateLimit() {
         val rateLimit = BetaRateLimitError.builder().message("message").build()
 
@@ -107,6 +187,21 @@ internal class BetaErrorTest {
         assertThat(betaError.gatewayTimeout()).isEmpty
         assertThat(betaError.api()).isEmpty
         assertThat(betaError.overloaded()).isEmpty
+    }
+
+    @Test
+    fun ofRateLimitRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaError =
+            BetaError.ofRateLimit(BetaRateLimitError.builder().message("message").build())
+
+        val roundtrippedBetaError =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaError),
+                jacksonTypeRef<BetaError>(),
+            )
+
+        assertThat(roundtrippedBetaError).isEqualTo(betaError)
     }
 
     @Test
@@ -127,6 +222,21 @@ internal class BetaErrorTest {
     }
 
     @Test
+    fun ofGatewayTimeoutRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaError =
+            BetaError.ofGatewayTimeout(BetaGatewayTimeoutError.builder().message("message").build())
+
+        val roundtrippedBetaError =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaError),
+                jacksonTypeRef<BetaError>(),
+            )
+
+        assertThat(roundtrippedBetaError).isEqualTo(betaError)
+    }
+
+    @Test
     fun ofApi() {
         val api = BetaApiError.builder().message("message").build()
 
@@ -144,6 +254,20 @@ internal class BetaErrorTest {
     }
 
     @Test
+    fun ofApiRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaError = BetaError.ofApi(BetaApiError.builder().message("message").build())
+
+        val roundtrippedBetaError =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaError),
+                jacksonTypeRef<BetaError>(),
+            )
+
+        assertThat(roundtrippedBetaError).isEqualTo(betaError)
+    }
+
+    @Test
     fun ofOverloaded() {
         val overloaded = BetaOverloadedError.builder().message("message").build()
 
@@ -158,5 +282,37 @@ internal class BetaErrorTest {
         assertThat(betaError.gatewayTimeout()).isEmpty
         assertThat(betaError.api()).isEmpty
         assertThat(betaError.overloaded()).contains(overloaded)
+    }
+
+    @Test
+    fun ofOverloadedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaError =
+            BetaError.ofOverloaded(BetaOverloadedError.builder().message("message").build())
+
+        val roundtrippedBetaError =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaError),
+                jacksonTypeRef<BetaError>(),
+            )
+
+        assertThat(roundtrippedBetaError).isEqualTo(betaError)
+    }
+
+    enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
+        BOOLEAN(JsonValue.from(false)),
+        STRING(JsonValue.from("invalid")),
+        INTEGER(JsonValue.from(-1)),
+        FLOAT(JsonValue.from(3.14)),
+        ARRAY(JsonValue.from(listOf("invalid", "array"))),
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    fun incompatibleJsonShapeDeserializesToUnknown(testCase: IncompatibleJsonShapeTestCase) {
+        val betaError = jsonMapper().convertValue(testCase.value, jacksonTypeRef<BetaError>())
+
+        val e = assertThrows<AnthropicInvalidDataException> { betaError.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
     }
 }

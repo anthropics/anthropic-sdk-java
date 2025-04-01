@@ -62,8 +62,8 @@ private constructor(
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-    fun <T> accept(visitor: Visitor<T>): T {
-        return when {
+    fun <T> accept(visitor: Visitor<T>): T =
+        when {
             text != null -> visitor.visitText(text)
             inputJson != null -> visitor.visitInputJson(inputJson)
             citations != null -> visitor.visitCitations(citations)
@@ -71,7 +71,6 @@ private constructor(
             signature != null -> visitor.visitSignature(signature)
             else -> visitor.unknown(_json)
         }
-    }
 
     private var validated: Boolean = false
 
@@ -105,6 +104,37 @@ private constructor(
         )
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        accept(
+            object : Visitor<Int> {
+                override fun visitText(text: TextDelta) = text.validity()
+
+                override fun visitInputJson(inputJson: InputJsonDelta) = inputJson.validity()
+
+                override fun visitCitations(citations: CitationsDelta) = citations.validity()
+
+                override fun visitThinking(thinking: ThinkingDelta) = thinking.validity()
+
+                override fun visitSignature(signature: SignatureDelta) = signature.validity()
+
+                override fun unknown(json: JsonValue?) = 0
+            }
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -184,34 +214,29 @@ private constructor(
 
             when (type) {
                 "text_delta" -> {
-                    return RawContentBlockDelta(
-                        text = deserialize(node, jacksonTypeRef<TextDelta>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<TextDelta>())?.let {
+                        RawContentBlockDelta(text = it, _json = json)
+                    } ?: RawContentBlockDelta(_json = json)
                 }
                 "input_json_delta" -> {
-                    return RawContentBlockDelta(
-                        inputJson = deserialize(node, jacksonTypeRef<InputJsonDelta>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<InputJsonDelta>())?.let {
+                        RawContentBlockDelta(inputJson = it, _json = json)
+                    } ?: RawContentBlockDelta(_json = json)
                 }
                 "citations_delta" -> {
-                    return RawContentBlockDelta(
-                        citations = deserialize(node, jacksonTypeRef<CitationsDelta>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<CitationsDelta>())?.let {
+                        RawContentBlockDelta(citations = it, _json = json)
+                    } ?: RawContentBlockDelta(_json = json)
                 }
                 "thinking_delta" -> {
-                    return RawContentBlockDelta(
-                        thinking = deserialize(node, jacksonTypeRef<ThinkingDelta>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<ThinkingDelta>())?.let {
+                        RawContentBlockDelta(thinking = it, _json = json)
+                    } ?: RawContentBlockDelta(_json = json)
                 }
                 "signature_delta" -> {
-                    return RawContentBlockDelta(
-                        signature = deserialize(node, jacksonTypeRef<SignatureDelta>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<SignatureDelta>())?.let {
+                        RawContentBlockDelta(signature = it, _json = json)
+                    } ?: RawContentBlockDelta(_json = json)
                 }
             }
 

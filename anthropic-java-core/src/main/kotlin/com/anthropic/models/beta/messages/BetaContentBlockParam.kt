@@ -78,8 +78,8 @@ private constructor(
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-    fun <T> accept(visitor: Visitor<T>): T {
-        return when {
+    fun <T> accept(visitor: Visitor<T>): T =
+        when {
             text != null -> visitor.visitText(text)
             image != null -> visitor.visitImage(image)
             toolUse != null -> visitor.visitToolUse(toolUse)
@@ -89,7 +89,6 @@ private constructor(
             redactedThinking != null -> visitor.visitRedactedThinking(redactedThinking)
             else -> visitor.unknown(_json)
         }
-    }
 
     private var validated: Boolean = false
 
@@ -133,6 +132,45 @@ private constructor(
         )
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        accept(
+            object : Visitor<Int> {
+                override fun visitText(text: BetaTextBlockParam) = text.validity()
+
+                override fun visitImage(image: BetaImageBlockParam) = image.validity()
+
+                override fun visitToolUse(toolUse: BetaToolUseBlockParam) = toolUse.validity()
+
+                override fun visitToolResult(toolResult: BetaToolResultBlockParam) =
+                    toolResult.validity()
+
+                override fun visitBase64PdfBlock(base64PdfBlock: BetaBase64PdfBlock) =
+                    base64PdfBlock.validity()
+
+                override fun visitThinking(thinking: BetaThinkingBlockParam) = thinking.validity()
+
+                override fun visitRedactedThinking(
+                    redactedThinking: BetaRedactedThinkingBlockParam
+                ) = redactedThinking.validity()
+
+                override fun unknown(json: JsonValue?) = 0
+            }
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -227,47 +265,39 @@ private constructor(
 
             when (type) {
                 "text" -> {
-                    return BetaContentBlockParam(
-                        text = deserialize(node, jacksonTypeRef<BetaTextBlockParam>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaTextBlockParam>())?.let {
+                        BetaContentBlockParam(text = it, _json = json)
+                    } ?: BetaContentBlockParam(_json = json)
                 }
                 "image" -> {
-                    return BetaContentBlockParam(
-                        image = deserialize(node, jacksonTypeRef<BetaImageBlockParam>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaImageBlockParam>())?.let {
+                        BetaContentBlockParam(image = it, _json = json)
+                    } ?: BetaContentBlockParam(_json = json)
                 }
                 "tool_use" -> {
-                    return BetaContentBlockParam(
-                        toolUse = deserialize(node, jacksonTypeRef<BetaToolUseBlockParam>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaToolUseBlockParam>())?.let {
+                        BetaContentBlockParam(toolUse = it, _json = json)
+                    } ?: BetaContentBlockParam(_json = json)
                 }
                 "tool_result" -> {
-                    return BetaContentBlockParam(
-                        toolResult = deserialize(node, jacksonTypeRef<BetaToolResultBlockParam>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaToolResultBlockParam>())?.let {
+                        BetaContentBlockParam(toolResult = it, _json = json)
+                    } ?: BetaContentBlockParam(_json = json)
                 }
                 "document" -> {
-                    return BetaContentBlockParam(
-                        base64PdfBlock = deserialize(node, jacksonTypeRef<BetaBase64PdfBlock>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaBase64PdfBlock>())?.let {
+                        BetaContentBlockParam(base64PdfBlock = it, _json = json)
+                    } ?: BetaContentBlockParam(_json = json)
                 }
                 "thinking" -> {
-                    return BetaContentBlockParam(
-                        thinking = deserialize(node, jacksonTypeRef<BetaThinkingBlockParam>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaThinkingBlockParam>())?.let {
+                        BetaContentBlockParam(thinking = it, _json = json)
+                    } ?: BetaContentBlockParam(_json = json)
                 }
                 "redacted_thinking" -> {
-                    return BetaContentBlockParam(
-                        redactedThinking =
-                            deserialize(node, jacksonTypeRef<BetaRedactedThinkingBlockParam>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaRedactedThinkingBlockParam>())
+                        ?.let { BetaContentBlockParam(redactedThinking = it, _json = json) }
+                        ?: BetaContentBlockParam(_json = json)
                 }
             }
 

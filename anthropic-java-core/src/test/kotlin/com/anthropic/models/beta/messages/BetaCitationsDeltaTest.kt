@@ -2,6 +2,8 @@
 
 package com.anthropic.models.beta.messages
 
+import com.anthropic.core.jsonMapper
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -34,5 +36,30 @@ internal class BetaCitationsDeltaTest {
                         .build()
                 )
             )
+    }
+
+    @Test
+    fun roundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaCitationsDelta =
+            BetaCitationsDelta.builder()
+                .citation(
+                    BetaCitationCharLocation.builder()
+                        .citedText("cited_text")
+                        .documentIndex(0L)
+                        .documentTitle("document_title")
+                        .endCharIndex(0L)
+                        .startCharIndex(0L)
+                        .build()
+                )
+                .build()
+
+        val roundtrippedBetaCitationsDelta =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaCitationsDelta),
+                jacksonTypeRef<BetaCitationsDelta>(),
+            )
+
+        assertThat(roundtrippedBetaCitationsDelta).isEqualTo(betaCitationsDelta)
     }
 }

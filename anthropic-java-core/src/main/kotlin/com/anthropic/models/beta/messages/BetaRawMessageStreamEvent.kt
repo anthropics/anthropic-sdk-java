@@ -75,8 +75,8 @@ private constructor(
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-    fun <T> accept(visitor: Visitor<T>): T {
-        return when {
+    fun <T> accept(visitor: Visitor<T>): T =
+        when {
             start != null -> visitor.visitStart(start)
             delta != null -> visitor.visitDelta(delta)
             stop != null -> visitor.visitStop(stop)
@@ -85,7 +85,6 @@ private constructor(
             contentBlockStop != null -> visitor.visitContentBlockStop(contentBlockStop)
             else -> visitor.unknown(_json)
         }
-    }
 
     private var validated: Boolean = false
 
@@ -127,6 +126,44 @@ private constructor(
         )
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        accept(
+            object : Visitor<Int> {
+                override fun visitStart(start: BetaRawMessageStartEvent) = start.validity()
+
+                override fun visitDelta(delta: BetaRawMessageDeltaEvent) = delta.validity()
+
+                override fun visitStop(stop: BetaRawMessageStopEvent) = stop.validity()
+
+                override fun visitContentBlockStart(
+                    contentBlockStart: BetaRawContentBlockStartEvent
+                ) = contentBlockStart.validity()
+
+                override fun visitContentBlockDelta(
+                    contentBlockDelta: BetaRawContentBlockDeltaEvent
+                ) = contentBlockDelta.validity()
+
+                override fun visitContentBlockStop(contentBlockStop: BetaRawContentBlockStopEvent) =
+                    contentBlockStop.validity()
+
+                override fun unknown(json: JsonValue?) = 0
+            }
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -219,43 +256,34 @@ private constructor(
 
             when (type) {
                 "message_start" -> {
-                    return BetaRawMessageStreamEvent(
-                        start = deserialize(node, jacksonTypeRef<BetaRawMessageStartEvent>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaRawMessageStartEvent>())?.let {
+                        BetaRawMessageStreamEvent(start = it, _json = json)
+                    } ?: BetaRawMessageStreamEvent(_json = json)
                 }
                 "message_delta" -> {
-                    return BetaRawMessageStreamEvent(
-                        delta = deserialize(node, jacksonTypeRef<BetaRawMessageDeltaEvent>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaRawMessageDeltaEvent>())?.let {
+                        BetaRawMessageStreamEvent(delta = it, _json = json)
+                    } ?: BetaRawMessageStreamEvent(_json = json)
                 }
                 "message_stop" -> {
-                    return BetaRawMessageStreamEvent(
-                        stop = deserialize(node, jacksonTypeRef<BetaRawMessageStopEvent>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaRawMessageStopEvent>())?.let {
+                        BetaRawMessageStreamEvent(stop = it, _json = json)
+                    } ?: BetaRawMessageStreamEvent(_json = json)
                 }
                 "content_block_start" -> {
-                    return BetaRawMessageStreamEvent(
-                        contentBlockStart =
-                            deserialize(node, jacksonTypeRef<BetaRawContentBlockStartEvent>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaRawContentBlockStartEvent>())
+                        ?.let { BetaRawMessageStreamEvent(contentBlockStart = it, _json = json) }
+                        ?: BetaRawMessageStreamEvent(_json = json)
                 }
                 "content_block_delta" -> {
-                    return BetaRawMessageStreamEvent(
-                        contentBlockDelta =
-                            deserialize(node, jacksonTypeRef<BetaRawContentBlockDeltaEvent>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaRawContentBlockDeltaEvent>())
+                        ?.let { BetaRawMessageStreamEvent(contentBlockDelta = it, _json = json) }
+                        ?: BetaRawMessageStreamEvent(_json = json)
                 }
                 "content_block_stop" -> {
-                    return BetaRawMessageStreamEvent(
-                        contentBlockStop =
-                            deserialize(node, jacksonTypeRef<BetaRawContentBlockStopEvent>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaRawContentBlockStopEvent>())
+                        ?.let { BetaRawMessageStreamEvent(contentBlockStop = it, _json = json) }
+                        ?: BetaRawMessageStreamEvent(_json = json)
                 }
             }
 

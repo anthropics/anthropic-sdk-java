@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.Params
+import com.anthropic.core.allMaxBy
 import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
@@ -470,6 +471,24 @@ private constructor(
             validated = true
         }
 
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (requests.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
@@ -664,6 +683,25 @@ private constructor(
             params().validate()
             validated = true
         }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (customId.asKnown().isPresent) 1 else 0) +
+                (params.asKnown().getOrNull()?.validity() ?: 0)
 
         /**
          * Messages API creation parameters for the individual request.
@@ -1904,6 +1942,36 @@ private constructor(
                 validated = true
             }
 
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: AnthropicInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                (if (maxTokens.asKnown().isPresent) 1 else 0) +
+                    (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                    (if (model.asKnown().isPresent) 1 else 0) +
+                    (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+                    (stopSequences.asKnown().getOrNull()?.size ?: 0) +
+                    (if (stream.asKnown().isPresent) 1 else 0) +
+                    (system.asKnown().getOrNull()?.validity() ?: 0) +
+                    (if (temperature.asKnown().isPresent) 1 else 0) +
+                    (thinking.asKnown().getOrNull()?.validity() ?: 0) +
+                    (toolChoice.asKnown().getOrNull()?.validity() ?: 0) +
+                    (tools.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                    (if (topK.asKnown().isPresent) 1 else 0) +
+                    (if (topP.asKnown().isPresent) 1 else 0)
+
             /**
              * System prompt.
              *
@@ -1936,14 +2004,13 @@ private constructor(
 
                 fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-                fun <T> accept(visitor: Visitor<T>): T {
-                    return when {
+                fun <T> accept(visitor: Visitor<T>): T =
+                    when {
                         string != null -> visitor.visitString(string)
                         betaTextBlockParams != null ->
                             visitor.visitBetaTextBlockParams(betaTextBlockParams)
                         else -> visitor.unknown(_json)
                     }
-                }
 
                 private var validated: Boolean = false
 
@@ -1965,6 +2032,34 @@ private constructor(
                     )
                     validated = true
                 }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: AnthropicInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic
+                internal fun validity(): Int =
+                    accept(
+                        object : Visitor<Int> {
+                            override fun visitString(string: String) = 1
+
+                            override fun visitBetaTextBlockParams(
+                                betaTextBlockParams: List<BetaTextBlockParam>
+                            ) = betaTextBlockParams.sumOf { it.validity().toInt() }
+
+                            override fun unknown(json: JsonValue?) = 0
+                        }
+                    )
 
                 override fun equals(other: Any?): Boolean {
                     if (this === other) {
@@ -2024,17 +2119,28 @@ private constructor(
                     override fun ObjectCodec.deserialize(node: JsonNode): System {
                         val json = JsonValue.fromJsonNode(node)
 
-                        tryDeserialize(node, jacksonTypeRef<String>())?.let {
-                            return System(string = it, _json = json)
+                        val bestMatches =
+                            sequenceOf(
+                                    tryDeserialize(node, jacksonTypeRef<String>())?.let {
+                                        System(string = it, _json = json)
+                                    },
+                                    tryDeserialize(node, jacksonTypeRef<List<BetaTextBlockParam>>())
+                                        ?.let { System(betaTextBlockParams = it, _json = json) },
+                                )
+                                .filterNotNull()
+                                .allMaxBy { it.validity() }
+                                .toList()
+                        return when (bestMatches.size) {
+                            // This can happen if what we're deserializing is completely
+                            // incompatible with all the possible variants (e.g. deserializing from
+                            // object).
+                            0 -> System(_json = json)
+                            1 -> bestMatches.single()
+                            // If there's more than one match with the highest validity, then use
+                            // the first completely valid match, or simply the first match if none
+                            // are completely valid.
+                            else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
                         }
-                        tryDeserialize(node, jacksonTypeRef<List<BetaTextBlockParam>>()) {
-                                it.forEach { it.validate() }
-                            }
-                            ?.let {
-                                return System(betaTextBlockParams = it, _json = json)
-                            }
-
-                        return System(_json = json)
                     }
                 }
 

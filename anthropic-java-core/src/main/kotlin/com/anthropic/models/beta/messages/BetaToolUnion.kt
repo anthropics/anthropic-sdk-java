@@ -5,6 +5,7 @@ package com.anthropic.models.beta.messages
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
 import com.anthropic.core.JsonValue
+import com.anthropic.core.allMaxBy
 import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.core.JsonGenerator
@@ -83,8 +84,8 @@ private constructor(
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-    fun <T> accept(visitor: Visitor<T>): T {
-        return when {
+    fun <T> accept(visitor: Visitor<T>): T =
+        when {
             betaTool != null -> visitor.visitBetaTool(betaTool)
             computerUse20241022 != null -> visitor.visitComputerUse20241022(computerUse20241022)
             bash20241022 != null -> visitor.visitBash20241022(bash20241022)
@@ -94,7 +95,6 @@ private constructor(
             textEditor20250124 != null -> visitor.visitTextEditor20250124(textEditor20250124)
             else -> visitor.unknown(_json)
         }
-    }
 
     private var validated: Boolean = false
 
@@ -144,6 +144,51 @@ private constructor(
         )
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        accept(
+            object : Visitor<Int> {
+                override fun visitBetaTool(betaTool: BetaTool) = betaTool.validity()
+
+                override fun visitComputerUse20241022(
+                    computerUse20241022: BetaToolComputerUse20241022
+                ) = computerUse20241022.validity()
+
+                override fun visitBash20241022(bash20241022: BetaToolBash20241022) =
+                    bash20241022.validity()
+
+                override fun visitTextEditor20241022(
+                    textEditor20241022: BetaToolTextEditor20241022
+                ) = textEditor20241022.validity()
+
+                override fun visitComputerUse20250124(
+                    computerUse20250124: BetaToolComputerUse20250124
+                ) = computerUse20250124.validity()
+
+                override fun visitBash20250124(bash20250124: BetaToolBash20250124) =
+                    bash20250124.validity()
+
+                override fun visitTextEditor20250124(
+                    textEditor20250124: BetaToolTextEditor20250124
+                ) = textEditor20250124.validity()
+
+                override fun unknown(json: JsonValue?) = 0
+            }
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -235,36 +280,42 @@ private constructor(
         override fun ObjectCodec.deserialize(node: JsonNode): BetaToolUnion {
             val json = JsonValue.fromJsonNode(node)
 
-            tryDeserialize(node, jacksonTypeRef<BetaTool>()) { it.validate() }
-                ?.let {
-                    return BetaToolUnion(betaTool = it, _json = json)
-                }
-            tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20241022>()) { it.validate() }
-                ?.let {
-                    return BetaToolUnion(computerUse20241022 = it, _json = json)
-                }
-            tryDeserialize(node, jacksonTypeRef<BetaToolBash20241022>()) { it.validate() }
-                ?.let {
-                    return BetaToolUnion(bash20241022 = it, _json = json)
-                }
-            tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20241022>()) { it.validate() }
-                ?.let {
-                    return BetaToolUnion(textEditor20241022 = it, _json = json)
-                }
-            tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20250124>()) { it.validate() }
-                ?.let {
-                    return BetaToolUnion(computerUse20250124 = it, _json = json)
-                }
-            tryDeserialize(node, jacksonTypeRef<BetaToolBash20250124>()) { it.validate() }
-                ?.let {
-                    return BetaToolUnion(bash20250124 = it, _json = json)
-                }
-            tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20250124>()) { it.validate() }
-                ?.let {
-                    return BetaToolUnion(textEditor20250124 = it, _json = json)
-                }
-
-            return BetaToolUnion(_json = json)
+            val bestMatches =
+                sequenceOf(
+                        tryDeserialize(node, jacksonTypeRef<BetaTool>())?.let {
+                            BetaToolUnion(betaTool = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20241022>())?.let {
+                            BetaToolUnion(computerUse20241022 = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<BetaToolBash20241022>())?.let {
+                            BetaToolUnion(bash20241022 = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20241022>())?.let {
+                            BetaToolUnion(textEditor20241022 = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20250124>())?.let {
+                            BetaToolUnion(computerUse20250124 = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<BetaToolBash20250124>())?.let {
+                            BetaToolUnion(bash20250124 = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20250124>())?.let {
+                            BetaToolUnion(textEditor20250124 = it, _json = json)
+                        },
+                    )
+                    .filterNotNull()
+                    .allMaxBy { it.validity() }
+                    .toList()
+            return when (bestMatches.size) {
+                // This can happen if what we're deserializing is completely incompatible with all
+                // the possible variants (e.g. deserializing from boolean).
+                0 -> BetaToolUnion(_json = json)
+                1 -> bestMatches.single()
+                // If there's more than one match with the highest validity, then use the first
+                // completely valid match, or simply the first match if none are completely valid.
+                else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+            }
         }
     }
 

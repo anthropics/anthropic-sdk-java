@@ -293,6 +293,26 @@ private constructor(
         validated = true
     }
 
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (text.asKnown().isPresent) 1 else 0) +
+            type.let { if (it == JsonValue.from("text")) 1 else 0 } +
+            (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
+            (citations.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true

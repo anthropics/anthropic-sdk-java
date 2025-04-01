@@ -2,6 +2,8 @@
 
 package com.anthropic.models.messages
 
+import com.anthropic.core.jsonMapper
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -30,5 +32,26 @@ internal class DocumentBlockParamTest {
             .contains(CitationsConfigParam.builder().enabled(true).build())
         assertThat(documentBlockParam.context()).contains("x")
         assertThat(documentBlockParam.title()).contains("x")
+    }
+
+    @Test
+    fun roundtrip() {
+        val jsonMapper = jsonMapper()
+        val documentBlockParam =
+            DocumentBlockParam.builder()
+                .base64PdfSource("U3RhaW5sZXNzIHJvY2tz")
+                .cacheControl(CacheControlEphemeral.builder().build())
+                .citations(CitationsConfigParam.builder().enabled(true).build())
+                .context("x")
+                .title("x")
+                .build()
+
+        val roundtrippedDocumentBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(documentBlockParam),
+                jacksonTypeRef<DocumentBlockParam>(),
+            )
+
+        assertThat(roundtrippedDocumentBlockParam).isEqualTo(documentBlockParam)
     }
 }

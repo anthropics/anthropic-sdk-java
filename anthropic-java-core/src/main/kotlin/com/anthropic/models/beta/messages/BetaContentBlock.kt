@@ -76,15 +76,14 @@ private constructor(
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-    fun <T> accept(visitor: Visitor<T>): T {
-        return when {
+    fun <T> accept(visitor: Visitor<T>): T =
+        when {
             text != null -> visitor.visitText(text)
             toolUse != null -> visitor.visitToolUse(toolUse)
             thinking != null -> visitor.visitThinking(thinking)
             redactedThinking != null -> visitor.visitRedactedThinking(redactedThinking)
             else -> visitor.unknown(_json)
         }
-    }
 
     private var validated: Boolean = false
 
@@ -114,6 +113,36 @@ private constructor(
         )
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        accept(
+            object : Visitor<Int> {
+                override fun visitText(text: BetaTextBlock) = text.validity()
+
+                override fun visitToolUse(toolUse: BetaToolUseBlock) = toolUse.validity()
+
+                override fun visitThinking(thinking: BetaThinkingBlock) = thinking.validity()
+
+                override fun visitRedactedThinking(redactedThinking: BetaRedactedThinkingBlock) =
+                    redactedThinking.validity()
+
+                override fun unknown(json: JsonValue?) = 0
+            }
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -186,29 +215,24 @@ private constructor(
 
             when (type) {
                 "text" -> {
-                    return BetaContentBlock(
-                        text = deserialize(node, jacksonTypeRef<BetaTextBlock>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaTextBlock>())?.let {
+                        BetaContentBlock(text = it, _json = json)
+                    } ?: BetaContentBlock(_json = json)
                 }
                 "tool_use" -> {
-                    return BetaContentBlock(
-                        toolUse = deserialize(node, jacksonTypeRef<BetaToolUseBlock>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaToolUseBlock>())?.let {
+                        BetaContentBlock(toolUse = it, _json = json)
+                    } ?: BetaContentBlock(_json = json)
                 }
                 "thinking" -> {
-                    return BetaContentBlock(
-                        thinking = deserialize(node, jacksonTypeRef<BetaThinkingBlock>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaThinkingBlock>())?.let {
+                        BetaContentBlock(thinking = it, _json = json)
+                    } ?: BetaContentBlock(_json = json)
                 }
                 "redacted_thinking" -> {
-                    return BetaContentBlock(
-                        redactedThinking =
-                            deserialize(node, jacksonTypeRef<BetaRedactedThinkingBlock>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaRedactedThinkingBlock>())?.let {
+                        BetaContentBlock(redactedThinking = it, _json = json)
+                    } ?: BetaContentBlock(_json = json)
                 }
             }
 

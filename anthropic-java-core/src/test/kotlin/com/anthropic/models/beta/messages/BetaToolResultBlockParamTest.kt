@@ -2,6 +2,8 @@
 
 package com.anthropic.models.beta.messages
 
+import com.anthropic.core.jsonMapper
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -23,5 +25,25 @@ internal class BetaToolResultBlockParamTest {
         assertThat(betaToolResultBlockParam.content())
             .contains(BetaToolResultBlockParam.Content.ofString("string"))
         assertThat(betaToolResultBlockParam.isError()).contains(true)
+    }
+
+    @Test
+    fun roundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaToolResultBlockParam =
+            BetaToolResultBlockParam.builder()
+                .toolUseId("tool_use_id")
+                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .content("string")
+                .isError(true)
+                .build()
+
+        val roundtrippedBetaToolResultBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaToolResultBlockParam),
+                jacksonTypeRef<BetaToolResultBlockParam>(),
+            )
+
+        assertThat(roundtrippedBetaToolResultBlockParam).isEqualTo(betaToolResultBlockParam)
     }
 }

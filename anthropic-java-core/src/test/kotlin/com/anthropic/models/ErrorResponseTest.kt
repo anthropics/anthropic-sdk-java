@@ -2,6 +2,8 @@
 
 package com.anthropic.models
 
+import com.anthropic.core.jsonMapper
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -17,5 +19,19 @@ internal class ErrorResponseTest {
                     InvalidRequestError.builder().message("message").build()
                 )
             )
+    }
+
+    @Test
+    fun roundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorResponse = ErrorResponse.builder().invalidRequestErrorError("message").build()
+
+        val roundtrippedErrorResponse =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorResponse),
+                jacksonTypeRef<ErrorResponse>(),
+            )
+
+        assertThat(roundtrippedErrorResponse).isEqualTo(errorResponse)
     }
 }

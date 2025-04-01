@@ -2,8 +2,15 @@
 
 package com.anthropic.models
 
+import com.anthropic.core.JsonValue
+import com.anthropic.core.jsonMapper
+import com.anthropic.errors.AnthropicInvalidDataException
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 
 internal class ErrorObjectTest {
 
@@ -25,6 +32,23 @@ internal class ErrorObjectTest {
     }
 
     @Test
+    fun ofInvalidRequestErrorRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorObject =
+            ErrorObject.ofInvalidRequestError(
+                InvalidRequestError.builder().message("message").build()
+            )
+
+        val roundtrippedErrorObject =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorObject),
+                jacksonTypeRef<ErrorObject>(),
+            )
+
+        assertThat(roundtrippedErrorObject).isEqualTo(errorObject)
+    }
+
+    @Test
     fun ofAuthenticationError() {
         val authenticationError = AuthenticationError.builder().message("message").build()
 
@@ -39,6 +63,23 @@ internal class ErrorObjectTest {
         assertThat(errorObject.gatewayTimeoutError()).isEmpty
         assertThat(errorObject.api()).isEmpty
         assertThat(errorObject.overloadedError()).isEmpty
+    }
+
+    @Test
+    fun ofAuthenticationErrorRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorObject =
+            ErrorObject.ofAuthenticationError(
+                AuthenticationError.builder().message("message").build()
+            )
+
+        val roundtrippedErrorObject =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorObject),
+                jacksonTypeRef<ErrorObject>(),
+            )
+
+        assertThat(roundtrippedErrorObject).isEqualTo(errorObject)
     }
 
     @Test
@@ -59,6 +100,21 @@ internal class ErrorObjectTest {
     }
 
     @Test
+    fun ofBillingErrorRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorObject =
+            ErrorObject.ofBillingError(BillingError.builder().message("message").build())
+
+        val roundtrippedErrorObject =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorObject),
+                jacksonTypeRef<ErrorObject>(),
+            )
+
+        assertThat(roundtrippedErrorObject).isEqualTo(errorObject)
+    }
+
+    @Test
     fun ofPermissionError() {
         val permissionError = PermissionError.builder().message("message").build()
 
@@ -73,6 +129,21 @@ internal class ErrorObjectTest {
         assertThat(errorObject.gatewayTimeoutError()).isEmpty
         assertThat(errorObject.api()).isEmpty
         assertThat(errorObject.overloadedError()).isEmpty
+    }
+
+    @Test
+    fun ofPermissionErrorRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorObject =
+            ErrorObject.ofPermissionError(PermissionError.builder().message("message").build())
+
+        val roundtrippedErrorObject =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorObject),
+                jacksonTypeRef<ErrorObject>(),
+            )
+
+        assertThat(roundtrippedErrorObject).isEqualTo(errorObject)
     }
 
     @Test
@@ -93,6 +164,21 @@ internal class ErrorObjectTest {
     }
 
     @Test
+    fun ofNotFoundErrorRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorObject =
+            ErrorObject.ofNotFoundError(NotFoundError.builder().message("message").build())
+
+        val roundtrippedErrorObject =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorObject),
+                jacksonTypeRef<ErrorObject>(),
+            )
+
+        assertThat(roundtrippedErrorObject).isEqualTo(errorObject)
+    }
+
+    @Test
     fun ofRateLimitError() {
         val rateLimitError = RateLimitError.builder().message("message").build()
 
@@ -107,6 +193,21 @@ internal class ErrorObjectTest {
         assertThat(errorObject.gatewayTimeoutError()).isEmpty
         assertThat(errorObject.api()).isEmpty
         assertThat(errorObject.overloadedError()).isEmpty
+    }
+
+    @Test
+    fun ofRateLimitErrorRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorObject =
+            ErrorObject.ofRateLimitError(RateLimitError.builder().message("message").build())
+
+        val roundtrippedErrorObject =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorObject),
+                jacksonTypeRef<ErrorObject>(),
+            )
+
+        assertThat(roundtrippedErrorObject).isEqualTo(errorObject)
     }
 
     @Test
@@ -127,6 +228,23 @@ internal class ErrorObjectTest {
     }
 
     @Test
+    fun ofGatewayTimeoutErrorRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorObject =
+            ErrorObject.ofGatewayTimeoutError(
+                GatewayTimeoutError.builder().message("message").build()
+            )
+
+        val roundtrippedErrorObject =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorObject),
+                jacksonTypeRef<ErrorObject>(),
+            )
+
+        assertThat(roundtrippedErrorObject).isEqualTo(errorObject)
+    }
+
+    @Test
     fun ofApi() {
         val api = ApiErrorObject.builder().message("message").build()
 
@@ -144,6 +262,20 @@ internal class ErrorObjectTest {
     }
 
     @Test
+    fun ofApiRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorObject = ErrorObject.ofApi(ApiErrorObject.builder().message("message").build())
+
+        val roundtrippedErrorObject =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorObject),
+                jacksonTypeRef<ErrorObject>(),
+            )
+
+        assertThat(roundtrippedErrorObject).isEqualTo(errorObject)
+    }
+
+    @Test
     fun ofOverloadedError() {
         val overloadedError = OverloadedError.builder().message("message").build()
 
@@ -158,5 +290,37 @@ internal class ErrorObjectTest {
         assertThat(errorObject.gatewayTimeoutError()).isEmpty
         assertThat(errorObject.api()).isEmpty
         assertThat(errorObject.overloadedError()).contains(overloadedError)
+    }
+
+    @Test
+    fun ofOverloadedErrorRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorObject =
+            ErrorObject.ofOverloadedError(OverloadedError.builder().message("message").build())
+
+        val roundtrippedErrorObject =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorObject),
+                jacksonTypeRef<ErrorObject>(),
+            )
+
+        assertThat(roundtrippedErrorObject).isEqualTo(errorObject)
+    }
+
+    enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
+        BOOLEAN(JsonValue.from(false)),
+        STRING(JsonValue.from("invalid")),
+        INTEGER(JsonValue.from(-1)),
+        FLOAT(JsonValue.from(3.14)),
+        ARRAY(JsonValue.from(listOf("invalid", "array"))),
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    fun incompatibleJsonShapeDeserializesToUnknown(testCase: IncompatibleJsonShapeTestCase) {
+        val errorObject = jsonMapper().convertValue(testCase.value, jacksonTypeRef<ErrorObject>())
+
+        val e = assertThrows<AnthropicInvalidDataException> { errorObject.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
     }
 }

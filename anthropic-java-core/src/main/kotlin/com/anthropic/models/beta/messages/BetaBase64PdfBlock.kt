@@ -401,6 +401,28 @@ private constructor(
         validated = true
     }
 
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (source.asKnown().getOrNull()?.validity() ?: 0) +
+            type.let { if (it == JsonValue.from("document")) 1 else 0 } +
+            (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
+            (citations.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (context.asKnown().isPresent) 1 else 0) +
+            (if (title.asKnown().isPresent) 1 else 0)
+
     @JsonDeserialize(using = Source.Deserializer::class)
     @JsonSerialize(using = Source.Serializer::class)
     class Source
@@ -440,15 +462,14 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-        fun <T> accept(visitor: Visitor<T>): T {
-            return when {
+        fun <T> accept(visitor: Visitor<T>): T =
+            when {
                 betaBase64Pdf != null -> visitor.visitBetaBase64Pdf(betaBase64Pdf)
                 betaPlainText != null -> visitor.visitBetaPlainText(betaPlainText)
                 betaContentBlock != null -> visitor.visitBetaContentBlock(betaContentBlock)
                 betaUrlPdf != null -> visitor.visitBetaUrlPdf(betaUrlPdf)
                 else -> visitor.unknown(_json)
             }
-        }
 
         private var validated: Boolean = false
 
@@ -478,6 +499,40 @@ private constructor(
             )
             validated = true
         }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            accept(
+                object : Visitor<Int> {
+                    override fun visitBetaBase64Pdf(betaBase64Pdf: BetaBase64PdfSource) =
+                        betaBase64Pdf.validity()
+
+                    override fun visitBetaPlainText(betaPlainText: BetaPlainTextSource) =
+                        betaPlainText.validity()
+
+                    override fun visitBetaContentBlock(betaContentBlock: BetaContentBlockSource) =
+                        betaContentBlock.validity()
+
+                    override fun visitBetaUrlPdf(betaUrlPdf: BetaUrlPdfSource) =
+                        betaUrlPdf.validity()
+
+                    override fun unknown(json: JsonValue?) = 0
+                }
+            )
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -551,31 +606,24 @@ private constructor(
 
                 when (type) {
                     "base64" -> {
-                        return Source(
-                            betaBase64Pdf =
-                                deserialize(node, jacksonTypeRef<BetaBase64PdfSource>()),
-                            _json = json,
-                        )
+                        return tryDeserialize(node, jacksonTypeRef<BetaBase64PdfSource>())?.let {
+                            Source(betaBase64Pdf = it, _json = json)
+                        } ?: Source(_json = json)
                     }
                     "text" -> {
-                        return Source(
-                            betaPlainText =
-                                deserialize(node, jacksonTypeRef<BetaPlainTextSource>()),
-                            _json = json,
-                        )
+                        return tryDeserialize(node, jacksonTypeRef<BetaPlainTextSource>())?.let {
+                            Source(betaPlainText = it, _json = json)
+                        } ?: Source(_json = json)
                     }
                     "content" -> {
-                        return Source(
-                            betaContentBlock =
-                                deserialize(node, jacksonTypeRef<BetaContentBlockSource>()),
-                            _json = json,
-                        )
+                        return tryDeserialize(node, jacksonTypeRef<BetaContentBlockSource>())?.let {
+                            Source(betaContentBlock = it, _json = json)
+                        } ?: Source(_json = json)
                     }
                     "url" -> {
-                        return Source(
-                            betaUrlPdf = deserialize(node, jacksonTypeRef<BetaUrlPdfSource>()),
-                            _json = json,
-                        )
+                        return tryDeserialize(node, jacksonTypeRef<BetaUrlPdfSource>())?.let {
+                            Source(betaUrlPdf = it, _json = json)
+                        } ?: Source(_json = json)
                     }
                 }
 
