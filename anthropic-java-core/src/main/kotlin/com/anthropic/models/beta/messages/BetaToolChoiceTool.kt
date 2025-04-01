@@ -223,6 +223,25 @@ private constructor(
         validated = true
     }
 
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (name.asKnown().isPresent) 1 else 0) +
+            type.let { if (it == JsonValue.from("tool")) 1 else 0 } +
+            (if (disableParallelToolUse.asKnown().isPresent) 1 else 0)
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true

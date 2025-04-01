@@ -75,8 +75,8 @@ private constructor(
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-    fun <T> accept(visitor: Visitor<T>): T {
-        return when {
+    fun <T> accept(visitor: Visitor<T>): T =
+        when {
             start != null -> visitor.visitStart(start)
             delta != null -> visitor.visitDelta(delta)
             stop != null -> visitor.visitStop(stop)
@@ -85,7 +85,6 @@ private constructor(
             contentBlockStop != null -> visitor.visitContentBlockStop(contentBlockStop)
             else -> visitor.unknown(_json)
         }
-    }
 
     private var validated: Boolean = false
 
@@ -123,6 +122,42 @@ private constructor(
         )
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        accept(
+            object : Visitor<Int> {
+                override fun visitStart(start: RawMessageStartEvent) = start.validity()
+
+                override fun visitDelta(delta: RawMessageDeltaEvent) = delta.validity()
+
+                override fun visitStop(stop: RawMessageStopEvent) = stop.validity()
+
+                override fun visitContentBlockStart(contentBlockStart: RawContentBlockStartEvent) =
+                    contentBlockStart.validity()
+
+                override fun visitContentBlockDelta(contentBlockDelta: RawContentBlockDeltaEvent) =
+                    contentBlockDelta.validity()
+
+                override fun visitContentBlockStop(contentBlockStop: RawContentBlockStopEvent) =
+                    contentBlockStop.validity()
+
+                override fun unknown(json: JsonValue?) = 0
+            }
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -211,43 +246,34 @@ private constructor(
 
             when (type) {
                 "message_start" -> {
-                    return RawMessageStreamEvent(
-                        start = deserialize(node, jacksonTypeRef<RawMessageStartEvent>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<RawMessageStartEvent>())?.let {
+                        RawMessageStreamEvent(start = it, _json = json)
+                    } ?: RawMessageStreamEvent(_json = json)
                 }
                 "message_delta" -> {
-                    return RawMessageStreamEvent(
-                        delta = deserialize(node, jacksonTypeRef<RawMessageDeltaEvent>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<RawMessageDeltaEvent>())?.let {
+                        RawMessageStreamEvent(delta = it, _json = json)
+                    } ?: RawMessageStreamEvent(_json = json)
                 }
                 "message_stop" -> {
-                    return RawMessageStreamEvent(
-                        stop = deserialize(node, jacksonTypeRef<RawMessageStopEvent>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<RawMessageStopEvent>())?.let {
+                        RawMessageStreamEvent(stop = it, _json = json)
+                    } ?: RawMessageStreamEvent(_json = json)
                 }
                 "content_block_start" -> {
-                    return RawMessageStreamEvent(
-                        contentBlockStart =
-                            deserialize(node, jacksonTypeRef<RawContentBlockStartEvent>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<RawContentBlockStartEvent>())?.let {
+                        RawMessageStreamEvent(contentBlockStart = it, _json = json)
+                    } ?: RawMessageStreamEvent(_json = json)
                 }
                 "content_block_delta" -> {
-                    return RawMessageStreamEvent(
-                        contentBlockDelta =
-                            deserialize(node, jacksonTypeRef<RawContentBlockDeltaEvent>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<RawContentBlockDeltaEvent>())?.let {
+                        RawMessageStreamEvent(contentBlockDelta = it, _json = json)
+                    } ?: RawMessageStreamEvent(_json = json)
                 }
                 "content_block_stop" -> {
-                    return RawMessageStreamEvent(
-                        contentBlockStop =
-                            deserialize(node, jacksonTypeRef<RawContentBlockStopEvent>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<RawContentBlockStopEvent>())?.let {
+                        RawMessageStreamEvent(contentBlockStop = it, _json = json)
+                    } ?: RawMessageStreamEvent(_json = json)
                 }
             }
 

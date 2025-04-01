@@ -96,8 +96,8 @@ private constructor(
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-    fun <T> accept(visitor: Visitor<T>): T {
-        return when {
+    fun <T> accept(visitor: Visitor<T>): T =
+        when {
             invalidRequestError != null -> visitor.visitInvalidRequestError(invalidRequestError)
             authenticationError != null -> visitor.visitAuthenticationError(authenticationError)
             billingError != null -> visitor.visitBillingError(billingError)
@@ -109,7 +109,6 @@ private constructor(
             overloadedError != null -> visitor.visitOverloadedError(overloadedError)
             else -> visitor.unknown(_json)
         }
-    }
 
     private var validated: Boolean = false
 
@@ -159,6 +158,52 @@ private constructor(
         )
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        accept(
+            object : Visitor<Int> {
+                override fun visitInvalidRequestError(invalidRequestError: InvalidRequestError) =
+                    invalidRequestError.validity()
+
+                override fun visitAuthenticationError(authenticationError: AuthenticationError) =
+                    authenticationError.validity()
+
+                override fun visitBillingError(billingError: BillingError) = billingError.validity()
+
+                override fun visitPermissionError(permissionError: PermissionError) =
+                    permissionError.validity()
+
+                override fun visitNotFoundError(notFoundError: NotFoundError) =
+                    notFoundError.validity()
+
+                override fun visitRateLimitError(rateLimitError: RateLimitError) =
+                    rateLimitError.validity()
+
+                override fun visitGatewayTimeoutError(gatewayTimeoutError: GatewayTimeoutError) =
+                    gatewayTimeoutError.validity()
+
+                override fun visitApi(api: ApiErrorObject) = api.validity()
+
+                override fun visitOverloadedError(overloadedError: OverloadedError) =
+                    overloadedError.validity()
+
+                override fun unknown(json: JsonValue?) = 0
+            }
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -266,61 +311,49 @@ private constructor(
 
             when (type) {
                 "invalid_request_error" -> {
-                    return ErrorObject(
-                        invalidRequestError =
-                            deserialize(node, jacksonTypeRef<InvalidRequestError>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<InvalidRequestError>())?.let {
+                        ErrorObject(invalidRequestError = it, _json = json)
+                    } ?: ErrorObject(_json = json)
                 }
                 "authentication_error" -> {
-                    return ErrorObject(
-                        authenticationError =
-                            deserialize(node, jacksonTypeRef<AuthenticationError>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<AuthenticationError>())?.let {
+                        ErrorObject(authenticationError = it, _json = json)
+                    } ?: ErrorObject(_json = json)
                 }
                 "billing_error" -> {
-                    return ErrorObject(
-                        billingError = deserialize(node, jacksonTypeRef<BillingError>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BillingError>())?.let {
+                        ErrorObject(billingError = it, _json = json)
+                    } ?: ErrorObject(_json = json)
                 }
                 "permission_error" -> {
-                    return ErrorObject(
-                        permissionError = deserialize(node, jacksonTypeRef<PermissionError>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<PermissionError>())?.let {
+                        ErrorObject(permissionError = it, _json = json)
+                    } ?: ErrorObject(_json = json)
                 }
                 "not_found_error" -> {
-                    return ErrorObject(
-                        notFoundError = deserialize(node, jacksonTypeRef<NotFoundError>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<NotFoundError>())?.let {
+                        ErrorObject(notFoundError = it, _json = json)
+                    } ?: ErrorObject(_json = json)
                 }
                 "rate_limit_error" -> {
-                    return ErrorObject(
-                        rateLimitError = deserialize(node, jacksonTypeRef<RateLimitError>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<RateLimitError>())?.let {
+                        ErrorObject(rateLimitError = it, _json = json)
+                    } ?: ErrorObject(_json = json)
                 }
                 "timeout_error" -> {
-                    return ErrorObject(
-                        gatewayTimeoutError =
-                            deserialize(node, jacksonTypeRef<GatewayTimeoutError>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<GatewayTimeoutError>())?.let {
+                        ErrorObject(gatewayTimeoutError = it, _json = json)
+                    } ?: ErrorObject(_json = json)
                 }
                 "api_error" -> {
-                    return ErrorObject(
-                        api = deserialize(node, jacksonTypeRef<ApiErrorObject>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<ApiErrorObject>())?.let {
+                        ErrorObject(api = it, _json = json)
+                    } ?: ErrorObject(_json = json)
                 }
                 "overloaded_error" -> {
-                    return ErrorObject(
-                        overloadedError = deserialize(node, jacksonTypeRef<OverloadedError>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<OverloadedError>())?.let {
+                        ErrorObject(overloadedError = it, _json = json)
+                    } ?: ErrorObject(_json = json)
                 }
             }
 

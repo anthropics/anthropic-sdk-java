@@ -2,6 +2,8 @@
 
 package com.anthropic.models.messages
 
+import com.anthropic.core.jsonMapper
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -23,5 +25,26 @@ internal class CitationPageLocationTest {
         assertThat(citationPageLocation.documentTitle()).contains("document_title")
         assertThat(citationPageLocation.endPageNumber()).isEqualTo(0L)
         assertThat(citationPageLocation.startPageNumber()).isEqualTo(1L)
+    }
+
+    @Test
+    fun roundtrip() {
+        val jsonMapper = jsonMapper()
+        val citationPageLocation =
+            CitationPageLocation.builder()
+                .citedText("cited_text")
+                .documentIndex(0L)
+                .documentTitle("document_title")
+                .endPageNumber(0L)
+                .startPageNumber(1L)
+                .build()
+
+        val roundtrippedCitationPageLocation =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(citationPageLocation),
+                jacksonTypeRef<CitationPageLocation>(),
+            )
+
+        assertThat(roundtrippedCitationPageLocation).isEqualTo(citationPageLocation)
     }
 }

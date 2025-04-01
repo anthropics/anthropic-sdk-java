@@ -41,13 +41,12 @@ private constructor(
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-    fun <T> accept(visitor: Visitor<T>): T {
-        return when {
+    fun <T> accept(visitor: Visitor<T>): T =
+        when {
             textBlockParam != null -> visitor.visitTextBlockParam(textBlockParam)
             imageBlockParam != null -> visitor.visitImageBlockParam(imageBlockParam)
             else -> visitor.unknown(_json)
         }
-    }
 
     private var validated: Boolean = false
 
@@ -69,6 +68,33 @@ private constructor(
         )
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        accept(
+            object : Visitor<Int> {
+                override fun visitTextBlockParam(textBlockParam: TextBlockParam) =
+                    textBlockParam.validity()
+
+                override fun visitImageBlockParam(imageBlockParam: ImageBlockParam) =
+                    imageBlockParam.validity()
+
+                override fun unknown(json: JsonValue?) = 0
+            }
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -133,16 +159,14 @@ private constructor(
 
             when (type) {
                 "text" -> {
-                    return ContentBlockSourceContent(
-                        textBlockParam = deserialize(node, jacksonTypeRef<TextBlockParam>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<TextBlockParam>())?.let {
+                        ContentBlockSourceContent(textBlockParam = it, _json = json)
+                    } ?: ContentBlockSourceContent(_json = json)
                 }
                 "image" -> {
-                    return ContentBlockSourceContent(
-                        imageBlockParam = deserialize(node, jacksonTypeRef<ImageBlockParam>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<ImageBlockParam>())?.let {
+                        ContentBlockSourceContent(imageBlockParam = it, _json = json)
+                    } ?: ContentBlockSourceContent(_json = json)
                 }
             }
 

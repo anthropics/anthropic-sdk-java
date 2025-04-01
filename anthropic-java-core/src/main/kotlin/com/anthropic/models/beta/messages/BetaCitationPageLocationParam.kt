@@ -340,6 +340,28 @@ private constructor(
         validated = true
     }
 
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (citedText.asKnown().isPresent) 1 else 0) +
+            (if (documentIndex.asKnown().isPresent) 1 else 0) +
+            (if (documentTitle.asKnown().isPresent) 1 else 0) +
+            (if (endPageNumber.asKnown().isPresent) 1 else 0) +
+            (if (startPageNumber.asKnown().isPresent) 1 else 0) +
+            type.let { if (it == JsonValue.from("page_location")) 1 else 0 }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true

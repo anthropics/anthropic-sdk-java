@@ -54,15 +54,14 @@ private constructor(
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-    fun <T> accept(visitor: Visitor<T>): T {
-        return when {
+    fun <T> accept(visitor: Visitor<T>): T =
+        when {
             citationCharLocation != null -> visitor.visitCitationCharLocation(citationCharLocation)
             citationPageLocation != null -> visitor.visitCitationPageLocation(citationPageLocation)
             citationContentBlockLocation != null ->
                 visitor.visitCitationContentBlockLocation(citationContentBlockLocation)
             else -> visitor.unknown(_json)
         }
-    }
 
     private var validated: Boolean = false
 
@@ -90,6 +89,37 @@ private constructor(
         )
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        accept(
+            object : Visitor<Int> {
+                override fun visitCitationCharLocation(citationCharLocation: CitationCharLocation) =
+                    citationCharLocation.validity()
+
+                override fun visitCitationPageLocation(citationPageLocation: CitationPageLocation) =
+                    citationPageLocation.validity()
+
+                override fun visitCitationContentBlockLocation(
+                    citationContentBlockLocation: CitationContentBlockLocation
+                ) = citationContentBlockLocation.validity()
+
+                override fun unknown(json: JsonValue?) = 0
+            }
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -164,25 +194,19 @@ private constructor(
 
             when (type) {
                 "char_location" -> {
-                    return TextCitation(
-                        citationCharLocation =
-                            deserialize(node, jacksonTypeRef<CitationCharLocation>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<CitationCharLocation>())?.let {
+                        TextCitation(citationCharLocation = it, _json = json)
+                    } ?: TextCitation(_json = json)
                 }
                 "page_location" -> {
-                    return TextCitation(
-                        citationPageLocation =
-                            deserialize(node, jacksonTypeRef<CitationPageLocation>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<CitationPageLocation>())?.let {
+                        TextCitation(citationPageLocation = it, _json = json)
+                    } ?: TextCitation(_json = json)
                 }
                 "content_block_location" -> {
-                    return TextCitation(
-                        citationContentBlockLocation =
-                            deserialize(node, jacksonTypeRef<CitationContentBlockLocation>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<CitationContentBlockLocation>())
+                        ?.let { TextCitation(citationContentBlockLocation = it, _json = json) }
+                        ?: TextCitation(_json = json)
                 }
             }
 
