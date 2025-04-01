@@ -55,7 +55,7 @@ public final class VertexBetaMessagesStreamingAsyncExample {
                 .messages()
                 .createStreaming(createParams)
                 .subscribe(event -> event.contentBlockDelta().stream()
-                        .flatMap(deltaEvent -> deltaEvent.delta().betaText().stream())
+                        .flatMap(deltaEvent -> deltaEvent.delta().text().stream())
                         .forEach(textDelta -> System.out.print(textDelta.text())))
                 .onCompleteFuture()
                 .join();
