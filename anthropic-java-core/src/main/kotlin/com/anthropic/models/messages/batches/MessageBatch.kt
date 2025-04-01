@@ -568,7 +568,7 @@ private constructor(
         createdAt()
         endedAt()
         expiresAt()
-        processingStatus()
+        processingStatus().validate()
         requestCounts().validate()
         resultsUrl()
         _type().let {
@@ -578,6 +578,32 @@ private constructor(
         }
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (id.asKnown().isPresent) 1 else 0) +
+            (if (archivedAt.asKnown().isPresent) 1 else 0) +
+            (if (cancelInitiatedAt.asKnown().isPresent) 1 else 0) +
+            (if (createdAt.asKnown().isPresent) 1 else 0) +
+            (if (endedAt.asKnown().isPresent) 1 else 0) +
+            (if (expiresAt.asKnown().isPresent) 1 else 0) +
+            (processingStatus.asKnown().getOrNull()?.validity() ?: 0) +
+            (requestCounts.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (resultsUrl.asKnown().isPresent) 1 else 0) +
+            type.let { if (it == JsonValue.from("message_batch")) 1 else 0 }
 
     /** Processing status of the Message Batch. */
     class ProcessingStatus @JsonCreator private constructor(private val value: JsonField<String>) :
@@ -676,6 +702,33 @@ private constructor(
             _value().asString().orElseThrow {
                 AnthropicInvalidDataException("Value is not a String")
             }
+
+        private var validated: Boolean = false
+
+        fun validate(): ProcessingStatus = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

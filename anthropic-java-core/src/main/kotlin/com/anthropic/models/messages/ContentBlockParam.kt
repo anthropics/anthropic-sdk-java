@@ -78,8 +78,8 @@ private constructor(
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-    fun <T> accept(visitor: Visitor<T>): T {
-        return when {
+    fun <T> accept(visitor: Visitor<T>): T =
+        when {
             text != null -> visitor.visitText(text)
             image != null -> visitor.visitImage(image)
             toolUse != null -> visitor.visitToolUse(toolUse)
@@ -89,7 +89,6 @@ private constructor(
             redactedThinking != null -> visitor.visitRedactedThinking(redactedThinking)
             else -> visitor.unknown(_json)
         }
-    }
 
     private var validated: Boolean = false
 
@@ -131,6 +130,43 @@ private constructor(
         )
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        accept(
+            object : Visitor<Int> {
+                override fun visitText(text: TextBlockParam) = text.validity()
+
+                override fun visitImage(image: ImageBlockParam) = image.validity()
+
+                override fun visitToolUse(toolUse: ToolUseBlockParam) = toolUse.validity()
+
+                override fun visitToolResult(toolResult: ToolResultBlockParam) =
+                    toolResult.validity()
+
+                override fun visitDocument(document: DocumentBlockParam) = document.validity()
+
+                override fun visitThinking(thinking: ThinkingBlockParam) = thinking.validity()
+
+                override fun visitRedactedThinking(redactedThinking: RedactedThinkingBlockParam) =
+                    redactedThinking.validity()
+
+                override fun unknown(json: JsonValue?) = 0
+            }
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -221,47 +257,39 @@ private constructor(
 
             when (type) {
                 "text" -> {
-                    return ContentBlockParam(
-                        text = deserialize(node, jacksonTypeRef<TextBlockParam>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<TextBlockParam>())?.let {
+                        ContentBlockParam(text = it, _json = json)
+                    } ?: ContentBlockParam(_json = json)
                 }
                 "image" -> {
-                    return ContentBlockParam(
-                        image = deserialize(node, jacksonTypeRef<ImageBlockParam>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<ImageBlockParam>())?.let {
+                        ContentBlockParam(image = it, _json = json)
+                    } ?: ContentBlockParam(_json = json)
                 }
                 "tool_use" -> {
-                    return ContentBlockParam(
-                        toolUse = deserialize(node, jacksonTypeRef<ToolUseBlockParam>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<ToolUseBlockParam>())?.let {
+                        ContentBlockParam(toolUse = it, _json = json)
+                    } ?: ContentBlockParam(_json = json)
                 }
                 "tool_result" -> {
-                    return ContentBlockParam(
-                        toolResult = deserialize(node, jacksonTypeRef<ToolResultBlockParam>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<ToolResultBlockParam>())?.let {
+                        ContentBlockParam(toolResult = it, _json = json)
+                    } ?: ContentBlockParam(_json = json)
                 }
                 "document" -> {
-                    return ContentBlockParam(
-                        document = deserialize(node, jacksonTypeRef<DocumentBlockParam>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<DocumentBlockParam>())?.let {
+                        ContentBlockParam(document = it, _json = json)
+                    } ?: ContentBlockParam(_json = json)
                 }
                 "thinking" -> {
-                    return ContentBlockParam(
-                        thinking = deserialize(node, jacksonTypeRef<ThinkingBlockParam>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<ThinkingBlockParam>())?.let {
+                        ContentBlockParam(thinking = it, _json = json)
+                    } ?: ContentBlockParam(_json = json)
                 }
                 "redacted_thinking" -> {
-                    return ContentBlockParam(
-                        redactedThinking =
-                            deserialize(node, jacksonTypeRef<RedactedThinkingBlockParam>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<RedactedThinkingBlockParam>())?.let {
+                        ContentBlockParam(redactedThinking = it, _json = json)
+                    } ?: ContentBlockParam(_json = json)
                 }
             }
 

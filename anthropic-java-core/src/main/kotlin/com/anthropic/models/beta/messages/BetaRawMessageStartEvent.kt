@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
+import kotlin.jvm.optionals.getOrNull
 
 class BetaRawMessageStartEvent
 private constructor(
@@ -170,6 +171,24 @@ private constructor(
         }
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (message.asKnown().getOrNull()?.validity() ?: 0) +
+            type.let { if (it == JsonValue.from("message_start")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

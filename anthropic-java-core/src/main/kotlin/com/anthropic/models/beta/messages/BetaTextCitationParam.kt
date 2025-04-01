@@ -54,15 +54,14 @@ private constructor(
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-    fun <T> accept(visitor: Visitor<T>): T {
-        return when {
+    fun <T> accept(visitor: Visitor<T>): T =
+        when {
             citationCharLocation != null -> visitor.visitCitationCharLocation(citationCharLocation)
             citationPageLocation != null -> visitor.visitCitationPageLocation(citationPageLocation)
             citationContentBlockLocation != null ->
                 visitor.visitCitationContentBlockLocation(citationContentBlockLocation)
             else -> visitor.unknown(_json)
         }
-    }
 
     private var validated: Boolean = false
 
@@ -94,6 +93,39 @@ private constructor(
         )
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        accept(
+            object : Visitor<Int> {
+                override fun visitCitationCharLocation(
+                    citationCharLocation: BetaCitationCharLocationParam
+                ) = citationCharLocation.validity()
+
+                override fun visitCitationPageLocation(
+                    citationPageLocation: BetaCitationPageLocationParam
+                ) = citationPageLocation.validity()
+
+                override fun visitCitationContentBlockLocation(
+                    citationContentBlockLocation: BetaCitationContentBlockLocationParam
+                ) = citationContentBlockLocation.validity()
+
+                override fun unknown(json: JsonValue?) = 0
+            }
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -171,28 +203,23 @@ private constructor(
 
             when (type) {
                 "char_location" -> {
-                    return BetaTextCitationParam(
-                        citationCharLocation =
-                            deserialize(node, jacksonTypeRef<BetaCitationCharLocationParam>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaCitationCharLocationParam>())
+                        ?.let { BetaTextCitationParam(citationCharLocation = it, _json = json) }
+                        ?: BetaTextCitationParam(_json = json)
                 }
                 "page_location" -> {
-                    return BetaTextCitationParam(
-                        citationPageLocation =
-                            deserialize(node, jacksonTypeRef<BetaCitationPageLocationParam>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaCitationPageLocationParam>())
+                        ?.let { BetaTextCitationParam(citationPageLocation = it, _json = json) }
+                        ?: BetaTextCitationParam(_json = json)
                 }
                 "content_block_location" -> {
-                    return BetaTextCitationParam(
-                        citationContentBlockLocation =
-                            deserialize(
-                                node,
-                                jacksonTypeRef<BetaCitationContentBlockLocationParam>(),
-                            ),
-                        _json = json,
-                    )
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaCitationContentBlockLocationParam>(),
+                        )
+                        ?.let {
+                            BetaTextCitationParam(citationContentBlockLocation = it, _json = json)
+                        } ?: BetaTextCitationParam(_json = json)
                 }
             }
 

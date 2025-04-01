@@ -2,6 +2,8 @@
 
 package com.anthropic.models.messages
 
+import com.anthropic.core.jsonMapper
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -30,5 +32,28 @@ internal class ImageBlockParamTest {
                 )
             )
         assertThat(imageBlockParam.cacheControl()).contains(CacheControlEphemeral.builder().build())
+    }
+
+    @Test
+    fun roundtrip() {
+        val jsonMapper = jsonMapper()
+        val imageBlockParam =
+            ImageBlockParam.builder()
+                .source(
+                    Base64ImageSource.builder()
+                        .data("U3RhaW5sZXNzIHJvY2tz")
+                        .mediaType(Base64ImageSource.MediaType.IMAGE_JPEG)
+                        .build()
+                )
+                .cacheControl(CacheControlEphemeral.builder().build())
+                .build()
+
+        val roundtrippedImageBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(imageBlockParam),
+                jacksonTypeRef<ImageBlockParam>(),
+            )
+
+        assertThat(roundtrippedImageBlockParam).isEqualTo(imageBlockParam)
     }
 }

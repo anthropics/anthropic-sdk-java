@@ -6,6 +6,7 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
+import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.services.blocking.ModelService
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -147,6 +148,14 @@ private constructor(
             lastId()
             validated = true
         }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
 
         fun toBuilder() = Builder().from(this)
 

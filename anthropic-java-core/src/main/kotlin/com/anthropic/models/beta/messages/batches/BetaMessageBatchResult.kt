@@ -61,15 +61,14 @@ private constructor(
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-    fun <T> accept(visitor: Visitor<T>): T {
-        return when {
+    fun <T> accept(visitor: Visitor<T>): T =
+        when {
             succeeded != null -> visitor.visitSucceeded(succeeded)
             errored != null -> visitor.visitErrored(errored)
             canceled != null -> visitor.visitCanceled(canceled)
             expired != null -> visitor.visitExpired(expired)
             else -> visitor.unknown(_json)
         }
-    }
 
     private var validated: Boolean = false
 
@@ -99,6 +98,39 @@ private constructor(
         )
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        accept(
+            object : Visitor<Int> {
+                override fun visitSucceeded(succeeded: BetaMessageBatchSucceededResult) =
+                    succeeded.validity()
+
+                override fun visitErrored(errored: BetaMessageBatchErroredResult) =
+                    errored.validity()
+
+                override fun visitCanceled(canceled: BetaMessageBatchCanceledResult) =
+                    canceled.validity()
+
+                override fun visitExpired(expired: BetaMessageBatchExpiredResult) =
+                    expired.validity()
+
+                override fun unknown(json: JsonValue?) = 0
+            }
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -177,32 +209,24 @@ private constructor(
 
             when (type) {
                 "succeeded" -> {
-                    return BetaMessageBatchResult(
-                        succeeded =
-                            deserialize(node, jacksonTypeRef<BetaMessageBatchSucceededResult>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaMessageBatchSucceededResult>())
+                        ?.let { BetaMessageBatchResult(succeeded = it, _json = json) }
+                        ?: BetaMessageBatchResult(_json = json)
                 }
                 "errored" -> {
-                    return BetaMessageBatchResult(
-                        errored =
-                            deserialize(node, jacksonTypeRef<BetaMessageBatchErroredResult>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaMessageBatchErroredResult>())
+                        ?.let { BetaMessageBatchResult(errored = it, _json = json) }
+                        ?: BetaMessageBatchResult(_json = json)
                 }
                 "canceled" -> {
-                    return BetaMessageBatchResult(
-                        canceled =
-                            deserialize(node, jacksonTypeRef<BetaMessageBatchCanceledResult>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaMessageBatchCanceledResult>())
+                        ?.let { BetaMessageBatchResult(canceled = it, _json = json) }
+                        ?: BetaMessageBatchResult(_json = json)
                 }
                 "expired" -> {
-                    return BetaMessageBatchResult(
-                        expired =
-                            deserialize(node, jacksonTypeRef<BetaMessageBatchExpiredResult>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaMessageBatchExpiredResult>())
+                        ?.let { BetaMessageBatchResult(expired = it, _json = json) }
+                        ?: BetaMessageBatchResult(_json = json)
                 }
             }
 

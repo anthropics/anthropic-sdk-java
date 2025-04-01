@@ -8,6 +8,7 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
+import com.anthropic.core.allMaxBy
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -291,6 +292,27 @@ private constructor(
         validated = true
     }
 
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (toolUseId.asKnown().isPresent) 1 else 0) +
+            type.let { if (it == JsonValue.from("tool_result")) 1 else 0 } +
+            (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
+            (content.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (isError.asKnown().isPresent) 1 else 0)
+
     @JsonDeserialize(using = Content.Deserializer::class)
     @JsonSerialize(using = Content.Serializer::class)
     class Content
@@ -314,13 +336,12 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-        fun <T> accept(visitor: Visitor<T>): T {
-            return when {
+        fun <T> accept(visitor: Visitor<T>): T =
+            when {
                 string != null -> visitor.visitString(string)
                 blocks != null -> visitor.visitBlocks(blocks)
                 else -> visitor.unknown(_json)
             }
-        }
 
         private var validated: Boolean = false
 
@@ -340,6 +361,33 @@ private constructor(
             )
             validated = true
         }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            accept(
+                object : Visitor<Int> {
+                    override fun visitString(string: String) = 1
+
+                    override fun visitBlocks(blocks: List<Block>) =
+                        blocks.sumOf { it.validity().toInt() }
+
+                    override fun unknown(json: JsonValue?) = 0
+                }
+            )
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -395,15 +443,28 @@ private constructor(
             override fun ObjectCodec.deserialize(node: JsonNode): Content {
                 val json = JsonValue.fromJsonNode(node)
 
-                tryDeserialize(node, jacksonTypeRef<String>())?.let {
-                    return Content(string = it, _json = json)
+                val bestMatches =
+                    sequenceOf(
+                            tryDeserialize(node, jacksonTypeRef<String>())?.let {
+                                Content(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<List<Block>>())?.let {
+                                Content(blocks = it, _json = json)
+                            },
+                        )
+                        .filterNotNull()
+                        .allMaxBy { it.validity() }
+                        .toList()
+                return when (bestMatches.size) {
+                    // This can happen if what we're deserializing is completely incompatible with
+                    // all the possible variants (e.g. deserializing from object).
+                    0 -> Content(_json = json)
+                    1 -> bestMatches.single()
+                    // If there's more than one match with the highest validity, then use the first
+                    // completely valid match, or simply the first match if none are completely
+                    // valid.
+                    else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
                 }
-                tryDeserialize(node, jacksonTypeRef<List<Block>>()) { it.forEach { it.validate() } }
-                    ?.let {
-                        return Content(blocks = it, _json = json)
-                    }
-
-                return Content(_json = json)
             }
         }
 
@@ -446,13 +507,12 @@ private constructor(
 
             fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-            fun <T> accept(visitor: Visitor<T>): T {
-                return when {
+            fun <T> accept(visitor: Visitor<T>): T =
+                when {
                     textBlockParam != null -> visitor.visitTextBlockParam(textBlockParam)
                     imageBlockParam != null -> visitor.visitImageBlockParam(imageBlockParam)
                     else -> visitor.unknown(_json)
                 }
-            }
 
             private var validated: Boolean = false
 
@@ -474,6 +534,34 @@ private constructor(
                 )
                 validated = true
             }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: AnthropicInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                accept(
+                    object : Visitor<Int> {
+                        override fun visitTextBlockParam(textBlockParam: TextBlockParam) =
+                            textBlockParam.validity()
+
+                        override fun visitImageBlockParam(imageBlockParam: ImageBlockParam) =
+                            imageBlockParam.validity()
+
+                        override fun unknown(json: JsonValue?) = 0
+                    }
+                )
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -536,18 +624,14 @@ private constructor(
 
                     when (type) {
                         "text" -> {
-                            return Block(
-                                textBlockParam =
-                                    deserialize(node, jacksonTypeRef<TextBlockParam>()),
-                                _json = json,
-                            )
+                            return tryDeserialize(node, jacksonTypeRef<TextBlockParam>())?.let {
+                                Block(textBlockParam = it, _json = json)
+                            } ?: Block(_json = json)
                         }
                         "image" -> {
-                            return Block(
-                                imageBlockParam =
-                                    deserialize(node, jacksonTypeRef<ImageBlockParam>()),
-                                _json = json,
-                            )
+                            return tryDeserialize(node, jacksonTypeRef<ImageBlockParam>())?.let {
+                                Block(imageBlockParam = it, _json = json)
+                            } ?: Block(_json = json)
                         }
                     }
 

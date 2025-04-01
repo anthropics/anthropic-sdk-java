@@ -589,7 +589,7 @@ private constructor(
                 throw AnthropicInvalidDataException("'role' is invalid, received $it")
             }
         }
-        stopReason()
+        stopReason().ifPresent { it.validate() }
         stopSequence()
         _type().let {
             if (it != JsonValue.from("message")) {
@@ -599,6 +599,30 @@ private constructor(
         usage().validate()
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (id.asKnown().isPresent) 1 else 0) +
+            (content.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (model.asKnown().isPresent) 1 else 0) +
+            role.let { if (it == JsonValue.from("assistant")) 1 else 0 } +
+            (stopReason.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (stopSequence.asKnown().isPresent) 1 else 0) +
+            type.let { if (it == JsonValue.from("message")) 1 else 0 } +
+            (usage.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

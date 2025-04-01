@@ -67,15 +67,14 @@ private constructor(
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-    fun <T> accept(visitor: Visitor<T>): T {
-        return when {
+    fun <T> accept(visitor: Visitor<T>): T =
+        when {
             auto != null -> visitor.visitAuto(auto)
             any != null -> visitor.visitAny(any)
             tool != null -> visitor.visitTool(tool)
             none != null -> visitor.visitNone(none)
             else -> visitor.unknown(_json)
         }
-    }
 
     private var validated: Boolean = false
 
@@ -105,6 +104,35 @@ private constructor(
         )
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        accept(
+            object : Visitor<Int> {
+                override fun visitAuto(auto: ToolChoiceAuto) = auto.validity()
+
+                override fun visitAny(any: ToolChoiceAny) = any.validity()
+
+                override fun visitTool(tool: ToolChoiceTool) = tool.validity()
+
+                override fun visitNone(none: ToolChoiceNone) = none.validity()
+
+                override fun unknown(json: JsonValue?) = 0
+            }
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -178,28 +206,24 @@ private constructor(
 
             when (type) {
                 "auto" -> {
-                    return ToolChoice(
-                        auto = deserialize(node, jacksonTypeRef<ToolChoiceAuto>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<ToolChoiceAuto>())?.let {
+                        ToolChoice(auto = it, _json = json)
+                    } ?: ToolChoice(_json = json)
                 }
                 "any" -> {
-                    return ToolChoice(
-                        any = deserialize(node, jacksonTypeRef<ToolChoiceAny>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<ToolChoiceAny>())?.let {
+                        ToolChoice(any = it, _json = json)
+                    } ?: ToolChoice(_json = json)
                 }
                 "tool" -> {
-                    return ToolChoice(
-                        tool = deserialize(node, jacksonTypeRef<ToolChoiceTool>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<ToolChoiceTool>())?.let {
+                        ToolChoice(tool = it, _json = json)
+                    } ?: ToolChoice(_json = json)
                 }
                 "none" -> {
-                    return ToolChoice(
-                        none = deserialize(node, jacksonTypeRef<ToolChoiceNone>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<ToolChoiceNone>())?.let {
+                        ToolChoice(none = it, _json = json)
+                    } ?: ToolChoice(_json = json)
                 }
             }
 

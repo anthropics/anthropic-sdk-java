@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * [Legacy] Create a Text Completion.
@@ -1043,6 +1044,31 @@ private constructor(
             topP()
             validated = true
         }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (maxTokensToSample.asKnown().isPresent) 1 else 0) +
+                (if (model.asKnown().isPresent) 1 else 0) +
+                (if (prompt.asKnown().isPresent) 1 else 0) +
+                (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+                (stopSequences.asKnown().getOrNull()?.size ?: 0) +
+                (if (temperature.asKnown().isPresent) 1 else 0) +
+                (if (topK.asKnown().isPresent) 1 else 0) +
+                (if (topP.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

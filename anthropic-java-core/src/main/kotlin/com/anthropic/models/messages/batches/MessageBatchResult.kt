@@ -61,15 +61,14 @@ private constructor(
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-    fun <T> accept(visitor: Visitor<T>): T {
-        return when {
+    fun <T> accept(visitor: Visitor<T>): T =
+        when {
             succeeded != null -> visitor.visitSucceeded(succeeded)
             errored != null -> visitor.visitErrored(errored)
             canceled != null -> visitor.visitCanceled(canceled)
             expired != null -> visitor.visitExpired(expired)
             else -> visitor.unknown(_json)
         }
-    }
 
     private var validated: Boolean = false
 
@@ -99,6 +98,37 @@ private constructor(
         )
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        accept(
+            object : Visitor<Int> {
+                override fun visitSucceeded(succeeded: MessageBatchSucceededResult) =
+                    succeeded.validity()
+
+                override fun visitErrored(errored: MessageBatchErroredResult) = errored.validity()
+
+                override fun visitCanceled(canceled: MessageBatchCanceledResult) =
+                    canceled.validity()
+
+                override fun visitExpired(expired: MessageBatchExpiredResult) = expired.validity()
+
+                override fun unknown(json: JsonValue?) = 0
+            }
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -174,29 +204,24 @@ private constructor(
 
             when (type) {
                 "succeeded" -> {
-                    return MessageBatchResult(
-                        succeeded =
-                            deserialize(node, jacksonTypeRef<MessageBatchSucceededResult>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<MessageBatchSucceededResult>())
+                        ?.let { MessageBatchResult(succeeded = it, _json = json) }
+                        ?: MessageBatchResult(_json = json)
                 }
                 "errored" -> {
-                    return MessageBatchResult(
-                        errored = deserialize(node, jacksonTypeRef<MessageBatchErroredResult>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<MessageBatchErroredResult>())?.let {
+                        MessageBatchResult(errored = it, _json = json)
+                    } ?: MessageBatchResult(_json = json)
                 }
                 "canceled" -> {
-                    return MessageBatchResult(
-                        canceled = deserialize(node, jacksonTypeRef<MessageBatchCanceledResult>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<MessageBatchCanceledResult>())?.let {
+                        MessageBatchResult(canceled = it, _json = json)
+                    } ?: MessageBatchResult(_json = json)
                 }
                 "expired" -> {
-                    return MessageBatchResult(
-                        expired = deserialize(node, jacksonTypeRef<MessageBatchExpiredResult>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<MessageBatchExpiredResult>())?.let {
+                        MessageBatchResult(expired = it, _json = json)
+                    } ?: MessageBatchResult(_json = json)
                 }
             }
 

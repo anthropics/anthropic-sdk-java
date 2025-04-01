@@ -51,13 +51,12 @@ private constructor(
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-    fun <T> accept(visitor: Visitor<T>): T {
-        return when {
+    fun <T> accept(visitor: Visitor<T>): T =
+        when {
             enabled != null -> visitor.visitEnabled(enabled)
             disabled != null -> visitor.visitDisabled(disabled)
             else -> visitor.unknown(_json)
         }
-    }
 
     private var validated: Boolean = false
 
@@ -79,6 +78,32 @@ private constructor(
         )
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        accept(
+            object : Visitor<Int> {
+                override fun visitEnabled(enabled: BetaThinkingConfigEnabled) = enabled.validity()
+
+                override fun visitDisabled(disabled: BetaThinkingConfigDisabled) =
+                    disabled.validity()
+
+                override fun unknown(json: JsonValue?) = 0
+            }
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -143,16 +168,14 @@ private constructor(
 
             when (type) {
                 "enabled" -> {
-                    return BetaThinkingConfigParam(
-                        enabled = deserialize(node, jacksonTypeRef<BetaThinkingConfigEnabled>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaThinkingConfigEnabled>())?.let {
+                        BetaThinkingConfigParam(enabled = it, _json = json)
+                    } ?: BetaThinkingConfigParam(_json = json)
                 }
                 "disabled" -> {
-                    return BetaThinkingConfigParam(
-                        disabled = deserialize(node, jacksonTypeRef<BetaThinkingConfigDisabled>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaThinkingConfigDisabled>())?.let {
+                        BetaThinkingConfigParam(disabled = it, _json = json)
+                    } ?: BetaThinkingConfigParam(_json = json)
                 }
             }
 

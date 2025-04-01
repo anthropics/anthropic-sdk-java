@@ -204,6 +204,24 @@ private constructor(
         validated = true
     }
 
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (citation.asKnown().getOrNull()?.validity() ?: 0) +
+            type.let { if (it == JsonValue.from("citations_delta")) 1 else 0 }
+
     @JsonDeserialize(using = Citation.Deserializer::class)
     @JsonSerialize(using = Citation.Serializer::class)
     class Citation
@@ -240,8 +258,8 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-        fun <T> accept(visitor: Visitor<T>): T {
-            return when {
+        fun <T> accept(visitor: Visitor<T>): T =
+            when {
                 betaCitationCharLocation != null ->
                     visitor.visitBetaCitationCharLocation(betaCitationCharLocation)
                 betaCitationPageLocation != null ->
@@ -250,7 +268,6 @@ private constructor(
                     visitor.visitBetaCitationContentBlockLocation(betaCitationContentBlockLocation)
                 else -> visitor.unknown(_json)
             }
-        }
 
         private var validated: Boolean = false
 
@@ -282,6 +299,40 @@ private constructor(
             )
             validated = true
         }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            accept(
+                object : Visitor<Int> {
+                    override fun visitBetaCitationCharLocation(
+                        betaCitationCharLocation: BetaCitationCharLocation
+                    ) = betaCitationCharLocation.validity()
+
+                    override fun visitBetaCitationPageLocation(
+                        betaCitationPageLocation: BetaCitationPageLocation
+                    ) = betaCitationPageLocation.validity()
+
+                    override fun visitBetaCitationContentBlockLocation(
+                        betaCitationContentBlockLocation: BetaCitationContentBlockLocation
+                    ) = betaCitationContentBlockLocation.validity()
+
+                    override fun unknown(json: JsonValue?) = 0
+                }
+            )
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -357,28 +408,22 @@ private constructor(
 
                 when (type) {
                     "char_location" -> {
-                        return Citation(
-                            betaCitationCharLocation =
-                                deserialize(node, jacksonTypeRef<BetaCitationCharLocation>()),
-                            _json = json,
-                        )
+                        return tryDeserialize(node, jacksonTypeRef<BetaCitationCharLocation>())
+                            ?.let { Citation(betaCitationCharLocation = it, _json = json) }
+                            ?: Citation(_json = json)
                     }
                     "page_location" -> {
-                        return Citation(
-                            betaCitationPageLocation =
-                                deserialize(node, jacksonTypeRef<BetaCitationPageLocation>()),
-                            _json = json,
-                        )
+                        return tryDeserialize(node, jacksonTypeRef<BetaCitationPageLocation>())
+                            ?.let { Citation(betaCitationPageLocation = it, _json = json) }
+                            ?: Citation(_json = json)
                     }
                     "content_block_location" -> {
-                        return Citation(
-                            betaCitationContentBlockLocation =
-                                deserialize(
-                                    node,
-                                    jacksonTypeRef<BetaCitationContentBlockLocation>(),
-                                ),
-                            _json = json,
-                        )
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaCitationContentBlockLocation>(),
+                            )
+                            ?.let { Citation(betaCitationContentBlockLocation = it, _json = json) }
+                            ?: Citation(_json = json)
                     }
                 }
 

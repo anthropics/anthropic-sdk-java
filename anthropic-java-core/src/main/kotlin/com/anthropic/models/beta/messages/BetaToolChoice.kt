@@ -67,15 +67,14 @@ private constructor(
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-    fun <T> accept(visitor: Visitor<T>): T {
-        return when {
+    fun <T> accept(visitor: Visitor<T>): T =
+        when {
             auto != null -> visitor.visitAuto(auto)
             any != null -> visitor.visitAny(any)
             tool != null -> visitor.visitTool(tool)
             none != null -> visitor.visitNone(none)
             else -> visitor.unknown(_json)
         }
-    }
 
     private var validated: Boolean = false
 
@@ -105,6 +104,35 @@ private constructor(
         )
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        accept(
+            object : Visitor<Int> {
+                override fun visitAuto(auto: BetaToolChoiceAuto) = auto.validity()
+
+                override fun visitAny(any: BetaToolChoiceAny) = any.validity()
+
+                override fun visitTool(tool: BetaToolChoiceTool) = tool.validity()
+
+                override fun visitNone(none: BetaToolChoiceNone) = none.validity()
+
+                override fun unknown(json: JsonValue?) = 0
+            }
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -181,28 +209,24 @@ private constructor(
 
             when (type) {
                 "auto" -> {
-                    return BetaToolChoice(
-                        auto = deserialize(node, jacksonTypeRef<BetaToolChoiceAuto>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaToolChoiceAuto>())?.let {
+                        BetaToolChoice(auto = it, _json = json)
+                    } ?: BetaToolChoice(_json = json)
                 }
                 "any" -> {
-                    return BetaToolChoice(
-                        any = deserialize(node, jacksonTypeRef<BetaToolChoiceAny>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaToolChoiceAny>())?.let {
+                        BetaToolChoice(any = it, _json = json)
+                    } ?: BetaToolChoice(_json = json)
                 }
                 "tool" -> {
-                    return BetaToolChoice(
-                        tool = deserialize(node, jacksonTypeRef<BetaToolChoiceTool>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaToolChoiceTool>())?.let {
+                        BetaToolChoice(tool = it, _json = json)
+                    } ?: BetaToolChoice(_json = json)
                 }
                 "none" -> {
-                    return BetaToolChoice(
-                        none = deserialize(node, jacksonTypeRef<BetaToolChoiceNone>()),
-                        _json = json,
-                    )
+                    return tryDeserialize(node, jacksonTypeRef<BetaToolChoiceNone>())?.let {
+                        BetaToolChoice(none = it, _json = json)
+                    } ?: BetaToolChoice(_json = json)
                 }
             }
 

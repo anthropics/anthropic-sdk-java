@@ -2,8 +2,15 @@
 
 package com.anthropic.models.beta.messages
 
+import com.anthropic.core.JsonValue
+import com.anthropic.core.jsonMapper
+import com.anthropic.errors.AnthropicInvalidDataException
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 
 internal class BetaTextCitationTest {
 
@@ -26,6 +33,29 @@ internal class BetaTextCitationTest {
     }
 
     @Test
+    fun ofCitationCharLocationRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaTextCitation =
+            BetaTextCitation.ofCitationCharLocation(
+                BetaCitationCharLocation.builder()
+                    .citedText("cited_text")
+                    .documentIndex(0L)
+                    .documentTitle("document_title")
+                    .endCharIndex(0L)
+                    .startCharIndex(0L)
+                    .build()
+            )
+
+        val roundtrippedBetaTextCitation =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaTextCitation),
+                jacksonTypeRef<BetaTextCitation>(),
+            )
+
+        assertThat(roundtrippedBetaTextCitation).isEqualTo(betaTextCitation)
+    }
+
+    @Test
     fun ofCitationPageLocation() {
         val citationPageLocation =
             BetaCitationPageLocation.builder()
@@ -41,6 +71,29 @@ internal class BetaTextCitationTest {
         assertThat(betaTextCitation.citationCharLocation()).isEmpty
         assertThat(betaTextCitation.citationPageLocation()).contains(citationPageLocation)
         assertThat(betaTextCitation.citationContentBlockLocation()).isEmpty
+    }
+
+    @Test
+    fun ofCitationPageLocationRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaTextCitation =
+            BetaTextCitation.ofCitationPageLocation(
+                BetaCitationPageLocation.builder()
+                    .citedText("cited_text")
+                    .documentIndex(0L)
+                    .documentTitle("document_title")
+                    .endPageNumber(0L)
+                    .startPageNumber(1L)
+                    .build()
+            )
+
+        val roundtrippedBetaTextCitation =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaTextCitation),
+                jacksonTypeRef<BetaTextCitation>(),
+            )
+
+        assertThat(roundtrippedBetaTextCitation).isEqualTo(betaTextCitation)
     }
 
     @Test
@@ -61,5 +114,46 @@ internal class BetaTextCitationTest {
         assertThat(betaTextCitation.citationPageLocation()).isEmpty
         assertThat(betaTextCitation.citationContentBlockLocation())
             .contains(citationContentBlockLocation)
+    }
+
+    @Test
+    fun ofCitationContentBlockLocationRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaTextCitation =
+            BetaTextCitation.ofCitationContentBlockLocation(
+                BetaCitationContentBlockLocation.builder()
+                    .citedText("cited_text")
+                    .documentIndex(0L)
+                    .documentTitle("document_title")
+                    .endBlockIndex(0L)
+                    .startBlockIndex(0L)
+                    .build()
+            )
+
+        val roundtrippedBetaTextCitation =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaTextCitation),
+                jacksonTypeRef<BetaTextCitation>(),
+            )
+
+        assertThat(roundtrippedBetaTextCitation).isEqualTo(betaTextCitation)
+    }
+
+    enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
+        BOOLEAN(JsonValue.from(false)),
+        STRING(JsonValue.from("invalid")),
+        INTEGER(JsonValue.from(-1)),
+        FLOAT(JsonValue.from(3.14)),
+        ARRAY(JsonValue.from(listOf("invalid", "array"))),
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    fun incompatibleJsonShapeDeserializesToUnknown(testCase: IncompatibleJsonShapeTestCase) {
+        val betaTextCitation =
+            jsonMapper().convertValue(testCase.value, jacksonTypeRef<BetaTextCitation>())
+
+        val e = assertThrows<AnthropicInvalidDataException> { betaTextCitation.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
     }
 }

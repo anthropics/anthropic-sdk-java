@@ -1,6 +1,5 @@
 package com.anthropic.core
 
-import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.ObjectCodec
 import com.fasterxml.jackson.core.type.TypeReference
@@ -8,7 +7,6 @@ import com.fasterxml.jackson.databind.BeanProperty
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.JsonDeserializer
-import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
@@ -30,38 +28,17 @@ abstract class BaseDeserializer<T : Any>(type: KClass<T>) :
 
     protected abstract fun ObjectCodec.deserialize(node: JsonNode): T
 
-    protected fun <T> ObjectCodec.deserialize(node: JsonNode, type: TypeReference<T>): T =
+    protected fun <T> ObjectCodec.tryDeserialize(node: JsonNode, type: TypeReference<T>): T? =
         try {
             readValue(treeAsTokens(node), type)
         } catch (e: Exception) {
-            throw AnthropicInvalidDataException("Error deserializing", e)
+            null
         }
 
-    protected fun <T> ObjectCodec.tryDeserialize(
-        node: JsonNode,
-        type: TypeReference<T>,
-        validate: (T) -> Unit = {},
-    ): T? {
-        return try {
-            readValue(treeAsTokens(node), type).apply(validate)
-        } catch (e: JsonMappingException) {
-            null
-        } catch (e: RuntimeException) {
+    protected fun <T> ObjectCodec.tryDeserialize(node: JsonNode, type: JavaType): T? =
+        try {
+            readValue(treeAsTokens(node), type)
+        } catch (e: Exception) {
             null
         }
-    }
-
-    protected fun <T> ObjectCodec.tryDeserialize(
-        node: JsonNode,
-        type: JavaType,
-        validate: (T) -> Unit = {},
-    ): T? {
-        return try {
-            readValue<T>(treeAsTokens(node), type).apply(validate)
-        } catch (e: JsonMappingException) {
-            null
-        } catch (e: RuntimeException) {
-            null
-        }
-    }
 }

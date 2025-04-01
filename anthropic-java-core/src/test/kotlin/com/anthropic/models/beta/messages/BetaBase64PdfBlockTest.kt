@@ -2,6 +2,8 @@
 
 package com.anthropic.models.beta.messages
 
+import com.anthropic.core.jsonMapper
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -30,5 +32,26 @@ internal class BetaBase64PdfBlockTest {
             .contains(BetaCitationsConfigParam.builder().enabled(true).build())
         assertThat(betaBase64PdfBlock.context()).contains("x")
         assertThat(betaBase64PdfBlock.title()).contains("x")
+    }
+
+    @Test
+    fun roundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaBase64PdfBlock =
+            BetaBase64PdfBlock.builder()
+                .betaBase64PdfSource("U3RhaW5sZXNzIHJvY2tz")
+                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .citations(BetaCitationsConfigParam.builder().enabled(true).build())
+                .context("x")
+                .title("x")
+                .build()
+
+        val roundtrippedBetaBase64PdfBlock =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaBase64PdfBlock),
+                jacksonTypeRef<BetaBase64PdfBlock>(),
+            )
+
+        assertThat(roundtrippedBetaBase64PdfBlock).isEqualTo(betaBase64PdfBlock)
     }
 }
