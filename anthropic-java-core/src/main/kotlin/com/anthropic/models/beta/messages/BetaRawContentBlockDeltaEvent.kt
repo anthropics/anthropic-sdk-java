@@ -2,34 +2,22 @@
 
 package com.anthropic.models.beta.messages
 
-import com.anthropic.core.BaseDeserializer
-import com.anthropic.core.BaseSerializer
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
-import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.core.ObjectCodec
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.SerializerProvider
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Collections
 import java.util.Objects
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
 class BetaRawContentBlockDeltaEvent
 private constructor(
-    private val delta: JsonField<Delta>,
+    private val delta: JsonField<BetaRawContentBlockDelta>,
     private val index: JsonField<Long>,
     private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -37,7 +25,9 @@ private constructor(
 
     @JsonCreator
     private constructor(
-        @JsonProperty("delta") @ExcludeMissing delta: JsonField<Delta> = JsonMissing.of(),
+        @JsonProperty("delta")
+        @ExcludeMissing
+        delta: JsonField<BetaRawContentBlockDelta> = JsonMissing.of(),
         @JsonProperty("index") @ExcludeMissing index: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
     ) : this(delta, index, type, mutableMapOf())
@@ -46,7 +36,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun delta(): Delta = delta.getRequired("delta")
+    fun delta(): BetaRawContentBlockDelta = delta.getRequired("delta")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -70,7 +60,7 @@ private constructor(
      *
      * Unlike [delta], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("delta") @ExcludeMissing fun _delta(): JsonField<Delta> = delta
+    @JsonProperty("delta") @ExcludeMissing fun _delta(): JsonField<BetaRawContentBlockDelta> = delta
 
     /**
      * Returns the raw JSON value of [index].
@@ -109,7 +99,7 @@ private constructor(
     /** A builder for [BetaRawContentBlockDeltaEvent]. */
     class Builder internal constructor() {
 
-        private var delta: JsonField<Delta>? = null
+        private var delta: JsonField<BetaRawContentBlockDelta>? = null
         private var index: JsonField<Long>? = null
         private var type: JsonValue = JsonValue.from("content_block_delta")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -122,18 +112,19 @@ private constructor(
             additionalProperties = betaRawContentBlockDeltaEvent.additionalProperties.toMutableMap()
         }
 
-        fun delta(delta: Delta) = delta(JsonField.of(delta))
+        fun delta(delta: BetaRawContentBlockDelta) = delta(JsonField.of(delta))
 
         /**
          * Sets [Builder.delta] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.delta] with a well-typed [Delta] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.delta] with a well-typed [BetaRawContentBlockDelta]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
          */
-        fun delta(delta: JsonField<Delta>) = apply { this.delta = delta }
+        fun delta(delta: JsonField<BetaRawContentBlockDelta>) = apply { this.delta = delta }
 
-        /** Alias for calling [delta] with `Delta.ofBetaText(betaText)`. */
-        fun delta(betaText: BetaTextDelta) = delta(Delta.ofBetaText(betaText))
+        /** Alias for calling [delta] with `BetaRawContentBlockDelta.ofText(text)`. */
+        fun delta(text: BetaTextDelta) = delta(BetaRawContentBlockDelta.ofText(text))
 
         /**
          * Alias for calling [delta] with the following:
@@ -143,10 +134,11 @@ private constructor(
          *     .build()
          * ```
          */
-        fun betaTextDelta(text: String) = delta(BetaTextDelta.builder().text(text).build())
+        fun textDelta(text: String) = delta(BetaTextDelta.builder().text(text).build())
 
-        /** Alias for calling [delta] with `Delta.ofBetaInputJson(betaInputJson)`. */
-        fun delta(betaInputJson: BetaInputJsonDelta) = delta(Delta.ofBetaInputJson(betaInputJson))
+        /** Alias for calling [delta] with `BetaRawContentBlockDelta.ofInputJson(inputJson)`. */
+        fun delta(inputJson: BetaInputJsonDelta) =
+            delta(BetaRawContentBlockDelta.ofInputJson(inputJson))
 
         /**
          * Alias for calling [delta] with the following:
@@ -156,11 +148,12 @@ private constructor(
          *     .build()
          * ```
          */
-        fun betaInputJsonDelta(partialJson: String) =
+        fun inputJsonDelta(partialJson: String) =
             delta(BetaInputJsonDelta.builder().partialJson(partialJson).build())
 
-        /** Alias for calling [delta] with `Delta.ofBetaCitations(betaCitations)`. */
-        fun delta(betaCitations: BetaCitationsDelta) = delta(Delta.ofBetaCitations(betaCitations))
+        /** Alias for calling [delta] with `BetaRawContentBlockDelta.ofCitations(citations)`. */
+        fun delta(citations: BetaCitationsDelta) =
+            delta(BetaRawContentBlockDelta.ofCitations(citations))
 
         /**
          * Alias for calling [delta] with the following:
@@ -170,40 +163,41 @@ private constructor(
          *     .build()
          * ```
          */
-        fun betaCitationsDelta(citation: BetaCitationsDelta.Citation) =
+        fun citationsDelta(citation: BetaCitationsDelta.Citation) =
             delta(BetaCitationsDelta.builder().citation(citation).build())
 
         /**
-         * Alias for calling [betaCitationsDelta] with
+         * Alias for calling [citationsDelta] with
          * `BetaCitationsDelta.Citation.ofBetaCitationCharLocation(betaCitationCharLocation)`.
          */
-        fun betaCitationsDelta(betaCitationCharLocation: BetaCitationCharLocation) =
-            betaCitationsDelta(
+        fun citationsDelta(betaCitationCharLocation: BetaCitationCharLocation) =
+            citationsDelta(
                 BetaCitationsDelta.Citation.ofBetaCitationCharLocation(betaCitationCharLocation)
             )
 
         /**
-         * Alias for calling [betaCitationsDelta] with
+         * Alias for calling [citationsDelta] with
          * `BetaCitationsDelta.Citation.ofBetaCitationPageLocation(betaCitationPageLocation)`.
          */
-        fun betaCitationsDelta(betaCitationPageLocation: BetaCitationPageLocation) =
-            betaCitationsDelta(
+        fun citationsDelta(betaCitationPageLocation: BetaCitationPageLocation) =
+            citationsDelta(
                 BetaCitationsDelta.Citation.ofBetaCitationPageLocation(betaCitationPageLocation)
             )
 
         /**
-         * Alias for calling [betaCitationsDelta] with
+         * Alias for calling [citationsDelta] with
          * `BetaCitationsDelta.Citation.ofBetaCitationContentBlockLocation(betaCitationContentBlockLocation)`.
          */
-        fun betaCitationsDelta(betaCitationContentBlockLocation: BetaCitationContentBlockLocation) =
-            betaCitationsDelta(
+        fun citationsDelta(betaCitationContentBlockLocation: BetaCitationContentBlockLocation) =
+            citationsDelta(
                 BetaCitationsDelta.Citation.ofBetaCitationContentBlockLocation(
                     betaCitationContentBlockLocation
                 )
             )
 
-        /** Alias for calling [delta] with `Delta.ofBetaThinking(betaThinking)`. */
-        fun delta(betaThinking: BetaThinkingDelta) = delta(Delta.ofBetaThinking(betaThinking))
+        /** Alias for calling [delta] with `BetaRawContentBlockDelta.ofThinking(thinking)`. */
+        fun delta(thinking: BetaThinkingDelta) =
+            delta(BetaRawContentBlockDelta.ofThinking(thinking))
 
         /**
          * Alias for calling [delta] with the following:
@@ -213,11 +207,12 @@ private constructor(
          *     .build()
          * ```
          */
-        fun betaThinkingDelta(thinking: String) =
+        fun thinkingDelta(thinking: String) =
             delta(BetaThinkingDelta.builder().thinking(thinking).build())
 
-        /** Alias for calling [delta] with `Delta.ofBetaSignature(betaSignature)`. */
-        fun delta(betaSignature: BetaSignatureDelta) = delta(Delta.ofBetaSignature(betaSignature))
+        /** Alias for calling [delta] with `BetaRawContentBlockDelta.ofSignature(signature)`. */
+        fun delta(signature: BetaSignatureDelta) =
+            delta(BetaRawContentBlockDelta.ofSignature(signature))
 
         /**
          * Alias for calling [delta] with the following:
@@ -227,7 +222,7 @@ private constructor(
          *     .build()
          * ```
          */
-        fun betaSignatureDelta(signature: String) =
+        fun signatureDelta(signature: String) =
             delta(BetaSignatureDelta.builder().signature(signature).build())
 
         fun index(index: Long) = index(JsonField.of(index))
@@ -310,226 +305,6 @@ private constructor(
             }
         }
         validated = true
-    }
-
-    @JsonDeserialize(using = Delta.Deserializer::class)
-    @JsonSerialize(using = Delta.Serializer::class)
-    class Delta
-    private constructor(
-        private val betaText: BetaTextDelta? = null,
-        private val betaInputJson: BetaInputJsonDelta? = null,
-        private val betaCitations: BetaCitationsDelta? = null,
-        private val betaThinking: BetaThinkingDelta? = null,
-        private val betaSignature: BetaSignatureDelta? = null,
-        private val _json: JsonValue? = null,
-    ) {
-
-        fun betaText(): Optional<BetaTextDelta> = Optional.ofNullable(betaText)
-
-        fun betaInputJson(): Optional<BetaInputJsonDelta> = Optional.ofNullable(betaInputJson)
-
-        fun betaCitations(): Optional<BetaCitationsDelta> = Optional.ofNullable(betaCitations)
-
-        fun betaThinking(): Optional<BetaThinkingDelta> = Optional.ofNullable(betaThinking)
-
-        fun betaSignature(): Optional<BetaSignatureDelta> = Optional.ofNullable(betaSignature)
-
-        fun isBetaText(): Boolean = betaText != null
-
-        fun isBetaInputJson(): Boolean = betaInputJson != null
-
-        fun isBetaCitations(): Boolean = betaCitations != null
-
-        fun isBetaThinking(): Boolean = betaThinking != null
-
-        fun isBetaSignature(): Boolean = betaSignature != null
-
-        fun asBetaText(): BetaTextDelta = betaText.getOrThrow("betaText")
-
-        fun asBetaInputJson(): BetaInputJsonDelta = betaInputJson.getOrThrow("betaInputJson")
-
-        fun asBetaCitations(): BetaCitationsDelta = betaCitations.getOrThrow("betaCitations")
-
-        fun asBetaThinking(): BetaThinkingDelta = betaThinking.getOrThrow("betaThinking")
-
-        fun asBetaSignature(): BetaSignatureDelta = betaSignature.getOrThrow("betaSignature")
-
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
-
-        fun <T> accept(visitor: Visitor<T>): T {
-            return when {
-                betaText != null -> visitor.visitBetaText(betaText)
-                betaInputJson != null -> visitor.visitBetaInputJson(betaInputJson)
-                betaCitations != null -> visitor.visitBetaCitations(betaCitations)
-                betaThinking != null -> visitor.visitBetaThinking(betaThinking)
-                betaSignature != null -> visitor.visitBetaSignature(betaSignature)
-                else -> visitor.unknown(_json)
-            }
-        }
-
-        private var validated: Boolean = false
-
-        fun validate(): Delta = apply {
-            if (validated) {
-                return@apply
-            }
-
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitBetaText(betaText: BetaTextDelta) {
-                        betaText.validate()
-                    }
-
-                    override fun visitBetaInputJson(betaInputJson: BetaInputJsonDelta) {
-                        betaInputJson.validate()
-                    }
-
-                    override fun visitBetaCitations(betaCitations: BetaCitationsDelta) {
-                        betaCitations.validate()
-                    }
-
-                    override fun visitBetaThinking(betaThinking: BetaThinkingDelta) {
-                        betaThinking.validate()
-                    }
-
-                    override fun visitBetaSignature(betaSignature: BetaSignatureDelta) {
-                        betaSignature.validate()
-                    }
-                }
-            )
-            validated = true
-        }
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return /* spotless:off */ other is Delta && betaText == other.betaText && betaInputJson == other.betaInputJson && betaCitations == other.betaCitations && betaThinking == other.betaThinking && betaSignature == other.betaSignature /* spotless:on */
-        }
-
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaText, betaInputJson, betaCitations, betaThinking, betaSignature) /* spotless:on */
-
-        override fun toString(): String =
-            when {
-                betaText != null -> "Delta{betaText=$betaText}"
-                betaInputJson != null -> "Delta{betaInputJson=$betaInputJson}"
-                betaCitations != null -> "Delta{betaCitations=$betaCitations}"
-                betaThinking != null -> "Delta{betaThinking=$betaThinking}"
-                betaSignature != null -> "Delta{betaSignature=$betaSignature}"
-                _json != null -> "Delta{_unknown=$_json}"
-                else -> throw IllegalStateException("Invalid Delta")
-            }
-
-        companion object {
-
-            @JvmStatic fun ofBetaText(betaText: BetaTextDelta) = Delta(betaText = betaText)
-
-            @JvmStatic
-            fun ofBetaInputJson(betaInputJson: BetaInputJsonDelta) =
-                Delta(betaInputJson = betaInputJson)
-
-            @JvmStatic
-            fun ofBetaCitations(betaCitations: BetaCitationsDelta) =
-                Delta(betaCitations = betaCitations)
-
-            @JvmStatic
-            fun ofBetaThinking(betaThinking: BetaThinkingDelta) = Delta(betaThinking = betaThinking)
-
-            @JvmStatic
-            fun ofBetaSignature(betaSignature: BetaSignatureDelta) =
-                Delta(betaSignature = betaSignature)
-        }
-
-        /** An interface that defines how to map each variant of [Delta] to a value of type [T]. */
-        interface Visitor<out T> {
-
-            fun visitBetaText(betaText: BetaTextDelta): T
-
-            fun visitBetaInputJson(betaInputJson: BetaInputJsonDelta): T
-
-            fun visitBetaCitations(betaCitations: BetaCitationsDelta): T
-
-            fun visitBetaThinking(betaThinking: BetaThinkingDelta): T
-
-            fun visitBetaSignature(betaSignature: BetaSignatureDelta): T
-
-            /**
-             * Maps an unknown variant of [Delta] to a value of type [T].
-             *
-             * An instance of [Delta] can contain an unknown variant if it was deserialized from
-             * data that doesn't match any known variant. For example, if the SDK is on an older
-             * version than the API, then the API may respond with new variants that the SDK is
-             * unaware of.
-             *
-             * @throws AnthropicInvalidDataException in the default implementation.
-             */
-            fun unknown(json: JsonValue?): T {
-                throw AnthropicInvalidDataException("Unknown Delta: $json")
-            }
-        }
-
-        internal class Deserializer : BaseDeserializer<Delta>(Delta::class) {
-
-            override fun ObjectCodec.deserialize(node: JsonNode): Delta {
-                val json = JsonValue.fromJsonNode(node)
-                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
-
-                when (type) {
-                    "text_delta" -> {
-                        return Delta(
-                            betaText = deserialize(node, jacksonTypeRef<BetaTextDelta>()),
-                            _json = json,
-                        )
-                    }
-                    "input_json_delta" -> {
-                        return Delta(
-                            betaInputJson = deserialize(node, jacksonTypeRef<BetaInputJsonDelta>()),
-                            _json = json,
-                        )
-                    }
-                    "citations_delta" -> {
-                        return Delta(
-                            betaCitations = deserialize(node, jacksonTypeRef<BetaCitationsDelta>()),
-                            _json = json,
-                        )
-                    }
-                    "thinking_delta" -> {
-                        return Delta(
-                            betaThinking = deserialize(node, jacksonTypeRef<BetaThinkingDelta>()),
-                            _json = json,
-                        )
-                    }
-                    "signature_delta" -> {
-                        return Delta(
-                            betaSignature = deserialize(node, jacksonTypeRef<BetaSignatureDelta>()),
-                            _json = json,
-                        )
-                    }
-                }
-
-                return Delta(_json = json)
-            }
-        }
-
-        internal class Serializer : BaseSerializer<Delta>(Delta::class) {
-
-            override fun serialize(
-                value: Delta,
-                generator: JsonGenerator,
-                provider: SerializerProvider,
-            ) {
-                when {
-                    value.betaText != null -> generator.writeObject(value.betaText)
-                    value.betaInputJson != null -> generator.writeObject(value.betaInputJson)
-                    value.betaCitations != null -> generator.writeObject(value.betaCitations)
-                    value.betaThinking != null -> generator.writeObject(value.betaThinking)
-                    value.betaSignature != null -> generator.writeObject(value.betaSignature)
-                    value._json != null -> generator.writeObject(value._json)
-                    else -> throw IllegalStateException("Invalid Delta")
-                }
-            }
-        }
     }
 
     override fun equals(other: Any?): Boolean {
