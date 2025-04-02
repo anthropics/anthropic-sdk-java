@@ -119,6 +119,15 @@ private constructor(
         }
 
         /**
+         * Sets the entire request body.
+         *
+         * This is generally only useful if you are already constructing the body separately.
+         * Otherwise, it's more convenient to use the top-level setters instead:
+         * - [requests]
+         */
+        fun body(body: Body) = apply { this.body = body.toBuilder() }
+
+        /**
          * List of requests for prompt completion. Each is an individual request to create a
          * Message.
          */
@@ -277,7 +286,7 @@ private constructor(
             )
     }
 
-    @JvmSynthetic internal fun _body(): Body = body
+    fun _body(): Body = body
 
     override fun _headers(): Headers = additionalHeaders
 
