@@ -1,5 +1,42 @@
 # Changelog
 
+## 1.1.0 (2025-04-03)
+
+Full Changelog: [v1.0.0...v1.1.0](https://github.com/anthropics/anthropic-sdk-java/compare/v1.0.0...v1.1.0)
+
+### Features
+
+* **api:** extract ContentBlockDelta events into their own schemas ([#226](https://github.com/anthropics/anthropic-sdk-java/issues/226)) ([49a83cf](https://github.com/anthropics/anthropic-sdk-java/commit/49a83cfdf734c0ea731aac552239220e2e924708))
+* **api:** manual updates ([d5afb44](https://github.com/anthropics/anthropic-sdk-java/commit/d5afb441237efd1e745df09812f251221d58a240))
+* **api:** manual updates ([93d6364](https://github.com/anthropics/anthropic-sdk-java/commit/93d636449c2bfcdcd3988ced2be7706a6f2da30f))
+* **client:** add enum validation method ([1ce5a58](https://github.com/anthropics/anthropic-sdk-java/commit/1ce5a587331d6cc7adfb8c3f8c2935cdf17c8bd7))
+* **client:** expose request body setter and getter ([#229](https://github.com/anthropics/anthropic-sdk-java/issues/229)) ([fb26c1f](https://github.com/anthropics/anthropic-sdk-java/commit/fb26c1ff8addd08277727c6047f88144fb00f2ed))
+* **client:** make datetime deserialization more lenient ([#228](https://github.com/anthropics/anthropic-sdk-java/issues/228)) ([52b871d](https://github.com/anthropics/anthropic-sdk-java/commit/52b871d8c9e1240610236514e52a81c6cac69846))
+* **client:** make union deserialization more robust ([#227](https://github.com/anthropics/anthropic-sdk-java/issues/227)) ([1ce5a58](https://github.com/anthropics/anthropic-sdk-java/commit/1ce5a587331d6cc7adfb8c3f8c2935cdf17c8bd7))
+
+
+### Bug Fixes
+
+* **client:** compilation errors ([c8e47fd](https://github.com/anthropics/anthropic-sdk-java/commit/c8e47fd24f0680de1ded21c6a45ac7f48c31b479))
+* **client:** limit json deserialization coercion ([#223](https://github.com/anthropics/anthropic-sdk-java/issues/223)) ([a5987f6](https://github.com/anthropics/anthropic-sdk-java/commit/a5987f6de5776dec0b68a740aa4baac692a21c45))
+
+
+### Performance Improvements
+
+* **client:** cached parsed type in `HttpResponseFor` ([#230](https://github.com/anthropics/anthropic-sdk-java/issues/230)) ([377c532](https://github.com/anthropics/anthropic-sdk-java/commit/377c5323439d3ff086e15b5b29734c5c9eeb233b))
+
+
+### Chores
+
+* **client:** remove unnecessary json state from some query param classes ([1ce5a58](https://github.com/anthropics/anthropic-sdk-java/commit/1ce5a587331d6cc7adfb8c3f8c2935cdf17c8bd7))
+* **internal:** add invalid json deserialization tests ([1ce5a58](https://github.com/anthropics/anthropic-sdk-java/commit/1ce5a587331d6cc7adfb8c3f8c2935cdf17c8bd7))
+* **internal:** add json roundtripping tests ([1ce5a58](https://github.com/anthropics/anthropic-sdk-java/commit/1ce5a587331d6cc7adfb8c3f8c2935cdf17c8bd7))
+
+
+### Documentation
+
+* fix examples ([a4c0a53](https://github.com/anthropics/anthropic-sdk-java/commit/a4c0a53ed2b596741565f39187c0db4eb435a9c3))
+
 ## 1.0.0 (2025-03-31)
 
 Full Changelog: [v0.9.2...v1.0.0](https://github.com/anthropics/anthropic-sdk-java/compare/v0.9.2...v1.0.0)
