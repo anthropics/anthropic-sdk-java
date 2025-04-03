@@ -481,8 +481,9 @@ implementation("com.anthropic:anthropic-java-bedrock:1.0.0")
 
 ### Usage
 
-To use Anthropic on Bedrock, create the Anthropic client with the 
-`BedrockBackend`. Usage of the API is otherwise the same.
+To use Anthropic on Bedrock, create the Anthropic client with the
+[`BedrockBackend`](anthropic-java-bedrock/src/main/kotlin/com/anthropic/bedrock/backends/BedrockBackend.kt).
+Usage of the API is otherwise the same.
 
 ```java
 import com.anthropic.bedrock.backends.BedrockBackend;
@@ -523,6 +524,29 @@ AnthropicClient client = AnthropicOkHttpClient.builder()
         .backend(BedrockBackend.builder()
                 .awsCredentials(awsCredentials)
                 .region(Region.US_EAST_1)
+                .build())
+        .build();
+```
+
+You can also create and configure your own AWS credentials provider and set it when building a
+`BedrockBackend`. For example, you can use the AWS `DefaultCredentialsProvider`, but enable
+automatic asynchronous refreshing of credentials:
+
+```java
+import com.anthropic.bedrock.backends.BedrockBackend;
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+
+AwsCredentialsProvider awsCredentialsProvider =
+        DefaultCredentialsProvider.builder()
+                .asyncCredentialUpdateEnabled(true)
+                .build();
+
+AnthropicClient client = AnthropicOkHttpClient.builder()
+        .backend(BedrockBackend.builder()
+                .fromEnv(awsCredentialsProvider)
                 .build())
         .build();
 ```

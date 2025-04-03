@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import java.lang.System.clearProperty
 import java.lang.System.setProperty
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatNoException
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -159,6 +160,47 @@ internal class BedrockBackendTest {
     }
 
     @Test
+    fun awsCredentialsProviderExplicitWithRegion() {
+        val backend =
+            BedrockBackend.builder()
+                .awsCredentialsProvider(
+                    BedrockBackend.providerOf(
+                        AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+                    )
+                )
+                .region(Region.EU_WEST_1)
+                .build()
+
+        assertThat(backend.awsCredentials).isExactlyInstanceOf(AwsBasicCredentials::class.java)
+        assertThat(backend.awsCredentials.accessKeyId()).isEqualTo(AWS_ACCESS_KEY_ID)
+        assertThat(backend.awsCredentials.secretAccessKey()).isEqualTo(AWS_SECRET_ACCESS_KEY)
+        assertThat(backend.region).isEqualTo(Region.EU_WEST_1)
+    }
+
+    @Test
+    fun awsCredentialsProviderViaFromEnvWithRegion() {
+        initEnv(
+            isSetAccessKeyID = false,
+            isSetSecretAccessKey = false,
+            isSetSessionToken = false,
+            isSetRegion = true,
+        )
+        val backend =
+            BedrockBackend.builder()
+                .fromEnv(
+                    BedrockBackend.providerOf(
+                        AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+                    )
+                )
+                .build()
+
+        assertThat(backend.awsCredentials).isExactlyInstanceOf(AwsBasicCredentials::class.java)
+        assertThat(backend.awsCredentials.accessKeyId()).isEqualTo(AWS_ACCESS_KEY_ID)
+        assertThat(backend.awsCredentials.secretAccessKey()).isEqualTo(AWS_SECRET_ACCESS_KEY)
+        assertThat(backend.region.toString()).isEqualTo(AWS_REGION)
+    }
+
+    @Test
     fun regionMissing() {
         initEnv(
             isSetAccessKeyID = true,
@@ -196,7 +238,7 @@ internal class BedrockBackendTest {
 
         assertThatThrownBy { BedrockBackend.builder().build() }
             .isExactlyInstanceOf(IllegalStateException::class.java)
-            .hasMessageContaining("awsCredentials")
+            .hasMessageContaining("awsCredentialsProvider")
     }
 
     @Test
@@ -213,7 +255,7 @@ internal class BedrockBackendTest {
     fun regionExplicitWithoutAwsCredentials() {
         assertThatThrownBy { BedrockBackend.builder().region(Region.US_EAST_1).build() }
             .isExactlyInstanceOf(IllegalStateException::class.java)
-            .hasMessageContaining("awsCredentials")
+            .hasMessageContaining("awsCredentialsProvider")
     }
 
     @Test
@@ -349,6 +391,15 @@ internal class BedrockBackendTest {
         assertThatThrownBy { backend.prepareRequest(request) }
             .isExactlyInstanceOf(AnthropicException::class.java)
             .hasMessageStartingWith("Token counting is not supported")
+    }
+
+    @Test
+    fun prepareRequestMessagesOtherEndpointsIgnored() {
+        initEnv()
+        val backend = BedrockBackend.fromEnv()
+        val request = createRequest("""{"model":"$MODEL_ID"}""", "v1", "messages", "new_endpoint")
+
+        assertThatNoException().isThrownBy { backend.prepareRequest(request) }
     }
 
     @Test
@@ -700,6 +751,14 @@ internal class BedrockBackendTest {
         assertThatThrownBy { backend.authorizeRequest(request) }
             .isExactlyInstanceOf(AnthropicInvalidDataException::class.java)
             .hasMessageStartingWith("No content type")
+    }
+
+    @Test
+    fun closeWithoutUsingThreads() {
+        initEnv()
+        val backend = BedrockBackend.fromEnv()
+
+        assertThatNoException().isThrownBy { backend.close() }
     }
 
     /**

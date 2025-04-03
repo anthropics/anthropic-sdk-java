@@ -1,7 +1,7 @@
 package com.anthropic.bedrock.backends
 
 import com.anthropic.backends.Backend
-import com.anthropic.bedrock.backends.BedrockBackend.Builder
+import com.anthropic.bedrock.backends.BedrockBackend.Companion.HEADER_PAYLOAD_CONTENT_TYPE
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpRequest
@@ -21,6 +21,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicLong
 import software.amazon.awssdk.auth.credentials.AwsCredentials
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider
 import software.amazon.awssdk.http.ContentStreamProvider
 import software.amazon.awssdk.http.SdkHttpMethod
@@ -38,16 +39,17 @@ import software.amazon.eventstream.MessageDecoder
  *
  * Amazon Bedrock requires cryptographically-signed requests using credentials issued by AWS. These
  * can be provided via system properties, environment variables, or other AWS facilities. They can
- * be resolved automatically by the default AWS provider chains by calling [Builder.fromEnv].
- * Alternatively, the AWS credentials and region can be resolved independently and passed to
- * [Builder.awsCredentials] and [Builder.region] should an alternative method of resolution be
- * required.
+ * be resolved automatically by the default AWS provider chain by calling [Builder.fromEnv].
+ * Alternatively, a custom AWS credentials provider can be configured on the builder and used to
+ * resolve the credentials. Both the credentials and the region can be resolved independently and
+ * passed to [Builder.awsCredentials] and [Builder.region] should an alternative method of
+ * resolution be required.
  *
  * See the Amazon Bedrock and AWS documentation for details on how to configure AWS credentials.
  */
 class BedrockBackend
 private constructor(
-    @get:JvmName("awsCredentials") val awsCredentials: AwsCredentials,
+    @get:JvmName("awsCredentialsProvider") val awsCredentialsProvider: AwsCredentialsProvider,
     @get:JvmName("region") val region: Region,
 ) : Backend {
 
@@ -65,6 +67,14 @@ private constructor(
                     }
             }
         )
+
+    /** Gets the AWS credentials resolved from the configured AWS credentials provider. */
+    val awsCredentials: AwsCredentials
+        // Depending on the source of the credentials, they may need to be periodically refreshed.
+        // This can be done in the background if a credentials provider is configured to do so.
+        // Typically, a provider will cache the periodically refreshed credentials, so resolving
+        // them is a simple cache read and does not add much overhead.
+        @JvmName("awsCredentials") get() = awsCredentialsProvider.resolveCredentials()
 
     companion object {
         private const val ANTHROPIC_VERSION = "bedrock-2023-05-31"
@@ -94,13 +104,23 @@ private constructor(
 
         @JvmStatic fun builder() = Builder()
 
-        @JvmStatic fun fromEnv(): BedrockBackend = builder().fromEnv().build()
+        /**
+         * Creates a Bedrock Backend configured to use the default AWS credentials provider. See
+         * [Builder.fromEnv] for more details, or to configure a different provider.
+         */
+        @JvmStatic fun fromEnv() = builder().fromEnv().build()
+
+        @JvmSynthetic
+        internal fun providerOf(awsCredentials: AwsCredentials) =
+            object : AwsCredentialsProvider {
+                override fun resolveCredentials() = awsCredentials
+            }
     }
 
     override fun baseUrl(): String =
-        // Could use the AWS "BedrockEndpointProvider" in "fromEnv()", but that
-        // is a large dependency that brings in all the competing AWS SDK
-        // classes for Bedrock that are not desired in this SDK.
+        // Could use the AWS "BedrockEndpointProvider" in "fromEnv()", but that is a large
+        // dependency that brings in all the competing AWS SDK classes for Bedrock that are not
+        // desired in this SDK.
         "https://$SERVICE_NAME.$region.amazonaws.com"
 
     override fun prepareRequest(request: HttpRequest): HttpRequest {
@@ -241,30 +261,31 @@ private constructor(
         val pipedInput = PipedInputStream()
         val pipedOutput = PipedOutputStream(pipedInput)
 
-        // A decoded AWS EventStream message's payload is JSON. It might look
-        // like this (abridged):
+        // spotless:off
+        //
+        // A decoded AWS EventStream message's payload is JSON. It might look like this (abridged):
         //
         //   {"bytes":"eyJ0eXBlIjoi...ZXJlIn19","p":"abcdefghijkl"}
         //
-        // The value of the "bytes" field is a base-64 encoded JSON string
-        // (UTF-8). When decoded, it might look like this:
+        // The value of the "bytes" field is a base-64 encoded JSON string (UTF-8). When decoded, it
+        // might look like this:
         //
         //   {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello"}}
         //
-        // Parse the "type" field to allow the construction of a server-sent
-        // event (SSE) that might look like this:
+        // Parse the "type" field to allow the construction of a server-sent event (SSE) that might
+        // look like this:
         //
         //   event: content_block_delta
-        //   data:
-        // {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello"}}
+        //   data: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello"}}
         //
-        // Print the SSE (with a blank line after) to the piped output stream to
-        // complete the translation process.
+        // Print the SSE (with a blank line after) to the piped output stream to complete the
+        // translation process.
         //
-        // A thread avoids deadlocking the pipe. If everything is on the same
-        // thread, a "read" that blocks waiting for more data to be written,
-        // would block the thread from executing the necessary "write" and cause
-        // a deadlock.
+        // A thread avoids deadlocking the pipe. If everything is on the same thread, a "read" that
+        // blocks waiting for more data to be written, would block the thread from executing the
+        // necessary "write" and cause a deadlock.
+        //
+        // spotless:on
         sseThreadPool.execute {
             responseInput.use { input ->
                 // "use" closes the piped output stream when done, which signals
@@ -322,16 +343,39 @@ private constructor(
      * The AWS credentials and region can be extracted from the environment and set on the builder
      * by calling [fromEnv] before calling [build] to create the [BedrockBackend]. Alternatively,
      * set the AWS credentials and region explicitly via [awsCredentials] and [region] before
-     * calling [build].
+     * calling [build]. A custom AWS credentials provider can be passed to [fromEnv] or
+     * [awsCredentialsProvider].
      */
     class Builder internal constructor() {
-        private var awsCredentials: AwsCredentials? = null
+        private var awsCredentialsProvider: AwsCredentialsProvider? = null
 
         private var region: Region? = null
 
-        fun fromEnv() = apply {
+        /**
+         * Resolves the AWS credentials from the environment, or other sources configured by the
+         * credentials provider. If no provider is given, the AWS `DefaultCredentialsProvider` is
+         * used, which is suitable for many use cases. The configuration of that provider follows
+         * its usual defaults, so asynchronous refreshing is not enabled. See the AWS documentation
+         * for details. For other use cases, pass a credentials provider configured as required. The
+         * provider, whether given explicitly or by default, overrides any provider set via
+         * [awsCredentialsProvider] or [awsCredentials].
+         *
+         * The region is also resolved immediately using the default AWS region provider chain. Once
+         * resolved here, the region will not be changed again.
+         *
+         * When called, this method will immediately attempt to resolve the AWS credentials and
+         * region. An error will occur if they cannot be resolved.
+         */
+        @JvmOverloads
+        fun fromEnv(
+            awsCredentialsProvider: AwsCredentialsProvider = DefaultCredentialsProvider.create()
+        ) = apply {
+            awsCredentialsProvider(awsCredentialsProvider)
+
             try {
-                awsCredentials = DefaultCredentialsProvider.create().resolveCredentials()
+                // A fail-fast check to ensure that the provider and the environment are properly
+                // configured. There is no need to store the result.
+                awsCredentialsProvider.resolveCredentials()
             } catch (e: Exception) {
                 throw IllegalStateException(
                     "No AWS access key ID or AWS secret access key found.",
@@ -345,15 +389,36 @@ private constructor(
             }
         }
 
-        fun awsCredentials(awsCredentials: AwsCredentials) = apply {
-            this.awsCredentials = awsCredentials
+        /**
+         * Sets the AWS credentials provider that will be used to resolve credentials. Credentials
+         * will not be resolved immediately. If misconfigured, an error may not be reported until
+         * the first client request is made. To set a credentials provider _and_ confirm that it can
+         * resolve credentials, call [fromEnv]. If called after [fromEnv], this overrides the
+         * credentials provider configured by [fromEnv].
+         */
+        fun awsCredentialsProvider(awsCredentialsProvider: AwsCredentialsProvider) = apply {
+            this.awsCredentialsProvider = awsCredentialsProvider
         }
 
+        /**
+         * Creates and sets an AWS credentials provider that provides only the given credentials.
+         * This is a convenience for simple use cases, such as when testing. The provider overrides
+         * any provider previously set by [awsCredentialsProvider] or [fromEnv].
+         */
+        fun awsCredentials(awsCredentials: AwsCredentials) = apply {
+            awsCredentialsProvider = providerOf(awsCredentials)
+        }
+
+        /**
+         * Sets the region to use when constructing the base URL for requests. Alternatively, this
+         * may be resolved from the environment by calling [fromEnv]. If called after [fromEnv],
+         * this overrides the region resolved by [fromEnv].
+         */
         fun region(region: Region) = apply { this.region = region }
 
-        fun build(): BedrockBackend =
+        fun build() =
             BedrockBackend(
-                checkRequired("awsCredentials", awsCredentials),
+                checkRequired("awsCredentialsProvider", awsCredentialsProvider),
                 checkRequired("region", region),
             )
     }
