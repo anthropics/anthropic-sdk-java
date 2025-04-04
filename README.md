@@ -487,10 +487,10 @@ To set undocumented parameters on _nested_ headers, query params, or body classe
 
 ```java
 import com.anthropic.core.JsonValue;
-import com.anthropic.models.completions.CompletionCreateParams;
+import com.anthropic.models.messages.MessageCreateParams;
 import com.anthropic.models.messages.Metadata;
 
-CompletionCreateParams params = CompletionCreateParams.builder()
+MessageCreateParams params = MessageCreateParams.builder()
     .metadata(Metadata.builder()
         .putAdditionalProperty("secretProperty", JsonValue.from("42"))
         .build())
@@ -550,6 +550,22 @@ JsonValue complexValue = JsonValue.from(Map.of(
     3, 4
   )
 ));
+```
+
+Normally a `Builder` class's `build` method will throw [`IllegalStateException`](https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalStateException.html) if any required parameter or property is unset.
+
+To forcibly omit a required parameter or property, pass [`JsonMissing`](anthropic-java-core/src/main/kotlin/com/anthropic/core/Values.kt):
+
+```java
+import com.anthropic.core.JsonMissing;
+import com.anthropic.models.messages.MessageCreateParams;
+import com.anthropic.models.messages.Model;
+
+MessageCreateParams params = MessageCreateParams.builder()
+    .addUserMessage("Hello, world")
+    .model(Model.CLAUDE_3_7_SONNET_LATEST)
+    .maxTokens(JsonMissing.of())
+    .build();
 ```
 
 ### Response properties
