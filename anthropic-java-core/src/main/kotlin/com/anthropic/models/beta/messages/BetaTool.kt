@@ -68,7 +68,7 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
-        Optional.ofNullable(cacheControl.getNullable("cache_control"))
+        cacheControl.getOptional("cache_control")
 
     /**
      * Description of what this tool does.
@@ -80,14 +80,13 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun description(): Optional<String> =
-        Optional.ofNullable(description.getNullable("description"))
+    fun description(): Optional<String> = description.getOptional("description")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun type(): Optional<Type> = Optional.ofNullable(type.getNullable("type"))
+    fun type(): Optional<Type> = type.getOptional("type")
 
     /**
      * Returns the raw JSON value of [inputSchema].

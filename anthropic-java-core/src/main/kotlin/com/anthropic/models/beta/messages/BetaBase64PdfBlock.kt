@@ -74,26 +74,25 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
-        Optional.ofNullable(cacheControl.getNullable("cache_control"))
+        cacheControl.getOptional("cache_control")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun citations(): Optional<BetaCitationsConfigParam> =
-        Optional.ofNullable(citations.getNullable("citations"))
+    fun citations(): Optional<BetaCitationsConfigParam> = citations.getOptional("citations")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun context(): Optional<String> = Optional.ofNullable(context.getNullable("context"))
+    fun context(): Optional<String> = context.getOptional("context")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun title(): Optional<String> = Optional.ofNullable(title.getNullable("title"))
+    fun title(): Optional<String> = title.getOptional("title")
 
     /**
      * Returns the raw JSON value of [source].

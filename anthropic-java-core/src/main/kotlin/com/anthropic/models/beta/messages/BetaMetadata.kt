@@ -37,7 +37,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun userId(): Optional<String> = Optional.ofNullable(userId.getNullable("user_id"))
+    fun userId(): Optional<String> = userId.getOptional("user_id")
 
     /**
      * Returns the raw JSON value of [userId].

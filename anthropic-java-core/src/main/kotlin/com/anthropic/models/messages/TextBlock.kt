@@ -48,8 +48,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun citations(): Optional<List<TextCitation>> =
-        Optional.ofNullable(citations.getNullable("citations"))
+    fun citations(): Optional<List<TextCitation>> = citations.getOptional("citations")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is

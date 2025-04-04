@@ -63,8 +63,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun cacheControl(): Optional<CacheControlEphemeral> =
-        Optional.ofNullable(cacheControl.getNullable("cache_control"))
+    fun cacheControl(): Optional<CacheControlEphemeral> = cacheControl.getOptional("cache_control")
 
     /**
      * Returns the raw JSON value of [cacheControl].
