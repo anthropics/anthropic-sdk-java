@@ -51,7 +51,7 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun disableParallelToolUse(): Optional<Boolean> =
-        Optional.ofNullable(disableParallelToolUse.getNullable("disable_parallel_tool_use"))
+        disableParallelToolUse.getOptional("disable_parallel_tool_use")
 
     /**
      * Returns the raw JSON value of [disableParallelToolUse].

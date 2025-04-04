@@ -61,15 +61,13 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun cacheControl(): Optional<CacheControlEphemeral> =
-        Optional.ofNullable(cacheControl.getNullable("cache_control"))
+    fun cacheControl(): Optional<CacheControlEphemeral> = cacheControl.getOptional("cache_control")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun citations(): Optional<List<TextCitationParam>> =
-        Optional.ofNullable(citations.getNullable("citations"))
+    fun citations(): Optional<List<TextCitationParam>> = citations.getOptional("citations")
 
     /**
      * Returns the raw JSON value of [text].

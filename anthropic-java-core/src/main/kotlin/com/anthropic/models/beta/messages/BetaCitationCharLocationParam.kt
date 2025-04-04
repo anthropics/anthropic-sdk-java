@@ -70,8 +70,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun documentTitle(): Optional<String> =
-        Optional.ofNullable(documentTitle.getNullable("document_title"))
+    fun documentTitle(): Optional<String> = documentTitle.getOptional("document_title")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is

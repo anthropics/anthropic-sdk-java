@@ -908,8 +908,7 @@ private constructor(
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
-            fun metadata(): Optional<BetaMetadata> =
-                Optional.ofNullable(metadata.getNullable("metadata"))
+            fun metadata(): Optional<BetaMetadata> = metadata.getOptional("metadata")
 
             /**
              * Custom text sequences that will cause the model to stop generating.
@@ -926,7 +925,7 @@ private constructor(
              *   if the server responded with an unexpected value).
              */
             fun stopSequences(): Optional<List<String>> =
-                Optional.ofNullable(stopSequences.getNullable("stop_sequences"))
+                stopSequences.getOptional("stop_sequences")
 
             /**
              * Whether to incrementally stream the response using server-sent events.
@@ -936,7 +935,7 @@ private constructor(
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
-            fun stream(): Optional<Boolean> = Optional.ofNullable(stream.getNullable("stream"))
+            fun stream(): Optional<Boolean> = stream.getOptional("stream")
 
             /**
              * System prompt.
@@ -948,7 +947,7 @@ private constructor(
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
-            fun system(): Optional<System> = Optional.ofNullable(system.getNullable("system"))
+            fun system(): Optional<System> = system.getOptional("system")
 
             /**
              * Amount of randomness injected into the response.
@@ -962,8 +961,7 @@ private constructor(
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
-            fun temperature(): Optional<Double> =
-                Optional.ofNullable(temperature.getNullable("temperature"))
+            fun temperature(): Optional<Double> = temperature.getOptional("temperature")
 
             /**
              * Configuration for enabling Claude's extended thinking.
@@ -979,8 +977,7 @@ private constructor(
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
-            fun thinking(): Optional<BetaThinkingConfigParam> =
-                Optional.ofNullable(thinking.getNullable("thinking"))
+            fun thinking(): Optional<BetaThinkingConfigParam> = thinking.getOptional("thinking")
 
             /**
              * How the model should use the provided tools. The model can use a specific tool, any
@@ -989,8 +986,7 @@ private constructor(
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
-            fun toolChoice(): Optional<BetaToolChoice> =
-                Optional.ofNullable(toolChoice.getNullable("tool_choice"))
+            fun toolChoice(): Optional<BetaToolChoice> = toolChoice.getOptional("tool_choice")
 
             /**
              * Definitions of tools that the model may use.
@@ -1060,8 +1056,7 @@ private constructor(
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
-            fun tools(): Optional<List<BetaToolUnion>> =
-                Optional.ofNullable(tools.getNullable("tools"))
+            fun tools(): Optional<List<BetaToolUnion>> = tools.getOptional("tools")
 
             /**
              * Only sample from the top K options for each subsequent token.
@@ -1074,7 +1069,7 @@ private constructor(
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
-            fun topK(): Optional<Long> = Optional.ofNullable(topK.getNullable("top_k"))
+            fun topK(): Optional<Long> = topK.getOptional("top_k")
 
             /**
              * Use nucleus sampling.
@@ -1089,7 +1084,7 @@ private constructor(
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
-            fun topP(): Optional<Double> = Optional.ofNullable(topP.getNullable("top_p"))
+            fun topP(): Optional<Double> = topP.getOptional("top_p")
 
             /**
              * Returns the raw JSON value of [maxTokens].
