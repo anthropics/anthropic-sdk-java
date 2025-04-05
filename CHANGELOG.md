@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.1.1 (2025-04-05)
+
+Full Changelog: [v1.1.0...v1.1.1](https://github.com/anthropics/anthropic-sdk-java/compare/v1.1.0...v1.1.1)
+
+### Bug Fixes
+
+* **client:** return `Optional&lt;T&gt;` instead of `Optional<? extends T>` ([#237](https://github.com/anthropics/anthropic-sdk-java/issues/237)) ([a73ed0c](https://github.com/anthropics/anthropic-sdk-java/commit/a73ed0c031454b60e205120fc03c9012942c9103))
+* **client:** translate streaming `IOException` into custom exception ([#233](https://github.com/anthropics/anthropic-sdk-java/issues/233)) ([8b925b9](https://github.com/anthropics/anthropic-sdk-java/commit/8b925b935b69136d717d009a37bacc94757feb43))
+
+
+### Chores
+
+* **internal:** codegen related update ([#235](https://github.com/anthropics/anthropic-sdk-java/issues/235)) ([3816ae3](https://github.com/anthropics/anthropic-sdk-java/commit/3816ae3055497217e4dccdfe5513895d30c47395))
+* **internal:** swap from `getNullable` to `getOptional` ([#236](https://github.com/anthropics/anthropic-sdk-java/issues/236)) ([0b97285](https://github.com/anthropics/anthropic-sdk-java/commit/0b97285e45995a768a2188a8e6e893aa6d8d7997))
+
+
+### Documentation
+
+* add comments to `JsonField` classes ([a73ed0c](https://github.com/anthropics/anthropic-sdk-java/commit/a73ed0c031454b60e205120fc03c9012942c9103))
+* document how to forcibly omit required field ([6da7748](https://github.com/anthropics/anthropic-sdk-java/commit/6da77484058c3e38ad83bef023ef7c9724fc5e30))
+* swap examples used in readme ([#238](https://github.com/anthropics/anthropic-sdk-java/issues/238)) ([6da7748](https://github.com/anthropics/anthropic-sdk-java/commit/6da77484058c3e38ad83bef023ef7c9724fc5e30))
+
 ## 1.1.0 (2025-04-03)
 
 Full Changelog: [v1.0.0...v1.1.0](https://github.com/anthropics/anthropic-sdk-java/compare/v1.0.0...v1.1.0)
