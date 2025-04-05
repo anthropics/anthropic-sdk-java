@@ -105,13 +105,13 @@ private constructor(
             @JsonProperty("last_id") lastId: JsonField<String> = JsonMissing.of(),
         ) : this(data, hasMore, firstId, lastId, mutableMapOf())
 
-        fun data(): List<BetaModelInfo> = data.getNullable("data") ?: listOf()
+        fun data(): List<BetaModelInfo> = data.getOptional("data").getOrNull() ?: listOf()
 
-        fun hasMore(): Optional<Boolean> = Optional.ofNullable(hasMore.getNullable("has_more"))
+        fun hasMore(): Optional<Boolean> = hasMore.getOptional("has_more")
 
-        fun firstId(): Optional<String> = Optional.ofNullable(firstId.getNullable("first_id"))
+        fun firstId(): Optional<String> = firstId.getOptional("first_id")
 
-        fun lastId(): Optional<String> = Optional.ofNullable(lastId.getNullable("last_id"))
+        fun lastId(): Optional<String> = lastId.getOptional("last_id")
 
         @JsonProperty("data")
         fun _data(): Optional<JsonField<List<BetaModelInfo>>> = Optional.ofNullable(data)

@@ -80,7 +80,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun stopReason(): Optional<String> = Optional.ofNullable(stopReason.getNullable("stop_reason"))
+    fun stopReason(): Optional<String> = stopReason.getOptional("stop_reason")
 
     /**
      * Object type.

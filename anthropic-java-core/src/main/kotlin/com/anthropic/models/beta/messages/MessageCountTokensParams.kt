@@ -1064,7 +1064,7 @@ private constructor(
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun system(): Optional<System> = Optional.ofNullable(system.getNullable("system"))
+        fun system(): Optional<System> = system.getOptional("system")
 
         /**
          * Configuration for enabling Claude's extended thinking.
@@ -1080,8 +1080,7 @@ private constructor(
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun thinking(): Optional<BetaThinkingConfigParam> =
-            Optional.ofNullable(thinking.getNullable("thinking"))
+        fun thinking(): Optional<BetaThinkingConfigParam> = thinking.getOptional("thinking")
 
         /**
          * How the model should use the provided tools. The model can use a specific tool, any
@@ -1090,8 +1089,7 @@ private constructor(
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun toolChoice(): Optional<BetaToolChoice> =
-            Optional.ofNullable(toolChoice.getNullable("tool_choice"))
+        fun toolChoice(): Optional<BetaToolChoice> = toolChoice.getOptional("tool_choice")
 
         /**
          * Definitions of tools that the model may use.
@@ -1161,7 +1159,7 @@ private constructor(
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun tools(): Optional<List<Tool>> = Optional.ofNullable(tools.getNullable("tools"))
+        fun tools(): Optional<List<Tool>> = tools.getOptional("tools")
 
         /**
          * Returns the raw JSON value of [messages].

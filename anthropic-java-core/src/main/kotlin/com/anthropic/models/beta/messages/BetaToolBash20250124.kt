@@ -64,7 +64,7 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
-        Optional.ofNullable(cacheControl.getNullable("cache_control"))
+        cacheControl.getOptional("cache_control")
 
     /**
      * Returns the raw JSON value of [cacheControl].

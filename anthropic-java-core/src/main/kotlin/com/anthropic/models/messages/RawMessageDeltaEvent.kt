@@ -278,15 +278,13 @@ private constructor(
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun stopReason(): Optional<StopReason> =
-            Optional.ofNullable(stopReason.getNullable("stop_reason"))
+        fun stopReason(): Optional<StopReason> = stopReason.getOptional("stop_reason")
 
         /**
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun stopSequence(): Optional<String> =
-            Optional.ofNullable(stopSequence.getNullable("stop_sequence"))
+        fun stopSequence(): Optional<String> = stopSequence.getOptional("stop_sequence")
 
         /**
          * Returns the raw JSON value of [stopReason].

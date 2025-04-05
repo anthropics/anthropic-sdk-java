@@ -145,8 +145,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun stopReason(): Optional<BetaStopReason> =
-        Optional.ofNullable(stopReason.getNullable("stop_reason"))
+    fun stopReason(): Optional<BetaStopReason> = stopReason.getOptional("stop_reason")
 
     /**
      * Which custom stop sequence was generated, if any.
@@ -156,8 +155,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun stopSequence(): Optional<String> =
-        Optional.ofNullable(stopSequence.getNullable("stop_sequence"))
+    fun stopSequence(): Optional<String> = stopSequence.getOptional("stop_sequence")
 
     /**
      * Object type.

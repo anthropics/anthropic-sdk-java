@@ -55,7 +55,7 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun cacheCreationInputTokens(): Optional<Long> =
-        Optional.ofNullable(cacheCreationInputTokens.getNullable("cache_creation_input_tokens"))
+        cacheCreationInputTokens.getOptional("cache_creation_input_tokens")
 
     /**
      * The number of input tokens read from the cache.
@@ -64,7 +64,7 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun cacheReadInputTokens(): Optional<Long> =
-        Optional.ofNullable(cacheReadInputTokens.getNullable("cache_read_input_tokens"))
+        cacheReadInputTokens.getOptional("cache_read_input_tokens")
 
     /**
      * The number of input tokens which were used.

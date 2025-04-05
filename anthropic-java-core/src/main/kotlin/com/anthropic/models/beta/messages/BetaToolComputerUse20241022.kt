@@ -101,7 +101,7 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
-        Optional.ofNullable(cacheControl.getNullable("cache_control"))
+        cacheControl.getOptional("cache_control")
 
     /**
      * The X11 display number (e.g. 0, 1) for the display.
@@ -109,8 +109,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun displayNumber(): Optional<Long> =
-        Optional.ofNullable(displayNumber.getNullable("display_number"))
+    fun displayNumber(): Optional<Long> = displayNumber.getOptional("display_number")
 
     /**
      * Returns the raw JSON value of [displayHeightPx].
