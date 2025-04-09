@@ -25,6 +25,7 @@ import com.anthropic.models.beta.messages.batches.BatchCancelParams
 import com.anthropic.models.beta.messages.batches.BatchCreateParams
 import com.anthropic.models.beta.messages.batches.BatchDeleteParams
 import com.anthropic.models.beta.messages.batches.BatchListPageAsync
+import com.anthropic.models.beta.messages.batches.BatchListPageResponse
 import com.anthropic.models.beta.messages.batches.BatchListParams
 import com.anthropic.models.beta.messages.batches.BatchResultsParams
 import com.anthropic.models.beta.messages.batches.BatchRetrieveParams
@@ -161,8 +162,8 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                 }
         }
 
-        private val listHandler: Handler<BatchListPageAsync.Response> =
-            jsonHandler<BatchListPageAsync.Response>(clientOptions.jsonMapper)
+        private val listHandler: Handler<BatchListPageResponse> =
+            jsonHandler<BatchListPageResponse>(clientOptions.jsonMapper)
                 .withErrorHandler(errorHandler)
 
         override fun list(
