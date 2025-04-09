@@ -97,7 +97,13 @@ class ModelServiceImpl internal constructor(private val clientOptions: ClientOpt
                             it.validate()
                         }
                     }
-                    .let { ModelListPage.of(ModelServiceImpl(clientOptions), params, it) }
+                    .let {
+                        ModelListPage.builder()
+                            .service(ModelServiceImpl(clientOptions))
+                            .params(params)
+                            .response(it)
+                            .build()
+                    }
             }
         }
     }
