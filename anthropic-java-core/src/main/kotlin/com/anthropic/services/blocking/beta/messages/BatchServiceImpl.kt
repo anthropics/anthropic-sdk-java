@@ -23,6 +23,7 @@ import com.anthropic.models.beta.messages.batches.BatchCancelParams
 import com.anthropic.models.beta.messages.batches.BatchCreateParams
 import com.anthropic.models.beta.messages.batches.BatchDeleteParams
 import com.anthropic.models.beta.messages.batches.BatchListPage
+import com.anthropic.models.beta.messages.batches.BatchListPageResponse
 import com.anthropic.models.beta.messages.batches.BatchListParams
 import com.anthropic.models.beta.messages.batches.BatchResultsParams
 import com.anthropic.models.beta.messages.batches.BatchRetrieveParams
@@ -146,8 +147,8 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             }
         }
 
-        private val listHandler: Handler<BatchListPage.Response> =
-            jsonHandler<BatchListPage.Response>(clientOptions.jsonMapper)
+        private val listHandler: Handler<BatchListPageResponse> =
+            jsonHandler<BatchListPageResponse>(clientOptions.jsonMapper)
                 .withErrorHandler(errorHandler)
 
         override fun list(

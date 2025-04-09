@@ -16,6 +16,7 @@ import com.anthropic.core.http.parseable
 import com.anthropic.core.prepare
 import com.anthropic.models.models.ModelInfo
 import com.anthropic.models.models.ModelListPage
+import com.anthropic.models.models.ModelListPageResponse
 import com.anthropic.models.models.ModelListParams
 import com.anthropic.models.models.ModelRetrieveParams
 
@@ -67,8 +68,8 @@ class ModelServiceImpl internal constructor(private val clientOptions: ClientOpt
             }
         }
 
-        private val listHandler: Handler<ModelListPage.Response> =
-            jsonHandler<ModelListPage.Response>(clientOptions.jsonMapper)
+        private val listHandler: Handler<ModelListPageResponse> =
+            jsonHandler<ModelListPageResponse>(clientOptions.jsonMapper)
                 .withErrorHandler(errorHandler)
 
         override fun list(
