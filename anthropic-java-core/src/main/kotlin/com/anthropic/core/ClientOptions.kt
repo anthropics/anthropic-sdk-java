@@ -211,7 +211,10 @@ private constructor(
 
         fun removeAllQueryParams(keys: Set<String>) = apply { queryParams.removeAll(keys) }
 
+        fun baseUrl(): String = baseUrl
+
         fun fromEnv() = apply {
+            System.getenv("ANTHROPIC_BASE_URL")?.let { baseUrl(it) }
             System.getenv("ANTHROPIC_API_KEY")?.let { apiKey(it) }
             System.getenv("ANTHROPIC_AUTH_TOKEN")?.let { authToken(it) }
         }
