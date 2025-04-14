@@ -11,7 +11,7 @@ The Anthropic Java SDK provides convenient access to the [Anthropic REST API](ht
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [docs.anthropic.com](https://docs.anthropic.com/claude/reference/). Javadocs are also available on [javadoc.io](https://javadoc.io/doc/com.anthropic/anthropic-java/1.1.0).
+The REST API documentation can be found on [docs.anthropic.com](https://docs.anthropic.com/claude/reference/). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.anthropic/anthropic-java/1.1.0).
 
 <!-- x-release-please-end -->
 
