@@ -1,9 +1,34 @@
 package com.anthropic.helpers
 
+import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonObject
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
-import com.anthropic.models.messages.*
+import com.anthropic.models.messages.CitationCharLocation
+import com.anthropic.models.messages.CitationContentBlockLocation
+import com.anthropic.models.messages.CitationPageLocation
+import com.anthropic.models.messages.CitationsDelta
+import com.anthropic.models.messages.ContentBlock
+import com.anthropic.models.messages.InputJsonDelta
+import com.anthropic.models.messages.Message
+import com.anthropic.models.messages.MessageDeltaUsage
+import com.anthropic.models.messages.RawContentBlockDelta
+import com.anthropic.models.messages.RawContentBlockDeltaEvent
+import com.anthropic.models.messages.RawContentBlockStartEvent
+import com.anthropic.models.messages.RawContentBlockStopEvent
+import com.anthropic.models.messages.RawMessageDeltaEvent
+import com.anthropic.models.messages.RawMessageStartEvent
+import com.anthropic.models.messages.RawMessageStopEvent
+import com.anthropic.models.messages.RawMessageStreamEvent
+import com.anthropic.models.messages.RedactedThinkingBlock
+import com.anthropic.models.messages.SignatureDelta
+import com.anthropic.models.messages.TextBlock
+import com.anthropic.models.messages.TextCitation
+import com.anthropic.models.messages.TextDelta
+import com.anthropic.models.messages.ThinkingBlock
+import com.anthropic.models.messages.ThinkingDelta
+import com.anthropic.models.messages.ToolUseBlock
+import com.anthropic.models.messages.Usage
 
 /**
  * An accumulator that constructs a [Message] from a sequence of streamed events. Pass all events
@@ -329,8 +354,14 @@ class MessageAccumulator private constructor() {
                                     .asToolUse()
                                     .toBuilder()
                                     // Anthropic Streaming Messages API: "the final `tool_use.input`
-                                    // is always an _object_."
-                                    .input(JSON_MAPPER.readValue(inputJson, JsonObject::class.java))
+                                    // is always an _object_." However, if a tool function has no
+                                    // arguments, the concatenated `inputJson` can be an empty
+                                    // string. In that case, interpret it as a missing field.
+                                    .input(
+                                        if (inputJson.trim() == "") JsonMissing.of()
+                                        else
+                                            JSON_MAPPER.readValue(inputJson, JsonObject::class.java)
+                                    )
                                     .build()
                             )
                     }

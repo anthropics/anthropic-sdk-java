@@ -544,6 +544,72 @@ internal class MessageAccumulatorTest {
     }
 
     @Test
+    fun accumulateToolUseContentBlockWithEmptyInput() {
+        val accumulator = MessageAccumulator.create()
+
+        accumulator.accumulate(messageStartEvent())
+
+        accumulator.accumulate(toolUseContentBlockStartEvent(1L, "1-TOOL."))
+
+        // Tool use content block deltas will build up the JSON string: {}
+        accumulator.accumulate(toolUseContentBlockDeltaEvent(1L, "{"))
+        accumulator.accumulate(toolUseContentBlockDeltaEvent(1L, "}"))
+
+        accumulator.accumulate(contentBlockStopEvent(1L))
+
+        accumulator.accumulate(
+            messageDeltaEvent(stopReason = JsonField.of(StopReason.TOOL_USE), outputTokens = 88L)
+        )
+        accumulator.accumulate(messageStopEvent())
+
+        val message = accumulator.message()
+        val content = message.content()
+
+        assertThat(message.stopSequence()).isEmpty()
+        assertThat(message.stopReason()).hasValue(StopReason.TOOL_USE)
+        assertThat(message.usage().inputTokens()).isEqualTo(INPUT_TOKENS)
+        assertThat(message.usage().outputTokens()).isEqualTo(88L)
+
+        assertThat(content.size).isEqualTo(1)
+        assertThat(content[0].asToolUse().name()).isEqualTo("1-TOOL.")
+        assertThat(content[0].asToolUse()._input().asObject().get()).isEmpty()
+    }
+
+    @Test
+    fun accumulateToolUseContentBlockWithNoInput() {
+        val accumulator = MessageAccumulator.create()
+
+        accumulator.accumulate(messageStartEvent())
+
+        accumulator.accumulate(toolUseContentBlockStartEvent(1L, "1-TOOL."))
+
+        // Tool use content block deltas will build up an empty JSON string. This behavior was
+        // observed in issue #249. It should be interpreted as a missing field. Whitespace should
+        // be ignored.
+        accumulator.accumulate(toolUseContentBlockDeltaEvent(1L, ""))
+        accumulator.accumulate(toolUseContentBlockDeltaEvent(1L, " "))
+
+        accumulator.accumulate(contentBlockStopEvent(1L))
+
+        accumulator.accumulate(
+            messageDeltaEvent(stopReason = JsonField.of(StopReason.TOOL_USE), outputTokens = 88L)
+        )
+        accumulator.accumulate(messageStopEvent())
+
+        val message = accumulator.message()
+        val content = message.content()
+
+        assertThat(message.stopSequence()).isEmpty()
+        assertThat(message.stopReason()).hasValue(StopReason.TOOL_USE)
+        assertThat(message.usage().inputTokens()).isEqualTo(INPUT_TOKENS)
+        assertThat(message.usage().outputTokens()).isEqualTo(88L)
+
+        assertThat(content.size).isEqualTo(1)
+        assertThat(content[0].asToolUse().name()).isEqualTo("1-TOOL.")
+        assertThat(content[0].asToolUse()._input().isMissing()).isTrue()
+    }
+
+    @Test
     fun accumulateTextAndToolUseContentBlocks() {
         val accumulator = MessageAccumulator.create()
 
