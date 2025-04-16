@@ -766,6 +766,42 @@ AnthropicClient client = AnthropicOkHttpClient.builder()
     .build();
 ```
 
+### Custom HTTP client
+
+The SDK consists of three artifacts:
+
+- `anthropic-java-core`
+  - Contains core SDK logic
+  - Does not depend on [OkHttp](https://square.github.io/okhttp)
+  - Exposes [`AnthropicClient`](anthropic-java-core/src/main/kotlin/com/anthropic/client/AnthropicClient.kt), [`AnthropicClientAsync`](anthropic-java-core/src/main/kotlin/com/anthropic/client/AnthropicClientAsync.kt), [`AnthropicClientImpl`](anthropic-java-core/src/main/kotlin/com/anthropic/client/AnthropicClientImpl.kt), and [`AnthropicClientAsyncImpl`](anthropic-java-core/src/main/kotlin/com/anthropic/client/AnthropicClientAsyncImpl.kt), all of which can work with any HTTP client
+- `anthropic-java-client-okhttp`
+  - Depends on [OkHttp](https://square.github.io/okhttp)
+  - Exposes [`AnthropicOkHttpClient`](anthropic-java-client-okhttp/src/main/kotlin/com/anthropic/client/okhttp/AnthropicOkHttpClient.kt) and [`AnthropicOkHttpClientAsync`](anthropic-java-client-okhttp/src/main/kotlin/com/anthropic/client/okhttp/AnthropicOkHttpClientAsync.kt), which provide a way to construct [`AnthropicClientImpl`](anthropic-java-core/src/main/kotlin/com/anthropic/client/AnthropicClientImpl.kt) and [`AnthropicClientAsyncImpl`](anthropic-java-core/src/main/kotlin/com/anthropic/client/AnthropicClientAsyncImpl.kt), respectively, using OkHttp
+- `anthropic-java`
+  - Depends on and exposes the APIs of both `anthropic-java-core` and `anthropic-java-client-okhttp`
+  - Does not have its own logic
+
+This structure allows replacing the SDK's default HTTP client without pulling in unnecessary dependencies.
+
+#### Customized [`OkHttpClient`](https://square.github.io/okhttp/3.x/okhttp/okhttp3/OkHttpClient.html)
+
+> [!TIP]
+> Try the available [network options](#network-options) before replacing the default client.
+
+To use a customized `OkHttpClient`:
+
+1. Replace your [`anthropic-java` dependency](#installation) with `anthropic-java-core`
+2. Copy `anthropic-java-client-okhttp`'s [`OkHttpClient`](anthropic-java-client-okhttp/src/main/kotlin/com/anthropic/client/okhttp/OkHttpClient.kt) class into your code and customize it
+3. Construct [`AnthropicClientImpl`](anthropic-java-core/src/main/kotlin/com/anthropic/client/AnthropicClientImpl.kt) or [`AnthropicClientAsyncImpl`](anthropic-java-core/src/main/kotlin/com/anthropic/client/AnthropicClientAsyncImpl.kt), similarly to [`AnthropicOkHttpClient`](anthropic-java-client-okhttp/src/main/kotlin/com/anthropic/client/okhttp/AnthropicOkHttpClient.kt) or [`AnthropicOkHttpClientAsync`](anthropic-java-client-okhttp/src/main/kotlin/com/anthropic/client/okhttp/AnthropicOkHttpClientAsync.kt), using your customized client
+
+### Completely custom HTTP client
+
+To use a completely custom HTTP client:
+
+1. Replace your [`anthropic-java` dependency](#installation) with `anthropic-java-core`
+2. Write a class that implements the [`HttpClient`](anthropic-java-core/src/main/kotlin/com/anthropic/core/http/HttpClient.kt) interface
+3. Construct [`AnthropicClientImpl`](anthropic-java-core/src/main/kotlin/com/anthropic/client/AnthropicClientImpl.kt) or [`AnthropicClientAsyncImpl`](anthropic-java-core/src/main/kotlin/com/anthropic/client/AnthropicClientAsyncImpl.kt), similarly to [`AnthropicOkHttpClient`](anthropic-java-client-okhttp/src/main/kotlin/com/anthropic/client/okhttp/AnthropicOkHttpClient.kt) or [`AnthropicOkHttpClientAsync`](anthropic-java-client-okhttp/src/main/kotlin/com/anthropic/client/okhttp/AnthropicOkHttpClientAsync.kt), using your new client class
+
 ## Undocumented API functionality
 
 The SDK is typed for convenient usage of the documented API. However, it also supports working with undocumented or not yet supported parts of the API.
