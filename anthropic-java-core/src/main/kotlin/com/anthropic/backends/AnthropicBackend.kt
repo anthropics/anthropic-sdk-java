@@ -83,6 +83,7 @@ private constructor(
         fun fromEnv() = apply {
             apiKey = System.getenv(ENV_API_KEY)
             authToken = System.getenv(ENV_AUTH_TOKEN)
+            System.getenv("ANTHROPIC_BASE_URL")?.let { baseUrl = it }
         }
 
         fun apiKey(apiKey: String?) = apply { this.apiKey = apiKey }

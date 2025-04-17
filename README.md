@@ -52,7 +52,7 @@ import com.anthropic.models.messages.Message;
 import com.anthropic.models.messages.MessageCreateParams;
 import com.anthropic.models.messages.Model;
 
-// Configures using the `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` environment variables
+// Configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_BASE_URL` environment variables
 AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
 MessageCreateParams params = MessageCreateParams.builder()
@@ -71,7 +71,7 @@ Configure the client using environment variables:
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 
-// Configures using the `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` environment variables
+// Configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_BASE_URL` environment variables
 AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 ```
 
@@ -93,7 +93,7 @@ import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 
 AnthropicClient client = AnthropicOkHttpClient.builder()
-    // Configures using the `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` environment variables
+    // Configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_BASE_URL` environment variables
     .fromEnv()
     .apiKey("my-anthropic-api-key")
     .build();
@@ -101,10 +101,11 @@ AnthropicClient client = AnthropicOkHttpClient.builder()
 
 See this table for the available options:
 
-| Setter      | Environment variable   | Required | Default value |
-| ----------- | ---------------------- | -------- | ------------- |
-| `apiKey`    | `ANTHROPIC_API_KEY`    | false    | -             |
-| `authToken` | `ANTHROPIC_AUTH_TOKEN` | false    | -             |
+| Setter      | Environment variable   | Required | Default value                 |
+| ----------- | ---------------------- | -------- | ----------------------------- |
+| `apiKey`    | `ANTHROPIC_API_KEY`    | false    | -                             |
+| `authToken` | `ANTHROPIC_AUTH_TOKEN` | false    | -                             |
+| `baseUrl`   | `ANTHROPIC_BASE_URL`   | true     | `"https://api.anthropic.com"` |
 
 > [!TIP]
 > Don't create more than one client in the same application. Each client has a connection pool and
@@ -145,7 +146,7 @@ import com.anthropic.models.messages.MessageCreateParams;
 import com.anthropic.models.messages.Model;
 import java.util.concurrent.CompletableFuture;
 
-// Configures using the `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` environment variables
+// Configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_BASE_URL` environment variables
 AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
 MessageCreateParams params = MessageCreateParams.builder()
@@ -166,7 +167,7 @@ import com.anthropic.models.messages.MessageCreateParams;
 import com.anthropic.models.messages.Model;
 import java.util.concurrent.CompletableFuture;
 
-// Configures using the `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` environment variables
+// Configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_BASE_URL` environment variables
 AnthropicClientAsync client = AnthropicOkHttpClientAsync.fromEnv();
 
 MessageCreateParams params = MessageCreateParams.builder()
