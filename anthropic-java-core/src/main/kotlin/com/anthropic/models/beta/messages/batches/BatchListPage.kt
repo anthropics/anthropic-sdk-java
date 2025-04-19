@@ -2,227 +2,130 @@
 
 package com.anthropic.models.beta.messages.batches
 
-import com.anthropic.core.ExcludeMissing
-import com.anthropic.core.JsonField
-import com.anthropic.core.JsonMissing
-import com.anthropic.core.JsonValue
-import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.core.checkRequired
 import com.anthropic.services.blocking.beta.messages.BatchService
-import com.fasterxml.jackson.annotation.JsonAnyGetter
-import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import java.util.stream.Stream
 import java.util.stream.StreamSupport
 import kotlin.jvm.optionals.getOrNull
 
-/**
- * List all Message Batches within a Workspace. Most recently created batches are returned first.
- *
- * Learn more about the Message Batches API in our
- * [user guide](/en/docs/build-with-claude/batch-processing)
- */
+/** @see [BatchService.list] */
 class BatchListPage
 private constructor(
-    private val batchesService: BatchService,
+    private val service: BatchService,
     private val params: BatchListParams,
-    private val response: Response,
+    private val response: BatchListPageResponse,
 ) {
 
-    fun response(): Response = response
+    /**
+     * Delegates to [BatchListPageResponse], but gracefully handles missing data.
+     *
+     * @see [BatchListPageResponse.data]
+     */
+    fun data(): List<BetaMessageBatch> =
+        response._data().getOptional("data").getOrNull() ?: emptyList()
 
-    fun data(): List<BetaMessageBatch> = response().data()
+    /**
+     * Delegates to [BatchListPageResponse], but gracefully handles missing data.
+     *
+     * @see [BatchListPageResponse.hasMore]
+     */
+    fun hasMore(): Optional<Boolean> = response._hasMore().getOptional("has_more")
 
-    fun hasMore(): Optional<Boolean> = response().hasMore()
+    /**
+     * Delegates to [BatchListPageResponse], but gracefully handles missing data.
+     *
+     * @see [BatchListPageResponse.firstId]
+     */
+    fun firstId(): Optional<String> = response._firstId().getOptional("first_id")
 
-    fun firstId(): Optional<String> = response().firstId()
+    /**
+     * Delegates to [BatchListPageResponse], but gracefully handles missing data.
+     *
+     * @see [BatchListPageResponse.lastId]
+     */
+    fun lastId(): Optional<String> = response._lastId().getOptional("last_id")
 
-    fun lastId(): Optional<String> = response().lastId()
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
-
-        return /* spotless:off */ other is BatchListPage && batchesService == other.batchesService && params == other.params && response == other.response /* spotless:on */
-    }
-
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(batchesService, params, response) /* spotless:on */
-
-    override fun toString() =
-        "BatchListPage{batchesService=$batchesService, params=$params, response=$response}"
-
-    fun hasNextPage(): Boolean {
-        if (data().isEmpty()) {
-            return false
-        }
-
-        return lastId().isPresent
-    }
+    fun hasNextPage(): Boolean = data().isNotEmpty() && lastId().isPresent
 
     fun getNextPageParams(): Optional<BatchListParams> {
         if (!hasNextPage()) {
             return Optional.empty()
         }
 
-        return Optional.of(
-            BatchListParams.builder()
-                .from(params)
-                .apply { lastId().ifPresent { this.afterId(it) } }
-                .build()
-        )
+        return Optional.of(params.toBuilder().apply { lastId().ifPresent { afterId(it) } }.build())
     }
 
-    fun getNextPage(): Optional<BatchListPage> {
-        return getNextPageParams().map { batchesService.list(it) }
-    }
+    fun getNextPage(): Optional<BatchListPage> = getNextPageParams().map { service.list(it) }
 
     fun autoPager(): AutoPager = AutoPager(this)
 
+    /** The parameters that were used to request this page. */
+    fun params(): BatchListParams = params
+
+    /** The response that this page was parsed from. */
+    fun response(): BatchListPageResponse = response
+
+    fun toBuilder() = Builder().from(this)
+
     companion object {
 
-        @JvmStatic
-        fun of(batchesService: BatchService, params: BatchListParams, response: Response) =
-            BatchListPage(batchesService, params, response)
+        /**
+         * Returns a mutable builder for constructing an instance of [BatchListPage].
+         *
+         * The following fields are required:
+         * ```java
+         * .service()
+         * .params()
+         * .response()
+         * ```
+         */
+        @JvmStatic fun builder() = Builder()
     }
 
-    class Response(
-        private val data: JsonField<List<BetaMessageBatch>>,
-        private val hasMore: JsonField<Boolean>,
-        private val firstId: JsonField<String>,
-        private val lastId: JsonField<String>,
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
+    /** A builder for [BatchListPage]. */
+    class Builder internal constructor() {
 
-        @JsonCreator
-        private constructor(
-            @JsonProperty("data") data: JsonField<List<BetaMessageBatch>> = JsonMissing.of(),
-            @JsonProperty("has_more") hasMore: JsonField<Boolean> = JsonMissing.of(),
-            @JsonProperty("first_id") firstId: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("last_id") lastId: JsonField<String> = JsonMissing.of(),
-        ) : this(data, hasMore, firstId, lastId, mutableMapOf())
+        private var service: BatchService? = null
+        private var params: BatchListParams? = null
+        private var response: BatchListPageResponse? = null
 
-        fun data(): List<BetaMessageBatch> = data.getOptional("data").getOrNull() ?: listOf()
-
-        fun hasMore(): Optional<Boolean> = hasMore.getOptional("has_more")
-
-        fun firstId(): Optional<String> = firstId.getOptional("first_id")
-
-        fun lastId(): Optional<String> = lastId.getOptional("last_id")
-
-        @JsonProperty("data")
-        fun _data(): Optional<JsonField<List<BetaMessageBatch>>> = Optional.ofNullable(data)
-
-        @JsonProperty("has_more")
-        fun _hasMore(): Optional<JsonField<Boolean>> = Optional.ofNullable(hasMore)
-
-        @JsonProperty("first_id")
-        fun _firstId(): Optional<JsonField<String>> = Optional.ofNullable(firstId)
-
-        @JsonProperty("last_id")
-        fun _lastId(): Optional<JsonField<String>> = Optional.ofNullable(lastId)
-
-        @JsonAnySetter
-        private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+        @JvmSynthetic
+        internal fun from(batchListPage: BatchListPage) = apply {
+            service = batchListPage.service
+            params = batchListPage.params
+            response = batchListPage.response
         }
 
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun service(service: BatchService) = apply { this.service = service }
 
-        private var validated: Boolean = false
+        /** The parameters that were used to request this page. */
+        fun params(params: BatchListParams) = apply { this.params = params }
 
-        fun validate(): Response = apply {
-            if (validated) {
-                return@apply
-            }
+        /** The response that this page was parsed from. */
+        fun response(response: BatchListPageResponse) = apply { this.response = response }
 
-            data().map { it.validate() }
-            hasMore()
-            firstId()
-            lastId()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        fun toBuilder() = Builder().from(this)
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return /* spotless:off */ other is Response && data == other.data && hasMore == other.hasMore && firstId == other.firstId && lastId == other.lastId && additionalProperties == other.additionalProperties /* spotless:on */
-        }
-
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(data, hasMore, firstId, lastId, additionalProperties) /* spotless:on */
-
-        override fun toString() =
-            "Response{data=$data, hasMore=$hasMore, firstId=$firstId, lastId=$lastId, additionalProperties=$additionalProperties}"
-
-        companion object {
-
-            /** Returns a mutable builder for constructing an instance of [BatchListPage]. */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        class Builder {
-
-            private var data: JsonField<List<BetaMessageBatch>> = JsonMissing.of()
-            private var hasMore: JsonField<Boolean> = JsonMissing.of()
-            private var firstId: JsonField<String> = JsonMissing.of()
-            private var lastId: JsonField<String> = JsonMissing.of()
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(page: Response) = apply {
-                this.data = page.data
-                this.hasMore = page.hasMore
-                this.firstId = page.firstId
-                this.lastId = page.lastId
-                this.additionalProperties.putAll(page.additionalProperties)
-            }
-
-            fun data(data: List<BetaMessageBatch>) = data(JsonField.of(data))
-
-            fun data(data: JsonField<List<BetaMessageBatch>>) = apply { this.data = data }
-
-            fun hasMore(hasMore: Boolean) = hasMore(JsonField.of(hasMore))
-
-            fun hasMore(hasMore: JsonField<Boolean>) = apply { this.hasMore = hasMore }
-
-            fun firstId(firstId: String) = firstId(JsonField.of(firstId))
-
-            fun firstId(firstId: JsonField<String>) = apply { this.firstId = firstId }
-
-            fun lastId(lastId: String) = lastId(JsonField.of(lastId))
-
-            fun lastId(lastId: JsonField<String>) = apply { this.lastId = lastId }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                this.additionalProperties.put(key, value)
-            }
-
-            /**
-             * Returns an immutable instance of [Response].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             */
-            fun build(): Response =
-                Response(data, hasMore, firstId, lastId, additionalProperties.toMutableMap())
-        }
+        /**
+         * Returns an immutable instance of [BatchListPage].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .service()
+         * .params()
+         * .response()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
+        fun build(): BatchListPage =
+            BatchListPage(
+                checkRequired("service", service),
+                checkRequired("params", params),
+                checkRequired("response", response),
+            )
     }
 
     class AutoPager(private val firstPage: BatchListPage) : Iterable<BetaMessageBatch> {
@@ -243,4 +146,16 @@ private constructor(
             return StreamSupport.stream(spliterator(), false)
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+
+        return /* spotless:off */ other is BatchListPage && service == other.service && params == other.params && response == other.response /* spotless:on */
+    }
+
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(service, params, response) /* spotless:on */
+
+    override fun toString() = "BatchListPage{service=$service, params=$params, response=$response}"
 }

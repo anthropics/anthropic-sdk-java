@@ -2,8 +2,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java/1.2.0)
-[![javadoc](https://javadoc.io/badge2/com.anthropic/anthropic-java/1.2.0/javadoc.svg)](https://javadoc.io/doc/com.anthropic/anthropic-java/1.2.0)
+[![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java/1.3.0)
+[![javadoc](https://javadoc.io/badge2/com.anthropic/anthropic-java/1.3.0/javadoc.svg)](https://javadoc.io/doc/com.anthropic/anthropic-java/1.3.0)
 
 <!-- x-release-please-end -->
 
@@ -11,7 +11,7 @@ The Anthropic Java SDK provides convenient access to the [Anthropic REST API](ht
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [docs.anthropic.com](https://docs.anthropic.com/claude/reference/). Javadocs are also available on [javadoc.io](https://javadoc.io/doc/com.anthropic/anthropic-java/1.2.0).
+The REST API documentation can be found on [docs.anthropic.com](https://docs.anthropic.com/claude/reference/). Javadocs are also available on [javadoc.io](https://javadoc.io/doc/com.anthropic/anthropic-java/1.3.0).
 
 <!-- x-release-please-end -->
 
@@ -22,7 +22,7 @@ The REST API documentation can be found on [docs.anthropic.com](https://docs.ant
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java:1.2.0")
+implementation("com.anthropic:anthropic-java:1.3.0")
 ```
 
 ### Maven
@@ -31,7 +31,7 @@ implementation("com.anthropic:anthropic-java:1.2.0")
 <dependency>
   <groupId>com.anthropic</groupId>
   <artifactId>anthropic-java</artifactId>
-  <version>1.2.0</version>
+  <version>1.3.0</version>
 </dependency>
 ```
 
@@ -52,7 +52,7 @@ import com.anthropic.models.messages.Message;
 import com.anthropic.models.messages.MessageCreateParams;
 import com.anthropic.models.messages.Model;
 
-// Configures using the `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` environment variables
+// Configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_BASE_URL` environment variables
 AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
 MessageCreateParams params = MessageCreateParams.builder()
@@ -71,7 +71,7 @@ Configure the client using environment variables:
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 
-// Configures using the `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` environment variables
+// Configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_BASE_URL` environment variables
 AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 ```
 
@@ -93,7 +93,7 @@ import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 
 AnthropicClient client = AnthropicOkHttpClient.builder()
-    // Configures using the `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` environment variables
+    // Configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_BASE_URL` environment variables
     .fromEnv()
     .apiKey("my-anthropic-api-key")
     .build();
@@ -101,10 +101,11 @@ AnthropicClient client = AnthropicOkHttpClient.builder()
 
 See this table for the available options:
 
-| Setter      | Environment variable   | Required | Default value |
-| ----------- | ---------------------- | -------- | ------------- |
-| `apiKey`    | `ANTHROPIC_API_KEY`    | false    | -             |
-| `authToken` | `ANTHROPIC_AUTH_TOKEN` | false    | -             |
+| Setter      | Environment variable   | Required | Default value                 |
+| ----------- | ---------------------- | -------- | ----------------------------- |
+| `apiKey`    | `ANTHROPIC_API_KEY`    | false    | -                             |
+| `authToken` | `ANTHROPIC_AUTH_TOKEN` | false    | -                             |
+| `baseUrl`   | `ANTHROPIC_BASE_URL`   | true     | `"https://api.anthropic.com"` |
 
 > [!TIP]
 > Don't create more than one client in the same application. Each client has a connection pool and
@@ -145,7 +146,7 @@ import com.anthropic.models.messages.MessageCreateParams;
 import com.anthropic.models.messages.Model;
 import java.util.concurrent.CompletableFuture;
 
-// Configures using the `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` environment variables
+// Configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_BASE_URL` environment variables
 AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
 MessageCreateParams params = MessageCreateParams.builder()
@@ -166,7 +167,7 @@ import com.anthropic.models.messages.MessageCreateParams;
 import com.anthropic.models.messages.Model;
 import java.util.concurrent.CompletableFuture;
 
-// Configures using the `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` environment variables
+// Configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_BASE_URL` environment variables
 AnthropicClientAsync client = AnthropicOkHttpClientAsync.fromEnv();
 
 MessageCreateParams params = MessageCreateParams.builder()
@@ -464,7 +465,7 @@ requires the `anthropic-java-bedrock` library dependency.
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java-bedrock:1.2.0")
+implementation("com.anthropic:anthropic-java-bedrock:1.3.0")
 ```
 
 ### Maven
@@ -473,7 +474,7 @@ implementation("com.anthropic:anthropic-java-bedrock:1.2.0")
 <dependency>
     <groupId>com.anthropic</groupId>
     <artifactId>anthropic-java-bedrock</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
 </dependency>
 ```
 
@@ -571,7 +572,7 @@ This support requires the `anthropic-java-vertex` library dependency.
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java-vertex:1.2.0")
+implementation("com.anthropic:anthropic-java-vertex:1.3.0")
 ```
 
 ### Maven
@@ -580,7 +581,7 @@ implementation("com.anthropic:anthropic-java-vertex:1.2.0")
 <dependency>
     <groupId>com.anthropic</groupId>
     <artifactId>anthropic-java-vertex</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
 </dependency>
 ```
 

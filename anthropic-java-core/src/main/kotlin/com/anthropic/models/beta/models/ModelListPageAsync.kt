@@ -2,17 +2,8 @@
 
 package com.anthropic.models.beta.models
 
-import com.anthropic.core.ExcludeMissing
-import com.anthropic.core.JsonField
-import com.anthropic.core.JsonMissing
-import com.anthropic.core.JsonValue
-import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.core.checkRequired
 import com.anthropic.services.async.beta.ModelServiceAsync
-import com.fasterxml.jackson.annotation.JsonAnyGetter
-import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import java.util.concurrent.CompletableFuture
@@ -20,212 +11,125 @@ import java.util.concurrent.Executor
 import java.util.function.Predicate
 import kotlin.jvm.optionals.getOrNull
 
-/**
- * List available models.
- *
- * The Models API response can be used to determine which models are available for use in the API.
- * More recently released models are listed first.
- */
+/** @see [ModelServiceAsync.list] */
 class ModelListPageAsync
 private constructor(
-    private val modelsService: ModelServiceAsync,
+    private val service: ModelServiceAsync,
     private val params: ModelListParams,
-    private val response: Response,
+    private val response: ModelListPageResponse,
 ) {
 
-    fun response(): Response = response
+    /**
+     * Delegates to [ModelListPageResponse], but gracefully handles missing data.
+     *
+     * @see [ModelListPageResponse.data]
+     */
+    fun data(): List<BetaModelInfo> =
+        response._data().getOptional("data").getOrNull() ?: emptyList()
 
-    fun data(): List<BetaModelInfo> = response().data()
+    /**
+     * Delegates to [ModelListPageResponse], but gracefully handles missing data.
+     *
+     * @see [ModelListPageResponse.hasMore]
+     */
+    fun hasMore(): Optional<Boolean> = response._hasMore().getOptional("has_more")
 
-    fun hasMore(): Optional<Boolean> = response().hasMore()
+    /**
+     * Delegates to [ModelListPageResponse], but gracefully handles missing data.
+     *
+     * @see [ModelListPageResponse.firstId]
+     */
+    fun firstId(): Optional<String> = response._firstId().getOptional("first_id")
 
-    fun firstId(): Optional<String> = response().firstId()
+    /**
+     * Delegates to [ModelListPageResponse], but gracefully handles missing data.
+     *
+     * @see [ModelListPageResponse.lastId]
+     */
+    fun lastId(): Optional<String> = response._lastId().getOptional("last_id")
 
-    fun lastId(): Optional<String> = response().lastId()
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
-
-        return /* spotless:off */ other is ModelListPageAsync && modelsService == other.modelsService && params == other.params && response == other.response /* spotless:on */
-    }
-
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(modelsService, params, response) /* spotless:on */
-
-    override fun toString() =
-        "ModelListPageAsync{modelsService=$modelsService, params=$params, response=$response}"
-
-    fun hasNextPage(): Boolean {
-        if (data().isEmpty()) {
-            return false
-        }
-
-        return lastId().isPresent
-    }
+    fun hasNextPage(): Boolean = data().isNotEmpty() && lastId().isPresent
 
     fun getNextPageParams(): Optional<ModelListParams> {
         if (!hasNextPage()) {
             return Optional.empty()
         }
 
-        return Optional.of(
-            ModelListParams.builder()
-                .from(params)
-                .apply { lastId().ifPresent { this.afterId(it) } }
-                .build()
-        )
+        return Optional.of(params.toBuilder().apply { lastId().ifPresent { afterId(it) } }.build())
     }
 
-    fun getNextPage(): CompletableFuture<Optional<ModelListPageAsync>> {
-        return getNextPageParams()
-            .map { modelsService.list(it).thenApply { Optional.of(it) } }
+    fun getNextPage(): CompletableFuture<Optional<ModelListPageAsync>> =
+        getNextPageParams()
+            .map { service.list(it).thenApply { Optional.of(it) } }
             .orElseGet { CompletableFuture.completedFuture(Optional.empty()) }
-    }
 
     fun autoPager(): AutoPager = AutoPager(this)
 
+    /** The parameters that were used to request this page. */
+    fun params(): ModelListParams = params
+
+    /** The response that this page was parsed from. */
+    fun response(): ModelListPageResponse = response
+
+    fun toBuilder() = Builder().from(this)
+
     companion object {
 
-        @JvmStatic
-        fun of(modelsService: ModelServiceAsync, params: ModelListParams, response: Response) =
-            ModelListPageAsync(modelsService, params, response)
+        /**
+         * Returns a mutable builder for constructing an instance of [ModelListPageAsync].
+         *
+         * The following fields are required:
+         * ```java
+         * .service()
+         * .params()
+         * .response()
+         * ```
+         */
+        @JvmStatic fun builder() = Builder()
     }
 
-    class Response(
-        private val data: JsonField<List<BetaModelInfo>>,
-        private val hasMore: JsonField<Boolean>,
-        private val firstId: JsonField<String>,
-        private val lastId: JsonField<String>,
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
+    /** A builder for [ModelListPageAsync]. */
+    class Builder internal constructor() {
 
-        @JsonCreator
-        private constructor(
-            @JsonProperty("data") data: JsonField<List<BetaModelInfo>> = JsonMissing.of(),
-            @JsonProperty("has_more") hasMore: JsonField<Boolean> = JsonMissing.of(),
-            @JsonProperty("first_id") firstId: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("last_id") lastId: JsonField<String> = JsonMissing.of(),
-        ) : this(data, hasMore, firstId, lastId, mutableMapOf())
+        private var service: ModelServiceAsync? = null
+        private var params: ModelListParams? = null
+        private var response: ModelListPageResponse? = null
 
-        fun data(): List<BetaModelInfo> = data.getOptional("data").getOrNull() ?: listOf()
-
-        fun hasMore(): Optional<Boolean> = hasMore.getOptional("has_more")
-
-        fun firstId(): Optional<String> = firstId.getOptional("first_id")
-
-        fun lastId(): Optional<String> = lastId.getOptional("last_id")
-
-        @JsonProperty("data")
-        fun _data(): Optional<JsonField<List<BetaModelInfo>>> = Optional.ofNullable(data)
-
-        @JsonProperty("has_more")
-        fun _hasMore(): Optional<JsonField<Boolean>> = Optional.ofNullable(hasMore)
-
-        @JsonProperty("first_id")
-        fun _firstId(): Optional<JsonField<String>> = Optional.ofNullable(firstId)
-
-        @JsonProperty("last_id")
-        fun _lastId(): Optional<JsonField<String>> = Optional.ofNullable(lastId)
-
-        @JsonAnySetter
-        private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+        @JvmSynthetic
+        internal fun from(modelListPageAsync: ModelListPageAsync) = apply {
+            service = modelListPageAsync.service
+            params = modelListPageAsync.params
+            response = modelListPageAsync.response
         }
 
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun service(service: ModelServiceAsync) = apply { this.service = service }
 
-        private var validated: Boolean = false
+        /** The parameters that were used to request this page. */
+        fun params(params: ModelListParams) = apply { this.params = params }
 
-        fun validate(): Response = apply {
-            if (validated) {
-                return@apply
-            }
+        /** The response that this page was parsed from. */
+        fun response(response: ModelListPageResponse) = apply { this.response = response }
 
-            data().map { it.validate() }
-            hasMore()
-            firstId()
-            lastId()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        fun toBuilder() = Builder().from(this)
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return /* spotless:off */ other is Response && data == other.data && hasMore == other.hasMore && firstId == other.firstId && lastId == other.lastId && additionalProperties == other.additionalProperties /* spotless:on */
-        }
-
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(data, hasMore, firstId, lastId, additionalProperties) /* spotless:on */
-
-        override fun toString() =
-            "Response{data=$data, hasMore=$hasMore, firstId=$firstId, lastId=$lastId, additionalProperties=$additionalProperties}"
-
-        companion object {
-
-            /** Returns a mutable builder for constructing an instance of [ModelListPageAsync]. */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        class Builder {
-
-            private var data: JsonField<List<BetaModelInfo>> = JsonMissing.of()
-            private var hasMore: JsonField<Boolean> = JsonMissing.of()
-            private var firstId: JsonField<String> = JsonMissing.of()
-            private var lastId: JsonField<String> = JsonMissing.of()
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(page: Response) = apply {
-                this.data = page.data
-                this.hasMore = page.hasMore
-                this.firstId = page.firstId
-                this.lastId = page.lastId
-                this.additionalProperties.putAll(page.additionalProperties)
-            }
-
-            fun data(data: List<BetaModelInfo>) = data(JsonField.of(data))
-
-            fun data(data: JsonField<List<BetaModelInfo>>) = apply { this.data = data }
-
-            fun hasMore(hasMore: Boolean) = hasMore(JsonField.of(hasMore))
-
-            fun hasMore(hasMore: JsonField<Boolean>) = apply { this.hasMore = hasMore }
-
-            fun firstId(firstId: String) = firstId(JsonField.of(firstId))
-
-            fun firstId(firstId: JsonField<String>) = apply { this.firstId = firstId }
-
-            fun lastId(lastId: String) = lastId(JsonField.of(lastId))
-
-            fun lastId(lastId: JsonField<String>) = apply { this.lastId = lastId }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                this.additionalProperties.put(key, value)
-            }
-
-            /**
-             * Returns an immutable instance of [Response].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             */
-            fun build(): Response =
-                Response(data, hasMore, firstId, lastId, additionalProperties.toMutableMap())
-        }
+        /**
+         * Returns an immutable instance of [ModelListPageAsync].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .service()
+         * .params()
+         * .response()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
+        fun build(): ModelListPageAsync =
+            ModelListPageAsync(
+                checkRequired("service", service),
+                checkRequired("params", params),
+                checkRequired("response", response),
+            )
     }
 
     class AutoPager(private val firstPage: ModelListPageAsync) {
@@ -253,4 +157,17 @@ private constructor(
             return forEach(values::add, executor).thenApply { values }
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+
+        return /* spotless:off */ other is ModelListPageAsync && service == other.service && params == other.params && response == other.response /* spotless:on */
+    }
+
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(service, params, response) /* spotless:on */
+
+    override fun toString() =
+        "ModelListPageAsync{service=$service, params=$params, response=$response}"
 }

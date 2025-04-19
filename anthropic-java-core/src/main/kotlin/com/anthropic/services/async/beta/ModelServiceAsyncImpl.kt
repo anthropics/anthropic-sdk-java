@@ -16,6 +16,7 @@ import com.anthropic.core.http.parseable
 import com.anthropic.core.prepareAsync
 import com.anthropic.models.beta.models.BetaModelInfo
 import com.anthropic.models.beta.models.ModelListPageAsync
+import com.anthropic.models.beta.models.ModelListPageResponse
 import com.anthropic.models.beta.models.ModelListParams
 import com.anthropic.models.beta.models.ModelRetrieveParams
 import java.util.concurrent.CompletableFuture
@@ -78,8 +79,8 @@ class ModelServiceAsyncImpl internal constructor(private val clientOptions: Clie
                 }
         }
 
-        private val listHandler: Handler<ModelListPageAsync.Response> =
-            jsonHandler<ModelListPageAsync.Response>(clientOptions.jsonMapper)
+        private val listHandler: Handler<ModelListPageResponse> =
+            jsonHandler<ModelListPageResponse>(clientOptions.jsonMapper)
                 .withErrorHandler(errorHandler)
 
         override fun list(
@@ -106,11 +107,11 @@ class ModelServiceAsyncImpl internal constructor(private val clientOptions: Clie
                                 }
                             }
                             .let {
-                                ModelListPageAsync.of(
-                                    ModelServiceAsyncImpl(clientOptions),
-                                    params,
-                                    it,
-                                )
+                                ModelListPageAsync.builder()
+                                    .service(ModelServiceAsyncImpl(clientOptions))
+                                    .params(params)
+                                    .response(it)
+                                    .build()
                             }
                     }
                 }

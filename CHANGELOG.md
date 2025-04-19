@@ -1,5 +1,37 @@
 # Changelog
 
+## 1.3.0 (2025-04-19)
+
+Full Changelog: [v1.2.0...v1.3.0](https://github.com/anthropics/anthropic-sdk-java/compare/v1.2.0...v1.3.0)
+
+### Features
+
+* **api:** manual updates ([12bfce7](https://github.com/anthropics/anthropic-sdk-java/commit/12bfce7441bf947232c4fca91f7cdc160b238dbf))
+* **client:** make pagination robust to missing data ([fafa963](https://github.com/anthropics/anthropic-sdk-java/commit/fafa96367750b83c4568de88827a1e015bb991f3))
+* **client:** support setting base URL via env var ([#244](https://github.com/anthropics/anthropic-sdk-java/issues/244)) ([b0a125a](https://github.com/anthropics/anthropic-sdk-java/commit/b0a125a1e6e089b42f280a321e1176b53490b6e7))
+
+
+### Bug Fixes
+
+* **client:** bump to better jackson version ([#246](https://github.com/anthropics/anthropic-sdk-java/issues/246)) ([6d17012](https://github.com/anthropics/anthropic-sdk-java/commit/6d1701215b19d365a9f96711a4215bd99f9a1c61))
+
+
+### Chores
+
+* **internal:** expand CI branch coverage ([#245](https://github.com/anthropics/anthropic-sdk-java/issues/245)) ([be51e0c](https://github.com/anthropics/anthropic-sdk-java/commit/be51e0c5d5b577b10387e8147bc55a56f40d7173))
+* **internal:** reduce CI branch coverage ([90e1fe1](https://github.com/anthropics/anthropic-sdk-java/commit/90e1fe1568a2a505178f01a7f7c1b6bd999df695))
+
+
+### Documentation
+
+* add comments for page methods ([fafa963](https://github.com/anthropics/anthropic-sdk-java/commit/fafa96367750b83c4568de88827a1e015bb991f3))
+
+
+### Refactors
+
+* **client:** deduplicate page response classes ([#247](https://github.com/anthropics/anthropic-sdk-java/issues/247)) ([fafa963](https://github.com/anthropics/anthropic-sdk-java/commit/fafa96367750b83c4568de88827a1e015bb991f3))
+* **client:** migrate pages to builder pattern ([#248](https://github.com/anthropics/anthropic-sdk-java/issues/248)) ([162fe98](https://github.com/anthropics/anthropic-sdk-java/commit/162fe9873d8274739d3c315ff2a564e99bb6cc04))
+
 ## 1.2.0 (2025-04-15)
 
 Full Changelog: [v1.1.0...v1.2.0](https://github.com/anthropics/anthropic-sdk-java/compare/v1.1.0...v1.2.0)
