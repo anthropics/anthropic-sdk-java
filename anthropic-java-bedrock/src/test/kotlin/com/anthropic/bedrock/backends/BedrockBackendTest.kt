@@ -15,10 +15,12 @@ import org.assertj.core.api.Assertions.assertThatNoException
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.parallel.ResourceLock
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.AwsSessionCredentials
 import software.amazon.awssdk.regions.Region
 
+@ResourceLock("environment")
 internal class BedrockBackendTest {
     companion object {
         private const val AWS_ACCESS_KEY_ID = "AKIAIOSFODNN7EXAMPLE"

@@ -13,7 +13,9 @@ import com.google.auth.oauth2.GoogleCredentials
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.parallel.ResourceLock
 
+@ResourceLock("environment")
 internal class VertexBackendTest {
     companion object {
         // This is *not* a real token.
