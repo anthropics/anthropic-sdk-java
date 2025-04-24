@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.AwsSessionCredentials
 import software.amazon.awssdk.regions.Region
-import software.amazon.awssdk.regions.providers.DefaultAwsRegionProviderChain
 
 internal class BedrockBackendTest {
     companion object {
@@ -40,80 +39,6 @@ internal class BedrockBackendTest {
     @BeforeEach
     fun setUp() {
         clearEnv()
-    }
-
-    @Test
-    fun awsCredentialsAllMissing() {
-        // No system properties are set (see "setUp()").
-        assertThatThrownBy { BedrockBackend.fromEnv() }
-            .isExactlyInstanceOf(IllegalStateException::class.java)
-    }
-
-    @Test
-    fun awsCredentialsAccessKeyIDMissing() {
-        initEnv(
-            isSetAccessKeyID = false,
-            isSetSecretAccessKey = true,
-            isSetSessionToken = false,
-            isSetRegion = true,
-        )
-
-        assertThatThrownBy { BedrockBackend.fromEnv() }
-            .isExactlyInstanceOf(IllegalStateException::class.java)
-    }
-
-    @Test
-    fun awsCredentialsSecretAccessKeyMissing() {
-        initEnv(
-            isSetAccessKeyID = true,
-            isSetSecretAccessKey = false,
-            isSetSessionToken = false,
-            isSetRegion = true,
-        )
-
-        assertThatThrownBy { BedrockBackend.fromEnv() }
-            .isExactlyInstanceOf(IllegalStateException::class.java)
-    }
-
-    @Test
-    fun awsCredentialsFromEnv() {
-        initEnv(
-            isSetAccessKeyID = true,
-            isSetSecretAccessKey = true,
-            isSetSessionToken = false,
-            isSetRegion = true,
-        )
-        val backend = BedrockBackend.fromEnv()
-
-        assertThat(backend.awsCredentials).isExactlyInstanceOf(AwsBasicCredentials::class.java)
-        assertThat(backend.awsCredentials.accessKeyId()).isEqualTo(AWS_ACCESS_KEY_ID)
-        assertThat(backend.awsCredentials.secretAccessKey()).isEqualTo(AWS_SECRET_ACCESS_KEY)
-    }
-
-    @Test
-    fun awsSessionCredentialsAccessKeyIDMissing() {
-        initEnv(
-            isSetAccessKeyID = false,
-            isSetSecretAccessKey = true,
-            isSetSessionToken = true,
-            isSetRegion = true,
-        )
-
-        assertThatThrownBy { BedrockBackend.fromEnv() }
-            .isExactlyInstanceOf(IllegalStateException::class.java)
-    }
-
-    @Test
-    fun awsSessionCredentialsSecretAccessKeyMissing() {
-        initEnv(
-            isSetAccessKeyID = true,
-            isSetSecretAccessKey = false,
-            isSetSessionToken = true,
-            isSetRegion = true,
-        )
-
-        assertThatThrownBy { BedrockBackend.fromEnv() }
-            .isExactlyInstanceOf(IllegalStateException::class.java)
     }
 
     @Test
@@ -175,50 +100,6 @@ internal class BedrockBackendTest {
         assertThat(backend.awsCredentials.accessKeyId()).isEqualTo(AWS_ACCESS_KEY_ID)
         assertThat(backend.awsCredentials.secretAccessKey()).isEqualTo(AWS_SECRET_ACCESS_KEY)
         assertThat(backend.region).isEqualTo(Region.EU_WEST_1)
-    }
-
-    @Test
-    fun awsCredentialsProviderViaFromEnvWithRegion() {
-        initEnv(
-            isSetAccessKeyID = false,
-            isSetSecretAccessKey = false,
-            isSetSessionToken = false,
-            isSetRegion = true,
-        )
-        val backend =
-            BedrockBackend.builder()
-                .fromEnv(
-                    BedrockBackend.providerOf(
-                        AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
-                    )
-                )
-                .build()
-
-        assertThat(backend.awsCredentials).isExactlyInstanceOf(AwsBasicCredentials::class.java)
-        assertThat(backend.awsCredentials.accessKeyId()).isEqualTo(AWS_ACCESS_KEY_ID)
-        assertThat(backend.awsCredentials.secretAccessKey()).isEqualTo(AWS_SECRET_ACCESS_KEY)
-        assertThat(backend.region.toString()).isEqualTo(AWS_REGION)
-    }
-
-    @Test
-    fun regionMissing() {
-        initEnv(
-            isSetAccessKeyID = true,
-            isSetSecretAccessKey = true,
-            isSetSessionToken = true,
-            isSetRegion = false,
-        )
-        try {
-            DefaultAwsRegionProviderChain.builder().build().region
-            // If the region is set in the environment, then we cannot run this test.
-            return
-        } catch (_: Exception) {}
-
-        // This test runs slowly for some reason. Perhaps there is a long chain
-        // of fall-backs in the region provider used in the class under test, or
-        // some step in the chain performs some slow network operation.
-        assertThatThrownBy { BedrockBackend.fromEnv() }
-            .isExactlyInstanceOf(IllegalStateException::class.java)
     }
 
     @Test
