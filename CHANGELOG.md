@@ -1,5 +1,53 @@
 # Changelog
 
+## 1.3.0 (2025-04-30)
+
+Full Changelog: [v1.2.0...v1.3.0](https://github.com/anthropics/anthropic-sdk-java/compare/v1.2.0...v1.3.0)
+
+### Features
+
+* **api:** manual updates ([12bfce7](https://github.com/anthropics/anthropic-sdk-java/commit/12bfce7441bf947232c4fca91f7cdc160b238dbf))
+* **client:** make pagination robust to missing data ([fafa963](https://github.com/anthropics/anthropic-sdk-java/commit/fafa96367750b83c4568de88827a1e015bb991f3))
+* **client:** support setting base URL via env var ([#244](https://github.com/anthropics/anthropic-sdk-java/issues/244)) ([b0a125a](https://github.com/anthropics/anthropic-sdk-java/commit/b0a125a1e6e089b42f280a321e1176b53490b6e7))
+
+
+### Bug Fixes
+
+* **client:** bump to better jackson version ([#246](https://github.com/anthropics/anthropic-sdk-java/issues/246)) ([6d17012](https://github.com/anthropics/anthropic-sdk-java/commit/6d1701215b19d365a9f96711a4215bd99f9a1c61))
+
+
+### Performance Improvements
+
+* **internal:** improve compilation+test speed ([6c86a79](https://github.com/anthropics/anthropic-sdk-java/commit/6c86a79fe843282d3330877ce61586c03de1f24a))
+
+
+### Chores
+
+* **ci:** only use depot for staging repos ([199e191](https://github.com/anthropics/anthropic-sdk-java/commit/199e191d7ddcc9e3c7cfd63ab008d610d11799a6))
+* **ci:** run on more branches and use depot runners ([316271f](https://github.com/anthropics/anthropic-sdk-java/commit/316271f64cd84d222df5567ba4d0a80580b91c06))
+* **internal:** codegen related update ([ed9783e](https://github.com/anthropics/anthropic-sdk-java/commit/ed9783e2d1ee40cf62df320099180eda92b959cf))
+* **internal:** codegen related update ([13676d4](https://github.com/anthropics/anthropic-sdk-java/commit/13676d417fa40bd587f64761555035c23a64a03e))
+* **internal:** delete flaky/unnecessary tests ([5e3d901](https://github.com/anthropics/anthropic-sdk-java/commit/5e3d9019562cdca84ecb73e1673d7894d2ffa5e6))
+* **internal:** expand CI branch coverage ([#245](https://github.com/anthropics/anthropic-sdk-java/issues/245)) ([be51e0c](https://github.com/anthropics/anthropic-sdk-java/commit/be51e0c5d5b577b10387e8147bc55a56f40d7173))
+* **internal:** isolate backend tests that use env ([189eebd](https://github.com/anthropics/anthropic-sdk-java/commit/189eebd9905dced1cb0e34b8322faa2d7d91785a))
+* **internal:** java 17 -&gt; 21 on ci ([adbb816](https://github.com/anthropics/anthropic-sdk-java/commit/adbb81659b976b4c27fc2d96f6b789d547e7da67))
+* **internal:** reduce CI branch coverage ([90e1fe1](https://github.com/anthropics/anthropic-sdk-java/commit/90e1fe1568a2a505178f01a7f7c1b6bd999df695))
+
+
+### Documentation
+
+* add comments for page methods ([fafa963](https://github.com/anthropics/anthropic-sdk-java/commit/fafa96367750b83c4568de88827a1e015bb991f3))
+* **client:** update jackson compat error message ([9c4f68f](https://github.com/anthropics/anthropic-sdk-java/commit/9c4f68f2638b8a159258dcc8449ee72adb32d23e))
+* explain http client customization ([c97180b](https://github.com/anthropics/anthropic-sdk-java/commit/c97180be2571a82cb4a138348258a1c8cb404857))
+* explain jackson compat in readme ([21448fa](https://github.com/anthropics/anthropic-sdk-java/commit/21448fa491540a9d0ef9322032f16322ca7c5e32))
+* update documentation links to be more uniform ([0022d67](https://github.com/anthropics/anthropic-sdk-java/commit/0022d67018004b631e6797934c986cabf75b7ca1))
+
+
+### Refactors
+
+* **client:** deduplicate page response classes ([#247](https://github.com/anthropics/anthropic-sdk-java/issues/247)) ([fafa963](https://github.com/anthropics/anthropic-sdk-java/commit/fafa96367750b83c4568de88827a1e015bb991f3))
+* **client:** migrate pages to builder pattern ([#248](https://github.com/anthropics/anthropic-sdk-java/issues/248)) ([162fe98](https://github.com/anthropics/anthropic-sdk-java/commit/162fe9873d8274739d3c315ff2a564e99bb6cc04))
+
 ## 1.2.0 (2025-04-15)
 
 Full Changelog: [v1.1.0...v1.2.0](https://github.com/anthropics/anthropic-sdk-java/compare/v1.1.0...v1.2.0)
