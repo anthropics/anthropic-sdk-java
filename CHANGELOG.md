@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.1 (2025-05-02)
+
+Full Changelog: [v1.3.0...v1.3.1](https://github.com/anthropics/anthropic-sdk-java/compare/v1.3.0...v1.3.1)
+
+### Chores
+
+* **internal:** update java toolchain ([dda0371](https://github.com/anthropics/anthropic-sdk-java/commit/dda037179a0e0badd639b035a92ea97398a50d40))
+
 ## 1.3.0 (2025-04-30)
 
 Full Changelog: [v1.2.0...v1.3.0](https://github.com/anthropics/anthropic-sdk-java/compare/v1.2.0...v1.3.0)
