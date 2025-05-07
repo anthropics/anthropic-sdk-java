@@ -11,15 +11,34 @@ internal class MessageDeltaUsageTest {
 
     @Test
     fun create() {
-        val messageDeltaUsage = MessageDeltaUsage.builder().outputTokens(503L).build()
+        val messageDeltaUsage =
+            MessageDeltaUsage.builder()
+                .cacheCreationInputTokens(2051L)
+                .cacheReadInputTokens(2051L)
+                .inputTokens(2095L)
+                .outputTokens(503L)
+                .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                .build()
 
+        assertThat(messageDeltaUsage.cacheCreationInputTokens()).contains(2051L)
+        assertThat(messageDeltaUsage.cacheReadInputTokens()).contains(2051L)
+        assertThat(messageDeltaUsage.inputTokens()).contains(2095L)
         assertThat(messageDeltaUsage.outputTokens()).isEqualTo(503L)
+        assertThat(messageDeltaUsage.serverToolUse())
+            .contains(ServerToolUsage.builder().webSearchRequests(0L).build())
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val messageDeltaUsage = MessageDeltaUsage.builder().outputTokens(503L).build()
+        val messageDeltaUsage =
+            MessageDeltaUsage.builder()
+                .cacheCreationInputTokens(2051L)
+                .cacheReadInputTokens(2051L)
+                .inputTokens(2095L)
+                .outputTokens(503L)
+                .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                .build()
 
         val roundtrippedMessageDeltaUsage =
             jsonMapper.readValue(

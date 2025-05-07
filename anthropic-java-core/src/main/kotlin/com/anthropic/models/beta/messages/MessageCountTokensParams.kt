@@ -132,6 +132,8 @@ private constructor(
      * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the top-level
      * `system` parameter — there is no `"system"` role for input messages in the Messages API.
      *
+     * There is a limit of 100000 messages in a single request.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -451,6 +453,8 @@ private constructor(
          * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
          * top-level `system` parameter — there is no `"system"` role for input messages in the
          * Messages API.
+         *
+         * There is a limit of 100000 messages in a single request.
          */
         fun messages(messages: List<BetaMessageParam>) = apply { body.messages(messages) }
 
@@ -780,6 +784,14 @@ private constructor(
             body.addTool(betaToolTextEditor20250124)
         }
 
+        /**
+         * Alias for calling [addTool] with
+         * `Tool.ofBetaWebSearchTool20250305(betaWebSearchTool20250305)`.
+         */
+        fun addTool(betaWebSearchTool20250305: BetaWebSearchTool20250305) = apply {
+            body.addTool(betaWebSearchTool20250305)
+        }
+
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
         }
@@ -1038,6 +1050,8 @@ private constructor(
          * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
          * top-level `system` parameter — there is no `"system"` role for input messages in the
          * Messages API.
+         *
+         * There is a limit of 100000 messages in a single request.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -1338,6 +1352,8 @@ private constructor(
              * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
              * top-level `system` parameter — there is no `"system"` role for input messages in the
              * Messages API.
+             *
+             * There is a limit of 100000 messages in a single request.
              */
             fun messages(messages: List<BetaMessageParam>) = messages(JsonField.of(messages))
 
@@ -1704,6 +1720,13 @@ private constructor(
             fun addTool(betaToolTextEditor20250124: BetaToolTextEditor20250124) =
                 addTool(Tool.ofBetaToolTextEditor20250124(betaToolTextEditor20250124))
 
+            /**
+             * Alias for calling [addTool] with
+             * `Tool.ofBetaWebSearchTool20250305(betaWebSearchTool20250305)`.
+             */
+            fun addTool(betaWebSearchTool20250305: BetaWebSearchTool20250305) =
+                addTool(Tool.ofBetaWebSearchTool20250305(betaWebSearchTool20250305))
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -2001,6 +2024,7 @@ private constructor(
         private val betaToolComputerUse20250124: BetaToolComputerUse20250124? = null,
         private val betaToolBash20250124: BetaToolBash20250124? = null,
         private val betaToolTextEditor20250124: BetaToolTextEditor20250124? = null,
+        private val betaWebSearchTool20250305: BetaWebSearchTool20250305? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -2024,6 +2048,9 @@ private constructor(
         fun betaToolTextEditor20250124(): Optional<BetaToolTextEditor20250124> =
             Optional.ofNullable(betaToolTextEditor20250124)
 
+        fun betaWebSearchTool20250305(): Optional<BetaWebSearchTool20250305> =
+            Optional.ofNullable(betaWebSearchTool20250305)
+
         fun isBeta(): Boolean = beta != null
 
         fun isBetaToolComputerUse20241022(): Boolean = betaToolComputerUse20241022 != null
@@ -2037,6 +2064,8 @@ private constructor(
         fun isBetaToolBash20250124(): Boolean = betaToolBash20250124 != null
 
         fun isBetaToolTextEditor20250124(): Boolean = betaToolTextEditor20250124 != null
+
+        fun isBetaWebSearchTool20250305(): Boolean = betaWebSearchTool20250305 != null
 
         fun asBeta(): BetaTool = beta.getOrThrow("beta")
 
@@ -2058,6 +2087,9 @@ private constructor(
         fun asBetaToolTextEditor20250124(): BetaToolTextEditor20250124 =
             betaToolTextEditor20250124.getOrThrow("betaToolTextEditor20250124")
 
+        fun asBetaWebSearchTool20250305(): BetaWebSearchTool20250305 =
+            betaWebSearchTool20250305.getOrThrow("betaWebSearchTool20250305")
+
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
@@ -2075,6 +2107,8 @@ private constructor(
                     visitor.visitBetaToolBash20250124(betaToolBash20250124)
                 betaToolTextEditor20250124 != null ->
                     visitor.visitBetaToolTextEditor20250124(betaToolTextEditor20250124)
+                betaWebSearchTool20250305 != null ->
+                    visitor.visitBetaWebSearchTool20250305(betaWebSearchTool20250305)
                 else -> visitor.unknown(_json)
             }
 
@@ -2126,6 +2160,12 @@ private constructor(
                     ) {
                         betaToolTextEditor20250124.validate()
                     }
+
+                    override fun visitBetaWebSearchTool20250305(
+                        betaWebSearchTool20250305: BetaWebSearchTool20250305
+                    ) {
+                        betaWebSearchTool20250305.validate()
+                    }
                 }
             )
             validated = true
@@ -2175,6 +2215,10 @@ private constructor(
                         betaToolTextEditor20250124: BetaToolTextEditor20250124
                     ) = betaToolTextEditor20250124.validity()
 
+                    override fun visitBetaWebSearchTool20250305(
+                        betaWebSearchTool20250305: BetaWebSearchTool20250305
+                    ) = betaWebSearchTool20250305.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -2184,10 +2228,10 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Tool && beta == other.beta && betaToolComputerUse20241022 == other.betaToolComputerUse20241022 && betaToolBash20241022 == other.betaToolBash20241022 && betaToolTextEditor20241022 == other.betaToolTextEditor20241022 && betaToolComputerUse20250124 == other.betaToolComputerUse20250124 && betaToolBash20250124 == other.betaToolBash20250124 && betaToolTextEditor20250124 == other.betaToolTextEditor20250124 /* spotless:on */
+            return /* spotless:off */ other is Tool && beta == other.beta && betaToolComputerUse20241022 == other.betaToolComputerUse20241022 && betaToolBash20241022 == other.betaToolBash20241022 && betaToolTextEditor20241022 == other.betaToolTextEditor20241022 && betaToolComputerUse20250124 == other.betaToolComputerUse20250124 && betaToolBash20250124 == other.betaToolBash20250124 && betaToolTextEditor20250124 == other.betaToolTextEditor20250124 && betaWebSearchTool20250305 == other.betaWebSearchTool20250305 /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(beta, betaToolComputerUse20241022, betaToolBash20241022, betaToolTextEditor20241022, betaToolComputerUse20250124, betaToolBash20250124, betaToolTextEditor20250124) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(beta, betaToolComputerUse20241022, betaToolBash20241022, betaToolTextEditor20241022, betaToolComputerUse20250124, betaToolBash20250124, betaToolTextEditor20250124, betaWebSearchTool20250305) /* spotless:on */
 
         override fun toString(): String =
             when {
@@ -2202,6 +2246,8 @@ private constructor(
                 betaToolBash20250124 != null -> "Tool{betaToolBash20250124=$betaToolBash20250124}"
                 betaToolTextEditor20250124 != null ->
                     "Tool{betaToolTextEditor20250124=$betaToolTextEditor20250124}"
+                betaWebSearchTool20250305 != null ->
+                    "Tool{betaWebSearchTool20250305=$betaWebSearchTool20250305}"
                 _json != null -> "Tool{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Tool")
             }
@@ -2237,6 +2283,10 @@ private constructor(
             fun ofBetaToolTextEditor20250124(
                 betaToolTextEditor20250124: BetaToolTextEditor20250124
             ) = Tool(betaToolTextEditor20250124 = betaToolTextEditor20250124)
+
+            @JvmStatic
+            fun ofBetaWebSearchTool20250305(betaWebSearchTool20250305: BetaWebSearchTool20250305) =
+                Tool(betaWebSearchTool20250305 = betaWebSearchTool20250305)
         }
 
         /** An interface that defines how to map each variant of [Tool] to a value of type [T]. */
@@ -2262,6 +2312,10 @@ private constructor(
 
             fun visitBetaToolTextEditor20250124(
                 betaToolTextEditor20250124: BetaToolTextEditor20250124
+            ): T
+
+            fun visitBetaWebSearchTool20250305(
+                betaWebSearchTool20250305: BetaWebSearchTool20250305
             ): T
 
             /**
@@ -2302,6 +2356,9 @@ private constructor(
                             },
                             tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20250124>())
                                 ?.let { Tool(betaToolTextEditor20250124 = it, _json = json) },
+                            tryDeserialize(node, jacksonTypeRef<BetaWebSearchTool20250305>())?.let {
+                                Tool(betaWebSearchTool20250305 = it, _json = json)
+                            },
                         )
                         .filterNotNull()
                         .allMaxBy { it.validity() }
@@ -2340,6 +2397,8 @@ private constructor(
                         generator.writeObject(value.betaToolBash20250124)
                     value.betaToolTextEditor20250124 != null ->
                         generator.writeObject(value.betaToolTextEditor20250124)
+                    value.betaWebSearchTool20250305 != null ->
+                        generator.writeObject(value.betaWebSearchTool20250305)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Tool")
                 }

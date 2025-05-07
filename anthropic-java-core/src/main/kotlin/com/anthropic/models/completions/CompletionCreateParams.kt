@@ -13,6 +13,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.messages.Metadata
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -36,10 +37,14 @@ import kotlin.jvm.optionals.getOrNull
  */
 class CompletionCreateParams
 private constructor(
+    private val betas: List<AnthropicBeta>?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    /** Optional header to specify the beta version(s) you want to use. */
+    fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
      * The maximum number of tokens to generate before stopping.
@@ -223,16 +228,42 @@ private constructor(
     /** A builder for [CompletionCreateParams]. */
     class Builder internal constructor() {
 
+        private var betas: MutableList<AnthropicBeta>? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(completionCreateParams: CompletionCreateParams) = apply {
+            betas = completionCreateParams.betas?.toMutableList()
             body = completionCreateParams.body.toBuilder()
             additionalHeaders = completionCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = completionCreateParams.additionalQueryParams.toBuilder()
         }
+
+        /** Optional header to specify the beta version(s) you want to use. */
+        fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
+
+        /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */
+        fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.getOrNull())
+
+        /**
+         * Adds a single [AnthropicBeta] to [betas].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addBeta(beta: AnthropicBeta) = apply {
+            betas = (betas ?: mutableListOf()).apply { add(beta) }
+        }
+
+        /**
+         * Sets [addBeta] to an arbitrary [String].
+         *
+         * You should usually call [addBeta] with a well-typed [AnthropicBeta] constant instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
         /**
          * Sets the entire request body.
@@ -544,6 +575,7 @@ private constructor(
          */
         fun build(): CompletionCreateParams =
             CompletionCreateParams(
+                betas?.toImmutable(),
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -552,7 +584,13 @@ private constructor(
 
     fun _body(): Body = body
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                betas?.forEach { put("anthropic-beta", it.toString()) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -1105,11 +1143,11 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is CompletionCreateParams && body == other.body && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
+        return /* spotless:off */ other is CompletionCreateParams && betas == other.betas && body == other.body && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(body, additionalHeaders, additionalQueryParams) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betas, body, additionalHeaders, additionalQueryParams) /* spotless:on */
 
     override fun toString() =
-        "CompletionCreateParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "CompletionCreateParams{betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

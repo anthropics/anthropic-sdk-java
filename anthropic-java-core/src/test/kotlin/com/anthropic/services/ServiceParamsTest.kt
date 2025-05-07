@@ -101,6 +101,7 @@ internal class ServiceParamsTest {
                         .name("name")
                         .cacheControl(CacheControlEphemeral.builder().build())
                         .description("Get the current weather in a given location")
+                        .type(Tool.Type.CUSTOM)
                         .build()
                 )
                 .topK(5L)

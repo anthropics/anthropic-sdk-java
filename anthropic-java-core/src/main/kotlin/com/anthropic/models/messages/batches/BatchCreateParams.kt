@@ -35,6 +35,7 @@ import com.anthropic.models.messages.ToolChoiceNone
 import com.anthropic.models.messages.ToolChoiceTool
 import com.anthropic.models.messages.ToolTextEditor20250124
 import com.anthropic.models.messages.ToolUnion
+import com.anthropic.models.messages.WebSearchTool20250305
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -843,6 +844,8 @@ private constructor(
              * top-level `system` parameter — there is no `"system"` role for input messages in the
              * Messages API.
              *
+             * There is a limit of 100000 messages in a single request.
+             *
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
              *   unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
@@ -1320,6 +1323,8 @@ private constructor(
                  * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use
                  * the top-level `system` parameter — there is no `"system"` role for input messages
                  * in the Messages API.
+                 *
+                 * There is a limit of 100000 messages in a single request.
                  */
                 fun messages(messages: List<MessageParam>) = messages(JsonField.of(messages))
 
@@ -1733,6 +1738,13 @@ private constructor(
                  */
                 fun addTool(textEditor20250124: ToolTextEditor20250124) =
                     addTool(ToolUnion.ofTextEditor20250124(textEditor20250124))
+
+                /**
+                 * Alias for calling [addTool] with
+                 * `ToolUnion.ofWebSearchTool20250305(webSearchTool20250305)`.
+                 */
+                fun addTool(webSearchTool20250305: WebSearchTool20250305) =
+                    addTool(ToolUnion.ofWebSearchTool20250305(webSearchTool20250305))
 
                 /**
                  * Only sample from the top K options for each subsequent token.

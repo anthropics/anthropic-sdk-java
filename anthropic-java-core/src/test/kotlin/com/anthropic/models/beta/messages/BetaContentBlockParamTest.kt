@@ -36,6 +36,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.text()).contains(text)
         assertThat(betaContentBlockParam.image()).isEmpty
         assertThat(betaContentBlockParam.toolUse()).isEmpty
+        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
+        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.toolResult()).isEmpty
         assertThat(betaContentBlockParam.base64PdfBlock()).isEmpty
         assertThat(betaContentBlockParam.thinking()).isEmpty
@@ -89,6 +91,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.text()).isEmpty
         assertThat(betaContentBlockParam.image()).contains(image)
         assertThat(betaContentBlockParam.toolUse()).isEmpty
+        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
+        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.toolResult()).isEmpty
         assertThat(betaContentBlockParam.base64PdfBlock()).isEmpty
         assertThat(betaContentBlockParam.thinking()).isEmpty
@@ -126,7 +130,7 @@ internal class BetaContentBlockParamTest {
             BetaToolUseBlockParam.builder()
                 .id("id")
                 .input(JsonValue.from(mapOf<String, Any>()))
-                .name("name")
+                .name("x")
                 .cacheControl(BetaCacheControlEphemeral.builder().build())
                 .build()
 
@@ -135,6 +139,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.text()).isEmpty
         assertThat(betaContentBlockParam.image()).isEmpty
         assertThat(betaContentBlockParam.toolUse()).contains(toolUse)
+        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
+        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.toolResult()).isEmpty
         assertThat(betaContentBlockParam.base64PdfBlock()).isEmpty
         assertThat(betaContentBlockParam.thinking()).isEmpty
@@ -149,7 +155,111 @@ internal class BetaContentBlockParamTest {
                 BetaToolUseBlockParam.builder()
                     .id("id")
                     .input(JsonValue.from(mapOf<String, Any>()))
-                    .name("name")
+                    .name("x")
+                    .cacheControl(BetaCacheControlEphemeral.builder().build())
+                    .build()
+            )
+
+        val roundtrippedBetaContentBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaContentBlockParam),
+                jacksonTypeRef<BetaContentBlockParam>(),
+            )
+
+        assertThat(roundtrippedBetaContentBlockParam).isEqualTo(betaContentBlockParam)
+    }
+
+    @Test
+    fun ofServerToolUse() {
+        val serverToolUse =
+            BetaServerToolUseBlockParam.builder()
+                .id("srvtoolu_SQfNkl1n_JR_")
+                .input(JsonValue.from(mapOf<String, Any>()))
+                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .build()
+
+        val betaContentBlockParam = BetaContentBlockParam.ofServerToolUse(serverToolUse)
+
+        assertThat(betaContentBlockParam.text()).isEmpty
+        assertThat(betaContentBlockParam.image()).isEmpty
+        assertThat(betaContentBlockParam.toolUse()).isEmpty
+        assertThat(betaContentBlockParam.serverToolUse()).contains(serverToolUse)
+        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(betaContentBlockParam.toolResult()).isEmpty
+        assertThat(betaContentBlockParam.base64PdfBlock()).isEmpty
+        assertThat(betaContentBlockParam.thinking()).isEmpty
+        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
+    }
+
+    @Test
+    fun ofServerToolUseRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaContentBlockParam =
+            BetaContentBlockParam.ofServerToolUse(
+                BetaServerToolUseBlockParam.builder()
+                    .id("srvtoolu_SQfNkl1n_JR_")
+                    .input(JsonValue.from(mapOf<String, Any>()))
+                    .cacheControl(BetaCacheControlEphemeral.builder().build())
+                    .build()
+            )
+
+        val roundtrippedBetaContentBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaContentBlockParam),
+                jacksonTypeRef<BetaContentBlockParam>(),
+            )
+
+        assertThat(roundtrippedBetaContentBlockParam).isEqualTo(betaContentBlockParam)
+    }
+
+    @Test
+    fun ofWebSearchToolResult() {
+        val webSearchToolResult =
+            BetaWebSearchToolResultBlockParam.builder()
+                .contentOfItem(
+                    listOf(
+                        BetaWebSearchResultBlockParam.builder()
+                            .encryptedContent("encrypted_content")
+                            .title("x")
+                            .url("x")
+                            .pageAge("page_age")
+                            .build()
+                    )
+                )
+                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .build()
+
+        val betaContentBlockParam = BetaContentBlockParam.ofWebSearchToolResult(webSearchToolResult)
+
+        assertThat(betaContentBlockParam.text()).isEmpty
+        assertThat(betaContentBlockParam.image()).isEmpty
+        assertThat(betaContentBlockParam.toolUse()).isEmpty
+        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
+        assertThat(betaContentBlockParam.webSearchToolResult()).contains(webSearchToolResult)
+        assertThat(betaContentBlockParam.toolResult()).isEmpty
+        assertThat(betaContentBlockParam.base64PdfBlock()).isEmpty
+        assertThat(betaContentBlockParam.thinking()).isEmpty
+        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
+    }
+
+    @Test
+    fun ofWebSearchToolResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaContentBlockParam =
+            BetaContentBlockParam.ofWebSearchToolResult(
+                BetaWebSearchToolResultBlockParam.builder()
+                    .contentOfItem(
+                        listOf(
+                            BetaWebSearchResultBlockParam.builder()
+                                .encryptedContent("encrypted_content")
+                                .title("x")
+                                .url("x")
+                                .pageAge("page_age")
+                                .build()
+                        )
+                    )
+                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .cacheControl(BetaCacheControlEphemeral.builder().build())
                     .build()
             )
@@ -178,6 +288,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.text()).isEmpty
         assertThat(betaContentBlockParam.image()).isEmpty
         assertThat(betaContentBlockParam.toolUse()).isEmpty
+        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
+        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.toolResult()).contains(toolResult)
         assertThat(betaContentBlockParam.base64PdfBlock()).isEmpty
         assertThat(betaContentBlockParam.thinking()).isEmpty
@@ -222,6 +334,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.text()).isEmpty
         assertThat(betaContentBlockParam.image()).isEmpty
         assertThat(betaContentBlockParam.toolUse()).isEmpty
+        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
+        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.toolResult()).isEmpty
         assertThat(betaContentBlockParam.base64PdfBlock()).contains(base64PdfBlock)
         assertThat(betaContentBlockParam.thinking()).isEmpty
@@ -261,6 +375,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.text()).isEmpty
         assertThat(betaContentBlockParam.image()).isEmpty
         assertThat(betaContentBlockParam.toolUse()).isEmpty
+        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
+        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.toolResult()).isEmpty
         assertThat(betaContentBlockParam.base64PdfBlock()).isEmpty
         assertThat(betaContentBlockParam.thinking()).contains(thinking)
@@ -293,6 +409,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.text()).isEmpty
         assertThat(betaContentBlockParam.image()).isEmpty
         assertThat(betaContentBlockParam.toolUse()).isEmpty
+        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
+        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.toolResult()).isEmpty
         assertThat(betaContentBlockParam.base64PdfBlock()).isEmpty
         assertThat(betaContentBlockParam.thinking()).isEmpty

@@ -30,6 +30,7 @@ internal class BetaTextCitationTest {
         assertThat(betaTextCitation.citationCharLocation()).contains(citationCharLocation)
         assertThat(betaTextCitation.citationPageLocation()).isEmpty
         assertThat(betaTextCitation.citationContentBlockLocation()).isEmpty
+        assertThat(betaTextCitation.citationsWebSearchResultLocation()).isEmpty
     }
 
     @Test
@@ -71,6 +72,7 @@ internal class BetaTextCitationTest {
         assertThat(betaTextCitation.citationCharLocation()).isEmpty
         assertThat(betaTextCitation.citationPageLocation()).contains(citationPageLocation)
         assertThat(betaTextCitation.citationContentBlockLocation()).isEmpty
+        assertThat(betaTextCitation.citationsWebSearchResultLocation()).isEmpty
     }
 
     @Test
@@ -114,6 +116,7 @@ internal class BetaTextCitationTest {
         assertThat(betaTextCitation.citationPageLocation()).isEmpty
         assertThat(betaTextCitation.citationContentBlockLocation())
             .contains(citationContentBlockLocation)
+        assertThat(betaTextCitation.citationsWebSearchResultLocation()).isEmpty
     }
 
     @Test
@@ -127,6 +130,48 @@ internal class BetaTextCitationTest {
                     .documentTitle("document_title")
                     .endBlockIndex(0L)
                     .startBlockIndex(0L)
+                    .build()
+            )
+
+        val roundtrippedBetaTextCitation =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaTextCitation),
+                jacksonTypeRef<BetaTextCitation>(),
+            )
+
+        assertThat(roundtrippedBetaTextCitation).isEqualTo(betaTextCitation)
+    }
+
+    @Test
+    fun ofCitationsWebSearchResultLocation() {
+        val citationsWebSearchResultLocation =
+            BetaCitationsWebSearchResultLocation.builder()
+                .citedText("cited_text")
+                .encryptedIndex("encrypted_index")
+                .title("title")
+                .url("url")
+                .build()
+
+        val betaTextCitation =
+            BetaTextCitation.ofCitationsWebSearchResultLocation(citationsWebSearchResultLocation)
+
+        assertThat(betaTextCitation.citationCharLocation()).isEmpty
+        assertThat(betaTextCitation.citationPageLocation()).isEmpty
+        assertThat(betaTextCitation.citationContentBlockLocation()).isEmpty
+        assertThat(betaTextCitation.citationsWebSearchResultLocation())
+            .contains(citationsWebSearchResultLocation)
+    }
+
+    @Test
+    fun ofCitationsWebSearchResultLocationRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaTextCitation =
+            BetaTextCitation.ofCitationsWebSearchResultLocation(
+                BetaCitationsWebSearchResultLocation.builder()
+                    .citedText("cited_text")
+                    .encryptedIndex("encrypted_index")
+                    .title("title")
+                    .url("url")
                     .build()
             )
 

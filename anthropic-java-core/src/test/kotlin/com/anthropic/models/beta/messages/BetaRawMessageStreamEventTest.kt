@@ -45,6 +45,9 @@ internal class BetaRawMessageStreamEventTest {
                                 .cacheReadInputTokens(2051L)
                                 .inputTokens(2095L)
                                 .outputTokens(503L)
+                                .serverToolUse(
+                                    BetaServerToolUsage.builder().webSearchRequests(0L).build()
+                                )
                                 .build()
                         )
                         .build()
@@ -93,6 +96,9 @@ internal class BetaRawMessageStreamEventTest {
                                     .cacheReadInputTokens(2051L)
                                     .inputTokens(2095L)
                                     .outputTokens(503L)
+                                    .serverToolUse(
+                                        BetaServerToolUsage.builder().webSearchRequests(0L).build()
+                                    )
                                     .build()
                             )
                             .build()
@@ -119,7 +125,15 @@ internal class BetaRawMessageStreamEventTest {
                         .stopSequence("stop_sequence")
                         .build()
                 )
-                .usage(BetaMessageDeltaUsage.builder().outputTokens(503L).build())
+                .usage(
+                    BetaMessageDeltaUsage.builder()
+                        .cacheCreationInputTokens(2051L)
+                        .cacheReadInputTokens(2051L)
+                        .inputTokens(2095L)
+                        .outputTokens(503L)
+                        .serverToolUse(BetaServerToolUsage.builder().webSearchRequests(0L).build())
+                        .build()
+                )
                 .build()
 
         val betaRawMessageStreamEvent = BetaRawMessageStreamEvent.ofDelta(delta)
@@ -144,7 +158,17 @@ internal class BetaRawMessageStreamEventTest {
                             .stopSequence("stop_sequence")
                             .build()
                     )
-                    .usage(BetaMessageDeltaUsage.builder().outputTokens(503L).build())
+                    .usage(
+                        BetaMessageDeltaUsage.builder()
+                            .cacheCreationInputTokens(2051L)
+                            .cacheReadInputTokens(2051L)
+                            .inputTokens(2095L)
+                            .outputTokens(503L)
+                            .serverToolUse(
+                                BetaServerToolUsage.builder().webSearchRequests(0L).build()
+                            )
+                            .build()
+                    )
                     .build()
             )
 

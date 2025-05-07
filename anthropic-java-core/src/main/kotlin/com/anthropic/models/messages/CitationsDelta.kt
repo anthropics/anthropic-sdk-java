@@ -130,6 +130,13 @@ private constructor(
             citation(Citation.ofContentBlockLocation(contentBlockLocation))
 
         /**
+         * Alias for calling [citation] with
+         * `Citation.ofCitationsWebSearchResultLocation(citationsWebSearchResultLocation)`.
+         */
+        fun citation(citationsWebSearchResultLocation: CitationsWebSearchResultLocation) =
+            citation(Citation.ofCitationsWebSearchResultLocation(citationsWebSearchResultLocation))
+
+        /**
          * Sets the field to an arbitrary JSON value.
          *
          * It is usually unnecessary to call this method because the field defaults to the
@@ -223,6 +230,7 @@ private constructor(
         private val charLocation: CitationCharLocation? = null,
         private val pageLocation: CitationPageLocation? = null,
         private val contentBlockLocation: CitationContentBlockLocation? = null,
+        private val citationsWebSearchResultLocation: CitationsWebSearchResultLocation? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -233,11 +241,16 @@ private constructor(
         fun contentBlockLocation(): Optional<CitationContentBlockLocation> =
             Optional.ofNullable(contentBlockLocation)
 
+        fun citationsWebSearchResultLocation(): Optional<CitationsWebSearchResultLocation> =
+            Optional.ofNullable(citationsWebSearchResultLocation)
+
         fun isCharLocation(): Boolean = charLocation != null
 
         fun isPageLocation(): Boolean = pageLocation != null
 
         fun isContentBlockLocation(): Boolean = contentBlockLocation != null
+
+        fun isCitationsWebSearchResultLocation(): Boolean = citationsWebSearchResultLocation != null
 
         fun asCharLocation(): CitationCharLocation = charLocation.getOrThrow("charLocation")
 
@@ -245,6 +258,9 @@ private constructor(
 
         fun asContentBlockLocation(): CitationContentBlockLocation =
             contentBlockLocation.getOrThrow("contentBlockLocation")
+
+        fun asCitationsWebSearchResultLocation(): CitationsWebSearchResultLocation =
+            citationsWebSearchResultLocation.getOrThrow("citationsWebSearchResultLocation")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -254,6 +270,8 @@ private constructor(
                 pageLocation != null -> visitor.visitPageLocation(pageLocation)
                 contentBlockLocation != null ->
                     visitor.visitContentBlockLocation(contentBlockLocation)
+                citationsWebSearchResultLocation != null ->
+                    visitor.visitCitationsWebSearchResultLocation(citationsWebSearchResultLocation)
                 else -> visitor.unknown(_json)
             }
 
@@ -278,6 +296,12 @@ private constructor(
                         contentBlockLocation: CitationContentBlockLocation
                     ) {
                         contentBlockLocation.validate()
+                    }
+
+                    override fun visitCitationsWebSearchResultLocation(
+                        citationsWebSearchResultLocation: CitationsWebSearchResultLocation
+                    ) {
+                        citationsWebSearchResultLocation.validate()
                     }
                 }
             )
@@ -312,6 +336,10 @@ private constructor(
                         contentBlockLocation: CitationContentBlockLocation
                     ) = contentBlockLocation.validity()
 
+                    override fun visitCitationsWebSearchResultLocation(
+                        citationsWebSearchResultLocation: CitationsWebSearchResultLocation
+                    ) = citationsWebSearchResultLocation.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -321,10 +349,10 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Citation && charLocation == other.charLocation && pageLocation == other.pageLocation && contentBlockLocation == other.contentBlockLocation /* spotless:on */
+            return /* spotless:off */ other is Citation && charLocation == other.charLocation && pageLocation == other.pageLocation && contentBlockLocation == other.contentBlockLocation && citationsWebSearchResultLocation == other.citationsWebSearchResultLocation /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(charLocation, pageLocation, contentBlockLocation) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(charLocation, pageLocation, contentBlockLocation, citationsWebSearchResultLocation) /* spotless:on */
 
         override fun toString(): String =
             when {
@@ -332,6 +360,8 @@ private constructor(
                 pageLocation != null -> "Citation{pageLocation=$pageLocation}"
                 contentBlockLocation != null ->
                     "Citation{contentBlockLocation=$contentBlockLocation}"
+                citationsWebSearchResultLocation != null ->
+                    "Citation{citationsWebSearchResultLocation=$citationsWebSearchResultLocation}"
                 _json != null -> "Citation{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Citation")
             }
@@ -349,6 +379,11 @@ private constructor(
             @JvmStatic
             fun ofContentBlockLocation(contentBlockLocation: CitationContentBlockLocation) =
                 Citation(contentBlockLocation = contentBlockLocation)
+
+            @JvmStatic
+            fun ofCitationsWebSearchResultLocation(
+                citationsWebSearchResultLocation: CitationsWebSearchResultLocation
+            ) = Citation(citationsWebSearchResultLocation = citationsWebSearchResultLocation)
         }
 
         /**
@@ -361,6 +396,10 @@ private constructor(
             fun visitPageLocation(pageLocation: CitationPageLocation): T
 
             fun visitContentBlockLocation(contentBlockLocation: CitationContentBlockLocation): T
+
+            fun visitCitationsWebSearchResultLocation(
+                citationsWebSearchResultLocation: CitationsWebSearchResultLocation
+            ): T
 
             /**
              * Maps an unknown variant of [Citation] to a value of type [T].
@@ -399,6 +438,14 @@ private constructor(
                             ?.let { Citation(contentBlockLocation = it, _json = json) }
                             ?: Citation(_json = json)
                     }
+                    "web_search_result_location" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<CitationsWebSearchResultLocation>(),
+                            )
+                            ?.let { Citation(citationsWebSearchResultLocation = it, _json = json) }
+                            ?: Citation(_json = json)
+                    }
                 }
 
                 return Citation(_json = json)
@@ -417,6 +464,8 @@ private constructor(
                     value.pageLocation != null -> generator.writeObject(value.pageLocation)
                     value.contentBlockLocation != null ->
                         generator.writeObject(value.contentBlockLocation)
+                    value.citationsWebSearchResultLocation != null ->
+                        generator.writeObject(value.citationsWebSearchResultLocation)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Citation")
                 }

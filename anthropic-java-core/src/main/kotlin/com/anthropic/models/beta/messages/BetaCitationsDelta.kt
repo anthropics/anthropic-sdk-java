@@ -136,6 +136,17 @@ private constructor(
             citation(Citation.ofBetaCitationContentBlockLocation(betaCitationContentBlockLocation))
 
         /**
+         * Alias for calling [citation] with
+         * `Citation.ofBetaCitationsWebSearchResultLocation(betaCitationsWebSearchResultLocation)`.
+         */
+        fun citation(betaCitationsWebSearchResultLocation: BetaCitationsWebSearchResultLocation) =
+            citation(
+                Citation.ofBetaCitationsWebSearchResultLocation(
+                    betaCitationsWebSearchResultLocation
+                )
+            )
+
+        /**
          * Sets the field to an arbitrary JSON value.
          *
          * It is usually unnecessary to call this method because the field defaults to the
@@ -229,6 +240,8 @@ private constructor(
         private val betaCitationCharLocation: BetaCitationCharLocation? = null,
         private val betaCitationPageLocation: BetaCitationPageLocation? = null,
         private val betaCitationContentBlockLocation: BetaCitationContentBlockLocation? = null,
+        private val betaCitationsWebSearchResultLocation: BetaCitationsWebSearchResultLocation? =
+            null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -241,11 +254,17 @@ private constructor(
         fun betaCitationContentBlockLocation(): Optional<BetaCitationContentBlockLocation> =
             Optional.ofNullable(betaCitationContentBlockLocation)
 
+        fun betaCitationsWebSearchResultLocation(): Optional<BetaCitationsWebSearchResultLocation> =
+            Optional.ofNullable(betaCitationsWebSearchResultLocation)
+
         fun isBetaCitationCharLocation(): Boolean = betaCitationCharLocation != null
 
         fun isBetaCitationPageLocation(): Boolean = betaCitationPageLocation != null
 
         fun isBetaCitationContentBlockLocation(): Boolean = betaCitationContentBlockLocation != null
+
+        fun isBetaCitationsWebSearchResultLocation(): Boolean =
+            betaCitationsWebSearchResultLocation != null
 
         fun asBetaCitationCharLocation(): BetaCitationCharLocation =
             betaCitationCharLocation.getOrThrow("betaCitationCharLocation")
@@ -255,6 +274,9 @@ private constructor(
 
         fun asBetaCitationContentBlockLocation(): BetaCitationContentBlockLocation =
             betaCitationContentBlockLocation.getOrThrow("betaCitationContentBlockLocation")
+
+        fun asBetaCitationsWebSearchResultLocation(): BetaCitationsWebSearchResultLocation =
+            betaCitationsWebSearchResultLocation.getOrThrow("betaCitationsWebSearchResultLocation")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -266,6 +288,10 @@ private constructor(
                     visitor.visitBetaCitationPageLocation(betaCitationPageLocation)
                 betaCitationContentBlockLocation != null ->
                     visitor.visitBetaCitationContentBlockLocation(betaCitationContentBlockLocation)
+                betaCitationsWebSearchResultLocation != null ->
+                    visitor.visitBetaCitationsWebSearchResultLocation(
+                        betaCitationsWebSearchResultLocation
+                    )
                 else -> visitor.unknown(_json)
             }
 
@@ -294,6 +320,12 @@ private constructor(
                         betaCitationContentBlockLocation: BetaCitationContentBlockLocation
                     ) {
                         betaCitationContentBlockLocation.validate()
+                    }
+
+                    override fun visitBetaCitationsWebSearchResultLocation(
+                        betaCitationsWebSearchResultLocation: BetaCitationsWebSearchResultLocation
+                    ) {
+                        betaCitationsWebSearchResultLocation.validate()
                     }
                 }
             )
@@ -330,6 +362,10 @@ private constructor(
                         betaCitationContentBlockLocation: BetaCitationContentBlockLocation
                     ) = betaCitationContentBlockLocation.validity()
 
+                    override fun visitBetaCitationsWebSearchResultLocation(
+                        betaCitationsWebSearchResultLocation: BetaCitationsWebSearchResultLocation
+                    ) = betaCitationsWebSearchResultLocation.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -339,10 +375,10 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Citation && betaCitationCharLocation == other.betaCitationCharLocation && betaCitationPageLocation == other.betaCitationPageLocation && betaCitationContentBlockLocation == other.betaCitationContentBlockLocation /* spotless:on */
+            return /* spotless:off */ other is Citation && betaCitationCharLocation == other.betaCitationCharLocation && betaCitationPageLocation == other.betaCitationPageLocation && betaCitationContentBlockLocation == other.betaCitationContentBlockLocation && betaCitationsWebSearchResultLocation == other.betaCitationsWebSearchResultLocation /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaCitationCharLocation, betaCitationPageLocation, betaCitationContentBlockLocation) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaCitationCharLocation, betaCitationPageLocation, betaCitationContentBlockLocation, betaCitationsWebSearchResultLocation) /* spotless:on */
 
         override fun toString(): String =
             when {
@@ -352,6 +388,8 @@ private constructor(
                     "Citation{betaCitationPageLocation=$betaCitationPageLocation}"
                 betaCitationContentBlockLocation != null ->
                     "Citation{betaCitationContentBlockLocation=$betaCitationContentBlockLocation}"
+                betaCitationsWebSearchResultLocation != null ->
+                    "Citation{betaCitationsWebSearchResultLocation=$betaCitationsWebSearchResultLocation}"
                 _json != null -> "Citation{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Citation")
             }
@@ -370,6 +408,14 @@ private constructor(
             fun ofBetaCitationContentBlockLocation(
                 betaCitationContentBlockLocation: BetaCitationContentBlockLocation
             ) = Citation(betaCitationContentBlockLocation = betaCitationContentBlockLocation)
+
+            @JvmStatic
+            fun ofBetaCitationsWebSearchResultLocation(
+                betaCitationsWebSearchResultLocation: BetaCitationsWebSearchResultLocation
+            ) =
+                Citation(
+                    betaCitationsWebSearchResultLocation = betaCitationsWebSearchResultLocation
+                )
         }
 
         /**
@@ -383,6 +429,10 @@ private constructor(
 
             fun visitBetaCitationContentBlockLocation(
                 betaCitationContentBlockLocation: BetaCitationContentBlockLocation
+            ): T
+
+            fun visitBetaCitationsWebSearchResultLocation(
+                betaCitationsWebSearchResultLocation: BetaCitationsWebSearchResultLocation
             ): T
 
             /**
@@ -425,6 +475,15 @@ private constructor(
                             ?.let { Citation(betaCitationContentBlockLocation = it, _json = json) }
                             ?: Citation(_json = json)
                     }
+                    "web_search_result_location" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaCitationsWebSearchResultLocation>(),
+                            )
+                            ?.let {
+                                Citation(betaCitationsWebSearchResultLocation = it, _json = json)
+                            } ?: Citation(_json = json)
+                    }
                 }
 
                 return Citation(_json = json)
@@ -445,6 +504,8 @@ private constructor(
                         generator.writeObject(value.betaCitationPageLocation)
                     value.betaCitationContentBlockLocation != null ->
                         generator.writeObject(value.betaCitationContentBlockLocation)
+                    value.betaCitationsWebSearchResultLocation != null ->
+                        generator.writeObject(value.betaCitationsWebSearchResultLocation)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Citation")
                 }

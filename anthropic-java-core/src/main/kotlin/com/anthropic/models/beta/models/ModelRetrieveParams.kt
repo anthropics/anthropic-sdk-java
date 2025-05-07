@@ -6,7 +6,11 @@ import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.toImmutable
+import com.anthropic.models.beta.AnthropicBeta
 import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * Get a specific model.
@@ -17,12 +21,16 @@ import java.util.Objects
 class ModelRetrieveParams
 private constructor(
     private val modelId: String,
+    private val betas: List<AnthropicBeta>?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     /** Model identifier or alias. */
     fun modelId(): String = modelId
+
+    /** Optional header to specify the beta version(s) you want to use. */
+    fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     fun _additionalHeaders(): Headers = additionalHeaders
 
@@ -47,18 +55,44 @@ private constructor(
     class Builder internal constructor() {
 
         private var modelId: String? = null
+        private var betas: MutableList<AnthropicBeta>? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(modelRetrieveParams: ModelRetrieveParams) = apply {
             modelId = modelRetrieveParams.modelId
+            betas = modelRetrieveParams.betas?.toMutableList()
             additionalHeaders = modelRetrieveParams.additionalHeaders.toBuilder()
             additionalQueryParams = modelRetrieveParams.additionalQueryParams.toBuilder()
         }
 
         /** Model identifier or alias. */
         fun modelId(modelId: String) = apply { this.modelId = modelId }
+
+        /** Optional header to specify the beta version(s) you want to use. */
+        fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
+
+        /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */
+        fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.getOrNull())
+
+        /**
+         * Adds a single [AnthropicBeta] to [betas].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addBeta(beta: AnthropicBeta) = apply {
+            betas = (betas ?: mutableListOf()).apply { add(beta) }
+        }
+
+        /**
+         * Sets [addBeta] to an arbitrary [String].
+         *
+         * You should usually call [addBeta] with a well-typed [AnthropicBeta] constant instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -173,6 +207,7 @@ private constructor(
         fun build(): ModelRetrieveParams =
             ModelRetrieveParams(
                 checkRequired("modelId", modelId),
+                betas?.toImmutable(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -184,7 +219,13 @@ private constructor(
             else -> ""
         }
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                betas?.forEach { put("anthropic-beta", it.toString()) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -193,11 +234,11 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ModelRetrieveParams && modelId == other.modelId && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
+        return /* spotless:off */ other is ModelRetrieveParams && modelId == other.modelId && betas == other.betas && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(modelId, additionalHeaders, additionalQueryParams) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(modelId, betas, additionalHeaders, additionalQueryParams) /* spotless:on */
 
     override fun toString() =
-        "ModelRetrieveParams{modelId=$modelId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ModelRetrieveParams{modelId=$modelId, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

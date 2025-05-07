@@ -16,13 +16,13 @@ internal class BetaToolUseBlockParamTest {
             BetaToolUseBlockParam.builder()
                 .id("id")
                 .input(JsonValue.from(mapOf<String, Any>()))
-                .name("name")
+                .name("x")
                 .cacheControl(BetaCacheControlEphemeral.builder().build())
                 .build()
 
         assertThat(betaToolUseBlockParam.id()).isEqualTo("id")
         assertThat(betaToolUseBlockParam._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
-        assertThat(betaToolUseBlockParam.name()).isEqualTo("name")
+        assertThat(betaToolUseBlockParam.name()).isEqualTo("x")
         assertThat(betaToolUseBlockParam.cacheControl())
             .contains(BetaCacheControlEphemeral.builder().build())
     }
@@ -34,7 +34,7 @@ internal class BetaToolUseBlockParamTest {
             BetaToolUseBlockParam.builder()
                 .id("id")
                 .input(JsonValue.from(mapOf<String, Any>()))
-                .name("name")
+                .name("x")
                 .cacheControl(BetaCacheControlEphemeral.builder().build())
                 .build()
 

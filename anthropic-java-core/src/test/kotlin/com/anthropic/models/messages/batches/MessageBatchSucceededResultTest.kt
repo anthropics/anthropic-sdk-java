@@ -6,6 +6,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.models.messages.CitationCharLocation
 import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.Model
+import com.anthropic.models.messages.ServerToolUsage
 import com.anthropic.models.messages.StopReason
 import com.anthropic.models.messages.TextBlock
 import com.anthropic.models.messages.Usage
@@ -45,6 +46,9 @@ internal class MessageBatchSucceededResultTest {
                                 .cacheReadInputTokens(2051L)
                                 .inputTokens(2095L)
                                 .outputTokens(503L)
+                                .serverToolUse(
+                                    ServerToolUsage.builder().webSearchRequests(0L).build()
+                                )
                                 .build()
                         )
                         .build()
@@ -78,6 +82,7 @@ internal class MessageBatchSucceededResultTest {
                             .cacheReadInputTokens(2051L)
                             .inputTokens(2095L)
                             .outputTokens(503L)
+                            .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
                             .build()
                     )
                     .build()
@@ -115,6 +120,9 @@ internal class MessageBatchSucceededResultTest {
                                 .cacheReadInputTokens(2051L)
                                 .inputTokens(2095L)
                                 .outputTokens(503L)
+                                .serverToolUse(
+                                    ServerToolUsage.builder().webSearchRequests(0L).build()
+                                )
                                 .build()
                         )
                         .build()

@@ -17,12 +17,15 @@ internal class UsageTest {
                 .cacheReadInputTokens(2051L)
                 .inputTokens(2095L)
                 .outputTokens(503L)
+                .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
                 .build()
 
         assertThat(usage.cacheCreationInputTokens()).contains(2051L)
         assertThat(usage.cacheReadInputTokens()).contains(2051L)
         assertThat(usage.inputTokens()).isEqualTo(2095L)
         assertThat(usage.outputTokens()).isEqualTo(503L)
+        assertThat(usage.serverToolUse())
+            .contains(ServerToolUsage.builder().webSearchRequests(0L).build())
     }
 
     @Test
@@ -34,6 +37,7 @@ internal class UsageTest {
                 .cacheReadInputTokens(2051L)
                 .inputTokens(2095L)
                 .outputTokens(503L)
+                .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
                 .build()
 
         val roundtrippedUsage =

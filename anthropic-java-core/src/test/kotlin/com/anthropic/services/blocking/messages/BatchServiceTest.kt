@@ -106,6 +106,7 @@ internal class BatchServiceTest {
                                             .description(
                                                 "Get the current weather in a given location"
                                             )
+                                            .type(Tool.Type.CUSTOM)
                                             .build()
                                     )
                                     .topK(5L)

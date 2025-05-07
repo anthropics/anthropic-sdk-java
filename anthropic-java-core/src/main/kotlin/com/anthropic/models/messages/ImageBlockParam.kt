@@ -62,6 +62,8 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
+     * Create a cache control breakpoint at this content block.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -164,6 +166,7 @@ private constructor(
          */
         fun type(type: JsonValue) = apply { this.type = type }
 
+        /** Create a cache control breakpoint at this content block. */
         fun cacheControl(cacheControl: CacheControlEphemeral?) =
             cacheControl(JsonField.ofNullable(cacheControl))
 

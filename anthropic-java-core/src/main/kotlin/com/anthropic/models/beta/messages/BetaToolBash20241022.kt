@@ -36,7 +36,7 @@ private constructor(
     /**
      * Name of the tool.
      *
-     * This is how the tool will be called by the model and in tool_use blocks.
+     * This is how the tool will be called by the model and in `tool_use` blocks.
      *
      * Expected to always return the following:
      * ```java
@@ -60,6 +60,8 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
+     * Create a cache control breakpoint at this content block.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -137,6 +139,7 @@ private constructor(
          */
         fun type(type: JsonValue) = apply { this.type = type }
 
+        /** Create a cache control breakpoint at this content block. */
         fun cacheControl(cacheControl: BetaCacheControlEphemeral?) =
             cacheControl(JsonField.ofNullable(cacheControl))
 

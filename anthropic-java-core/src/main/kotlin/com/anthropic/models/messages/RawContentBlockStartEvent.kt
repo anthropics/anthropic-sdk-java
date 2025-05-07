@@ -144,6 +144,17 @@ private constructor(
         /** Alias for calling [contentBlock] with `ContentBlock.ofToolUse(toolUse)`. */
         fun contentBlock(toolUse: ToolUseBlock) = contentBlock(ContentBlock.ofToolUse(toolUse))
 
+        /** Alias for calling [contentBlock] with `ContentBlock.ofServerToolUse(serverToolUse)`. */
+        fun contentBlock(serverToolUse: ServerToolUseBlock) =
+            contentBlock(ContentBlock.ofServerToolUse(serverToolUse))
+
+        /**
+         * Alias for calling [contentBlock] with
+         * `ContentBlock.ofWebSearchToolResult(webSearchToolResult)`.
+         */
+        fun contentBlock(webSearchToolResult: WebSearchToolResultBlock) =
+            contentBlock(ContentBlock.ofWebSearchToolResult(webSearchToolResult))
+
         /** Alias for calling [contentBlock] with `ContentBlock.ofThinking(thinking)`. */
         fun contentBlock(thinking: ThinkingBlock) = contentBlock(ContentBlock.ofThinking(thinking))
 
@@ -272,6 +283,8 @@ private constructor(
     private constructor(
         private val text: TextBlock? = null,
         private val toolUse: ToolUseBlock? = null,
+        private val serverToolUse: ServerToolUseBlock? = null,
+        private val webSearchToolResult: WebSearchToolResultBlock? = null,
         private val thinking: ThinkingBlock? = null,
         private val redactedThinking: RedactedThinkingBlock? = null,
         private val _json: JsonValue? = null,
@@ -280,6 +293,11 @@ private constructor(
         fun text(): Optional<TextBlock> = Optional.ofNullable(text)
 
         fun toolUse(): Optional<ToolUseBlock> = Optional.ofNullable(toolUse)
+
+        fun serverToolUse(): Optional<ServerToolUseBlock> = Optional.ofNullable(serverToolUse)
+
+        fun webSearchToolResult(): Optional<WebSearchToolResultBlock> =
+            Optional.ofNullable(webSearchToolResult)
 
         fun thinking(): Optional<ThinkingBlock> = Optional.ofNullable(thinking)
 
@@ -290,6 +308,10 @@ private constructor(
 
         fun isToolUse(): Boolean = toolUse != null
 
+        fun isServerToolUse(): Boolean = serverToolUse != null
+
+        fun isWebSearchToolResult(): Boolean = webSearchToolResult != null
+
         fun isThinking(): Boolean = thinking != null
 
         fun isRedactedThinking(): Boolean = redactedThinking != null
@@ -297,6 +319,11 @@ private constructor(
         fun asText(): TextBlock = text.getOrThrow("text")
 
         fun asToolUse(): ToolUseBlock = toolUse.getOrThrow("toolUse")
+
+        fun asServerToolUse(): ServerToolUseBlock = serverToolUse.getOrThrow("serverToolUse")
+
+        fun asWebSearchToolResult(): WebSearchToolResultBlock =
+            webSearchToolResult.getOrThrow("webSearchToolResult")
 
         fun asThinking(): ThinkingBlock = thinking.getOrThrow("thinking")
 
@@ -309,6 +336,8 @@ private constructor(
             when {
                 text != null -> visitor.visitText(text)
                 toolUse != null -> visitor.visitToolUse(toolUse)
+                serverToolUse != null -> visitor.visitServerToolUse(serverToolUse)
+                webSearchToolResult != null -> visitor.visitWebSearchToolResult(webSearchToolResult)
                 thinking != null -> visitor.visitThinking(thinking)
                 redactedThinking != null -> visitor.visitRedactedThinking(redactedThinking)
                 else -> visitor.unknown(_json)
@@ -329,6 +358,16 @@ private constructor(
 
                     override fun visitToolUse(toolUse: ToolUseBlock) {
                         toolUse.validate()
+                    }
+
+                    override fun visitServerToolUse(serverToolUse: ServerToolUseBlock) {
+                        serverToolUse.validate()
+                    }
+
+                    override fun visitWebSearchToolResult(
+                        webSearchToolResult: WebSearchToolResultBlock
+                    ) {
+                        webSearchToolResult.validate()
                     }
 
                     override fun visitThinking(thinking: ThinkingBlock) {
@@ -365,6 +404,13 @@ private constructor(
 
                     override fun visitToolUse(toolUse: ToolUseBlock) = toolUse.validity()
 
+                    override fun visitServerToolUse(serverToolUse: ServerToolUseBlock) =
+                        serverToolUse.validity()
+
+                    override fun visitWebSearchToolResult(
+                        webSearchToolResult: WebSearchToolResultBlock
+                    ) = webSearchToolResult.validity()
+
                     override fun visitThinking(thinking: ThinkingBlock) = thinking.validity()
 
                     override fun visitRedactedThinking(redactedThinking: RedactedThinkingBlock) =
@@ -379,15 +425,18 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is ContentBlock && text == other.text && toolUse == other.toolUse && thinking == other.thinking && redactedThinking == other.redactedThinking /* spotless:on */
+            return /* spotless:off */ other is ContentBlock && text == other.text && toolUse == other.toolUse && serverToolUse == other.serverToolUse && webSearchToolResult == other.webSearchToolResult && thinking == other.thinking && redactedThinking == other.redactedThinking /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, toolUse, thinking, redactedThinking) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, toolUse, serverToolUse, webSearchToolResult, thinking, redactedThinking) /* spotless:on */
 
         override fun toString(): String =
             when {
                 text != null -> "ContentBlock{text=$text}"
                 toolUse != null -> "ContentBlock{toolUse=$toolUse}"
+                serverToolUse != null -> "ContentBlock{serverToolUse=$serverToolUse}"
+                webSearchToolResult != null ->
+                    "ContentBlock{webSearchToolResult=$webSearchToolResult}"
                 thinking != null -> "ContentBlock{thinking=$thinking}"
                 redactedThinking != null -> "ContentBlock{redactedThinking=$redactedThinking}"
                 _json != null -> "ContentBlock{_unknown=$_json}"
@@ -399,6 +448,14 @@ private constructor(
             @JvmStatic fun ofText(text: TextBlock) = ContentBlock(text = text)
 
             @JvmStatic fun ofToolUse(toolUse: ToolUseBlock) = ContentBlock(toolUse = toolUse)
+
+            @JvmStatic
+            fun ofServerToolUse(serverToolUse: ServerToolUseBlock) =
+                ContentBlock(serverToolUse = serverToolUse)
+
+            @JvmStatic
+            fun ofWebSearchToolResult(webSearchToolResult: WebSearchToolResultBlock) =
+                ContentBlock(webSearchToolResult = webSearchToolResult)
 
             @JvmStatic fun ofThinking(thinking: ThinkingBlock) = ContentBlock(thinking = thinking)
 
@@ -416,6 +473,10 @@ private constructor(
             fun visitText(text: TextBlock): T
 
             fun visitToolUse(toolUse: ToolUseBlock): T
+
+            fun visitServerToolUse(serverToolUse: ServerToolUseBlock): T
+
+            fun visitWebSearchToolResult(webSearchToolResult: WebSearchToolResultBlock): T
 
             fun visitThinking(thinking: ThinkingBlock): T
 
@@ -453,6 +514,16 @@ private constructor(
                             ContentBlock(toolUse = it, _json = json)
                         } ?: ContentBlock(_json = json)
                     }
+                    "server_tool_use" -> {
+                        return tryDeserialize(node, jacksonTypeRef<ServerToolUseBlock>())?.let {
+                            ContentBlock(serverToolUse = it, _json = json)
+                        } ?: ContentBlock(_json = json)
+                    }
+                    "web_search_tool_result" -> {
+                        return tryDeserialize(node, jacksonTypeRef<WebSearchToolResultBlock>())
+                            ?.let { ContentBlock(webSearchToolResult = it, _json = json) }
+                            ?: ContentBlock(_json = json)
+                    }
                     "thinking" -> {
                         return tryDeserialize(node, jacksonTypeRef<ThinkingBlock>())?.let {
                             ContentBlock(thinking = it, _json = json)
@@ -479,6 +550,9 @@ private constructor(
                 when {
                     value.text != null -> generator.writeObject(value.text)
                     value.toolUse != null -> generator.writeObject(value.toolUse)
+                    value.serverToolUse != null -> generator.writeObject(value.serverToolUse)
+                    value.webSearchToolResult != null ->
+                        generator.writeObject(value.webSearchToolResult)
                     value.thinking != null -> generator.writeObject(value.thinking)
                     value.redactedThinking != null -> generator.writeObject(value.redactedThinking)
                     value._json != null -> generator.writeObject(value._json)

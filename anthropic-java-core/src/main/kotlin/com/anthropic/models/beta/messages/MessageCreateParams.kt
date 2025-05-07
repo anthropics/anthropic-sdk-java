@@ -146,6 +146,8 @@ private constructor(
      * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the top-level
      * `system` parameter — there is no `"system"` role for input messages in the Messages API.
      *
+     * There is a limit of 100000 messages in a single request.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -592,6 +594,8 @@ private constructor(
          * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
          * top-level `system` parameter — there is no `"system"` role for input messages in the
          * Messages API.
+         *
+         * There is a limit of 100000 messages in a single request.
          */
         fun messages(messages: List<BetaMessageParam>) = apply { body.messages(messages) }
 
@@ -980,6 +984,14 @@ private constructor(
         }
 
         /**
+         * Alias for calling [addTool] with
+         * `BetaToolUnion.ofWebSearchTool20250305(webSearchTool20250305)`.
+         */
+        fun addTool(webSearchTool20250305: BetaWebSearchTool20250305) = apply {
+            body.addTool(webSearchTool20250305)
+        }
+
+        /**
          * Only sample from the top K options for each subsequent token.
          *
          * Used to remove "long tail" low probability responses.
@@ -1326,6 +1338,8 @@ private constructor(
          * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
          * top-level `system` parameter — there is no `"system"` role for input messages in the
          * Messages API.
+         *
+         * There is a limit of 100000 messages in a single request.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -1773,6 +1787,8 @@ private constructor(
              * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
              * top-level `system` parameter — there is no `"system"` role for input messages in the
              * Messages API.
+             *
+             * There is a limit of 100000 messages in a single request.
              */
             fun messages(messages: List<BetaMessageParam>) = messages(JsonField.of(messages))
 
@@ -2205,6 +2221,13 @@ private constructor(
              */
             fun addTool(textEditor20250124: BetaToolTextEditor20250124) =
                 addTool(BetaToolUnion.ofTextEditor20250124(textEditor20250124))
+
+            /**
+             * Alias for calling [addTool] with
+             * `BetaToolUnion.ofWebSearchTool20250305(webSearchTool20250305)`.
+             */
+            fun addTool(webSearchTool20250305: BetaWebSearchTool20250305) =
+                addTool(BetaToolUnion.ofWebSearchTool20250305(webSearchTool20250305))
 
             /**
              * Only sample from the top K options for each subsequent token.

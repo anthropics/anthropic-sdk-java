@@ -43,6 +43,7 @@ internal class ToolUnionTest {
                 .name("name")
                 .cacheControl(CacheControlEphemeral.builder().build())
                 .description("Get the current weather in a given location")
+                .type(Tool.Type.CUSTOM)
                 .build()
 
         val toolUnion = ToolUnion.ofTool(tool)
@@ -50,6 +51,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.tool()).contains(tool)
         assertThat(toolUnion.bash20250124()).isEmpty
         assertThat(toolUnion.textEditor20250124()).isEmpty
+        assertThat(toolUnion.webSearchTool20250305()).isEmpty
     }
 
     @Test
@@ -83,6 +85,7 @@ internal class ToolUnionTest {
                     .name("name")
                     .cacheControl(CacheControlEphemeral.builder().build())
                     .description("Get the current weather in a given location")
+                    .type(Tool.Type.CUSTOM)
                     .build()
             )
 
@@ -105,6 +108,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.tool()).isEmpty
         assertThat(toolUnion.bash20250124()).contains(bash20250124)
         assertThat(toolUnion.textEditor20250124()).isEmpty
+        assertThat(toolUnion.webSearchTool20250305()).isEmpty
     }
 
     @Test
@@ -138,6 +142,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.tool()).isEmpty
         assertThat(toolUnion.bash20250124()).isEmpty
         assertThat(toolUnion.textEditor20250124()).contains(textEditor20250124)
+        assertThat(toolUnion.webSearchTool20250305()).isEmpty
     }
 
     @Test
@@ -147,6 +152,62 @@ internal class ToolUnionTest {
             ToolUnion.ofTextEditor20250124(
                 ToolTextEditor20250124.builder()
                     .cacheControl(CacheControlEphemeral.builder().build())
+                    .build()
+            )
+
+        val roundtrippedToolUnion =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(toolUnion),
+                jacksonTypeRef<ToolUnion>(),
+            )
+
+        assertThat(roundtrippedToolUnion).isEqualTo(toolUnion)
+    }
+
+    @Test
+    fun ofWebSearchTool20250305() {
+        val webSearchTool20250305 =
+            WebSearchTool20250305.builder()
+                .addAllowedDomain("string")
+                .addBlockedDomain("string")
+                .cacheControl(CacheControlEphemeral.builder().build())
+                .maxUses(1L)
+                .userLocation(
+                    WebSearchTool20250305.UserLocation.builder()
+                        .city("New York")
+                        .country("US")
+                        .region("California")
+                        .timezone("America/New_York")
+                        .build()
+                )
+                .build()
+
+        val toolUnion = ToolUnion.ofWebSearchTool20250305(webSearchTool20250305)
+
+        assertThat(toolUnion.tool()).isEmpty
+        assertThat(toolUnion.bash20250124()).isEmpty
+        assertThat(toolUnion.textEditor20250124()).isEmpty
+        assertThat(toolUnion.webSearchTool20250305()).contains(webSearchTool20250305)
+    }
+
+    @Test
+    fun ofWebSearchTool20250305Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val toolUnion =
+            ToolUnion.ofWebSearchTool20250305(
+                WebSearchTool20250305.builder()
+                    .addAllowedDomain("string")
+                    .addBlockedDomain("string")
+                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .maxUses(1L)
+                    .userLocation(
+                        WebSearchTool20250305.UserLocation.builder()
+                            .city("New York")
+                            .country("US")
+                            .region("California")
+                            .timezone("America/New_York")
+                            .build()
+                    )
                     .build()
             )
 

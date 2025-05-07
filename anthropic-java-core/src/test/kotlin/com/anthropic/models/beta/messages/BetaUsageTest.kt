@@ -17,12 +17,15 @@ internal class BetaUsageTest {
                 .cacheReadInputTokens(2051L)
                 .inputTokens(2095L)
                 .outputTokens(503L)
+                .serverToolUse(BetaServerToolUsage.builder().webSearchRequests(0L).build())
                 .build()
 
         assertThat(betaUsage.cacheCreationInputTokens()).contains(2051L)
         assertThat(betaUsage.cacheReadInputTokens()).contains(2051L)
         assertThat(betaUsage.inputTokens()).isEqualTo(2095L)
         assertThat(betaUsage.outputTokens()).isEqualTo(503L)
+        assertThat(betaUsage.serverToolUse())
+            .contains(BetaServerToolUsage.builder().webSearchRequests(0L).build())
     }
 
     @Test
@@ -34,6 +37,7 @@ internal class BetaUsageTest {
                 .cacheReadInputTokens(2051L)
                 .inputTokens(2095L)
                 .outputTokens(503L)
+                .serverToolUse(BetaServerToolUsage.builder().webSearchRequests(0L).build())
                 .build()
 
         val roundtrippedBetaUsage =

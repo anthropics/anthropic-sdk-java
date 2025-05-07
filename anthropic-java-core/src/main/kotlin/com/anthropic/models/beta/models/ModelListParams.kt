@@ -5,6 +5,8 @@ package com.anthropic.models.beta.models
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.toImmutable
+import com.anthropic.models.beta.AnthropicBeta
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -20,6 +22,7 @@ private constructor(
     private val afterId: String?,
     private val beforeId: String?,
     private val limit: Long?,
+    private val betas: List<AnthropicBeta>?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -43,6 +46,9 @@ private constructor(
      */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
+    /** Optional header to specify the beta version(s) you want to use. */
+    fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
     fun _additionalHeaders(): Headers = additionalHeaders
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
@@ -63,6 +69,7 @@ private constructor(
         private var afterId: String? = null
         private var beforeId: String? = null
         private var limit: Long? = null
+        private var betas: MutableList<AnthropicBeta>? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -71,6 +78,7 @@ private constructor(
             afterId = modelListParams.afterId
             beforeId = modelListParams.beforeId
             limit = modelListParams.limit
+            betas = modelListParams.betas?.toMutableList()
             additionalHeaders = modelListParams.additionalHeaders.toBuilder()
             additionalQueryParams = modelListParams.additionalQueryParams.toBuilder()
         }
@@ -109,6 +117,30 @@ private constructor(
 
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
+
+        /** Optional header to specify the beta version(s) you want to use. */
+        fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
+
+        /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */
+        fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.getOrNull())
+
+        /**
+         * Adds a single [AnthropicBeta] to [betas].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addBeta(beta: AnthropicBeta) = apply {
+            betas = (betas ?: mutableListOf()).apply { add(beta) }
+        }
+
+        /**
+         * Sets [addBeta] to an arbitrary [String].
+         *
+         * You should usually call [addBeta] with a well-typed [AnthropicBeta] constant instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -218,12 +250,19 @@ private constructor(
                 afterId,
                 beforeId,
                 limit,
+                betas?.toImmutable(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
     }
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                betas?.forEach { put("anthropic-beta", it.toString()) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
@@ -240,11 +279,11 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ModelListParams && afterId == other.afterId && beforeId == other.beforeId && limit == other.limit && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
+        return /* spotless:off */ other is ModelListParams && afterId == other.afterId && beforeId == other.beforeId && limit == other.limit && betas == other.betas && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(afterId, beforeId, limit, additionalHeaders, additionalQueryParams) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(afterId, beforeId, limit, betas, additionalHeaders, additionalQueryParams) /* spotless:on */
 
     override fun toString() =
-        "ModelListParams{afterId=$afterId, beforeId=$beforeId, limit=$limit, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ModelListParams{afterId=$afterId, beforeId=$beforeId, limit=$limit, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -25,6 +25,7 @@ private constructor(
     private val citationCharLocation: CitationCharLocationParam? = null,
     private val citationPageLocation: CitationPageLocationParam? = null,
     private val citationContentBlockLocation: CitationContentBlockLocationParam? = null,
+    private val citationWebSearchResultLocation: CitationWebSearchResultLocationParam? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -37,11 +38,16 @@ private constructor(
     fun citationContentBlockLocation(): Optional<CitationContentBlockLocationParam> =
         Optional.ofNullable(citationContentBlockLocation)
 
+    fun citationWebSearchResultLocation(): Optional<CitationWebSearchResultLocationParam> =
+        Optional.ofNullable(citationWebSearchResultLocation)
+
     fun isCitationCharLocation(): Boolean = citationCharLocation != null
 
     fun isCitationPageLocation(): Boolean = citationPageLocation != null
 
     fun isCitationContentBlockLocation(): Boolean = citationContentBlockLocation != null
+
+    fun isCitationWebSearchResultLocation(): Boolean = citationWebSearchResultLocation != null
 
     fun asCitationCharLocation(): CitationCharLocationParam =
         citationCharLocation.getOrThrow("citationCharLocation")
@@ -52,6 +58,9 @@ private constructor(
     fun asCitationContentBlockLocation(): CitationContentBlockLocationParam =
         citationContentBlockLocation.getOrThrow("citationContentBlockLocation")
 
+    fun asCitationWebSearchResultLocation(): CitationWebSearchResultLocationParam =
+        citationWebSearchResultLocation.getOrThrow("citationWebSearchResultLocation")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
@@ -60,6 +69,8 @@ private constructor(
             citationPageLocation != null -> visitor.visitCitationPageLocation(citationPageLocation)
             citationContentBlockLocation != null ->
                 visitor.visitCitationContentBlockLocation(citationContentBlockLocation)
+            citationWebSearchResultLocation != null ->
+                visitor.visitCitationWebSearchResultLocation(citationWebSearchResultLocation)
             else -> visitor.unknown(_json)
         }
 
@@ -88,6 +99,12 @@ private constructor(
                     citationContentBlockLocation: CitationContentBlockLocationParam
                 ) {
                     citationContentBlockLocation.validate()
+                }
+
+                override fun visitCitationWebSearchResultLocation(
+                    citationWebSearchResultLocation: CitationWebSearchResultLocationParam
+                ) {
+                    citationWebSearchResultLocation.validate()
                 }
             }
         )
@@ -123,6 +140,10 @@ private constructor(
                     citationContentBlockLocation: CitationContentBlockLocationParam
                 ) = citationContentBlockLocation.validity()
 
+                override fun visitCitationWebSearchResultLocation(
+                    citationWebSearchResultLocation: CitationWebSearchResultLocationParam
+                ) = citationWebSearchResultLocation.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -132,10 +153,10 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is TextCitationParam && citationCharLocation == other.citationCharLocation && citationPageLocation == other.citationPageLocation && citationContentBlockLocation == other.citationContentBlockLocation /* spotless:on */
+        return /* spotless:off */ other is TextCitationParam && citationCharLocation == other.citationCharLocation && citationPageLocation == other.citationPageLocation && citationContentBlockLocation == other.citationContentBlockLocation && citationWebSearchResultLocation == other.citationWebSearchResultLocation /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(citationCharLocation, citationPageLocation, citationContentBlockLocation) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(citationCharLocation, citationPageLocation, citationContentBlockLocation, citationWebSearchResultLocation) /* spotless:on */
 
     override fun toString(): String =
         when {
@@ -145,6 +166,8 @@ private constructor(
                 "TextCitationParam{citationPageLocation=$citationPageLocation}"
             citationContentBlockLocation != null ->
                 "TextCitationParam{citationContentBlockLocation=$citationContentBlockLocation}"
+            citationWebSearchResultLocation != null ->
+                "TextCitationParam{citationWebSearchResultLocation=$citationWebSearchResultLocation}"
             _json != null -> "TextCitationParam{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid TextCitationParam")
         }
@@ -163,6 +186,11 @@ private constructor(
         fun ofCitationContentBlockLocation(
             citationContentBlockLocation: CitationContentBlockLocationParam
         ) = TextCitationParam(citationContentBlockLocation = citationContentBlockLocation)
+
+        @JvmStatic
+        fun ofCitationWebSearchResultLocation(
+            citationWebSearchResultLocation: CitationWebSearchResultLocationParam
+        ) = TextCitationParam(citationWebSearchResultLocation = citationWebSearchResultLocation)
     }
 
     /**
@@ -177,6 +205,10 @@ private constructor(
 
         fun visitCitationContentBlockLocation(
             citationContentBlockLocation: CitationContentBlockLocationParam
+        ): T
+
+        fun visitCitationWebSearchResultLocation(
+            citationWebSearchResultLocation: CitationWebSearchResultLocationParam
         ): T
 
         /**
@@ -216,6 +248,15 @@ private constructor(
                         ?.let { TextCitationParam(citationContentBlockLocation = it, _json = json) }
                         ?: TextCitationParam(_json = json)
                 }
+                "web_search_result_location" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<CitationWebSearchResultLocationParam>(),
+                        )
+                        ?.let {
+                            TextCitationParam(citationWebSearchResultLocation = it, _json = json)
+                        } ?: TextCitationParam(_json = json)
+                }
             }
 
             return TextCitationParam(_json = json)
@@ -236,6 +277,8 @@ private constructor(
                     generator.writeObject(value.citationPageLocation)
                 value.citationContentBlockLocation != null ->
                     generator.writeObject(value.citationContentBlockLocation)
+                value.citationWebSearchResultLocation != null ->
+                    generator.writeObject(value.citationWebSearchResultLocation)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid TextCitationParam")
             }

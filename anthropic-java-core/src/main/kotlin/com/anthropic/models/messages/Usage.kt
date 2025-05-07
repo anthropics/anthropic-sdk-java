@@ -23,6 +23,7 @@ private constructor(
     private val cacheReadInputTokens: JsonField<Long>,
     private val inputTokens: JsonField<Long>,
     private val outputTokens: JsonField<Long>,
+    private val serverToolUse: JsonField<ServerToolUsage>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -40,11 +41,15 @@ private constructor(
         @JsonProperty("output_tokens")
         @ExcludeMissing
         outputTokens: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("server_tool_use")
+        @ExcludeMissing
+        serverToolUse: JsonField<ServerToolUsage> = JsonMissing.of(),
     ) : this(
         cacheCreationInputTokens,
         cacheReadInputTokens,
         inputTokens,
         outputTokens,
+        serverToolUse,
         mutableMapOf(),
     )
 
@@ -83,6 +88,14 @@ private constructor(
     fun outputTokens(): Long = outputTokens.getRequired("output_tokens")
 
     /**
+     * The number of server tool requests.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun serverToolUse(): Optional<ServerToolUsage> = serverToolUse.getOptional("server_tool_use")
+
+    /**
      * Returns the raw JSON value of [cacheCreationInputTokens].
      *
      * Unlike [cacheCreationInputTokens], this method doesn't throw if the JSON field has an
@@ -118,6 +131,15 @@ private constructor(
     @ExcludeMissing
     fun _outputTokens(): JsonField<Long> = outputTokens
 
+    /**
+     * Returns the raw JSON value of [serverToolUse].
+     *
+     * Unlike [serverToolUse], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("server_tool_use")
+    @ExcludeMissing
+    fun _serverToolUse(): JsonField<ServerToolUsage> = serverToolUse
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -141,6 +163,7 @@ private constructor(
          * .cacheReadInputTokens()
          * .inputTokens()
          * .outputTokens()
+         * .serverToolUse()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -153,6 +176,7 @@ private constructor(
         private var cacheReadInputTokens: JsonField<Long>? = null
         private var inputTokens: JsonField<Long>? = null
         private var outputTokens: JsonField<Long>? = null
+        private var serverToolUse: JsonField<ServerToolUsage>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -161,6 +185,7 @@ private constructor(
             cacheReadInputTokens = usage.cacheReadInputTokens
             inputTokens = usage.inputTokens
             outputTokens = usage.outputTokens
+            serverToolUse = usage.serverToolUse
             additionalProperties = usage.additionalProperties.toMutableMap()
         }
 
@@ -248,6 +273,25 @@ private constructor(
          */
         fun outputTokens(outputTokens: JsonField<Long>) = apply { this.outputTokens = outputTokens }
 
+        /** The number of server tool requests. */
+        fun serverToolUse(serverToolUse: ServerToolUsage?) =
+            serverToolUse(JsonField.ofNullable(serverToolUse))
+
+        /** Alias for calling [Builder.serverToolUse] with `serverToolUse.orElse(null)`. */
+        fun serverToolUse(serverToolUse: Optional<ServerToolUsage>) =
+            serverToolUse(serverToolUse.getOrNull())
+
+        /**
+         * Sets [Builder.serverToolUse] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.serverToolUse] with a well-typed [ServerToolUsage] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun serverToolUse(serverToolUse: JsonField<ServerToolUsage>) = apply {
+            this.serverToolUse = serverToolUse
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -278,6 +322,7 @@ private constructor(
          * .cacheReadInputTokens()
          * .inputTokens()
          * .outputTokens()
+         * .serverToolUse()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -288,6 +333,7 @@ private constructor(
                 checkRequired("cacheReadInputTokens", cacheReadInputTokens),
                 checkRequired("inputTokens", inputTokens),
                 checkRequired("outputTokens", outputTokens),
+                checkRequired("serverToolUse", serverToolUse),
                 additionalProperties.toMutableMap(),
             )
     }
@@ -303,6 +349,7 @@ private constructor(
         cacheReadInputTokens()
         inputTokens()
         outputTokens()
+        serverToolUse().ifPresent { it.validate() }
         validated = true
     }
 
@@ -324,22 +371,23 @@ private constructor(
         (if (cacheCreationInputTokens.asKnown().isPresent) 1 else 0) +
             (if (cacheReadInputTokens.asKnown().isPresent) 1 else 0) +
             (if (inputTokens.asKnown().isPresent) 1 else 0) +
-            (if (outputTokens.asKnown().isPresent) 1 else 0)
+            (if (outputTokens.asKnown().isPresent) 1 else 0) +
+            (serverToolUse.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return /* spotless:off */ other is Usage && cacheCreationInputTokens == other.cacheCreationInputTokens && cacheReadInputTokens == other.cacheReadInputTokens && inputTokens == other.inputTokens && outputTokens == other.outputTokens && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is Usage && cacheCreationInputTokens == other.cacheCreationInputTokens && cacheReadInputTokens == other.cacheReadInputTokens && inputTokens == other.inputTokens && outputTokens == other.outputTokens && serverToolUse == other.serverToolUse && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(cacheCreationInputTokens, cacheReadInputTokens, inputTokens, outputTokens, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(cacheCreationInputTokens, cacheReadInputTokens, inputTokens, outputTokens, serverToolUse, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Usage{cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inputTokens=$inputTokens, outputTokens=$outputTokens, additionalProperties=$additionalProperties}"
+        "Usage{cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inputTokens=$inputTokens, outputTokens=$outputTokens, serverToolUse=$serverToolUse, additionalProperties=$additionalProperties}"
 }

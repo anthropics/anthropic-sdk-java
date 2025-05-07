@@ -28,6 +28,10 @@ class StopReason @JsonCreator private constructor(private val value: JsonField<S
 
         @JvmField val TOOL_USE = of("tool_use")
 
+        @JvmField val PAUSE_TURN = of("pause_turn")
+
+        @JvmField val REFUSAL = of("refusal")
+
         @JvmStatic fun of(value: String) = StopReason(JsonField.of(value))
     }
 
@@ -37,6 +41,8 @@ class StopReason @JsonCreator private constructor(private val value: JsonField<S
         MAX_TOKENS,
         STOP_SEQUENCE,
         TOOL_USE,
+        PAUSE_TURN,
+        REFUSAL,
     }
 
     /**
@@ -53,6 +59,8 @@ class StopReason @JsonCreator private constructor(private val value: JsonField<S
         MAX_TOKENS,
         STOP_SEQUENCE,
         TOOL_USE,
+        PAUSE_TURN,
+        REFUSAL,
         /** An enum member indicating that [StopReason] was instantiated with an unknown value. */
         _UNKNOWN,
     }
@@ -70,6 +78,8 @@ class StopReason @JsonCreator private constructor(private val value: JsonField<S
             MAX_TOKENS -> Value.MAX_TOKENS
             STOP_SEQUENCE -> Value.STOP_SEQUENCE
             TOOL_USE -> Value.TOOL_USE
+            PAUSE_TURN -> Value.PAUSE_TURN
+            REFUSAL -> Value.REFUSAL
             else -> Value._UNKNOWN
         }
 
@@ -87,6 +97,8 @@ class StopReason @JsonCreator private constructor(private val value: JsonField<S
             MAX_TOKENS -> Known.MAX_TOKENS
             STOP_SEQUENCE -> Known.STOP_SEQUENCE
             TOOL_USE -> Known.TOOL_USE
+            PAUSE_TURN -> Known.PAUSE_TURN
+            REFUSAL -> Known.REFUSAL
             else -> throw AnthropicInvalidDataException("Unknown StopReason: $value")
         }
 

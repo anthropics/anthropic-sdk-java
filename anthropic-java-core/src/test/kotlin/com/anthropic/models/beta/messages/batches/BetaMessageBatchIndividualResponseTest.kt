@@ -5,6 +5,7 @@ package com.anthropic.models.beta.messages.batches
 import com.anthropic.core.jsonMapper
 import com.anthropic.models.beta.messages.BetaCitationCharLocation
 import com.anthropic.models.beta.messages.BetaMessage
+import com.anthropic.models.beta.messages.BetaServerToolUsage
 import com.anthropic.models.beta.messages.BetaStopReason
 import com.anthropic.models.beta.messages.BetaTextBlock
 import com.anthropic.models.beta.messages.BetaUsage
@@ -46,6 +47,9 @@ internal class BetaMessageBatchIndividualResponseTest {
                                 .cacheReadInputTokens(2051L)
                                 .inputTokens(2095L)
                                 .outputTokens(503L)
+                                .serverToolUse(
+                                    BetaServerToolUsage.builder().webSearchRequests(0L).build()
+                                )
                                 .build()
                         )
                         .build()
@@ -83,6 +87,11 @@ internal class BetaMessageBatchIndividualResponseTest {
                                         .cacheReadInputTokens(2051L)
                                         .inputTokens(2095L)
                                         .outputTokens(503L)
+                                        .serverToolUse(
+                                            BetaServerToolUsage.builder()
+                                                .webSearchRequests(0L)
+                                                .build()
+                                        )
                                         .build()
                                 )
                                 .build()
@@ -124,6 +133,9 @@ internal class BetaMessageBatchIndividualResponseTest {
                                 .cacheReadInputTokens(2051L)
                                 .inputTokens(2095L)
                                 .outputTokens(503L)
+                                .serverToolUse(
+                                    BetaServerToolUsage.builder().webSearchRequests(0L).build()
+                                )
                                 .build()
                         )
                         .build()

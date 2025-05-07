@@ -43,6 +43,7 @@ internal class MessageCountTokensToolTest {
                 .name("name")
                 .cacheControl(CacheControlEphemeral.builder().build())
                 .description("Get the current weather in a given location")
+                .type(Tool.Type.CUSTOM)
                 .build()
 
         val messageCountTokensTool = MessageCountTokensTool.ofTool(tool)
@@ -50,6 +51,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.tool()).contains(tool)
         assertThat(messageCountTokensTool.toolBash20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20250305()).isEmpty
     }
 
     @Test
@@ -83,6 +85,7 @@ internal class MessageCountTokensToolTest {
                     .name("name")
                     .cacheControl(CacheControlEphemeral.builder().build())
                     .description("Get the current weather in a given location")
+                    .type(Tool.Type.CUSTOM)
                     .build()
             )
 
@@ -105,6 +108,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.tool()).isEmpty
         assertThat(messageCountTokensTool.toolBash20250124()).contains(toolBash20250124)
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20250305()).isEmpty
     }
 
     @Test
@@ -139,6 +143,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.tool()).isEmpty
         assertThat(messageCountTokensTool.toolBash20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).contains(toolTextEditor20250124)
+        assertThat(messageCountTokensTool.webSearchTool20250305()).isEmpty
     }
 
     @Test
@@ -148,6 +153,63 @@ internal class MessageCountTokensToolTest {
             MessageCountTokensTool.ofToolTextEditor20250124(
                 ToolTextEditor20250124.builder()
                     .cacheControl(CacheControlEphemeral.builder().build())
+                    .build()
+            )
+
+        val roundtrippedMessageCountTokensTool =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(messageCountTokensTool),
+                jacksonTypeRef<MessageCountTokensTool>(),
+            )
+
+        assertThat(roundtrippedMessageCountTokensTool).isEqualTo(messageCountTokensTool)
+    }
+
+    @Test
+    fun ofWebSearchTool20250305() {
+        val webSearchTool20250305 =
+            WebSearchTool20250305.builder()
+                .addAllowedDomain("string")
+                .addBlockedDomain("string")
+                .cacheControl(CacheControlEphemeral.builder().build())
+                .maxUses(1L)
+                .userLocation(
+                    WebSearchTool20250305.UserLocation.builder()
+                        .city("New York")
+                        .country("US")
+                        .region("California")
+                        .timezone("America/New_York")
+                        .build()
+                )
+                .build()
+
+        val messageCountTokensTool =
+            MessageCountTokensTool.ofWebSearchTool20250305(webSearchTool20250305)
+
+        assertThat(messageCountTokensTool.tool()).isEmpty
+        assertThat(messageCountTokensTool.toolBash20250124()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20250305()).contains(webSearchTool20250305)
+    }
+
+    @Test
+    fun ofWebSearchTool20250305Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val messageCountTokensTool =
+            MessageCountTokensTool.ofWebSearchTool20250305(
+                WebSearchTool20250305.builder()
+                    .addAllowedDomain("string")
+                    .addBlockedDomain("string")
+                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .maxUses(1L)
+                    .userLocation(
+                        WebSearchTool20250305.UserLocation.builder()
+                            .city("New York")
+                            .country("US")
+                            .region("California")
+                            .timezone("America/New_York")
+                            .build()
+                    )
                     .build()
             )
 

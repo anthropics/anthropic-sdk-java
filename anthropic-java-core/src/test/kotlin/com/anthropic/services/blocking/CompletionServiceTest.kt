@@ -4,6 +4,7 @@ package com.anthropic.services.blocking
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
+import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.completions.CompletionCreateParams
 import com.anthropic.models.messages.Metadata
 import com.anthropic.models.messages.Model
@@ -25,6 +26,7 @@ internal class CompletionServiceTest {
         val completion =
             completionService.create(
                 CompletionCreateParams.builder()
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .maxTokensToSample(256L)
                     .model(Model.CLAUDE_3_7_SONNET_LATEST)
                     .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
@@ -53,6 +55,7 @@ internal class CompletionServiceTest {
         val completionStreamResponse =
             completionService.createStreaming(
                 CompletionCreateParams.builder()
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .maxTokensToSample(256L)
                     .model(Model.CLAUDE_3_7_SONNET_LATEST)
                     .prompt("\n\nHuman: Hello, world!\n\nAssistant:")

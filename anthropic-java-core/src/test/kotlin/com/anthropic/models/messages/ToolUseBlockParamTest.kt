@@ -16,13 +16,13 @@ internal class ToolUseBlockParamTest {
             ToolUseBlockParam.builder()
                 .id("id")
                 .input(JsonValue.from(mapOf<String, Any>()))
-                .name("name")
+                .name("x")
                 .cacheControl(CacheControlEphemeral.builder().build())
                 .build()
 
         assertThat(toolUseBlockParam.id()).isEqualTo("id")
         assertThat(toolUseBlockParam._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
-        assertThat(toolUseBlockParam.name()).isEqualTo("name")
+        assertThat(toolUseBlockParam.name()).isEqualTo("x")
         assertThat(toolUseBlockParam.cacheControl())
             .contains(CacheControlEphemeral.builder().build())
     }
@@ -34,7 +34,7 @@ internal class ToolUseBlockParamTest {
             ToolUseBlockParam.builder()
                 .id("id")
                 .input(JsonValue.from(mapOf<String, Any>()))
-                .name("name")
+                .name("x")
                 .cacheControl(CacheControlEphemeral.builder().build())
                 .build()
 

@@ -34,6 +34,8 @@ internal class BetaContentBlockTest {
 
         assertThat(betaContentBlock.text()).contains(text)
         assertThat(betaContentBlock.toolUse()).isEmpty
+        assertThat(betaContentBlock.serverToolUse()).isEmpty
+        assertThat(betaContentBlock.webSearchToolResult()).isEmpty
         assertThat(betaContentBlock.thinking()).isEmpty
         assertThat(betaContentBlock.redactedThinking()).isEmpty
     }
@@ -79,6 +81,8 @@ internal class BetaContentBlockTest {
 
         assertThat(betaContentBlock.text()).isEmpty
         assertThat(betaContentBlock.toolUse()).contains(toolUse)
+        assertThat(betaContentBlock.serverToolUse()).isEmpty
+        assertThat(betaContentBlock.webSearchToolResult()).isEmpty
         assertThat(betaContentBlock.thinking()).isEmpty
         assertThat(betaContentBlock.redactedThinking()).isEmpty
     }
@@ -105,6 +109,90 @@ internal class BetaContentBlockTest {
     }
 
     @Test
+    fun ofServerToolUse() {
+        val serverToolUse =
+            BetaServerToolUseBlock.builder()
+                .id("srvtoolu_SQfNkl1n_JR_")
+                .input(JsonValue.from(mapOf<String, Any>()))
+                .build()
+
+        val betaContentBlock = BetaContentBlock.ofServerToolUse(serverToolUse)
+
+        assertThat(betaContentBlock.text()).isEmpty
+        assertThat(betaContentBlock.toolUse()).isEmpty
+        assertThat(betaContentBlock.serverToolUse()).contains(serverToolUse)
+        assertThat(betaContentBlock.webSearchToolResult()).isEmpty
+        assertThat(betaContentBlock.thinking()).isEmpty
+        assertThat(betaContentBlock.redactedThinking()).isEmpty
+    }
+
+    @Test
+    fun ofServerToolUseRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaContentBlock =
+            BetaContentBlock.ofServerToolUse(
+                BetaServerToolUseBlock.builder()
+                    .id("srvtoolu_SQfNkl1n_JR_")
+                    .input(JsonValue.from(mapOf<String, Any>()))
+                    .build()
+            )
+
+        val roundtrippedBetaContentBlock =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaContentBlock),
+                jacksonTypeRef<BetaContentBlock>(),
+            )
+
+        assertThat(roundtrippedBetaContentBlock).isEqualTo(betaContentBlock)
+    }
+
+    @Test
+    fun ofWebSearchToolResult() {
+        val webSearchToolResult =
+            BetaWebSearchToolResultBlock.builder()
+                .content(
+                    BetaWebSearchToolResultError.builder()
+                        .errorCode(BetaWebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                        .build()
+                )
+                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .build()
+
+        val betaContentBlock = BetaContentBlock.ofWebSearchToolResult(webSearchToolResult)
+
+        assertThat(betaContentBlock.text()).isEmpty
+        assertThat(betaContentBlock.toolUse()).isEmpty
+        assertThat(betaContentBlock.serverToolUse()).isEmpty
+        assertThat(betaContentBlock.webSearchToolResult()).contains(webSearchToolResult)
+        assertThat(betaContentBlock.thinking()).isEmpty
+        assertThat(betaContentBlock.redactedThinking()).isEmpty
+    }
+
+    @Test
+    fun ofWebSearchToolResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaContentBlock =
+            BetaContentBlock.ofWebSearchToolResult(
+                BetaWebSearchToolResultBlock.builder()
+                    .content(
+                        BetaWebSearchToolResultError.builder()
+                            .errorCode(BetaWebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                            .build()
+                    )
+                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .build()
+            )
+
+        val roundtrippedBetaContentBlock =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaContentBlock),
+                jacksonTypeRef<BetaContentBlock>(),
+            )
+
+        assertThat(roundtrippedBetaContentBlock).isEqualTo(betaContentBlock)
+    }
+
+    @Test
     fun ofThinking() {
         val thinking =
             BetaThinkingBlock.builder().signature("signature").thinking("thinking").build()
@@ -113,6 +201,8 @@ internal class BetaContentBlockTest {
 
         assertThat(betaContentBlock.text()).isEmpty
         assertThat(betaContentBlock.toolUse()).isEmpty
+        assertThat(betaContentBlock.serverToolUse()).isEmpty
+        assertThat(betaContentBlock.webSearchToolResult()).isEmpty
         assertThat(betaContentBlock.thinking()).contains(thinking)
         assertThat(betaContentBlock.redactedThinking()).isEmpty
     }
@@ -142,6 +232,8 @@ internal class BetaContentBlockTest {
 
         assertThat(betaContentBlock.text()).isEmpty
         assertThat(betaContentBlock.toolUse()).isEmpty
+        assertThat(betaContentBlock.serverToolUse()).isEmpty
+        assertThat(betaContentBlock.webSearchToolResult()).isEmpty
         assertThat(betaContentBlock.thinking()).isEmpty
         assertThat(betaContentBlock.redactedThinking()).contains(redactedThinking)
     }

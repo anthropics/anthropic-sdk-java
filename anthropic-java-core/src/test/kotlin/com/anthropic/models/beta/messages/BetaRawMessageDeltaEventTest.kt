@@ -19,7 +19,15 @@ internal class BetaRawMessageDeltaEventTest {
                         .stopSequence("stop_sequence")
                         .build()
                 )
-                .usage(BetaMessageDeltaUsage.builder().outputTokens(503L).build())
+                .usage(
+                    BetaMessageDeltaUsage.builder()
+                        .cacheCreationInputTokens(2051L)
+                        .cacheReadInputTokens(2051L)
+                        .inputTokens(2095L)
+                        .outputTokens(503L)
+                        .serverToolUse(BetaServerToolUsage.builder().webSearchRequests(0L).build())
+                        .build()
+                )
                 .build()
 
         assertThat(betaRawMessageDeltaEvent.delta())
@@ -30,7 +38,15 @@ internal class BetaRawMessageDeltaEventTest {
                     .build()
             )
         assertThat(betaRawMessageDeltaEvent.usage())
-            .isEqualTo(BetaMessageDeltaUsage.builder().outputTokens(503L).build())
+            .isEqualTo(
+                BetaMessageDeltaUsage.builder()
+                    .cacheCreationInputTokens(2051L)
+                    .cacheReadInputTokens(2051L)
+                    .inputTokens(2095L)
+                    .outputTokens(503L)
+                    .serverToolUse(BetaServerToolUsage.builder().webSearchRequests(0L).build())
+                    .build()
+            )
     }
 
     @Test
@@ -44,7 +60,15 @@ internal class BetaRawMessageDeltaEventTest {
                         .stopSequence("stop_sequence")
                         .build()
                 )
-                .usage(BetaMessageDeltaUsage.builder().outputTokens(503L).build())
+                .usage(
+                    BetaMessageDeltaUsage.builder()
+                        .cacheCreationInputTokens(2051L)
+                        .cacheReadInputTokens(2051L)
+                        .inputTokens(2095L)
+                        .outputTokens(503L)
+                        .serverToolUse(BetaServerToolUsage.builder().webSearchRequests(0L).build())
+                        .build()
+                )
                 .build()
 
         val roundtrippedBetaRawMessageDeltaEvent =

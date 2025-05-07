@@ -56,7 +56,7 @@ private constructor(
     /**
      * Name of the tool.
      *
-     * This is how the tool will be called by the model and in tool_use blocks.
+     * This is how the tool will be called by the model and in `tool_use` blocks.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -64,6 +64,8 @@ private constructor(
     fun name(): String = name.getRequired("name")
 
     /**
+     * Create a cache control breakpoint at this content block.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -195,7 +197,7 @@ private constructor(
         /**
          * Name of the tool.
          *
-         * This is how the tool will be called by the model and in tool_use blocks.
+         * This is how the tool will be called by the model and in `tool_use` blocks.
          */
         fun name(name: String) = name(JsonField.of(name))
 
@@ -207,6 +209,7 @@ private constructor(
          */
         fun name(name: JsonField<String>) = apply { this.name = name }
 
+        /** Create a cache control breakpoint at this content block. */
         fun cacheControl(cacheControl: BetaCacheControlEphemeral?) =
             cacheControl(JsonField.ofNullable(cacheControl))
 

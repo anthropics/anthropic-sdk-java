@@ -55,6 +55,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
     }
 
     @Test
@@ -120,6 +121,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
     }
 
     @Test
@@ -160,6 +162,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
     }
 
     @Test
@@ -197,6 +200,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
     }
 
     @Test
@@ -237,6 +241,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.computerUse20250124()).contains(computerUse20250124)
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
     }
 
     @Test
@@ -277,6 +282,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.bash20250124()).contains(bash20250124)
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
     }
 
     @Test
@@ -314,6 +320,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).contains(textEditor20250124)
+        assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
     }
 
     @Test
@@ -323,6 +330,66 @@ internal class BetaToolUnionTest {
             BetaToolUnion.ofTextEditor20250124(
                 BetaToolTextEditor20250124.builder()
                     .cacheControl(BetaCacheControlEphemeral.builder().build())
+                    .build()
+            )
+
+        val roundtrippedBetaToolUnion =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaToolUnion),
+                jacksonTypeRef<BetaToolUnion>(),
+            )
+
+        assertThat(roundtrippedBetaToolUnion).isEqualTo(betaToolUnion)
+    }
+
+    @Test
+    fun ofWebSearchTool20250305() {
+        val webSearchTool20250305 =
+            BetaWebSearchTool20250305.builder()
+                .addAllowedDomain("string")
+                .addBlockedDomain("string")
+                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .maxUses(1L)
+                .userLocation(
+                    BetaWebSearchTool20250305.UserLocation.builder()
+                        .city("New York")
+                        .country("US")
+                        .region("California")
+                        .timezone("America/New_York")
+                        .build()
+                )
+                .build()
+
+        val betaToolUnion = BetaToolUnion.ofWebSearchTool20250305(webSearchTool20250305)
+
+        assertThat(betaToolUnion.betaTool()).isEmpty
+        assertThat(betaToolUnion.computerUse20241022()).isEmpty
+        assertThat(betaToolUnion.bash20241022()).isEmpty
+        assertThat(betaToolUnion.textEditor20241022()).isEmpty
+        assertThat(betaToolUnion.computerUse20250124()).isEmpty
+        assertThat(betaToolUnion.bash20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20250124()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20250305()).contains(webSearchTool20250305)
+    }
+
+    @Test
+    fun ofWebSearchTool20250305Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaToolUnion =
+            BetaToolUnion.ofWebSearchTool20250305(
+                BetaWebSearchTool20250305.builder()
+                    .addAllowedDomain("string")
+                    .addBlockedDomain("string")
+                    .cacheControl(BetaCacheControlEphemeral.builder().build())
+                    .maxUses(1L)
+                    .userLocation(
+                        BetaWebSearchTool20250305.UserLocation.builder()
+                            .city("New York")
+                            .country("US")
+                            .region("California")
+                            .timezone("America/New_York")
+                            .build()
+                    )
                     .build()
             )
 

@@ -19,7 +19,15 @@ internal class RawMessageDeltaEventTest {
                         .stopSequence("stop_sequence")
                         .build()
                 )
-                .usage(MessageDeltaUsage.builder().outputTokens(503L).build())
+                .usage(
+                    MessageDeltaUsage.builder()
+                        .cacheCreationInputTokens(2051L)
+                        .cacheReadInputTokens(2051L)
+                        .inputTokens(2095L)
+                        .outputTokens(503L)
+                        .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                        .build()
+                )
                 .build()
 
         assertThat(rawMessageDeltaEvent.delta())
@@ -30,7 +38,15 @@ internal class RawMessageDeltaEventTest {
                     .build()
             )
         assertThat(rawMessageDeltaEvent.usage())
-            .isEqualTo(MessageDeltaUsage.builder().outputTokens(503L).build())
+            .isEqualTo(
+                MessageDeltaUsage.builder()
+                    .cacheCreationInputTokens(2051L)
+                    .cacheReadInputTokens(2051L)
+                    .inputTokens(2095L)
+                    .outputTokens(503L)
+                    .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                    .build()
+            )
     }
 
     @Test
@@ -44,7 +60,15 @@ internal class RawMessageDeltaEventTest {
                         .stopSequence("stop_sequence")
                         .build()
                 )
-                .usage(MessageDeltaUsage.builder().outputTokens(503L).build())
+                .usage(
+                    MessageDeltaUsage.builder()
+                        .cacheCreationInputTokens(2051L)
+                        .cacheReadInputTokens(2051L)
+                        .inputTokens(2095L)
+                        .outputTokens(503L)
+                        .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                        .build()
+                )
                 .build()
 
         val roundtrippedRawMessageDeltaEvent =

@@ -1,0 +1,48 @@
+// File generated from our OpenAPI spec by Stainless.
+
+package com.anthropic.models.beta.messages
+
+import com.anthropic.core.jsonMapper
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+
+internal class BetaWebSearchResultBlockParamTest {
+
+    @Test
+    fun create() {
+        val betaWebSearchResultBlockParam =
+            BetaWebSearchResultBlockParam.builder()
+                .encryptedContent("encrypted_content")
+                .title("x")
+                .url("x")
+                .pageAge("page_age")
+                .build()
+
+        assertThat(betaWebSearchResultBlockParam.encryptedContent()).isEqualTo("encrypted_content")
+        assertThat(betaWebSearchResultBlockParam.title()).isEqualTo("x")
+        assertThat(betaWebSearchResultBlockParam.url()).isEqualTo("x")
+        assertThat(betaWebSearchResultBlockParam.pageAge()).contains("page_age")
+    }
+
+    @Test
+    fun roundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaWebSearchResultBlockParam =
+            BetaWebSearchResultBlockParam.builder()
+                .encryptedContent("encrypted_content")
+                .title("x")
+                .url("x")
+                .pageAge("page_age")
+                .build()
+
+        val roundtrippedBetaWebSearchResultBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaWebSearchResultBlockParam),
+                jacksonTypeRef<BetaWebSearchResultBlockParam>(),
+            )
+
+        assertThat(roundtrippedBetaWebSearchResultBlockParam)
+            .isEqualTo(betaWebSearchResultBlockParam)
+    }
+}

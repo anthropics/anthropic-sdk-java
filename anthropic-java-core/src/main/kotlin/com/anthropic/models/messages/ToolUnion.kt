@@ -25,6 +25,7 @@ private constructor(
     private val tool: Tool? = null,
     private val bash20250124: ToolBash20250124? = null,
     private val textEditor20250124: ToolTextEditor20250124? = null,
+    private val webSearchTool20250305: WebSearchTool20250305? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -35,11 +36,16 @@ private constructor(
     fun textEditor20250124(): Optional<ToolTextEditor20250124> =
         Optional.ofNullable(textEditor20250124)
 
+    fun webSearchTool20250305(): Optional<WebSearchTool20250305> =
+        Optional.ofNullable(webSearchTool20250305)
+
     fun isTool(): Boolean = tool != null
 
     fun isBash20250124(): Boolean = bash20250124 != null
 
     fun isTextEditor20250124(): Boolean = textEditor20250124 != null
+
+    fun isWebSearchTool20250305(): Boolean = webSearchTool20250305 != null
 
     fun asTool(): Tool = tool.getOrThrow("tool")
 
@@ -48,6 +54,9 @@ private constructor(
     fun asTextEditor20250124(): ToolTextEditor20250124 =
         textEditor20250124.getOrThrow("textEditor20250124")
 
+    fun asWebSearchTool20250305(): WebSearchTool20250305 =
+        webSearchTool20250305.getOrThrow("webSearchTool20250305")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
@@ -55,6 +64,8 @@ private constructor(
             tool != null -> visitor.visitTool(tool)
             bash20250124 != null -> visitor.visitBash20250124(bash20250124)
             textEditor20250124 != null -> visitor.visitTextEditor20250124(textEditor20250124)
+            webSearchTool20250305 != null ->
+                visitor.visitWebSearchTool20250305(webSearchTool20250305)
             else -> visitor.unknown(_json)
         }
 
@@ -77,6 +88,12 @@ private constructor(
 
                 override fun visitTextEditor20250124(textEditor20250124: ToolTextEditor20250124) {
                     textEditor20250124.validate()
+                }
+
+                override fun visitWebSearchTool20250305(
+                    webSearchTool20250305: WebSearchTool20250305
+                ) {
+                    webSearchTool20250305.validate()
                 }
             }
         )
@@ -108,6 +125,10 @@ private constructor(
                 override fun visitTextEditor20250124(textEditor20250124: ToolTextEditor20250124) =
                     textEditor20250124.validity()
 
+                override fun visitWebSearchTool20250305(
+                    webSearchTool20250305: WebSearchTool20250305
+                ) = webSearchTool20250305.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -117,16 +138,18 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ToolUnion && tool == other.tool && bash20250124 == other.bash20250124 && textEditor20250124 == other.textEditor20250124 /* spotless:on */
+        return /* spotless:off */ other is ToolUnion && tool == other.tool && bash20250124 == other.bash20250124 && textEditor20250124 == other.textEditor20250124 && webSearchTool20250305 == other.webSearchTool20250305 /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(tool, bash20250124, textEditor20250124) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(tool, bash20250124, textEditor20250124, webSearchTool20250305) /* spotless:on */
 
     override fun toString(): String =
         when {
             tool != null -> "ToolUnion{tool=$tool}"
             bash20250124 != null -> "ToolUnion{bash20250124=$bash20250124}"
             textEditor20250124 != null -> "ToolUnion{textEditor20250124=$textEditor20250124}"
+            webSearchTool20250305 != null ->
+                "ToolUnion{webSearchTool20250305=$webSearchTool20250305}"
             _json != null -> "ToolUnion{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid ToolUnion")
         }
@@ -141,6 +164,10 @@ private constructor(
         @JvmStatic
         fun ofTextEditor20250124(textEditor20250124: ToolTextEditor20250124) =
             ToolUnion(textEditor20250124 = textEditor20250124)
+
+        @JvmStatic
+        fun ofWebSearchTool20250305(webSearchTool20250305: WebSearchTool20250305) =
+            ToolUnion(webSearchTool20250305 = webSearchTool20250305)
     }
 
     /** An interface that defines how to map each variant of [ToolUnion] to a value of type [T]. */
@@ -151,6 +178,8 @@ private constructor(
         fun visitBash20250124(bash20250124: ToolBash20250124): T
 
         fun visitTextEditor20250124(textEditor20250124: ToolTextEditor20250124): T
+
+        fun visitWebSearchTool20250305(webSearchTool20250305: WebSearchTool20250305): T
 
         /**
          * Maps an unknown variant of [ToolUnion] to a value of type [T].
@@ -182,6 +211,9 @@ private constructor(
                         tryDeserialize(node, jacksonTypeRef<ToolTextEditor20250124>())?.let {
                             ToolUnion(textEditor20250124 = it, _json = json)
                         },
+                        tryDeserialize(node, jacksonTypeRef<WebSearchTool20250305>())?.let {
+                            ToolUnion(webSearchTool20250305 = it, _json = json)
+                        },
                     )
                     .filterNotNull()
                     .allMaxBy { it.validity() }
@@ -209,6 +241,8 @@ private constructor(
                 value.tool != null -> generator.writeObject(value.tool)
                 value.bash20250124 != null -> generator.writeObject(value.bash20250124)
                 value.textEditor20250124 != null -> generator.writeObject(value.textEditor20250124)
+                value.webSearchTool20250305 != null ->
+                    generator.writeObject(value.webSearchTool20250305)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid ToolUnion")
             }

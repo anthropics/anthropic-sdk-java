@@ -34,6 +34,8 @@ internal class ContentBlockTest {
 
         assertThat(contentBlock.text()).contains(text)
         assertThat(contentBlock.toolUse()).isEmpty
+        assertThat(contentBlock.serverToolUse()).isEmpty
+        assertThat(contentBlock.webSearchToolResult()).isEmpty
         assertThat(contentBlock.thinking()).isEmpty
         assertThat(contentBlock.redactedThinking()).isEmpty
     }
@@ -79,6 +81,8 @@ internal class ContentBlockTest {
 
         assertThat(contentBlock.text()).isEmpty
         assertThat(contentBlock.toolUse()).contains(toolUse)
+        assertThat(contentBlock.serverToolUse()).isEmpty
+        assertThat(contentBlock.webSearchToolResult()).isEmpty
         assertThat(contentBlock.thinking()).isEmpty
         assertThat(contentBlock.redactedThinking()).isEmpty
     }
@@ -105,6 +109,90 @@ internal class ContentBlockTest {
     }
 
     @Test
+    fun ofServerToolUse() {
+        val serverToolUse =
+            ServerToolUseBlock.builder()
+                .id("srvtoolu_SQfNkl1n_JR_")
+                .input(JsonValue.from(mapOf<String, Any>()))
+                .build()
+
+        val contentBlock = ContentBlock.ofServerToolUse(serverToolUse)
+
+        assertThat(contentBlock.text()).isEmpty
+        assertThat(contentBlock.toolUse()).isEmpty
+        assertThat(contentBlock.serverToolUse()).contains(serverToolUse)
+        assertThat(contentBlock.webSearchToolResult()).isEmpty
+        assertThat(contentBlock.thinking()).isEmpty
+        assertThat(contentBlock.redactedThinking()).isEmpty
+    }
+
+    @Test
+    fun ofServerToolUseRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlock =
+            ContentBlock.ofServerToolUse(
+                ServerToolUseBlock.builder()
+                    .id("srvtoolu_SQfNkl1n_JR_")
+                    .input(JsonValue.from(mapOf<String, Any>()))
+                    .build()
+            )
+
+        val roundtrippedContentBlock =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlock),
+                jacksonTypeRef<ContentBlock>(),
+            )
+
+        assertThat(roundtrippedContentBlock).isEqualTo(contentBlock)
+    }
+
+    @Test
+    fun ofWebSearchToolResult() {
+        val webSearchToolResult =
+            WebSearchToolResultBlock.builder()
+                .content(
+                    WebSearchToolResultError.builder()
+                        .errorCode(WebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                        .build()
+                )
+                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .build()
+
+        val contentBlock = ContentBlock.ofWebSearchToolResult(webSearchToolResult)
+
+        assertThat(contentBlock.text()).isEmpty
+        assertThat(contentBlock.toolUse()).isEmpty
+        assertThat(contentBlock.serverToolUse()).isEmpty
+        assertThat(contentBlock.webSearchToolResult()).contains(webSearchToolResult)
+        assertThat(contentBlock.thinking()).isEmpty
+        assertThat(contentBlock.redactedThinking()).isEmpty
+    }
+
+    @Test
+    fun ofWebSearchToolResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlock =
+            ContentBlock.ofWebSearchToolResult(
+                WebSearchToolResultBlock.builder()
+                    .content(
+                        WebSearchToolResultError.builder()
+                            .errorCode(WebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                            .build()
+                    )
+                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .build()
+            )
+
+        val roundtrippedContentBlock =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlock),
+                jacksonTypeRef<ContentBlock>(),
+            )
+
+        assertThat(roundtrippedContentBlock).isEqualTo(contentBlock)
+    }
+
+    @Test
     fun ofThinking() {
         val thinking = ThinkingBlock.builder().signature("signature").thinking("thinking").build()
 
@@ -112,6 +200,8 @@ internal class ContentBlockTest {
 
         assertThat(contentBlock.text()).isEmpty
         assertThat(contentBlock.toolUse()).isEmpty
+        assertThat(contentBlock.serverToolUse()).isEmpty
+        assertThat(contentBlock.webSearchToolResult()).isEmpty
         assertThat(contentBlock.thinking()).contains(thinking)
         assertThat(contentBlock.redactedThinking()).isEmpty
     }
@@ -141,6 +231,8 @@ internal class ContentBlockTest {
 
         assertThat(contentBlock.text()).isEmpty
         assertThat(contentBlock.toolUse()).isEmpty
+        assertThat(contentBlock.serverToolUse()).isEmpty
+        assertThat(contentBlock.webSearchToolResult()).isEmpty
         assertThat(contentBlock.thinking()).isEmpty
         assertThat(contentBlock.redactedThinking()).contains(redactedThinking)
     }

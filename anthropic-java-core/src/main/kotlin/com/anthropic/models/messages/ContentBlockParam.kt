@@ -25,6 +25,8 @@ private constructor(
     private val text: TextBlockParam? = null,
     private val image: ImageBlockParam? = null,
     private val toolUse: ToolUseBlockParam? = null,
+    private val serverToolUse: ServerToolUseBlockParam? = null,
+    private val webSearchToolResult: WebSearchToolResultBlockParam? = null,
     private val toolResult: ToolResultBlockParam? = null,
     private val document: DocumentBlockParam? = null,
     private val thinking: ThinkingBlockParam? = null,
@@ -37,6 +39,11 @@ private constructor(
     fun image(): Optional<ImageBlockParam> = Optional.ofNullable(image)
 
     fun toolUse(): Optional<ToolUseBlockParam> = Optional.ofNullable(toolUse)
+
+    fun serverToolUse(): Optional<ServerToolUseBlockParam> = Optional.ofNullable(serverToolUse)
+
+    fun webSearchToolResult(): Optional<WebSearchToolResultBlockParam> =
+        Optional.ofNullable(webSearchToolResult)
 
     fun toolResult(): Optional<ToolResultBlockParam> = Optional.ofNullable(toolResult)
 
@@ -53,6 +60,10 @@ private constructor(
 
     fun isToolUse(): Boolean = toolUse != null
 
+    fun isServerToolUse(): Boolean = serverToolUse != null
+
+    fun isWebSearchToolResult(): Boolean = webSearchToolResult != null
+
     fun isToolResult(): Boolean = toolResult != null
 
     fun isDocument(): Boolean = document != null
@@ -66,6 +77,11 @@ private constructor(
     fun asImage(): ImageBlockParam = image.getOrThrow("image")
 
     fun asToolUse(): ToolUseBlockParam = toolUse.getOrThrow("toolUse")
+
+    fun asServerToolUse(): ServerToolUseBlockParam = serverToolUse.getOrThrow("serverToolUse")
+
+    fun asWebSearchToolResult(): WebSearchToolResultBlockParam =
+        webSearchToolResult.getOrThrow("webSearchToolResult")
 
     fun asToolResult(): ToolResultBlockParam = toolResult.getOrThrow("toolResult")
 
@@ -83,6 +99,8 @@ private constructor(
             text != null -> visitor.visitText(text)
             image != null -> visitor.visitImage(image)
             toolUse != null -> visitor.visitToolUse(toolUse)
+            serverToolUse != null -> visitor.visitServerToolUse(serverToolUse)
+            webSearchToolResult != null -> visitor.visitWebSearchToolResult(webSearchToolResult)
             toolResult != null -> visitor.visitToolResult(toolResult)
             document != null -> visitor.visitDocument(document)
             thinking != null -> visitor.visitThinking(thinking)
@@ -109,6 +127,16 @@ private constructor(
 
                 override fun visitToolUse(toolUse: ToolUseBlockParam) {
                     toolUse.validate()
+                }
+
+                override fun visitServerToolUse(serverToolUse: ServerToolUseBlockParam) {
+                    serverToolUse.validate()
+                }
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: WebSearchToolResultBlockParam
+                ) {
+                    webSearchToolResult.validate()
                 }
 
                 override fun visitToolResult(toolResult: ToolResultBlockParam) {
@@ -154,6 +182,13 @@ private constructor(
 
                 override fun visitToolUse(toolUse: ToolUseBlockParam) = toolUse.validity()
 
+                override fun visitServerToolUse(serverToolUse: ServerToolUseBlockParam) =
+                    serverToolUse.validity()
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: WebSearchToolResultBlockParam
+                ) = webSearchToolResult.validity()
+
                 override fun visitToolResult(toolResult: ToolResultBlockParam) =
                     toolResult.validity()
 
@@ -173,16 +208,19 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ContentBlockParam && text == other.text && image == other.image && toolUse == other.toolUse && toolResult == other.toolResult && document == other.document && thinking == other.thinking && redactedThinking == other.redactedThinking /* spotless:on */
+        return /* spotless:off */ other is ContentBlockParam && text == other.text && image == other.image && toolUse == other.toolUse && serverToolUse == other.serverToolUse && webSearchToolResult == other.webSearchToolResult && toolResult == other.toolResult && document == other.document && thinking == other.thinking && redactedThinking == other.redactedThinking /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image, toolUse, toolResult, document, thinking, redactedThinking) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image, toolUse, serverToolUse, webSearchToolResult, toolResult, document, thinking, redactedThinking) /* spotless:on */
 
     override fun toString(): String =
         when {
             text != null -> "ContentBlockParam{text=$text}"
             image != null -> "ContentBlockParam{image=$image}"
             toolUse != null -> "ContentBlockParam{toolUse=$toolUse}"
+            serverToolUse != null -> "ContentBlockParam{serverToolUse=$serverToolUse}"
+            webSearchToolResult != null ->
+                "ContentBlockParam{webSearchToolResult=$webSearchToolResult}"
             toolResult != null -> "ContentBlockParam{toolResult=$toolResult}"
             document != null -> "ContentBlockParam{document=$document}"
             thinking != null -> "ContentBlockParam{thinking=$thinking}"
@@ -198,6 +236,14 @@ private constructor(
         @JvmStatic fun ofImage(image: ImageBlockParam) = ContentBlockParam(image = image)
 
         @JvmStatic fun ofToolUse(toolUse: ToolUseBlockParam) = ContentBlockParam(toolUse = toolUse)
+
+        @JvmStatic
+        fun ofServerToolUse(serverToolUse: ServerToolUseBlockParam) =
+            ContentBlockParam(serverToolUse = serverToolUse)
+
+        @JvmStatic
+        fun ofWebSearchToolResult(webSearchToolResult: WebSearchToolResultBlockParam) =
+            ContentBlockParam(webSearchToolResult = webSearchToolResult)
 
         @JvmStatic
         fun ofToolResult(toolResult: ToolResultBlockParam) =
@@ -225,6 +271,10 @@ private constructor(
         fun visitImage(image: ImageBlockParam): T
 
         fun visitToolUse(toolUse: ToolUseBlockParam): T
+
+        fun visitServerToolUse(serverToolUse: ServerToolUseBlockParam): T
+
+        fun visitWebSearchToolResult(webSearchToolResult: WebSearchToolResultBlockParam): T
 
         fun visitToolResult(toolResult: ToolResultBlockParam): T
 
@@ -271,6 +321,16 @@ private constructor(
                         ContentBlockParam(toolUse = it, _json = json)
                     } ?: ContentBlockParam(_json = json)
                 }
+                "server_tool_use" -> {
+                    return tryDeserialize(node, jacksonTypeRef<ServerToolUseBlockParam>())?.let {
+                        ContentBlockParam(serverToolUse = it, _json = json)
+                    } ?: ContentBlockParam(_json = json)
+                }
+                "web_search_tool_result" -> {
+                    return tryDeserialize(node, jacksonTypeRef<WebSearchToolResultBlockParam>())
+                        ?.let { ContentBlockParam(webSearchToolResult = it, _json = json) }
+                        ?: ContentBlockParam(_json = json)
+                }
                 "tool_result" -> {
                     return tryDeserialize(node, jacksonTypeRef<ToolResultBlockParam>())?.let {
                         ContentBlockParam(toolResult = it, _json = json)
@@ -308,6 +368,9 @@ private constructor(
                 value.text != null -> generator.writeObject(value.text)
                 value.image != null -> generator.writeObject(value.image)
                 value.toolUse != null -> generator.writeObject(value.toolUse)
+                value.serverToolUse != null -> generator.writeObject(value.serverToolUse)
+                value.webSearchToolResult != null ->
+                    generator.writeObject(value.webSearchToolResult)
                 value.toolResult != null -> generator.writeObject(value.toolResult)
                 value.document != null -> generator.writeObject(value.document)
                 value.thinking != null -> generator.writeObject(value.thinking)

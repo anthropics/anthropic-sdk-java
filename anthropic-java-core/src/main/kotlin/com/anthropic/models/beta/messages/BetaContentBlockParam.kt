@@ -25,6 +25,8 @@ private constructor(
     private val text: BetaTextBlockParam? = null,
     private val image: BetaImageBlockParam? = null,
     private val toolUse: BetaToolUseBlockParam? = null,
+    private val serverToolUse: BetaServerToolUseBlockParam? = null,
+    private val webSearchToolResult: BetaWebSearchToolResultBlockParam? = null,
     private val toolResult: BetaToolResultBlockParam? = null,
     private val base64PdfBlock: BetaBase64PdfBlock? = null,
     private val thinking: BetaThinkingBlockParam? = null,
@@ -37,6 +39,11 @@ private constructor(
     fun image(): Optional<BetaImageBlockParam> = Optional.ofNullable(image)
 
     fun toolUse(): Optional<BetaToolUseBlockParam> = Optional.ofNullable(toolUse)
+
+    fun serverToolUse(): Optional<BetaServerToolUseBlockParam> = Optional.ofNullable(serverToolUse)
+
+    fun webSearchToolResult(): Optional<BetaWebSearchToolResultBlockParam> =
+        Optional.ofNullable(webSearchToolResult)
 
     fun toolResult(): Optional<BetaToolResultBlockParam> = Optional.ofNullable(toolResult)
 
@@ -53,6 +60,10 @@ private constructor(
 
     fun isToolUse(): Boolean = toolUse != null
 
+    fun isServerToolUse(): Boolean = serverToolUse != null
+
+    fun isWebSearchToolResult(): Boolean = webSearchToolResult != null
+
     fun isToolResult(): Boolean = toolResult != null
 
     fun isBase64PdfBlock(): Boolean = base64PdfBlock != null
@@ -66,6 +77,11 @@ private constructor(
     fun asImage(): BetaImageBlockParam = image.getOrThrow("image")
 
     fun asToolUse(): BetaToolUseBlockParam = toolUse.getOrThrow("toolUse")
+
+    fun asServerToolUse(): BetaServerToolUseBlockParam = serverToolUse.getOrThrow("serverToolUse")
+
+    fun asWebSearchToolResult(): BetaWebSearchToolResultBlockParam =
+        webSearchToolResult.getOrThrow("webSearchToolResult")
 
     fun asToolResult(): BetaToolResultBlockParam = toolResult.getOrThrow("toolResult")
 
@@ -83,6 +99,8 @@ private constructor(
             text != null -> visitor.visitText(text)
             image != null -> visitor.visitImage(image)
             toolUse != null -> visitor.visitToolUse(toolUse)
+            serverToolUse != null -> visitor.visitServerToolUse(serverToolUse)
+            webSearchToolResult != null -> visitor.visitWebSearchToolResult(webSearchToolResult)
             toolResult != null -> visitor.visitToolResult(toolResult)
             base64PdfBlock != null -> visitor.visitBase64PdfBlock(base64PdfBlock)
             thinking != null -> visitor.visitThinking(thinking)
@@ -109,6 +127,16 @@ private constructor(
 
                 override fun visitToolUse(toolUse: BetaToolUseBlockParam) {
                     toolUse.validate()
+                }
+
+                override fun visitServerToolUse(serverToolUse: BetaServerToolUseBlockParam) {
+                    serverToolUse.validate()
+                }
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: BetaWebSearchToolResultBlockParam
+                ) {
+                    webSearchToolResult.validate()
                 }
 
                 override fun visitToolResult(toolResult: BetaToolResultBlockParam) {
@@ -156,6 +184,13 @@ private constructor(
 
                 override fun visitToolUse(toolUse: BetaToolUseBlockParam) = toolUse.validity()
 
+                override fun visitServerToolUse(serverToolUse: BetaServerToolUseBlockParam) =
+                    serverToolUse.validity()
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: BetaWebSearchToolResultBlockParam
+                ) = webSearchToolResult.validity()
+
                 override fun visitToolResult(toolResult: BetaToolResultBlockParam) =
                     toolResult.validity()
 
@@ -177,16 +212,19 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaContentBlockParam && text == other.text && image == other.image && toolUse == other.toolUse && toolResult == other.toolResult && base64PdfBlock == other.base64PdfBlock && thinking == other.thinking && redactedThinking == other.redactedThinking /* spotless:on */
+        return /* spotless:off */ other is BetaContentBlockParam && text == other.text && image == other.image && toolUse == other.toolUse && serverToolUse == other.serverToolUse && webSearchToolResult == other.webSearchToolResult && toolResult == other.toolResult && base64PdfBlock == other.base64PdfBlock && thinking == other.thinking && redactedThinking == other.redactedThinking /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image, toolUse, toolResult, base64PdfBlock, thinking, redactedThinking) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image, toolUse, serverToolUse, webSearchToolResult, toolResult, base64PdfBlock, thinking, redactedThinking) /* spotless:on */
 
     override fun toString(): String =
         when {
             text != null -> "BetaContentBlockParam{text=$text}"
             image != null -> "BetaContentBlockParam{image=$image}"
             toolUse != null -> "BetaContentBlockParam{toolUse=$toolUse}"
+            serverToolUse != null -> "BetaContentBlockParam{serverToolUse=$serverToolUse}"
+            webSearchToolResult != null ->
+                "BetaContentBlockParam{webSearchToolResult=$webSearchToolResult}"
             toolResult != null -> "BetaContentBlockParam{toolResult=$toolResult}"
             base64PdfBlock != null -> "BetaContentBlockParam{base64PdfBlock=$base64PdfBlock}"
             thinking != null -> "BetaContentBlockParam{thinking=$thinking}"
@@ -203,6 +241,14 @@ private constructor(
 
         @JvmStatic
         fun ofToolUse(toolUse: BetaToolUseBlockParam) = BetaContentBlockParam(toolUse = toolUse)
+
+        @JvmStatic
+        fun ofServerToolUse(serverToolUse: BetaServerToolUseBlockParam) =
+            BetaContentBlockParam(serverToolUse = serverToolUse)
+
+        @JvmStatic
+        fun ofWebSearchToolResult(webSearchToolResult: BetaWebSearchToolResultBlockParam) =
+            BetaContentBlockParam(webSearchToolResult = webSearchToolResult)
 
         @JvmStatic
         fun ofToolResult(toolResult: BetaToolResultBlockParam) =
@@ -232,6 +278,10 @@ private constructor(
         fun visitImage(image: BetaImageBlockParam): T
 
         fun visitToolUse(toolUse: BetaToolUseBlockParam): T
+
+        fun visitServerToolUse(serverToolUse: BetaServerToolUseBlockParam): T
+
+        fun visitWebSearchToolResult(webSearchToolResult: BetaWebSearchToolResultBlockParam): T
 
         fun visitToolResult(toolResult: BetaToolResultBlockParam): T
 
@@ -279,6 +329,16 @@ private constructor(
                         BetaContentBlockParam(toolUse = it, _json = json)
                     } ?: BetaContentBlockParam(_json = json)
                 }
+                "server_tool_use" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaServerToolUseBlockParam>())
+                        ?.let { BetaContentBlockParam(serverToolUse = it, _json = json) }
+                        ?: BetaContentBlockParam(_json = json)
+                }
+                "web_search_tool_result" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaWebSearchToolResultBlockParam>())
+                        ?.let { BetaContentBlockParam(webSearchToolResult = it, _json = json) }
+                        ?: BetaContentBlockParam(_json = json)
+                }
                 "tool_result" -> {
                     return tryDeserialize(node, jacksonTypeRef<BetaToolResultBlockParam>())?.let {
                         BetaContentBlockParam(toolResult = it, _json = json)
@@ -317,6 +377,9 @@ private constructor(
                 value.text != null -> generator.writeObject(value.text)
                 value.image != null -> generator.writeObject(value.image)
                 value.toolUse != null -> generator.writeObject(value.toolUse)
+                value.serverToolUse != null -> generator.writeObject(value.serverToolUse)
+                value.webSearchToolResult != null ->
+                    generator.writeObject(value.webSearchToolResult)
                 value.toolResult != null -> generator.writeObject(value.toolResult)
                 value.base64PdfBlock != null -> generator.writeObject(value.base64PdfBlock)
                 value.thinking != null -> generator.writeObject(value.thinking)

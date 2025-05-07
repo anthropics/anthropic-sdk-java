@@ -146,6 +146,20 @@ private constructor(
         fun contentBlock(betaToolUse: BetaToolUseBlock) =
             contentBlock(ContentBlock.ofBetaToolUse(betaToolUse))
 
+        /**
+         * Alias for calling [contentBlock] with
+         * `ContentBlock.ofBetaServerToolUse(betaServerToolUse)`.
+         */
+        fun contentBlock(betaServerToolUse: BetaServerToolUseBlock) =
+            contentBlock(ContentBlock.ofBetaServerToolUse(betaServerToolUse))
+
+        /**
+         * Alias for calling [contentBlock] with
+         * `ContentBlock.ofBetaWebSearchToolResult(betaWebSearchToolResult)`.
+         */
+        fun contentBlock(betaWebSearchToolResult: BetaWebSearchToolResultBlock) =
+            contentBlock(ContentBlock.ofBetaWebSearchToolResult(betaWebSearchToolResult))
+
         /** Alias for calling [contentBlock] with `ContentBlock.ofBetaThinking(betaThinking)`. */
         fun contentBlock(betaThinking: BetaThinkingBlock) =
             contentBlock(ContentBlock.ofBetaThinking(betaThinking))
@@ -275,6 +289,8 @@ private constructor(
     private constructor(
         private val betaText: BetaTextBlock? = null,
         private val betaToolUse: BetaToolUseBlock? = null,
+        private val betaServerToolUse: BetaServerToolUseBlock? = null,
+        private val betaWebSearchToolResult: BetaWebSearchToolResultBlock? = null,
         private val betaThinking: BetaThinkingBlock? = null,
         private val betaRedactedThinking: BetaRedactedThinkingBlock? = null,
         private val _json: JsonValue? = null,
@@ -283,6 +299,12 @@ private constructor(
         fun betaText(): Optional<BetaTextBlock> = Optional.ofNullable(betaText)
 
         fun betaToolUse(): Optional<BetaToolUseBlock> = Optional.ofNullable(betaToolUse)
+
+        fun betaServerToolUse(): Optional<BetaServerToolUseBlock> =
+            Optional.ofNullable(betaServerToolUse)
+
+        fun betaWebSearchToolResult(): Optional<BetaWebSearchToolResultBlock> =
+            Optional.ofNullable(betaWebSearchToolResult)
 
         fun betaThinking(): Optional<BetaThinkingBlock> = Optional.ofNullable(betaThinking)
 
@@ -293,6 +315,10 @@ private constructor(
 
         fun isBetaToolUse(): Boolean = betaToolUse != null
 
+        fun isBetaServerToolUse(): Boolean = betaServerToolUse != null
+
+        fun isBetaWebSearchToolResult(): Boolean = betaWebSearchToolResult != null
+
         fun isBetaThinking(): Boolean = betaThinking != null
 
         fun isBetaRedactedThinking(): Boolean = betaRedactedThinking != null
@@ -300,6 +326,12 @@ private constructor(
         fun asBetaText(): BetaTextBlock = betaText.getOrThrow("betaText")
 
         fun asBetaToolUse(): BetaToolUseBlock = betaToolUse.getOrThrow("betaToolUse")
+
+        fun asBetaServerToolUse(): BetaServerToolUseBlock =
+            betaServerToolUse.getOrThrow("betaServerToolUse")
+
+        fun asBetaWebSearchToolResult(): BetaWebSearchToolResultBlock =
+            betaWebSearchToolResult.getOrThrow("betaWebSearchToolResult")
 
         fun asBetaThinking(): BetaThinkingBlock = betaThinking.getOrThrow("betaThinking")
 
@@ -312,6 +344,9 @@ private constructor(
             when {
                 betaText != null -> visitor.visitBetaText(betaText)
                 betaToolUse != null -> visitor.visitBetaToolUse(betaToolUse)
+                betaServerToolUse != null -> visitor.visitBetaServerToolUse(betaServerToolUse)
+                betaWebSearchToolResult != null ->
+                    visitor.visitBetaWebSearchToolResult(betaWebSearchToolResult)
                 betaThinking != null -> visitor.visitBetaThinking(betaThinking)
                 betaRedactedThinking != null ->
                     visitor.visitBetaRedactedThinking(betaRedactedThinking)
@@ -333,6 +368,16 @@ private constructor(
 
                     override fun visitBetaToolUse(betaToolUse: BetaToolUseBlock) {
                         betaToolUse.validate()
+                    }
+
+                    override fun visitBetaServerToolUse(betaServerToolUse: BetaServerToolUseBlock) {
+                        betaServerToolUse.validate()
+                    }
+
+                    override fun visitBetaWebSearchToolResult(
+                        betaWebSearchToolResult: BetaWebSearchToolResultBlock
+                    ) {
+                        betaWebSearchToolResult.validate()
                     }
 
                     override fun visitBetaThinking(betaThinking: BetaThinkingBlock) {
@@ -372,6 +417,13 @@ private constructor(
                     override fun visitBetaToolUse(betaToolUse: BetaToolUseBlock) =
                         betaToolUse.validity()
 
+                    override fun visitBetaServerToolUse(betaServerToolUse: BetaServerToolUseBlock) =
+                        betaServerToolUse.validity()
+
+                    override fun visitBetaWebSearchToolResult(
+                        betaWebSearchToolResult: BetaWebSearchToolResultBlock
+                    ) = betaWebSearchToolResult.validity()
+
                     override fun visitBetaThinking(betaThinking: BetaThinkingBlock) =
                         betaThinking.validity()
 
@@ -388,15 +440,18 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is ContentBlock && betaText == other.betaText && betaToolUse == other.betaToolUse && betaThinking == other.betaThinking && betaRedactedThinking == other.betaRedactedThinking /* spotless:on */
+            return /* spotless:off */ other is ContentBlock && betaText == other.betaText && betaToolUse == other.betaToolUse && betaServerToolUse == other.betaServerToolUse && betaWebSearchToolResult == other.betaWebSearchToolResult && betaThinking == other.betaThinking && betaRedactedThinking == other.betaRedactedThinking /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaText, betaToolUse, betaThinking, betaRedactedThinking) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaText, betaToolUse, betaServerToolUse, betaWebSearchToolResult, betaThinking, betaRedactedThinking) /* spotless:on */
 
         override fun toString(): String =
             when {
                 betaText != null -> "ContentBlock{betaText=$betaText}"
                 betaToolUse != null -> "ContentBlock{betaToolUse=$betaToolUse}"
+                betaServerToolUse != null -> "ContentBlock{betaServerToolUse=$betaServerToolUse}"
+                betaWebSearchToolResult != null ->
+                    "ContentBlock{betaWebSearchToolResult=$betaWebSearchToolResult}"
                 betaThinking != null -> "ContentBlock{betaThinking=$betaThinking}"
                 betaRedactedThinking != null ->
                     "ContentBlock{betaRedactedThinking=$betaRedactedThinking}"
@@ -411,6 +466,14 @@ private constructor(
             @JvmStatic
             fun ofBetaToolUse(betaToolUse: BetaToolUseBlock) =
                 ContentBlock(betaToolUse = betaToolUse)
+
+            @JvmStatic
+            fun ofBetaServerToolUse(betaServerToolUse: BetaServerToolUseBlock) =
+                ContentBlock(betaServerToolUse = betaServerToolUse)
+
+            @JvmStatic
+            fun ofBetaWebSearchToolResult(betaWebSearchToolResult: BetaWebSearchToolResultBlock) =
+                ContentBlock(betaWebSearchToolResult = betaWebSearchToolResult)
 
             @JvmStatic
             fun ofBetaThinking(betaThinking: BetaThinkingBlock) =
@@ -430,6 +493,12 @@ private constructor(
             fun visitBetaText(betaText: BetaTextBlock): T
 
             fun visitBetaToolUse(betaToolUse: BetaToolUseBlock): T
+
+            fun visitBetaServerToolUse(betaServerToolUse: BetaServerToolUseBlock): T
+
+            fun visitBetaWebSearchToolResult(
+                betaWebSearchToolResult: BetaWebSearchToolResultBlock
+            ): T
 
             fun visitBetaThinking(betaThinking: BetaThinkingBlock): T
 
@@ -467,6 +536,16 @@ private constructor(
                             ContentBlock(betaToolUse = it, _json = json)
                         } ?: ContentBlock(_json = json)
                     }
+                    "server_tool_use" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaServerToolUseBlock>())?.let {
+                            ContentBlock(betaServerToolUse = it, _json = json)
+                        } ?: ContentBlock(_json = json)
+                    }
+                    "web_search_tool_result" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaWebSearchToolResultBlock>())
+                            ?.let { ContentBlock(betaWebSearchToolResult = it, _json = json) }
+                            ?: ContentBlock(_json = json)
+                    }
                     "thinking" -> {
                         return tryDeserialize(node, jacksonTypeRef<BetaThinkingBlock>())?.let {
                             ContentBlock(betaThinking = it, _json = json)
@@ -493,6 +572,10 @@ private constructor(
                 when {
                     value.betaText != null -> generator.writeObject(value.betaText)
                     value.betaToolUse != null -> generator.writeObject(value.betaToolUse)
+                    value.betaServerToolUse != null ->
+                        generator.writeObject(value.betaServerToolUse)
+                    value.betaWebSearchToolResult != null ->
+                        generator.writeObject(value.betaWebSearchToolResult)
                     value.betaThinking != null -> generator.writeObject(value.betaThinking)
                     value.betaRedactedThinking != null ->
                         generator.writeObject(value.betaRedactedThinking)

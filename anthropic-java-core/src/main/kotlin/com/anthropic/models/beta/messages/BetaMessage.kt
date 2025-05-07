@@ -373,6 +373,19 @@ private constructor(
         /** Alias for calling [addContent] with `BetaContentBlock.ofToolUse(toolUse)`. */
         fun addContent(toolUse: BetaToolUseBlock) = addContent(BetaContentBlock.ofToolUse(toolUse))
 
+        /**
+         * Alias for calling [addContent] with `BetaContentBlock.ofServerToolUse(serverToolUse)`.
+         */
+        fun addContent(serverToolUse: BetaServerToolUseBlock) =
+            addContent(BetaContentBlock.ofServerToolUse(serverToolUse))
+
+        /**
+         * Alias for calling [addContent] with
+         * `BetaContentBlock.ofWebSearchToolResult(webSearchToolResult)`.
+         */
+        fun addContent(webSearchToolResult: BetaWebSearchToolResultBlock) =
+            addContent(BetaContentBlock.ofWebSearchToolResult(webSearchToolResult))
+
         /** Alias for calling [addContent] with `BetaContentBlock.ofThinking(thinking)`. */
         fun addContent(thinking: BetaThinkingBlock) =
             addContent(BetaContentBlock.ofThinking(thinking))

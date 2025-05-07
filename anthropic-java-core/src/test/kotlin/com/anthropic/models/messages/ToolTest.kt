@@ -39,6 +39,7 @@ internal class ToolTest {
                 .name("name")
                 .cacheControl(CacheControlEphemeral.builder().build())
                 .description("Get the current weather in a given location")
+                .type(Tool.Type.CUSTOM)
                 .build()
 
         assertThat(tool.inputSchema())
@@ -67,6 +68,7 @@ internal class ToolTest {
         assertThat(tool.name()).isEqualTo("name")
         assertThat(tool.cacheControl()).contains(CacheControlEphemeral.builder().build())
         assertThat(tool.description()).contains("Get the current weather in a given location")
+        assertThat(tool.type()).contains(Tool.Type.CUSTOM)
     }
 
     @Test
@@ -99,6 +101,7 @@ internal class ToolTest {
                 .name("name")
                 .cacheControl(CacheControlEphemeral.builder().build())
                 .description("Get the current weather in a given location")
+                .type(Tool.Type.CUSTOM)
                 .build()
 
         val roundtrippedTool =

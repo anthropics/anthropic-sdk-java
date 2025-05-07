@@ -366,6 +366,17 @@ private constructor(
         /** Alias for calling [addContent] with `ContentBlock.ofToolUse(toolUse)`. */
         fun addContent(toolUse: ToolUseBlock) = addContent(ContentBlock.ofToolUse(toolUse))
 
+        /** Alias for calling [addContent] with `ContentBlock.ofServerToolUse(serverToolUse)`. */
+        fun addContent(serverToolUse: ServerToolUseBlock) =
+            addContent(ContentBlock.ofServerToolUse(serverToolUse))
+
+        /**
+         * Alias for calling [addContent] with
+         * `ContentBlock.ofWebSearchToolResult(webSearchToolResult)`.
+         */
+        fun addContent(webSearchToolResult: WebSearchToolResultBlock) =
+            addContent(ContentBlock.ofWebSearchToolResult(webSearchToolResult))
+
         /** Alias for calling [addContent] with `ContentBlock.ofThinking(thinking)`. */
         fun addContent(thinking: ThinkingBlock) = addContent(ContentBlock.ofThinking(thinking))
 

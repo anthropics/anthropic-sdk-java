@@ -2,6 +2,7 @@
 
 package com.anthropic.models.messages
 
+import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
@@ -23,6 +24,7 @@ private constructor(
     private val name: JsonField<String>,
     private val cacheControl: JsonField<CacheControlEphemeral>,
     private val description: JsonField<String>,
+    private val type: JsonField<Type>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -38,7 +40,8 @@ private constructor(
         @JsonProperty("description")
         @ExcludeMissing
         description: JsonField<String> = JsonMissing.of(),
-    ) : this(inputSchema, name, cacheControl, description, mutableMapOf())
+        @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+    ) : this(inputSchema, name, cacheControl, description, type, mutableMapOf())
 
     /**
      * [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
@@ -53,7 +56,7 @@ private constructor(
     /**
      * Name of the tool.
      *
-     * This is how the tool will be called by the model and in tool_use blocks.
+     * This is how the tool will be called by the model and in `tool_use` blocks.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -61,6 +64,8 @@ private constructor(
     fun name(): String = name.getRequired("name")
 
     /**
+     * Create a cache control breakpoint at this content block.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -77,6 +82,12 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun description(): Optional<String> = description.getOptional("description")
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun type(): Optional<Type> = type.getOptional("type")
 
     /**
      * Returns the raw JSON value of [inputSchema].
@@ -109,6 +120,13 @@ private constructor(
      * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
+
+    /**
+     * Returns the raw JSON value of [type].
+     *
+     * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -143,6 +161,7 @@ private constructor(
         private var name: JsonField<String>? = null
         private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var description: JsonField<String> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -151,6 +170,7 @@ private constructor(
             name = tool.name
             cacheControl = tool.cacheControl
             description = tool.description
+            type = tool.type
             additionalProperties = tool.additionalProperties.toMutableMap()
         }
 
@@ -176,7 +196,7 @@ private constructor(
         /**
          * Name of the tool.
          *
-         * This is how the tool will be called by the model and in tool_use blocks.
+         * This is how the tool will be called by the model and in `tool_use` blocks.
          */
         fun name(name: String) = name(JsonField.of(name))
 
@@ -188,6 +208,7 @@ private constructor(
          */
         fun name(name: JsonField<String>) = apply { this.name = name }
 
+        /** Create a cache control breakpoint at this content block. */
         fun cacheControl(cacheControl: CacheControlEphemeral?) =
             cacheControl(JsonField.ofNullable(cacheControl))
 
@@ -224,6 +245,19 @@ private constructor(
          * value.
          */
         fun description(description: JsonField<String>) = apply { this.description = description }
+
+        fun type(type: Type?) = type(JsonField.ofNullable(type))
+
+        /** Alias for calling [Builder.type] with `type.orElse(null)`. */
+        fun type(type: Optional<Type>) = type(type.getOrNull())
+
+        /**
+         * Sets [Builder.type] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.type] with a well-typed [Type] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun type(type: JsonField<Type>) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -263,6 +297,7 @@ private constructor(
                 checkRequired("name", name),
                 cacheControl,
                 description,
+                type,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -278,6 +313,7 @@ private constructor(
         name()
         cacheControl().ifPresent { it.validate() }
         description()
+        type().ifPresent { it.validate() }
         validated = true
     }
 
@@ -299,7 +335,8 @@ private constructor(
         (inputSchema.asKnown().getOrNull()?.validity() ?: 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (description.asKnown().isPresent) 1 else 0)
+            (if (description.asKnown().isPresent) 1 else 0) +
+            (type.asKnown().getOrNull()?.validity() ?: 0)
 
     /**
      * [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
@@ -458,20 +495,141 @@ private constructor(
             "InputSchema{type=$type, properties=$properties, additionalProperties=$additionalProperties}"
     }
 
+    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val CUSTOM = of("custom")
+
+            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+        }
+
+        /** An enum containing [Type]'s known values. */
+        enum class Known {
+            CUSTOM
+        }
+
+        /**
+         * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Type] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            CUSTOM,
+            /** An enum member indicating that [Type] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                CUSTOM -> Value.CUSTOM
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                CUSTOM -> Known.CUSTOM
+                else -> throw AnthropicInvalidDataException("Unknown Type: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        fun validate(): Type = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return /* spotless:off */ other is Type && value == other.value /* spotless:on */
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return /* spotless:off */ other is Tool && inputSchema == other.inputSchema && name == other.name && cacheControl == other.cacheControl && description == other.description && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is Tool && inputSchema == other.inputSchema && name == other.name && cacheControl == other.cacheControl && description == other.description && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(inputSchema, name, cacheControl, description, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(inputSchema, name, cacheControl, description, type, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Tool{inputSchema=$inputSchema, name=$name, cacheControl=$cacheControl, description=$description, additionalProperties=$additionalProperties}"
+        "Tool{inputSchema=$inputSchema, name=$name, cacheControl=$cacheControl, description=$description, type=$type, additionalProperties=$additionalProperties}"
 }

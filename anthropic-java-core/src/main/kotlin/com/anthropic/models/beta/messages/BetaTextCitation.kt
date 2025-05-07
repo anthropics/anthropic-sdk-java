@@ -25,6 +25,7 @@ private constructor(
     private val citationCharLocation: BetaCitationCharLocation? = null,
     private val citationPageLocation: BetaCitationPageLocation? = null,
     private val citationContentBlockLocation: BetaCitationContentBlockLocation? = null,
+    private val citationsWebSearchResultLocation: BetaCitationsWebSearchResultLocation? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -37,11 +38,16 @@ private constructor(
     fun citationContentBlockLocation(): Optional<BetaCitationContentBlockLocation> =
         Optional.ofNullable(citationContentBlockLocation)
 
+    fun citationsWebSearchResultLocation(): Optional<BetaCitationsWebSearchResultLocation> =
+        Optional.ofNullable(citationsWebSearchResultLocation)
+
     fun isCitationCharLocation(): Boolean = citationCharLocation != null
 
     fun isCitationPageLocation(): Boolean = citationPageLocation != null
 
     fun isCitationContentBlockLocation(): Boolean = citationContentBlockLocation != null
+
+    fun isCitationsWebSearchResultLocation(): Boolean = citationsWebSearchResultLocation != null
 
     fun asCitationCharLocation(): BetaCitationCharLocation =
         citationCharLocation.getOrThrow("citationCharLocation")
@@ -52,6 +58,9 @@ private constructor(
     fun asCitationContentBlockLocation(): BetaCitationContentBlockLocation =
         citationContentBlockLocation.getOrThrow("citationContentBlockLocation")
 
+    fun asCitationsWebSearchResultLocation(): BetaCitationsWebSearchResultLocation =
+        citationsWebSearchResultLocation.getOrThrow("citationsWebSearchResultLocation")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
@@ -60,6 +69,8 @@ private constructor(
             citationPageLocation != null -> visitor.visitCitationPageLocation(citationPageLocation)
             citationContentBlockLocation != null ->
                 visitor.visitCitationContentBlockLocation(citationContentBlockLocation)
+            citationsWebSearchResultLocation != null ->
+                visitor.visitCitationsWebSearchResultLocation(citationsWebSearchResultLocation)
             else -> visitor.unknown(_json)
         }
 
@@ -88,6 +99,12 @@ private constructor(
                     citationContentBlockLocation: BetaCitationContentBlockLocation
                 ) {
                     citationContentBlockLocation.validate()
+                }
+
+                override fun visitCitationsWebSearchResultLocation(
+                    citationsWebSearchResultLocation: BetaCitationsWebSearchResultLocation
+                ) {
+                    citationsWebSearchResultLocation.validate()
                 }
             }
         )
@@ -123,6 +140,10 @@ private constructor(
                     citationContentBlockLocation: BetaCitationContentBlockLocation
                 ) = citationContentBlockLocation.validity()
 
+                override fun visitCitationsWebSearchResultLocation(
+                    citationsWebSearchResultLocation: BetaCitationsWebSearchResultLocation
+                ) = citationsWebSearchResultLocation.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -132,10 +153,10 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaTextCitation && citationCharLocation == other.citationCharLocation && citationPageLocation == other.citationPageLocation && citationContentBlockLocation == other.citationContentBlockLocation /* spotless:on */
+        return /* spotless:off */ other is BetaTextCitation && citationCharLocation == other.citationCharLocation && citationPageLocation == other.citationPageLocation && citationContentBlockLocation == other.citationContentBlockLocation && citationsWebSearchResultLocation == other.citationsWebSearchResultLocation /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(citationCharLocation, citationPageLocation, citationContentBlockLocation) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(citationCharLocation, citationPageLocation, citationContentBlockLocation, citationsWebSearchResultLocation) /* spotless:on */
 
     override fun toString(): String =
         when {
@@ -145,6 +166,8 @@ private constructor(
                 "BetaTextCitation{citationPageLocation=$citationPageLocation}"
             citationContentBlockLocation != null ->
                 "BetaTextCitation{citationContentBlockLocation=$citationContentBlockLocation}"
+            citationsWebSearchResultLocation != null ->
+                "BetaTextCitation{citationsWebSearchResultLocation=$citationsWebSearchResultLocation}"
             _json != null -> "BetaTextCitation{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaTextCitation")
         }
@@ -163,6 +186,11 @@ private constructor(
         fun ofCitationContentBlockLocation(
             citationContentBlockLocation: BetaCitationContentBlockLocation
         ) = BetaTextCitation(citationContentBlockLocation = citationContentBlockLocation)
+
+        @JvmStatic
+        fun ofCitationsWebSearchResultLocation(
+            citationsWebSearchResultLocation: BetaCitationsWebSearchResultLocation
+        ) = BetaTextCitation(citationsWebSearchResultLocation = citationsWebSearchResultLocation)
     }
 
     /**
@@ -177,6 +205,10 @@ private constructor(
 
         fun visitCitationContentBlockLocation(
             citationContentBlockLocation: BetaCitationContentBlockLocation
+        ): T
+
+        fun visitCitationsWebSearchResultLocation(
+            citationsWebSearchResultLocation: BetaCitationsWebSearchResultLocation
         ): T
 
         /**
@@ -216,6 +248,15 @@ private constructor(
                         ?.let { BetaTextCitation(citationContentBlockLocation = it, _json = json) }
                         ?: BetaTextCitation(_json = json)
                 }
+                "web_search_result_location" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaCitationsWebSearchResultLocation>(),
+                        )
+                        ?.let {
+                            BetaTextCitation(citationsWebSearchResultLocation = it, _json = json)
+                        } ?: BetaTextCitation(_json = json)
+                }
             }
 
             return BetaTextCitation(_json = json)
@@ -236,6 +277,8 @@ private constructor(
                     generator.writeObject(value.citationPageLocation)
                 value.citationContentBlockLocation != null ->
                     generator.writeObject(value.citationContentBlockLocation)
+                value.citationsWebSearchResultLocation != null ->
+                    generator.writeObject(value.citationsWebSearchResultLocation)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaTextCitation")
             }

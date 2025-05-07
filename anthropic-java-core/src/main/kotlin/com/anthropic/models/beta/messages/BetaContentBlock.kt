@@ -24,6 +24,8 @@ class BetaContentBlock
 private constructor(
     private val text: BetaTextBlock? = null,
     private val toolUse: BetaToolUseBlock? = null,
+    private val serverToolUse: BetaServerToolUseBlock? = null,
+    private val webSearchToolResult: BetaWebSearchToolResultBlock? = null,
     private val thinking: BetaThinkingBlock? = null,
     private val redactedThinking: BetaRedactedThinkingBlock? = null,
     private val _json: JsonValue? = null,
@@ -37,6 +39,16 @@ private constructor(
 
                 override fun visitToolUse(toolUse: BetaToolUseBlock): BetaContentBlockParam =
                     BetaContentBlockParam.ofToolUse(toolUse.toParam())
+
+                override fun visitServerToolUse(
+                    serverToolUse: BetaServerToolUseBlock
+                ): BetaContentBlockParam =
+                    BetaContentBlockParam.ofServerToolUse(serverToolUse.toParam())
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: BetaWebSearchToolResultBlock
+                ): BetaContentBlockParam =
+                    BetaContentBlockParam.ofServerToolUse(webSearchToolResult.toParam())
 
                 override fun visitThinking(thinking: BetaThinkingBlock): BetaContentBlockParam =
                     BetaContentBlockParam.ofThinking(thinking.toParam())
@@ -52,6 +64,11 @@ private constructor(
 
     fun toolUse(): Optional<BetaToolUseBlock> = Optional.ofNullable(toolUse)
 
+    fun serverToolUse(): Optional<BetaServerToolUseBlock> = Optional.ofNullable(serverToolUse)
+
+    fun webSearchToolResult(): Optional<BetaWebSearchToolResultBlock> =
+        Optional.ofNullable(webSearchToolResult)
+
     fun thinking(): Optional<BetaThinkingBlock> = Optional.ofNullable(thinking)
 
     fun redactedThinking(): Optional<BetaRedactedThinkingBlock> =
@@ -61,6 +78,10 @@ private constructor(
 
     fun isToolUse(): Boolean = toolUse != null
 
+    fun isServerToolUse(): Boolean = serverToolUse != null
+
+    fun isWebSearchToolResult(): Boolean = webSearchToolResult != null
+
     fun isThinking(): Boolean = thinking != null
 
     fun isRedactedThinking(): Boolean = redactedThinking != null
@@ -68,6 +89,11 @@ private constructor(
     fun asText(): BetaTextBlock = text.getOrThrow("text")
 
     fun asToolUse(): BetaToolUseBlock = toolUse.getOrThrow("toolUse")
+
+    fun asServerToolUse(): BetaServerToolUseBlock = serverToolUse.getOrThrow("serverToolUse")
+
+    fun asWebSearchToolResult(): BetaWebSearchToolResultBlock =
+        webSearchToolResult.getOrThrow("webSearchToolResult")
 
     fun asThinking(): BetaThinkingBlock = thinking.getOrThrow("thinking")
 
@@ -80,6 +106,8 @@ private constructor(
         when {
             text != null -> visitor.visitText(text)
             toolUse != null -> visitor.visitToolUse(toolUse)
+            serverToolUse != null -> visitor.visitServerToolUse(serverToolUse)
+            webSearchToolResult != null -> visitor.visitWebSearchToolResult(webSearchToolResult)
             thinking != null -> visitor.visitThinking(thinking)
             redactedThinking != null -> visitor.visitRedactedThinking(redactedThinking)
             else -> visitor.unknown(_json)
@@ -100,6 +128,16 @@ private constructor(
 
                 override fun visitToolUse(toolUse: BetaToolUseBlock) {
                     toolUse.validate()
+                }
+
+                override fun visitServerToolUse(serverToolUse: BetaServerToolUseBlock) {
+                    serverToolUse.validate()
+                }
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: BetaWebSearchToolResultBlock
+                ) {
+                    webSearchToolResult.validate()
                 }
 
                 override fun visitThinking(thinking: BetaThinkingBlock) {
@@ -135,6 +173,13 @@ private constructor(
 
                 override fun visitToolUse(toolUse: BetaToolUseBlock) = toolUse.validity()
 
+                override fun visitServerToolUse(serverToolUse: BetaServerToolUseBlock) =
+                    serverToolUse.validity()
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: BetaWebSearchToolResultBlock
+                ) = webSearchToolResult.validity()
+
                 override fun visitThinking(thinking: BetaThinkingBlock) = thinking.validity()
 
                 override fun visitRedactedThinking(redactedThinking: BetaRedactedThinkingBlock) =
@@ -149,15 +194,18 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaContentBlock && text == other.text && toolUse == other.toolUse && thinking == other.thinking && redactedThinking == other.redactedThinking /* spotless:on */
+        return /* spotless:off */ other is BetaContentBlock && text == other.text && toolUse == other.toolUse && serverToolUse == other.serverToolUse && webSearchToolResult == other.webSearchToolResult && thinking == other.thinking && redactedThinking == other.redactedThinking /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, toolUse, thinking, redactedThinking) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, toolUse, serverToolUse, webSearchToolResult, thinking, redactedThinking) /* spotless:on */
 
     override fun toString(): String =
         when {
             text != null -> "BetaContentBlock{text=$text}"
             toolUse != null -> "BetaContentBlock{toolUse=$toolUse}"
+            serverToolUse != null -> "BetaContentBlock{serverToolUse=$serverToolUse}"
+            webSearchToolResult != null ->
+                "BetaContentBlock{webSearchToolResult=$webSearchToolResult}"
             thinking != null -> "BetaContentBlock{thinking=$thinking}"
             redactedThinking != null -> "BetaContentBlock{redactedThinking=$redactedThinking}"
             _json != null -> "BetaContentBlock{_unknown=$_json}"
@@ -169,6 +217,14 @@ private constructor(
         @JvmStatic fun ofText(text: BetaTextBlock) = BetaContentBlock(text = text)
 
         @JvmStatic fun ofToolUse(toolUse: BetaToolUseBlock) = BetaContentBlock(toolUse = toolUse)
+
+        @JvmStatic
+        fun ofServerToolUse(serverToolUse: BetaServerToolUseBlock) =
+            BetaContentBlock(serverToolUse = serverToolUse)
+
+        @JvmStatic
+        fun ofWebSearchToolResult(webSearchToolResult: BetaWebSearchToolResultBlock) =
+            BetaContentBlock(webSearchToolResult = webSearchToolResult)
 
         @JvmStatic
         fun ofThinking(thinking: BetaThinkingBlock) = BetaContentBlock(thinking = thinking)
@@ -187,6 +243,10 @@ private constructor(
         fun visitText(text: BetaTextBlock): T
 
         fun visitToolUse(toolUse: BetaToolUseBlock): T
+
+        fun visitServerToolUse(serverToolUse: BetaServerToolUseBlock): T
+
+        fun visitWebSearchToolResult(webSearchToolResult: BetaWebSearchToolResultBlock): T
 
         fun visitThinking(thinking: BetaThinkingBlock): T
 
@@ -224,6 +284,16 @@ private constructor(
                         BetaContentBlock(toolUse = it, _json = json)
                     } ?: BetaContentBlock(_json = json)
                 }
+                "server_tool_use" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaServerToolUseBlock>())?.let {
+                        BetaContentBlock(serverToolUse = it, _json = json)
+                    } ?: BetaContentBlock(_json = json)
+                }
+                "web_search_tool_result" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaWebSearchToolResultBlock>())
+                        ?.let { BetaContentBlock(webSearchToolResult = it, _json = json) }
+                        ?: BetaContentBlock(_json = json)
+                }
                 "thinking" -> {
                     return tryDeserialize(node, jacksonTypeRef<BetaThinkingBlock>())?.let {
                         BetaContentBlock(thinking = it, _json = json)
@@ -250,6 +320,9 @@ private constructor(
             when {
                 value.text != null -> generator.writeObject(value.text)
                 value.toolUse != null -> generator.writeObject(value.toolUse)
+                value.serverToolUse != null -> generator.writeObject(value.serverToolUse)
+                value.webSearchToolResult != null ->
+                    generator.writeObject(value.webSearchToolResult)
                 value.thinking != null -> generator.writeObject(value.thinking)
                 value.redactedThinking != null -> generator.writeObject(value.redactedThinking)
                 value._json != null -> generator.writeObject(value._json)

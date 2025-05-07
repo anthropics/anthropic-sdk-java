@@ -44,6 +44,9 @@ internal class RawMessageStreamEventTest {
                                 .cacheReadInputTokens(2051L)
                                 .inputTokens(2095L)
                                 .outputTokens(503L)
+                                .serverToolUse(
+                                    ServerToolUsage.builder().webSearchRequests(0L).build()
+                                )
                                 .build()
                         )
                         .build()
@@ -92,6 +95,9 @@ internal class RawMessageStreamEventTest {
                                     .cacheReadInputTokens(2051L)
                                     .inputTokens(2095L)
                                     .outputTokens(503L)
+                                    .serverToolUse(
+                                        ServerToolUsage.builder().webSearchRequests(0L).build()
+                                    )
                                     .build()
                             )
                             .build()
@@ -118,7 +124,15 @@ internal class RawMessageStreamEventTest {
                         .stopSequence("stop_sequence")
                         .build()
                 )
-                .usage(MessageDeltaUsage.builder().outputTokens(503L).build())
+                .usage(
+                    MessageDeltaUsage.builder()
+                        .cacheCreationInputTokens(2051L)
+                        .cacheReadInputTokens(2051L)
+                        .inputTokens(2095L)
+                        .outputTokens(503L)
+                        .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                        .build()
+                )
                 .build()
 
         val rawMessageStreamEvent = RawMessageStreamEvent.ofDelta(delta)
@@ -143,7 +157,15 @@ internal class RawMessageStreamEventTest {
                             .stopSequence("stop_sequence")
                             .build()
                     )
-                    .usage(MessageDeltaUsage.builder().outputTokens(503L).build())
+                    .usage(
+                        MessageDeltaUsage.builder()
+                            .cacheCreationInputTokens(2051L)
+                            .cacheReadInputTokens(2051L)
+                            .inputTokens(2095L)
+                            .outputTokens(503L)
+                            .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                            .build()
+                    )
                     .build()
             )
 

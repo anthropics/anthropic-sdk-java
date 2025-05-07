@@ -181,6 +181,15 @@ private constructor(
         fun addCitation(citationContentBlockLocation: CitationContentBlockLocation) =
             addCitation(TextCitation.ofCitationContentBlockLocation(citationContentBlockLocation))
 
+        /**
+         * Alias for calling [addCitation] with
+         * `TextCitation.ofCitationsWebSearchResultLocation(citationsWebSearchResultLocation)`.
+         */
+        fun addCitation(citationsWebSearchResultLocation: CitationsWebSearchResultLocation) =
+            addCitation(
+                TextCitation.ofCitationsWebSearchResultLocation(citationsWebSearchResultLocation)
+            )
+
         fun text(text: String) = text(JsonField.of(text))
 
         /**

@@ -8,6 +8,7 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.BetaErrorResponse
 import com.anthropic.models.beta.messages.BetaCitationCharLocation
 import com.anthropic.models.beta.messages.BetaMessage
+import com.anthropic.models.beta.messages.BetaServerToolUsage
 import com.anthropic.models.beta.messages.BetaStopReason
 import com.anthropic.models.beta.messages.BetaTextBlock
 import com.anthropic.models.beta.messages.BetaUsage
@@ -51,6 +52,9 @@ internal class BetaMessageBatchResultTest {
                                 .cacheReadInputTokens(2051L)
                                 .inputTokens(2095L)
                                 .outputTokens(503L)
+                                .serverToolUse(
+                                    BetaServerToolUsage.builder().webSearchRequests(0L).build()
+                                )
                                 .build()
                         )
                         .build()
@@ -97,6 +101,9 @@ internal class BetaMessageBatchResultTest {
                                     .cacheReadInputTokens(2051L)
                                     .inputTokens(2095L)
                                     .outputTokens(503L)
+                                    .serverToolUse(
+                                        BetaServerToolUsage.builder().webSearchRequests(0L).build()
+                                    )
                                     .build()
                             )
                             .build()
