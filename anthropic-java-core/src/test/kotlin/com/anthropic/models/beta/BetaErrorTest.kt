@@ -26,7 +26,7 @@ internal class BetaErrorTest {
         assertThat(betaError.permission()).isEmpty
         assertThat(betaError.notFound()).isEmpty
         assertThat(betaError.rateLimit()).isEmpty
-        assertThat(betaError.gatewayTimeout()).isEmpty
+        assertThat(betaError.timeout()).isEmpty
         assertThat(betaError.api()).isEmpty
         assertThat(betaError.overloaded()).isEmpty
     }
@@ -58,7 +58,7 @@ internal class BetaErrorTest {
         assertThat(betaError.permission()).isEmpty
         assertThat(betaError.notFound()).isEmpty
         assertThat(betaError.rateLimit()).isEmpty
-        assertThat(betaError.gatewayTimeout()).isEmpty
+        assertThat(betaError.timeout()).isEmpty
         assertThat(betaError.api()).isEmpty
         assertThat(betaError.overloaded()).isEmpty
     }
@@ -90,7 +90,7 @@ internal class BetaErrorTest {
         assertThat(betaError.permission()).isEmpty
         assertThat(betaError.notFound()).isEmpty
         assertThat(betaError.rateLimit()).isEmpty
-        assertThat(betaError.gatewayTimeout()).isEmpty
+        assertThat(betaError.timeout()).isEmpty
         assertThat(betaError.api()).isEmpty
         assertThat(betaError.overloaded()).isEmpty
     }
@@ -121,7 +121,7 @@ internal class BetaErrorTest {
         assertThat(betaError.permission()).contains(permission)
         assertThat(betaError.notFound()).isEmpty
         assertThat(betaError.rateLimit()).isEmpty
-        assertThat(betaError.gatewayTimeout()).isEmpty
+        assertThat(betaError.timeout()).isEmpty
         assertThat(betaError.api()).isEmpty
         assertThat(betaError.overloaded()).isEmpty
     }
@@ -153,7 +153,7 @@ internal class BetaErrorTest {
         assertThat(betaError.permission()).isEmpty
         assertThat(betaError.notFound()).contains(notFound)
         assertThat(betaError.rateLimit()).isEmpty
-        assertThat(betaError.gatewayTimeout()).isEmpty
+        assertThat(betaError.timeout()).isEmpty
         assertThat(betaError.api()).isEmpty
         assertThat(betaError.overloaded()).isEmpty
     }
@@ -184,7 +184,7 @@ internal class BetaErrorTest {
         assertThat(betaError.permission()).isEmpty
         assertThat(betaError.notFound()).isEmpty
         assertThat(betaError.rateLimit()).contains(rateLimit)
-        assertThat(betaError.gatewayTimeout()).isEmpty
+        assertThat(betaError.timeout()).isEmpty
         assertThat(betaError.api()).isEmpty
         assertThat(betaError.overloaded()).isEmpty
     }
@@ -205,10 +205,10 @@ internal class BetaErrorTest {
     }
 
     @Test
-    fun ofGatewayTimeout() {
-        val gatewayTimeout = BetaGatewayTimeoutError.builder().message("message").build()
+    fun ofTimeout() {
+        val timeout = BetaGatewayTimeoutError.builder().message("message").build()
 
-        val betaError = BetaError.ofGatewayTimeout(gatewayTimeout)
+        val betaError = BetaError.ofTimeout(timeout)
 
         assertThat(betaError.invalidRequest()).isEmpty
         assertThat(betaError.authentication()).isEmpty
@@ -216,16 +216,16 @@ internal class BetaErrorTest {
         assertThat(betaError.permission()).isEmpty
         assertThat(betaError.notFound()).isEmpty
         assertThat(betaError.rateLimit()).isEmpty
-        assertThat(betaError.gatewayTimeout()).contains(gatewayTimeout)
+        assertThat(betaError.timeout()).contains(timeout)
         assertThat(betaError.api()).isEmpty
         assertThat(betaError.overloaded()).isEmpty
     }
 
     @Test
-    fun ofGatewayTimeoutRoundtrip() {
+    fun ofTimeoutRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaError =
-            BetaError.ofGatewayTimeout(BetaGatewayTimeoutError.builder().message("message").build())
+            BetaError.ofTimeout(BetaGatewayTimeoutError.builder().message("message").build())
 
         val roundtrippedBetaError =
             jsonMapper.readValue(
@@ -248,7 +248,7 @@ internal class BetaErrorTest {
         assertThat(betaError.permission()).isEmpty
         assertThat(betaError.notFound()).isEmpty
         assertThat(betaError.rateLimit()).isEmpty
-        assertThat(betaError.gatewayTimeout()).isEmpty
+        assertThat(betaError.timeout()).isEmpty
         assertThat(betaError.api()).contains(api)
         assertThat(betaError.overloaded()).isEmpty
     }
@@ -279,7 +279,7 @@ internal class BetaErrorTest {
         assertThat(betaError.permission()).isEmpty
         assertThat(betaError.notFound()).isEmpty
         assertThat(betaError.rateLimit()).isEmpty
-        assertThat(betaError.gatewayTimeout()).isEmpty
+        assertThat(betaError.timeout()).isEmpty
         assertThat(betaError.api()).isEmpty
         assertThat(betaError.overloaded()).contains(overloaded)
     }

@@ -192,9 +192,8 @@ private constructor(
          */
         fun source(source: JsonField<Source>) = apply { this.source = source }
 
-        /** Alias for calling [source] with `Source.ofBetaBase64Pdf(betaBase64Pdf)`. */
-        fun source(betaBase64Pdf: BetaBase64PdfSource) =
-            source(Source.ofBetaBase64Pdf(betaBase64Pdf))
+        /** Alias for calling [source] with `Source.ofBase64(base64)`. */
+        fun source(base64: BetaBase64PdfSource) = source(Source.ofBase64(base64))
 
         /**
          * Alias for calling [source] with the following:
@@ -204,12 +203,10 @@ private constructor(
          *     .build()
          * ```
          */
-        fun betaBase64PdfSource(data: String) =
-            source(BetaBase64PdfSource.builder().data(data).build())
+        fun base64Source(data: String) = source(BetaBase64PdfSource.builder().data(data).build())
 
-        /** Alias for calling [source] with `Source.ofBetaPlainText(betaPlainText)`. */
-        fun source(betaPlainText: BetaPlainTextSource) =
-            source(Source.ofBetaPlainText(betaPlainText))
+        /** Alias for calling [source] with `Source.ofText(text)`. */
+        fun source(text: BetaPlainTextSource) = source(Source.ofText(text))
 
         /**
          * Alias for calling [source] with the following:
@@ -219,12 +216,10 @@ private constructor(
          *     .build()
          * ```
          */
-        fun betaPlainTextSource(data: String) =
-            source(BetaPlainTextSource.builder().data(data).build())
+        fun textSource(data: String) = source(BetaPlainTextSource.builder().data(data).build())
 
-        /** Alias for calling [source] with `Source.ofBetaContentBlock(betaContentBlock)`. */
-        fun source(betaContentBlock: BetaContentBlockSource) =
-            source(Source.ofBetaContentBlock(betaContentBlock))
+        /** Alias for calling [source] with `Source.ofContent(content)`. */
+        fun source(content: BetaContentBlockSource) = source(Source.ofContent(content))
 
         /**
          * Alias for calling [source] with the following:
@@ -234,29 +229,28 @@ private constructor(
          *     .build()
          * ```
          */
-        fun betaContentBlockSource(content: BetaContentBlockSource.Content) =
+        fun contentSource(content: BetaContentBlockSource.Content) =
             source(BetaContentBlockSource.builder().content(content).build())
 
         /**
-         * Alias for calling [betaContentBlockSource] with
-         * `BetaContentBlockSource.Content.ofString(string)`.
+         * Alias for calling [contentSource] with `BetaContentBlockSource.Content.ofString(string)`.
          */
-        fun betaContentBlockSource(string: String) =
-            betaContentBlockSource(BetaContentBlockSource.Content.ofString(string))
+        fun contentSource(string: String) =
+            contentSource(BetaContentBlockSource.Content.ofString(string))
 
         /**
-         * Alias for calling [Builder.betaContentBlockSource] with
+         * Alias for calling [contentSource] with
          * `BetaContentBlockSource.Content.ofBetaContentBlockSource(betaContentBlockSource)`.
          */
-        fun betaContentBlockSourceOfBetaContentBlockSource(
+        fun contentSourceOfBetaContentBlockSource(
             betaContentBlockSource: List<BetaContentBlockSourceContent>
         ) =
-            betaContentBlockSource(
+            contentSource(
                 BetaContentBlockSource.Content.ofBetaContentBlockSource(betaContentBlockSource)
             )
 
-        /** Alias for calling [source] with `Source.ofBetaUrlPdf(betaUrlPdf)`. */
-        fun source(betaUrlPdf: BetaUrlPdfSource) = source(Source.ofBetaUrlPdf(betaUrlPdf))
+        /** Alias for calling [source] with `Source.ofUrl(url)`. */
+        fun source(url: BetaUrlPdfSource) = source(Source.ofUrl(url))
 
         /**
          * Alias for calling [source] with the following:
@@ -266,7 +260,7 @@ private constructor(
          *     .build()
          * ```
          */
-        fun betaUrlPdfSource(url: String) = source(BetaUrlPdfSource.builder().url(url).build())
+        fun urlSource(url: String) = source(BetaUrlPdfSource.builder().url(url).build())
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -429,47 +423,45 @@ private constructor(
     @JsonSerialize(using = Source.Serializer::class)
     class Source
     private constructor(
-        private val betaBase64Pdf: BetaBase64PdfSource? = null,
-        private val betaPlainText: BetaPlainTextSource? = null,
-        private val betaContentBlock: BetaContentBlockSource? = null,
-        private val betaUrlPdf: BetaUrlPdfSource? = null,
+        private val base64: BetaBase64PdfSource? = null,
+        private val text: BetaPlainTextSource? = null,
+        private val content: BetaContentBlockSource? = null,
+        private val url: BetaUrlPdfSource? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun betaBase64Pdf(): Optional<BetaBase64PdfSource> = Optional.ofNullable(betaBase64Pdf)
+        fun base64(): Optional<BetaBase64PdfSource> = Optional.ofNullable(base64)
 
-        fun betaPlainText(): Optional<BetaPlainTextSource> = Optional.ofNullable(betaPlainText)
+        fun text(): Optional<BetaPlainTextSource> = Optional.ofNullable(text)
 
-        fun betaContentBlock(): Optional<BetaContentBlockSource> =
-            Optional.ofNullable(betaContentBlock)
+        fun content(): Optional<BetaContentBlockSource> = Optional.ofNullable(content)
 
-        fun betaUrlPdf(): Optional<BetaUrlPdfSource> = Optional.ofNullable(betaUrlPdf)
+        fun url(): Optional<BetaUrlPdfSource> = Optional.ofNullable(url)
 
-        fun isBetaBase64Pdf(): Boolean = betaBase64Pdf != null
+        fun isBase64(): Boolean = base64 != null
 
-        fun isBetaPlainText(): Boolean = betaPlainText != null
+        fun isText(): Boolean = text != null
 
-        fun isBetaContentBlock(): Boolean = betaContentBlock != null
+        fun isContent(): Boolean = content != null
 
-        fun isBetaUrlPdf(): Boolean = betaUrlPdf != null
+        fun isUrl(): Boolean = url != null
 
-        fun asBetaBase64Pdf(): BetaBase64PdfSource = betaBase64Pdf.getOrThrow("betaBase64Pdf")
+        fun asBase64(): BetaBase64PdfSource = base64.getOrThrow("base64")
 
-        fun asBetaPlainText(): BetaPlainTextSource = betaPlainText.getOrThrow("betaPlainText")
+        fun asText(): BetaPlainTextSource = text.getOrThrow("text")
 
-        fun asBetaContentBlock(): BetaContentBlockSource =
-            betaContentBlock.getOrThrow("betaContentBlock")
+        fun asContent(): BetaContentBlockSource = content.getOrThrow("content")
 
-        fun asBetaUrlPdf(): BetaUrlPdfSource = betaUrlPdf.getOrThrow("betaUrlPdf")
+        fun asUrl(): BetaUrlPdfSource = url.getOrThrow("url")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                betaBase64Pdf != null -> visitor.visitBetaBase64Pdf(betaBase64Pdf)
-                betaPlainText != null -> visitor.visitBetaPlainText(betaPlainText)
-                betaContentBlock != null -> visitor.visitBetaContentBlock(betaContentBlock)
-                betaUrlPdf != null -> visitor.visitBetaUrlPdf(betaUrlPdf)
+                base64 != null -> visitor.visitBase64(base64)
+                text != null -> visitor.visitText(text)
+                content != null -> visitor.visitContent(content)
+                url != null -> visitor.visitUrl(url)
                 else -> visitor.unknown(_json)
             }
 
@@ -482,20 +474,20 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitBetaBase64Pdf(betaBase64Pdf: BetaBase64PdfSource) {
-                        betaBase64Pdf.validate()
+                    override fun visitBase64(base64: BetaBase64PdfSource) {
+                        base64.validate()
                     }
 
-                    override fun visitBetaPlainText(betaPlainText: BetaPlainTextSource) {
-                        betaPlainText.validate()
+                    override fun visitText(text: BetaPlainTextSource) {
+                        text.validate()
                     }
 
-                    override fun visitBetaContentBlock(betaContentBlock: BetaContentBlockSource) {
-                        betaContentBlock.validate()
+                    override fun visitContent(content: BetaContentBlockSource) {
+                        content.validate()
                     }
 
-                    override fun visitBetaUrlPdf(betaUrlPdf: BetaUrlPdfSource) {
-                        betaUrlPdf.validate()
+                    override fun visitUrl(url: BetaUrlPdfSource) {
+                        url.validate()
                     }
                 }
             )
@@ -520,17 +512,13 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitBetaBase64Pdf(betaBase64Pdf: BetaBase64PdfSource) =
-                        betaBase64Pdf.validity()
+                    override fun visitBase64(base64: BetaBase64PdfSource) = base64.validity()
 
-                    override fun visitBetaPlainText(betaPlainText: BetaPlainTextSource) =
-                        betaPlainText.validity()
+                    override fun visitText(text: BetaPlainTextSource) = text.validity()
 
-                    override fun visitBetaContentBlock(betaContentBlock: BetaContentBlockSource) =
-                        betaContentBlock.validity()
+                    override fun visitContent(content: BetaContentBlockSource) = content.validity()
 
-                    override fun visitBetaUrlPdf(betaUrlPdf: BetaUrlPdfSource) =
-                        betaUrlPdf.validity()
+                    override fun visitUrl(url: BetaUrlPdfSource) = url.validity()
 
                     override fun unknown(json: JsonValue?) = 0
                 }
@@ -541,49 +529,42 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Source && betaBase64Pdf == other.betaBase64Pdf && betaPlainText == other.betaPlainText && betaContentBlock == other.betaContentBlock && betaUrlPdf == other.betaUrlPdf /* spotless:on */
+            return /* spotless:off */ other is Source && base64 == other.base64 && text == other.text && content == other.content && url == other.url /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaBase64Pdf, betaPlainText, betaContentBlock, betaUrlPdf) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(base64, text, content, url) /* spotless:on */
 
         override fun toString(): String =
             when {
-                betaBase64Pdf != null -> "Source{betaBase64Pdf=$betaBase64Pdf}"
-                betaPlainText != null -> "Source{betaPlainText=$betaPlainText}"
-                betaContentBlock != null -> "Source{betaContentBlock=$betaContentBlock}"
-                betaUrlPdf != null -> "Source{betaUrlPdf=$betaUrlPdf}"
+                base64 != null -> "Source{base64=$base64}"
+                text != null -> "Source{text=$text}"
+                content != null -> "Source{content=$content}"
+                url != null -> "Source{url=$url}"
                 _json != null -> "Source{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Source")
             }
 
         companion object {
 
-            @JvmStatic
-            fun ofBetaBase64Pdf(betaBase64Pdf: BetaBase64PdfSource) =
-                Source(betaBase64Pdf = betaBase64Pdf)
+            @JvmStatic fun ofBase64(base64: BetaBase64PdfSource) = Source(base64 = base64)
 
-            @JvmStatic
-            fun ofBetaPlainText(betaPlainText: BetaPlainTextSource) =
-                Source(betaPlainText = betaPlainText)
+            @JvmStatic fun ofText(text: BetaPlainTextSource) = Source(text = text)
 
-            @JvmStatic
-            fun ofBetaContentBlock(betaContentBlock: BetaContentBlockSource) =
-                Source(betaContentBlock = betaContentBlock)
+            @JvmStatic fun ofContent(content: BetaContentBlockSource) = Source(content = content)
 
-            @JvmStatic
-            fun ofBetaUrlPdf(betaUrlPdf: BetaUrlPdfSource) = Source(betaUrlPdf = betaUrlPdf)
+            @JvmStatic fun ofUrl(url: BetaUrlPdfSource) = Source(url = url)
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */
         interface Visitor<out T> {
 
-            fun visitBetaBase64Pdf(betaBase64Pdf: BetaBase64PdfSource): T
+            fun visitBase64(base64: BetaBase64PdfSource): T
 
-            fun visitBetaPlainText(betaPlainText: BetaPlainTextSource): T
+            fun visitText(text: BetaPlainTextSource): T
 
-            fun visitBetaContentBlock(betaContentBlock: BetaContentBlockSource): T
+            fun visitContent(content: BetaContentBlockSource): T
 
-            fun visitBetaUrlPdf(betaUrlPdf: BetaUrlPdfSource): T
+            fun visitUrl(url: BetaUrlPdfSource): T
 
             /**
              * Maps an unknown variant of [Source] to a value of type [T].
@@ -609,22 +590,22 @@ private constructor(
                 when (type) {
                     "base64" -> {
                         return tryDeserialize(node, jacksonTypeRef<BetaBase64PdfSource>())?.let {
-                            Source(betaBase64Pdf = it, _json = json)
+                            Source(base64 = it, _json = json)
                         } ?: Source(_json = json)
                     }
                     "text" -> {
                         return tryDeserialize(node, jacksonTypeRef<BetaPlainTextSource>())?.let {
-                            Source(betaPlainText = it, _json = json)
+                            Source(text = it, _json = json)
                         } ?: Source(_json = json)
                     }
                     "content" -> {
                         return tryDeserialize(node, jacksonTypeRef<BetaContentBlockSource>())?.let {
-                            Source(betaContentBlock = it, _json = json)
+                            Source(content = it, _json = json)
                         } ?: Source(_json = json)
                     }
                     "url" -> {
                         return tryDeserialize(node, jacksonTypeRef<BetaUrlPdfSource>())?.let {
-                            Source(betaUrlPdf = it, _json = json)
+                            Source(url = it, _json = json)
                         } ?: Source(_json = json)
                     }
                 }
@@ -641,10 +622,10 @@ private constructor(
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.betaBase64Pdf != null -> generator.writeObject(value.betaBase64Pdf)
-                    value.betaPlainText != null -> generator.writeObject(value.betaPlainText)
-                    value.betaContentBlock != null -> generator.writeObject(value.betaContentBlock)
-                    value.betaUrlPdf != null -> generator.writeObject(value.betaUrlPdf)
+                    value.base64 != null -> generator.writeObject(value.base64)
+                    value.text != null -> generator.writeObject(value.text)
+                    value.content != null -> generator.writeObject(value.content)
+                    value.url != null -> generator.writeObject(value.url)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Source")
                 }

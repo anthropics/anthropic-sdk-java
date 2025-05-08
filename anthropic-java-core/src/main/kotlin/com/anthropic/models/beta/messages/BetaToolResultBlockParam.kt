@@ -491,35 +491,29 @@ private constructor(
         @JsonSerialize(using = Block.Serializer::class)
         class Block
         private constructor(
-            private val betaTextBlockParam: BetaTextBlockParam? = null,
-            private val betaImageBlockParam: BetaImageBlockParam? = null,
+            private val text: BetaTextBlockParam? = null,
+            private val image: BetaImageBlockParam? = null,
             private val _json: JsonValue? = null,
         ) {
 
-            fun betaTextBlockParam(): Optional<BetaTextBlockParam> =
-                Optional.ofNullable(betaTextBlockParam)
+            fun text(): Optional<BetaTextBlockParam> = Optional.ofNullable(text)
 
-            fun betaImageBlockParam(): Optional<BetaImageBlockParam> =
-                Optional.ofNullable(betaImageBlockParam)
+            fun image(): Optional<BetaImageBlockParam> = Optional.ofNullable(image)
 
-            fun isBetaTextBlockParam(): Boolean = betaTextBlockParam != null
+            fun isText(): Boolean = text != null
 
-            fun isBetaImageBlockParam(): Boolean = betaImageBlockParam != null
+            fun isImage(): Boolean = image != null
 
-            fun asBetaTextBlockParam(): BetaTextBlockParam =
-                betaTextBlockParam.getOrThrow("betaTextBlockParam")
+            fun asText(): BetaTextBlockParam = text.getOrThrow("text")
 
-            fun asBetaImageBlockParam(): BetaImageBlockParam =
-                betaImageBlockParam.getOrThrow("betaImageBlockParam")
+            fun asImage(): BetaImageBlockParam = image.getOrThrow("image")
 
             fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
             fun <T> accept(visitor: Visitor<T>): T =
                 when {
-                    betaTextBlockParam != null ->
-                        visitor.visitBetaTextBlockParam(betaTextBlockParam)
-                    betaImageBlockParam != null ->
-                        visitor.visitBetaImageBlockParam(betaImageBlockParam)
+                    text != null -> visitor.visitText(text)
+                    image != null -> visitor.visitImage(image)
                     else -> visitor.unknown(_json)
                 }
 
@@ -532,16 +526,12 @@ private constructor(
 
                 accept(
                     object : Visitor<Unit> {
-                        override fun visitBetaTextBlockParam(
-                            betaTextBlockParam: BetaTextBlockParam
-                        ) {
-                            betaTextBlockParam.validate()
+                        override fun visitText(text: BetaTextBlockParam) {
+                            text.validate()
                         }
 
-                        override fun visitBetaImageBlockParam(
-                            betaImageBlockParam: BetaImageBlockParam
-                        ) {
-                            betaImageBlockParam.validate()
+                        override fun visitImage(image: BetaImageBlockParam) {
+                            image.validate()
                         }
                     }
                 )
@@ -566,13 +556,9 @@ private constructor(
             internal fun validity(): Int =
                 accept(
                     object : Visitor<Int> {
-                        override fun visitBetaTextBlockParam(
-                            betaTextBlockParam: BetaTextBlockParam
-                        ) = betaTextBlockParam.validity()
+                        override fun visitText(text: BetaTextBlockParam) = text.validity()
 
-                        override fun visitBetaImageBlockParam(
-                            betaImageBlockParam: BetaImageBlockParam
-                        ) = betaImageBlockParam.validity()
+                        override fun visitImage(image: BetaImageBlockParam) = image.validity()
 
                         override fun unknown(json: JsonValue?) = 0
                     }
@@ -583,28 +569,24 @@ private constructor(
                     return true
                 }
 
-                return /* spotless:off */ other is Block && betaTextBlockParam == other.betaTextBlockParam && betaImageBlockParam == other.betaImageBlockParam /* spotless:on */
+                return /* spotless:off */ other is Block && text == other.text && image == other.image /* spotless:on */
             }
 
-            override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaTextBlockParam, betaImageBlockParam) /* spotless:on */
+            override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image) /* spotless:on */
 
             override fun toString(): String =
                 when {
-                    betaTextBlockParam != null -> "Block{betaTextBlockParam=$betaTextBlockParam}"
-                    betaImageBlockParam != null -> "Block{betaImageBlockParam=$betaImageBlockParam}"
+                    text != null -> "Block{text=$text}"
+                    image != null -> "Block{image=$image}"
                     _json != null -> "Block{_unknown=$_json}"
                     else -> throw IllegalStateException("Invalid Block")
                 }
 
             companion object {
 
-                @JvmStatic
-                fun ofBetaTextBlockParam(betaTextBlockParam: BetaTextBlockParam) =
-                    Block(betaTextBlockParam = betaTextBlockParam)
+                @JvmStatic fun ofText(text: BetaTextBlockParam) = Block(text = text)
 
-                @JvmStatic
-                fun ofBetaImageBlockParam(betaImageBlockParam: BetaImageBlockParam) =
-                    Block(betaImageBlockParam = betaImageBlockParam)
+                @JvmStatic fun ofImage(image: BetaImageBlockParam) = Block(image = image)
             }
 
             /**
@@ -612,9 +594,9 @@ private constructor(
              */
             interface Visitor<out T> {
 
-                fun visitBetaTextBlockParam(betaTextBlockParam: BetaTextBlockParam): T
+                fun visitText(text: BetaTextBlockParam): T
 
-                fun visitBetaImageBlockParam(betaImageBlockParam: BetaImageBlockParam): T
+                fun visitImage(image: BetaImageBlockParam): T
 
                 /**
                  * Maps an unknown variant of [Block] to a value of type [T].
@@ -640,13 +622,12 @@ private constructor(
                     when (type) {
                         "text" -> {
                             return tryDeserialize(node, jacksonTypeRef<BetaTextBlockParam>())?.let {
-                                Block(betaTextBlockParam = it, _json = json)
+                                Block(text = it, _json = json)
                             } ?: Block(_json = json)
                         }
                         "image" -> {
                             return tryDeserialize(node, jacksonTypeRef<BetaImageBlockParam>())
-                                ?.let { Block(betaImageBlockParam = it, _json = json) }
-                                ?: Block(_json = json)
+                                ?.let { Block(image = it, _json = json) } ?: Block(_json = json)
                         }
                     }
 
@@ -662,10 +643,8 @@ private constructor(
                     provider: SerializerProvider,
                 ) {
                     when {
-                        value.betaTextBlockParam != null ->
-                            generator.writeObject(value.betaTextBlockParam)
-                        value.betaImageBlockParam != null ->
-                            generator.writeObject(value.betaImageBlockParam)
+                        value.text != null -> generator.writeObject(value.text)
+                        value.image != null -> generator.writeObject(value.image)
                         value._json != null -> generator.writeObject(value._json)
                         else -> throw IllegalStateException("Invalid Block")
                     }

@@ -15,8 +15,8 @@ import org.junit.jupiter.params.provider.EnumSource
 internal class TextCitationTest {
 
     @Test
-    fun ofCitationCharLocation() {
-        val citationCharLocation =
+    fun ofCharLocation() {
+        val charLocation =
             CitationCharLocation.builder()
                 .citedText("cited_text")
                 .documentIndex(0L)
@@ -25,19 +25,19 @@ internal class TextCitationTest {
                 .startCharIndex(0L)
                 .build()
 
-        val textCitation = TextCitation.ofCitationCharLocation(citationCharLocation)
+        val textCitation = TextCitation.ofCharLocation(charLocation)
 
-        assertThat(textCitation.citationCharLocation()).contains(citationCharLocation)
-        assertThat(textCitation.citationPageLocation()).isEmpty
-        assertThat(textCitation.citationContentBlockLocation()).isEmpty
-        assertThat(textCitation.citationsWebSearchResultLocation()).isEmpty
+        assertThat(textCitation.charLocation()).contains(charLocation)
+        assertThat(textCitation.pageLocation()).isEmpty
+        assertThat(textCitation.contentBlockLocation()).isEmpty
+        assertThat(textCitation.webSearchResultLocation()).isEmpty
     }
 
     @Test
-    fun ofCitationCharLocationRoundtrip() {
+    fun ofCharLocationRoundtrip() {
         val jsonMapper = jsonMapper()
         val textCitation =
-            TextCitation.ofCitationCharLocation(
+            TextCitation.ofCharLocation(
                 CitationCharLocation.builder()
                     .citedText("cited_text")
                     .documentIndex(0L)
@@ -57,8 +57,8 @@ internal class TextCitationTest {
     }
 
     @Test
-    fun ofCitationPageLocation() {
-        val citationPageLocation =
+    fun ofPageLocation() {
+        val pageLocation =
             CitationPageLocation.builder()
                 .citedText("cited_text")
                 .documentIndex(0L)
@@ -67,19 +67,19 @@ internal class TextCitationTest {
                 .startPageNumber(1L)
                 .build()
 
-        val textCitation = TextCitation.ofCitationPageLocation(citationPageLocation)
+        val textCitation = TextCitation.ofPageLocation(pageLocation)
 
-        assertThat(textCitation.citationCharLocation()).isEmpty
-        assertThat(textCitation.citationPageLocation()).contains(citationPageLocation)
-        assertThat(textCitation.citationContentBlockLocation()).isEmpty
-        assertThat(textCitation.citationsWebSearchResultLocation()).isEmpty
+        assertThat(textCitation.charLocation()).isEmpty
+        assertThat(textCitation.pageLocation()).contains(pageLocation)
+        assertThat(textCitation.contentBlockLocation()).isEmpty
+        assertThat(textCitation.webSearchResultLocation()).isEmpty
     }
 
     @Test
-    fun ofCitationPageLocationRoundtrip() {
+    fun ofPageLocationRoundtrip() {
         val jsonMapper = jsonMapper()
         val textCitation =
-            TextCitation.ofCitationPageLocation(
+            TextCitation.ofPageLocation(
                 CitationPageLocation.builder()
                     .citedText("cited_text")
                     .documentIndex(0L)
@@ -99,8 +99,8 @@ internal class TextCitationTest {
     }
 
     @Test
-    fun ofCitationContentBlockLocation() {
-        val citationContentBlockLocation =
+    fun ofContentBlockLocation() {
+        val contentBlockLocation =
             CitationContentBlockLocation.builder()
                 .citedText("cited_text")
                 .documentIndex(0L)
@@ -109,20 +109,19 @@ internal class TextCitationTest {
                 .startBlockIndex(0L)
                 .build()
 
-        val textCitation = TextCitation.ofCitationContentBlockLocation(citationContentBlockLocation)
+        val textCitation = TextCitation.ofContentBlockLocation(contentBlockLocation)
 
-        assertThat(textCitation.citationCharLocation()).isEmpty
-        assertThat(textCitation.citationPageLocation()).isEmpty
-        assertThat(textCitation.citationContentBlockLocation())
-            .contains(citationContentBlockLocation)
-        assertThat(textCitation.citationsWebSearchResultLocation()).isEmpty
+        assertThat(textCitation.charLocation()).isEmpty
+        assertThat(textCitation.pageLocation()).isEmpty
+        assertThat(textCitation.contentBlockLocation()).contains(contentBlockLocation)
+        assertThat(textCitation.webSearchResultLocation()).isEmpty
     }
 
     @Test
-    fun ofCitationContentBlockLocationRoundtrip() {
+    fun ofContentBlockLocationRoundtrip() {
         val jsonMapper = jsonMapper()
         val textCitation =
-            TextCitation.ofCitationContentBlockLocation(
+            TextCitation.ofContentBlockLocation(
                 CitationContentBlockLocation.builder()
                     .citedText("cited_text")
                     .documentIndex(0L)
@@ -142,8 +141,8 @@ internal class TextCitationTest {
     }
 
     @Test
-    fun ofCitationsWebSearchResultLocation() {
-        val citationsWebSearchResultLocation =
+    fun ofWebSearchResultLocation() {
+        val webSearchResultLocation =
             CitationsWebSearchResultLocation.builder()
                 .citedText("cited_text")
                 .encryptedIndex("encrypted_index")
@@ -151,21 +150,19 @@ internal class TextCitationTest {
                 .url("url")
                 .build()
 
-        val textCitation =
-            TextCitation.ofCitationsWebSearchResultLocation(citationsWebSearchResultLocation)
+        val textCitation = TextCitation.ofWebSearchResultLocation(webSearchResultLocation)
 
-        assertThat(textCitation.citationCharLocation()).isEmpty
-        assertThat(textCitation.citationPageLocation()).isEmpty
-        assertThat(textCitation.citationContentBlockLocation()).isEmpty
-        assertThat(textCitation.citationsWebSearchResultLocation())
-            .contains(citationsWebSearchResultLocation)
+        assertThat(textCitation.charLocation()).isEmpty
+        assertThat(textCitation.pageLocation()).isEmpty
+        assertThat(textCitation.contentBlockLocation()).isEmpty
+        assertThat(textCitation.webSearchResultLocation()).contains(webSearchResultLocation)
     }
 
     @Test
-    fun ofCitationsWebSearchResultLocationRoundtrip() {
+    fun ofWebSearchResultLocationRoundtrip() {
         val jsonMapper = jsonMapper()
         val textCitation =
-            TextCitation.ofCitationsWebSearchResultLocation(
+            TextCitation.ofWebSearchResultLocation(
                 CitationsWebSearchResultLocation.builder()
                     .citedText("cited_text")
                     .encryptedIndex("encrypted_index")

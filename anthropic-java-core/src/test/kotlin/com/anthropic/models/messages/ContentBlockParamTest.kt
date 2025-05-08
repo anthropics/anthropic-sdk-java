@@ -322,7 +322,7 @@ internal class ContentBlockParamTest {
     fun ofDocument() {
         val document =
             DocumentBlockParam.builder()
-                .base64PdfSource("U3RhaW5sZXNzIHJvY2tz")
+                .base64Source("U3RhaW5sZXNzIHJvY2tz")
                 .cacheControl(CacheControlEphemeral.builder().build())
                 .citations(CitationsConfigParam.builder().enabled(true).build())
                 .context("x")
@@ -348,7 +348,7 @@ internal class ContentBlockParamTest {
         val contentBlockParam =
             ContentBlockParam.ofDocument(
                 DocumentBlockParam.builder()
-                    .base64PdfSource("U3RhaW5sZXNzIHJvY2tz")
+                    .base64Source("U3RhaW5sZXNzIHJvY2tz")
                     .cacheControl(CacheControlEphemeral.builder().build())
                     .citations(CitationsConfigParam.builder().enabled(true).build())
                     .context("x")

@@ -39,7 +39,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.base64PdfBlock()).isEmpty
+        assertThat(betaContentBlockParam.document()).isEmpty
         assertThat(betaContentBlockParam.thinking()).isEmpty
         assertThat(betaContentBlockParam.redactedThinking()).isEmpty
     }
@@ -94,7 +94,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.base64PdfBlock()).isEmpty
+        assertThat(betaContentBlockParam.document()).isEmpty
         assertThat(betaContentBlockParam.thinking()).isEmpty
         assertThat(betaContentBlockParam.redactedThinking()).isEmpty
     }
@@ -142,7 +142,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.base64PdfBlock()).isEmpty
+        assertThat(betaContentBlockParam.document()).isEmpty
         assertThat(betaContentBlockParam.thinking()).isEmpty
         assertThat(betaContentBlockParam.redactedThinking()).isEmpty
     }
@@ -186,7 +186,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).contains(serverToolUse)
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.base64PdfBlock()).isEmpty
+        assertThat(betaContentBlockParam.document()).isEmpty
         assertThat(betaContentBlockParam.thinking()).isEmpty
         assertThat(betaContentBlockParam.redactedThinking()).isEmpty
     }
@@ -238,7 +238,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).contains(webSearchToolResult)
         assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.base64PdfBlock()).isEmpty
+        assertThat(betaContentBlockParam.document()).isEmpty
         assertThat(betaContentBlockParam.thinking()).isEmpty
         assertThat(betaContentBlockParam.redactedThinking()).isEmpty
     }
@@ -291,7 +291,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.toolResult()).contains(toolResult)
-        assertThat(betaContentBlockParam.base64PdfBlock()).isEmpty
+        assertThat(betaContentBlockParam.document()).isEmpty
         assertThat(betaContentBlockParam.thinking()).isEmpty
         assertThat(betaContentBlockParam.redactedThinking()).isEmpty
     }
@@ -319,17 +319,17 @@ internal class BetaContentBlockParamTest {
     }
 
     @Test
-    fun ofBase64PdfBlock() {
-        val base64PdfBlock =
+    fun ofDocument() {
+        val document =
             BetaBase64PdfBlock.builder()
-                .betaBase64PdfSource("U3RhaW5sZXNzIHJvY2tz")
+                .base64Source("U3RhaW5sZXNzIHJvY2tz")
                 .cacheControl(BetaCacheControlEphemeral.builder().build())
                 .citations(BetaCitationsConfigParam.builder().enabled(true).build())
                 .context("x")
                 .title("x")
                 .build()
 
-        val betaContentBlockParam = BetaContentBlockParam.ofBase64PdfBlock(base64PdfBlock)
+        val betaContentBlockParam = BetaContentBlockParam.ofDocument(document)
 
         assertThat(betaContentBlockParam.text()).isEmpty
         assertThat(betaContentBlockParam.image()).isEmpty
@@ -337,18 +337,18 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.base64PdfBlock()).contains(base64PdfBlock)
+        assertThat(betaContentBlockParam.document()).contains(document)
         assertThat(betaContentBlockParam.thinking()).isEmpty
         assertThat(betaContentBlockParam.redactedThinking()).isEmpty
     }
 
     @Test
-    fun ofBase64PdfBlockRoundtrip() {
+    fun ofDocumentRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaContentBlockParam =
-            BetaContentBlockParam.ofBase64PdfBlock(
+            BetaContentBlockParam.ofDocument(
                 BetaBase64PdfBlock.builder()
-                    .betaBase64PdfSource("U3RhaW5sZXNzIHJvY2tz")
+                    .base64Source("U3RhaW5sZXNzIHJvY2tz")
                     .cacheControl(BetaCacheControlEphemeral.builder().build())
                     .citations(BetaCitationsConfigParam.builder().enabled(true).build())
                     .context("x")
@@ -378,7 +378,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.base64PdfBlock()).isEmpty
+        assertThat(betaContentBlockParam.document()).isEmpty
         assertThat(betaContentBlockParam.thinking()).contains(thinking)
         assertThat(betaContentBlockParam.redactedThinking()).isEmpty
     }
@@ -412,7 +412,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.base64PdfBlock()).isEmpty
+        assertThat(betaContentBlockParam.document()).isEmpty
         assertThat(betaContentBlockParam.thinking()).isEmpty
         assertThat(betaContentBlockParam.redactedThinking()).contains(redactedThinking)
     }

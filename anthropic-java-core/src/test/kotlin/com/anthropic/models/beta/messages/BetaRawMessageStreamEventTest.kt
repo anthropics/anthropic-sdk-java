@@ -16,8 +16,8 @@ import org.junit.jupiter.params.provider.EnumSource
 internal class BetaRawMessageStreamEventTest {
 
     @Test
-    fun ofStart() {
-        val start =
+    fun ofMessageStart() {
+        val messageStart =
             BetaRawMessageStartEvent.builder()
                 .message(
                     BetaMessage.builder()
@@ -54,21 +54,21 @@ internal class BetaRawMessageStreamEventTest {
                 )
                 .build()
 
-        val betaRawMessageStreamEvent = BetaRawMessageStreamEvent.ofStart(start)
+        val betaRawMessageStreamEvent = BetaRawMessageStreamEvent.ofMessageStart(messageStart)
 
-        assertThat(betaRawMessageStreamEvent.start()).contains(start)
-        assertThat(betaRawMessageStreamEvent.delta()).isEmpty
-        assertThat(betaRawMessageStreamEvent.stop()).isEmpty
+        assertThat(betaRawMessageStreamEvent.messageStart()).contains(messageStart)
+        assertThat(betaRawMessageStreamEvent.messageDelta()).isEmpty
+        assertThat(betaRawMessageStreamEvent.messageStop()).isEmpty
         assertThat(betaRawMessageStreamEvent.contentBlockStart()).isEmpty
         assertThat(betaRawMessageStreamEvent.contentBlockDelta()).isEmpty
         assertThat(betaRawMessageStreamEvent.contentBlockStop()).isEmpty
     }
 
     @Test
-    fun ofStartRoundtrip() {
+    fun ofMessageStartRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaRawMessageStreamEvent =
-            BetaRawMessageStreamEvent.ofStart(
+            BetaRawMessageStreamEvent.ofMessageStart(
                 BetaRawMessageStartEvent.builder()
                     .message(
                         BetaMessage.builder()
@@ -116,8 +116,8 @@ internal class BetaRawMessageStreamEventTest {
     }
 
     @Test
-    fun ofDelta() {
-        val delta =
+    fun ofMessageDelta() {
+        val messageDelta =
             BetaRawMessageDeltaEvent.builder()
                 .delta(
                     BetaRawMessageDeltaEvent.Delta.builder()
@@ -136,21 +136,21 @@ internal class BetaRawMessageStreamEventTest {
                 )
                 .build()
 
-        val betaRawMessageStreamEvent = BetaRawMessageStreamEvent.ofDelta(delta)
+        val betaRawMessageStreamEvent = BetaRawMessageStreamEvent.ofMessageDelta(messageDelta)
 
-        assertThat(betaRawMessageStreamEvent.start()).isEmpty
-        assertThat(betaRawMessageStreamEvent.delta()).contains(delta)
-        assertThat(betaRawMessageStreamEvent.stop()).isEmpty
+        assertThat(betaRawMessageStreamEvent.messageStart()).isEmpty
+        assertThat(betaRawMessageStreamEvent.messageDelta()).contains(messageDelta)
+        assertThat(betaRawMessageStreamEvent.messageStop()).isEmpty
         assertThat(betaRawMessageStreamEvent.contentBlockStart()).isEmpty
         assertThat(betaRawMessageStreamEvent.contentBlockDelta()).isEmpty
         assertThat(betaRawMessageStreamEvent.contentBlockStop()).isEmpty
     }
 
     @Test
-    fun ofDeltaRoundtrip() {
+    fun ofMessageDeltaRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaRawMessageStreamEvent =
-            BetaRawMessageStreamEvent.ofDelta(
+            BetaRawMessageStreamEvent.ofMessageDelta(
                 BetaRawMessageDeltaEvent.builder()
                     .delta(
                         BetaRawMessageDeltaEvent.Delta.builder()
@@ -182,24 +182,24 @@ internal class BetaRawMessageStreamEventTest {
     }
 
     @Test
-    fun ofStop() {
-        val stop = BetaRawMessageStopEvent.builder().build()
+    fun ofMessageStop() {
+        val messageStop = BetaRawMessageStopEvent.builder().build()
 
-        val betaRawMessageStreamEvent = BetaRawMessageStreamEvent.ofStop(stop)
+        val betaRawMessageStreamEvent = BetaRawMessageStreamEvent.ofMessageStop(messageStop)
 
-        assertThat(betaRawMessageStreamEvent.start()).isEmpty
-        assertThat(betaRawMessageStreamEvent.delta()).isEmpty
-        assertThat(betaRawMessageStreamEvent.stop()).contains(stop)
+        assertThat(betaRawMessageStreamEvent.messageStart()).isEmpty
+        assertThat(betaRawMessageStreamEvent.messageDelta()).isEmpty
+        assertThat(betaRawMessageStreamEvent.messageStop()).contains(messageStop)
         assertThat(betaRawMessageStreamEvent.contentBlockStart()).isEmpty
         assertThat(betaRawMessageStreamEvent.contentBlockDelta()).isEmpty
         assertThat(betaRawMessageStreamEvent.contentBlockStop()).isEmpty
     }
 
     @Test
-    fun ofStopRoundtrip() {
+    fun ofMessageStopRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaRawMessageStreamEvent =
-            BetaRawMessageStreamEvent.ofStop(BetaRawMessageStopEvent.builder().build())
+            BetaRawMessageStreamEvent.ofMessageStop(BetaRawMessageStopEvent.builder().build())
 
         val roundtrippedBetaRawMessageStreamEvent =
             jsonMapper.readValue(
@@ -234,9 +234,9 @@ internal class BetaRawMessageStreamEventTest {
         val betaRawMessageStreamEvent =
             BetaRawMessageStreamEvent.ofContentBlockStart(contentBlockStart)
 
-        assertThat(betaRawMessageStreamEvent.start()).isEmpty
-        assertThat(betaRawMessageStreamEvent.delta()).isEmpty
-        assertThat(betaRawMessageStreamEvent.stop()).isEmpty
+        assertThat(betaRawMessageStreamEvent.messageStart()).isEmpty
+        assertThat(betaRawMessageStreamEvent.messageDelta()).isEmpty
+        assertThat(betaRawMessageStreamEvent.messageStop()).isEmpty
         assertThat(betaRawMessageStreamEvent.contentBlockStart()).contains(contentBlockStart)
         assertThat(betaRawMessageStreamEvent.contentBlockDelta()).isEmpty
         assertThat(betaRawMessageStreamEvent.contentBlockStop()).isEmpty
@@ -283,9 +283,9 @@ internal class BetaRawMessageStreamEventTest {
         val betaRawMessageStreamEvent =
             BetaRawMessageStreamEvent.ofContentBlockDelta(contentBlockDelta)
 
-        assertThat(betaRawMessageStreamEvent.start()).isEmpty
-        assertThat(betaRawMessageStreamEvent.delta()).isEmpty
-        assertThat(betaRawMessageStreamEvent.stop()).isEmpty
+        assertThat(betaRawMessageStreamEvent.messageStart()).isEmpty
+        assertThat(betaRawMessageStreamEvent.messageDelta()).isEmpty
+        assertThat(betaRawMessageStreamEvent.messageStop()).isEmpty
         assertThat(betaRawMessageStreamEvent.contentBlockStart()).isEmpty
         assertThat(betaRawMessageStreamEvent.contentBlockDelta()).contains(contentBlockDelta)
         assertThat(betaRawMessageStreamEvent.contentBlockStop()).isEmpty
@@ -315,9 +315,9 @@ internal class BetaRawMessageStreamEventTest {
         val betaRawMessageStreamEvent =
             BetaRawMessageStreamEvent.ofContentBlockStop(contentBlockStop)
 
-        assertThat(betaRawMessageStreamEvent.start()).isEmpty
-        assertThat(betaRawMessageStreamEvent.delta()).isEmpty
-        assertThat(betaRawMessageStreamEvent.stop()).isEmpty
+        assertThat(betaRawMessageStreamEvent.messageStart()).isEmpty
+        assertThat(betaRawMessageStreamEvent.messageDelta()).isEmpty
+        assertThat(betaRawMessageStreamEvent.messageStop()).isEmpty
         assertThat(betaRawMessageStreamEvent.contentBlockStart()).isEmpty
         assertThat(betaRawMessageStreamEvent.contentBlockDelta()).isEmpty
         assertThat(betaRawMessageStreamEvent.contentBlockStop()).contains(contentBlockStop)

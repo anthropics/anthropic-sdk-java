@@ -188,9 +188,8 @@ private constructor(
         fun rateLimitError(message: String) =
             error(BetaRateLimitError.builder().message(message).build())
 
-        /** Alias for calling [error] with `BetaError.ofGatewayTimeout(gatewayTimeout)`. */
-        fun error(gatewayTimeout: BetaGatewayTimeoutError) =
-            error(BetaError.ofGatewayTimeout(gatewayTimeout))
+        /** Alias for calling [error] with `BetaError.ofTimeout(timeout)`. */
+        fun error(timeout: BetaGatewayTimeoutError) = error(BetaError.ofTimeout(timeout))
 
         /**
          * Alias for calling [error] with the following:
@@ -200,7 +199,7 @@ private constructor(
          *     .build()
          * ```
          */
-        fun gatewayTimeoutError(message: String) =
+        fun timeoutError(message: String) =
             error(BetaGatewayTimeoutError.builder().message(message).build())
 
         /** Alias for calling [error] with `BetaError.ofApi(api)`. */

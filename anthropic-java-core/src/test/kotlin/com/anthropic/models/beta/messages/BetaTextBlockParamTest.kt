@@ -32,7 +32,7 @@ internal class BetaTextBlockParamTest {
             .contains(BetaCacheControlEphemeral.builder().build())
         assertThat(betaTextBlockParam.citations().getOrNull())
             .containsExactly(
-                BetaTextCitationParam.ofCitationCharLocation(
+                BetaTextCitationParam.ofCharLocation(
                     BetaCitationCharLocationParam.builder()
                         .citedText("cited_text")
                         .documentIndex(0L)

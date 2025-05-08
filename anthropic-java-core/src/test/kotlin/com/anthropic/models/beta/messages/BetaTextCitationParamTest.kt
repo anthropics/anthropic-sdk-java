@@ -15,8 +15,8 @@ import org.junit.jupiter.params.provider.EnumSource
 internal class BetaTextCitationParamTest {
 
     @Test
-    fun ofCitationCharLocation() {
-        val citationCharLocation =
+    fun ofCharLocation() {
+        val charLocation =
             BetaCitationCharLocationParam.builder()
                 .citedText("cited_text")
                 .documentIndex(0L)
@@ -25,20 +25,19 @@ internal class BetaTextCitationParamTest {
                 .startCharIndex(0L)
                 .build()
 
-        val betaTextCitationParam =
-            BetaTextCitationParam.ofCitationCharLocation(citationCharLocation)
+        val betaTextCitationParam = BetaTextCitationParam.ofCharLocation(charLocation)
 
-        assertThat(betaTextCitationParam.citationCharLocation()).contains(citationCharLocation)
-        assertThat(betaTextCitationParam.citationPageLocation()).isEmpty
-        assertThat(betaTextCitationParam.citationContentBlockLocation()).isEmpty
-        assertThat(betaTextCitationParam.citationWebSearchResultLocation()).isEmpty
+        assertThat(betaTextCitationParam.charLocation()).contains(charLocation)
+        assertThat(betaTextCitationParam.pageLocation()).isEmpty
+        assertThat(betaTextCitationParam.contentBlockLocation()).isEmpty
+        assertThat(betaTextCitationParam.webSearchResultLocation()).isEmpty
     }
 
     @Test
-    fun ofCitationCharLocationRoundtrip() {
+    fun ofCharLocationRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaTextCitationParam =
-            BetaTextCitationParam.ofCitationCharLocation(
+            BetaTextCitationParam.ofCharLocation(
                 BetaCitationCharLocationParam.builder()
                     .citedText("cited_text")
                     .documentIndex(0L)
@@ -58,8 +57,8 @@ internal class BetaTextCitationParamTest {
     }
 
     @Test
-    fun ofCitationPageLocation() {
-        val citationPageLocation =
+    fun ofPageLocation() {
+        val pageLocation =
             BetaCitationPageLocationParam.builder()
                 .citedText("cited_text")
                 .documentIndex(0L)
@@ -68,20 +67,19 @@ internal class BetaTextCitationParamTest {
                 .startPageNumber(1L)
                 .build()
 
-        val betaTextCitationParam =
-            BetaTextCitationParam.ofCitationPageLocation(citationPageLocation)
+        val betaTextCitationParam = BetaTextCitationParam.ofPageLocation(pageLocation)
 
-        assertThat(betaTextCitationParam.citationCharLocation()).isEmpty
-        assertThat(betaTextCitationParam.citationPageLocation()).contains(citationPageLocation)
-        assertThat(betaTextCitationParam.citationContentBlockLocation()).isEmpty
-        assertThat(betaTextCitationParam.citationWebSearchResultLocation()).isEmpty
+        assertThat(betaTextCitationParam.charLocation()).isEmpty
+        assertThat(betaTextCitationParam.pageLocation()).contains(pageLocation)
+        assertThat(betaTextCitationParam.contentBlockLocation()).isEmpty
+        assertThat(betaTextCitationParam.webSearchResultLocation()).isEmpty
     }
 
     @Test
-    fun ofCitationPageLocationRoundtrip() {
+    fun ofPageLocationRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaTextCitationParam =
-            BetaTextCitationParam.ofCitationPageLocation(
+            BetaTextCitationParam.ofPageLocation(
                 BetaCitationPageLocationParam.builder()
                     .citedText("cited_text")
                     .documentIndex(0L)
@@ -101,8 +99,8 @@ internal class BetaTextCitationParamTest {
     }
 
     @Test
-    fun ofCitationContentBlockLocation() {
-        val citationContentBlockLocation =
+    fun ofContentBlockLocation() {
+        val contentBlockLocation =
             BetaCitationContentBlockLocationParam.builder()
                 .citedText("cited_text")
                 .documentIndex(0L)
@@ -112,20 +110,19 @@ internal class BetaTextCitationParamTest {
                 .build()
 
         val betaTextCitationParam =
-            BetaTextCitationParam.ofCitationContentBlockLocation(citationContentBlockLocation)
+            BetaTextCitationParam.ofContentBlockLocation(contentBlockLocation)
 
-        assertThat(betaTextCitationParam.citationCharLocation()).isEmpty
-        assertThat(betaTextCitationParam.citationPageLocation()).isEmpty
-        assertThat(betaTextCitationParam.citationContentBlockLocation())
-            .contains(citationContentBlockLocation)
-        assertThat(betaTextCitationParam.citationWebSearchResultLocation()).isEmpty
+        assertThat(betaTextCitationParam.charLocation()).isEmpty
+        assertThat(betaTextCitationParam.pageLocation()).isEmpty
+        assertThat(betaTextCitationParam.contentBlockLocation()).contains(contentBlockLocation)
+        assertThat(betaTextCitationParam.webSearchResultLocation()).isEmpty
     }
 
     @Test
-    fun ofCitationContentBlockLocationRoundtrip() {
+    fun ofContentBlockLocationRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaTextCitationParam =
-            BetaTextCitationParam.ofCitationContentBlockLocation(
+            BetaTextCitationParam.ofContentBlockLocation(
                 BetaCitationContentBlockLocationParam.builder()
                     .citedText("cited_text")
                     .documentIndex(0L)
@@ -145,8 +142,8 @@ internal class BetaTextCitationParamTest {
     }
 
     @Test
-    fun ofCitationWebSearchResultLocation() {
-        val citationWebSearchResultLocation =
+    fun ofWebSearchResultLocation() {
+        val webSearchResultLocation =
             BetaCitationWebSearchResultLocationParam.builder()
                 .citedText("cited_text")
                 .encryptedIndex("encrypted_index")
@@ -155,20 +152,20 @@ internal class BetaTextCitationParamTest {
                 .build()
 
         val betaTextCitationParam =
-            BetaTextCitationParam.ofCitationWebSearchResultLocation(citationWebSearchResultLocation)
+            BetaTextCitationParam.ofWebSearchResultLocation(webSearchResultLocation)
 
-        assertThat(betaTextCitationParam.citationCharLocation()).isEmpty
-        assertThat(betaTextCitationParam.citationPageLocation()).isEmpty
-        assertThat(betaTextCitationParam.citationContentBlockLocation()).isEmpty
-        assertThat(betaTextCitationParam.citationWebSearchResultLocation())
-            .contains(citationWebSearchResultLocation)
+        assertThat(betaTextCitationParam.charLocation()).isEmpty
+        assertThat(betaTextCitationParam.pageLocation()).isEmpty
+        assertThat(betaTextCitationParam.contentBlockLocation()).isEmpty
+        assertThat(betaTextCitationParam.webSearchResultLocation())
+            .contains(webSearchResultLocation)
     }
 
     @Test
-    fun ofCitationWebSearchResultLocationRoundtrip() {
+    fun ofWebSearchResultLocationRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaTextCitationParam =
-            BetaTextCitationParam.ofCitationWebSearchResultLocation(
+            BetaTextCitationParam.ofWebSearchResultLocation(
                 BetaCitationWebSearchResultLocationParam.builder()
                     .citedText("cited_text")
                     .encryptedIndex("encrypted_index")

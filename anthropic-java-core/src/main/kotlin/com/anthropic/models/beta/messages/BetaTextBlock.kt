@@ -162,39 +162,27 @@ private constructor(
                 }
         }
 
-        /**
-         * Alias for calling [addCitation] with
-         * `BetaTextCitation.ofCitationCharLocation(citationCharLocation)`.
-         */
-        fun addCitation(citationCharLocation: BetaCitationCharLocation) =
-            addCitation(BetaTextCitation.ofCitationCharLocation(citationCharLocation))
+        /** Alias for calling [addCitation] with `BetaTextCitation.ofCharLocation(charLocation)`. */
+        fun addCitation(charLocation: BetaCitationCharLocation) =
+            addCitation(BetaTextCitation.ofCharLocation(charLocation))
+
+        /** Alias for calling [addCitation] with `BetaTextCitation.ofPageLocation(pageLocation)`. */
+        fun addCitation(pageLocation: BetaCitationPageLocation) =
+            addCitation(BetaTextCitation.ofPageLocation(pageLocation))
 
         /**
          * Alias for calling [addCitation] with
-         * `BetaTextCitation.ofCitationPageLocation(citationPageLocation)`.
+         * `BetaTextCitation.ofContentBlockLocation(contentBlockLocation)`.
          */
-        fun addCitation(citationPageLocation: BetaCitationPageLocation) =
-            addCitation(BetaTextCitation.ofCitationPageLocation(citationPageLocation))
+        fun addCitation(contentBlockLocation: BetaCitationContentBlockLocation) =
+            addCitation(BetaTextCitation.ofContentBlockLocation(contentBlockLocation))
 
         /**
          * Alias for calling [addCitation] with
-         * `BetaTextCitation.ofCitationContentBlockLocation(citationContentBlockLocation)`.
+         * `BetaTextCitation.ofWebSearchResultLocation(webSearchResultLocation)`.
          */
-        fun addCitation(citationContentBlockLocation: BetaCitationContentBlockLocation) =
-            addCitation(
-                BetaTextCitation.ofCitationContentBlockLocation(citationContentBlockLocation)
-            )
-
-        /**
-         * Alias for calling [addCitation] with
-         * `BetaTextCitation.ofCitationsWebSearchResultLocation(citationsWebSearchResultLocation)`.
-         */
-        fun addCitation(citationsWebSearchResultLocation: BetaCitationsWebSearchResultLocation) =
-            addCitation(
-                BetaTextCitation.ofCitationsWebSearchResultLocation(
-                    citationsWebSearchResultLocation
-                )
-            )
+        fun addCitation(webSearchResultLocation: BetaCitationsWebSearchResultLocation) =
+            addCitation(BetaTextCitation.ofWebSearchResultLocation(webSearchResultLocation))
 
         fun text(text: String) = text(JsonField.of(text))
 

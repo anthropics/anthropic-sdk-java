@@ -15,8 +15,8 @@ import org.junit.jupiter.params.provider.EnumSource
 internal class RawMessageStreamEventTest {
 
     @Test
-    fun ofStart() {
-        val start =
+    fun ofMessageStart() {
+        val messageStart =
             RawMessageStartEvent.builder()
                 .message(
                     Message.builder()
@@ -53,21 +53,21 @@ internal class RawMessageStreamEventTest {
                 )
                 .build()
 
-        val rawMessageStreamEvent = RawMessageStreamEvent.ofStart(start)
+        val rawMessageStreamEvent = RawMessageStreamEvent.ofMessageStart(messageStart)
 
-        assertThat(rawMessageStreamEvent.start()).contains(start)
-        assertThat(rawMessageStreamEvent.delta()).isEmpty
-        assertThat(rawMessageStreamEvent.stop()).isEmpty
+        assertThat(rawMessageStreamEvent.messageStart()).contains(messageStart)
+        assertThat(rawMessageStreamEvent.messageDelta()).isEmpty
+        assertThat(rawMessageStreamEvent.messageStop()).isEmpty
         assertThat(rawMessageStreamEvent.contentBlockStart()).isEmpty
         assertThat(rawMessageStreamEvent.contentBlockDelta()).isEmpty
         assertThat(rawMessageStreamEvent.contentBlockStop()).isEmpty
     }
 
     @Test
-    fun ofStartRoundtrip() {
+    fun ofMessageStartRoundtrip() {
         val jsonMapper = jsonMapper()
         val rawMessageStreamEvent =
-            RawMessageStreamEvent.ofStart(
+            RawMessageStreamEvent.ofMessageStart(
                 RawMessageStartEvent.builder()
                     .message(
                         Message.builder()
@@ -115,8 +115,8 @@ internal class RawMessageStreamEventTest {
     }
 
     @Test
-    fun ofDelta() {
-        val delta =
+    fun ofMessageDelta() {
+        val messageDelta =
             RawMessageDeltaEvent.builder()
                 .delta(
                     RawMessageDeltaEvent.Delta.builder()
@@ -135,21 +135,21 @@ internal class RawMessageStreamEventTest {
                 )
                 .build()
 
-        val rawMessageStreamEvent = RawMessageStreamEvent.ofDelta(delta)
+        val rawMessageStreamEvent = RawMessageStreamEvent.ofMessageDelta(messageDelta)
 
-        assertThat(rawMessageStreamEvent.start()).isEmpty
-        assertThat(rawMessageStreamEvent.delta()).contains(delta)
-        assertThat(rawMessageStreamEvent.stop()).isEmpty
+        assertThat(rawMessageStreamEvent.messageStart()).isEmpty
+        assertThat(rawMessageStreamEvent.messageDelta()).contains(messageDelta)
+        assertThat(rawMessageStreamEvent.messageStop()).isEmpty
         assertThat(rawMessageStreamEvent.contentBlockStart()).isEmpty
         assertThat(rawMessageStreamEvent.contentBlockDelta()).isEmpty
         assertThat(rawMessageStreamEvent.contentBlockStop()).isEmpty
     }
 
     @Test
-    fun ofDeltaRoundtrip() {
+    fun ofMessageDeltaRoundtrip() {
         val jsonMapper = jsonMapper()
         val rawMessageStreamEvent =
-            RawMessageStreamEvent.ofDelta(
+            RawMessageStreamEvent.ofMessageDelta(
                 RawMessageDeltaEvent.builder()
                     .delta(
                         RawMessageDeltaEvent.Delta.builder()
@@ -179,24 +179,24 @@ internal class RawMessageStreamEventTest {
     }
 
     @Test
-    fun ofStop() {
-        val stop = RawMessageStopEvent.builder().build()
+    fun ofMessageStop() {
+        val messageStop = RawMessageStopEvent.builder().build()
 
-        val rawMessageStreamEvent = RawMessageStreamEvent.ofStop(stop)
+        val rawMessageStreamEvent = RawMessageStreamEvent.ofMessageStop(messageStop)
 
-        assertThat(rawMessageStreamEvent.start()).isEmpty
-        assertThat(rawMessageStreamEvent.delta()).isEmpty
-        assertThat(rawMessageStreamEvent.stop()).contains(stop)
+        assertThat(rawMessageStreamEvent.messageStart()).isEmpty
+        assertThat(rawMessageStreamEvent.messageDelta()).isEmpty
+        assertThat(rawMessageStreamEvent.messageStop()).contains(messageStop)
         assertThat(rawMessageStreamEvent.contentBlockStart()).isEmpty
         assertThat(rawMessageStreamEvent.contentBlockDelta()).isEmpty
         assertThat(rawMessageStreamEvent.contentBlockStop()).isEmpty
     }
 
     @Test
-    fun ofStopRoundtrip() {
+    fun ofMessageStopRoundtrip() {
         val jsonMapper = jsonMapper()
         val rawMessageStreamEvent =
-            RawMessageStreamEvent.ofStop(RawMessageStopEvent.builder().build())
+            RawMessageStreamEvent.ofMessageStop(RawMessageStopEvent.builder().build())
 
         val roundtrippedRawMessageStreamEvent =
             jsonMapper.readValue(
@@ -230,9 +230,9 @@ internal class RawMessageStreamEventTest {
 
         val rawMessageStreamEvent = RawMessageStreamEvent.ofContentBlockStart(contentBlockStart)
 
-        assertThat(rawMessageStreamEvent.start()).isEmpty
-        assertThat(rawMessageStreamEvent.delta()).isEmpty
-        assertThat(rawMessageStreamEvent.stop()).isEmpty
+        assertThat(rawMessageStreamEvent.messageStart()).isEmpty
+        assertThat(rawMessageStreamEvent.messageDelta()).isEmpty
+        assertThat(rawMessageStreamEvent.messageStop()).isEmpty
         assertThat(rawMessageStreamEvent.contentBlockStart()).contains(contentBlockStart)
         assertThat(rawMessageStreamEvent.contentBlockDelta()).isEmpty
         assertThat(rawMessageStreamEvent.contentBlockStop()).isEmpty
@@ -278,9 +278,9 @@ internal class RawMessageStreamEventTest {
 
         val rawMessageStreamEvent = RawMessageStreamEvent.ofContentBlockDelta(contentBlockDelta)
 
-        assertThat(rawMessageStreamEvent.start()).isEmpty
-        assertThat(rawMessageStreamEvent.delta()).isEmpty
-        assertThat(rawMessageStreamEvent.stop()).isEmpty
+        assertThat(rawMessageStreamEvent.messageStart()).isEmpty
+        assertThat(rawMessageStreamEvent.messageDelta()).isEmpty
+        assertThat(rawMessageStreamEvent.messageStop()).isEmpty
         assertThat(rawMessageStreamEvent.contentBlockStart()).isEmpty
         assertThat(rawMessageStreamEvent.contentBlockDelta()).contains(contentBlockDelta)
         assertThat(rawMessageStreamEvent.contentBlockStop()).isEmpty
@@ -309,9 +309,9 @@ internal class RawMessageStreamEventTest {
 
         val rawMessageStreamEvent = RawMessageStreamEvent.ofContentBlockStop(contentBlockStop)
 
-        assertThat(rawMessageStreamEvent.start()).isEmpty
-        assertThat(rawMessageStreamEvent.delta()).isEmpty
-        assertThat(rawMessageStreamEvent.stop()).isEmpty
+        assertThat(rawMessageStreamEvent.messageStart()).isEmpty
+        assertThat(rawMessageStreamEvent.messageDelta()).isEmpty
+        assertThat(rawMessageStreamEvent.messageStop()).isEmpty
         assertThat(rawMessageStreamEvent.contentBlockStart()).isEmpty
         assertThat(rawMessageStreamEvent.contentBlockDelta()).isEmpty
         assertThat(rawMessageStreamEvent.contentBlockStop()).contains(contentBlockStop)

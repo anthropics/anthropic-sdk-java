@@ -195,11 +195,9 @@ private constructor(
         fun rateLimitErrorError(message: String) =
             error(RateLimitError.builder().message(message).build())
 
-        /**
-         * Alias for calling [error] with `ErrorObject.ofGatewayTimeoutError(gatewayTimeoutError)`.
-         */
-        fun error(gatewayTimeoutError: GatewayTimeoutError) =
-            error(ErrorObject.ofGatewayTimeoutError(gatewayTimeoutError))
+        /** Alias for calling [error] with `ErrorObject.ofTimeoutError(timeoutError)`. */
+        fun error(timeoutError: GatewayTimeoutError) =
+            error(ErrorObject.ofTimeoutError(timeoutError))
 
         /**
          * Alias for calling [error] with the following:
@@ -209,11 +207,11 @@ private constructor(
          *     .build()
          * ```
          */
-        fun gatewayTimeoutErrorError(message: String) =
+        fun timeoutErrorError(message: String) =
             error(GatewayTimeoutError.builder().message(message).build())
 
-        /** Alias for calling [error] with `ErrorObject.ofApi(api)`. */
-        fun error(api: ApiErrorObject) = error(ErrorObject.ofApi(api))
+        /** Alias for calling [error] with `ErrorObject.ofApiError(apiError)`. */
+        fun error(apiError: ApiErrorObject) = error(ErrorObject.ofApiError(apiError))
 
         /**
          * Alias for calling [error] with the following:
@@ -223,7 +221,8 @@ private constructor(
          *     .build()
          * ```
          */
-        fun apiError(message: String) = error(ApiErrorObject.builder().message(message).build())
+        fun apiErrorError(message: String) =
+            error(ApiErrorObject.builder().message(message).build())
 
         /** Alias for calling [error] with `ErrorObject.ofOverloadedError(overloadedError)`. */
         fun error(overloadedError: OverloadedError) =
