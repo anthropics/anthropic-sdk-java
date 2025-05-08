@@ -3,7 +3,6 @@
 package com.anthropic.models.beta.models
 
 import com.anthropic.core.Params
-import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
@@ -20,14 +19,14 @@ import kotlin.jvm.optionals.getOrNull
  */
 class ModelRetrieveParams
 private constructor(
-    private val modelId: String,
+    private val modelId: String?,
     private val betas: List<AnthropicBeta>?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     /** Model identifier or alias. */
-    fun modelId(): String = modelId
+    fun modelId(): Optional<String> = Optional.ofNullable(modelId)
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
@@ -40,14 +39,9 @@ private constructor(
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of [ModelRetrieveParams].
-         *
-         * The following fields are required:
-         * ```java
-         * .modelId()
-         * ```
-         */
+        @JvmStatic fun none(): ModelRetrieveParams = builder().build()
+
+        /** Returns a mutable builder for constructing an instance of [ModelRetrieveParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -68,7 +62,10 @@ private constructor(
         }
 
         /** Model identifier or alias. */
-        fun modelId(modelId: String) = apply { this.modelId = modelId }
+        fun modelId(modelId: String?) = apply { this.modelId = modelId }
+
+        /** Alias for calling [Builder.modelId] with `modelId.orElse(null)`. */
+        fun modelId(modelId: Optional<String>) = modelId(modelId.getOrNull())
 
         /** Optional header to specify the beta version(s) you want to use. */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
@@ -196,17 +193,10 @@ private constructor(
          * Returns an immutable instance of [ModelRetrieveParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
-         *
-         * The following fields are required:
-         * ```java
-         * .modelId()
-         * ```
-         *
-         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): ModelRetrieveParams =
             ModelRetrieveParams(
-                checkRequired("modelId", modelId),
+                modelId,
                 betas?.toImmutable(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -215,7 +205,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> modelId
+            0 -> modelId ?: ""
             else -> ""
         }
 

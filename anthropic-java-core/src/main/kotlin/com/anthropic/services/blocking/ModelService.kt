@@ -23,13 +23,33 @@ interface ModelService {
      * The Models API response can be used to determine information about a specific model or
      * resolve a model alias to a model ID.
      */
-    fun retrieve(params: ModelRetrieveParams): ModelInfo = retrieve(params, RequestOptions.none())
+    fun retrieve(modelId: String): ModelInfo = retrieve(modelId, ModelRetrieveParams.none())
+
+    /** @see [retrieve] */
+    fun retrieve(
+        modelId: String,
+        params: ModelRetrieveParams = ModelRetrieveParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ModelInfo = retrieve(params.toBuilder().modelId(modelId).build(), requestOptions)
+
+    /** @see [retrieve] */
+    fun retrieve(
+        modelId: String,
+        params: ModelRetrieveParams = ModelRetrieveParams.none(),
+    ): ModelInfo = retrieve(modelId, params, RequestOptions.none())
 
     /** @see [retrieve] */
     fun retrieve(
         params: ModelRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ModelInfo
+
+    /** @see [retrieve] */
+    fun retrieve(params: ModelRetrieveParams): ModelInfo = retrieve(params, RequestOptions.none())
+
+    /** @see [retrieve] */
+    fun retrieve(modelId: String, requestOptions: RequestOptions): ModelInfo =
+        retrieve(modelId, ModelRetrieveParams.none(), requestOptions)
 
     /**
      * List available models.
@@ -61,8 +81,24 @@ interface ModelService {
          * [ModelService.retrieve].
          */
         @MustBeClosed
-        fun retrieve(params: ModelRetrieveParams): HttpResponseFor<ModelInfo> =
-            retrieve(params, RequestOptions.none())
+        fun retrieve(modelId: String): HttpResponseFor<ModelInfo> =
+            retrieve(modelId, ModelRetrieveParams.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            modelId: String,
+            params: ModelRetrieveParams = ModelRetrieveParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ModelInfo> =
+            retrieve(params.toBuilder().modelId(modelId).build(), requestOptions)
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            modelId: String,
+            params: ModelRetrieveParams = ModelRetrieveParams.none(),
+        ): HttpResponseFor<ModelInfo> = retrieve(modelId, params, RequestOptions.none())
 
         /** @see [retrieve] */
         @MustBeClosed
@@ -70,6 +106,16 @@ interface ModelService {
             params: ModelRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<ModelInfo>
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(params: ModelRetrieveParams): HttpResponseFor<ModelInfo> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(modelId: String, requestOptions: RequestOptions): HttpResponseFor<ModelInfo> =
+            retrieve(modelId, ModelRetrieveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /v1/models`, but is otherwise the same as

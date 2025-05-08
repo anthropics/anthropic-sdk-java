@@ -12,11 +12,7 @@ import com.anthropic.models.messages.Model
 import com.anthropic.models.messages.TextBlockParam
 import com.anthropic.models.messages.Tool
 import com.anthropic.models.messages.ToolChoiceAuto
-import com.anthropic.models.messages.batches.BatchCancelParams
 import com.anthropic.models.messages.batches.BatchCreateParams
-import com.anthropic.models.messages.batches.BatchDeleteParams
-import com.anthropic.models.messages.batches.BatchResultsParams
-import com.anthropic.models.messages.batches.BatchRetrieveParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -131,10 +127,7 @@ internal class BatchServiceAsyncTest {
                 .build()
         val batchServiceAsync = client.messages().batches()
 
-        val messageBatchFuture =
-            batchServiceAsync.retrieve(
-                BatchRetrieveParams.builder().messageBatchId("message_batch_id").build()
-            )
+        val messageBatchFuture = batchServiceAsync.retrieve("message_batch_id")
 
         val messageBatch = messageBatchFuture.get()
         messageBatch.validate()
@@ -164,10 +157,7 @@ internal class BatchServiceAsyncTest {
                 .build()
         val batchServiceAsync = client.messages().batches()
 
-        val deletedMessageBatchFuture =
-            batchServiceAsync.delete(
-                BatchDeleteParams.builder().messageBatchId("message_batch_id").build()
-            )
+        val deletedMessageBatchFuture = batchServiceAsync.delete("message_batch_id")
 
         val deletedMessageBatch = deletedMessageBatchFuture.get()
         deletedMessageBatch.validate()
@@ -182,10 +172,7 @@ internal class BatchServiceAsyncTest {
                 .build()
         val batchServiceAsync = client.messages().batches()
 
-        val messageBatchFuture =
-            batchServiceAsync.cancel(
-                BatchCancelParams.builder().messageBatchId("message_batch_id").build()
-            )
+        val messageBatchFuture = batchServiceAsync.cancel("message_batch_id")
 
         val messageBatch = messageBatchFuture.get()
         messageBatch.validate()
@@ -202,9 +189,7 @@ internal class BatchServiceAsyncTest {
         val batchServiceAsync = client.messages().batches()
 
         val messageBatchIndividualResponseStreamResponse =
-            batchServiceAsync.resultsStreaming(
-                BatchResultsParams.builder().messageBatchId("message_batch_id").build()
-            )
+            batchServiceAsync.resultsStreaming("message_batch_id")
 
         val onCompleteFuture =
             messageBatchIndividualResponseStreamResponse

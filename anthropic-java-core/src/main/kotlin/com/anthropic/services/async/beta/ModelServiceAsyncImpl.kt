@@ -5,6 +5,7 @@ package com.anthropic.services.async.beta
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.JsonValue
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.checkRequired
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
 import com.anthropic.core.handlers.withErrorHandler
@@ -20,6 +21,7 @@ import com.anthropic.models.beta.models.ModelListPageResponse
 import com.anthropic.models.beta.models.ModelListParams
 import com.anthropic.models.beta.models.ModelRetrieveParams
 import java.util.concurrent.CompletableFuture
+import kotlin.jvm.optionals.getOrNull
 
 class ModelServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     ModelServiceAsync {
@@ -56,6 +58,9 @@ class ModelServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: ModelRetrieveParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<BetaModelInfo>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("modelId", params.modelId().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)

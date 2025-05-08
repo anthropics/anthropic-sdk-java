@@ -4,12 +4,12 @@ package com.anthropic.models.messages.batches
 
 import com.anthropic.core.JsonValue
 import com.anthropic.core.Params
-import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * Delete a Message Batch.
@@ -22,14 +22,14 @@ import java.util.Optional
  */
 class BatchDeleteParams
 private constructor(
-    private val messageBatchId: String,
+    private val messageBatchId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
     private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
     /** ID of the Message Batch. */
-    fun messageBatchId(): String = messageBatchId
+    fun messageBatchId(): Optional<String> = Optional.ofNullable(messageBatchId)
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
 
@@ -41,14 +41,9 @@ private constructor(
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of [BatchDeleteParams].
-         *
-         * The following fields are required:
-         * ```java
-         * .messageBatchId()
-         * ```
-         */
+        @JvmStatic fun none(): BatchDeleteParams = builder().build()
+
+        /** Returns a mutable builder for constructing an instance of [BatchDeleteParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -69,7 +64,11 @@ private constructor(
         }
 
         /** ID of the Message Batch. */
-        fun messageBatchId(messageBatchId: String) = apply { this.messageBatchId = messageBatchId }
+        fun messageBatchId(messageBatchId: String?) = apply { this.messageBatchId = messageBatchId }
+
+        /** Alias for calling [Builder.messageBatchId] with `messageBatchId.orElse(null)`. */
+        fun messageBatchId(messageBatchId: Optional<String>) =
+            messageBatchId(messageBatchId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -195,17 +194,10 @@ private constructor(
          * Returns an immutable instance of [BatchDeleteParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
-         *
-         * The following fields are required:
-         * ```java
-         * .messageBatchId()
-         * ```
-         *
-         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): BatchDeleteParams =
             BatchDeleteParams(
-                checkRequired("messageBatchId", messageBatchId),
+                messageBatchId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
                 additionalBodyProperties.toImmutable(),
@@ -217,7 +209,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> messageBatchId
+            0 -> messageBatchId ?: ""
             else -> ""
         }
 

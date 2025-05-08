@@ -5,6 +5,7 @@ package com.anthropic.services.async.messages
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.JsonValue
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.checkRequired
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
 import com.anthropic.core.handlers.jsonlHandler
@@ -32,6 +33,7 @@ import com.anthropic.models.messages.batches.DeletedMessageBatch
 import com.anthropic.models.messages.batches.MessageBatch
 import com.anthropic.models.messages.batches.MessageBatchIndividualResponse
 import java.util.concurrent.CompletableFuture
+import kotlin.jvm.optionals.getOrNull
 
 class BatchServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     BatchServiceAsync {
@@ -129,6 +131,9 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: BatchRetrieveParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<MessageBatch>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("messageBatchId", params.messageBatchId().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -196,6 +201,9 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: BatchDeleteParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<DeletedMessageBatch>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("messageBatchId", params.messageBatchId().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
@@ -226,6 +234,9 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: BatchCancelParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<MessageBatch>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("messageBatchId", params.messageBatchId().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -258,6 +269,9 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: BatchResultsParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<StreamResponse<MessageBatchIndividualResponse>>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("messageBatchId", params.messageBatchId().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)

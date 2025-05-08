@@ -5,6 +5,7 @@ package com.anthropic.services.blocking.beta.messages
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.JsonValue
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.checkRequired
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
 import com.anthropic.core.handlers.jsonlHandler
@@ -30,6 +31,7 @@ import com.anthropic.models.beta.messages.batches.BatchRetrieveParams
 import com.anthropic.models.beta.messages.batches.BetaDeletedMessageBatch
 import com.anthropic.models.beta.messages.batches.BetaMessageBatch
 import com.anthropic.models.beta.messages.batches.BetaMessageBatchIndividualResponse
+import kotlin.jvm.optionals.getOrNull
 
 class BatchServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     BatchService {
@@ -126,6 +128,9 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: BatchRetrieveParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<BetaMessageBatch> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("messageBatchId", params.messageBatchId().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -191,6 +196,9 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: BatchDeleteParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<BetaDeletedMessageBatch> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("messageBatchId", params.messageBatchId().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
@@ -220,6 +228,9 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: BatchCancelParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<BetaMessageBatch> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("messageBatchId", params.messageBatchId().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -251,6 +262,9 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: BatchResultsParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<StreamResponse<BetaMessageBatchIndividualResponse>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("messageBatchId", params.messageBatchId().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
