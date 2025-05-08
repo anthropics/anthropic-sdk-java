@@ -114,6 +114,7 @@ class ModelServiceAsyncImpl internal constructor(private val clientOptions: Clie
                             .let {
                                 ModelListPageAsync.builder()
                                     .service(ModelServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
                                     .params(params)
                                     .response(it)
                                     .build()

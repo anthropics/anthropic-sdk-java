@@ -2,22 +2,24 @@
 
 package com.anthropic.models.beta.messages.batches
 
+import com.anthropic.core.AutoPagerAsync
+import com.anthropic.core.PageAsync
 import com.anthropic.core.checkRequired
 import com.anthropic.services.async.beta.messages.BatchServiceAsync
 import java.util.Objects
 import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
-import java.util.function.Predicate
 import kotlin.jvm.optionals.getOrNull
 
 /** @see [BatchServiceAsync.list] */
 class BatchListPageAsync
 private constructor(
     private val service: BatchServiceAsync,
+    private val streamHandlerExecutor: Executor,
     private val params: BatchListParams,
     private val response: BatchListPageResponse,
-) {
+) : PageAsync<BetaMessageBatch> {
 
     /**
      * Delegates to [BatchListPageResponse], but gracefully handles missing data.
@@ -48,22 +50,20 @@ private constructor(
      */
     fun lastId(): Optional<String> = response._lastId().getOptional("last_id")
 
-    fun hasNextPage(): Boolean = data().isNotEmpty() && lastId().isPresent
+    override fun items(): List<BetaMessageBatch> = data()
 
-    fun getNextPageParams(): Optional<BatchListParams> {
-        if (!hasNextPage()) {
-            return Optional.empty()
-        }
+    override fun hasNextPage(): Boolean = items().isNotEmpty() && lastId().isPresent
 
-        return Optional.of(params.toBuilder().apply { lastId().ifPresent { afterId(it) } }.build())
+    fun nextPageParams(): BatchListParams {
+        val nextCursor =
+            lastId().getOrNull() ?: throw IllegalStateException("Cannot construct next page params")
+        return params.toBuilder().afterId(nextCursor).build()
     }
 
-    fun getNextPage(): CompletableFuture<Optional<BatchListPageAsync>> =
-        getNextPageParams()
-            .map { service.list(it).thenApply { Optional.of(it) } }
-            .orElseGet { CompletableFuture.completedFuture(Optional.empty()) }
+    override fun nextPage(): CompletableFuture<BatchListPageAsync> = service.list(nextPageParams())
 
-    fun autoPager(): AutoPager = AutoPager(this)
+    fun autoPager(): AutoPagerAsync<BetaMessageBatch> =
+        AutoPagerAsync.from(this, streamHandlerExecutor)
 
     /** The parameters that were used to request this page. */
     fun params(): BatchListParams = params
@@ -81,6 +81,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .service()
+         * .streamHandlerExecutor()
          * .params()
          * .response()
          * ```
@@ -92,17 +93,23 @@ private constructor(
     class Builder internal constructor() {
 
         private var service: BatchServiceAsync? = null
+        private var streamHandlerExecutor: Executor? = null
         private var params: BatchListParams? = null
         private var response: BatchListPageResponse? = null
 
         @JvmSynthetic
         internal fun from(batchListPageAsync: BatchListPageAsync) = apply {
             service = batchListPageAsync.service
+            streamHandlerExecutor = batchListPageAsync.streamHandlerExecutor
             params = batchListPageAsync.params
             response = batchListPageAsync.response
         }
 
         fun service(service: BatchServiceAsync) = apply { this.service = service }
+
+        fun streamHandlerExecutor(streamHandlerExecutor: Executor) = apply {
+            this.streamHandlerExecutor = streamHandlerExecutor
+        }
 
         /** The parameters that were used to request this page. */
         fun params(params: BatchListParams) = apply { this.params = params }
@@ -118,6 +125,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .service()
+         * .streamHandlerExecutor()
          * .params()
          * .response()
          * ```
@@ -127,38 +135,10 @@ private constructor(
         fun build(): BatchListPageAsync =
             BatchListPageAsync(
                 checkRequired("service", service),
+                checkRequired("streamHandlerExecutor", streamHandlerExecutor),
                 checkRequired("params", params),
                 checkRequired("response", response),
             )
-    }
-
-    class AutoPager(private val firstPage: BatchListPageAsync) {
-
-        fun forEach(
-            action: Predicate<BetaMessageBatch>,
-            executor: Executor,
-        ): CompletableFuture<Void> {
-            fun CompletableFuture<Optional<BatchListPageAsync>>.forEach(
-                action: (BetaMessageBatch) -> Boolean,
-                executor: Executor,
-            ): CompletableFuture<Void> =
-                thenComposeAsync(
-                    { page ->
-                        page
-                            .filter { it.data().all(action) }
-                            .map { it.getNextPage().forEach(action, executor) }
-                            .orElseGet { CompletableFuture.completedFuture(null) }
-                    },
-                    executor,
-                )
-            return CompletableFuture.completedFuture(Optional.of(firstPage))
-                .forEach(action::test, executor)
-        }
-
-        fun toList(executor: Executor): CompletableFuture<List<BetaMessageBatch>> {
-            val values = mutableListOf<BetaMessageBatch>()
-            return forEach(values::add, executor).thenApply { values }
-        }
     }
 
     override fun equals(other: Any?): Boolean {
@@ -166,11 +146,11 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BatchListPageAsync && service == other.service && params == other.params && response == other.response /* spotless:on */
+        return /* spotless:off */ other is BatchListPageAsync && service == other.service && streamHandlerExecutor == other.streamHandlerExecutor && params == other.params && response == other.response /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(service, params, response) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(service, streamHandlerExecutor, params, response) /* spotless:on */
 
     override fun toString() =
-        "BatchListPageAsync{service=$service, params=$params, response=$response}"
+        "BatchListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
 }

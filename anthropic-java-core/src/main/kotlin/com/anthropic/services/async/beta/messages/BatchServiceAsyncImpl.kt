@@ -198,6 +198,7 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                             .let {
                                 BatchListPageAsync.builder()
                                     .service(BatchServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
                                     .params(params)
                                     .response(it)
                                     .build()
