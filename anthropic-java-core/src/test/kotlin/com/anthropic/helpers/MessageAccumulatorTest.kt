@@ -32,7 +32,7 @@ internal class MessageAccumulatorTest {
                     .outputTokens(44L)
                     .cacheCreationInputTokens(0L)
                     .cacheReadInputTokens(0L)
-                    .inputTokens(0L)
+                    .inputTokens(INPUT_TOKENS) // Use test constant
                     .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
                     .build(),
             )
@@ -43,7 +43,7 @@ internal class MessageAccumulatorTest {
                     .outputTokens(11L)
                     .cacheCreationInputTokens(0L)
                     .cacheReadInputTokens(0L)
-                    .inputTokens(0L)
+                    .inputTokens(INPUT_TOKENS) // Use test constant
                     .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
                     .build(),
             )
@@ -52,7 +52,7 @@ internal class MessageAccumulatorTest {
         assertThat(usage1.outputTokens()).isEqualTo(44L)
 
         assertThat(usage2.inputTokens()).isEqualTo(INPUT_TOKENS)
-        assertThat(usage2.outputTokens()).isEqualTo(44L + 11L)
+        assertThat(usage2.outputTokens()).isEqualTo(11L)
     }
 
     @Test
@@ -92,8 +92,8 @@ internal class MessageAccumulatorTest {
         assertThat(text2.text().get().text()).isEqualTo("hello world!!!")
 
         assertThat(citations2.size).isEqualTo(2)
-        assertThat(citations2[0].citationPageLocation().get().startPageNumber()).isEqualTo(123L)
-        assertThat(citations2[1].citationPageLocation().get().startPageNumber()).isEqualTo(456L)
+        assertThat(citations2[0].pageLocation().get().startPageNumber()).isEqualTo(123L)
+        assertThat(citations2[1].pageLocation().get().startPageNumber()).isEqualTo(456L)
     }
 
     @Test
@@ -136,11 +136,10 @@ internal class MessageAccumulatorTest {
         assertThat(text2.text().get().text()).isEqualTo("hello")
 
         assertThat(citations4.size).isEqualTo(4)
-        assertThat(citations4[0].citationPageLocation().get().startPageNumber()).isEqualTo(123L)
-        assertThat(citations4[1].citationPageLocation().get().startPageNumber()).isEqualTo(456L)
-        assertThat(citations4[2].citationCharLocation().get().startCharIndex()).isEqualTo(789L)
-        assertThat(citations4[3].citationContentBlockLocation().get().startBlockIndex())
-            .isEqualTo(890L)
+        assertThat(citations4[0].pageLocation().get().startPageNumber()).isEqualTo(123L)
+        assertThat(citations4[1].pageLocation().get().startPageNumber()).isEqualTo(456L)
+        assertThat(citations4[2].charLocation().get().startCharIndex()).isEqualTo(789L)
+        assertThat(citations4[3].contentBlockLocation().get().startBlockIndex()).isEqualTo(890L)
     }
 
     @Test
@@ -451,7 +450,7 @@ internal class MessageAccumulatorTest {
         accumulator.accumulate(messageStopEvent())
 
         assertThat(accumulator.message().usage().inputTokens()).isEqualTo(INPUT_TOKENS)
-        assertThat(accumulator.message().usage().outputTokens()).isEqualTo(11L + 12L + 13L)
+        assertThat(accumulator.message().usage().outputTokens()).isEqualTo(13L)
     }
 
     @Test
@@ -802,7 +801,7 @@ internal class MessageAccumulatorTest {
     // not set explicitly, as it always has an appropriate non-null default value.
 
     private fun messageStartEvent() =
-        RawMessageStreamEvent.ofStart(
+        RawMessageStreamEvent.ofMessageStart(
             RawMessageStartEvent.builder()
                 .message(
                     Message.builder()
@@ -847,8 +846,12 @@ internal class MessageAccumulatorTest {
         stopReason: JsonField<StopReason> = NOT_SET,
         stopSequence: JsonField<String> = NOT_SET,
         outputTokens: Long = 0L,
+        inputTokens: Long = INPUT_TOKENS,
+        cacheCreationInputTokens: Long = 0L,
+        cacheReadInputTokens: Long = 0L,
+        webSearchRequests: Long = 0L,
     ) =
-        RawMessageStreamEvent.ofDelta(
+        RawMessageStreamEvent.ofMessageDelta(
             RawMessageDeltaEvent.builder()
                 .delta(
                     RawMessageDeltaEvent.Delta.builder()
@@ -859,17 +862,19 @@ internal class MessageAccumulatorTest {
                 .usage(
                     MessageDeltaUsage.builder()
                         .outputTokens(outputTokens)
-                        .cacheCreationInputTokens(0L)
-                        .cacheReadInputTokens(0L)
-                        .inputTokens(0L)
-                        .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                        .cacheCreationInputTokens(cacheCreationInputTokens)
+                        .cacheReadInputTokens(cacheReadInputTokens)
+                        .inputTokens(inputTokens)
+                        .serverToolUse(
+                            ServerToolUsage.builder().webSearchRequests(webSearchRequests).build()
+                        )
                         .build()
                 )
                 .build()
         )
 
     private fun messageStopEvent() =
-        RawMessageStreamEvent.ofStop(RawMessageStopEvent.builder().build())
+        RawMessageStreamEvent.ofMessageStop(RawMessageStopEvent.builder().build())
 
     /**
      * @param citationPageNumber Omit (or use `null`) to create a text content block without any
@@ -890,7 +895,7 @@ internal class MessageAccumulatorTest {
                         // citations" state explicitly with an empty list if needed.
                         citationPageNumber?.let {
                             addCitation(
-                                TextCitation.ofCitationPageLocation(
+                                TextCitation.ofPageLocation(
                                     citationPageLocation(citationPageNumber)
                                 )
                             )
@@ -1033,7 +1038,7 @@ internal class MessageAccumulatorTest {
             .build()
 
     private fun textCitation(pageNumber: Long) =
-        TextCitation.ofCitationPageLocation(citationPageLocation(pageNumber))
+        TextCitation.ofPageLocation(citationPageLocation(pageNumber))
 
     private fun thinkingDelta(thinking: String) = ThinkingDelta.builder().thinking(thinking).build()
 

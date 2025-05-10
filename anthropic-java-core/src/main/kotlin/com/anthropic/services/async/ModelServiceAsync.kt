@@ -24,14 +24,36 @@ interface ModelServiceAsync {
      * The Models API response can be used to determine information about a specific model or
      * resolve a model alias to a model ID.
      */
-    fun retrieve(params: ModelRetrieveParams): CompletableFuture<ModelInfo> =
-        retrieve(params, RequestOptions.none())
+    fun retrieve(modelId: String): CompletableFuture<ModelInfo> =
+        retrieve(modelId, ModelRetrieveParams.none())
+
+    /** @see [retrieve] */
+    fun retrieve(
+        modelId: String,
+        params: ModelRetrieveParams = ModelRetrieveParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<ModelInfo> =
+        retrieve(params.toBuilder().modelId(modelId).build(), requestOptions)
+
+    /** @see [retrieve] */
+    fun retrieve(
+        modelId: String,
+        params: ModelRetrieveParams = ModelRetrieveParams.none(),
+    ): CompletableFuture<ModelInfo> = retrieve(modelId, params, RequestOptions.none())
 
     /** @see [retrieve] */
     fun retrieve(
         params: ModelRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ModelInfo>
+
+    /** @see [retrieve] */
+    fun retrieve(params: ModelRetrieveParams): CompletableFuture<ModelInfo> =
+        retrieve(params, RequestOptions.none())
+
+    /** @see [retrieve] */
+    fun retrieve(modelId: String, requestOptions: RequestOptions): CompletableFuture<ModelInfo> =
+        retrieve(modelId, ModelRetrieveParams.none(), requestOptions)
 
     /**
      * List available models.
@@ -64,8 +86,25 @@ interface ModelServiceAsync {
          * [ModelServiceAsync.retrieve].
          */
         @MustBeClosed
-        fun retrieve(params: ModelRetrieveParams): CompletableFuture<HttpResponseFor<ModelInfo>> =
-            retrieve(params, RequestOptions.none())
+        fun retrieve(modelId: String): CompletableFuture<HttpResponseFor<ModelInfo>> =
+            retrieve(modelId, ModelRetrieveParams.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            modelId: String,
+            params: ModelRetrieveParams = ModelRetrieveParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<ModelInfo>> =
+            retrieve(params.toBuilder().modelId(modelId).build(), requestOptions)
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            modelId: String,
+            params: ModelRetrieveParams = ModelRetrieveParams.none(),
+        ): CompletableFuture<HttpResponseFor<ModelInfo>> =
+            retrieve(modelId, params, RequestOptions.none())
 
         /** @see [retrieve] */
         @MustBeClosed
@@ -73,6 +112,19 @@ interface ModelServiceAsync {
             params: ModelRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ModelInfo>>
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(params: ModelRetrieveParams): CompletableFuture<HttpResponseFor<ModelInfo>> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            modelId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<ModelInfo>> =
+            retrieve(modelId, ModelRetrieveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /v1/models`, but is otherwise the same as

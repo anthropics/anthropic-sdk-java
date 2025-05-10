@@ -1,5 +1,41 @@
 # Changelog
 
+## 2.0.0 (2025-05-10)
+
+Full Changelog: [v1.4.0...v2.0.0](https://github.com/anthropics/anthropic-sdk-java/compare/v1.4.0...v2.0.0)
+
+### ⚠ BREAKING CHANGES
+
+* **client:** improve some class names
+* **client:** extract auto pagination to shared classes
+* **client:** **Migration:** - If you were referencing the `AutoPager` class on a specific `*Page` or `*PageAsync` type, then you should instead reference the shared `AutoPager` and `AutoPagerAsync` types, under the `core` package
+    - `AutoPagerAsync` now has different usage. You can call `.subscribe(...)` on the returned object instead to get called back each page item. You can also call `onCompleteFuture()` to get a future that completes when all items have been processed. Finally, you can call `.close()` on the returned object to stop auto-paginating early
+    - If you were referencing `getNextPage` or `getNextPageParams`:
+       - Swap to `nextPage()` and `nextPageParams()`
+       - Note that these both now return non-optional types (use `hasNextPage()` before calling these, since they will throw if it's impossible to get another page)
+
+### Features
+
+* **client:** allow providing some params positionally ([f05e741](https://github.com/anthropics/anthropic-sdk-java/commit/f05e74180f6b8ebb5e2aeaf6f4834753df3359e2))
+* **client:** extract auto pagination to shared classes ([b7d354b](https://github.com/anthropics/anthropic-sdk-java/commit/b7d354b75a9f3a15918dab2df570eac8880cf84c))
+
+
+### Bug Fixes
+
+* **internal:** fix message usage accumulation ([7427fdb](https://github.com/anthropics/anthropic-sdk-java/commit/7427fdb8bb715a4471b8a8b4534dc8c6cf9e368f))
+* **tests:** update MessageAccumulator tests to match implementation ([ed8ff39](https://github.com/anthropics/anthropic-sdk-java/commit/ed8ff39d2290526486a52c52852c7f346a28f925))
+
+
+### Chores
+
+* **internal:** fix custom code ([88c1572](https://github.com/anthropics/anthropic-sdk-java/commit/88c1572fc92d95b60bd2e5083d79d9ab9d0644f5))
+* **internal:** fix custom code ([b0985c6](https://github.com/anthropics/anthropic-sdk-java/commit/b0985c6076b602a83a496c6cef416cc019ddde14))
+
+
+### Refactors
+
+* **client:** improve some class names ([aa1f7b7](https://github.com/anthropics/anthropic-sdk-java/commit/aa1f7b795ede291665ca81600ac819a25a003843))
+
 ## 1.4.0 (2025-05-07)
 
 Full Changelog: [v1.3.1...v1.4.0](https://github.com/anthropics/anthropic-sdk-java/compare/v1.3.1...v1.4.0)

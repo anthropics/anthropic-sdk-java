@@ -28,7 +28,7 @@ private constructor(
     private val permission: BetaPermissionError? = null,
     private val notFound: BetaNotFoundError? = null,
     private val rateLimit: BetaRateLimitError? = null,
-    private val gatewayTimeout: BetaGatewayTimeoutError? = null,
+    private val timeout: BetaGatewayTimeoutError? = null,
     private val api: BetaApiError? = null,
     private val overloaded: BetaOverloadedError? = null,
     private val _json: JsonValue? = null,
@@ -46,7 +46,7 @@ private constructor(
 
     fun rateLimit(): Optional<BetaRateLimitError> = Optional.ofNullable(rateLimit)
 
-    fun gatewayTimeout(): Optional<BetaGatewayTimeoutError> = Optional.ofNullable(gatewayTimeout)
+    fun timeout(): Optional<BetaGatewayTimeoutError> = Optional.ofNullable(timeout)
 
     fun api(): Optional<BetaApiError> = Optional.ofNullable(api)
 
@@ -64,7 +64,7 @@ private constructor(
 
     fun isRateLimit(): Boolean = rateLimit != null
 
-    fun isGatewayTimeout(): Boolean = gatewayTimeout != null
+    fun isTimeout(): Boolean = timeout != null
 
     fun isApi(): Boolean = api != null
 
@@ -82,7 +82,7 @@ private constructor(
 
     fun asRateLimit(): BetaRateLimitError = rateLimit.getOrThrow("rateLimit")
 
-    fun asGatewayTimeout(): BetaGatewayTimeoutError = gatewayTimeout.getOrThrow("gatewayTimeout")
+    fun asTimeout(): BetaGatewayTimeoutError = timeout.getOrThrow("timeout")
 
     fun asApi(): BetaApiError = api.getOrThrow("api")
 
@@ -98,7 +98,7 @@ private constructor(
             permission != null -> visitor.visitPermission(permission)
             notFound != null -> visitor.visitNotFound(notFound)
             rateLimit != null -> visitor.visitRateLimit(rateLimit)
-            gatewayTimeout != null -> visitor.visitGatewayTimeout(gatewayTimeout)
+            timeout != null -> visitor.visitTimeout(timeout)
             api != null -> visitor.visitApi(api)
             overloaded != null -> visitor.visitOverloaded(overloaded)
             else -> visitor.unknown(_json)
@@ -137,8 +137,8 @@ private constructor(
                     rateLimit.validate()
                 }
 
-                override fun visitGatewayTimeout(gatewayTimeout: BetaGatewayTimeoutError) {
-                    gatewayTimeout.validate()
+                override fun visitTimeout(timeout: BetaGatewayTimeoutError) {
+                    timeout.validate()
                 }
 
                 override fun visitApi(api: BetaApiError) {
@@ -185,8 +185,7 @@ private constructor(
 
                 override fun visitRateLimit(rateLimit: BetaRateLimitError) = rateLimit.validity()
 
-                override fun visitGatewayTimeout(gatewayTimeout: BetaGatewayTimeoutError) =
-                    gatewayTimeout.validity()
+                override fun visitTimeout(timeout: BetaGatewayTimeoutError) = timeout.validity()
 
                 override fun visitApi(api: BetaApiError) = api.validity()
 
@@ -202,10 +201,10 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaError && invalidRequest == other.invalidRequest && authentication == other.authentication && billing == other.billing && permission == other.permission && notFound == other.notFound && rateLimit == other.rateLimit && gatewayTimeout == other.gatewayTimeout && api == other.api && overloaded == other.overloaded /* spotless:on */
+        return /* spotless:off */ other is BetaError && invalidRequest == other.invalidRequest && authentication == other.authentication && billing == other.billing && permission == other.permission && notFound == other.notFound && rateLimit == other.rateLimit && timeout == other.timeout && api == other.api && overloaded == other.overloaded /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(invalidRequest, authentication, billing, permission, notFound, rateLimit, gatewayTimeout, api, overloaded) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(invalidRequest, authentication, billing, permission, notFound, rateLimit, timeout, api, overloaded) /* spotless:on */
 
     override fun toString(): String =
         when {
@@ -215,7 +214,7 @@ private constructor(
             permission != null -> "BetaError{permission=$permission}"
             notFound != null -> "BetaError{notFound=$notFound}"
             rateLimit != null -> "BetaError{rateLimit=$rateLimit}"
-            gatewayTimeout != null -> "BetaError{gatewayTimeout=$gatewayTimeout}"
+            timeout != null -> "BetaError{timeout=$timeout}"
             api != null -> "BetaError{api=$api}"
             overloaded != null -> "BetaError{overloaded=$overloaded}"
             _json != null -> "BetaError{_unknown=$_json}"
@@ -241,9 +240,7 @@ private constructor(
 
         @JvmStatic fun ofRateLimit(rateLimit: BetaRateLimitError) = BetaError(rateLimit = rateLimit)
 
-        @JvmStatic
-        fun ofGatewayTimeout(gatewayTimeout: BetaGatewayTimeoutError) =
-            BetaError(gatewayTimeout = gatewayTimeout)
+        @JvmStatic fun ofTimeout(timeout: BetaGatewayTimeoutError) = BetaError(timeout = timeout)
 
         @JvmStatic fun ofApi(api: BetaApiError) = BetaError(api = api)
 
@@ -266,7 +263,7 @@ private constructor(
 
         fun visitRateLimit(rateLimit: BetaRateLimitError): T
 
-        fun visitGatewayTimeout(gatewayTimeout: BetaGatewayTimeoutError): T
+        fun visitTimeout(timeout: BetaGatewayTimeoutError): T
 
         fun visitApi(api: BetaApiError): T
 
@@ -325,7 +322,7 @@ private constructor(
                 }
                 "timeout_error" -> {
                     return tryDeserialize(node, jacksonTypeRef<BetaGatewayTimeoutError>())?.let {
-                        BetaError(gatewayTimeout = it, _json = json)
+                        BetaError(timeout = it, _json = json)
                     } ?: BetaError(_json = json)
                 }
                 "api_error" -> {
@@ -358,7 +355,7 @@ private constructor(
                 value.permission != null -> generator.writeObject(value.permission)
                 value.notFound != null -> generator.writeObject(value.notFound)
                 value.rateLimit != null -> generator.writeObject(value.rateLimit)
-                value.gatewayTimeout != null -> generator.writeObject(value.gatewayTimeout)
+                value.timeout != null -> generator.writeObject(value.timeout)
                 value.api != null -> generator.writeObject(value.api)
                 value.overloaded != null -> generator.writeObject(value.overloaded)
                 value._json != null -> generator.writeObject(value._json)

@@ -13,7 +13,7 @@ internal class DocumentBlockParamTest {
     fun create() {
         val documentBlockParam =
             DocumentBlockParam.builder()
-                .base64PdfSource("U3RhaW5sZXNzIHJvY2tz")
+                .base64Source("U3RhaW5sZXNzIHJvY2tz")
                 .cacheControl(CacheControlEphemeral.builder().build())
                 .citations(CitationsConfigParam.builder().enabled(true).build())
                 .context("x")
@@ -22,7 +22,7 @@ internal class DocumentBlockParamTest {
 
         assertThat(documentBlockParam.source())
             .isEqualTo(
-                DocumentBlockParam.Source.ofBase64Pdf(
+                DocumentBlockParam.Source.ofBase64(
                     Base64PdfSource.builder().data("U3RhaW5sZXNzIHJvY2tz").build()
                 )
             )
@@ -39,7 +39,7 @@ internal class DocumentBlockParamTest {
         val jsonMapper = jsonMapper()
         val documentBlockParam =
             DocumentBlockParam.builder()
-                .base64PdfSource("U3RhaW5sZXNzIHJvY2tz")
+                .base64Source("U3RhaW5sZXNzIHJvY2tz")
                 .cacheControl(CacheControlEphemeral.builder().build())
                 .citations(CitationsConfigParam.builder().enabled(true).build())
                 .context("x")

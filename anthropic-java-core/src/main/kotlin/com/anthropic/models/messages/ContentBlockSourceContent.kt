@@ -22,29 +22,29 @@ import kotlin.jvm.optionals.getOrNull
 @JsonSerialize(using = ContentBlockSourceContent.Serializer::class)
 class ContentBlockSourceContent
 private constructor(
-    private val textBlockParam: TextBlockParam? = null,
-    private val imageBlockParam: ImageBlockParam? = null,
+    private val text: TextBlockParam? = null,
+    private val image: ImageBlockParam? = null,
     private val _json: JsonValue? = null,
 ) {
 
-    fun textBlockParam(): Optional<TextBlockParam> = Optional.ofNullable(textBlockParam)
+    fun text(): Optional<TextBlockParam> = Optional.ofNullable(text)
 
-    fun imageBlockParam(): Optional<ImageBlockParam> = Optional.ofNullable(imageBlockParam)
+    fun image(): Optional<ImageBlockParam> = Optional.ofNullable(image)
 
-    fun isTextBlockParam(): Boolean = textBlockParam != null
+    fun isText(): Boolean = text != null
 
-    fun isImageBlockParam(): Boolean = imageBlockParam != null
+    fun isImage(): Boolean = image != null
 
-    fun asTextBlockParam(): TextBlockParam = textBlockParam.getOrThrow("textBlockParam")
+    fun asText(): TextBlockParam = text.getOrThrow("text")
 
-    fun asImageBlockParam(): ImageBlockParam = imageBlockParam.getOrThrow("imageBlockParam")
+    fun asImage(): ImageBlockParam = image.getOrThrow("image")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {
-            textBlockParam != null -> visitor.visitTextBlockParam(textBlockParam)
-            imageBlockParam != null -> visitor.visitImageBlockParam(imageBlockParam)
+            text != null -> visitor.visitText(text)
+            image != null -> visitor.visitImage(image)
             else -> visitor.unknown(_json)
         }
 
@@ -57,12 +57,12 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
-                override fun visitTextBlockParam(textBlockParam: TextBlockParam) {
-                    textBlockParam.validate()
+                override fun visitText(text: TextBlockParam) {
+                    text.validate()
                 }
 
-                override fun visitImageBlockParam(imageBlockParam: ImageBlockParam) {
-                    imageBlockParam.validate()
+                override fun visitImage(image: ImageBlockParam) {
+                    image.validate()
                 }
             }
         )
@@ -86,11 +86,9 @@ private constructor(
     internal fun validity(): Int =
         accept(
             object : Visitor<Int> {
-                override fun visitTextBlockParam(textBlockParam: TextBlockParam) =
-                    textBlockParam.validity()
+                override fun visitText(text: TextBlockParam) = text.validity()
 
-                override fun visitImageBlockParam(imageBlockParam: ImageBlockParam) =
-                    imageBlockParam.validity()
+                override fun visitImage(image: ImageBlockParam) = image.validity()
 
                 override fun unknown(json: JsonValue?) = 0
             }
@@ -101,28 +99,24 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ContentBlockSourceContent && textBlockParam == other.textBlockParam && imageBlockParam == other.imageBlockParam /* spotless:on */
+        return /* spotless:off */ other is ContentBlockSourceContent && text == other.text && image == other.image /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(textBlockParam, imageBlockParam) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image) /* spotless:on */
 
     override fun toString(): String =
         when {
-            textBlockParam != null -> "ContentBlockSourceContent{textBlockParam=$textBlockParam}"
-            imageBlockParam != null -> "ContentBlockSourceContent{imageBlockParam=$imageBlockParam}"
+            text != null -> "ContentBlockSourceContent{text=$text}"
+            image != null -> "ContentBlockSourceContent{image=$image}"
             _json != null -> "ContentBlockSourceContent{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid ContentBlockSourceContent")
         }
 
     companion object {
 
-        @JvmStatic
-        fun ofTextBlockParam(textBlockParam: TextBlockParam) =
-            ContentBlockSourceContent(textBlockParam = textBlockParam)
+        @JvmStatic fun ofText(text: TextBlockParam) = ContentBlockSourceContent(text = text)
 
-        @JvmStatic
-        fun ofImageBlockParam(imageBlockParam: ImageBlockParam) =
-            ContentBlockSourceContent(imageBlockParam = imageBlockParam)
+        @JvmStatic fun ofImage(image: ImageBlockParam) = ContentBlockSourceContent(image = image)
     }
 
     /**
@@ -131,9 +125,9 @@ private constructor(
      */
     interface Visitor<out T> {
 
-        fun visitTextBlockParam(textBlockParam: TextBlockParam): T
+        fun visitText(text: TextBlockParam): T
 
-        fun visitImageBlockParam(imageBlockParam: ImageBlockParam): T
+        fun visitImage(image: ImageBlockParam): T
 
         /**
          * Maps an unknown variant of [ContentBlockSourceContent] to a value of type [T].
@@ -160,12 +154,12 @@ private constructor(
             when (type) {
                 "text" -> {
                     return tryDeserialize(node, jacksonTypeRef<TextBlockParam>())?.let {
-                        ContentBlockSourceContent(textBlockParam = it, _json = json)
+                        ContentBlockSourceContent(text = it, _json = json)
                     } ?: ContentBlockSourceContent(_json = json)
                 }
                 "image" -> {
                     return tryDeserialize(node, jacksonTypeRef<ImageBlockParam>())?.let {
-                        ContentBlockSourceContent(imageBlockParam = it, _json = json)
+                        ContentBlockSourceContent(image = it, _json = json)
                     } ?: ContentBlockSourceContent(_json = json)
                 }
             }
@@ -183,8 +177,8 @@ private constructor(
             provider: SerializerProvider,
         ) {
             when {
-                value.textBlockParam != null -> generator.writeObject(value.textBlockParam)
-                value.imageBlockParam != null -> generator.writeObject(value.imageBlockParam)
+                value.text != null -> generator.writeObject(value.text)
+                value.image != null -> generator.writeObject(value.image)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid ContentBlockSourceContent")
             }

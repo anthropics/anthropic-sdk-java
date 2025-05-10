@@ -13,7 +13,7 @@ internal class BetaBase64PdfBlockTest {
     fun create() {
         val betaBase64PdfBlock =
             BetaBase64PdfBlock.builder()
-                .betaBase64PdfSource("U3RhaW5sZXNzIHJvY2tz")
+                .base64Source("U3RhaW5sZXNzIHJvY2tz")
                 .cacheControl(BetaCacheControlEphemeral.builder().build())
                 .citations(BetaCitationsConfigParam.builder().enabled(true).build())
                 .context("x")
@@ -22,7 +22,7 @@ internal class BetaBase64PdfBlockTest {
 
         assertThat(betaBase64PdfBlock.source())
             .isEqualTo(
-                BetaBase64PdfBlock.Source.ofBetaBase64Pdf(
+                BetaBase64PdfBlock.Source.ofBase64(
                     BetaBase64PdfSource.builder().data("U3RhaW5sZXNzIHJvY2tz").build()
                 )
             )
@@ -39,7 +39,7 @@ internal class BetaBase64PdfBlockTest {
         val jsonMapper = jsonMapper()
         val betaBase64PdfBlock =
             BetaBase64PdfBlock.builder()
-                .betaBase64PdfSource("U3RhaW5sZXNzIHJvY2tz")
+                .base64Source("U3RhaW5sZXNzIHJvY2tz")
                 .cacheControl(BetaCacheControlEphemeral.builder().build())
                 .citations(BetaCitationsConfigParam.builder().enabled(true).build())
                 .context("x")

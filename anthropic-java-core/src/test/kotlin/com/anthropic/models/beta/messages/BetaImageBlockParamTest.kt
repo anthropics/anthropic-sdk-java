@@ -24,7 +24,7 @@ internal class BetaImageBlockParamTest {
 
         assertThat(betaImageBlockParam.source())
             .isEqualTo(
-                BetaImageBlockParam.Source.ofBetaBase64Image(
+                BetaImageBlockParam.Source.ofBase64(
                     BetaBase64ImageSource.builder()
                         .data("U3RhaW5sZXNzIHJvY2tz")
                         .mediaType(BetaBase64ImageSource.MediaType.IMAGE_JPEG)

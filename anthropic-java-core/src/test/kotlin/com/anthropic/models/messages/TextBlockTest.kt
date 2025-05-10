@@ -28,7 +28,7 @@ internal class TextBlockTest {
 
         assertThat(textBlock.citations().getOrNull())
             .containsExactly(
-                TextCitation.ofCitationCharLocation(
+                TextCitation.ofCharLocation(
                     CitationCharLocation.builder()
                         .citedText("cited_text")
                         .documentIndex(0L)

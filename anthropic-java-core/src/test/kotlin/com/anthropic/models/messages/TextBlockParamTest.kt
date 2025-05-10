@@ -31,7 +31,7 @@ internal class TextBlockParamTest {
         assertThat(textBlockParam.cacheControl()).contains(CacheControlEphemeral.builder().build())
         assertThat(textBlockParam.citations().getOrNull())
             .containsExactly(
-                TextCitationParam.ofCitationCharLocation(
+                TextCitationParam.ofCharLocation(
                     CitationCharLocationParam.builder()
                         .citedText("cited_text")
                         .documentIndex(0L)

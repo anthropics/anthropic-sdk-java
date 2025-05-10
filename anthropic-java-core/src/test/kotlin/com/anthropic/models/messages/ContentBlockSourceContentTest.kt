@@ -15,8 +15,8 @@ import org.junit.jupiter.params.provider.EnumSource
 internal class ContentBlockSourceContentTest {
 
     @Test
-    fun ofTextBlockParam() {
-        val textBlockParam =
+    fun ofText() {
+        val text =
             TextBlockParam.builder()
                 .text("x")
                 .cacheControl(CacheControlEphemeral.builder().build())
@@ -31,17 +31,17 @@ internal class ContentBlockSourceContentTest {
                 )
                 .build()
 
-        val contentBlockSourceContent = ContentBlockSourceContent.ofTextBlockParam(textBlockParam)
+        val contentBlockSourceContent = ContentBlockSourceContent.ofText(text)
 
-        assertThat(contentBlockSourceContent.textBlockParam()).contains(textBlockParam)
-        assertThat(contentBlockSourceContent.imageBlockParam()).isEmpty
+        assertThat(contentBlockSourceContent.text()).contains(text)
+        assertThat(contentBlockSourceContent.image()).isEmpty
     }
 
     @Test
-    fun ofTextBlockParamRoundtrip() {
+    fun ofTextRoundtrip() {
         val jsonMapper = jsonMapper()
         val contentBlockSourceContent =
-            ContentBlockSourceContent.ofTextBlockParam(
+            ContentBlockSourceContent.ofText(
                 TextBlockParam.builder()
                     .text("x")
                     .cacheControl(CacheControlEphemeral.builder().build())
@@ -67,8 +67,8 @@ internal class ContentBlockSourceContentTest {
     }
 
     @Test
-    fun ofImageBlockParam() {
-        val imageBlockParam =
+    fun ofImage() {
+        val image =
             ImageBlockParam.builder()
                 .source(
                     Base64ImageSource.builder()
@@ -79,17 +79,17 @@ internal class ContentBlockSourceContentTest {
                 .cacheControl(CacheControlEphemeral.builder().build())
                 .build()
 
-        val contentBlockSourceContent = ContentBlockSourceContent.ofImageBlockParam(imageBlockParam)
+        val contentBlockSourceContent = ContentBlockSourceContent.ofImage(image)
 
-        assertThat(contentBlockSourceContent.textBlockParam()).isEmpty
-        assertThat(contentBlockSourceContent.imageBlockParam()).contains(imageBlockParam)
+        assertThat(contentBlockSourceContent.text()).isEmpty
+        assertThat(contentBlockSourceContent.image()).contains(image)
     }
 
     @Test
-    fun ofImageBlockParamRoundtrip() {
+    fun ofImageRoundtrip() {
         val jsonMapper = jsonMapper()
         val contentBlockSourceContent =
-            ContentBlockSourceContent.ofImageBlockParam(
+            ContentBlockSourceContent.ofImage(
                 ImageBlockParam.builder()
                     .source(
                         Base64ImageSource.builder()

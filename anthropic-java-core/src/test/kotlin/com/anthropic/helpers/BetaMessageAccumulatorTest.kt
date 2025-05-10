@@ -33,7 +33,7 @@ internal class BetaMessageAccumulatorTest {
                     .outputTokens(44L)
                     .cacheCreationInputTokens(0L)
                     .cacheReadInputTokens(0L)
-                    .inputTokens(0L)
+                    .inputTokens(INPUT_TOKENS) // Use test constant
                     .serverToolUse(BetaServerToolUsage.builder().webSearchRequests(0L).build())
                     .build(),
             )
@@ -44,7 +44,7 @@ internal class BetaMessageAccumulatorTest {
                     .outputTokens(11L)
                     .cacheCreationInputTokens(0L)
                     .cacheReadInputTokens(0L)
-                    .inputTokens(0L)
+                    .inputTokens(INPUT_TOKENS) // Use test constant
                     .serverToolUse(BetaServerToolUsage.builder().webSearchRequests(0L).build())
                     .build(),
             )
@@ -53,7 +53,7 @@ internal class BetaMessageAccumulatorTest {
         assertThat(usage1.outputTokens()).isEqualTo(44L)
 
         assertThat(usage2.inputTokens()).isEqualTo(INPUT_TOKENS)
-        assertThat(usage2.outputTokens()).isEqualTo(44L + 11L)
+        assertThat(usage2.outputTokens()).isEqualTo(11L)
     }
 
     @Test
@@ -93,8 +93,8 @@ internal class BetaMessageAccumulatorTest {
         assertThat(text2.text().get().text()).isEqualTo("hello world!!!")
 
         assertThat(citations2.size).isEqualTo(2)
-        assertThat(citations2[0].citationPageLocation().get().startPageNumber()).isEqualTo(123L)
-        assertThat(citations2[1].citationPageLocation().get().startPageNumber()).isEqualTo(456L)
+        assertThat(citations2[0].pageLocation().get().startPageNumber()).isEqualTo(123L)
+        assertThat(citations2[1].pageLocation().get().startPageNumber()).isEqualTo(456L)
     }
 
     @Test
@@ -138,11 +138,10 @@ internal class BetaMessageAccumulatorTest {
         assertThat(text2.text().get().text()).isEqualTo("hello")
 
         assertThat(citations4.size).isEqualTo(4)
-        assertThat(citations4[0].citationPageLocation().get().startPageNumber()).isEqualTo(123L)
-        assertThat(citations4[1].citationPageLocation().get().startPageNumber()).isEqualTo(456L)
-        assertThat(citations4[2].citationCharLocation().get().startCharIndex()).isEqualTo(789L)
-        assertThat(citations4[3].citationContentBlockLocation().get().startBlockIndex())
-            .isEqualTo(890L)
+        assertThat(citations4[0].pageLocation().get().startPageNumber()).isEqualTo(123L)
+        assertThat(citations4[1].pageLocation().get().startPageNumber()).isEqualTo(456L)
+        assertThat(citations4[2].charLocation().get().startCharIndex()).isEqualTo(789L)
+        assertThat(citations4[3].contentBlockLocation().get().startBlockIndex()).isEqualTo(890L)
     }
 
     @Test
@@ -456,7 +455,7 @@ internal class BetaMessageAccumulatorTest {
         accumulator.accumulate(messageStopEvent())
 
         assertThat(accumulator.message().usage().inputTokens()).isEqualTo(INPUT_TOKENS)
-        assertThat(accumulator.message().usage().outputTokens()).isEqualTo(11L + 12L + 13L)
+        assertThat(accumulator.message().usage().outputTokens()).isEqualTo(13L)
     }
 
     @Test
@@ -759,7 +758,7 @@ internal class BetaMessageAccumulatorTest {
     // not set explicitly, as it always has an appropriate non-null default value.
 
     private fun messageStartEvent() =
-        BetaRawMessageStreamEvent.ofStart(
+        BetaRawMessageStreamEvent.ofMessageStart(
             BetaRawMessageStartEvent.builder()
                 .message(
                     BetaMessage.builder()
@@ -804,8 +803,12 @@ internal class BetaMessageAccumulatorTest {
         stopReason: JsonField<BetaStopReason> = NOT_SET,
         stopSequence: JsonField<String> = NOT_SET,
         outputTokens: Long = 0L,
+        inputTokens: Long = INPUT_TOKENS,
+        cacheCreationInputTokens: Long = 0L,
+        cacheReadInputTokens: Long = 0L,
+        webSearchRequests: Long = 0L,
     ) =
-        BetaRawMessageStreamEvent.ofDelta(
+        BetaRawMessageStreamEvent.ofMessageDelta(
             BetaRawMessageDeltaEvent.builder()
                 .delta(
                     BetaRawMessageDeltaEvent.Delta.builder()
@@ -816,17 +819,21 @@ internal class BetaMessageAccumulatorTest {
                 .usage(
                     BetaMessageDeltaUsage.builder()
                         .outputTokens(outputTokens)
-                        .cacheCreationInputTokens(0L)
-                        .cacheReadInputTokens(0L)
-                        .inputTokens(0L)
-                        .serverToolUse(BetaServerToolUsage.builder().webSearchRequests(0L).build())
+                        .cacheCreationInputTokens(cacheCreationInputTokens)
+                        .cacheReadInputTokens(cacheReadInputTokens)
+                        .inputTokens(inputTokens)
+                        .serverToolUse(
+                            BetaServerToolUsage.builder()
+                                .webSearchRequests(webSearchRequests)
+                                .build()
+                        )
                         .build()
                 )
                 .build()
         )
 
     private fun messageStopEvent() =
-        BetaRawMessageStreamEvent.ofStop(BetaRawMessageStopEvent.builder().build())
+        BetaRawMessageStreamEvent.ofMessageStop(BetaRawMessageStopEvent.builder().build())
 
     /**
      * @param citationPageNumber Omit (or use `null`) to create a text content block without any
@@ -839,7 +846,7 @@ internal class BetaMessageAccumulatorTest {
     ) =
         contentBlockStartEvent(
             index,
-            ContentBlock.ofBetaText(
+            ContentBlock.ofText(
                 BetaTextBlock.builder()
                     .text(text)
                     .apply {
@@ -847,7 +854,7 @@ internal class BetaMessageAccumulatorTest {
                         // citations" state explicitly with an empty list if needed.
                         citationPageNumber?.let {
                             addCitation(
-                                BetaTextCitation.ofCitationPageLocation(
+                                BetaTextCitation.ofPageLocation(
                                     citationPageLocation(citationPageNumber)
                                 )
                             )
@@ -871,7 +878,7 @@ internal class BetaMessageAccumulatorTest {
     private fun toolUseContentBlockStartEvent(index: Long, name: String = "tool-name") =
         contentBlockStartEvent(
             index,
-            ContentBlock.ofBetaToolUse(
+            ContentBlock.ofToolUse(
                 BetaToolUseBlock.builder().id("tool-id").name(name).input(SET_TO_NULL).build()
             ),
         )
@@ -882,7 +889,7 @@ internal class BetaMessageAccumulatorTest {
     private fun thinkingContentBlockStartEvent(index: Long, thinking: String = "[thought-1") =
         contentBlockStartEvent(
             index,
-            ContentBlock.ofBetaThinking(
+            ContentBlock.ofThinking(
                 BetaThinkingBlock.builder()
                     .thinking(thinking)
                     // No signature is set for the `content_block_start` event. A single
@@ -903,7 +910,7 @@ internal class BetaMessageAccumulatorTest {
     private fun redactedThinkingContentBlockStartEvent(index: Long, data: String?) =
         contentBlockStartEvent(
             index,
-            ContentBlock.ofBetaRedactedThinking(
+            ContentBlock.ofRedactedThinking(
                 BetaRedactedThinkingBlock.builder().data(JsonField.ofNullable(data)).build()
             ),
         )
@@ -990,7 +997,7 @@ internal class BetaMessageAccumulatorTest {
             .build()
 
     private fun textCitation(pageNumber: Long) =
-        BetaTextCitation.ofCitationPageLocation(citationPageLocation(pageNumber))
+        BetaTextCitation.ofPageLocation(citationPageLocation(pageNumber))
 
     private fun thinkingDelta(thinking: String) =
         BetaThinkingDelta.builder().thinking(thinking).build()
