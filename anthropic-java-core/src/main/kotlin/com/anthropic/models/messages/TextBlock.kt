@@ -160,35 +160,27 @@ private constructor(
                 }
         }
 
-        /**
-         * Alias for calling [addCitation] with
-         * `TextCitation.ofCitationCharLocation(citationCharLocation)`.
-         */
-        fun addCitation(citationCharLocation: CitationCharLocation) =
-            addCitation(TextCitation.ofCitationCharLocation(citationCharLocation))
+        /** Alias for calling [addCitation] with `TextCitation.ofCharLocation(charLocation)`. */
+        fun addCitation(charLocation: CitationCharLocation) =
+            addCitation(TextCitation.ofCharLocation(charLocation))
+
+        /** Alias for calling [addCitation] with `TextCitation.ofPageLocation(pageLocation)`. */
+        fun addCitation(pageLocation: CitationPageLocation) =
+            addCitation(TextCitation.ofPageLocation(pageLocation))
 
         /**
          * Alias for calling [addCitation] with
-         * `TextCitation.ofCitationPageLocation(citationPageLocation)`.
+         * `TextCitation.ofContentBlockLocation(contentBlockLocation)`.
          */
-        fun addCitation(citationPageLocation: CitationPageLocation) =
-            addCitation(TextCitation.ofCitationPageLocation(citationPageLocation))
+        fun addCitation(contentBlockLocation: CitationContentBlockLocation) =
+            addCitation(TextCitation.ofContentBlockLocation(contentBlockLocation))
 
         /**
          * Alias for calling [addCitation] with
-         * `TextCitation.ofCitationContentBlockLocation(citationContentBlockLocation)`.
+         * `TextCitation.ofWebSearchResultLocation(webSearchResultLocation)`.
          */
-        fun addCitation(citationContentBlockLocation: CitationContentBlockLocation) =
-            addCitation(TextCitation.ofCitationContentBlockLocation(citationContentBlockLocation))
-
-        /**
-         * Alias for calling [addCitation] with
-         * `TextCitation.ofCitationsWebSearchResultLocation(citationsWebSearchResultLocation)`.
-         */
-        fun addCitation(citationsWebSearchResultLocation: CitationsWebSearchResultLocation) =
-            addCitation(
-                TextCitation.ofCitationsWebSearchResultLocation(citationsWebSearchResultLocation)
-            )
+        fun addCitation(webSearchResultLocation: CitationsWebSearchResultLocation) =
+            addCitation(TextCitation.ofWebSearchResultLocation(webSearchResultLocation))
 
         fun text(text: String) = text(JsonField.of(text))
 

@@ -2,12 +2,12 @@
 
 package com.anthropic.models.models
 
+import com.anthropic.core.AutoPager
+import com.anthropic.core.Page
 import com.anthropic.core.checkRequired
 import com.anthropic.services.blocking.ModelService
 import java.util.Objects
 import java.util.Optional
-import java.util.stream.Stream
-import java.util.stream.StreamSupport
 import kotlin.jvm.optionals.getOrNull
 
 /** @see [ModelService.list] */
@@ -16,7 +16,7 @@ private constructor(
     private val service: ModelService,
     private val params: ModelListParams,
     private val response: ModelListPageResponse,
-) {
+) : Page<ModelInfo> {
 
     /**
      * Delegates to [ModelListPageResponse], but gracefully handles missing data.
@@ -46,19 +46,19 @@ private constructor(
      */
     fun lastId(): Optional<String> = response._lastId().getOptional("last_id")
 
-    fun hasNextPage(): Boolean = data().isNotEmpty() && lastId().isPresent
+    override fun items(): List<ModelInfo> = data()
 
-    fun getNextPageParams(): Optional<ModelListParams> {
-        if (!hasNextPage()) {
-            return Optional.empty()
-        }
+    override fun hasNextPage(): Boolean = items().isNotEmpty() && lastId().isPresent
 
-        return Optional.of(params.toBuilder().apply { lastId().ifPresent { afterId(it) } }.build())
+    fun nextPageParams(): ModelListParams {
+        val nextCursor =
+            lastId().getOrNull() ?: throw IllegalStateException("Cannot construct next page params")
+        return params.toBuilder().afterId(nextCursor).build()
     }
 
-    fun getNextPage(): Optional<ModelListPage> = getNextPageParams().map { service.list(it) }
+    override fun nextPage(): ModelListPage = service.list(nextPageParams())
 
-    fun autoPager(): AutoPager = AutoPager(this)
+    fun autoPager(): AutoPager<ModelInfo> = AutoPager.from(this)
 
     /** The parameters that were used to request this page. */
     fun params(): ModelListParams = params
@@ -125,25 +125,6 @@ private constructor(
                 checkRequired("params", params),
                 checkRequired("response", response),
             )
-    }
-
-    class AutoPager(private val firstPage: ModelListPage) : Iterable<ModelInfo> {
-
-        override fun iterator(): Iterator<ModelInfo> = iterator {
-            var page = firstPage
-            var index = 0
-            while (true) {
-                while (index < page.data().size) {
-                    yield(page.data()[index++])
-                }
-                page = page.getNextPage().getOrNull() ?: break
-                index = 0
-            }
-        }
-
-        fun stream(): Stream<ModelInfo> {
-            return StreamSupport.stream(spliterator(), false)
-        }
     }
 
     override fun equals(other: Any?): Boolean {

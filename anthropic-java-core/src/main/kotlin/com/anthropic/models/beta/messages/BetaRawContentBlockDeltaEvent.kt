@@ -169,44 +169,32 @@ private constructor(
 
         /**
          * Alias for calling [citationsDelta] with
-         * `BetaCitationsDelta.Citation.ofBetaCitationCharLocation(betaCitationCharLocation)`.
+         * `BetaCitationsDelta.Citation.ofCharLocation(charLocation)`.
          */
-        fun citationsDelta(betaCitationCharLocation: BetaCitationCharLocation) =
-            citationsDelta(
-                BetaCitationsDelta.Citation.ofBetaCitationCharLocation(betaCitationCharLocation)
-            )
+        fun citationsDelta(charLocation: BetaCitationCharLocation) =
+            citationsDelta(BetaCitationsDelta.Citation.ofCharLocation(charLocation))
 
         /**
          * Alias for calling [citationsDelta] with
-         * `BetaCitationsDelta.Citation.ofBetaCitationPageLocation(betaCitationPageLocation)`.
+         * `BetaCitationsDelta.Citation.ofPageLocation(pageLocation)`.
          */
-        fun citationsDelta(betaCitationPageLocation: BetaCitationPageLocation) =
-            citationsDelta(
-                BetaCitationsDelta.Citation.ofBetaCitationPageLocation(betaCitationPageLocation)
-            )
+        fun citationsDelta(pageLocation: BetaCitationPageLocation) =
+            citationsDelta(BetaCitationsDelta.Citation.ofPageLocation(pageLocation))
 
         /**
          * Alias for calling [citationsDelta] with
-         * `BetaCitationsDelta.Citation.ofBetaCitationContentBlockLocation(betaCitationContentBlockLocation)`.
+         * `BetaCitationsDelta.Citation.ofContentBlockLocation(contentBlockLocation)`.
          */
-        fun citationsDelta(betaCitationContentBlockLocation: BetaCitationContentBlockLocation) =
-            citationsDelta(
-                BetaCitationsDelta.Citation.ofBetaCitationContentBlockLocation(
-                    betaCitationContentBlockLocation
-                )
-            )
+        fun citationsDelta(contentBlockLocation: BetaCitationContentBlockLocation) =
+            citationsDelta(BetaCitationsDelta.Citation.ofContentBlockLocation(contentBlockLocation))
 
         /**
          * Alias for calling [citationsDelta] with
-         * `BetaCitationsDelta.Citation.ofBetaCitationsWebSearchResultLocation(betaCitationsWebSearchResultLocation)`.
+         * `BetaCitationsDelta.Citation.ofWebSearchResultLocation(webSearchResultLocation)`.
          */
-        fun citationsDelta(
-            betaCitationsWebSearchResultLocation: BetaCitationsWebSearchResultLocation
-        ) =
+        fun citationsDelta(webSearchResultLocation: BetaCitationsWebSearchResultLocation) =
             citationsDelta(
-                BetaCitationsDelta.Citation.ofBetaCitationsWebSearchResultLocation(
-                    betaCitationsWebSearchResultLocation
-                )
+                BetaCitationsDelta.Citation.ofWebSearchResultLocation(webSearchResultLocation)
             )
 
         /** Alias for calling [delta] with `BetaRawContentBlockDelta.ofThinking(thinking)`. */

@@ -5,6 +5,7 @@ package com.anthropic.services.blocking.beta
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.JsonValue
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.checkRequired
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
 import com.anthropic.core.handlers.withErrorHandler
@@ -19,6 +20,7 @@ import com.anthropic.models.beta.models.ModelListPage
 import com.anthropic.models.beta.models.ModelListPageResponse
 import com.anthropic.models.beta.models.ModelListParams
 import com.anthropic.models.beta.models.ModelRetrieveParams
+import kotlin.jvm.optionals.getOrNull
 
 class ModelServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     ModelService {
@@ -52,6 +54,9 @@ class ModelServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: ModelRetrieveParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<BetaModelInfo> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("modelId", params.modelId().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)

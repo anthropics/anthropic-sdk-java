@@ -3,10 +3,11 @@
 package com.anthropic.models.messages.batches
 
 import com.anthropic.core.Params
-import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * This endpoint is idempotent and can be used to poll for Message Batch completion. To access the
@@ -17,13 +18,13 @@ import java.util.Objects
  */
 class BatchRetrieveParams
 private constructor(
-    private val messageBatchId: String,
+    private val messageBatchId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     /** ID of the Message Batch. */
-    fun messageBatchId(): String = messageBatchId
+    fun messageBatchId(): Optional<String> = Optional.ofNullable(messageBatchId)
 
     fun _additionalHeaders(): Headers = additionalHeaders
 
@@ -33,14 +34,9 @@ private constructor(
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of [BatchRetrieveParams].
-         *
-         * The following fields are required:
-         * ```java
-         * .messageBatchId()
-         * ```
-         */
+        @JvmStatic fun none(): BatchRetrieveParams = builder().build()
+
+        /** Returns a mutable builder for constructing an instance of [BatchRetrieveParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -59,7 +55,11 @@ private constructor(
         }
 
         /** ID of the Message Batch. */
-        fun messageBatchId(messageBatchId: String) = apply { this.messageBatchId = messageBatchId }
+        fun messageBatchId(messageBatchId: String?) = apply { this.messageBatchId = messageBatchId }
+
+        /** Alias for calling [Builder.messageBatchId] with `messageBatchId.orElse(null)`. */
+        fun messageBatchId(messageBatchId: Optional<String>) =
+            messageBatchId(messageBatchId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -163,17 +163,10 @@ private constructor(
          * Returns an immutable instance of [BatchRetrieveParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
-         *
-         * The following fields are required:
-         * ```java
-         * .messageBatchId()
-         * ```
-         *
-         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): BatchRetrieveParams =
             BatchRetrieveParams(
-                checkRequired("messageBatchId", messageBatchId),
+                messageBatchId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -181,7 +174,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> messageBatchId
+            0 -> messageBatchId ?: ""
             else -> ""
         }
 

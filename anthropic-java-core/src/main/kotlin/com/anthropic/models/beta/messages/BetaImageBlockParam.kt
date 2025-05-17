@@ -137,12 +137,11 @@ private constructor(
          */
         fun source(source: JsonField<Source>) = apply { this.source = source }
 
-        /** Alias for calling [source] with `Source.ofBetaBase64Image(betaBase64Image)`. */
-        fun source(betaBase64Image: BetaBase64ImageSource) =
-            source(Source.ofBetaBase64Image(betaBase64Image))
+        /** Alias for calling [source] with `Source.ofBase64(base64)`. */
+        fun source(base64: BetaBase64ImageSource) = source(Source.ofBase64(base64))
 
-        /** Alias for calling [source] with `Source.ofBetaUrlImage(betaUrlImage)`. */
-        fun source(betaUrlImage: BetaUrlImageSource) = source(Source.ofBetaUrlImage(betaUrlImage))
+        /** Alias for calling [source] with `Source.ofUrl(url)`. */
+        fun source(url: BetaUrlImageSource) = source(Source.ofUrl(url))
 
         /**
          * Alias for calling [source] with the following:
@@ -152,7 +151,7 @@ private constructor(
          *     .build()
          * ```
          */
-        fun betaUrlImageSource(url: String) = source(BetaUrlImageSource.builder().url(url).build())
+        fun urlSource(url: String) = source(BetaUrlImageSource.builder().url(url).build())
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -267,31 +266,29 @@ private constructor(
     @JsonSerialize(using = Source.Serializer::class)
     class Source
     private constructor(
-        private val betaBase64Image: BetaBase64ImageSource? = null,
-        private val betaUrlImage: BetaUrlImageSource? = null,
+        private val base64: BetaBase64ImageSource? = null,
+        private val url: BetaUrlImageSource? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun betaBase64Image(): Optional<BetaBase64ImageSource> =
-            Optional.ofNullable(betaBase64Image)
+        fun base64(): Optional<BetaBase64ImageSource> = Optional.ofNullable(base64)
 
-        fun betaUrlImage(): Optional<BetaUrlImageSource> = Optional.ofNullable(betaUrlImage)
+        fun url(): Optional<BetaUrlImageSource> = Optional.ofNullable(url)
 
-        fun isBetaBase64Image(): Boolean = betaBase64Image != null
+        fun isBase64(): Boolean = base64 != null
 
-        fun isBetaUrlImage(): Boolean = betaUrlImage != null
+        fun isUrl(): Boolean = url != null
 
-        fun asBetaBase64Image(): BetaBase64ImageSource =
-            betaBase64Image.getOrThrow("betaBase64Image")
+        fun asBase64(): BetaBase64ImageSource = base64.getOrThrow("base64")
 
-        fun asBetaUrlImage(): BetaUrlImageSource = betaUrlImage.getOrThrow("betaUrlImage")
+        fun asUrl(): BetaUrlImageSource = url.getOrThrow("url")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                betaBase64Image != null -> visitor.visitBetaBase64Image(betaBase64Image)
-                betaUrlImage != null -> visitor.visitBetaUrlImage(betaUrlImage)
+                base64 != null -> visitor.visitBase64(base64)
+                url != null -> visitor.visitUrl(url)
                 else -> visitor.unknown(_json)
             }
 
@@ -304,12 +301,12 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitBetaBase64Image(betaBase64Image: BetaBase64ImageSource) {
-                        betaBase64Image.validate()
+                    override fun visitBase64(base64: BetaBase64ImageSource) {
+                        base64.validate()
                     }
 
-                    override fun visitBetaUrlImage(betaUrlImage: BetaUrlImageSource) {
-                        betaUrlImage.validate()
+                    override fun visitUrl(url: BetaUrlImageSource) {
+                        url.validate()
                     }
                 }
             )
@@ -334,11 +331,9 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitBetaBase64Image(betaBase64Image: BetaBase64ImageSource) =
-                        betaBase64Image.validity()
+                    override fun visitBase64(base64: BetaBase64ImageSource) = base64.validity()
 
-                    override fun visitBetaUrlImage(betaUrlImage: BetaUrlImageSource) =
-                        betaUrlImage.validity()
+                    override fun visitUrl(url: BetaUrlImageSource) = url.validity()
 
                     override fun unknown(json: JsonValue?) = 0
                 }
@@ -349,36 +344,32 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Source && betaBase64Image == other.betaBase64Image && betaUrlImage == other.betaUrlImage /* spotless:on */
+            return /* spotless:off */ other is Source && base64 == other.base64 && url == other.url /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaBase64Image, betaUrlImage) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(base64, url) /* spotless:on */
 
         override fun toString(): String =
             when {
-                betaBase64Image != null -> "Source{betaBase64Image=$betaBase64Image}"
-                betaUrlImage != null -> "Source{betaUrlImage=$betaUrlImage}"
+                base64 != null -> "Source{base64=$base64}"
+                url != null -> "Source{url=$url}"
                 _json != null -> "Source{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Source")
             }
 
         companion object {
 
-            @JvmStatic
-            fun ofBetaBase64Image(betaBase64Image: BetaBase64ImageSource) =
-                Source(betaBase64Image = betaBase64Image)
+            @JvmStatic fun ofBase64(base64: BetaBase64ImageSource) = Source(base64 = base64)
 
-            @JvmStatic
-            fun ofBetaUrlImage(betaUrlImage: BetaUrlImageSource) =
-                Source(betaUrlImage = betaUrlImage)
+            @JvmStatic fun ofUrl(url: BetaUrlImageSource) = Source(url = url)
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */
         interface Visitor<out T> {
 
-            fun visitBetaBase64Image(betaBase64Image: BetaBase64ImageSource): T
+            fun visitBase64(base64: BetaBase64ImageSource): T
 
-            fun visitBetaUrlImage(betaUrlImage: BetaUrlImageSource): T
+            fun visitUrl(url: BetaUrlImageSource): T
 
             /**
              * Maps an unknown variant of [Source] to a value of type [T].
@@ -404,12 +395,12 @@ private constructor(
                 when (type) {
                     "base64" -> {
                         return tryDeserialize(node, jacksonTypeRef<BetaBase64ImageSource>())?.let {
-                            Source(betaBase64Image = it, _json = json)
+                            Source(base64 = it, _json = json)
                         } ?: Source(_json = json)
                     }
                     "url" -> {
                         return tryDeserialize(node, jacksonTypeRef<BetaUrlImageSource>())?.let {
-                            Source(betaUrlImage = it, _json = json)
+                            Source(url = it, _json = json)
                         } ?: Source(_json = json)
                     }
                 }
@@ -426,8 +417,8 @@ private constructor(
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.betaBase64Image != null -> generator.writeObject(value.betaBase64Image)
-                    value.betaUrlImage != null -> generator.writeObject(value.betaUrlImage)
+                    value.base64 != null -> generator.writeObject(value.base64)
+                    value.url != null -> generator.writeObject(value.url)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Source")
                 }

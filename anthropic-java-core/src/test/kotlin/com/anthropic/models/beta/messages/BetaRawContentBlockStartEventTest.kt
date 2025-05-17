@@ -32,7 +32,7 @@ internal class BetaRawContentBlockStartEventTest {
 
         assertThat(betaRawContentBlockStartEvent.contentBlock())
             .isEqualTo(
-                BetaRawContentBlockStartEvent.ContentBlock.ofBetaText(
+                BetaRawContentBlockStartEvent.ContentBlock.ofText(
                     BetaTextBlock.builder()
                         .addCitation(
                             BetaCitationCharLocation.builder()

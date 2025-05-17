@@ -2,22 +2,24 @@
 
 package com.anthropic.models.models
 
+import com.anthropic.core.AutoPagerAsync
+import com.anthropic.core.PageAsync
 import com.anthropic.core.checkRequired
 import com.anthropic.services.async.ModelServiceAsync
 import java.util.Objects
 import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
-import java.util.function.Predicate
 import kotlin.jvm.optionals.getOrNull
 
 /** @see [ModelServiceAsync.list] */
 class ModelListPageAsync
 private constructor(
     private val service: ModelServiceAsync,
+    private val streamHandlerExecutor: Executor,
     private val params: ModelListParams,
     private val response: ModelListPageResponse,
-) {
+) : PageAsync<ModelInfo> {
 
     /**
      * Delegates to [ModelListPageResponse], but gracefully handles missing data.
@@ -47,22 +49,19 @@ private constructor(
      */
     fun lastId(): Optional<String> = response._lastId().getOptional("last_id")
 
-    fun hasNextPage(): Boolean = data().isNotEmpty() && lastId().isPresent
+    override fun items(): List<ModelInfo> = data()
 
-    fun getNextPageParams(): Optional<ModelListParams> {
-        if (!hasNextPage()) {
-            return Optional.empty()
-        }
+    override fun hasNextPage(): Boolean = items().isNotEmpty() && lastId().isPresent
 
-        return Optional.of(params.toBuilder().apply { lastId().ifPresent { afterId(it) } }.build())
+    fun nextPageParams(): ModelListParams {
+        val nextCursor =
+            lastId().getOrNull() ?: throw IllegalStateException("Cannot construct next page params")
+        return params.toBuilder().afterId(nextCursor).build()
     }
 
-    fun getNextPage(): CompletableFuture<Optional<ModelListPageAsync>> =
-        getNextPageParams()
-            .map { service.list(it).thenApply { Optional.of(it) } }
-            .orElseGet { CompletableFuture.completedFuture(Optional.empty()) }
+    override fun nextPage(): CompletableFuture<ModelListPageAsync> = service.list(nextPageParams())
 
-    fun autoPager(): AutoPager = AutoPager(this)
+    fun autoPager(): AutoPagerAsync<ModelInfo> = AutoPagerAsync.from(this, streamHandlerExecutor)
 
     /** The parameters that were used to request this page. */
     fun params(): ModelListParams = params
@@ -80,6 +79,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .service()
+         * .streamHandlerExecutor()
          * .params()
          * .response()
          * ```
@@ -91,17 +91,23 @@ private constructor(
     class Builder internal constructor() {
 
         private var service: ModelServiceAsync? = null
+        private var streamHandlerExecutor: Executor? = null
         private var params: ModelListParams? = null
         private var response: ModelListPageResponse? = null
 
         @JvmSynthetic
         internal fun from(modelListPageAsync: ModelListPageAsync) = apply {
             service = modelListPageAsync.service
+            streamHandlerExecutor = modelListPageAsync.streamHandlerExecutor
             params = modelListPageAsync.params
             response = modelListPageAsync.response
         }
 
         fun service(service: ModelServiceAsync) = apply { this.service = service }
+
+        fun streamHandlerExecutor(streamHandlerExecutor: Executor) = apply {
+            this.streamHandlerExecutor = streamHandlerExecutor
+        }
 
         /** The parameters that were used to request this page. */
         fun params(params: ModelListParams) = apply { this.params = params }
@@ -117,6 +123,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .service()
+         * .streamHandlerExecutor()
          * .params()
          * .response()
          * ```
@@ -126,35 +133,10 @@ private constructor(
         fun build(): ModelListPageAsync =
             ModelListPageAsync(
                 checkRequired("service", service),
+                checkRequired("streamHandlerExecutor", streamHandlerExecutor),
                 checkRequired("params", params),
                 checkRequired("response", response),
             )
-    }
-
-    class AutoPager(private val firstPage: ModelListPageAsync) {
-
-        fun forEach(action: Predicate<ModelInfo>, executor: Executor): CompletableFuture<Void> {
-            fun CompletableFuture<Optional<ModelListPageAsync>>.forEach(
-                action: (ModelInfo) -> Boolean,
-                executor: Executor,
-            ): CompletableFuture<Void> =
-                thenComposeAsync(
-                    { page ->
-                        page
-                            .filter { it.data().all(action) }
-                            .map { it.getNextPage().forEach(action, executor) }
-                            .orElseGet { CompletableFuture.completedFuture(null) }
-                    },
-                    executor,
-                )
-            return CompletableFuture.completedFuture(Optional.of(firstPage))
-                .forEach(action::test, executor)
-        }
-
-        fun toList(executor: Executor): CompletableFuture<List<ModelInfo>> {
-            val values = mutableListOf<ModelInfo>()
-            return forEach(values::add, executor).thenApply { values }
-        }
     }
 
     override fun equals(other: Any?): Boolean {
@@ -162,11 +144,11 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ModelListPageAsync && service == other.service && params == other.params && response == other.response /* spotless:on */
+        return /* spotless:off */ other is ModelListPageAsync && service == other.service && streamHandlerExecutor == other.streamHandlerExecutor && params == other.params && response == other.response /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(service, params, response) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(service, streamHandlerExecutor, params, response) /* spotless:on */
 
     override fun toString() =
-        "ModelListPageAsync{service=$service, params=$params, response=$response}"
+        "ModelListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
 }

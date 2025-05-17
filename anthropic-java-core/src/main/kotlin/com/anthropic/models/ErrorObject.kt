@@ -28,8 +28,8 @@ private constructor(
     private val permissionError: PermissionError? = null,
     private val notFoundError: NotFoundError? = null,
     private val rateLimitError: RateLimitError? = null,
-    private val gatewayTimeoutError: GatewayTimeoutError? = null,
-    private val api: ApiErrorObject? = null,
+    private val timeoutError: GatewayTimeoutError? = null,
+    private val apiError: ApiErrorObject? = null,
     private val overloadedError: OverloadedError? = null,
     private val _json: JsonValue? = null,
 ) {
@@ -48,10 +48,9 @@ private constructor(
 
     fun rateLimitError(): Optional<RateLimitError> = Optional.ofNullable(rateLimitError)
 
-    fun gatewayTimeoutError(): Optional<GatewayTimeoutError> =
-        Optional.ofNullable(gatewayTimeoutError)
+    fun timeoutError(): Optional<GatewayTimeoutError> = Optional.ofNullable(timeoutError)
 
-    fun api(): Optional<ApiErrorObject> = Optional.ofNullable(api)
+    fun apiError(): Optional<ApiErrorObject> = Optional.ofNullable(apiError)
 
     fun overloadedError(): Optional<OverloadedError> = Optional.ofNullable(overloadedError)
 
@@ -67,9 +66,9 @@ private constructor(
 
     fun isRateLimitError(): Boolean = rateLimitError != null
 
-    fun isGatewayTimeoutError(): Boolean = gatewayTimeoutError != null
+    fun isTimeoutError(): Boolean = timeoutError != null
 
-    fun isApi(): Boolean = api != null
+    fun isApiError(): Boolean = apiError != null
 
     fun isOverloadedError(): Boolean = overloadedError != null
 
@@ -87,10 +86,9 @@ private constructor(
 
     fun asRateLimitError(): RateLimitError = rateLimitError.getOrThrow("rateLimitError")
 
-    fun asGatewayTimeoutError(): GatewayTimeoutError =
-        gatewayTimeoutError.getOrThrow("gatewayTimeoutError")
+    fun asTimeoutError(): GatewayTimeoutError = timeoutError.getOrThrow("timeoutError")
 
-    fun asApi(): ApiErrorObject = api.getOrThrow("api")
+    fun asApiError(): ApiErrorObject = apiError.getOrThrow("apiError")
 
     fun asOverloadedError(): OverloadedError = overloadedError.getOrThrow("overloadedError")
 
@@ -104,8 +102,8 @@ private constructor(
             permissionError != null -> visitor.visitPermissionError(permissionError)
             notFoundError != null -> visitor.visitNotFoundError(notFoundError)
             rateLimitError != null -> visitor.visitRateLimitError(rateLimitError)
-            gatewayTimeoutError != null -> visitor.visitGatewayTimeoutError(gatewayTimeoutError)
-            api != null -> visitor.visitApi(api)
+            timeoutError != null -> visitor.visitTimeoutError(timeoutError)
+            apiError != null -> visitor.visitApiError(apiError)
             overloadedError != null -> visitor.visitOverloadedError(overloadedError)
             else -> visitor.unknown(_json)
         }
@@ -143,12 +141,12 @@ private constructor(
                     rateLimitError.validate()
                 }
 
-                override fun visitGatewayTimeoutError(gatewayTimeoutError: GatewayTimeoutError) {
-                    gatewayTimeoutError.validate()
+                override fun visitTimeoutError(timeoutError: GatewayTimeoutError) {
+                    timeoutError.validate()
                 }
 
-                override fun visitApi(api: ApiErrorObject) {
-                    api.validate()
+                override fun visitApiError(apiError: ApiErrorObject) {
+                    apiError.validate()
                 }
 
                 override fun visitOverloadedError(overloadedError: OverloadedError) {
@@ -193,10 +191,10 @@ private constructor(
                 override fun visitRateLimitError(rateLimitError: RateLimitError) =
                     rateLimitError.validity()
 
-                override fun visitGatewayTimeoutError(gatewayTimeoutError: GatewayTimeoutError) =
-                    gatewayTimeoutError.validity()
+                override fun visitTimeoutError(timeoutError: GatewayTimeoutError) =
+                    timeoutError.validity()
 
-                override fun visitApi(api: ApiErrorObject) = api.validity()
+                override fun visitApiError(apiError: ApiErrorObject) = apiError.validity()
 
                 override fun visitOverloadedError(overloadedError: OverloadedError) =
                     overloadedError.validity()
@@ -210,10 +208,10 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ErrorObject && invalidRequestError == other.invalidRequestError && authenticationError == other.authenticationError && billingError == other.billingError && permissionError == other.permissionError && notFoundError == other.notFoundError && rateLimitError == other.rateLimitError && gatewayTimeoutError == other.gatewayTimeoutError && api == other.api && overloadedError == other.overloadedError /* spotless:on */
+        return /* spotless:off */ other is ErrorObject && invalidRequestError == other.invalidRequestError && authenticationError == other.authenticationError && billingError == other.billingError && permissionError == other.permissionError && notFoundError == other.notFoundError && rateLimitError == other.rateLimitError && timeoutError == other.timeoutError && apiError == other.apiError && overloadedError == other.overloadedError /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(invalidRequestError, authenticationError, billingError, permissionError, notFoundError, rateLimitError, gatewayTimeoutError, api, overloadedError) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(invalidRequestError, authenticationError, billingError, permissionError, notFoundError, rateLimitError, timeoutError, apiError, overloadedError) /* spotless:on */
 
     override fun toString(): String =
         when {
@@ -223,8 +221,8 @@ private constructor(
             permissionError != null -> "ErrorObject{permissionError=$permissionError}"
             notFoundError != null -> "ErrorObject{notFoundError=$notFoundError}"
             rateLimitError != null -> "ErrorObject{rateLimitError=$rateLimitError}"
-            gatewayTimeoutError != null -> "ErrorObject{gatewayTimeoutError=$gatewayTimeoutError}"
-            api != null -> "ErrorObject{api=$api}"
+            timeoutError != null -> "ErrorObject{timeoutError=$timeoutError}"
+            apiError != null -> "ErrorObject{apiError=$apiError}"
             overloadedError != null -> "ErrorObject{overloadedError=$overloadedError}"
             _json != null -> "ErrorObject{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid ErrorObject")
@@ -256,10 +254,10 @@ private constructor(
             ErrorObject(rateLimitError = rateLimitError)
 
         @JvmStatic
-        fun ofGatewayTimeoutError(gatewayTimeoutError: GatewayTimeoutError) =
-            ErrorObject(gatewayTimeoutError = gatewayTimeoutError)
+        fun ofTimeoutError(timeoutError: GatewayTimeoutError) =
+            ErrorObject(timeoutError = timeoutError)
 
-        @JvmStatic fun ofApi(api: ApiErrorObject) = ErrorObject(api = api)
+        @JvmStatic fun ofApiError(apiError: ApiErrorObject) = ErrorObject(apiError = apiError)
 
         @JvmStatic
         fun ofOverloadedError(overloadedError: OverloadedError) =
@@ -283,9 +281,9 @@ private constructor(
 
         fun visitRateLimitError(rateLimitError: RateLimitError): T
 
-        fun visitGatewayTimeoutError(gatewayTimeoutError: GatewayTimeoutError): T
+        fun visitTimeoutError(timeoutError: GatewayTimeoutError): T
 
-        fun visitApi(api: ApiErrorObject): T
+        fun visitApiError(apiError: ApiErrorObject): T
 
         fun visitOverloadedError(overloadedError: OverloadedError): T
 
@@ -342,12 +340,12 @@ private constructor(
                 }
                 "timeout_error" -> {
                     return tryDeserialize(node, jacksonTypeRef<GatewayTimeoutError>())?.let {
-                        ErrorObject(gatewayTimeoutError = it, _json = json)
+                        ErrorObject(timeoutError = it, _json = json)
                     } ?: ErrorObject(_json = json)
                 }
                 "api_error" -> {
                     return tryDeserialize(node, jacksonTypeRef<ApiErrorObject>())?.let {
-                        ErrorObject(api = it, _json = json)
+                        ErrorObject(apiError = it, _json = json)
                     } ?: ErrorObject(_json = json)
                 }
                 "overloaded_error" -> {
@@ -377,9 +375,8 @@ private constructor(
                 value.permissionError != null -> generator.writeObject(value.permissionError)
                 value.notFoundError != null -> generator.writeObject(value.notFoundError)
                 value.rateLimitError != null -> generator.writeObject(value.rateLimitError)
-                value.gatewayTimeoutError != null ->
-                    generator.writeObject(value.gatewayTimeoutError)
-                value.api != null -> generator.writeObject(value.api)
+                value.timeoutError != null -> generator.writeObject(value.timeoutError)
+                value.apiError != null -> generator.writeObject(value.apiError)
                 value.overloadedError != null -> generator.writeObject(value.overloadedError)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid ErrorObject")

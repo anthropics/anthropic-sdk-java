@@ -86,8 +86,31 @@ class MessageAccumulator private constructor() {
         @JvmStatic fun create() = MessageAccumulator()
 
         @JvmSynthetic
-        internal fun mergeMessageUsage(usage: Usage, deltaUsage: MessageDeltaUsage) =
-            usage.toBuilder().outputTokens(usage.outputTokens() + deltaUsage.outputTokens()).build()
+        internal fun mergeMessageUsage(usage: Usage, deltaUsage: MessageDeltaUsage): Usage {
+            val builder = usage.toBuilder()
+
+            if (!deltaUsage._outputTokens().isMissing()) {
+                builder.outputTokens(deltaUsage.outputTokens())
+            }
+
+            if (!deltaUsage._inputTokens().isMissing()) {
+                builder.inputTokens(deltaUsage.inputTokens().orElse(0))
+            }
+
+            if (!deltaUsage._cacheCreationInputTokens().isMissing()) {
+                builder.cacheCreationInputTokens(deltaUsage.cacheCreationInputTokens())
+            }
+
+            if (!deltaUsage._cacheReadInputTokens().isMissing()) {
+                builder.cacheReadInputTokens(deltaUsage.cacheReadInputTokens())
+            }
+
+            if (!deltaUsage._serverToolUse().isMissing()) {
+                builder.serverToolUse(deltaUsage.serverToolUse())
+            }
+
+            return builder.build()
+        }
 
         @JvmSynthetic
         internal fun mergeTextDelta(
@@ -162,21 +185,18 @@ class MessageAccumulator private constructor() {
                 .accept(
                     object : CitationsDelta.Citation.Visitor<TextCitation> {
                         override fun visitCharLocation(charLocation: CitationCharLocation) =
-                            TextCitation.ofCitationCharLocation(charLocation)
+                            TextCitation.ofCharLocation(charLocation)
 
                         override fun visitPageLocation(pageLocation: CitationPageLocation) =
-                            TextCitation.ofCitationPageLocation(pageLocation)
+                            TextCitation.ofPageLocation(pageLocation)
 
                         override fun visitContentBlockLocation(
                             contentBlockLocation: CitationContentBlockLocation
-                        ) = TextCitation.ofCitationContentBlockLocation(contentBlockLocation)
+                        ) = TextCitation.ofContentBlockLocation(contentBlockLocation)
 
-                        override fun visitCitationsWebSearchResultLocation(
+                        override fun visitWebSearchResultLocation(
                             citationsWebSearchResultLocation: CitationsWebSearchResultLocation
-                        ) =
-                            TextCitation.ofCitationsWebSearchResultLocation(
-                                citationsWebSearchResultLocation
-                            )
+                        ) = TextCitation.ofWebSearchResultLocation(citationsWebSearchResultLocation)
                     }
                 )
     }
@@ -207,7 +227,7 @@ class MessageAccumulator private constructor() {
 
         event.accept(
             object : RawMessageStreamEvent.Visitor<Unit> {
-                override fun visitStart(start: RawMessageStartEvent) {
+                override fun visitMessageStart(start: RawMessageStartEvent) {
                     if (messageBuilder != null) {
                         throw AnthropicInvalidDataException(
                             "'message_start' event already received."
@@ -217,7 +237,7 @@ class MessageAccumulator private constructor() {
                     messageUsage = start.message().usage()
                 }
 
-                override fun visitDelta(deltaEvent: RawMessageDeltaEvent) {
+                override fun visitMessageDelta(deltaEvent: RawMessageDeltaEvent) {
                     val delta = deltaEvent.delta()
 
                     // The Anthropic API allows that there may be "one or more `message_delta`
@@ -239,10 +259,11 @@ class MessageAccumulator private constructor() {
                         requireMessageBuilder().stopSequence(delta.stopSequence().get())
                     }
 
+                    // Ensure we properly update the usage information from the delta event
                     messageUsage = mergeMessageUsage(requireMessageUsage(), deltaEvent.usage())
                 }
 
-                override fun visitStop(stop: RawMessageStopEvent) {
+                override fun visitMessageStop(stop: RawMessageStopEvent) {
                     message =
                         requireMessageBuilder()
                             // The indexed content block map is converted to a list with the blocks

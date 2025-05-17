@@ -24,7 +24,7 @@ internal class ImageBlockParamTest {
 
         assertThat(imageBlockParam.source())
             .isEqualTo(
-                ImageBlockParam.Source.ofBase64Image(
+                ImageBlockParam.Source.ofBase64(
                     Base64ImageSource.builder()
                         .data("U3RhaW5sZXNzIHJvY2tz")
                         .mediaType(Base64ImageSource.MediaType.IMAGE_JPEG)

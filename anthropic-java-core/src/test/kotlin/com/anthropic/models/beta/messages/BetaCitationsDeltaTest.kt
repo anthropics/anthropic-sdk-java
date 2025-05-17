@@ -26,7 +26,7 @@ internal class BetaCitationsDeltaTest {
 
         assertThat(betaCitationsDelta.citation())
             .isEqualTo(
-                BetaCitationsDelta.Citation.ofBetaCitationCharLocation(
+                BetaCitationsDelta.Citation.ofCharLocation(
                     BetaCitationCharLocation.builder()
                         .citedText("cited_text")
                         .documentIndex(0L)

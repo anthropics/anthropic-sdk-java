@@ -26,8 +26,8 @@ internal class ErrorObjectTest {
         assertThat(errorObject.permissionError()).isEmpty
         assertThat(errorObject.notFoundError()).isEmpty
         assertThat(errorObject.rateLimitError()).isEmpty
-        assertThat(errorObject.gatewayTimeoutError()).isEmpty
-        assertThat(errorObject.api()).isEmpty
+        assertThat(errorObject.timeoutError()).isEmpty
+        assertThat(errorObject.apiError()).isEmpty
         assertThat(errorObject.overloadedError()).isEmpty
     }
 
@@ -60,8 +60,8 @@ internal class ErrorObjectTest {
         assertThat(errorObject.permissionError()).isEmpty
         assertThat(errorObject.notFoundError()).isEmpty
         assertThat(errorObject.rateLimitError()).isEmpty
-        assertThat(errorObject.gatewayTimeoutError()).isEmpty
-        assertThat(errorObject.api()).isEmpty
+        assertThat(errorObject.timeoutError()).isEmpty
+        assertThat(errorObject.apiError()).isEmpty
         assertThat(errorObject.overloadedError()).isEmpty
     }
 
@@ -94,8 +94,8 @@ internal class ErrorObjectTest {
         assertThat(errorObject.permissionError()).isEmpty
         assertThat(errorObject.notFoundError()).isEmpty
         assertThat(errorObject.rateLimitError()).isEmpty
-        assertThat(errorObject.gatewayTimeoutError()).isEmpty
-        assertThat(errorObject.api()).isEmpty
+        assertThat(errorObject.timeoutError()).isEmpty
+        assertThat(errorObject.apiError()).isEmpty
         assertThat(errorObject.overloadedError()).isEmpty
     }
 
@@ -126,8 +126,8 @@ internal class ErrorObjectTest {
         assertThat(errorObject.permissionError()).contains(permissionError)
         assertThat(errorObject.notFoundError()).isEmpty
         assertThat(errorObject.rateLimitError()).isEmpty
-        assertThat(errorObject.gatewayTimeoutError()).isEmpty
-        assertThat(errorObject.api()).isEmpty
+        assertThat(errorObject.timeoutError()).isEmpty
+        assertThat(errorObject.apiError()).isEmpty
         assertThat(errorObject.overloadedError()).isEmpty
     }
 
@@ -158,8 +158,8 @@ internal class ErrorObjectTest {
         assertThat(errorObject.permissionError()).isEmpty
         assertThat(errorObject.notFoundError()).contains(notFoundError)
         assertThat(errorObject.rateLimitError()).isEmpty
-        assertThat(errorObject.gatewayTimeoutError()).isEmpty
-        assertThat(errorObject.api()).isEmpty
+        assertThat(errorObject.timeoutError()).isEmpty
+        assertThat(errorObject.apiError()).isEmpty
         assertThat(errorObject.overloadedError()).isEmpty
     }
 
@@ -190,8 +190,8 @@ internal class ErrorObjectTest {
         assertThat(errorObject.permissionError()).isEmpty
         assertThat(errorObject.notFoundError()).isEmpty
         assertThat(errorObject.rateLimitError()).contains(rateLimitError)
-        assertThat(errorObject.gatewayTimeoutError()).isEmpty
-        assertThat(errorObject.api()).isEmpty
+        assertThat(errorObject.timeoutError()).isEmpty
+        assertThat(errorObject.apiError()).isEmpty
         assertThat(errorObject.overloadedError()).isEmpty
     }
 
@@ -211,10 +211,10 @@ internal class ErrorObjectTest {
     }
 
     @Test
-    fun ofGatewayTimeoutError() {
-        val gatewayTimeoutError = GatewayTimeoutError.builder().message("message").build()
+    fun ofTimeoutError() {
+        val timeoutError = GatewayTimeoutError.builder().message("message").build()
 
-        val errorObject = ErrorObject.ofGatewayTimeoutError(gatewayTimeoutError)
+        val errorObject = ErrorObject.ofTimeoutError(timeoutError)
 
         assertThat(errorObject.invalidRequestError()).isEmpty
         assertThat(errorObject.authenticationError()).isEmpty
@@ -222,18 +222,16 @@ internal class ErrorObjectTest {
         assertThat(errorObject.permissionError()).isEmpty
         assertThat(errorObject.notFoundError()).isEmpty
         assertThat(errorObject.rateLimitError()).isEmpty
-        assertThat(errorObject.gatewayTimeoutError()).contains(gatewayTimeoutError)
-        assertThat(errorObject.api()).isEmpty
+        assertThat(errorObject.timeoutError()).contains(timeoutError)
+        assertThat(errorObject.apiError()).isEmpty
         assertThat(errorObject.overloadedError()).isEmpty
     }
 
     @Test
-    fun ofGatewayTimeoutErrorRoundtrip() {
+    fun ofTimeoutErrorRoundtrip() {
         val jsonMapper = jsonMapper()
         val errorObject =
-            ErrorObject.ofGatewayTimeoutError(
-                GatewayTimeoutError.builder().message("message").build()
-            )
+            ErrorObject.ofTimeoutError(GatewayTimeoutError.builder().message("message").build())
 
         val roundtrippedErrorObject =
             jsonMapper.readValue(
@@ -245,10 +243,10 @@ internal class ErrorObjectTest {
     }
 
     @Test
-    fun ofApi() {
-        val api = ApiErrorObject.builder().message("message").build()
+    fun ofApiError() {
+        val apiError = ApiErrorObject.builder().message("message").build()
 
-        val errorObject = ErrorObject.ofApi(api)
+        val errorObject = ErrorObject.ofApiError(apiError)
 
         assertThat(errorObject.invalidRequestError()).isEmpty
         assertThat(errorObject.authenticationError()).isEmpty
@@ -256,15 +254,16 @@ internal class ErrorObjectTest {
         assertThat(errorObject.permissionError()).isEmpty
         assertThat(errorObject.notFoundError()).isEmpty
         assertThat(errorObject.rateLimitError()).isEmpty
-        assertThat(errorObject.gatewayTimeoutError()).isEmpty
-        assertThat(errorObject.api()).contains(api)
+        assertThat(errorObject.timeoutError()).isEmpty
+        assertThat(errorObject.apiError()).contains(apiError)
         assertThat(errorObject.overloadedError()).isEmpty
     }
 
     @Test
-    fun ofApiRoundtrip() {
+    fun ofApiErrorRoundtrip() {
         val jsonMapper = jsonMapper()
-        val errorObject = ErrorObject.ofApi(ApiErrorObject.builder().message("message").build())
+        val errorObject =
+            ErrorObject.ofApiError(ApiErrorObject.builder().message("message").build())
 
         val roundtrippedErrorObject =
             jsonMapper.readValue(
@@ -287,8 +286,8 @@ internal class ErrorObjectTest {
         assertThat(errorObject.permissionError()).isEmpty
         assertThat(errorObject.notFoundError()).isEmpty
         assertThat(errorObject.rateLimitError()).isEmpty
-        assertThat(errorObject.gatewayTimeoutError()).isEmpty
-        assertThat(errorObject.api()).isEmpty
+        assertThat(errorObject.timeoutError()).isEmpty
+        assertThat(errorObject.apiError()).isEmpty
         assertThat(errorObject.overloadedError()).contains(overloadedError)
     }
 

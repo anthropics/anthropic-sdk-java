@@ -3,7 +3,6 @@
 package com.anthropic.models.beta.messages.batches
 
 import com.anthropic.core.Params
-import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
@@ -24,14 +23,14 @@ import kotlin.jvm.optionals.getOrNull
  */
 class BatchResultsParams
 private constructor(
-    private val messageBatchId: String,
+    private val messageBatchId: String?,
     private val betas: List<AnthropicBeta>?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     /** ID of the Message Batch. */
-    fun messageBatchId(): String = messageBatchId
+    fun messageBatchId(): Optional<String> = Optional.ofNullable(messageBatchId)
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
@@ -44,14 +43,9 @@ private constructor(
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of [BatchResultsParams].
-         *
-         * The following fields are required:
-         * ```java
-         * .messageBatchId()
-         * ```
-         */
+        @JvmStatic fun none(): BatchResultsParams = builder().build()
+
+        /** Returns a mutable builder for constructing an instance of [BatchResultsParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -72,7 +66,11 @@ private constructor(
         }
 
         /** ID of the Message Batch. */
-        fun messageBatchId(messageBatchId: String) = apply { this.messageBatchId = messageBatchId }
+        fun messageBatchId(messageBatchId: String?) = apply { this.messageBatchId = messageBatchId }
+
+        /** Alias for calling [Builder.messageBatchId] with `messageBatchId.orElse(null)`. */
+        fun messageBatchId(messageBatchId: Optional<String>) =
+            messageBatchId(messageBatchId.getOrNull())
 
         /** Optional header to specify the beta version(s) you want to use. */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
@@ -200,17 +198,10 @@ private constructor(
          * Returns an immutable instance of [BatchResultsParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
-         *
-         * The following fields are required:
-         * ```java
-         * .messageBatchId()
-         * ```
-         *
-         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): BatchResultsParams =
             BatchResultsParams(
-                checkRequired("messageBatchId", messageBatchId),
+                messageBatchId,
                 betas?.toImmutable(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -219,7 +210,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> messageBatchId
+            0 -> messageBatchId ?: ""
             else -> ""
         }
 

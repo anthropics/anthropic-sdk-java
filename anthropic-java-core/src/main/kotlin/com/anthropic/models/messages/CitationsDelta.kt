@@ -131,10 +131,10 @@ private constructor(
 
         /**
          * Alias for calling [citation] with
-         * `Citation.ofCitationsWebSearchResultLocation(citationsWebSearchResultLocation)`.
+         * `Citation.ofWebSearchResultLocation(webSearchResultLocation)`.
          */
-        fun citation(citationsWebSearchResultLocation: CitationsWebSearchResultLocation) =
-            citation(Citation.ofCitationsWebSearchResultLocation(citationsWebSearchResultLocation))
+        fun citation(webSearchResultLocation: CitationsWebSearchResultLocation) =
+            citation(Citation.ofWebSearchResultLocation(webSearchResultLocation))
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -230,7 +230,7 @@ private constructor(
         private val charLocation: CitationCharLocation? = null,
         private val pageLocation: CitationPageLocation? = null,
         private val contentBlockLocation: CitationContentBlockLocation? = null,
-        private val citationsWebSearchResultLocation: CitationsWebSearchResultLocation? = null,
+        private val webSearchResultLocation: CitationsWebSearchResultLocation? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -241,8 +241,8 @@ private constructor(
         fun contentBlockLocation(): Optional<CitationContentBlockLocation> =
             Optional.ofNullable(contentBlockLocation)
 
-        fun citationsWebSearchResultLocation(): Optional<CitationsWebSearchResultLocation> =
-            Optional.ofNullable(citationsWebSearchResultLocation)
+        fun webSearchResultLocation(): Optional<CitationsWebSearchResultLocation> =
+            Optional.ofNullable(webSearchResultLocation)
 
         fun isCharLocation(): Boolean = charLocation != null
 
@@ -250,7 +250,7 @@ private constructor(
 
         fun isContentBlockLocation(): Boolean = contentBlockLocation != null
 
-        fun isCitationsWebSearchResultLocation(): Boolean = citationsWebSearchResultLocation != null
+        fun isWebSearchResultLocation(): Boolean = webSearchResultLocation != null
 
         fun asCharLocation(): CitationCharLocation = charLocation.getOrThrow("charLocation")
 
@@ -259,8 +259,8 @@ private constructor(
         fun asContentBlockLocation(): CitationContentBlockLocation =
             contentBlockLocation.getOrThrow("contentBlockLocation")
 
-        fun asCitationsWebSearchResultLocation(): CitationsWebSearchResultLocation =
-            citationsWebSearchResultLocation.getOrThrow("citationsWebSearchResultLocation")
+        fun asWebSearchResultLocation(): CitationsWebSearchResultLocation =
+            webSearchResultLocation.getOrThrow("webSearchResultLocation")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -270,8 +270,8 @@ private constructor(
                 pageLocation != null -> visitor.visitPageLocation(pageLocation)
                 contentBlockLocation != null ->
                     visitor.visitContentBlockLocation(contentBlockLocation)
-                citationsWebSearchResultLocation != null ->
-                    visitor.visitCitationsWebSearchResultLocation(citationsWebSearchResultLocation)
+                webSearchResultLocation != null ->
+                    visitor.visitWebSearchResultLocation(webSearchResultLocation)
                 else -> visitor.unknown(_json)
             }
 
@@ -298,10 +298,10 @@ private constructor(
                         contentBlockLocation.validate()
                     }
 
-                    override fun visitCitationsWebSearchResultLocation(
-                        citationsWebSearchResultLocation: CitationsWebSearchResultLocation
+                    override fun visitWebSearchResultLocation(
+                        webSearchResultLocation: CitationsWebSearchResultLocation
                     ) {
-                        citationsWebSearchResultLocation.validate()
+                        webSearchResultLocation.validate()
                     }
                 }
             )
@@ -336,9 +336,9 @@ private constructor(
                         contentBlockLocation: CitationContentBlockLocation
                     ) = contentBlockLocation.validity()
 
-                    override fun visitCitationsWebSearchResultLocation(
-                        citationsWebSearchResultLocation: CitationsWebSearchResultLocation
-                    ) = citationsWebSearchResultLocation.validity()
+                    override fun visitWebSearchResultLocation(
+                        webSearchResultLocation: CitationsWebSearchResultLocation
+                    ) = webSearchResultLocation.validity()
 
                     override fun unknown(json: JsonValue?) = 0
                 }
@@ -349,10 +349,10 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Citation && charLocation == other.charLocation && pageLocation == other.pageLocation && contentBlockLocation == other.contentBlockLocation && citationsWebSearchResultLocation == other.citationsWebSearchResultLocation /* spotless:on */
+            return /* spotless:off */ other is Citation && charLocation == other.charLocation && pageLocation == other.pageLocation && contentBlockLocation == other.contentBlockLocation && webSearchResultLocation == other.webSearchResultLocation /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(charLocation, pageLocation, contentBlockLocation, citationsWebSearchResultLocation) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(charLocation, pageLocation, contentBlockLocation, webSearchResultLocation) /* spotless:on */
 
         override fun toString(): String =
             when {
@@ -360,8 +360,8 @@ private constructor(
                 pageLocation != null -> "Citation{pageLocation=$pageLocation}"
                 contentBlockLocation != null ->
                     "Citation{contentBlockLocation=$contentBlockLocation}"
-                citationsWebSearchResultLocation != null ->
-                    "Citation{citationsWebSearchResultLocation=$citationsWebSearchResultLocation}"
+                webSearchResultLocation != null ->
+                    "Citation{webSearchResultLocation=$webSearchResultLocation}"
                 _json != null -> "Citation{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Citation")
             }
@@ -381,9 +381,9 @@ private constructor(
                 Citation(contentBlockLocation = contentBlockLocation)
 
             @JvmStatic
-            fun ofCitationsWebSearchResultLocation(
-                citationsWebSearchResultLocation: CitationsWebSearchResultLocation
-            ) = Citation(citationsWebSearchResultLocation = citationsWebSearchResultLocation)
+            fun ofWebSearchResultLocation(
+                webSearchResultLocation: CitationsWebSearchResultLocation
+            ) = Citation(webSearchResultLocation = webSearchResultLocation)
         }
 
         /**
@@ -397,8 +397,8 @@ private constructor(
 
             fun visitContentBlockLocation(contentBlockLocation: CitationContentBlockLocation): T
 
-            fun visitCitationsWebSearchResultLocation(
-                citationsWebSearchResultLocation: CitationsWebSearchResultLocation
+            fun visitWebSearchResultLocation(
+                webSearchResultLocation: CitationsWebSearchResultLocation
             ): T
 
             /**
@@ -443,7 +443,7 @@ private constructor(
                                 node,
                                 jacksonTypeRef<CitationsWebSearchResultLocation>(),
                             )
-                            ?.let { Citation(citationsWebSearchResultLocation = it, _json = json) }
+                            ?.let { Citation(webSearchResultLocation = it, _json = json) }
                             ?: Citation(_json = json)
                     }
                 }
@@ -464,8 +464,8 @@ private constructor(
                     value.pageLocation != null -> generator.writeObject(value.pageLocation)
                     value.contentBlockLocation != null ->
                         generator.writeObject(value.contentBlockLocation)
-                    value.citationsWebSearchResultLocation != null ->
-                        generator.writeObject(value.citationsWebSearchResultLocation)
+                    value.webSearchResultLocation != null ->
+                        generator.writeObject(value.webSearchResultLocation)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Citation")
                 }

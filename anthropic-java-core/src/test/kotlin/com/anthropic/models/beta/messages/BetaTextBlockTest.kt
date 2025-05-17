@@ -28,7 +28,7 @@ internal class BetaTextBlockTest {
 
         assertThat(betaTextBlock.citations().getOrNull())
             .containsExactly(
-                BetaTextCitation.ofCitationCharLocation(
+                BetaTextCitation.ofCharLocation(
                     BetaCitationCharLocation.builder()
                         .citedText("cited_text")
                         .documentIndex(0L)
