@@ -13,11 +13,11 @@ internal class BetaWebSearchToolResultErrorTest {
     fun create() {
         val betaWebSearchToolResultError =
             BetaWebSearchToolResultError.builder()
-                .errorCode(BetaWebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                .errorCode(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                 .build()
 
         assertThat(betaWebSearchToolResultError.errorCode())
-            .isEqualTo(BetaWebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+            .isEqualTo(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
     }
 
     @Test
@@ -25,7 +25,7 @@ internal class BetaWebSearchToolResultErrorTest {
         val jsonMapper = jsonMapper()
         val betaWebSearchToolResultError =
             BetaWebSearchToolResultError.builder()
-                .errorCode(BetaWebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                .errorCode(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                 .build()
 
         val roundtrippedBetaWebSearchToolResultError =

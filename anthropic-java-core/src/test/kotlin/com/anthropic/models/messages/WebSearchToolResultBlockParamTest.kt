@@ -17,8 +17,8 @@ internal class WebSearchToolResultBlockParamTest {
                     listOf(
                         WebSearchResultBlockParam.builder()
                             .encryptedContent("encrypted_content")
-                            .title("x")
-                            .url("x")
+                            .title("title")
+                            .url("url")
                             .pageAge("page_age")
                             .build()
                     )
@@ -33,8 +33,8 @@ internal class WebSearchToolResultBlockParamTest {
                     listOf(
                         WebSearchResultBlockParam.builder()
                             .encryptedContent("encrypted_content")
-                            .title("x")
-                            .url("x")
+                            .title("title")
+                            .url("url")
                             .pageAge("page_age")
                             .build()
                     )
@@ -54,8 +54,8 @@ internal class WebSearchToolResultBlockParamTest {
                     listOf(
                         WebSearchResultBlockParam.builder()
                             .encryptedContent("encrypted_content")
-                            .title("x")
-                            .url("x")
+                            .title("title")
+                            .url("url")
                             .pageAge("page_age")
                             .build()
                     )

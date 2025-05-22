@@ -31,6 +31,7 @@ internal class BatchCreateParamsTest {
                                     .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
                                     .build()
                             )
+                            .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
                             .addStopSequence("string")
                             .stream(true)
                             .systemOfTextBlockParams(
@@ -111,6 +112,7 @@ internal class BatchCreateParamsTest {
                                         .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
                                         .build()
                                 )
+                                .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
                                 .addStopSequence("string")
                                 .stream(true)
                                 .systemOfTextBlockParams(
@@ -189,6 +191,7 @@ internal class BatchCreateParamsTest {
                                     .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
                                     .build()
                             )
+                            .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
                             .addStopSequence("string")
                             .stream(true)
                             .systemOfTextBlockParams(

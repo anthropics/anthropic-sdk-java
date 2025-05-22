@@ -47,7 +47,7 @@ private constructor(
                 override fun visitWebSearchToolResult(
                     webSearchToolResult: WebSearchToolResultBlock
                 ): ContentBlockParam =
-                    ContentBlockParam.ofServerToolUse(webSearchToolResult.toParam())
+                    ContentBlockParam.ofWebSearchToolResult(webSearchToolResult.toParam())
 
                 override fun visitThinking(thinking: ThinkingBlock): ContentBlockParam =
                     ContentBlockParam.ofThinking(thinking.toParam())

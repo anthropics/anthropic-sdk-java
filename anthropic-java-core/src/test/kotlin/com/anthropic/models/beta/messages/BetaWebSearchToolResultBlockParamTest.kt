@@ -13,28 +13,32 @@ internal class BetaWebSearchToolResultBlockParamTest {
     fun create() {
         val betaWebSearchToolResultBlockParam =
             BetaWebSearchToolResultBlockParam.builder()
-                .contentOfItem(
+                .contentOfResultBlock(
                     listOf(
                         BetaWebSearchResultBlockParam.builder()
                             .encryptedContent("encrypted_content")
-                            .title("x")
-                            .url("x")
+                            .title("title")
+                            .url("url")
                             .pageAge("page_age")
                             .build()
                     )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .build()
 
         assertThat(betaWebSearchToolResultBlockParam.content())
             .isEqualTo(
-                BetaWebSearchToolResultBlockParamContent.ofItem(
+                BetaWebSearchToolResultBlockParamContent.ofResultBlock(
                     listOf(
                         BetaWebSearchResultBlockParam.builder()
                             .encryptedContent("encrypted_content")
-                            .title("x")
-                            .url("x")
+                            .title("title")
+                            .url("url")
                             .pageAge("page_age")
                             .build()
                     )
@@ -42,7 +46,11 @@ internal class BetaWebSearchToolResultBlockParamTest {
             )
         assertThat(betaWebSearchToolResultBlockParam.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
         assertThat(betaWebSearchToolResultBlockParam.cacheControl())
-            .contains(BetaCacheControlEphemeral.builder().build())
+            .contains(
+                BetaCacheControlEphemeral.builder()
+                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                    .build()
+            )
     }
 
     @Test
@@ -50,18 +58,22 @@ internal class BetaWebSearchToolResultBlockParamTest {
         val jsonMapper = jsonMapper()
         val betaWebSearchToolResultBlockParam =
             BetaWebSearchToolResultBlockParam.builder()
-                .contentOfItem(
+                .contentOfResultBlock(
                     listOf(
                         BetaWebSearchResultBlockParam.builder()
                             .encryptedContent("encrypted_content")
-                            .title("x")
-                            .url("x")
+                            .title("title")
+                            .url("url")
                             .pageAge("page_age")
                             .build()
                     )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .build()
 
         val roundtrippedBetaWebSearchToolResultBlockParam =

@@ -5,6 +5,7 @@ package com.anthropic.models.beta.messages
 import com.anthropic.core.jsonMapper
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -15,6 +16,12 @@ internal class BetaMessageTest {
         val betaMessage =
             BetaMessage.builder()
                 .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
+                .container(
+                    BetaContainer.builder()
+                        .id("id")
+                        .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
                 .addContent(
                     BetaTextBlock.builder()
                         .addCitation(
@@ -34,16 +41,30 @@ internal class BetaMessageTest {
                 .stopSequence(null)
                 .usage(
                     BetaUsage.builder()
+                        .cacheCreation(
+                            BetaCacheCreation.builder()
+                                .ephemeral1hInputTokens(0L)
+                                .ephemeral5mInputTokens(0L)
+                                .build()
+                        )
                         .cacheCreationInputTokens(2051L)
                         .cacheReadInputTokens(2051L)
                         .inputTokens(2095L)
                         .outputTokens(503L)
                         .serverToolUse(BetaServerToolUsage.builder().webSearchRequests(0L).build())
+                        .serviceTier(BetaUsage.ServiceTier.STANDARD)
                         .build()
                 )
                 .build()
 
         assertThat(betaMessage.id()).isEqualTo("msg_013Zva2CMHLNnXjNJJKqJ2EF")
+        assertThat(betaMessage.container())
+            .contains(
+                BetaContainer.builder()
+                    .id("id")
+                    .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
         assertThat(betaMessage.content())
             .containsExactly(
                 BetaContentBlock.ofText(
@@ -67,11 +88,18 @@ internal class BetaMessageTest {
         assertThat(betaMessage.usage())
             .isEqualTo(
                 BetaUsage.builder()
+                    .cacheCreation(
+                        BetaCacheCreation.builder()
+                            .ephemeral1hInputTokens(0L)
+                            .ephemeral5mInputTokens(0L)
+                            .build()
+                    )
                     .cacheCreationInputTokens(2051L)
                     .cacheReadInputTokens(2051L)
                     .inputTokens(2095L)
                     .outputTokens(503L)
                     .serverToolUse(BetaServerToolUsage.builder().webSearchRequests(0L).build())
+                    .serviceTier(BetaUsage.ServiceTier.STANDARD)
                     .build()
             )
     }
@@ -82,6 +110,12 @@ internal class BetaMessageTest {
         val betaMessage =
             BetaMessage.builder()
                 .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
+                .container(
+                    BetaContainer.builder()
+                        .id("id")
+                        .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
                 .addContent(
                     BetaTextBlock.builder()
                         .addCitation(
@@ -101,11 +135,18 @@ internal class BetaMessageTest {
                 .stopSequence(null)
                 .usage(
                     BetaUsage.builder()
+                        .cacheCreation(
+                            BetaCacheCreation.builder()
+                                .ephemeral1hInputTokens(0L)
+                                .ephemeral5mInputTokens(0L)
+                                .build()
+                        )
                         .cacheCreationInputTokens(2051L)
                         .cacheReadInputTokens(2051L)
                         .inputTokens(2095L)
                         .outputTokens(503L)
                         .serverToolUse(BetaServerToolUsage.builder().webSearchRequests(0L).build())
+                        .serviceTier(BetaUsage.ServiceTier.STANDARD)
                         .build()
                 )
                 .build()

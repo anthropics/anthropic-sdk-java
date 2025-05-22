@@ -2,6 +2,7 @@
 
 package com.anthropic.services.blocking
 
+import com.anthropic.services.blocking.beta.FileService
 import com.anthropic.services.blocking.beta.MessageService
 import com.anthropic.services.blocking.beta.ModelService
 
@@ -16,11 +17,15 @@ interface BetaService {
 
     fun messages(): MessageService
 
+    fun files(): FileService
+
     /** A view of [BetaService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         fun models(): ModelService.WithRawResponse
 
         fun messages(): MessageService.WithRawResponse
+
+        fun files(): FileService.WithRawResponse
     }
 }

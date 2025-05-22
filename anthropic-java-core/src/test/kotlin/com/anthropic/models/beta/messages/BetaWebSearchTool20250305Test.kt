@@ -16,7 +16,11 @@ internal class BetaWebSearchTool20250305Test {
             BetaWebSearchTool20250305.builder()
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .maxUses(1L)
                 .userLocation(
                     BetaWebSearchTool20250305.UserLocation.builder()
@@ -31,7 +35,11 @@ internal class BetaWebSearchTool20250305Test {
         assertThat(betaWebSearchTool20250305.allowedDomains().getOrNull()).containsExactly("string")
         assertThat(betaWebSearchTool20250305.blockedDomains().getOrNull()).containsExactly("string")
         assertThat(betaWebSearchTool20250305.cacheControl())
-            .contains(BetaCacheControlEphemeral.builder().build())
+            .contains(
+                BetaCacheControlEphemeral.builder()
+                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                    .build()
+            )
         assertThat(betaWebSearchTool20250305.maxUses()).contains(1L)
         assertThat(betaWebSearchTool20250305.userLocation())
             .contains(
@@ -51,7 +59,11 @@ internal class BetaWebSearchTool20250305Test {
             BetaWebSearchTool20250305.builder()
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .maxUses(1L)
                 .userLocation(
                     BetaWebSearchTool20250305.UserLocation.builder()

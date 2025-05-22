@@ -18,6 +18,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/** Response model for a file uploaded to the container. */
 @JsonDeserialize(using = BetaContentBlock.Deserializer::class)
 @JsonSerialize(using = BetaContentBlock.Serializer::class)
 class BetaContentBlock
@@ -26,6 +27,10 @@ private constructor(
     private val toolUse: BetaToolUseBlock? = null,
     private val serverToolUse: BetaServerToolUseBlock? = null,
     private val webSearchToolResult: BetaWebSearchToolResultBlock? = null,
+    private val codeExecutionToolResult: BetaCodeExecutionToolResultBlock? = null,
+    private val mcpToolUse: BetaMcpToolUseBlock? = null,
+    private val mcpToolResult: BetaMcpToolResultBlock? = null,
+    private val containerUpload: BetaContainerUploadBlock? = null,
     private val thinking: BetaThinkingBlock? = null,
     private val redactedThinking: BetaRedactedThinkingBlock? = null,
     private val _json: JsonValue? = null,
@@ -48,7 +53,28 @@ private constructor(
                 override fun visitWebSearchToolResult(
                     webSearchToolResult: BetaWebSearchToolResultBlock
                 ): BetaContentBlockParam =
-                    BetaContentBlockParam.ofServerToolUse(webSearchToolResult.toParam())
+                    BetaContentBlockParam.ofWebSearchToolResult(webSearchToolResult.toParam())
+
+                override fun visitCodeExecutionToolResult(
+                    codeExecutionToolResult: BetaCodeExecutionToolResultBlock
+                ): BetaContentBlockParam =
+                    BetaContentBlockParam.ofCodeExecutionToolResult(
+                        codeExecutionToolResult.toParam()
+                    )
+
+                override fun visitMcpToolUse(
+                    mcpToolUse: BetaMcpToolUseBlock
+                ): BetaContentBlockParam = BetaContentBlockParam.ofMcpToolUse(mcpToolUse.toParam())
+
+                override fun visitMcpToolResult(
+                    mcpToolResult: BetaMcpToolResultBlock
+                ): BetaContentBlockParam =
+                    BetaContentBlockParam.ofMcpToolResult(mcpToolResult.toParam())
+
+                override fun visitContainerUpload(
+                    containerUpload: BetaContainerUploadBlock
+                ): BetaContentBlockParam =
+                    BetaContentBlockParam.ofContainerUpload(containerUpload.toParam())
 
                 override fun visitThinking(thinking: BetaThinkingBlock): BetaContentBlockParam =
                     BetaContentBlockParam.ofThinking(thinking.toParam())
@@ -69,6 +95,16 @@ private constructor(
     fun webSearchToolResult(): Optional<BetaWebSearchToolResultBlock> =
         Optional.ofNullable(webSearchToolResult)
 
+    fun codeExecutionToolResult(): Optional<BetaCodeExecutionToolResultBlock> =
+        Optional.ofNullable(codeExecutionToolResult)
+
+    fun mcpToolUse(): Optional<BetaMcpToolUseBlock> = Optional.ofNullable(mcpToolUse)
+
+    fun mcpToolResult(): Optional<BetaMcpToolResultBlock> = Optional.ofNullable(mcpToolResult)
+
+    /** Response model for a file uploaded to the container. */
+    fun containerUpload(): Optional<BetaContainerUploadBlock> = Optional.ofNullable(containerUpload)
+
     fun thinking(): Optional<BetaThinkingBlock> = Optional.ofNullable(thinking)
 
     fun redactedThinking(): Optional<BetaRedactedThinkingBlock> =
@@ -81,6 +117,14 @@ private constructor(
     fun isServerToolUse(): Boolean = serverToolUse != null
 
     fun isWebSearchToolResult(): Boolean = webSearchToolResult != null
+
+    fun isCodeExecutionToolResult(): Boolean = codeExecutionToolResult != null
+
+    fun isMcpToolUse(): Boolean = mcpToolUse != null
+
+    fun isMcpToolResult(): Boolean = mcpToolResult != null
+
+    fun isContainerUpload(): Boolean = containerUpload != null
 
     fun isThinking(): Boolean = thinking != null
 
@@ -95,6 +139,17 @@ private constructor(
     fun asWebSearchToolResult(): BetaWebSearchToolResultBlock =
         webSearchToolResult.getOrThrow("webSearchToolResult")
 
+    fun asCodeExecutionToolResult(): BetaCodeExecutionToolResultBlock =
+        codeExecutionToolResult.getOrThrow("codeExecutionToolResult")
+
+    fun asMcpToolUse(): BetaMcpToolUseBlock = mcpToolUse.getOrThrow("mcpToolUse")
+
+    fun asMcpToolResult(): BetaMcpToolResultBlock = mcpToolResult.getOrThrow("mcpToolResult")
+
+    /** Response model for a file uploaded to the container. */
+    fun asContainerUpload(): BetaContainerUploadBlock =
+        containerUpload.getOrThrow("containerUpload")
+
     fun asThinking(): BetaThinkingBlock = thinking.getOrThrow("thinking")
 
     fun asRedactedThinking(): BetaRedactedThinkingBlock =
@@ -108,6 +163,11 @@ private constructor(
             toolUse != null -> visitor.visitToolUse(toolUse)
             serverToolUse != null -> visitor.visitServerToolUse(serverToolUse)
             webSearchToolResult != null -> visitor.visitWebSearchToolResult(webSearchToolResult)
+            codeExecutionToolResult != null ->
+                visitor.visitCodeExecutionToolResult(codeExecutionToolResult)
+            mcpToolUse != null -> visitor.visitMcpToolUse(mcpToolUse)
+            mcpToolResult != null -> visitor.visitMcpToolResult(mcpToolResult)
+            containerUpload != null -> visitor.visitContainerUpload(containerUpload)
             thinking != null -> visitor.visitThinking(thinking)
             redactedThinking != null -> visitor.visitRedactedThinking(redactedThinking)
             else -> visitor.unknown(_json)
@@ -138,6 +198,24 @@ private constructor(
                     webSearchToolResult: BetaWebSearchToolResultBlock
                 ) {
                     webSearchToolResult.validate()
+                }
+
+                override fun visitCodeExecutionToolResult(
+                    codeExecutionToolResult: BetaCodeExecutionToolResultBlock
+                ) {
+                    codeExecutionToolResult.validate()
+                }
+
+                override fun visitMcpToolUse(mcpToolUse: BetaMcpToolUseBlock) {
+                    mcpToolUse.validate()
+                }
+
+                override fun visitMcpToolResult(mcpToolResult: BetaMcpToolResultBlock) {
+                    mcpToolResult.validate()
+                }
+
+                override fun visitContainerUpload(containerUpload: BetaContainerUploadBlock) {
+                    containerUpload.validate()
                 }
 
                 override fun visitThinking(thinking: BetaThinkingBlock) {
@@ -180,6 +258,19 @@ private constructor(
                     webSearchToolResult: BetaWebSearchToolResultBlock
                 ) = webSearchToolResult.validity()
 
+                override fun visitCodeExecutionToolResult(
+                    codeExecutionToolResult: BetaCodeExecutionToolResultBlock
+                ) = codeExecutionToolResult.validity()
+
+                override fun visitMcpToolUse(mcpToolUse: BetaMcpToolUseBlock) =
+                    mcpToolUse.validity()
+
+                override fun visitMcpToolResult(mcpToolResult: BetaMcpToolResultBlock) =
+                    mcpToolResult.validity()
+
+                override fun visitContainerUpload(containerUpload: BetaContainerUploadBlock) =
+                    containerUpload.validity()
+
                 override fun visitThinking(thinking: BetaThinkingBlock) = thinking.validity()
 
                 override fun visitRedactedThinking(redactedThinking: BetaRedactedThinkingBlock) =
@@ -194,10 +285,10 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaContentBlock && text == other.text && toolUse == other.toolUse && serverToolUse == other.serverToolUse && webSearchToolResult == other.webSearchToolResult && thinking == other.thinking && redactedThinking == other.redactedThinking /* spotless:on */
+        return /* spotless:off */ other is BetaContentBlock && text == other.text && toolUse == other.toolUse && serverToolUse == other.serverToolUse && webSearchToolResult == other.webSearchToolResult && codeExecutionToolResult == other.codeExecutionToolResult && mcpToolUse == other.mcpToolUse && mcpToolResult == other.mcpToolResult && containerUpload == other.containerUpload && thinking == other.thinking && redactedThinking == other.redactedThinking /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, toolUse, serverToolUse, webSearchToolResult, thinking, redactedThinking) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, toolUse, serverToolUse, webSearchToolResult, codeExecutionToolResult, mcpToolUse, mcpToolResult, containerUpload, thinking, redactedThinking) /* spotless:on */
 
     override fun toString(): String =
         when {
@@ -206,6 +297,11 @@ private constructor(
             serverToolUse != null -> "BetaContentBlock{serverToolUse=$serverToolUse}"
             webSearchToolResult != null ->
                 "BetaContentBlock{webSearchToolResult=$webSearchToolResult}"
+            codeExecutionToolResult != null ->
+                "BetaContentBlock{codeExecutionToolResult=$codeExecutionToolResult}"
+            mcpToolUse != null -> "BetaContentBlock{mcpToolUse=$mcpToolUse}"
+            mcpToolResult != null -> "BetaContentBlock{mcpToolResult=$mcpToolResult}"
+            containerUpload != null -> "BetaContentBlock{containerUpload=$containerUpload}"
             thinking != null -> "BetaContentBlock{thinking=$thinking}"
             redactedThinking != null -> "BetaContentBlock{redactedThinking=$redactedThinking}"
             _json != null -> "BetaContentBlock{_unknown=$_json}"
@@ -225,6 +321,23 @@ private constructor(
         @JvmStatic
         fun ofWebSearchToolResult(webSearchToolResult: BetaWebSearchToolResultBlock) =
             BetaContentBlock(webSearchToolResult = webSearchToolResult)
+
+        @JvmStatic
+        fun ofCodeExecutionToolResult(codeExecutionToolResult: BetaCodeExecutionToolResultBlock) =
+            BetaContentBlock(codeExecutionToolResult = codeExecutionToolResult)
+
+        @JvmStatic
+        fun ofMcpToolUse(mcpToolUse: BetaMcpToolUseBlock) =
+            BetaContentBlock(mcpToolUse = mcpToolUse)
+
+        @JvmStatic
+        fun ofMcpToolResult(mcpToolResult: BetaMcpToolResultBlock) =
+            BetaContentBlock(mcpToolResult = mcpToolResult)
+
+        /** Response model for a file uploaded to the container. */
+        @JvmStatic
+        fun ofContainerUpload(containerUpload: BetaContainerUploadBlock) =
+            BetaContentBlock(containerUpload = containerUpload)
 
         @JvmStatic
         fun ofThinking(thinking: BetaThinkingBlock) = BetaContentBlock(thinking = thinking)
@@ -247,6 +360,17 @@ private constructor(
         fun visitServerToolUse(serverToolUse: BetaServerToolUseBlock): T
 
         fun visitWebSearchToolResult(webSearchToolResult: BetaWebSearchToolResultBlock): T
+
+        fun visitCodeExecutionToolResult(
+            codeExecutionToolResult: BetaCodeExecutionToolResultBlock
+        ): T
+
+        fun visitMcpToolUse(mcpToolUse: BetaMcpToolUseBlock): T
+
+        fun visitMcpToolResult(mcpToolResult: BetaMcpToolResultBlock): T
+
+        /** Response model for a file uploaded to the container. */
+        fun visitContainerUpload(containerUpload: BetaContainerUploadBlock): T
 
         fun visitThinking(thinking: BetaThinkingBlock): T
 
@@ -294,6 +418,26 @@ private constructor(
                         ?.let { BetaContentBlock(webSearchToolResult = it, _json = json) }
                         ?: BetaContentBlock(_json = json)
                 }
+                "code_execution_tool_result" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaCodeExecutionToolResultBlock>())
+                        ?.let { BetaContentBlock(codeExecutionToolResult = it, _json = json) }
+                        ?: BetaContentBlock(_json = json)
+                }
+                "mcp_tool_use" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaMcpToolUseBlock>())?.let {
+                        BetaContentBlock(mcpToolUse = it, _json = json)
+                    } ?: BetaContentBlock(_json = json)
+                }
+                "mcp_tool_result" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaMcpToolResultBlock>())?.let {
+                        BetaContentBlock(mcpToolResult = it, _json = json)
+                    } ?: BetaContentBlock(_json = json)
+                }
+                "container_upload" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaContainerUploadBlock>())?.let {
+                        BetaContentBlock(containerUpload = it, _json = json)
+                    } ?: BetaContentBlock(_json = json)
+                }
                 "thinking" -> {
                     return tryDeserialize(node, jacksonTypeRef<BetaThinkingBlock>())?.let {
                         BetaContentBlock(thinking = it, _json = json)
@@ -323,6 +467,11 @@ private constructor(
                 value.serverToolUse != null -> generator.writeObject(value.serverToolUse)
                 value.webSearchToolResult != null ->
                     generator.writeObject(value.webSearchToolResult)
+                value.codeExecutionToolResult != null ->
+                    generator.writeObject(value.codeExecutionToolResult)
+                value.mcpToolUse != null -> generator.writeObject(value.mcpToolUse)
+                value.mcpToolResult != null -> generator.writeObject(value.mcpToolResult)
+                value.containerUpload != null -> generator.writeObject(value.containerUpload)
                 value.thinking != null -> generator.writeObject(value.thinking)
                 value.redactedThinking != null -> generator.writeObject(value.redactedThinking)
                 value._json != null -> generator.writeObject(value._json)

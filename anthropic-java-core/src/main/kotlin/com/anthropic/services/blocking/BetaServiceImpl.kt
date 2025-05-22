@@ -3,6 +3,8 @@
 package com.anthropic.services.blocking
 
 import com.anthropic.core.ClientOptions
+import com.anthropic.services.blocking.beta.FileService
+import com.anthropic.services.blocking.beta.FileServiceImpl
 import com.anthropic.services.blocking.beta.MessageService
 import com.anthropic.services.blocking.beta.MessageServiceImpl
 import com.anthropic.services.blocking.beta.ModelService
@@ -18,11 +20,15 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
 
     private val messages: MessageService by lazy { MessageServiceImpl(clientOptions) }
 
+    private val files: FileService by lazy { FileServiceImpl(clientOptions) }
+
     override fun withRawResponse(): BetaService.WithRawResponse = withRawResponse
 
     override fun models(): ModelService = models
 
     override fun messages(): MessageService = messages
+
+    override fun files(): FileService = files
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         BetaService.WithRawResponse {
@@ -35,8 +41,14 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
             MessageServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val files: FileService.WithRawResponse by lazy {
+            FileServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun models(): ModelService.WithRawResponse = models
 
         override fun messages(): MessageService.WithRawResponse = messages
+
+        override fun files(): FileService.WithRawResponse = files
     }
 }

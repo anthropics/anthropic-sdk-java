@@ -7,6 +7,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -22,6 +23,12 @@ internal class BetaRawMessageStreamEventTest {
                 .message(
                     BetaMessage.builder()
                         .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
+                        .container(
+                            BetaContainer.builder()
+                                .id("id")
+                                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .build()
+                        )
                         .addContent(
                             BetaTextBlock.builder()
                                 .addCitation(
@@ -41,6 +48,12 @@ internal class BetaRawMessageStreamEventTest {
                         .stopSequence(null)
                         .usage(
                             BetaUsage.builder()
+                                .cacheCreation(
+                                    BetaCacheCreation.builder()
+                                        .ephemeral1hInputTokens(0L)
+                                        .ephemeral5mInputTokens(0L)
+                                        .build()
+                                )
                                 .cacheCreationInputTokens(2051L)
                                 .cacheReadInputTokens(2051L)
                                 .inputTokens(2095L)
@@ -48,6 +61,7 @@ internal class BetaRawMessageStreamEventTest {
                                 .serverToolUse(
                                     BetaServerToolUsage.builder().webSearchRequests(0L).build()
                                 )
+                                .serviceTier(BetaUsage.ServiceTier.STANDARD)
                                 .build()
                         )
                         .build()
@@ -73,6 +87,12 @@ internal class BetaRawMessageStreamEventTest {
                     .message(
                         BetaMessage.builder()
                             .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
+                            .container(
+                                BetaContainer.builder()
+                                    .id("id")
+                                    .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .build()
+                            )
                             .addContent(
                                 BetaTextBlock.builder()
                                     .addCitation(
@@ -92,6 +112,12 @@ internal class BetaRawMessageStreamEventTest {
                             .stopSequence(null)
                             .usage(
                                 BetaUsage.builder()
+                                    .cacheCreation(
+                                        BetaCacheCreation.builder()
+                                            .ephemeral1hInputTokens(0L)
+                                            .ephemeral5mInputTokens(0L)
+                                            .build()
+                                    )
                                     .cacheCreationInputTokens(2051L)
                                     .cacheReadInputTokens(2051L)
                                     .inputTokens(2095L)
@@ -99,6 +125,7 @@ internal class BetaRawMessageStreamEventTest {
                                     .serverToolUse(
                                         BetaServerToolUsage.builder().webSearchRequests(0L).build()
                                     )
+                                    .serviceTier(BetaUsage.ServiceTier.STANDARD)
                                     .build()
                             )
                             .build()
@@ -121,6 +148,12 @@ internal class BetaRawMessageStreamEventTest {
             BetaRawMessageDeltaEvent.builder()
                 .delta(
                     BetaRawMessageDeltaEvent.Delta.builder()
+                        .container(
+                            BetaContainer.builder()
+                                .id("id")
+                                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .build()
+                        )
                         .stopReason(BetaStopReason.END_TURN)
                         .stopSequence("stop_sequence")
                         .build()
@@ -154,6 +187,12 @@ internal class BetaRawMessageStreamEventTest {
                 BetaRawMessageDeltaEvent.builder()
                     .delta(
                         BetaRawMessageDeltaEvent.Delta.builder()
+                            .container(
+                                BetaContainer.builder()
+                                    .id("id")
+                                    .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .build()
+                            )
                             .stopReason(BetaStopReason.END_TURN)
                             .stopSequence("stop_sequence")
                             .build()

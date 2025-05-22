@@ -4,6 +4,7 @@ package com.anthropic.models.messages
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
+import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
@@ -164,6 +165,18 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun metadata(): Optional<Metadata> = body.metadata()
+
+    /**
+     * Determines whether to use priority capacity (if available) or standard capacity for this
+     * request.
+     *
+     * Anthropic offers different levels of service for your API requests. See
+     * [service-tiers](https://docs.anthropic.com/en/api/service-tiers) for details.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun serviceTier(): Optional<ServiceTier> = body.serviceTier()
 
     /**
      * Custom text sequences that will cause the model to stop generating.
@@ -357,6 +370,13 @@ private constructor(
     fun _metadata(): JsonField<Metadata> = body._metadata()
 
     /**
+     * Returns the raw JSON value of [serviceTier].
+     *
+     * Unlike [serviceTier], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _serviceTier(): JsonField<ServiceTier> = body._serviceTier()
+
+    /**
      * Returns the raw JSON value of [stopSequences].
      *
      * Unlike [stopSequences], this method doesn't throw if the JSON field has an unexpected type.
@@ -458,7 +478,7 @@ private constructor(
          * - [messages]
          * - [model]
          * - [metadata]
-         * - [stopSequences]
+         * - [serviceTier]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -666,6 +686,26 @@ private constructor(
          * value.
          */
         fun metadata(metadata: JsonField<Metadata>) = apply { body.metadata(metadata) }
+
+        /**
+         * Determines whether to use priority capacity (if available) or standard capacity for this
+         * request.
+         *
+         * Anthropic offers different levels of service for your API requests. See
+         * [service-tiers](https://docs.anthropic.com/en/api/service-tiers) for details.
+         */
+        fun serviceTier(serviceTier: ServiceTier) = apply { body.serviceTier(serviceTier) }
+
+        /**
+         * Sets [Builder.serviceTier] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.serviceTier] with a well-typed [ServiceTier] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun serviceTier(serviceTier: JsonField<ServiceTier>) = apply {
+            body.serviceTier(serviceTier)
+        }
 
         /**
          * Custom text sequences that will cause the model to stop generating.
@@ -1110,6 +1150,7 @@ private constructor(
         private val messages: JsonField<List<MessageParam>>,
         private val model: JsonField<Model>,
         private val metadata: JsonField<Metadata>,
+        private val serviceTier: JsonField<ServiceTier>,
         private val stopSequences: JsonField<List<String>>,
         private val system: JsonField<System>,
         private val temperature: JsonField<Double>,
@@ -1133,6 +1174,9 @@ private constructor(
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
+            @JsonProperty("service_tier")
+            @ExcludeMissing
+            serviceTier: JsonField<ServiceTier> = JsonMissing.of(),
             @JsonProperty("stop_sequences")
             @ExcludeMissing
             stopSequences: JsonField<List<String>> = JsonMissing.of(),
@@ -1156,6 +1200,7 @@ private constructor(
             messages,
             model,
             metadata,
+            serviceTier,
             stopSequences,
             system,
             temperature,
@@ -1286,6 +1331,18 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
+
+        /**
+         * Determines whether to use priority capacity (if available) or standard capacity for this
+         * request.
+         *
+         * Anthropic offers different levels of service for your API requests. See
+         * [service-tiers](https://docs.anthropic.com/en/api/service-tiers) for details.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun serviceTier(): Optional<ServiceTier> = serviceTier.getOptional("service_tier")
 
         /**
          * Custom text sequences that will cause the model to stop generating.
@@ -1482,6 +1539,15 @@ private constructor(
         @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonField<Metadata> = metadata
 
         /**
+         * Returns the raw JSON value of [serviceTier].
+         *
+         * Unlike [serviceTier], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("service_tier")
+        @ExcludeMissing
+        fun _serviceTier(): JsonField<ServiceTier> = serviceTier
+
+        /**
          * Returns the raw JSON value of [stopSequences].
          *
          * Unlike [stopSequences], this method doesn't throw if the JSON field has an unexpected
@@ -1580,6 +1646,7 @@ private constructor(
             private var messages: JsonField<MutableList<MessageParam>>? = null
             private var model: JsonField<Model>? = null
             private var metadata: JsonField<Metadata> = JsonMissing.of()
+            private var serviceTier: JsonField<ServiceTier> = JsonMissing.of()
             private var stopSequences: JsonField<MutableList<String>>? = null
             private var system: JsonField<System> = JsonMissing.of()
             private var temperature: JsonField<Double> = JsonMissing.of()
@@ -1596,6 +1663,7 @@ private constructor(
                 messages = body.messages.map { it.toMutableList() }
                 model = body.model
                 metadata = body.metadata
+                serviceTier = body.serviceTier
                 stopSequences = body.stopSequences.map { it.toMutableList() }
                 system = body.system
                 temperature = body.temperature
@@ -1830,6 +1898,26 @@ private constructor(
              * supported value.
              */
             fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
+
+            /**
+             * Determines whether to use priority capacity (if available) or standard capacity for
+             * this request.
+             *
+             * Anthropic offers different levels of service for your API requests. See
+             * [service-tiers](https://docs.anthropic.com/en/api/service-tiers) for details.
+             */
+            fun serviceTier(serviceTier: ServiceTier) = serviceTier(JsonField.of(serviceTier))
+
+            /**
+             * Sets [Builder.serviceTier] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.serviceTier] with a well-typed [ServiceTier] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun serviceTier(serviceTier: JsonField<ServiceTier>) = apply {
+                this.serviceTier = serviceTier
+            }
 
             /**
              * Custom text sequences that will cause the model to stop generating.
@@ -2188,6 +2276,7 @@ private constructor(
                     checkRequired("messages", messages).map { it.toImmutable() },
                     checkRequired("model", model),
                     metadata,
+                    serviceTier,
                     (stopSequences ?: JsonMissing.of()).map { it.toImmutable() },
                     system,
                     temperature,
@@ -2211,6 +2300,7 @@ private constructor(
             messages().forEach { it.validate() }
             model()
             metadata().ifPresent { it.validate() }
+            serviceTier().ifPresent { it.validate() }
             stopSequences()
             system().ifPresent { it.validate() }
             temperature()
@@ -2242,6 +2332,7 @@ private constructor(
                 (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (model.asKnown().isPresent) 1 else 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+                (serviceTier.asKnown().getOrNull()?.validity() ?: 0) +
                 (stopSequences.asKnown().getOrNull()?.size ?: 0) +
                 (system.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (temperature.asKnown().isPresent) 1 else 0) +
@@ -2256,17 +2347,154 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Body && maxTokens == other.maxTokens && messages == other.messages && model == other.model && metadata == other.metadata && stopSequences == other.stopSequences && system == other.system && temperature == other.temperature && thinking == other.thinking && toolChoice == other.toolChoice && tools == other.tools && topK == other.topK && topP == other.topP && additionalProperties == other.additionalProperties /* spotless:on */
+            return /* spotless:off */ other is Body && maxTokens == other.maxTokens && messages == other.messages && model == other.model && metadata == other.metadata && serviceTier == other.serviceTier && stopSequences == other.stopSequences && system == other.system && temperature == other.temperature && thinking == other.thinking && toolChoice == other.toolChoice && tools == other.tools && topK == other.topK && topP == other.topP && additionalProperties == other.additionalProperties /* spotless:on */
         }
 
         /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(maxTokens, messages, model, metadata, stopSequences, system, temperature, thinking, toolChoice, tools, topK, topP, additionalProperties) }
+        private val hashCode: Int by lazy { Objects.hash(maxTokens, messages, model, metadata, serviceTier, stopSequences, system, temperature, thinking, toolChoice, tools, topK, topP, additionalProperties) }
         /* spotless:on */
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, metadata=$metadata, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, metadata=$metadata, serviceTier=$serviceTier, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+    }
+
+    /**
+     * Determines whether to use priority capacity (if available) or standard capacity for this
+     * request.
+     *
+     * Anthropic offers different levels of service for your API requests. See
+     * [service-tiers](https://docs.anthropic.com/en/api/service-tiers) for details.
+     */
+    class ServiceTier @JsonCreator private constructor(private val value: JsonField<String>) :
+        Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val AUTO = of("auto")
+
+            @JvmField val STANDARD_ONLY = of("standard_only")
+
+            @JvmStatic fun of(value: String) = ServiceTier(JsonField.of(value))
+        }
+
+        /** An enum containing [ServiceTier]'s known values. */
+        enum class Known {
+            AUTO,
+            STANDARD_ONLY,
+        }
+
+        /**
+         * An enum containing [ServiceTier]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [ServiceTier] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            AUTO,
+            STANDARD_ONLY,
+            /**
+             * An enum member indicating that [ServiceTier] was instantiated with an unknown value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                AUTO -> Value.AUTO
+                STANDARD_ONLY -> Value.STANDARD_ONLY
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                AUTO -> Known.AUTO
+                STANDARD_ONLY -> Known.STANDARD_ONLY
+                else -> throw AnthropicInvalidDataException("Unknown ServiceTier: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        fun validate(): ServiceTier = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return /* spotless:off */ other is ServiceTier && value == other.value /* spotless:on */
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
     }
 
     /**

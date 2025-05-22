@@ -15,14 +15,22 @@ internal class BetaToolComputerUse20250124Test {
             BetaToolComputerUse20250124.builder()
                 .displayHeightPx(1L)
                 .displayWidthPx(1L)
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .displayNumber(0L)
                 .build()
 
         assertThat(betaToolComputerUse20250124.displayHeightPx()).isEqualTo(1L)
         assertThat(betaToolComputerUse20250124.displayWidthPx()).isEqualTo(1L)
         assertThat(betaToolComputerUse20250124.cacheControl())
-            .contains(BetaCacheControlEphemeral.builder().build())
+            .contains(
+                BetaCacheControlEphemeral.builder()
+                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                    .build()
+            )
         assertThat(betaToolComputerUse20250124.displayNumber()).contains(0L)
     }
 
@@ -33,7 +41,11 @@ internal class BetaToolComputerUse20250124Test {
             BetaToolComputerUse20250124.builder()
                 .displayHeightPx(1L)
                 .displayWidthPx(1L)
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .displayNumber(0L)
                 .build()
 

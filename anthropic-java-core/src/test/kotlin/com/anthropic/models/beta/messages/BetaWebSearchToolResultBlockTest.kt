@@ -15,7 +15,7 @@ internal class BetaWebSearchToolResultBlockTest {
             BetaWebSearchToolResultBlock.builder()
                 .content(
                     BetaWebSearchToolResultError.builder()
-                        .errorCode(BetaWebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                        .errorCode(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                         .build()
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
@@ -25,7 +25,7 @@ internal class BetaWebSearchToolResultBlockTest {
             .isEqualTo(
                 BetaWebSearchToolResultBlockContent.ofError(
                     BetaWebSearchToolResultError.builder()
-                        .errorCode(BetaWebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                        .errorCode(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                         .build()
                 )
             )
@@ -39,7 +39,7 @@ internal class BetaWebSearchToolResultBlockTest {
             BetaWebSearchToolResultBlock.builder()
                 .content(
                     BetaWebSearchToolResultError.builder()
-                        .errorCode(BetaWebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                        .errorCode(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                         .build()
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")

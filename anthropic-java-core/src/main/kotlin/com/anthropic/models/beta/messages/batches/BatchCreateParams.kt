@@ -4,6 +4,7 @@ package com.anthropic.models.beta.messages.batches
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
+import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
@@ -18,10 +19,12 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.messages.BetaCodeExecutionTool20250522
 import com.anthropic.models.beta.messages.BetaContentBlockParam
 import com.anthropic.models.beta.messages.BetaMessage
 import com.anthropic.models.beta.messages.BetaMessageParam
 import com.anthropic.models.beta.messages.BetaMetadata
+import com.anthropic.models.beta.messages.BetaRequestMcpServerUrlDefinition
 import com.anthropic.models.beta.messages.BetaTextBlockParam
 import com.anthropic.models.beta.messages.BetaThinkingConfigDisabled
 import com.anthropic.models.beta.messages.BetaThinkingConfigEnabled
@@ -38,6 +41,7 @@ import com.anthropic.models.beta.messages.BetaToolComputerUse20241022
 import com.anthropic.models.beta.messages.BetaToolComputerUse20250124
 import com.anthropic.models.beta.messages.BetaToolTextEditor20241022
 import com.anthropic.models.beta.messages.BetaToolTextEditor20250124
+import com.anthropic.models.beta.messages.BetaToolTextEditor20250429
 import com.anthropic.models.beta.messages.BetaToolUnion
 import com.anthropic.models.beta.messages.BetaWebSearchTool20250305
 import com.anthropic.models.messages.Model
@@ -724,7 +728,10 @@ private constructor(
             private val maxTokens: JsonField<Long>,
             private val messages: JsonField<List<BetaMessageParam>>,
             private val model: JsonField<Model>,
+            private val container: JsonField<String>,
+            private val mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>,
             private val metadata: JsonField<BetaMetadata>,
+            private val serviceTier: JsonField<ServiceTier>,
             private val stopSequences: JsonField<List<String>>,
             private val stream: JsonField<Boolean>,
             private val system: JsonField<System>,
@@ -746,9 +753,18 @@ private constructor(
                 @ExcludeMissing
                 messages: JsonField<List<BetaMessageParam>> = JsonMissing.of(),
                 @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
+                @JsonProperty("container")
+                @ExcludeMissing
+                container: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("mcp_servers")
+                @ExcludeMissing
+                mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>> = JsonMissing.of(),
                 @JsonProperty("metadata")
                 @ExcludeMissing
                 metadata: JsonField<BetaMetadata> = JsonMissing.of(),
+                @JsonProperty("service_tier")
+                @ExcludeMissing
+                serviceTier: JsonField<ServiceTier> = JsonMissing.of(),
                 @JsonProperty("stop_sequences")
                 @ExcludeMissing
                 stopSequences: JsonField<List<String>> = JsonMissing.of(),
@@ -776,7 +792,10 @@ private constructor(
                 maxTokens,
                 messages,
                 model,
+                container,
+                mcpServers,
                 metadata,
+                serviceTier,
                 stopSequences,
                 stream,
                 system,
@@ -906,12 +925,41 @@ private constructor(
             fun model(): Model = model.getRequired("model")
 
             /**
+             * Container identifier for reuse across requests.
+             *
+             * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun container(): Optional<String> = container.getOptional("container")
+
+            /**
+             * MCP servers to be utilized in this request
+             *
+             * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun mcpServers(): Optional<List<BetaRequestMcpServerUrlDefinition>> =
+                mcpServers.getOptional("mcp_servers")
+
+            /**
              * An object describing metadata about the request.
              *
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
             fun metadata(): Optional<BetaMetadata> = metadata.getOptional("metadata")
+
+            /**
+             * Determines whether to use priority capacity (if available) or standard capacity for
+             * this request.
+             *
+             * Anthropic offers different levels of service for your API requests. See
+             * [service-tiers](https://docs.anthropic.com/en/api/service-tiers) for details.
+             *
+             * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun serviceTier(): Optional<ServiceTier> = serviceTier.getOptional("service_tier")
 
             /**
              * Custom text sequences that will cause the model to stop generating.
@@ -1117,6 +1165,26 @@ private constructor(
             @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
 
             /**
+             * Returns the raw JSON value of [container].
+             *
+             * Unlike [container], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("container")
+            @ExcludeMissing
+            fun _container(): JsonField<String> = container
+
+            /**
+             * Returns the raw JSON value of [mcpServers].
+             *
+             * Unlike [mcpServers], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("mcp_servers")
+            @ExcludeMissing
+            fun _mcpServers(): JsonField<List<BetaRequestMcpServerUrlDefinition>> = mcpServers
+
+            /**
              * Returns the raw JSON value of [metadata].
              *
              * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected
@@ -1125,6 +1193,16 @@ private constructor(
             @JsonProperty("metadata")
             @ExcludeMissing
             fun _metadata(): JsonField<BetaMetadata> = metadata
+
+            /**
+             * Returns the raw JSON value of [serviceTier].
+             *
+             * Unlike [serviceTier], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("service_tier")
+            @ExcludeMissing
+            fun _serviceTier(): JsonField<ServiceTier> = serviceTier
 
             /**
              * Returns the raw JSON value of [stopSequences].
@@ -1236,7 +1314,11 @@ private constructor(
                 private var maxTokens: JsonField<Long>? = null
                 private var messages: JsonField<MutableList<BetaMessageParam>>? = null
                 private var model: JsonField<Model>? = null
+                private var container: JsonField<String> = JsonMissing.of()
+                private var mcpServers: JsonField<MutableList<BetaRequestMcpServerUrlDefinition>>? =
+                    null
                 private var metadata: JsonField<BetaMetadata> = JsonMissing.of()
+                private var serviceTier: JsonField<ServiceTier> = JsonMissing.of()
                 private var stopSequences: JsonField<MutableList<String>>? = null
                 private var stream: JsonField<Boolean> = JsonMissing.of()
                 private var system: JsonField<System> = JsonMissing.of()
@@ -1253,7 +1335,10 @@ private constructor(
                     maxTokens = params.maxTokens
                     messages = params.messages.map { it.toMutableList() }
                     model = params.model
+                    container = params.container
+                    mcpServers = params.mcpServers.map { it.toMutableList() }
                     metadata = params.metadata
+                    serviceTier = params.serviceTier
                     stopSequences = params.stopSequences.map { it.toMutableList() }
                     stream = params.stream
                     system = params.system
@@ -1493,6 +1578,49 @@ private constructor(
                  */
                 fun model(value: String) = model(Model.of(value))
 
+                /** Container identifier for reuse across requests. */
+                fun container(container: String?) = container(JsonField.ofNullable(container))
+
+                /** Alias for calling [Builder.container] with `container.orElse(null)`. */
+                fun container(container: Optional<String>) = container(container.getOrNull())
+
+                /**
+                 * Sets [Builder.container] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.container] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun container(container: JsonField<String>) = apply { this.container = container }
+
+                /** MCP servers to be utilized in this request */
+                fun mcpServers(mcpServers: List<BetaRequestMcpServerUrlDefinition>) =
+                    mcpServers(JsonField.of(mcpServers))
+
+                /**
+                 * Sets [Builder.mcpServers] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mcpServers] with a well-typed
+                 * `List<BetaRequestMcpServerUrlDefinition>` value instead. This method is primarily
+                 * for setting the field to an undocumented or not yet supported value.
+                 */
+                fun mcpServers(mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>) =
+                    apply {
+                        this.mcpServers = mcpServers.map { it.toMutableList() }
+                    }
+
+                /**
+                 * Adds a single [BetaRequestMcpServerUrlDefinition] to [mcpServers].
+                 *
+                 * @throws IllegalStateException if the field was previously set to a non-list.
+                 */
+                fun addMcpServer(mcpServer: BetaRequestMcpServerUrlDefinition) = apply {
+                    mcpServers =
+                        (mcpServers ?: JsonField.of(mutableListOf())).also {
+                            checkKnown("mcpServers", it).add(mcpServer)
+                        }
+                }
+
                 /** An object describing metadata about the request. */
                 fun metadata(metadata: BetaMetadata) = metadata(JsonField.of(metadata))
 
@@ -1504,6 +1632,26 @@ private constructor(
                  * yet supported value.
                  */
                 fun metadata(metadata: JsonField<BetaMetadata>) = apply { this.metadata = metadata }
+
+                /**
+                 * Determines whether to use priority capacity (if available) or standard capacity
+                 * for this request.
+                 *
+                 * Anthropic offers different levels of service for your API requests. See
+                 * [service-tiers](https://docs.anthropic.com/en/api/service-tiers) for details.
+                 */
+                fun serviceTier(serviceTier: ServiceTier) = serviceTier(JsonField.of(serviceTier))
+
+                /**
+                 * Sets [Builder.serviceTier] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.serviceTier] with a well-typed [ServiceTier]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun serviceTier(serviceTier: JsonField<ServiceTier>) = apply {
+                    this.serviceTier = serviceTier
+                }
 
                 /**
                  * Custom text sequences that will cause the model to stop generating.
@@ -1833,10 +1981,24 @@ private constructor(
 
                 /**
                  * Alias for calling [addTool] with
+                 * `BetaToolUnion.ofTextEditor20250429(textEditor20250429)`.
+                 */
+                fun addTool(textEditor20250429: BetaToolTextEditor20250429) =
+                    addTool(BetaToolUnion.ofTextEditor20250429(textEditor20250429))
+
+                /**
+                 * Alias for calling [addTool] with
                  * `BetaToolUnion.ofWebSearchTool20250305(webSearchTool20250305)`.
                  */
                 fun addTool(webSearchTool20250305: BetaWebSearchTool20250305) =
                     addTool(BetaToolUnion.ofWebSearchTool20250305(webSearchTool20250305))
+
+                /**
+                 * Alias for calling [addTool] with
+                 * `BetaToolUnion.ofCodeExecutionTool20250522(codeExecutionTool20250522)`.
+                 */
+                fun addTool(codeExecutionTool20250522: BetaCodeExecutionTool20250522) =
+                    addTool(BetaToolUnion.ofCodeExecutionTool20250522(codeExecutionTool20250522))
 
                 /**
                  * Only sample from the top K options for each subsequent token.
@@ -1921,7 +2083,10 @@ private constructor(
                         checkRequired("maxTokens", maxTokens),
                         checkRequired("messages", messages).map { it.toImmutable() },
                         checkRequired("model", model),
+                        container,
+                        (mcpServers ?: JsonMissing.of()).map { it.toImmutable() },
                         metadata,
+                        serviceTier,
                         (stopSequences ?: JsonMissing.of()).map { it.toImmutable() },
                         stream,
                         system,
@@ -1945,7 +2110,10 @@ private constructor(
                 maxTokens()
                 messages().forEach { it.validate() }
                 model()
+                container()
+                mcpServers().ifPresent { it.forEach { it.validate() } }
                 metadata().ifPresent { it.validate() }
+                serviceTier().ifPresent { it.validate() }
                 stopSequences()
                 stream()
                 system().ifPresent { it.validate() }
@@ -1977,7 +2145,10 @@ private constructor(
                 (if (maxTokens.asKnown().isPresent) 1 else 0) +
                     (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                     (if (model.asKnown().isPresent) 1 else 0) +
+                    (if (container.asKnown().isPresent) 1 else 0) +
+                    (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                     (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+                    (serviceTier.asKnown().getOrNull()?.validity() ?: 0) +
                     (stopSequences.asKnown().getOrNull()?.size ?: 0) +
                     (if (stream.asKnown().isPresent) 1 else 0) +
                     (system.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1987,6 +2158,145 @@ private constructor(
                     (tools.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                     (if (topK.asKnown().isPresent) 1 else 0) +
                     (if (topP.asKnown().isPresent) 1 else 0)
+
+            /**
+             * Determines whether to use priority capacity (if available) or standard capacity for
+             * this request.
+             *
+             * Anthropic offers different levels of service for your API requests. See
+             * [service-tiers](https://docs.anthropic.com/en/api/service-tiers) for details.
+             */
+            class ServiceTier
+            @JsonCreator
+            private constructor(private val value: JsonField<String>) : Enum {
+
+                /**
+                 * Returns this class instance's raw value.
+                 *
+                 * This is usually only useful if this instance was deserialized from data that
+                 * doesn't match any known member, and you want to know that value. For example, if
+                 * the SDK is on an older version than the API, then the API may respond with new
+                 * members that the SDK is unaware of.
+                 */
+                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+                companion object {
+
+                    @JvmField val AUTO = of("auto")
+
+                    @JvmField val STANDARD_ONLY = of("standard_only")
+
+                    @JvmStatic fun of(value: String) = ServiceTier(JsonField.of(value))
+                }
+
+                /** An enum containing [ServiceTier]'s known values. */
+                enum class Known {
+                    AUTO,
+                    STANDARD_ONLY,
+                }
+
+                /**
+                 * An enum containing [ServiceTier]'s known values, as well as an [_UNKNOWN] member.
+                 *
+                 * An instance of [ServiceTier] can contain an unknown value in a couple of cases:
+                 * - It was deserialized from data that doesn't match any known member. For example,
+                 *   if the SDK is on an older version than the API, then the API may respond with
+                 *   new members that the SDK is unaware of.
+                 * - It was constructed with an arbitrary value using the [of] method.
+                 */
+                enum class Value {
+                    AUTO,
+                    STANDARD_ONLY,
+                    /**
+                     * An enum member indicating that [ServiceTier] was instantiated with an unknown
+                     * value.
+                     */
+                    _UNKNOWN,
+                }
+
+                /**
+                 * Returns an enum member corresponding to this class instance's value, or
+                 * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+                 *
+                 * Use the [known] method instead if you're certain the value is always known or if
+                 * you want to throw for the unknown case.
+                 */
+                fun value(): Value =
+                    when (this) {
+                        AUTO -> Value.AUTO
+                        STANDARD_ONLY -> Value.STANDARD_ONLY
+                        else -> Value._UNKNOWN
+                    }
+
+                /**
+                 * Returns an enum member corresponding to this class instance's value.
+                 *
+                 * Use the [value] method instead if you're uncertain the value is always known and
+                 * don't want to throw for the unknown case.
+                 *
+                 * @throws AnthropicInvalidDataException if this class instance's value is a not a
+                 *   known member.
+                 */
+                fun known(): Known =
+                    when (this) {
+                        AUTO -> Known.AUTO
+                        STANDARD_ONLY -> Known.STANDARD_ONLY
+                        else -> throw AnthropicInvalidDataException("Unknown ServiceTier: $value")
+                    }
+
+                /**
+                 * Returns this class instance's primitive wire representation.
+                 *
+                 * This differs from the [toString] method because that method is primarily for
+                 * debugging and generally doesn't throw.
+                 *
+                 * @throws AnthropicInvalidDataException if this class instance's value does not
+                 *   have the expected primitive type.
+                 */
+                fun asString(): String =
+                    _value().asString().orElseThrow {
+                        AnthropicInvalidDataException("Value is not a String")
+                    }
+
+                private var validated: Boolean = false
+
+                fun validate(): ServiceTier = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    known()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: AnthropicInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return /* spotless:off */ other is ServiceTier && value == other.value /* spotless:on */
+                }
+
+                override fun hashCode() = value.hashCode()
+
+                override fun toString() = value.toString()
+            }
 
             /**
              * System prompt.
@@ -2183,17 +2493,17 @@ private constructor(
                     return true
                 }
 
-                return /* spotless:off */ other is Params && maxTokens == other.maxTokens && messages == other.messages && model == other.model && metadata == other.metadata && stopSequences == other.stopSequences && stream == other.stream && system == other.system && temperature == other.temperature && thinking == other.thinking && toolChoice == other.toolChoice && tools == other.tools && topK == other.topK && topP == other.topP && additionalProperties == other.additionalProperties /* spotless:on */
+                return /* spotless:off */ other is Params && maxTokens == other.maxTokens && messages == other.messages && model == other.model && container == other.container && mcpServers == other.mcpServers && metadata == other.metadata && serviceTier == other.serviceTier && stopSequences == other.stopSequences && stream == other.stream && system == other.system && temperature == other.temperature && thinking == other.thinking && toolChoice == other.toolChoice && tools == other.tools && topK == other.topK && topP == other.topP && additionalProperties == other.additionalProperties /* spotless:on */
             }
 
             /* spotless:off */
-            private val hashCode: Int by lazy { Objects.hash(maxTokens, messages, model, metadata, stopSequences, stream, system, temperature, thinking, toolChoice, tools, topK, topP, additionalProperties) }
+            private val hashCode: Int by lazy { Objects.hash(maxTokens, messages, model, container, mcpServers, metadata, serviceTier, stopSequences, stream, system, temperature, thinking, toolChoice, tools, topK, topP, additionalProperties) }
             /* spotless:on */
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Params{maxTokens=$maxTokens, messages=$messages, model=$model, metadata=$metadata, stopSequences=$stopSequences, stream=$stream, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+                "Params{maxTokens=$maxTokens, messages=$messages, model=$model, container=$container, mcpServers=$mcpServers, metadata=$metadata, serviceTier=$serviceTier, stopSequences=$stopSequences, stream=$stream, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {

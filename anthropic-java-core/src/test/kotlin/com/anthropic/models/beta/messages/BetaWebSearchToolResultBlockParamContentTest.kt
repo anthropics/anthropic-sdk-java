@@ -15,34 +15,34 @@ import org.junit.jupiter.params.provider.EnumSource
 internal class BetaWebSearchToolResultBlockParamContentTest {
 
     @Test
-    fun ofItem() {
-        val item =
+    fun ofResultBlock() {
+        val resultBlock =
             listOf(
                 BetaWebSearchResultBlockParam.builder()
                     .encryptedContent("encrypted_content")
-                    .title("x")
-                    .url("x")
+                    .title("title")
+                    .url("url")
                     .pageAge("page_age")
                     .build()
             )
 
         val betaWebSearchToolResultBlockParamContent =
-            BetaWebSearchToolResultBlockParamContent.ofItem(item)
+            BetaWebSearchToolResultBlockParamContent.ofResultBlock(resultBlock)
 
-        assertThat(betaWebSearchToolResultBlockParamContent.item()).contains(item)
+        assertThat(betaWebSearchToolResultBlockParamContent.resultBlock()).contains(resultBlock)
         assertThat(betaWebSearchToolResultBlockParamContent.requestError()).isEmpty
     }
 
     @Test
-    fun ofItemRoundtrip() {
+    fun ofResultBlockRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaWebSearchToolResultBlockParamContent =
-            BetaWebSearchToolResultBlockParamContent.ofItem(
+            BetaWebSearchToolResultBlockParamContent.ofResultBlock(
                 listOf(
                     BetaWebSearchResultBlockParam.builder()
                         .encryptedContent("encrypted_content")
-                        .title("x")
-                        .url("x")
+                        .title("title")
+                        .url("url")
                         .pageAge("page_age")
                         .build()
                 )
@@ -62,13 +62,13 @@ internal class BetaWebSearchToolResultBlockParamContentTest {
     fun ofRequestError() {
         val requestError =
             BetaWebSearchToolRequestError.builder()
-                .errorCode(BetaWebSearchToolRequestError.ErrorCode.INVALID_TOOL_INPUT)
+                .errorCode(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                 .build()
 
         val betaWebSearchToolResultBlockParamContent =
             BetaWebSearchToolResultBlockParamContent.ofRequestError(requestError)
 
-        assertThat(betaWebSearchToolResultBlockParamContent.item()).isEmpty
+        assertThat(betaWebSearchToolResultBlockParamContent.resultBlock()).isEmpty
         assertThat(betaWebSearchToolResultBlockParamContent.requestError()).contains(requestError)
     }
 
@@ -78,7 +78,7 @@ internal class BetaWebSearchToolResultBlockParamContentTest {
         val betaWebSearchToolResultBlockParamContent =
             BetaWebSearchToolResultBlockParamContent.ofRequestError(
                 BetaWebSearchToolRequestError.builder()
-                    .errorCode(BetaWebSearchToolRequestError.ErrorCode.INVALID_TOOL_INPUT)
+                    .errorCode(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                     .build()
             )
 

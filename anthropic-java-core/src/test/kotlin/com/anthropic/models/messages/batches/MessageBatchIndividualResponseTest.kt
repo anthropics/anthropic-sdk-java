@@ -50,6 +50,7 @@ internal class MessageBatchIndividualResponseTest {
                                 .serverToolUse(
                                     ServerToolUsage.builder().webSearchRequests(0L).build()
                                 )
+                                .serviceTier(Usage.ServiceTier.STANDARD)
                                 .build()
                         )
                         .build()
@@ -90,6 +91,7 @@ internal class MessageBatchIndividualResponseTest {
                                         .serverToolUse(
                                             ServerToolUsage.builder().webSearchRequests(0L).build()
                                         )
+                                        .serviceTier(Usage.ServiceTier.STANDARD)
                                         .build()
                                 )
                                 .build()
@@ -134,6 +136,7 @@ internal class MessageBatchIndividualResponseTest {
                                 .serverToolUse(
                                     ServerToolUsage.builder().webSearchRequests(0L).build()
                                 )
+                                .serviceTier(Usage.ServiceTier.STANDARD)
                                 .build()
                         )
                         .build()

@@ -49,6 +49,7 @@ internal class MessageBatchSucceededResultTest {
                                 .serverToolUse(
                                     ServerToolUsage.builder().webSearchRequests(0L).build()
                                 )
+                                .serviceTier(Usage.ServiceTier.STANDARD)
                                 .build()
                         )
                         .build()
@@ -83,6 +84,7 @@ internal class MessageBatchSucceededResultTest {
                             .inputTokens(2095L)
                             .outputTokens(503L)
                             .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                            .serviceTier(Usage.ServiceTier.STANDARD)
                             .build()
                     )
                     .build()
@@ -123,6 +125,7 @@ internal class MessageBatchSucceededResultTest {
                                 .serverToolUse(
                                     ServerToolUsage.builder().webSearchRequests(0L).build()
                                 )
+                                .serviceTier(Usage.ServiceTier.STANDARD)
                                 .build()
                         )
                         .build()

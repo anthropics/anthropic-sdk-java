@@ -4,6 +4,7 @@ package com.anthropic.models.beta.messages
 
 import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -15,6 +16,12 @@ internal class BetaRawMessageDeltaEventTest {
             BetaRawMessageDeltaEvent.builder()
                 .delta(
                     BetaRawMessageDeltaEvent.Delta.builder()
+                        .container(
+                            BetaContainer.builder()
+                                .id("id")
+                                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .build()
+                        )
                         .stopReason(BetaStopReason.END_TURN)
                         .stopSequence("stop_sequence")
                         .build()
@@ -33,6 +40,12 @@ internal class BetaRawMessageDeltaEventTest {
         assertThat(betaRawMessageDeltaEvent.delta())
             .isEqualTo(
                 BetaRawMessageDeltaEvent.Delta.builder()
+                    .container(
+                        BetaContainer.builder()
+                            .id("id")
+                            .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .build()
+                    )
                     .stopReason(BetaStopReason.END_TURN)
                     .stopSequence("stop_sequence")
                     .build()
@@ -56,6 +69,12 @@ internal class BetaRawMessageDeltaEventTest {
             BetaRawMessageDeltaEvent.builder()
                 .delta(
                     BetaRawMessageDeltaEvent.Delta.builder()
+                        .container(
+                            BetaContainer.builder()
+                                .id("id")
+                                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .build()
+                        )
                         .stopReason(BetaStopReason.END_TURN)
                         .stopSequence("stop_sequence")
                         .build()

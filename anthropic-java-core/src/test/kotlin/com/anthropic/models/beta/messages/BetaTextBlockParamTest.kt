@@ -15,7 +15,11 @@ internal class BetaTextBlockParamTest {
         val betaTextBlockParam =
             BetaTextBlockParam.builder()
                 .text("x")
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .addCitation(
                     BetaCitationCharLocationParam.builder()
                         .citedText("cited_text")
@@ -29,7 +33,11 @@ internal class BetaTextBlockParamTest {
 
         assertThat(betaTextBlockParam.text()).isEqualTo("x")
         assertThat(betaTextBlockParam.cacheControl())
-            .contains(BetaCacheControlEphemeral.builder().build())
+            .contains(
+                BetaCacheControlEphemeral.builder()
+                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                    .build()
+            )
         assertThat(betaTextBlockParam.citations().getOrNull())
             .containsExactly(
                 BetaTextCitationParam.ofCharLocation(
@@ -50,7 +58,11 @@ internal class BetaTextBlockParamTest {
         val betaTextBlockParam =
             BetaTextBlockParam.builder()
                 .text("x")
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .addCitation(
                     BetaCitationCharLocationParam.builder()
                         .citedText("cited_text")

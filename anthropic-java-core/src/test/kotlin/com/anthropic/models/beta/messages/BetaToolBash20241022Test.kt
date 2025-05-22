@@ -13,11 +13,19 @@ internal class BetaToolBash20241022Test {
     fun create() {
         val betaToolBash20241022 =
             BetaToolBash20241022.builder()
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .build()
 
         assertThat(betaToolBash20241022.cacheControl())
-            .contains(BetaCacheControlEphemeral.builder().build())
+            .contains(
+                BetaCacheControlEphemeral.builder()
+                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                    .build()
+            )
     }
 
     @Test
@@ -25,7 +33,11 @@ internal class BetaToolBash20241022Test {
         val jsonMapper = jsonMapper()
         val betaToolBash20241022 =
             BetaToolBash20241022.builder()
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .build()
 
         val roundtrippedBetaToolBash20241022 =

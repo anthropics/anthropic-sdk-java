@@ -159,10 +159,11 @@ private constructor(
         }
 
         /**
-         * Alias for calling [content] with `BetaWebSearchToolResultBlockParamContent.ofItem(item)`.
+         * Alias for calling [content] with
+         * `BetaWebSearchToolResultBlockParamContent.ofResultBlock(resultBlock)`.
          */
-        fun contentOfItem(item: List<BetaWebSearchResultBlockParam>) =
-            content(BetaWebSearchToolResultBlockParamContent.ofItem(item))
+        fun contentOfResultBlock(resultBlock: List<BetaWebSearchResultBlockParam>) =
+            content(BetaWebSearchToolResultBlockParamContent.ofResultBlock(resultBlock))
 
         /**
          * Alias for calling [content] with

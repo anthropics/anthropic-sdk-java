@@ -6,7 +6,9 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.BetaErrorResponse
+import com.anthropic.models.beta.messages.BetaCacheCreation
 import com.anthropic.models.beta.messages.BetaCitationCharLocation
+import com.anthropic.models.beta.messages.BetaContainer
 import com.anthropic.models.beta.messages.BetaMessage
 import com.anthropic.models.beta.messages.BetaServerToolUsage
 import com.anthropic.models.beta.messages.BetaStopReason
@@ -14,6 +16,7 @@ import com.anthropic.models.beta.messages.BetaTextBlock
 import com.anthropic.models.beta.messages.BetaUsage
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -29,6 +32,12 @@ internal class BetaMessageBatchResultTest {
                 .message(
                     BetaMessage.builder()
                         .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
+                        .container(
+                            BetaContainer.builder()
+                                .id("id")
+                                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .build()
+                        )
                         .addContent(
                             BetaTextBlock.builder()
                                 .addCitation(
@@ -48,6 +57,12 @@ internal class BetaMessageBatchResultTest {
                         .stopSequence(null)
                         .usage(
                             BetaUsage.builder()
+                                .cacheCreation(
+                                    BetaCacheCreation.builder()
+                                        .ephemeral1hInputTokens(0L)
+                                        .ephemeral5mInputTokens(0L)
+                                        .build()
+                                )
                                 .cacheCreationInputTokens(2051L)
                                 .cacheReadInputTokens(2051L)
                                 .inputTokens(2095L)
@@ -55,6 +70,7 @@ internal class BetaMessageBatchResultTest {
                                 .serverToolUse(
                                     BetaServerToolUsage.builder().webSearchRequests(0L).build()
                                 )
+                                .serviceTier(BetaUsage.ServiceTier.STANDARD)
                                 .build()
                         )
                         .build()
@@ -78,6 +94,12 @@ internal class BetaMessageBatchResultTest {
                     .message(
                         BetaMessage.builder()
                             .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
+                            .container(
+                                BetaContainer.builder()
+                                    .id("id")
+                                    .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .build()
+                            )
                             .addContent(
                                 BetaTextBlock.builder()
                                     .addCitation(
@@ -97,6 +119,12 @@ internal class BetaMessageBatchResultTest {
                             .stopSequence(null)
                             .usage(
                                 BetaUsage.builder()
+                                    .cacheCreation(
+                                        BetaCacheCreation.builder()
+                                            .ephemeral1hInputTokens(0L)
+                                            .ephemeral5mInputTokens(0L)
+                                            .build()
+                                    )
                                     .cacheCreationInputTokens(2051L)
                                     .cacheReadInputTokens(2051L)
                                     .inputTokens(2095L)
@@ -104,6 +132,7 @@ internal class BetaMessageBatchResultTest {
                                     .serverToolUse(
                                         BetaServerToolUsage.builder().webSearchRequests(0L).build()
                                     )
+                                    .serviceTier(BetaUsage.ServiceTier.STANDARD)
                                     .build()
                             )
                             .build()

@@ -19,7 +19,11 @@ internal class BetaContentBlockSourceContentTest {
         val text =
             BetaTextBlockParam.builder()
                 .text("x")
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .addCitation(
                     BetaCitationCharLocationParam.builder()
                         .citedText("cited_text")
@@ -44,7 +48,11 @@ internal class BetaContentBlockSourceContentTest {
             BetaContentBlockSourceContent.ofText(
                 BetaTextBlockParam.builder()
                     .text("x")
-                    .cacheControl(BetaCacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .addCitation(
                         BetaCitationCharLocationParam.builder()
                             .citedText("cited_text")
@@ -77,7 +85,11 @@ internal class BetaContentBlockSourceContentTest {
                         .mediaType(BetaBase64ImageSource.MediaType.IMAGE_JPEG)
                         .build()
                 )
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .build()
 
         val betaContentBlockSourceContent = BetaContentBlockSourceContent.ofImage(image)
@@ -98,7 +110,11 @@ internal class BetaContentBlockSourceContentTest {
                             .mediaType(BetaBase64ImageSource.MediaType.IMAGE_JPEG)
                             .build()
                     )
-                    .cacheControl(BetaCacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .build()
             )
 

@@ -36,6 +36,10 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.toolUse()).isEmpty
         assertThat(betaContentBlock.serverToolUse()).isEmpty
         assertThat(betaContentBlock.webSearchToolResult()).isEmpty
+        assertThat(betaContentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlock.mcpToolUse()).isEmpty
+        assertThat(betaContentBlock.mcpToolResult()).isEmpty
+        assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.thinking()).isEmpty
         assertThat(betaContentBlock.redactedThinking()).isEmpty
     }
@@ -83,6 +87,10 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.toolUse()).contains(toolUse)
         assertThat(betaContentBlock.serverToolUse()).isEmpty
         assertThat(betaContentBlock.webSearchToolResult()).isEmpty
+        assertThat(betaContentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlock.mcpToolUse()).isEmpty
+        assertThat(betaContentBlock.mcpToolResult()).isEmpty
+        assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.thinking()).isEmpty
         assertThat(betaContentBlock.redactedThinking()).isEmpty
     }
@@ -114,6 +122,7 @@ internal class BetaContentBlockTest {
             BetaServerToolUseBlock.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
                 .input(JsonValue.from(mapOf<String, Any>()))
+                .name(BetaServerToolUseBlock.Name.WEB_SEARCH)
                 .build()
 
         val betaContentBlock = BetaContentBlock.ofServerToolUse(serverToolUse)
@@ -122,6 +131,10 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.toolUse()).isEmpty
         assertThat(betaContentBlock.serverToolUse()).contains(serverToolUse)
         assertThat(betaContentBlock.webSearchToolResult()).isEmpty
+        assertThat(betaContentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlock.mcpToolUse()).isEmpty
+        assertThat(betaContentBlock.mcpToolResult()).isEmpty
+        assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.thinking()).isEmpty
         assertThat(betaContentBlock.redactedThinking()).isEmpty
     }
@@ -134,6 +147,7 @@ internal class BetaContentBlockTest {
                 BetaServerToolUseBlock.builder()
                     .id("srvtoolu_SQfNkl1n_JR_")
                     .input(JsonValue.from(mapOf<String, Any>()))
+                    .name(BetaServerToolUseBlock.Name.WEB_SEARCH)
                     .build()
             )
 
@@ -152,7 +166,7 @@ internal class BetaContentBlockTest {
             BetaWebSearchToolResultBlock.builder()
                 .content(
                     BetaWebSearchToolResultError.builder()
-                        .errorCode(BetaWebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                        .errorCode(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                         .build()
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
@@ -164,6 +178,10 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.toolUse()).isEmpty
         assertThat(betaContentBlock.serverToolUse()).isEmpty
         assertThat(betaContentBlock.webSearchToolResult()).contains(webSearchToolResult)
+        assertThat(betaContentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlock.mcpToolUse()).isEmpty
+        assertThat(betaContentBlock.mcpToolResult()).isEmpty
+        assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.thinking()).isEmpty
         assertThat(betaContentBlock.redactedThinking()).isEmpty
     }
@@ -176,11 +194,186 @@ internal class BetaContentBlockTest {
                 BetaWebSearchToolResultBlock.builder()
                     .content(
                         BetaWebSearchToolResultError.builder()
-                            .errorCode(BetaWebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                            .errorCode(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                             .build()
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .build()
+            )
+
+        val roundtrippedBetaContentBlock =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaContentBlock),
+                jacksonTypeRef<BetaContentBlock>(),
+            )
+
+        assertThat(roundtrippedBetaContentBlock).isEqualTo(betaContentBlock)
+    }
+
+    @Test
+    fun ofCodeExecutionToolResult() {
+        val codeExecutionToolResult =
+            BetaCodeExecutionToolResultBlock.builder()
+                .content(
+                    BetaCodeExecutionToolResultError.builder()
+                        .errorCode(BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
+                        .build()
+                )
+                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .build()
+
+        val betaContentBlock = BetaContentBlock.ofCodeExecutionToolResult(codeExecutionToolResult)
+
+        assertThat(betaContentBlock.text()).isEmpty
+        assertThat(betaContentBlock.toolUse()).isEmpty
+        assertThat(betaContentBlock.serverToolUse()).isEmpty
+        assertThat(betaContentBlock.webSearchToolResult()).isEmpty
+        assertThat(betaContentBlock.codeExecutionToolResult()).contains(codeExecutionToolResult)
+        assertThat(betaContentBlock.mcpToolUse()).isEmpty
+        assertThat(betaContentBlock.mcpToolResult()).isEmpty
+        assertThat(betaContentBlock.containerUpload()).isEmpty
+        assertThat(betaContentBlock.thinking()).isEmpty
+        assertThat(betaContentBlock.redactedThinking()).isEmpty
+    }
+
+    @Test
+    fun ofCodeExecutionToolResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaContentBlock =
+            BetaContentBlock.ofCodeExecutionToolResult(
+                BetaCodeExecutionToolResultBlock.builder()
+                    .content(
+                        BetaCodeExecutionToolResultError.builder()
+                            .errorCode(BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
+                            .build()
+                    )
+                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .build()
+            )
+
+        val roundtrippedBetaContentBlock =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaContentBlock),
+                jacksonTypeRef<BetaContentBlock>(),
+            )
+
+        assertThat(roundtrippedBetaContentBlock).isEqualTo(betaContentBlock)
+    }
+
+    @Test
+    fun ofMcpToolUse() {
+        val mcpToolUse =
+            BetaMcpToolUseBlock.builder()
+                .id("id")
+                .input(JsonValue.from(mapOf<String, Any>()))
+                .name("name")
+                .serverName("server_name")
+                .build()
+
+        val betaContentBlock = BetaContentBlock.ofMcpToolUse(mcpToolUse)
+
+        assertThat(betaContentBlock.text()).isEmpty
+        assertThat(betaContentBlock.toolUse()).isEmpty
+        assertThat(betaContentBlock.serverToolUse()).isEmpty
+        assertThat(betaContentBlock.webSearchToolResult()).isEmpty
+        assertThat(betaContentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlock.mcpToolUse()).contains(mcpToolUse)
+        assertThat(betaContentBlock.mcpToolResult()).isEmpty
+        assertThat(betaContentBlock.containerUpload()).isEmpty
+        assertThat(betaContentBlock.thinking()).isEmpty
+        assertThat(betaContentBlock.redactedThinking()).isEmpty
+    }
+
+    @Test
+    fun ofMcpToolUseRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaContentBlock =
+            BetaContentBlock.ofMcpToolUse(
+                BetaMcpToolUseBlock.builder()
+                    .id("id")
+                    .input(JsonValue.from(mapOf<String, Any>()))
+                    .name("name")
+                    .serverName("server_name")
+                    .build()
+            )
+
+        val roundtrippedBetaContentBlock =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaContentBlock),
+                jacksonTypeRef<BetaContentBlock>(),
+            )
+
+        assertThat(roundtrippedBetaContentBlock).isEqualTo(betaContentBlock)
+    }
+
+    @Test
+    fun ofMcpToolResult() {
+        val mcpToolResult =
+            BetaMcpToolResultBlock.builder()
+                .content("string")
+                .isError(true)
+                .toolUseId("tool_use_id")
+                .build()
+
+        val betaContentBlock = BetaContentBlock.ofMcpToolResult(mcpToolResult)
+
+        assertThat(betaContentBlock.text()).isEmpty
+        assertThat(betaContentBlock.toolUse()).isEmpty
+        assertThat(betaContentBlock.serverToolUse()).isEmpty
+        assertThat(betaContentBlock.webSearchToolResult()).isEmpty
+        assertThat(betaContentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlock.mcpToolUse()).isEmpty
+        assertThat(betaContentBlock.mcpToolResult()).contains(mcpToolResult)
+        assertThat(betaContentBlock.containerUpload()).isEmpty
+        assertThat(betaContentBlock.thinking()).isEmpty
+        assertThat(betaContentBlock.redactedThinking()).isEmpty
+    }
+
+    @Test
+    fun ofMcpToolResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaContentBlock =
+            BetaContentBlock.ofMcpToolResult(
+                BetaMcpToolResultBlock.builder()
+                    .content("string")
+                    .isError(true)
+                    .toolUseId("tool_use_id")
+                    .build()
+            )
+
+        val roundtrippedBetaContentBlock =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaContentBlock),
+                jacksonTypeRef<BetaContentBlock>(),
+            )
+
+        assertThat(roundtrippedBetaContentBlock).isEqualTo(betaContentBlock)
+    }
+
+    @Test
+    fun ofContainerUpload() {
+        val containerUpload = BetaContainerUploadBlock.builder().fileId("file_id").build()
+
+        val betaContentBlock = BetaContentBlock.ofContainerUpload(containerUpload)
+
+        assertThat(betaContentBlock.text()).isEmpty
+        assertThat(betaContentBlock.toolUse()).isEmpty
+        assertThat(betaContentBlock.serverToolUse()).isEmpty
+        assertThat(betaContentBlock.webSearchToolResult()).isEmpty
+        assertThat(betaContentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlock.mcpToolUse()).isEmpty
+        assertThat(betaContentBlock.mcpToolResult()).isEmpty
+        assertThat(betaContentBlock.containerUpload()).contains(containerUpload)
+        assertThat(betaContentBlock.thinking()).isEmpty
+        assertThat(betaContentBlock.redactedThinking()).isEmpty
+    }
+
+    @Test
+    fun ofContainerUploadRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaContentBlock =
+            BetaContentBlock.ofContainerUpload(
+                BetaContainerUploadBlock.builder().fileId("file_id").build()
             )
 
         val roundtrippedBetaContentBlock =
@@ -203,6 +396,10 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.toolUse()).isEmpty
         assertThat(betaContentBlock.serverToolUse()).isEmpty
         assertThat(betaContentBlock.webSearchToolResult()).isEmpty
+        assertThat(betaContentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlock.mcpToolUse()).isEmpty
+        assertThat(betaContentBlock.mcpToolResult()).isEmpty
+        assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.thinking()).contains(thinking)
         assertThat(betaContentBlock.redactedThinking()).isEmpty
     }
@@ -234,6 +431,10 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.toolUse()).isEmpty
         assertThat(betaContentBlock.serverToolUse()).isEmpty
         assertThat(betaContentBlock.webSearchToolResult()).isEmpty
+        assertThat(betaContentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlock.mcpToolUse()).isEmpty
+        assertThat(betaContentBlock.mcpToolResult()).isEmpty
+        assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.thinking()).isEmpty
         assertThat(betaContentBlock.redactedThinking()).contains(redactedThinking)
     }

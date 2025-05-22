@@ -38,6 +38,7 @@ internal class MessageServiceTest {
                     .metadata(
                         Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
                     )
+                    .serviceTier(MessageCreateParams.ServiceTier.AUTO)
                     .addStopSequence("string")
                     .systemOfTextBlockParams(
                         listOf(
@@ -115,6 +116,7 @@ internal class MessageServiceTest {
                     .metadata(
                         Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
                     )
+                    .serviceTier(MessageCreateParams.ServiceTier.AUTO)
                     .addStopSequence("string")
                     .systemOfTextBlockParams(
                         listOf(

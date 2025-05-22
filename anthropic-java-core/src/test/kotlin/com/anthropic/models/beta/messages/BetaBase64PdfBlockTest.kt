@@ -14,7 +14,11 @@ internal class BetaBase64PdfBlockTest {
         val betaBase64PdfBlock =
             BetaBase64PdfBlock.builder()
                 .base64Source("U3RhaW5sZXNzIHJvY2tz")
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .citations(BetaCitationsConfigParam.builder().enabled(true).build())
                 .context("x")
                 .title("x")
@@ -27,7 +31,11 @@ internal class BetaBase64PdfBlockTest {
                 )
             )
         assertThat(betaBase64PdfBlock.cacheControl())
-            .contains(BetaCacheControlEphemeral.builder().build())
+            .contains(
+                BetaCacheControlEphemeral.builder()
+                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                    .build()
+            )
         assertThat(betaBase64PdfBlock.citations())
             .contains(BetaCitationsConfigParam.builder().enabled(true).build())
         assertThat(betaBase64PdfBlock.context()).contains("x")
@@ -40,7 +48,11 @@ internal class BetaBase64PdfBlockTest {
         val betaBase64PdfBlock =
             BetaBase64PdfBlock.builder()
                 .base64Source("U3RhaW5sZXNzIHJvY2tz")
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .citations(BetaCitationsConfigParam.builder().enabled(true).build())
                 .context("x")
                 .title("x")

@@ -16,6 +16,7 @@ internal class MessageCreateParamsTest {
             .addUserMessage("Hello, world")
             .model(Model.CLAUDE_3_7_SONNET_LATEST)
             .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
+            .serviceTier(MessageCreateParams.ServiceTier.AUTO)
             .addStopSequence("string")
             .systemOfTextBlockParams(
                 listOf(
@@ -80,6 +81,7 @@ internal class MessageCreateParamsTest {
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_7_SONNET_LATEST)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
+                .serviceTier(MessageCreateParams.ServiceTier.AUTO)
                 .addStopSequence("string")
                 .systemOfTextBlockParams(
                     listOf(
@@ -145,6 +147,7 @@ internal class MessageCreateParamsTest {
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
         assertThat(body.metadata())
             .contains(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
+        assertThat(body.serviceTier()).contains(MessageCreateParams.ServiceTier.AUTO)
         assertThat(body.stopSequences().getOrNull()).containsExactly("string")
         assertThat(body.system())
             .contains(

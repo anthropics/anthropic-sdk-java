@@ -14,14 +14,14 @@ internal class WebSearchResultBlockParamTest {
         val webSearchResultBlockParam =
             WebSearchResultBlockParam.builder()
                 .encryptedContent("encrypted_content")
-                .title("x")
-                .url("x")
+                .title("title")
+                .url("url")
                 .pageAge("page_age")
                 .build()
 
         assertThat(webSearchResultBlockParam.encryptedContent()).isEqualTo("encrypted_content")
-        assertThat(webSearchResultBlockParam.title()).isEqualTo("x")
-        assertThat(webSearchResultBlockParam.url()).isEqualTo("x")
+        assertThat(webSearchResultBlockParam.title()).isEqualTo("title")
+        assertThat(webSearchResultBlockParam.url()).isEqualTo("url")
         assertThat(webSearchResultBlockParam.pageAge()).contains("page_age")
     }
 
@@ -31,8 +31,8 @@ internal class WebSearchResultBlockParamTest {
         val webSearchResultBlockParam =
             WebSearchResultBlockParam.builder()
                 .encryptedContent("encrypted_content")
-                .title("x")
-                .url("x")
+                .title("title")
+                .url("url")
                 .pageAge("page_age")
                 .build()
 

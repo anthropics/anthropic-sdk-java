@@ -38,6 +38,7 @@ internal class MessageTest {
                         .inputTokens(2095L)
                         .outputTokens(503L)
                         .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                        .serviceTier(Usage.ServiceTier.STANDARD)
                         .build()
                 )
                 .build()
@@ -71,6 +72,7 @@ internal class MessageTest {
                     .inputTokens(2095L)
                     .outputTokens(503L)
                     .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                    .serviceTier(Usage.ServiceTier.STANDARD)
                     .build()
             )
     }
@@ -105,6 +107,7 @@ internal class MessageTest {
                         .inputTokens(2095L)
                         .outputTokens(503L)
                         .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                        .serviceTier(Usage.ServiceTier.STANDARD)
                         .build()
                 )
                 .build()

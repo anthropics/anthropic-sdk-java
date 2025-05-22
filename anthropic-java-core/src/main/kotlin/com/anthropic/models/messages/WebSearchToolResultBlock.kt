@@ -35,7 +35,8 @@ private constructor(
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
     ) : this(content, toolUseId, type, mutableMapOf())
 
-    fun toParam(): ServerToolUseBlockParam = ServerToolUseBlockParam.builder().build()
+    fun toParam(): WebSearchToolResultBlockParam =
+        WebSearchToolResultBlockParam.builder().toolUseId(_toolUseId()).build()
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is

@@ -19,13 +19,32 @@ internal class MessageCreateParamsTest {
             .maxTokens(1024L)
             .addUserMessage("Hello, world")
             .model(Model.CLAUDE_3_7_SONNET_LATEST)
+            .container("container")
+            .addMcpServer(
+                BetaRequestMcpServerUrlDefinition.builder()
+                    .name("name")
+                    .url("url")
+                    .authorizationToken("authorization_token")
+                    .toolConfiguration(
+                        BetaRequestMcpServerToolConfiguration.builder()
+                            .addAllowedTool("string")
+                            .enabled(true)
+                            .build()
+                    )
+                    .build()
+            )
             .metadata(BetaMetadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
+            .serviceTier(MessageCreateParams.ServiceTier.AUTO)
             .addStopSequence("string")
             .systemOfBetaTextBlockParams(
                 listOf(
                     BetaTextBlockParam.builder()
                         .text("Today's date is 2024-06-01.")
-                        .cacheControl(BetaCacheControlEphemeral.builder().build())
+                        .cacheControl(
+                            BetaCacheControlEphemeral.builder()
+                                .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
                         .addCitation(
                             BetaCitationCharLocationParam.builder()
                                 .citedText("cited_text")
@@ -66,7 +85,11 @@ internal class MessageCreateParamsTest {
                             .build()
                     )
                     .name("name")
-                    .cacheControl(BetaCacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .description("Get the current weather in a given location")
                     .type(BetaTool.Type.CUSTOM)
                     .build()
@@ -84,15 +107,34 @@ internal class MessageCreateParamsTest {
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                .container("container")
+                .addMcpServer(
+                    BetaRequestMcpServerUrlDefinition.builder()
+                        .name("name")
+                        .url("url")
+                        .authorizationToken("authorization_token")
+                        .toolConfiguration(
+                            BetaRequestMcpServerToolConfiguration.builder()
+                                .addAllowedTool("string")
+                                .enabled(true)
+                                .build()
+                        )
+                        .build()
+                )
                 .metadata(
                     BetaMetadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
                 )
+                .serviceTier(MessageCreateParams.ServiceTier.AUTO)
                 .addStopSequence("string")
                 .systemOfBetaTextBlockParams(
                     listOf(
                         BetaTextBlockParam.builder()
                             .text("Today's date is 2024-06-01.")
-                            .cacheControl(BetaCacheControlEphemeral.builder().build())
+                            .cacheControl(
+                                BetaCacheControlEphemeral.builder()
+                                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                                    .build()
+                            )
                             .addCitation(
                                 BetaCitationCharLocationParam.builder()
                                     .citedText("cited_text")
@@ -133,7 +175,11 @@ internal class MessageCreateParamsTest {
                                 .build()
                         )
                         .name("name")
-                        .cacheControl(BetaCacheControlEphemeral.builder().build())
+                        .cacheControl(
+                            BetaCacheControlEphemeral.builder()
+                                .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
                         .description("Get the current weather in a given location")
                         .type(BetaTool.Type.CUSTOM)
                         .build()
@@ -172,15 +218,34 @@ internal class MessageCreateParamsTest {
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                .container("container")
+                .addMcpServer(
+                    BetaRequestMcpServerUrlDefinition.builder()
+                        .name("name")
+                        .url("url")
+                        .authorizationToken("authorization_token")
+                        .toolConfiguration(
+                            BetaRequestMcpServerToolConfiguration.builder()
+                                .addAllowedTool("string")
+                                .enabled(true)
+                                .build()
+                        )
+                        .build()
+                )
                 .metadata(
                     BetaMetadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
                 )
+                .serviceTier(MessageCreateParams.ServiceTier.AUTO)
                 .addStopSequence("string")
                 .systemOfBetaTextBlockParams(
                     listOf(
                         BetaTextBlockParam.builder()
                             .text("Today's date is 2024-06-01.")
-                            .cacheControl(BetaCacheControlEphemeral.builder().build())
+                            .cacheControl(
+                                BetaCacheControlEphemeral.builder()
+                                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                                    .build()
+                            )
                             .addCitation(
                                 BetaCitationCharLocationParam.builder()
                                     .citedText("cited_text")
@@ -221,7 +286,11 @@ internal class MessageCreateParamsTest {
                                 .build()
                         )
                         .name("name")
-                        .cacheControl(BetaCacheControlEphemeral.builder().build())
+                        .cacheControl(
+                            BetaCacheControlEphemeral.builder()
+                                .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
                         .description("Get the current weather in a given location")
                         .type(BetaTool.Type.CUSTOM)
                         .build()
@@ -241,8 +310,24 @@ internal class MessageCreateParamsTest {
                     .build()
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
+        assertThat(body.container()).contains("container")
+        assertThat(body.mcpServers().getOrNull())
+            .containsExactly(
+                BetaRequestMcpServerUrlDefinition.builder()
+                    .name("name")
+                    .url("url")
+                    .authorizationToken("authorization_token")
+                    .toolConfiguration(
+                        BetaRequestMcpServerToolConfiguration.builder()
+                            .addAllowedTool("string")
+                            .enabled(true)
+                            .build()
+                    )
+                    .build()
+            )
         assertThat(body.metadata())
             .contains(BetaMetadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
+        assertThat(body.serviceTier()).contains(MessageCreateParams.ServiceTier.AUTO)
         assertThat(body.stopSequences().getOrNull()).containsExactly("string")
         assertThat(body.system())
             .contains(
@@ -250,7 +335,11 @@ internal class MessageCreateParamsTest {
                     listOf(
                         BetaTextBlockParam.builder()
                             .text("Today's date is 2024-06-01.")
-                            .cacheControl(BetaCacheControlEphemeral.builder().build())
+                            .cacheControl(
+                                BetaCacheControlEphemeral.builder()
+                                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                                    .build()
+                            )
                             .addCitation(
                                 BetaCitationCharLocationParam.builder()
                                     .citedText("cited_text")
@@ -304,7 +393,11 @@ internal class MessageCreateParamsTest {
                                 .build()
                         )
                         .name("name")
-                        .cacheControl(BetaCacheControlEphemeral.builder().build())
+                        .cacheControl(
+                            BetaCacheControlEphemeral.builder()
+                                .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
                         .description("Get the current weather in a given location")
                         .type(BetaTool.Type.CUSTOM)
                         .build()

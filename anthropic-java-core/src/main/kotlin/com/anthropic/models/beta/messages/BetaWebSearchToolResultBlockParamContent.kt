@@ -22,20 +22,21 @@ import java.util.Optional
 @JsonSerialize(using = BetaWebSearchToolResultBlockParamContent.Serializer::class)
 class BetaWebSearchToolResultBlockParamContent
 private constructor(
-    private val item: List<BetaWebSearchResultBlockParam>? = null,
+    private val resultBlock: List<BetaWebSearchResultBlockParam>? = null,
     private val requestError: BetaWebSearchToolRequestError? = null,
     private val _json: JsonValue? = null,
 ) {
 
-    fun item(): Optional<List<BetaWebSearchResultBlockParam>> = Optional.ofNullable(item)
+    fun resultBlock(): Optional<List<BetaWebSearchResultBlockParam>> =
+        Optional.ofNullable(resultBlock)
 
     fun requestError(): Optional<BetaWebSearchToolRequestError> = Optional.ofNullable(requestError)
 
-    fun isItem(): Boolean = item != null
+    fun isResultBlock(): Boolean = resultBlock != null
 
     fun isRequestError(): Boolean = requestError != null
 
-    fun asItem(): List<BetaWebSearchResultBlockParam> = item.getOrThrow("item")
+    fun asResultBlock(): List<BetaWebSearchResultBlockParam> = resultBlock.getOrThrow("resultBlock")
 
     fun asRequestError(): BetaWebSearchToolRequestError = requestError.getOrThrow("requestError")
 
@@ -43,7 +44,7 @@ private constructor(
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {
-            item != null -> visitor.visitItem(item)
+            resultBlock != null -> visitor.visitResultBlock(resultBlock)
             requestError != null -> visitor.visitRequestError(requestError)
             else -> visitor.unknown(_json)
         }
@@ -57,8 +58,8 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
-                override fun visitItem(item: List<BetaWebSearchResultBlockParam>) {
-                    item.forEach { it.validate() }
+                override fun visitResultBlock(resultBlock: List<BetaWebSearchResultBlockParam>) {
+                    resultBlock.forEach { it.validate() }
                 }
 
                 override fun visitRequestError(requestError: BetaWebSearchToolRequestError) {
@@ -86,8 +87,8 @@ private constructor(
     internal fun validity(): Int =
         accept(
             object : Visitor<Int> {
-                override fun visitItem(item: List<BetaWebSearchResultBlockParam>) =
-                    item.sumOf { it.validity().toInt() }
+                override fun visitResultBlock(resultBlock: List<BetaWebSearchResultBlockParam>) =
+                    resultBlock.sumOf { it.validity().toInt() }
 
                 override fun visitRequestError(requestError: BetaWebSearchToolRequestError) =
                     requestError.validity()
@@ -101,14 +102,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaWebSearchToolResultBlockParamContent && item == other.item && requestError == other.requestError /* spotless:on */
+        return /* spotless:off */ other is BetaWebSearchToolResultBlockParamContent && resultBlock == other.resultBlock && requestError == other.requestError /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(item, requestError) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(resultBlock, requestError) /* spotless:on */
 
     override fun toString(): String =
         when {
-            item != null -> "BetaWebSearchToolResultBlockParamContent{item=$item}"
+            resultBlock != null ->
+                "BetaWebSearchToolResultBlockParamContent{resultBlock=$resultBlock}"
             requestError != null ->
                 "BetaWebSearchToolResultBlockParamContent{requestError=$requestError}"
             _json != null -> "BetaWebSearchToolResultBlockParamContent{_unknown=$_json}"
@@ -118,8 +120,8 @@ private constructor(
     companion object {
 
         @JvmStatic
-        fun ofItem(item: List<BetaWebSearchResultBlockParam>) =
-            BetaWebSearchToolResultBlockParamContent(item = item)
+        fun ofResultBlock(resultBlock: List<BetaWebSearchResultBlockParam>) =
+            BetaWebSearchToolResultBlockParamContent(resultBlock = resultBlock)
 
         @JvmStatic
         fun ofRequestError(requestError: BetaWebSearchToolRequestError) =
@@ -132,7 +134,7 @@ private constructor(
      */
     interface Visitor<out T> {
 
-        fun visitItem(item: List<BetaWebSearchResultBlockParam>): T
+        fun visitResultBlock(resultBlock: List<BetaWebSearchResultBlockParam>): T
 
         fun visitRequestError(requestError: BetaWebSearchToolRequestError): T
 
@@ -174,7 +176,10 @@ private constructor(
                         },
                         tryDeserialize(node, jacksonTypeRef<List<BetaWebSearchResultBlockParam>>())
                             ?.let {
-                                BetaWebSearchToolResultBlockParamContent(item = it, _json = json)
+                                BetaWebSearchToolResultBlockParamContent(
+                                    resultBlock = it,
+                                    _json = json,
+                                )
                             },
                     )
                     .filterNotNull()
@@ -203,7 +208,7 @@ private constructor(
             provider: SerializerProvider,
         ) {
             when {
-                value.item != null -> generator.writeObject(value.item)
+                value.resultBlock != null -> generator.writeObject(value.resultBlock)
                 value.requestError != null -> generator.writeObject(value.requestError)
                 value._json != null -> generator.writeObject(value._json)
                 else ->

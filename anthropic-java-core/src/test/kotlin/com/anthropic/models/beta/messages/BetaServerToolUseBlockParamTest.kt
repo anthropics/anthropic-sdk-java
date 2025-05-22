@@ -16,14 +16,25 @@ internal class BetaServerToolUseBlockParamTest {
             BetaServerToolUseBlockParam.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
                 .input(JsonValue.from(mapOf<String, Any>()))
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .name(BetaServerToolUseBlockParam.Name.WEB_SEARCH)
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .build()
 
         assertThat(betaServerToolUseBlockParam.id()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
         assertThat(betaServerToolUseBlockParam._input())
             .isEqualTo(JsonValue.from(mapOf<String, Any>()))
+        assertThat(betaServerToolUseBlockParam.name())
+            .isEqualTo(BetaServerToolUseBlockParam.Name.WEB_SEARCH)
         assertThat(betaServerToolUseBlockParam.cacheControl())
-            .contains(BetaCacheControlEphemeral.builder().build())
+            .contains(
+                BetaCacheControlEphemeral.builder()
+                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                    .build()
+            )
     }
 
     @Test
@@ -33,7 +44,12 @@ internal class BetaServerToolUseBlockParamTest {
             BetaServerToolUseBlockParam.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
                 .input(JsonValue.from(mapOf<String, Any>()))
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .name(BetaServerToolUseBlockParam.Name.WEB_SEARCH)
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .build()
 
         val roundtrippedBetaServerToolUseBlockParam =

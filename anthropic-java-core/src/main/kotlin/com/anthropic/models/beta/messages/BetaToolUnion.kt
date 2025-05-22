@@ -29,7 +29,9 @@ private constructor(
     private val computerUse20250124: BetaToolComputerUse20250124? = null,
     private val bash20250124: BetaToolBash20250124? = null,
     private val textEditor20250124: BetaToolTextEditor20250124? = null,
+    private val textEditor20250429: BetaToolTextEditor20250429? = null,
     private val webSearchTool20250305: BetaWebSearchTool20250305? = null,
+    private val codeExecutionTool20250522: BetaCodeExecutionTool20250522? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -51,8 +53,14 @@ private constructor(
     fun textEditor20250124(): Optional<BetaToolTextEditor20250124> =
         Optional.ofNullable(textEditor20250124)
 
+    fun textEditor20250429(): Optional<BetaToolTextEditor20250429> =
+        Optional.ofNullable(textEditor20250429)
+
     fun webSearchTool20250305(): Optional<BetaWebSearchTool20250305> =
         Optional.ofNullable(webSearchTool20250305)
+
+    fun codeExecutionTool20250522(): Optional<BetaCodeExecutionTool20250522> =
+        Optional.ofNullable(codeExecutionTool20250522)
 
     fun isBetaTool(): Boolean = betaTool != null
 
@@ -68,7 +76,11 @@ private constructor(
 
     fun isTextEditor20250124(): Boolean = textEditor20250124 != null
 
+    fun isTextEditor20250429(): Boolean = textEditor20250429 != null
+
     fun isWebSearchTool20250305(): Boolean = webSearchTool20250305 != null
+
+    fun isCodeExecutionTool20250522(): Boolean = codeExecutionTool20250522 != null
 
     fun asBetaTool(): BetaTool = betaTool.getOrThrow("betaTool")
 
@@ -88,8 +100,14 @@ private constructor(
     fun asTextEditor20250124(): BetaToolTextEditor20250124 =
         textEditor20250124.getOrThrow("textEditor20250124")
 
+    fun asTextEditor20250429(): BetaToolTextEditor20250429 =
+        textEditor20250429.getOrThrow("textEditor20250429")
+
     fun asWebSearchTool20250305(): BetaWebSearchTool20250305 =
         webSearchTool20250305.getOrThrow("webSearchTool20250305")
+
+    fun asCodeExecutionTool20250522(): BetaCodeExecutionTool20250522 =
+        codeExecutionTool20250522.getOrThrow("codeExecutionTool20250522")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -102,8 +120,11 @@ private constructor(
             computerUse20250124 != null -> visitor.visitComputerUse20250124(computerUse20250124)
             bash20250124 != null -> visitor.visitBash20250124(bash20250124)
             textEditor20250124 != null -> visitor.visitTextEditor20250124(textEditor20250124)
+            textEditor20250429 != null -> visitor.visitTextEditor20250429(textEditor20250429)
             webSearchTool20250305 != null ->
                 visitor.visitWebSearchTool20250305(webSearchTool20250305)
+            codeExecutionTool20250522 != null ->
+                visitor.visitCodeExecutionTool20250522(codeExecutionTool20250522)
             else -> visitor.unknown(_json)
         }
 
@@ -152,10 +173,22 @@ private constructor(
                     textEditor20250124.validate()
                 }
 
+                override fun visitTextEditor20250429(
+                    textEditor20250429: BetaToolTextEditor20250429
+                ) {
+                    textEditor20250429.validate()
+                }
+
                 override fun visitWebSearchTool20250305(
                     webSearchTool20250305: BetaWebSearchTool20250305
                 ) {
                     webSearchTool20250305.validate()
+                }
+
+                override fun visitCodeExecutionTool20250522(
+                    codeExecutionTool20250522: BetaCodeExecutionTool20250522
+                ) {
+                    codeExecutionTool20250522.validate()
                 }
             }
         )
@@ -203,9 +236,17 @@ private constructor(
                     textEditor20250124: BetaToolTextEditor20250124
                 ) = textEditor20250124.validity()
 
+                override fun visitTextEditor20250429(
+                    textEditor20250429: BetaToolTextEditor20250429
+                ) = textEditor20250429.validity()
+
                 override fun visitWebSearchTool20250305(
                     webSearchTool20250305: BetaWebSearchTool20250305
                 ) = webSearchTool20250305.validity()
+
+                override fun visitCodeExecutionTool20250522(
+                    codeExecutionTool20250522: BetaCodeExecutionTool20250522
+                ) = codeExecutionTool20250522.validity()
 
                 override fun unknown(json: JsonValue?) = 0
             }
@@ -216,10 +257,10 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaToolUnion && betaTool == other.betaTool && computerUse20241022 == other.computerUse20241022 && bash20241022 == other.bash20241022 && textEditor20241022 == other.textEditor20241022 && computerUse20250124 == other.computerUse20250124 && bash20250124 == other.bash20250124 && textEditor20250124 == other.textEditor20250124 && webSearchTool20250305 == other.webSearchTool20250305 /* spotless:on */
+        return /* spotless:off */ other is BetaToolUnion && betaTool == other.betaTool && computerUse20241022 == other.computerUse20241022 && bash20241022 == other.bash20241022 && textEditor20241022 == other.textEditor20241022 && computerUse20250124 == other.computerUse20250124 && bash20250124 == other.bash20250124 && textEditor20250124 == other.textEditor20250124 && textEditor20250429 == other.textEditor20250429 && webSearchTool20250305 == other.webSearchTool20250305 && codeExecutionTool20250522 == other.codeExecutionTool20250522 /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaTool, computerUse20241022, bash20241022, textEditor20241022, computerUse20250124, bash20250124, textEditor20250124, webSearchTool20250305) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaTool, computerUse20241022, bash20241022, textEditor20241022, computerUse20250124, bash20250124, textEditor20250124, textEditor20250429, webSearchTool20250305, codeExecutionTool20250522) /* spotless:on */
 
     override fun toString(): String =
         when {
@@ -230,8 +271,11 @@ private constructor(
             computerUse20250124 != null -> "BetaToolUnion{computerUse20250124=$computerUse20250124}"
             bash20250124 != null -> "BetaToolUnion{bash20250124=$bash20250124}"
             textEditor20250124 != null -> "BetaToolUnion{textEditor20250124=$textEditor20250124}"
+            textEditor20250429 != null -> "BetaToolUnion{textEditor20250429=$textEditor20250429}"
             webSearchTool20250305 != null ->
                 "BetaToolUnion{webSearchTool20250305=$webSearchTool20250305}"
+            codeExecutionTool20250522 != null ->
+                "BetaToolUnion{codeExecutionTool20250522=$codeExecutionTool20250522}"
             _json != null -> "BetaToolUnion{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaToolUnion")
         }
@@ -265,8 +309,16 @@ private constructor(
             BetaToolUnion(textEditor20250124 = textEditor20250124)
 
         @JvmStatic
+        fun ofTextEditor20250429(textEditor20250429: BetaToolTextEditor20250429) =
+            BetaToolUnion(textEditor20250429 = textEditor20250429)
+
+        @JvmStatic
         fun ofWebSearchTool20250305(webSearchTool20250305: BetaWebSearchTool20250305) =
             BetaToolUnion(webSearchTool20250305 = webSearchTool20250305)
+
+        @JvmStatic
+        fun ofCodeExecutionTool20250522(codeExecutionTool20250522: BetaCodeExecutionTool20250522) =
+            BetaToolUnion(codeExecutionTool20250522 = codeExecutionTool20250522)
     }
 
     /**
@@ -288,7 +340,13 @@ private constructor(
 
         fun visitTextEditor20250124(textEditor20250124: BetaToolTextEditor20250124): T
 
+        fun visitTextEditor20250429(textEditor20250429: BetaToolTextEditor20250429): T
+
         fun visitWebSearchTool20250305(webSearchTool20250305: BetaWebSearchTool20250305): T
+
+        fun visitCodeExecutionTool20250522(
+            codeExecutionTool20250522: BetaCodeExecutionTool20250522
+        ): T
 
         /**
          * Maps an unknown variant of [BetaToolUnion] to a value of type [T].
@@ -332,8 +390,14 @@ private constructor(
                         tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20250124>())?.let {
                             BetaToolUnion(textEditor20250124 = it, _json = json)
                         },
+                        tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20250429>())?.let {
+                            BetaToolUnion(textEditor20250429 = it, _json = json)
+                        },
                         tryDeserialize(node, jacksonTypeRef<BetaWebSearchTool20250305>())?.let {
                             BetaToolUnion(webSearchTool20250305 = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<BetaCodeExecutionTool20250522>())?.let {
+                            BetaToolUnion(codeExecutionTool20250522 = it, _json = json)
                         },
                     )
                     .filterNotNull()
@@ -368,8 +432,11 @@ private constructor(
                     generator.writeObject(value.computerUse20250124)
                 value.bash20250124 != null -> generator.writeObject(value.bash20250124)
                 value.textEditor20250124 != null -> generator.writeObject(value.textEditor20250124)
+                value.textEditor20250429 != null -> generator.writeObject(value.textEditor20250429)
                 value.webSearchTool20250305 != null ->
                     generator.writeObject(value.webSearchTool20250305)
+                value.codeExecutionTool20250522 != null ->
+                    generator.writeObject(value.codeExecutionTool20250522)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaToolUnion")
             }

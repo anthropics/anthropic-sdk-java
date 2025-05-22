@@ -2,7 +2,6 @@
 
 package com.anthropic.models.beta.messages
 
-import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
@@ -19,7 +18,7 @@ import kotlin.jvm.optionals.getOrNull
 
 class BetaWebSearchToolResultError
 private constructor(
-    private val errorCode: JsonField<ErrorCode>,
+    private val errorCode: JsonField<BetaWebSearchToolResultErrorCode>,
     private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -28,7 +27,7 @@ private constructor(
     private constructor(
         @JsonProperty("error_code")
         @ExcludeMissing
-        errorCode: JsonField<ErrorCode> = JsonMissing.of(),
+        errorCode: JsonField<BetaWebSearchToolResultErrorCode> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
     ) : this(errorCode, type, mutableMapOf())
 
@@ -36,7 +35,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun errorCode(): ErrorCode = errorCode.getRequired("error_code")
+    fun errorCode(): BetaWebSearchToolResultErrorCode = errorCode.getRequired("error_code")
 
     /**
      * Expected to always return the following:
@@ -54,7 +53,9 @@ private constructor(
      *
      * Unlike [errorCode], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("error_code") @ExcludeMissing fun _errorCode(): JsonField<ErrorCode> = errorCode
+    @JsonProperty("error_code")
+    @ExcludeMissing
+    fun _errorCode(): JsonField<BetaWebSearchToolResultErrorCode> = errorCode
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -84,7 +85,7 @@ private constructor(
     /** A builder for [BetaWebSearchToolResultError]. */
     class Builder internal constructor() {
 
-        private var errorCode: JsonField<ErrorCode>? = null
+        private var errorCode: JsonField<BetaWebSearchToolResultErrorCode>? = null
         private var type: JsonValue = JsonValue.from("web_search_tool_result_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -95,16 +96,19 @@ private constructor(
             additionalProperties = betaWebSearchToolResultError.additionalProperties.toMutableMap()
         }
 
-        fun errorCode(errorCode: ErrorCode) = errorCode(JsonField.of(errorCode))
+        fun errorCode(errorCode: BetaWebSearchToolResultErrorCode) =
+            errorCode(JsonField.of(errorCode))
 
         /**
          * Sets [Builder.errorCode] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.errorCode] with a well-typed [ErrorCode] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.errorCode] with a well-typed
+         * [BetaWebSearchToolResultErrorCode] value instead. This method is primarily for setting
+         * the field to an undocumented or not yet supported value.
          */
-        fun errorCode(errorCode: JsonField<ErrorCode>) = apply { this.errorCode = errorCode }
+        fun errorCode(errorCode: JsonField<BetaWebSearchToolResultErrorCode>) = apply {
+            this.errorCode = errorCode
+        }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -192,153 +196,6 @@ private constructor(
     internal fun validity(): Int =
         (errorCode.asKnown().getOrNull()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("web_search_tool_result_error")) 1 else 0 }
-
-    class ErrorCode @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val INVALID_TOOL_INPUT = of("invalid_tool_input")
-
-            @JvmField val UNAVAILABLE = of("unavailable")
-
-            @JvmField val MAX_USES_EXCEEDED = of("max_uses_exceeded")
-
-            @JvmField val TOO_MANY_REQUESTS = of("too_many_requests")
-
-            @JvmField val QUERY_TOO_LONG = of("query_too_long")
-
-            @JvmStatic fun of(value: String) = ErrorCode(JsonField.of(value))
-        }
-
-        /** An enum containing [ErrorCode]'s known values. */
-        enum class Known {
-            INVALID_TOOL_INPUT,
-            UNAVAILABLE,
-            MAX_USES_EXCEEDED,
-            TOO_MANY_REQUESTS,
-            QUERY_TOO_LONG,
-        }
-
-        /**
-         * An enum containing [ErrorCode]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [ErrorCode] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            INVALID_TOOL_INPUT,
-            UNAVAILABLE,
-            MAX_USES_EXCEEDED,
-            TOO_MANY_REQUESTS,
-            QUERY_TOO_LONG,
-            /**
-             * An enum member indicating that [ErrorCode] was instantiated with an unknown value.
-             */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                INVALID_TOOL_INPUT -> Value.INVALID_TOOL_INPUT
-                UNAVAILABLE -> Value.UNAVAILABLE
-                MAX_USES_EXCEEDED -> Value.MAX_USES_EXCEEDED
-                TOO_MANY_REQUESTS -> Value.TOO_MANY_REQUESTS
-                QUERY_TOO_LONG -> Value.QUERY_TOO_LONG
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                INVALID_TOOL_INPUT -> Known.INVALID_TOOL_INPUT
-                UNAVAILABLE -> Known.UNAVAILABLE
-                MAX_USES_EXCEEDED -> Known.MAX_USES_EXCEEDED
-                TOO_MANY_REQUESTS -> Known.TOO_MANY_REQUESTS
-                QUERY_TOO_LONG -> Known.QUERY_TOO_LONG
-                else -> throw AnthropicInvalidDataException("Unknown ErrorCode: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
-
-        private var validated: Boolean = false
-
-        fun validate(): ErrorCode = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return /* spotless:off */ other is ErrorCode && value == other.value /* spotless:on */
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

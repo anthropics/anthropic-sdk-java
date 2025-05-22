@@ -17,14 +17,22 @@ internal class BetaToolUseBlockParamTest {
                 .id("id")
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name("x")
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .build()
 
         assertThat(betaToolUseBlockParam.id()).isEqualTo("id")
         assertThat(betaToolUseBlockParam._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
         assertThat(betaToolUseBlockParam.name()).isEqualTo("x")
         assertThat(betaToolUseBlockParam.cacheControl())
-            .contains(BetaCacheControlEphemeral.builder().build())
+            .contains(
+                BetaCacheControlEphemeral.builder()
+                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                    .build()
+            )
     }
 
     @Test
@@ -35,7 +43,11 @@ internal class BetaToolUseBlockParamTest {
                 .id("id")
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name("x")
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .build()
 
         val roundtrippedBetaToolUseBlockParam =

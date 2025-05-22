@@ -19,7 +19,11 @@ internal class BetaImageBlockParamTest {
                         .mediaType(BetaBase64ImageSource.MediaType.IMAGE_JPEG)
                         .build()
                 )
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .build()
 
         assertThat(betaImageBlockParam.source())
@@ -32,7 +36,11 @@ internal class BetaImageBlockParamTest {
                 )
             )
         assertThat(betaImageBlockParam.cacheControl())
-            .contains(BetaCacheControlEphemeral.builder().build())
+            .contains(
+                BetaCacheControlEphemeral.builder()
+                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                    .build()
+            )
     }
 
     @Test
@@ -46,7 +54,11 @@ internal class BetaImageBlockParamTest {
                         .mediaType(BetaBase64ImageSource.MediaType.IMAGE_JPEG)
                         .build()
                 )
-                .cacheControl(BetaCacheControlEphemeral.builder().build())
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .build()
 
         val roundtrippedBetaImageBlockParam =

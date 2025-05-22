@@ -18,7 +18,7 @@ internal class BetaWebSearchToolResultBlockContentTest {
     fun ofError() {
         val error =
             BetaWebSearchToolResultError.builder()
-                .errorCode(BetaWebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                .errorCode(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                 .build()
 
         val betaWebSearchToolResultBlockContent = BetaWebSearchToolResultBlockContent.ofError(error)
@@ -33,7 +33,7 @@ internal class BetaWebSearchToolResultBlockContentTest {
         val betaWebSearchToolResultBlockContent =
             BetaWebSearchToolResultBlockContent.ofError(
                 BetaWebSearchToolResultError.builder()
-                    .errorCode(BetaWebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                    .errorCode(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                     .build()
             )
 

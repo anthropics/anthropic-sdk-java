@@ -153,6 +153,20 @@ private constructor(
          */
         fun urlSource(url: String) = source(BetaUrlImageSource.builder().url(url).build())
 
+        /** Alias for calling [source] with `Source.ofFile(file)`. */
+        fun source(file: BetaFileImageSource) = source(Source.ofFile(file))
+
+        /**
+         * Alias for calling [source] with the following:
+         * ```java
+         * BetaFileImageSource.builder()
+         *     .fileId(fileId)
+         *     .build()
+         * ```
+         */
+        fun fileSource(fileId: String) =
+            source(BetaFileImageSource.builder().fileId(fileId).build())
+
         /**
          * Sets the field to an arbitrary JSON value.
          *
@@ -268,6 +282,7 @@ private constructor(
     private constructor(
         private val base64: BetaBase64ImageSource? = null,
         private val url: BetaUrlImageSource? = null,
+        private val file: BetaFileImageSource? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -275,13 +290,19 @@ private constructor(
 
         fun url(): Optional<BetaUrlImageSource> = Optional.ofNullable(url)
 
+        fun file(): Optional<BetaFileImageSource> = Optional.ofNullable(file)
+
         fun isBase64(): Boolean = base64 != null
 
         fun isUrl(): Boolean = url != null
 
+        fun isFile(): Boolean = file != null
+
         fun asBase64(): BetaBase64ImageSource = base64.getOrThrow("base64")
 
         fun asUrl(): BetaUrlImageSource = url.getOrThrow("url")
+
+        fun asFile(): BetaFileImageSource = file.getOrThrow("file")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -289,6 +310,7 @@ private constructor(
             when {
                 base64 != null -> visitor.visitBase64(base64)
                 url != null -> visitor.visitUrl(url)
+                file != null -> visitor.visitFile(file)
                 else -> visitor.unknown(_json)
             }
 
@@ -307,6 +329,10 @@ private constructor(
 
                     override fun visitUrl(url: BetaUrlImageSource) {
                         url.validate()
+                    }
+
+                    override fun visitFile(file: BetaFileImageSource) {
+                        file.validate()
                     }
                 }
             )
@@ -335,6 +361,8 @@ private constructor(
 
                     override fun visitUrl(url: BetaUrlImageSource) = url.validity()
 
+                    override fun visitFile(file: BetaFileImageSource) = file.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -344,15 +372,16 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Source && base64 == other.base64 && url == other.url /* spotless:on */
+            return /* spotless:off */ other is Source && base64 == other.base64 && url == other.url && file == other.file /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(base64, url) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(base64, url, file) /* spotless:on */
 
         override fun toString(): String =
             when {
                 base64 != null -> "Source{base64=$base64}"
                 url != null -> "Source{url=$url}"
+                file != null -> "Source{file=$file}"
                 _json != null -> "Source{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Source")
             }
@@ -362,6 +391,8 @@ private constructor(
             @JvmStatic fun ofBase64(base64: BetaBase64ImageSource) = Source(base64 = base64)
 
             @JvmStatic fun ofUrl(url: BetaUrlImageSource) = Source(url = url)
+
+            @JvmStatic fun ofFile(file: BetaFileImageSource) = Source(file = file)
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */
@@ -370,6 +401,8 @@ private constructor(
             fun visitBase64(base64: BetaBase64ImageSource): T
 
             fun visitUrl(url: BetaUrlImageSource): T
+
+            fun visitFile(file: BetaFileImageSource): T
 
             /**
              * Maps an unknown variant of [Source] to a value of type [T].
@@ -403,6 +436,11 @@ private constructor(
                             Source(url = it, _json = json)
                         } ?: Source(_json = json)
                     }
+                    "file" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaFileImageSource>())?.let {
+                            Source(file = it, _json = json)
+                        } ?: Source(_json = json)
+                    }
                 }
 
                 return Source(_json = json)
@@ -419,6 +457,7 @@ private constructor(
                 when {
                     value.base64 != null -> generator.writeObject(value.base64)
                     value.url != null -> generator.writeObject(value.url)
+                    value.file != null -> generator.writeObject(value.file)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Source")
                 }

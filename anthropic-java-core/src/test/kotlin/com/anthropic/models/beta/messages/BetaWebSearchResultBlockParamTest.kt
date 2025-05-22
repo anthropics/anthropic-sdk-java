@@ -14,14 +14,14 @@ internal class BetaWebSearchResultBlockParamTest {
         val betaWebSearchResultBlockParam =
             BetaWebSearchResultBlockParam.builder()
                 .encryptedContent("encrypted_content")
-                .title("x")
-                .url("x")
+                .title("title")
+                .url("url")
                 .pageAge("page_age")
                 .build()
 
         assertThat(betaWebSearchResultBlockParam.encryptedContent()).isEqualTo("encrypted_content")
-        assertThat(betaWebSearchResultBlockParam.title()).isEqualTo("x")
-        assertThat(betaWebSearchResultBlockParam.url()).isEqualTo("x")
+        assertThat(betaWebSearchResultBlockParam.title()).isEqualTo("title")
+        assertThat(betaWebSearchResultBlockParam.url()).isEqualTo("url")
         assertThat(betaWebSearchResultBlockParam.pageAge()).contains("page_age")
     }
 
@@ -31,8 +31,8 @@ internal class BetaWebSearchResultBlockParamTest {
         val betaWebSearchResultBlockParam =
             BetaWebSearchResultBlockParam.builder()
                 .encryptedContent("encrypted_content")
-                .title("x")
-                .url("x")
+                .title("title")
+                .url("url")
                 .pageAge("page_age")
                 .build()
 

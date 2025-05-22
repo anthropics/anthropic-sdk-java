@@ -24,10 +24,10 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
 
     companion object {
 
-        /** Our most intelligent model */
+        /** High-performance model with early extended thinking */
         @JvmField val CLAUDE_3_7_SONNET_LATEST = of("claude-3-7-sonnet-latest")
 
-        /** Our most intelligent model */
+        /** High-performance model with early extended thinking */
         @JvmField val CLAUDE_3_7_SONNET_20250219 = of("claude-3-7-sonnet-20250219")
 
         /** Fastest and most compact model for near-instant responsiveness */
@@ -36,6 +36,15 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         /** Our fastest model */
         @JvmField val CLAUDE_3_5_HAIKU_20241022 = of("claude-3-5-haiku-20241022")
 
+        /** High-performance model with extended thinking */
+        @JvmField val CLAUDE_SONNET_4_20250514 = of("claude-sonnet-4-20250514")
+
+        /** High-performance model with extended thinking */
+        @JvmField val CLAUDE_SONNET_4_0 = of("claude-sonnet-4-0")
+
+        /** High-performance model with extended thinking */
+        @JvmField val CLAUDE_4_SONNET_20250514 = of("claude-4-sonnet-20250514")
+
         /** Our previous most intelligent model */
         @JvmField val CLAUDE_3_5_SONNET_LATEST = of("claude-3-5-sonnet-latest")
 
@@ -43,6 +52,15 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         @JvmField val CLAUDE_3_5_SONNET_20241022 = of("claude-3-5-sonnet-20241022")
 
         @JvmField val CLAUDE_3_5_SONNET_20240620 = of("claude-3-5-sonnet-20240620")
+
+        /** Our most capable model */
+        @JvmField val CLAUDE_OPUS_4_0 = of("claude-opus-4-0")
+
+        /** Our most capable model */
+        @JvmField val CLAUDE_OPUS_4_20250514 = of("claude-opus-4-20250514")
+
+        /** Our most capable model */
+        @JvmField val CLAUDE_4_OPUS_20250514 = of("claude-4-opus-20250514")
 
         /** Excels at writing and complex tasks */
         @JvmField val CLAUDE_3_OPUS_LATEST = of("claude-3-opus-latest")
@@ -77,19 +95,31 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
 
     /** An enum containing [Model]'s known values. */
     enum class Known {
-        /** Our most intelligent model */
+        /** High-performance model with early extended thinking */
         CLAUDE_3_7_SONNET_LATEST,
-        /** Our most intelligent model */
+        /** High-performance model with early extended thinking */
         CLAUDE_3_7_SONNET_20250219,
         /** Fastest and most compact model for near-instant responsiveness */
         CLAUDE_3_5_HAIKU_LATEST,
         /** Our fastest model */
         CLAUDE_3_5_HAIKU_20241022,
+        /** High-performance model with extended thinking */
+        CLAUDE_SONNET_4_20250514,
+        /** High-performance model with extended thinking */
+        CLAUDE_SONNET_4_0,
+        /** High-performance model with extended thinking */
+        CLAUDE_4_SONNET_20250514,
         /** Our previous most intelligent model */
         CLAUDE_3_5_SONNET_LATEST,
         /** Our previous most intelligent model */
         CLAUDE_3_5_SONNET_20241022,
         CLAUDE_3_5_SONNET_20240620,
+        /** Our most capable model */
+        CLAUDE_OPUS_4_0,
+        /** Our most capable model */
+        CLAUDE_OPUS_4_20250514,
+        /** Our most capable model */
+        CLAUDE_4_OPUS_20250514,
         /** Excels at writing and complex tasks */
         CLAUDE_3_OPUS_LATEST,
         /** Excels at writing and complex tasks */
@@ -121,19 +151,31 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
-        /** Our most intelligent model */
+        /** High-performance model with early extended thinking */
         CLAUDE_3_7_SONNET_LATEST,
-        /** Our most intelligent model */
+        /** High-performance model with early extended thinking */
         CLAUDE_3_7_SONNET_20250219,
         /** Fastest and most compact model for near-instant responsiveness */
         CLAUDE_3_5_HAIKU_LATEST,
         /** Our fastest model */
         CLAUDE_3_5_HAIKU_20241022,
+        /** High-performance model with extended thinking */
+        CLAUDE_SONNET_4_20250514,
+        /** High-performance model with extended thinking */
+        CLAUDE_SONNET_4_0,
+        /** High-performance model with extended thinking */
+        CLAUDE_4_SONNET_20250514,
         /** Our previous most intelligent model */
         CLAUDE_3_5_SONNET_LATEST,
         /** Our previous most intelligent model */
         CLAUDE_3_5_SONNET_20241022,
         CLAUDE_3_5_SONNET_20240620,
+        /** Our most capable model */
+        CLAUDE_OPUS_4_0,
+        /** Our most capable model */
+        CLAUDE_OPUS_4_20250514,
+        /** Our most capable model */
+        CLAUDE_4_OPUS_20250514,
         /** Excels at writing and complex tasks */
         CLAUDE_3_OPUS_LATEST,
         /** Excels at writing and complex tasks */
@@ -170,9 +212,15 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
             CLAUDE_3_7_SONNET_20250219 -> Value.CLAUDE_3_7_SONNET_20250219
             CLAUDE_3_5_HAIKU_LATEST -> Value.CLAUDE_3_5_HAIKU_LATEST
             CLAUDE_3_5_HAIKU_20241022 -> Value.CLAUDE_3_5_HAIKU_20241022
+            CLAUDE_SONNET_4_20250514 -> Value.CLAUDE_SONNET_4_20250514
+            CLAUDE_SONNET_4_0 -> Value.CLAUDE_SONNET_4_0
+            CLAUDE_4_SONNET_20250514 -> Value.CLAUDE_4_SONNET_20250514
             CLAUDE_3_5_SONNET_LATEST -> Value.CLAUDE_3_5_SONNET_LATEST
             CLAUDE_3_5_SONNET_20241022 -> Value.CLAUDE_3_5_SONNET_20241022
             CLAUDE_3_5_SONNET_20240620 -> Value.CLAUDE_3_5_SONNET_20240620
+            CLAUDE_OPUS_4_0 -> Value.CLAUDE_OPUS_4_0
+            CLAUDE_OPUS_4_20250514 -> Value.CLAUDE_OPUS_4_20250514
+            CLAUDE_4_OPUS_20250514 -> Value.CLAUDE_4_OPUS_20250514
             CLAUDE_3_OPUS_LATEST -> Value.CLAUDE_3_OPUS_LATEST
             CLAUDE_3_OPUS_20240229 -> Value.CLAUDE_3_OPUS_20240229
             CLAUDE_3_SONNET_20240229 -> Value.CLAUDE_3_SONNET_20240229
@@ -196,9 +244,15 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
             CLAUDE_3_7_SONNET_20250219 -> Known.CLAUDE_3_7_SONNET_20250219
             CLAUDE_3_5_HAIKU_LATEST -> Known.CLAUDE_3_5_HAIKU_LATEST
             CLAUDE_3_5_HAIKU_20241022 -> Known.CLAUDE_3_5_HAIKU_20241022
+            CLAUDE_SONNET_4_20250514 -> Known.CLAUDE_SONNET_4_20250514
+            CLAUDE_SONNET_4_0 -> Known.CLAUDE_SONNET_4_0
+            CLAUDE_4_SONNET_20250514 -> Known.CLAUDE_4_SONNET_20250514
             CLAUDE_3_5_SONNET_LATEST -> Known.CLAUDE_3_5_SONNET_LATEST
             CLAUDE_3_5_SONNET_20241022 -> Known.CLAUDE_3_5_SONNET_20241022
             CLAUDE_3_5_SONNET_20240620 -> Known.CLAUDE_3_5_SONNET_20240620
+            CLAUDE_OPUS_4_0 -> Known.CLAUDE_OPUS_4_0
+            CLAUDE_OPUS_4_20250514 -> Known.CLAUDE_OPUS_4_20250514
+            CLAUDE_4_OPUS_20250514 -> Known.CLAUDE_4_OPUS_20250514
             CLAUDE_3_OPUS_LATEST -> Known.CLAUDE_3_OPUS_LATEST
             CLAUDE_3_OPUS_20240229 -> Known.CLAUDE_3_OPUS_20240229
             CLAUDE_3_SONNET_20240229 -> Known.CLAUDE_3_SONNET_20240229

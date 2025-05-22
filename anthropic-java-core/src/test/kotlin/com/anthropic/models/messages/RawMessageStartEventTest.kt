@@ -42,6 +42,7 @@ internal class RawMessageStartEventTest {
                                 .serverToolUse(
                                     ServerToolUsage.builder().webSearchRequests(0L).build()
                                 )
+                                .serviceTier(Usage.ServiceTier.STANDARD)
                                 .build()
                         )
                         .build()
@@ -76,6 +77,7 @@ internal class RawMessageStartEventTest {
                             .inputTokens(2095L)
                             .outputTokens(503L)
                             .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                            .serviceTier(Usage.ServiceTier.STANDARD)
                             .build()
                     )
                     .build()
@@ -116,6 +118,7 @@ internal class RawMessageStartEventTest {
                                 .serverToolUse(
                                     ServerToolUsage.builder().webSearchRequests(0L).build()
                                 )
+                                .serviceTier(Usage.ServiceTier.STANDARD)
                                 .build()
                         )
                         .build()

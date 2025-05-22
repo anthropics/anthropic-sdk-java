@@ -150,6 +150,14 @@ private constructor(
     fun model(): Model = body.model()
 
     /**
+     * MCP servers to be utilized in this request
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun mcpServers(): Optional<List<BetaRequestMcpServerUrlDefinition>> = body.mcpServers()
+
+    /**
      * System prompt.
      *
      * A system prompt is a way of providing context and instructions to Claude, such as specifying
@@ -270,6 +278,13 @@ private constructor(
     fun _model(): JsonField<Model> = body._model()
 
     /**
+     * Returns the raw JSON value of [mcpServers].
+     *
+     * Unlike [mcpServers], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _mcpServers(): JsonField<List<BetaRequestMcpServerUrlDefinition>> = body._mcpServers()
+
+    /**
      * Returns the raw JSON value of [system].
      *
      * Unlike [system], this method doesn't throw if the JSON field has an unexpected type.
@@ -366,9 +381,9 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [messages]
          * - [model]
+         * - [mcpServers]
          * - [system]
          * - [thinking]
-         * - [toolChoice]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -551,6 +566,31 @@ private constructor(
          * is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun model(value: String) = apply { body.model(value) }
+
+        /** MCP servers to be utilized in this request */
+        fun mcpServers(mcpServers: List<BetaRequestMcpServerUrlDefinition>) = apply {
+            body.mcpServers(mcpServers)
+        }
+
+        /**
+         * Sets [Builder.mcpServers] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.mcpServers] with a well-typed
+         * `List<BetaRequestMcpServerUrlDefinition>` value instead. This method is primarily for
+         * setting the field to an undocumented or not yet supported value.
+         */
+        fun mcpServers(mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>) = apply {
+            body.mcpServers(mcpServers)
+        }
+
+        /**
+         * Adds a single [BetaRequestMcpServerUrlDefinition] to [mcpServers].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addMcpServer(mcpServer: BetaRequestMcpServerUrlDefinition) = apply {
+            body.addMcpServer(mcpServer)
+        }
 
         /**
          * System prompt.
@@ -786,10 +826,26 @@ private constructor(
 
         /**
          * Alias for calling [addTool] with
+         * `Tool.ofBetaToolTextEditor20250429(betaToolTextEditor20250429)`.
+         */
+        fun addTool(betaToolTextEditor20250429: BetaToolTextEditor20250429) = apply {
+            body.addTool(betaToolTextEditor20250429)
+        }
+
+        /**
+         * Alias for calling [addTool] with
          * `Tool.ofBetaWebSearchTool20250305(betaWebSearchTool20250305)`.
          */
         fun addTool(betaWebSearchTool20250305: BetaWebSearchTool20250305) = apply {
             body.addTool(betaWebSearchTool20250305)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `Tool.ofBetaCodeExecutionTool20250522(betaCodeExecutionTool20250522)`.
+         */
+        fun addTool(betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522) = apply {
+            body.addTool(betaCodeExecutionTool20250522)
         }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
@@ -947,6 +1003,7 @@ private constructor(
     private constructor(
         private val messages: JsonField<List<BetaMessageParam>>,
         private val model: JsonField<Model>,
+        private val mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>,
         private val system: JsonField<System>,
         private val thinking: JsonField<BetaThinkingConfigParam>,
         private val toolChoice: JsonField<BetaToolChoice>,
@@ -960,6 +1017,9 @@ private constructor(
             @ExcludeMissing
             messages: JsonField<List<BetaMessageParam>> = JsonMissing.of(),
             @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
+            @JsonProperty("mcp_servers")
+            @ExcludeMissing
+            mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>> = JsonMissing.of(),
             @JsonProperty("system") @ExcludeMissing system: JsonField<System> = JsonMissing.of(),
             @JsonProperty("thinking")
             @ExcludeMissing
@@ -968,7 +1028,7 @@ private constructor(
             @ExcludeMissing
             toolChoice: JsonField<BetaToolChoice> = JsonMissing.of(),
             @JsonProperty("tools") @ExcludeMissing tools: JsonField<List<Tool>> = JsonMissing.of(),
-        ) : this(messages, model, system, thinking, toolChoice, tools, mutableMapOf())
+        ) : this(messages, model, mcpServers, system, thinking, toolChoice, tools, mutableMapOf())
 
         /**
          * Input messages.
@@ -1067,6 +1127,15 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun model(): Model = model.getRequired("model")
+
+        /**
+         * MCP servers to be utilized in this request
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun mcpServers(): Optional<List<BetaRequestMcpServerUrlDefinition>> =
+            mcpServers.getOptional("mcp_servers")
 
         /**
          * System prompt.
@@ -1192,6 +1261,15 @@ private constructor(
         @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
 
         /**
+         * Returns the raw JSON value of [mcpServers].
+         *
+         * Unlike [mcpServers], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("mcp_servers")
+        @ExcludeMissing
+        fun _mcpServers(): JsonField<List<BetaRequestMcpServerUrlDefinition>> = mcpServers
+
+        /**
          * Returns the raw JSON value of [system].
          *
          * Unlike [system], this method doesn't throw if the JSON field has an unexpected type.
@@ -1254,6 +1332,8 @@ private constructor(
 
             private var messages: JsonField<MutableList<BetaMessageParam>>? = null
             private var model: JsonField<Model>? = null
+            private var mcpServers: JsonField<MutableList<BetaRequestMcpServerUrlDefinition>>? =
+                null
             private var system: JsonField<System> = JsonMissing.of()
             private var thinking: JsonField<BetaThinkingConfigParam> = JsonMissing.of()
             private var toolChoice: JsonField<BetaToolChoice> = JsonMissing.of()
@@ -1264,6 +1344,7 @@ private constructor(
             internal fun from(body: Body) = apply {
                 messages = body.messages.map { it.toMutableList() }
                 model = body.model
+                mcpServers = body.mcpServers.map { it.toMutableList() }
                 system = body.system
                 thinking = body.thinking
                 toolChoice = body.toolChoice
@@ -1476,6 +1557,33 @@ private constructor(
              * value.
              */
             fun model(value: String) = model(Model.of(value))
+
+            /** MCP servers to be utilized in this request */
+            fun mcpServers(mcpServers: List<BetaRequestMcpServerUrlDefinition>) =
+                mcpServers(JsonField.of(mcpServers))
+
+            /**
+             * Sets [Builder.mcpServers] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.mcpServers] with a well-typed
+             * `List<BetaRequestMcpServerUrlDefinition>` value instead. This method is primarily for
+             * setting the field to an undocumented or not yet supported value.
+             */
+            fun mcpServers(mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>) = apply {
+                this.mcpServers = mcpServers.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [BetaRequestMcpServerUrlDefinition] to [mcpServers].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addMcpServer(mcpServer: BetaRequestMcpServerUrlDefinition) = apply {
+                mcpServers =
+                    (mcpServers ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("mcpServers", it).add(mcpServer)
+                    }
+            }
 
             /**
              * System prompt.
@@ -1722,10 +1830,24 @@ private constructor(
 
             /**
              * Alias for calling [addTool] with
+             * `Tool.ofBetaToolTextEditor20250429(betaToolTextEditor20250429)`.
+             */
+            fun addTool(betaToolTextEditor20250429: BetaToolTextEditor20250429) =
+                addTool(Tool.ofBetaToolTextEditor20250429(betaToolTextEditor20250429))
+
+            /**
+             * Alias for calling [addTool] with
              * `Tool.ofBetaWebSearchTool20250305(betaWebSearchTool20250305)`.
              */
             fun addTool(betaWebSearchTool20250305: BetaWebSearchTool20250305) =
                 addTool(Tool.ofBetaWebSearchTool20250305(betaWebSearchTool20250305))
+
+            /**
+             * Alias for calling [addTool] with
+             * `Tool.ofBetaCodeExecutionTool20250522(betaCodeExecutionTool20250522)`.
+             */
+            fun addTool(betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522) =
+                addTool(Tool.ofBetaCodeExecutionTool20250522(betaCodeExecutionTool20250522))
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -1763,6 +1885,7 @@ private constructor(
                 Body(
                     checkRequired("messages", messages).map { it.toImmutable() },
                     checkRequired("model", model),
+                    (mcpServers ?: JsonMissing.of()).map { it.toImmutable() },
                     system,
                     thinking,
                     toolChoice,
@@ -1780,6 +1903,7 @@ private constructor(
 
             messages().forEach { it.validate() }
             model()
+            mcpServers().ifPresent { it.forEach { it.validate() } }
             system().ifPresent { it.validate() }
             thinking().ifPresent { it.validate() }
             toolChoice().ifPresent { it.validate() }
@@ -1805,6 +1929,7 @@ private constructor(
         internal fun validity(): Int =
             (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (model.asKnown().isPresent) 1 else 0) +
+                (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (system.asKnown().getOrNull()?.validity() ?: 0) +
                 (thinking.asKnown().getOrNull()?.validity() ?: 0) +
                 (toolChoice.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1815,17 +1940,17 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Body && messages == other.messages && model == other.model && system == other.system && thinking == other.thinking && toolChoice == other.toolChoice && tools == other.tools && additionalProperties == other.additionalProperties /* spotless:on */
+            return /* spotless:off */ other is Body && messages == other.messages && model == other.model && mcpServers == other.mcpServers && system == other.system && thinking == other.thinking && toolChoice == other.toolChoice && tools == other.tools && additionalProperties == other.additionalProperties /* spotless:on */
         }
 
         /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(messages, model, system, thinking, toolChoice, tools, additionalProperties) }
+        private val hashCode: Int by lazy { Objects.hash(messages, model, mcpServers, system, thinking, toolChoice, tools, additionalProperties) }
         /* spotless:on */
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{messages=$messages, model=$model, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
+            "Body{messages=$messages, model=$model, mcpServers=$mcpServers, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
     }
 
     /**
@@ -2024,7 +2149,9 @@ private constructor(
         private val betaToolComputerUse20250124: BetaToolComputerUse20250124? = null,
         private val betaToolBash20250124: BetaToolBash20250124? = null,
         private val betaToolTextEditor20250124: BetaToolTextEditor20250124? = null,
+        private val betaToolTextEditor20250429: BetaToolTextEditor20250429? = null,
         private val betaWebSearchTool20250305: BetaWebSearchTool20250305? = null,
+        private val betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -2048,8 +2175,14 @@ private constructor(
         fun betaToolTextEditor20250124(): Optional<BetaToolTextEditor20250124> =
             Optional.ofNullable(betaToolTextEditor20250124)
 
+        fun betaToolTextEditor20250429(): Optional<BetaToolTextEditor20250429> =
+            Optional.ofNullable(betaToolTextEditor20250429)
+
         fun betaWebSearchTool20250305(): Optional<BetaWebSearchTool20250305> =
             Optional.ofNullable(betaWebSearchTool20250305)
+
+        fun betaCodeExecutionTool20250522(): Optional<BetaCodeExecutionTool20250522> =
+            Optional.ofNullable(betaCodeExecutionTool20250522)
 
         fun isBeta(): Boolean = beta != null
 
@@ -2065,7 +2198,11 @@ private constructor(
 
         fun isBetaToolTextEditor20250124(): Boolean = betaToolTextEditor20250124 != null
 
+        fun isBetaToolTextEditor20250429(): Boolean = betaToolTextEditor20250429 != null
+
         fun isBetaWebSearchTool20250305(): Boolean = betaWebSearchTool20250305 != null
+
+        fun isBetaCodeExecutionTool20250522(): Boolean = betaCodeExecutionTool20250522 != null
 
         fun asBeta(): BetaTool = beta.getOrThrow("beta")
 
@@ -2087,8 +2224,14 @@ private constructor(
         fun asBetaToolTextEditor20250124(): BetaToolTextEditor20250124 =
             betaToolTextEditor20250124.getOrThrow("betaToolTextEditor20250124")
 
+        fun asBetaToolTextEditor20250429(): BetaToolTextEditor20250429 =
+            betaToolTextEditor20250429.getOrThrow("betaToolTextEditor20250429")
+
         fun asBetaWebSearchTool20250305(): BetaWebSearchTool20250305 =
             betaWebSearchTool20250305.getOrThrow("betaWebSearchTool20250305")
+
+        fun asBetaCodeExecutionTool20250522(): BetaCodeExecutionTool20250522 =
+            betaCodeExecutionTool20250522.getOrThrow("betaCodeExecutionTool20250522")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -2107,8 +2250,12 @@ private constructor(
                     visitor.visitBetaToolBash20250124(betaToolBash20250124)
                 betaToolTextEditor20250124 != null ->
                     visitor.visitBetaToolTextEditor20250124(betaToolTextEditor20250124)
+                betaToolTextEditor20250429 != null ->
+                    visitor.visitBetaToolTextEditor20250429(betaToolTextEditor20250429)
                 betaWebSearchTool20250305 != null ->
                     visitor.visitBetaWebSearchTool20250305(betaWebSearchTool20250305)
+                betaCodeExecutionTool20250522 != null ->
+                    visitor.visitBetaCodeExecutionTool20250522(betaCodeExecutionTool20250522)
                 else -> visitor.unknown(_json)
             }
 
@@ -2161,10 +2308,22 @@ private constructor(
                         betaToolTextEditor20250124.validate()
                     }
 
+                    override fun visitBetaToolTextEditor20250429(
+                        betaToolTextEditor20250429: BetaToolTextEditor20250429
+                    ) {
+                        betaToolTextEditor20250429.validate()
+                    }
+
                     override fun visitBetaWebSearchTool20250305(
                         betaWebSearchTool20250305: BetaWebSearchTool20250305
                     ) {
                         betaWebSearchTool20250305.validate()
+                    }
+
+                    override fun visitBetaCodeExecutionTool20250522(
+                        betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
+                    ) {
+                        betaCodeExecutionTool20250522.validate()
                     }
                 }
             )
@@ -2215,9 +2374,17 @@ private constructor(
                         betaToolTextEditor20250124: BetaToolTextEditor20250124
                     ) = betaToolTextEditor20250124.validity()
 
+                    override fun visitBetaToolTextEditor20250429(
+                        betaToolTextEditor20250429: BetaToolTextEditor20250429
+                    ) = betaToolTextEditor20250429.validity()
+
                     override fun visitBetaWebSearchTool20250305(
                         betaWebSearchTool20250305: BetaWebSearchTool20250305
                     ) = betaWebSearchTool20250305.validity()
+
+                    override fun visitBetaCodeExecutionTool20250522(
+                        betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
+                    ) = betaCodeExecutionTool20250522.validity()
 
                     override fun unknown(json: JsonValue?) = 0
                 }
@@ -2228,10 +2395,10 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Tool && beta == other.beta && betaToolComputerUse20241022 == other.betaToolComputerUse20241022 && betaToolBash20241022 == other.betaToolBash20241022 && betaToolTextEditor20241022 == other.betaToolTextEditor20241022 && betaToolComputerUse20250124 == other.betaToolComputerUse20250124 && betaToolBash20250124 == other.betaToolBash20250124 && betaToolTextEditor20250124 == other.betaToolTextEditor20250124 && betaWebSearchTool20250305 == other.betaWebSearchTool20250305 /* spotless:on */
+            return /* spotless:off */ other is Tool && beta == other.beta && betaToolComputerUse20241022 == other.betaToolComputerUse20241022 && betaToolBash20241022 == other.betaToolBash20241022 && betaToolTextEditor20241022 == other.betaToolTextEditor20241022 && betaToolComputerUse20250124 == other.betaToolComputerUse20250124 && betaToolBash20250124 == other.betaToolBash20250124 && betaToolTextEditor20250124 == other.betaToolTextEditor20250124 && betaToolTextEditor20250429 == other.betaToolTextEditor20250429 && betaWebSearchTool20250305 == other.betaWebSearchTool20250305 && betaCodeExecutionTool20250522 == other.betaCodeExecutionTool20250522 /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(beta, betaToolComputerUse20241022, betaToolBash20241022, betaToolTextEditor20241022, betaToolComputerUse20250124, betaToolBash20250124, betaToolTextEditor20250124, betaWebSearchTool20250305) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(beta, betaToolComputerUse20241022, betaToolBash20241022, betaToolTextEditor20241022, betaToolComputerUse20250124, betaToolBash20250124, betaToolTextEditor20250124, betaToolTextEditor20250429, betaWebSearchTool20250305, betaCodeExecutionTool20250522) /* spotless:on */
 
         override fun toString(): String =
             when {
@@ -2246,8 +2413,12 @@ private constructor(
                 betaToolBash20250124 != null -> "Tool{betaToolBash20250124=$betaToolBash20250124}"
                 betaToolTextEditor20250124 != null ->
                     "Tool{betaToolTextEditor20250124=$betaToolTextEditor20250124}"
+                betaToolTextEditor20250429 != null ->
+                    "Tool{betaToolTextEditor20250429=$betaToolTextEditor20250429}"
                 betaWebSearchTool20250305 != null ->
                     "Tool{betaWebSearchTool20250305=$betaWebSearchTool20250305}"
+                betaCodeExecutionTool20250522 != null ->
+                    "Tool{betaCodeExecutionTool20250522=$betaCodeExecutionTool20250522}"
                 _json != null -> "Tool{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Tool")
             }
@@ -2285,8 +2456,18 @@ private constructor(
             ) = Tool(betaToolTextEditor20250124 = betaToolTextEditor20250124)
 
             @JvmStatic
+            fun ofBetaToolTextEditor20250429(
+                betaToolTextEditor20250429: BetaToolTextEditor20250429
+            ) = Tool(betaToolTextEditor20250429 = betaToolTextEditor20250429)
+
+            @JvmStatic
             fun ofBetaWebSearchTool20250305(betaWebSearchTool20250305: BetaWebSearchTool20250305) =
                 Tool(betaWebSearchTool20250305 = betaWebSearchTool20250305)
+
+            @JvmStatic
+            fun ofBetaCodeExecutionTool20250522(
+                betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
+            ) = Tool(betaCodeExecutionTool20250522 = betaCodeExecutionTool20250522)
         }
 
         /** An interface that defines how to map each variant of [Tool] to a value of type [T]. */
@@ -2314,8 +2495,16 @@ private constructor(
                 betaToolTextEditor20250124: BetaToolTextEditor20250124
             ): T
 
+            fun visitBetaToolTextEditor20250429(
+                betaToolTextEditor20250429: BetaToolTextEditor20250429
+            ): T
+
             fun visitBetaWebSearchTool20250305(
                 betaWebSearchTool20250305: BetaWebSearchTool20250305
+            ): T
+
+            fun visitBetaCodeExecutionTool20250522(
+                betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
             ): T
 
             /**
@@ -2356,9 +2545,13 @@ private constructor(
                             },
                             tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20250124>())
                                 ?.let { Tool(betaToolTextEditor20250124 = it, _json = json) },
+                            tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20250429>())
+                                ?.let { Tool(betaToolTextEditor20250429 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaWebSearchTool20250305>())?.let {
                                 Tool(betaWebSearchTool20250305 = it, _json = json)
                             },
+                            tryDeserialize(node, jacksonTypeRef<BetaCodeExecutionTool20250522>())
+                                ?.let { Tool(betaCodeExecutionTool20250522 = it, _json = json) },
                         )
                         .filterNotNull()
                         .allMaxBy { it.validity() }
@@ -2397,8 +2590,12 @@ private constructor(
                         generator.writeObject(value.betaToolBash20250124)
                     value.betaToolTextEditor20250124 != null ->
                         generator.writeObject(value.betaToolTextEditor20250124)
+                    value.betaToolTextEditor20250429 != null ->
+                        generator.writeObject(value.betaToolTextEditor20250429)
                     value.betaWebSearchTool20250305 != null ->
                         generator.writeObject(value.betaWebSearchTool20250305)
+                    value.betaCodeExecutionTool20250522 != null ->
+                        generator.writeObject(value.betaCodeExecutionTool20250522)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Tool")
                 }

@@ -36,6 +36,18 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
 
         @JvmField val OUTPUT_128K_2025_02_19 = of("output-128k-2025-02-19")
 
+        @JvmField val FILES_API_2025_04_14 = of("files-api-2025-04-14")
+
+        @JvmField val MCP_CLIENT_2025_04_04 = of("mcp-client-2025-04-04")
+
+        @JvmField val DEV_FULL_THINKING_2025_05_14 = of("dev-full-thinking-2025-05-14")
+
+        @JvmField val INTERLEAVED_THINKING_2025_05_14 = of("interleaved-thinking-2025-05-14")
+
+        @JvmField val CODE_EXECUTION_2025_05_22 = of("code-execution-2025-05-22")
+
+        @JvmField val EXTENDED_CACHE_TTL_2025_04_11 = of("extended-cache-ttl-2025-04-11")
+
         @JvmStatic fun of(value: String) = AnthropicBeta(JsonField.of(value))
     }
 
@@ -49,6 +61,12 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         TOKEN_COUNTING_2024_11_01,
         TOKEN_EFFICIENT_TOOLS_2025_02_19,
         OUTPUT_128K_2025_02_19,
+        FILES_API_2025_04_14,
+        MCP_CLIENT_2025_04_04,
+        DEV_FULL_THINKING_2025_05_14,
+        INTERLEAVED_THINKING_2025_05_14,
+        CODE_EXECUTION_2025_05_22,
+        EXTENDED_CACHE_TTL_2025_04_11,
     }
 
     /**
@@ -69,6 +87,12 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         TOKEN_COUNTING_2024_11_01,
         TOKEN_EFFICIENT_TOOLS_2025_02_19,
         OUTPUT_128K_2025_02_19,
+        FILES_API_2025_04_14,
+        MCP_CLIENT_2025_04_04,
+        DEV_FULL_THINKING_2025_05_14,
+        INTERLEAVED_THINKING_2025_05_14,
+        CODE_EXECUTION_2025_05_22,
+        EXTENDED_CACHE_TTL_2025_04_11,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
          */
@@ -92,6 +116,12 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             TOKEN_COUNTING_2024_11_01 -> Value.TOKEN_COUNTING_2024_11_01
             TOKEN_EFFICIENT_TOOLS_2025_02_19 -> Value.TOKEN_EFFICIENT_TOOLS_2025_02_19
             OUTPUT_128K_2025_02_19 -> Value.OUTPUT_128K_2025_02_19
+            FILES_API_2025_04_14 -> Value.FILES_API_2025_04_14
+            MCP_CLIENT_2025_04_04 -> Value.MCP_CLIENT_2025_04_04
+            DEV_FULL_THINKING_2025_05_14 -> Value.DEV_FULL_THINKING_2025_05_14
+            INTERLEAVED_THINKING_2025_05_14 -> Value.INTERLEAVED_THINKING_2025_05_14
+            CODE_EXECUTION_2025_05_22 -> Value.CODE_EXECUTION_2025_05_22
+            EXTENDED_CACHE_TTL_2025_04_11 -> Value.EXTENDED_CACHE_TTL_2025_04_11
             else -> Value._UNKNOWN
         }
 
@@ -113,6 +143,12 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             TOKEN_COUNTING_2024_11_01 -> Known.TOKEN_COUNTING_2024_11_01
             TOKEN_EFFICIENT_TOOLS_2025_02_19 -> Known.TOKEN_EFFICIENT_TOOLS_2025_02_19
             OUTPUT_128K_2025_02_19 -> Known.OUTPUT_128K_2025_02_19
+            FILES_API_2025_04_14 -> Known.FILES_API_2025_04_14
+            MCP_CLIENT_2025_04_04 -> Known.MCP_CLIENT_2025_04_04
+            DEV_FULL_THINKING_2025_05_14 -> Known.DEV_FULL_THINKING_2025_05_14
+            INTERLEAVED_THINKING_2025_05_14 -> Known.INTERLEAVED_THINKING_2025_05_14
+            CODE_EXECUTION_2025_05_22 -> Known.CODE_EXECUTION_2025_05_22
+            EXTENDED_CACHE_TTL_2025_04_11 -> Known.EXTENDED_CACHE_TTL_2025_04_11
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }
 

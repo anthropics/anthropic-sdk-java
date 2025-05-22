@@ -18,6 +18,7 @@ internal class UsageTest {
                 .inputTokens(2095L)
                 .outputTokens(503L)
                 .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                .serviceTier(Usage.ServiceTier.STANDARD)
                 .build()
 
         assertThat(usage.cacheCreationInputTokens()).contains(2051L)
@@ -26,6 +27,7 @@ internal class UsageTest {
         assertThat(usage.outputTokens()).isEqualTo(503L)
         assertThat(usage.serverToolUse())
             .contains(ServerToolUsage.builder().webSearchRequests(0L).build())
+        assertThat(usage.serviceTier()).contains(Usage.ServiceTier.STANDARD)
     }
 
     @Test
@@ -38,6 +40,7 @@ internal class UsageTest {
                 .inputTokens(2095L)
                 .outputTokens(503L)
                 .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                .serviceTier(Usage.ServiceTier.STANDARD)
                 .build()
 
         val roundtrippedUsage =
