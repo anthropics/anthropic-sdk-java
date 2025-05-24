@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.1 (2025-05-24)
+
+Full Changelog: [v2.0.0...v2.0.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.0.0...v2.0.1)
+
+### Chores
+
+* **internal:** fix release workflows ([a5287dc](https://github.com/anthropics/anthropic-sdk-java/commit/a5287dc4ffaad0e02fed166b63e4635448666247))
+
 ## 2.0.0 (2025-05-22)
 
 Full Changelog: [v1.4.0...v2.0.0](https://github.com/anthropics/anthropic-sdk-java/compare/v1.4.0...v2.0.0)
