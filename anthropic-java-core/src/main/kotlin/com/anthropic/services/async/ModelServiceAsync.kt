@@ -8,7 +8,6 @@ import com.anthropic.models.models.ModelInfo
 import com.anthropic.models.models.ModelListPageAsync
 import com.anthropic.models.models.ModelListParams
 import com.anthropic.models.models.ModelRetrieveParams
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 
 interface ModelServiceAsync {
@@ -85,12 +84,10 @@ interface ModelServiceAsync {
          * Returns a raw HTTP response for `get /v1/models/{model_id}`, but is otherwise the same as
          * [ModelServiceAsync.retrieve].
          */
-        @MustBeClosed
         fun retrieve(modelId: String): CompletableFuture<HttpResponseFor<ModelInfo>> =
             retrieve(modelId, ModelRetrieveParams.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             modelId: String,
             params: ModelRetrieveParams = ModelRetrieveParams.none(),
@@ -99,7 +96,6 @@ interface ModelServiceAsync {
             retrieve(params.toBuilder().modelId(modelId).build(), requestOptions)
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             modelId: String,
             params: ModelRetrieveParams = ModelRetrieveParams.none(),
@@ -107,19 +103,16 @@ interface ModelServiceAsync {
             retrieve(modelId, params, RequestOptions.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             params: ModelRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ModelInfo>>
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(params: ModelRetrieveParams): CompletableFuture<HttpResponseFor<ModelInfo>> =
             retrieve(params, RequestOptions.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             modelId: String,
             requestOptions: RequestOptions,
@@ -130,26 +123,22 @@ interface ModelServiceAsync {
          * Returns a raw HTTP response for `get /v1/models`, but is otherwise the same as
          * [ModelServiceAsync.list].
          */
-        @MustBeClosed
         fun list(): CompletableFuture<HttpResponseFor<ModelListPageAsync>> =
             list(ModelListParams.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: ModelListParams = ModelListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ModelListPageAsync>>
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: ModelListParams = ModelListParams.none()
         ): CompletableFuture<HttpResponseFor<ModelListPageAsync>> =
             list(params, RequestOptions.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<ModelListPageAsync>> =

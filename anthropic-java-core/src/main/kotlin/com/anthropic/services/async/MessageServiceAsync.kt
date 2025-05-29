@@ -87,12 +87,10 @@ interface MessageServiceAsync {
          * Returns a raw HTTP response for `post /v1/messages`, but is otherwise the same as
          * [MessageServiceAsync.create].
          */
-        @MustBeClosed
         fun create(params: MessageCreateParams): CompletableFuture<HttpResponseFor<Message>> =
             create(params, RequestOptions.none())
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             params: MessageCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -119,14 +117,12 @@ interface MessageServiceAsync {
          * Returns a raw HTTP response for `post /v1/messages/count_tokens`, but is otherwise the
          * same as [MessageServiceAsync.countTokens].
          */
-        @MustBeClosed
         fun countTokens(
             params: MessageCountTokensParams
         ): CompletableFuture<HttpResponseFor<MessageTokensCount>> =
             countTokens(params, RequestOptions.none())
 
         /** @see [countTokens] */
-        @MustBeClosed
         fun countTokens(
             params: MessageCountTokensParams,
             requestOptions: RequestOptions = RequestOptions.none(),

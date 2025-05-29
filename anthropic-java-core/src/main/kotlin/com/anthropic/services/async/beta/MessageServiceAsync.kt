@@ -89,12 +89,10 @@ interface MessageServiceAsync {
          * Returns a raw HTTP response for `post /v1/messages?beta=true`, but is otherwise the same
          * as [MessageServiceAsync.create].
          */
-        @MustBeClosed
         fun create(params: MessageCreateParams): CompletableFuture<HttpResponseFor<BetaMessage>> =
             create(params, RequestOptions.none())
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             params: MessageCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -121,14 +119,12 @@ interface MessageServiceAsync {
          * Returns a raw HTTP response for `post /v1/messages/count_tokens?beta=true`, but is
          * otherwise the same as [MessageServiceAsync.countTokens].
          */
-        @MustBeClosed
         fun countTokens(
             params: MessageCountTokensParams
         ): CompletableFuture<HttpResponseFor<BetaMessageTokensCount>> =
             countTokens(params, RequestOptions.none())
 
         /** @see [countTokens] */
-        @MustBeClosed
         fun countTokens(
             params: MessageCountTokensParams,
             requestOptions: RequestOptions = RequestOptions.none(),

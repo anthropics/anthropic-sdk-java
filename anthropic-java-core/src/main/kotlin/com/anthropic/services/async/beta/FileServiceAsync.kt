@@ -13,7 +13,6 @@ import com.anthropic.models.beta.files.FileListParams
 import com.anthropic.models.beta.files.FileMetadata
 import com.anthropic.models.beta.files.FileRetrieveMetadataParams
 import com.anthropic.models.beta.files.FileUploadParams
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 
 interface FileServiceAsync {
@@ -73,12 +72,10 @@ interface FileServiceAsync {
         delete(fileId, FileDeleteParams.none(), requestOptions)
 
     /** Download File */
-    @MustBeClosed
     fun download(fileId: String): CompletableFuture<HttpResponse> =
         download(fileId, FileDownloadParams.none())
 
     /** @see [download] */
-    @MustBeClosed
     fun download(
         fileId: String,
         params: FileDownloadParams = FileDownloadParams.none(),
@@ -87,26 +84,22 @@ interface FileServiceAsync {
         download(params.toBuilder().fileId(fileId).build(), requestOptions)
 
     /** @see [download] */
-    @MustBeClosed
     fun download(
         fileId: String,
         params: FileDownloadParams = FileDownloadParams.none(),
     ): CompletableFuture<HttpResponse> = download(fileId, params, RequestOptions.none())
 
     /** @see [download] */
-    @MustBeClosed
     fun download(
         params: FileDownloadParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<HttpResponse>
 
     /** @see [download] */
-    @MustBeClosed
     fun download(params: FileDownloadParams): CompletableFuture<HttpResponse> =
         download(params, RequestOptions.none())
 
     /** @see [download] */
-    @MustBeClosed
     fun download(fileId: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
         download(fileId, FileDownloadParams.none(), requestOptions)
 
@@ -162,26 +155,22 @@ interface FileServiceAsync {
          * Returns a raw HTTP response for `get /v1/files?beta=true`, but is otherwise the same as
          * [FileServiceAsync.list].
          */
-        @MustBeClosed
         fun list(): CompletableFuture<HttpResponseFor<FileListPageAsync>> =
             list(FileListParams.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: FileListParams = FileListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<FileListPageAsync>>
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: FileListParams = FileListParams.none()
         ): CompletableFuture<HttpResponseFor<FileListPageAsync>> =
             list(params, RequestOptions.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<FileListPageAsync>> =
@@ -191,12 +180,10 @@ interface FileServiceAsync {
          * Returns a raw HTTP response for `delete /v1/files/{file_id}?beta=true`, but is otherwise
          * the same as [FileServiceAsync.delete].
          */
-        @MustBeClosed
         fun delete(fileId: String): CompletableFuture<HttpResponseFor<DeletedFile>> =
             delete(fileId, FileDeleteParams.none())
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(
             fileId: String,
             params: FileDeleteParams = FileDeleteParams.none(),
@@ -205,7 +192,6 @@ interface FileServiceAsync {
             delete(params.toBuilder().fileId(fileId).build(), requestOptions)
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(
             fileId: String,
             params: FileDeleteParams = FileDeleteParams.none(),
@@ -213,19 +199,16 @@ interface FileServiceAsync {
             delete(fileId, params, RequestOptions.none())
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(
             params: FileDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<DeletedFile>>
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(params: FileDeleteParams): CompletableFuture<HttpResponseFor<DeletedFile>> =
             delete(params, RequestOptions.none())
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(
             fileId: String,
             requestOptions: RequestOptions,
@@ -236,12 +219,10 @@ interface FileServiceAsync {
          * Returns a raw HTTP response for `get /v1/files/{file_id}/content?beta=true`, but is
          * otherwise the same as [FileServiceAsync.download].
          */
-        @MustBeClosed
         fun download(fileId: String): CompletableFuture<HttpResponse> =
             download(fileId, FileDownloadParams.none())
 
         /** @see [download] */
-        @MustBeClosed
         fun download(
             fileId: String,
             params: FileDownloadParams = FileDownloadParams.none(),
@@ -250,26 +231,22 @@ interface FileServiceAsync {
             download(params.toBuilder().fileId(fileId).build(), requestOptions)
 
         /** @see [download] */
-        @MustBeClosed
         fun download(
             fileId: String,
             params: FileDownloadParams = FileDownloadParams.none(),
         ): CompletableFuture<HttpResponse> = download(fileId, params, RequestOptions.none())
 
         /** @see [download] */
-        @MustBeClosed
         fun download(
             params: FileDownloadParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponse>
 
         /** @see [download] */
-        @MustBeClosed
         fun download(params: FileDownloadParams): CompletableFuture<HttpResponse> =
             download(params, RequestOptions.none())
 
         /** @see [download] */
-        @MustBeClosed
         fun download(
             fileId: String,
             requestOptions: RequestOptions,
@@ -280,12 +257,10 @@ interface FileServiceAsync {
          * Returns a raw HTTP response for `get /v1/files/{file_id}?beta=true`, but is otherwise the
          * same as [FileServiceAsync.retrieveMetadata].
          */
-        @MustBeClosed
         fun retrieveMetadata(fileId: String): CompletableFuture<HttpResponseFor<FileMetadata>> =
             retrieveMetadata(fileId, FileRetrieveMetadataParams.none())
 
         /** @see [retrieveMetadata] */
-        @MustBeClosed
         fun retrieveMetadata(
             fileId: String,
             params: FileRetrieveMetadataParams = FileRetrieveMetadataParams.none(),
@@ -294,7 +269,6 @@ interface FileServiceAsync {
             retrieveMetadata(params.toBuilder().fileId(fileId).build(), requestOptions)
 
         /** @see [retrieveMetadata] */
-        @MustBeClosed
         fun retrieveMetadata(
             fileId: String,
             params: FileRetrieveMetadataParams = FileRetrieveMetadataParams.none(),
@@ -302,21 +276,18 @@ interface FileServiceAsync {
             retrieveMetadata(fileId, params, RequestOptions.none())
 
         /** @see [retrieveMetadata] */
-        @MustBeClosed
         fun retrieveMetadata(
             params: FileRetrieveMetadataParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<FileMetadata>>
 
         /** @see [retrieveMetadata] */
-        @MustBeClosed
         fun retrieveMetadata(
             params: FileRetrieveMetadataParams
         ): CompletableFuture<HttpResponseFor<FileMetadata>> =
             retrieveMetadata(params, RequestOptions.none())
 
         /** @see [retrieveMetadata] */
-        @MustBeClosed
         fun retrieveMetadata(
             fileId: String,
             requestOptions: RequestOptions,
@@ -327,12 +298,10 @@ interface FileServiceAsync {
          * Returns a raw HTTP response for `post /v1/files?beta=true`, but is otherwise the same as
          * [FileServiceAsync.upload].
          */
-        @MustBeClosed
         fun upload(params: FileUploadParams): CompletableFuture<HttpResponseFor<FileMetadata>> =
             upload(params, RequestOptions.none())
 
         /** @see [upload] */
-        @MustBeClosed
         fun upload(
             params: FileUploadParams,
             requestOptions: RequestOptions = RequestOptions.none(),
