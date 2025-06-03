@@ -27,6 +27,29 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    fun toParam(): WebSearchToolResultBlockParamContent =
+        accept(
+            object : Visitor<WebSearchToolResultBlockParamContent> {
+                override fun visitError(
+                    error: WebSearchToolResultError
+                ): WebSearchToolResultBlockParamContent =
+                    WebSearchToolResultBlockParamContent.ofRequestError(
+                        WebSearchToolRequestError.builder()
+                            .errorCode(
+                                error._errorCode().map {
+                                    WebSearchToolRequestError.ErrorCode.of(it.toString())
+                                }
+                            )
+                            .build()
+                    )
+
+                override fun visitResultBlocks(
+                    resultBlocks: List<WebSearchResultBlock>
+                ): WebSearchToolResultBlockParamContent =
+                    WebSearchToolResultBlockParamContent.ofItem(resultBlocks.map { it.toParam() })
+            }
+        )
+
     fun error(): Optional<WebSearchToolResultError> = Optional.ofNullable(error)
 
     fun resultBlocks(): Optional<List<WebSearchResultBlock>> = Optional.ofNullable(resultBlocks)

@@ -43,7 +43,7 @@ private constructor(
                 _citations().map {
                     it.map {
                         it.accept(
-                            object : Visitor<TextCitationParam> {
+                            object : TextCitation.Visitor<TextCitationParam> {
                                 override fun visitCharLocation(
                                     charLocation: CitationCharLocation
                                 ): TextCitationParam =

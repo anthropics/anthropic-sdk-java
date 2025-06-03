@@ -50,6 +50,29 @@ private constructor(
     fun toParam(): BetaRequestMcpToolResultBlockParam =
         BetaRequestMcpToolResultBlockParam.builder()
             .toolUseId(_toolUseId())
+            .content(
+                _content().map {
+                    it.accept(
+                        object :
+                            BetaMcpToolResultBlock.Content.Visitor<
+                                BetaRequestMcpToolResultBlockParam.Content
+                            > {
+                            override fun visitString(
+                                string: String
+                            ): BetaRequestMcpToolResultBlockParam.Content =
+                                BetaRequestMcpToolResultBlockParam.Content.ofString(string)
+
+                            override fun visitBetaMcpToolResultBlock(
+                                betaMcpToolResultBlock: List<BetaTextBlock>
+                            ): BetaRequestMcpToolResultBlockParam.Content =
+                                BetaRequestMcpToolResultBlockParam.Content
+                                    .ofBetaMcpToolResultBlockParam(
+                                        betaMcpToolResultBlock.map { it.toParam() }
+                                    )
+                        }
+                    )
+                }
+            )
             .isError(_isError())
             .build()
 

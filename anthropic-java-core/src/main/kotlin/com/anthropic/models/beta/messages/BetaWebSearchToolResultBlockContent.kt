@@ -27,6 +27,27 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    fun toParam(): BetaWebSearchToolResultBlockParamContent =
+        accept(
+            object : Visitor<BetaWebSearchToolResultBlockParamContent> {
+                override fun visitError(
+                    error: BetaWebSearchToolResultError
+                ): BetaWebSearchToolResultBlockParamContent =
+                    BetaWebSearchToolResultBlockParamContent.ofRequestError(
+                        BetaWebSearchToolRequestError.builder()
+                            .errorCode(error._errorCode())
+                            .build()
+                    )
+
+                override fun visitResultBlocks(
+                    resultBlocks: List<BetaWebSearchResultBlock>
+                ): BetaWebSearchToolResultBlockParamContent =
+                    BetaWebSearchToolResultBlockParamContent.ofResultBlock(
+                        resultBlocks.map { it.toParam() }
+                    )
+            }
+        )
+
     fun error(): Optional<BetaWebSearchToolResultError> = Optional.ofNullable(error)
 
     fun resultBlocks(): Optional<List<BetaWebSearchResultBlock>> = Optional.ofNullable(resultBlocks)

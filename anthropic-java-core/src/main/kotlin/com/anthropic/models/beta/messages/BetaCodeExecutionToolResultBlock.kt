@@ -40,7 +40,10 @@ private constructor(
             .content(
                 _content().map {
                     it.accept(
-                        object : Visitor<BetaCodeExecutionToolResultBlockParamContent> {
+                        object :
+                            BetaCodeExecutionToolResultBlockContent.Visitor<
+                                BetaCodeExecutionToolResultBlockParamContent
+                            > {
                             override fun visitError(
                                 error: BetaCodeExecutionToolResultError
                             ): BetaCodeExecutionToolResultBlockParamContent =
