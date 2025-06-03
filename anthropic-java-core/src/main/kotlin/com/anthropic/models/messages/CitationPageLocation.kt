@@ -54,6 +54,15 @@ private constructor(
         mutableMapOf(),
     )
 
+    fun toParam(): CitationPageLocationParam =
+        CitationPageLocationParam.builder()
+            .citedText(_citedText())
+            .documentIndex(_documentIndex())
+            .documentTitle(_documentTitle())
+            .endPageNumber(_endPageNumber())
+            .startPageNumber(_startPageNumber())
+            .build()
+
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).

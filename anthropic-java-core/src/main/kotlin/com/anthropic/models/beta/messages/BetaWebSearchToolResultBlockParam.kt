@@ -158,6 +158,22 @@ private constructor(
             this.content = content
         }
 
+        /** Alias for calling [Builder.content] with `content.toParam()`. */
+        fun content(content: BetaWebSearchToolResultBlockContent) = content(content.toParam())
+
+        /**
+         * Alias for calling [content] with `BetaWebSearchToolResultBlockContent.ofError(error)`.
+         */
+        fun content(error: BetaWebSearchToolResultError) =
+            content(BetaWebSearchToolResultBlockContent.ofError(error))
+
+        /**
+         * Alias for calling [content] with
+         * `BetaWebSearchToolResultBlockContent.ofResultBlocks(resultBlocks)`.
+         */
+        fun contentOfResultBlocks(resultBlocks: List<BetaWebSearchResultBlock>) =
+            content(BetaWebSearchToolResultBlockContent.ofResultBlocks(resultBlocks))
+
         /**
          * Alias for calling [content] with
          * `BetaWebSearchToolResultBlockParamContent.ofResultBlock(resultBlock)`.

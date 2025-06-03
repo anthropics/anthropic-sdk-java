@@ -54,6 +54,15 @@ private constructor(
         mutableMapOf(),
     )
 
+    fun toParam(): BetaCitationCharLocationParam =
+        BetaCitationCharLocationParam.builder()
+            .citedText(_citedText())
+            .documentIndex(_documentIndex())
+            .documentTitle(_documentTitle())
+            .endCharIndex(_endCharIndex())
+            .startCharIndex(_startCharIndex())
+            .build()
+
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).

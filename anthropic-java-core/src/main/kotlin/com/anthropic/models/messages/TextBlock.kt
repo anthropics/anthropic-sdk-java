@@ -36,7 +36,43 @@ private constructor(
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
     ) : this(citations, text, type, mutableMapOf())
 
-    fun toParam(): TextBlockParam = TextBlockParam.builder().text(_text()).build()
+    fun toParam(): TextBlockParam =
+        TextBlockParam.builder()
+            .text(_text())
+            .citations(
+                _citations().map {
+                    it.map {
+                        it.accept(
+                            object : Visitor<TextCitationParam> {
+                                override fun visitCharLocation(
+                                    charLocation: CitationCharLocation
+                                ): TextCitationParam =
+                                    TextCitationParam.ofCharLocation(charLocation.toParam())
+
+                                override fun visitPageLocation(
+                                    pageLocation: CitationPageLocation
+                                ): TextCitationParam =
+                                    TextCitationParam.ofPageLocation(pageLocation.toParam())
+
+                                override fun visitContentBlockLocation(
+                                    contentBlockLocation: CitationContentBlockLocation
+                                ): TextCitationParam =
+                                    TextCitationParam.ofContentBlockLocation(
+                                        contentBlockLocation.toParam()
+                                    )
+
+                                override fun visitWebSearchResultLocation(
+                                    webSearchResultLocation: CitationsWebSearchResultLocation
+                                ): TextCitationParam =
+                                    TextCitationParam.ofWebSearchResultLocation(
+                                        webSearchResultLocation.toParam()
+                                    )
+                            }
+                        )
+                    }
+                }
+            )
+            .build()
 
     /**
      * Citations supporting the text block.

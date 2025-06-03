@@ -154,6 +154,20 @@ private constructor(
             this.content = content
         }
 
+        /** Alias for calling [Builder.content] with `content.toParam()`. */
+        fun content(content: WebSearchToolResultBlockContent) = content(content.toParam())
+
+        /** Alias for calling [content] with `WebSearchToolResultBlockContent.ofError(error)`. */
+        fun content(error: WebSearchToolResultError) =
+            content(WebSearchToolResultBlockContent.ofError(error))
+
+        /**
+         * Alias for calling [content] with
+         * `WebSearchToolResultBlockContent.ofResultBlocks(resultBlocks)`.
+         */
+        fun contentOfResultBlocks(resultBlocks: List<WebSearchResultBlock>) =
+            content(WebSearchToolResultBlockContent.ofResultBlocks(resultBlocks))
+
         /** Alias for calling [content] with `WebSearchToolResultBlockParamContent.ofItem(item)`. */
         fun contentOfItem(item: List<WebSearchResultBlockParam>) =
             content(WebSearchToolResultBlockParamContent.ofItem(item))

@@ -36,7 +36,11 @@ private constructor(
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
     ) : this(citations, text, type, mutableMapOf())
 
-    fun toParam(): BetaTextBlockParam = BetaTextBlockParam.builder().text(_text()).build()
+    fun toParam(): BetaTextBlockParam =
+        BetaTextBlockParam.builder()
+            .text(_text())
+            .citations(_citations().map { it.map { it.toParam() } })
+            .build()
 
     /**
      * Citations supporting the text block.

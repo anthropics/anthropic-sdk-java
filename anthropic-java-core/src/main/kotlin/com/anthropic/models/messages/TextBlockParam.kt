@@ -218,11 +218,17 @@ private constructor(
         fun addCitation(charLocation: CitationCharLocationParam) =
             addCitation(TextCitationParam.ofCharLocation(charLocation))
 
+        /** Alias for calling [addCitation] with `charLocation.toParam()`. */
+        fun addCitation(charLocation: CitationCharLocation) = addCitation(charLocation.toParam())
+
         /**
          * Alias for calling [addCitation] with `TextCitationParam.ofPageLocation(pageLocation)`.
          */
         fun addCitation(pageLocation: CitationPageLocationParam) =
             addCitation(TextCitationParam.ofPageLocation(pageLocation))
+
+        /** Alias for calling [addCitation] with `pageLocation.toParam()`. */
+        fun addCitation(pageLocation: CitationPageLocation) = addCitation(pageLocation.toParam())
 
         /**
          * Alias for calling [addCitation] with
@@ -231,12 +237,20 @@ private constructor(
         fun addCitation(contentBlockLocation: CitationContentBlockLocationParam) =
             addCitation(TextCitationParam.ofContentBlockLocation(contentBlockLocation))
 
+        /** Alias for calling [addCitation] with `contentBlockLocation.toParam()`. */
+        fun addCitation(contentBlockLocation: CitationContentBlockLocation) =
+            addCitation(contentBlockLocation.toParam())
+
         /**
          * Alias for calling [addCitation] with
          * `TextCitationParam.ofWebSearchResultLocation(webSearchResultLocation)`.
          */
         fun addCitation(webSearchResultLocation: CitationWebSearchResultLocationParam) =
             addCitation(TextCitationParam.ofWebSearchResultLocation(webSearchResultLocation))
+
+        /** Alias for calling [addCitation] with `webSearchResultLocation.toParam()`. */
+        fun addCitation(webSearchResultLocation: CitationsWebSearchResultLocation) =
+            addCitation(webSearchResultLocation.toParam())
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()

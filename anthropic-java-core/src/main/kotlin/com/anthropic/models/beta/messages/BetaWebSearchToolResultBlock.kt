@@ -36,7 +36,10 @@ private constructor(
     ) : this(content, toolUseId, type, mutableMapOf())
 
     fun toParam(): BetaWebSearchToolResultBlockParam =
-        BetaWebSearchToolResultBlockParam.builder().toolUseId(_toolUseId()).build()
+        BetaWebSearchToolResultBlockParam.builder()
+            .content(_content().map { it.toParam() })
+            .toolUseId(_toolUseId())
+            .build()
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is

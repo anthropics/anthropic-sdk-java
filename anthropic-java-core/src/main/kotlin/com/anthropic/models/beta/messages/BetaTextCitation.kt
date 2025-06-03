@@ -29,6 +29,33 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    fun toParam(): BetaTextCitationParam =
+        accept(
+            object : Visitor<BetaTextCitationParam> {
+                override fun visitCharLocation(
+                    charLocation: BetaCitationCharLocation
+                ): BetaTextCitationParam =
+                    BetaTextCitationParam.ofCharLocation(charLocation.toParam())
+
+                override fun visitPageLocation(
+                    pageLocation: BetaCitationPageLocation
+                ): BetaTextCitationParam =
+                    BetaTextCitationParam.ofPageLocation(pageLocation.toParam())
+
+                override fun visitContentBlockLocation(
+                    contentBlockLocation: BetaCitationContentBlockLocation
+                ): BetaTextCitationParam =
+                    BetaTextCitationParam.ofContentBlockLocation(contentBlockLocation.toParam())
+
+                override fun visitWebSearchResultLocation(
+                    webSearchResultLocation: BetaCitationsWebSearchResultLocation
+                ): BetaTextCitationParam =
+                    BetaTextCitationParam.ofWebSearchResultLocation(
+                        webSearchResultLocation.toParam()
+                    )
+            }
+        )
+
     fun charLocation(): Optional<BetaCitationCharLocation> = Optional.ofNullable(charLocation)
 
     fun pageLocation(): Optional<BetaCitationPageLocation> = Optional.ofNullable(pageLocation)

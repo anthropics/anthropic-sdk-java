@@ -38,6 +38,14 @@ private constructor(
         @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
     ) : this(citedText, encryptedIndex, title, type, url, mutableMapOf())
 
+    fun toParam(): BetaCitationWebSearchResultLocationParam =
+        BetaCitationWebSearchResultLocationParam.builder()
+            .citedText(_citedText())
+            .encryptedIndex(_encryptedIndex())
+            .title(_title())
+            .url(_url())
+            .build()
+
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).

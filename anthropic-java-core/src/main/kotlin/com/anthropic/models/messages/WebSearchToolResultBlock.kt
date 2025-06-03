@@ -36,7 +36,10 @@ private constructor(
     ) : this(content, toolUseId, type, mutableMapOf())
 
     fun toParam(): WebSearchToolResultBlockParam =
-        WebSearchToolResultBlockParam.builder().toolUseId(_toolUseId()).build()
+        WebSearchToolResultBlockParam.builder()
+            .content(_content().map { it.toParam() })
+            .toolUseId(_toolUseId())
+            .build()
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is

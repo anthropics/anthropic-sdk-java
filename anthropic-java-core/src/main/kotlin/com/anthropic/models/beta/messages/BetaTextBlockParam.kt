@@ -213,12 +213,41 @@ private constructor(
                 }
         }
 
+        /** Alias for calling [addCitation] with `citation.toParam()`. */
+        fun addCitation(citation: BetaTextCitation) = addCitation(citation.toParam())
+
+        /** Alias for calling [addCitation] with `BetaTextCitation.ofCharLocation(charLocation)`. */
+        fun addCitation(charLocation: BetaCitationCharLocation) =
+            addCitation(BetaTextCitation.ofCharLocation(charLocation))
+
+        /** Alias for calling [addCitation] with `BetaTextCitation.ofPageLocation(pageLocation)`. */
+        fun addCitation(pageLocation: BetaCitationPageLocation) =
+            addCitation(BetaTextCitation.ofPageLocation(pageLocation))
+
+        /**
+         * Alias for calling [addCitation] with
+         * `BetaTextCitation.ofContentBlockLocation(contentBlockLocation)`.
+         */
+        fun addCitation(contentBlockLocation: BetaCitationContentBlockLocation) =
+            addCitation(BetaTextCitation.ofContentBlockLocation(contentBlockLocation))
+
+        /**
+         * Alias for calling [addCitation] with
+         * `BetaTextCitation.ofWebSearchResultLocation(webSearchResultLocation)`.
+         */
+        fun addCitation(webSearchResultLocation: BetaCitationsWebSearchResultLocation) =
+            addCitation(BetaTextCitation.ofWebSearchResultLocation(webSearchResultLocation))
+
         /**
          * Alias for calling [addCitation] with
          * `BetaTextCitationParam.ofCharLocation(charLocation)`.
          */
         fun addCitation(charLocation: BetaCitationCharLocationParam) =
             addCitation(BetaTextCitationParam.ofCharLocation(charLocation))
+
+        /** Alias for calling [addCitation] with `charLocation.toParam()`. */
+        fun addCitation(charLocation: BetaCitationCharLocation) =
+            addCitation(charLocation.toParam())
 
         /**
          * Alias for calling [addCitation] with
@@ -227,6 +256,10 @@ private constructor(
         fun addCitation(pageLocation: BetaCitationPageLocationParam) =
             addCitation(BetaTextCitationParam.ofPageLocation(pageLocation))
 
+        /** Alias for calling [addCitation] with `pageLocation.toParam()`. */
+        fun addCitation(pageLocation: BetaCitationPageLocation) =
+            addCitation(pageLocation.toParam())
+
         /**
          * Alias for calling [addCitation] with
          * `BetaTextCitationParam.ofContentBlockLocation(contentBlockLocation)`.
@@ -234,12 +267,20 @@ private constructor(
         fun addCitation(contentBlockLocation: BetaCitationContentBlockLocationParam) =
             addCitation(BetaTextCitationParam.ofContentBlockLocation(contentBlockLocation))
 
+        /** Alias for calling [addCitation] with `contentBlockLocation.toParam()`. */
+        fun addCitation(contentBlockLocation: BetaCitationContentBlockLocation) =
+            addCitation(contentBlockLocation.toParam())
+
         /**
          * Alias for calling [addCitation] with
          * `BetaTextCitationParam.ofWebSearchResultLocation(webSearchResultLocation)`.
          */
         fun addCitation(webSearchResultLocation: BetaCitationWebSearchResultLocationParam) =
             addCitation(BetaTextCitationParam.ofWebSearchResultLocation(webSearchResultLocation))
+
+        /** Alias for calling [addCitation] with `webSearchResultLocation.toParam()`. */
+        fun addCitation(webSearchResultLocation: BetaCitationsWebSearchResultLocation) =
+            addCitation(webSearchResultLocation.toParam())
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
