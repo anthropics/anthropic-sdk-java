@@ -96,6 +96,7 @@ internal class BatchServiceAsyncTest {
                                                             )
                                                         )
                                                     )
+                                                    .addRequired("location")
                                                     .build()
                                             )
                                             .name("name")

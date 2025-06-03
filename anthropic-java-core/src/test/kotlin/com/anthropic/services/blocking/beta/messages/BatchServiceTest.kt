@@ -120,6 +120,7 @@ internal class BatchServiceTest {
                                                             )
                                                         )
                                                     )
+                                                    .addRequired("location")
                                                     .build()
                                             )
                                             .name("name")

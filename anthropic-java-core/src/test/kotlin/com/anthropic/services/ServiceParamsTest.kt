@@ -97,6 +97,7 @@ internal class ServiceParamsTest {
                                         )
                                     )
                                 )
+                                .addRequired("location")
                                 .build()
                         )
                         .name("name")

@@ -7,7 +7,9 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
+import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
+import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -347,6 +349,7 @@ private constructor(
     private constructor(
         private val type: JsonValue,
         private val properties: JsonValue,
+        private val required: JsonField<List<String>>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -354,7 +357,10 @@ private constructor(
         private constructor(
             @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
             @JsonProperty("properties") @ExcludeMissing properties: JsonValue = JsonMissing.of(),
-        ) : this(type, properties, mutableMapOf())
+            @JsonProperty("required")
+            @ExcludeMissing
+            required: JsonField<List<String>> = JsonMissing.of(),
+        ) : this(type, properties, required, mutableMapOf())
 
         /**
          * Expected to always return the following:
@@ -368,6 +374,21 @@ private constructor(
         @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
         @JsonProperty("properties") @ExcludeMissing fun _properties(): JsonValue = properties
+
+        /**
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun required(): Optional<List<String>> = required.getOptional("required")
+
+        /**
+         * Returns the raw JSON value of [required].
+         *
+         * Unlike [required], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("required")
+        @ExcludeMissing
+        fun _required(): JsonField<List<String>> = required
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -392,12 +413,14 @@ private constructor(
 
             private var type: JsonValue = JsonValue.from("object")
             private var properties: JsonValue = JsonMissing.of()
+            private var required: JsonField<MutableList<String>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(inputSchema: InputSchema) = apply {
                 type = inputSchema.type
                 properties = inputSchema.properties
+                required = inputSchema.required.map { it.toMutableList() }
                 additionalProperties = inputSchema.additionalProperties.toMutableMap()
             }
 
@@ -416,6 +439,34 @@ private constructor(
             fun type(type: JsonValue) = apply { this.type = type }
 
             fun properties(properties: JsonValue) = apply { this.properties = properties }
+
+            fun required(required: List<String>?) = required(JsonField.ofNullable(required))
+
+            /** Alias for calling [Builder.required] with `required.orElse(null)`. */
+            fun required(required: Optional<List<String>>) = required(required.getOrNull())
+
+            /**
+             * Sets [Builder.required] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.required] with a well-typed `List<String>` value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun required(required: JsonField<List<String>>) = apply {
+                this.required = required.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [String] to [Builder.required].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addRequired(required: String) = apply {
+                this.required =
+                    (this.required ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("required", it).add(required)
+                    }
+            }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -442,7 +493,12 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              */
             fun build(): InputSchema =
-                InputSchema(type, properties, additionalProperties.toMutableMap())
+                InputSchema(
+                    type,
+                    properties,
+                    (required ?: JsonMissing.of()).map { it.toImmutable() },
+                    additionalProperties.toMutableMap(),
+                )
         }
 
         private var validated: Boolean = false
@@ -457,6 +513,7 @@ private constructor(
                     throw AnthropicInvalidDataException("'type' is invalid, received $it")
                 }
             }
+            required()
             validated = true
         }
 
@@ -475,24 +532,26 @@ private constructor(
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int = type.let { if (it == JsonValue.from("object")) 1 else 0 }
+        internal fun validity(): Int =
+            type.let { if (it == JsonValue.from("object")) 1 else 0 } +
+                (required.asKnown().getOrNull()?.size ?: 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
             }
 
-            return /* spotless:off */ other is InputSchema && type == other.type && properties == other.properties && additionalProperties == other.additionalProperties /* spotless:on */
+            return /* spotless:off */ other is InputSchema && type == other.type && properties == other.properties && required == other.required && additionalProperties == other.additionalProperties /* spotless:on */
         }
 
         /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(type, properties, additionalProperties) }
+        private val hashCode: Int by lazy { Objects.hash(type, properties, required, additionalProperties) }
         /* spotless:on */
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "InputSchema{type=$type, properties=$properties, additionalProperties=$additionalProperties}"
+            "InputSchema{type=$type, properties=$properties, required=$required, additionalProperties=$additionalProperties}"
     }
 
     class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
