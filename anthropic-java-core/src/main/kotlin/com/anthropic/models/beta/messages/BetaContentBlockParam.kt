@@ -32,7 +32,7 @@ private constructor(
     private val image: BetaImageBlockParam? = null,
     private val toolUse: BetaToolUseBlockParam? = null,
     private val toolResult: BetaToolResultBlockParam? = null,
-    private val document: BetaBase64PdfBlock? = null,
+    private val document: BetaRequestDocumentBlock? = null,
     private val thinking: BetaThinkingBlockParam? = null,
     private val redactedThinking: BetaRedactedThinkingBlockParam? = null,
     private val containerUpload: BetaContainerUploadBlockParam? = null,
@@ -68,7 +68,7 @@ private constructor(
      * Document content, either specified directly as base64 data, as text, or as a reference via a
      * URL.
      */
-    fun document(): Optional<BetaBase64PdfBlock> = Optional.ofNullable(document)
+    fun document(): Optional<BetaRequestDocumentBlock> = Optional.ofNullable(document)
 
     /** A block specifying internal thinking by the model. */
     fun thinking(): Optional<BetaThinkingBlockParam> = Optional.ofNullable(thinking)
@@ -139,7 +139,7 @@ private constructor(
      * Document content, either specified directly as base64 data, as text, or as a reference via a
      * URL.
      */
-    fun asDocument(): BetaBase64PdfBlock = document.getOrThrow("document")
+    fun asDocument(): BetaRequestDocumentBlock = document.getOrThrow("document")
 
     /** A block specifying internal thinking by the model. */
     fun asThinking(): BetaThinkingBlockParam = thinking.getOrThrow("thinking")
@@ -225,7 +225,7 @@ private constructor(
                     toolResult.validate()
                 }
 
-                override fun visitDocument(document: BetaBase64PdfBlock) {
+                override fun visitDocument(document: BetaRequestDocumentBlock) {
                     document.validate()
                 }
 
@@ -290,7 +290,7 @@ private constructor(
                 override fun visitToolResult(toolResult: BetaToolResultBlockParam) =
                     toolResult.validity()
 
-                override fun visitDocument(document: BetaBase64PdfBlock) = document.validity()
+                override fun visitDocument(document: BetaRequestDocumentBlock) = document.validity()
 
                 override fun visitThinking(thinking: BetaThinkingBlockParam) = thinking.validity()
 
@@ -379,7 +379,8 @@ private constructor(
          * via a URL.
          */
         @JvmStatic
-        fun ofDocument(document: BetaBase64PdfBlock) = BetaContentBlockParam(document = document)
+        fun ofDocument(document: BetaRequestDocumentBlock) =
+            BetaContentBlockParam(document = document)
 
         /** A block specifying internal thinking by the model. */
         @JvmStatic
@@ -434,7 +435,7 @@ private constructor(
          * Document content, either specified directly as base64 data, as text, or as a reference
          * via a URL.
          */
-        fun visitDocument(document: BetaBase64PdfBlock): T
+        fun visitDocument(document: BetaRequestDocumentBlock): T
 
         /** A block specifying internal thinking by the model. */
         fun visitThinking(thinking: BetaThinkingBlockParam): T
@@ -523,7 +524,7 @@ private constructor(
                     } ?: BetaContentBlockParam(_json = json)
                 }
                 "document" -> {
-                    return tryDeserialize(node, jacksonTypeRef<BetaBase64PdfBlock>())?.let {
+                    return tryDeserialize(node, jacksonTypeRef<BetaRequestDocumentBlock>())?.let {
                         BetaContentBlockParam(document = it, _json = json)
                     } ?: BetaContentBlockParam(_json = json)
                 }

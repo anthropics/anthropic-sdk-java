@@ -27,7 +27,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class BetaBase64PdfBlock
+class BetaRequestDocumentBlock
 private constructor(
     private val source: JsonField<Source>,
     private val type: JsonValue,
@@ -150,7 +150,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [BetaBase64PdfBlock].
+         * Returns a mutable builder for constructing an instance of [BetaRequestDocumentBlock].
          *
          * The following fields are required:
          * ```java
@@ -160,7 +160,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [BetaBase64PdfBlock]. */
+    /** A builder for [BetaRequestDocumentBlock]. */
     class Builder internal constructor() {
 
         private var source: JsonField<Source>? = null
@@ -172,14 +172,14 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(betaBase64PdfBlock: BetaBase64PdfBlock) = apply {
-            source = betaBase64PdfBlock.source
-            type = betaBase64PdfBlock.type
-            cacheControl = betaBase64PdfBlock.cacheControl
-            citations = betaBase64PdfBlock.citations
-            context = betaBase64PdfBlock.context
-            title = betaBase64PdfBlock.title
-            additionalProperties = betaBase64PdfBlock.additionalProperties.toMutableMap()
+        internal fun from(betaRequestDocumentBlock: BetaRequestDocumentBlock) = apply {
+            source = betaRequestDocumentBlock.source
+            type = betaRequestDocumentBlock.type
+            cacheControl = betaRequestDocumentBlock.cacheControl
+            citations = betaRequestDocumentBlock.citations
+            context = betaRequestDocumentBlock.context
+            title = betaRequestDocumentBlock.title
+            additionalProperties = betaRequestDocumentBlock.additionalProperties.toMutableMap()
         }
 
         fun source(source: Source) = source(JsonField.of(source))
@@ -368,7 +368,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [BetaBase64PdfBlock].
+         * Returns an immutable instance of [BetaRequestDocumentBlock].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -379,8 +379,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): BetaBase64PdfBlock =
-            BetaBase64PdfBlock(
+        fun build(): BetaRequestDocumentBlock =
+            BetaRequestDocumentBlock(
                 checkRequired("source", source),
                 type,
                 cacheControl,
@@ -393,7 +393,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): BetaBase64PdfBlock = apply {
+    fun validate(): BetaRequestDocumentBlock = apply {
         if (validated) {
             return@apply
         }
@@ -677,7 +677,7 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaBase64PdfBlock && source == other.source && type == other.type && cacheControl == other.cacheControl && citations == other.citations && context == other.context && title == other.title && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is BetaRequestDocumentBlock && source == other.source && type == other.type && cacheControl == other.cacheControl && citations == other.citations && context == other.context && title == other.title && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
@@ -687,5 +687,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaBase64PdfBlock{source=$source, type=$type, cacheControl=$cacheControl, citations=$citations, context=$context, title=$title, additionalProperties=$additionalProperties}"
+        "BetaRequestDocumentBlock{source=$source, type=$type, cacheControl=$cacheControl, citations=$citations, context=$context, title=$title, additionalProperties=$additionalProperties}"
 }

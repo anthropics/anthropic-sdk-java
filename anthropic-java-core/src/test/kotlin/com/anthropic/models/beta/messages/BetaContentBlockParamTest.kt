@@ -576,7 +576,7 @@ internal class BetaContentBlockParamTest {
     @Test
     fun ofDocument() {
         val document =
-            BetaBase64PdfBlock.builder()
+            BetaRequestDocumentBlock.builder()
                 .base64Source("U3RhaW5sZXNzIHJvY2tz")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
@@ -610,7 +610,7 @@ internal class BetaContentBlockParamTest {
         val jsonMapper = jsonMapper()
         val betaContentBlockParam =
             BetaContentBlockParam.ofDocument(
-                BetaBase64PdfBlock.builder()
+                BetaRequestDocumentBlock.builder()
                     .base64Source("U3RhaW5sZXNzIHJvY2tz")
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()

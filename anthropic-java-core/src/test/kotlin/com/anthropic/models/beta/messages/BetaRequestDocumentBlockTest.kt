@@ -7,12 +7,12 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class BetaBase64PdfBlockTest {
+internal class BetaRequestDocumentBlockTest {
 
     @Test
     fun create() {
-        val betaBase64PdfBlock =
-            BetaBase64PdfBlock.builder()
+        val betaRequestDocumentBlock =
+            BetaRequestDocumentBlock.builder()
                 .base64Source("U3RhaW5sZXNzIHJvY2tz")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
@@ -24,29 +24,29 @@ internal class BetaBase64PdfBlockTest {
                 .title("x")
                 .build()
 
-        assertThat(betaBase64PdfBlock.source())
+        assertThat(betaRequestDocumentBlock.source())
             .isEqualTo(
-                BetaBase64PdfBlock.Source.ofBase64(
+                BetaRequestDocumentBlock.Source.ofBase64(
                     BetaBase64PdfSource.builder().data("U3RhaW5sZXNzIHJvY2tz").build()
                 )
             )
-        assertThat(betaBase64PdfBlock.cacheControl())
+        assertThat(betaRequestDocumentBlock.cacheControl())
             .contains(
                 BetaCacheControlEphemeral.builder()
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                     .build()
             )
-        assertThat(betaBase64PdfBlock.citations())
+        assertThat(betaRequestDocumentBlock.citations())
             .contains(BetaCitationsConfigParam.builder().enabled(true).build())
-        assertThat(betaBase64PdfBlock.context()).contains("x")
-        assertThat(betaBase64PdfBlock.title()).contains("x")
+        assertThat(betaRequestDocumentBlock.context()).contains("x")
+        assertThat(betaRequestDocumentBlock.title()).contains("x")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaBase64PdfBlock =
-            BetaBase64PdfBlock.builder()
+        val betaRequestDocumentBlock =
+            BetaRequestDocumentBlock.builder()
                 .base64Source("U3RhaW5sZXNzIHJvY2tz")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
@@ -58,12 +58,12 @@ internal class BetaBase64PdfBlockTest {
                 .title("x")
                 .build()
 
-        val roundtrippedBetaBase64PdfBlock =
+        val roundtrippedBetaRequestDocumentBlock =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(betaBase64PdfBlock),
-                jacksonTypeRef<BetaBase64PdfBlock>(),
+                jsonMapper.writeValueAsString(betaRequestDocumentBlock),
+                jacksonTypeRef<BetaRequestDocumentBlock>(),
             )
 
-        assertThat(roundtrippedBetaBase64PdfBlock).isEqualTo(betaBase64PdfBlock)
+        assertThat(roundtrippedBetaRequestDocumentBlock).isEqualTo(betaRequestDocumentBlock)
     }
 }
