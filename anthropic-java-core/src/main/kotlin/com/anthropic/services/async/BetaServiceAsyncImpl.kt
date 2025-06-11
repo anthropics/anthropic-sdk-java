@@ -17,39 +17,39 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
         WithRawResponseImpl(clientOptions)
     }
 
-    private val files: FileServiceAsync by lazy { FileServiceAsyncImpl(clientOptions) }
+    private val models: ModelServiceAsync by lazy { ModelServiceAsyncImpl(clientOptions) }
 
     private val messages: MessageServiceAsync by lazy { MessageServiceAsyncImpl(clientOptions) }
 
-    private val models: ModelServiceAsync by lazy { ModelServiceAsyncImpl(clientOptions) }
+    private val files: FileServiceAsync by lazy { FileServiceAsyncImpl(clientOptions) }
 
     override fun withRawResponse(): BetaServiceAsync.WithRawResponse = withRawResponse
 
-    override fun files(): FileServiceAsync = files
+    override fun models(): ModelServiceAsync = models
 
     override fun messages(): MessageServiceAsync = messages
 
-    override fun models(): ModelServiceAsync = models
+    override fun files(): FileServiceAsync = files
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         BetaServiceAsync.WithRawResponse {
 
-        private val files: FileServiceAsync.WithRawResponse by lazy {
-            FileServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        private val models: ModelServiceAsync.WithRawResponse by lazy {
+            ModelServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val messages: MessageServiceAsync.WithRawResponse by lazy {
             MessageServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
-        private val models: ModelServiceAsync.WithRawResponse by lazy {
-            ModelServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        private val files: FileServiceAsync.WithRawResponse by lazy {
+            FileServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
-        override fun files(): FileServiceAsync.WithRawResponse = files
+        override fun models(): ModelServiceAsync.WithRawResponse = models
 
         override fun messages(): MessageServiceAsync.WithRawResponse = messages
 
-        override fun models(): ModelServiceAsync.WithRawResponse = models
+        override fun files(): FileServiceAsync.WithRawResponse = files
     }
 }

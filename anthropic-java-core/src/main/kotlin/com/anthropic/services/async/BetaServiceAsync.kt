@@ -13,19 +13,19 @@ interface BetaServiceAsync {
      */
     fun withRawResponse(): WithRawResponse
 
-    fun files(): FileServiceAsync
+    fun models(): ModelServiceAsync
 
     fun messages(): MessageServiceAsync
 
-    fun models(): ModelServiceAsync
+    fun files(): FileServiceAsync
 
     /** A view of [BetaServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
-        fun files(): FileServiceAsync.WithRawResponse
+        fun models(): ModelServiceAsync.WithRawResponse
 
         fun messages(): MessageServiceAsync.WithRawResponse
 
-        fun models(): ModelServiceAsync.WithRawResponse
+        fun files(): FileServiceAsync.WithRawResponse
     }
 }

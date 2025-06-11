@@ -28,16 +28,16 @@ private constructor(
     /**
      * Delegates to [FileListPageResponse], but gracefully handles missing data.
      *
-     * @see [FileListPageResponse.firstId]
+     * @see [FileListPageResponse.hasMore]
      */
-    fun firstId(): Optional<String> = response._firstId().getOptional("first_id")
+    fun hasMore(): Optional<Boolean> = response._hasMore().getOptional("has_more")
 
     /**
      * Delegates to [FileListPageResponse], but gracefully handles missing data.
      *
-     * @see [FileListPageResponse.hasMore]
+     * @see [FileListPageResponse.firstId]
      */
-    fun hasMore(): Optional<Boolean> = response._hasMore().getOptional("has_more")
+    fun firstId(): Optional<String> = response._firstId().getOptional("first_id")
 
     /**
      * Delegates to [FileListPageResponse], but gracefully handles missing data.

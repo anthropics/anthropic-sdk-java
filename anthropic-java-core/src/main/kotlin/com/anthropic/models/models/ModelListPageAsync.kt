@@ -31,16 +31,16 @@ private constructor(
     /**
      * Delegates to [ModelListPageResponse], but gracefully handles missing data.
      *
-     * @see [ModelListPageResponse.firstId]
+     * @see [ModelListPageResponse.hasMore]
      */
-    fun firstId(): Optional<String> = response._firstId().getOptional("first_id")
+    fun hasMore(): Optional<Boolean> = response._hasMore().getOptional("has_more")
 
     /**
      * Delegates to [ModelListPageResponse], but gracefully handles missing data.
      *
-     * @see [ModelListPageResponse.hasMore]
+     * @see [ModelListPageResponse.firstId]
      */
-    fun hasMore(): Optional<Boolean> = response._hasMore().getOptional("has_more")
+    fun firstId(): Optional<String> = response._firstId().getOptional("first_id")
 
     /**
      * Delegates to [ModelListPageResponse], but gracefully handles missing data.

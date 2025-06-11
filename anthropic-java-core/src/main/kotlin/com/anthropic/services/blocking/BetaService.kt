@@ -13,19 +13,19 @@ interface BetaService {
      */
     fun withRawResponse(): WithRawResponse
 
-    fun files(): FileService
+    fun models(): ModelService
 
     fun messages(): MessageService
 
-    fun models(): ModelService
+    fun files(): FileService
 
     /** A view of [BetaService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
-        fun files(): FileService.WithRawResponse
+        fun models(): ModelService.WithRawResponse
 
         fun messages(): MessageService.WithRawResponse
 
-        fun models(): ModelService.WithRawResponse
+        fun files(): FileService.WithRawResponse
     }
 }
