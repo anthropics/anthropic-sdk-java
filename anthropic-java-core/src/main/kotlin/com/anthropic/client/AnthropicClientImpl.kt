@@ -30,6 +30,8 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
         WithRawResponseImpl(clientOptions)
     }
 
+    private val beta: BetaService by lazy { BetaServiceImpl(clientOptionsWithUserAgent) }
+
     private val completions: CompletionService by lazy {
         CompletionServiceImpl(clientOptionsWithUserAgent)
     }
@@ -38,11 +40,11 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
 
     private val models: ModelService by lazy { ModelServiceImpl(clientOptionsWithUserAgent) }
 
-    private val beta: BetaService by lazy { BetaServiceImpl(clientOptionsWithUserAgent) }
-
     override fun async(): AnthropicClientAsync = async
 
     override fun withRawResponse(): AnthropicClient.WithRawResponse = withRawResponse
+
+    override fun beta(): BetaService = beta
 
     override fun completions(): CompletionService = completions
 
@@ -50,12 +52,14 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
 
     override fun models(): ModelService = models
 
-    override fun beta(): BetaService = beta
-
     override fun close() = clientOptions.httpClient.close()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         AnthropicClient.WithRawResponse {
+
+        private val beta: BetaService.WithRawResponse by lazy {
+            BetaServiceImpl.WithRawResponseImpl(clientOptions)
+        }
 
         private val completions: CompletionService.WithRawResponse by lazy {
             CompletionServiceImpl.WithRawResponseImpl(clientOptions)
@@ -69,16 +73,12 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
             ModelServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
-        private val beta: BetaService.WithRawResponse by lazy {
-            BetaServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        override fun beta(): BetaService.WithRawResponse = beta
 
         override fun completions(): CompletionService.WithRawResponse = completions
 
         override fun messages(): MessageService.WithRawResponse = messages
 
         override fun models(): ModelService.WithRawResponse = models
-
-        override fun beta(): BetaService.WithRawResponse = beta
     }
 }

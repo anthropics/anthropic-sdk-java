@@ -36,13 +36,13 @@ interface AnthropicClientAsync {
      */
     fun withRawResponse(): WithRawResponse
 
+    fun beta(): BetaServiceAsync
+
     fun completions(): CompletionServiceAsync
 
     fun messages(): MessageServiceAsync
 
     fun models(): ModelServiceAsync
-
-    fun beta(): BetaServiceAsync
 
     /**
      * Closes this client, relinquishing any underlying resources.
@@ -62,12 +62,12 @@ interface AnthropicClientAsync {
      */
     interface WithRawResponse {
 
+        fun beta(): BetaServiceAsync.WithRawResponse
+
         fun completions(): CompletionServiceAsync.WithRawResponse
 
         fun messages(): MessageServiceAsync.WithRawResponse
 
         fun models(): ModelServiceAsync.WithRawResponse
-
-        fun beta(): BetaServiceAsync.WithRawResponse
     }
 }

@@ -36,13 +36,13 @@ interface AnthropicClient {
      */
     fun withRawResponse(): WithRawResponse
 
+    fun beta(): BetaService
+
     fun completions(): CompletionService
 
     fun messages(): MessageService
 
     fun models(): ModelService
-
-    fun beta(): BetaService
 
     /**
      * Closes this client, relinquishing any underlying resources.
@@ -60,12 +60,12 @@ interface AnthropicClient {
     /** A view of [AnthropicClient] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
+        fun beta(): BetaService.WithRawResponse
+
         fun completions(): CompletionService.WithRawResponse
 
         fun messages(): MessageService.WithRawResponse
 
         fun models(): ModelService.WithRawResponse
-
-        fun beta(): BetaService.WithRawResponse
     }
 }

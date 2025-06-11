@@ -16,39 +16,39 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
         WithRawResponseImpl(clientOptions)
     }
 
-    private val models: ModelService by lazy { ModelServiceImpl(clientOptions) }
+    private val files: FileService by lazy { FileServiceImpl(clientOptions) }
 
     private val messages: MessageService by lazy { MessageServiceImpl(clientOptions) }
 
-    private val files: FileService by lazy { FileServiceImpl(clientOptions) }
+    private val models: ModelService by lazy { ModelServiceImpl(clientOptions) }
 
     override fun withRawResponse(): BetaService.WithRawResponse = withRawResponse
 
-    override fun models(): ModelService = models
+    override fun files(): FileService = files
 
     override fun messages(): MessageService = messages
 
-    override fun files(): FileService = files
+    override fun models(): ModelService = models
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         BetaService.WithRawResponse {
 
-        private val models: ModelService.WithRawResponse by lazy {
-            ModelServiceImpl.WithRawResponseImpl(clientOptions)
+        private val files: FileService.WithRawResponse by lazy {
+            FileServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val messages: MessageService.WithRawResponse by lazy {
             MessageServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
-        private val files: FileService.WithRawResponse by lazy {
-            FileServiceImpl.WithRawResponseImpl(clientOptions)
+        private val models: ModelService.WithRawResponse by lazy {
+            ModelServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
-        override fun models(): ModelService.WithRawResponse = models
+        override fun files(): FileService.WithRawResponse = files
 
         override fun messages(): MessageService.WithRawResponse = messages
 
-        override fun files(): FileService.WithRawResponse = files
+        override fun models(): ModelService.WithRawResponse = models
     }
 }

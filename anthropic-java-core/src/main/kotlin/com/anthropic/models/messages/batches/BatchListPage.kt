@@ -28,16 +28,16 @@ private constructor(
     /**
      * Delegates to [BatchListPageResponse], but gracefully handles missing data.
      *
-     * @see [BatchListPageResponse.hasMore]
+     * @see [BatchListPageResponse.firstId]
      */
-    fun hasMore(): Optional<Boolean> = response._hasMore().getOptional("has_more")
+    fun firstId(): Optional<String> = response._firstId().getOptional("first_id")
 
     /**
      * Delegates to [BatchListPageResponse], but gracefully handles missing data.
      *
-     * @see [BatchListPageResponse.firstId]
+     * @see [BatchListPageResponse.hasMore]
      */
-    fun firstId(): Optional<String> = response._firstId().getOptional("first_id")
+    fun hasMore(): Optional<Boolean> = response._hasMore().getOptional("has_more")
 
     /**
      * Delegates to [BatchListPageResponse], but gracefully handles missing data.
