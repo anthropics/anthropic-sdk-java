@@ -2,7 +2,6 @@ package com.anthropic.client.okhttp
 
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.Timeout
-import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpClient
 import com.anthropic.core.http.HttpMethod
@@ -17,7 +16,6 @@ import java.time.Duration
 import java.util.concurrent.CompletableFuture
 import okhttp3.Call
 import okhttp3.Callback
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
@@ -28,8 +26,7 @@ import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import okio.BufferedSink
 
-class OkHttpClient
-private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val baseUrl: HttpUrl) :
+class OkHttpClient private constructor(private val okHttpClient: okhttp3.OkHttpClient) :
     HttpClient {
 
     override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse {
@@ -143,11 +140,7 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
         }
 
     private fun HttpRequest.toUrl(): String {
-        url?.let {
-            return it
-        }
-
-        val builder = baseUrl.newBuilder()
+        val builder = baseUrl.toHttpUrl().newBuilder()
         pathSegments.forEach(builder::addPathSegment)
         queryParams.keys().forEach { key ->
             queryParams.values(key).forEach { builder.addQueryParameter(key, it) }
@@ -197,11 +190,8 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
 
     class Builder internal constructor() {
 
-        private var baseUrl: HttpUrl? = null
         private var timeout: Timeout = Timeout.default()
         private var proxy: Proxy? = null
-
-        fun baseUrl(baseUrl: String) = apply { this.baseUrl = baseUrl.toHttpUrl() }
 
         fun timeout(timeout: Timeout) = apply { this.timeout = timeout }
 
@@ -217,8 +207,7 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
                     .writeTimeout(timeout.write())
                     .callTimeout(timeout.request())
                     .proxy(proxy)
-                    .build(),
-                checkRequired("baseUrl", baseUrl),
+                    .build()
             )
     }
 }

@@ -89,6 +89,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -124,6 +125,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages")
                     .body(
                         json(
@@ -168,6 +170,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "count_tokens")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()

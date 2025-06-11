@@ -64,6 +64,7 @@ class ModelServiceAsyncImpl internal constructor(private val clientOptions: Clie
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "models", params._pathParam(0))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -94,6 +95,7 @@ class ModelServiceAsyncImpl internal constructor(private val clientOptions: Clie
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "models")
                     .build()
                     .prepareAsync(clientOptions, params)

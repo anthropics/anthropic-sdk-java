@@ -80,6 +80,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages")
                     .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
@@ -113,6 +114,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages")
                     .putQueryParam("beta", "true")
                     .body(
@@ -156,6 +158,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "count_tokens")
                     .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))

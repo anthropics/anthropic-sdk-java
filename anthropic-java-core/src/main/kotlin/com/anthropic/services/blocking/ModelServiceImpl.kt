@@ -57,6 +57,7 @@ class ModelServiceImpl internal constructor(private val clientOptions: ClientOpt
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "models", params._pathParam(0))
                     .build()
                     .prepare(clientOptions, params)
@@ -84,6 +85,7 @@ class ModelServiceImpl internal constructor(private val clientOptions: ClientOpt
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "models")
                     .build()
                     .prepare(clientOptions, params)
