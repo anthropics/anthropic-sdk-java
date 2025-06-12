@@ -2,6 +2,7 @@
 
 package com.anthropic.services.async.beta
 
+import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.models.beta.models.BetaModelInfo
@@ -9,6 +10,7 @@ import com.anthropic.models.beta.models.ModelListPageAsync
 import com.anthropic.models.beta.models.ModelListParams
 import com.anthropic.models.beta.models.ModelRetrieveParams
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 
 interface ModelServiceAsync {
 
@@ -16,6 +18,13 @@ interface ModelServiceAsync {
      * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
+
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): ModelServiceAsync
 
     /**
      * Get a specific model.
@@ -82,6 +91,15 @@ interface ModelServiceAsync {
 
     /** A view of [ModelServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): ModelServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /v1/models/{model_id}?beta=true`, but is otherwise

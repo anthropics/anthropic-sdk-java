@@ -20,6 +20,7 @@ import com.anthropic.models.models.ModelListPage
 import com.anthropic.models.models.ModelListPageResponse
 import com.anthropic.models.models.ModelListParams
 import com.anthropic.models.models.ModelRetrieveParams
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class ModelServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -30,6 +31,9 @@ class ModelServiceImpl internal constructor(private val clientOptions: ClientOpt
     }
 
     override fun withRawResponse(): ModelService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ModelService =
+        ModelServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun retrieve(params: ModelRetrieveParams, requestOptions: RequestOptions): ModelInfo =
         // get /v1/models/{model_id}
@@ -43,6 +47,13 @@ class ModelServiceImpl internal constructor(private val clientOptions: ClientOpt
         ModelService.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): ModelService.WithRawResponse =
+            ModelServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val retrieveHandler: Handler<ModelInfo> =
             jsonHandler<ModelInfo>(clientOptions.jsonMapper).withErrorHandler(errorHandler)

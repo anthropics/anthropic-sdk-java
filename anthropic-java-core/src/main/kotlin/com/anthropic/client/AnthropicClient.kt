@@ -2,10 +2,12 @@
 
 package com.anthropic.client
 
+import com.anthropic.core.ClientOptions
 import com.anthropic.services.blocking.BetaService
 import com.anthropic.services.blocking.CompletionService
 import com.anthropic.services.blocking.MessageService
 import com.anthropic.services.blocking.ModelService
+import java.util.function.Consumer
 
 /**
  * A client for interacting with the Anthropic REST API synchronously. You can also switch to
@@ -36,6 +38,13 @@ interface AnthropicClient {
      */
     fun withRawResponse(): WithRawResponse
 
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): AnthropicClient
+
     fun completions(): CompletionService
 
     fun messages(): MessageService
@@ -59,6 +68,13 @@ interface AnthropicClient {
 
     /** A view of [AnthropicClient] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): AnthropicClient.WithRawResponse
 
         fun completions(): CompletionService.WithRawResponse
 

@@ -2,6 +2,7 @@
 
 package com.anthropic.services.blocking.messages
 
+import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
@@ -16,6 +17,7 @@ import com.anthropic.models.messages.batches.DeletedMessageBatch
 import com.anthropic.models.messages.batches.MessageBatch
 import com.anthropic.models.messages.batches.MessageBatchIndividualResponse
 import com.google.errorprone.annotations.MustBeClosed
+import java.util.function.Consumer
 
 interface BatchService {
 
@@ -23,6 +25,13 @@ interface BatchService {
      * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
+
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): BatchService
 
     /**
      * Send a batch of Message creation requests.
@@ -240,6 +249,13 @@ interface BatchService {
 
     /** A view of [BatchService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): BatchService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /v1/messages/batches`, but is otherwise the same as

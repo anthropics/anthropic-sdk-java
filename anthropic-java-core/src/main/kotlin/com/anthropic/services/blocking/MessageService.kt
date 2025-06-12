@@ -2,6 +2,7 @@
 
 package com.anthropic.services.blocking
 
+import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
@@ -12,6 +13,7 @@ import com.anthropic.models.messages.MessageTokensCount
 import com.anthropic.models.messages.RawMessageStreamEvent
 import com.anthropic.services.blocking.messages.BatchService
 import com.google.errorprone.annotations.MustBeClosed
+import java.util.function.Consumer
 
 interface MessageService {
 
@@ -19,6 +21,13 @@ interface MessageService {
      * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
+
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): MessageService
 
     fun batches(): BatchService
 
@@ -77,6 +86,13 @@ interface MessageService {
 
     /** A view of [MessageService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): MessageService.WithRawResponse
 
         fun batches(): BatchService.WithRawResponse
 

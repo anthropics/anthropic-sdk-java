@@ -2,6 +2,7 @@
 
 package com.anthropic.services.async.beta
 
+import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.AsyncStreamResponse
 import com.anthropic.core.http.HttpResponseFor
@@ -14,6 +15,7 @@ import com.anthropic.models.beta.messages.MessageCreateParams
 import com.anthropic.services.async.beta.messages.BatchServiceAsync
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 
 interface MessageServiceAsync {
 
@@ -21,6 +23,13 @@ interface MessageServiceAsync {
      * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
+
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): MessageServiceAsync
 
     fun batches(): BatchServiceAsync
 
@@ -82,6 +91,15 @@ interface MessageServiceAsync {
      * A view of [MessageServiceAsync] that provides access to raw HTTP responses for each method.
      */
     interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): MessageServiceAsync.WithRawResponse
 
         fun batches(): BatchServiceAsync.WithRawResponse
 

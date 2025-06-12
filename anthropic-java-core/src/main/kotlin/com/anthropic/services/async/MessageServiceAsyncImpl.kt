@@ -30,6 +30,7 @@ import com.anthropic.services.async.messages.BatchServiceAsync
 import com.anthropic.services.async.messages.BatchServiceAsyncImpl
 import java.time.Duration
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 
 class MessageServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     MessageServiceAsync {
@@ -41,6 +42,9 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
     private val batches: BatchServiceAsync by lazy { BatchServiceAsyncImpl(clientOptions) }
 
     override fun withRawResponse(): MessageServiceAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): MessageServiceAsync =
+        MessageServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun batches(): BatchServiceAsync = batches
 
@@ -76,6 +80,13 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
         private val batches: BatchServiceAsync.WithRawResponse by lazy {
             BatchServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): MessageServiceAsync.WithRawResponse =
+            MessageServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         override fun batches(): BatchServiceAsync.WithRawResponse = batches
 

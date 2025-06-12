@@ -29,6 +29,7 @@ import com.anthropic.models.beta.files.FileMetadata
 import com.anthropic.models.beta.files.FileRetrieveMetadataParams
 import com.anthropic.models.beta.files.FileUploadParams
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class FileServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -45,6 +46,9 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
     }
 
     override fun withRawResponse(): FileServiceAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): FileServiceAsync =
+        FileServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun list(
         params: FileListParams,
@@ -85,6 +89,13 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
         FileServiceAsync.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): FileServiceAsync.WithRawResponse =
+            FileServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val listHandler: Handler<FileListPageResponse> =
             jsonHandler<FileListPageResponse>(clientOptions.jsonMapper)

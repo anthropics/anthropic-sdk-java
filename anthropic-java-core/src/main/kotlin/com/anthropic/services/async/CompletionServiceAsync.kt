@@ -2,6 +2,7 @@
 
 package com.anthropic.services.async
 
+import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.AsyncStreamResponse
 import com.anthropic.core.http.HttpResponseFor
@@ -10,6 +11,7 @@ import com.anthropic.models.completions.Completion
 import com.anthropic.models.completions.CompletionCreateParams
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 
 interface CompletionServiceAsync {
 
@@ -17,6 +19,13 @@ interface CompletionServiceAsync {
      * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
+
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): CompletionServiceAsync
 
     /**
      * [Legacy] Create a Text Completion.
@@ -61,6 +70,15 @@ interface CompletionServiceAsync {
      * method.
      */
     interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): CompletionServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /v1/complete`, but is otherwise the same as

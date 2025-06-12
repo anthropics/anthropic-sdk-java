@@ -2,6 +2,7 @@
 
 package com.anthropic.services.blocking.beta
 
+import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.models.beta.models.BetaModelInfo
@@ -9,6 +10,7 @@ import com.anthropic.models.beta.models.ModelListPage
 import com.anthropic.models.beta.models.ModelListParams
 import com.anthropic.models.beta.models.ModelRetrieveParams
 import com.google.errorprone.annotations.MustBeClosed
+import java.util.function.Consumer
 
 interface ModelService {
 
@@ -16,6 +18,13 @@ interface ModelService {
      * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
+
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): ModelService
 
     /**
      * Get a specific model.
@@ -76,6 +85,13 @@ interface ModelService {
 
     /** A view of [ModelService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): ModelService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /v1/models/{model_id}?beta=true`, but is otherwise
