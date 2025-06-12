@@ -2,6 +2,7 @@
 
 package com.anthropic.services.async.beta
 
+import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponseFor
@@ -14,6 +15,7 @@ import com.anthropic.models.beta.files.FileMetadata
 import com.anthropic.models.beta.files.FileRetrieveMetadataParams
 import com.anthropic.models.beta.files.FileUploadParams
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 
 interface FileServiceAsync {
 
@@ -21,6 +23,13 @@ interface FileServiceAsync {
      * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
+
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): FileServiceAsync
 
     /** List Files */
     fun list(): CompletableFuture<FileListPageAsync> = list(FileListParams.none())
@@ -150,6 +159,13 @@ interface FileServiceAsync {
 
     /** A view of [FileServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): FileServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /v1/files?beta=true`, but is otherwise the same as

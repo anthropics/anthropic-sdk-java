@@ -2,6 +2,7 @@
 
 package com.anthropic.services.blocking.beta
 
+import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponseFor
@@ -14,6 +15,7 @@ import com.anthropic.models.beta.files.FileMetadata
 import com.anthropic.models.beta.files.FileRetrieveMetadataParams
 import com.anthropic.models.beta.files.FileUploadParams
 import com.google.errorprone.annotations.MustBeClosed
+import java.util.function.Consumer
 
 interface FileService {
 
@@ -21,6 +23,13 @@ interface FileService {
      * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
+
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): FileService
 
     /** List Files */
     fun list(): FileListPage = list(FileListParams.none())
@@ -143,6 +152,13 @@ interface FileService {
 
     /** A view of [FileService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): FileService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /v1/files?beta=true`, but is otherwise the same as

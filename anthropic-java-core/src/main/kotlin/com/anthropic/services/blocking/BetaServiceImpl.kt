@@ -9,6 +9,7 @@ import com.anthropic.services.blocking.beta.MessageService
 import com.anthropic.services.blocking.beta.MessageServiceImpl
 import com.anthropic.services.blocking.beta.ModelService
 import com.anthropic.services.blocking.beta.ModelServiceImpl
+import java.util.function.Consumer
 
 class BetaServiceImpl internal constructor(private val clientOptions: ClientOptions) : BetaService {
 
@@ -23,6 +24,9 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
     private val files: FileService by lazy { FileServiceImpl(clientOptions) }
 
     override fun withRawResponse(): BetaService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BetaService =
+        BetaServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun models(): ModelService = models
 
@@ -44,6 +48,13 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
         private val files: FileService.WithRawResponse by lazy {
             FileServiceImpl.WithRawResponseImpl(clientOptions)
         }
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): BetaService.WithRawResponse =
+            BetaServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         override fun models(): ModelService.WithRawResponse = models
 

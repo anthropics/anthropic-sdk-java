@@ -12,6 +12,7 @@ import com.anthropic.services.blocking.MessageService
 import com.anthropic.services.blocking.MessageServiceImpl
 import com.anthropic.services.blocking.ModelService
 import com.anthropic.services.blocking.ModelServiceImpl
+import java.util.function.Consumer
 
 class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicClient {
 
@@ -44,6 +45,9 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
 
     override fun withRawResponse(): AnthropicClient.WithRawResponse = withRawResponse
 
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): AnthropicClient =
+        AnthropicClientImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
     override fun completions(): CompletionService = completions
 
     override fun messages(): MessageService = messages
@@ -72,6 +76,13 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
         private val beta: BetaService.WithRawResponse by lazy {
             BetaServiceImpl.WithRawResponseImpl(clientOptions)
         }
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): AnthropicClient.WithRawResponse =
+            AnthropicClientImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         override fun completions(): CompletionService.WithRawResponse = completions
 

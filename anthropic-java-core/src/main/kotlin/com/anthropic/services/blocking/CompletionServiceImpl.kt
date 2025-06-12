@@ -21,6 +21,7 @@ import com.anthropic.core.http.parseable
 import com.anthropic.core.prepare
 import com.anthropic.models.completions.Completion
 import com.anthropic.models.completions.CompletionCreateParams
+import java.util.function.Consumer
 
 class CompletionServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     CompletionService {
@@ -30,6 +31,9 @@ class CompletionServiceImpl internal constructor(private val clientOptions: Clie
     }
 
     override fun withRawResponse(): CompletionService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CompletionService =
+        CompletionServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(
         params: CompletionCreateParams,
@@ -49,6 +53,13 @@ class CompletionServiceImpl internal constructor(private val clientOptions: Clie
         CompletionService.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): CompletionService.WithRawResponse =
+            CompletionServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val createHandler: Handler<Completion> =
             jsonHandler<Completion>(clientOptions.jsonMapper).withErrorHandler(errorHandler)

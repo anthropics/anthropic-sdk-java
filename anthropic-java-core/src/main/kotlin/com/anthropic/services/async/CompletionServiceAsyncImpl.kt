@@ -24,6 +24,7 @@ import com.anthropic.core.prepareAsync
 import com.anthropic.models.completions.Completion
 import com.anthropic.models.completions.CompletionCreateParams
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 
 class CompletionServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     CompletionServiceAsync {
@@ -33,6 +34,9 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
     }
 
     override fun withRawResponse(): CompletionServiceAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CompletionServiceAsync =
+        CompletionServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(
         params: CompletionCreateParams,
@@ -55,6 +59,13 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
         CompletionServiceAsync.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): CompletionServiceAsync.WithRawResponse =
+            CompletionServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val createHandler: Handler<Completion> =
             jsonHandler<Completion>(clientOptions.jsonMapper).withErrorHandler(errorHandler)

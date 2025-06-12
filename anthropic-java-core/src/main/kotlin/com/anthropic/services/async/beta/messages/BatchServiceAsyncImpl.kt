@@ -34,6 +34,7 @@ import com.anthropic.models.beta.messages.batches.BetaDeletedMessageBatch
 import com.anthropic.models.beta.messages.batches.BetaMessageBatch
 import com.anthropic.models.beta.messages.batches.BetaMessageBatchIndividualResponse
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class BatchServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -50,6 +51,9 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
     }
 
     override fun withRawResponse(): BatchServiceAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BatchServiceAsync =
+        BatchServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(
         params: BatchCreateParams,
@@ -100,6 +104,13 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
         BatchServiceAsync.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): BatchServiceAsync.WithRawResponse =
+            BatchServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val createHandler: Handler<BetaMessageBatch> =
             jsonHandler<BetaMessageBatch>(clientOptions.jsonMapper).withErrorHandler(errorHandler)

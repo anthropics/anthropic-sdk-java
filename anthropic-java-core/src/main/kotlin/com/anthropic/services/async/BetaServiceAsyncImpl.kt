@@ -9,6 +9,7 @@ import com.anthropic.services.async.beta.MessageServiceAsync
 import com.anthropic.services.async.beta.MessageServiceAsyncImpl
 import com.anthropic.services.async.beta.ModelServiceAsync
 import com.anthropic.services.async.beta.ModelServiceAsyncImpl
+import java.util.function.Consumer
 
 class BetaServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     BetaServiceAsync {
@@ -24,6 +25,9 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
     private val files: FileServiceAsync by lazy { FileServiceAsyncImpl(clientOptions) }
 
     override fun withRawResponse(): BetaServiceAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BetaServiceAsync =
+        BetaServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun models(): ModelServiceAsync = models
 
@@ -45,6 +49,13 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
         private val files: FileServiceAsync.WithRawResponse by lazy {
             FileServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): BetaServiceAsync.WithRawResponse =
+            BetaServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         override fun models(): ModelServiceAsync.WithRawResponse = models
 

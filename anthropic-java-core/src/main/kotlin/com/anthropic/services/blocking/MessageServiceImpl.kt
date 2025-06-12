@@ -26,6 +26,7 @@ import com.anthropic.models.messages.MessageTokensCount
 import com.anthropic.models.messages.RawMessageStreamEvent
 import com.anthropic.services.blocking.messages.BatchService
 import com.anthropic.services.blocking.messages.BatchServiceImpl
+import java.util.function.Consumer
 
 class MessageServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     MessageService {
@@ -37,6 +38,9 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
     private val batches: BatchService by lazy { BatchServiceImpl(clientOptions) }
 
     override fun withRawResponse(): MessageService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): MessageService =
+        MessageServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun batches(): BatchService = batches
 
@@ -66,6 +70,13 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
         private val batches: BatchService.WithRawResponse by lazy {
             BatchServiceImpl.WithRawResponseImpl(clientOptions)
         }
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): MessageService.WithRawResponse =
+            MessageServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         override fun batches(): BatchService.WithRawResponse = batches
 

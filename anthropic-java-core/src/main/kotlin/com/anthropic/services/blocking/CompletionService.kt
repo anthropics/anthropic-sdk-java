@@ -2,12 +2,14 @@
 
 package com.anthropic.services.blocking
 
+import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
 import com.anthropic.models.completions.Completion
 import com.anthropic.models.completions.CompletionCreateParams
 import com.google.errorprone.annotations.MustBeClosed
+import java.util.function.Consumer
 
 interface CompletionService {
 
@@ -15,6 +17,13 @@ interface CompletionService {
      * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
+
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): CompletionService
 
     /**
      * [Legacy] Create a Text Completion.
@@ -57,6 +66,15 @@ interface CompletionService {
 
     /** A view of [CompletionService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): CompletionService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /v1/complete`, but is otherwise the same as
