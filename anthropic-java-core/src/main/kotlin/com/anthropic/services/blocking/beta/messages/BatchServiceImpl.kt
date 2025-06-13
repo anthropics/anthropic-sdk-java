@@ -102,6 +102,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "batches")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
@@ -134,6 +135,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "batches", params._pathParam(0))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
@@ -163,6 +165,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "batches")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
@@ -202,6 +205,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "batches", params._pathParam(0))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
@@ -234,6 +238,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "batches", params._pathParam(0), "cancel")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
@@ -268,6 +273,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "batches", params._pathParam(0), "results")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)

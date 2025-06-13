@@ -353,7 +353,7 @@ internal class VertexBackendTest {
         val request =
             HttpRequest.builder()
                 .method(HttpMethod.POST)
-                .url("https://$GC_REGION-aiplatform.googleapis.com/path1/path2")
+                .baseUrl("https://$GC_REGION-aiplatform.googleapis.com/path1/path2")
                 .addPathSegment("path-1")
                 .putQueryParam("param-1", "param-value-1")
                 .putHeader("content-type", "on/request")
@@ -372,7 +372,7 @@ internal class VertexBackendTest {
         val request =
             HttpRequest.builder()
                 .method(HttpMethod.POST)
-                .url("https://$GC_REGION-aiplatform.googleapis.com/path1/path2")
+                .baseUrl("https://$GC_REGION-aiplatform.googleapis.com/path1/path2")
                 .addPathSegment("path-1")
                 .addPathSegment("path-2")
                 .putQueryParam("param-1", "param-value-1a")
@@ -388,7 +388,7 @@ internal class VertexBackendTest {
         // Check that the authorized request contains all the same elements that
         // were in the original request plus the new authorization header.
         assertThat(authorizedRequest.method).isEqualTo(request.method)
-        assertThat(authorizedRequest.url).isEqualTo(request.url)
+        assertThat(authorizedRequest.baseUrl).isEqualTo(request.baseUrl)
         assertThat(authorizedRequest.body).isEqualTo(request.body)
 
         assertThat(authorizedRequest.pathSegments.size).isEqualTo(2)

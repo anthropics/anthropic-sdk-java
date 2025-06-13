@@ -86,6 +86,7 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "files")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
@@ -124,6 +125,7 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "files", params._pathParam(0))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
@@ -153,6 +155,7 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "files", params._pathParam(0), "content")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
@@ -175,6 +178,7 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "files", params._pathParam(0))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
@@ -203,6 +207,7 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "files")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)

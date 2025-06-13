@@ -9,10 +9,12 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.http.RetryingHttpClient
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.time.Clock
+import java.util.Optional
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicLong
+import kotlin.jvm.optionals.getOrNull
 
 class ClientOptions
 private constructor(
@@ -22,6 +24,7 @@ private constructor(
     @get:JvmName("jsonMapper") val jsonMapper: JsonMapper,
     @get:JvmName("streamHandlerExecutor") val streamHandlerExecutor: Executor,
     @get:JvmName("clock") val clock: Clock,
+    val baseUrl: String?,
     @get:JvmName("headers") val headers: Headers,
     @get:JvmName("queryParams") val queryParams: QueryParams,
     @get:JvmName("responseValidation") val responseValidation: Boolean,
@@ -34,6 +37,8 @@ private constructor(
             checkJacksonVersionCompatibility()
         }
     }
+
+    fun baseUrl(): String? = baseUrl
 
     fun toBuilder() = Builder().from(this)
 
@@ -58,6 +63,7 @@ private constructor(
         private var jsonMapper: JsonMapper = jsonMapper()
         private var streamHandlerExecutor: Executor? = null
         private var clock: Clock = Clock.systemUTC()
+        private var baseUrl: String? = null
         private var headers: Headers.Builder = Headers.builder()
         private var queryParams: QueryParams.Builder = QueryParams.builder()
         private var responseValidation: Boolean = false
@@ -71,6 +77,7 @@ private constructor(
             jsonMapper = clientOptions.jsonMapper
             streamHandlerExecutor = clientOptions.streamHandlerExecutor
             clock = clientOptions.clock
+            baseUrl = clientOptions.baseUrl
             headers = clientOptions.headers.toBuilder()
             queryParams = clientOptions.queryParams.toBuilder()
             responseValidation = clientOptions.responseValidation
@@ -91,6 +98,11 @@ private constructor(
         }
 
         fun clock(clock: Clock) = apply { this.clock = clock }
+
+        fun baseUrl(baseUrl: String?) = apply { this.baseUrl = baseUrl }
+
+        /** Alias for calling [Builder.baseUrl] with `baseUrl.orElse(null)`. */
+        fun baseUrl(baseUrl: Optional<String>) = baseUrl(baseUrl.getOrNull())
 
         fun responseValidation(responseValidation: Boolean) = apply {
             this.responseValidation = responseValidation
@@ -234,6 +246,7 @@ private constructor(
                         }
                     ),
                 clock,
+                baseUrl,
                 headers.build(),
                 queryParams.build(),
                 responseValidation,

@@ -120,7 +120,7 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
         if (body == null && requiresBody(method)) {
             body = "".toRequestBody()
         }
-        val builder = Request.Builder().url(url ?: "").method(method.name, body)
+        val builder = Request.Builder().url(baseUrl ?: "").method(method.name, body)
         headers.names().forEach { name ->
             headers.values(name).forEach { builder.header(name, it) }
         }
@@ -153,15 +153,11 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
         }
 
     private fun HttpRequest.resolveUrl(): HttpRequest {
-        return toBuilder().url(toUrl()).build()
+        return toBuilder().baseUrl(toUrl()).build()
     }
 
     private fun HttpRequest.toUrl(): String {
-        url?.let {
-            return it
-        }
-
-        val builder = backend.baseUrl().toHttpUrl().newBuilder()
+        val builder = (baseUrl ?: backend.baseUrl()).toHttpUrl().newBuilder()
 
         pathSegments.forEach(builder::addPathSegment)
         queryParams.keys().forEach { key ->

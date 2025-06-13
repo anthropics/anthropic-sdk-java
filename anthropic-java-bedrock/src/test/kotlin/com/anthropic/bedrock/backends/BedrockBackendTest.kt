@@ -509,7 +509,7 @@ internal class BedrockBackendTest {
         val request =
             HttpRequest.builder()
                 .method(HttpMethod.POST)
-                .url("https://bedrock-runtime.us-east-1.amazonaws.com/path1/path2")
+                .baseUrl("https://bedrock-runtime.us-east-1.amazonaws.com/path1/path2")
                 .addPathSegment("path-1")
                 .putQueryParam("param-1", "param-value-1")
                 .putHeader("content-type", "on/request")
@@ -529,7 +529,7 @@ internal class BedrockBackendTest {
         val request =
             HttpRequest.builder()
                 .method(HttpMethod.POST)
-                .url("https://bedrock-runtime.us-east-1.amazonaws.com/path1/path2")
+                .baseUrl("https://bedrock-runtime.us-east-1.amazonaws.com/path1/path2")
                 .addPathSegment("path-1")
                 .addPathSegment("path-2")
                 .putQueryParam("param-1", "param-value-1a")
@@ -546,7 +546,7 @@ internal class BedrockBackendTest {
         // Check that the signed request contains all the same elements that
         // were in the original request plus the new signature-related headers.
         assertThat(signedRequest.method).isEqualTo(request.method)
-        assertThat(signedRequest.url).isEqualTo(request.url)
+        assertThat(signedRequest.baseUrl).isEqualTo(request.baseUrl)
         assertThat(signedRequest.body).isEqualTo(request.body)
 
         assertThat(signedRequest.pathSegments.size).isEqualTo(2)
@@ -592,7 +592,7 @@ internal class BedrockBackendTest {
         val request =
             HttpRequest.builder()
                 .method(HttpMethod.POST)
-                .url("https://bedrock-runtime.us-east-1.amazonaws.com/path1/path2")
+                .baseUrl("https://bedrock-runtime.us-east-1.amazonaws.com/path1/path2")
                 .addPathSegment("path-1")
                 .addPathSegment("path-2")
                 .putQueryParam("param-1", "param-value-1a")
@@ -621,7 +621,7 @@ internal class BedrockBackendTest {
         val request =
             HttpRequest.builder()
                 .method(HttpMethod.POST)
-                .url("https://bedrock-runtime.us-east-1.amazonaws.com/path1/path2")
+                .baseUrl("https://bedrock-runtime.us-east-1.amazonaws.com/path1/path2")
                 .addPathSegment("path-1")
                 .putQueryParam("param-1", "param-value-1")
                 .putHeader("X-Test", "header-value-a")

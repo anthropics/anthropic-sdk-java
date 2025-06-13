@@ -196,7 +196,7 @@ private constructor(
 
         val awsSignRequest =
             SdkHttpRequest.builder()
-                .uri(request.url)
+                .uri(request.baseUrl)
                 .method(SdkHttpMethod.fromValue(request.method.toString()))
                 .apply {
                     // For the signature, copy the content type header from the body

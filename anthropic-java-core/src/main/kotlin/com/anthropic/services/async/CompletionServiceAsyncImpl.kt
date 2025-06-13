@@ -66,6 +66,7 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "complete")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -105,6 +106,7 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "complete")
                     .body(
                         json(
