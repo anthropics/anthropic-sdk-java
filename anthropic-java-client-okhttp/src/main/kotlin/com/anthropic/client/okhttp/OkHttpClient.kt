@@ -229,7 +229,12 @@ private constructor(private val okHttpClient: okhttp3.OkHttpClient, private val 
                     .writeTimeout(timeout.write())
                     .callTimeout(timeout.request())
                     .proxy(proxy)
-                    .build(),
+                    .build()
+                    .apply {
+                        // We usually make all our requests to the same host so it makes sense to
+                        // raise the per-host limit to the overall limit.
+                        dispatcher.maxRequestsPerHost = dispatcher.maxRequests
+                    },
                 checkRequired("backend", backend),
             )
     }
