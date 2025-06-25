@@ -83,6 +83,14 @@ internal class VertexBackendTest {
     }
 
     @Test
+    fun baseUrlGlobalRegion() {
+        val backend1 = createBackend()
+        val globalBackend = createBackend(backend1.googleCredentials, "global", backend1.project)
+
+        assertThat(globalBackend.baseUrl()).isEqualTo("https://aiplatform.googleapis.com")
+    }
+
+    @Test
     fun prepareRequestMissingJSON() {
         val backend = createBackend()
         val request = createRequest(null, "v1", "messages")
