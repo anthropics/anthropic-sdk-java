@@ -63,10 +63,18 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         @JvmField val CLAUDE_4_OPUS_20250514 = of("claude-4-opus-20250514")
 
         /** Excels at writing and complex tasks */
-        @JvmField val CLAUDE_3_OPUS_LATEST = of("claude-3-opus-latest")
+        @Deprecated(
+            "Will reach end-of-life on January 5th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
+        @JvmField
+        val CLAUDE_3_OPUS_LATEST = of("claude-3-opus-latest")
 
         /** Excels at writing and complex tasks */
-        @JvmField val CLAUDE_3_OPUS_20240229 = of("claude-3-opus-20240229")
+        @Deprecated(
+            "Will reach end-of-life on January 5th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
+        @JvmField
+        val CLAUDE_3_OPUS_20240229 = of("claude-3-opus-20240229")
 
         /** Balance of speed and intelligence */
         @Deprecated(
@@ -120,8 +128,14 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         CLAUDE_OPUS_4_20250514,
         /** Our most capable model */
         CLAUDE_4_OPUS_20250514,
+        @Deprecated(
+            "Will reach end-of-life on January 5th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Excels at writing and complex tasks */
         CLAUDE_3_OPUS_LATEST,
+        @Deprecated(
+            "Will reach end-of-life on January 5th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Excels at writing and complex tasks */
         CLAUDE_3_OPUS_20240229,
         @Deprecated(
@@ -176,8 +190,14 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         CLAUDE_OPUS_4_20250514,
         /** Our most capable model */
         CLAUDE_4_OPUS_20250514,
+        @Deprecated(
+            "Will reach end-of-life on January 5th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Excels at writing and complex tasks */
         CLAUDE_3_OPUS_LATEST,
+        @Deprecated(
+            "Will reach end-of-life on January 5th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Excels at writing and complex tasks */
         CLAUDE_3_OPUS_20240229,
         @Deprecated(
