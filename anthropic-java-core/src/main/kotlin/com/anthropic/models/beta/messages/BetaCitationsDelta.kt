@@ -140,7 +140,7 @@ private constructor(
          * Alias for calling [citation] with
          * `Citation.ofSearchResultLocation(searchResultLocation)`.
          */
-        fun citation(searchResultLocation: BetaSearchResultLocationCitation) =
+        fun citation(searchResultLocation: BetaCitationSearchResultLocation) =
             citation(Citation.ofSearchResultLocation(searchResultLocation))
 
         /**
@@ -238,7 +238,7 @@ private constructor(
         private val pageLocation: BetaCitationPageLocation? = null,
         private val contentBlockLocation: BetaCitationContentBlockLocation? = null,
         private val webSearchResultLocation: BetaCitationsWebSearchResultLocation? = null,
-        private val searchResultLocation: BetaSearchResultLocationCitation? = null,
+        private val searchResultLocation: BetaCitationSearchResultLocation? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -252,7 +252,7 @@ private constructor(
         fun webSearchResultLocation(): Optional<BetaCitationsWebSearchResultLocation> =
             Optional.ofNullable(webSearchResultLocation)
 
-        fun searchResultLocation(): Optional<BetaSearchResultLocationCitation> =
+        fun searchResultLocation(): Optional<BetaCitationSearchResultLocation> =
             Optional.ofNullable(searchResultLocation)
 
         fun isCharLocation(): Boolean = charLocation != null
@@ -275,7 +275,7 @@ private constructor(
         fun asWebSearchResultLocation(): BetaCitationsWebSearchResultLocation =
             webSearchResultLocation.getOrThrow("webSearchResultLocation")
 
-        fun asSearchResultLocation(): BetaSearchResultLocationCitation =
+        fun asSearchResultLocation(): BetaCitationSearchResultLocation =
             searchResultLocation.getOrThrow("searchResultLocation")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
@@ -323,7 +323,7 @@ private constructor(
                     }
 
                     override fun visitSearchResultLocation(
-                        searchResultLocation: BetaSearchResultLocationCitation
+                        searchResultLocation: BetaCitationSearchResultLocation
                     ) {
                         searchResultLocation.validate()
                     }
@@ -365,7 +365,7 @@ private constructor(
                     ) = webSearchResultLocation.validity()
 
                     override fun visitSearchResultLocation(
-                        searchResultLocation: BetaSearchResultLocationCitation
+                        searchResultLocation: BetaCitationSearchResultLocation
                     ) = searchResultLocation.validity()
 
                     override fun unknown(json: JsonValue?) = 0
@@ -416,7 +416,7 @@ private constructor(
             ) = Citation(webSearchResultLocation = webSearchResultLocation)
 
             @JvmStatic
-            fun ofSearchResultLocation(searchResultLocation: BetaSearchResultLocationCitation) =
+            fun ofSearchResultLocation(searchResultLocation: BetaCitationSearchResultLocation) =
                 Citation(searchResultLocation = searchResultLocation)
         }
 
@@ -435,7 +435,7 @@ private constructor(
                 webSearchResultLocation: BetaCitationsWebSearchResultLocation
             ): T
 
-            fun visitSearchResultLocation(searchResultLocation: BetaSearchResultLocationCitation): T
+            fun visitSearchResultLocation(searchResultLocation: BetaCitationSearchResultLocation): T
 
             /**
              * Maps an unknown variant of [Citation] to a value of type [T].
@@ -488,7 +488,7 @@ private constructor(
                     "search_result_location" -> {
                         return tryDeserialize(
                                 node,
-                                jacksonTypeRef<BetaSearchResultLocationCitation>(),
+                                jacksonTypeRef<BetaCitationSearchResultLocation>(),
                             )
                             ?.let { Citation(searchResultLocation = it, _json = json) }
                             ?: Citation(_json = json)

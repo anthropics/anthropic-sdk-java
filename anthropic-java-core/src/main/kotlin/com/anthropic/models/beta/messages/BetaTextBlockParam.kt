@@ -242,7 +242,7 @@ private constructor(
          * Alias for calling [addCitation] with
          * `BetaTextCitation.ofSearchResultLocation(searchResultLocation)`.
          */
-        fun addCitation(searchResultLocation: BetaSearchResultLocationCitation) =
+        fun addCitation(searchResultLocation: BetaCitationSearchResultLocation) =
             addCitation(BetaTextCitation.ofSearchResultLocation(searchResultLocation))
 
         /**
@@ -277,7 +277,7 @@ private constructor(
          * Alias for calling [addCitation] with
          * `BetaTextCitationParam.ofSearchResultLocation(searchResultLocation)`.
          */
-        fun addCitation(searchResultLocation: BetaSearchResultLocationCitationParam) =
+        fun addCitation(searchResultLocation: BetaCitationSearchResultLocationParam) =
             addCitation(BetaTextCitationParam.ofSearchResultLocation(searchResultLocation))
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

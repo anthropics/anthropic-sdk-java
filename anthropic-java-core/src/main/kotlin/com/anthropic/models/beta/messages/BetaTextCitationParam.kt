@@ -26,7 +26,7 @@ private constructor(
     private val pageLocation: BetaCitationPageLocationParam? = null,
     private val contentBlockLocation: BetaCitationContentBlockLocationParam? = null,
     private val webSearchResultLocation: BetaCitationWebSearchResultLocationParam? = null,
-    private val searchResultLocation: BetaSearchResultLocationCitationParam? = null,
+    private val searchResultLocation: BetaCitationSearchResultLocationParam? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -40,7 +40,7 @@ private constructor(
     fun webSearchResultLocation(): Optional<BetaCitationWebSearchResultLocationParam> =
         Optional.ofNullable(webSearchResultLocation)
 
-    fun searchResultLocation(): Optional<BetaSearchResultLocationCitationParam> =
+    fun searchResultLocation(): Optional<BetaCitationSearchResultLocationParam> =
         Optional.ofNullable(searchResultLocation)
 
     fun isCharLocation(): Boolean = charLocation != null
@@ -63,7 +63,7 @@ private constructor(
     fun asWebSearchResultLocation(): BetaCitationWebSearchResultLocationParam =
         webSearchResultLocation.getOrThrow("webSearchResultLocation")
 
-    fun asSearchResultLocation(): BetaSearchResultLocationCitationParam =
+    fun asSearchResultLocation(): BetaCitationSearchResultLocationParam =
         searchResultLocation.getOrThrow("searchResultLocation")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
@@ -109,7 +109,7 @@ private constructor(
                 }
 
                 override fun visitSearchResultLocation(
-                    searchResultLocation: BetaSearchResultLocationCitationParam
+                    searchResultLocation: BetaCitationSearchResultLocationParam
                 ) {
                     searchResultLocation.validate()
                 }
@@ -150,7 +150,7 @@ private constructor(
                 ) = webSearchResultLocation.validity()
 
                 override fun visitSearchResultLocation(
-                    searchResultLocation: BetaSearchResultLocationCitationParam
+                    searchResultLocation: BetaCitationSearchResultLocationParam
                 ) = searchResultLocation.validity()
 
                 override fun unknown(json: JsonValue?) = 0
@@ -201,7 +201,7 @@ private constructor(
         ) = BetaTextCitationParam(webSearchResultLocation = webSearchResultLocation)
 
         @JvmStatic
-        fun ofSearchResultLocation(searchResultLocation: BetaSearchResultLocationCitationParam) =
+        fun ofSearchResultLocation(searchResultLocation: BetaCitationSearchResultLocationParam) =
             BetaTextCitationParam(searchResultLocation = searchResultLocation)
     }
 
@@ -224,7 +224,7 @@ private constructor(
         ): T
 
         fun visitSearchResultLocation(
-            searchResultLocation: BetaSearchResultLocationCitationParam
+            searchResultLocation: BetaCitationSearchResultLocationParam
         ): T
 
         /**
@@ -279,7 +279,7 @@ private constructor(
                 "search_result_location" -> {
                     return tryDeserialize(
                             node,
-                            jacksonTypeRef<BetaSearchResultLocationCitationParam>(),
+                            jacksonTypeRef<BetaCitationSearchResultLocationParam>(),
                         )
                         ?.let { BetaTextCitationParam(searchResultLocation = it, _json = json) }
                         ?: BetaTextCitationParam(_json = json)

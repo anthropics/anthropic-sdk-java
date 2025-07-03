@@ -201,7 +201,7 @@ private constructor(
          * Alias for calling [citationsDelta] with
          * `BetaCitationsDelta.Citation.ofSearchResultLocation(searchResultLocation)`.
          */
-        fun citationsDelta(searchResultLocation: BetaSearchResultLocationCitation) =
+        fun citationsDelta(searchResultLocation: BetaCitationSearchResultLocation) =
             citationsDelta(BetaCitationsDelta.Citation.ofSearchResultLocation(searchResultLocation))
 
         /** Alias for calling [delta] with `BetaRawContentBlockDelta.ofThinking(thinking)`. */
