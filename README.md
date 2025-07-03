@@ -58,7 +58,7 @@ AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_3_7_SONNET_LATEST)
+    .model(Model.CLAUDE_SONNET_4_20250514)
     .build();
 Message message = client.messages().create(params);
 ```
@@ -134,7 +134,7 @@ For example, `client.messages().create(...)` should be called with an instance o
 
 ### Long requests
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > We highly encourage you to use [streaming](#streaming) for longer running requests.
 
 We do not recommend setting a large `maxTokens` value without using streaming. Some networks may drop idle connections after a certain period of time, which can cause the request to fail or [timeout](#timeouts) without receiving a response from Anthropic. We periodically ping the API to keep the connection alive and reduce the impact of these networks.
@@ -167,7 +167,7 @@ AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_3_7_SONNET_LATEST)
+    .model(Model.CLAUDE_SONNET_4_20250514)
     .build();
 CompletableFuture<Message> message = client.async().messages().create(params);
 ```
@@ -188,7 +188,7 @@ AnthropicClientAsync client = AnthropicOkHttpClientAsync.fromEnv();
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_3_7_SONNET_LATEST)
+    .model(Model.CLAUDE_SONNET_4_20250514)
     .build();
 CompletableFuture<Message> message = client.messages().create(params);
 ```
@@ -478,7 +478,7 @@ import com.anthropic.models.messages.Model;
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_3_7_SONNET_LATEST)
+    .model(Model.CLAUDE_SONNET_4_20250514)
     .build();
 HttpResponseFor<Message> message = client.messages().withRawResponse().create(params);
 
@@ -547,13 +547,13 @@ To iterate through all results across all pages, use the `autoPager()` method, w
 When using the synchronous client, the method returns an [`Iterable`](https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html)
 
 ```java
-import com.anthropic.models.beta.messages.batches.BatchListPage;
-import com.anthropic.models.beta.messages.batches.BetaMessageBatch;
+import com.anthropic.models.messages.batches.BatchListPage;
+import com.anthropic.models.messages.batches.MessageBatch;
 
-BatchListPage page = client.beta().messages().batches().list();
+BatchListPage page = client.messages().batches().list();
 
 // Process as an Iterable
-for (BetaMessageBatch batch : page.autoPager()) {
+for (MessageBatch batch : page.autoPager()) {
     System.out.println(batch);
 }
 
@@ -568,12 +568,12 @@ When using the asynchronous client, the method returns an [`AsyncStreamResponse`
 
 ```java
 import com.anthropic.core.http.AsyncStreamResponse;
-import com.anthropic.models.beta.messages.batches.BatchListPageAsync;
-import com.anthropic.models.beta.messages.batches.BetaMessageBatch;
+import com.anthropic.models.messages.batches.BatchListPageAsync;
+import com.anthropic.models.messages.batches.MessageBatch;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-CompletableFuture<BatchListPageAsync> pageFuture = client.async().beta().messages().batches().list();
+CompletableFuture<BatchListPageAsync> pageFuture = client.async().messages().batches().list();
 
 pageFuture.thenRun(page -> page.autoPager().subscribe(batch -> {
     System.out.println(batch);
@@ -582,7 +582,7 @@ pageFuture.thenRun(page -> page.autoPager().subscribe(batch -> {
 // If you need to handle errors or completion of the stream
 pageFuture.thenRun(page -> page.autoPager().subscribe(new AsyncStreamResponse.Handler<>() {
     @Override
-    public void onNext(BetaMessageBatch batch) {
+    public void onNext(MessageBatch batch) {
         System.out.println(batch);
     }
 
@@ -619,12 +619,12 @@ To access individual page items and manually request the next page, use the `ite
 `hasNextPage()`, and `nextPage()` methods:
 
 ```java
-import com.anthropic.models.beta.messages.batches.BatchListPage;
-import com.anthropic.models.beta.messages.batches.BetaMessageBatch;
+import com.anthropic.models.messages.batches.BatchListPage;
+import com.anthropic.models.messages.batches.MessageBatch;
 
-BatchListPage page = client.beta().messages().batches().list();
+BatchListPage page = client.messages().batches().list();
 while (true) {
-    for (BetaMessageBatch batch : page.items()) {
+    for (MessageBatch batch : page.items()) {
         System.out.println(batch);
     }
 
@@ -1034,7 +1034,7 @@ import com.anthropic.models.messages.Model;
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(JsonValue.from(3.14))
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_3_7_SONNET_LATEST)
+    .model(Model.CLAUDE_SONNET_4_20250514)
     .build();
 ```
 
@@ -1088,7 +1088,7 @@ import com.anthropic.models.messages.Model;
 
 MessageCreateParams params = MessageCreateParams.builder()
     .addUserMessage("Hello, world")
-    .model(Model.CLAUDE_3_7_SONNET_LATEST)
+    .model(Model.CLAUDE_SONNET_4_20250514)
     .maxTokens(JsonMissing.of())
     .build();
 ```
