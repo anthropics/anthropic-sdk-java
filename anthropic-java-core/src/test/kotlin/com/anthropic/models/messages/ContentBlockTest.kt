@@ -33,11 +33,11 @@ internal class ContentBlockTest {
         val contentBlock = ContentBlock.ofText(text)
 
         assertThat(contentBlock.text()).contains(text)
+        assertThat(contentBlock.thinking()).isEmpty
+        assertThat(contentBlock.redactedThinking()).isEmpty
         assertThat(contentBlock.toolUse()).isEmpty
         assertThat(contentBlock.serverToolUse()).isEmpty
         assertThat(contentBlock.webSearchToolResult()).isEmpty
-        assertThat(contentBlock.thinking()).isEmpty
-        assertThat(contentBlock.redactedThinking()).isEmpty
     }
 
     @Test
@@ -69,6 +69,66 @@ internal class ContentBlockTest {
     }
 
     @Test
+    fun ofThinking() {
+        val thinking = ThinkingBlock.builder().signature("signature").thinking("thinking").build()
+
+        val contentBlock = ContentBlock.ofThinking(thinking)
+
+        assertThat(contentBlock.text()).isEmpty
+        assertThat(contentBlock.thinking()).contains(thinking)
+        assertThat(contentBlock.redactedThinking()).isEmpty
+        assertThat(contentBlock.toolUse()).isEmpty
+        assertThat(contentBlock.serverToolUse()).isEmpty
+        assertThat(contentBlock.webSearchToolResult()).isEmpty
+    }
+
+    @Test
+    fun ofThinkingRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlock =
+            ContentBlock.ofThinking(
+                ThinkingBlock.builder().signature("signature").thinking("thinking").build()
+            )
+
+        val roundtrippedContentBlock =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlock),
+                jacksonTypeRef<ContentBlock>(),
+            )
+
+        assertThat(roundtrippedContentBlock).isEqualTo(contentBlock)
+    }
+
+    @Test
+    fun ofRedactedThinking() {
+        val redactedThinking = RedactedThinkingBlock.builder().data("data").build()
+
+        val contentBlock = ContentBlock.ofRedactedThinking(redactedThinking)
+
+        assertThat(contentBlock.text()).isEmpty
+        assertThat(contentBlock.thinking()).isEmpty
+        assertThat(contentBlock.redactedThinking()).contains(redactedThinking)
+        assertThat(contentBlock.toolUse()).isEmpty
+        assertThat(contentBlock.serverToolUse()).isEmpty
+        assertThat(contentBlock.webSearchToolResult()).isEmpty
+    }
+
+    @Test
+    fun ofRedactedThinkingRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlock =
+            ContentBlock.ofRedactedThinking(RedactedThinkingBlock.builder().data("data").build())
+
+        val roundtrippedContentBlock =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlock),
+                jacksonTypeRef<ContentBlock>(),
+            )
+
+        assertThat(roundtrippedContentBlock).isEqualTo(contentBlock)
+    }
+
+    @Test
     fun ofToolUse() {
         val toolUse =
             ToolUseBlock.builder()
@@ -80,11 +140,11 @@ internal class ContentBlockTest {
         val contentBlock = ContentBlock.ofToolUse(toolUse)
 
         assertThat(contentBlock.text()).isEmpty
+        assertThat(contentBlock.thinking()).isEmpty
+        assertThat(contentBlock.redactedThinking()).isEmpty
         assertThat(contentBlock.toolUse()).contains(toolUse)
         assertThat(contentBlock.serverToolUse()).isEmpty
         assertThat(contentBlock.webSearchToolResult()).isEmpty
-        assertThat(contentBlock.thinking()).isEmpty
-        assertThat(contentBlock.redactedThinking()).isEmpty
     }
 
     @Test
@@ -119,11 +179,11 @@ internal class ContentBlockTest {
         val contentBlock = ContentBlock.ofServerToolUse(serverToolUse)
 
         assertThat(contentBlock.text()).isEmpty
+        assertThat(contentBlock.thinking()).isEmpty
+        assertThat(contentBlock.redactedThinking()).isEmpty
         assertThat(contentBlock.toolUse()).isEmpty
         assertThat(contentBlock.serverToolUse()).contains(serverToolUse)
         assertThat(contentBlock.webSearchToolResult()).isEmpty
-        assertThat(contentBlock.thinking()).isEmpty
-        assertThat(contentBlock.redactedThinking()).isEmpty
     }
 
     @Test
@@ -161,11 +221,11 @@ internal class ContentBlockTest {
         val contentBlock = ContentBlock.ofWebSearchToolResult(webSearchToolResult)
 
         assertThat(contentBlock.text()).isEmpty
+        assertThat(contentBlock.thinking()).isEmpty
+        assertThat(contentBlock.redactedThinking()).isEmpty
         assertThat(contentBlock.toolUse()).isEmpty
         assertThat(contentBlock.serverToolUse()).isEmpty
         assertThat(contentBlock.webSearchToolResult()).contains(webSearchToolResult)
-        assertThat(contentBlock.thinking()).isEmpty
-        assertThat(contentBlock.redactedThinking()).isEmpty
     }
 
     @Test
@@ -182,66 +242,6 @@ internal class ContentBlockTest {
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .build()
             )
-
-        val roundtrippedContentBlock =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(contentBlock),
-                jacksonTypeRef<ContentBlock>(),
-            )
-
-        assertThat(roundtrippedContentBlock).isEqualTo(contentBlock)
-    }
-
-    @Test
-    fun ofThinking() {
-        val thinking = ThinkingBlock.builder().signature("signature").thinking("thinking").build()
-
-        val contentBlock = ContentBlock.ofThinking(thinking)
-
-        assertThat(contentBlock.text()).isEmpty
-        assertThat(contentBlock.toolUse()).isEmpty
-        assertThat(contentBlock.serverToolUse()).isEmpty
-        assertThat(contentBlock.webSearchToolResult()).isEmpty
-        assertThat(contentBlock.thinking()).contains(thinking)
-        assertThat(contentBlock.redactedThinking()).isEmpty
-    }
-
-    @Test
-    fun ofThinkingRoundtrip() {
-        val jsonMapper = jsonMapper()
-        val contentBlock =
-            ContentBlock.ofThinking(
-                ThinkingBlock.builder().signature("signature").thinking("thinking").build()
-            )
-
-        val roundtrippedContentBlock =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(contentBlock),
-                jacksonTypeRef<ContentBlock>(),
-            )
-
-        assertThat(roundtrippedContentBlock).isEqualTo(contentBlock)
-    }
-
-    @Test
-    fun ofRedactedThinking() {
-        val redactedThinking = RedactedThinkingBlock.builder().data("data").build()
-
-        val contentBlock = ContentBlock.ofRedactedThinking(redactedThinking)
-
-        assertThat(contentBlock.text()).isEmpty
-        assertThat(contentBlock.toolUse()).isEmpty
-        assertThat(contentBlock.serverToolUse()).isEmpty
-        assertThat(contentBlock.webSearchToolResult()).isEmpty
-        assertThat(contentBlock.thinking()).isEmpty
-        assertThat(contentBlock.redactedThinking()).contains(redactedThinking)
-    }
-
-    @Test
-    fun ofRedactedThinkingRoundtrip() {
-        val jsonMapper = jsonMapper()
-        val contentBlock =
-            ContentBlock.ofRedactedThinking(RedactedThinkingBlock.builder().data("data").build())
 
         val roundtrippedContentBlock =
             jsonMapper.readValue(

@@ -161,6 +161,9 @@ private constructor(
      * - `"max_tokens"`: we exceeded the requested `max_tokens` or the model's maximum
      * - `"stop_sequence"`: one of your provided custom `stop_sequences` was generated
      * - `"tool_use"`: the model invoked one or more tools
+     * - `"pause_turn"`: we paused a long-running turn. You may provide the response back as-is in a
+     *   subsequent request to let the model continue.
+     * - `"refusal"`: when streaming classifiers intervene to handle potential policy violations
      *
      * In non-streaming mode this value is always non-null. In streaming mode, it is null in the
      * `message_start` event and non-null otherwise.
@@ -420,6 +423,28 @@ private constructor(
         /** Alias for calling [addContent] with `BetaContentBlock.ofText(text)`. */
         fun addContent(text: BetaTextBlock) = addContent(BetaContentBlock.ofText(text))
 
+        /** Alias for calling [addContent] with `BetaContentBlock.ofThinking(thinking)`. */
+        fun addContent(thinking: BetaThinkingBlock) =
+            addContent(BetaContentBlock.ofThinking(thinking))
+
+        /**
+         * Alias for calling [addContent] with
+         * `BetaContentBlock.ofRedactedThinking(redactedThinking)`.
+         */
+        fun addContent(redactedThinking: BetaRedactedThinkingBlock) =
+            addContent(BetaContentBlock.ofRedactedThinking(redactedThinking))
+
+        /**
+         * Alias for calling [addContent] with the following:
+         * ```java
+         * BetaRedactedThinkingBlock.builder()
+         *     .data(data)
+         *     .build()
+         * ```
+         */
+        fun addRedactedThinkingContent(data: String) =
+            addContent(BetaRedactedThinkingBlock.builder().data(data).build())
+
         /** Alias for calling [addContent] with `BetaContentBlock.ofToolUse(toolUse)`. */
         fun addContent(toolUse: BetaToolUseBlock) = addContent(BetaContentBlock.ofToolUse(toolUse))
 
@@ -471,28 +496,6 @@ private constructor(
         fun addContainerUploadContent(fileId: String) =
             addContent(BetaContainerUploadBlock.builder().fileId(fileId).build())
 
-        /** Alias for calling [addContent] with `BetaContentBlock.ofThinking(thinking)`. */
-        fun addContent(thinking: BetaThinkingBlock) =
-            addContent(BetaContentBlock.ofThinking(thinking))
-
-        /**
-         * Alias for calling [addContent] with
-         * `BetaContentBlock.ofRedactedThinking(redactedThinking)`.
-         */
-        fun addContent(redactedThinking: BetaRedactedThinkingBlock) =
-            addContent(BetaContentBlock.ofRedactedThinking(redactedThinking))
-
-        /**
-         * Alias for calling [addContent] with the following:
-         * ```java
-         * BetaRedactedThinkingBlock.builder()
-         *     .data(data)
-         *     .build()
-         * ```
-         */
-        fun addRedactedThinkingContent(data: String) =
-            addContent(BetaRedactedThinkingBlock.builder().data(data).build())
-
         /**
          * The model that will complete your prompt.\n\nSee
          * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
@@ -538,6 +541,9 @@ private constructor(
          * - `"max_tokens"`: we exceeded the requested `max_tokens` or the model's maximum
          * - `"stop_sequence"`: one of your provided custom `stop_sequences` was generated
          * - `"tool_use"`: the model invoked one or more tools
+         * - `"pause_turn"`: we paused a long-running turn. You may provide the response back as-is
+         *   in a subsequent request to let the model continue.
+         * - `"refusal"`: when streaming classifiers intervene to handle potential policy violations
          *
          * In non-streaming mode this value is always non-null. In streaming mode, it is null in the
          * `message_start` event and non-null otherwise.

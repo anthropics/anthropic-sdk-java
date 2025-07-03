@@ -19,37 +19,55 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class BetaTextBlockParam
+class BetaSearchResultBlockParam
 private constructor(
-    private val text: JsonField<String>,
+    private val content: JsonField<List<BetaTextBlockParam>>,
+    private val source: JsonField<String>,
+    private val title: JsonField<String>,
     private val type: JsonValue,
     private val cacheControl: JsonField<BetaCacheControlEphemeral>,
-    private val citations: JsonField<List<BetaTextCitationParam>>,
+    private val citations: JsonField<BetaCitationsConfigParam>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("text") @ExcludeMissing text: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("content")
+        @ExcludeMissing
+        content: JsonField<List<BetaTextBlockParam>> = JsonMissing.of(),
+        @JsonProperty("source") @ExcludeMissing source: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("title") @ExcludeMissing title: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
         @JsonProperty("cache_control")
         @ExcludeMissing
         cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
         @JsonProperty("citations")
         @ExcludeMissing
-        citations: JsonField<List<BetaTextCitationParam>> = JsonMissing.of(),
-    ) : this(text, type, cacheControl, citations, mutableMapOf())
+        citations: JsonField<BetaCitationsConfigParam> = JsonMissing.of(),
+    ) : this(content, source, title, type, cacheControl, citations, mutableMapOf())
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun text(): String = text.getRequired("text")
+    fun content(): List<BetaTextBlockParam> = content.getRequired("content")
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun source(): String = source.getRequired("source")
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun title(): String = title.getRequired("title")
 
     /**
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("text")
+     * JsonValue.from("search_result")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -70,14 +88,30 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun citations(): Optional<List<BetaTextCitationParam>> = citations.getOptional("citations")
+    fun citations(): Optional<BetaCitationsConfigParam> = citations.getOptional("citations")
 
     /**
-     * Returns the raw JSON value of [text].
+     * Returns the raw JSON value of [content].
      *
-     * Unlike [text], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [content], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("text") @ExcludeMissing fun _text(): JsonField<String> = text
+    @JsonProperty("content")
+    @ExcludeMissing
+    fun _content(): JsonField<List<BetaTextBlockParam>> = content
+
+    /**
+     * Returns the raw JSON value of [source].
+     *
+     * Unlike [source], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("source") @ExcludeMissing fun _source(): JsonField<String> = source
+
+    /**
+     * Returns the raw JSON value of [title].
+     *
+     * Unlike [title], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("title") @ExcludeMissing fun _title(): JsonField<String> = title
 
     /**
      * Returns the raw JSON value of [cacheControl].
@@ -95,7 +129,7 @@ private constructor(
      */
     @JsonProperty("citations")
     @ExcludeMissing
-    fun _citations(): JsonField<List<BetaTextCitationParam>> = citations
+    fun _citations(): JsonField<BetaCitationsConfigParam> = citations
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -112,43 +146,87 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [BetaTextBlockParam].
+         * Returns a mutable builder for constructing an instance of [BetaSearchResultBlockParam].
          *
          * The following fields are required:
          * ```java
-         * .text()
+         * .content()
+         * .source()
+         * .title()
          * ```
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [BetaTextBlockParam]. */
+    /** A builder for [BetaSearchResultBlockParam]. */
     class Builder internal constructor() {
 
-        private var text: JsonField<String>? = null
-        private var type: JsonValue = JsonValue.from("text")
+        private var content: JsonField<MutableList<BetaTextBlockParam>>? = null
+        private var source: JsonField<String>? = null
+        private var title: JsonField<String>? = null
+        private var type: JsonValue = JsonValue.from("search_result")
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
-        private var citations: JsonField<MutableList<BetaTextCitationParam>>? = null
+        private var citations: JsonField<BetaCitationsConfigParam> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(betaTextBlockParam: BetaTextBlockParam) = apply {
-            text = betaTextBlockParam.text
-            type = betaTextBlockParam.type
-            cacheControl = betaTextBlockParam.cacheControl
-            citations = betaTextBlockParam.citations.map { it.toMutableList() }
-            additionalProperties = betaTextBlockParam.additionalProperties.toMutableMap()
+        internal fun from(betaSearchResultBlockParam: BetaSearchResultBlockParam) = apply {
+            content = betaSearchResultBlockParam.content.map { it.toMutableList() }
+            source = betaSearchResultBlockParam.source
+            title = betaSearchResultBlockParam.title
+            type = betaSearchResultBlockParam.type
+            cacheControl = betaSearchResultBlockParam.cacheControl
+            citations = betaSearchResultBlockParam.citations
+            additionalProperties = betaSearchResultBlockParam.additionalProperties.toMutableMap()
         }
 
-        fun text(text: String) = text(JsonField.of(text))
+        fun content(content: List<BetaTextBlockParam>) = content(JsonField.of(content))
 
         /**
-         * Sets [Builder.text] to an arbitrary JSON value.
+         * Sets [Builder.content] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.text] with a well-typed [String] value instead. This
+         * You should usually call [Builder.content] with a well-typed `List<BetaTextBlockParam>`
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun content(content: JsonField<List<BetaTextBlockParam>>) = apply {
+            this.content = content.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [BetaTextBlockParam] to [Builder.content].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addContent(content: BetaTextBlockParam) = apply {
+            this.content =
+                (this.content ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("content", it).add(content)
+                }
+        }
+
+        /** Alias for calling [addContent] with `content.toParam()`. */
+        fun addContent(content: BetaTextBlock) = addContent(content.toParam())
+
+        fun source(source: String) = source(JsonField.of(source))
+
+        /**
+         * Sets [Builder.source] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.source] with a well-typed [String] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun text(text: JsonField<String>) = apply { this.text = text }
+        fun source(source: JsonField<String>) = apply { this.source = source }
+
+        fun title(title: String) = title(JsonField.of(title))
+
+        /**
+         * Sets [Builder.title] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.title] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun title(title: JsonField<String>) = apply { this.title = title }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -156,7 +234,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("text")
+         * JsonValue.from("search_result")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -183,102 +261,18 @@ private constructor(
             this.cacheControl = cacheControl
         }
 
-        fun citations(citations: List<BetaTextCitationParam>?) =
-            citations(JsonField.ofNullable(citations))
-
-        /** Alias for calling [Builder.citations] with `citations.orElse(null)`. */
-        fun citations(citations: Optional<List<BetaTextCitationParam>>) =
-            citations(citations.getOrNull())
+        fun citations(citations: BetaCitationsConfigParam) = citations(JsonField.of(citations))
 
         /**
          * Sets [Builder.citations] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.citations] with a well-typed
-         * `List<BetaTextCitationParam>` value instead. This method is primarily for setting the
-         * field to an undocumented or not yet supported value.
+         * You should usually call [Builder.citations] with a well-typed [BetaCitationsConfigParam]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
          */
-        fun citations(citations: JsonField<List<BetaTextCitationParam>>) = apply {
-            this.citations = citations.map { it.toMutableList() }
+        fun citations(citations: JsonField<BetaCitationsConfigParam>) = apply {
+            this.citations = citations
         }
-
-        /**
-         * Adds a single [BetaTextCitationParam] to [citations].
-         *
-         * @throws IllegalStateException if the field was previously set to a non-list.
-         */
-        fun addCitation(citation: BetaTextCitationParam) = apply {
-            citations =
-                (citations ?: JsonField.of(mutableListOf())).also {
-                    checkKnown("citations", it).add(citation)
-                }
-        }
-
-        /** Alias for calling [addCitation] with `citation.toParam()`. */
-        fun addCitation(citation: BetaTextCitation) = addCitation(citation.toParam())
-
-        /** Alias for calling [addCitation] with `BetaTextCitation.ofCharLocation(charLocation)`. */
-        fun addCitation(charLocation: BetaCitationCharLocation) =
-            addCitation(BetaTextCitation.ofCharLocation(charLocation))
-
-        /** Alias for calling [addCitation] with `BetaTextCitation.ofPageLocation(pageLocation)`. */
-        fun addCitation(pageLocation: BetaCitationPageLocation) =
-            addCitation(BetaTextCitation.ofPageLocation(pageLocation))
-
-        /**
-         * Alias for calling [addCitation] with
-         * `BetaTextCitation.ofContentBlockLocation(contentBlockLocation)`.
-         */
-        fun addCitation(contentBlockLocation: BetaCitationContentBlockLocation) =
-            addCitation(BetaTextCitation.ofContentBlockLocation(contentBlockLocation))
-
-        /**
-         * Alias for calling [addCitation] with
-         * `BetaTextCitation.ofWebSearchResultLocation(webSearchResultLocation)`.
-         */
-        fun addCitation(webSearchResultLocation: BetaCitationsWebSearchResultLocation) =
-            addCitation(BetaTextCitation.ofWebSearchResultLocation(webSearchResultLocation))
-
-        /**
-         * Alias for calling [addCitation] with
-         * `BetaTextCitation.ofSearchResultLocation(searchResultLocation)`.
-         */
-        fun addCitation(searchResultLocation: BetaSearchResultLocationCitation) =
-            addCitation(BetaTextCitation.ofSearchResultLocation(searchResultLocation))
-
-        /**
-         * Alias for calling [addCitation] with
-         * `BetaTextCitationParam.ofCharLocation(charLocation)`.
-         */
-        fun addCitation(charLocation: BetaCitationCharLocationParam) =
-            addCitation(BetaTextCitationParam.ofCharLocation(charLocation))
-
-        /**
-         * Alias for calling [addCitation] with
-         * `BetaTextCitationParam.ofPageLocation(pageLocation)`.
-         */
-        fun addCitation(pageLocation: BetaCitationPageLocationParam) =
-            addCitation(BetaTextCitationParam.ofPageLocation(pageLocation))
-
-        /**
-         * Alias for calling [addCitation] with
-         * `BetaTextCitationParam.ofContentBlockLocation(contentBlockLocation)`.
-         */
-        fun addCitation(contentBlockLocation: BetaCitationContentBlockLocationParam) =
-            addCitation(BetaTextCitationParam.ofContentBlockLocation(contentBlockLocation))
-
-        /**
-         * Alias for calling [addCitation] with
-         * `BetaTextCitationParam.ofWebSearchResultLocation(webSearchResultLocation)`.
-         */
-        fun addCitation(webSearchResultLocation: BetaCitationWebSearchResultLocationParam) =
-            addCitation(BetaTextCitationParam.ofWebSearchResultLocation(webSearchResultLocation))
-
-        /**
-         * Alias for calling [addCitation] with
-         * `BetaTextCitationParam.ofSearchResultLocation(searchResultLocation)`.
-         */
-        fun addCitation(searchResultLocation: BetaSearchResultLocationCitationParam) =
-            addCitation(BetaTextCitationParam.ofSearchResultLocation(searchResultLocation))
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -300,42 +294,48 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [BetaTextBlockParam].
+         * Returns an immutable instance of [BetaSearchResultBlockParam].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
          * ```java
-         * .text()
+         * .content()
+         * .source()
+         * .title()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): BetaTextBlockParam =
-            BetaTextBlockParam(
-                checkRequired("text", text),
+        fun build(): BetaSearchResultBlockParam =
+            BetaSearchResultBlockParam(
+                checkRequired("content", content).map { it.toImmutable() },
+                checkRequired("source", source),
+                checkRequired("title", title),
                 type,
                 cacheControl,
-                (citations ?: JsonMissing.of()).map { it.toImmutable() },
+                citations,
                 additionalProperties.toMutableMap(),
             )
     }
 
     private var validated: Boolean = false
 
-    fun validate(): BetaTextBlockParam = apply {
+    fun validate(): BetaSearchResultBlockParam = apply {
         if (validated) {
             return@apply
         }
 
-        text()
+        content().forEach { it.validate() }
+        source()
+        title()
         _type().let {
-            if (it != JsonValue.from("text")) {
+            if (it != JsonValue.from("search_result")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
         cacheControl().ifPresent { it.validate() }
-        citations().ifPresent { it.forEach { it.validate() } }
+        citations().ifPresent { it.validate() }
         validated = true
     }
 
@@ -354,25 +354,27 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (text.asKnown().isPresent) 1 else 0) +
-            type.let { if (it == JsonValue.from("text")) 1 else 0 } +
+        (content.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (source.asKnown().isPresent) 1 else 0) +
+            (if (title.asKnown().isPresent) 1 else 0) +
+            type.let { if (it == JsonValue.from("search_result")) 1 else 0 } +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
-            (citations.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+            (citations.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return /* spotless:off */ other is BetaTextBlockParam && text == other.text && type == other.type && cacheControl == other.cacheControl && citations == other.citations && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is BetaSearchResultBlockParam && content == other.content && source == other.source && title == other.title && type == other.type && cacheControl == other.cacheControl && citations == other.citations && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(text, type, cacheControl, citations, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(content, source, title, type, cacheControl, citations, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaTextBlockParam{text=$text, type=$type, cacheControl=$cacheControl, citations=$citations, additionalProperties=$additionalProperties}"
+        "BetaSearchResultBlockParam{content=$content, source=$source, title=$title, type=$type, cacheControl=$cacheControl, citations=$citations, additionalProperties=$additionalProperties}"
 }
