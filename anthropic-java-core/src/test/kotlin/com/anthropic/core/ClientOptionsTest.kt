@@ -18,8 +18,7 @@ internal class ClientOptionsTest {
 
     @Test
     fun toBuilder_whenOriginalClientOptionsGarbageCollected_doesNotCloseOriginalClient() {
-        var clientOptions =
-            ClientOptions.builder().httpClient(httpClient).apiKey("my-anthropic-api-key").build()
+        var clientOptions = ClientOptions.builder().httpClient(httpClient).build()
         verify(httpClient, never()).close()
 
         // Overwrite the `clientOptions` variable so that the original `ClientOptions` is GC'd.

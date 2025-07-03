@@ -181,6 +181,11 @@ class BetaMessageAccumulator private constructor() {
                             BetaTextCitation.ofWebSearchResultLocation(
                                 betaCitationsWebSearchResultLocation
                             )
+
+                        override fun visitSearchResultLocation(
+                            searchResultLocation: BetaCitationSearchResultLocation
+                        ): BetaTextCitation =
+                            BetaTextCitation.ofSearchResultLocation(searchResultLocation)
                     }
                 )
     }
