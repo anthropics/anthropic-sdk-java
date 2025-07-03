@@ -187,7 +187,7 @@ internal class BetaTextCitationTest {
     @Test
     fun ofSearchResultLocation() {
         val searchResultLocation =
-            BetaSearchResultLocationCitation.builder()
+            BetaCitationSearchResultLocation.builder()
                 .citedText("cited_text")
                 .endBlockIndex(0L)
                 .searchResultIndex(0L)
@@ -210,7 +210,7 @@ internal class BetaTextCitationTest {
         val jsonMapper = jsonMapper()
         val betaTextCitation =
             BetaTextCitation.ofSearchResultLocation(
-                BetaSearchResultLocationCitation.builder()
+                BetaCitationSearchResultLocation.builder()
                     .citedText("cited_text")
                     .endBlockIndex(0L)
                     .searchResultIndex(0L)

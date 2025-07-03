@@ -17,7 +17,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class BetaSearchResultLocationCitation
+class BetaCitationSearchResultLocationParam
 private constructor(
     private val citedText: JsonField<String>,
     private val endBlockIndex: JsonField<Long>,
@@ -54,16 +54,6 @@ private constructor(
         type,
         mutableMapOf(),
     )
-
-    fun toParam(): BetaSearchResultLocationCitationParam =
-        BetaSearchResultLocationCitationParam.builder()
-            .citedText(_citedText())
-            .endBlockIndex(_endBlockIndex())
-            .searchResultIndex(_searchResultIndex())
-            .source(_source())
-            .startBlockIndex(_startBlockIndex())
-            .title(_title())
-            .build()
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -177,7 +167,7 @@ private constructor(
 
         /**
          * Returns a mutable builder for constructing an instance of
-         * [BetaSearchResultLocationCitation].
+         * [BetaCitationSearchResultLocationParam].
          *
          * The following fields are required:
          * ```java
@@ -192,7 +182,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [BetaSearchResultLocationCitation]. */
+    /** A builder for [BetaCitationSearchResultLocationParam]. */
     class Builder internal constructor() {
 
         private var citedText: JsonField<String>? = null
@@ -205,18 +195,19 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(betaSearchResultLocationCitation: BetaSearchResultLocationCitation) =
-            apply {
-                citedText = betaSearchResultLocationCitation.citedText
-                endBlockIndex = betaSearchResultLocationCitation.endBlockIndex
-                searchResultIndex = betaSearchResultLocationCitation.searchResultIndex
-                source = betaSearchResultLocationCitation.source
-                startBlockIndex = betaSearchResultLocationCitation.startBlockIndex
-                title = betaSearchResultLocationCitation.title
-                type = betaSearchResultLocationCitation.type
-                additionalProperties =
-                    betaSearchResultLocationCitation.additionalProperties.toMutableMap()
-            }
+        internal fun from(
+            betaCitationSearchResultLocationParam: BetaCitationSearchResultLocationParam
+        ) = apply {
+            citedText = betaCitationSearchResultLocationParam.citedText
+            endBlockIndex = betaCitationSearchResultLocationParam.endBlockIndex
+            searchResultIndex = betaCitationSearchResultLocationParam.searchResultIndex
+            source = betaCitationSearchResultLocationParam.source
+            startBlockIndex = betaCitationSearchResultLocationParam.startBlockIndex
+            title = betaCitationSearchResultLocationParam.title
+            type = betaCitationSearchResultLocationParam.type
+            additionalProperties =
+                betaCitationSearchResultLocationParam.additionalProperties.toMutableMap()
+        }
 
         fun citedText(citedText: String) = citedText(JsonField.of(citedText))
 
@@ -326,7 +317,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [BetaSearchResultLocationCitation].
+         * Returns an immutable instance of [BetaCitationSearchResultLocationParam].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -342,8 +333,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): BetaSearchResultLocationCitation =
-            BetaSearchResultLocationCitation(
+        fun build(): BetaCitationSearchResultLocationParam =
+            BetaCitationSearchResultLocationParam(
                 checkRequired("citedText", citedText),
                 checkRequired("endBlockIndex", endBlockIndex),
                 checkRequired("searchResultIndex", searchResultIndex),
@@ -357,7 +348,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): BetaSearchResultLocationCitation = apply {
+    fun validate(): BetaCitationSearchResultLocationParam = apply {
         if (validated) {
             return@apply
         }
@@ -404,7 +395,7 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaSearchResultLocationCitation && citedText == other.citedText && endBlockIndex == other.endBlockIndex && searchResultIndex == other.searchResultIndex && source == other.source && startBlockIndex == other.startBlockIndex && title == other.title && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is BetaCitationSearchResultLocationParam && citedText == other.citedText && endBlockIndex == other.endBlockIndex && searchResultIndex == other.searchResultIndex && source == other.source && startBlockIndex == other.startBlockIndex && title == other.title && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
@@ -414,5 +405,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaSearchResultLocationCitation{citedText=$citedText, endBlockIndex=$endBlockIndex, searchResultIndex=$searchResultIndex, source=$source, startBlockIndex=$startBlockIndex, title=$title, type=$type, additionalProperties=$additionalProperties}"
+        "BetaCitationSearchResultLocationParam{citedText=$citedText, endBlockIndex=$endBlockIndex, searchResultIndex=$searchResultIndex, source=$source, startBlockIndex=$startBlockIndex, title=$title, type=$type, additionalProperties=$additionalProperties}"
 }
