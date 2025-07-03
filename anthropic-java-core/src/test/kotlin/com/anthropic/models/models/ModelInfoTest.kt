@@ -14,14 +14,14 @@ internal class ModelInfoTest {
     fun create() {
         val modelInfo =
             ModelInfo.builder()
-                .id("claude-3-7-sonnet-20250219")
+                .id("claude-sonnet-4-20250514")
                 .createdAt(OffsetDateTime.parse("2025-02-19T00:00:00Z"))
-                .displayName("Claude 3.7 Sonnet")
+                .displayName("Claude Sonnet 4")
                 .build()
 
-        assertThat(modelInfo.id()).isEqualTo("claude-3-7-sonnet-20250219")
+        assertThat(modelInfo.id()).isEqualTo("claude-sonnet-4-20250514")
         assertThat(modelInfo.createdAt()).isEqualTo(OffsetDateTime.parse("2025-02-19T00:00:00Z"))
-        assertThat(modelInfo.displayName()).isEqualTo("Claude 3.7 Sonnet")
+        assertThat(modelInfo.displayName()).isEqualTo("Claude Sonnet 4")
     }
 
     @Test
@@ -29,9 +29,9 @@ internal class ModelInfoTest {
         val jsonMapper = jsonMapper()
         val modelInfo =
             ModelInfo.builder()
-                .id("claude-3-7-sonnet-20250219")
+                .id("claude-sonnet-4-20250514")
                 .createdAt(OffsetDateTime.parse("2025-02-19T00:00:00Z"))
-                .displayName("Claude 3.7 Sonnet")
+                .displayName("Claude Sonnet 4")
                 .build()
 
         val roundtrippedModelInfo =

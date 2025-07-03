@@ -188,6 +188,13 @@ private constructor(
         fun addCitation(webSearchResultLocation: BetaCitationsWebSearchResultLocation) =
             addCitation(BetaTextCitation.ofWebSearchResultLocation(webSearchResultLocation))
 
+        /**
+         * Alias for calling [addCitation] with
+         * `BetaTextCitation.ofSearchResultLocation(searchResultLocation)`.
+         */
+        fun addCitation(searchResultLocation: BetaSearchResultLocationCitation) =
+            addCitation(BetaTextCitation.ofSearchResultLocation(searchResultLocation))
+
         fun text(text: String) = text(JsonField.of(text))
 
         /**

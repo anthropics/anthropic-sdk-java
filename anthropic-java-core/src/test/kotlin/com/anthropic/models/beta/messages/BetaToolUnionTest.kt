@@ -54,15 +54,15 @@ internal class BetaToolUnionTest {
         val betaToolUnion = BetaToolUnion.ofBetaTool(betaTool)
 
         assertThat(betaToolUnion.betaTool()).contains(betaTool)
-        assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.bash20241022()).isEmpty
-        assertThat(betaToolUnion.textEditor20241022()).isEmpty
-        assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.bash20250124()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
+        assertThat(betaToolUnion.computerUse20241022()).isEmpty
+        assertThat(betaToolUnion.computerUse20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
     }
 
     @Test
@@ -115,6 +115,150 @@ internal class BetaToolUnionTest {
     }
 
     @Test
+    fun ofBash20241022() {
+        val bash20241022 =
+            BetaToolBash20241022.builder()
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
+                .build()
+
+        val betaToolUnion = BetaToolUnion.ofBash20241022(bash20241022)
+
+        assertThat(betaToolUnion.betaTool()).isEmpty
+        assertThat(betaToolUnion.bash20241022()).contains(bash20241022)
+        assertThat(betaToolUnion.bash20250124()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
+        assertThat(betaToolUnion.computerUse20241022()).isEmpty
+        assertThat(betaToolUnion.computerUse20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20241022()).isEmpty
+        assertThat(betaToolUnion.textEditor20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20250429()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
+    }
+
+    @Test
+    fun ofBash20241022Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaToolUnion =
+            BetaToolUnion.ofBash20241022(
+                BetaToolBash20241022.builder()
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedBetaToolUnion =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaToolUnion),
+                jacksonTypeRef<BetaToolUnion>(),
+            )
+
+        assertThat(roundtrippedBetaToolUnion).isEqualTo(betaToolUnion)
+    }
+
+    @Test
+    fun ofBash20250124() {
+        val bash20250124 =
+            BetaToolBash20250124.builder()
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
+                .build()
+
+        val betaToolUnion = BetaToolUnion.ofBash20250124(bash20250124)
+
+        assertThat(betaToolUnion.betaTool()).isEmpty
+        assertThat(betaToolUnion.bash20241022()).isEmpty
+        assertThat(betaToolUnion.bash20250124()).contains(bash20250124)
+        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
+        assertThat(betaToolUnion.computerUse20241022()).isEmpty
+        assertThat(betaToolUnion.computerUse20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20241022()).isEmpty
+        assertThat(betaToolUnion.textEditor20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20250429()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
+    }
+
+    @Test
+    fun ofBash20250124Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaToolUnion =
+            BetaToolUnion.ofBash20250124(
+                BetaToolBash20250124.builder()
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedBetaToolUnion =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaToolUnion),
+                jacksonTypeRef<BetaToolUnion>(),
+            )
+
+        assertThat(roundtrippedBetaToolUnion).isEqualTo(betaToolUnion)
+    }
+
+    @Test
+    fun ofCodeExecutionTool20250522() {
+        val codeExecutionTool20250522 =
+            BetaCodeExecutionTool20250522.builder()
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
+                .build()
+
+        val betaToolUnion = BetaToolUnion.ofCodeExecutionTool20250522(codeExecutionTool20250522)
+
+        assertThat(betaToolUnion.betaTool()).isEmpty
+        assertThat(betaToolUnion.bash20241022()).isEmpty
+        assertThat(betaToolUnion.bash20250124()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20250522()).contains(codeExecutionTool20250522)
+        assertThat(betaToolUnion.computerUse20241022()).isEmpty
+        assertThat(betaToolUnion.computerUse20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20241022()).isEmpty
+        assertThat(betaToolUnion.textEditor20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20250429()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
+    }
+
+    @Test
+    fun ofCodeExecutionTool20250522Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaToolUnion =
+            BetaToolUnion.ofCodeExecutionTool20250522(
+                BetaCodeExecutionTool20250522.builder()
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedBetaToolUnion =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaToolUnion),
+                jacksonTypeRef<BetaToolUnion>(),
+            )
+
+        assertThat(roundtrippedBetaToolUnion).isEqualTo(betaToolUnion)
+    }
+
+    @Test
     fun ofComputerUse20241022() {
         val computerUse20241022 =
             BetaToolComputerUse20241022.builder()
@@ -131,15 +275,15 @@ internal class BetaToolUnionTest {
         val betaToolUnion = BetaToolUnion.ofComputerUse20241022(computerUse20241022)
 
         assertThat(betaToolUnion.betaTool()).isEmpty
-        assertThat(betaToolUnion.computerUse20241022()).contains(computerUse20241022)
         assertThat(betaToolUnion.bash20241022()).isEmpty
-        assertThat(betaToolUnion.textEditor20241022()).isEmpty
-        assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.bash20250124()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
+        assertThat(betaToolUnion.computerUse20241022()).contains(computerUse20241022)
+        assertThat(betaToolUnion.computerUse20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
     }
 
     @Test
@@ -169,102 +313,6 @@ internal class BetaToolUnionTest {
     }
 
     @Test
-    fun ofBash20241022() {
-        val bash20241022 =
-            BetaToolBash20241022.builder()
-                .cacheControl(
-                    BetaCacheControlEphemeral.builder()
-                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
-                        .build()
-                )
-                .build()
-
-        val betaToolUnion = BetaToolUnion.ofBash20241022(bash20241022)
-
-        assertThat(betaToolUnion.betaTool()).isEmpty
-        assertThat(betaToolUnion.computerUse20241022()).isEmpty
-        assertThat(betaToolUnion.bash20241022()).contains(bash20241022)
-        assertThat(betaToolUnion.textEditor20241022()).isEmpty
-        assertThat(betaToolUnion.computerUse20250124()).isEmpty
-        assertThat(betaToolUnion.bash20250124()).isEmpty
-        assertThat(betaToolUnion.textEditor20250124()).isEmpty
-        assertThat(betaToolUnion.textEditor20250429()).isEmpty
-        assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
-    }
-
-    @Test
-    fun ofBash20241022Roundtrip() {
-        val jsonMapper = jsonMapper()
-        val betaToolUnion =
-            BetaToolUnion.ofBash20241022(
-                BetaToolBash20241022.builder()
-                    .cacheControl(
-                        BetaCacheControlEphemeral.builder()
-                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
-                            .build()
-                    )
-                    .build()
-            )
-
-        val roundtrippedBetaToolUnion =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(betaToolUnion),
-                jacksonTypeRef<BetaToolUnion>(),
-            )
-
-        assertThat(roundtrippedBetaToolUnion).isEqualTo(betaToolUnion)
-    }
-
-    @Test
-    fun ofTextEditor20241022() {
-        val textEditor20241022 =
-            BetaToolTextEditor20241022.builder()
-                .cacheControl(
-                    BetaCacheControlEphemeral.builder()
-                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
-                        .build()
-                )
-                .build()
-
-        val betaToolUnion = BetaToolUnion.ofTextEditor20241022(textEditor20241022)
-
-        assertThat(betaToolUnion.betaTool()).isEmpty
-        assertThat(betaToolUnion.computerUse20241022()).isEmpty
-        assertThat(betaToolUnion.bash20241022()).isEmpty
-        assertThat(betaToolUnion.textEditor20241022()).contains(textEditor20241022)
-        assertThat(betaToolUnion.computerUse20250124()).isEmpty
-        assertThat(betaToolUnion.bash20250124()).isEmpty
-        assertThat(betaToolUnion.textEditor20250124()).isEmpty
-        assertThat(betaToolUnion.textEditor20250429()).isEmpty
-        assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
-    }
-
-    @Test
-    fun ofTextEditor20241022Roundtrip() {
-        val jsonMapper = jsonMapper()
-        val betaToolUnion =
-            BetaToolUnion.ofTextEditor20241022(
-                BetaToolTextEditor20241022.builder()
-                    .cacheControl(
-                        BetaCacheControlEphemeral.builder()
-                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
-                            .build()
-                    )
-                    .build()
-            )
-
-        val roundtrippedBetaToolUnion =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(betaToolUnion),
-                jacksonTypeRef<BetaToolUnion>(),
-            )
-
-        assertThat(roundtrippedBetaToolUnion).isEqualTo(betaToolUnion)
-    }
-
-    @Test
     fun ofComputerUse20250124() {
         val computerUse20250124 =
             BetaToolComputerUse20250124.builder()
@@ -281,15 +329,15 @@ internal class BetaToolUnionTest {
         val betaToolUnion = BetaToolUnion.ofComputerUse20250124(computerUse20250124)
 
         assertThat(betaToolUnion.betaTool()).isEmpty
-        assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.bash20241022()).isEmpty
-        assertThat(betaToolUnion.textEditor20241022()).isEmpty
-        assertThat(betaToolUnion.computerUse20250124()).contains(computerUse20250124)
         assertThat(betaToolUnion.bash20250124()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
+        assertThat(betaToolUnion.computerUse20241022()).isEmpty
+        assertThat(betaToolUnion.computerUse20250124()).contains(computerUse20250124)
+        assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
     }
 
     @Test
@@ -319,9 +367,9 @@ internal class BetaToolUnionTest {
     }
 
     @Test
-    fun ofBash20250124() {
-        val bash20250124 =
-            BetaToolBash20250124.builder()
+    fun ofTextEditor20241022() {
+        val textEditor20241022 =
+            BetaToolTextEditor20241022.builder()
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -329,26 +377,26 @@ internal class BetaToolUnionTest {
                 )
                 .build()
 
-        val betaToolUnion = BetaToolUnion.ofBash20250124(bash20250124)
+        val betaToolUnion = BetaToolUnion.ofTextEditor20241022(textEditor20241022)
 
         assertThat(betaToolUnion.betaTool()).isEmpty
-        assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.bash20241022()).isEmpty
-        assertThat(betaToolUnion.textEditor20241022()).isEmpty
+        assertThat(betaToolUnion.bash20250124()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
+        assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
-        assertThat(betaToolUnion.bash20250124()).contains(bash20250124)
+        assertThat(betaToolUnion.textEditor20241022()).contains(textEditor20241022)
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
     }
 
     @Test
-    fun ofBash20250124Roundtrip() {
+    fun ofTextEditor20241022Roundtrip() {
         val jsonMapper = jsonMapper()
         val betaToolUnion =
-            BetaToolUnion.ofBash20250124(
-                BetaToolBash20250124.builder()
+            BetaToolUnion.ofTextEditor20241022(
+                BetaToolTextEditor20241022.builder()
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -380,15 +428,15 @@ internal class BetaToolUnionTest {
         val betaToolUnion = BetaToolUnion.ofTextEditor20250124(textEditor20250124)
 
         assertThat(betaToolUnion.betaTool()).isEmpty
-        assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.bash20241022()).isEmpty
-        assertThat(betaToolUnion.textEditor20241022()).isEmpty
-        assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.bash20250124()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
+        assertThat(betaToolUnion.computerUse20241022()).isEmpty
+        assertThat(betaToolUnion.computerUse20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).contains(textEditor20250124)
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
     }
 
     @Test
@@ -428,15 +476,15 @@ internal class BetaToolUnionTest {
         val betaToolUnion = BetaToolUnion.ofTextEditor20250429(textEditor20250429)
 
         assertThat(betaToolUnion.betaTool()).isEmpty
-        assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.bash20241022()).isEmpty
-        assertThat(betaToolUnion.textEditor20241022()).isEmpty
-        assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.bash20250124()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
+        assertThat(betaToolUnion.computerUse20241022()).isEmpty
+        assertThat(betaToolUnion.computerUse20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).contains(textEditor20250429)
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
     }
 
     @Test
@@ -487,15 +535,15 @@ internal class BetaToolUnionTest {
         val betaToolUnion = BetaToolUnion.ofWebSearchTool20250305(webSearchTool20250305)
 
         assertThat(betaToolUnion.betaTool()).isEmpty
-        assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.bash20241022()).isEmpty
-        assertThat(betaToolUnion.textEditor20241022()).isEmpty
-        assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.bash20250124()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
+        assertThat(betaToolUnion.computerUse20241022()).isEmpty
+        assertThat(betaToolUnion.computerUse20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).contains(webSearchTool20250305)
-        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
     }
 
     @Test
@@ -518,54 +566,6 @@ internal class BetaToolUnionTest {
                             .country("US")
                             .region("California")
                             .timezone("America/New_York")
-                            .build()
-                    )
-                    .build()
-            )
-
-        val roundtrippedBetaToolUnion =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(betaToolUnion),
-                jacksonTypeRef<BetaToolUnion>(),
-            )
-
-        assertThat(roundtrippedBetaToolUnion).isEqualTo(betaToolUnion)
-    }
-
-    @Test
-    fun ofCodeExecutionTool20250522() {
-        val codeExecutionTool20250522 =
-            BetaCodeExecutionTool20250522.builder()
-                .cacheControl(
-                    BetaCacheControlEphemeral.builder()
-                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
-                        .build()
-                )
-                .build()
-
-        val betaToolUnion = BetaToolUnion.ofCodeExecutionTool20250522(codeExecutionTool20250522)
-
-        assertThat(betaToolUnion.betaTool()).isEmpty
-        assertThat(betaToolUnion.computerUse20241022()).isEmpty
-        assertThat(betaToolUnion.bash20241022()).isEmpty
-        assertThat(betaToolUnion.textEditor20241022()).isEmpty
-        assertThat(betaToolUnion.computerUse20250124()).isEmpty
-        assertThat(betaToolUnion.bash20250124()).isEmpty
-        assertThat(betaToolUnion.textEditor20250124()).isEmpty
-        assertThat(betaToolUnion.textEditor20250429()).isEmpty
-        assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaToolUnion.codeExecutionTool20250522()).contains(codeExecutionTool20250522)
-    }
-
-    @Test
-    fun ofCodeExecutionTool20250522Roundtrip() {
-        val jsonMapper = jsonMapper()
-        val betaToolUnion =
-            BetaToolUnion.ofCodeExecutionTool20250522(
-                BetaCodeExecutionTool20250522.builder()
-                    .cacheControl(
-                        BetaCacheControlEphemeral.builder()
-                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
                     .build()

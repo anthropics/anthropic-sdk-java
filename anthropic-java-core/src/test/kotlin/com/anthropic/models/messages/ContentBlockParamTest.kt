@@ -15,110 +15,6 @@ import org.junit.jupiter.params.provider.EnumSource
 internal class ContentBlockParamTest {
 
     @Test
-    fun ofServerToolUse() {
-        val serverToolUse =
-            ServerToolUseBlockParam.builder()
-                .id("srvtoolu_SQfNkl1n_JR_")
-                .input(JsonValue.from(mapOf<String, Any>()))
-                .cacheControl(CacheControlEphemeral.builder().build())
-                .build()
-
-        val contentBlockParam = ContentBlockParam.ofServerToolUse(serverToolUse)
-
-        assertThat(contentBlockParam.serverToolUse()).contains(serverToolUse)
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.text()).isEmpty
-        assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.document()).isEmpty
-        assertThat(contentBlockParam.thinking()).isEmpty
-        assertThat(contentBlockParam.redactedThinking()).isEmpty
-    }
-
-    @Test
-    fun ofServerToolUseRoundtrip() {
-        val jsonMapper = jsonMapper()
-        val contentBlockParam =
-            ContentBlockParam.ofServerToolUse(
-                ServerToolUseBlockParam.builder()
-                    .id("srvtoolu_SQfNkl1n_JR_")
-                    .input(JsonValue.from(mapOf<String, Any>()))
-                    .cacheControl(CacheControlEphemeral.builder().build())
-                    .build()
-            )
-
-        val roundtrippedContentBlockParam =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(contentBlockParam),
-                jacksonTypeRef<ContentBlockParam>(),
-            )
-
-        assertThat(roundtrippedContentBlockParam).isEqualTo(contentBlockParam)
-    }
-
-    @Test
-    fun ofWebSearchToolResult() {
-        val webSearchToolResult =
-            WebSearchToolResultBlockParam.builder()
-                .contentOfItem(
-                    listOf(
-                        WebSearchResultBlockParam.builder()
-                            .encryptedContent("encrypted_content")
-                            .title("title")
-                            .url("url")
-                            .pageAge("page_age")
-                            .build()
-                    )
-                )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
-                .cacheControl(CacheControlEphemeral.builder().build())
-                .build()
-
-        val contentBlockParam = ContentBlockParam.ofWebSearchToolResult(webSearchToolResult)
-
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).contains(webSearchToolResult)
-        assertThat(contentBlockParam.text()).isEmpty
-        assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.document()).isEmpty
-        assertThat(contentBlockParam.thinking()).isEmpty
-        assertThat(contentBlockParam.redactedThinking()).isEmpty
-    }
-
-    @Test
-    fun ofWebSearchToolResultRoundtrip() {
-        val jsonMapper = jsonMapper()
-        val contentBlockParam =
-            ContentBlockParam.ofWebSearchToolResult(
-                WebSearchToolResultBlockParam.builder()
-                    .contentOfItem(
-                        listOf(
-                            WebSearchResultBlockParam.builder()
-                                .encryptedContent("encrypted_content")
-                                .title("title")
-                                .url("url")
-                                .pageAge("page_age")
-                                .build()
-                        )
-                    )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
-                    .cacheControl(CacheControlEphemeral.builder().build())
-                    .build()
-            )
-
-        val roundtrippedContentBlockParam =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(contentBlockParam),
-                jacksonTypeRef<ContentBlockParam>(),
-            )
-
-        assertThat(roundtrippedContentBlockParam).isEqualTo(contentBlockParam)
-    }
-
-    @Test
     fun ofText() {
         val text =
             TextBlockParam.builder()
@@ -137,15 +33,15 @@ internal class ContentBlockParamTest {
 
         val contentBlockParam = ContentBlockParam.ofText(text)
 
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
         assertThat(contentBlockParam.text()).contains(text)
         assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
         assertThat(contentBlockParam.document()).isEmpty
         assertThat(contentBlockParam.thinking()).isEmpty
         assertThat(contentBlockParam.redactedThinking()).isEmpty
+        assertThat(contentBlockParam.toolUse()).isEmpty
+        assertThat(contentBlockParam.toolResult()).isEmpty
+        assertThat(contentBlockParam.serverToolUse()).isEmpty
+        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
     }
 
     @Test
@@ -192,15 +88,15 @@ internal class ContentBlockParamTest {
 
         val contentBlockParam = ContentBlockParam.ofImage(image)
 
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
         assertThat(contentBlockParam.text()).isEmpty
         assertThat(contentBlockParam.image()).contains(image)
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
         assertThat(contentBlockParam.document()).isEmpty
         assertThat(contentBlockParam.thinking()).isEmpty
         assertThat(contentBlockParam.redactedThinking()).isEmpty
+        assertThat(contentBlockParam.toolUse()).isEmpty
+        assertThat(contentBlockParam.toolResult()).isEmpty
+        assertThat(contentBlockParam.serverToolUse()).isEmpty
+        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
     }
 
     @Test
@@ -229,6 +125,122 @@ internal class ContentBlockParamTest {
     }
 
     @Test
+    fun ofDocument() {
+        val document =
+            DocumentBlockParam.builder()
+                .base64Source("U3RhaW5sZXNzIHJvY2tz")
+                .cacheControl(CacheControlEphemeral.builder().build())
+                .citations(CitationsConfigParam.builder().enabled(true).build())
+                .context("x")
+                .title("x")
+                .build()
+
+        val contentBlockParam = ContentBlockParam.ofDocument(document)
+
+        assertThat(contentBlockParam.text()).isEmpty
+        assertThat(contentBlockParam.image()).isEmpty
+        assertThat(contentBlockParam.document()).contains(document)
+        assertThat(contentBlockParam.thinking()).isEmpty
+        assertThat(contentBlockParam.redactedThinking()).isEmpty
+        assertThat(contentBlockParam.toolUse()).isEmpty
+        assertThat(contentBlockParam.toolResult()).isEmpty
+        assertThat(contentBlockParam.serverToolUse()).isEmpty
+        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
+    }
+
+    @Test
+    fun ofDocumentRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlockParam =
+            ContentBlockParam.ofDocument(
+                DocumentBlockParam.builder()
+                    .base64Source("U3RhaW5sZXNzIHJvY2tz")
+                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .citations(CitationsConfigParam.builder().enabled(true).build())
+                    .context("x")
+                    .title("x")
+                    .build()
+            )
+
+        val roundtrippedContentBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlockParam),
+                jacksonTypeRef<ContentBlockParam>(),
+            )
+
+        assertThat(roundtrippedContentBlockParam).isEqualTo(contentBlockParam)
+    }
+
+    @Test
+    fun ofThinking() {
+        val thinking =
+            ThinkingBlockParam.builder().signature("signature").thinking("thinking").build()
+
+        val contentBlockParam = ContentBlockParam.ofThinking(thinking)
+
+        assertThat(contentBlockParam.text()).isEmpty
+        assertThat(contentBlockParam.image()).isEmpty
+        assertThat(contentBlockParam.document()).isEmpty
+        assertThat(contentBlockParam.thinking()).contains(thinking)
+        assertThat(contentBlockParam.redactedThinking()).isEmpty
+        assertThat(contentBlockParam.toolUse()).isEmpty
+        assertThat(contentBlockParam.toolResult()).isEmpty
+        assertThat(contentBlockParam.serverToolUse()).isEmpty
+        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
+    }
+
+    @Test
+    fun ofThinkingRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlockParam =
+            ContentBlockParam.ofThinking(
+                ThinkingBlockParam.builder().signature("signature").thinking("thinking").build()
+            )
+
+        val roundtrippedContentBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlockParam),
+                jacksonTypeRef<ContentBlockParam>(),
+            )
+
+        assertThat(roundtrippedContentBlockParam).isEqualTo(contentBlockParam)
+    }
+
+    @Test
+    fun ofRedactedThinking() {
+        val redactedThinking = RedactedThinkingBlockParam.builder().data("data").build()
+
+        val contentBlockParam = ContentBlockParam.ofRedactedThinking(redactedThinking)
+
+        assertThat(contentBlockParam.text()).isEmpty
+        assertThat(contentBlockParam.image()).isEmpty
+        assertThat(contentBlockParam.document()).isEmpty
+        assertThat(contentBlockParam.thinking()).isEmpty
+        assertThat(contentBlockParam.redactedThinking()).contains(redactedThinking)
+        assertThat(contentBlockParam.toolUse()).isEmpty
+        assertThat(contentBlockParam.toolResult()).isEmpty
+        assertThat(contentBlockParam.serverToolUse()).isEmpty
+        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
+    }
+
+    @Test
+    fun ofRedactedThinkingRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlockParam =
+            ContentBlockParam.ofRedactedThinking(
+                RedactedThinkingBlockParam.builder().data("data").build()
+            )
+
+        val roundtrippedContentBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlockParam),
+                jacksonTypeRef<ContentBlockParam>(),
+            )
+
+        assertThat(roundtrippedContentBlockParam).isEqualTo(contentBlockParam)
+    }
+
+    @Test
     fun ofToolUse() {
         val toolUse =
             ToolUseBlockParam.builder()
@@ -240,15 +252,15 @@ internal class ContentBlockParamTest {
 
         val contentBlockParam = ContentBlockParam.ofToolUse(toolUse)
 
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
         assertThat(contentBlockParam.text()).isEmpty
         assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.toolUse()).contains(toolUse)
-        assertThat(contentBlockParam.toolResult()).isEmpty
         assertThat(contentBlockParam.document()).isEmpty
         assertThat(contentBlockParam.thinking()).isEmpty
         assertThat(contentBlockParam.redactedThinking()).isEmpty
+        assertThat(contentBlockParam.toolUse()).contains(toolUse)
+        assertThat(contentBlockParam.toolResult()).isEmpty
+        assertThat(contentBlockParam.serverToolUse()).isEmpty
+        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
     }
 
     @Test
@@ -285,15 +297,15 @@ internal class ContentBlockParamTest {
 
         val contentBlockParam = ContentBlockParam.ofToolResult(toolResult)
 
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
         assertThat(contentBlockParam.text()).isEmpty
         assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).contains(toolResult)
         assertThat(contentBlockParam.document()).isEmpty
         assertThat(contentBlockParam.thinking()).isEmpty
         assertThat(contentBlockParam.redactedThinking()).isEmpty
+        assertThat(contentBlockParam.toolUse()).isEmpty
+        assertThat(contentBlockParam.toolResult()).contains(toolResult)
+        assertThat(contentBlockParam.serverToolUse()).isEmpty
+        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
     }
 
     @Test
@@ -319,40 +331,36 @@ internal class ContentBlockParamTest {
     }
 
     @Test
-    fun ofDocument() {
-        val document =
-            DocumentBlockParam.builder()
-                .base64Source("U3RhaW5sZXNzIHJvY2tz")
+    fun ofServerToolUse() {
+        val serverToolUse =
+            ServerToolUseBlockParam.builder()
+                .id("srvtoolu_SQfNkl1n_JR_")
+                .input(JsonValue.from(mapOf<String, Any>()))
                 .cacheControl(CacheControlEphemeral.builder().build())
-                .citations(CitationsConfigParam.builder().enabled(true).build())
-                .context("x")
-                .title("x")
                 .build()
 
-        val contentBlockParam = ContentBlockParam.ofDocument(document)
+        val contentBlockParam = ContentBlockParam.ofServerToolUse(serverToolUse)
 
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
         assertThat(contentBlockParam.text()).isEmpty
         assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.document()).contains(document)
+        assertThat(contentBlockParam.document()).isEmpty
         assertThat(contentBlockParam.thinking()).isEmpty
         assertThat(contentBlockParam.redactedThinking()).isEmpty
+        assertThat(contentBlockParam.toolUse()).isEmpty
+        assertThat(contentBlockParam.toolResult()).isEmpty
+        assertThat(contentBlockParam.serverToolUse()).contains(serverToolUse)
+        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
     }
 
     @Test
-    fun ofDocumentRoundtrip() {
+    fun ofServerToolUseRoundtrip() {
         val jsonMapper = jsonMapper()
         val contentBlockParam =
-            ContentBlockParam.ofDocument(
-                DocumentBlockParam.builder()
-                    .base64Source("U3RhaW5sZXNzIHJvY2tz")
+            ContentBlockParam.ofServerToolUse(
+                ServerToolUseBlockParam.builder()
+                    .id("srvtoolu_SQfNkl1n_JR_")
+                    .input(JsonValue.from(mapOf<String, Any>()))
                     .cacheControl(CacheControlEphemeral.builder().build())
-                    .citations(CitationsConfigParam.builder().enabled(true).build())
-                    .context("x")
-                    .title("x")
                     .build()
             )
 
@@ -366,63 +374,55 @@ internal class ContentBlockParamTest {
     }
 
     @Test
-    fun ofThinking() {
-        val thinking =
-            ThinkingBlockParam.builder().signature("signature").thinking("thinking").build()
+    fun ofWebSearchToolResult() {
+        val webSearchToolResult =
+            WebSearchToolResultBlockParam.builder()
+                .contentOfItem(
+                    listOf(
+                        WebSearchResultBlockParam.builder()
+                            .encryptedContent("encrypted_content")
+                            .title("title")
+                            .url("url")
+                            .pageAge("page_age")
+                            .build()
+                    )
+                )
+                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .cacheControl(CacheControlEphemeral.builder().build())
+                .build()
 
-        val contentBlockParam = ContentBlockParam.ofThinking(thinking)
+        val contentBlockParam = ContentBlockParam.ofWebSearchToolResult(webSearchToolResult)
 
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
         assertThat(contentBlockParam.text()).isEmpty
         assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.document()).isEmpty
-        assertThat(contentBlockParam.thinking()).contains(thinking)
-        assertThat(contentBlockParam.redactedThinking()).isEmpty
-    }
-
-    @Test
-    fun ofThinkingRoundtrip() {
-        val jsonMapper = jsonMapper()
-        val contentBlockParam =
-            ContentBlockParam.ofThinking(
-                ThinkingBlockParam.builder().signature("signature").thinking("thinking").build()
-            )
-
-        val roundtrippedContentBlockParam =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(contentBlockParam),
-                jacksonTypeRef<ContentBlockParam>(),
-            )
-
-        assertThat(roundtrippedContentBlockParam).isEqualTo(contentBlockParam)
-    }
-
-    @Test
-    fun ofRedactedThinking() {
-        val redactedThinking = RedactedThinkingBlockParam.builder().data("data").build()
-
-        val contentBlockParam = ContentBlockParam.ofRedactedThinking(redactedThinking)
-
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.text()).isEmpty
-        assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
         assertThat(contentBlockParam.document()).isEmpty
         assertThat(contentBlockParam.thinking()).isEmpty
-        assertThat(contentBlockParam.redactedThinking()).contains(redactedThinking)
+        assertThat(contentBlockParam.redactedThinking()).isEmpty
+        assertThat(contentBlockParam.toolUse()).isEmpty
+        assertThat(contentBlockParam.toolResult()).isEmpty
+        assertThat(contentBlockParam.serverToolUse()).isEmpty
+        assertThat(contentBlockParam.webSearchToolResult()).contains(webSearchToolResult)
     }
 
     @Test
-    fun ofRedactedThinkingRoundtrip() {
+    fun ofWebSearchToolResultRoundtrip() {
         val jsonMapper = jsonMapper()
         val contentBlockParam =
-            ContentBlockParam.ofRedactedThinking(
-                RedactedThinkingBlockParam.builder().data("data").build()
+            ContentBlockParam.ofWebSearchToolResult(
+                WebSearchToolResultBlockParam.builder()
+                    .contentOfItem(
+                        listOf(
+                            WebSearchResultBlockParam.builder()
+                                .encryptedContent("encrypted_content")
+                                .title("title")
+                                .url("url")
+                                .pageAge("page_age")
+                                .build()
+                        )
+                    )
+                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .build()
             )
 
         val roundtrippedContentBlockParam =

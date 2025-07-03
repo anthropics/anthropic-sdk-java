@@ -31,6 +31,7 @@ internal class BetaTextCitationTest {
         assertThat(betaTextCitation.pageLocation()).isEmpty
         assertThat(betaTextCitation.contentBlockLocation()).isEmpty
         assertThat(betaTextCitation.webSearchResultLocation()).isEmpty
+        assertThat(betaTextCitation.searchResultLocation()).isEmpty
     }
 
     @Test
@@ -73,6 +74,7 @@ internal class BetaTextCitationTest {
         assertThat(betaTextCitation.pageLocation()).contains(pageLocation)
         assertThat(betaTextCitation.contentBlockLocation()).isEmpty
         assertThat(betaTextCitation.webSearchResultLocation()).isEmpty
+        assertThat(betaTextCitation.searchResultLocation()).isEmpty
     }
 
     @Test
@@ -115,6 +117,7 @@ internal class BetaTextCitationTest {
         assertThat(betaTextCitation.pageLocation()).isEmpty
         assertThat(betaTextCitation.contentBlockLocation()).contains(contentBlockLocation)
         assertThat(betaTextCitation.webSearchResultLocation()).isEmpty
+        assertThat(betaTextCitation.searchResultLocation()).isEmpty
     }
 
     @Test
@@ -156,6 +159,7 @@ internal class BetaTextCitationTest {
         assertThat(betaTextCitation.pageLocation()).isEmpty
         assertThat(betaTextCitation.contentBlockLocation()).isEmpty
         assertThat(betaTextCitation.webSearchResultLocation()).contains(webSearchResultLocation)
+        assertThat(betaTextCitation.searchResultLocation()).isEmpty
     }
 
     @Test
@@ -168,6 +172,51 @@ internal class BetaTextCitationTest {
                     .encryptedIndex("encrypted_index")
                     .title("title")
                     .url("url")
+                    .build()
+            )
+
+        val roundtrippedBetaTextCitation =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaTextCitation),
+                jacksonTypeRef<BetaTextCitation>(),
+            )
+
+        assertThat(roundtrippedBetaTextCitation).isEqualTo(betaTextCitation)
+    }
+
+    @Test
+    fun ofSearchResultLocation() {
+        val searchResultLocation =
+            BetaSearchResultLocationCitation.builder()
+                .citedText("cited_text")
+                .endBlockIndex(0L)
+                .searchResultIndex(0L)
+                .source("source")
+                .startBlockIndex(0L)
+                .title("title")
+                .build()
+
+        val betaTextCitation = BetaTextCitation.ofSearchResultLocation(searchResultLocation)
+
+        assertThat(betaTextCitation.charLocation()).isEmpty
+        assertThat(betaTextCitation.pageLocation()).isEmpty
+        assertThat(betaTextCitation.contentBlockLocation()).isEmpty
+        assertThat(betaTextCitation.webSearchResultLocation()).isEmpty
+        assertThat(betaTextCitation.searchResultLocation()).contains(searchResultLocation)
+    }
+
+    @Test
+    fun ofSearchResultLocationRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaTextCitation =
+            BetaTextCitation.ofSearchResultLocation(
+                BetaSearchResultLocationCitation.builder()
+                    .citedText("cited_text")
+                    .endBlockIndex(0L)
+                    .searchResultIndex(0L)
+                    .source("source")
+                    .startBlockIndex(0L)
+                    .title("title")
                     .build()
             )
 

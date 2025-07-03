@@ -23,34 +23,23 @@ import kotlin.jvm.optionals.getOrNull
 @JsonSerialize(using = ContentBlockParam.Serializer::class)
 class ContentBlockParam
 private constructor(
-    private val serverToolUse: ServerToolUseBlockParam? = null,
-    private val webSearchToolResult: WebSearchToolResultBlockParam? = null,
     private val text: TextBlockParam? = null,
     private val image: ImageBlockParam? = null,
-    private val toolUse: ToolUseBlockParam? = null,
-    private val toolResult: ToolResultBlockParam? = null,
     private val document: DocumentBlockParam? = null,
     private val thinking: ThinkingBlockParam? = null,
     private val redactedThinking: RedactedThinkingBlockParam? = null,
+    private val toolUse: ToolUseBlockParam? = null,
+    private val toolResult: ToolResultBlockParam? = null,
+    private val serverToolUse: ServerToolUseBlockParam? = null,
+    private val webSearchToolResult: WebSearchToolResultBlockParam? = null,
     private val _json: JsonValue? = null,
 ) {
-
-    fun serverToolUse(): Optional<ServerToolUseBlockParam> = Optional.ofNullable(serverToolUse)
-
-    fun webSearchToolResult(): Optional<WebSearchToolResultBlockParam> =
-        Optional.ofNullable(webSearchToolResult)
 
     /** Regular text content. */
     fun text(): Optional<TextBlockParam> = Optional.ofNullable(text)
 
     /** Image content specified directly as base64 data or as a reference via a URL. */
     fun image(): Optional<ImageBlockParam> = Optional.ofNullable(image)
-
-    /** A block indicating a tool use by the model. */
-    fun toolUse(): Optional<ToolUseBlockParam> = Optional.ofNullable(toolUse)
-
-    /** A block specifying the results of a tool use by the model. */
-    fun toolResult(): Optional<ToolResultBlockParam> = Optional.ofNullable(toolResult)
 
     /**
      * Document content, either specified directly as base64 data, as text, or as a reference via a
@@ -65,17 +54,20 @@ private constructor(
     fun redactedThinking(): Optional<RedactedThinkingBlockParam> =
         Optional.ofNullable(redactedThinking)
 
-    fun isServerToolUse(): Boolean = serverToolUse != null
+    /** A block indicating a tool use by the model. */
+    fun toolUse(): Optional<ToolUseBlockParam> = Optional.ofNullable(toolUse)
 
-    fun isWebSearchToolResult(): Boolean = webSearchToolResult != null
+    /** A block specifying the results of a tool use by the model. */
+    fun toolResult(): Optional<ToolResultBlockParam> = Optional.ofNullable(toolResult)
+
+    fun serverToolUse(): Optional<ServerToolUseBlockParam> = Optional.ofNullable(serverToolUse)
+
+    fun webSearchToolResult(): Optional<WebSearchToolResultBlockParam> =
+        Optional.ofNullable(webSearchToolResult)
 
     fun isText(): Boolean = text != null
 
     fun isImage(): Boolean = image != null
-
-    fun isToolUse(): Boolean = toolUse != null
-
-    fun isToolResult(): Boolean = toolResult != null
 
     fun isDocument(): Boolean = document != null
 
@@ -83,22 +75,19 @@ private constructor(
 
     fun isRedactedThinking(): Boolean = redactedThinking != null
 
-    fun asServerToolUse(): ServerToolUseBlockParam = serverToolUse.getOrThrow("serverToolUse")
+    fun isToolUse(): Boolean = toolUse != null
 
-    fun asWebSearchToolResult(): WebSearchToolResultBlockParam =
-        webSearchToolResult.getOrThrow("webSearchToolResult")
+    fun isToolResult(): Boolean = toolResult != null
+
+    fun isServerToolUse(): Boolean = serverToolUse != null
+
+    fun isWebSearchToolResult(): Boolean = webSearchToolResult != null
 
     /** Regular text content. */
     fun asText(): TextBlockParam = text.getOrThrow("text")
 
     /** Image content specified directly as base64 data or as a reference via a URL. */
     fun asImage(): ImageBlockParam = image.getOrThrow("image")
-
-    /** A block indicating a tool use by the model. */
-    fun asToolUse(): ToolUseBlockParam = toolUse.getOrThrow("toolUse")
-
-    /** A block specifying the results of a tool use by the model. */
-    fun asToolResult(): ToolResultBlockParam = toolResult.getOrThrow("toolResult")
 
     /**
      * Document content, either specified directly as base64 data, as text, or as a reference via a
@@ -113,19 +102,30 @@ private constructor(
     fun asRedactedThinking(): RedactedThinkingBlockParam =
         redactedThinking.getOrThrow("redactedThinking")
 
+    /** A block indicating a tool use by the model. */
+    fun asToolUse(): ToolUseBlockParam = toolUse.getOrThrow("toolUse")
+
+    /** A block specifying the results of a tool use by the model. */
+    fun asToolResult(): ToolResultBlockParam = toolResult.getOrThrow("toolResult")
+
+    fun asServerToolUse(): ServerToolUseBlockParam = serverToolUse.getOrThrow("serverToolUse")
+
+    fun asWebSearchToolResult(): WebSearchToolResultBlockParam =
+        webSearchToolResult.getOrThrow("webSearchToolResult")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {
-            serverToolUse != null -> visitor.visitServerToolUse(serverToolUse)
-            webSearchToolResult != null -> visitor.visitWebSearchToolResult(webSearchToolResult)
             text != null -> visitor.visitText(text)
             image != null -> visitor.visitImage(image)
-            toolUse != null -> visitor.visitToolUse(toolUse)
-            toolResult != null -> visitor.visitToolResult(toolResult)
             document != null -> visitor.visitDocument(document)
             thinking != null -> visitor.visitThinking(thinking)
             redactedThinking != null -> visitor.visitRedactedThinking(redactedThinking)
+            toolUse != null -> visitor.visitToolUse(toolUse)
+            toolResult != null -> visitor.visitToolResult(toolResult)
+            serverToolUse != null -> visitor.visitServerToolUse(serverToolUse)
+            webSearchToolResult != null -> visitor.visitWebSearchToolResult(webSearchToolResult)
             else -> visitor.unknown(_json)
         }
 
@@ -138,30 +138,12 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
-                override fun visitServerToolUse(serverToolUse: ServerToolUseBlockParam) {
-                    serverToolUse.validate()
-                }
-
-                override fun visitWebSearchToolResult(
-                    webSearchToolResult: WebSearchToolResultBlockParam
-                ) {
-                    webSearchToolResult.validate()
-                }
-
                 override fun visitText(text: TextBlockParam) {
                     text.validate()
                 }
 
                 override fun visitImage(image: ImageBlockParam) {
                     image.validate()
-                }
-
-                override fun visitToolUse(toolUse: ToolUseBlockParam) {
-                    toolUse.validate()
-                }
-
-                override fun visitToolResult(toolResult: ToolResultBlockParam) {
-                    toolResult.validate()
                 }
 
                 override fun visitDocument(document: DocumentBlockParam) {
@@ -174,6 +156,24 @@ private constructor(
 
                 override fun visitRedactedThinking(redactedThinking: RedactedThinkingBlockParam) {
                     redactedThinking.validate()
+                }
+
+                override fun visitToolUse(toolUse: ToolUseBlockParam) {
+                    toolUse.validate()
+                }
+
+                override fun visitToolResult(toolResult: ToolResultBlockParam) {
+                    toolResult.validate()
+                }
+
+                override fun visitServerToolUse(serverToolUse: ServerToolUseBlockParam) {
+                    serverToolUse.validate()
+                }
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: WebSearchToolResultBlockParam
+                ) {
+                    webSearchToolResult.validate()
                 }
             }
         )
@@ -197,21 +197,9 @@ private constructor(
     internal fun validity(): Int =
         accept(
             object : Visitor<Int> {
-                override fun visitServerToolUse(serverToolUse: ServerToolUseBlockParam) =
-                    serverToolUse.validity()
-
-                override fun visitWebSearchToolResult(
-                    webSearchToolResult: WebSearchToolResultBlockParam
-                ) = webSearchToolResult.validity()
-
                 override fun visitText(text: TextBlockParam) = text.validity()
 
                 override fun visitImage(image: ImageBlockParam) = image.validity()
-
-                override fun visitToolUse(toolUse: ToolUseBlockParam) = toolUse.validity()
-
-                override fun visitToolResult(toolResult: ToolResultBlockParam) =
-                    toolResult.validity()
 
                 override fun visitDocument(document: DocumentBlockParam) = document.validity()
 
@@ -219,6 +207,18 @@ private constructor(
 
                 override fun visitRedactedThinking(redactedThinking: RedactedThinkingBlockParam) =
                     redactedThinking.validity()
+
+                override fun visitToolUse(toolUse: ToolUseBlockParam) = toolUse.validity()
+
+                override fun visitToolResult(toolResult: ToolResultBlockParam) =
+                    toolResult.validity()
+
+                override fun visitServerToolUse(serverToolUse: ServerToolUseBlockParam) =
+                    serverToolUse.validity()
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: WebSearchToolResultBlockParam
+                ) = webSearchToolResult.validity()
 
                 override fun unknown(json: JsonValue?) = 0
             }
@@ -229,50 +229,34 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ContentBlockParam && serverToolUse == other.serverToolUse && webSearchToolResult == other.webSearchToolResult && text == other.text && image == other.image && toolUse == other.toolUse && toolResult == other.toolResult && document == other.document && thinking == other.thinking && redactedThinking == other.redactedThinking /* spotless:on */
+        return /* spotless:off */ other is ContentBlockParam && text == other.text && image == other.image && document == other.document && thinking == other.thinking && redactedThinking == other.redactedThinking && toolUse == other.toolUse && toolResult == other.toolResult && serverToolUse == other.serverToolUse && webSearchToolResult == other.webSearchToolResult /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(serverToolUse, webSearchToolResult, text, image, toolUse, toolResult, document, thinking, redactedThinking) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image, document, thinking, redactedThinking, toolUse, toolResult, serverToolUse, webSearchToolResult) /* spotless:on */
 
     override fun toString(): String =
         when {
-            serverToolUse != null -> "ContentBlockParam{serverToolUse=$serverToolUse}"
-            webSearchToolResult != null ->
-                "ContentBlockParam{webSearchToolResult=$webSearchToolResult}"
             text != null -> "ContentBlockParam{text=$text}"
             image != null -> "ContentBlockParam{image=$image}"
-            toolUse != null -> "ContentBlockParam{toolUse=$toolUse}"
-            toolResult != null -> "ContentBlockParam{toolResult=$toolResult}"
             document != null -> "ContentBlockParam{document=$document}"
             thinking != null -> "ContentBlockParam{thinking=$thinking}"
             redactedThinking != null -> "ContentBlockParam{redactedThinking=$redactedThinking}"
+            toolUse != null -> "ContentBlockParam{toolUse=$toolUse}"
+            toolResult != null -> "ContentBlockParam{toolResult=$toolResult}"
+            serverToolUse != null -> "ContentBlockParam{serverToolUse=$serverToolUse}"
+            webSearchToolResult != null ->
+                "ContentBlockParam{webSearchToolResult=$webSearchToolResult}"
             _json != null -> "ContentBlockParam{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid ContentBlockParam")
         }
 
     companion object {
 
-        @JvmStatic
-        fun ofServerToolUse(serverToolUse: ServerToolUseBlockParam) =
-            ContentBlockParam(serverToolUse = serverToolUse)
-
-        @JvmStatic
-        fun ofWebSearchToolResult(webSearchToolResult: WebSearchToolResultBlockParam) =
-            ContentBlockParam(webSearchToolResult = webSearchToolResult)
-
         /** Regular text content. */
         @JvmStatic fun ofText(text: TextBlockParam) = ContentBlockParam(text = text)
 
         /** Image content specified directly as base64 data or as a reference via a URL. */
         @JvmStatic fun ofImage(image: ImageBlockParam) = ContentBlockParam(image = image)
-
-        /** A block indicating a tool use by the model. */
-        @JvmStatic fun ofToolUse(toolUse: ToolUseBlockParam) = ContentBlockParam(toolUse = toolUse)
-
-        /** A block specifying the results of a tool use by the model. */
-        @JvmStatic
-        fun ofToolResult(toolResult: ToolResultBlockParam) =
-            ContentBlockParam(toolResult = toolResult)
 
         /**
          * Document content, either specified directly as base64 data, as text, or as a reference
@@ -289,6 +273,22 @@ private constructor(
         @JvmStatic
         fun ofRedactedThinking(redactedThinking: RedactedThinkingBlockParam) =
             ContentBlockParam(redactedThinking = redactedThinking)
+
+        /** A block indicating a tool use by the model. */
+        @JvmStatic fun ofToolUse(toolUse: ToolUseBlockParam) = ContentBlockParam(toolUse = toolUse)
+
+        /** A block specifying the results of a tool use by the model. */
+        @JvmStatic
+        fun ofToolResult(toolResult: ToolResultBlockParam) =
+            ContentBlockParam(toolResult = toolResult)
+
+        @JvmStatic
+        fun ofServerToolUse(serverToolUse: ServerToolUseBlockParam) =
+            ContentBlockParam(serverToolUse = serverToolUse)
+
+        @JvmStatic
+        fun ofWebSearchToolResult(webSearchToolResult: WebSearchToolResultBlockParam) =
+            ContentBlockParam(webSearchToolResult = webSearchToolResult)
     }
 
     /**
@@ -297,21 +297,11 @@ private constructor(
      */
     interface Visitor<out T> {
 
-        fun visitServerToolUse(serverToolUse: ServerToolUseBlockParam): T
-
-        fun visitWebSearchToolResult(webSearchToolResult: WebSearchToolResultBlockParam): T
-
         /** Regular text content. */
         fun visitText(text: TextBlockParam): T
 
         /** Image content specified directly as base64 data or as a reference via a URL. */
         fun visitImage(image: ImageBlockParam): T
-
-        /** A block indicating a tool use by the model. */
-        fun visitToolUse(toolUse: ToolUseBlockParam): T
-
-        /** A block specifying the results of a tool use by the model. */
-        fun visitToolResult(toolResult: ToolResultBlockParam): T
 
         /**
          * Document content, either specified directly as base64 data, as text, or as a reference
@@ -324,6 +314,16 @@ private constructor(
 
         /** A block specifying internal, redacted thinking by the model. */
         fun visitRedactedThinking(redactedThinking: RedactedThinkingBlockParam): T
+
+        /** A block indicating a tool use by the model. */
+        fun visitToolUse(toolUse: ToolUseBlockParam): T
+
+        /** A block specifying the results of a tool use by the model. */
+        fun visitToolResult(toolResult: ToolResultBlockParam): T
+
+        fun visitServerToolUse(serverToolUse: ServerToolUseBlockParam): T
+
+        fun visitWebSearchToolResult(webSearchToolResult: WebSearchToolResultBlockParam): T
 
         /**
          * Maps an unknown variant of [ContentBlockParam] to a value of type [T].
@@ -347,16 +347,6 @@ private constructor(
             val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
 
             when (type) {
-                "server_tool_use" -> {
-                    return tryDeserialize(node, jacksonTypeRef<ServerToolUseBlockParam>())?.let {
-                        ContentBlockParam(serverToolUse = it, _json = json)
-                    } ?: ContentBlockParam(_json = json)
-                }
-                "web_search_tool_result" -> {
-                    return tryDeserialize(node, jacksonTypeRef<WebSearchToolResultBlockParam>())
-                        ?.let { ContentBlockParam(webSearchToolResult = it, _json = json) }
-                        ?: ContentBlockParam(_json = json)
-                }
                 "text" -> {
                     return tryDeserialize(node, jacksonTypeRef<TextBlockParam>())?.let {
                         ContentBlockParam(text = it, _json = json)
@@ -365,16 +355,6 @@ private constructor(
                 "image" -> {
                     return tryDeserialize(node, jacksonTypeRef<ImageBlockParam>())?.let {
                         ContentBlockParam(image = it, _json = json)
-                    } ?: ContentBlockParam(_json = json)
-                }
-                "tool_use" -> {
-                    return tryDeserialize(node, jacksonTypeRef<ToolUseBlockParam>())?.let {
-                        ContentBlockParam(toolUse = it, _json = json)
-                    } ?: ContentBlockParam(_json = json)
-                }
-                "tool_result" -> {
-                    return tryDeserialize(node, jacksonTypeRef<ToolResultBlockParam>())?.let {
-                        ContentBlockParam(toolResult = it, _json = json)
                     } ?: ContentBlockParam(_json = json)
                 }
                 "document" -> {
@@ -392,6 +372,26 @@ private constructor(
                         ContentBlockParam(redactedThinking = it, _json = json)
                     } ?: ContentBlockParam(_json = json)
                 }
+                "tool_use" -> {
+                    return tryDeserialize(node, jacksonTypeRef<ToolUseBlockParam>())?.let {
+                        ContentBlockParam(toolUse = it, _json = json)
+                    } ?: ContentBlockParam(_json = json)
+                }
+                "tool_result" -> {
+                    return tryDeserialize(node, jacksonTypeRef<ToolResultBlockParam>())?.let {
+                        ContentBlockParam(toolResult = it, _json = json)
+                    } ?: ContentBlockParam(_json = json)
+                }
+                "server_tool_use" -> {
+                    return tryDeserialize(node, jacksonTypeRef<ServerToolUseBlockParam>())?.let {
+                        ContentBlockParam(serverToolUse = it, _json = json)
+                    } ?: ContentBlockParam(_json = json)
+                }
+                "web_search_tool_result" -> {
+                    return tryDeserialize(node, jacksonTypeRef<WebSearchToolResultBlockParam>())
+                        ?.let { ContentBlockParam(webSearchToolResult = it, _json = json) }
+                        ?: ContentBlockParam(_json = json)
+                }
             }
 
             return ContentBlockParam(_json = json)
@@ -406,16 +406,16 @@ private constructor(
             provider: SerializerProvider,
         ) {
             when {
-                value.serverToolUse != null -> generator.writeObject(value.serverToolUse)
-                value.webSearchToolResult != null ->
-                    generator.writeObject(value.webSearchToolResult)
                 value.text != null -> generator.writeObject(value.text)
                 value.image != null -> generator.writeObject(value.image)
-                value.toolUse != null -> generator.writeObject(value.toolUse)
-                value.toolResult != null -> generator.writeObject(value.toolResult)
                 value.document != null -> generator.writeObject(value.document)
                 value.thinking != null -> generator.writeObject(value.thinking)
                 value.redactedThinking != null -> generator.writeObject(value.redactedThinking)
+                value.toolUse != null -> generator.writeObject(value.toolUse)
+                value.toolResult != null -> generator.writeObject(value.toolResult)
+                value.serverToolUse != null -> generator.writeObject(value.serverToolUse)
+                value.webSearchToolResult != null ->
+                    generator.writeObject(value.webSearchToolResult)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid ContentBlockParam")
             }

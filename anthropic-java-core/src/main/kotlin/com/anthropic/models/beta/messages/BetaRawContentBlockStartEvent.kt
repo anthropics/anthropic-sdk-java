@@ -145,6 +145,28 @@ private constructor(
         /** Alias for calling [contentBlock] with `ContentBlock.ofText(text)`. */
         fun contentBlock(text: BetaTextBlock) = contentBlock(ContentBlock.ofText(text))
 
+        /** Alias for calling [contentBlock] with `ContentBlock.ofThinking(thinking)`. */
+        fun contentBlock(thinking: BetaThinkingBlock) =
+            contentBlock(ContentBlock.ofThinking(thinking))
+
+        /**
+         * Alias for calling [contentBlock] with
+         * `ContentBlock.ofRedactedThinking(redactedThinking)`.
+         */
+        fun contentBlock(redactedThinking: BetaRedactedThinkingBlock) =
+            contentBlock(ContentBlock.ofRedactedThinking(redactedThinking))
+
+        /**
+         * Alias for calling [contentBlock] with the following:
+         * ```java
+         * BetaRedactedThinkingBlock.builder()
+         *     .data(data)
+         *     .build()
+         * ```
+         */
+        fun redactedThinkingContentBlock(data: String) =
+            contentBlock(BetaRedactedThinkingBlock.builder().data(data).build())
+
         /** Alias for calling [contentBlock] with `ContentBlock.ofToolUse(toolUse)`. */
         fun contentBlock(toolUse: BetaToolUseBlock) = contentBlock(ContentBlock.ofToolUse(toolUse))
 
@@ -190,28 +212,6 @@ private constructor(
          */
         fun containerUploadContentBlock(fileId: String) =
             contentBlock(BetaContainerUploadBlock.builder().fileId(fileId).build())
-
-        /** Alias for calling [contentBlock] with `ContentBlock.ofThinking(thinking)`. */
-        fun contentBlock(thinking: BetaThinkingBlock) =
-            contentBlock(ContentBlock.ofThinking(thinking))
-
-        /**
-         * Alias for calling [contentBlock] with
-         * `ContentBlock.ofRedactedThinking(redactedThinking)`.
-         */
-        fun contentBlock(redactedThinking: BetaRedactedThinkingBlock) =
-            contentBlock(ContentBlock.ofRedactedThinking(redactedThinking))
-
-        /**
-         * Alias for calling [contentBlock] with the following:
-         * ```java
-         * BetaRedactedThinkingBlock.builder()
-         *     .data(data)
-         *     .build()
-         * ```
-         */
-        fun redactedThinkingContentBlock(data: String) =
-            contentBlock(BetaRedactedThinkingBlock.builder().data(data).build())
 
         fun index(index: Long) = index(JsonField.of(index))
 
@@ -320,6 +320,8 @@ private constructor(
     class ContentBlock
     private constructor(
         private val text: BetaTextBlock? = null,
+        private val thinking: BetaThinkingBlock? = null,
+        private val redactedThinking: BetaRedactedThinkingBlock? = null,
         private val toolUse: BetaToolUseBlock? = null,
         private val serverToolUse: BetaServerToolUseBlock? = null,
         private val webSearchToolResult: BetaWebSearchToolResultBlock? = null,
@@ -327,12 +329,15 @@ private constructor(
         private val mcpToolUse: BetaMcpToolUseBlock? = null,
         private val mcpToolResult: BetaMcpToolResultBlock? = null,
         private val containerUpload: BetaContainerUploadBlock? = null,
-        private val thinking: BetaThinkingBlock? = null,
-        private val redactedThinking: BetaRedactedThinkingBlock? = null,
         private val _json: JsonValue? = null,
     ) {
 
         fun text(): Optional<BetaTextBlock> = Optional.ofNullable(text)
+
+        fun thinking(): Optional<BetaThinkingBlock> = Optional.ofNullable(thinking)
+
+        fun redactedThinking(): Optional<BetaRedactedThinkingBlock> =
+            Optional.ofNullable(redactedThinking)
 
         fun toolUse(): Optional<BetaToolUseBlock> = Optional.ofNullable(toolUse)
 
@@ -352,12 +357,11 @@ private constructor(
         fun containerUpload(): Optional<BetaContainerUploadBlock> =
             Optional.ofNullable(containerUpload)
 
-        fun thinking(): Optional<BetaThinkingBlock> = Optional.ofNullable(thinking)
-
-        fun redactedThinking(): Optional<BetaRedactedThinkingBlock> =
-            Optional.ofNullable(redactedThinking)
-
         fun isText(): Boolean = text != null
+
+        fun isThinking(): Boolean = thinking != null
+
+        fun isRedactedThinking(): Boolean = redactedThinking != null
 
         fun isToolUse(): Boolean = toolUse != null
 
@@ -373,11 +377,12 @@ private constructor(
 
         fun isContainerUpload(): Boolean = containerUpload != null
 
-        fun isThinking(): Boolean = thinking != null
-
-        fun isRedactedThinking(): Boolean = redactedThinking != null
-
         fun asText(): BetaTextBlock = text.getOrThrow("text")
+
+        fun asThinking(): BetaThinkingBlock = thinking.getOrThrow("thinking")
+
+        fun asRedactedThinking(): BetaRedactedThinkingBlock =
+            redactedThinking.getOrThrow("redactedThinking")
 
         fun asToolUse(): BetaToolUseBlock = toolUse.getOrThrow("toolUse")
 
@@ -397,16 +402,13 @@ private constructor(
         fun asContainerUpload(): BetaContainerUploadBlock =
             containerUpload.getOrThrow("containerUpload")
 
-        fun asThinking(): BetaThinkingBlock = thinking.getOrThrow("thinking")
-
-        fun asRedactedThinking(): BetaRedactedThinkingBlock =
-            redactedThinking.getOrThrow("redactedThinking")
-
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 text != null -> visitor.visitText(text)
+                thinking != null -> visitor.visitThinking(thinking)
+                redactedThinking != null -> visitor.visitRedactedThinking(redactedThinking)
                 toolUse != null -> visitor.visitToolUse(toolUse)
                 serverToolUse != null -> visitor.visitServerToolUse(serverToolUse)
                 webSearchToolResult != null -> visitor.visitWebSearchToolResult(webSearchToolResult)
@@ -415,8 +417,6 @@ private constructor(
                 mcpToolUse != null -> visitor.visitMcpToolUse(mcpToolUse)
                 mcpToolResult != null -> visitor.visitMcpToolResult(mcpToolResult)
                 containerUpload != null -> visitor.visitContainerUpload(containerUpload)
-                thinking != null -> visitor.visitThinking(thinking)
-                redactedThinking != null -> visitor.visitRedactedThinking(redactedThinking)
                 else -> visitor.unknown(_json)
             }
 
@@ -431,6 +431,16 @@ private constructor(
                 object : Visitor<Unit> {
                     override fun visitText(text: BetaTextBlock) {
                         text.validate()
+                    }
+
+                    override fun visitThinking(thinking: BetaThinkingBlock) {
+                        thinking.validate()
+                    }
+
+                    override fun visitRedactedThinking(
+                        redactedThinking: BetaRedactedThinkingBlock
+                    ) {
+                        redactedThinking.validate()
                     }
 
                     override fun visitToolUse(toolUse: BetaToolUseBlock) {
@@ -464,16 +474,6 @@ private constructor(
                     override fun visitContainerUpload(containerUpload: BetaContainerUploadBlock) {
                         containerUpload.validate()
                     }
-
-                    override fun visitThinking(thinking: BetaThinkingBlock) {
-                        thinking.validate()
-                    }
-
-                    override fun visitRedactedThinking(
-                        redactedThinking: BetaRedactedThinkingBlock
-                    ) {
-                        redactedThinking.validate()
-                    }
                 }
             )
             validated = true
@@ -499,6 +499,12 @@ private constructor(
                 object : Visitor<Int> {
                     override fun visitText(text: BetaTextBlock) = text.validity()
 
+                    override fun visitThinking(thinking: BetaThinkingBlock) = thinking.validity()
+
+                    override fun visitRedactedThinking(
+                        redactedThinking: BetaRedactedThinkingBlock
+                    ) = redactedThinking.validity()
+
                     override fun visitToolUse(toolUse: BetaToolUseBlock) = toolUse.validity()
 
                     override fun visitServerToolUse(serverToolUse: BetaServerToolUseBlock) =
@@ -521,12 +527,6 @@ private constructor(
                     override fun visitContainerUpload(containerUpload: BetaContainerUploadBlock) =
                         containerUpload.validity()
 
-                    override fun visitThinking(thinking: BetaThinkingBlock) = thinking.validity()
-
-                    override fun visitRedactedThinking(
-                        redactedThinking: BetaRedactedThinkingBlock
-                    ) = redactedThinking.validity()
-
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -536,14 +536,16 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is ContentBlock && text == other.text && toolUse == other.toolUse && serverToolUse == other.serverToolUse && webSearchToolResult == other.webSearchToolResult && codeExecutionToolResult == other.codeExecutionToolResult && mcpToolUse == other.mcpToolUse && mcpToolResult == other.mcpToolResult && containerUpload == other.containerUpload && thinking == other.thinking && redactedThinking == other.redactedThinking /* spotless:on */
+            return /* spotless:off */ other is ContentBlock && text == other.text && thinking == other.thinking && redactedThinking == other.redactedThinking && toolUse == other.toolUse && serverToolUse == other.serverToolUse && webSearchToolResult == other.webSearchToolResult && codeExecutionToolResult == other.codeExecutionToolResult && mcpToolUse == other.mcpToolUse && mcpToolResult == other.mcpToolResult && containerUpload == other.containerUpload /* spotless:on */
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, toolUse, serverToolUse, webSearchToolResult, codeExecutionToolResult, mcpToolUse, mcpToolResult, containerUpload, thinking, redactedThinking) /* spotless:on */
+        override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, thinking, redactedThinking, toolUse, serverToolUse, webSearchToolResult, codeExecutionToolResult, mcpToolUse, mcpToolResult, containerUpload) /* spotless:on */
 
         override fun toString(): String =
             when {
                 text != null -> "ContentBlock{text=$text}"
+                thinking != null -> "ContentBlock{thinking=$thinking}"
+                redactedThinking != null -> "ContentBlock{redactedThinking=$redactedThinking}"
                 toolUse != null -> "ContentBlock{toolUse=$toolUse}"
                 serverToolUse != null -> "ContentBlock{serverToolUse=$serverToolUse}"
                 webSearchToolResult != null ->
@@ -553,8 +555,6 @@ private constructor(
                 mcpToolUse != null -> "ContentBlock{mcpToolUse=$mcpToolUse}"
                 mcpToolResult != null -> "ContentBlock{mcpToolResult=$mcpToolResult}"
                 containerUpload != null -> "ContentBlock{containerUpload=$containerUpload}"
-                thinking != null -> "ContentBlock{thinking=$thinking}"
-                redactedThinking != null -> "ContentBlock{redactedThinking=$redactedThinking}"
                 _json != null -> "ContentBlock{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid ContentBlock")
             }
@@ -562,6 +562,13 @@ private constructor(
         companion object {
 
             @JvmStatic fun ofText(text: BetaTextBlock) = ContentBlock(text = text)
+
+            @JvmStatic
+            fun ofThinking(thinking: BetaThinkingBlock) = ContentBlock(thinking = thinking)
+
+            @JvmStatic
+            fun ofRedactedThinking(redactedThinking: BetaRedactedThinkingBlock) =
+                ContentBlock(redactedThinking = redactedThinking)
 
             @JvmStatic fun ofToolUse(toolUse: BetaToolUseBlock) = ContentBlock(toolUse = toolUse)
 
@@ -590,13 +597,6 @@ private constructor(
             @JvmStatic
             fun ofContainerUpload(containerUpload: BetaContainerUploadBlock) =
                 ContentBlock(containerUpload = containerUpload)
-
-            @JvmStatic
-            fun ofThinking(thinking: BetaThinkingBlock) = ContentBlock(thinking = thinking)
-
-            @JvmStatic
-            fun ofRedactedThinking(redactedThinking: BetaRedactedThinkingBlock) =
-                ContentBlock(redactedThinking = redactedThinking)
         }
 
         /**
@@ -606,6 +606,10 @@ private constructor(
         interface Visitor<out T> {
 
             fun visitText(text: BetaTextBlock): T
+
+            fun visitThinking(thinking: BetaThinkingBlock): T
+
+            fun visitRedactedThinking(redactedThinking: BetaRedactedThinkingBlock): T
 
             fun visitToolUse(toolUse: BetaToolUseBlock): T
 
@@ -623,10 +627,6 @@ private constructor(
 
             /** Response model for a file uploaded to the container. */
             fun visitContainerUpload(containerUpload: BetaContainerUploadBlock): T
-
-            fun visitThinking(thinking: BetaThinkingBlock): T
-
-            fun visitRedactedThinking(redactedThinking: BetaRedactedThinkingBlock): T
 
             /**
              * Maps an unknown variant of [ContentBlock] to a value of type [T].
@@ -654,6 +654,16 @@ private constructor(
                         return tryDeserialize(node, jacksonTypeRef<BetaTextBlock>())?.let {
                             ContentBlock(text = it, _json = json)
                         } ?: ContentBlock(_json = json)
+                    }
+                    "thinking" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaThinkingBlock>())?.let {
+                            ContentBlock(thinking = it, _json = json)
+                        } ?: ContentBlock(_json = json)
+                    }
+                    "redacted_thinking" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaRedactedThinkingBlock>())
+                            ?.let { ContentBlock(redactedThinking = it, _json = json) }
+                            ?: ContentBlock(_json = json)
                     }
                     "tool_use" -> {
                         return tryDeserialize(node, jacksonTypeRef<BetaToolUseBlock>())?.let {
@@ -693,16 +703,6 @@ private constructor(
                             ?.let { ContentBlock(containerUpload = it, _json = json) }
                             ?: ContentBlock(_json = json)
                     }
-                    "thinking" -> {
-                        return tryDeserialize(node, jacksonTypeRef<BetaThinkingBlock>())?.let {
-                            ContentBlock(thinking = it, _json = json)
-                        } ?: ContentBlock(_json = json)
-                    }
-                    "redacted_thinking" -> {
-                        return tryDeserialize(node, jacksonTypeRef<BetaRedactedThinkingBlock>())
-                            ?.let { ContentBlock(redactedThinking = it, _json = json) }
-                            ?: ContentBlock(_json = json)
-                    }
                 }
 
                 return ContentBlock(_json = json)
@@ -718,6 +718,8 @@ private constructor(
             ) {
                 when {
                     value.text != null -> generator.writeObject(value.text)
+                    value.thinking != null -> generator.writeObject(value.thinking)
+                    value.redactedThinking != null -> generator.writeObject(value.redactedThinking)
                     value.toolUse != null -> generator.writeObject(value.toolUse)
                     value.serverToolUse != null -> generator.writeObject(value.serverToolUse)
                     value.webSearchToolResult != null ->
@@ -727,8 +729,6 @@ private constructor(
                     value.mcpToolUse != null -> generator.writeObject(value.mcpToolUse)
                     value.mcpToolResult != null -> generator.writeObject(value.mcpToolResult)
                     value.containerUpload != null -> generator.writeObject(value.containerUpload)
-                    value.thinking != null -> generator.writeObject(value.thinking)
-                    value.redactedThinking != null -> generator.writeObject(value.redactedThinking)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid ContentBlock")
                 }
