@@ -15,7 +15,7 @@ public final class ThinkingStreamingAsyncExample {
         AnthropicClientAsync client = AnthropicOkHttpClientAsync.fromEnv();
 
         MessageCreateParams createParams = MessageCreateParams.builder()
-                .model(Model.CLAUDE_3_7_SONNET_20250219)
+                .model(Model.CLAUDE_SONNET_4_20250514)
                 .maxTokens(2048)
                 .thinking(ThinkingConfigEnabled.builder().budgetTokens(1024).build())
                 .addUserMessage("Tell me a story about building the best SDK!")

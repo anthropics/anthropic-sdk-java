@@ -31,7 +31,7 @@ public final class MessagesMcpExample {
                 .build();
 
         MessageCreateParams createParams = MessageCreateParams.builder()
-                .model(Model.CLAUDE_OPUS_4_0)
+                .model(Model.CLAUDE_SONNET_4_20250514)
                 .maxTokens(1000)
                 .mcpServers(List.of(mcpServer))
                 .addUserMessage("Calculate 1+2")

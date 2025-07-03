@@ -46,7 +46,7 @@ public final class VertexBetaMessagesStreamingAsyncExample {
                 .build();
 
         MessageCreateParams createParams = MessageCreateParams.builder()
-                .model("claude-3-sonnet")
+                .model("claude-sonnet-4@20250514")
                 .maxTokens(2048)
                 .addUserMessage("Tell me a story about building the best SDK!")
                 .build();

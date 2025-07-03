@@ -31,7 +31,7 @@ public final class MessagesToolsExample {
                 .putAdditionalProperty("required", JsonValue.from(List.of("robustness", "polish_level")))
                 .build();
         MessageCreateParams createParams = MessageCreateParams.builder()
-                .model(Model.CLAUDE_3_5_SONNET_LATEST)
+                .model(Model.CLAUDE_SONNET_4_20250514)
                 .maxTokens(2048)
                 .addTool(Tool.builder().name("describe_sdk").inputSchema(schema).build())
                 .toolChoice(ToolChoiceTool.builder().name("describe_sdk").build())
