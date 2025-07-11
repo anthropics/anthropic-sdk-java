@@ -37,7 +37,7 @@ internal class InterceptingHttpClientTest {
     fun execute_noInterceptors(async: Boolean) {
         val response = httpResponse("hello")
         mockClient(HTTP_REQUEST to listOf(response))
-        val interceptingHttpClient = InterceptingHttpClient(httpClient, interceptors = listOf())
+        val interceptingHttpClient = InterceptingHttpClient.builder().httpClient(httpClient).build()
 
         val actualResponse = interceptingHttpClient.execute(HTTP_REQUEST, async)
 
@@ -51,9 +51,9 @@ internal class InterceptingHttpClientTest {
     fun execute_avoidSendingRequest(async: Boolean) {
         val interceptedResponse = httpResponse("INTERCEPTED!")
         val interceptingHttpClient =
-            InterceptingHttpClient(
-                httpClient,
-                interceptors =
+            InterceptingHttpClient.builder()
+                .httpClient(httpClient)
+                .interceptors(
                     listOf(
                         object : Interceptor {
 
@@ -68,8 +68,9 @@ internal class InterceptingHttpClientTest {
                         // We shouldn't move onto the next interceptor after the previous one so we
                         // add this one to assert that the next one isn't called.
                         THROWING_INTERCEPTOR,
-                    ),
-            )
+                    )
+                )
+                .build()
 
         val response = interceptingHttpClient.execute(HTTP_REQUEST, async)
 
@@ -86,9 +87,9 @@ internal class InterceptingHttpClientTest {
         val response = httpResponse("hello")
         mockClient(transformRequest(HTTP_REQUEST) to listOf(response))
         val interceptingHttpClient =
-            InterceptingHttpClient(
-                httpClient,
-                interceptors =
+            InterceptingHttpClient.builder()
+                .httpClient(httpClient)
+                .interceptors(
                     listOf(
                         object : Interceptor {
 
@@ -100,8 +101,9 @@ internal class InterceptingHttpClientTest {
                             ): CompletableFuture<HttpResponse> =
                                 chain.proceed(transformRequest(chain.request()))
                         }
-                    ),
-            )
+                    )
+                )
+                .build()
 
         val actualResponse = interceptingHttpClient.execute(HTTP_REQUEST, async)
 
@@ -116,9 +118,9 @@ internal class InterceptingHttpClientTest {
         val response = httpResponse("hello")
         mockClient(HTTP_REQUEST to listOf(response))
         val interceptingHttpClient =
-            InterceptingHttpClient(
-                httpClient,
-                interceptors =
+            InterceptingHttpClient.builder()
+                .httpClient(httpClient)
+                .interceptors(
                     listOf(
                         object : Interceptor {
 
@@ -132,8 +134,9 @@ internal class InterceptingHttpClientTest {
                                     it.mapBody { "$it world" }
                                 }
                         }
-                    ),
-            )
+                    )
+                )
+                .build()
 
         val actualResponse = interceptingHttpClient.execute(HTTP_REQUEST, async)
 
@@ -149,9 +152,9 @@ internal class InterceptingHttpClientTest {
         val response = httpResponse("hello")
         mockClient(HTTP_REQUEST to listOf(response))
         val interceptingHttpClient =
-            InterceptingHttpClient(
-                httpClient,
-                interceptors =
+            InterceptingHttpClient.builder()
+                .httpClient(httpClient)
+                .interceptors(
                     listOf(
                         object : Interceptor {
 
@@ -177,8 +180,9 @@ internal class InterceptingHttpClientTest {
                                 }
                             }
                         }
-                    ),
-            )
+                    )
+                )
+                .build()
 
         val actualResponse = interceptingHttpClient.execute(HTTP_REQUEST, async)
 
@@ -194,9 +198,9 @@ internal class InterceptingHttpClientTest {
         val response = httpResponse("hello")
         mockClient(HTTP_REQUEST to listOf(response))
         val interceptingHttpClient =
-            InterceptingHttpClient(
-                httpClient,
-                interceptors =
+            InterceptingHttpClient.builder()
+                .httpClient(httpClient)
+                .interceptors(
                     listOf(
                         object : Interceptor {
 
@@ -234,8 +238,9 @@ internal class InterceptingHttpClientTest {
                                     it.mapBody { "$it world" }
                                 }
                         },
-                    ),
-            )
+                    )
+                )
+                .build()
 
         val actualResponse = interceptingHttpClient.execute(HTTP_REQUEST, async)
 
@@ -251,9 +256,9 @@ internal class InterceptingHttpClientTest {
         val response = httpResponse("hello")
         mockClient(HTTP_REQUEST to listOf(response))
         val interceptingHttpClient =
-            InterceptingHttpClient(
-                httpClient,
-                interceptors =
+            InterceptingHttpClient.builder()
+                .httpClient(httpClient)
+                .interceptors(
                     listOf(
                         object : Interceptor {
 
@@ -277,8 +282,9 @@ internal class InterceptingHttpClientTest {
                                     it.mapBody { "$it world" }
                                 }
                         },
-                    ),
-            )
+                    )
+                )
+                .build()
 
         val actualResponse = interceptingHttpClient.execute(HTTP_REQUEST, async)
 
