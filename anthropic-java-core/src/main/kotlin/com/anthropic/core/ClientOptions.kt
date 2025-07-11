@@ -85,6 +85,7 @@ private constructor(
             responseValidation = clientOptions.responseValidation
             timeout = clientOptions.timeout
             maxRetries = clientOptions.maxRetries
+            interceptors = clientOptions.interceptors.toMutableList()
         }
 
         fun httpClient(httpClient: HttpClient) = apply {
