@@ -30,6 +30,7 @@ private constructor(
     @get:JvmName("responseValidation") val responseValidation: Boolean,
     @get:JvmName("timeout") val timeout: Timeout,
     @get:JvmName("maxRetries") val maxRetries: Int,
+    @get:JvmName("interceptors") val interceptors: List<Interceptor>,
 ) {
 
     init {
@@ -69,6 +70,7 @@ private constructor(
         private var responseValidation: Boolean = false
         private var timeout: Timeout = Timeout.default()
         private var maxRetries: Int = 2
+        private var interceptors: MutableList<Interceptor> = mutableListOf()
 
         @JvmSynthetic
         internal fun from(clientOptions: ClientOptions) = apply {
@@ -113,6 +115,12 @@ private constructor(
         fun timeout(timeout: Timeout) = apply { this.timeout = timeout }
 
         fun maxRetries(maxRetries: Int) = apply { this.maxRetries = maxRetries }
+
+        fun interceptors(interceptors: List<Interceptor>) = apply {
+            this.interceptors = interceptors.toMutableList()
+        }
+
+        fun addInterceptor(interceptor: Interceptor) = apply { interceptors.add(interceptor) }
 
         fun headers(headers: Headers) = apply {
             this.headers.clear()
@@ -223,10 +231,15 @@ private constructor(
 
             return ClientOptions(
                 httpClient,
-                RetryingHttpClient.builder()
-                    .httpClient(httpClient)
-                    .clock(clock)
-                    .maxRetries(maxRetries)
+                InterceptingHttpClient.builder()
+                    .httpClient(
+                        RetryingHttpClient.builder()
+                            .httpClient(httpClient)
+                            .clock(clock)
+                            .maxRetries(maxRetries)
+                            .build()
+                    )
+                    .interceptors(interceptors)
                     .build(),
                 checkJacksonVersionCompatibility,
                 jsonMapper,
@@ -252,6 +265,7 @@ private constructor(
                 responseValidation,
                 timeout,
                 maxRetries,
+                interceptors.toImmutable(),
             )
         }
     }
