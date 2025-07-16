@@ -19,5 +19,12 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 application {
-    mainClass = "com.anthropic.example.Main"
+    // Use `./gradlew :anthropic-java-example:run` to run `Main`
+    // Use `./gradlew :anthropic-java-example:run -Dexample=Something` to run `SomethingExample`
+    mainClass = "com.anthropic.example.${
+        if (project.hasProperty("example"))
+            "${project.property("example")}Example"
+        else
+            "Main"
+    }"
 }
