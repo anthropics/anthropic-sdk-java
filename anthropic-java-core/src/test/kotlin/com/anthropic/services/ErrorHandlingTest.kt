@@ -152,8 +152,180 @@ internal class ErrorHandlingTest {
     }
 
     @Test
+    fun messagesCreate400WithRawResponse() {
+        val messageService = client.messages().withRawResponse()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(400).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<BadRequestException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(CacheControlEphemeral.builder().build())
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("cited_text")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .temperature(1.0)
+                        .enabledThinking(1024L)
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            JsonValue.from(
+                                                mapOf(
+                                                    "location" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "The city and state, e.g. San Francisco, CA",
+                                                            "type" to "string",
+                                                        ),
+                                                    "unit" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "Unit for the output - one of (celsius, fahrenheit)",
+                                                            "type" to "string",
+                                                        ),
+                                                )
+                                            )
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .cacheControl(CacheControlEphemeral.builder().build())
+                                .description("Get the current weather in a given location")
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .topK(5L)
+                        .topP(0.7)
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(400)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
     fun messagesCreate401() {
         val messageService = client.messages()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(401).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<UnauthorizedException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(CacheControlEphemeral.builder().build())
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("cited_text")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .temperature(1.0)
+                        .enabledThinking(1024L)
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            JsonValue.from(
+                                                mapOf(
+                                                    "location" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "The city and state, e.g. San Francisco, CA",
+                                                            "type" to "string",
+                                                        ),
+                                                    "unit" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "Unit for the output - one of (celsius, fahrenheit)",
+                                                            "type" to "string",
+                                                        ),
+                                                )
+                                            )
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .cacheControl(CacheControlEphemeral.builder().build())
+                                .description("Get the current weather in a given location")
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .topK(5L)
+                        .topP(0.7)
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(401)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate401WithRawResponse() {
+        val messageService = client.messages().withRawResponse()
         stubFor(
             post(anyUrl())
                 .willReturn(
@@ -324,8 +496,180 @@ internal class ErrorHandlingTest {
     }
 
     @Test
+    fun messagesCreate403WithRawResponse() {
+        val messageService = client.messages().withRawResponse()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(403).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<PermissionDeniedException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(CacheControlEphemeral.builder().build())
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("cited_text")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .temperature(1.0)
+                        .enabledThinking(1024L)
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            JsonValue.from(
+                                                mapOf(
+                                                    "location" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "The city and state, e.g. San Francisco, CA",
+                                                            "type" to "string",
+                                                        ),
+                                                    "unit" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "Unit for the output - one of (celsius, fahrenheit)",
+                                                            "type" to "string",
+                                                        ),
+                                                )
+                                            )
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .cacheControl(CacheControlEphemeral.builder().build())
+                                .description("Get the current weather in a given location")
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .topK(5L)
+                        .topP(0.7)
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(403)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
     fun messagesCreate404() {
         val messageService = client.messages()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(404).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<NotFoundException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(CacheControlEphemeral.builder().build())
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("cited_text")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .temperature(1.0)
+                        .enabledThinking(1024L)
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            JsonValue.from(
+                                                mapOf(
+                                                    "location" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "The city and state, e.g. San Francisco, CA",
+                                                            "type" to "string",
+                                                        ),
+                                                    "unit" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "Unit for the output - one of (celsius, fahrenheit)",
+                                                            "type" to "string",
+                                                        ),
+                                                )
+                                            )
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .cacheControl(CacheControlEphemeral.builder().build())
+                                .description("Get the current weather in a given location")
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .topK(5L)
+                        .topP(0.7)
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(404)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate404WithRawResponse() {
+        val messageService = client.messages().withRawResponse()
         stubFor(
             post(anyUrl())
                 .willReturn(
@@ -496,8 +840,180 @@ internal class ErrorHandlingTest {
     }
 
     @Test
+    fun messagesCreate422WithRawResponse() {
+        val messageService = client.messages().withRawResponse()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(422).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<UnprocessableEntityException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(CacheControlEphemeral.builder().build())
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("cited_text")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .temperature(1.0)
+                        .enabledThinking(1024L)
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            JsonValue.from(
+                                                mapOf(
+                                                    "location" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "The city and state, e.g. San Francisco, CA",
+                                                            "type" to "string",
+                                                        ),
+                                                    "unit" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "Unit for the output - one of (celsius, fahrenheit)",
+                                                            "type" to "string",
+                                                        ),
+                                                )
+                                            )
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .cacheControl(CacheControlEphemeral.builder().build())
+                                .description("Get the current weather in a given location")
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .topK(5L)
+                        .topP(0.7)
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(422)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
     fun messagesCreate429() {
         val messageService = client.messages()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(429).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<RateLimitException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(CacheControlEphemeral.builder().build())
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("cited_text")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .temperature(1.0)
+                        .enabledThinking(1024L)
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            JsonValue.from(
+                                                mapOf(
+                                                    "location" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "The city and state, e.g. San Francisco, CA",
+                                                            "type" to "string",
+                                                        ),
+                                                    "unit" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "Unit for the output - one of (celsius, fahrenheit)",
+                                                            "type" to "string",
+                                                        ),
+                                                )
+                                            )
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .cacheControl(CacheControlEphemeral.builder().build())
+                                .description("Get the current weather in a given location")
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .topK(5L)
+                        .topP(0.7)
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(429)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate429WithRawResponse() {
+        val messageService = client.messages().withRawResponse()
         stubFor(
             post(anyUrl())
                 .willReturn(
@@ -668,8 +1184,180 @@ internal class ErrorHandlingTest {
     }
 
     @Test
+    fun messagesCreate500WithRawResponse() {
+        val messageService = client.messages().withRawResponse()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(500).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<InternalServerException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(CacheControlEphemeral.builder().build())
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("cited_text")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .temperature(1.0)
+                        .enabledThinking(1024L)
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            JsonValue.from(
+                                                mapOf(
+                                                    "location" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "The city and state, e.g. San Francisco, CA",
+                                                            "type" to "string",
+                                                        ),
+                                                    "unit" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "Unit for the output - one of (celsius, fahrenheit)",
+                                                            "type" to "string",
+                                                        ),
+                                                )
+                                            )
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .cacheControl(CacheControlEphemeral.builder().build())
+                                .description("Get the current weather in a given location")
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .topK(5L)
+                        .topP(0.7)
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(500)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
     fun messagesCreate999() {
         val messageService = client.messages()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(999).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<UnexpectedStatusCodeException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(CacheControlEphemeral.builder().build())
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("cited_text")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .temperature(1.0)
+                        .enabledThinking(1024L)
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            JsonValue.from(
+                                                mapOf(
+                                                    "location" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "The city and state, e.g. San Francisco, CA",
+                                                            "type" to "string",
+                                                        ),
+                                                    "unit" to
+                                                        mapOf(
+                                                            "description" to
+                                                                "Unit for the output - one of (celsius, fahrenheit)",
+                                                            "type" to "string",
+                                                        ),
+                                                )
+                                            )
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .cacheControl(CacheControlEphemeral.builder().build())
+                                .description("Get the current weather in a given location")
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .topK(5L)
+                        .topP(0.7)
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(999)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate999WithRawResponse() {
+        val messageService = client.messages().withRawResponse()
         stubFor(
             post(anyUrl())
                 .willReturn(

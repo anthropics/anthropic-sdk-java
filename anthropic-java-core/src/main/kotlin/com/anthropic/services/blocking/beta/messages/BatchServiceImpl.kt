@@ -3,16 +3,16 @@
 package com.anthropic.services.blocking.beta.messages
 
 import com.anthropic.core.ClientOptions
-import com.anthropic.core.JsonValue
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.checkRequired
+import com.anthropic.core.handlers.errorBodyHandler
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
 import com.anthropic.core.handlers.jsonlHandler
-import com.anthropic.core.handlers.withErrorHandler
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
+import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
@@ -94,7 +94,8 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         BatchService.WithRawResponse {
 
-        private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+        private val errorHandler: Handler<HttpResponse> =
+            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
@@ -104,7 +105,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
             )
 
         private val createHandler: Handler<BetaMessageBatch> =
-            jsonHandler<BetaMessageBatch>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<BetaMessageBatch>(clientOptions.jsonMapper)
 
         override fun create(
             params: BatchCreateParams,
@@ -122,7 +123,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { createHandler.handle(it) }
                     .also {
@@ -134,7 +135,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
         }
 
         private val retrieveHandler: Handler<BetaMessageBatch> =
-            jsonHandler<BetaMessageBatch>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<BetaMessageBatch>(clientOptions.jsonMapper)
 
         override fun retrieve(
             params: BatchRetrieveParams,
@@ -154,7 +155,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { retrieveHandler.handle(it) }
                     .also {
@@ -167,7 +168,6 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
 
         private val listHandler: Handler<BatchListPageResponse> =
             jsonHandler<BatchListPageResponse>(clientOptions.jsonMapper)
-                .withErrorHandler(errorHandler)
 
         override fun list(
             params: BatchListParams,
@@ -184,7 +184,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { listHandler.handle(it) }
                     .also {
@@ -204,7 +204,6 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
 
         private val deleteHandler: Handler<BetaDeletedMessageBatch> =
             jsonHandler<BetaDeletedMessageBatch>(clientOptions.jsonMapper)
-                .withErrorHandler(errorHandler)
 
         override fun delete(
             params: BatchDeleteParams,
@@ -225,7 +224,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { deleteHandler.handle(it) }
                     .also {
@@ -237,7 +236,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
         }
 
         private val cancelHandler: Handler<BetaMessageBatch> =
-            jsonHandler<BetaMessageBatch>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<BetaMessageBatch>(clientOptions.jsonMapper)
 
         override fun cancel(
             params: BatchCancelParams,
@@ -258,7 +257,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { cancelHandler.handle(it) }
                     .also {
@@ -272,7 +271,6 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
         private val resultsStreamingHandler:
             Handler<StreamResponse<BetaMessageBatchIndividualResponse>> =
             jsonlHandler<BetaMessageBatchIndividualResponse>(clientOptions.jsonMapper)
-                .withErrorHandler(errorHandler)
 
         override fun resultsStreaming(
             params: BatchResultsParams,
@@ -292,7 +290,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .let { resultsStreamingHandler.handle(it) }
                     .let { streamResponse ->
