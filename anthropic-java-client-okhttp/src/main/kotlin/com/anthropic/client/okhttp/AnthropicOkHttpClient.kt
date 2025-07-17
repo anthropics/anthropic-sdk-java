@@ -7,6 +7,7 @@ import com.anthropic.backends.Backend
 import com.anthropic.client.AnthropicClient
 import com.anthropic.client.AnthropicClientImpl
 import com.anthropic.core.ClientOptions
+import com.anthropic.core.Interceptor
 import com.anthropic.core.Timeout
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
@@ -157,6 +158,14 @@ class AnthropicOkHttpClient private constructor() {
         fun maxRetries(maxRetries: Int) = apply { clientOptions.maxRetries(maxRetries) }
 
         fun proxy(proxy: Proxy) = apply { this.proxy = proxy }
+
+        fun interceptors(interceptors: List<Interceptor>) = apply {
+            clientOptions.interceptors(interceptors)
+        }
+
+        fun addInterceptor(interceptor: Interceptor) = apply {
+            clientOptions.addInterceptor(interceptor)
+        }
 
         fun responseValidation(responseValidation: Boolean) = apply {
             clientOptions.responseValidation(responseValidation)
