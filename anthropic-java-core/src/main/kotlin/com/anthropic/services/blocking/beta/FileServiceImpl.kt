@@ -3,12 +3,11 @@
 package com.anthropic.services.blocking.beta
 
 import com.anthropic.core.ClientOptions
-import com.anthropic.core.JsonValue
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.checkRequired
+import com.anthropic.core.handlers.errorBodyHandler
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
-import com.anthropic.core.handlers.withErrorHandler
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
@@ -77,7 +76,8 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         FileService.WithRawResponse {
 
-        private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+        private val errorHandler: Handler<HttpResponse> =
+            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
@@ -88,7 +88,6 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
 
         private val listHandler: Handler<FileListPageResponse> =
             jsonHandler<FileListPageResponse>(clientOptions.jsonMapper)
-                .withErrorHandler(errorHandler)
 
         override fun list(
             params: FileListParams,
@@ -105,7 +104,7 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { listHandler.handle(it) }
                     .also {
@@ -124,7 +123,7 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
         }
 
         private val deleteHandler: Handler<DeletedFile> =
-            jsonHandler<DeletedFile>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<DeletedFile>(clientOptions.jsonMapper)
 
         override fun delete(
             params: FileDeleteParams,
@@ -145,7 +144,7 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { deleteHandler.handle(it) }
                     .also {
@@ -173,11 +172,12 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return clientOptions.httpClient.execute(request, requestOptions)
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response)
         }
 
         private val retrieveMetadataHandler: Handler<FileMetadata> =
-            jsonHandler<FileMetadata>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<FileMetadata>(clientOptions.jsonMapper)
 
         override fun retrieveMetadata(
             params: FileRetrieveMetadataParams,
@@ -197,7 +197,7 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { retrieveMetadataHandler.handle(it) }
                     .also {
@@ -209,7 +209,7 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
         }
 
         private val uploadHandler: Handler<FileMetadata> =
-            jsonHandler<FileMetadata>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<FileMetadata>(clientOptions.jsonMapper)
 
         override fun upload(
             params: FileUploadParams,
@@ -227,7 +227,7 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { uploadHandler.handle(it) }
                     .also {

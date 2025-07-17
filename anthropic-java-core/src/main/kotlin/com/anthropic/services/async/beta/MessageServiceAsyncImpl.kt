@@ -5,14 +5,15 @@ package com.anthropic.services.async.beta
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.JsonValue
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.handlers.errorBodyHandler
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
 import com.anthropic.core.handlers.mapJson
 import com.anthropic.core.handlers.sseHandler
-import com.anthropic.core.handlers.withErrorHandler
 import com.anthropic.core.http.AsyncStreamResponse
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
+import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
@@ -75,7 +76,8 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         MessageServiceAsync.WithRawResponse {
 
-        private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+        private val errorHandler: Handler<HttpResponse> =
+            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
         private val batches: BatchServiceAsync.WithRawResponse by lazy {
             BatchServiceAsyncImpl.WithRawResponseImpl(clientOptions)
@@ -91,7 +93,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
         override fun batches(): BatchServiceAsync.WithRawResponse = batches
 
         private val createHandler: Handler<BetaMessage> =
-            jsonHandler<BetaMessage>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<BetaMessage>(clientOptions.jsonMapper)
 
         override fun create(
             params: MessageCreateParams,
@@ -113,7 +115,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
-                    response.parseable {
+                    errorHandler.handle(response).parseable {
                         response
                             .use { createHandler.handle(it) }
                             .also {
@@ -126,9 +128,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
         }
 
         private val createStreamingHandler: Handler<StreamResponse<BetaRawMessageStreamEvent>> =
-            sseHandler(clientOptions.jsonMapper)
-                .mapJson<BetaRawMessageStreamEvent>()
-                .withErrorHandler(errorHandler)
+            sseHandler(clientOptions.jsonMapper).mapJson<BetaRawMessageStreamEvent>()
 
         override fun createStreaming(
             params: MessageCreateParams,
@@ -159,7 +159,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
-                    response.parseable {
+                    errorHandler.handle(response).parseable {
                         response
                             .let { createStreamingHandler.handle(it) }
                             .let { streamResponse ->
@@ -175,7 +175,6 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
 
         private val countTokensHandler: Handler<BetaMessageTokensCount> =
             jsonHandler<BetaMessageTokensCount>(clientOptions.jsonMapper)
-                .withErrorHandler(errorHandler)
 
         override fun countTokens(
             params: MessageCountTokensParams,
@@ -194,7 +193,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
-                    response.parseable {
+                    errorHandler.handle(response).parseable {
                         response
                             .use { countTokensHandler.handle(it) }
                             .also {

@@ -5,13 +5,14 @@ package com.anthropic.services.blocking
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.JsonValue
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.handlers.errorBodyHandler
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
 import com.anthropic.core.handlers.mapJson
 import com.anthropic.core.handlers.sseHandler
-import com.anthropic.core.handlers.withErrorHandler
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
+import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
@@ -53,7 +54,8 @@ class CompletionServiceImpl internal constructor(private val clientOptions: Clie
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         CompletionService.WithRawResponse {
 
-        private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+        private val errorHandler: Handler<HttpResponse> =
+            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
@@ -63,7 +65,7 @@ class CompletionServiceImpl internal constructor(private val clientOptions: Clie
             )
 
         private val createHandler: Handler<Completion> =
-            jsonHandler<Completion>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<Completion>(clientOptions.jsonMapper)
 
         override fun create(
             params: CompletionCreateParams,
@@ -82,7 +84,7 @@ class CompletionServiceImpl internal constructor(private val clientOptions: Clie
                     .applyDefaults(RequestOptions.from(clientOptions))
                     .applyDefaults(RequestOptions.builder().timeout(Duration.ofMinutes(10)).build())
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { createHandler.handle(it) }
                     .also {
@@ -94,9 +96,7 @@ class CompletionServiceImpl internal constructor(private val clientOptions: Clie
         }
 
         private val createStreamingHandler: Handler<StreamResponse<Completion>> =
-            sseHandler(clientOptions.jsonMapper)
-                .mapJson<Completion>()
-                .withErrorHandler(errorHandler)
+            sseHandler(clientOptions.jsonMapper).mapJson<Completion>()
 
         override fun createStreaming(
             params: CompletionCreateParams,
@@ -124,7 +124,7 @@ class CompletionServiceImpl internal constructor(private val clientOptions: Clie
                     .applyDefaults(RequestOptions.from(clientOptions))
                     .applyDefaults(RequestOptions.builder().timeout(Duration.ofMinutes(10)).build())
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .let { createStreamingHandler.handle(it) }
                     .let { streamResponse ->

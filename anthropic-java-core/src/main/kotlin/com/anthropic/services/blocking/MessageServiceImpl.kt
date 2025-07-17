@@ -5,13 +5,14 @@ package com.anthropic.services.blocking
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.JsonValue
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.handlers.errorBodyHandler
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
 import com.anthropic.core.handlers.mapJson
 import com.anthropic.core.handlers.sseHandler
-import com.anthropic.core.handlers.withErrorHandler
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
+import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
@@ -66,7 +67,8 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         MessageService.WithRawResponse {
 
-        private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+        private val errorHandler: Handler<HttpResponse> =
+            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
         private val batches: BatchService.WithRawResponse by lazy {
             BatchServiceImpl.WithRawResponseImpl(clientOptions)
@@ -81,8 +83,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
 
         override fun batches(): BatchService.WithRawResponse = batches
 
-        private val createHandler: Handler<Message> =
-            jsonHandler<Message>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+        private val createHandler: Handler<Message> = jsonHandler<Message>(clientOptions.jsonMapper)
 
         override fun create(
             params: MessageCreateParams,
@@ -101,7 +102,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                     .applyDefaults(RequestOptions.from(clientOptions))
                     .applyDefaults(RequestOptions.builder().timeout(Duration.ofMinutes(10)).build())
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { createHandler.handle(it) }
                     .also {
@@ -113,9 +114,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
         }
 
         private val createStreamingHandler: Handler<StreamResponse<RawMessageStreamEvent>> =
-            sseHandler(clientOptions.jsonMapper)
-                .mapJson<RawMessageStreamEvent>()
-                .withErrorHandler(errorHandler)
+            sseHandler(clientOptions.jsonMapper).mapJson<RawMessageStreamEvent>()
 
         override fun createStreaming(
             params: MessageCreateParams,
@@ -143,7 +142,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                     .applyDefaults(RequestOptions.from(clientOptions))
                     .applyDefaults(RequestOptions.builder().timeout(Duration.ofMinutes(10)).build())
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .let { createStreamingHandler.handle(it) }
                     .let { streamResponse ->
@@ -157,7 +156,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
         }
 
         private val countTokensHandler: Handler<MessageTokensCount> =
-            jsonHandler<MessageTokensCount>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<MessageTokensCount>(clientOptions.jsonMapper)
 
         override fun countTokens(
             params: MessageCountTokensParams,
@@ -173,7 +172,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { countTokensHandler.handle(it) }
                     .also {

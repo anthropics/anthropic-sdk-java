@@ -5,14 +5,15 @@ package com.anthropic.services.async
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.JsonValue
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.handlers.errorBodyHandler
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
 import com.anthropic.core.handlers.mapJson
 import com.anthropic.core.handlers.sseHandler
-import com.anthropic.core.handlers.withErrorHandler
 import com.anthropic.core.http.AsyncStreamResponse
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
+import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
@@ -59,7 +60,8 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         CompletionServiceAsync.WithRawResponse {
 
-        private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+        private val errorHandler: Handler<HttpResponse> =
+            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
@@ -69,7 +71,7 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
             )
 
         private val createHandler: Handler<Completion> =
-            jsonHandler<Completion>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<Completion>(clientOptions.jsonMapper)
 
         override fun create(
             params: CompletionCreateParams,
@@ -90,7 +92,7 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
-                    response.parseable {
+                    errorHandler.handle(response).parseable {
                         response
                             .use { createHandler.handle(it) }
                             .also {
@@ -103,9 +105,7 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
         }
 
         private val createStreamingHandler: Handler<StreamResponse<Completion>> =
-            sseHandler(clientOptions.jsonMapper)
-                .mapJson<Completion>()
-                .withErrorHandler(errorHandler)
+            sseHandler(clientOptions.jsonMapper).mapJson<Completion>()
 
         override fun createStreaming(
             params: CompletionCreateParams,
@@ -135,7 +135,7 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
-                    response.parseable {
+                    errorHandler.handle(response).parseable {
                         response
                             .let { createStreamingHandler.handle(it) }
                             .let { streamResponse ->

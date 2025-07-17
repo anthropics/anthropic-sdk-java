@@ -3,17 +3,17 @@
 package com.anthropic.services.async.beta.messages
 
 import com.anthropic.core.ClientOptions
-import com.anthropic.core.JsonValue
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.checkRequired
+import com.anthropic.core.handlers.errorBodyHandler
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
 import com.anthropic.core.handlers.jsonlHandler
-import com.anthropic.core.handlers.withErrorHandler
 import com.anthropic.core.http.AsyncStreamResponse
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
+import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
@@ -103,7 +103,8 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         BatchServiceAsync.WithRawResponse {
 
-        private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+        private val errorHandler: Handler<HttpResponse> =
+            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
@@ -113,7 +114,7 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
             )
 
         private val createHandler: Handler<BetaMessageBatch> =
-            jsonHandler<BetaMessageBatch>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<BetaMessageBatch>(clientOptions.jsonMapper)
 
         override fun create(
             params: BatchCreateParams,
@@ -133,7 +134,7 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
-                    response.parseable {
+                    errorHandler.handle(response).parseable {
                         response
                             .use { createHandler.handle(it) }
                             .also {
@@ -146,7 +147,7 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
         }
 
         private val retrieveHandler: Handler<BetaMessageBatch> =
-            jsonHandler<BetaMessageBatch>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<BetaMessageBatch>(clientOptions.jsonMapper)
 
         override fun retrieve(
             params: BatchRetrieveParams,
@@ -168,7 +169,7 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
-                    response.parseable {
+                    errorHandler.handle(response).parseable {
                         response
                             .use { retrieveHandler.handle(it) }
                             .also {
@@ -182,7 +183,6 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
 
         private val listHandler: Handler<BatchListPageResponse> =
             jsonHandler<BatchListPageResponse>(clientOptions.jsonMapper)
-                .withErrorHandler(errorHandler)
 
         override fun list(
             params: BatchListParams,
@@ -201,7 +201,7 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
-                    response.parseable {
+                    errorHandler.handle(response).parseable {
                         response
                             .use { listHandler.handle(it) }
                             .also {
@@ -223,7 +223,6 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
 
         private val deleteHandler: Handler<BetaDeletedMessageBatch> =
             jsonHandler<BetaDeletedMessageBatch>(clientOptions.jsonMapper)
-                .withErrorHandler(errorHandler)
 
         override fun delete(
             params: BatchDeleteParams,
@@ -246,7 +245,7 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
-                    response.parseable {
+                    errorHandler.handle(response).parseable {
                         response
                             .use { deleteHandler.handle(it) }
                             .also {
@@ -259,7 +258,7 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
         }
 
         private val cancelHandler: Handler<BetaMessageBatch> =
-            jsonHandler<BetaMessageBatch>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<BetaMessageBatch>(clientOptions.jsonMapper)
 
         override fun cancel(
             params: BatchCancelParams,
@@ -282,7 +281,7 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
-                    response.parseable {
+                    errorHandler.handle(response).parseable {
                         response
                             .use { cancelHandler.handle(it) }
                             .also {
@@ -297,7 +296,6 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
         private val resultsStreamingHandler:
             Handler<StreamResponse<BetaMessageBatchIndividualResponse>> =
             jsonlHandler<BetaMessageBatchIndividualResponse>(clientOptions.jsonMapper)
-                .withErrorHandler(errorHandler)
 
         override fun resultsStreaming(
             params: BatchResultsParams,
@@ -319,7 +317,7 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
-                    response.parseable {
+                    errorHandler.handle(response).parseable {
                         response
                             .let { resultsStreamingHandler.handle(it) }
                             .let { streamResponse ->
