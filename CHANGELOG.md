@@ -1,5 +1,49 @@
 # Changelog
 
+## 2.2.0 (2025-07-18)
+
+Full Changelog: [v2.1.0...v2.2.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.1.0...v2.2.0)
+
+### Features
+
+* **api:** add support for Search Result Content Blocks ([c36527b](https://github.com/anthropics/anthropic-sdk-java/commit/c36527b940b14dcf0e7b54d5dd042725a7e467e1))
+* **client:** add a `withOptions` method ([27a82a5](https://github.com/anthropics/anthropic-sdk-java/commit/27a82a51cd4841ddfeed831649fb9266ad2dafbc))
+* **client:** implement per-endpoint base URL support ([4e8302c](https://github.com/anthropics/anthropic-sdk-java/commit/4e8302c8362e02c4e50508fba63870a9c38e520a))
+* **vertex:** support global region endpoint ([44119cb](https://github.com/anthropics/anthropic-sdk-java/commit/44119cbbf8047ef0f4c450592cfd329a6d2fc9ba))
+
+
+### Bug Fixes
+
+* **ci:** release-doctor — report correct token name ([6c97d93](https://github.com/anthropics/anthropic-sdk-java/commit/6c97d93df2dd7b9d0616e727fdcd704b134e34ff))
+* **client:** bump max requests per host to max requests (5 -&gt; 64) ([f2abb48](https://github.com/anthropics/anthropic-sdk-java/commit/f2abb48aee3ce30911e9311ea7fdaea56d6adf44))
+* **client:** don't close client on `withOptions` usage when original is gc'd ([76af310](https://github.com/anthropics/anthropic-sdk-java/commit/76af310809c0fff30be805241a08fc6443c46148))
+* **client:** ensure error handling always occurs ([9a56f4f](https://github.com/anthropics/anthropic-sdk-java/commit/9a56f4f2cf3944d945e0d7e4e52e1576d5dda148))
+* compilation errors ([8ad3163](https://github.com/anthropics/anthropic-sdk-java/commit/8ad31632d2f9f07c70edf6232a6c03d17d0265f5))
+
+
+### Chores
+
+* **api:** mark claude-3-opus-20240229 as deprecated ([cfa37e8](https://github.com/anthropics/anthropic-sdk-java/commit/cfa37e82a3ddc24890efe835c44b55a0aeccbfa4))
+* **api:** update BetaCitationSearchResultLocation ([3bdbf82](https://github.com/anthropics/anthropic-sdk-java/commit/3bdbf821f3bae852952cc96dfd80585a5c97818d))
+* **ci:** bump `actions/setup-java` to v4 ([ab43021](https://github.com/anthropics/anthropic-sdk-java/commit/ab43021a2b1e306f90d687f5ffe25e23d352b045))
+* **ci:** enable for pull requests ([9e47921](https://github.com/anthropics/anthropic-sdk-java/commit/9e479210fa6d69829e431134f3e35c86bc2130f9))
+* **ci:** ensure docs generation always succeeds ([8dbfb13](https://github.com/anthropics/anthropic-sdk-java/commit/8dbfb13bb82998e7801c761d79f058e18752a702))
+* **ci:** only run for pushes and fork pull requests ([82647dd](https://github.com/anthropics/anthropic-sdk-java/commit/82647dda97b2ee03ca22ceb74ba88972e0bdcdf1))
+* delete bin/ ([7f2f39b](https://github.com/anthropics/anthropic-sdk-java/commit/7f2f39b856fcf7a372e8fe842c83353d477b83b6))
+* **internal:** add breaking change detection ([cc6c869](https://github.com/anthropics/anthropic-sdk-java/commit/cc6c8693ae8186cdf59876f98291006a862d4bbe))
+* **internal:** allow running specific example from cli ([4b19506](https://github.com/anthropics/anthropic-sdk-java/commit/4b1950630184cf95fd2266b0a9ff5e0802e8aa0a))
+
+
+### Documentation
+
+* model in examples ([24d79a1](https://github.com/anthropics/anthropic-sdk-java/commit/24d79a1bb92a46929c1924b96f479f4052b5bca2))
+* update models and non-beta ([cb49393](https://github.com/anthropics/anthropic-sdk-java/commit/cb49393985980e849bae611f08f149f75908631f))
+
+
+### Refactors
+
+* **internal:** minor `ClientOptionsTest` change ([b28dade](https://github.com/anthropics/anthropic-sdk-java/commit/b28dade407979c521a10ed35f1335be500e6740c))
+
 ## 2.1.0 (2025-06-11)
 
 Full Changelog: [v2.0.0...v2.1.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.0.0...v2.1.0)
