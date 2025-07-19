@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.2.1 (2025-07-19)
+
+Full Changelog: [v2.2.0...v2.2.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.2.0...v2.2.1)
+
+### Chores
+
+* **internal:** refactor delegating from client to options ([e947c00](https://github.com/anthropics/anthropic-sdk-java/commit/e947c00c64118b1f10994136720cd39429876ead))
+
 ## 2.2.0 (2025-07-18)
 
 Full Changelog: [v2.1.0...v2.2.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.1.0...v2.2.0)
