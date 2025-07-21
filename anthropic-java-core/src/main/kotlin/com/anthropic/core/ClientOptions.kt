@@ -245,9 +245,14 @@ private constructor(
         fun timeout(): Timeout = timeout
 
         fun fromEnv() = apply {
-            System.getenv("ANTHROPIC_BASE_URL")?.let { baseUrl(it) }
-            System.getenv("ANTHROPIC_API_KEY")?.let { apiKey(it) }
-            System.getenv("ANTHROPIC_AUTH_TOKEN")?.let { authToken(it) }
+            (System.getProperty("anthropic.baseUrl") ?: System.getenv("ANTHROPIC_BASE_URL"))?.let {
+                baseUrl(it)
+            }
+            (System.getProperty("anthropic.apiKey") ?: System.getenv("ANTHROPIC_API_KEY"))?.let {
+                apiKey(it)
+            }
+            (System.getProperty("anthropic.authToken") ?: System.getenv("ANTHROPIC_AUTH_TOKEN"))
+                ?.let { authToken(it) }
         }
 
         /**
