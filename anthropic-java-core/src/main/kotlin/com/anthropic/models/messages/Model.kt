@@ -76,27 +76,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         @JvmField
         val CLAUDE_3_OPUS_20240229 = of("claude-3-opus-20240229")
 
-        /** Balance of speed and intelligence */
-        @Deprecated(
-            "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        @JvmField
-        val CLAUDE_3_SONNET_20240229 = of("claude-3-sonnet-20240229")
-
         /** Our previous most fast and cost-effective */
         @JvmField val CLAUDE_3_HAIKU_20240307 = of("claude-3-haiku-20240307")
-
-        @Deprecated(
-            "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        @JvmField
-        val CLAUDE_2_1 = of("claude-2.1")
-
-        @Deprecated(
-            "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        @JvmField
-        val CLAUDE_2_0 = of("claude-2.0")
 
         @JvmStatic fun of(value: String) = Model(JsonField.of(value))
     }
@@ -138,21 +119,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         )
         /** Excels at writing and complex tasks */
         CLAUDE_3_OPUS_20240229,
-        @Deprecated(
-            "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        /** Balance of speed and intelligence */
-        CLAUDE_3_SONNET_20240229,
         /** Our previous most fast and cost-effective */
         CLAUDE_3_HAIKU_20240307,
-        @Deprecated(
-            "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        CLAUDE_2_1,
-        @Deprecated(
-            "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        CLAUDE_2_0,
     }
 
     /**
@@ -200,21 +168,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         )
         /** Excels at writing and complex tasks */
         CLAUDE_3_OPUS_20240229,
-        @Deprecated(
-            "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        /** Balance of speed and intelligence */
-        CLAUDE_3_SONNET_20240229,
         /** Our previous most fast and cost-effective */
         CLAUDE_3_HAIKU_20240307,
-        @Deprecated(
-            "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        CLAUDE_2_1,
-        @Deprecated(
-            "Will reach end-of-life on July 21st, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        CLAUDE_2_0,
         /** An enum member indicating that [Model] was instantiated with an unknown value. */
         _UNKNOWN,
     }
@@ -243,10 +198,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
             CLAUDE_4_OPUS_20250514 -> Value.CLAUDE_4_OPUS_20250514
             CLAUDE_3_OPUS_LATEST -> Value.CLAUDE_3_OPUS_LATEST
             CLAUDE_3_OPUS_20240229 -> Value.CLAUDE_3_OPUS_20240229
-            CLAUDE_3_SONNET_20240229 -> Value.CLAUDE_3_SONNET_20240229
             CLAUDE_3_HAIKU_20240307 -> Value.CLAUDE_3_HAIKU_20240307
-            CLAUDE_2_1 -> Value.CLAUDE_2_1
-            CLAUDE_2_0 -> Value.CLAUDE_2_0
             else -> Value._UNKNOWN
         }
 
@@ -275,10 +227,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
             CLAUDE_4_OPUS_20250514 -> Known.CLAUDE_4_OPUS_20250514
             CLAUDE_3_OPUS_LATEST -> Known.CLAUDE_3_OPUS_LATEST
             CLAUDE_3_OPUS_20240229 -> Known.CLAUDE_3_OPUS_20240229
-            CLAUDE_3_SONNET_20240229 -> Known.CLAUDE_3_SONNET_20240229
             CLAUDE_3_HAIKU_20240307 -> Known.CLAUDE_3_HAIKU_20240307
-            CLAUDE_2_1 -> Known.CLAUDE_2_1
-            CLAUDE_2_0 -> Known.CLAUDE_2_0
             else -> throw AnthropicInvalidDataException("Unknown Model: $value")
         }
 
