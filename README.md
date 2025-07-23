@@ -94,7 +94,7 @@ import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 
 AnthropicClient client = AnthropicOkHttpClient.builder()
     // Configures using the `anthropic.apiKey`, `anthropic.authToken` and `anthropic.baseUrl` system properties
-    Or configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_BASE_URL` environment variables
+    // Or configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_BASE_URL` environment variables
     .fromEnv()
     .apiKey("my-anthropic-api-key")
     .build();
