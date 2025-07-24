@@ -2219,7 +2219,7 @@ private constructor(
 
                     @JvmStatic
                     fun ofTextBlockParams(textBlockParams: List<TextBlockParam>) =
-                        System(textBlockParams = textBlockParams)
+                        System(textBlockParams = textBlockParams.toImmutable())
                 }
 
                 /**

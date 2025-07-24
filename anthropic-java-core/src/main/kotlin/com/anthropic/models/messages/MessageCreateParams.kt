@@ -2643,7 +2643,7 @@ private constructor(
 
             @JvmStatic
             fun ofTextBlockParams(textBlockParams: List<TextBlockParam>) =
-                System(textBlockParams = textBlockParams)
+                System(textBlockParams = textBlockParams.toImmutable())
         }
 
         /** An interface that defines how to map each variant of [System] to a value of type [T]. */

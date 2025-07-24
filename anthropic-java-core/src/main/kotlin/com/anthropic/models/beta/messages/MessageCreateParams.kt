@@ -2949,7 +2949,7 @@ private constructor(
 
             @JvmStatic
             fun ofBetaTextBlockParams(betaTextBlockParams: List<BetaTextBlockParam>) =
-                System(betaTextBlockParams = betaTextBlockParams)
+                System(betaTextBlockParams = betaTextBlockParams.toImmutable())
         }
 
         /** An interface that defines how to map each variant of [System] to a value of type [T]. */

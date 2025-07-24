@@ -7,6 +7,7 @@ import com.anthropic.core.BaseSerializer
 import com.anthropic.core.JsonValue
 import com.anthropic.core.allMaxBy
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
@@ -143,7 +144,7 @@ private constructor(
 
         @JvmStatic
         fun ofResultBlocks(resultBlocks: List<BetaWebSearchResultBlock>) =
-            BetaWebSearchToolResultBlockContent(resultBlocks = resultBlocks)
+            BetaWebSearchToolResultBlockContent(resultBlocks = resultBlocks.toImmutable())
     }
 
     /**

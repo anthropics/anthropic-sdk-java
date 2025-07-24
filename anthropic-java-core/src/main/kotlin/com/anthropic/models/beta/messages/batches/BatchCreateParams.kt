@@ -2424,7 +2424,7 @@ private constructor(
 
                     @JvmStatic
                     fun ofBetaTextBlockParams(betaTextBlockParams: List<BetaTextBlockParam>) =
-                        System(betaTextBlockParams = betaTextBlockParams)
+                        System(betaTextBlockParams = betaTextBlockParams.toImmutable())
                 }
 
                 /**
