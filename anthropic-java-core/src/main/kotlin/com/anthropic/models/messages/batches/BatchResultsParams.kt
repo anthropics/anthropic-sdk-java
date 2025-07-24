@@ -29,8 +29,10 @@ private constructor(
     /** ID of the Message Batch. */
     fun messageBatchId(): Optional<String> = Optional.ofNullable(messageBatchId)
 
+    /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
 
+    /** Additional query param to send with the request. */
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
     fun toBuilder() = Builder().from(this)
