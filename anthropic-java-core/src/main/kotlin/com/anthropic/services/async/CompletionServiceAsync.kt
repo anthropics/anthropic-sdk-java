@@ -40,7 +40,7 @@ interface CompletionServiceAsync {
     fun create(params: CompletionCreateParams): CompletableFuture<Completion> =
         create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: CompletionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -59,7 +59,7 @@ interface CompletionServiceAsync {
     fun createStreaming(params: CompletionCreateParams): AsyncStreamResponse<Completion> =
         createStreaming(params, RequestOptions.none())
 
-    /** @see [createStreaming] */
+    /** @see createStreaming */
     fun createStreaming(
         params: CompletionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -87,7 +87,7 @@ interface CompletionServiceAsync {
         fun create(params: CompletionCreateParams): CompletableFuture<HttpResponseFor<Completion>> =
             create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         fun create(
             params: CompletionCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -103,7 +103,7 @@ interface CompletionServiceAsync {
         ): CompletableFuture<HttpResponseFor<StreamResponse<Completion>>> =
             createStreaming(params, RequestOptions.none())
 
-        /** @see [createStreaming] */
+        /** @see createStreaming */
         @MustBeClosed
         fun createStreaming(
             params: CompletionCreateParams,

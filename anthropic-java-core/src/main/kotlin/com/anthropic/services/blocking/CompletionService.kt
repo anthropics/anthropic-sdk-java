@@ -37,7 +37,7 @@ interface CompletionService {
      */
     fun create(params: CompletionCreateParams): Completion = create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: CompletionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -57,7 +57,7 @@ interface CompletionService {
     fun createStreaming(params: CompletionCreateParams): StreamResponse<Completion> =
         createStreaming(params, RequestOptions.none())
 
-    /** @see [createStreaming] */
+    /** @see createStreaming */
     @MustBeClosed
     fun createStreaming(
         params: CompletionCreateParams,
@@ -84,7 +84,7 @@ interface CompletionService {
         fun create(params: CompletionCreateParams): HttpResponseFor<Completion> =
             create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(
             params: CompletionCreateParams,
@@ -101,7 +101,7 @@ interface CompletionService {
         ): HttpResponseFor<StreamResponse<Completion>> =
             createStreaming(params, RequestOptions.none())
 
-        /** @see [createStreaming] */
+        /** @see createStreaming */
         @MustBeClosed
         fun createStreaming(
             params: CompletionCreateParams,

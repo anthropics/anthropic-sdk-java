@@ -41,7 +41,7 @@ interface MessageService {
      */
     fun create(params: MessageCreateParams): BetaMessage = create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: MessageCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -59,7 +59,7 @@ interface MessageService {
     fun createStreaming(params: MessageCreateParams): StreamResponse<BetaRawMessageStreamEvent> =
         createStreaming(params, RequestOptions.none())
 
-    /** @see [createStreaming] */
+    /** @see createStreaming */
     @MustBeClosed
     fun createStreaming(
         params: MessageCreateParams,
@@ -78,7 +78,7 @@ interface MessageService {
     fun countTokens(params: MessageCountTokensParams): BetaMessageTokensCount =
         countTokens(params, RequestOptions.none())
 
-    /** @see [countTokens] */
+    /** @see countTokens */
     fun countTokens(
         params: MessageCountTokensParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -104,7 +104,7 @@ interface MessageService {
         fun create(params: MessageCreateParams): HttpResponseFor<BetaMessage> =
             create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(
             params: MessageCreateParams,
@@ -121,7 +121,7 @@ interface MessageService {
         ): HttpResponseFor<StreamResponse<BetaRawMessageStreamEvent>> =
             createStreaming(params, RequestOptions.none())
 
-        /** @see [createStreaming] */
+        /** @see createStreaming */
         @MustBeClosed
         fun createStreaming(
             params: MessageCreateParams,
@@ -136,7 +136,7 @@ interface MessageService {
         fun countTokens(params: MessageCountTokensParams): HttpResponseFor<BetaMessageTokensCount> =
             countTokens(params, RequestOptions.none())
 
-        /** @see [countTokens] */
+        /** @see countTokens */
         @MustBeClosed
         fun countTokens(
             params: MessageCountTokensParams,

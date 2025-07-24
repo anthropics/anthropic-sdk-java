@@ -34,29 +34,29 @@ interface ModelService {
      */
     fun retrieve(modelId: String): ModelInfo = retrieve(modelId, ModelRetrieveParams.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         modelId: String,
         params: ModelRetrieveParams = ModelRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ModelInfo = retrieve(params.toBuilder().modelId(modelId).build(), requestOptions)
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         modelId: String,
         params: ModelRetrieveParams = ModelRetrieveParams.none(),
     ): ModelInfo = retrieve(modelId, params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         params: ModelRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ModelInfo
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(params: ModelRetrieveParams): ModelInfo = retrieve(params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(modelId: String, requestOptions: RequestOptions): ModelInfo =
         retrieve(modelId, ModelRetrieveParams.none(), requestOptions)
 
@@ -68,17 +68,17 @@ interface ModelService {
      */
     fun list(): ModelListPage = list(ModelListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: ModelListParams = ModelListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ModelListPage
 
-    /** @see [list] */
+    /** @see list */
     fun list(params: ModelListParams = ModelListParams.none()): ModelListPage =
         list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): ModelListPage =
         list(ModelListParams.none(), requestOptions)
 
@@ -100,7 +100,7 @@ interface ModelService {
         fun retrieve(modelId: String): HttpResponseFor<ModelInfo> =
             retrieve(modelId, ModelRetrieveParams.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             modelId: String,
@@ -109,26 +109,26 @@ interface ModelService {
         ): HttpResponseFor<ModelInfo> =
             retrieve(params.toBuilder().modelId(modelId).build(), requestOptions)
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             modelId: String,
             params: ModelRetrieveParams = ModelRetrieveParams.none(),
         ): HttpResponseFor<ModelInfo> = retrieve(modelId, params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             params: ModelRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<ModelInfo>
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(params: ModelRetrieveParams): HttpResponseFor<ModelInfo> =
             retrieve(params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(modelId: String, requestOptions: RequestOptions): HttpResponseFor<ModelInfo> =
             retrieve(modelId, ModelRetrieveParams.none(), requestOptions)
@@ -139,19 +139,19 @@ interface ModelService {
          */
         @MustBeClosed fun list(): HttpResponseFor<ModelListPage> = list(ModelListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: ModelListParams = ModelListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<ModelListPage>
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(params: ModelListParams = ModelListParams.none()): HttpResponseFor<ModelListPage> =
             list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<ModelListPage> =
             list(ModelListParams.none(), requestOptions)
