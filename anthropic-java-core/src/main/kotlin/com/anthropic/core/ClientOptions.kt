@@ -4,9 +4,11 @@ package com.anthropic.core
 
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpClient
+import com.anthropic.core.http.Interceptor
 import com.anthropic.core.http.PhantomReachableClosingHttpClient
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.http.RetryingHttpClient
+import com.anthropic.core.http.intercept
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.time.Clock
 import java.time.Duration
@@ -21,6 +23,8 @@ class ClientOptions
 private constructor(
     private val originalHttpClient: HttpClient,
     @get:JvmName("httpClient") val httpClient: HttpClient,
+    private val interceptor: Interceptor?,
+    private val networkInterceptor: Interceptor?,
     /**
      * Whether to throw an exception if any of the Jackson versions detected at runtime are
      * incompatible with the SDK's minimum supported Jackson version (2.13.4).
@@ -46,6 +50,28 @@ private constructor(
         }
     }
 
+    /**
+     * Wraps the HTTP client using the given [interceptor].
+     *
+     * The HTTP client may perform retries. Use [networkInterceptor] to wrap the raw HTTP client
+     * before retry logic.
+     *
+     * Also note that calling [interceptor] multiple times overwrites the previous call. To apply
+     * multiple layers of wrapping, perform all the wrapping in a single call.
+     */
+    fun interceptor(): Optional<Interceptor> = Optional.ofNullable(interceptor)
+
+    /**
+     * Wraps the raw HTTP client using the given [interceptor].
+     *
+     * The raw HTTP client does _not_ perform retries. Use [interceptor] to wrap the HTTP client
+     * after retry logic.
+     *
+     * Also note that calling [networkInterceptor] multiple times overwrites the previous call. To
+     * apply multiple layers of wrapping, perform all the wrapping in a single call.
+     */
+    fun networkInterceptor(): Optional<Interceptor> = Optional.ofNullable(networkInterceptor)
+
     fun baseUrl(): String? = baseUrl
 
     fun toBuilder() = Builder().from(this)
@@ -67,6 +93,8 @@ private constructor(
     class Builder internal constructor() {
 
         private var httpClient: HttpClient? = null
+        private var interceptor: Interceptor? = null
+        private var networkInterceptor: Interceptor? = null
         private var checkJacksonVersionCompatibility: Boolean = true
         private var jsonMapper: JsonMapper = jsonMapper()
         private var streamHandlerExecutor: Executor? = null
@@ -81,6 +109,8 @@ private constructor(
         @JvmSynthetic
         internal fun from(clientOptions: ClientOptions) = apply {
             httpClient = clientOptions.originalHttpClient
+            interceptor = clientOptions.interceptor
+            networkInterceptor = clientOptions.networkInterceptor
             checkJacksonVersionCompatibility = clientOptions.checkJacksonVersionCompatibility
             jsonMapper = clientOptions.jsonMapper
             streamHandlerExecutor = clientOptions.streamHandlerExecutor
@@ -96,6 +126,39 @@ private constructor(
         fun httpClient(httpClient: HttpClient) = apply {
             this.httpClient = PhantomReachableClosingHttpClient(httpClient)
         }
+
+        /**
+         * Wraps the HTTP client using the given [interceptor].
+         *
+         * The HTTP client may perform retries. Use [networkInterceptor] to wrap the raw HTTP client
+         * before retry logic.
+         *
+         * Also note that calling [interceptor] multiple times overwrites the previous call. To
+         * apply multiple layers of wrapping, perform all the wrapping in a single call.
+         */
+        fun interceptor(interceptor: Interceptor?) = apply { this.interceptor = interceptor }
+
+        /** Alias for calling [Builder.interceptor] with `interceptor.orElse(null)`. */
+        fun interceptor(interceptor: Optional<Interceptor>) = interceptor(interceptor.getOrNull())
+
+        /**
+         * Wraps the raw HTTP client using the given [interceptor].
+         *
+         * The raw HTTP client does _not_ perform retries. Use [interceptor] to wrap the HTTP client
+         * after retry logic.
+         *
+         * Also note that calling [networkInterceptor] multiple times overwrites the previous call.
+         * To apply multiple layers of wrapping, perform all the wrapping in a single call.
+         */
+        fun networkInterceptor(networkInterceptor: Interceptor?) = apply {
+            this.networkInterceptor = networkInterceptor
+        }
+
+        /**
+         * Alias for calling [Builder.networkInterceptor] with `networkInterceptor.orElse(null)`.
+         */
+        fun networkInterceptor(networkInterceptor: Optional<Interceptor>) =
+            networkInterceptor(networkInterceptor.getOrNull())
 
         /**
          * Whether to throw an exception if any of the Jackson versions detected at runtime are
@@ -249,11 +312,21 @@ private constructor(
 
             return ClientOptions(
                 httpClient,
-                RetryingHttpClient.builder()
-                    .httpClient(httpClient)
-                    .clock(clock)
-                    .maxRetries(maxRetries)
-                    .build(),
+                interceptor.intercept(
+                    // Add default post-retries interceptors around this client.
+                    RetryingHttpClient.builder()
+                        .httpClient(
+                            networkInterceptor.intercept(
+                                // Add default pre-retries interceptors around this client.
+                                httpClient
+                            )
+                        )
+                        .clock(clock)
+                        .maxRetries(maxRetries)
+                        .build()
+                ),
+                interceptor,
+                networkInterceptor,
                 checkJacksonVersionCompatibility,
                 jsonMapper,
                 streamHandlerExecutor

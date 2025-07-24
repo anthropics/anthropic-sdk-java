@@ -974,6 +974,113 @@ AnthropicClient client = AnthropicOkHttpClient.builder()
     .build();
 ```
 
+### Interceptors
+
+To intercept all requests and responses _after_ [retries](#retries), configure the client using the `interceptor` method:
+
+```java
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+import com.anthropic.core.RequestOptions;
+import com.anthropic.core.http.HttpClient;
+import com.anthropic.core.http.HttpRequest;
+import com.anthropic.core.http.HttpResponse;
+import java.util.concurrent.CompletableFuture;
+
+class LoggingHttpClient implements HttpClient {
+
+    private final HttpClient delegate;
+
+    LoggingHttpClient(HttpClient delegate) {
+        this.delegate = delegate;
+    }
+
+    @Override
+    public HttpResponse execute(
+        HttpRequest request,
+        RequestOptions requestOptions
+    ) {
+        System.out.println("Sending request...");
+        HttpResponse response = delegate.execute(
+            // Optionally modify the request
+            request.toBuilder().putHeader("X-Request-ID", "42").build(),
+            requestOptions
+        );
+        System.out.println("Received response!");
+        // Optionally modify the response by implementing `HttpResponse`
+        return response;
+    }
+
+    @Override
+    public CompletableFuture<HttpResponse> executeAsync(
+        HttpRequest request,
+        RequestOptions requestOptions
+    ) {
+        System.out.println("Sending request...");
+        CompletableFuture<HttpResponse> responseFuture = delegate.executeAsync(
+            // Optionally modify the request
+            request.toBuilder().putHeader("X-Request-ID", "42").build(),
+            requestOptions
+        );
+        return responseFuture.thenApply(response -> {
+            System.out.println("Received response!");
+            // Optionally modify the response by implementing `HttpResponse`
+            return response;
+        });
+    }
+
+    @Override
+    public void close() {
+        delegate.close();
+    }
+}
+
+AnthropicClient client = AnthropicOkHttpClient.builder()
+    .fromEnv()
+    // Or pass a lambda
+    .interceptor(LoggingHttpClient::new)
+    .build();
+```
+
+To intercept _before_ retries, which is useful for logging and tracing, configure the client using the `networkInterceptor` method instead:
+
+```java
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+
+AnthropicClient client = AnthropicOkHttpClient.builder()
+    .fromEnv()
+    // Or pass a lambda
+    .networkInterceptor(LoggingHttpClient::new)
+    .build();
+```
+
+Or configure the client to intercept synchronous calls only, if you don't use [asynchronous execution](#asynchronous-execution):
+
+```java
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+import com.anthropic.core.http.HttpResponse;
+import com.anthropic.core.http.Interceptor;
+
+AnthropicClient client = AnthropicOkHttpClient.builder()
+    .fromEnv()
+    // Or `networkInterceptor`
+    .interceptor(Interceptor.syncOnly((httpClient, request, requestOptions) -> {
+        System.out.println("Sending request...");
+        HttpResponse response = httpClient.execute(request, response);
+        System.out.println("Received response!");
+        return response;
+    }))
+    .build();
+```
+
+Or configure the client to intercept asynchronous calls only, if you _only_ use asynchronous execution, using `Interceptor.asyncOnly`.
+
+> [!NOTE]
+> Only a single `interceptor` and a single `networkInterceptor` can be configured. To configure multiple
+> layers of wrapping, perform all the wrapping in a single call.
+
 ### Custom HTTP client
 
 The SDK consists of three artifacts:

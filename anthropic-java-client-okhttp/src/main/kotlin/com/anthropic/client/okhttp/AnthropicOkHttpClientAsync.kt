@@ -9,6 +9,7 @@ import com.anthropic.client.AnthropicClientAsyncImpl
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.Timeout
 import com.anthropic.core.http.Headers
+import com.anthropic.core.http.Interceptor
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.databind.json.JsonMapper
@@ -97,6 +98,41 @@ class AnthropicOkHttpClientAsync private constructor() {
         /** Alias for calling [Builder.hostnameVerifier] with `hostnameVerifier.orElse(null)`. */
         fun hostnameVerifier(hostnameVerifier: Optional<HostnameVerifier>) =
             hostnameVerifier(hostnameVerifier.getOrNull())
+
+        /**
+         * Wraps the HTTP client using the given [interceptor].
+         *
+         * The HTTP client may perform retries. Use [networkInterceptor] to wrap the raw HTTP client
+         * before retry logic.
+         *
+         * Also note that calling [interceptor] multiple times overwrites the previous call. To
+         * apply multiple layers of wrapping, perform all the wrapping in a single call.
+         */
+        fun interceptor(interceptor: Interceptor?) = apply {
+            clientOptions.interceptor(interceptor)
+        }
+
+        /** Alias for calling [Builder.interceptor] with `interceptor.orElse(null)`. */
+        fun interceptor(interceptor: Optional<Interceptor>) = interceptor(interceptor.getOrNull())
+
+        /**
+         * Wraps the raw HTTP client using the given [interceptor].
+         *
+         * The raw HTTP client does _not_ perform retries. Use [interceptor] to wrap the HTTP client
+         * after retry logic.
+         *
+         * Also note that calling [networkInterceptor] multiple times overwrites the previous call.
+         * To apply multiple layers of wrapping, perform all the wrapping in a single call.
+         */
+        fun networkInterceptor(networkInterceptor: Interceptor?) = apply {
+            clientOptions.networkInterceptor(networkInterceptor)
+        }
+
+        /**
+         * Alias for calling [Builder.networkInterceptor] with `networkInterceptor.orElse(null)`.
+         */
+        fun networkInterceptor(networkInterceptor: Optional<Interceptor>) =
+            networkInterceptor(networkInterceptor.getOrNull())
 
         /**
          * Whether to throw an exception if any of the Jackson versions detected at runtime are
