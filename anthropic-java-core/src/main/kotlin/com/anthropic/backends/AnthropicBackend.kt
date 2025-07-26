@@ -81,9 +81,13 @@ private constructor(
         private var baseUrl: String = PRODUCTION_URL
 
         fun fromEnv() = apply {
-            apiKey = System.getenv(ENV_API_KEY)
-            authToken = System.getenv(ENV_AUTH_TOKEN)
-            System.getenv("ANTHROPIC_BASE_URL")?.let { baseUrl = it }
+            (System.getProperty("anthropic.baseUrl") ?: System.getenv("ANTHROPIC_BASE_URL"))?.let {
+                baseUrl = it
+            }
+            (System.getProperty("anthropic.apiKey") ?: System.getenv(apiKey))?.let { apiKey(it) }
+            (System.getProperty("anthropic.authToken") ?: System.getenv(authToken))?.let {
+                authToken(it)
+            }
         }
 
         fun apiKey(apiKey: String?) = apply { this.apiKey = apiKey }
@@ -94,7 +98,7 @@ private constructor(
 
         fun authToken(authToken: Optional<String>) = authToken(authToken.orElse(null))
 
-        fun baseUrl(baseUrl: String) = apply { this.baseUrl = baseUrl }
+        fun baseUrl(baseUrl: String?) = apply { this.baseUrl = baseUrl ?: PRODUCTION_URL }
 
         fun build(): AnthropicBackend {
             return AnthropicBackend(apiKey, authToken, baseUrl)

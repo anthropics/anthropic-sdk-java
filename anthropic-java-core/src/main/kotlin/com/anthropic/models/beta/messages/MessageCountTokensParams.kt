@@ -320,8 +320,10 @@ private constructor(
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
+    /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
 
+    /** Additional query param to send with the request. */
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
     fun toBuilder() = Builder().from(this)
@@ -2089,7 +2091,7 @@ private constructor(
 
             @JvmStatic
             fun ofBetaTextBlockParams(betaTextBlockParams: List<BetaTextBlockParam>) =
-                System(betaTextBlockParams = betaTextBlockParams)
+                System(betaTextBlockParams = betaTextBlockParams.toImmutable())
         }
 
         /** An interface that defines how to map each variant of [System] to a value of type [T]. */

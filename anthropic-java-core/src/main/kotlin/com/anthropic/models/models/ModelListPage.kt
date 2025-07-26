@@ -10,7 +10,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** @see [ModelService.list] */
+/** @see ModelService.list */
 class ModelListPage
 private constructor(
     private val service: ModelService,
@@ -21,28 +21,28 @@ private constructor(
     /**
      * Delegates to [ModelListPageResponse], but gracefully handles missing data.
      *
-     * @see [ModelListPageResponse.data]
+     * @see ModelListPageResponse.data
      */
     fun data(): List<ModelInfo> = response._data().getOptional("data").getOrNull() ?: emptyList()
 
     /**
      * Delegates to [ModelListPageResponse], but gracefully handles missing data.
      *
-     * @see [ModelListPageResponse.hasMore]
+     * @see ModelListPageResponse.hasMore
      */
     fun hasMore(): Optional<Boolean> = response._hasMore().getOptional("has_more")
 
     /**
      * Delegates to [ModelListPageResponse], but gracefully handles missing data.
      *
-     * @see [ModelListPageResponse.firstId]
+     * @see ModelListPageResponse.firstId
      */
     fun firstId(): Optional<String> = response._firstId().getOptional("first_id")
 
     /**
      * Delegates to [ModelListPageResponse], but gracefully handles missing data.
      *
-     * @see [ModelListPageResponse.lastId]
+     * @see ModelListPageResponse.lastId
      */
     fun lastId(): Optional<String> = response._lastId().getOptional("last_id")
 

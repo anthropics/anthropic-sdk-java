@@ -2,6 +2,14 @@
 
 package com.anthropic.core.http
 
+import com.anthropic.core.JsonArray
+import com.anthropic.core.JsonBoolean
+import com.anthropic.core.JsonMissing
+import com.anthropic.core.JsonNull
+import com.anthropic.core.JsonNumber
+import com.anthropic.core.JsonObject
+import com.anthropic.core.JsonString
+import com.anthropic.core.JsonValue
 import com.anthropic.core.toImmutable
 
 class QueryParams
@@ -27,6 +35,39 @@ private constructor(
 
         private val map: MutableMap<String, MutableList<String>> = mutableMapOf()
         private var size: Int = 0
+
+        fun put(key: String, value: JsonValue): Builder = apply {
+            when (value) {
+                is JsonMissing,
+                is JsonNull -> {}
+                is JsonBoolean -> put(key, value.value.toString())
+                is JsonNumber -> put(key, value.value.toString())
+                is JsonString -> put(key, value.value)
+                is JsonArray ->
+                    put(
+                        key,
+                        value.values
+                            .asSequence()
+                            .mapNotNull {
+                                when (it) {
+                                    is JsonMissing,
+                                    is JsonNull -> null
+                                    is JsonBoolean -> it.value.toString()
+                                    is JsonNumber -> it.value.toString()
+                                    is JsonString -> it.value
+                                    is JsonArray,
+                                    is JsonObject ->
+                                        throw IllegalArgumentException(
+                                            "Cannot comma separate non-primitives in query params"
+                                        )
+                                }
+                            }
+                            .joinToString(","),
+                    )
+                is JsonObject ->
+                    value.values.forEach { (nestedKey, value) -> put("$key[$nestedKey]", value) }
+            }
+        }
 
         fun put(key: String, value: String) = apply {
             map.getOrPut(key) { mutableListOf() }.add(value)

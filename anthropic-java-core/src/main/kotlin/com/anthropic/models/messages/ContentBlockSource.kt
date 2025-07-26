@@ -11,6 +11,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.allMaxBy
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -309,7 +310,7 @@ private constructor(
 
             @JvmStatic
             fun ofBlockSource(blockSource: List<ContentBlockSourceContent>) =
-                Content(blockSource = blockSource)
+                Content(blockSource = blockSource.toImmutable())
         }
 
         /**

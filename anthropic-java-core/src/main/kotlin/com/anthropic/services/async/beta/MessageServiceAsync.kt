@@ -44,7 +44,7 @@ interface MessageServiceAsync {
     fun create(params: MessageCreateParams): CompletableFuture<BetaMessage> =
         create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: MessageCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -63,7 +63,7 @@ interface MessageServiceAsync {
     ): AsyncStreamResponse<BetaRawMessageStreamEvent> =
         createStreaming(params, RequestOptions.none())
 
-    /** @see [createStreaming] */
+    /** @see createStreaming */
     fun createStreaming(
         params: MessageCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -81,7 +81,7 @@ interface MessageServiceAsync {
     fun countTokens(params: MessageCountTokensParams): CompletableFuture<BetaMessageTokensCount> =
         countTokens(params, RequestOptions.none())
 
-    /** @see [countTokens] */
+    /** @see countTokens */
     fun countTokens(
         params: MessageCountTokensParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -110,7 +110,7 @@ interface MessageServiceAsync {
         fun create(params: MessageCreateParams): CompletableFuture<HttpResponseFor<BetaMessage>> =
             create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         fun create(
             params: MessageCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -126,7 +126,7 @@ interface MessageServiceAsync {
         ): CompletableFuture<HttpResponseFor<StreamResponse<BetaRawMessageStreamEvent>>> =
             createStreaming(params, RequestOptions.none())
 
-        /** @see [createStreaming] */
+        /** @see createStreaming */
         @MustBeClosed
         fun createStreaming(
             params: MessageCreateParams,
@@ -142,7 +142,7 @@ interface MessageServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaMessageTokensCount>> =
             countTokens(params, RequestOptions.none())
 
-        /** @see [countTokens] */
+        /** @see countTokens */
         fun countTokens(
             params: MessageCountTokensParams,
             requestOptions: RequestOptions = RequestOptions.none(),
