@@ -14,7 +14,7 @@ dependencies {
     // use in code (where necessary) that depends on this Anthropic SDK library
     // module. The BOM must be declared as an "api" dependency if any of its
     // modules are declared as "api" dependencies.
-    api(platform("software.amazon.awssdk:bom:2.30.11"))
+    api(platform("software.amazon.awssdk:bom:2.31.74"))
     api("software.amazon.awssdk:auth")
     implementation("software.amazon.awssdk:http-client-spi")
 

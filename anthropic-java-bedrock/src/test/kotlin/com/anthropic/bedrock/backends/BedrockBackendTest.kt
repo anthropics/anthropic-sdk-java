@@ -52,8 +52,8 @@ internal class BedrockBackendTest {
         // have a different type to the type when it is absent.
         assertThat(backend.awsCredentials).isExactlyInstanceOf(AwsSessionCredentials::class.java)
 
-        assertThat(backend.awsCredentials.accessKeyId()).isEqualTo(AWS_ACCESS_KEY_ID)
-        assertThat(backend.awsCredentials.secretAccessKey()).isEqualTo(AWS_SECRET_ACCESS_KEY)
+        assertThat(backend.awsCredentials!!.accessKeyId()).isEqualTo(AWS_ACCESS_KEY_ID)
+        assertThat(backend.awsCredentials!!.secretAccessKey()).isEqualTo(AWS_SECRET_ACCESS_KEY)
         assertThat((backend.awsCredentials as AwsSessionCredentials).sessionToken())
             .isEqualTo(AWS_SESSION_TOKEN)
     }
@@ -81,8 +81,8 @@ internal class BedrockBackendTest {
                 .region(Region.EU_WEST_1)
                 .build()
 
-        assertThat(backend.awsCredentials.accessKeyId()).isEqualTo(AWS_ACCESS_KEY_ID)
-        assertThat(backend.awsCredentials.secretAccessKey()).isEqualTo(AWS_SECRET_ACCESS_KEY)
+        assertThat(backend.awsCredentials!!.accessKeyId()).isEqualTo(AWS_ACCESS_KEY_ID)
+        assertThat(backend.awsCredentials!!.secretAccessKey()).isEqualTo(AWS_SECRET_ACCESS_KEY)
         assertThat(backend.region).isEqualTo(Region.EU_WEST_1)
     }
 
@@ -99,8 +99,8 @@ internal class BedrockBackendTest {
                 .build()
 
         assertThat(backend.awsCredentials).isExactlyInstanceOf(AwsBasicCredentials::class.java)
-        assertThat(backend.awsCredentials.accessKeyId()).isEqualTo(AWS_ACCESS_KEY_ID)
-        assertThat(backend.awsCredentials.secretAccessKey()).isEqualTo(AWS_SECRET_ACCESS_KEY)
+        assertThat(backend.awsCredentials!!.accessKeyId()).isEqualTo(AWS_ACCESS_KEY_ID)
+        assertThat(backend.awsCredentials!!.secretAccessKey()).isEqualTo(AWS_SECRET_ACCESS_KEY)
         assertThat(backend.region).isEqualTo(Region.EU_WEST_1)
     }
 
@@ -119,9 +119,9 @@ internal class BedrockBackendTest {
         // when building the backend.
         initEnv()
 
-        assertThatThrownBy { BedrockBackend.builder().build() }
+        assertThatThrownBy { BedrockBackend.builder().region(Region.US_EAST_1).build() }
             .isExactlyInstanceOf(IllegalStateException::class.java)
-            .hasMessageContaining("awsCredentialsProvider")
+            .hasMessageContaining("bearerToken or awsCredentialsProvider")
     }
 
     @Test
@@ -642,6 +642,85 @@ internal class BedrockBackendTest {
         val backend = BedrockBackend.fromEnv()
 
         assertThatNoException().isThrownBy { backend.close() }
+    }
+
+    @Test
+    fun bearerTokenFromEnv() {
+        // Note: This test cannot easily set environment variables at runtime in JVM
+        // Instead, we test the explicit bearer token configuration
+        val bearerToken = "test-bearer-token-12345"
+        val backend = BedrockBackend.builder()
+            .bearerToken(bearerToken)
+            .region(Region.of(AWS_REGION))
+            .build()
+
+        assertThat(backend.bearerToken).isEqualTo(bearerToken)
+        assertThat(backend.awsCredentials).isNull()
+        assertThat(backend.region.toString()).isEqualTo(AWS_REGION)
+    }
+
+    @Test
+    fun bearerTokenExplicit() {
+        val bearerToken = "explicit-bearer-token-67890"
+        val backend = BedrockBackend.builder()
+            .bearerToken(bearerToken)
+            .region(Region.EU_WEST_1)
+            .build()
+
+        assertThat(backend.bearerToken).isEqualTo(bearerToken)
+        assertThat(backend.awsCredentials).isNull()
+        assertThat(backend.region).isEqualTo(Region.EU_WEST_1)
+    }
+
+    @Test
+    fun bearerTokenOverridesCredentials() {
+        // Test that explicit bearer token overrides credentials provider
+        val bearerToken = "override-bearer-token"
+        val backend = BedrockBackend.builder()
+            .awsCredentials(AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY))
+            .bearerToken(bearerToken)
+            .region(Region.US_EAST_1)
+            .build()
+
+        // Bearer token should take precedence
+        assertThat(backend.bearerToken).isEqualTo(bearerToken)
+        // awsCredentialsProvider should still be set but not used for auth
+        assertThat(backend.awsCredentialsProvider).isNotNull()
+    }
+
+    @Test
+    fun authorizeBearerTokenRequest() {
+        val bearerToken = "auth-test-bearer-token"
+        val backend = BedrockBackend.builder()
+            .bearerToken(bearerToken)
+            .region(Region.US_EAST_1)
+            .build()
+
+        val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl("https://bedrock-runtime.us-east-1.amazonaws.com/model/test-model/invoke")
+            .putHeader("content-type", "application/json")
+            .build()
+
+        val authorizedRequest = backend.authorizeRequest(request)
+
+        assertThat(authorizedRequest.headers.values("Authorization")).hasSize(1)
+        assertThat(authorizedRequest.headers.values("Authorization")[0]).isEqualTo("Bearer $bearerToken")
+        
+        // Should not have AWS signature headers
+        assertThat(authorizedRequest.headers.names()).doesNotContain("x-amz-content-sha256")
+        assertThat(authorizedRequest.headers.names()).doesNotContain("X-Amz-Date")
+    }
+
+    @Test
+    fun bearerTokenWithoutRegionFails() {
+        assertThatThrownBy { 
+            BedrockBackend.builder()
+                .bearerToken("test-token")
+                .build() 
+        }
+        .isExactlyInstanceOf(IllegalStateException::class.java)
+        .hasMessageContaining("region")
     }
 
     /**
