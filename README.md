@@ -564,6 +564,12 @@ Or to `debug` for more verbose logging:
 $ export ANTHROPIC_LOG=debug
 ```
 
+## ProGuard and R8
+
+Although the SDK uses reflection, it is still usable with [ProGuard](https://github.com/Guardsquare/proguard) and [R8](https://developer.android.com/topic/performance/app-optimization/enable-app-optimization) because `anthropic-java-core` is published with a [configuration file](anthropic-java-core/src/main/resources/META-INF/proguard/anthropic-java-core.pro) containing [keep rules](https://www.guardsquare.com/manual/configuration/usage).
+
+ProGuard and R8 should automatically detect and use the published rules, but you can also manually copy the keep rules if necessary.
+
 ## Jackson
 
 The SDK depends on [Jackson](https://github.com/FasterXML/jackson) for JSON serialization/deserialization. It is compatible with version 2.13.4 or higher, but depends on version 2.18.2 by default.
