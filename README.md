@@ -444,6 +444,8 @@ The SDK throws custom unchecked exception types:
 
 - [`AnthropicIoException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/AnthropicIoException.kt): I/O networking errors.
 
+- [`AnthropicRetryableException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/AnthropicRetryableException.kt): Generic error indicating a failure that could be retried by the client.
+
 - [`AnthropicInvalidDataException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/AnthropicInvalidDataException.kt): Failure to interpret successfully parsed data. For example, when accessing a property that's supposed to be required, but the API unexpectedly omitted it from the response.
 
 - [`AnthropicException`](anthropic-java-core/src/main/kotlin/com/anthropic/errors/AnthropicException.kt): Base class for all exceptions. Most errors will result in one of the previously mentioned ones, but completely generic errors may be thrown using the base class.
