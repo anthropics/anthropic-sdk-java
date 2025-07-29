@@ -678,23 +678,6 @@ AnthropicClient client = AnthropicOkHttpClient.builder()
         .build();
 ```
 
-#### Authentication Methods
-
-Amazon Bedrock supports two authentication methods, both handled automatically by the AWS SDK:
-
-**API Key Authentication (Recommended for Development)**
-
-The simplest way to get started is using Amazon Bedrock API keys. Set the `AWS_BEARER_TOKEN_BEDROCK` environment variable:
-
-```bash
-export AWS_BEARER_TOKEN_BEDROCK=your-api-key-here
-export AWS_REGION=us-east-1
-```
-
-> **Note:** Long-term API keys are recommended only for exploration and development. For production applications, use alternatives to long-term access keys such as IAM roles or temporary credentials.
-
-**AWS Credentials Authentication**
-
 `BedrockBackend.fromEnv()` automatically resolves the AWS credentials using the
 [AWS default credentials provider chain](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials-chain.html)
 and resolves the AWS region using the
@@ -702,7 +685,8 @@ and resolves the AWS region using the
 See those AWS documents for details on how to configure the AWS credentials and
 AWS region for resolution by those provider chains.
 
-Instead of using the default AWS provider chains, you can resolve the AWS credentials and AWS region independently using any provider, or any
+Instead of resolving the AWS credentials and AWS region using the default AWS
+provider chains, you can resolve them independently using any provider, or any
 scheme of your choice, and pass them directly to the `BedrockBackend` during
 building. For example, you can resolve the AWS credentials directly from
 environment variables and hard-code the AWS region:

@@ -45,11 +45,6 @@ import software.amazon.eventstream.MessageDecoder
  * passed to [Builder.awsCredentials] and [Builder.region] should an alternative method of
  * resolution be required.
  *
- * As of AWS SDK 2.31.74+, the default credentials provider chain also supports Amazon Bedrock API
- * keys via the AWS_BEARER_TOKEN_BEDROCK environment variable. When this environment variable is
- * set, the AWS SDK will automatically use bearer token authentication instead of traditional AWS
- * credentials for calling Amazon Bedrock API.
- *
  * See the Amazon Bedrock and AWS documentation for details on how to configure AWS credentials.
  */
 class BedrockBackend
