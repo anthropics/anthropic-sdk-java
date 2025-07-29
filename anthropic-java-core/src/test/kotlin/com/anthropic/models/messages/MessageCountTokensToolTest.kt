@@ -53,6 +53,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.toolBash20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.textEditor20250429()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
         assertThat(messageCountTokensTool.webSearchTool20250305()).isEmpty
     }
 
@@ -112,6 +113,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.toolBash20250124()).contains(toolBash20250124)
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.textEditor20250429()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
         assertThat(messageCountTokensTool.webSearchTool20250305()).isEmpty
     }
 
@@ -148,6 +150,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.toolBash20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).contains(toolTextEditor20250124)
         assertThat(messageCountTokensTool.textEditor20250429()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
         assertThat(messageCountTokensTool.webSearchTool20250305()).isEmpty
     }
 
@@ -183,6 +186,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.toolBash20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.textEditor20250429()).contains(textEditor20250429)
+        assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
         assertThat(messageCountTokensTool.webSearchTool20250305()).isEmpty
     }
 
@@ -193,6 +197,45 @@ internal class MessageCountTokensToolTest {
             MessageCountTokensTool.ofTextEditor20250429(
                 MessageCountTokensTool.TextEditor20250429.builder()
                     .cacheControl(CacheControlEphemeral.builder().build())
+                    .build()
+            )
+
+        val roundtrippedMessageCountTokensTool =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(messageCountTokensTool),
+                jacksonTypeRef<MessageCountTokensTool>(),
+            )
+
+        assertThat(roundtrippedMessageCountTokensTool).isEqualTo(messageCountTokensTool)
+    }
+
+    @Test
+    fun ofToolTextEditor20250728() {
+        val toolTextEditor20250728 =
+            ToolTextEditor20250728.builder()
+                .cacheControl(CacheControlEphemeral.builder().build())
+                .maxCharacters(1L)
+                .build()
+
+        val messageCountTokensTool =
+            MessageCountTokensTool.ofToolTextEditor20250728(toolTextEditor20250728)
+
+        assertThat(messageCountTokensTool.tool()).isEmpty
+        assertThat(messageCountTokensTool.toolBash20250124()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
+        assertThat(messageCountTokensTool.textEditor20250429()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250728()).contains(toolTextEditor20250728)
+        assertThat(messageCountTokensTool.webSearchTool20250305()).isEmpty
+    }
+
+    @Test
+    fun ofToolTextEditor20250728Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val messageCountTokensTool =
+            MessageCountTokensTool.ofToolTextEditor20250728(
+                ToolTextEditor20250728.builder()
+                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .maxCharacters(1L)
                     .build()
             )
 
@@ -230,6 +273,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.toolBash20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.textEditor20250429()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
         assertThat(messageCountTokensTool.webSearchTool20250305()).contains(webSearchTool20250305)
     }
 

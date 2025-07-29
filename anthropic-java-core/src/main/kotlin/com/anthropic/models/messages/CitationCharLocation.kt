@@ -23,6 +23,7 @@ private constructor(
     private val documentIndex: JsonField<Long>,
     private val documentTitle: JsonField<String>,
     private val endCharIndex: JsonField<Long>,
+    private val fileId: JsonField<String>,
     private val startCharIndex: JsonField<Long>,
     private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -40,6 +41,7 @@ private constructor(
         @JsonProperty("end_char_index")
         @ExcludeMissing
         endCharIndex: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("file_id") @ExcludeMissing fileId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("start_char_index")
         @ExcludeMissing
         startCharIndex: JsonField<Long> = JsonMissing.of(),
@@ -49,6 +51,7 @@ private constructor(
         documentIndex,
         documentTitle,
         endCharIndex,
+        fileId,
         startCharIndex,
         type,
         mutableMapOf(),
@@ -86,6 +89,12 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun endCharIndex(): Long = endCharIndex.getRequired("end_char_index")
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun fileId(): Optional<String> = fileId.getOptional("file_id")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -139,6 +148,13 @@ private constructor(
     fun _endCharIndex(): JsonField<Long> = endCharIndex
 
     /**
+     * Returns the raw JSON value of [fileId].
+     *
+     * Unlike [fileId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("file_id") @ExcludeMissing fun _fileId(): JsonField<String> = fileId
+
+    /**
      * Returns the raw JSON value of [startCharIndex].
      *
      * Unlike [startCharIndex], this method doesn't throw if the JSON field has an unexpected type.
@@ -170,6 +186,7 @@ private constructor(
          * .documentIndex()
          * .documentTitle()
          * .endCharIndex()
+         * .fileId()
          * .startCharIndex()
          * ```
          */
@@ -183,6 +200,7 @@ private constructor(
         private var documentIndex: JsonField<Long>? = null
         private var documentTitle: JsonField<String>? = null
         private var endCharIndex: JsonField<Long>? = null
+        private var fileId: JsonField<String>? = null
         private var startCharIndex: JsonField<Long>? = null
         private var type: JsonValue = JsonValue.from("char_location")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -193,6 +211,7 @@ private constructor(
             documentIndex = citationCharLocation.documentIndex
             documentTitle = citationCharLocation.documentTitle
             endCharIndex = citationCharLocation.endCharIndex
+            fileId = citationCharLocation.fileId
             startCharIndex = citationCharLocation.startCharIndex
             type = citationCharLocation.type
             additionalProperties = citationCharLocation.additionalProperties.toMutableMap()
@@ -251,6 +270,19 @@ private constructor(
          */
         fun endCharIndex(endCharIndex: JsonField<Long>) = apply { this.endCharIndex = endCharIndex }
 
+        fun fileId(fileId: String?) = fileId(JsonField.ofNullable(fileId))
+
+        /** Alias for calling [Builder.fileId] with `fileId.orElse(null)`. */
+        fun fileId(fileId: Optional<String>) = fileId(fileId.getOrNull())
+
+        /**
+         * Sets [Builder.fileId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.fileId] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun fileId(fileId: JsonField<String>) = apply { this.fileId = fileId }
+
         fun startCharIndex(startCharIndex: Long) = startCharIndex(JsonField.of(startCharIndex))
 
         /**
@@ -308,6 +340,7 @@ private constructor(
          * .documentIndex()
          * .documentTitle()
          * .endCharIndex()
+         * .fileId()
          * .startCharIndex()
          * ```
          *
@@ -319,6 +352,7 @@ private constructor(
                 checkRequired("documentIndex", documentIndex),
                 checkRequired("documentTitle", documentTitle),
                 checkRequired("endCharIndex", endCharIndex),
+                checkRequired("fileId", fileId),
                 checkRequired("startCharIndex", startCharIndex),
                 type,
                 additionalProperties.toMutableMap(),
@@ -336,6 +370,7 @@ private constructor(
         documentIndex()
         documentTitle()
         endCharIndex()
+        fileId()
         startCharIndex()
         _type().let {
             if (it != JsonValue.from("char_location")) {
@@ -364,6 +399,7 @@ private constructor(
             (if (documentIndex.asKnown().isPresent) 1 else 0) +
             (if (documentTitle.asKnown().isPresent) 1 else 0) +
             (if (endCharIndex.asKnown().isPresent) 1 else 0) +
+            (if (fileId.asKnown().isPresent) 1 else 0) +
             (if (startCharIndex.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("char_location")) 1 else 0 }
 
@@ -372,15 +408,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is CitationCharLocation && citedText == other.citedText && documentIndex == other.documentIndex && documentTitle == other.documentTitle && endCharIndex == other.endCharIndex && startCharIndex == other.startCharIndex && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is CitationCharLocation && citedText == other.citedText && documentIndex == other.documentIndex && documentTitle == other.documentTitle && endCharIndex == other.endCharIndex && fileId == other.fileId && startCharIndex == other.startCharIndex && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(citedText, documentIndex, documentTitle, endCharIndex, startCharIndex, type, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(citedText, documentIndex, documentTitle, endCharIndex, fileId, startCharIndex, type, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CitationCharLocation{citedText=$citedText, documentIndex=$documentIndex, documentTitle=$documentTitle, endCharIndex=$endCharIndex, startCharIndex=$startCharIndex, type=$type, additionalProperties=$additionalProperties}"
+        "CitationCharLocation{citedText=$citedText, documentIndex=$documentIndex, documentTitle=$documentTitle, endCharIndex=$endCharIndex, fileId=$fileId, startCharIndex=$startCharIndex, type=$type, additionalProperties=$additionalProperties}"
 }

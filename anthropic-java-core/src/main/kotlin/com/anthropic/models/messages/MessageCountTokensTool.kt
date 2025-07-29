@@ -35,6 +35,7 @@ private constructor(
     private val toolBash20250124: ToolBash20250124? = null,
     private val toolTextEditor20250124: ToolTextEditor20250124? = null,
     private val textEditor20250429: TextEditor20250429? = null,
+    private val toolTextEditor20250728: ToolTextEditor20250728? = null,
     private val webSearchTool20250305: WebSearchTool20250305? = null,
     private val _json: JsonValue? = null,
 ) {
@@ -48,6 +49,9 @@ private constructor(
 
     fun textEditor20250429(): Optional<TextEditor20250429> = Optional.ofNullable(textEditor20250429)
 
+    fun toolTextEditor20250728(): Optional<ToolTextEditor20250728> =
+        Optional.ofNullable(toolTextEditor20250728)
+
     fun webSearchTool20250305(): Optional<WebSearchTool20250305> =
         Optional.ofNullable(webSearchTool20250305)
 
@@ -58,6 +62,8 @@ private constructor(
     fun isToolTextEditor20250124(): Boolean = toolTextEditor20250124 != null
 
     fun isTextEditor20250429(): Boolean = textEditor20250429 != null
+
+    fun isToolTextEditor20250728(): Boolean = toolTextEditor20250728 != null
 
     fun isWebSearchTool20250305(): Boolean = webSearchTool20250305 != null
 
@@ -71,6 +77,9 @@ private constructor(
     fun asTextEditor20250429(): TextEditor20250429 =
         textEditor20250429.getOrThrow("textEditor20250429")
 
+    fun asToolTextEditor20250728(): ToolTextEditor20250728 =
+        toolTextEditor20250728.getOrThrow("toolTextEditor20250728")
+
     fun asWebSearchTool20250305(): WebSearchTool20250305 =
         webSearchTool20250305.getOrThrow("webSearchTool20250305")
 
@@ -83,6 +92,8 @@ private constructor(
             toolTextEditor20250124 != null ->
                 visitor.visitToolTextEditor20250124(toolTextEditor20250124)
             textEditor20250429 != null -> visitor.visitTextEditor20250429(textEditor20250429)
+            toolTextEditor20250728 != null ->
+                visitor.visitToolTextEditor20250728(toolTextEditor20250728)
             webSearchTool20250305 != null ->
                 visitor.visitWebSearchTool20250305(webSearchTool20250305)
             else -> visitor.unknown(_json)
@@ -113,6 +124,12 @@ private constructor(
 
                 override fun visitTextEditor20250429(textEditor20250429: TextEditor20250429) {
                     textEditor20250429.validate()
+                }
+
+                override fun visitToolTextEditor20250728(
+                    toolTextEditor20250728: ToolTextEditor20250728
+                ) {
+                    toolTextEditor20250728.validate()
                 }
 
                 override fun visitWebSearchTool20250305(
@@ -154,6 +171,10 @@ private constructor(
                 override fun visitTextEditor20250429(textEditor20250429: TextEditor20250429) =
                     textEditor20250429.validity()
 
+                override fun visitToolTextEditor20250728(
+                    toolTextEditor20250728: ToolTextEditor20250728
+                ) = toolTextEditor20250728.validity()
+
                 override fun visitWebSearchTool20250305(
                     webSearchTool20250305: WebSearchTool20250305
                 ) = webSearchTool20250305.validity()
@@ -167,10 +188,10 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is MessageCountTokensTool && tool == other.tool && toolBash20250124 == other.toolBash20250124 && toolTextEditor20250124 == other.toolTextEditor20250124 && textEditor20250429 == other.textEditor20250429 && webSearchTool20250305 == other.webSearchTool20250305 /* spotless:on */
+        return /* spotless:off */ other is MessageCountTokensTool && tool == other.tool && toolBash20250124 == other.toolBash20250124 && toolTextEditor20250124 == other.toolTextEditor20250124 && textEditor20250429 == other.textEditor20250429 && toolTextEditor20250728 == other.toolTextEditor20250728 && webSearchTool20250305 == other.webSearchTool20250305 /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(tool, toolBash20250124, toolTextEditor20250124, textEditor20250429, webSearchTool20250305) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(tool, toolBash20250124, toolTextEditor20250124, textEditor20250429, toolTextEditor20250728, webSearchTool20250305) /* spotless:on */
 
     override fun toString(): String =
         when {
@@ -180,6 +201,8 @@ private constructor(
                 "MessageCountTokensTool{toolTextEditor20250124=$toolTextEditor20250124}"
             textEditor20250429 != null ->
                 "MessageCountTokensTool{textEditor20250429=$textEditor20250429}"
+            toolTextEditor20250728 != null ->
+                "MessageCountTokensTool{toolTextEditor20250728=$toolTextEditor20250728}"
             webSearchTool20250305 != null ->
                 "MessageCountTokensTool{webSearchTool20250305=$webSearchTool20250305}"
             _json != null -> "MessageCountTokensTool{_unknown=$_json}"
@@ -203,6 +226,10 @@ private constructor(
             MessageCountTokensTool(textEditor20250429 = textEditor20250429)
 
         @JvmStatic
+        fun ofToolTextEditor20250728(toolTextEditor20250728: ToolTextEditor20250728) =
+            MessageCountTokensTool(toolTextEditor20250728 = toolTextEditor20250728)
+
+        @JvmStatic
         fun ofWebSearchTool20250305(webSearchTool20250305: WebSearchTool20250305) =
             MessageCountTokensTool(webSearchTool20250305 = webSearchTool20250305)
     }
@@ -220,6 +247,8 @@ private constructor(
         fun visitToolTextEditor20250124(toolTextEditor20250124: ToolTextEditor20250124): T
 
         fun visitTextEditor20250429(textEditor20250429: TextEditor20250429): T
+
+        fun visitToolTextEditor20250728(toolTextEditor20250728: ToolTextEditor20250728): T
 
         fun visitWebSearchTool20250305(webSearchTool20250305: WebSearchTool20250305): T
 
@@ -258,6 +287,9 @@ private constructor(
                         tryDeserialize(node, jacksonTypeRef<TextEditor20250429>())?.let {
                             MessageCountTokensTool(textEditor20250429 = it, _json = json)
                         },
+                        tryDeserialize(node, jacksonTypeRef<ToolTextEditor20250728>())?.let {
+                            MessageCountTokensTool(toolTextEditor20250728 = it, _json = json)
+                        },
                         tryDeserialize(node, jacksonTypeRef<WebSearchTool20250305>())?.let {
                             MessageCountTokensTool(webSearchTool20250305 = it, _json = json)
                         },
@@ -291,6 +323,8 @@ private constructor(
                 value.toolTextEditor20250124 != null ->
                     generator.writeObject(value.toolTextEditor20250124)
                 value.textEditor20250429 != null -> generator.writeObject(value.textEditor20250429)
+                value.toolTextEditor20250728 != null ->
+                    generator.writeObject(value.toolTextEditor20250728)
                 value.webSearchTool20250305 != null ->
                     generator.writeObject(value.webSearchTool20250305)
                 value._json != null -> generator.writeObject(value._json)

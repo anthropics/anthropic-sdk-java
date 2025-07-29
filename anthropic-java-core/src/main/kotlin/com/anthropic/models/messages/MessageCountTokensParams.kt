@@ -738,6 +738,14 @@ private constructor(
 
         /**
          * Alias for calling [addTool] with
+         * `MessageCountTokensTool.ofToolTextEditor20250728(toolTextEditor20250728)`.
+         */
+        fun addTool(toolTextEditor20250728: ToolTextEditor20250728) = apply {
+            body.addTool(toolTextEditor20250728)
+        }
+
+        /**
+         * Alias for calling [addTool] with
          * `MessageCountTokensTool.ofWebSearchTool20250305(webSearchTool20250305)`.
          */
         fun addTool(webSearchTool20250305: WebSearchTool20250305) = apply {
@@ -1645,6 +1653,13 @@ private constructor(
              */
             fun addTool(textEditor20250429: MessageCountTokensTool.TextEditor20250429) =
                 addTool(MessageCountTokensTool.ofTextEditor20250429(textEditor20250429))
+
+            /**
+             * Alias for calling [addTool] with
+             * `MessageCountTokensTool.ofToolTextEditor20250728(toolTextEditor20250728)`.
+             */
+            fun addTool(toolTextEditor20250728: ToolTextEditor20250728) =
+                addTool(MessageCountTokensTool.ofToolTextEditor20250728(toolTextEditor20250728))
 
             /**
              * Alias for calling [addTool] with

@@ -17,6 +17,7 @@ internal class CitationPageLocationTest {
                 .documentIndex(0L)
                 .documentTitle("document_title")
                 .endPageNumber(0L)
+                .fileId("file_id")
                 .startPageNumber(1L)
                 .build()
 
@@ -24,6 +25,7 @@ internal class CitationPageLocationTest {
         assertThat(citationPageLocation.documentIndex()).isEqualTo(0L)
         assertThat(citationPageLocation.documentTitle()).contains("document_title")
         assertThat(citationPageLocation.endPageNumber()).isEqualTo(0L)
+        assertThat(citationPageLocation.fileId()).contains("file_id")
         assertThat(citationPageLocation.startPageNumber()).isEqualTo(1L)
     }
 
@@ -36,6 +38,7 @@ internal class CitationPageLocationTest {
                 .documentIndex(0L)
                 .documentTitle("document_title")
                 .endPageNumber(0L)
+                .fileId("file_id")
                 .startPageNumber(1L)
                 .build()
 

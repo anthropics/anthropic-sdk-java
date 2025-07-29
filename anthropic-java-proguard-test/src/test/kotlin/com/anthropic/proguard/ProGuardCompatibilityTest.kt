@@ -76,6 +76,7 @@ internal class ProGuardCompatibilityTest {
                             .documentIndex(0L)
                             .documentTitle("document_title")
                             .endCharIndex(0L)
+                            .fileId("file_id")
                             .startCharIndex(0L)
                             .build()
                     )

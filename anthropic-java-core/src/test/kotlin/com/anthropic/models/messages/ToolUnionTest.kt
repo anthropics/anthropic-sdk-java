@@ -53,6 +53,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.bash20250124()).isEmpty
         assertThat(toolUnion.textEditor20250124()).isEmpty
         assertThat(toolUnion.textEditor20250429()).isEmpty
+        assertThat(toolUnion.textEditor20250728()).isEmpty
         assertThat(toolUnion.webSearchTool20250305()).isEmpty
     }
 
@@ -112,6 +113,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.bash20250124()).contains(bash20250124)
         assertThat(toolUnion.textEditor20250124()).isEmpty
         assertThat(toolUnion.textEditor20250429()).isEmpty
+        assertThat(toolUnion.textEditor20250728()).isEmpty
         assertThat(toolUnion.webSearchTool20250305()).isEmpty
     }
 
@@ -147,6 +149,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.bash20250124()).isEmpty
         assertThat(toolUnion.textEditor20250124()).contains(textEditor20250124)
         assertThat(toolUnion.textEditor20250429()).isEmpty
+        assertThat(toolUnion.textEditor20250728()).isEmpty
         assertThat(toolUnion.webSearchTool20250305()).isEmpty
     }
 
@@ -182,6 +185,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.bash20250124()).isEmpty
         assertThat(toolUnion.textEditor20250124()).isEmpty
         assertThat(toolUnion.textEditor20250429()).contains(textEditor20250429)
+        assertThat(toolUnion.textEditor20250728()).isEmpty
         assertThat(toolUnion.webSearchTool20250305()).isEmpty
     }
 
@@ -192,6 +196,44 @@ internal class ToolUnionTest {
             ToolUnion.ofTextEditor20250429(
                 ToolUnion.TextEditor20250429.builder()
                     .cacheControl(CacheControlEphemeral.builder().build())
+                    .build()
+            )
+
+        val roundtrippedToolUnion =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(toolUnion),
+                jacksonTypeRef<ToolUnion>(),
+            )
+
+        assertThat(roundtrippedToolUnion).isEqualTo(toolUnion)
+    }
+
+    @Test
+    fun ofTextEditor20250728() {
+        val textEditor20250728 =
+            ToolTextEditor20250728.builder()
+                .cacheControl(CacheControlEphemeral.builder().build())
+                .maxCharacters(1L)
+                .build()
+
+        val toolUnion = ToolUnion.ofTextEditor20250728(textEditor20250728)
+
+        assertThat(toolUnion.tool()).isEmpty
+        assertThat(toolUnion.bash20250124()).isEmpty
+        assertThat(toolUnion.textEditor20250124()).isEmpty
+        assertThat(toolUnion.textEditor20250429()).isEmpty
+        assertThat(toolUnion.textEditor20250728()).contains(textEditor20250728)
+        assertThat(toolUnion.webSearchTool20250305()).isEmpty
+    }
+
+    @Test
+    fun ofTextEditor20250728Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val toolUnion =
+            ToolUnion.ofTextEditor20250728(
+                ToolTextEditor20250728.builder()
+                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .maxCharacters(1L)
                     .build()
             )
 
@@ -228,6 +270,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.bash20250124()).isEmpty
         assertThat(toolUnion.textEditor20250124()).isEmpty
         assertThat(toolUnion.textEditor20250429()).isEmpty
+        assertThat(toolUnion.textEditor20250728()).isEmpty
         assertThat(toolUnion.webSearchTool20250305()).contains(webSearchTool20250305)
     }
 

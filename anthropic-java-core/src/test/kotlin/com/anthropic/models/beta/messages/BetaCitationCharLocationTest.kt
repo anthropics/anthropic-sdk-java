@@ -17,6 +17,7 @@ internal class BetaCitationCharLocationTest {
                 .documentIndex(0L)
                 .documentTitle("document_title")
                 .endCharIndex(0L)
+                .fileId("file_id")
                 .startCharIndex(0L)
                 .build()
 
@@ -24,6 +25,7 @@ internal class BetaCitationCharLocationTest {
         assertThat(betaCitationCharLocation.documentIndex()).isEqualTo(0L)
         assertThat(betaCitationCharLocation.documentTitle()).contains("document_title")
         assertThat(betaCitationCharLocation.endCharIndex()).isEqualTo(0L)
+        assertThat(betaCitationCharLocation.fileId()).contains("file_id")
         assertThat(betaCitationCharLocation.startCharIndex()).isEqualTo(0L)
     }
 
@@ -36,6 +38,7 @@ internal class BetaCitationCharLocationTest {
                 .documentIndex(0L)
                 .documentTitle("document_title")
                 .endCharIndex(0L)
+                .fileId("file_id")
                 .startCharIndex(0L)
                 .build()
 

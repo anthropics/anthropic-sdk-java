@@ -35,6 +35,7 @@ import com.anthropic.models.messages.ToolChoiceAuto
 import com.anthropic.models.messages.ToolChoiceNone
 import com.anthropic.models.messages.ToolChoiceTool
 import com.anthropic.models.messages.ToolTextEditor20250124
+import com.anthropic.models.messages.ToolTextEditor20250728
 import com.anthropic.models.messages.ToolUnion
 import com.anthropic.models.messages.WebSearchTool20250305
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -1809,6 +1810,13 @@ private constructor(
                  */
                 fun addTool(textEditor20250429: ToolUnion.TextEditor20250429) =
                     addTool(ToolUnion.ofTextEditor20250429(textEditor20250429))
+
+                /**
+                 * Alias for calling [addTool] with
+                 * `ToolUnion.ofTextEditor20250728(textEditor20250728)`.
+                 */
+                fun addTool(textEditor20250728: ToolTextEditor20250728) =
+                    addTool(ToolUnion.ofTextEditor20250728(textEditor20250728))
 
                 /**
                  * Alias for calling [addTool] with

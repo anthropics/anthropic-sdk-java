@@ -42,6 +42,7 @@ import com.anthropic.models.beta.messages.BetaToolComputerUse20250124
 import com.anthropic.models.beta.messages.BetaToolTextEditor20241022
 import com.anthropic.models.beta.messages.BetaToolTextEditor20250124
 import com.anthropic.models.beta.messages.BetaToolTextEditor20250429
+import com.anthropic.models.beta.messages.BetaToolTextEditor20250728
 import com.anthropic.models.beta.messages.BetaToolUnion
 import com.anthropic.models.beta.messages.BetaWebSearchTool20250305
 import com.anthropic.models.messages.Model
@@ -2006,6 +2007,13 @@ private constructor(
                  */
                 fun addTool(textEditor20250429: BetaToolTextEditor20250429) =
                     addTool(BetaToolUnion.ofTextEditor20250429(textEditor20250429))
+
+                /**
+                 * Alias for calling [addTool] with
+                 * `BetaToolUnion.ofTextEditor20250728(textEditor20250728)`.
+                 */
+                fun addTool(textEditor20250728: BetaToolTextEditor20250728) =
+                    addTool(BetaToolUnion.ofTextEditor20250728(textEditor20250728))
 
                 /**
                  * Alias for calling [addTool] with
