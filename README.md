@@ -668,24 +668,44 @@ To use Anthropic on Bedrock, create the Anthropic client with the
 [`BedrockBackend`](anthropic-java-bedrock/src/main/kotlin/com/anthropic/bedrock/backends/BedrockBackend.kt).
 Usage of the API is otherwise the same.
 
+Amazon Bedrock supports two authentication methods:
+
+#### Bearer Token Authentication (Recommended for Development)
+
+Amazon Bedrock API keys provide a simpler authentication method for development and experimentation. Set the `AWS_BEARER_TOKEN_BEDROCK` environment variable with your API key:
+
 ```java
 import com.anthropic.bedrock.backends.BedrockBackend;
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 
+// Automatically uses AWS_BEARER_TOKEN_BEDROCK if available
 AnthropicClient client = AnthropicOkHttpClient.builder()
         .backend(BedrockBackend.fromEnv())
         .build();
 ```
 
+Or set the Bearer token explicitly:
+
+```java
+AnthropicClient client = AnthropicOkHttpClient.builder()
+        .backend(BedrockBackend.builder()
+                .bearerToken("your-bedrock-api-key")
+                .region(Region.US_EAST_1)
+                .build())
+        .build();
+```
+
+#### AWS SigV4 Authentication (Recommended for Production)
+
 `BedrockBackend.fromEnv()` automatically resolves the AWS credentials using the
 [AWS default credentials provider chain](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials-chain.html)
 and resolves the AWS region using the
-[AWS default region provider chain](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html).
-See those AWS documents for details on how to configure the AWS credentials and
+[AWS default region provider chain](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html)
+when no Bearer token is present. See those AWS documents for details on how to configure the AWS credentials and
 AWS region for resolution by those provider chains.
 
-Instead of resolving the AWS credentials and AWS region using the default AWS
+For SigV4 authentication, instead of resolving the AWS credentials and AWS region using the default AWS
 provider chains, you can resolve them independently using any provider, or any
 scheme of your choice, and pass them directly to the `BedrockBackend` during
 building. For example, you can resolve the AWS credentials directly from
