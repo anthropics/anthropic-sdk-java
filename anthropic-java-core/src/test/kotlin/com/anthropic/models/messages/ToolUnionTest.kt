@@ -175,7 +175,7 @@ internal class ToolUnionTest {
     @Test
     fun ofTextEditor20250429() {
         val textEditor20250429 =
-            ToolUnion.TextEditor20250429.builder()
+            ToolTextEditor20250429.builder()
                 .cacheControl(CacheControlEphemeral.builder().build())
                 .build()
 
@@ -194,7 +194,7 @@ internal class ToolUnionTest {
         val jsonMapper = jsonMapper()
         val toolUnion =
             ToolUnion.ofTextEditor20250429(
-                ToolUnion.TextEditor20250429.builder()
+                ToolTextEditor20250429.builder()
                     .cacheControl(CacheControlEphemeral.builder().build())
                     .build()
             )

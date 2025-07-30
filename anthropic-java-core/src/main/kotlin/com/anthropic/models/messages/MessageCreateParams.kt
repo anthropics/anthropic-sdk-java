@@ -970,7 +970,7 @@ private constructor(
         /**
          * Alias for calling [addTool] with `ToolUnion.ofTextEditor20250429(textEditor20250429)`.
          */
-        fun addTool(textEditor20250429: ToolUnion.TextEditor20250429) = apply {
+        fun addTool(textEditor20250429: ToolTextEditor20250429) = apply {
             body.addTool(textEditor20250429)
         }
 
@@ -2234,7 +2234,7 @@ private constructor(
              * Alias for calling [addTool] with
              * `ToolUnion.ofTextEditor20250429(textEditor20250429)`.
              */
-            fun addTool(textEditor20250429: ToolUnion.TextEditor20250429) =
+            fun addTool(textEditor20250429: ToolTextEditor20250429) =
                 addTool(ToolUnion.ofTextEditor20250429(textEditor20250429))
 
             /**
