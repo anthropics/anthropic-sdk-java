@@ -1,5 +1,57 @@
 # Changelog
 
+## 2.3.0 (2025-08-02)
+
+Full Changelog: [v2.2.0...v2.3.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.2.0...v2.3.0)
+
+### Features
+
+* add retryable exception ([1def48d](https://github.com/anthropics/anthropic-sdk-java/commit/1def48d631625edea5373b2599d99db8f1d5d87b))
+* **api:** adds support for text_editor_20250728 tool ([8dc3158](https://github.com/anthropics/anthropic-sdk-java/commit/8dc3158cc014147e04f1027ccac0f69e879fc03c))
+* **api:** removed older deprecated models ([1cb9517](https://github.com/anthropics/anthropic-sdk-java/commit/1cb9517bd755765f9c44e756692b7c2924d7b416))
+* **client:** add `{QueryParams,Headers}#put(String, JsonValue)` methods ([76d9732](https://github.com/anthropics/anthropic-sdk-java/commit/76d973260ef82fc200718239e893bfd2a825db6a))
+* **client:** add https config options ([cd752b3](https://github.com/anthropics/anthropic-sdk-java/commit/cd752b354d82453ffdf60476bece661c699bc21e))
+* **client:** allow configuring env via system properties ([427a38d](https://github.com/anthropics/anthropic-sdk-java/commit/427a38dbd7c6fe584ff91f88ee38dcb4b8e3eae8))
+* **client:** allow setting additional multipart body props ([eb4bfdf](https://github.com/anthropics/anthropic-sdk-java/commit/eb4bfdf0d819a4668673d7121f98906102fcffd4))
+* **client:** ensure compat with proguard ([ee2a29e](https://github.com/anthropics/anthropic-sdk-java/commit/ee2a29e3868d07b7ee76a086b0a5080e71d6bef8))
+
+
+### Bug Fixes
+
+* **client:** accidental mutability of some classes ([528db15](https://github.com/anthropics/anthropic-sdk-java/commit/528db15e8674c65fff8dbe4d3374173b3331134f))
+* **client:** r8 support ([16605d7](https://github.com/anthropics/anthropic-sdk-java/commit/16605d7933f0c10b06dd637a6f6018983d242aff))
+* **client:** some bad `_additionalBodyProperties` serialization ([e9d67d1](https://github.com/anthropics/anthropic-sdk-java/commit/e9d67d14508ff3db329f08a14f2269012b6caaee))
+* **client:** support system properties properly ([85a9afa](https://github.com/anthropics/anthropic-sdk-java/commit/85a9afa4a15ba2a5d5769f4b21f4acfbdf04e18e))
+* **docs:** fix FileUpload example in README ([054c721](https://github.com/anthropics/anthropic-sdk-java/commit/054c7212ec65130574ae0084c965500dd98dbd36))
+* **docs:** fix FileUpload example in README ([b36b104](https://github.com/anthropics/anthropic-sdk-java/commit/b36b104c0da3e3174980aa9e9d7b0280e440298a))
+* **internal:** fix duplication across Client ([87f50c1](https://github.com/anthropics/anthropic-sdk-java/commit/87f50c1794f51538b7b7240b86d1f7240adc88e3))
+* **internal:** fix formatting ([7a900b1](https://github.com/anthropics/anthropic-sdk-java/commit/7a900b110b18b385e922ecf2169b712a841abaae))
+* **internal:** run formatter ([42f6987](https://github.com/anthropics/anthropic-sdk-java/commit/42f698767a9944236b409b69ebd7974842746bf8))
+
+
+### Chores
+
+* **client:** add TextEditor_20250429 tool ([63eebb9](https://github.com/anthropics/anthropic-sdk-java/commit/63eebb9975b52ec7c7ce452cbe528173ee5d7516))
+* fix BetaMessageAccumulatorTest ([cd016a9](https://github.com/anthropics/anthropic-sdk-java/commit/cd016a9c3eaf437d04a8ca587bb2ab0ddc521e4d))
+* fix MessageAccumulatorTest ([e63d274](https://github.com/anthropics/anthropic-sdk-java/commit/e63d274f5378f6da5bfd5d12b568eda64571bcbc))
+* **internal:** bump ci test timeout ([c5daf2c](https://github.com/anthropics/anthropic-sdk-java/commit/c5daf2cd47d233567391320772d4897a093907bd))
+* **internal:** reduce proguard ci logging ([f32ca8c](https://github.com/anthropics/anthropic-sdk-java/commit/f32ca8c17595898f9cd36bdc35ae3446b69bd40e))
+* **internal:** refactor delegating from client to options ([9cdfee3](https://github.com/anthropics/anthropic-sdk-java/commit/9cdfee34a0f62affe9691afbbe1ba5beccfff926))
+* **internal:** remove unnecessary `[...]` in `[@see](https://github.com/see)` ([1e74b4b](https://github.com/anthropics/anthropic-sdk-java/commit/1e74b4b24efc00e9f2a33c25d29bda3b75198c15))
+* remove unnecessary setter ([0bc854c](https://github.com/anthropics/anthropic-sdk-java/commit/0bc854cc5465061be7197ad45b1dfcee39a9bc0e))
+
+
+### Documentation
+
+* fix missing readme comment ([e26c877](https://github.com/anthropics/anthropic-sdk-java/commit/e26c877a1d9250b2d6fcfdd9c076b563dee2e490))
+* more code comments ([dd6f433](https://github.com/anthropics/anthropic-sdk-java/commit/dd6f4332010e00e2e44eac9f60bc456dc3b4f882))
+
+
+### Refactors
+
+* **client:** reduce unnecessary diff by reordering methods ([a1d3b0c](https://github.com/anthropics/anthropic-sdk-java/commit/a1d3b0c8e837ba12178467556f724a9d62c5e1b5))
+* **client:** reduce unnecessary diff by reordering methods ([71dbdec](https://github.com/anthropics/anthropic-sdk-java/commit/71dbdec8cbcd0d8de7aa5c91fe5158120bd51111))
+
 ## 2.2.0 (2025-07-18)
 
 Full Changelog: [v2.1.0...v2.2.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.1.0...v2.2.0)
