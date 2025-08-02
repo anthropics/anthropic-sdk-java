@@ -17,6 +17,7 @@ internal class BetaCitationContentBlockLocationTest {
                 .documentIndex(0L)
                 .documentTitle("document_title")
                 .endBlockIndex(0L)
+                .fileId("file_id")
                 .startBlockIndex(0L)
                 .build()
 
@@ -24,6 +25,7 @@ internal class BetaCitationContentBlockLocationTest {
         assertThat(betaCitationContentBlockLocation.documentIndex()).isEqualTo(0L)
         assertThat(betaCitationContentBlockLocation.documentTitle()).contains("document_title")
         assertThat(betaCitationContentBlockLocation.endBlockIndex()).isEqualTo(0L)
+        assertThat(betaCitationContentBlockLocation.fileId()).contains("file_id")
         assertThat(betaCitationContentBlockLocation.startBlockIndex()).isEqualTo(0L)
     }
 
@@ -36,6 +38,7 @@ internal class BetaCitationContentBlockLocationTest {
                 .documentIndex(0L)
                 .documentTitle("document_title")
                 .endBlockIndex(0L)
+                .fileId("file_id")
                 .startBlockIndex(0L)
                 .build()
 

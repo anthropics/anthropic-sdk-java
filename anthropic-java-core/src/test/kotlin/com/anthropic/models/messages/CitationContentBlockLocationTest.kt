@@ -17,6 +17,7 @@ internal class CitationContentBlockLocationTest {
                 .documentIndex(0L)
                 .documentTitle("document_title")
                 .endBlockIndex(0L)
+                .fileId("file_id")
                 .startBlockIndex(0L)
                 .build()
 
@@ -24,6 +25,7 @@ internal class CitationContentBlockLocationTest {
         assertThat(citationContentBlockLocation.documentIndex()).isEqualTo(0L)
         assertThat(citationContentBlockLocation.documentTitle()).contains("document_title")
         assertThat(citationContentBlockLocation.endBlockIndex()).isEqualTo(0L)
+        assertThat(citationContentBlockLocation.fileId()).contains("file_id")
         assertThat(citationContentBlockLocation.startBlockIndex()).isEqualTo(0L)
     }
 
@@ -36,6 +38,7 @@ internal class CitationContentBlockLocationTest {
                 .documentIndex(0L)
                 .documentTitle("document_title")
                 .endBlockIndex(0L)
+                .fileId("file_id")
                 .startBlockIndex(0L)
                 .build()
 

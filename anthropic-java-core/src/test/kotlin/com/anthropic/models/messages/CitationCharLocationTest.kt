@@ -17,6 +17,7 @@ internal class CitationCharLocationTest {
                 .documentIndex(0L)
                 .documentTitle("document_title")
                 .endCharIndex(0L)
+                .fileId("file_id")
                 .startCharIndex(0L)
                 .build()
 
@@ -24,6 +25,7 @@ internal class CitationCharLocationTest {
         assertThat(citationCharLocation.documentIndex()).isEqualTo(0L)
         assertThat(citationCharLocation.documentTitle()).contains("document_title")
         assertThat(citationCharLocation.endCharIndex()).isEqualTo(0L)
+        assertThat(citationCharLocation.fileId()).contains("file_id")
         assertThat(citationCharLocation.startCharIndex()).isEqualTo(0L)
     }
 
@@ -36,6 +38,7 @@ internal class CitationCharLocationTest {
                 .documentIndex(0L)
                 .documentTitle("document_title")
                 .endCharIndex(0L)
+                .fileId("file_id")
                 .startCharIndex(0L)
                 .build()
 

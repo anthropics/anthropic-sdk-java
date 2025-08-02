@@ -3,6 +3,7 @@ package com.anthropic.core.http
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.checkRequired
 import com.anthropic.errors.AnthropicIoException
+import com.anthropic.errors.AnthropicRetryableException
 import java.io.IOException
 import java.time.Clock
 import java.time.Duration
@@ -176,9 +177,10 @@ private constructor(
     }
 
     private fun shouldRetry(throwable: Throwable): Boolean =
-        // Only retry IOException and AnthropicIoException, other exceptions are not intended to be
-        // retried.
-        throwable is IOException || throwable is AnthropicIoException
+        // Only retry known retryable exceptions, other exceptions are not intended to be retried.
+        throwable is IOException ||
+            throwable is AnthropicIoException ||
+            throwable is AnthropicRetryableException
 
     private fun getRetryBackoffDuration(retries: Int, response: HttpResponse?): Duration {
         // About the Retry-After header:

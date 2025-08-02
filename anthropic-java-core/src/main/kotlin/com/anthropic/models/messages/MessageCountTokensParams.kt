@@ -299,8 +299,10 @@ private constructor(
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
+    /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
 
+    /** Additional query param to send with the request. */
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
     fun toBuilder() = Builder().from(this)
@@ -728,10 +730,18 @@ private constructor(
 
         /**
          * Alias for calling [addTool] with
-         * `MessageCountTokensTool.ofTextEditor20250429(textEditor20250429)`.
+         * `MessageCountTokensTool.ofToolTextEditor20250429(toolTextEditor20250429)`.
          */
-        fun addTool(textEditor20250429: MessageCountTokensTool.TextEditor20250429) = apply {
-            body.addTool(textEditor20250429)
+        fun addTool(toolTextEditor20250429: ToolTextEditor20250429) = apply {
+            body.addTool(toolTextEditor20250429)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `MessageCountTokensTool.ofToolTextEditor20250728(toolTextEditor20250728)`.
+         */
+        fun addTool(toolTextEditor20250728: ToolTextEditor20250728) = apply {
+            body.addTool(toolTextEditor20250728)
         }
 
         /**
@@ -1639,10 +1649,17 @@ private constructor(
 
             /**
              * Alias for calling [addTool] with
-             * `MessageCountTokensTool.ofTextEditor20250429(textEditor20250429)`.
+             * `MessageCountTokensTool.ofToolTextEditor20250429(toolTextEditor20250429)`.
              */
-            fun addTool(textEditor20250429: MessageCountTokensTool.TextEditor20250429) =
-                addTool(MessageCountTokensTool.ofTextEditor20250429(textEditor20250429))
+            fun addTool(toolTextEditor20250429: ToolTextEditor20250429) =
+                addTool(MessageCountTokensTool.ofToolTextEditor20250429(toolTextEditor20250429))
+
+            /**
+             * Alias for calling [addTool] with
+             * `MessageCountTokensTool.ofToolTextEditor20250728(toolTextEditor20250728)`.
+             */
+            fun addTool(toolTextEditor20250728: ToolTextEditor20250728) =
+                addTool(MessageCountTokensTool.ofToolTextEditor20250728(toolTextEditor20250728))
 
             /**
              * Alias for calling [addTool] with
@@ -1860,7 +1877,7 @@ private constructor(
 
             @JvmStatic
             fun ofTextBlockParams(textBlockParams: List<TextBlockParam>) =
-                System(textBlockParams = textBlockParams)
+                System(textBlockParams = textBlockParams.toImmutable())
         }
 
         /** An interface that defines how to map each variant of [System] to a value of type [T]. */

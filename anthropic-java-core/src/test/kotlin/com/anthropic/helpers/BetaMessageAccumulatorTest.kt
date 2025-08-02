@@ -1008,6 +1008,7 @@ internal class BetaMessageAccumulatorTest {
 
     private fun citationPageLocation(pageNumber: Long) =
         BetaCitationPageLocation.builder()
+            .fileId("fileId")
             .documentTitle("Document Title")
             .documentIndex(11L)
             .citedText("cited text")
@@ -1017,6 +1018,7 @@ internal class BetaMessageAccumulatorTest {
 
     private fun citationContentBlockLocation(blockIndex: Long) =
         BetaCitationContentBlockLocation.builder()
+            .fileId("fileId")
             .documentTitle("Document Title")
             .documentIndex(11L)
             .citedText("cited text")
@@ -1026,6 +1028,7 @@ internal class BetaMessageAccumulatorTest {
 
     private fun citationCharLocation(charIndex: Long) =
         BetaCitationCharLocation.builder()
+            .fileId("fileId")
             .documentTitle("Document Title")
             .documentIndex(11L)
             .citedText("cited text")

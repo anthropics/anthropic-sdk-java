@@ -23,6 +23,7 @@ private constructor(
     private val documentIndex: JsonField<Long>,
     private val documentTitle: JsonField<String>,
     private val endPageNumber: JsonField<Long>,
+    private val fileId: JsonField<String>,
     private val startPageNumber: JsonField<Long>,
     private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -40,6 +41,7 @@ private constructor(
         @JsonProperty("end_page_number")
         @ExcludeMissing
         endPageNumber: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("file_id") @ExcludeMissing fileId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("start_page_number")
         @ExcludeMissing
         startPageNumber: JsonField<Long> = JsonMissing.of(),
@@ -49,6 +51,7 @@ private constructor(
         documentIndex,
         documentTitle,
         endPageNumber,
+        fileId,
         startPageNumber,
         type,
         mutableMapOf(),
@@ -86,6 +89,12 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun endPageNumber(): Long = endPageNumber.getRequired("end_page_number")
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun fileId(): Optional<String> = fileId.getOptional("file_id")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -139,6 +148,13 @@ private constructor(
     fun _endPageNumber(): JsonField<Long> = endPageNumber
 
     /**
+     * Returns the raw JSON value of [fileId].
+     *
+     * Unlike [fileId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("file_id") @ExcludeMissing fun _fileId(): JsonField<String> = fileId
+
+    /**
      * Returns the raw JSON value of [startPageNumber].
      *
      * Unlike [startPageNumber], this method doesn't throw if the JSON field has an unexpected type.
@@ -170,6 +186,7 @@ private constructor(
          * .documentIndex()
          * .documentTitle()
          * .endPageNumber()
+         * .fileId()
          * .startPageNumber()
          * ```
          */
@@ -183,6 +200,7 @@ private constructor(
         private var documentIndex: JsonField<Long>? = null
         private var documentTitle: JsonField<String>? = null
         private var endPageNumber: JsonField<Long>? = null
+        private var fileId: JsonField<String>? = null
         private var startPageNumber: JsonField<Long>? = null
         private var type: JsonValue = JsonValue.from("page_location")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -193,6 +211,7 @@ private constructor(
             documentIndex = citationPageLocation.documentIndex
             documentTitle = citationPageLocation.documentTitle
             endPageNumber = citationPageLocation.endPageNumber
+            fileId = citationPageLocation.fileId
             startPageNumber = citationPageLocation.startPageNumber
             type = citationPageLocation.type
             additionalProperties = citationPageLocation.additionalProperties.toMutableMap()
@@ -253,6 +272,19 @@ private constructor(
             this.endPageNumber = endPageNumber
         }
 
+        fun fileId(fileId: String?) = fileId(JsonField.ofNullable(fileId))
+
+        /** Alias for calling [Builder.fileId] with `fileId.orElse(null)`. */
+        fun fileId(fileId: Optional<String>) = fileId(fileId.getOrNull())
+
+        /**
+         * Sets [Builder.fileId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.fileId] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun fileId(fileId: JsonField<String>) = apply { this.fileId = fileId }
+
         fun startPageNumber(startPageNumber: Long) = startPageNumber(JsonField.of(startPageNumber))
 
         /**
@@ -310,6 +342,7 @@ private constructor(
          * .documentIndex()
          * .documentTitle()
          * .endPageNumber()
+         * .fileId()
          * .startPageNumber()
          * ```
          *
@@ -321,6 +354,7 @@ private constructor(
                 checkRequired("documentIndex", documentIndex),
                 checkRequired("documentTitle", documentTitle),
                 checkRequired("endPageNumber", endPageNumber),
+                checkRequired("fileId", fileId),
                 checkRequired("startPageNumber", startPageNumber),
                 type,
                 additionalProperties.toMutableMap(),
@@ -338,6 +372,7 @@ private constructor(
         documentIndex()
         documentTitle()
         endPageNumber()
+        fileId()
         startPageNumber()
         _type().let {
             if (it != JsonValue.from("page_location")) {
@@ -366,6 +401,7 @@ private constructor(
             (if (documentIndex.asKnown().isPresent) 1 else 0) +
             (if (documentTitle.asKnown().isPresent) 1 else 0) +
             (if (endPageNumber.asKnown().isPresent) 1 else 0) +
+            (if (fileId.asKnown().isPresent) 1 else 0) +
             (if (startPageNumber.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("page_location")) 1 else 0 }
 
@@ -374,15 +410,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is CitationPageLocation && citedText == other.citedText && documentIndex == other.documentIndex && documentTitle == other.documentTitle && endPageNumber == other.endPageNumber && startPageNumber == other.startPageNumber && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is CitationPageLocation && citedText == other.citedText && documentIndex == other.documentIndex && documentTitle == other.documentTitle && endPageNumber == other.endPageNumber && fileId == other.fileId && startPageNumber == other.startPageNumber && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(citedText, documentIndex, documentTitle, endPageNumber, startPageNumber, type, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(citedText, documentIndex, documentTitle, endPageNumber, fileId, startPageNumber, type, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CitationPageLocation{citedText=$citedText, documentIndex=$documentIndex, documentTitle=$documentTitle, endPageNumber=$endPageNumber, startPageNumber=$startPageNumber, type=$type, additionalProperties=$additionalProperties}"
+        "CitationPageLocation{citedText=$citedText, documentIndex=$documentIndex, documentTitle=$documentTitle, endPageNumber=$endPageNumber, fileId=$fileId, startPageNumber=$startPageNumber, type=$type, additionalProperties=$additionalProperties}"
 }

@@ -476,8 +476,10 @@ private constructor(
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
+    /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
 
+    /** Additional query param to send with the request. */
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
     fun toBuilder() = Builder().from(this)
@@ -1119,6 +1121,14 @@ private constructor(
          */
         fun addTool(textEditor20250429: BetaToolTextEditor20250429) = apply {
             body.addTool(textEditor20250429)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `BetaToolUnion.ofTextEditor20250728(textEditor20250728)`.
+         */
+        fun addTool(textEditor20250728: BetaToolTextEditor20250728) = apply {
+            body.addTool(textEditor20250728)
         }
 
         /**
@@ -2526,6 +2536,13 @@ private constructor(
 
             /**
              * Alias for calling [addTool] with
+             * `BetaToolUnion.ofTextEditor20250728(textEditor20250728)`.
+             */
+            fun addTool(textEditor20250728: BetaToolTextEditor20250728) =
+                addTool(BetaToolUnion.ofTextEditor20250728(textEditor20250728))
+
+            /**
+             * Alias for calling [addTool] with
              * `BetaToolUnion.ofWebSearchTool20250305(webSearchTool20250305)`.
              */
             fun addTool(webSearchTool20250305: BetaWebSearchTool20250305) =
@@ -2949,7 +2966,7 @@ private constructor(
 
             @JvmStatic
             fun ofBetaTextBlockParams(betaTextBlockParams: List<BetaTextBlockParam>) =
-                System(betaTextBlockParams = betaTextBlockParams)
+                System(betaTextBlockParams = betaTextBlockParams.toImmutable())
         }
 
         /** An interface that defines how to map each variant of [System] to a value of type [T]. */

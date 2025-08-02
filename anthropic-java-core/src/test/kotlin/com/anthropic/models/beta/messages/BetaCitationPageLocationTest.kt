@@ -17,6 +17,7 @@ internal class BetaCitationPageLocationTest {
                 .documentIndex(0L)
                 .documentTitle("document_title")
                 .endPageNumber(0L)
+                .fileId("file_id")
                 .startPageNumber(1L)
                 .build()
 
@@ -24,6 +25,7 @@ internal class BetaCitationPageLocationTest {
         assertThat(betaCitationPageLocation.documentIndex()).isEqualTo(0L)
         assertThat(betaCitationPageLocation.documentTitle()).contains("document_title")
         assertThat(betaCitationPageLocation.endPageNumber()).isEqualTo(0L)
+        assertThat(betaCitationPageLocation.fileId()).contains("file_id")
         assertThat(betaCitationPageLocation.startPageNumber()).isEqualTo(1L)
     }
 
@@ -36,6 +38,7 @@ internal class BetaCitationPageLocationTest {
                 .documentIndex(0L)
                 .documentTitle("document_title")
                 .endPageNumber(0L)
+                .fileId("file_id")
                 .startPageNumber(1L)
                 .build()
 

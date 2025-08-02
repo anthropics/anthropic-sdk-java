@@ -1013,6 +1013,7 @@ internal class MessageAccumulatorTest {
 
     private fun citationPageLocation(pageNumber: Long) =
         CitationPageLocation.builder()
+            .fileId("fileId")
             .documentTitle("Document Title")
             .documentIndex(11L)
             .citedText("cited text")
@@ -1022,6 +1023,7 @@ internal class MessageAccumulatorTest {
 
     private fun citationContentBlockLocation(blockIndex: Long) =
         CitationContentBlockLocation.builder()
+            .fileId("fileId")
             .documentTitle("Document Title")
             .documentIndex(11L)
             .citedText("cited text")
@@ -1031,6 +1033,7 @@ internal class MessageAccumulatorTest {
 
     private fun citationCharLocation(charIndex: Long) =
         CitationCharLocation.builder()
+            .fileId("fileId")
             .documentTitle("Document Title")
             .documentIndex(11L)
             .citedText("cited text")

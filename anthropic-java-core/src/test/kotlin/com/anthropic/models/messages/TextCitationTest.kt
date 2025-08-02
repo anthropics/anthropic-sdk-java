@@ -22,6 +22,7 @@ internal class TextCitationTest {
                 .documentIndex(0L)
                 .documentTitle("document_title")
                 .endCharIndex(0L)
+                .fileId("file_id")
                 .startCharIndex(0L)
                 .build()
 
@@ -43,6 +44,7 @@ internal class TextCitationTest {
                     .documentIndex(0L)
                     .documentTitle("document_title")
                     .endCharIndex(0L)
+                    .fileId("file_id")
                     .startCharIndex(0L)
                     .build()
             )
@@ -64,6 +66,7 @@ internal class TextCitationTest {
                 .documentIndex(0L)
                 .documentTitle("document_title")
                 .endPageNumber(0L)
+                .fileId("file_id")
                 .startPageNumber(1L)
                 .build()
 
@@ -85,6 +88,7 @@ internal class TextCitationTest {
                     .documentIndex(0L)
                     .documentTitle("document_title")
                     .endPageNumber(0L)
+                    .fileId("file_id")
                     .startPageNumber(1L)
                     .build()
             )
@@ -106,6 +110,7 @@ internal class TextCitationTest {
                 .documentIndex(0L)
                 .documentTitle("document_title")
                 .endBlockIndex(0L)
+                .fileId("file_id")
                 .startBlockIndex(0L)
                 .build()
 
@@ -127,6 +132,7 @@ internal class TextCitationTest {
                     .documentIndex(0L)
                     .documentTitle("document_title")
                     .endBlockIndex(0L)
+                    .fileId("file_id")
                     .startBlockIndex(0L)
                     .build()
             )

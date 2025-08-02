@@ -42,6 +42,7 @@ import com.anthropic.models.beta.messages.BetaToolComputerUse20250124
 import com.anthropic.models.beta.messages.BetaToolTextEditor20241022
 import com.anthropic.models.beta.messages.BetaToolTextEditor20250124
 import com.anthropic.models.beta.messages.BetaToolTextEditor20250429
+import com.anthropic.models.beta.messages.BetaToolTextEditor20250728
 import com.anthropic.models.beta.messages.BetaToolUnion
 import com.anthropic.models.beta.messages.BetaWebSearchTool20250305
 import com.anthropic.models.messages.Model
@@ -99,8 +100,10 @@ private constructor(
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
+    /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
 
+    /** Additional query param to send with the request. */
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
     fun toBuilder() = Builder().from(this)
@@ -2007,6 +2010,13 @@ private constructor(
 
                 /**
                  * Alias for calling [addTool] with
+                 * `BetaToolUnion.ofTextEditor20250728(textEditor20250728)`.
+                 */
+                fun addTool(textEditor20250728: BetaToolTextEditor20250728) =
+                    addTool(BetaToolUnion.ofTextEditor20250728(textEditor20250728))
+
+                /**
+                 * Alias for calling [addTool] with
                  * `BetaToolUnion.ofWebSearchTool20250305(webSearchTool20250305)`.
                  */
                 fun addTool(webSearchTool20250305: BetaWebSearchTool20250305) =
@@ -2424,7 +2434,7 @@ private constructor(
 
                     @JvmStatic
                     fun ofBetaTextBlockParams(betaTextBlockParams: List<BetaTextBlockParam>) =
-                        System(betaTextBlockParams = betaTextBlockParams)
+                        System(betaTextBlockParams = betaTextBlockParams.toImmutable())
                 }
 
                 /**

@@ -31,6 +31,7 @@ private constructor(
     private val textEditor20241022: BetaToolTextEditor20241022? = null,
     private val textEditor20250124: BetaToolTextEditor20250124? = null,
     private val textEditor20250429: BetaToolTextEditor20250429? = null,
+    private val textEditor20250728: BetaToolTextEditor20250728? = null,
     private val webSearchTool20250305: BetaWebSearchTool20250305? = null,
     private val _json: JsonValue? = null,
 ) {
@@ -59,6 +60,9 @@ private constructor(
     fun textEditor20250429(): Optional<BetaToolTextEditor20250429> =
         Optional.ofNullable(textEditor20250429)
 
+    fun textEditor20250728(): Optional<BetaToolTextEditor20250728> =
+        Optional.ofNullable(textEditor20250728)
+
     fun webSearchTool20250305(): Optional<BetaWebSearchTool20250305> =
         Optional.ofNullable(webSearchTool20250305)
 
@@ -79,6 +83,8 @@ private constructor(
     fun isTextEditor20250124(): Boolean = textEditor20250124 != null
 
     fun isTextEditor20250429(): Boolean = textEditor20250429 != null
+
+    fun isTextEditor20250728(): Boolean = textEditor20250728 != null
 
     fun isWebSearchTool20250305(): Boolean = webSearchTool20250305 != null
 
@@ -106,6 +112,9 @@ private constructor(
     fun asTextEditor20250429(): BetaToolTextEditor20250429 =
         textEditor20250429.getOrThrow("textEditor20250429")
 
+    fun asTextEditor20250728(): BetaToolTextEditor20250728 =
+        textEditor20250728.getOrThrow("textEditor20250728")
+
     fun asWebSearchTool20250305(): BetaWebSearchTool20250305 =
         webSearchTool20250305.getOrThrow("webSearchTool20250305")
 
@@ -123,6 +132,7 @@ private constructor(
             textEditor20241022 != null -> visitor.visitTextEditor20241022(textEditor20241022)
             textEditor20250124 != null -> visitor.visitTextEditor20250124(textEditor20250124)
             textEditor20250429 != null -> visitor.visitTextEditor20250429(textEditor20250429)
+            textEditor20250728 != null -> visitor.visitTextEditor20250728(textEditor20250728)
             webSearchTool20250305 != null ->
                 visitor.visitWebSearchTool20250305(webSearchTool20250305)
             else -> visitor.unknown(_json)
@@ -185,6 +195,12 @@ private constructor(
                     textEditor20250429.validate()
                 }
 
+                override fun visitTextEditor20250728(
+                    textEditor20250728: BetaToolTextEditor20250728
+                ) {
+                    textEditor20250728.validate()
+                }
+
                 override fun visitWebSearchTool20250305(
                     webSearchTool20250305: BetaWebSearchTool20250305
                 ) {
@@ -244,6 +260,10 @@ private constructor(
                     textEditor20250429: BetaToolTextEditor20250429
                 ) = textEditor20250429.validity()
 
+                override fun visitTextEditor20250728(
+                    textEditor20250728: BetaToolTextEditor20250728
+                ) = textEditor20250728.validity()
+
                 override fun visitWebSearchTool20250305(
                     webSearchTool20250305: BetaWebSearchTool20250305
                 ) = webSearchTool20250305.validity()
@@ -257,10 +277,10 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaToolUnion && betaTool == other.betaTool && bash20241022 == other.bash20241022 && bash20250124 == other.bash20250124 && codeExecutionTool20250522 == other.codeExecutionTool20250522 && computerUse20241022 == other.computerUse20241022 && computerUse20250124 == other.computerUse20250124 && textEditor20241022 == other.textEditor20241022 && textEditor20250124 == other.textEditor20250124 && textEditor20250429 == other.textEditor20250429 && webSearchTool20250305 == other.webSearchTool20250305 /* spotless:on */
+        return /* spotless:off */ other is BetaToolUnion && betaTool == other.betaTool && bash20241022 == other.bash20241022 && bash20250124 == other.bash20250124 && codeExecutionTool20250522 == other.codeExecutionTool20250522 && computerUse20241022 == other.computerUse20241022 && computerUse20250124 == other.computerUse20250124 && textEditor20241022 == other.textEditor20241022 && textEditor20250124 == other.textEditor20250124 && textEditor20250429 == other.textEditor20250429 && textEditor20250728 == other.textEditor20250728 && webSearchTool20250305 == other.webSearchTool20250305 /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaTool, bash20241022, bash20250124, codeExecutionTool20250522, computerUse20241022, computerUse20250124, textEditor20241022, textEditor20250124, textEditor20250429, webSearchTool20250305) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaTool, bash20241022, bash20250124, codeExecutionTool20250522, computerUse20241022, computerUse20250124, textEditor20241022, textEditor20250124, textEditor20250429, textEditor20250728, webSearchTool20250305) /* spotless:on */
 
     override fun toString(): String =
         when {
@@ -274,6 +294,7 @@ private constructor(
             textEditor20241022 != null -> "BetaToolUnion{textEditor20241022=$textEditor20241022}"
             textEditor20250124 != null -> "BetaToolUnion{textEditor20250124=$textEditor20250124}"
             textEditor20250429 != null -> "BetaToolUnion{textEditor20250429=$textEditor20250429}"
+            textEditor20250728 != null -> "BetaToolUnion{textEditor20250728=$textEditor20250728}"
             webSearchTool20250305 != null ->
                 "BetaToolUnion{webSearchTool20250305=$webSearchTool20250305}"
             _json != null -> "BetaToolUnion{_unknown=$_json}"
@@ -317,6 +338,10 @@ private constructor(
             BetaToolUnion(textEditor20250429 = textEditor20250429)
 
         @JvmStatic
+        fun ofTextEditor20250728(textEditor20250728: BetaToolTextEditor20250728) =
+            BetaToolUnion(textEditor20250728 = textEditor20250728)
+
+        @JvmStatic
         fun ofWebSearchTool20250305(webSearchTool20250305: BetaWebSearchTool20250305) =
             BetaToolUnion(webSearchTool20250305 = webSearchTool20250305)
     }
@@ -345,6 +370,8 @@ private constructor(
         fun visitTextEditor20250124(textEditor20250124: BetaToolTextEditor20250124): T
 
         fun visitTextEditor20250429(textEditor20250429: BetaToolTextEditor20250429): T
+
+        fun visitTextEditor20250728(textEditor20250728: BetaToolTextEditor20250728): T
 
         fun visitWebSearchTool20250305(webSearchTool20250305: BetaWebSearchTool20250305): T
 
@@ -396,6 +423,9 @@ private constructor(
                         tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20250429>())?.let {
                             BetaToolUnion(textEditor20250429 = it, _json = json)
                         },
+                        tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20250728>())?.let {
+                            BetaToolUnion(textEditor20250728 = it, _json = json)
+                        },
                         tryDeserialize(node, jacksonTypeRef<BetaWebSearchTool20250305>())?.let {
                             BetaToolUnion(webSearchTool20250305 = it, _json = json)
                         },
@@ -435,6 +465,7 @@ private constructor(
                 value.textEditor20241022 != null -> generator.writeObject(value.textEditor20241022)
                 value.textEditor20250124 != null -> generator.writeObject(value.textEditor20250124)
                 value.textEditor20250429 != null -> generator.writeObject(value.textEditor20250429)
+                value.textEditor20250728 != null -> generator.writeObject(value.textEditor20250728)
                 value.webSearchTool20250305 != null ->
                     generator.writeObject(value.webSearchTool20250305)
                 value._json != null -> generator.writeObject(value._json)

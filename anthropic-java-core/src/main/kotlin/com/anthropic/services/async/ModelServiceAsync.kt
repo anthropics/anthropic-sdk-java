@@ -35,7 +35,7 @@ interface ModelServiceAsync {
     fun retrieve(modelId: String): CompletableFuture<ModelInfo> =
         retrieve(modelId, ModelRetrieveParams.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         modelId: String,
         params: ModelRetrieveParams = ModelRetrieveParams.none(),
@@ -43,23 +43,23 @@ interface ModelServiceAsync {
     ): CompletableFuture<ModelInfo> =
         retrieve(params.toBuilder().modelId(modelId).build(), requestOptions)
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         modelId: String,
         params: ModelRetrieveParams = ModelRetrieveParams.none(),
     ): CompletableFuture<ModelInfo> = retrieve(modelId, params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         params: ModelRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ModelInfo>
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(params: ModelRetrieveParams): CompletableFuture<ModelInfo> =
         retrieve(params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(modelId: String, requestOptions: RequestOptions): CompletableFuture<ModelInfo> =
         retrieve(modelId, ModelRetrieveParams.none(), requestOptions)
 
@@ -71,18 +71,18 @@ interface ModelServiceAsync {
      */
     fun list(): CompletableFuture<ModelListPageAsync> = list(ModelListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: ModelListParams = ModelListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ModelListPageAsync>
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: ModelListParams = ModelListParams.none()
     ): CompletableFuture<ModelListPageAsync> = list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<ModelListPageAsync> =
         list(ModelListParams.none(), requestOptions)
 
@@ -105,7 +105,7 @@ interface ModelServiceAsync {
         fun retrieve(modelId: String): CompletableFuture<HttpResponseFor<ModelInfo>> =
             retrieve(modelId, ModelRetrieveParams.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             modelId: String,
             params: ModelRetrieveParams = ModelRetrieveParams.none(),
@@ -113,24 +113,24 @@ interface ModelServiceAsync {
         ): CompletableFuture<HttpResponseFor<ModelInfo>> =
             retrieve(params.toBuilder().modelId(modelId).build(), requestOptions)
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             modelId: String,
             params: ModelRetrieveParams = ModelRetrieveParams.none(),
         ): CompletableFuture<HttpResponseFor<ModelInfo>> =
             retrieve(modelId, params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             params: ModelRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ModelInfo>>
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(params: ModelRetrieveParams): CompletableFuture<HttpResponseFor<ModelInfo>> =
             retrieve(params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             modelId: String,
             requestOptions: RequestOptions,
@@ -144,19 +144,19 @@ interface ModelServiceAsync {
         fun list(): CompletableFuture<HttpResponseFor<ModelListPageAsync>> =
             list(ModelListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: ModelListParams = ModelListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ModelListPageAsync>>
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: ModelListParams = ModelListParams.none()
         ): CompletableFuture<HttpResponseFor<ModelListPageAsync>> =
             list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<ModelListPageAsync>> =
