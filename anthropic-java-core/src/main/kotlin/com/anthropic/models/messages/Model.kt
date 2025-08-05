@@ -62,6 +62,9 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         /** Our most capable model */
         @JvmField val CLAUDE_4_OPUS_20250514 = of("claude-4-opus-20250514")
 
+        /** Our most capable model */
+        @JvmField val CLAUDE_OPUS_4_1_20250805 = of("claude-opus-4-1-20250805")
+
         /** Excels at writing and complex tasks */
         @Deprecated(
             "Will reach end-of-life on January 5th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
@@ -109,6 +112,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         CLAUDE_OPUS_4_20250514,
         /** Our most capable model */
         CLAUDE_4_OPUS_20250514,
+        /** Our most capable model */
+        CLAUDE_OPUS_4_1_20250805,
         @Deprecated(
             "Will reach end-of-life on January 5th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
         )
@@ -158,6 +163,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         CLAUDE_OPUS_4_20250514,
         /** Our most capable model */
         CLAUDE_4_OPUS_20250514,
+        /** Our most capable model */
+        CLAUDE_OPUS_4_1_20250805,
         @Deprecated(
             "Will reach end-of-life on January 5th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
         )
@@ -196,6 +203,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
             CLAUDE_OPUS_4_0 -> Value.CLAUDE_OPUS_4_0
             CLAUDE_OPUS_4_20250514 -> Value.CLAUDE_OPUS_4_20250514
             CLAUDE_4_OPUS_20250514 -> Value.CLAUDE_4_OPUS_20250514
+            CLAUDE_OPUS_4_1_20250805 -> Value.CLAUDE_OPUS_4_1_20250805
             CLAUDE_3_OPUS_LATEST -> Value.CLAUDE_3_OPUS_LATEST
             CLAUDE_3_OPUS_20240229 -> Value.CLAUDE_3_OPUS_20240229
             CLAUDE_3_HAIKU_20240307 -> Value.CLAUDE_3_HAIKU_20240307
@@ -225,6 +233,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
             CLAUDE_OPUS_4_0 -> Known.CLAUDE_OPUS_4_0
             CLAUDE_OPUS_4_20250514 -> Known.CLAUDE_OPUS_4_20250514
             CLAUDE_4_OPUS_20250514 -> Known.CLAUDE_4_OPUS_20250514
+            CLAUDE_OPUS_4_1_20250805 -> Known.CLAUDE_OPUS_4_1_20250805
             CLAUDE_3_OPUS_LATEST -> Known.CLAUDE_3_OPUS_LATEST
             CLAUDE_3_OPUS_20240229 -> Known.CLAUDE_3_OPUS_20240229
             CLAUDE_3_HAIKU_20240307 -> Known.CLAUDE_3_HAIKU_20240307
