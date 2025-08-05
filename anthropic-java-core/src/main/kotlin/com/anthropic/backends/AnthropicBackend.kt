@@ -84,8 +84,10 @@ private constructor(
             (System.getProperty("anthropic.baseUrl") ?: System.getenv("ANTHROPIC_BASE_URL"))?.let {
                 baseUrl = it
             }
-            (System.getProperty("anthropic.apiKey") ?: System.getenv(apiKey))?.let { apiKey(it) }
-            (System.getProperty("anthropic.authToken") ?: System.getenv(authToken))?.let {
+            (System.getProperty("anthropic.apiKey") ?: System.getenv(ENV_API_KEY))?.let {
+                apiKey(it)
+            }
+            (System.getProperty("anthropic.authToken") ?: System.getenv(ENV_AUTH_TOKEN))?.let {
                 authToken(it)
             }
         }
