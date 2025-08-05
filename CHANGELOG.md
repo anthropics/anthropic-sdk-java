@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.3.1 (2025-08-05)
+
+Full Changelog: [v2.3.0...v2.3.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.3.0...v2.3.1)
+
+### Bug Fixes
+
+* bug in fromEnv ([74e0888](https://github.com/anthropics/anthropic-sdk-java/commit/74e08885720acf56d39ea42e2fadca23c3761865))
+
 ## 2.3.0 (2025-08-05)
 
 Full Changelog: [v2.2.0...v2.3.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.2.0...v2.3.0)
