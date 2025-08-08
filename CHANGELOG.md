@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.4.0 (2025-08-08)
+
+Full Changelog: [v2.3.1...v2.4.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.3.1...v2.4.0)
+
+### Features
+
+* **api:** search result content blocks ([7ff0d0b](https://github.com/anthropics/anthropic-sdk-java/commit/7ff0d0b3cbd7a163546b1b5f5dbaf77e92b3a14e))
+
+
+### Chores
+
+* **example:** fix run example comment ([c209490](https://github.com/anthropics/anthropic-sdk-java/commit/c209490d814f6990798af21e3006cf436e361f7e))
+* increase max gradle JVM heap to 8GB ([63801cd](https://github.com/anthropics/anthropic-sdk-java/commit/63801cd8b3b4434c24162c3b67c1fcefdc9ebfe7))
+
 ## 2.3.1 (2025-08-05)
 
 Full Changelog: [v2.3.0...v2.3.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.3.0...v2.3.1)
