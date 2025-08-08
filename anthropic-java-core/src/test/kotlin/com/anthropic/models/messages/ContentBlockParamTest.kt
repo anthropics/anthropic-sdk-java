@@ -36,6 +36,7 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.text()).contains(text)
         assertThat(contentBlockParam.image()).isEmpty
         assertThat(contentBlockParam.document()).isEmpty
+        assertThat(contentBlockParam.searchResult()).isEmpty
         assertThat(contentBlockParam.thinking()).isEmpty
         assertThat(contentBlockParam.redactedThinking()).isEmpty
         assertThat(contentBlockParam.toolUse()).isEmpty
@@ -91,6 +92,7 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.text()).isEmpty
         assertThat(contentBlockParam.image()).contains(image)
         assertThat(contentBlockParam.document()).isEmpty
+        assertThat(contentBlockParam.searchResult()).isEmpty
         assertThat(contentBlockParam.thinking()).isEmpty
         assertThat(contentBlockParam.redactedThinking()).isEmpty
         assertThat(contentBlockParam.toolUse()).isEmpty
@@ -140,6 +142,7 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.text()).isEmpty
         assertThat(contentBlockParam.image()).isEmpty
         assertThat(contentBlockParam.document()).contains(document)
+        assertThat(contentBlockParam.searchResult()).isEmpty
         assertThat(contentBlockParam.thinking()).isEmpty
         assertThat(contentBlockParam.redactedThinking()).isEmpty
         assertThat(contentBlockParam.toolUse()).isEmpty
@@ -172,6 +175,82 @@ internal class ContentBlockParamTest {
     }
 
     @Test
+    fun ofSearchResult() {
+        val searchResult =
+            SearchResultBlockParam.builder()
+                .addContent(
+                    TextBlockParam.builder()
+                        .text("x")
+                        .cacheControl(CacheControlEphemeral.builder().build())
+                        .addCitation(
+                            CitationCharLocationParam.builder()
+                                .citedText("cited_text")
+                                .documentIndex(0L)
+                                .documentTitle("x")
+                                .endCharIndex(0L)
+                                .startCharIndex(0L)
+                                .build()
+                        )
+                        .build()
+                )
+                .source("source")
+                .title("title")
+                .cacheControl(CacheControlEphemeral.builder().build())
+                .citations(CitationsConfigParam.builder().enabled(true).build())
+                .build()
+
+        val contentBlockParam = ContentBlockParam.ofSearchResult(searchResult)
+
+        assertThat(contentBlockParam.text()).isEmpty
+        assertThat(contentBlockParam.image()).isEmpty
+        assertThat(contentBlockParam.document()).isEmpty
+        assertThat(contentBlockParam.searchResult()).contains(searchResult)
+        assertThat(contentBlockParam.thinking()).isEmpty
+        assertThat(contentBlockParam.redactedThinking()).isEmpty
+        assertThat(contentBlockParam.toolUse()).isEmpty
+        assertThat(contentBlockParam.toolResult()).isEmpty
+        assertThat(contentBlockParam.serverToolUse()).isEmpty
+        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
+    }
+
+    @Test
+    fun ofSearchResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlockParam =
+            ContentBlockParam.ofSearchResult(
+                SearchResultBlockParam.builder()
+                    .addContent(
+                        TextBlockParam.builder()
+                            .text("x")
+                            .cacheControl(CacheControlEphemeral.builder().build())
+                            .addCitation(
+                                CitationCharLocationParam.builder()
+                                    .citedText("cited_text")
+                                    .documentIndex(0L)
+                                    .documentTitle("x")
+                                    .endCharIndex(0L)
+                                    .startCharIndex(0L)
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .source("source")
+                    .title("title")
+                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .citations(CitationsConfigParam.builder().enabled(true).build())
+                    .build()
+            )
+
+        val roundtrippedContentBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlockParam),
+                jacksonTypeRef<ContentBlockParam>(),
+            )
+
+        assertThat(roundtrippedContentBlockParam).isEqualTo(contentBlockParam)
+    }
+
+    @Test
     fun ofThinking() {
         val thinking =
             ThinkingBlockParam.builder().signature("signature").thinking("thinking").build()
@@ -181,6 +260,7 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.text()).isEmpty
         assertThat(contentBlockParam.image()).isEmpty
         assertThat(contentBlockParam.document()).isEmpty
+        assertThat(contentBlockParam.searchResult()).isEmpty
         assertThat(contentBlockParam.thinking()).contains(thinking)
         assertThat(contentBlockParam.redactedThinking()).isEmpty
         assertThat(contentBlockParam.toolUse()).isEmpty
@@ -215,6 +295,7 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.text()).isEmpty
         assertThat(contentBlockParam.image()).isEmpty
         assertThat(contentBlockParam.document()).isEmpty
+        assertThat(contentBlockParam.searchResult()).isEmpty
         assertThat(contentBlockParam.thinking()).isEmpty
         assertThat(contentBlockParam.redactedThinking()).contains(redactedThinking)
         assertThat(contentBlockParam.toolUse()).isEmpty
@@ -255,6 +336,7 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.text()).isEmpty
         assertThat(contentBlockParam.image()).isEmpty
         assertThat(contentBlockParam.document()).isEmpty
+        assertThat(contentBlockParam.searchResult()).isEmpty
         assertThat(contentBlockParam.thinking()).isEmpty
         assertThat(contentBlockParam.redactedThinking()).isEmpty
         assertThat(contentBlockParam.toolUse()).contains(toolUse)
@@ -300,6 +382,7 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.text()).isEmpty
         assertThat(contentBlockParam.image()).isEmpty
         assertThat(contentBlockParam.document()).isEmpty
+        assertThat(contentBlockParam.searchResult()).isEmpty
         assertThat(contentBlockParam.thinking()).isEmpty
         assertThat(contentBlockParam.redactedThinking()).isEmpty
         assertThat(contentBlockParam.toolUse()).isEmpty
@@ -344,6 +427,7 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.text()).isEmpty
         assertThat(contentBlockParam.image()).isEmpty
         assertThat(contentBlockParam.document()).isEmpty
+        assertThat(contentBlockParam.searchResult()).isEmpty
         assertThat(contentBlockParam.thinking()).isEmpty
         assertThat(contentBlockParam.redactedThinking()).isEmpty
         assertThat(contentBlockParam.toolUse()).isEmpty
@@ -396,6 +480,7 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.text()).isEmpty
         assertThat(contentBlockParam.image()).isEmpty
         assertThat(contentBlockParam.document()).isEmpty
+        assertThat(contentBlockParam.searchResult()).isEmpty
         assertThat(contentBlockParam.thinking()).isEmpty
         assertThat(contentBlockParam.redactedThinking()).isEmpty
         assertThat(contentBlockParam.toolUse()).isEmpty

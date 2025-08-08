@@ -67,6 +67,13 @@ private constructor(
                                     TextCitationParam.ofWebSearchResultLocation(
                                         webSearchResultLocation.toParam()
                                     )
+
+                                override fun visitSearchResultLocation(
+                                    searchResultLocation: CitationsSearchResultLocation
+                                ): TextCitationParam =
+                                    TextCitationParam.ofSearchResultLocation(
+                                        searchResultLocation.toParam()
+                                    )
                             }
                         )
                     }
@@ -217,6 +224,13 @@ private constructor(
          */
         fun addCitation(webSearchResultLocation: CitationsWebSearchResultLocation) =
             addCitation(TextCitation.ofWebSearchResultLocation(webSearchResultLocation))
+
+        /**
+         * Alias for calling [addCitation] with
+         * `TextCitation.ofSearchResultLocation(searchResultLocation)`.
+         */
+        fun addCitation(searchResultLocation: CitationsSearchResultLocation) =
+            addCitation(TextCitation.ofSearchResultLocation(searchResultLocation))
 
         fun text(text: String) = text(JsonField.of(text))
 
