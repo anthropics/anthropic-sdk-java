@@ -37,20 +37,27 @@ import software.amazon.eventstream.MessageDecoder
  * The Amazon Bedrock backend that manages the AWS credentials required to access an Anthropic AI
  * model on the Bedrock service and adapts requests and responses to Bedrock's requirements.
  *
- * Amazon Bedrock requires cryptographically-signed requests using credentials issued by AWS. These
- * can be provided via system properties, environment variables, or other AWS facilities. They can
- * be resolved automatically by the default AWS provider chain by calling [Builder.fromEnv].
- * Alternatively, a custom AWS credentials provider can be configured on the builder and used to
- * resolve the credentials. Both the credentials and the region can be resolved independently and
- * passed to [Builder.awsCredentials] and [Builder.region] should an alternative method of
- * resolution be required.
+ * Amazon Bedrock supports two authentication methods:
+ * 1. AWS SigV4 signing using AWS credentials (traditional method)
+ * 2. Bearer token authentication using Amazon Bedrock API keys
  *
- * See the Amazon Bedrock and AWS documentation for details on how to configure AWS credentials.
+ * For SigV4 authentication, credentials can be provided via system properties, environment 
+ * variables, or other AWS facilities. They can be resolved automatically by the default AWS 
+ * provider chain by calling [Builder.fromEnv]. Alternatively, a custom AWS credentials provider 
+ * can be configured on the builder.
+ *
+ * For Bearer token authentication, set the AWS_BEARER_TOKEN_BEDROCK environment variable with
+ * your Amazon Bedrock API key. When this environment variable is present, Bearer token 
+ * authentication will be used instead of SigV4 signing.
+ *
+ * See the Amazon Bedrock and AWS documentation for details on how to configure AWS credentials
+ * and API keys.
  */
 class BedrockBackend
 private constructor(
-    @get:JvmName("awsCredentialsProvider") val awsCredentialsProvider: AwsCredentialsProvider,
+    @get:JvmName("awsCredentialsProvider") val awsCredentialsProvider: AwsCredentialsProvider?,
     @get:JvmName("region") val region: Region,
+    @get:JvmName("bearerToken") val bearerToken: String?,
 ) : Backend {
 
     private val jsonMapper = jsonMapper()
@@ -69,12 +76,12 @@ private constructor(
         )
 
     /** Gets the AWS credentials resolved from the configured AWS credentials provider. */
-    val awsCredentials: AwsCredentials
+    val awsCredentials: AwsCredentials?
         // Depending on the source of the credentials, they may need to be periodically refreshed.
         // This can be done in the background if a credentials provider is configured to do so.
         // Typically, a provider will cache the periodically refreshed credentials, so resolving
         // them is a simple cache read and does not add much overhead.
-        @JvmName("awsCredentials") get() = awsCredentialsProvider.resolveCredentials()
+        @JvmName("awsCredentials") get() = awsCredentialsProvider?.resolveCredentials()
 
     companion object {
         private const val ANTHROPIC_VERSION = "bedrock-2023-05-31"
@@ -82,6 +89,7 @@ private constructor(
         private const val HEADER_ANTHROPIC_BETA = "anthropic-beta"
         private const val HEADER_CONTENT_TYPE = "content-type"
         private const val CONTENT_TYPE_JSON = "application/json"
+        private const val ENV_AWS_BEARER_TOKEN_BEDROCK = "AWS_BEARER_TOKEN_BEDROCK"
 
         /**
          * The name of the header that identifies the content type for the "payloads" of AWS
@@ -105,8 +113,10 @@ private constructor(
         @JvmStatic fun builder() = Builder()
 
         /**
-         * Creates a Bedrock Backend configured to use the default AWS credentials provider. See
-         * [Builder.fromEnv] for more details, or to configure a different provider.
+         * Creates a Bedrock Backend configured to use either Bearer token authentication
+         * (if AWS_BEARER_TOKEN_BEDROCK environment variable is set) or the default AWS 
+         * credentials provider. See [Builder.fromEnv] for more details, or to configure 
+         * a different provider.
          */
         @JvmStatic fun fromEnv() = builder().fromEnv().build()
 
@@ -194,6 +204,24 @@ private constructor(
             "Request already authorized for Bedrock."
         }
 
+        // Use Bearer token authentication if available, otherwise fall back to SigV4
+        return if (bearerToken != null) {
+            authorizeBearerTokenRequest(request)
+        } else {
+            authorizeSigV4Request(request)
+        }
+    }
+
+    private fun authorizeBearerTokenRequest(request: HttpRequest): HttpRequest {
+        return request.toBuilder()
+            .putHeader("Authorization", "Bearer $bearerToken")
+            .build()
+    }
+
+    private fun authorizeSigV4Request(request: HttpRequest): HttpRequest {
+        val credentials = awsCredentials
+            ?: throw AnthropicInvalidDataException("No AWS credentials available for SigV4 signing")
+
         val awsSignRequest =
             SdkHttpRequest.builder()
                 .uri(request.baseUrl)
@@ -227,7 +255,7 @@ private constructor(
         val awsSignedRequest: SdkHttpRequest =
             AwsV4HttpSigner.create()
                 .sign { r: SignRequest.Builder<AwsCredentialsIdentity?> ->
-                    r.identity(awsCredentials)
+                    r.identity(credentials)
                         .request(awsSignRequest)
                         .payload(ContentStreamProvider.fromByteArray(bodyData.toByteArray()))
                         // The service *signing* name "bedrock" is not the same as
@@ -340,20 +368,33 @@ private constructor(
      * A builder for a [BedrockBackend] used to connect an Anthropic client to an Amazon Bedrock
      * backend service.
      *
-     * The AWS credentials and region can be extracted from the environment and set on the builder
-     * by calling [fromEnv] before calling [build] to create the [BedrockBackend]. Alternatively,
-     * set the AWS credentials and region explicitly via [awsCredentials] and [region] before
-     * calling [build]. A custom AWS credentials provider can be passed to [fromEnv] or
-     * [awsCredentialsProvider].
+     * The backend supports two authentication methods:
+     * 1. Bearer token authentication using Amazon Bedrock API keys
+     * 2. AWS SigV4 signing using AWS credentials (traditional method)
+     *
+     * For Bearer token authentication, set the AWS_BEARER_TOKEN_BEDROCK environment variable
+     * or call [bearerToken] with your API key.
+     *
+     * For SigV4 authentication, AWS credentials and region can be extracted from the environment 
+     * and set on the builder by calling [fromEnv] before calling [build] to create the 
+     * [BedrockBackend]. Alternatively, set the AWS credentials and region explicitly via 
+     * [awsCredentials] and [region] before calling [build]. A custom AWS credentials provider 
+     * can be passed to [fromEnv] or [awsCredentialsProvider].
      */
     class Builder internal constructor() {
         private var awsCredentialsProvider: AwsCredentialsProvider? = null
 
         private var region: Region? = null
+        
+        private var bearerToken: String? = null
 
         /**
-         * Resolves the AWS credentials from the environment, or other sources configured by the
-         * credentials provider. If no provider is given, the AWS `DefaultCredentialsProvider` is
+         * Resolves authentication from the environment. First checks for AWS_BEARER_TOKEN_BEDROCK
+         * environment variable for Bearer token authentication. If not found, falls back to
+         * resolving AWS credentials from the environment or other sources configured by the
+         * credentials provider.
+         *
+         * If no provider is given for SigV4 authentication, the AWS `DefaultCredentialsProvider` is
          * used, which is suitable for many use cases. The configuration of that provider follows
          * its usual defaults, so asynchronous refreshing is not enabled. See the AWS documentation
          * for details. For other use cases, pass a credentials provider configured as required. The
@@ -363,25 +404,33 @@ private constructor(
          * The region is also resolved immediately using the default AWS region provider chain. Once
          * resolved here, the region will not be changed again.
          *
-         * When called, this method will immediately attempt to resolve the AWS credentials and
+         * When called, this method will immediately attempt to resolve authentication and
          * region. An error will occur if they cannot be resolved.
          */
         @JvmOverloads
         fun fromEnv(
             awsCredentialsProvider: AwsCredentialsProvider = DefaultCredentialsProvider.create()
         ) = apply {
-            awsCredentialsProvider(awsCredentialsProvider)
+            // Check for Bearer token first
+            val envBearerToken = System.getenv(ENV_AWS_BEARER_TOKEN_BEDROCK)
+            if (envBearerToken != null && envBearerToken.isNotBlank()) {
+                bearerToken(envBearerToken)
+            } else {
+                // Fall back to SigV4 authentication
+                awsCredentialsProvider(awsCredentialsProvider)
 
-            try {
-                // A fail-fast check to ensure that the provider and the environment are properly
-                // configured. There is no need to store the result.
-                awsCredentialsProvider.resolveCredentials()
-            } catch (e: Exception) {
-                throw IllegalStateException(
-                    "No AWS access key ID or AWS secret access key found.",
-                    e,
-                )
+                try {
+                    // A fail-fast check to ensure that the provider and the environment are properly
+                    // configured. There is no need to store the result.
+                    awsCredentialsProvider.resolveCredentials()
+                } catch (e: Exception) {
+                    throw IllegalStateException(
+                        "No AWS access key ID or AWS secret access key found.",
+                        e,
+                    )
+                }
             }
+            
             try {
                 region = DefaultAwsRegionProviderChain.builder().build().region
             } catch (e: Exception) {
@@ -416,10 +465,28 @@ private constructor(
          */
         fun region(region: Region) = apply { this.region = region }
 
-        fun build() =
-            BedrockBackend(
-                checkRequired("awsCredentialsProvider", awsCredentialsProvider),
-                checkRequired("region", region),
+        /**
+         * Sets the Bearer token for Amazon Bedrock API key authentication. When set, this will
+         * be used instead of AWS SigV4 signing. The token overrides any token previously set
+         * by [fromEnv] or previous calls to this method.
+         */
+        fun bearerToken(bearerToken: String) = apply { this.bearerToken = bearerToken }
+
+        fun build(): BedrockBackend {
+            val requiredRegion = checkRequired("region", region)
+            
+            // Either bearer token or AWS credentials provider is required
+            if (bearerToken == null && awsCredentialsProvider == null) {
+                throw IllegalStateException(
+                    "Either bearerToken or awsCredentialsProvider must be configured"
+                )
+            }
+            
+            return BedrockBackend(
+                awsCredentialsProvider,
+                requiredRegion,
+                bearerToken,
             )
+        }
     }
 }
