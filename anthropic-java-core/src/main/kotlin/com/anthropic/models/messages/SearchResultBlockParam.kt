@@ -19,37 +19,55 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class TextBlockParam
+class SearchResultBlockParam
 private constructor(
-    private val text: JsonField<String>,
+    private val content: JsonField<List<TextBlockParam>>,
+    private val source: JsonField<String>,
+    private val title: JsonField<String>,
     private val type: JsonValue,
     private val cacheControl: JsonField<CacheControlEphemeral>,
-    private val citations: JsonField<List<TextCitationParam>>,
+    private val citations: JsonField<CitationsConfigParam>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("text") @ExcludeMissing text: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("content")
+        @ExcludeMissing
+        content: JsonField<List<TextBlockParam>> = JsonMissing.of(),
+        @JsonProperty("source") @ExcludeMissing source: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("title") @ExcludeMissing title: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
         @JsonProperty("cache_control")
         @ExcludeMissing
         cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of(),
         @JsonProperty("citations")
         @ExcludeMissing
-        citations: JsonField<List<TextCitationParam>> = JsonMissing.of(),
-    ) : this(text, type, cacheControl, citations, mutableMapOf())
+        citations: JsonField<CitationsConfigParam> = JsonMissing.of(),
+    ) : this(content, source, title, type, cacheControl, citations, mutableMapOf())
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun text(): String = text.getRequired("text")
+    fun content(): List<TextBlockParam> = content.getRequired("content")
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun source(): String = source.getRequired("source")
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun title(): String = title.getRequired("title")
 
     /**
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("text")
+     * JsonValue.from("search_result")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -69,14 +87,30 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun citations(): Optional<List<TextCitationParam>> = citations.getOptional("citations")
+    fun citations(): Optional<CitationsConfigParam> = citations.getOptional("citations")
 
     /**
-     * Returns the raw JSON value of [text].
+     * Returns the raw JSON value of [content].
      *
-     * Unlike [text], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [content], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("text") @ExcludeMissing fun _text(): JsonField<String> = text
+    @JsonProperty("content")
+    @ExcludeMissing
+    fun _content(): JsonField<List<TextBlockParam>> = content
+
+    /**
+     * Returns the raw JSON value of [source].
+     *
+     * Unlike [source], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("source") @ExcludeMissing fun _source(): JsonField<String> = source
+
+    /**
+     * Returns the raw JSON value of [title].
+     *
+     * Unlike [title], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("title") @ExcludeMissing fun _title(): JsonField<String> = title
 
     /**
      * Returns the raw JSON value of [cacheControl].
@@ -94,7 +128,7 @@ private constructor(
      */
     @JsonProperty("citations")
     @ExcludeMissing
-    fun _citations(): JsonField<List<TextCitationParam>> = citations
+    fun _citations(): JsonField<CitationsConfigParam> = citations
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -111,43 +145,87 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [TextBlockParam].
+         * Returns a mutable builder for constructing an instance of [SearchResultBlockParam].
          *
          * The following fields are required:
          * ```java
-         * .text()
+         * .content()
+         * .source()
+         * .title()
          * ```
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [TextBlockParam]. */
+    /** A builder for [SearchResultBlockParam]. */
     class Builder internal constructor() {
 
-        private var text: JsonField<String>? = null
-        private var type: JsonValue = JsonValue.from("text")
+        private var content: JsonField<MutableList<TextBlockParam>>? = null
+        private var source: JsonField<String>? = null
+        private var title: JsonField<String>? = null
+        private var type: JsonValue = JsonValue.from("search_result")
         private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
-        private var citations: JsonField<MutableList<TextCitationParam>>? = null
+        private var citations: JsonField<CitationsConfigParam> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(textBlockParam: TextBlockParam) = apply {
-            text = textBlockParam.text
-            type = textBlockParam.type
-            cacheControl = textBlockParam.cacheControl
-            citations = textBlockParam.citations.map { it.toMutableList() }
-            additionalProperties = textBlockParam.additionalProperties.toMutableMap()
+        internal fun from(searchResultBlockParam: SearchResultBlockParam) = apply {
+            content = searchResultBlockParam.content.map { it.toMutableList() }
+            source = searchResultBlockParam.source
+            title = searchResultBlockParam.title
+            type = searchResultBlockParam.type
+            cacheControl = searchResultBlockParam.cacheControl
+            citations = searchResultBlockParam.citations
+            additionalProperties = searchResultBlockParam.additionalProperties.toMutableMap()
         }
 
-        fun text(text: String) = text(JsonField.of(text))
+        fun content(content: List<TextBlockParam>) = content(JsonField.of(content))
 
         /**
-         * Sets [Builder.text] to an arbitrary JSON value.
+         * Sets [Builder.content] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.text] with a well-typed [String] value instead. This
+         * You should usually call [Builder.content] with a well-typed `List<TextBlockParam>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun content(content: JsonField<List<TextBlockParam>>) = apply {
+            this.content = content.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [TextBlockParam] to [Builder.content].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addContent(content: TextBlockParam) = apply {
+            this.content =
+                (this.content ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("content", it).add(content)
+                }
+        }
+
+        /** Alias for calling [addContent] with `content.toParam()`. */
+        fun addContent(content: TextBlock) = addContent(content.toParam())
+
+        fun source(source: String) = source(JsonField.of(source))
+
+        /**
+         * Sets [Builder.source] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.source] with a well-typed [String] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun text(text: JsonField<String>) = apply { this.text = text }
+        fun source(source: JsonField<String>) = apply { this.source = source }
+
+        fun title(title: String) = title(JsonField.of(title))
+
+        /**
+         * Sets [Builder.title] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.title] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun title(title: JsonField<String>) = apply { this.title = title }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -155,7 +233,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("text")
+         * JsonValue.from("search_result")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -182,86 +260,18 @@ private constructor(
             this.cacheControl = cacheControl
         }
 
-        fun citations(citations: List<TextCitationParam>?) =
-            citations(JsonField.ofNullable(citations))
-
-        /** Alias for calling [Builder.citations] with `citations.orElse(null)`. */
-        fun citations(citations: Optional<List<TextCitationParam>>) =
-            citations(citations.getOrNull())
+        fun citations(citations: CitationsConfigParam) = citations(JsonField.of(citations))
 
         /**
          * Sets [Builder.citations] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.citations] with a well-typed `List<TextCitationParam>`
+         * You should usually call [Builder.citations] with a well-typed [CitationsConfigParam]
          * value instead. This method is primarily for setting the field to an undocumented or not
          * yet supported value.
          */
-        fun citations(citations: JsonField<List<TextCitationParam>>) = apply {
-            this.citations = citations.map { it.toMutableList() }
+        fun citations(citations: JsonField<CitationsConfigParam>) = apply {
+            this.citations = citations
         }
-
-        /**
-         * Adds a single [TextCitationParam] to [citations].
-         *
-         * @throws IllegalStateException if the field was previously set to a non-list.
-         */
-        fun addCitation(citation: TextCitationParam) = apply {
-            citations =
-                (citations ?: JsonField.of(mutableListOf())).also {
-                    checkKnown("citations", it).add(citation)
-                }
-        }
-
-        /**
-         * Alias for calling [addCitation] with `TextCitationParam.ofCharLocation(charLocation)`.
-         */
-        fun addCitation(charLocation: CitationCharLocationParam) =
-            addCitation(TextCitationParam.ofCharLocation(charLocation))
-
-        /** Alias for calling [addCitation] with `charLocation.toParam()`. */
-        fun addCitation(charLocation: CitationCharLocation) = addCitation(charLocation.toParam())
-
-        /**
-         * Alias for calling [addCitation] with `TextCitationParam.ofPageLocation(pageLocation)`.
-         */
-        fun addCitation(pageLocation: CitationPageLocationParam) =
-            addCitation(TextCitationParam.ofPageLocation(pageLocation))
-
-        /** Alias for calling [addCitation] with `pageLocation.toParam()`. */
-        fun addCitation(pageLocation: CitationPageLocation) = addCitation(pageLocation.toParam())
-
-        /**
-         * Alias for calling [addCitation] with
-         * `TextCitationParam.ofContentBlockLocation(contentBlockLocation)`.
-         */
-        fun addCitation(contentBlockLocation: CitationContentBlockLocationParam) =
-            addCitation(TextCitationParam.ofContentBlockLocation(contentBlockLocation))
-
-        /** Alias for calling [addCitation] with `contentBlockLocation.toParam()`. */
-        fun addCitation(contentBlockLocation: CitationContentBlockLocation) =
-            addCitation(contentBlockLocation.toParam())
-
-        /**
-         * Alias for calling [addCitation] with
-         * `TextCitationParam.ofWebSearchResultLocation(webSearchResultLocation)`.
-         */
-        fun addCitation(webSearchResultLocation: CitationWebSearchResultLocationParam) =
-            addCitation(TextCitationParam.ofWebSearchResultLocation(webSearchResultLocation))
-
-        /** Alias for calling [addCitation] with `webSearchResultLocation.toParam()`. */
-        fun addCitation(webSearchResultLocation: CitationsWebSearchResultLocation) =
-            addCitation(webSearchResultLocation.toParam())
-
-        /**
-         * Alias for calling [addCitation] with
-         * `TextCitationParam.ofSearchResultLocation(searchResultLocation)`.
-         */
-        fun addCitation(searchResultLocation: CitationSearchResultLocationParam) =
-            addCitation(TextCitationParam.ofSearchResultLocation(searchResultLocation))
-
-        /** Alias for calling [addCitation] with `searchResultLocation.toParam()`. */
-        fun addCitation(searchResultLocation: CitationsSearchResultLocation) =
-            addCitation(searchResultLocation.toParam())
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -283,42 +293,48 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [TextBlockParam].
+         * Returns an immutable instance of [SearchResultBlockParam].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
          * ```java
-         * .text()
+         * .content()
+         * .source()
+         * .title()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): TextBlockParam =
-            TextBlockParam(
-                checkRequired("text", text),
+        fun build(): SearchResultBlockParam =
+            SearchResultBlockParam(
+                checkRequired("content", content).map { it.toImmutable() },
+                checkRequired("source", source),
+                checkRequired("title", title),
                 type,
                 cacheControl,
-                (citations ?: JsonMissing.of()).map { it.toImmutable() },
+                citations,
                 additionalProperties.toMutableMap(),
             )
     }
 
     private var validated: Boolean = false
 
-    fun validate(): TextBlockParam = apply {
+    fun validate(): SearchResultBlockParam = apply {
         if (validated) {
             return@apply
         }
 
-        text()
+        content().forEach { it.validate() }
+        source()
+        title()
         _type().let {
-            if (it != JsonValue.from("text")) {
+            if (it != JsonValue.from("search_result")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
         cacheControl().ifPresent { it.validate() }
-        citations().ifPresent { it.forEach { it.validate() } }
+        citations().ifPresent { it.validate() }
         validated = true
     }
 
@@ -337,25 +353,27 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (text.asKnown().isPresent) 1 else 0) +
-            type.let { if (it == JsonValue.from("text")) 1 else 0 } +
+        (content.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (source.asKnown().isPresent) 1 else 0) +
+            (if (title.asKnown().isPresent) 1 else 0) +
+            type.let { if (it == JsonValue.from("search_result")) 1 else 0 } +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
-            (citations.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+            (citations.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return /* spotless:off */ other is TextBlockParam && text == other.text && type == other.type && cacheControl == other.cacheControl && citations == other.citations && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is SearchResultBlockParam && content == other.content && source == other.source && title == other.title && type == other.type && cacheControl == other.cacheControl && citations == other.citations && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(text, type, cacheControl, citations, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(content, source, title, type, cacheControl, citations, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "TextBlockParam{text=$text, type=$type, cacheControl=$cacheControl, citations=$citations, additionalProperties=$additionalProperties}"
+        "SearchResultBlockParam{content=$content, source=$source, title=$title, type=$type, cacheControl=$cacheControl, citations=$citations, additionalProperties=$additionalProperties}"
 }

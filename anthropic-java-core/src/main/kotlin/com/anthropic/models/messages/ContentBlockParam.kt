@@ -26,6 +26,7 @@ private constructor(
     private val text: TextBlockParam? = null,
     private val image: ImageBlockParam? = null,
     private val document: DocumentBlockParam? = null,
+    private val searchResult: SearchResultBlockParam? = null,
     private val thinking: ThinkingBlockParam? = null,
     private val redactedThinking: RedactedThinkingBlockParam? = null,
     private val toolUse: ToolUseBlockParam? = null,
@@ -46,6 +47,9 @@ private constructor(
      * URL.
      */
     fun document(): Optional<DocumentBlockParam> = Optional.ofNullable(document)
+
+    /** A search result block containing source, title, and content from search operations. */
+    fun searchResult(): Optional<SearchResultBlockParam> = Optional.ofNullable(searchResult)
 
     /** A block specifying internal thinking by the model. */
     fun thinking(): Optional<ThinkingBlockParam> = Optional.ofNullable(thinking)
@@ -71,6 +75,8 @@ private constructor(
 
     fun isDocument(): Boolean = document != null
 
+    fun isSearchResult(): Boolean = searchResult != null
+
     fun isThinking(): Boolean = thinking != null
 
     fun isRedactedThinking(): Boolean = redactedThinking != null
@@ -94,6 +100,9 @@ private constructor(
      * URL.
      */
     fun asDocument(): DocumentBlockParam = document.getOrThrow("document")
+
+    /** A search result block containing source, title, and content from search operations. */
+    fun asSearchResult(): SearchResultBlockParam = searchResult.getOrThrow("searchResult")
 
     /** A block specifying internal thinking by the model. */
     fun asThinking(): ThinkingBlockParam = thinking.getOrThrow("thinking")
@@ -120,6 +129,7 @@ private constructor(
             text != null -> visitor.visitText(text)
             image != null -> visitor.visitImage(image)
             document != null -> visitor.visitDocument(document)
+            searchResult != null -> visitor.visitSearchResult(searchResult)
             thinking != null -> visitor.visitThinking(thinking)
             redactedThinking != null -> visitor.visitRedactedThinking(redactedThinking)
             toolUse != null -> visitor.visitToolUse(toolUse)
@@ -148,6 +158,10 @@ private constructor(
 
                 override fun visitDocument(document: DocumentBlockParam) {
                     document.validate()
+                }
+
+                override fun visitSearchResult(searchResult: SearchResultBlockParam) {
+                    searchResult.validate()
                 }
 
                 override fun visitThinking(thinking: ThinkingBlockParam) {
@@ -203,6 +217,9 @@ private constructor(
 
                 override fun visitDocument(document: DocumentBlockParam) = document.validity()
 
+                override fun visitSearchResult(searchResult: SearchResultBlockParam) =
+                    searchResult.validity()
+
                 override fun visitThinking(thinking: ThinkingBlockParam) = thinking.validity()
 
                 override fun visitRedactedThinking(redactedThinking: RedactedThinkingBlockParam) =
@@ -229,16 +246,17 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ContentBlockParam && text == other.text && image == other.image && document == other.document && thinking == other.thinking && redactedThinking == other.redactedThinking && toolUse == other.toolUse && toolResult == other.toolResult && serverToolUse == other.serverToolUse && webSearchToolResult == other.webSearchToolResult /* spotless:on */
+        return /* spotless:off */ other is ContentBlockParam && text == other.text && image == other.image && document == other.document && searchResult == other.searchResult && thinking == other.thinking && redactedThinking == other.redactedThinking && toolUse == other.toolUse && toolResult == other.toolResult && serverToolUse == other.serverToolUse && webSearchToolResult == other.webSearchToolResult /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image, document, thinking, redactedThinking, toolUse, toolResult, serverToolUse, webSearchToolResult) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image, document, searchResult, thinking, redactedThinking, toolUse, toolResult, serverToolUse, webSearchToolResult) /* spotless:on */
 
     override fun toString(): String =
         when {
             text != null -> "ContentBlockParam{text=$text}"
             image != null -> "ContentBlockParam{image=$image}"
             document != null -> "ContentBlockParam{document=$document}"
+            searchResult != null -> "ContentBlockParam{searchResult=$searchResult}"
             thinking != null -> "ContentBlockParam{thinking=$thinking}"
             redactedThinking != null -> "ContentBlockParam{redactedThinking=$redactedThinking}"
             toolUse != null -> "ContentBlockParam{toolUse=$toolUse}"
@@ -264,6 +282,11 @@ private constructor(
          */
         @JvmStatic
         fun ofDocument(document: DocumentBlockParam) = ContentBlockParam(document = document)
+
+        /** A search result block containing source, title, and content from search operations. */
+        @JvmStatic
+        fun ofSearchResult(searchResult: SearchResultBlockParam) =
+            ContentBlockParam(searchResult = searchResult)
 
         /** A block specifying internal thinking by the model. */
         @JvmStatic
@@ -308,6 +331,9 @@ private constructor(
          * via a URL.
          */
         fun visitDocument(document: DocumentBlockParam): T
+
+        /** A search result block containing source, title, and content from search operations. */
+        fun visitSearchResult(searchResult: SearchResultBlockParam): T
 
         /** A block specifying internal thinking by the model. */
         fun visitThinking(thinking: ThinkingBlockParam): T
@@ -362,6 +388,11 @@ private constructor(
                         ContentBlockParam(document = it, _json = json)
                     } ?: ContentBlockParam(_json = json)
                 }
+                "search_result" -> {
+                    return tryDeserialize(node, jacksonTypeRef<SearchResultBlockParam>())?.let {
+                        ContentBlockParam(searchResult = it, _json = json)
+                    } ?: ContentBlockParam(_json = json)
+                }
                 "thinking" -> {
                     return tryDeserialize(node, jacksonTypeRef<ThinkingBlockParam>())?.let {
                         ContentBlockParam(thinking = it, _json = json)
@@ -409,6 +440,7 @@ private constructor(
                 value.text != null -> generator.writeObject(value.text)
                 value.image != null -> generator.writeObject(value.image)
                 value.document != null -> generator.writeObject(value.document)
+                value.searchResult != null -> generator.writeObject(value.searchResult)
                 value.thinking != null -> generator.writeObject(value.thinking)
                 value.redactedThinking != null -> generator.writeObject(value.redactedThinking)
                 value.toolUse != null -> generator.writeObject(value.toolUse)

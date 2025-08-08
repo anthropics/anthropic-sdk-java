@@ -493,6 +493,7 @@ private constructor(
         private constructor(
             private val text: TextBlockParam? = null,
             private val image: ImageBlockParam? = null,
+            private val searchResult: SearchResultBlockParam? = null,
             private val _json: JsonValue? = null,
         ) {
 
@@ -500,13 +501,19 @@ private constructor(
 
             fun image(): Optional<ImageBlockParam> = Optional.ofNullable(image)
 
+            fun searchResult(): Optional<SearchResultBlockParam> = Optional.ofNullable(searchResult)
+
             fun isText(): Boolean = text != null
 
             fun isImage(): Boolean = image != null
 
+            fun isSearchResult(): Boolean = searchResult != null
+
             fun asText(): TextBlockParam = text.getOrThrow("text")
 
             fun asImage(): ImageBlockParam = image.getOrThrow("image")
+
+            fun asSearchResult(): SearchResultBlockParam = searchResult.getOrThrow("searchResult")
 
             fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -514,6 +521,7 @@ private constructor(
                 when {
                     text != null -> visitor.visitText(text)
                     image != null -> visitor.visitImage(image)
+                    searchResult != null -> visitor.visitSearchResult(searchResult)
                     else -> visitor.unknown(_json)
                 }
 
@@ -532,6 +540,10 @@ private constructor(
 
                         override fun visitImage(image: ImageBlockParam) {
                             image.validate()
+                        }
+
+                        override fun visitSearchResult(searchResult: SearchResultBlockParam) {
+                            searchResult.validate()
                         }
                     }
                 )
@@ -560,6 +572,9 @@ private constructor(
 
                         override fun visitImage(image: ImageBlockParam) = image.validity()
 
+                        override fun visitSearchResult(searchResult: SearchResultBlockParam) =
+                            searchResult.validity()
+
                         override fun unknown(json: JsonValue?) = 0
                     }
                 )
@@ -569,15 +584,16 @@ private constructor(
                     return true
                 }
 
-                return /* spotless:off */ other is Block && text == other.text && image == other.image /* spotless:on */
+                return /* spotless:off */ other is Block && text == other.text && image == other.image && searchResult == other.searchResult /* spotless:on */
             }
 
-            override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image) /* spotless:on */
+            override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image, searchResult) /* spotless:on */
 
             override fun toString(): String =
                 when {
                     text != null -> "Block{text=$text}"
                     image != null -> "Block{image=$image}"
+                    searchResult != null -> "Block{searchResult=$searchResult}"
                     _json != null -> "Block{_unknown=$_json}"
                     else -> throw IllegalStateException("Invalid Block")
                 }
@@ -587,6 +603,10 @@ private constructor(
                 @JvmStatic fun ofText(text: TextBlockParam) = Block(text = text)
 
                 @JvmStatic fun ofImage(image: ImageBlockParam) = Block(image = image)
+
+                @JvmStatic
+                fun ofSearchResult(searchResult: SearchResultBlockParam) =
+                    Block(searchResult = searchResult)
             }
 
             /**
@@ -597,6 +617,8 @@ private constructor(
                 fun visitText(text: TextBlockParam): T
 
                 fun visitImage(image: ImageBlockParam): T
+
+                fun visitSearchResult(searchResult: SearchResultBlockParam): T
 
                 /**
                  * Maps an unknown variant of [Block] to a value of type [T].
@@ -630,6 +652,11 @@ private constructor(
                                 Block(image = it, _json = json)
                             } ?: Block(_json = json)
                         }
+                        "search_result" -> {
+                            return tryDeserialize(node, jacksonTypeRef<SearchResultBlockParam>())
+                                ?.let { Block(searchResult = it, _json = json) }
+                                ?: Block(_json = json)
+                        }
                     }
 
                     return Block(_json = json)
@@ -646,6 +673,7 @@ private constructor(
                     when {
                         value.text != null -> generator.writeObject(value.text)
                         value.image != null -> generator.writeObject(value.image)
+                        value.searchResult != null -> generator.writeObject(value.searchResult)
                         value._json != null -> generator.writeObject(value._json)
                         else -> throw IllegalStateException("Invalid Block")
                     }

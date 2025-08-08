@@ -8,6 +8,7 @@ import com.anthropic.models.messages.CitationCharLocation
 import com.anthropic.models.messages.CitationContentBlockLocation
 import com.anthropic.models.messages.CitationPageLocation
 import com.anthropic.models.messages.CitationsDelta
+import com.anthropic.models.messages.CitationsSearchResultLocation
 import com.anthropic.models.messages.CitationsWebSearchResultLocation
 import com.anthropic.models.messages.ContentBlock
 import com.anthropic.models.messages.InputJsonDelta
@@ -201,6 +202,10 @@ class MessageAccumulator private constructor() {
                         override fun visitWebSearchResultLocation(
                             citationsWebSearchResultLocation: CitationsWebSearchResultLocation
                         ) = TextCitation.ofWebSearchResultLocation(citationsWebSearchResultLocation)
+
+                        override fun visitSearchResultLocation(
+                            searchResultLocation: CitationsSearchResultLocation
+                        ) = TextCitation.ofSearchResultLocation(searchResultLocation)
                     }
                 )
     }

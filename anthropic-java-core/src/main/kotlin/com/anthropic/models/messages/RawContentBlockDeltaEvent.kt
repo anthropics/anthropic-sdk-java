@@ -194,6 +194,13 @@ private constructor(
                 CitationsDelta.Citation.ofWebSearchResultLocation(webSearchResultLocation)
             )
 
+        /**
+         * Alias for calling [citationsDelta] with
+         * `CitationsDelta.Citation.ofSearchResultLocation(searchResultLocation)`.
+         */
+        fun citationsDelta(searchResultLocation: CitationsSearchResultLocation) =
+            citationsDelta(CitationsDelta.Citation.ofSearchResultLocation(searchResultLocation))
+
         /** Alias for calling [delta] with `RawContentBlockDelta.ofThinking(thinking)`. */
         fun delta(thinking: ThinkingDelta) = delta(RawContentBlockDelta.ofThinking(thinking))
 
