@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.5.0 (2025-08-12)
+
+Full Changelog: [v2.4.0...v2.5.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.4.0...v2.5.0)
+
+### Features
+
+* **betas:** add context-1m-2025-08-07 ([9207405](https://github.com/anthropics/anthropic-sdk-java/commit/92074054d4afc94af62689ce060decf186d8dca1))
+
+
+### Chores
+
+* **internal:** detect breaking changes when removing endpoints ([f9f20ea](https://github.com/anthropics/anthropic-sdk-java/commit/f9f20ea6fcfacd5fa948046a87b7b48456bba91a))
+* **internal:** update comment in script ([628d8a0](https://github.com/anthropics/anthropic-sdk-java/commit/628d8a0c5450e86cfe87faa168a733ec604a624d))
+* **internal:** update test skipping reason ([86f2cd4](https://github.com/anthropics/anthropic-sdk-java/commit/86f2cd41cd7e4d7402672f964370bc9086d05214))
+* update @stainless-api/prism-cli to v5.15.0 ([5da9253](https://github.com/anthropics/anthropic-sdk-java/commit/5da9253e014708a5fa9eadd534feff329247af04))
+
 ## 2.4.0 (2025-08-08)
 
 Full Changelog: [v2.3.1...v2.4.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.3.1...v2.4.0)
