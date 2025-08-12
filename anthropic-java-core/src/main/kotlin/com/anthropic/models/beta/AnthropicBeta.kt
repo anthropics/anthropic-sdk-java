@@ -48,6 +48,8 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
 
         @JvmField val EXTENDED_CACHE_TTL_2025_04_11 = of("extended-cache-ttl-2025-04-11")
 
+        @JvmField val CONTEXT_1M_2025_08_07 = of("context-1m-2025-08-07")
+
         @JvmStatic fun of(value: String) = AnthropicBeta(JsonField.of(value))
     }
 
@@ -67,6 +69,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         INTERLEAVED_THINKING_2025_05_14,
         CODE_EXECUTION_2025_05_22,
         EXTENDED_CACHE_TTL_2025_04_11,
+        CONTEXT_1M_2025_08_07,
     }
 
     /**
@@ -93,6 +96,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         INTERLEAVED_THINKING_2025_05_14,
         CODE_EXECUTION_2025_05_22,
         EXTENDED_CACHE_TTL_2025_04_11,
+        CONTEXT_1M_2025_08_07,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
          */
@@ -122,6 +126,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             INTERLEAVED_THINKING_2025_05_14 -> Value.INTERLEAVED_THINKING_2025_05_14
             CODE_EXECUTION_2025_05_22 -> Value.CODE_EXECUTION_2025_05_22
             EXTENDED_CACHE_TTL_2025_04_11 -> Value.EXTENDED_CACHE_TTL_2025_04_11
+            CONTEXT_1M_2025_08_07 -> Value.CONTEXT_1M_2025_08_07
             else -> Value._UNKNOWN
         }
 
@@ -149,6 +154,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             INTERLEAVED_THINKING_2025_05_14 -> Known.INTERLEAVED_THINKING_2025_05_14
             CODE_EXECUTION_2025_05_22 -> Known.CODE_EXECUTION_2025_05_22
             EXTENDED_CACHE_TTL_2025_04_11 -> Known.EXTENDED_CACHE_TTL_2025_04_11
+            CONTEXT_1M_2025_08_07 -> Known.CONTEXT_1M_2025_08_07
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }
 
