@@ -49,9 +49,17 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         @JvmField val CLAUDE_3_5_SONNET_LATEST = of("claude-3-5-sonnet-latest")
 
         /** Our previous most intelligent model */
-        @JvmField val CLAUDE_3_5_SONNET_20241022 = of("claude-3-5-sonnet-20241022")
+        @Deprecated(
+            "Will reach end-of-life on October 22, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
+        @JvmField
+        val CLAUDE_3_5_SONNET_20241022 = of("claude-3-5-sonnet-20241022")
 
-        @JvmField val CLAUDE_3_5_SONNET_20240620 = of("claude-3-5-sonnet-20240620")
+        @Deprecated(
+            "Will reach end-of-life on October 22, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
+        @JvmField
+        val CLAUDE_3_5_SONNET_20240620 = of("claude-3-5-sonnet-20240620")
 
         /** Our most capable model */
         @JvmField val CLAUDE_OPUS_4_0 = of("claude-opus-4-0")
@@ -103,8 +111,14 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         CLAUDE_4_SONNET_20250514,
         /** Our previous most intelligent model */
         CLAUDE_3_5_SONNET_LATEST,
+        @Deprecated(
+            "Will reach end-of-life on October 22, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Our previous most intelligent model */
         CLAUDE_3_5_SONNET_20241022,
+        @Deprecated(
+            "Will reach end-of-life on October 22, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         CLAUDE_3_5_SONNET_20240620,
         /** Our most capable model */
         CLAUDE_OPUS_4_0,
@@ -154,8 +168,14 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         CLAUDE_4_SONNET_20250514,
         /** Our previous most intelligent model */
         CLAUDE_3_5_SONNET_LATEST,
+        @Deprecated(
+            "Will reach end-of-life on October 22, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Our previous most intelligent model */
         CLAUDE_3_5_SONNET_20241022,
+        @Deprecated(
+            "Will reach end-of-life on October 22, 2025. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         CLAUDE_3_5_SONNET_20240620,
         /** Our most capable model */
         CLAUDE_OPUS_4_0,
