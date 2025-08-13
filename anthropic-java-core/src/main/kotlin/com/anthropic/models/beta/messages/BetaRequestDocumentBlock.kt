@@ -557,10 +557,15 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Source && base64 == other.base64 && text == other.text && content == other.content && url == other.url && file == other.file /* spotless:on */
+            return other is Source &&
+                base64 == other.base64 &&
+                text == other.text &&
+                content == other.content &&
+                url == other.url &&
+                file == other.file
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(base64, text, content, url, file) /* spotless:on */
+        override fun hashCode(): Int = Objects.hash(base64, text, content, url, file)
 
         override fun toString(): String =
             when {
@@ -677,12 +682,19 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaRequestDocumentBlock && source == other.source && type == other.type && cacheControl == other.cacheControl && citations == other.citations && context == other.context && title == other.title && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaRequestDocumentBlock &&
+            source == other.source &&
+            type == other.type &&
+            cacheControl == other.cacheControl &&
+            citations == other.citations &&
+            context == other.context &&
+            title == other.title &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(source, type, cacheControl, citations, context, title, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(source, type, cacheControl, citations, context, title, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

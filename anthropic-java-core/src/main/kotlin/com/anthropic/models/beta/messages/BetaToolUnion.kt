@@ -277,10 +277,34 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaToolUnion && betaTool == other.betaTool && bash20241022 == other.bash20241022 && bash20250124 == other.bash20250124 && codeExecutionTool20250522 == other.codeExecutionTool20250522 && computerUse20241022 == other.computerUse20241022 && computerUse20250124 == other.computerUse20250124 && textEditor20241022 == other.textEditor20241022 && textEditor20250124 == other.textEditor20250124 && textEditor20250429 == other.textEditor20250429 && textEditor20250728 == other.textEditor20250728 && webSearchTool20250305 == other.webSearchTool20250305 /* spotless:on */
+        return other is BetaToolUnion &&
+            betaTool == other.betaTool &&
+            bash20241022 == other.bash20241022 &&
+            bash20250124 == other.bash20250124 &&
+            codeExecutionTool20250522 == other.codeExecutionTool20250522 &&
+            computerUse20241022 == other.computerUse20241022 &&
+            computerUse20250124 == other.computerUse20250124 &&
+            textEditor20241022 == other.textEditor20241022 &&
+            textEditor20250124 == other.textEditor20250124 &&
+            textEditor20250429 == other.textEditor20250429 &&
+            textEditor20250728 == other.textEditor20250728 &&
+            webSearchTool20250305 == other.webSearchTool20250305
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betaTool, bash20241022, bash20250124, codeExecutionTool20250522, computerUse20241022, computerUse20250124, textEditor20241022, textEditor20250124, textEditor20250429, textEditor20250728, webSearchTool20250305) /* spotless:on */
+    override fun hashCode(): Int =
+        Objects.hash(
+            betaTool,
+            bash20241022,
+            bash20250124,
+            codeExecutionTool20250522,
+            computerUse20241022,
+            computerUse20250124,
+            textEditor20241022,
+            textEditor20250124,
+            textEditor20250429,
+            textEditor20250728,
+            webSearchTool20250305,
+        )
 
     override fun toString(): String =
         when {

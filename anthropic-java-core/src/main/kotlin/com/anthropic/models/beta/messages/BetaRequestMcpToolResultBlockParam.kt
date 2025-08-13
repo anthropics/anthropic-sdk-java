@@ -412,10 +412,12 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Content && string == other.string && betaMcpToolResultBlockParam == other.betaMcpToolResultBlockParam /* spotless:on */
+            return other is Content &&
+                string == other.string &&
+                betaMcpToolResultBlockParam == other.betaMcpToolResultBlockParam
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(string, betaMcpToolResultBlockParam) /* spotless:on */
+        override fun hashCode(): Int = Objects.hash(string, betaMcpToolResultBlockParam)
 
         override fun toString(): String =
             when {
@@ -515,12 +517,18 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaRequestMcpToolResultBlockParam && toolUseId == other.toolUseId && type == other.type && cacheControl == other.cacheControl && content == other.content && isError == other.isError && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaRequestMcpToolResultBlockParam &&
+            toolUseId == other.toolUseId &&
+            type == other.type &&
+            cacheControl == other.cacheControl &&
+            content == other.content &&
+            isError == other.isError &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(toolUseId, type, cacheControl, content, isError, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(toolUseId, type, cacheControl, content, isError, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

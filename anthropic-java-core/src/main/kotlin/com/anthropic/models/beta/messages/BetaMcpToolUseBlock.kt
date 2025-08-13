@@ -285,12 +285,18 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaMcpToolUseBlock && id == other.id && input == other.input && name == other.name && serverName == other.serverName && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaMcpToolUseBlock &&
+            id == other.id &&
+            input == other.input &&
+            name == other.name &&
+            serverName == other.serverName &&
+            type == other.type &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(id, input, name, serverName, type, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(id, input, name, serverName, type, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

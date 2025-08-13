@@ -99,10 +99,10 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaContentBlockSourceContent && text == other.text && image == other.image /* spotless:on */
+        return other is BetaContentBlockSourceContent && text == other.text && image == other.image
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image) /* spotless:on */
+    override fun hashCode(): Int = Objects.hash(text, image)
 
     override fun toString(): String =
         when {

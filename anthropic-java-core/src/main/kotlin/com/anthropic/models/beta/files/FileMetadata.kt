@@ -393,12 +393,29 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is FileMetadata && id == other.id && createdAt == other.createdAt && filename == other.filename && mimeType == other.mimeType && sizeBytes == other.sizeBytes && type == other.type && downloadable == other.downloadable && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is FileMetadata &&
+            id == other.id &&
+            createdAt == other.createdAt &&
+            filename == other.filename &&
+            mimeType == other.mimeType &&
+            sizeBytes == other.sizeBytes &&
+            type == other.type &&
+            downloadable == other.downloadable &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(id, createdAt, filename, mimeType, sizeBytes, type, downloadable, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            id,
+            createdAt,
+            filename,
+            mimeType,
+            sizeBytes,
+            type,
+            downloadable,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

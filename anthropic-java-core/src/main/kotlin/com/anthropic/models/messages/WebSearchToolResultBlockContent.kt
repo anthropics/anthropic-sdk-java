@@ -124,10 +124,12 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is WebSearchToolResultBlockContent && error == other.error && resultBlocks == other.resultBlocks /* spotless:on */
+        return other is WebSearchToolResultBlockContent &&
+            error == other.error &&
+            resultBlocks == other.resultBlocks
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(error, resultBlocks) /* spotless:on */
+    override fun hashCode(): Int = Objects.hash(error, resultBlocks)
 
     override fun toString(): String =
         when {

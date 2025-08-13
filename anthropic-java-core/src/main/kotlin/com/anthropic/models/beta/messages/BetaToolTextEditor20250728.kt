@@ -292,12 +292,17 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaToolTextEditor20250728 && name == other.name && type == other.type && cacheControl == other.cacheControl && maxCharacters == other.maxCharacters && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaToolTextEditor20250728 &&
+            name == other.name &&
+            type == other.type &&
+            cacheControl == other.cacheControl &&
+            maxCharacters == other.maxCharacters &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(name, type, cacheControl, maxCharacters, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(name, type, cacheControl, maxCharacters, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

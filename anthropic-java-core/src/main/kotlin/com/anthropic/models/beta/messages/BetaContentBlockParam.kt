@@ -327,10 +327,40 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaContentBlockParam && text == other.text && image == other.image && document == other.document && searchResult == other.searchResult && thinking == other.thinking && redactedThinking == other.redactedThinking && toolUse == other.toolUse && toolResult == other.toolResult && serverToolUse == other.serverToolUse && webSearchToolResult == other.webSearchToolResult && codeExecutionToolResult == other.codeExecutionToolResult && mcpToolUse == other.mcpToolUse && mcpToolResult == other.mcpToolResult && containerUpload == other.containerUpload /* spotless:on */
+        return other is BetaContentBlockParam &&
+            text == other.text &&
+            image == other.image &&
+            document == other.document &&
+            searchResult == other.searchResult &&
+            thinking == other.thinking &&
+            redactedThinking == other.redactedThinking &&
+            toolUse == other.toolUse &&
+            toolResult == other.toolResult &&
+            serverToolUse == other.serverToolUse &&
+            webSearchToolResult == other.webSearchToolResult &&
+            codeExecutionToolResult == other.codeExecutionToolResult &&
+            mcpToolUse == other.mcpToolUse &&
+            mcpToolResult == other.mcpToolResult &&
+            containerUpload == other.containerUpload
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image, document, searchResult, thinking, redactedThinking, toolUse, toolResult, serverToolUse, webSearchToolResult, codeExecutionToolResult, mcpToolUse, mcpToolResult, containerUpload) /* spotless:on */
+    override fun hashCode(): Int =
+        Objects.hash(
+            text,
+            image,
+            document,
+            searchResult,
+            thinking,
+            redactedThinking,
+            toolUse,
+            toolResult,
+            serverToolUse,
+            webSearchToolResult,
+            codeExecutionToolResult,
+            mcpToolUse,
+            mcpToolResult,
+            containerUpload,
+        )
 
     override fun toString(): String =
         when {

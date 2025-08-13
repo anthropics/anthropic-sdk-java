@@ -173,10 +173,24 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaRawMessageStreamEvent && messageStart == other.messageStart && messageDelta == other.messageDelta && messageStop == other.messageStop && contentBlockStart == other.contentBlockStart && contentBlockDelta == other.contentBlockDelta && contentBlockStop == other.contentBlockStop /* spotless:on */
+        return other is BetaRawMessageStreamEvent &&
+            messageStart == other.messageStart &&
+            messageDelta == other.messageDelta &&
+            messageStop == other.messageStop &&
+            contentBlockStart == other.contentBlockStart &&
+            contentBlockDelta == other.contentBlockDelta &&
+            contentBlockStop == other.contentBlockStop
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(messageStart, messageDelta, messageStop, contentBlockStart, contentBlockDelta, contentBlockStop) /* spotless:on */
+    override fun hashCode(): Int =
+        Objects.hash(
+            messageStart,
+            messageDelta,
+            messageStop,
+            contentBlockStart,
+            contentBlockDelta,
+            contentBlockStop,
+        )
 
     override fun toString(): String =
         when {

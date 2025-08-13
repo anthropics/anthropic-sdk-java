@@ -301,12 +301,14 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaTextBlock && citations == other.citations && text == other.text && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaTextBlock &&
+            citations == other.citations &&
+            text == other.text &&
+            type == other.type &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
     private val hashCode: Int by lazy { Objects.hash(citations, text, type, additionalProperties) }
-    /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 

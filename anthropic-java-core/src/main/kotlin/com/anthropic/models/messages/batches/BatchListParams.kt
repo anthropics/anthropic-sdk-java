@@ -242,10 +242,16 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BatchListParams && afterId == other.afterId && beforeId == other.beforeId && limit == other.limit && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
+        return other is BatchListParams &&
+            afterId == other.afterId &&
+            beforeId == other.beforeId &&
+            limit == other.limit &&
+            additionalHeaders == other.additionalHeaders &&
+            additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(afterId, beforeId, limit, additionalHeaders, additionalQueryParams) /* spotless:on */
+    override fun hashCode(): Int =
+        Objects.hash(afterId, beforeId, limit, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "BatchListParams{afterId=$afterId, beforeId=$beforeId, limit=$limit, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

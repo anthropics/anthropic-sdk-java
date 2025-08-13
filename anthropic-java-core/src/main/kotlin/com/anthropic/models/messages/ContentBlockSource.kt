@@ -291,10 +291,10 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Content && string == other.string && blockSource == other.blockSource /* spotless:on */
+            return other is Content && string == other.string && blockSource == other.blockSource
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(string, blockSource) /* spotless:on */
+        override fun hashCode(): Int = Objects.hash(string, blockSource)
 
         override fun toString(): String =
             when {
@@ -388,12 +388,13 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ContentBlockSource && content == other.content && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is ContentBlockSource &&
+            content == other.content &&
+            type == other.type &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
     private val hashCode: Int by lazy { Objects.hash(content, type, additionalProperties) }
-    /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 

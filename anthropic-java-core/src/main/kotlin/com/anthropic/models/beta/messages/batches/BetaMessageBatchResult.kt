@@ -137,10 +137,14 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaMessageBatchResult && succeeded == other.succeeded && errored == other.errored && canceled == other.canceled && expired == other.expired /* spotless:on */
+        return other is BetaMessageBatchResult &&
+            succeeded == other.succeeded &&
+            errored == other.errored &&
+            canceled == other.canceled &&
+            expired == other.expired
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(succeeded, errored, canceled, expired) /* spotless:on */
+    override fun hashCode(): Int = Objects.hash(succeeded, errored, canceled, expired)
 
     override fun toString(): String =
         when {

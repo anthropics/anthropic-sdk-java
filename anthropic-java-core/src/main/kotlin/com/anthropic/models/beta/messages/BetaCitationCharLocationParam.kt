@@ -364,12 +364,27 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaCitationCharLocationParam && citedText == other.citedText && documentIndex == other.documentIndex && documentTitle == other.documentTitle && endCharIndex == other.endCharIndex && startCharIndex == other.startCharIndex && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaCitationCharLocationParam &&
+            citedText == other.citedText &&
+            documentIndex == other.documentIndex &&
+            documentTitle == other.documentTitle &&
+            endCharIndex == other.endCharIndex &&
+            startCharIndex == other.startCharIndex &&
+            type == other.type &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(citedText, documentIndex, documentTitle, endCharIndex, startCharIndex, type, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            citedText,
+            documentIndex,
+            documentTitle,
+            endCharIndex,
+            startCharIndex,
+            type,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

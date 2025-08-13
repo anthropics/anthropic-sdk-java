@@ -141,10 +141,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaRawContentBlockDelta && text == other.text && inputJson == other.inputJson && citations == other.citations && thinking == other.thinking && signature == other.signature /* spotless:on */
+        return other is BetaRawContentBlockDelta &&
+            text == other.text &&
+            inputJson == other.inputJson &&
+            citations == other.citations &&
+            thinking == other.thinking &&
+            signature == other.signature
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, inputJson, citations, thinking, signature) /* spotless:on */
+    override fun hashCode(): Int = Objects.hash(text, inputJson, citations, thinking, signature)
 
     override fun toString(): String =
         when {

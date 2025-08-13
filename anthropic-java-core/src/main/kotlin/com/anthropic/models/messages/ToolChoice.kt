@@ -139,10 +139,14 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ToolChoice && auto == other.auto && any == other.any && tool == other.tool && none == other.none /* spotless:on */
+        return other is ToolChoice &&
+            auto == other.auto &&
+            any == other.any &&
+            tool == other.tool &&
+            none == other.none
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(auto, any, tool, none) /* spotless:on */
+    override fun hashCode(): Int = Objects.hash(auto, any, tool, none)
 
     override fun toString(): String =
         when {

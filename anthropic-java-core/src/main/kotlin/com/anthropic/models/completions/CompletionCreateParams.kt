@@ -1127,12 +1127,31 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Body && maxTokensToSample == other.maxTokensToSample && model == other.model && prompt == other.prompt && metadata == other.metadata && stopSequences == other.stopSequences && temperature == other.temperature && topK == other.topK && topP == other.topP && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is Body &&
+                maxTokensToSample == other.maxTokensToSample &&
+                model == other.model &&
+                prompt == other.prompt &&
+                metadata == other.metadata &&
+                stopSequences == other.stopSequences &&
+                temperature == other.temperature &&
+                topK == other.topK &&
+                topP == other.topP &&
+                additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(maxTokensToSample, model, prompt, metadata, stopSequences, temperature, topK, topP, additionalProperties) }
-        /* spotless:on */
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                maxTokensToSample,
+                model,
+                prompt,
+                metadata,
+                stopSequences,
+                temperature,
+                topK,
+                topP,
+                additionalProperties,
+            )
+        }
 
         override fun hashCode(): Int = hashCode
 
@@ -1145,10 +1164,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is CompletionCreateParams && betas == other.betas && body == other.body && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
+        return other is CompletionCreateParams &&
+            betas == other.betas &&
+            body == other.body &&
+            additionalHeaders == other.additionalHeaders &&
+            additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betas, body, additionalHeaders, additionalQueryParams) /* spotless:on */
+    override fun hashCode(): Int =
+        Objects.hash(betas, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "CompletionCreateParams{betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

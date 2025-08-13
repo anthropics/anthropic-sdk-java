@@ -391,12 +391,27 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaToolComputerUse20250124 && displayHeightPx == other.displayHeightPx && displayWidthPx == other.displayWidthPx && name == other.name && type == other.type && cacheControl == other.cacheControl && displayNumber == other.displayNumber && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaToolComputerUse20250124 &&
+            displayHeightPx == other.displayHeightPx &&
+            displayWidthPx == other.displayWidthPx &&
+            name == other.name &&
+            type == other.type &&
+            cacheControl == other.cacheControl &&
+            displayNumber == other.displayNumber &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(displayHeightPx, displayWidthPx, name, type, cacheControl, displayNumber, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            displayHeightPx,
+            displayWidthPx,
+            name,
+            type,
+            cacheControl,
+            displayNumber,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

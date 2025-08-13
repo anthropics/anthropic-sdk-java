@@ -201,7 +201,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             return true
         }
 
-        return /* spotless:off */ other is AnthropicBeta && value == other.value /* spotless:on */
+        return other is AnthropicBeta && value == other.value
     }
 
     override fun hashCode() = value.hashCode()

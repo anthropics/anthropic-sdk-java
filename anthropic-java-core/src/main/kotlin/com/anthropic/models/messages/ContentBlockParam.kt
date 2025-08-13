@@ -246,10 +246,32 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ContentBlockParam && text == other.text && image == other.image && document == other.document && searchResult == other.searchResult && thinking == other.thinking && redactedThinking == other.redactedThinking && toolUse == other.toolUse && toolResult == other.toolResult && serverToolUse == other.serverToolUse && webSearchToolResult == other.webSearchToolResult /* spotless:on */
+        return other is ContentBlockParam &&
+            text == other.text &&
+            image == other.image &&
+            document == other.document &&
+            searchResult == other.searchResult &&
+            thinking == other.thinking &&
+            redactedThinking == other.redactedThinking &&
+            toolUse == other.toolUse &&
+            toolResult == other.toolResult &&
+            serverToolUse == other.serverToolUse &&
+            webSearchToolResult == other.webSearchToolResult
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, image, document, searchResult, thinking, redactedThinking, toolUse, toolResult, serverToolUse, webSearchToolResult) /* spotless:on */
+    override fun hashCode(): Int =
+        Objects.hash(
+            text,
+            image,
+            document,
+            searchResult,
+            thinking,
+            redactedThinking,
+            toolUse,
+            toolResult,
+            serverToolUse,
+            webSearchToolResult,
+        )
 
     override fun toString(): String =
         when {

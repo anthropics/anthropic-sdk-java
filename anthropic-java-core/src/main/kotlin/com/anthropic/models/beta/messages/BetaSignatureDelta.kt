@@ -194,12 +194,13 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaSignatureDelta && signature == other.signature && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaSignatureDelta &&
+            signature == other.signature &&
+            type == other.type &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
     private val hashCode: Int by lazy { Objects.hash(signature, type, additionalProperties) }
-    /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 

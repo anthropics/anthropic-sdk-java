@@ -735,12 +735,33 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaMessage && id == other.id && container == other.container && content == other.content && model == other.model && role == other.role && stopReason == other.stopReason && stopSequence == other.stopSequence && type == other.type && usage == other.usage && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaMessage &&
+            id == other.id &&
+            container == other.container &&
+            content == other.content &&
+            model == other.model &&
+            role == other.role &&
+            stopReason == other.stopReason &&
+            stopSequence == other.stopSequence &&
+            type == other.type &&
+            usage == other.usage &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(id, container, content, model, role, stopReason, stopSequence, type, usage, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            id,
+            container,
+            content,
+            model,
+            role,
+            stopReason,
+            stopSequence,
+            type,
+            usage,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

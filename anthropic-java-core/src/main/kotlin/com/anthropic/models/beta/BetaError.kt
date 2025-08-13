@@ -201,10 +201,30 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaError && invalidRequest == other.invalidRequest && authentication == other.authentication && billing == other.billing && permission == other.permission && notFound == other.notFound && rateLimit == other.rateLimit && timeout == other.timeout && api == other.api && overloaded == other.overloaded /* spotless:on */
+        return other is BetaError &&
+            invalidRequest == other.invalidRequest &&
+            authentication == other.authentication &&
+            billing == other.billing &&
+            permission == other.permission &&
+            notFound == other.notFound &&
+            rateLimit == other.rateLimit &&
+            timeout == other.timeout &&
+            api == other.api &&
+            overloaded == other.overloaded
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(invalidRequest, authentication, billing, permission, notFound, rateLimit, timeout, api, overloaded) /* spotless:on */
+    override fun hashCode(): Int =
+        Objects.hash(
+            invalidRequest,
+            authentication,
+            billing,
+            permission,
+            notFound,
+            rateLimit,
+            timeout,
+            api,
+            overloaded,
+        )
 
     override fun toString(): String =
         when {

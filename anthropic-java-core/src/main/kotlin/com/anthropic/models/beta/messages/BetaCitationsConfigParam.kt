@@ -138,12 +138,12 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaCitationsConfigParam && enabled == other.enabled && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaCitationsConfigParam &&
+            enabled == other.enabled &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
     private val hashCode: Int by lazy { Objects.hash(enabled, additionalProperties) }
-    /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 

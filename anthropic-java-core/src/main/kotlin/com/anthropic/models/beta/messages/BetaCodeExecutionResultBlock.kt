@@ -319,12 +319,18 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaCodeExecutionResultBlock && content == other.content && returnCode == other.returnCode && stderr == other.stderr && stdout == other.stdout && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaCodeExecutionResultBlock &&
+            content == other.content &&
+            returnCode == other.returnCode &&
+            stderr == other.stderr &&
+            stdout == other.stdout &&
+            type == other.type &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(content, returnCode, stderr, stdout, type, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(content, returnCode, stderr, stdout, type, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

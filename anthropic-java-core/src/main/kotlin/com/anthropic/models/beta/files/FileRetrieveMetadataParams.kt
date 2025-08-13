@@ -223,10 +223,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is FileRetrieveMetadataParams && fileId == other.fileId && betas == other.betas && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
+        return other is FileRetrieveMetadataParams &&
+            fileId == other.fileId &&
+            betas == other.betas &&
+            additionalHeaders == other.additionalHeaders &&
+            additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(fileId, betas, additionalHeaders, additionalQueryParams) /* spotless:on */
+    override fun hashCode(): Int =
+        Objects.hash(fileId, betas, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "FileRetrieveMetadataParams{fileId=$fileId, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

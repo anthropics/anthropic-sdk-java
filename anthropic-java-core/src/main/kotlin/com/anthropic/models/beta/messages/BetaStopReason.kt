@@ -147,7 +147,7 @@ class BetaStopReason @JsonCreator private constructor(private val value: JsonFie
             return true
         }
 
-        return /* spotless:off */ other is BetaStopReason && value == other.value /* spotless:on */
+        return other is BetaStopReason && value == other.value
     }
 
     override fun hashCode() = value.hashCode()

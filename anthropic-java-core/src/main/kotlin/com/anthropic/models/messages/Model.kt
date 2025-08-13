@@ -283,7 +283,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
             return true
         }
 
-        return /* spotless:off */ other is Model && value == other.value /* spotless:on */
+        return other is Model && value == other.value
     }
 
     override fun hashCode() = value.hashCode()

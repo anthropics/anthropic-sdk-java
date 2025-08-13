@@ -283,12 +283,18 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ToolUseBlockParam && id == other.id && input == other.input && name == other.name && type == other.type && cacheControl == other.cacheControl && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is ToolUseBlockParam &&
+            id == other.id &&
+            input == other.input &&
+            name == other.name &&
+            type == other.type &&
+            cacheControl == other.cacheControl &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(id, input, name, type, cacheControl, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(id, input, name, type, cacheControl, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

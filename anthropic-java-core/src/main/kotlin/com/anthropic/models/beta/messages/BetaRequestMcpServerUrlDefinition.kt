@@ -322,12 +322,18 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaRequestMcpServerUrlDefinition && name == other.name && type == other.type && url == other.url && authorizationToken == other.authorizationToken && toolConfiguration == other.toolConfiguration && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaRequestMcpServerUrlDefinition &&
+            name == other.name &&
+            type == other.type &&
+            url == other.url &&
+            authorizationToken == other.authorizationToken &&
+            toolConfiguration == other.toolConfiguration &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(name, type, url, authorizationToken, toolConfiguration, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(name, type, url, authorizationToken, toolConfiguration, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

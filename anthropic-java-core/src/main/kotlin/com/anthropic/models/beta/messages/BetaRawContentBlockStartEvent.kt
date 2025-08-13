@@ -536,10 +536,32 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is ContentBlock && text == other.text && thinking == other.thinking && redactedThinking == other.redactedThinking && toolUse == other.toolUse && serverToolUse == other.serverToolUse && webSearchToolResult == other.webSearchToolResult && codeExecutionToolResult == other.codeExecutionToolResult && mcpToolUse == other.mcpToolUse && mcpToolResult == other.mcpToolResult && containerUpload == other.containerUpload /* spotless:on */
+            return other is ContentBlock &&
+                text == other.text &&
+                thinking == other.thinking &&
+                redactedThinking == other.redactedThinking &&
+                toolUse == other.toolUse &&
+                serverToolUse == other.serverToolUse &&
+                webSearchToolResult == other.webSearchToolResult &&
+                codeExecutionToolResult == other.codeExecutionToolResult &&
+                mcpToolUse == other.mcpToolUse &&
+                mcpToolResult == other.mcpToolResult &&
+                containerUpload == other.containerUpload
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, thinking, redactedThinking, toolUse, serverToolUse, webSearchToolResult, codeExecutionToolResult, mcpToolUse, mcpToolResult, containerUpload) /* spotless:on */
+        override fun hashCode(): Int =
+            Objects.hash(
+                text,
+                thinking,
+                redactedThinking,
+                toolUse,
+                serverToolUse,
+                webSearchToolResult,
+                codeExecutionToolResult,
+                mcpToolUse,
+                mcpToolResult,
+                containerUpload,
+            )
 
         override fun toString(): String =
             when {
@@ -741,12 +763,16 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaRawContentBlockStartEvent && contentBlock == other.contentBlock && index == other.index && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaRawContentBlockStartEvent &&
+            contentBlock == other.contentBlock &&
+            index == other.index &&
+            type == other.type &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(contentBlock, index, type, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(contentBlock, index, type, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

@@ -189,10 +189,14 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BatchRetrieveParams && messageBatchId == other.messageBatchId && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
+        return other is BatchRetrieveParams &&
+            messageBatchId == other.messageBatchId &&
+            additionalHeaders == other.additionalHeaders &&
+            additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(messageBatchId, additionalHeaders, additionalQueryParams) /* spotless:on */
+    override fun hashCode(): Int =
+        Objects.hash(messageBatchId, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "BatchRetrieveParams{messageBatchId=$messageBatchId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
