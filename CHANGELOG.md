@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.5.1 (2025-08-13)
+
+Full Changelog: [v2.5.0...v2.5.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.5.0...v2.5.1)
+
+### Chores
+
+* deprecate older claude-3-5 sonnet models ([#591](https://github.com/anthropics/anthropic-sdk-java/issues/591)) ([c7c4cc1](https://github.com/anthropics/anthropic-sdk-java/commit/c7c4cc1a0862f3121f9e1eb7703407efe9198b0c))
+* **internal:** format identity methods ([483576a](https://github.com/anthropics/anthropic-sdk-java/commit/483576abc49b0932bade9ad667747d1eedbea8a4))
+
 ## 2.5.0 (2025-08-12)
 
 Full Changelog: [v2.4.0...v2.5.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.4.0...v2.5.0)
