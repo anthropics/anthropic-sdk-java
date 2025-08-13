@@ -276,7 +276,8 @@ private constructor(
         // look like this:
         //
         //   event: content_block_delta
-        //   data: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello"}}
+        //   data:
+        // {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello"}}
         //
         // Print the SSE (with a blank line after) to the piped output stream to complete the
         // translation process.
