@@ -285,10 +285,32 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaContentBlock && text == other.text && thinking == other.thinking && redactedThinking == other.redactedThinking && toolUse == other.toolUse && serverToolUse == other.serverToolUse && webSearchToolResult == other.webSearchToolResult && codeExecutionToolResult == other.codeExecutionToolResult && mcpToolUse == other.mcpToolUse && mcpToolResult == other.mcpToolResult && containerUpload == other.containerUpload /* spotless:on */
+        return other is BetaContentBlock &&
+            text == other.text &&
+            thinking == other.thinking &&
+            redactedThinking == other.redactedThinking &&
+            toolUse == other.toolUse &&
+            serverToolUse == other.serverToolUse &&
+            webSearchToolResult == other.webSearchToolResult &&
+            codeExecutionToolResult == other.codeExecutionToolResult &&
+            mcpToolUse == other.mcpToolUse &&
+            mcpToolResult == other.mcpToolResult &&
+            containerUpload == other.containerUpload
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(text, thinking, redactedThinking, toolUse, serverToolUse, webSearchToolResult, codeExecutionToolResult, mcpToolUse, mcpToolResult, containerUpload) /* spotless:on */
+    override fun hashCode(): Int =
+        Objects.hash(
+            text,
+            thinking,
+            redactedThinking,
+            toolUse,
+            serverToolUse,
+            webSearchToolResult,
+            codeExecutionToolResult,
+            mcpToolUse,
+            mcpToolResult,
+            containerUpload,
+        )
 
     override fun toString(): String =
         when {

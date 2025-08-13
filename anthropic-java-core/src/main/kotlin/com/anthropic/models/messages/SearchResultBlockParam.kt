@@ -365,12 +365,19 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is SearchResultBlockParam && content == other.content && source == other.source && title == other.title && type == other.type && cacheControl == other.cacheControl && citations == other.citations && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is SearchResultBlockParam &&
+            content == other.content &&
+            source == other.source &&
+            title == other.title &&
+            type == other.type &&
+            cacheControl == other.cacheControl &&
+            citations == other.citations &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(content, source, title, type, cacheControl, citations, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(content, source, title, type, cacheControl, citations, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

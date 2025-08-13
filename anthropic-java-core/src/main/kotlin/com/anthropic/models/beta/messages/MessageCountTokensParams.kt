@@ -1981,12 +1981,29 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Body && messages == other.messages && model == other.model && mcpServers == other.mcpServers && system == other.system && thinking == other.thinking && toolChoice == other.toolChoice && tools == other.tools && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is Body &&
+                messages == other.messages &&
+                model == other.model &&
+                mcpServers == other.mcpServers &&
+                system == other.system &&
+                thinking == other.thinking &&
+                toolChoice == other.toolChoice &&
+                tools == other.tools &&
+                additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(messages, model, mcpServers, system, thinking, toolChoice, tools, additionalProperties) }
-        /* spotless:on */
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                messages,
+                model,
+                mcpServers,
+                system,
+                thinking,
+                toolChoice,
+                tools,
+                additionalProperties,
+            )
+        }
 
         override fun hashCode(): Int = hashCode
 
@@ -2087,10 +2104,12 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is System && string == other.string && betaTextBlockParams == other.betaTextBlockParams /* spotless:on */
+            return other is System &&
+                string == other.string &&
+                betaTextBlockParams == other.betaTextBlockParams
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(string, betaTextBlockParams) /* spotless:on */
+        override fun hashCode(): Int = Objects.hash(string, betaTextBlockParams)
 
         override fun toString(): String =
             when {
@@ -2457,10 +2476,34 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Tool && beta == other.beta && betaToolBash20241022 == other.betaToolBash20241022 && betaToolBash20250124 == other.betaToolBash20250124 && betaCodeExecutionTool20250522 == other.betaCodeExecutionTool20250522 && betaToolComputerUse20241022 == other.betaToolComputerUse20241022 && betaToolComputerUse20250124 == other.betaToolComputerUse20250124 && betaToolTextEditor20241022 == other.betaToolTextEditor20241022 && betaToolTextEditor20250124 == other.betaToolTextEditor20250124 && betaToolTextEditor20250429 == other.betaToolTextEditor20250429 && betaToolTextEditor20250728 == other.betaToolTextEditor20250728 && betaWebSearchTool20250305 == other.betaWebSearchTool20250305 /* spotless:on */
+            return other is Tool &&
+                beta == other.beta &&
+                betaToolBash20241022 == other.betaToolBash20241022 &&
+                betaToolBash20250124 == other.betaToolBash20250124 &&
+                betaCodeExecutionTool20250522 == other.betaCodeExecutionTool20250522 &&
+                betaToolComputerUse20241022 == other.betaToolComputerUse20241022 &&
+                betaToolComputerUse20250124 == other.betaToolComputerUse20250124 &&
+                betaToolTextEditor20241022 == other.betaToolTextEditor20241022 &&
+                betaToolTextEditor20250124 == other.betaToolTextEditor20250124 &&
+                betaToolTextEditor20250429 == other.betaToolTextEditor20250429 &&
+                betaToolTextEditor20250728 == other.betaToolTextEditor20250728 &&
+                betaWebSearchTool20250305 == other.betaWebSearchTool20250305
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(beta, betaToolBash20241022, betaToolBash20250124, betaCodeExecutionTool20250522, betaToolComputerUse20241022, betaToolComputerUse20250124, betaToolTextEditor20241022, betaToolTextEditor20250124, betaToolTextEditor20250429, betaToolTextEditor20250728, betaWebSearchTool20250305) /* spotless:on */
+        override fun hashCode(): Int =
+            Objects.hash(
+                beta,
+                betaToolBash20241022,
+                betaToolBash20250124,
+                betaCodeExecutionTool20250522,
+                betaToolComputerUse20241022,
+                betaToolComputerUse20250124,
+                betaToolTextEditor20241022,
+                betaToolTextEditor20250124,
+                betaToolTextEditor20250429,
+                betaToolTextEditor20250728,
+                betaWebSearchTool20250305,
+            )
 
         override fun toString(): String =
             when {
@@ -2685,10 +2728,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is MessageCountTokensParams && betas == other.betas && body == other.body && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
+        return other is MessageCountTokensParams &&
+            betas == other.betas &&
+            body == other.body &&
+            additionalHeaders == other.additionalHeaders &&
+            additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betas, body, additionalHeaders, additionalQueryParams) /* spotless:on */
+    override fun hashCode(): Int =
+        Objects.hash(betas, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "MessageCountTokensParams{betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

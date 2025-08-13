@@ -311,12 +311,18 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaWebSearchResultBlock && encryptedContent == other.encryptedContent && pageAge == other.pageAge && title == other.title && type == other.type && url == other.url && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaWebSearchResultBlock &&
+            encryptedContent == other.encryptedContent &&
+            pageAge == other.pageAge &&
+            title == other.title &&
+            type == other.type &&
+            url == other.url &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(encryptedContent, pageAge, title, type, url, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(encryptedContent, pageAge, title, type, url, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

@@ -230,12 +230,16 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ToolBash20250124 && name == other.name && type == other.type && cacheControl == other.cacheControl && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is ToolBash20250124 &&
+            name == other.name &&
+            type == other.type &&
+            cacheControl == other.cacheControl &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(name, type, cacheControl, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(name, type, cacheControl, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

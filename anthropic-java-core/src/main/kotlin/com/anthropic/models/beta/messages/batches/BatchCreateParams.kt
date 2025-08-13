@@ -511,12 +511,12 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Body && requests == other.requests && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is Body &&
+                requests == other.requests &&
+                additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
         private val hashCode: Int by lazy { Objects.hash(requests, additionalProperties) }
-        /* spotless:on */
 
         override fun hashCode(): Int = hashCode
 
@@ -2312,7 +2312,7 @@ private constructor(
                         return true
                     }
 
-                    return /* spotless:off */ other is ServiceTier && value == other.value /* spotless:on */
+                    return other is ServiceTier && value == other.value
                 }
 
                 override fun hashCode() = value.hashCode()
@@ -2414,10 +2414,12 @@ private constructor(
                         return true
                     }
 
-                    return /* spotless:off */ other is System && string == other.string && betaTextBlockParams == other.betaTextBlockParams /* spotless:on */
+                    return other is System &&
+                        string == other.string &&
+                        betaTextBlockParams == other.betaTextBlockParams
                 }
 
-                override fun hashCode(): Int = /* spotless:off */ Objects.hash(string, betaTextBlockParams) /* spotless:on */
+                override fun hashCode(): Int = Objects.hash(string, betaTextBlockParams)
 
                 override fun toString(): String =
                     when {
@@ -2515,12 +2517,47 @@ private constructor(
                     return true
                 }
 
-                return /* spotless:off */ other is Params && maxTokens == other.maxTokens && messages == other.messages && model == other.model && container == other.container && mcpServers == other.mcpServers && metadata == other.metadata && serviceTier == other.serviceTier && stopSequences == other.stopSequences && stream == other.stream && system == other.system && temperature == other.temperature && thinking == other.thinking && toolChoice == other.toolChoice && tools == other.tools && topK == other.topK && topP == other.topP && additionalProperties == other.additionalProperties /* spotless:on */
+                return other is Params &&
+                    maxTokens == other.maxTokens &&
+                    messages == other.messages &&
+                    model == other.model &&
+                    container == other.container &&
+                    mcpServers == other.mcpServers &&
+                    metadata == other.metadata &&
+                    serviceTier == other.serviceTier &&
+                    stopSequences == other.stopSequences &&
+                    stream == other.stream &&
+                    system == other.system &&
+                    temperature == other.temperature &&
+                    thinking == other.thinking &&
+                    toolChoice == other.toolChoice &&
+                    tools == other.tools &&
+                    topK == other.topK &&
+                    topP == other.topP &&
+                    additionalProperties == other.additionalProperties
             }
 
-            /* spotless:off */
-            private val hashCode: Int by lazy { Objects.hash(maxTokens, messages, model, container, mcpServers, metadata, serviceTier, stopSequences, stream, system, temperature, thinking, toolChoice, tools, topK, topP, additionalProperties) }
-            /* spotless:on */
+            private val hashCode: Int by lazy {
+                Objects.hash(
+                    maxTokens,
+                    messages,
+                    model,
+                    container,
+                    mcpServers,
+                    metadata,
+                    serviceTier,
+                    stopSequences,
+                    stream,
+                    system,
+                    temperature,
+                    thinking,
+                    toolChoice,
+                    tools,
+                    topK,
+                    topP,
+                    additionalProperties,
+                )
+            }
 
             override fun hashCode(): Int = hashCode
 
@@ -2533,12 +2570,13 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Request && customId == other.customId && params == other.params && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is Request &&
+                customId == other.customId &&
+                params == other.params &&
+                additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
         private val hashCode: Int by lazy { Objects.hash(customId, params, additionalProperties) }
-        /* spotless:on */
 
         override fun hashCode(): Int = hashCode
 
@@ -2551,10 +2589,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BatchCreateParams && betas == other.betas && body == other.body && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
+        return other is BatchCreateParams &&
+            betas == other.betas &&
+            body == other.body &&
+            additionalHeaders == other.additionalHeaders &&
+            additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(betas, body, additionalHeaders, additionalQueryParams) /* spotless:on */
+    override fun hashCode(): Int =
+        Objects.hash(betas, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "BatchCreateParams{betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

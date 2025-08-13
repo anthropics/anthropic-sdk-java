@@ -162,10 +162,22 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is TextCitation && charLocation == other.charLocation && pageLocation == other.pageLocation && contentBlockLocation == other.contentBlockLocation && webSearchResultLocation == other.webSearchResultLocation && searchResultLocation == other.searchResultLocation /* spotless:on */
+        return other is TextCitation &&
+            charLocation == other.charLocation &&
+            pageLocation == other.pageLocation &&
+            contentBlockLocation == other.contentBlockLocation &&
+            webSearchResultLocation == other.webSearchResultLocation &&
+            searchResultLocation == other.searchResultLocation
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(charLocation, pageLocation, contentBlockLocation, webSearchResultLocation, searchResultLocation) /* spotless:on */
+    override fun hashCode(): Int =
+        Objects.hash(
+            charLocation,
+            pageLocation,
+            contentBlockLocation,
+            webSearchResultLocation,
+            searchResultLocation,
+        )
 
     override fun toString(): String =
         when {

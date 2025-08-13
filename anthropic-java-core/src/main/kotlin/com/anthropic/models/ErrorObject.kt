@@ -208,10 +208,30 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ErrorObject && invalidRequestError == other.invalidRequestError && authenticationError == other.authenticationError && billingError == other.billingError && permissionError == other.permissionError && notFoundError == other.notFoundError && rateLimitError == other.rateLimitError && timeoutError == other.timeoutError && apiError == other.apiError && overloadedError == other.overloadedError /* spotless:on */
+        return other is ErrorObject &&
+            invalidRequestError == other.invalidRequestError &&
+            authenticationError == other.authenticationError &&
+            billingError == other.billingError &&
+            permissionError == other.permissionError &&
+            notFoundError == other.notFoundError &&
+            rateLimitError == other.rateLimitError &&
+            timeoutError == other.timeoutError &&
+            apiError == other.apiError &&
+            overloadedError == other.overloadedError
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(invalidRequestError, authenticationError, billingError, permissionError, notFoundError, rateLimitError, timeoutError, apiError, overloadedError) /* spotless:on */
+    override fun hashCode(): Int =
+        Objects.hash(
+            invalidRequestError,
+            authenticationError,
+            billingError,
+            permissionError,
+            notFoundError,
+            rateLimitError,
+            timeoutError,
+            apiError,
+            overloadedError,
+        )
 
     override fun toString(): String =
         when {

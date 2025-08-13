@@ -599,7 +599,7 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is ServiceTier && value == other.value /* spotless:on */
+            return other is ServiceTier && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
@@ -612,12 +612,29 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaUsage && cacheCreation == other.cacheCreation && cacheCreationInputTokens == other.cacheCreationInputTokens && cacheReadInputTokens == other.cacheReadInputTokens && inputTokens == other.inputTokens && outputTokens == other.outputTokens && serverToolUse == other.serverToolUse && serviceTier == other.serviceTier && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaUsage &&
+            cacheCreation == other.cacheCreation &&
+            cacheCreationInputTokens == other.cacheCreationInputTokens &&
+            cacheReadInputTokens == other.cacheReadInputTokens &&
+            inputTokens == other.inputTokens &&
+            outputTokens == other.outputTokens &&
+            serverToolUse == other.serverToolUse &&
+            serviceTier == other.serviceTier &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(cacheCreation, cacheCreationInputTokens, cacheReadInputTokens, inputTokens, outputTokens, serverToolUse, serviceTier, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            cacheCreation,
+            cacheCreationInputTokens,
+            cacheReadInputTokens,
+            inputTokens,
+            outputTokens,
+            serverToolUse,
+            serviceTier,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

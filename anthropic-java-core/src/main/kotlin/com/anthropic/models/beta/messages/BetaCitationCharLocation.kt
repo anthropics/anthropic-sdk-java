@@ -408,12 +408,29 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaCitationCharLocation && citedText == other.citedText && documentIndex == other.documentIndex && documentTitle == other.documentTitle && endCharIndex == other.endCharIndex && fileId == other.fileId && startCharIndex == other.startCharIndex && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaCitationCharLocation &&
+            citedText == other.citedText &&
+            documentIndex == other.documentIndex &&
+            documentTitle == other.documentTitle &&
+            endCharIndex == other.endCharIndex &&
+            fileId == other.fileId &&
+            startCharIndex == other.startCharIndex &&
+            type == other.type &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(citedText, documentIndex, documentTitle, endCharIndex, fileId, startCharIndex, type, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            citedText,
+            documentIndex,
+            documentTitle,
+            endCharIndex,
+            fileId,
+            startCharIndex,
+            type,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

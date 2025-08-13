@@ -109,10 +109,12 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ThinkingConfigParam && enabled == other.enabled && disabled == other.disabled /* spotless:on */
+        return other is ThinkingConfigParam &&
+            enabled == other.enabled &&
+            disabled == other.disabled
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(enabled, disabled) /* spotless:on */
+    override fun hashCode(): Int = Objects.hash(enabled, disabled)
 
     override fun toString(): String =
         when {

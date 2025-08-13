@@ -389,12 +389,25 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is MessageDeltaUsage && cacheCreationInputTokens == other.cacheCreationInputTokens && cacheReadInputTokens == other.cacheReadInputTokens && inputTokens == other.inputTokens && outputTokens == other.outputTokens && serverToolUse == other.serverToolUse && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is MessageDeltaUsage &&
+            cacheCreationInputTokens == other.cacheCreationInputTokens &&
+            cacheReadInputTokens == other.cacheReadInputTokens &&
+            inputTokens == other.inputTokens &&
+            outputTokens == other.outputTokens &&
+            serverToolUse == other.serverToolUse &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(cacheCreationInputTokens, cacheReadInputTokens, inputTokens, outputTokens, serverToolUse, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            cacheCreationInputTokens,
+            cacheReadInputTokens,
+            inputTokens,
+            outputTokens,
+            serverToolUse,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

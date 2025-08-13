@@ -502,12 +502,16 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Delta && container == other.container && stopReason == other.stopReason && stopSequence == other.stopSequence && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is Delta &&
+                container == other.container &&
+                stopReason == other.stopReason &&
+                stopSequence == other.stopSequence &&
+                additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(container, stopReason, stopSequence, additionalProperties) }
-        /* spotless:on */
+        private val hashCode: Int by lazy {
+            Objects.hash(container, stopReason, stopSequence, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
@@ -520,12 +524,14 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaRawMessageDeltaEvent && delta == other.delta && type == other.type && usage == other.usage && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaRawMessageDeltaEvent &&
+            delta == other.delta &&
+            type == other.type &&
+            usage == other.usage &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
     private val hashCode: Int by lazy { Objects.hash(delta, type, usage, additionalProperties) }
-    /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 

@@ -100,10 +100,12 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaCodeExecutionToolResultBlockContent && error == other.error && resultBlock == other.resultBlock /* spotless:on */
+        return other is BetaCodeExecutionToolResultBlockContent &&
+            error == other.error &&
+            resultBlock == other.resultBlock
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(error, resultBlock) /* spotless:on */
+    override fun hashCode(): Int = Objects.hash(error, resultBlock)
 
     override fun toString(): String =
         when {

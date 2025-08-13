@@ -215,12 +215,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaCacheCreation && ephemeral1hInputTokens == other.ephemeral1hInputTokens && ephemeral5mInputTokens == other.ephemeral5mInputTokens && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaCacheCreation &&
+            ephemeral1hInputTokens == other.ephemeral1hInputTokens &&
+            ephemeral5mInputTokens == other.ephemeral5mInputTokens &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(ephemeral1hInputTokens, ephemeral5mInputTokens, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(ephemeral1hInputTokens, ephemeral5mInputTokens, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

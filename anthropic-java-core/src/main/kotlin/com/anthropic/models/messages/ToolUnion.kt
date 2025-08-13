@@ -172,10 +172,24 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ToolUnion && tool == other.tool && bash20250124 == other.bash20250124 && textEditor20250124 == other.textEditor20250124 && textEditor20250429 == other.textEditor20250429 && textEditor20250728 == other.textEditor20250728 && webSearchTool20250305 == other.webSearchTool20250305 /* spotless:on */
+        return other is ToolUnion &&
+            tool == other.tool &&
+            bash20250124 == other.bash20250124 &&
+            textEditor20250124 == other.textEditor20250124 &&
+            textEditor20250429 == other.textEditor20250429 &&
+            textEditor20250728 == other.textEditor20250728 &&
+            webSearchTool20250305 == other.webSearchTool20250305
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(tool, bash20250124, textEditor20250124, textEditor20250429, textEditor20250728, webSearchTool20250305) /* spotless:on */
+    override fun hashCode(): Int =
+        Objects.hash(
+            tool,
+            bash20250124,
+            textEditor20250124,
+            textEditor20250429,
+            textEditor20250728,
+            webSearchTool20250305,
+        )
 
     override fun toString(): String =
         when {

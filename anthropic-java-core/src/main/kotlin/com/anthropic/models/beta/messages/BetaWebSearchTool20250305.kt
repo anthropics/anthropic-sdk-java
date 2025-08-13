@@ -742,12 +742,18 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is UserLocation && type == other.type && city == other.city && country == other.country && region == other.region && timezone == other.timezone && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is UserLocation &&
+                type == other.type &&
+                city == other.city &&
+                country == other.country &&
+                region == other.region &&
+                timezone == other.timezone &&
+                additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(type, city, country, region, timezone, additionalProperties) }
-        /* spotless:on */
+        private val hashCode: Int by lazy {
+            Objects.hash(type, city, country, region, timezone, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
@@ -760,12 +766,29 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaWebSearchTool20250305 && name == other.name && type == other.type && allowedDomains == other.allowedDomains && blockedDomains == other.blockedDomains && cacheControl == other.cacheControl && maxUses == other.maxUses && userLocation == other.userLocation && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaWebSearchTool20250305 &&
+            name == other.name &&
+            type == other.type &&
+            allowedDomains == other.allowedDomains &&
+            blockedDomains == other.blockedDomains &&
+            cacheControl == other.cacheControl &&
+            maxUses == other.maxUses &&
+            userLocation == other.userLocation &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(name, type, allowedDomains, blockedDomains, cacheControl, maxUses, userLocation, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            name,
+            type,
+            allowedDomains,
+            blockedDomains,
+            cacheControl,
+            maxUses,
+            userLocation,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

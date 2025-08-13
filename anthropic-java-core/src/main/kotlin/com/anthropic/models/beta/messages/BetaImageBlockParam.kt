@@ -372,10 +372,13 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Source && base64 == other.base64 && url == other.url && file == other.file /* spotless:on */
+            return other is Source &&
+                base64 == other.base64 &&
+                url == other.url &&
+                file == other.file
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(base64, url, file) /* spotless:on */
+        override fun hashCode(): Int = Objects.hash(base64, url, file)
 
         override fun toString(): String =
             when {
@@ -470,12 +473,16 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaImageBlockParam && source == other.source && type == other.type && cacheControl == other.cacheControl && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaImageBlockParam &&
+            source == other.source &&
+            type == other.type &&
+            cacheControl == other.cacheControl &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(source, type, cacheControl, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(source, type, cacheControl, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

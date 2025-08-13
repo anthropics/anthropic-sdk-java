@@ -368,12 +368,27 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is CitationContentBlockLocationParam && citedText == other.citedText && documentIndex == other.documentIndex && documentTitle == other.documentTitle && endBlockIndex == other.endBlockIndex && startBlockIndex == other.startBlockIndex && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is CitationContentBlockLocationParam &&
+            citedText == other.citedText &&
+            documentIndex == other.documentIndex &&
+            documentTitle == other.documentTitle &&
+            endBlockIndex == other.endBlockIndex &&
+            startBlockIndex == other.startBlockIndex &&
+            type == other.type &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(citedText, documentIndex, documentTitle, endBlockIndex, startBlockIndex, type, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            citedText,
+            documentIndex,
+            documentTitle,
+            endBlockIndex,
+            startBlockIndex,
+            type,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

@@ -300,10 +300,12 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Content && string == other.string && betaContentBlockSource == other.betaContentBlockSource /* spotless:on */
+            return other is Content &&
+                string == other.string &&
+                betaContentBlockSource == other.betaContentBlockSource
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(string, betaContentBlockSource) /* spotless:on */
+        override fun hashCode(): Int = Objects.hash(string, betaContentBlockSource)
 
         override fun toString(): String =
             when {
@@ -405,12 +407,13 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaContentBlockSource && content == other.content && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaContentBlockSource &&
+            content == other.content &&
+            type == other.type &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
     private val hashCode: Int by lazy { Objects.hash(content, type, additionalProperties) }
-    /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 

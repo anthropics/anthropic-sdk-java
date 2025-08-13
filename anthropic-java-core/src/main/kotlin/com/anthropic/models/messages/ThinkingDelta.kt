@@ -193,12 +193,13 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ThinkingDelta && thinking == other.thinking && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is ThinkingDelta &&
+            thinking == other.thinking &&
+            type == other.type &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
     private val hashCode: Int by lazy { Objects.hash(thinking, type, additionalProperties) }
-    /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 

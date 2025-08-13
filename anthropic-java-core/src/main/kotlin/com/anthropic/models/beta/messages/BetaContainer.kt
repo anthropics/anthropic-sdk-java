@@ -201,12 +201,13 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaContainer && id == other.id && expiresAt == other.expiresAt && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaContainer &&
+            id == other.id &&
+            expiresAt == other.expiresAt &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
     private val hashCode: Int by lazy { Objects.hash(id, expiresAt, additionalProperties) }
-    /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 

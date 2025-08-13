@@ -319,7 +319,7 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Ttl && value == other.value /* spotless:on */
+            return other is Ttl && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
@@ -332,12 +332,13 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaCacheControlEphemeral && type == other.type && ttl == other.ttl && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaCacheControlEphemeral &&
+            type == other.type &&
+            ttl == other.ttl &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
     private val hashCode: Int by lazy { Objects.hash(type, ttl, additionalProperties) }
-    /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 

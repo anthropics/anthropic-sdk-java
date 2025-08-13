@@ -325,12 +325,18 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaMessageBatchRequestCounts && canceled == other.canceled && errored == other.errored && expired == other.expired && processing == other.processing && succeeded == other.succeeded && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaMessageBatchRequestCounts &&
+            canceled == other.canceled &&
+            errored == other.errored &&
+            expired == other.expired &&
+            processing == other.processing &&
+            succeeded == other.succeeded &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(canceled, errored, expired, processing, succeeded, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(canceled, errored, expired, processing, succeeded, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

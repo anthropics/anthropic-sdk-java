@@ -311,12 +311,17 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaCodeExecutionToolResultBlockParam && content == other.content && toolUseId == other.toolUseId && type == other.type && cacheControl == other.cacheControl && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is BetaCodeExecutionToolResultBlockParam &&
+            content == other.content &&
+            toolUseId == other.toolUseId &&
+            type == other.type &&
+            cacheControl == other.cacheControl &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(content, toolUseId, type, cacheControl, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(content, toolUseId, type, cacheControl, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

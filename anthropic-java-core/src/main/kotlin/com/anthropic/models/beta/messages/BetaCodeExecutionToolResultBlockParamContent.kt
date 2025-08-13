@@ -107,10 +107,12 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaCodeExecutionToolResultBlockParamContent && errorParam == other.errorParam && resultBlockParam == other.resultBlockParam /* spotless:on */
+        return other is BetaCodeExecutionToolResultBlockParamContent &&
+            errorParam == other.errorParam &&
+            resultBlockParam == other.resultBlockParam
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(errorParam, resultBlockParam) /* spotless:on */
+    override fun hashCode(): Int = Objects.hash(errorParam, resultBlockParam)
 
     override fun toString(): String =
         when {

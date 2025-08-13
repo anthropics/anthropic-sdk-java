@@ -226,10 +226,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ModelRetrieveParams && modelId == other.modelId && betas == other.betas && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
+        return other is ModelRetrieveParams &&
+            modelId == other.modelId &&
+            betas == other.betas &&
+            additionalHeaders == other.additionalHeaders &&
+            additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(modelId, betas, additionalHeaders, additionalQueryParams) /* spotless:on */
+    override fun hashCode(): Int =
+        Objects.hash(modelId, betas, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "ModelRetrieveParams{modelId=$modelId, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

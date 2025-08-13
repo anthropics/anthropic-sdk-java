@@ -103,10 +103,12 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BetaWebSearchToolResultBlockParamContent && resultBlock == other.resultBlock && requestError == other.requestError /* spotless:on */
+        return other is BetaWebSearchToolResultBlockParamContent &&
+            resultBlock == other.resultBlock &&
+            requestError == other.requestError
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(resultBlock, requestError) /* spotless:on */
+    override fun hashCode(): Int = Objects.hash(resultBlock, requestError)
 
     override fun toString(): String =
         when {
