@@ -1,7 +1,14 @@
 rootProject.name = "anthropic-java-root"
 
-include("anthropic-java")
-include("anthropic-java-client-okhttp")
-include("anthropic-java-core")
-include("anthropic-java-proguard-test")
-include("anthropic-java-example")
+val projectNames = rootDir.listFiles()
+    ?.asSequence()
+    .orEmpty()
+    .filter { file ->
+        file.isDirectory &&
+        file.name.startsWith("anthropic-java") &&
+        file.listFiles()?.asSequence().orEmpty().any { it.name == "build.gradle.kts" }
+    }
+    .map { it.name }
+    .toList()
+println("projects: $projectNames")
+projectNames.forEach { include(it) }
