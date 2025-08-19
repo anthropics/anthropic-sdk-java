@@ -19,7 +19,9 @@ internal class ImageBlockParamTest {
                         .mediaType(Base64ImageSource.MediaType.IMAGE_JPEG)
                         .build()
                 )
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .build()
 
         assertThat(imageBlockParam.source())
@@ -31,7 +33,8 @@ internal class ImageBlockParamTest {
                         .build()
                 )
             )
-        assertThat(imageBlockParam.cacheControl()).contains(CacheControlEphemeral.builder().build())
+        assertThat(imageBlockParam.cacheControl())
+            .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
     }
 
     @Test
@@ -45,7 +48,9 @@ internal class ImageBlockParamTest {
                         .mediaType(Base64ImageSource.MediaType.IMAGE_JPEG)
                         .build()
                 )
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .build()
 
         val roundtrippedImageBlockParam =

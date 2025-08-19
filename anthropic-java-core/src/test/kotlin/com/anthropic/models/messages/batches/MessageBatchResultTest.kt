@@ -6,6 +6,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.ErrorResponse
+import com.anthropic.models.messages.CacheCreation
 import com.anthropic.models.messages.CitationCharLocation
 import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.Model
@@ -49,6 +50,12 @@ internal class MessageBatchResultTest {
                         .stopSequence(null)
                         .usage(
                             Usage.builder()
+                                .cacheCreation(
+                                    CacheCreation.builder()
+                                        .ephemeral1hInputTokens(0L)
+                                        .ephemeral5mInputTokens(0L)
+                                        .build()
+                                )
                                 .cacheCreationInputTokens(2051L)
                                 .cacheReadInputTokens(2051L)
                                 .inputTokens(2095L)
@@ -100,6 +107,12 @@ internal class MessageBatchResultTest {
                             .stopSequence(null)
                             .usage(
                                 Usage.builder()
+                                    .cacheCreation(
+                                        CacheCreation.builder()
+                                            .ephemeral1hInputTokens(0L)
+                                            .ephemeral5mInputTokens(0L)
+                                            .build()
+                                    )
                                     .cacheCreationInputTokens(2051L)
                                     .cacheReadInputTokens(2051L)
                                     .inputTokens(2095L)

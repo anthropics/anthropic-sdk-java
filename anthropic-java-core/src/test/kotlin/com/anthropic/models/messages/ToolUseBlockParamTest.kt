@@ -17,14 +17,16 @@ internal class ToolUseBlockParamTest {
                 .id("id")
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name("x")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .build()
 
         assertThat(toolUseBlockParam.id()).isEqualTo("id")
         assertThat(toolUseBlockParam._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
         assertThat(toolUseBlockParam.name()).isEqualTo("x")
         assertThat(toolUseBlockParam.cacheControl())
-            .contains(CacheControlEphemeral.builder().build())
+            .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
     }
 
     @Test
@@ -35,7 +37,9 @@ internal class ToolUseBlockParamTest {
                 .id("id")
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name("x")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .build()
 
         val roundtrippedToolUseBlockParam =

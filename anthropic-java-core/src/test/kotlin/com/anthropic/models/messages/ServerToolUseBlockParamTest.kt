@@ -16,13 +16,15 @@ internal class ServerToolUseBlockParamTest {
             ServerToolUseBlockParam.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
                 .input(JsonValue.from(mapOf<String, Any>()))
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .build()
 
         assertThat(serverToolUseBlockParam.id()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
         assertThat(serverToolUseBlockParam._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
         assertThat(serverToolUseBlockParam.cacheControl())
-            .contains(CacheControlEphemeral.builder().build())
+            .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
     }
 
     @Test
@@ -32,7 +34,9 @@ internal class ServerToolUseBlockParamTest {
             ServerToolUseBlockParam.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
                 .input(JsonValue.from(mapOf<String, Any>()))
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .build()
 
         val roundtrippedServerToolUseBlockParam =

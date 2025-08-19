@@ -16,7 +16,11 @@ internal class SearchResultBlockParamTest {
                 .addContent(
                     TextBlockParam.builder()
                         .text("x")
-                        .cacheControl(CacheControlEphemeral.builder().build())
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
                         .addCitation(
                             CitationCharLocationParam.builder()
                                 .citedText("cited_text")
@@ -30,7 +34,9 @@ internal class SearchResultBlockParamTest {
                 )
                 .source("source")
                 .title("title")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .citations(CitationsConfigParam.builder().enabled(true).build())
                 .build()
 
@@ -38,7 +44,11 @@ internal class SearchResultBlockParamTest {
             .containsExactly(
                 TextBlockParam.builder()
                     .text("x")
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .addCitation(
                         CitationCharLocationParam.builder()
                             .citedText("cited_text")
@@ -53,7 +63,7 @@ internal class SearchResultBlockParamTest {
         assertThat(searchResultBlockParam.source()).isEqualTo("source")
         assertThat(searchResultBlockParam.title()).isEqualTo("title")
         assertThat(searchResultBlockParam.cacheControl())
-            .contains(CacheControlEphemeral.builder().build())
+            .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
         assertThat(searchResultBlockParam.citations())
             .contains(CitationsConfigParam.builder().enabled(true).build())
     }
@@ -66,7 +76,11 @@ internal class SearchResultBlockParamTest {
                 .addContent(
                     TextBlockParam.builder()
                         .text("x")
-                        .cacheControl(CacheControlEphemeral.builder().build())
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
                         .addCitation(
                             CitationCharLocationParam.builder()
                                 .citedText("cited_text")
@@ -80,7 +94,9 @@ internal class SearchResultBlockParamTest {
                 )
                 .source("source")
                 .title("title")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .citations(CitationsConfigParam.builder().enabled(true).build())
                 .build()
 

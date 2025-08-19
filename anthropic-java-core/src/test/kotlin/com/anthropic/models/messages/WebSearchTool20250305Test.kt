@@ -16,7 +16,9 @@ internal class WebSearchTool20250305Test {
             WebSearchTool20250305.builder()
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .maxUses(1L)
                 .userLocation(
                     WebSearchTool20250305.UserLocation.builder()
@@ -31,7 +33,7 @@ internal class WebSearchTool20250305Test {
         assertThat(webSearchTool20250305.allowedDomains().getOrNull()).containsExactly("string")
         assertThat(webSearchTool20250305.blockedDomains().getOrNull()).containsExactly("string")
         assertThat(webSearchTool20250305.cacheControl())
-            .contains(CacheControlEphemeral.builder().build())
+            .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
         assertThat(webSearchTool20250305.maxUses()).contains(1L)
         assertThat(webSearchTool20250305.userLocation())
             .contains(
@@ -51,7 +53,9 @@ internal class WebSearchTool20250305Test {
             WebSearchTool20250305.builder()
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .maxUses(1L)
                 .userLocation(
                     WebSearchTool20250305.UserLocation.builder()

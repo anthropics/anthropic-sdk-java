@@ -3,6 +3,7 @@
 package com.anthropic.models.messages.batches
 
 import com.anthropic.core.jsonMapper
+import com.anthropic.models.messages.CacheCreation
 import com.anthropic.models.messages.CitationCharLocation
 import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.Model
@@ -44,6 +45,12 @@ internal class MessageBatchIndividualResponseTest {
                         .stopSequence(null)
                         .usage(
                             Usage.builder()
+                                .cacheCreation(
+                                    CacheCreation.builder()
+                                        .ephemeral1hInputTokens(0L)
+                                        .ephemeral5mInputTokens(0L)
+                                        .build()
+                                )
                                 .cacheCreationInputTokens(2051L)
                                 .cacheReadInputTokens(2051L)
                                 .inputTokens(2095L)
@@ -86,6 +93,12 @@ internal class MessageBatchIndividualResponseTest {
                                 .stopSequence(null)
                                 .usage(
                                     Usage.builder()
+                                        .cacheCreation(
+                                            CacheCreation.builder()
+                                                .ephemeral1hInputTokens(0L)
+                                                .ephemeral5mInputTokens(0L)
+                                                .build()
+                                        )
                                         .cacheCreationInputTokens(2051L)
                                         .cacheReadInputTokens(2051L)
                                         .inputTokens(2095L)
@@ -132,6 +145,12 @@ internal class MessageBatchIndividualResponseTest {
                         .stopSequence(null)
                         .usage(
                             Usage.builder()
+                                .cacheCreation(
+                                    CacheCreation.builder()
+                                        .ephemeral1hInputTokens(0L)
+                                        .ephemeral5mInputTokens(0L)
+                                        .build()
+                                )
                                 .cacheCreationInputTokens(2051L)
                                 .cacheReadInputTokens(2051L)
                                 .inputTokens(2095L)

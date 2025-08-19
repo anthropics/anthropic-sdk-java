@@ -19,7 +19,9 @@ internal class ContentBlockSourceContentTest {
         val text =
             TextBlockParam.builder()
                 .text("x")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .addCitation(
                     CitationCharLocationParam.builder()
                         .citedText("cited_text")
@@ -44,7 +46,11 @@ internal class ContentBlockSourceContentTest {
             ContentBlockSourceContent.ofText(
                 TextBlockParam.builder()
                     .text("x")
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .addCitation(
                         CitationCharLocationParam.builder()
                             .citedText("cited_text")
@@ -76,7 +82,9 @@ internal class ContentBlockSourceContentTest {
                         .mediaType(Base64ImageSource.MediaType.IMAGE_JPEG)
                         .build()
                 )
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .build()
 
         val contentBlockSourceContent = ContentBlockSourceContent.ofImage(image)
@@ -97,7 +105,11 @@ internal class ContentBlockSourceContentTest {
                             .mediaType(Base64ImageSource.MediaType.IMAGE_JPEG)
                             .build()
                     )
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .build()
             )
 

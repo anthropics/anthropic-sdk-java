@@ -19,7 +19,9 @@ internal class ContentBlockParamTest {
         val text =
             TextBlockParam.builder()
                 .text("x")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .addCitation(
                     CitationCharLocationParam.builder()
                         .citedText("cited_text")
@@ -52,7 +54,11 @@ internal class ContentBlockParamTest {
             ContentBlockParam.ofText(
                 TextBlockParam.builder()
                     .text("x")
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .addCitation(
                         CitationCharLocationParam.builder()
                             .citedText("cited_text")
@@ -84,7 +90,9 @@ internal class ContentBlockParamTest {
                         .mediaType(Base64ImageSource.MediaType.IMAGE_JPEG)
                         .build()
                 )
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .build()
 
         val contentBlockParam = ContentBlockParam.ofImage(image)
@@ -113,7 +121,11 @@ internal class ContentBlockParamTest {
                             .mediaType(Base64ImageSource.MediaType.IMAGE_JPEG)
                             .build()
                     )
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .build()
             )
 
@@ -131,7 +143,9 @@ internal class ContentBlockParamTest {
         val document =
             DocumentBlockParam.builder()
                 .base64Source("U3RhaW5sZXNzIHJvY2tz")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .citations(CitationsConfigParam.builder().enabled(true).build())
                 .context("x")
                 .title("x")
@@ -158,7 +172,11 @@ internal class ContentBlockParamTest {
             ContentBlockParam.ofDocument(
                 DocumentBlockParam.builder()
                     .base64Source("U3RhaW5sZXNzIHJvY2tz")
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .citations(CitationsConfigParam.builder().enabled(true).build())
                     .context("x")
                     .title("x")
@@ -181,7 +199,11 @@ internal class ContentBlockParamTest {
                 .addContent(
                     TextBlockParam.builder()
                         .text("x")
-                        .cacheControl(CacheControlEphemeral.builder().build())
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
                         .addCitation(
                             CitationCharLocationParam.builder()
                                 .citedText("cited_text")
@@ -195,7 +217,9 @@ internal class ContentBlockParamTest {
                 )
                 .source("source")
                 .title("title")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .citations(CitationsConfigParam.builder().enabled(true).build())
                 .build()
 
@@ -222,7 +246,11 @@ internal class ContentBlockParamTest {
                     .addContent(
                         TextBlockParam.builder()
                             .text("x")
-                            .cacheControl(CacheControlEphemeral.builder().build())
+                            .cacheControl(
+                                CacheControlEphemeral.builder()
+                                    .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                    .build()
+                            )
                             .addCitation(
                                 CitationCharLocationParam.builder()
                                     .citedText("cited_text")
@@ -236,7 +264,11 @@ internal class ContentBlockParamTest {
                     )
                     .source("source")
                     .title("title")
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .citations(CitationsConfigParam.builder().enabled(true).build())
                     .build()
             )
@@ -328,7 +360,9 @@ internal class ContentBlockParamTest {
                 .id("id")
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name("x")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .build()
 
         val contentBlockParam = ContentBlockParam.ofToolUse(toolUse)
@@ -354,7 +388,11 @@ internal class ContentBlockParamTest {
                     .id("id")
                     .input(JsonValue.from(mapOf<String, Any>()))
                     .name("x")
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .build()
             )
 
@@ -372,7 +410,9 @@ internal class ContentBlockParamTest {
         val toolResult =
             ToolResultBlockParam.builder()
                 .toolUseId("tool_use_id")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .content("string")
                 .isError(true)
                 .build()
@@ -398,7 +438,11 @@ internal class ContentBlockParamTest {
             ContentBlockParam.ofToolResult(
                 ToolResultBlockParam.builder()
                     .toolUseId("tool_use_id")
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .content("string")
                     .isError(true)
                     .build()
@@ -419,7 +463,9 @@ internal class ContentBlockParamTest {
             ServerToolUseBlockParam.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
                 .input(JsonValue.from(mapOf<String, Any>()))
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .build()
 
         val contentBlockParam = ContentBlockParam.ofServerToolUse(serverToolUse)
@@ -444,7 +490,11 @@ internal class ContentBlockParamTest {
                 ServerToolUseBlockParam.builder()
                     .id("srvtoolu_SQfNkl1n_JR_")
                     .input(JsonValue.from(mapOf<String, Any>()))
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .build()
             )
 
@@ -472,7 +522,9 @@ internal class ContentBlockParamTest {
                     )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .build()
 
         val contentBlockParam = ContentBlockParam.ofWebSearchToolResult(webSearchToolResult)
@@ -506,7 +558,11 @@ internal class ContentBlockParamTest {
                         )
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .build()
             )
 

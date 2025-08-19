@@ -13,6 +13,12 @@ internal class UsageTest {
     fun create() {
         val usage =
             Usage.builder()
+                .cacheCreation(
+                    CacheCreation.builder()
+                        .ephemeral1hInputTokens(0L)
+                        .ephemeral5mInputTokens(0L)
+                        .build()
+                )
                 .cacheCreationInputTokens(2051L)
                 .cacheReadInputTokens(2051L)
                 .inputTokens(2095L)
@@ -21,6 +27,13 @@ internal class UsageTest {
                 .serviceTier(Usage.ServiceTier.STANDARD)
                 .build()
 
+        assertThat(usage.cacheCreation())
+            .contains(
+                CacheCreation.builder()
+                    .ephemeral1hInputTokens(0L)
+                    .ephemeral5mInputTokens(0L)
+                    .build()
+            )
         assertThat(usage.cacheCreationInputTokens()).contains(2051L)
         assertThat(usage.cacheReadInputTokens()).contains(2051L)
         assertThat(usage.inputTokens()).isEqualTo(2095L)
@@ -35,6 +48,12 @@ internal class UsageTest {
         val jsonMapper = jsonMapper()
         val usage =
             Usage.builder()
+                .cacheCreation(
+                    CacheCreation.builder()
+                        .ephemeral1hInputTokens(0L)
+                        .ephemeral5mInputTokens(0L)
+                        .build()
+                )
                 .cacheCreationInputTokens(2051L)
                 .cacheReadInputTokens(2051L)
                 .inputTokens(2095L)

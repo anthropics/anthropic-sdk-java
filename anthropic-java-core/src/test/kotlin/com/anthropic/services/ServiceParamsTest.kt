@@ -59,7 +59,11 @@ internal class ServiceParamsTest {
                     listOf(
                         TextBlockParam.builder()
                             .text("Today's date is 2024-06-01.")
-                            .cacheControl(CacheControlEphemeral.builder().build())
+                            .cacheControl(
+                                CacheControlEphemeral.builder()
+                                    .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                    .build()
+                            )
                             .addCitation(
                                 CitationCharLocationParam.builder()
                                     .citedText("cited_text")
@@ -101,7 +105,11 @@ internal class ServiceParamsTest {
                                 .build()
                         )
                         .name("name")
-                        .cacheControl(CacheControlEphemeral.builder().build())
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
                         .description("Get the current weather in a given location")
                         .type(Tool.Type.CUSTOM)
                         .build()

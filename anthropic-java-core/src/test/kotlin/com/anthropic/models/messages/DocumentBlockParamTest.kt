@@ -14,7 +14,9 @@ internal class DocumentBlockParamTest {
         val documentBlockParam =
             DocumentBlockParam.builder()
                 .base64Source("U3RhaW5sZXNzIHJvY2tz")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .citations(CitationsConfigParam.builder().enabled(true).build())
                 .context("x")
                 .title("x")
@@ -27,7 +29,7 @@ internal class DocumentBlockParamTest {
                 )
             )
         assertThat(documentBlockParam.cacheControl())
-            .contains(CacheControlEphemeral.builder().build())
+            .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
         assertThat(documentBlockParam.citations())
             .contains(CitationsConfigParam.builder().enabled(true).build())
         assertThat(documentBlockParam.context()).contains("x")
@@ -40,7 +42,9 @@ internal class DocumentBlockParamTest {
         val documentBlockParam =
             DocumentBlockParam.builder()
                 .base64Source("U3RhaW5sZXNzIHJvY2tz")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .citations(CitationsConfigParam.builder().enabled(true).build())
                 .context("x")
                 .title("x")
