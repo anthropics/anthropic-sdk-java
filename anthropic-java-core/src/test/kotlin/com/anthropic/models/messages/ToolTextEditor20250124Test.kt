@@ -13,11 +13,13 @@ internal class ToolTextEditor20250124Test {
     fun create() {
         val toolTextEditor20250124 =
             ToolTextEditor20250124.builder()
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .build()
 
         assertThat(toolTextEditor20250124.cacheControl())
-            .contains(CacheControlEphemeral.builder().build())
+            .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
     }
 
     @Test
@@ -25,7 +27,9 @@ internal class ToolTextEditor20250124Test {
         val jsonMapper = jsonMapper()
         val toolTextEditor20250124 =
             ToolTextEditor20250124.builder()
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .build()
 
         val roundtrippedToolTextEditor20250124 =

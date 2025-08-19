@@ -15,7 +15,9 @@ internal class TextBlockParamTest {
         val textBlockParam =
             TextBlockParam.builder()
                 .text("x")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .addCitation(
                     CitationCharLocationParam.builder()
                         .citedText("cited_text")
@@ -28,7 +30,8 @@ internal class TextBlockParamTest {
                 .build()
 
         assertThat(textBlockParam.text()).isEqualTo("x")
-        assertThat(textBlockParam.cacheControl()).contains(CacheControlEphemeral.builder().build())
+        assertThat(textBlockParam.cacheControl())
+            .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
         assertThat(textBlockParam.citations().getOrNull())
             .containsExactly(
                 TextCitationParam.ofCharLocation(
@@ -49,7 +52,9 @@ internal class TextBlockParamTest {
         val textBlockParam =
             TextBlockParam.builder()
                 .text("x")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .addCitation(
                     CitationCharLocationParam.builder()
                         .citedText("cited_text")

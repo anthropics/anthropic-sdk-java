@@ -42,7 +42,9 @@ internal class MessageCountTokensToolTest {
                         .build()
                 )
                 .name("name")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .description("Get the current weather in a given location")
                 .type(Tool.Type.CUSTOM)
                 .build()
@@ -87,7 +89,11 @@ internal class MessageCountTokensToolTest {
                             .build()
                     )
                     .name("name")
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .description("Get the current weather in a given location")
                     .type(Tool.Type.CUSTOM)
                     .build()
@@ -105,7 +111,11 @@ internal class MessageCountTokensToolTest {
     @Test
     fun ofToolBash20250124() {
         val toolBash20250124 =
-            ToolBash20250124.builder().cacheControl(CacheControlEphemeral.builder().build()).build()
+            ToolBash20250124.builder()
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
+                .build()
 
         val messageCountTokensTool = MessageCountTokensTool.ofToolBash20250124(toolBash20250124)
 
@@ -123,7 +133,11 @@ internal class MessageCountTokensToolTest {
         val messageCountTokensTool =
             MessageCountTokensTool.ofToolBash20250124(
                 ToolBash20250124.builder()
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .build()
             )
 
@@ -140,7 +154,9 @@ internal class MessageCountTokensToolTest {
     fun ofToolTextEditor20250124() {
         val toolTextEditor20250124 =
             ToolTextEditor20250124.builder()
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .build()
 
         val messageCountTokensTool =
@@ -160,7 +176,11 @@ internal class MessageCountTokensToolTest {
         val messageCountTokensTool =
             MessageCountTokensTool.ofToolTextEditor20250124(
                 ToolTextEditor20250124.builder()
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .build()
             )
 
@@ -177,7 +197,9 @@ internal class MessageCountTokensToolTest {
     fun ofToolTextEditor20250429() {
         val toolTextEditor20250429 =
             ToolTextEditor20250429.builder()
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .build()
 
         val messageCountTokensTool =
@@ -197,7 +219,11 @@ internal class MessageCountTokensToolTest {
         val messageCountTokensTool =
             MessageCountTokensTool.ofToolTextEditor20250429(
                 ToolTextEditor20250429.builder()
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .build()
             )
 
@@ -214,7 +240,9 @@ internal class MessageCountTokensToolTest {
     fun ofToolTextEditor20250728() {
         val toolTextEditor20250728 =
             ToolTextEditor20250728.builder()
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .maxCharacters(1L)
                 .build()
 
@@ -235,7 +263,11 @@ internal class MessageCountTokensToolTest {
         val messageCountTokensTool =
             MessageCountTokensTool.ofToolTextEditor20250728(
                 ToolTextEditor20250728.builder()
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .maxCharacters(1L)
                     .build()
             )
@@ -255,7 +287,9 @@ internal class MessageCountTokensToolTest {
             WebSearchTool20250305.builder()
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .maxUses(1L)
                 .userLocation(
                     WebSearchTool20250305.UserLocation.builder()
@@ -286,7 +320,11 @@ internal class MessageCountTokensToolTest {
                 WebSearchTool20250305.builder()
                     .addAllowedDomain("string")
                     .addBlockedDomain("string")
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .maxUses(1L)
                     .userLocation(
                         WebSearchTool20250305.UserLocation.builder()

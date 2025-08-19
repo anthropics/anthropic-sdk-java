@@ -14,14 +14,16 @@ internal class ToolResultBlockParamTest {
         val toolResultBlockParam =
             ToolResultBlockParam.builder()
                 .toolUseId("tool_use_id")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .content("string")
                 .isError(true)
                 .build()
 
         assertThat(toolResultBlockParam.toolUseId()).isEqualTo("tool_use_id")
         assertThat(toolResultBlockParam.cacheControl())
-            .contains(CacheControlEphemeral.builder().build())
+            .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
         assertThat(toolResultBlockParam.content())
             .contains(ToolResultBlockParam.Content.ofString("string"))
         assertThat(toolResultBlockParam.isError()).contains(true)
@@ -33,7 +35,9 @@ internal class ToolResultBlockParamTest {
         val toolResultBlockParam =
             ToolResultBlockParam.builder()
                 .toolUseId("tool_use_id")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .content("string")
                 .isError(true)
                 .build()

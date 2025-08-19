@@ -38,7 +38,9 @@ internal class ToolTest {
                         .build()
                 )
                 .name("name")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .description("Get the current weather in a given location")
                 .type(Tool.Type.CUSTOM)
                 .build()
@@ -68,7 +70,8 @@ internal class ToolTest {
                     .build()
             )
         assertThat(tool.name()).isEqualTo("name")
-        assertThat(tool.cacheControl()).contains(CacheControlEphemeral.builder().build())
+        assertThat(tool.cacheControl())
+            .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
         assertThat(tool.description()).contains("Get the current weather in a given location")
         assertThat(tool.type()).contains(Tool.Type.CUSTOM)
     }
@@ -102,7 +105,9 @@ internal class ToolTest {
                         .build()
                 )
                 .name("name")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .description("Get the current weather in a given location")
                 .type(Tool.Type.CUSTOM)
                 .build()

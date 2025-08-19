@@ -20,6 +20,7 @@ import kotlin.jvm.optionals.getOrNull
 
 class Usage
 private constructor(
+    private val cacheCreation: JsonField<CacheCreation>,
     private val cacheCreationInputTokens: JsonField<Long>,
     private val cacheReadInputTokens: JsonField<Long>,
     private val inputTokens: JsonField<Long>,
@@ -31,6 +32,9 @@ private constructor(
 
     @JsonCreator
     private constructor(
+        @JsonProperty("cache_creation")
+        @ExcludeMissing
+        cacheCreation: JsonField<CacheCreation> = JsonMissing.of(),
         @JsonProperty("cache_creation_input_tokens")
         @ExcludeMissing
         cacheCreationInputTokens: JsonField<Long> = JsonMissing.of(),
@@ -50,6 +54,7 @@ private constructor(
         @ExcludeMissing
         serviceTier: JsonField<ServiceTier> = JsonMissing.of(),
     ) : this(
+        cacheCreation,
         cacheCreationInputTokens,
         cacheReadInputTokens,
         inputTokens,
@@ -58,6 +63,14 @@ private constructor(
         serviceTier,
         mutableMapOf(),
     )
+
+    /**
+     * Breakdown of cached tokens by TTL
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun cacheCreation(): Optional<CacheCreation> = cacheCreation.getOptional("cache_creation")
 
     /**
      * The number of input tokens used to create the cache entry.
@@ -108,6 +121,15 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun serviceTier(): Optional<ServiceTier> = serviceTier.getOptional("service_tier")
+
+    /**
+     * Returns the raw JSON value of [cacheCreation].
+     *
+     * Unlike [cacheCreation], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("cache_creation")
+    @ExcludeMissing
+    fun _cacheCreation(): JsonField<CacheCreation> = cacheCreation
 
     /**
      * Returns the raw JSON value of [cacheCreationInputTokens].
@@ -182,6 +204,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .cacheCreation()
          * .cacheCreationInputTokens()
          * .cacheReadInputTokens()
          * .inputTokens()
@@ -196,6 +219,7 @@ private constructor(
     /** A builder for [Usage]. */
     class Builder internal constructor() {
 
+        private var cacheCreation: JsonField<CacheCreation>? = null
         private var cacheCreationInputTokens: JsonField<Long>? = null
         private var cacheReadInputTokens: JsonField<Long>? = null
         private var inputTokens: JsonField<Long>? = null
@@ -206,6 +230,7 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(usage: Usage) = apply {
+            cacheCreation = usage.cacheCreation
             cacheCreationInputTokens = usage.cacheCreationInputTokens
             cacheReadInputTokens = usage.cacheReadInputTokens
             inputTokens = usage.inputTokens
@@ -213,6 +238,25 @@ private constructor(
             serverToolUse = usage.serverToolUse
             serviceTier = usage.serviceTier
             additionalProperties = usage.additionalProperties.toMutableMap()
+        }
+
+        /** Breakdown of cached tokens by TTL */
+        fun cacheCreation(cacheCreation: CacheCreation?) =
+            cacheCreation(JsonField.ofNullable(cacheCreation))
+
+        /** Alias for calling [Builder.cacheCreation] with `cacheCreation.orElse(null)`. */
+        fun cacheCreation(cacheCreation: Optional<CacheCreation>) =
+            cacheCreation(cacheCreation.getOrNull())
+
+        /**
+         * Sets [Builder.cacheCreation] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.cacheCreation] with a well-typed [CacheCreation] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun cacheCreation(cacheCreation: JsonField<CacheCreation>) = apply {
+            this.cacheCreation = cacheCreation
         }
 
         /** The number of input tokens used to create the cache entry. */
@@ -361,6 +405,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .cacheCreation()
          * .cacheCreationInputTokens()
          * .cacheReadInputTokens()
          * .inputTokens()
@@ -373,6 +418,7 @@ private constructor(
          */
         fun build(): Usage =
             Usage(
+                checkRequired("cacheCreation", cacheCreation),
                 checkRequired("cacheCreationInputTokens", cacheCreationInputTokens),
                 checkRequired("cacheReadInputTokens", cacheReadInputTokens),
                 checkRequired("inputTokens", inputTokens),
@@ -390,6 +436,7 @@ private constructor(
             return@apply
         }
 
+        cacheCreation().ifPresent { it.validate() }
         cacheCreationInputTokens()
         cacheReadInputTokens()
         inputTokens()
@@ -414,7 +461,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (cacheCreationInputTokens.asKnown().isPresent) 1 else 0) +
+        (cacheCreation.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (cacheCreationInputTokens.asKnown().isPresent) 1 else 0) +
             (if (cacheReadInputTokens.asKnown().isPresent) 1 else 0) +
             (if (inputTokens.asKnown().isPresent) 1 else 0) +
             (if (outputTokens.asKnown().isPresent) 1 else 0) +
@@ -564,6 +612,7 @@ private constructor(
         }
 
         return other is Usage &&
+            cacheCreation == other.cacheCreation &&
             cacheCreationInputTokens == other.cacheCreationInputTokens &&
             cacheReadInputTokens == other.cacheReadInputTokens &&
             inputTokens == other.inputTokens &&
@@ -575,6 +624,7 @@ private constructor(
 
     private val hashCode: Int by lazy {
         Objects.hash(
+            cacheCreation,
             cacheCreationInputTokens,
             cacheReadInputTokens,
             inputTokens,
@@ -588,5 +638,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Usage{cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inputTokens=$inputTokens, outputTokens=$outputTokens, serverToolUse=$serverToolUse, serviceTier=$serviceTier, additionalProperties=$additionalProperties}"
+        "Usage{cacheCreation=$cacheCreation, cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inputTokens=$inputTokens, outputTokens=$outputTokens, serverToolUse=$serverToolUse, serviceTier=$serviceTier, additionalProperties=$additionalProperties}"
 }

@@ -42,7 +42,9 @@ internal class ToolUnionTest {
                         .build()
                 )
                 .name("name")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .description("Get the current weather in a given location")
                 .type(Tool.Type.CUSTOM)
                 .build()
@@ -87,7 +89,11 @@ internal class ToolUnionTest {
                             .build()
                     )
                     .name("name")
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .description("Get the current weather in a given location")
                     .type(Tool.Type.CUSTOM)
                     .build()
@@ -105,7 +111,11 @@ internal class ToolUnionTest {
     @Test
     fun ofBash20250124() {
         val bash20250124 =
-            ToolBash20250124.builder().cacheControl(CacheControlEphemeral.builder().build()).build()
+            ToolBash20250124.builder()
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
+                .build()
 
         val toolUnion = ToolUnion.ofBash20250124(bash20250124)
 
@@ -123,7 +133,11 @@ internal class ToolUnionTest {
         val toolUnion =
             ToolUnion.ofBash20250124(
                 ToolBash20250124.builder()
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .build()
             )
 
@@ -140,7 +154,9 @@ internal class ToolUnionTest {
     fun ofTextEditor20250124() {
         val textEditor20250124 =
             ToolTextEditor20250124.builder()
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .build()
 
         val toolUnion = ToolUnion.ofTextEditor20250124(textEditor20250124)
@@ -159,7 +175,11 @@ internal class ToolUnionTest {
         val toolUnion =
             ToolUnion.ofTextEditor20250124(
                 ToolTextEditor20250124.builder()
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .build()
             )
 
@@ -176,7 +196,9 @@ internal class ToolUnionTest {
     fun ofTextEditor20250429() {
         val textEditor20250429 =
             ToolTextEditor20250429.builder()
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .build()
 
         val toolUnion = ToolUnion.ofTextEditor20250429(textEditor20250429)
@@ -195,7 +217,11 @@ internal class ToolUnionTest {
         val toolUnion =
             ToolUnion.ofTextEditor20250429(
                 ToolTextEditor20250429.builder()
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .build()
             )
 
@@ -212,7 +238,9 @@ internal class ToolUnionTest {
     fun ofTextEditor20250728() {
         val textEditor20250728 =
             ToolTextEditor20250728.builder()
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .maxCharacters(1L)
                 .build()
 
@@ -232,7 +260,11 @@ internal class ToolUnionTest {
         val toolUnion =
             ToolUnion.ofTextEditor20250728(
                 ToolTextEditor20250728.builder()
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .maxCharacters(1L)
                     .build()
             )
@@ -252,7 +284,9 @@ internal class ToolUnionTest {
             WebSearchTool20250305.builder()
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .maxUses(1L)
                 .userLocation(
                     WebSearchTool20250305.UserLocation.builder()
@@ -282,7 +316,11 @@ internal class ToolUnionTest {
                 WebSearchTool20250305.builder()
                     .addAllowedDomain("string")
                     .addBlockedDomain("string")
-                    .cacheControl(CacheControlEphemeral.builder().build())
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .maxUses(1L)
                     .userLocation(
                         WebSearchTool20250305.UserLocation.builder()

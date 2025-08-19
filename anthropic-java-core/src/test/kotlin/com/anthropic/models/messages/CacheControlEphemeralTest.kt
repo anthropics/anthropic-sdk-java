@@ -11,13 +11,17 @@ internal class CacheControlEphemeralTest {
 
     @Test
     fun create() {
-        val cacheControlEphemeral = CacheControlEphemeral.builder().build()
+        val cacheControlEphemeral =
+            CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+
+        assertThat(cacheControlEphemeral.ttl()).contains(CacheControlEphemeral.Ttl.TTL_5M)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val cacheControlEphemeral = CacheControlEphemeral.builder().build()
+        val cacheControlEphemeral =
+            CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
 
         val roundtrippedCacheControlEphemeral =
             jsonMapper.readValue(

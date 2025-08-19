@@ -34,6 +34,12 @@ internal class MessageTest {
                 .stopSequence(null)
                 .usage(
                     Usage.builder()
+                        .cacheCreation(
+                            CacheCreation.builder()
+                                .ephemeral1hInputTokens(0L)
+                                .ephemeral5mInputTokens(0L)
+                                .build()
+                        )
                         .cacheCreationInputTokens(2051L)
                         .cacheReadInputTokens(2051L)
                         .inputTokens(2095L)
@@ -69,6 +75,12 @@ internal class MessageTest {
         assertThat(message.usage())
             .isEqualTo(
                 Usage.builder()
+                    .cacheCreation(
+                        CacheCreation.builder()
+                            .ephemeral1hInputTokens(0L)
+                            .ephemeral5mInputTokens(0L)
+                            .build()
+                    )
                     .cacheCreationInputTokens(2051L)
                     .cacheReadInputTokens(2051L)
                     .inputTokens(2095L)
@@ -105,6 +117,12 @@ internal class MessageTest {
                 .stopSequence(null)
                 .usage(
                     Usage.builder()
+                        .cacheCreation(
+                            CacheCreation.builder()
+                                .ephemeral1hInputTokens(0L)
+                                .ephemeral5mInputTokens(0L)
+                                .build()
+                        )
                         .cacheCreationInputTokens(2051L)
                         .cacheReadInputTokens(2051L)
                         .inputTokens(2095L)

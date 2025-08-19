@@ -24,7 +24,9 @@ internal class WebSearchToolResultBlockParamTest {
                     )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .build()
 
         assertThat(webSearchToolResultBlockParam.content())
@@ -42,7 +44,7 @@ internal class WebSearchToolResultBlockParamTest {
             )
         assertThat(webSearchToolResultBlockParam.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
         assertThat(webSearchToolResultBlockParam.cacheControl())
-            .contains(CacheControlEphemeral.builder().build())
+            .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
     }
 
     @Test
@@ -61,7 +63,9 @@ internal class WebSearchToolResultBlockParamTest {
                     )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .build()
 
         val roundtrippedWebSearchToolResultBlockParam =

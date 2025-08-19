@@ -12,17 +12,25 @@ internal class ToolBash20250124Test {
     @Test
     fun create() {
         val toolBash20250124 =
-            ToolBash20250124.builder().cacheControl(CacheControlEphemeral.builder().build()).build()
+            ToolBash20250124.builder()
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
+                .build()
 
         assertThat(toolBash20250124.cacheControl())
-            .contains(CacheControlEphemeral.builder().build())
+            .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val toolBash20250124 =
-            ToolBash20250124.builder().cacheControl(CacheControlEphemeral.builder().build()).build()
+            ToolBash20250124.builder()
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
+                .build()
 
         val roundtrippedToolBash20250124 =
             jsonMapper.readValue(

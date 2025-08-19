@@ -41,6 +41,12 @@ internal class RawMessageStreamEventTest {
                         .stopSequence(null)
                         .usage(
                             Usage.builder()
+                                .cacheCreation(
+                                    CacheCreation.builder()
+                                        .ephemeral1hInputTokens(0L)
+                                        .ephemeral5mInputTokens(0L)
+                                        .build()
+                                )
                                 .cacheCreationInputTokens(2051L)
                                 .cacheReadInputTokens(2051L)
                                 .inputTokens(2095L)
@@ -94,6 +100,12 @@ internal class RawMessageStreamEventTest {
                             .stopSequence(null)
                             .usage(
                                 Usage.builder()
+                                    .cacheCreation(
+                                        CacheCreation.builder()
+                                            .ephemeral1hInputTokens(0L)
+                                            .ephemeral5mInputTokens(0L)
+                                            .build()
+                                    )
                                     .cacheCreationInputTokens(2051L)
                                     .cacheReadInputTokens(2051L)
                                     .inputTokens(2095L)

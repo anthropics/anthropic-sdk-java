@@ -13,12 +13,14 @@ internal class ToolTextEditor20250728Test {
     fun create() {
         val toolTextEditor20250728 =
             ToolTextEditor20250728.builder()
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .maxCharacters(1L)
                 .build()
 
         assertThat(toolTextEditor20250728.cacheControl())
-            .contains(CacheControlEphemeral.builder().build())
+            .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
         assertThat(toolTextEditor20250728.maxCharacters()).contains(1L)
     }
 
@@ -27,7 +29,9 @@ internal class ToolTextEditor20250728Test {
         val jsonMapper = jsonMapper()
         val toolTextEditor20250728 =
             ToolTextEditor20250728.builder()
-                .cacheControl(CacheControlEphemeral.builder().build())
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .maxCharacters(1L)
                 .build()
 
