@@ -60,7 +60,7 @@ class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : Anthr
 
     override fun beta(): BetaServiceAsync = beta
 
-    override fun close() = clientOptions.httpClient.close()
+    override fun close() = clientOptions.close()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         AnthropicClientAsync.WithRawResponse {
