@@ -139,7 +139,7 @@ private constructor(
         fun file(file: ByteArray) = apply { body.file(file) }
 
         /** The file to upload */
-        fun file(file: Path) = apply { body.file(file) }
+        fun file(path: Path) = apply { body.file(path) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -368,11 +368,11 @@ private constructor(
             fun file(file: ByteArray) = file(file.inputStream())
 
             /** The file to upload */
-            fun file(file: Path) =
+            fun file(path: Path) =
                 file(
                     MultipartField.builder<InputStream>()
-                        .value(file.inputStream())
-                        .filename(file.name)
+                        .value(path.inputStream())
+                        .filename(path.name)
                         .build()
                 )
 
