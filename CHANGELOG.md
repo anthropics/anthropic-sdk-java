@@ -1,5 +1,31 @@
 # Changelog
 
+## 2.5.2 (2025-08-22)
+
+Full Changelog: [v2.5.1...v2.5.2](https://github.com/anthropics/anthropic-sdk-java/compare/v2.5.1...v2.5.2)
+
+### Bug Fixes
+
+* **client:** ensure correct binary content type ([197fdd5](https://github.com/anthropics/anthropic-sdk-java/commit/197fdd5433ad9d39b488bb232797084b08bade7f))
+
+
+### Performance Improvements
+
+* **internal:** make formatting faster ([7c36322](https://github.com/anthropics/anthropic-sdk-java/commit/7c36322f9f664d32a4649f07d0bfc02a3116129b))
+
+
+### Chores
+
+* **api:** remove unsupported endpoints ([d9b7be3](https://github.com/anthropics/anthropic-sdk-java/commit/d9b7be334b6d949045be9f9ee22f8b80b20c8cda))
+* **ci:** add build job ([061df8e](https://github.com/anthropics/anthropic-sdk-java/commit/061df8e7024fc4db78f703510e6e80ff20221974))
+* **ci:** reduce log noise ([b91d777](https://github.com/anthropics/anthropic-sdk-java/commit/b91d7779f1263e3f33a6297fab9016e2dc52a74b))
+* **client:** refactor closing / shutdown ([f0c796d](https://github.com/anthropics/anthropic-sdk-java/commit/f0c796d723913df6b9465cbb4d0a84d00df21cdd))
+* **client:** rename parameter ([197fdd5](https://github.com/anthropics/anthropic-sdk-java/commit/197fdd5433ad9d39b488bb232797084b08bade7f))
+* **internal:** dynamically determine included projects ([93db169](https://github.com/anthropics/anthropic-sdk-java/commit/93db169c6cf328e9a7ffca28555264686853001a))
+* **internal:** support passing arguments to test script ([8528c63](https://github.com/anthropics/anthropic-sdk-java/commit/8528c63f15574ecf0def1ad937324e83d324675f))
+* **internal:** support running formatters directly ([e0de72e](https://github.com/anthropics/anthropic-sdk-java/commit/e0de72e934963d0dddf749d678e6293d123cb79e))
+* remove memory upper bound from publishing step ([cb2ac3b](https://github.com/anthropics/anthropic-sdk-java/commit/cb2ac3b70f37f9d65bbeaff429f684b66911b3b1))
+
 ## 2.5.1 (2025-08-13)
 
 Full Changelog: [v2.5.0...v2.5.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.5.0...v2.5.1)
