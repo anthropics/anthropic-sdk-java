@@ -999,7 +999,12 @@ internal class MessageAccumulatorTest {
     private fun usage(inputTokens: Long) =
         Usage.builder()
             .inputTokens(inputTokens)
-            .cacheCreation(CacheCreation.builder().ephemeral1hInputTokens(0L).ephemeral5mInputTokens(0L).build())
+            .cacheCreation(
+                CacheCreation.builder()
+                    .ephemeral1hInputTokens(0L)
+                    .ephemeral5mInputTokens(0L)
+                    .build()
+            )
             .cacheCreationInputTokens(0L)
             .cacheReadInputTokens(0L)
             .outputTokens(0L)
