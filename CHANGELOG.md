@@ -1,5 +1,40 @@
 # Changelog
 
+## 2.6.0 (2025-09-02)
+
+Full Changelog: [v2.5.1...v2.6.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.5.1...v2.6.0)
+
+### Features
+
+* **client:** adds support for code-execution-2025-08-26 tool ([da4c57b](https://github.com/anthropics/anthropic-sdk-java/commit/da4c57b12dafe5243a5e06288c946830746622e5))
+
+
+### Bug Fixes
+
+* **client:** ensure correct binary content type ([197fdd5](https://github.com/anthropics/anthropic-sdk-java/commit/197fdd5433ad9d39b488bb232797084b08bade7f))
+* fix casing issue ([c2c5009](https://github.com/anthropics/anthropic-sdk-java/commit/c2c50097e4ea22fbac005fc4083142315384c51b))
+* update singularization rules ([afec494](https://github.com/anthropics/anthropic-sdk-java/commit/afec494c858f4231191f8ff80e3a5dfd37f62e82))
+
+
+### Performance Improvements
+
+* **internal:** make formatting faster ([7c36322](https://github.com/anthropics/anthropic-sdk-java/commit/7c36322f9f664d32a4649f07d0bfc02a3116129b))
+
+
+### Chores
+
+* **api:** remove unsupported endpoints ([d9b7be3](https://github.com/anthropics/anthropic-sdk-java/commit/d9b7be334b6d949045be9f9ee22f8b80b20c8cda))
+* **ci:** add build job ([061df8e](https://github.com/anthropics/anthropic-sdk-java/commit/061df8e7024fc4db78f703510e6e80ff20221974))
+* **ci:** reduce log noise ([b91d777](https://github.com/anthropics/anthropic-sdk-java/commit/b91d7779f1263e3f33a6297fab9016e2dc52a74b))
+* **client:** refactor closing / shutdown ([f0c796d](https://github.com/anthropics/anthropic-sdk-java/commit/f0c796d723913df6b9465cbb4d0a84d00df21cdd))
+* **client:** rename parameter ([197fdd5](https://github.com/anthropics/anthropic-sdk-java/commit/197fdd5433ad9d39b488bb232797084b08bade7f))
+* **internal:** dynamically determine included projects ([93db169](https://github.com/anthropics/anthropic-sdk-java/commit/93db169c6cf328e9a7ffca28555264686853001a))
+* **internal:** run formatter ([06cd69f](https://github.com/anthropics/anthropic-sdk-java/commit/06cd69ff9dc45bf6ae427c87818b31bee60fd35d))
+* **internal:** support passing arguments to test script ([8528c63](https://github.com/anthropics/anthropic-sdk-java/commit/8528c63f15574ecf0def1ad937324e83d324675f))
+* **internal:** support running formatters directly ([e0de72e](https://github.com/anthropics/anthropic-sdk-java/commit/e0de72e934963d0dddf749d678e6293d123cb79e))
+* remove memory upper bound from publishing step ([cb2ac3b](https://github.com/anthropics/anthropic-sdk-java/commit/cb2ac3b70f37f9d65bbeaff429f684b66911b3b1))
+* **tests:** setup cache creation in MessageAccumulator test ([d5de443](https://github.com/anthropics/anthropic-sdk-java/commit/d5de4438df3ee755bac3d4c66021e653c9f07acb))
+
 ## 2.5.1 (2025-08-13)
 
 Full Changelog: [v2.5.0...v2.5.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.5.0...v2.5.1)
