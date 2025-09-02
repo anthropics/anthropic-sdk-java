@@ -48,6 +48,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
@@ -116,6 +118,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
@@ -178,6 +182,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
@@ -256,6 +262,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
@@ -324,6 +332,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
@@ -363,6 +373,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
@@ -412,6 +424,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
@@ -470,6 +484,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
@@ -528,6 +544,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).contains(serverToolUse)
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
@@ -594,6 +612,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).contains(webSearchToolResult)
         assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
@@ -665,6 +685,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.codeExecutionToolResult())
             .contains(codeExecutionToolResult)
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
@@ -679,6 +701,157 @@ internal class BetaContentBlockParamTest {
                     .content(
                         BetaCodeExecutionToolResultErrorParam.builder()
                             .errorCode(BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
+                            .build()
+                    )
+                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedBetaContentBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaContentBlockParam),
+                jacksonTypeRef<BetaContentBlockParam>(),
+            )
+
+        assertThat(roundtrippedBetaContentBlockParam).isEqualTo(betaContentBlockParam)
+    }
+
+    @Test
+    fun ofBashCodeExecutionToolResult() {
+        val bashCodeExecutionToolResult =
+            BetaBashCodeExecutionToolResultBlockParam.builder()
+                .content(
+                    BetaBashCodeExecutionToolResultErrorParam.builder()
+                        .errorCode(
+                            BetaBashCodeExecutionToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT
+                        )
+                        .build()
+                )
+                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
+                .build()
+
+        val betaContentBlockParam =
+            BetaContentBlockParam.ofBashCodeExecutionToolResult(bashCodeExecutionToolResult)
+
+        assertThat(betaContentBlockParam.text()).isEmpty
+        assertThat(betaContentBlockParam.image()).isEmpty
+        assertThat(betaContentBlockParam.document()).isEmpty
+        assertThat(betaContentBlockParam.searchResult()).isEmpty
+        assertThat(betaContentBlockParam.thinking()).isEmpty
+        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
+        assertThat(betaContentBlockParam.toolUse()).isEmpty
+        assertThat(betaContentBlockParam.toolResult()).isEmpty
+        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
+        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult())
+            .contains(bashCodeExecutionToolResult)
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
+        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
+        assertThat(betaContentBlockParam.containerUpload()).isEmpty
+    }
+
+    @Test
+    fun ofBashCodeExecutionToolResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaContentBlockParam =
+            BetaContentBlockParam.ofBashCodeExecutionToolResult(
+                BetaBashCodeExecutionToolResultBlockParam.builder()
+                    .content(
+                        BetaBashCodeExecutionToolResultErrorParam.builder()
+                            .errorCode(
+                                BetaBashCodeExecutionToolResultErrorParam.ErrorCode
+                                    .INVALID_TOOL_INPUT
+                            )
+                            .build()
+                    )
+                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedBetaContentBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaContentBlockParam),
+                jacksonTypeRef<BetaContentBlockParam>(),
+            )
+
+        assertThat(roundtrippedBetaContentBlockParam).isEqualTo(betaContentBlockParam)
+    }
+
+    @Test
+    fun ofTextEditorCodeExecutionToolResult() {
+        val textEditorCodeExecutionToolResult =
+            BetaTextEditorCodeExecutionToolResultBlockParam.builder()
+                .content(
+                    BetaTextEditorCodeExecutionToolResultErrorParam.builder()
+                        .errorCode(
+                            BetaTextEditorCodeExecutionToolResultErrorParam.ErrorCode
+                                .INVALID_TOOL_INPUT
+                        )
+                        .errorMessage("error_message")
+                        .build()
+                )
+                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
+                .build()
+
+        val betaContentBlockParam =
+            BetaContentBlockParam.ofTextEditorCodeExecutionToolResult(
+                textEditorCodeExecutionToolResult
+            )
+
+        assertThat(betaContentBlockParam.text()).isEmpty
+        assertThat(betaContentBlockParam.image()).isEmpty
+        assertThat(betaContentBlockParam.document()).isEmpty
+        assertThat(betaContentBlockParam.searchResult()).isEmpty
+        assertThat(betaContentBlockParam.thinking()).isEmpty
+        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
+        assertThat(betaContentBlockParam.toolUse()).isEmpty
+        assertThat(betaContentBlockParam.toolResult()).isEmpty
+        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
+        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult())
+            .contains(textEditorCodeExecutionToolResult)
+        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
+        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
+        assertThat(betaContentBlockParam.containerUpload()).isEmpty
+    }
+
+    @Test
+    fun ofTextEditorCodeExecutionToolResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaContentBlockParam =
+            BetaContentBlockParam.ofTextEditorCodeExecutionToolResult(
+                BetaTextEditorCodeExecutionToolResultBlockParam.builder()
+                    .content(
+                        BetaTextEditorCodeExecutionToolResultErrorParam.builder()
+                            .errorCode(
+                                BetaTextEditorCodeExecutionToolResultErrorParam.ErrorCode
+                                    .INVALID_TOOL_INPUT
+                            )
+                            .errorMessage("error_message")
                             .build()
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
@@ -727,6 +900,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(betaContentBlockParam.mcpToolUse()).contains(mcpToolUse)
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
@@ -786,6 +961,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
         assertThat(betaContentBlockParam.mcpToolResult()).contains(mcpToolResult)
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
@@ -842,6 +1019,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.serverToolUse()).isEmpty
         assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
         assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).contains(containerUpload)

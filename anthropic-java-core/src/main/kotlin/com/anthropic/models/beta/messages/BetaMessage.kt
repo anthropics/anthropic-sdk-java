@@ -468,6 +468,26 @@ private constructor(
         fun addContent(codeExecutionToolResult: BetaCodeExecutionToolResultBlock) =
             addContent(BetaContentBlock.ofCodeExecutionToolResult(codeExecutionToolResult))
 
+        /**
+         * Alias for calling [addContent] with
+         * `BetaContentBlock.ofBashCodeExecutionToolResult(bashCodeExecutionToolResult)`.
+         */
+        fun addContent(bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlock) =
+            addContent(BetaContentBlock.ofBashCodeExecutionToolResult(bashCodeExecutionToolResult))
+
+        /**
+         * Alias for calling [addContent] with
+         * `BetaContentBlock.ofTextEditorCodeExecutionToolResult(textEditorCodeExecutionToolResult)`.
+         */
+        fun addContent(
+            textEditorCodeExecutionToolResult: BetaTextEditorCodeExecutionToolResultBlock
+        ) =
+            addContent(
+                BetaContentBlock.ofTextEditorCodeExecutionToolResult(
+                    textEditorCodeExecutionToolResult
+                )
+            )
+
         /** Alias for calling [addContent] with `BetaContentBlock.ofMcpToolUse(mcpToolUse)`. */
         fun addContent(mcpToolUse: BetaMcpToolUseBlock) =
             addContent(BetaContentBlock.ofMcpToolUse(mcpToolUse))

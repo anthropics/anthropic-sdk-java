@@ -316,6 +316,24 @@ class BetaMessageAccumulator private constructor() {
                                         )
                                     }
 
+                                    override fun visitBashCodeExecutionToolResult(
+                                        bashCodeExecutionToolResult:
+                                            BetaBashCodeExecutionToolResultBlock
+                                    ): BetaContentBlock {
+                                        return BetaContentBlock.ofBashCodeExecutionToolResult(
+                                            bashCodeExecutionToolResult
+                                        )
+                                    }
+
+                                    override fun visitTextEditorCodeExecutionToolResult(
+                                        textEditorCodeExecutionToolResult:
+                                            BetaTextEditorCodeExecutionToolResultBlock
+                                    ): BetaContentBlock {
+                                        return BetaContentBlock.ofTextEditorCodeExecutionToolResult(
+                                            textEditorCodeExecutionToolResult
+                                        )
+                                    }
+
                                     override fun visitMcpToolUse(
                                         mcpToolUse: BetaMcpToolUseBlock
                                     ): BetaContentBlock {

@@ -14,11 +14,13 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BetaErrorResponse
 private constructor(
     private val error: JsonField<BetaError>,
+    private val requestId: JsonField<String>,
     private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -26,14 +28,21 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("error") @ExcludeMissing error: JsonField<BetaError> = JsonMissing.of(),
+        @JsonProperty("request_id") @ExcludeMissing requestId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(error, type, mutableMapOf())
+    ) : this(error, requestId, type, mutableMapOf())
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun error(): BetaError = error.getRequired("error")
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun requestId(): Optional<String> = requestId.getOptional("request_id")
 
     /**
      * Expected to always return the following:
@@ -52,6 +61,13 @@ private constructor(
      * Unlike [error], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("error") @ExcludeMissing fun _error(): JsonField<BetaError> = error
+
+    /**
+     * Returns the raw JSON value of [requestId].
+     *
+     * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("request_id") @ExcludeMissing fun _requestId(): JsonField<String> = requestId
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -73,6 +89,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .error()
+         * .requestId()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -82,12 +99,14 @@ private constructor(
     class Builder internal constructor() {
 
         private var error: JsonField<BetaError>? = null
+        private var requestId: JsonField<String>? = null
         private var type: JsonValue = JsonValue.from("error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaErrorResponse: BetaErrorResponse) = apply {
             error = betaErrorResponse.error
+            requestId = betaErrorResponse.requestId
             type = betaErrorResponse.type
             additionalProperties = betaErrorResponse.additionalProperties.toMutableMap()
         }
@@ -229,6 +248,20 @@ private constructor(
         fun overloadedError(message: String) =
             error(BetaOverloadedError.builder().message(message).build())
 
+        fun requestId(requestId: String?) = requestId(JsonField.ofNullable(requestId))
+
+        /** Alias for calling [Builder.requestId] with `requestId.orElse(null)`. */
+        fun requestId(requestId: Optional<String>) = requestId(requestId.getOrNull())
+
+        /**
+         * Sets [Builder.requestId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun requestId(requestId: JsonField<String>) = apply { this.requestId = requestId }
+
         /**
          * Sets the field to an arbitrary JSON value.
          *
@@ -270,6 +303,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .error()
+         * .requestId()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -277,6 +311,7 @@ private constructor(
         fun build(): BetaErrorResponse =
             BetaErrorResponse(
                 checkRequired("error", error),
+                checkRequired("requestId", requestId),
                 type,
                 additionalProperties.toMutableMap(),
             )
@@ -290,6 +325,7 @@ private constructor(
         }
 
         error().validate()
+        requestId()
         _type().let {
             if (it != JsonValue.from("error")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
@@ -314,6 +350,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (error.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (requestId.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("error")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
@@ -323,14 +360,15 @@ private constructor(
 
         return other is BetaErrorResponse &&
             error == other.error &&
+            requestId == other.requestId &&
             type == other.type &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(error, type, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(error, requestId, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaErrorResponse{error=$error, type=$type, additionalProperties=$additionalProperties}"
+        "BetaErrorResponse{error=$error, requestId=$requestId, type=$type, additionalProperties=$additionalProperties}"
 }

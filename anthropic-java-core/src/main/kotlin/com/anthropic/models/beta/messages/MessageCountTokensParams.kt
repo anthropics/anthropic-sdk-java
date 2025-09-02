@@ -104,29 +104,7 @@ private constructor(
      * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
      * ```
      *
-     * Starting with Claude 3 models, you can also send image content blocks:
-     * ```json
-     * {
-     *   "role": "user",
-     *   "content": [
-     *     {
-     *       "type": "image",
-     *       "source": {
-     *         "type": "base64",
-     *         "media_type": "image/jpeg",
-     *         "data": "/9j/4AAQSkZJRg..."
-     *       }
-     *     },
-     *     { "type": "text", "text": "What is in this image?" }
-     *   ]
-     * }
-     * ```
-     *
-     * We currently support the `base64` source type for images, and the `image/jpeg`, `image/png`,
-     * `image/gif`, and `image/webp` media types.
-     *
-     * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more input
-     * examples.
+     * See [input examples](https://docs.anthropic.com/en/api/messages-examples).
      *
      * Note that if you want to include a
      * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the top-level
@@ -448,29 +426,7 @@ private constructor(
          * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
          * ```
          *
-         * Starting with Claude 3 models, you can also send image content blocks:
-         * ```json
-         * {
-         *   "role": "user",
-         *   "content": [
-         *     {
-         *       "type": "image",
-         *       "source": {
-         *         "type": "base64",
-         *         "media_type": "image/jpeg",
-         *         "data": "/9j/4AAQSkZJRg..."
-         *       }
-         *     },
-         *     { "type": "text", "text": "What is in this image?" }
-         *   ]
-         * }
-         * ```
-         *
-         * We currently support the `base64` source type for images, and the `image/jpeg`,
-         * `image/png`, `image/gif`, and `image/webp` media types.
-         *
-         * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more input
-         * examples.
+         * See [input examples](https://docs.anthropic.com/en/api/messages-examples).
          *
          * Note that if you want to include a
          * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
@@ -816,6 +772,14 @@ private constructor(
 
         /**
          * Alias for calling [addTool] with
+         * `Tool.ofBetaCodeExecutionTool20250825(betaCodeExecutionTool20250825)`.
+         */
+        fun addTool(betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825) = apply {
+            body.addTool(betaCodeExecutionTool20250825)
+        }
+
+        /**
+         * Alias for calling [addTool] with
          * `Tool.ofBetaToolComputerUse20241022(betaToolComputerUse20241022)`.
          */
         fun addTool(betaToolComputerUse20241022: BetaToolComputerUse20241022) = apply {
@@ -1104,29 +1068,7 @@ private constructor(
          * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
          * ```
          *
-         * Starting with Claude 3 models, you can also send image content blocks:
-         * ```json
-         * {
-         *   "role": "user",
-         *   "content": [
-         *     {
-         *       "type": "image",
-         *       "source": {
-         *         "type": "base64",
-         *         "media_type": "image/jpeg",
-         *         "data": "/9j/4AAQSkZJRg..."
-         *       }
-         *     },
-         *     { "type": "text", "text": "What is in this image?" }
-         *   ]
-         * }
-         * ```
-         *
-         * We currently support the `base64` source type for images, and the `image/jpeg`,
-         * `image/png`, `image/gif`, and `image/webp` media types.
-         *
-         * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more input
-         * examples.
+         * See [input examples](https://docs.anthropic.com/en/api/messages-examples).
          *
          * Note that if you want to include a
          * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
@@ -1433,29 +1375,7 @@ private constructor(
              * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
              * ```
              *
-             * Starting with Claude 3 models, you can also send image content blocks:
-             * ```json
-             * {
-             *   "role": "user",
-             *   "content": [
-             *     {
-             *       "type": "image",
-             *       "source": {
-             *         "type": "base64",
-             *         "media_type": "image/jpeg",
-             *         "data": "/9j/4AAQSkZJRg..."
-             *       }
-             *     },
-             *     { "type": "text", "text": "What is in this image?" }
-             *   ]
-             * }
-             * ```
-             *
-             * We currently support the `base64` source type for images, and the `image/jpeg`,
-             * `image/png`, `image/gif`, and `image/webp` media types.
-             *
-             * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more
-             * input examples.
+             * See [input examples](https://docs.anthropic.com/en/api/messages-examples).
              *
              * Note that if you want to include a
              * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
@@ -1843,6 +1763,13 @@ private constructor(
 
             /**
              * Alias for calling [addTool] with
+             * `Tool.ofBetaCodeExecutionTool20250825(betaCodeExecutionTool20250825)`.
+             */
+            fun addTool(betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825) =
+                addTool(Tool.ofBetaCodeExecutionTool20250825(betaCodeExecutionTool20250825))
+
+            /**
+             * Alias for calling [addTool] with
              * `Tool.ofBetaToolComputerUse20241022(betaToolComputerUse20241022)`.
              */
             fun addTool(betaToolComputerUse20241022: BetaToolComputerUse20241022) =
@@ -2206,6 +2133,7 @@ private constructor(
         private val betaToolBash20241022: BetaToolBash20241022? = null,
         private val betaToolBash20250124: BetaToolBash20250124? = null,
         private val betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522? = null,
+        private val betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825? = null,
         private val betaToolComputerUse20241022: BetaToolComputerUse20241022? = null,
         private val betaToolComputerUse20250124: BetaToolComputerUse20250124? = null,
         private val betaToolTextEditor20241022: BetaToolTextEditor20241022? = null,
@@ -2226,6 +2154,9 @@ private constructor(
 
         fun betaCodeExecutionTool20250522(): Optional<BetaCodeExecutionTool20250522> =
             Optional.ofNullable(betaCodeExecutionTool20250522)
+
+        fun betaCodeExecutionTool20250825(): Optional<BetaCodeExecutionTool20250825> =
+            Optional.ofNullable(betaCodeExecutionTool20250825)
 
         fun betaToolComputerUse20241022(): Optional<BetaToolComputerUse20241022> =
             Optional.ofNullable(betaToolComputerUse20241022)
@@ -2256,6 +2187,8 @@ private constructor(
 
         fun isBetaCodeExecutionTool20250522(): Boolean = betaCodeExecutionTool20250522 != null
 
+        fun isBetaCodeExecutionTool20250825(): Boolean = betaCodeExecutionTool20250825 != null
+
         fun isBetaToolComputerUse20241022(): Boolean = betaToolComputerUse20241022 != null
 
         fun isBetaToolComputerUse20250124(): Boolean = betaToolComputerUse20250124 != null
@@ -2280,6 +2213,9 @@ private constructor(
 
         fun asBetaCodeExecutionTool20250522(): BetaCodeExecutionTool20250522 =
             betaCodeExecutionTool20250522.getOrThrow("betaCodeExecutionTool20250522")
+
+        fun asBetaCodeExecutionTool20250825(): BetaCodeExecutionTool20250825 =
+            betaCodeExecutionTool20250825.getOrThrow("betaCodeExecutionTool20250825")
 
         fun asBetaToolComputerUse20241022(): BetaToolComputerUse20241022 =
             betaToolComputerUse20241022.getOrThrow("betaToolComputerUse20241022")
@@ -2313,6 +2249,8 @@ private constructor(
                     visitor.visitBetaToolBash20250124(betaToolBash20250124)
                 betaCodeExecutionTool20250522 != null ->
                     visitor.visitBetaCodeExecutionTool20250522(betaCodeExecutionTool20250522)
+                betaCodeExecutionTool20250825 != null ->
+                    visitor.visitBetaCodeExecutionTool20250825(betaCodeExecutionTool20250825)
                 betaToolComputerUse20241022 != null ->
                     visitor.visitBetaToolComputerUse20241022(betaToolComputerUse20241022)
                 betaToolComputerUse20250124 != null ->
@@ -2359,6 +2297,12 @@ private constructor(
                         betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
                     ) {
                         betaCodeExecutionTool20250522.validate()
+                    }
+
+                    override fun visitBetaCodeExecutionTool20250825(
+                        betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
+                    ) {
+                        betaCodeExecutionTool20250825.validate()
                     }
 
                     override fun visitBetaToolComputerUse20241022(
@@ -2439,6 +2383,10 @@ private constructor(
                         betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
                     ) = betaCodeExecutionTool20250522.validity()
 
+                    override fun visitBetaCodeExecutionTool20250825(
+                        betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
+                    ) = betaCodeExecutionTool20250825.validity()
+
                     override fun visitBetaToolComputerUse20241022(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ) = betaToolComputerUse20241022.validity()
@@ -2481,6 +2429,7 @@ private constructor(
                 betaToolBash20241022 == other.betaToolBash20241022 &&
                 betaToolBash20250124 == other.betaToolBash20250124 &&
                 betaCodeExecutionTool20250522 == other.betaCodeExecutionTool20250522 &&
+                betaCodeExecutionTool20250825 == other.betaCodeExecutionTool20250825 &&
                 betaToolComputerUse20241022 == other.betaToolComputerUse20241022 &&
                 betaToolComputerUse20250124 == other.betaToolComputerUse20250124 &&
                 betaToolTextEditor20241022 == other.betaToolTextEditor20241022 &&
@@ -2496,6 +2445,7 @@ private constructor(
                 betaToolBash20241022,
                 betaToolBash20250124,
                 betaCodeExecutionTool20250522,
+                betaCodeExecutionTool20250825,
                 betaToolComputerUse20241022,
                 betaToolComputerUse20250124,
                 betaToolTextEditor20241022,
@@ -2512,6 +2462,8 @@ private constructor(
                 betaToolBash20250124 != null -> "Tool{betaToolBash20250124=$betaToolBash20250124}"
                 betaCodeExecutionTool20250522 != null ->
                     "Tool{betaCodeExecutionTool20250522=$betaCodeExecutionTool20250522}"
+                betaCodeExecutionTool20250825 != null ->
+                    "Tool{betaCodeExecutionTool20250825=$betaCodeExecutionTool20250825}"
                 betaToolComputerUse20241022 != null ->
                     "Tool{betaToolComputerUse20241022=$betaToolComputerUse20241022}"
                 betaToolComputerUse20250124 != null ->
@@ -2546,6 +2498,11 @@ private constructor(
             fun ofBetaCodeExecutionTool20250522(
                 betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
             ) = Tool(betaCodeExecutionTool20250522 = betaCodeExecutionTool20250522)
+
+            @JvmStatic
+            fun ofBetaCodeExecutionTool20250825(
+                betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
+            ) = Tool(betaCodeExecutionTool20250825 = betaCodeExecutionTool20250825)
 
             @JvmStatic
             fun ofBetaToolComputerUse20241022(
@@ -2593,6 +2550,10 @@ private constructor(
 
             fun visitBetaCodeExecutionTool20250522(
                 betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
+            ): T
+
+            fun visitBetaCodeExecutionTool20250825(
+                betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
             ): T
 
             fun visitBetaToolComputerUse20241022(
@@ -2655,6 +2616,8 @@ private constructor(
                             },
                             tryDeserialize(node, jacksonTypeRef<BetaCodeExecutionTool20250522>())
                                 ?.let { Tool(betaCodeExecutionTool20250522 = it, _json = json) },
+                            tryDeserialize(node, jacksonTypeRef<BetaCodeExecutionTool20250825>())
+                                ?.let { Tool(betaCodeExecutionTool20250825 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20241022>())
                                 ?.let { Tool(betaToolComputerUse20241022 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20250124>())
@@ -2702,6 +2665,8 @@ private constructor(
                         generator.writeObject(value.betaToolBash20250124)
                     value.betaCodeExecutionTool20250522 != null ->
                         generator.writeObject(value.betaCodeExecutionTool20250522)
+                    value.betaCodeExecutionTool20250825 != null ->
+                        generator.writeObject(value.betaCodeExecutionTool20250825)
                     value.betaToolComputerUse20241022 != null ->
                         generator.writeObject(value.betaToolComputerUse20241022)
                     value.betaToolComputerUse20250124 != null ->

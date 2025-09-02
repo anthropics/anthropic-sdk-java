@@ -298,6 +298,10 @@ private constructor(
 
             @JvmField val CODE_EXECUTION = of("code_execution")
 
+            @JvmField val BASH_CODE_EXECUTION = of("bash_code_execution")
+
+            @JvmField val TEXT_EDITOR_CODE_EXECUTION = of("text_editor_code_execution")
+
             @JvmStatic fun of(value: String) = Name(JsonField.of(value))
         }
 
@@ -305,6 +309,8 @@ private constructor(
         enum class Known {
             WEB_SEARCH,
             CODE_EXECUTION,
+            BASH_CODE_EXECUTION,
+            TEXT_EDITOR_CODE_EXECUTION,
         }
 
         /**
@@ -319,6 +325,8 @@ private constructor(
         enum class Value {
             WEB_SEARCH,
             CODE_EXECUTION,
+            BASH_CODE_EXECUTION,
+            TEXT_EDITOR_CODE_EXECUTION,
             /** An enum member indicating that [Name] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -334,6 +342,8 @@ private constructor(
             when (this) {
                 WEB_SEARCH -> Value.WEB_SEARCH
                 CODE_EXECUTION -> Value.CODE_EXECUTION
+                BASH_CODE_EXECUTION -> Value.BASH_CODE_EXECUTION
+                TEXT_EDITOR_CODE_EXECUTION -> Value.TEXT_EDITOR_CODE_EXECUTION
                 else -> Value._UNKNOWN
             }
 
@@ -350,6 +360,8 @@ private constructor(
             when (this) {
                 WEB_SEARCH -> Known.WEB_SEARCH
                 CODE_EXECUTION -> Known.CODE_EXECUTION
+                BASH_CODE_EXECUTION -> Known.BASH_CODE_EXECUTION
+                TEXT_EDITOR_CODE_EXECUTION -> Known.TEXT_EDITOR_CODE_EXECUTION
                 else -> throw AnthropicInvalidDataException("Unknown Name: $value")
             }
 

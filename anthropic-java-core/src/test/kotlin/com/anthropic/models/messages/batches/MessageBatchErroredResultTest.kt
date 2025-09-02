@@ -14,11 +14,21 @@ internal class MessageBatchErroredResultTest {
     fun create() {
         val messageBatchErroredResult =
             MessageBatchErroredResult.builder()
-                .error(ErrorResponse.builder().invalidRequestErrorError("message").build())
+                .error(
+                    ErrorResponse.builder()
+                        .invalidRequestErrorError("message")
+                        .requestId("request_id")
+                        .build()
+                )
                 .build()
 
         assertThat(messageBatchErroredResult.error())
-            .isEqualTo(ErrorResponse.builder().invalidRequestErrorError("message").build())
+            .isEqualTo(
+                ErrorResponse.builder()
+                    .invalidRequestErrorError("message")
+                    .requestId("request_id")
+                    .build()
+            )
     }
 
     @Test
@@ -26,7 +36,12 @@ internal class MessageBatchErroredResultTest {
         val jsonMapper = jsonMapper()
         val messageBatchErroredResult =
             MessageBatchErroredResult.builder()
-                .error(ErrorResponse.builder().invalidRequestErrorError("message").build())
+                .error(
+                    ErrorResponse.builder()
+                        .invalidRequestErrorError("message")
+                        .requestId("request_id")
+                        .build()
+                )
                 .build()
 
         val roundtrippedMessageBatchErroredResult =

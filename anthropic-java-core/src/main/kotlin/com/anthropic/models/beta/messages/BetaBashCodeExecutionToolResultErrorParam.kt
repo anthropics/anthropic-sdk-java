@@ -17,48 +17,31 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-class BetaServerToolUseBlock
+class BetaBashCodeExecutionToolResultErrorParam
 private constructor(
-    private val id: JsonField<String>,
-    private val input: JsonValue,
-    private val name: JsonField<Name>,
+    private val errorCode: JsonField<ErrorCode>,
     private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("input") @ExcludeMissing input: JsonValue = JsonMissing.of(),
-        @JsonProperty("name") @ExcludeMissing name: JsonField<Name> = JsonMissing.of(),
+        @JsonProperty("error_code")
+        @ExcludeMissing
+        errorCode: JsonField<ErrorCode> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(id, input, name, type, mutableMapOf())
-
-    fun toParam(): BetaServerToolUseBlockParam =
-        BetaServerToolUseBlockParam.builder()
-            .id(_id())
-            .input(_input())
-            .name(_name().map { BetaServerToolUseBlockParam.Name.of(it.toString()) })
-            .build()
+    ) : this(errorCode, type, mutableMapOf())
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun id(): String = id.getRequired("id")
-
-    @JsonProperty("input") @ExcludeMissing fun _input(): JsonValue = input
-
-    /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun name(): Name = name.getRequired("name")
+    fun errorCode(): ErrorCode = errorCode.getRequired("error_code")
 
     /**
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("server_tool_use")
+     * JsonValue.from("bash_code_execution_tool_result_error")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -67,18 +50,11 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
-     * Returns the raw JSON value of [id].
+     * Returns the raw JSON value of [errorCode].
      *
-     * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [errorCode], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
-
-    /**
-     * Returns the raw JSON value of [name].
-     *
-     * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<Name> = name
+    @JsonProperty("error_code") @ExcludeMissing fun _errorCode(): JsonField<ErrorCode> = errorCode
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -95,57 +71,44 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [BetaServerToolUseBlock].
+         * Returns a mutable builder for constructing an instance of
+         * [BetaBashCodeExecutionToolResultErrorParam].
          *
          * The following fields are required:
          * ```java
-         * .id()
-         * .input()
-         * .name()
+         * .errorCode()
          * ```
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [BetaServerToolUseBlock]. */
+    /** A builder for [BetaBashCodeExecutionToolResultErrorParam]. */
     class Builder internal constructor() {
 
-        private var id: JsonField<String>? = null
-        private var input: JsonValue? = null
-        private var name: JsonField<Name>? = null
-        private var type: JsonValue = JsonValue.from("server_tool_use")
+        private var errorCode: JsonField<ErrorCode>? = null
+        private var type: JsonValue = JsonValue.from("bash_code_execution_tool_result_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(betaServerToolUseBlock: BetaServerToolUseBlock) = apply {
-            id = betaServerToolUseBlock.id
-            input = betaServerToolUseBlock.input
-            name = betaServerToolUseBlock.name
-            type = betaServerToolUseBlock.type
-            additionalProperties = betaServerToolUseBlock.additionalProperties.toMutableMap()
+        internal fun from(
+            betaBashCodeExecutionToolResultErrorParam: BetaBashCodeExecutionToolResultErrorParam
+        ) = apply {
+            errorCode = betaBashCodeExecutionToolResultErrorParam.errorCode
+            type = betaBashCodeExecutionToolResultErrorParam.type
+            additionalProperties =
+                betaBashCodeExecutionToolResultErrorParam.additionalProperties.toMutableMap()
         }
 
-        fun id(id: String) = id(JsonField.of(id))
+        fun errorCode(errorCode: ErrorCode) = errorCode(JsonField.of(errorCode))
 
         /**
-         * Sets [Builder.id] to an arbitrary JSON value.
+         * Sets [Builder.errorCode] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.id] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.errorCode] with a well-typed [ErrorCode] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun id(id: JsonField<String>) = apply { this.id = id }
-
-        fun input(input: JsonValue) = apply { this.input = input }
-
-        fun name(name: Name) = name(JsonField.of(name))
-
-        /**
-         * Sets [Builder.name] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.name] with a well-typed [Name] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun name(name: JsonField<Name>) = apply { this.name = name }
+        fun errorCode(errorCode: JsonField<ErrorCode>) = apply { this.errorCode = errorCode }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -153,7 +116,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("server_tool_use")
+         * JsonValue.from("bash_code_execution_tool_result_error")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -181,24 +144,20 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [BetaServerToolUseBlock].
+         * Returns an immutable instance of [BetaBashCodeExecutionToolResultErrorParam].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
          * ```java
-         * .id()
-         * .input()
-         * .name()
+         * .errorCode()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): BetaServerToolUseBlock =
-            BetaServerToolUseBlock(
-                checkRequired("id", id),
-                checkRequired("input", input),
-                checkRequired("name", name),
+        fun build(): BetaBashCodeExecutionToolResultErrorParam =
+            BetaBashCodeExecutionToolResultErrorParam(
+                checkRequired("errorCode", errorCode),
                 type,
                 additionalProperties.toMutableMap(),
             )
@@ -206,15 +165,14 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): BetaServerToolUseBlock = apply {
+    fun validate(): BetaBashCodeExecutionToolResultErrorParam = apply {
         if (validated) {
             return@apply
         }
 
-        id()
-        name().validate()
+        errorCode().validate()
         _type().let {
-            if (it != JsonValue.from("server_tool_use")) {
+            if (it != JsonValue.from("bash_code_execution_tool_result_error")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
@@ -236,11 +194,10 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) +
-            (name.asKnown().getOrNull()?.validity() ?: 0) +
-            type.let { if (it == JsonValue.from("server_tool_use")) 1 else 0 }
+        (errorCode.asKnown().getOrNull()?.validity() ?: 0) +
+            type.let { if (it == JsonValue.from("bash_code_execution_tool_result_error")) 1 else 0 }
 
-    class Name @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class ErrorCode @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -254,40 +211,46 @@ private constructor(
 
         companion object {
 
-            @JvmField val WEB_SEARCH = of("web_search")
+            @JvmField val INVALID_TOOL_INPUT = of("invalid_tool_input")
 
-            @JvmField val CODE_EXECUTION = of("code_execution")
+            @JvmField val UNAVAILABLE = of("unavailable")
 
-            @JvmField val BASH_CODE_EXECUTION = of("bash_code_execution")
+            @JvmField val TOO_MANY_REQUESTS = of("too_many_requests")
 
-            @JvmField val TEXT_EDITOR_CODE_EXECUTION = of("text_editor_code_execution")
+            @JvmField val EXECUTION_TIME_EXCEEDED = of("execution_time_exceeded")
 
-            @JvmStatic fun of(value: String) = Name(JsonField.of(value))
+            @JvmField val OUTPUT_FILE_TOO_LARGE = of("output_file_too_large")
+
+            @JvmStatic fun of(value: String) = ErrorCode(JsonField.of(value))
         }
 
-        /** An enum containing [Name]'s known values. */
+        /** An enum containing [ErrorCode]'s known values. */
         enum class Known {
-            WEB_SEARCH,
-            CODE_EXECUTION,
-            BASH_CODE_EXECUTION,
-            TEXT_EDITOR_CODE_EXECUTION,
+            INVALID_TOOL_INPUT,
+            UNAVAILABLE,
+            TOO_MANY_REQUESTS,
+            EXECUTION_TIME_EXCEEDED,
+            OUTPUT_FILE_TOO_LARGE,
         }
 
         /**
-         * An enum containing [Name]'s known values, as well as an [_UNKNOWN] member.
+         * An enum containing [ErrorCode]'s known values, as well as an [_UNKNOWN] member.
          *
-         * An instance of [Name] can contain an unknown value in a couple of cases:
+         * An instance of [ErrorCode] can contain an unknown value in a couple of cases:
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
-            WEB_SEARCH,
-            CODE_EXECUTION,
-            BASH_CODE_EXECUTION,
-            TEXT_EDITOR_CODE_EXECUTION,
-            /** An enum member indicating that [Name] was instantiated with an unknown value. */
+            INVALID_TOOL_INPUT,
+            UNAVAILABLE,
+            TOO_MANY_REQUESTS,
+            EXECUTION_TIME_EXCEEDED,
+            OUTPUT_FILE_TOO_LARGE,
+            /**
+             * An enum member indicating that [ErrorCode] was instantiated with an unknown value.
+             */
             _UNKNOWN,
         }
 
@@ -300,10 +263,11 @@ private constructor(
          */
         fun value(): Value =
             when (this) {
-                WEB_SEARCH -> Value.WEB_SEARCH
-                CODE_EXECUTION -> Value.CODE_EXECUTION
-                BASH_CODE_EXECUTION -> Value.BASH_CODE_EXECUTION
-                TEXT_EDITOR_CODE_EXECUTION -> Value.TEXT_EDITOR_CODE_EXECUTION
+                INVALID_TOOL_INPUT -> Value.INVALID_TOOL_INPUT
+                UNAVAILABLE -> Value.UNAVAILABLE
+                TOO_MANY_REQUESTS -> Value.TOO_MANY_REQUESTS
+                EXECUTION_TIME_EXCEEDED -> Value.EXECUTION_TIME_EXCEEDED
+                OUTPUT_FILE_TOO_LARGE -> Value.OUTPUT_FILE_TOO_LARGE
                 else -> Value._UNKNOWN
             }
 
@@ -318,11 +282,12 @@ private constructor(
          */
         fun known(): Known =
             when (this) {
-                WEB_SEARCH -> Known.WEB_SEARCH
-                CODE_EXECUTION -> Known.CODE_EXECUTION
-                BASH_CODE_EXECUTION -> Known.BASH_CODE_EXECUTION
-                TEXT_EDITOR_CODE_EXECUTION -> Known.TEXT_EDITOR_CODE_EXECUTION
-                else -> throw AnthropicInvalidDataException("Unknown Name: $value")
+                INVALID_TOOL_INPUT -> Known.INVALID_TOOL_INPUT
+                UNAVAILABLE -> Known.UNAVAILABLE
+                TOO_MANY_REQUESTS -> Known.TOO_MANY_REQUESTS
+                EXECUTION_TIME_EXCEEDED -> Known.EXECUTION_TIME_EXCEEDED
+                OUTPUT_FILE_TOO_LARGE -> Known.OUTPUT_FILE_TOO_LARGE
+                else -> throw AnthropicInvalidDataException("Unknown ErrorCode: $value")
             }
 
         /**
@@ -341,7 +306,7 @@ private constructor(
 
         private var validated: Boolean = false
 
-        fun validate(): Name = apply {
+        fun validate(): ErrorCode = apply {
             if (validated) {
                 return@apply
             }
@@ -371,7 +336,7 @@ private constructor(
                 return true
             }
 
-            return other is Name && value == other.value
+            return other is ErrorCode && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
@@ -384,18 +349,16 @@ private constructor(
             return true
         }
 
-        return other is BetaServerToolUseBlock &&
-            id == other.id &&
-            input == other.input &&
-            name == other.name &&
+        return other is BetaBashCodeExecutionToolResultErrorParam &&
+            errorCode == other.errorCode &&
             type == other.type &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, input, name, type, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(errorCode, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaServerToolUseBlock{id=$id, input=$input, name=$name, type=$type, additionalProperties=$additionalProperties}"
+        "BetaBashCodeExecutionToolResultErrorParam{errorCode=$errorCode, type=$type, additionalProperties=$additionalProperties}"
 }
