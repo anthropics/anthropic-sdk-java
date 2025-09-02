@@ -14,11 +14,21 @@ internal class BetaMessageBatchErroredResultTest {
     fun create() {
         val betaMessageBatchErroredResult =
             BetaMessageBatchErroredResult.builder()
-                .error(BetaErrorResponse.builder().invalidRequestError("message").build())
+                .error(
+                    BetaErrorResponse.builder()
+                        .invalidRequestError("message")
+                        .requestId("request_id")
+                        .build()
+                )
                 .build()
 
         assertThat(betaMessageBatchErroredResult.error())
-            .isEqualTo(BetaErrorResponse.builder().invalidRequestError("message").build())
+            .isEqualTo(
+                BetaErrorResponse.builder()
+                    .invalidRequestError("message")
+                    .requestId("request_id")
+                    .build()
+            )
     }
 
     @Test
@@ -26,7 +36,12 @@ internal class BetaMessageBatchErroredResultTest {
         val jsonMapper = jsonMapper()
         val betaMessageBatchErroredResult =
             BetaMessageBatchErroredResult.builder()
-                .error(BetaErrorResponse.builder().invalidRequestError("message").build())
+                .error(
+                    BetaErrorResponse.builder()
+                        .invalidRequestError("message")
+                        .requestId("request_id")
+                        .build()
+                )
                 .build()
 
         val roundtrippedBetaMessageBatchErroredResult =

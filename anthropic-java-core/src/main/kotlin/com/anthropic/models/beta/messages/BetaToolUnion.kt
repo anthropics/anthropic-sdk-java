@@ -26,6 +26,7 @@ private constructor(
     private val bash20241022: BetaToolBash20241022? = null,
     private val bash20250124: BetaToolBash20250124? = null,
     private val codeExecutionTool20250522: BetaCodeExecutionTool20250522? = null,
+    private val codeExecutionTool20250825: BetaCodeExecutionTool20250825? = null,
     private val computerUse20241022: BetaToolComputerUse20241022? = null,
     private val computerUse20250124: BetaToolComputerUse20250124? = null,
     private val textEditor20241022: BetaToolTextEditor20241022? = null,
@@ -44,6 +45,9 @@ private constructor(
 
     fun codeExecutionTool20250522(): Optional<BetaCodeExecutionTool20250522> =
         Optional.ofNullable(codeExecutionTool20250522)
+
+    fun codeExecutionTool20250825(): Optional<BetaCodeExecutionTool20250825> =
+        Optional.ofNullable(codeExecutionTool20250825)
 
     fun computerUse20241022(): Optional<BetaToolComputerUse20241022> =
         Optional.ofNullable(computerUse20241022)
@@ -74,6 +78,8 @@ private constructor(
 
     fun isCodeExecutionTool20250522(): Boolean = codeExecutionTool20250522 != null
 
+    fun isCodeExecutionTool20250825(): Boolean = codeExecutionTool20250825 != null
+
     fun isComputerUse20241022(): Boolean = computerUse20241022 != null
 
     fun isComputerUse20250124(): Boolean = computerUse20250124 != null
@@ -96,6 +102,9 @@ private constructor(
 
     fun asCodeExecutionTool20250522(): BetaCodeExecutionTool20250522 =
         codeExecutionTool20250522.getOrThrow("codeExecutionTool20250522")
+
+    fun asCodeExecutionTool20250825(): BetaCodeExecutionTool20250825 =
+        codeExecutionTool20250825.getOrThrow("codeExecutionTool20250825")
 
     fun asComputerUse20241022(): BetaToolComputerUse20241022 =
         computerUse20241022.getOrThrow("computerUse20241022")
@@ -127,6 +136,8 @@ private constructor(
             bash20250124 != null -> visitor.visitBash20250124(bash20250124)
             codeExecutionTool20250522 != null ->
                 visitor.visitCodeExecutionTool20250522(codeExecutionTool20250522)
+            codeExecutionTool20250825 != null ->
+                visitor.visitCodeExecutionTool20250825(codeExecutionTool20250825)
             computerUse20241022 != null -> visitor.visitComputerUse20241022(computerUse20241022)
             computerUse20250124 != null -> visitor.visitComputerUse20250124(computerUse20250124)
             textEditor20241022 != null -> visitor.visitTextEditor20241022(textEditor20241022)
@@ -163,6 +174,12 @@ private constructor(
                     codeExecutionTool20250522: BetaCodeExecutionTool20250522
                 ) {
                     codeExecutionTool20250522.validate()
+                }
+
+                override fun visitCodeExecutionTool20250825(
+                    codeExecutionTool20250825: BetaCodeExecutionTool20250825
+                ) {
+                    codeExecutionTool20250825.validate()
                 }
 
                 override fun visitComputerUse20241022(
@@ -240,6 +257,10 @@ private constructor(
                     codeExecutionTool20250522: BetaCodeExecutionTool20250522
                 ) = codeExecutionTool20250522.validity()
 
+                override fun visitCodeExecutionTool20250825(
+                    codeExecutionTool20250825: BetaCodeExecutionTool20250825
+                ) = codeExecutionTool20250825.validity()
+
                 override fun visitComputerUse20241022(
                     computerUse20241022: BetaToolComputerUse20241022
                 ) = computerUse20241022.validity()
@@ -282,6 +303,7 @@ private constructor(
             bash20241022 == other.bash20241022 &&
             bash20250124 == other.bash20250124 &&
             codeExecutionTool20250522 == other.codeExecutionTool20250522 &&
+            codeExecutionTool20250825 == other.codeExecutionTool20250825 &&
             computerUse20241022 == other.computerUse20241022 &&
             computerUse20250124 == other.computerUse20250124 &&
             textEditor20241022 == other.textEditor20241022 &&
@@ -297,6 +319,7 @@ private constructor(
             bash20241022,
             bash20250124,
             codeExecutionTool20250522,
+            codeExecutionTool20250825,
             computerUse20241022,
             computerUse20250124,
             textEditor20241022,
@@ -313,6 +336,8 @@ private constructor(
             bash20250124 != null -> "BetaToolUnion{bash20250124=$bash20250124}"
             codeExecutionTool20250522 != null ->
                 "BetaToolUnion{codeExecutionTool20250522=$codeExecutionTool20250522}"
+            codeExecutionTool20250825 != null ->
+                "BetaToolUnion{codeExecutionTool20250825=$codeExecutionTool20250825}"
             computerUse20241022 != null -> "BetaToolUnion{computerUse20241022=$computerUse20241022}"
             computerUse20250124 != null -> "BetaToolUnion{computerUse20250124=$computerUse20250124}"
             textEditor20241022 != null -> "BetaToolUnion{textEditor20241022=$textEditor20241022}"
@@ -340,6 +365,10 @@ private constructor(
         @JvmStatic
         fun ofCodeExecutionTool20250522(codeExecutionTool20250522: BetaCodeExecutionTool20250522) =
             BetaToolUnion(codeExecutionTool20250522 = codeExecutionTool20250522)
+
+        @JvmStatic
+        fun ofCodeExecutionTool20250825(codeExecutionTool20250825: BetaCodeExecutionTool20250825) =
+            BetaToolUnion(codeExecutionTool20250825 = codeExecutionTool20250825)
 
         @JvmStatic
         fun ofComputerUse20241022(computerUse20241022: BetaToolComputerUse20241022) =
@@ -383,6 +412,10 @@ private constructor(
 
         fun visitCodeExecutionTool20250522(
             codeExecutionTool20250522: BetaCodeExecutionTool20250522
+        ): T
+
+        fun visitCodeExecutionTool20250825(
+            codeExecutionTool20250825: BetaCodeExecutionTool20250825
         ): T
 
         fun visitComputerUse20241022(computerUse20241022: BetaToolComputerUse20241022): T
@@ -431,6 +464,9 @@ private constructor(
                         },
                         tryDeserialize(node, jacksonTypeRef<BetaCodeExecutionTool20250522>())?.let {
                             BetaToolUnion(codeExecutionTool20250522 = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<BetaCodeExecutionTool20250825>())?.let {
+                            BetaToolUnion(codeExecutionTool20250825 = it, _json = json)
                         },
                         tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20241022>())?.let {
                             BetaToolUnion(computerUse20241022 = it, _json = json)
@@ -482,6 +518,8 @@ private constructor(
                 value.bash20250124 != null -> generator.writeObject(value.bash20250124)
                 value.codeExecutionTool20250522 != null ->
                     generator.writeObject(value.codeExecutionTool20250522)
+                value.codeExecutionTool20250825 != null ->
+                    generator.writeObject(value.codeExecutionTool20250825)
                 value.computerUse20241022 != null ->
                     generator.writeObject(value.computerUse20241022)
                 value.computerUse20250124 != null ->

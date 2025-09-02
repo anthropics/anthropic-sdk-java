@@ -119,29 +119,7 @@ private constructor(
      * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
      * ```
      *
-     * Starting with Claude 3 models, you can also send image content blocks:
-     * ```json
-     * {
-     *   "role": "user",
-     *   "content": [
-     *     {
-     *       "type": "image",
-     *       "source": {
-     *         "type": "base64",
-     *         "media_type": "image/jpeg",
-     *         "data": "/9j/4AAQSkZJRg..."
-     *       }
-     *     },
-     *     { "type": "text", "text": "What is in this image?" }
-     *   ]
-     * }
-     * ```
-     *
-     * We currently support the `base64` source type for images, and the `image/jpeg`, `image/png`,
-     * `image/gif`, and `image/webp` media types.
-     *
-     * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more input
-     * examples.
+     * See [input examples](https://docs.anthropic.com/en/api/messages-examples).
      *
      * Note that if you want to include a
      * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the top-level
@@ -624,29 +602,7 @@ private constructor(
          * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
          * ```
          *
-         * Starting with Claude 3 models, you can also send image content blocks:
-         * ```json
-         * {
-         *   "role": "user",
-         *   "content": [
-         *     {
-         *       "type": "image",
-         *       "source": {
-         *         "type": "base64",
-         *         "media_type": "image/jpeg",
-         *         "data": "/9j/4AAQSkZJRg..."
-         *       }
-         *     },
-         *     { "type": "text", "text": "What is in this image?" }
-         *   ]
-         * }
-         * ```
-         *
-         * We currently support the `base64` source type for images, and the `image/jpeg`,
-         * `image/png`, `image/gif`, and `image/webp` media types.
-         *
-         * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more input
-         * examples.
+         * See [input examples](https://docs.anthropic.com/en/api/messages-examples).
          *
          * Note that if you want to include a
          * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
@@ -1085,6 +1041,14 @@ private constructor(
 
         /**
          * Alias for calling [addTool] with
+         * `BetaToolUnion.ofCodeExecutionTool20250825(codeExecutionTool20250825)`.
+         */
+        fun addTool(codeExecutionTool20250825: BetaCodeExecutionTool20250825) = apply {
+            body.addTool(codeExecutionTool20250825)
+        }
+
+        /**
+         * Alias for calling [addTool] with
          * `BetaToolUnion.ofComputerUse20241022(computerUse20241022)`.
          */
         fun addTool(computerUse20241022: BetaToolComputerUse20241022) = apply {
@@ -1473,29 +1437,7 @@ private constructor(
          * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
          * ```
          *
-         * Starting with Claude 3 models, you can also send image content blocks:
-         * ```json
-         * {
-         *   "role": "user",
-         *   "content": [
-         *     {
-         *       "type": "image",
-         *       "source": {
-         *         "type": "base64",
-         *         "media_type": "image/jpeg",
-         *         "data": "/9j/4AAQSkZJRg..."
-         *       }
-         *     },
-         *     { "type": "text", "text": "What is in this image?" }
-         *   ]
-         * }
-         * ```
-         *
-         * We currently support the `base64` source type for images, and the `image/jpeg`,
-         * `image/png`, `image/gif`, and `image/webp` media types.
-         *
-         * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more input
-         * examples.
+         * See [input examples](https://docs.anthropic.com/en/api/messages-examples).
          *
          * Note that if you want to include a
          * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
@@ -1989,29 +1931,7 @@ private constructor(
              * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
              * ```
              *
-             * Starting with Claude 3 models, you can also send image content blocks:
-             * ```json
-             * {
-             *   "role": "user",
-             *   "content": [
-             *     {
-             *       "type": "image",
-             *       "source": {
-             *         "type": "base64",
-             *         "media_type": "image/jpeg",
-             *         "data": "/9j/4AAQSkZJRg..."
-             *       }
-             *     },
-             *     { "type": "text", "text": "What is in this image?" }
-             *   ]
-             * }
-             * ```
-             *
-             * We currently support the `base64` source type for images, and the `image/jpeg`,
-             * `image/png`, `image/gif`, and `image/webp` media types.
-             *
-             * See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for more
-             * input examples.
+             * See [input examples](https://docs.anthropic.com/en/api/messages-examples).
              *
              * Note that if you want to include a
              * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
@@ -2498,6 +2418,13 @@ private constructor(
              */
             fun addTool(codeExecutionTool20250522: BetaCodeExecutionTool20250522) =
                 addTool(BetaToolUnion.ofCodeExecutionTool20250522(codeExecutionTool20250522))
+
+            /**
+             * Alias for calling [addTool] with
+             * `BetaToolUnion.ofCodeExecutionTool20250825(codeExecutionTool20250825)`.
+             */
+            fun addTool(codeExecutionTool20250825: BetaCodeExecutionTool20250825) =
+                addTool(BetaToolUnion.ofCodeExecutionTool20250825(codeExecutionTool20250825))
 
             /**
              * Alias for calling [addTool] with

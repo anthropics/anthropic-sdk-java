@@ -11,7 +11,11 @@ internal class ErrorResponseTest {
 
     @Test
     fun create() {
-        val errorResponse = ErrorResponse.builder().invalidRequestErrorError("message").build()
+        val errorResponse =
+            ErrorResponse.builder()
+                .invalidRequestErrorError("message")
+                .requestId("request_id")
+                .build()
 
         assertThat(errorResponse.error())
             .isEqualTo(
@@ -19,12 +23,17 @@ internal class ErrorResponseTest {
                     InvalidRequestError.builder().message("message").build()
                 )
             )
+        assertThat(errorResponse.requestId()).contains("request_id")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val errorResponse = ErrorResponse.builder().invalidRequestErrorError("message").build()
+        val errorResponse =
+            ErrorResponse.builder()
+                .invalidRequestErrorError("message")
+                .requestId("request_id")
+                .build()
 
         val roundtrippedErrorResponse =
             jsonMapper.readValue(

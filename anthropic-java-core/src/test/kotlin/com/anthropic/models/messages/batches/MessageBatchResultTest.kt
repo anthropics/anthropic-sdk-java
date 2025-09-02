@@ -141,7 +141,12 @@ internal class MessageBatchResultTest {
     fun ofErrored() {
         val errored =
             MessageBatchErroredResult.builder()
-                .error(ErrorResponse.builder().invalidRequestErrorError("message").build())
+                .error(
+                    ErrorResponse.builder()
+                        .invalidRequestErrorError("message")
+                        .requestId("request_id")
+                        .build()
+                )
                 .build()
 
         val messageBatchResult = MessageBatchResult.ofErrored(errored)
@@ -158,7 +163,12 @@ internal class MessageBatchResultTest {
         val messageBatchResult =
             MessageBatchResult.ofErrored(
                 MessageBatchErroredResult.builder()
-                    .error(ErrorResponse.builder().invalidRequestErrorError("message").build())
+                    .error(
+                        ErrorResponse.builder()
+                            .invalidRequestErrorError("message")
+                            .requestId("request_id")
+                            .build()
+                    )
                     .build()
             )
 

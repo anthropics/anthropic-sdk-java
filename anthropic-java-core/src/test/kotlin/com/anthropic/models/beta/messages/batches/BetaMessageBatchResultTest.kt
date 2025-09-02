@@ -155,7 +155,12 @@ internal class BetaMessageBatchResultTest {
     fun ofErrored() {
         val errored =
             BetaMessageBatchErroredResult.builder()
-                .error(BetaErrorResponse.builder().invalidRequestError("message").build())
+                .error(
+                    BetaErrorResponse.builder()
+                        .invalidRequestError("message")
+                        .requestId("request_id")
+                        .build()
+                )
                 .build()
 
         val betaMessageBatchResult = BetaMessageBatchResult.ofErrored(errored)
@@ -172,7 +177,12 @@ internal class BetaMessageBatchResultTest {
         val betaMessageBatchResult =
             BetaMessageBatchResult.ofErrored(
                 BetaMessageBatchErroredResult.builder()
-                    .error(BetaErrorResponse.builder().invalidRequestError("message").build())
+                    .error(
+                        BetaErrorResponse.builder()
+                            .invalidRequestError("message")
+                            .requestId("request_id")
+                            .build()
+                    )
                     .build()
             )
 
