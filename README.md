@@ -753,6 +753,32 @@ Currently, the Bedrock backend does _not_ support the following:
 - Anthropic Batch API
 - Anthropic Token Counting API
 
+#### Usage with an API key
+
+The `BedrockBackend` can also use an API key instead of AWS credentials for request authorization.
+See the [AWS documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/api-keys-how.html)
+for details on API keys and how to generate them.
+
+You can set the `AWS_BEARER_TOKEN_BEDROCK` environment variable to the value of your API key and
+call `BedrockBackend.fromEnv()` to authorize requests using that API key. An API key will be used in
+preference to AWS credentials if both are set in the environment. If calling
+`BedrockBackend.Builder.fromEnv(AwsCredentialsProvider)` with a non-`null` provider instance, that
+provider's credentials will take precedence over any API key set in the environment.
+
+The API key can also be passed directly to the backend, so you can resolve it from a source other
+than an environment variable, if preferred:
+
+```java
+AnthropicClient client = AnthropicOkHttpClient.builder()
+        .backend(BedrockBackend.builder()
+                .apiKey(myApiKey)
+                .region(Region.US_EAST_1)
+                .build())
+        .build();
+```
+
+An error will occur if you set _both_ an API key _and_ an AWS credentials provider.
+
 ## Google Cloud Vertex AI
 
 This SDK also provides support for Anthropic models on the

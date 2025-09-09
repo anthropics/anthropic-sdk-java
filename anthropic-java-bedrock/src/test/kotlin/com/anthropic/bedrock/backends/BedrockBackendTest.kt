@@ -16,13 +16,16 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
+import org.mockito.Mockito
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.AwsSessionCredentials
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider
 import software.amazon.awssdk.regions.Region
 
 @ResourceLock("environment")
 internal class BedrockBackendTest {
     companion object {
+        private const val API_KEY = "AKIAIOSFODNN7EXAMPLE"
         private const val AWS_ACCESS_KEY_ID = "AKIAIOSFODNN7EXAMPLE"
         private const val AWS_SECRET_ACCESS_KEY = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
         private const val AWS_SESSION_TOKEN = "FwoGZXIvYXdzEJr..."
@@ -36,6 +39,8 @@ internal class BedrockBackendTest {
         private const val PROP_AWS_SECRET_ACCESS_KEY = "aws.secretAccessKey"
         private const val PROP_AWS_SESSION_TOKEN = "aws.sessionToken"
         private const val PROP_AWS_REGION = "aws.region"
+
+        private const val ENV_API_KEY = "AWS_BEARER_TOKEN_BEDROCK"
     }
 
     @BeforeEach
@@ -87,6 +92,126 @@ internal class BedrockBackendTest {
     }
 
     @Test
+    fun awsCredentialsProviderExplicitToFromEnvWithRegion() {
+        initEnv()
+        // Set the API key (mock) environment variable. It should be ignored when the explicit
+        // credentials provider is given.
+        val builder = Mockito.spy(BedrockBackend.builder())
+
+        Mockito.doReturn(API_KEY).`when`(builder).getEnv(ENV_API_KEY)
+
+        val backend =
+            builder
+                .fromEnv(
+                    BedrockBackend.providerOf(
+                        AwsBasicCredentials.create(
+                            "Alt:$AWS_ACCESS_KEY_ID",
+                            "Alt:$AWS_SECRET_ACCESS_KEY",
+                        )
+                    )
+                )
+                .build()
+
+        assertThat(backend.awsCredentials).isExactlyInstanceOf(AwsBasicCredentials::class.java)
+        assertThat(backend.awsCredentials.accessKeyId()).isEqualTo("Alt:$AWS_ACCESS_KEY_ID")
+        assertThat(backend.awsCredentials.secretAccessKey()).isEqualTo("Alt:$AWS_SECRET_ACCESS_KEY")
+        assertThat(backend.region.toString()).isEqualTo(AWS_REGION)
+    }
+
+    @Test
+    fun awsCredentialsProviderExplicitToFromEnvButNotResolvedWithRegion() {
+        initEnv(
+            isSetAccessKeyID = false,
+            isSetSecretAccessKey = false,
+            isSetSessionToken = false,
+            isSetRegion = true,
+        )
+        assertThatThrownBy {
+                BedrockBackend.builder()
+                    .fromEnv(DefaultCredentialsProvider.builder().build())
+                    .build()
+            }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessage("No AWS access key ID or AWS secret access key found.")
+    }
+
+    @Test
+    fun awsCredentialsProviderViaFromEnvWithNoRegion() {
+        initEnv(
+            isSetAccessKeyID = true,
+            isSetSecretAccessKey = true,
+            isSetSessionToken = true,
+            isSetRegion = false,
+        )
+        assertThatThrownBy { BedrockBackend.builder().fromEnv().build() }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessage("No AWS region found.")
+    }
+
+    @Test
+    fun awsCredentialsProviderClashWithApiKey() {
+        initEnv()
+        assertThatThrownBy {
+                BedrockBackend.builder()
+                    .apiKey(API_KEY)
+                    .awsCredentialsProvider(DefaultCredentialsProvider.builder().build())
+                    .build()
+            }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessage("An AWS credentials provider or an API key must be set, but not both.")
+    }
+
+    @Test
+    fun awsCredentialsProviderClashWithApiKeyViaFromEnv() {
+        initEnv()
+        assertThatThrownBy { BedrockBackend.builder().apiKey(API_KEY).fromEnv().build() }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessage("An AWS credentials provider or an API key must be set, but not both.")
+    }
+
+    @Test
+    fun apiKeyClashWithAwsCredentialsProvider() {
+        initEnv()
+        assertThatThrownBy {
+                BedrockBackend.builder()
+                    .awsCredentialsProvider(DefaultCredentialsProvider.builder().build())
+                    .apiKey(API_KEY)
+                    .build()
+            }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessage("Credentials provider already set.")
+    }
+
+    @Test
+    fun apiKeyClashWithAwsCredentialsProviderViaFromEnv() {
+        initEnv()
+        val builder = Mockito.spy(BedrockBackend.builder())
+
+        Mockito.doReturn(API_KEY).`when`(builder).getEnv(ENV_API_KEY)
+
+        assertThatThrownBy {
+                builder
+                    .awsCredentialsProvider(DefaultCredentialsProvider.builder().build())
+                    .fromEnv()
+                    .build()
+            }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessage("Credentials provider already set.")
+    }
+
+    @Test
+    fun apiKeySetSoNoCredentialsProviderToAccessCredentials() {
+        val backend = BedrockBackend.builder().apiKey(API_KEY).region(Region.EU_WEST_1).build()
+
+        assertThat(backend.apiKey).isEqualTo(API_KEY)
+        assertThat(backend.awsCredentialsProvider).isNull()
+
+        assertThatThrownBy { backend.awsCredentials }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessage("AWS credentials provider was not set.")
+    }
+
+    @Test
     fun awsCredentialsProviderExplicitWithRegion() {
         val backend =
             BedrockBackend.builder()
@@ -105,6 +230,21 @@ internal class BedrockBackendTest {
     }
 
     @Test
+    fun apiKeyFromEnv() {
+        // The AWS credentials are set, but they should be ignored because the API key environment
+        // variable is set and `fromEnv()` is not explicitly passed an AWS credentials provider.
+        initEnv()
+        val builder = Mockito.spy(BedrockBackend.builder())
+
+        Mockito.doReturn(API_KEY).`when`(builder).getEnv(ENV_API_KEY)
+
+        val backend = builder.fromEnv().build()
+
+        assertThat(backend.apiKey).isEqualTo(API_KEY)
+        assertThat(backend.region.toString()).isEqualTo(AWS_REGION)
+    }
+
+    @Test
     fun regionPresent() {
         initEnv()
         val backend = BedrockBackend.fromEnv()
@@ -115,13 +255,13 @@ internal class BedrockBackendTest {
 
     @Test
     fun builderMissingCredentials() {
-        // Make credentials available from the environment, but do not use them
-        // when building the backend.
+        // Make credentials available from the environment, but do not use them when building the
+        // backend.
         initEnv()
 
         assertThatThrownBy { BedrockBackend.builder().build() }
             .isExactlyInstanceOf(IllegalStateException::class.java)
-            .hasMessageContaining("awsCredentialsProvider")
+            .hasMessageStartingWith("No AWS credentials provider or API key was set.")
     }
 
     @Test
@@ -138,7 +278,7 @@ internal class BedrockBackendTest {
     fun regionExplicitWithoutAwsCredentials() {
         assertThatThrownBy { BedrockBackend.builder().region(Region.US_EAST_1).build() }
             .isExactlyInstanceOf(IllegalStateException::class.java)
-            .hasMessageContaining("awsCredentialsProvider")
+            .hasMessage("No AWS credentials provider or API key was set.")
     }
 
     @Test
@@ -630,10 +770,34 @@ internal class BedrockBackendTest {
         // Only test the content type; the rest should be the same as the main
         // test of signing. If the request does not have a body and the request
         // does not have a content type, then no content type can be inferred.
-        // This is should be a fatal condition.
+        // This should be a fatal condition.
         assertThatThrownBy { backend.authorizeRequest(request) }
             .isExactlyInstanceOf(AnthropicInvalidDataException::class.java)
             .hasMessageStartingWith("No content type")
+    }
+
+    @Test
+    fun authorizeRequestWithApiKey() {
+        initEnv()
+        val backend = BedrockBackend.builder().apiKey(API_KEY).region(Region.EU_WEST_1).build()
+        // Include a header in the request to ensure that the authorization procedure does not
+        // replace all (delete) existing headers. This request is not signed, so not much else is
+        // required to be set.
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.POST)
+                .baseUrl("https://bedrock-runtime.us-east-1.amazonaws.com/path1/path2")
+                .addPathSegment("path-1")
+                .putQueryParam("param-1", "param-value-1")
+                .putHeader("X-Test", "header-value-a")
+                .build()
+        val authorizedRequest = backend.authorizeRequest(request)
+
+        assertThat(authorizedRequest.headers.names().contains("X-Test")).isTrue
+        assertThat(authorizedRequest.headers.names().contains("Authorization")).isTrue
+        assertThat(authorizedRequest.headers.values("Authorization").size).isEqualTo(1)
+        assertThat(authorizedRequest.headers.values("Authorization")[0])
+            .isEqualTo("Bearer $API_KEY")
     }
 
     @Test

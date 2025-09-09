@@ -34,22 +34,30 @@ import software.amazon.awssdk.regions.providers.DefaultAwsRegionProviderChain
 import software.amazon.eventstream.MessageDecoder
 
 /**
- * The Amazon Bedrock backend that manages the AWS credentials required to access an Anthropic AI
- * model on the Bedrock service and adapts requests and responses to Bedrock's requirements.
+ * The Amazon Bedrock backend that manages the AWS credentials or API key required to access an
+ * Anthropic AI model on the Bedrock service and adapts requests and responses to Bedrock's
+ * requirements.
  *
- * Amazon Bedrock requires cryptographically-signed requests using credentials issued by AWS. These
- * can be provided via system properties, environment variables, or other AWS facilities. They can
- * be resolved automatically by the default AWS provider chain by calling [Builder.fromEnv].
- * Alternatively, a custom AWS credentials provider can be configured on the builder and used to
- * resolve the credentials. Both the credentials and the region can be resolved independently and
- * passed to [Builder.awsCredentials] and [Builder.region] should an alternative method of
- * resolution be required.
+ * Unless using an API key, Amazon Bedrock requires cryptographically-signed requests using
+ * credentials issued by AWS. These can be provided via system properties, environment variables, or
+ * other AWS facilities. They can be resolved automatically by the default AWS provider chain by
+ * calling [Builder.fromEnv]. Alternatively, a custom AWS credentials provider can be configured on
+ * the builder and used to resolve the credentials.
+ *
+ * If using an API key, the key can be set directly, or provided via the `AWS_BEARER_TOKEN_BEDROCK`
+ * environment variable. If that variable is set, it will be resolved by [Builder.fromEnv] unless an
+ * AWS credentials provider is specified explicitly to that method.
+ *
+ * Both the credentials (or API key) and the region can be resolved independently and passed to
+ * [Builder.awsCredentials] (or [Builder.apiKey]) and [Builder.region] should an alternative method
+ * of resolution be required.
  *
  * See the Amazon Bedrock and AWS documentation for details on how to configure AWS credentials.
  */
 class BedrockBackend
 private constructor(
-    @get:JvmName("awsCredentialsProvider") val awsCredentialsProvider: AwsCredentialsProvider,
+    @get:JvmName("awsCredentialsProvider") val awsCredentialsProvider: AwsCredentialsProvider?,
+    @get:JvmName("apiKey") val apiKey: String?,
     @get:JvmName("region") val region: Region,
 ) : Backend {
 
@@ -68,19 +76,26 @@ private constructor(
             }
         )
 
-    /** Gets the AWS credentials resolved from the configured AWS credentials provider. */
+    /**
+     * Gets the AWS credentials resolved from the configured AWS credentials provider. Accessing
+     * this will result in an error if an API key was used instead of an AWS credentials provider.
+     */
     val awsCredentials: AwsCredentials
         // Depending on the source of the credentials, they may need to be periodically refreshed.
         // This can be done in the background if a credentials provider is configured to do so.
         // Typically, a provider will cache the periodically refreshed credentials, so resolving
         // them is a simple cache read and does not add much overhead.
-        @JvmName("awsCredentials") get() = awsCredentialsProvider.resolveCredentials()
+        @JvmName("awsCredentials")
+        get() =
+            awsCredentialsProvider?.resolveCredentials()
+                ?: throw IllegalStateException("AWS credentials provider was not set.")
 
     companion object {
         private const val ANTHROPIC_VERSION = "bedrock-2023-05-31"
         private const val SERVICE_NAME = "bedrock-runtime"
         private const val HEADER_ANTHROPIC_BETA = "anthropic-beta"
         private const val HEADER_CONTENT_TYPE = "content-type"
+        private const val HEADER_AUTHORIZATION = "authorization"
         private const val CONTENT_TYPE_JSON = "application/json"
 
         /**
@@ -101,6 +116,13 @@ private constructor(
          * translated into the Server-Sent Events (SSE) stream format.
          */
         private const val CONTENT_TYPE_SSE_STREAM = "text/event-stream; charset=utf-8"
+
+        /**
+         * The name of the environment variable that may hold the API key for authorization. If this
+         * variable is set, it will take precedence over the AWS credentials resolved from all other
+         * sources.
+         */
+        private const val ENV_API_KEY = "AWS_BEARER_TOKEN_BEDROCK"
 
         @JvmStatic fun builder() = Builder()
 
@@ -177,8 +199,8 @@ private constructor(
             jsonBody.remove("model")
                 ?: throw AnthropicInvalidDataException("No model found in body.")
         val modelId = model.asText()
-        // For Bedrock, the "stream" property must be removed from the body.
-        // This differs from Vertex where the property is retained.
+        // For Bedrock, the "stream" property must be removed from the body. This differs from
+        // Vertex where the property is retained.
         val isStream = jsonBody.remove("stream")?.asBoolean() ?: false
 
         return request
@@ -190,21 +212,33 @@ private constructor(
     }
 
     override fun authorizeRequest(request: HttpRequest): HttpRequest {
-        require(!request.headers.names().contains("Authorization")) {
+        require(!request.headers.names().contains(HEADER_AUTHORIZATION)) {
             "Request already authorized for Bedrock."
         }
 
+        if (awsCredentialsProvider != null) {
+            return authorizeRequestWithCredentials(request)
+        }
+
+        if (apiKey != null) {
+            return authorizeRequestWithApiKey(request)
+        }
+
+        // Probably a bug in the `Builder` class. This will make it easy to find the problem.
+        throw IllegalStateException("AWS credentials provider or API key must be set.")
+    }
+
+    private fun authorizeRequestWithCredentials(request: HttpRequest): HttpRequest {
         val awsSignRequest =
             SdkHttpRequest.builder()
                 .uri(request.baseUrl)
                 .method(SdkHttpMethod.fromValue(request.method.toString()))
                 .apply {
-                    // For the signature, copy the content type header from the body
-                    // if the request object has no content type header. If there is
-                    // no content type header, die. There needs to be one, otherwise
-                    // the "sign()" call later will add a "content-type" header with
-                    // a "null" value and crash "replaceAllHeaders". It is better to
-                    // provide a meaningful error earlier in the execution.
+                    // For the signature, copy the content type header from the body if the request
+                    // object has no content type header. If there is no content type header, die.
+                    // There needs to be one, otherwise the "sign()" call later will add a
+                    // "content-type" header with a "null" value and crash "replaceAllHeaders". It
+                    // is better to provide a meaningful error earlier in the execution.
                     if (request.headers.values(HEADER_CONTENT_TYPE).isEmpty()) {
                         if (request.body?.contentType() != null) {
                             appendHeader(HEADER_CONTENT_TYPE, request.body!!.contentType())
@@ -230,8 +264,8 @@ private constructor(
                     r.identity(awsCredentials)
                         .request(awsSignRequest)
                         .payload(ContentStreamProvider.fromByteArray(bodyData.toByteArray()))
-                        // The service *signing* name "bedrock" is not the same as
-                        // the service name in the URL ("bedrock-runtime").
+                        // The service *signing* name "bedrock" is not the same as the service name
+                        // in the URL ("bedrock-runtime").
                         .putProperty(AwsV4HttpSigner.SERVICE_SIGNING_NAME, "bedrock")
                         .putProperty(AwsV4HttpSigner.REGION_NAME, region.id())
                 }
@@ -240,6 +274,10 @@ private constructor(
         // Overwrite any headers with the same names already present.
         return request.toBuilder().replaceAllHeaders(awsSignedRequest.headers()).build()
     }
+
+    private fun authorizeRequestWithApiKey(request: HttpRequest): HttpRequest =
+        // When using an API key, the request is not signed.
+        request.toBuilder().putHeader(HEADER_AUTHORIZATION, "Bearer $apiKey").build()
 
     override fun prepareResponse(response: HttpResponse): HttpResponse {
         if (
@@ -261,7 +299,6 @@ private constructor(
         val pipedInput = PipedInputStream()
         val pipedOutput = PipedOutputStream(pipedInput)
 
-        // spotless:off
         //
         // A decoded AWS EventStream message's payload is JSON. It might look like this (abridged):
         //
@@ -286,7 +323,6 @@ private constructor(
         // blocks waiting for more data to be written, would block the thread from executing the
         // necessary "write" and cause a deadlock.
         //
-        // spotless:on
         sseThreadPool.execute {
             responseInput.use { input ->
                 // "use" closes the piped output stream when done, which signals
@@ -346,10 +382,13 @@ private constructor(
      * set the AWS credentials and region explicitly via [awsCredentials] and [region] before
      * calling [build]. A custom AWS credentials provider can be passed to [fromEnv] or
      * [awsCredentialsProvider].
+     *
+     * You should set _either_ the AWS credentials provider _or_ the API key, but not both. If both
+     * are set, an error will occur.
      */
     class Builder internal constructor() {
         private var awsCredentialsProvider: AwsCredentialsProvider? = null
-
+        private var apiKey: String? = null
         private var region: Region? = null
 
         /**
@@ -361,34 +400,61 @@ private constructor(
          * provider, whether given explicitly or by default, overrides any provider set via
          * [awsCredentialsProvider] or [awsCredentials].
          *
+         * If an API key is set via the `AWS_BEARER_TOKEN_BEDROCK` environment variable and no
+         * credentials provider is given, the API key will be used instead of the default
+         * credentials provider.
+         *
          * The region is also resolved immediately using the default AWS region provider chain. Once
          * resolved here, the region will not be changed again.
          *
-         * When called, this method will immediately attempt to resolve the AWS credentials and
-         * region. An error will occur if they cannot be resolved.
+         * When called, this method will immediately attempt to resolve the AWS credentials (or API
+         * key) and region. An error will occur if they cannot be resolved.
+         *
+         * @param awsCredentialsProvider The AWS credentials provider to use. If `null`, the API key
+         *   defined in the environment variables will be used if available, otherwise the default
+         *   AWS credentials provider will be used.
          */
         @JvmOverloads
-        fun fromEnv(
-            awsCredentialsProvider: AwsCredentialsProvider = DefaultCredentialsProvider.create()
-        ) = apply {
-            awsCredentialsProvider(awsCredentialsProvider)
+        fun fromEnv(awsCredentialsProvider: AwsCredentialsProvider? = null) = apply {
+            var effectiveCredentialsProvider = awsCredentialsProvider
 
-            try {
-                // A fail-fast check to ensure that the provider and the environment are properly
-                // configured. There is no need to store the result.
-                awsCredentialsProvider.resolveCredentials()
-            } catch (e: Exception) {
-                throw IllegalStateException(
-                    "No AWS access key ID or AWS secret access key found.",
-                    e,
-                )
+            if (effectiveCredentialsProvider == null) {
+                val apiKey = getEnv(ENV_API_KEY)
+
+                if (apiKey == null) {
+                    effectiveCredentialsProvider = DefaultCredentialsProvider.builder().build()
+                } else {
+                    apiKey(apiKey)
+                }
             }
+
+            if (effectiveCredentialsProvider != null) {
+                awsCredentialsProvider(effectiveCredentialsProvider)
+
+                try {
+                    // A fail-fast check to ensure that the provider and the environment are
+                    // properly configured. There is no need to store the result.
+                    effectiveCredentialsProvider.resolveCredentials()
+                } catch (e: Exception) {
+                    throw IllegalStateException(
+                        "No AWS access key ID or AWS secret access key found.",
+                        e,
+                    )
+                }
+            }
+
             try {
                 region = DefaultAwsRegionProviderChain.builder().build().region
             } catch (e: Exception) {
                 throw IllegalStateException("No AWS region found.", e)
             }
         }
+
+        /**
+         * Wraps access to system environment variables to allow mocking of environment variables
+         * when testing.
+         */
+        @JvmSynthetic internal fun getEnv(name: String): String? = System.getenv(name)
 
         /**
          * Sets the AWS credentials provider that will be used to resolve credentials. Credentials
@@ -406,8 +472,19 @@ private constructor(
          * This is a convenience for simple use cases, such as when testing. The provider overrides
          * any provider previously set by [awsCredentialsProvider] or [fromEnv].
          */
-        fun awsCredentials(awsCredentials: AwsCredentials) = apply {
-            awsCredentialsProvider = providerOf(awsCredentials)
+        fun awsCredentials(awsCredentials: AwsCredentials) =
+            awsCredentialsProvider(providerOf(awsCredentials))
+
+        /**
+         * Sets the API key to used as the Bedrock "bearer token". This will be set automatically
+         * from the `AWS_BEARER_TOKEN_BEDROCK` environment variable if that variable is set when
+         * [fromEnv] is called.
+         */
+        fun apiKey(apiKey: String) = apply {
+            if (awsCredentialsProvider != null) {
+                throw IllegalStateException("Credentials provider already set.")
+            }
+            this.apiKey = apiKey
         }
 
         /**
@@ -417,10 +494,16 @@ private constructor(
          */
         fun region(region: Region) = apply { this.region = region }
 
-        fun build() =
-            BedrockBackend(
-                checkRequired("awsCredentialsProvider", awsCredentialsProvider),
-                checkRequired("region", region),
-            )
+        fun build(): BedrockBackend {
+            if (awsCredentialsProvider != null && apiKey != null) {
+                throw IllegalStateException(
+                    "An AWS credentials provider or an API key must be set, but not both."
+                )
+            }
+            if (awsCredentialsProvider == null && apiKey == null) {
+                throw IllegalStateException("No AWS credentials provider or API key was set.")
+            }
+            return BedrockBackend(awsCredentialsProvider, apiKey, checkRequired("region", region))
+        }
     }
 }
