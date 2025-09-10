@@ -23,7 +23,9 @@ internal class BetaUsageTest {
                 .cacheReadInputTokens(2051L)
                 .inputTokens(2095L)
                 .outputTokens(503L)
-                .serverToolUse(BetaServerToolUsage.builder().webSearchRequests(0L).build())
+                .serverToolUse(
+                    BetaServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
+                )
                 .serviceTier(BetaUsage.ServiceTier.STANDARD)
                 .build()
 
@@ -39,7 +41,9 @@ internal class BetaUsageTest {
         assertThat(betaUsage.inputTokens()).isEqualTo(2095L)
         assertThat(betaUsage.outputTokens()).isEqualTo(503L)
         assertThat(betaUsage.serverToolUse())
-            .contains(BetaServerToolUsage.builder().webSearchRequests(0L).build())
+            .contains(
+                BetaServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
+            )
         assertThat(betaUsage.serviceTier()).contains(BetaUsage.ServiceTier.STANDARD)
     }
 
@@ -58,7 +62,9 @@ internal class BetaUsageTest {
                 .cacheReadInputTokens(2051L)
                 .inputTokens(2095L)
                 .outputTokens(503L)
-                .serverToolUse(BetaServerToolUsage.builder().webSearchRequests(0L).build())
+                .serverToolUse(
+                    BetaServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
+                )
                 .serviceTier(BetaUsage.ServiceTier.STANDARD)
                 .build()
 

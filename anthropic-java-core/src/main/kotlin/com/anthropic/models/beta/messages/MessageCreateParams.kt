@@ -1104,6 +1104,14 @@ private constructor(
         }
 
         /**
+         * Alias for calling [addTool] with
+         * `BetaToolUnion.ofWebFetchTool20250910(webFetchTool20250910)`.
+         */
+        fun addTool(webFetchTool20250910: BetaWebFetchTool20250910) = apply {
+            body.addTool(webFetchTool20250910)
+        }
+
+        /**
          * Only sample from the top K options for each subsequent token.
          *
          * Used to remove "long tail" low probability responses.
@@ -2474,6 +2482,13 @@ private constructor(
              */
             fun addTool(webSearchTool20250305: BetaWebSearchTool20250305) =
                 addTool(BetaToolUnion.ofWebSearchTool20250305(webSearchTool20250305))
+
+            /**
+             * Alias for calling [addTool] with
+             * `BetaToolUnion.ofWebFetchTool20250910(webFetchTool20250910)`.
+             */
+            fun addTool(webFetchTool20250910: BetaWebFetchTool20250910) =
+                addTool(BetaToolUnion.ofWebFetchTool20250910(webFetchTool20250910))
 
             /**
              * Only sample from the top K options for each subsequent token.

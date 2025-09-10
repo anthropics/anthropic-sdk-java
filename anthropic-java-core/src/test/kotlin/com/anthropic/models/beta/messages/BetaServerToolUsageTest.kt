@@ -11,15 +11,18 @@ internal class BetaServerToolUsageTest {
 
     @Test
     fun create() {
-        val betaServerToolUsage = BetaServerToolUsage.builder().webSearchRequests(0L).build()
+        val betaServerToolUsage =
+            BetaServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
 
+        assertThat(betaServerToolUsage.webFetchRequests()).isEqualTo(2L)
         assertThat(betaServerToolUsage.webSearchRequests()).isEqualTo(0L)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaServerToolUsage = BetaServerToolUsage.builder().webSearchRequests(0L).build()
+        val betaServerToolUsage =
+            BetaServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
 
         val roundtrippedBetaServerToolUsage =
             jsonMapper.readValue(

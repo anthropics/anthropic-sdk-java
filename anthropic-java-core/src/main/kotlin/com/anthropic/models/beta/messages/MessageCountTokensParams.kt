@@ -834,6 +834,14 @@ private constructor(
             body.addTool(betaWebSearchTool20250305)
         }
 
+        /**
+         * Alias for calling [addTool] with
+         * `Tool.ofBetaWebFetchTool20250910(betaWebFetchTool20250910)`.
+         */
+        fun addTool(betaWebFetchTool20250910: BetaWebFetchTool20250910) = apply {
+            body.addTool(betaWebFetchTool20250910)
+        }
+
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
         }
@@ -1817,6 +1825,13 @@ private constructor(
             fun addTool(betaWebSearchTool20250305: BetaWebSearchTool20250305) =
                 addTool(Tool.ofBetaWebSearchTool20250305(betaWebSearchTool20250305))
 
+            /**
+             * Alias for calling [addTool] with
+             * `Tool.ofBetaWebFetchTool20250910(betaWebFetchTool20250910)`.
+             */
+            fun addTool(betaWebFetchTool20250910: BetaWebFetchTool20250910) =
+                addTool(Tool.ofBetaWebFetchTool20250910(betaWebFetchTool20250910))
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -2141,6 +2156,7 @@ private constructor(
         private val betaToolTextEditor20250429: BetaToolTextEditor20250429? = null,
         private val betaToolTextEditor20250728: BetaToolTextEditor20250728? = null,
         private val betaWebSearchTool20250305: BetaWebSearchTool20250305? = null,
+        private val betaWebFetchTool20250910: BetaWebFetchTool20250910? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -2179,6 +2195,9 @@ private constructor(
         fun betaWebSearchTool20250305(): Optional<BetaWebSearchTool20250305> =
             Optional.ofNullable(betaWebSearchTool20250305)
 
+        fun betaWebFetchTool20250910(): Optional<BetaWebFetchTool20250910> =
+            Optional.ofNullable(betaWebFetchTool20250910)
+
         fun isBeta(): Boolean = beta != null
 
         fun isBetaToolBash20241022(): Boolean = betaToolBash20241022 != null
@@ -2202,6 +2221,8 @@ private constructor(
         fun isBetaToolTextEditor20250728(): Boolean = betaToolTextEditor20250728 != null
 
         fun isBetaWebSearchTool20250305(): Boolean = betaWebSearchTool20250305 != null
+
+        fun isBetaWebFetchTool20250910(): Boolean = betaWebFetchTool20250910 != null
 
         fun asBeta(): BetaTool = beta.getOrThrow("beta")
 
@@ -2238,6 +2259,9 @@ private constructor(
         fun asBetaWebSearchTool20250305(): BetaWebSearchTool20250305 =
             betaWebSearchTool20250305.getOrThrow("betaWebSearchTool20250305")
 
+        fun asBetaWebFetchTool20250910(): BetaWebFetchTool20250910 =
+            betaWebFetchTool20250910.getOrThrow("betaWebFetchTool20250910")
+
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
@@ -2265,6 +2289,8 @@ private constructor(
                     visitor.visitBetaToolTextEditor20250728(betaToolTextEditor20250728)
                 betaWebSearchTool20250305 != null ->
                     visitor.visitBetaWebSearchTool20250305(betaWebSearchTool20250305)
+                betaWebFetchTool20250910 != null ->
+                    visitor.visitBetaWebFetchTool20250910(betaWebFetchTool20250910)
                 else -> visitor.unknown(_json)
             }
 
@@ -2346,6 +2372,12 @@ private constructor(
                     ) {
                         betaWebSearchTool20250305.validate()
                     }
+
+                    override fun visitBetaWebFetchTool20250910(
+                        betaWebFetchTool20250910: BetaWebFetchTool20250910
+                    ) {
+                        betaWebFetchTool20250910.validate()
+                    }
                 }
             )
             validated = true
@@ -2415,6 +2447,10 @@ private constructor(
                         betaWebSearchTool20250305: BetaWebSearchTool20250305
                     ) = betaWebSearchTool20250305.validity()
 
+                    override fun visitBetaWebFetchTool20250910(
+                        betaWebFetchTool20250910: BetaWebFetchTool20250910
+                    ) = betaWebFetchTool20250910.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -2436,7 +2472,8 @@ private constructor(
                 betaToolTextEditor20250124 == other.betaToolTextEditor20250124 &&
                 betaToolTextEditor20250429 == other.betaToolTextEditor20250429 &&
                 betaToolTextEditor20250728 == other.betaToolTextEditor20250728 &&
-                betaWebSearchTool20250305 == other.betaWebSearchTool20250305
+                betaWebSearchTool20250305 == other.betaWebSearchTool20250305 &&
+                betaWebFetchTool20250910 == other.betaWebFetchTool20250910
         }
 
         override fun hashCode(): Int =
@@ -2453,6 +2490,7 @@ private constructor(
                 betaToolTextEditor20250429,
                 betaToolTextEditor20250728,
                 betaWebSearchTool20250305,
+                betaWebFetchTool20250910,
             )
 
         override fun toString(): String =
@@ -2478,6 +2516,8 @@ private constructor(
                     "Tool{betaToolTextEditor20250728=$betaToolTextEditor20250728}"
                 betaWebSearchTool20250305 != null ->
                     "Tool{betaWebSearchTool20250305=$betaWebSearchTool20250305}"
+                betaWebFetchTool20250910 != null ->
+                    "Tool{betaWebFetchTool20250910=$betaWebFetchTool20250910}"
                 _json != null -> "Tool{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Tool")
             }
@@ -2537,6 +2577,10 @@ private constructor(
             @JvmStatic
             fun ofBetaWebSearchTool20250305(betaWebSearchTool20250305: BetaWebSearchTool20250305) =
                 Tool(betaWebSearchTool20250305 = betaWebSearchTool20250305)
+
+            @JvmStatic
+            fun ofBetaWebFetchTool20250910(betaWebFetchTool20250910: BetaWebFetchTool20250910) =
+                Tool(betaWebFetchTool20250910 = betaWebFetchTool20250910)
         }
 
         /** An interface that defines how to map each variant of [Tool] to a value of type [T]. */
@@ -2583,6 +2627,8 @@ private constructor(
             fun visitBetaWebSearchTool20250305(
                 betaWebSearchTool20250305: BetaWebSearchTool20250305
             ): T
+
+            fun visitBetaWebFetchTool20250910(betaWebFetchTool20250910: BetaWebFetchTool20250910): T
 
             /**
              * Maps an unknown variant of [Tool] to a value of type [T].
@@ -2633,6 +2679,9 @@ private constructor(
                             tryDeserialize(node, jacksonTypeRef<BetaWebSearchTool20250305>())?.let {
                                 Tool(betaWebSearchTool20250305 = it, _json = json)
                             },
+                            tryDeserialize(node, jacksonTypeRef<BetaWebFetchTool20250910>())?.let {
+                                Tool(betaWebFetchTool20250910 = it, _json = json)
+                            },
                         )
                         .filterNotNull()
                         .allMaxBy { it.validity() }
@@ -2681,6 +2730,8 @@ private constructor(
                         generator.writeObject(value.betaToolTextEditor20250728)
                     value.betaWebSearchTool20250305 != null ->
                         generator.writeObject(value.betaWebSearchTool20250305)
+                    value.betaWebFetchTool20250910 != null ->
+                        generator.writeObject(value.betaWebFetchTool20250910)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Tool")
                 }

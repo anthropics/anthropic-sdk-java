@@ -256,6 +256,8 @@ private constructor(
 
             @JvmField val WEB_SEARCH = of("web_search")
 
+            @JvmField val WEB_FETCH = of("web_fetch")
+
             @JvmField val CODE_EXECUTION = of("code_execution")
 
             @JvmField val BASH_CODE_EXECUTION = of("bash_code_execution")
@@ -268,6 +270,7 @@ private constructor(
         /** An enum containing [Name]'s known values. */
         enum class Known {
             WEB_SEARCH,
+            WEB_FETCH,
             CODE_EXECUTION,
             BASH_CODE_EXECUTION,
             TEXT_EDITOR_CODE_EXECUTION,
@@ -284,6 +287,7 @@ private constructor(
          */
         enum class Value {
             WEB_SEARCH,
+            WEB_FETCH,
             CODE_EXECUTION,
             BASH_CODE_EXECUTION,
             TEXT_EDITOR_CODE_EXECUTION,
@@ -301,6 +305,7 @@ private constructor(
         fun value(): Value =
             when (this) {
                 WEB_SEARCH -> Value.WEB_SEARCH
+                WEB_FETCH -> Value.WEB_FETCH
                 CODE_EXECUTION -> Value.CODE_EXECUTION
                 BASH_CODE_EXECUTION -> Value.BASH_CODE_EXECUTION
                 TEXT_EDITOR_CODE_EXECUTION -> Value.TEXT_EDITOR_CODE_EXECUTION
@@ -319,6 +324,7 @@ private constructor(
         fun known(): Known =
             when (this) {
                 WEB_SEARCH -> Known.WEB_SEARCH
+                WEB_FETCH -> Known.WEB_FETCH
                 CODE_EXECUTION -> Known.CODE_EXECUTION
                 BASH_CODE_EXECUTION -> Known.BASH_CODE_EXECUTION
                 TEXT_EDITOR_CODE_EXECUTION -> Known.TEXT_EDITOR_CODE_EXECUTION

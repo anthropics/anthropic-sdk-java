@@ -463,6 +463,13 @@ private constructor(
 
         /**
          * Alias for calling [addContent] with
+         * `BetaContentBlock.ofWebFetchToolResult(webFetchToolResult)`.
+         */
+        fun addContent(webFetchToolResult: BetaWebFetchToolResultBlock) =
+            addContent(BetaContentBlock.ofWebFetchToolResult(webFetchToolResult))
+
+        /**
+         * Alias for calling [addContent] with
          * `BetaContentBlock.ofCodeExecutionToolResult(codeExecutionToolResult)`.
          */
         fun addContent(codeExecutionToolResult: BetaCodeExecutionToolResultBlock) =

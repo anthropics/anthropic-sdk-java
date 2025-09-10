@@ -309,7 +309,12 @@ private constructor(
             this.cacheControl = cacheControl
         }
 
-        fun citations(citations: BetaCitationsConfigParam) = citations(JsonField.of(citations))
+        fun citations(citations: BetaCitationsConfigParam?) =
+            citations(JsonField.ofNullable(citations))
+
+        /** Alias for calling [Builder.citations] with `citations.orElse(null)`. */
+        fun citations(citations: Optional<BetaCitationsConfigParam>) =
+            citations(citations.getOrNull())
 
         /**
          * Sets [Builder.citations] to an arbitrary JSON value.
