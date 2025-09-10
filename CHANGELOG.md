@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.7.0 (2025-09-10)
+
+Full Changelog: [v2.6.0...v2.7.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.6.0...v2.7.0)
+
+### Features
+
+* **api:** adds support for Documents in tool results ([a299cfd](https://github.com/anthropics/anthropic-sdk-java/commit/a299cfdd8537938f463acab2dc2580b1b19fea84))
+* **api:** adds support for web_fetch_20250910 tool ([dec0520](https://github.com/anthropics/anthropic-sdk-java/commit/dec0520beb804087a35f2c898ee739e6abdfaadc))
+* **client:** support for Bedrock authorization using API keys ([#279](https://github.com/anthropics/anthropic-sdk-java/issues/279)) ([787d77b](https://github.com/anthropics/anthropic-sdk-java/commit/787d77b8beaa032d6b294b200af44b78e75637b0))
+
+
+### Bug Fixes
+
+* **accumulator:** add web fetch block handling ([a731cdd](https://github.com/anthropics/anthropic-sdk-java/commit/a731cdde36d8d7b09aa9e1a56d2bac433281dd30))
+* **ci:** use java-version 21 for publish step ([165cefb](https://github.com/anthropics/anthropic-sdk-java/commit/165cefbcdc3342253086bd3599997dcd33eed4d4))
+* **tests:** add missing web fetch requests usage ([aec8f06](https://github.com/anthropics/anthropic-sdk-java/commit/aec8f060b66669aca94a52c78d3188476c6f3784))
+
 ## 2.6.0 (2025-09-02)
 
 Full Changelog: [v2.5.1...v2.6.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.5.1...v2.6.0)
