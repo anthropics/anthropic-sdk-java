@@ -34,7 +34,12 @@ internal class BetaMessageAccumulatorTest {
                     .cacheCreationInputTokens(0L)
                     .cacheReadInputTokens(0L)
                     .inputTokens(INPUT_TOKENS) // Use test constant
-                    .serverToolUse(BetaServerToolUsage.builder().webSearchRequests(0L).build())
+                    .serverToolUse(
+                        BetaServerToolUsage.builder()
+                            .webSearchRequests(0L)
+                            .webFetchRequests(0L)
+                            .build()
+                    )
                     .build(),
             )
         val usage2 =
@@ -45,7 +50,12 @@ internal class BetaMessageAccumulatorTest {
                     .cacheCreationInputTokens(0L)
                     .cacheReadInputTokens(0L)
                     .inputTokens(INPUT_TOKENS) // Use test constant
-                    .serverToolUse(BetaServerToolUsage.builder().webSearchRequests(0L).build())
+                    .serverToolUse(
+                        BetaServerToolUsage.builder()
+                            .webSearchRequests(0L)
+                            .webFetchRequests(0L)
+                            .build()
+                    )
                     .build(),
             )
 
@@ -855,6 +865,7 @@ internal class BetaMessageAccumulatorTest {
                         .serverToolUse(
                             BetaServerToolUsage.builder()
                                 .webSearchRequests(webSearchRequests)
+                                .webFetchRequests(0L)
                                 .build()
                         )
                         .build()
@@ -997,7 +1008,9 @@ internal class BetaMessageAccumulatorTest {
             .cacheCreationInputTokens(0L)
             .cacheReadInputTokens(0L)
             .outputTokens(0L)
-            .serverToolUse(BetaServerToolUsage.builder().webSearchRequests(0L).build())
+            .serverToolUse(
+                BetaServerToolUsage.builder().webSearchRequests(0L).webFetchRequests(0L).build()
+            )
             .serviceTier(BetaUsage.ServiceTier.STANDARD)
             .build()
 
