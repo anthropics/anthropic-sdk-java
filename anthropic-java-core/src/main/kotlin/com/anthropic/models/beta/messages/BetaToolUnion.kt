@@ -34,6 +34,7 @@ private constructor(
     private val textEditor20250429: BetaToolTextEditor20250429? = null,
     private val textEditor20250728: BetaToolTextEditor20250728? = null,
     private val webSearchTool20250305: BetaWebSearchTool20250305? = null,
+    private val webFetchTool20250910: BetaWebFetchTool20250910? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -70,6 +71,9 @@ private constructor(
     fun webSearchTool20250305(): Optional<BetaWebSearchTool20250305> =
         Optional.ofNullable(webSearchTool20250305)
 
+    fun webFetchTool20250910(): Optional<BetaWebFetchTool20250910> =
+        Optional.ofNullable(webFetchTool20250910)
+
     fun isBetaTool(): Boolean = betaTool != null
 
     fun isBash20241022(): Boolean = bash20241022 != null
@@ -93,6 +97,8 @@ private constructor(
     fun isTextEditor20250728(): Boolean = textEditor20250728 != null
 
     fun isWebSearchTool20250305(): Boolean = webSearchTool20250305 != null
+
+    fun isWebFetchTool20250910(): Boolean = webFetchTool20250910 != null
 
     fun asBetaTool(): BetaTool = betaTool.getOrThrow("betaTool")
 
@@ -127,6 +133,9 @@ private constructor(
     fun asWebSearchTool20250305(): BetaWebSearchTool20250305 =
         webSearchTool20250305.getOrThrow("webSearchTool20250305")
 
+    fun asWebFetchTool20250910(): BetaWebFetchTool20250910 =
+        webFetchTool20250910.getOrThrow("webFetchTool20250910")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
@@ -146,6 +155,7 @@ private constructor(
             textEditor20250728 != null -> visitor.visitTextEditor20250728(textEditor20250728)
             webSearchTool20250305 != null ->
                 visitor.visitWebSearchTool20250305(webSearchTool20250305)
+            webFetchTool20250910 != null -> visitor.visitWebFetchTool20250910(webFetchTool20250910)
             else -> visitor.unknown(_json)
         }
 
@@ -223,6 +233,12 @@ private constructor(
                 ) {
                     webSearchTool20250305.validate()
                 }
+
+                override fun visitWebFetchTool20250910(
+                    webFetchTool20250910: BetaWebFetchTool20250910
+                ) {
+                    webFetchTool20250910.validate()
+                }
             }
         )
         validated = true
@@ -289,6 +305,10 @@ private constructor(
                     webSearchTool20250305: BetaWebSearchTool20250305
                 ) = webSearchTool20250305.validity()
 
+                override fun visitWebFetchTool20250910(
+                    webFetchTool20250910: BetaWebFetchTool20250910
+                ) = webFetchTool20250910.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -310,7 +330,8 @@ private constructor(
             textEditor20250124 == other.textEditor20250124 &&
             textEditor20250429 == other.textEditor20250429 &&
             textEditor20250728 == other.textEditor20250728 &&
-            webSearchTool20250305 == other.webSearchTool20250305
+            webSearchTool20250305 == other.webSearchTool20250305 &&
+            webFetchTool20250910 == other.webFetchTool20250910
     }
 
     override fun hashCode(): Int =
@@ -327,6 +348,7 @@ private constructor(
             textEditor20250429,
             textEditor20250728,
             webSearchTool20250305,
+            webFetchTool20250910,
         )
 
     override fun toString(): String =
@@ -346,6 +368,8 @@ private constructor(
             textEditor20250728 != null -> "BetaToolUnion{textEditor20250728=$textEditor20250728}"
             webSearchTool20250305 != null ->
                 "BetaToolUnion{webSearchTool20250305=$webSearchTool20250305}"
+            webFetchTool20250910 != null ->
+                "BetaToolUnion{webFetchTool20250910=$webFetchTool20250910}"
             _json != null -> "BetaToolUnion{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaToolUnion")
         }
@@ -397,6 +421,10 @@ private constructor(
         @JvmStatic
         fun ofWebSearchTool20250305(webSearchTool20250305: BetaWebSearchTool20250305) =
             BetaToolUnion(webSearchTool20250305 = webSearchTool20250305)
+
+        @JvmStatic
+        fun ofWebFetchTool20250910(webFetchTool20250910: BetaWebFetchTool20250910) =
+            BetaToolUnion(webFetchTool20250910 = webFetchTool20250910)
     }
 
     /**
@@ -431,6 +459,8 @@ private constructor(
         fun visitTextEditor20250728(textEditor20250728: BetaToolTextEditor20250728): T
 
         fun visitWebSearchTool20250305(webSearchTool20250305: BetaWebSearchTool20250305): T
+
+        fun visitWebFetchTool20250910(webFetchTool20250910: BetaWebFetchTool20250910): T
 
         /**
          * Maps an unknown variant of [BetaToolUnion] to a value of type [T].
@@ -489,6 +519,9 @@ private constructor(
                         tryDeserialize(node, jacksonTypeRef<BetaWebSearchTool20250305>())?.let {
                             BetaToolUnion(webSearchTool20250305 = it, _json = json)
                         },
+                        tryDeserialize(node, jacksonTypeRef<BetaWebFetchTool20250910>())?.let {
+                            BetaToolUnion(webFetchTool20250910 = it, _json = json)
+                        },
                     )
                     .filterNotNull()
                     .allMaxBy { it.validity() }
@@ -530,6 +563,8 @@ private constructor(
                 value.textEditor20250728 != null -> generator.writeObject(value.textEditor20250728)
                 value.webSearchTool20250305 != null ->
                     generator.writeObject(value.webSearchTool20250305)
+                value.webFetchTool20250910 != null ->
+                    generator.writeObject(value.webFetchTool20250910)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaToolUnion")
             }

@@ -45,6 +45,7 @@ import com.anthropic.models.beta.messages.BetaToolTextEditor20250124
 import com.anthropic.models.beta.messages.BetaToolTextEditor20250429
 import com.anthropic.models.beta.messages.BetaToolTextEditor20250728
 import com.anthropic.models.beta.messages.BetaToolUnion
+import com.anthropic.models.beta.messages.BetaWebFetchTool20250910
 import com.anthropic.models.beta.messages.BetaWebSearchTool20250305
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -1985,6 +1986,13 @@ private constructor(
                  */
                 fun addTool(webSearchTool20250305: BetaWebSearchTool20250305) =
                     addTool(BetaToolUnion.ofWebSearchTool20250305(webSearchTool20250305))
+
+                /**
+                 * Alias for calling [addTool] with
+                 * `BetaToolUnion.ofWebFetchTool20250910(webFetchTool20250910)`.
+                 */
+                fun addTool(webFetchTool20250910: BetaWebFetchTool20250910) =
+                    addTool(BetaToolUnion.ofWebFetchTool20250910(webFetchTool20250910))
 
                 /**
                  * Only sample from the top K options for each subsequent token.

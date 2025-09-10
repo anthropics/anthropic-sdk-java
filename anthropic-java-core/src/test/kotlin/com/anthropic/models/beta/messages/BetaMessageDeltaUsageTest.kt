@@ -17,7 +17,9 @@ internal class BetaMessageDeltaUsageTest {
                 .cacheReadInputTokens(2051L)
                 .inputTokens(2095L)
                 .outputTokens(503L)
-                .serverToolUse(BetaServerToolUsage.builder().webSearchRequests(0L).build())
+                .serverToolUse(
+                    BetaServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
+                )
                 .build()
 
         assertThat(betaMessageDeltaUsage.cacheCreationInputTokens()).contains(2051L)
@@ -25,7 +27,9 @@ internal class BetaMessageDeltaUsageTest {
         assertThat(betaMessageDeltaUsage.inputTokens()).contains(2095L)
         assertThat(betaMessageDeltaUsage.outputTokens()).isEqualTo(503L)
         assertThat(betaMessageDeltaUsage.serverToolUse())
-            .contains(BetaServerToolUsage.builder().webSearchRequests(0L).build())
+            .contains(
+                BetaServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
+            )
     }
 
     @Test
@@ -37,7 +41,9 @@ internal class BetaMessageDeltaUsageTest {
                 .cacheReadInputTokens(2051L)
                 .inputTokens(2095L)
                 .outputTokens(503L)
-                .serverToolUse(BetaServerToolUsage.builder().webSearchRequests(0L).build())
+                .serverToolUse(
+                    BetaServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
+                )
                 .build()
 
         val roundtrippedBetaMessageDeltaUsage =

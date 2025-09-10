@@ -17,16 +17,28 @@ import java.util.Objects
 
 class BetaServerToolUsage
 private constructor(
+    private val webFetchRequests: JsonField<Long>,
     private val webSearchRequests: JsonField<Long>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
+        @JsonProperty("web_fetch_requests")
+        @ExcludeMissing
+        webFetchRequests: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("web_search_requests")
         @ExcludeMissing
-        webSearchRequests: JsonField<Long> = JsonMissing.of()
-    ) : this(webSearchRequests, mutableMapOf())
+        webSearchRequests: JsonField<Long> = JsonMissing.of(),
+    ) : this(webFetchRequests, webSearchRequests, mutableMapOf())
+
+    /**
+     * The number of web fetch tool requests.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun webFetchRequests(): Long = webFetchRequests.getRequired("web_fetch_requests")
 
     /**
      * The number of web search tool requests.
@@ -35,6 +47,16 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun webSearchRequests(): Long = webSearchRequests.getRequired("web_search_requests")
+
+    /**
+     * Returns the raw JSON value of [webFetchRequests].
+     *
+     * Unlike [webFetchRequests], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("web_fetch_requests")
+    @ExcludeMissing
+    fun _webFetchRequests(): JsonField<Long> = webFetchRequests
 
     /**
      * Returns the raw JSON value of [webSearchRequests].
@@ -65,6 +87,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .webFetchRequests()
          * .webSearchRequests()
          * ```
          */
@@ -74,13 +97,30 @@ private constructor(
     /** A builder for [BetaServerToolUsage]. */
     class Builder internal constructor() {
 
+        private var webFetchRequests: JsonField<Long>? = null
         private var webSearchRequests: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaServerToolUsage: BetaServerToolUsage) = apply {
+            webFetchRequests = betaServerToolUsage.webFetchRequests
             webSearchRequests = betaServerToolUsage.webSearchRequests
             additionalProperties = betaServerToolUsage.additionalProperties.toMutableMap()
+        }
+
+        /** The number of web fetch tool requests. */
+        fun webFetchRequests(webFetchRequests: Long) =
+            webFetchRequests(JsonField.of(webFetchRequests))
+
+        /**
+         * Sets [Builder.webFetchRequests] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.webFetchRequests] with a well-typed [Long] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun webFetchRequests(webFetchRequests: JsonField<Long>) = apply {
+            this.webFetchRequests = webFetchRequests
         }
 
         /** The number of web search tool requests. */
@@ -124,6 +164,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .webFetchRequests()
          * .webSearchRequests()
          * ```
          *
@@ -131,6 +172,7 @@ private constructor(
          */
         fun build(): BetaServerToolUsage =
             BetaServerToolUsage(
+                checkRequired("webFetchRequests", webFetchRequests),
                 checkRequired("webSearchRequests", webSearchRequests),
                 additionalProperties.toMutableMap(),
             )
@@ -143,6 +185,7 @@ private constructor(
             return@apply
         }
 
+        webFetchRequests()
         webSearchRequests()
         validated = true
     }
@@ -161,7 +204,9 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int = (if (webSearchRequests.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int =
+        (if (webFetchRequests.asKnown().isPresent) 1 else 0) +
+            (if (webSearchRequests.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -169,14 +214,17 @@ private constructor(
         }
 
         return other is BetaServerToolUsage &&
+            webFetchRequests == other.webFetchRequests &&
             webSearchRequests == other.webSearchRequests &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(webSearchRequests, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(webFetchRequests, webSearchRequests, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaServerToolUsage{webSearchRequests=$webSearchRequests, additionalProperties=$additionalProperties}"
+        "BetaServerToolUsage{webFetchRequests=$webFetchRequests, webSearchRequests=$webSearchRequests, additionalProperties=$additionalProperties}"
 }

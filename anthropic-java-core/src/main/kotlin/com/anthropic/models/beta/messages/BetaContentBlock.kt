@@ -29,6 +29,7 @@ private constructor(
     private val toolUse: BetaToolUseBlock? = null,
     private val serverToolUse: BetaServerToolUseBlock? = null,
     private val webSearchToolResult: BetaWebSearchToolResultBlock? = null,
+    private val webFetchToolResult: BetaWebFetchToolResultBlock? = null,
     private val codeExecutionToolResult: BetaCodeExecutionToolResultBlock? = null,
     private val bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlock? = null,
     private val textEditorCodeExecutionToolResult: BetaTextEditorCodeExecutionToolResultBlock? =
@@ -65,6 +66,11 @@ private constructor(
                     webSearchToolResult: BetaWebSearchToolResultBlock
                 ): BetaContentBlockParam =
                     BetaContentBlockParam.ofWebSearchToolResult(webSearchToolResult.toParam())
+
+                override fun visitWebFetchToolResult(
+                    webFetchToolResult: BetaWebFetchToolResultBlock
+                ): BetaContentBlockParam =
+                    BetaContentBlockParam.ofWebFetchToolResult(webFetchToolResult.toParam())
 
                 override fun visitCodeExecutionToolResult(
                     codeExecutionToolResult: BetaCodeExecutionToolResultBlock
@@ -117,6 +123,9 @@ private constructor(
     fun webSearchToolResult(): Optional<BetaWebSearchToolResultBlock> =
         Optional.ofNullable(webSearchToolResult)
 
+    fun webFetchToolResult(): Optional<BetaWebFetchToolResultBlock> =
+        Optional.ofNullable(webFetchToolResult)
+
     fun codeExecutionToolResult(): Optional<BetaCodeExecutionToolResultBlock> =
         Optional.ofNullable(codeExecutionToolResult)
 
@@ -145,6 +154,8 @@ private constructor(
 
     fun isWebSearchToolResult(): Boolean = webSearchToolResult != null
 
+    fun isWebFetchToolResult(): Boolean = webFetchToolResult != null
+
     fun isCodeExecutionToolResult(): Boolean = codeExecutionToolResult != null
 
     fun isBashCodeExecutionToolResult(): Boolean = bashCodeExecutionToolResult != null
@@ -170,6 +181,9 @@ private constructor(
 
     fun asWebSearchToolResult(): BetaWebSearchToolResultBlock =
         webSearchToolResult.getOrThrow("webSearchToolResult")
+
+    fun asWebFetchToolResult(): BetaWebFetchToolResultBlock =
+        webFetchToolResult.getOrThrow("webFetchToolResult")
 
     fun asCodeExecutionToolResult(): BetaCodeExecutionToolResultBlock =
         codeExecutionToolResult.getOrThrow("codeExecutionToolResult")
@@ -198,6 +212,7 @@ private constructor(
             toolUse != null -> visitor.visitToolUse(toolUse)
             serverToolUse != null -> visitor.visitServerToolUse(serverToolUse)
             webSearchToolResult != null -> visitor.visitWebSearchToolResult(webSearchToolResult)
+            webFetchToolResult != null -> visitor.visitWebFetchToolResult(webFetchToolResult)
             codeExecutionToolResult != null ->
                 visitor.visitCodeExecutionToolResult(codeExecutionToolResult)
             bashCodeExecutionToolResult != null ->
@@ -243,6 +258,12 @@ private constructor(
                     webSearchToolResult: BetaWebSearchToolResultBlock
                 ) {
                     webSearchToolResult.validate()
+                }
+
+                override fun visitWebFetchToolResult(
+                    webFetchToolResult: BetaWebFetchToolResultBlock
+                ) {
+                    webFetchToolResult.validate()
                 }
 
                 override fun visitCodeExecutionToolResult(
@@ -312,6 +333,10 @@ private constructor(
                     webSearchToolResult: BetaWebSearchToolResultBlock
                 ) = webSearchToolResult.validity()
 
+                override fun visitWebFetchToolResult(
+                    webFetchToolResult: BetaWebFetchToolResultBlock
+                ) = webFetchToolResult.validity()
+
                 override fun visitCodeExecutionToolResult(
                     codeExecutionToolResult: BetaCodeExecutionToolResultBlock
                 ) = codeExecutionToolResult.validity()
@@ -349,6 +374,7 @@ private constructor(
             toolUse == other.toolUse &&
             serverToolUse == other.serverToolUse &&
             webSearchToolResult == other.webSearchToolResult &&
+            webFetchToolResult == other.webFetchToolResult &&
             codeExecutionToolResult == other.codeExecutionToolResult &&
             bashCodeExecutionToolResult == other.bashCodeExecutionToolResult &&
             textEditorCodeExecutionToolResult == other.textEditorCodeExecutionToolResult &&
@@ -365,6 +391,7 @@ private constructor(
             toolUse,
             serverToolUse,
             webSearchToolResult,
+            webFetchToolResult,
             codeExecutionToolResult,
             bashCodeExecutionToolResult,
             textEditorCodeExecutionToolResult,
@@ -382,6 +409,7 @@ private constructor(
             serverToolUse != null -> "BetaContentBlock{serverToolUse=$serverToolUse}"
             webSearchToolResult != null ->
                 "BetaContentBlock{webSearchToolResult=$webSearchToolResult}"
+            webFetchToolResult != null -> "BetaContentBlock{webFetchToolResult=$webFetchToolResult}"
             codeExecutionToolResult != null ->
                 "BetaContentBlock{codeExecutionToolResult=$codeExecutionToolResult}"
             bashCodeExecutionToolResult != null ->
@@ -415,6 +443,10 @@ private constructor(
         @JvmStatic
         fun ofWebSearchToolResult(webSearchToolResult: BetaWebSearchToolResultBlock) =
             BetaContentBlock(webSearchToolResult = webSearchToolResult)
+
+        @JvmStatic
+        fun ofWebFetchToolResult(webFetchToolResult: BetaWebFetchToolResultBlock) =
+            BetaContentBlock(webFetchToolResult = webFetchToolResult)
 
         @JvmStatic
         fun ofCodeExecutionToolResult(codeExecutionToolResult: BetaCodeExecutionToolResultBlock) =
@@ -461,6 +493,8 @@ private constructor(
         fun visitServerToolUse(serverToolUse: BetaServerToolUseBlock): T
 
         fun visitWebSearchToolResult(webSearchToolResult: BetaWebSearchToolResultBlock): T
+
+        fun visitWebFetchToolResult(webFetchToolResult: BetaWebFetchToolResultBlock): T
 
         fun visitCodeExecutionToolResult(
             codeExecutionToolResult: BetaCodeExecutionToolResultBlock
@@ -533,6 +567,11 @@ private constructor(
                         ?.let { BetaContentBlock(webSearchToolResult = it, _json = json) }
                         ?: BetaContentBlock(_json = json)
                 }
+                "web_fetch_tool_result" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaWebFetchToolResultBlock>())
+                        ?.let { BetaContentBlock(webFetchToolResult = it, _json = json) }
+                        ?: BetaContentBlock(_json = json)
+                }
                 "code_execution_tool_result" -> {
                     return tryDeserialize(node, jacksonTypeRef<BetaCodeExecutionToolResultBlock>())
                         ?.let { BetaContentBlock(codeExecutionToolResult = it, _json = json) }
@@ -591,6 +630,7 @@ private constructor(
                 value.serverToolUse != null -> generator.writeObject(value.serverToolUse)
                 value.webSearchToolResult != null ->
                     generator.writeObject(value.webSearchToolResult)
+                value.webFetchToolResult != null -> generator.writeObject(value.webFetchToolResult)
                 value.codeExecutionToolResult != null ->
                     generator.writeObject(value.codeExecutionToolResult)
                 value.bashCodeExecutionToolResult != null ->

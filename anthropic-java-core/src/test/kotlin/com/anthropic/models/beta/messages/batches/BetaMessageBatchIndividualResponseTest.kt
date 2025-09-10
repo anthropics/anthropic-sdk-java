@@ -64,7 +64,10 @@ internal class BetaMessageBatchIndividualResponseTest {
                                 .inputTokens(2095L)
                                 .outputTokens(503L)
                                 .serverToolUse(
-                                    BetaServerToolUsage.builder().webSearchRequests(0L).build()
+                                    BetaServerToolUsage.builder()
+                                        .webFetchRequests(2L)
+                                        .webSearchRequests(0L)
+                                        .build()
                                 )
                                 .serviceTier(BetaUsage.ServiceTier.STANDARD)
                                 .build()
@@ -119,6 +122,7 @@ internal class BetaMessageBatchIndividualResponseTest {
                                         .outputTokens(503L)
                                         .serverToolUse(
                                             BetaServerToolUsage.builder()
+                                                .webFetchRequests(2L)
                                                 .webSearchRequests(0L)
                                                 .build()
                                         )
@@ -178,7 +182,10 @@ internal class BetaMessageBatchIndividualResponseTest {
                                 .inputTokens(2095L)
                                 .outputTokens(503L)
                                 .serverToolUse(
-                                    BetaServerToolUsage.builder().webSearchRequests(0L).build()
+                                    BetaServerToolUsage.builder()
+                                        .webFetchRequests(2L)
+                                        .webSearchRequests(0L)
+                                        .build()
                                 )
                                 .serviceTier(BetaUsage.ServiceTier.STANDARD)
                                 .build()
