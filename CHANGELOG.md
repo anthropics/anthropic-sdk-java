@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.7.1 (2025-09-13)
+
+Full Changelog: [v2.7.0...v2.7.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.7.0...v2.7.1)
+
+### Chores
+
+* improve formatter performance ([100e6ad](https://github.com/anthropics/anthropic-sdk-java/commit/100e6adc25f2c09366be2bc85101615e85393817))
+* **internal:** codegen related update ([14a3c9c](https://github.com/anthropics/anthropic-sdk-java/commit/14a3c9cc526f9a51b80a082496ce50f28bb2b814))
+* **internal:** codegen related update ([e6fddb4](https://github.com/anthropics/anthropic-sdk-java/commit/e6fddb403cebdab86243be8ae3c3ec0c3fd6ac74))
+
 ## 2.7.0 (2025-09-10)
 
 Full Changelog: [v2.6.0...v2.7.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.6.0...v2.7.0)
