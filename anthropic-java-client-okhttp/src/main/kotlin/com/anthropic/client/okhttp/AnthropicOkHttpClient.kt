@@ -7,6 +7,7 @@ import com.anthropic.backends.Backend
 import com.anthropic.client.AnthropicClient
 import com.anthropic.client.AnthropicClientImpl
 import com.anthropic.core.ClientOptions
+import com.anthropic.core.Sleeper
 import com.anthropic.core.Timeout
 import com.anthropic.core.http.AsyncStreamResponse
 import com.anthropic.core.http.Headers
@@ -136,6 +137,17 @@ class AnthropicOkHttpClient private constructor() {
         fun streamHandlerExecutor(streamHandlerExecutor: Executor) = apply {
             clientOptions.streamHandlerExecutor(streamHandlerExecutor)
         }
+
+        /**
+         * The interface to use for delaying execution, like during retries.
+         *
+         * This is primarily useful for using fake delays in tests.
+         *
+         * Defaults to real execution delays.
+         *
+         * This class takes ownership of the sleeper and closes it when closed.
+         */
+        fun sleeper(sleeper: Sleeper) = apply { clientOptions.sleeper(sleeper) }
 
         /**
          * The clock to use for operations that require timing, like retries.

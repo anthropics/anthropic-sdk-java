@@ -27,6 +27,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class BatchServiceAsyncTest {
 
+    @Disabled("prism validates based on the non-beta endpoint")
     @Test
     fun create() {
         val client =
