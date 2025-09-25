@@ -18,6 +18,7 @@ import java.util.Optional
 
 /** The model will use the specified tool with `tool_choice.name`. */
 class BetaToolChoiceTool
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val name: JsonField<String>,
     private val type: JsonValue,

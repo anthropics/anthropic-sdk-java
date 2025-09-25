@@ -17,6 +17,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 class WebSearchToolResultBlock
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val content: JsonField<WebSearchToolResultBlockContent>,
     private val toolUseId: JsonField<String>,

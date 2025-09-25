@@ -18,6 +18,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 class BetaBashCodeExecutionToolResultErrorParam
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val errorCode: JsonField<ErrorCode>,
     private val type: JsonValue,

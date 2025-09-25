@@ -16,6 +16,7 @@ import java.util.Collections
 import java.util.Objects
 
 class BetaThinkingDelta
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val thinking: JsonField<String>,
     private val type: JsonValue,

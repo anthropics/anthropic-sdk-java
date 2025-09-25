@@ -18,6 +18,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class CitationContentBlockLocation
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val citedText: JsonField<String>,
     private val documentIndex: JsonField<Long>,

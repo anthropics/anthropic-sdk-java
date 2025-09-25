@@ -18,6 +18,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class RawMessageDeltaEvent
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val delta: JsonField<Delta>,
     private val type: JsonValue,
@@ -258,6 +259,7 @@ private constructor(
             (usage.asKnown().getOrNull()?.validity() ?: 0)
 
     class Delta
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val stopReason: JsonField<StopReason>,
         private val stopSequence: JsonField<String>,

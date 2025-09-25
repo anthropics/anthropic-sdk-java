@@ -22,6 +22,7 @@ import kotlin.jvm.optionals.getOrNull
  * block will be available in the container's input directory.
  */
 class BetaContainerUploadBlockParam
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val fileId: JsonField<String>,
     private val type: JsonValue,

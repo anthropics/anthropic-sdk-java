@@ -16,6 +16,7 @@ import java.util.Collections
 import java.util.Objects
 
 class CacheCreation
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val ephemeral1hInputTokens: JsonField<Long>,
     private val ephemeral5mInputTokens: JsonField<Long>,

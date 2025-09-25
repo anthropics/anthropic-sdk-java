@@ -16,6 +16,7 @@ import java.util.Collections
 import java.util.Objects
 
 class TextDelta
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val text: JsonField<String>,
     private val type: JsonValue,

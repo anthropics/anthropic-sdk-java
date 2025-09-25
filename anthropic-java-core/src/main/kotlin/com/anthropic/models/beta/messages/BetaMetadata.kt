@@ -17,6 +17,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BetaMetadata
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val userId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,

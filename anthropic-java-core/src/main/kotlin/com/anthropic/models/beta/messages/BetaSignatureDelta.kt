@@ -16,6 +16,7 @@ import java.util.Collections
 import java.util.Objects
 
 class BetaSignatureDelta
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val signature: JsonField<String>,
     private val type: JsonValue,

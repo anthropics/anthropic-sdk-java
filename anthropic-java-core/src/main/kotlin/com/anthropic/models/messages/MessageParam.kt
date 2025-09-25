@@ -31,6 +31,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class MessageParam
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val content: JsonField<Content>,
     private val role: JsonField<Role>,

@@ -28,6 +28,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BetaRawContentBlockStartEvent
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val contentBlock: JsonField<ContentBlock>,
     private val index: JsonField<Long>,

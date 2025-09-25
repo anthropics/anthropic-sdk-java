@@ -19,6 +19,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BetaRequestMcpServerToolConfiguration
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val allowedTools: JsonField<List<String>>,
     private val enabled: JsonField<Boolean>,

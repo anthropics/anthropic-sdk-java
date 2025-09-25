@@ -17,6 +17,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 class BetaWebSearchToolResultError
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val errorCode: JsonField<BetaWebSearchToolResultErrorCode>,
     private val type: JsonValue,

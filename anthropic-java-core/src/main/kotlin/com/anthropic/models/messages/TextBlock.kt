@@ -20,6 +20,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class TextBlock
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val citations: JsonField<List<TextCitation>>,
     private val text: JsonField<String>,

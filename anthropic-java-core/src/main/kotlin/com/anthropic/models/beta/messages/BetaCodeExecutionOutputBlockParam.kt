@@ -16,6 +16,7 @@ import java.util.Collections
 import java.util.Objects
 
 class BetaCodeExecutionOutputBlockParam
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val fileId: JsonField<String>,
     private val type: JsonValue,

@@ -18,6 +18,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 class MessageBatchErroredResult
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val error: JsonField<ErrorResponse>,
     private val type: JsonValue,

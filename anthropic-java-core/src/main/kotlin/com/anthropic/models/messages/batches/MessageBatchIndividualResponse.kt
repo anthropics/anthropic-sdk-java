@@ -23,6 +23,7 @@ import kotlin.jvm.optionals.getOrNull
  * whole.
  */
 class MessageBatchIndividualResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val customId: JsonField<String>,
     private val result: JsonField<MessageBatchResult>,

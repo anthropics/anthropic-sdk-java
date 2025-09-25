@@ -30,6 +30,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class ToolResultBlockParam
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val toolUseId: JsonField<String>,
     private val type: JsonValue,

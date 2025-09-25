@@ -18,6 +18,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class ErrorResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val error: JsonField<ErrorObject>,
     private val requestId: JsonField<String>,

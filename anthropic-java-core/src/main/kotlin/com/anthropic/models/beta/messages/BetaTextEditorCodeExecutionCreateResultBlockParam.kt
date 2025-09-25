@@ -16,6 +16,7 @@ import java.util.Collections
 import java.util.Objects
 
 class BetaTextEditorCodeExecutionCreateResultBlockParam
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val isFileUpdate: JsonField<Boolean>,
     private val type: JsonValue,

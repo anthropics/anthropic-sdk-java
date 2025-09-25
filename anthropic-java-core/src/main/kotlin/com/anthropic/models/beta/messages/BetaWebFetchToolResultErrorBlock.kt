@@ -17,6 +17,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 class BetaWebFetchToolResultErrorBlock
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val errorCode: JsonField<BetaWebFetchToolResultErrorCode>,
     private val type: JsonValue,

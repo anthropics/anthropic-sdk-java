@@ -19,6 +19,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class WebSearchTool20250305
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val name: JsonValue,
     private val type: JsonValue,
@@ -453,6 +454,7 @@ private constructor(
 
     /** Parameters for the user's location. Used to provide more relevant search results. */
     class UserLocation
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val type: JsonValue,
         private val city: JsonField<String>,
