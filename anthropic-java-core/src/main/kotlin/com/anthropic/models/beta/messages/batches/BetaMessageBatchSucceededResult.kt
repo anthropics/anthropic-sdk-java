@@ -18,6 +18,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 class BetaMessageBatchSucceededResult
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val message: JsonField<BetaMessage>,
     private val type: JsonValue,

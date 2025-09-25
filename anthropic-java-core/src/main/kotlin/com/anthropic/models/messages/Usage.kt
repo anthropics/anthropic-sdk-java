@@ -19,6 +19,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class Usage
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val cacheCreation: JsonField<CacheCreation>,
     private val cacheCreationInputTokens: JsonField<Long>,

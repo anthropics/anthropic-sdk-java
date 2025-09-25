@@ -17,6 +17,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 class RawContentBlockDeltaEvent
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val delta: JsonField<RawContentBlockDelta>,
     private val index: JsonField<Long>,

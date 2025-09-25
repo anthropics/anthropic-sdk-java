@@ -18,6 +18,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class WebSearchResultBlock
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val encryptedContent: JsonField<String>,
     private val pageAge: JsonField<String>,

@@ -16,6 +16,7 @@ import java.util.Collections
 import java.util.Objects
 
 class ServerToolUsage
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val webSearchRequests: JsonField<Long>,
     private val additionalProperties: MutableMap<String, JsonValue>,

@@ -17,6 +17,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BetaToolTextEditor20250728
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val name: JsonValue,
     private val type: JsonValue,

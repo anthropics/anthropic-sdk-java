@@ -20,6 +20,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class ModelListPageResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val data: JsonField<List<ModelInfo>>,
     private val firstId: JsonField<String>,

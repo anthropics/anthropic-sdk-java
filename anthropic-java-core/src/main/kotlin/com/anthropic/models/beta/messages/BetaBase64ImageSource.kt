@@ -18,6 +18,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 class BetaBase64ImageSource
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val data: JsonField<String>,
     private val mediaType: JsonField<MediaType>,

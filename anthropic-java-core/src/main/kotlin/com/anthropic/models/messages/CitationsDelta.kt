@@ -28,6 +28,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class CitationsDelta
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val citation: JsonField<Citation>,
     private val type: JsonValue,

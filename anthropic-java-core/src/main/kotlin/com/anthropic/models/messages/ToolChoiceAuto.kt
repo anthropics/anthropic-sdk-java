@@ -17,6 +17,7 @@ import java.util.Optional
 
 /** The model will automatically decide whether to use tools. */
 class ToolChoiceAuto
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val type: JsonValue,
     private val disableParallelToolUse: JsonField<Boolean>,

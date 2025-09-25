@@ -21,6 +21,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class Tool
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val inputSchema: JsonField<InputSchema>,
     private val name: JsonField<String>,
@@ -346,6 +347,7 @@ private constructor(
      * This defines the shape of the `input` that your tool accepts and that the model will produce.
      */
     class InputSchema
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val type: JsonValue,
         private val properties: JsonValue,

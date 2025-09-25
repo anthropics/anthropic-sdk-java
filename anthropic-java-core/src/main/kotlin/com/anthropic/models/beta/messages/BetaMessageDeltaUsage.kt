@@ -18,6 +18,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BetaMessageDeltaUsage
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val cacheCreationInputTokens: JsonField<Long>,
     private val cacheReadInputTokens: JsonField<Long>,

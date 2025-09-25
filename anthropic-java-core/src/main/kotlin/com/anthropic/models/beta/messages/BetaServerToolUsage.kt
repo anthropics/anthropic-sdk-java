@@ -16,6 +16,7 @@ import java.util.Collections
 import java.util.Objects
 
 class BetaServerToolUsage
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val webFetchRequests: JsonField<Long>,
     private val webSearchRequests: JsonField<Long>,

@@ -16,6 +16,7 @@ import java.util.Collections
 import java.util.Objects
 
 class BetaThinkingConfigEnabled
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val budgetTokens: JsonField<Long>,
     private val type: JsonValue,

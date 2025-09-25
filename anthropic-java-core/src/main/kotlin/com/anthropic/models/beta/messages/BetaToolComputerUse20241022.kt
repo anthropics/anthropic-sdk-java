@@ -18,6 +18,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BetaToolComputerUse20241022
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val displayHeightPx: JsonField<Long>,
     private val displayWidthPx: JsonField<Long>,

@@ -20,6 +20,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class SearchResultBlockParam
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val content: JsonField<List<TextBlockParam>>,
     private val source: JsonField<String>,

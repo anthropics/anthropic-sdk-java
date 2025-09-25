@@ -16,6 +16,7 @@ import java.util.Collections
 import java.util.Objects
 
 class MessageBatchRequestCounts
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val canceled: JsonField<Long>,
     private val errored: JsonField<Long>,

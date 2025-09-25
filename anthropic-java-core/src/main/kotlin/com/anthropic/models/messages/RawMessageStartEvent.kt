@@ -17,6 +17,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 class RawMessageStartEvent
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val message: JsonField<Message>,
     private val type: JsonValue,

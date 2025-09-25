@@ -16,6 +16,7 @@ import java.util.Collections
 import java.util.Objects
 
 class RedactedThinkingBlock
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val data: JsonField<String>,
     private val type: JsonValue,

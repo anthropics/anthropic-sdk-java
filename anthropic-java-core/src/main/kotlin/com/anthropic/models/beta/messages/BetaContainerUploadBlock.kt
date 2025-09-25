@@ -17,6 +17,7 @@ import java.util.Objects
 
 /** Response model for a file uploaded to the container. */
 class BetaContainerUploadBlock
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val fileId: JsonField<String>,
     private val type: JsonValue,

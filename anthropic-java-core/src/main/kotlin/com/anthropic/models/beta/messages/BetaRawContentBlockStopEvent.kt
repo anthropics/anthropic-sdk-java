@@ -16,6 +16,7 @@ import java.util.Collections
 import java.util.Objects
 
 class BetaRawContentBlockStopEvent
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val index: JsonField<Long>,
     private val type: JsonValue,

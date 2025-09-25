@@ -28,6 +28,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BetaDocumentBlock
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val citations: JsonField<BetaCitationConfig>,
     private val source: JsonField<Source>,

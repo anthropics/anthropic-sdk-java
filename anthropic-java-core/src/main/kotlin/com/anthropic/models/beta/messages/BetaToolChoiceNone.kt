@@ -15,6 +15,7 @@ import java.util.Objects
 
 /** The model will not be allowed to use tools. */
 class BetaToolChoiceNone
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,

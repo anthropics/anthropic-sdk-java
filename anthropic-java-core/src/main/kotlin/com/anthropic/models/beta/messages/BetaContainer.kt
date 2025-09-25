@@ -18,6 +18,7 @@ import java.util.Objects
 
 /** Information about the container used in the request (for the code execution tool) */
 class BetaContainer
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val expiresAt: JsonField<OffsetDateTime>,

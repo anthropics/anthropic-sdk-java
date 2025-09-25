@@ -20,6 +20,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BetaTextBlock
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val citations: JsonField<List<BetaTextCitation>>,
     private val text: JsonField<String>,

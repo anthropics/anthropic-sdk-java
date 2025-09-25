@@ -19,6 +19,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BetaTextEditorCodeExecutionStrReplaceResultBlockParam
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val type: JsonValue,
     private val lines: JsonField<List<String>>,

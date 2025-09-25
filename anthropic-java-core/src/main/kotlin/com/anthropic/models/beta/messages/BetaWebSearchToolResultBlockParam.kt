@@ -18,6 +18,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BetaWebSearchToolResultBlockParam
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val content: JsonField<BetaWebSearchToolResultBlockParamContent>,
     private val toolUseId: JsonField<String>,

@@ -28,6 +28,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BetaImageBlockParam
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val source: JsonField<Source>,
     private val type: JsonValue,

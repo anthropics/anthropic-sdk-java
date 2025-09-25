@@ -17,6 +17,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 class BetaCodeExecutionToolResultBlock
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val content: JsonField<BetaCodeExecutionToolResultBlockContent>,
     private val toolUseId: JsonField<String>,

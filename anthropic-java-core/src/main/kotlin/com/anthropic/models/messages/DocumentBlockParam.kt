@@ -28,6 +28,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class DocumentBlockParam
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val source: JsonField<Source>,
     private val type: JsonValue,
