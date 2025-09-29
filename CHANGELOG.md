@@ -1,5 +1,31 @@
 # Changelog
 
+## 2.8.0 (2025-09-29)
+
+Full Changelog: [v2.7.0...v2.8.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.7.0...v2.8.0)
+
+### Features
+
+* **api:** adds support for Claude Sonnet 4.5 and context management features ([c286ab8](https://github.com/anthropics/anthropic-sdk-java/commit/c286ab85ad924205987641240792f1734a0686b8))
+* **client:** expose sleeper option ([ca9ce4f](https://github.com/anthropics/anthropic-sdk-java/commit/ca9ce4f05f004acf4118e1621cd8897c2a4be8a0))
+
+
+### Bug Fixes
+
+* **client:** deserialization of empty objects ([af93581](https://github.com/anthropics/anthropic-sdk-java/commit/af93581b6a56804cbccff3318706716c0b926ddb))
+* **client:** ensure single timer is created per client ([ca9ce4f](https://github.com/anthropics/anthropic-sdk-java/commit/ca9ce4f05f004acf4118e1621cd8897c2a4be8a0))
+* **client:** incorrect `getPackageVersion` impl ([a8b170b](https://github.com/anthropics/anthropic-sdk-java/commit/a8b170b391da21f2fe4a43d9ba82207c2ff5a2ae))
+
+
+### Chores
+
+* improve formatter performance ([c57630b](https://github.com/anthropics/anthropic-sdk-java/commit/c57630b565faa7d87192c3cbd3af682868a514f3))
+* improve formatter performance ([100e6ad](https://github.com/anthropics/anthropic-sdk-java/commit/100e6adc25f2c09366be2bc85101615e85393817))
+* **internal:** change some comment formatting ([f725d58](https://github.com/anthropics/anthropic-sdk-java/commit/f725d582e11284786a10a3813080a335ce283a36))
+* **internal:** codegen related update ([14a3c9c](https://github.com/anthropics/anthropic-sdk-java/commit/14a3c9cc526f9a51b80a082496ce50f28bb2b814))
+* **internal:** codegen related update ([e6fddb4](https://github.com/anthropics/anthropic-sdk-java/commit/e6fddb403cebdab86243be8ae3c3ec0c3fd6ac74))
+* **internal:** fix tests ([cc05673](https://github.com/anthropics/anthropic-sdk-java/commit/cc0567395827e0f7ff289b724a5112da9210f290))
+
 ## 2.7.0 (2025-09-10)
 
 Full Changelog: [v2.6.0...v2.7.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.6.0...v2.7.0)
