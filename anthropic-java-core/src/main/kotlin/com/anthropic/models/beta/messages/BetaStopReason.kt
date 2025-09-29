@@ -32,6 +32,8 @@ class BetaStopReason @JsonCreator private constructor(private val value: JsonFie
 
         @JvmField val REFUSAL = of("refusal")
 
+        @JvmField val MODEL_CONTEXT_WINDOW_EXCEEDED = of("model_context_window_exceeded")
+
         @JvmStatic fun of(value: String) = BetaStopReason(JsonField.of(value))
     }
 
@@ -43,6 +45,7 @@ class BetaStopReason @JsonCreator private constructor(private val value: JsonFie
         TOOL_USE,
         PAUSE_TURN,
         REFUSAL,
+        MODEL_CONTEXT_WINDOW_EXCEEDED,
     }
 
     /**
@@ -61,6 +64,7 @@ class BetaStopReason @JsonCreator private constructor(private val value: JsonFie
         TOOL_USE,
         PAUSE_TURN,
         REFUSAL,
+        MODEL_CONTEXT_WINDOW_EXCEEDED,
         /**
          * An enum member indicating that [BetaStopReason] was instantiated with an unknown value.
          */
@@ -82,6 +86,7 @@ class BetaStopReason @JsonCreator private constructor(private val value: JsonFie
             TOOL_USE -> Value.TOOL_USE
             PAUSE_TURN -> Value.PAUSE_TURN
             REFUSAL -> Value.REFUSAL
+            MODEL_CONTEXT_WINDOW_EXCEEDED -> Value.MODEL_CONTEXT_WINDOW_EXCEEDED
             else -> Value._UNKNOWN
         }
 
@@ -101,6 +106,7 @@ class BetaStopReason @JsonCreator private constructor(private val value: JsonFie
             TOOL_USE -> Known.TOOL_USE
             PAUSE_TURN -> Known.PAUSE_TURN
             REFUSAL -> Known.REFUSAL
+            MODEL_CONTEXT_WINDOW_EXCEEDED -> Known.MODEL_CONTEXT_WINDOW_EXCEEDED
             else -> throw AnthropicInvalidDataException("Unknown BetaStopReason: $value")
         }
 

@@ -14,6 +14,16 @@ internal class BetaRawMessageDeltaEventTest {
     fun create() {
         val betaRawMessageDeltaEvent =
             BetaRawMessageDeltaEvent.builder()
+                .contextManagement(
+                    BetaContextManagementResponse.builder()
+                        .addAppliedEdit(
+                            BetaClearToolUses20250919EditResponse.builder()
+                                .clearedInputTokens(0L)
+                                .clearedToolUses(0L)
+                                .build()
+                        )
+                        .build()
+                )
                 .delta(
                     BetaRawMessageDeltaEvent.Delta.builder()
                         .container(
@@ -42,6 +52,17 @@ internal class BetaRawMessageDeltaEventTest {
                 )
                 .build()
 
+        assertThat(betaRawMessageDeltaEvent.contextManagement())
+            .contains(
+                BetaContextManagementResponse.builder()
+                    .addAppliedEdit(
+                        BetaClearToolUses20250919EditResponse.builder()
+                            .clearedInputTokens(0L)
+                            .clearedToolUses(0L)
+                            .build()
+                    )
+                    .build()
+            )
         assertThat(betaRawMessageDeltaEvent.delta())
             .isEqualTo(
                 BetaRawMessageDeltaEvent.Delta.builder()
@@ -77,6 +98,16 @@ internal class BetaRawMessageDeltaEventTest {
         val jsonMapper = jsonMapper()
         val betaRawMessageDeltaEvent =
             BetaRawMessageDeltaEvent.builder()
+                .contextManagement(
+                    BetaContextManagementResponse.builder()
+                        .addAppliedEdit(
+                            BetaClearToolUses20250919EditResponse.builder()
+                                .clearedInputTokens(0L)
+                                .clearedToolUses(0L)
+                                .build()
+                        )
+                        .build()
+                )
                 .delta(
                     BetaRawMessageDeltaEvent.Delta.builder()
                         .container(

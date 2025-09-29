@@ -28,6 +28,7 @@ private constructor(
     private val codeExecutionTool20250522: BetaCodeExecutionTool20250522? = null,
     private val codeExecutionTool20250825: BetaCodeExecutionTool20250825? = null,
     private val computerUse20241022: BetaToolComputerUse20241022? = null,
+    private val memoryTool20250818: BetaMemoryTool20250818? = null,
     private val computerUse20250124: BetaToolComputerUse20250124? = null,
     private val textEditor20241022: BetaToolTextEditor20241022? = null,
     private val textEditor20250124: BetaToolTextEditor20250124? = null,
@@ -52,6 +53,9 @@ private constructor(
 
     fun computerUse20241022(): Optional<BetaToolComputerUse20241022> =
         Optional.ofNullable(computerUse20241022)
+
+    fun memoryTool20250818(): Optional<BetaMemoryTool20250818> =
+        Optional.ofNullable(memoryTool20250818)
 
     fun computerUse20250124(): Optional<BetaToolComputerUse20250124> =
         Optional.ofNullable(computerUse20250124)
@@ -86,6 +90,8 @@ private constructor(
 
     fun isComputerUse20241022(): Boolean = computerUse20241022 != null
 
+    fun isMemoryTool20250818(): Boolean = memoryTool20250818 != null
+
     fun isComputerUse20250124(): Boolean = computerUse20250124 != null
 
     fun isTextEditor20241022(): Boolean = textEditor20241022 != null
@@ -114,6 +120,9 @@ private constructor(
 
     fun asComputerUse20241022(): BetaToolComputerUse20241022 =
         computerUse20241022.getOrThrow("computerUse20241022")
+
+    fun asMemoryTool20250818(): BetaMemoryTool20250818 =
+        memoryTool20250818.getOrThrow("memoryTool20250818")
 
     fun asComputerUse20250124(): BetaToolComputerUse20250124 =
         computerUse20250124.getOrThrow("computerUse20250124")
@@ -148,6 +157,7 @@ private constructor(
             codeExecutionTool20250825 != null ->
                 visitor.visitCodeExecutionTool20250825(codeExecutionTool20250825)
             computerUse20241022 != null -> visitor.visitComputerUse20241022(computerUse20241022)
+            memoryTool20250818 != null -> visitor.visitMemoryTool20250818(memoryTool20250818)
             computerUse20250124 != null -> visitor.visitComputerUse20250124(computerUse20250124)
             textEditor20241022 != null -> visitor.visitTextEditor20241022(textEditor20241022)
             textEditor20250124 != null -> visitor.visitTextEditor20250124(textEditor20250124)
@@ -196,6 +206,10 @@ private constructor(
                     computerUse20241022: BetaToolComputerUse20241022
                 ) {
                     computerUse20241022.validate()
+                }
+
+                override fun visitMemoryTool20250818(memoryTool20250818: BetaMemoryTool20250818) {
+                    memoryTool20250818.validate()
                 }
 
                 override fun visitComputerUse20250124(
@@ -281,6 +295,9 @@ private constructor(
                     computerUse20241022: BetaToolComputerUse20241022
                 ) = computerUse20241022.validity()
 
+                override fun visitMemoryTool20250818(memoryTool20250818: BetaMemoryTool20250818) =
+                    memoryTool20250818.validity()
+
                 override fun visitComputerUse20250124(
                     computerUse20250124: BetaToolComputerUse20250124
                 ) = computerUse20250124.validity()
@@ -325,6 +342,7 @@ private constructor(
             codeExecutionTool20250522 == other.codeExecutionTool20250522 &&
             codeExecutionTool20250825 == other.codeExecutionTool20250825 &&
             computerUse20241022 == other.computerUse20241022 &&
+            memoryTool20250818 == other.memoryTool20250818 &&
             computerUse20250124 == other.computerUse20250124 &&
             textEditor20241022 == other.textEditor20241022 &&
             textEditor20250124 == other.textEditor20250124 &&
@@ -342,6 +360,7 @@ private constructor(
             codeExecutionTool20250522,
             codeExecutionTool20250825,
             computerUse20241022,
+            memoryTool20250818,
             computerUse20250124,
             textEditor20241022,
             textEditor20250124,
@@ -361,6 +380,7 @@ private constructor(
             codeExecutionTool20250825 != null ->
                 "BetaToolUnion{codeExecutionTool20250825=$codeExecutionTool20250825}"
             computerUse20241022 != null -> "BetaToolUnion{computerUse20241022=$computerUse20241022}"
+            memoryTool20250818 != null -> "BetaToolUnion{memoryTool20250818=$memoryTool20250818}"
             computerUse20250124 != null -> "BetaToolUnion{computerUse20250124=$computerUse20250124}"
             textEditor20241022 != null -> "BetaToolUnion{textEditor20241022=$textEditor20241022}"
             textEditor20250124 != null -> "BetaToolUnion{textEditor20250124=$textEditor20250124}"
@@ -397,6 +417,10 @@ private constructor(
         @JvmStatic
         fun ofComputerUse20241022(computerUse20241022: BetaToolComputerUse20241022) =
             BetaToolUnion(computerUse20241022 = computerUse20241022)
+
+        @JvmStatic
+        fun ofMemoryTool20250818(memoryTool20250818: BetaMemoryTool20250818) =
+            BetaToolUnion(memoryTool20250818 = memoryTool20250818)
 
         @JvmStatic
         fun ofComputerUse20250124(computerUse20250124: BetaToolComputerUse20250124) =
@@ -447,6 +471,8 @@ private constructor(
         ): T
 
         fun visitComputerUse20241022(computerUse20241022: BetaToolComputerUse20241022): T
+
+        fun visitMemoryTool20250818(memoryTool20250818: BetaMemoryTool20250818): T
 
         fun visitComputerUse20250124(computerUse20250124: BetaToolComputerUse20250124): T
 
@@ -500,6 +526,9 @@ private constructor(
                         },
                         tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20241022>())?.let {
                             BetaToolUnion(computerUse20241022 = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<BetaMemoryTool20250818>())?.let {
+                            BetaToolUnion(memoryTool20250818 = it, _json = json)
                         },
                         tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20250124>())?.let {
                             BetaToolUnion(computerUse20250124 = it, _json = json)
@@ -555,6 +584,7 @@ private constructor(
                     generator.writeObject(value.codeExecutionTool20250825)
                 value.computerUse20241022 != null ->
                     generator.writeObject(value.computerUse20241022)
+                value.memoryTool20250818 != null -> generator.writeObject(value.memoryTool20250818)
                 value.computerUse20250124 != null ->
                     generator.writeObject(value.computerUse20250124)
                 value.textEditor20241022 != null -> generator.writeObject(value.textEditor20241022)

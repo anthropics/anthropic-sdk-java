@@ -14,20 +14,35 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 class BetaMessageTokensCount
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
+    private val contextManagement: JsonField<BetaCountTokensContextManagementResponse>,
     private val inputTokens: JsonField<Long>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
+        @JsonProperty("context_management")
+        @ExcludeMissing
+        contextManagement: JsonField<BetaCountTokensContextManagementResponse> = JsonMissing.of(),
         @JsonProperty("input_tokens")
         @ExcludeMissing
-        inputTokens: JsonField<Long> = JsonMissing.of()
-    ) : this(inputTokens, mutableMapOf())
+        inputTokens: JsonField<Long> = JsonMissing.of(),
+    ) : this(contextManagement, inputTokens, mutableMapOf())
+
+    /**
+     * Information about context management applied to the message.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun contextManagement(): Optional<BetaCountTokensContextManagementResponse> =
+        contextManagement.getOptional("context_management")
 
     /**
      * The total number of tokens across the provided list of messages, system prompt, and tools.
@@ -36,6 +51,17 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun inputTokens(): Long = inputTokens.getRequired("input_tokens")
+
+    /**
+     * Returns the raw JSON value of [contextManagement].
+     *
+     * Unlike [contextManagement], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("context_management")
+    @ExcludeMissing
+    fun _contextManagement(): JsonField<BetaCountTokensContextManagementResponse> =
+        contextManagement
 
     /**
      * Returns the raw JSON value of [inputTokens].
@@ -63,6 +89,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .contextManagement()
          * .inputTokens()
          * ```
          */
@@ -72,14 +99,36 @@ private constructor(
     /** A builder for [BetaMessageTokensCount]. */
     class Builder internal constructor() {
 
+        private var contextManagement: JsonField<BetaCountTokensContextManagementResponse>? = null
         private var inputTokens: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaMessageTokensCount: BetaMessageTokensCount) = apply {
+            contextManagement = betaMessageTokensCount.contextManagement
             inputTokens = betaMessageTokensCount.inputTokens
             additionalProperties = betaMessageTokensCount.additionalProperties.toMutableMap()
         }
+
+        /** Information about context management applied to the message. */
+        fun contextManagement(contextManagement: BetaCountTokensContextManagementResponse?) =
+            contextManagement(JsonField.ofNullable(contextManagement))
+
+        /** Alias for calling [Builder.contextManagement] with `contextManagement.orElse(null)`. */
+        fun contextManagement(
+            contextManagement: Optional<BetaCountTokensContextManagementResponse>
+        ) = contextManagement(contextManagement.getOrNull())
+
+        /**
+         * Sets [Builder.contextManagement] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.contextManagement] with a well-typed
+         * [BetaCountTokensContextManagementResponse] value instead. This method is primarily for
+         * setting the field to an undocumented or not yet supported value.
+         */
+        fun contextManagement(
+            contextManagement: JsonField<BetaCountTokensContextManagementResponse>
+        ) = apply { this.contextManagement = contextManagement }
 
         /**
          * The total number of tokens across the provided list of messages, system prompt, and
@@ -122,6 +171,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .contextManagement()
          * .inputTokens()
          * ```
          *
@@ -129,6 +179,7 @@ private constructor(
          */
         fun build(): BetaMessageTokensCount =
             BetaMessageTokensCount(
+                checkRequired("contextManagement", contextManagement),
                 checkRequired("inputTokens", inputTokens),
                 additionalProperties.toMutableMap(),
             )
@@ -141,6 +192,7 @@ private constructor(
             return@apply
         }
 
+        contextManagement().ifPresent { it.validate() }
         inputTokens()
         validated = true
     }
@@ -158,7 +210,10 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic internal fun validity(): Int = (if (inputTokens.asKnown().isPresent) 1 else 0)
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (inputTokens.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -166,14 +221,17 @@ private constructor(
         }
 
         return other is BetaMessageTokensCount &&
+            contextManagement == other.contextManagement &&
             inputTokens == other.inputTokens &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(inputTokens, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(contextManagement, inputTokens, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaMessageTokensCount{inputTokens=$inputTokens, additionalProperties=$additionalProperties}"
+        "BetaMessageTokensCount{contextManagement=$contextManagement, inputTokens=$inputTokens, additionalProperties=$additionalProperties}"
 }

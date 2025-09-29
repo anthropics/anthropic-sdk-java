@@ -11,15 +11,35 @@ internal class BetaMessageTokensCountTest {
 
     @Test
     fun create() {
-        val betaMessageTokensCount = BetaMessageTokensCount.builder().inputTokens(2095L).build()
+        val betaMessageTokensCount =
+            BetaMessageTokensCount.builder()
+                .contextManagement(
+                    BetaCountTokensContextManagementResponse.builder()
+                        .originalInputTokens(0L)
+                        .build()
+                )
+                .inputTokens(2095L)
+                .build()
 
+        assertThat(betaMessageTokensCount.contextManagement())
+            .contains(
+                BetaCountTokensContextManagementResponse.builder().originalInputTokens(0L).build()
+            )
         assertThat(betaMessageTokensCount.inputTokens()).isEqualTo(2095L)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaMessageTokensCount = BetaMessageTokensCount.builder().inputTokens(2095L).build()
+        val betaMessageTokensCount =
+            BetaMessageTokensCount.builder()
+                .contextManagement(
+                    BetaCountTokensContextManagementResponse.builder()
+                        .originalInputTokens(0L)
+                        .build()
+                )
+                .inputTokens(2095L)
+                .build()
 
         val roundtrippedBetaMessageTokensCount =
             jsonMapper.readValue(

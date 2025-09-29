@@ -44,6 +44,16 @@ internal class BetaRawMessageStreamEventTest {
                                 .text("Hi! My name is Claude.")
                                 .build()
                         )
+                        .contextManagement(
+                            BetaContextManagementResponse.builder()
+                                .addAppliedEdit(
+                                    BetaClearToolUses20250919EditResponse.builder()
+                                        .clearedInputTokens(0L)
+                                        .clearedToolUses(0L)
+                                        .build()
+                                )
+                                .build()
+                        )
                         .model(Model.CLAUDE_3_7_SONNET_LATEST)
                         .stopReason(BetaStopReason.END_TURN)
                         .stopSequence(null)
@@ -112,6 +122,16 @@ internal class BetaRawMessageStreamEventTest {
                                     .text("Hi! My name is Claude.")
                                     .build()
                             )
+                            .contextManagement(
+                                BetaContextManagementResponse.builder()
+                                    .addAppliedEdit(
+                                        BetaClearToolUses20250919EditResponse.builder()
+                                            .clearedInputTokens(0L)
+                                            .clearedToolUses(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
                             .model(Model.CLAUDE_3_7_SONNET_LATEST)
                             .stopReason(BetaStopReason.END_TURN)
                             .stopSequence(null)
@@ -154,6 +174,16 @@ internal class BetaRawMessageStreamEventTest {
     fun ofMessageDelta() {
         val messageDelta =
             BetaRawMessageDeltaEvent.builder()
+                .contextManagement(
+                    BetaContextManagementResponse.builder()
+                        .addAppliedEdit(
+                            BetaClearToolUses20250919EditResponse.builder()
+                                .clearedInputTokens(0L)
+                                .clearedToolUses(0L)
+                                .build()
+                        )
+                        .build()
+                )
                 .delta(
                     BetaRawMessageDeltaEvent.Delta.builder()
                         .container(
@@ -198,6 +228,16 @@ internal class BetaRawMessageStreamEventTest {
         val betaRawMessageStreamEvent =
             BetaRawMessageStreamEvent.ofMessageDelta(
                 BetaRawMessageDeltaEvent.builder()
+                    .contextManagement(
+                        BetaContextManagementResponse.builder()
+                            .addAppliedEdit(
+                                BetaClearToolUses20250919EditResponse.builder()
+                                    .clearedInputTokens(0L)
+                                    .clearedToolUses(0L)
+                                    .build()
+                            )
+                            .build()
+                    )
                     .delta(
                         BetaRawMessageDeltaEvent.Delta.builder()
                             .container(

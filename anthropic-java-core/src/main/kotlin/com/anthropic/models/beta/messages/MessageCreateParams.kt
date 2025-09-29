@@ -148,6 +148,14 @@ private constructor(
     fun container(): Optional<String> = body.container()
 
     /**
+     * Configuration for context management operations.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun contextManagement(): Optional<BetaContextManagementConfig> = body.contextManagement()
+
+    /**
      * MCP servers to be utilized in this request
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -373,6 +381,14 @@ private constructor(
     fun _container(): JsonField<String> = body._container()
 
     /**
+     * Returns the raw JSON value of [contextManagement].
+     *
+     * Unlike [contextManagement], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    fun _contextManagement(): JsonField<BetaContextManagementConfig> = body._contextManagement()
+
+    /**
      * Returns the raw JSON value of [mcpServers].
      *
      * Unlike [mcpServers], this method doesn't throw if the JSON field has an unexpected type.
@@ -523,7 +539,7 @@ private constructor(
          * - [messages]
          * - [model]
          * - [container]
-         * - [mcpServers]
+         * - [contextManagement]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -715,6 +731,26 @@ private constructor(
          * value.
          */
         fun container(container: JsonField<String>) = apply { body.container(container) }
+
+        /** Configuration for context management operations. */
+        fun contextManagement(contextManagement: BetaContextManagementConfig?) = apply {
+            body.contextManagement(contextManagement)
+        }
+
+        /** Alias for calling [Builder.contextManagement] with `contextManagement.orElse(null)`. */
+        fun contextManagement(contextManagement: Optional<BetaContextManagementConfig>) =
+            contextManagement(contextManagement.getOrNull())
+
+        /**
+         * Sets [Builder.contextManagement] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.contextManagement] with a well-typed
+         * [BetaContextManagementConfig] value instead. This method is primarily for setting the
+         * field to an undocumented or not yet supported value.
+         */
+        fun contextManagement(contextManagement: JsonField<BetaContextManagementConfig>) = apply {
+            body.contextManagement(contextManagement)
+        }
 
         /** MCP servers to be utilized in this request */
         fun mcpServers(mcpServers: List<BetaRequestMcpServerUrlDefinition>) = apply {
@@ -1051,6 +1087,14 @@ private constructor(
 
         /**
          * Alias for calling [addTool] with
+         * `BetaToolUnion.ofMemoryTool20250818(memoryTool20250818)`.
+         */
+        fun addTool(memoryTool20250818: BetaMemoryTool20250818) = apply {
+            body.addTool(memoryTool20250818)
+        }
+
+        /**
+         * Alias for calling [addTool] with
          * `BetaToolUnion.ofComputerUse20250124(computerUse20250124)`.
          */
         fun addTool(computerUse20250124: BetaToolComputerUse20250124) = apply {
@@ -1302,6 +1346,7 @@ private constructor(
         private val messages: JsonField<List<BetaMessageParam>>,
         private val model: JsonField<Model>,
         private val container: JsonField<String>,
+        private val contextManagement: JsonField<BetaContextManagementConfig>,
         private val mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>,
         private val metadata: JsonField<BetaMetadata>,
         private val serviceTier: JsonField<ServiceTier>,
@@ -1328,6 +1373,9 @@ private constructor(
             @JsonProperty("container")
             @ExcludeMissing
             container: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("context_management")
+            @ExcludeMissing
+            contextManagement: JsonField<BetaContextManagementConfig> = JsonMissing.of(),
             @JsonProperty("mcp_servers")
             @ExcludeMissing
             mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>> = JsonMissing.of(),
@@ -1360,6 +1408,7 @@ private constructor(
             messages,
             model,
             container,
+            contextManagement,
             mcpServers,
             metadata,
             serviceTier,
@@ -1468,6 +1517,15 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun container(): Optional<String> = container.getOptional("container")
+
+        /**
+         * Configuration for context management operations.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun contextManagement(): Optional<BetaContextManagementConfig> =
+            contextManagement.getOptional("context_management")
 
         /**
          * MCP servers to be utilized in this request
@@ -1699,6 +1757,16 @@ private constructor(
         @JsonProperty("container") @ExcludeMissing fun _container(): JsonField<String> = container
 
         /**
+         * Returns the raw JSON value of [contextManagement].
+         *
+         * Unlike [contextManagement], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("context_management")
+        @ExcludeMissing
+        fun _contextManagement(): JsonField<BetaContextManagementConfig> = contextManagement
+
+        /**
          * Returns the raw JSON value of [mcpServers].
          *
          * Unlike [mcpServers], this method doesn't throw if the JSON field has an unexpected type.
@@ -1824,6 +1892,7 @@ private constructor(
             private var messages: JsonField<MutableList<BetaMessageParam>>? = null
             private var model: JsonField<Model>? = null
             private var container: JsonField<String> = JsonMissing.of()
+            private var contextManagement: JsonField<BetaContextManagementConfig> = JsonMissing.of()
             private var mcpServers: JsonField<MutableList<BetaRequestMcpServerUrlDefinition>>? =
                 null
             private var metadata: JsonField<BetaMetadata> = JsonMissing.of()
@@ -1844,6 +1913,7 @@ private constructor(
                 messages = body.messages.map { it.toMutableList() }
                 model = body.model
                 container = body.container
+                contextManagement = body.contextManagement
                 mcpServers = body.mcpServers.map { it.toMutableList() }
                 metadata = body.metadata
                 serviceTier = body.serviceTier
@@ -2073,6 +2143,28 @@ private constructor(
              * supported value.
              */
             fun container(container: JsonField<String>) = apply { this.container = container }
+
+            /** Configuration for context management operations. */
+            fun contextManagement(contextManagement: BetaContextManagementConfig?) =
+                contextManagement(JsonField.ofNullable(contextManagement))
+
+            /**
+             * Alias for calling [Builder.contextManagement] with `contextManagement.orElse(null)`.
+             */
+            fun contextManagement(contextManagement: Optional<BetaContextManagementConfig>) =
+                contextManagement(contextManagement.getOrNull())
+
+            /**
+             * Sets [Builder.contextManagement] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.contextManagement] with a well-typed
+             * [BetaContextManagementConfig] value instead. This method is primarily for setting the
+             * field to an undocumented or not yet supported value.
+             */
+            fun contextManagement(contextManagement: JsonField<BetaContextManagementConfig>) =
+                apply {
+                    this.contextManagement = contextManagement
+                }
 
             /** MCP servers to be utilized in this request */
             fun mcpServers(mcpServers: List<BetaRequestMcpServerUrlDefinition>) =
@@ -2432,6 +2524,13 @@ private constructor(
 
             /**
              * Alias for calling [addTool] with
+             * `BetaToolUnion.ofMemoryTool20250818(memoryTool20250818)`.
+             */
+            fun addTool(memoryTool20250818: BetaMemoryTool20250818) =
+                addTool(BetaToolUnion.ofMemoryTool20250818(memoryTool20250818))
+
+            /**
+             * Alias for calling [addTool] with
              * `BetaToolUnion.ofComputerUse20250124(computerUse20250124)`.
              */
             fun addTool(computerUse20250124: BetaToolComputerUse20250124) =
@@ -2558,6 +2657,7 @@ private constructor(
                     checkRequired("messages", messages).map { it.toImmutable() },
                     checkRequired("model", model),
                     container,
+                    contextManagement,
                     (mcpServers ?: JsonMissing.of()).map { it.toImmutable() },
                     metadata,
                     serviceTier,
@@ -2584,6 +2684,7 @@ private constructor(
             messages().forEach { it.validate() }
             model()
             container()
+            contextManagement().ifPresent { it.validate() }
             mcpServers().ifPresent { it.forEach { it.validate() } }
             metadata().ifPresent { it.validate() }
             serviceTier().ifPresent { it.validate() }
@@ -2618,6 +2719,7 @@ private constructor(
                 (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (model.asKnown().isPresent) 1 else 0) +
                 (if (container.asKnown().isPresent) 1 else 0) +
+                (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
                 (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (serviceTier.asKnown().getOrNull()?.validity() ?: 0) +
@@ -2640,6 +2742,7 @@ private constructor(
                 messages == other.messages &&
                 model == other.model &&
                 container == other.container &&
+                contextManagement == other.contextManagement &&
                 mcpServers == other.mcpServers &&
                 metadata == other.metadata &&
                 serviceTier == other.serviceTier &&
@@ -2660,6 +2763,7 @@ private constructor(
                 messages,
                 model,
                 container,
+                contextManagement,
                 mcpServers,
                 metadata,
                 serviceTier,
@@ -2678,7 +2782,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, container=$container, mcpServers=$mcpServers, metadata=$metadata, serviceTier=$serviceTier, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, container=$container, contextManagement=$contextManagement, mcpServers=$mcpServers, metadata=$metadata, serviceTier=$serviceTier, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
     }
 
     /**

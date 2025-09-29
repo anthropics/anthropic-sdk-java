@@ -125,6 +125,14 @@ private constructor(
     fun model(): Model = body.model()
 
     /**
+     * Configuration for context management operations.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun contextManagement(): Optional<BetaContextManagementConfig> = body.contextManagement()
+
+    /**
      * MCP servers to be utilized in this request
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -259,6 +267,14 @@ private constructor(
     fun _model(): JsonField<Model> = body._model()
 
     /**
+     * Returns the raw JSON value of [contextManagement].
+     *
+     * Unlike [contextManagement], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    fun _contextManagement(): JsonField<BetaContextManagementConfig> = body._contextManagement()
+
+    /**
      * Returns the raw JSON value of [mcpServers].
      *
      * Unlike [mcpServers], this method doesn't throw if the JSON field has an unexpected type.
@@ -364,9 +380,9 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [messages]
          * - [model]
+         * - [contextManagement]
          * - [mcpServers]
          * - [system]
-         * - [thinking]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -524,6 +540,26 @@ private constructor(
          * is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun model(value: String) = apply { body.model(value) }
+
+        /** Configuration for context management operations. */
+        fun contextManagement(contextManagement: BetaContextManagementConfig?) = apply {
+            body.contextManagement(contextManagement)
+        }
+
+        /** Alias for calling [Builder.contextManagement] with `contextManagement.orElse(null)`. */
+        fun contextManagement(contextManagement: Optional<BetaContextManagementConfig>) =
+            contextManagement(contextManagement.getOrNull())
+
+        /**
+         * Sets [Builder.contextManagement] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.contextManagement] with a well-typed
+         * [BetaContextManagementConfig] value instead. This method is primarily for setting the
+         * field to an undocumented or not yet supported value.
+         */
+        fun contextManagement(contextManagement: JsonField<BetaContextManagementConfig>) = apply {
+            body.contextManagement(contextManagement)
+        }
 
         /** MCP servers to be utilized in this request */
         fun mcpServers(mcpServers: List<BetaRequestMcpServerUrlDefinition>) = apply {
@@ -781,6 +817,13 @@ private constructor(
         }
 
         /**
+         * Alias for calling [addTool] with `Tool.ofBetaMemoryTool20250818(betaMemoryTool20250818)`.
+         */
+        fun addTool(betaMemoryTool20250818: BetaMemoryTool20250818) = apply {
+            body.addTool(betaMemoryTool20250818)
+        }
+
+        /**
          * Alias for calling [addTool] with
          * `Tool.ofBetaToolComputerUse20250124(betaToolComputerUse20250124)`.
          */
@@ -992,6 +1035,7 @@ private constructor(
     private constructor(
         private val messages: JsonField<List<BetaMessageParam>>,
         private val model: JsonField<Model>,
+        private val contextManagement: JsonField<BetaContextManagementConfig>,
         private val mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>,
         private val system: JsonField<System>,
         private val thinking: JsonField<BetaThinkingConfigParam>,
@@ -1006,6 +1050,9 @@ private constructor(
             @ExcludeMissing
             messages: JsonField<List<BetaMessageParam>> = JsonMissing.of(),
             @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
+            @JsonProperty("context_management")
+            @ExcludeMissing
+            contextManagement: JsonField<BetaContextManagementConfig> = JsonMissing.of(),
             @JsonProperty("mcp_servers")
             @ExcludeMissing
             mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>> = JsonMissing.of(),
@@ -1017,7 +1064,17 @@ private constructor(
             @ExcludeMissing
             toolChoice: JsonField<BetaToolChoice> = JsonMissing.of(),
             @JsonProperty("tools") @ExcludeMissing tools: JsonField<List<Tool>> = JsonMissing.of(),
-        ) : this(messages, model, mcpServers, system, thinking, toolChoice, tools, mutableMapOf())
+        ) : this(
+            messages,
+            model,
+            contextManagement,
+            mcpServers,
+            system,
+            thinking,
+            toolChoice,
+            tools,
+            mutableMapOf(),
+        )
 
         /**
          * Input messages.
@@ -1091,6 +1148,15 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun model(): Model = model.getRequired("model")
+
+        /**
+         * Configuration for context management operations.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun contextManagement(): Optional<BetaContextManagementConfig> =
+            contextManagement.getOptional("context_management")
 
         /**
          * MCP servers to be utilized in this request
@@ -1231,6 +1297,16 @@ private constructor(
         @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
 
         /**
+         * Returns the raw JSON value of [contextManagement].
+         *
+         * Unlike [contextManagement], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("context_management")
+        @ExcludeMissing
+        fun _contextManagement(): JsonField<BetaContextManagementConfig> = contextManagement
+
+        /**
          * Returns the raw JSON value of [mcpServers].
          *
          * Unlike [mcpServers], this method doesn't throw if the JSON field has an unexpected type.
@@ -1302,6 +1378,7 @@ private constructor(
 
             private var messages: JsonField<MutableList<BetaMessageParam>>? = null
             private var model: JsonField<Model>? = null
+            private var contextManagement: JsonField<BetaContextManagementConfig> = JsonMissing.of()
             private var mcpServers: JsonField<MutableList<BetaRequestMcpServerUrlDefinition>>? =
                 null
             private var system: JsonField<System> = JsonMissing.of()
@@ -1314,6 +1391,7 @@ private constructor(
             internal fun from(body: Body) = apply {
                 messages = body.messages.map { it.toMutableList() }
                 model = body.model
+                contextManagement = body.contextManagement
                 mcpServers = body.mcpServers.map { it.toMutableList() }
                 system = body.system
                 thinking = body.thinking
@@ -1502,6 +1580,28 @@ private constructor(
              * value.
              */
             fun model(value: String) = model(Model.of(value))
+
+            /** Configuration for context management operations. */
+            fun contextManagement(contextManagement: BetaContextManagementConfig?) =
+                contextManagement(JsonField.ofNullable(contextManagement))
+
+            /**
+             * Alias for calling [Builder.contextManagement] with `contextManagement.orElse(null)`.
+             */
+            fun contextManagement(contextManagement: Optional<BetaContextManagementConfig>) =
+                contextManagement(contextManagement.getOrNull())
+
+            /**
+             * Sets [Builder.contextManagement] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.contextManagement] with a well-typed
+             * [BetaContextManagementConfig] value instead. This method is primarily for setting the
+             * field to an undocumented or not yet supported value.
+             */
+            fun contextManagement(contextManagement: JsonField<BetaContextManagementConfig>) =
+                apply {
+                    this.contextManagement = contextManagement
+                }
 
             /** MCP servers to be utilized in this request */
             fun mcpServers(mcpServers: List<BetaRequestMcpServerUrlDefinition>) =
@@ -1774,6 +1874,13 @@ private constructor(
 
             /**
              * Alias for calling [addTool] with
+             * `Tool.ofBetaMemoryTool20250818(betaMemoryTool20250818)`.
+             */
+            fun addTool(betaMemoryTool20250818: BetaMemoryTool20250818) =
+                addTool(Tool.ofBetaMemoryTool20250818(betaMemoryTool20250818))
+
+            /**
+             * Alias for calling [addTool] with
              * `Tool.ofBetaToolComputerUse20250124(betaToolComputerUse20250124)`.
              */
             fun addTool(betaToolComputerUse20250124: BetaToolComputerUse20250124) =
@@ -1857,6 +1964,7 @@ private constructor(
                 Body(
                     checkRequired("messages", messages).map { it.toImmutable() },
                     checkRequired("model", model),
+                    contextManagement,
                     (mcpServers ?: JsonMissing.of()).map { it.toImmutable() },
                     system,
                     thinking,
@@ -1875,6 +1983,7 @@ private constructor(
 
             messages().forEach { it.validate() }
             model()
+            contextManagement().ifPresent { it.validate() }
             mcpServers().ifPresent { it.forEach { it.validate() } }
             system().ifPresent { it.validate() }
             thinking().ifPresent { it.validate() }
@@ -1901,6 +2010,7 @@ private constructor(
         internal fun validity(): Int =
             (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (model.asKnown().isPresent) 1 else 0) +
+                (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
                 (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (system.asKnown().getOrNull()?.validity() ?: 0) +
                 (thinking.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1915,6 +2025,7 @@ private constructor(
             return other is Body &&
                 messages == other.messages &&
                 model == other.model &&
+                contextManagement == other.contextManagement &&
                 mcpServers == other.mcpServers &&
                 system == other.system &&
                 thinking == other.thinking &&
@@ -1927,6 +2038,7 @@ private constructor(
             Objects.hash(
                 messages,
                 model,
+                contextManagement,
                 mcpServers,
                 system,
                 thinking,
@@ -1939,7 +2051,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{messages=$messages, model=$model, mcpServers=$mcpServers, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
+            "Body{messages=$messages, model=$model, contextManagement=$contextManagement, mcpServers=$mcpServers, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
     }
 
     /**
@@ -2139,6 +2251,7 @@ private constructor(
         private val betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522? = null,
         private val betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825? = null,
         private val betaToolComputerUse20241022: BetaToolComputerUse20241022? = null,
+        private val betaMemoryTool20250818: BetaMemoryTool20250818? = null,
         private val betaToolComputerUse20250124: BetaToolComputerUse20250124? = null,
         private val betaToolTextEditor20241022: BetaToolTextEditor20241022? = null,
         private val betaToolTextEditor20250124: BetaToolTextEditor20250124? = null,
@@ -2165,6 +2278,9 @@ private constructor(
 
         fun betaToolComputerUse20241022(): Optional<BetaToolComputerUse20241022> =
             Optional.ofNullable(betaToolComputerUse20241022)
+
+        fun betaMemoryTool20250818(): Optional<BetaMemoryTool20250818> =
+            Optional.ofNullable(betaMemoryTool20250818)
 
         fun betaToolComputerUse20250124(): Optional<BetaToolComputerUse20250124> =
             Optional.ofNullable(betaToolComputerUse20250124)
@@ -2199,6 +2315,8 @@ private constructor(
 
         fun isBetaToolComputerUse20241022(): Boolean = betaToolComputerUse20241022 != null
 
+        fun isBetaMemoryTool20250818(): Boolean = betaMemoryTool20250818 != null
+
         fun isBetaToolComputerUse20250124(): Boolean = betaToolComputerUse20250124 != null
 
         fun isBetaToolTextEditor20241022(): Boolean = betaToolTextEditor20241022 != null
@@ -2229,6 +2347,9 @@ private constructor(
 
         fun asBetaToolComputerUse20241022(): BetaToolComputerUse20241022 =
             betaToolComputerUse20241022.getOrThrow("betaToolComputerUse20241022")
+
+        fun asBetaMemoryTool20250818(): BetaMemoryTool20250818 =
+            betaMemoryTool20250818.getOrThrow("betaMemoryTool20250818")
 
         fun asBetaToolComputerUse20250124(): BetaToolComputerUse20250124 =
             betaToolComputerUse20250124.getOrThrow("betaToolComputerUse20250124")
@@ -2266,6 +2387,8 @@ private constructor(
                     visitor.visitBetaCodeExecutionTool20250825(betaCodeExecutionTool20250825)
                 betaToolComputerUse20241022 != null ->
                     visitor.visitBetaToolComputerUse20241022(betaToolComputerUse20241022)
+                betaMemoryTool20250818 != null ->
+                    visitor.visitBetaMemoryTool20250818(betaMemoryTool20250818)
                 betaToolComputerUse20250124 != null ->
                     visitor.visitBetaToolComputerUse20250124(betaToolComputerUse20250124)
                 betaToolTextEditor20241022 != null ->
@@ -2324,6 +2447,12 @@ private constructor(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ) {
                         betaToolComputerUse20241022.validate()
+                    }
+
+                    override fun visitBetaMemoryTool20250818(
+                        betaMemoryTool20250818: BetaMemoryTool20250818
+                    ) {
+                        betaMemoryTool20250818.validate()
                     }
 
                     override fun visitBetaToolComputerUse20250124(
@@ -2412,6 +2541,10 @@ private constructor(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ) = betaToolComputerUse20241022.validity()
 
+                    override fun visitBetaMemoryTool20250818(
+                        betaMemoryTool20250818: BetaMemoryTool20250818
+                    ) = betaMemoryTool20250818.validity()
+
                     override fun visitBetaToolComputerUse20250124(
                         betaToolComputerUse20250124: BetaToolComputerUse20250124
                     ) = betaToolComputerUse20250124.validity()
@@ -2456,6 +2589,7 @@ private constructor(
                 betaCodeExecutionTool20250522 == other.betaCodeExecutionTool20250522 &&
                 betaCodeExecutionTool20250825 == other.betaCodeExecutionTool20250825 &&
                 betaToolComputerUse20241022 == other.betaToolComputerUse20241022 &&
+                betaMemoryTool20250818 == other.betaMemoryTool20250818 &&
                 betaToolComputerUse20250124 == other.betaToolComputerUse20250124 &&
                 betaToolTextEditor20241022 == other.betaToolTextEditor20241022 &&
                 betaToolTextEditor20250124 == other.betaToolTextEditor20250124 &&
@@ -2473,6 +2607,7 @@ private constructor(
                 betaCodeExecutionTool20250522,
                 betaCodeExecutionTool20250825,
                 betaToolComputerUse20241022,
+                betaMemoryTool20250818,
                 betaToolComputerUse20250124,
                 betaToolTextEditor20241022,
                 betaToolTextEditor20250124,
@@ -2493,6 +2628,8 @@ private constructor(
                     "Tool{betaCodeExecutionTool20250825=$betaCodeExecutionTool20250825}"
                 betaToolComputerUse20241022 != null ->
                     "Tool{betaToolComputerUse20241022=$betaToolComputerUse20241022}"
+                betaMemoryTool20250818 != null ->
+                    "Tool{betaMemoryTool20250818=$betaMemoryTool20250818}"
                 betaToolComputerUse20250124 != null ->
                     "Tool{betaToolComputerUse20250124=$betaToolComputerUse20250124}"
                 betaToolTextEditor20241022 != null ->
@@ -2537,6 +2674,10 @@ private constructor(
             fun ofBetaToolComputerUse20241022(
                 betaToolComputerUse20241022: BetaToolComputerUse20241022
             ) = Tool(betaToolComputerUse20241022 = betaToolComputerUse20241022)
+
+            @JvmStatic
+            fun ofBetaMemoryTool20250818(betaMemoryTool20250818: BetaMemoryTool20250818) =
+                Tool(betaMemoryTool20250818 = betaMemoryTool20250818)
 
             @JvmStatic
             fun ofBetaToolComputerUse20250124(
@@ -2592,6 +2733,8 @@ private constructor(
             fun visitBetaToolComputerUse20241022(
                 betaToolComputerUse20241022: BetaToolComputerUse20241022
             ): T
+
+            fun visitBetaMemoryTool20250818(betaMemoryTool20250818: BetaMemoryTool20250818): T
 
             fun visitBetaToolComputerUse20250124(
                 betaToolComputerUse20250124: BetaToolComputerUse20250124
@@ -2655,6 +2798,9 @@ private constructor(
                                 ?.let { Tool(betaCodeExecutionTool20250825 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20241022>())
                                 ?.let { Tool(betaToolComputerUse20241022 = it, _json = json) },
+                            tryDeserialize(node, jacksonTypeRef<BetaMemoryTool20250818>())?.let {
+                                Tool(betaMemoryTool20250818 = it, _json = json)
+                            },
                             tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20250124>())
                                 ?.let { Tool(betaToolComputerUse20250124 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20241022>())
@@ -2707,6 +2853,8 @@ private constructor(
                         generator.writeObject(value.betaCodeExecutionTool20250825)
                     value.betaToolComputerUse20241022 != null ->
                         generator.writeObject(value.betaToolComputerUse20241022)
+                    value.betaMemoryTool20250818 != null ->
+                        generator.writeObject(value.betaMemoryTool20250818)
                     value.betaToolComputerUse20250124 != null ->
                         generator.writeObject(value.betaToolComputerUse20250124)
                     value.betaToolTextEditor20241022 != null ->

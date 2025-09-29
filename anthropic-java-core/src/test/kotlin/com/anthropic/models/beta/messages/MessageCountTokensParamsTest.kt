@@ -18,6 +18,19 @@ internal class MessageCountTokensParamsTest {
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .addUserMessage("Hello, world")
             .model(Model.CLAUDE_3_7_SONNET_LATEST)
+            .contextManagement(
+                BetaContextManagementConfig.builder()
+                    .addEdit(
+                        BetaClearToolUses20250919Edit.builder()
+                            .clearAtLeast(BetaInputTokensClearAtLeast.builder().value(0L).build())
+                            .clearToolInputs(true)
+                            .addExcludeTool("string")
+                            .keep(BetaToolUsesKeep.builder().value(0L).build())
+                            .inputTokensTrigger(1L)
+                            .build()
+                    )
+                    .build()
+            )
             .addMcpServer(
                 BetaRequestMcpServerUrlDefinition.builder()
                     .name("name")
@@ -99,6 +112,21 @@ internal class MessageCountTokensParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                .contextManagement(
+                    BetaContextManagementConfig.builder()
+                        .addEdit(
+                            BetaClearToolUses20250919Edit.builder()
+                                .clearAtLeast(
+                                    BetaInputTokensClearAtLeast.builder().value(0L).build()
+                                )
+                                .clearToolInputs(true)
+                                .addExcludeTool("string")
+                                .keep(BetaToolUsesKeep.builder().value(0L).build())
+                                .inputTokensTrigger(1L)
+                                .build()
+                        )
+                        .build()
+                )
                 .addMcpServer(
                     BetaRequestMcpServerUrlDefinition.builder()
                         .name("name")
@@ -200,6 +228,21 @@ internal class MessageCountTokensParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                .contextManagement(
+                    BetaContextManagementConfig.builder()
+                        .addEdit(
+                            BetaClearToolUses20250919Edit.builder()
+                                .clearAtLeast(
+                                    BetaInputTokensClearAtLeast.builder().value(0L).build()
+                                )
+                                .clearToolInputs(true)
+                                .addExcludeTool("string")
+                                .keep(BetaToolUsesKeep.builder().value(0L).build())
+                                .inputTokensTrigger(1L)
+                                .build()
+                        )
+                        .build()
+                )
                 .addMcpServer(
                     BetaRequestMcpServerUrlDefinition.builder()
                         .name("name")
@@ -283,6 +326,20 @@ internal class MessageCountTokensParamsTest {
                     .build()
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
+        assertThat(body.contextManagement())
+            .contains(
+                BetaContextManagementConfig.builder()
+                    .addEdit(
+                        BetaClearToolUses20250919Edit.builder()
+                            .clearAtLeast(BetaInputTokensClearAtLeast.builder().value(0L).build())
+                            .clearToolInputs(true)
+                            .addExcludeTool("string")
+                            .keep(BetaToolUsesKeep.builder().value(0L).build())
+                            .inputTokensTrigger(1L)
+                            .build()
+                    )
+                    .build()
+            )
         assertThat(body.mcpServers().getOrNull())
             .containsExactly(
                 BetaRequestMcpServerUrlDefinition.builder()

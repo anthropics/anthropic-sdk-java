@@ -5,7 +5,9 @@ package com.anthropic.models.beta.messages.batches
 import com.anthropic.core.jsonMapper
 import com.anthropic.models.beta.messages.BetaCacheCreation
 import com.anthropic.models.beta.messages.BetaCitationCharLocation
+import com.anthropic.models.beta.messages.BetaClearToolUses20250919EditResponse
 import com.anthropic.models.beta.messages.BetaContainer
+import com.anthropic.models.beta.messages.BetaContextManagementResponse
 import com.anthropic.models.beta.messages.BetaMessage
 import com.anthropic.models.beta.messages.BetaServerToolUsage
 import com.anthropic.models.beta.messages.BetaStopReason
@@ -46,6 +48,16 @@ internal class BetaMessageBatchIndividualResponseTest {
                                         .build()
                                 )
                                 .text("Hi! My name is Claude.")
+                                .build()
+                        )
+                        .contextManagement(
+                            BetaContextManagementResponse.builder()
+                                .addAppliedEdit(
+                                    BetaClearToolUses20250919EditResponse.builder()
+                                        .clearedInputTokens(0L)
+                                        .clearedToolUses(0L)
+                                        .build()
+                                )
                                 .build()
                         )
                         .model(Model.CLAUDE_3_7_SONNET_LATEST)
@@ -103,6 +115,16 @@ internal class BetaMessageBatchIndividualResponseTest {
                                                 .build()
                                         )
                                         .text("Hi! My name is Claude.")
+                                        .build()
+                                )
+                                .contextManagement(
+                                    BetaContextManagementResponse.builder()
+                                        .addAppliedEdit(
+                                            BetaClearToolUses20250919EditResponse.builder()
+                                                .clearedInputTokens(0L)
+                                                .clearedToolUses(0L)
+                                                .build()
+                                        )
                                         .build()
                                 )
                                 .model(Model.CLAUDE_3_7_SONNET_LATEST)
@@ -164,6 +186,16 @@ internal class BetaMessageBatchIndividualResponseTest {
                                         .build()
                                 )
                                 .text("Hi! My name is Claude.")
+                                .build()
+                        )
+                        .contextManagement(
+                            BetaContextManagementResponse.builder()
+                                .addAppliedEdit(
+                                    BetaClearToolUses20250919EditResponse.builder()
+                                        .clearedInputTokens(0L)
+                                        .clearedToolUses(0L)
+                                        .build()
+                                )
                                 .build()
                         )
                         .model(Model.CLAUDE_3_7_SONNET_LATEST)

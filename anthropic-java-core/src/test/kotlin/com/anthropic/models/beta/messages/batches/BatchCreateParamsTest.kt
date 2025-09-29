@@ -7,12 +7,16 @@ import com.anthropic.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.messages.BetaCacheControlEphemeral
 import com.anthropic.models.beta.messages.BetaCitationCharLocationParam
+import com.anthropic.models.beta.messages.BetaClearToolUses20250919Edit
+import com.anthropic.models.beta.messages.BetaContextManagementConfig
+import com.anthropic.models.beta.messages.BetaInputTokensClearAtLeast
 import com.anthropic.models.beta.messages.BetaMetadata
 import com.anthropic.models.beta.messages.BetaRequestMcpServerToolConfiguration
 import com.anthropic.models.beta.messages.BetaRequestMcpServerUrlDefinition
 import com.anthropic.models.beta.messages.BetaTextBlockParam
 import com.anthropic.models.beta.messages.BetaTool
 import com.anthropic.models.beta.messages.BetaToolChoiceAuto
+import com.anthropic.models.beta.messages.BetaToolUsesKeep
 import com.anthropic.models.messages.Model
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -32,6 +36,23 @@ internal class BatchCreateParamsTest {
                             .addUserMessage("Hello, world")
                             .model(Model.CLAUDE_3_7_SONNET_LATEST)
                             .container("container")
+                            .contextManagement(
+                                BetaContextManagementConfig.builder()
+                                    .addEdit(
+                                        BetaClearToolUses20250919Edit.builder()
+                                            .clearAtLeast(
+                                                BetaInputTokensClearAtLeast.builder()
+                                                    .value(0L)
+                                                    .build()
+                                            )
+                                            .clearToolInputs(true)
+                                            .addExcludeTool("string")
+                                            .keep(BetaToolUsesKeep.builder().value(0L).build())
+                                            .inputTokensTrigger(1L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
                             .addMcpServer(
                                 BetaRequestMcpServerUrlDefinition.builder()
                                     .name("name")
@@ -137,6 +158,23 @@ internal class BatchCreateParamsTest {
                                 .addUserMessage("Hello, world")
                                 .model(Model.CLAUDE_3_7_SONNET_LATEST)
                                 .container("container")
+                                .contextManagement(
+                                    BetaContextManagementConfig.builder()
+                                        .addEdit(
+                                            BetaClearToolUses20250919Edit.builder()
+                                                .clearAtLeast(
+                                                    BetaInputTokensClearAtLeast.builder()
+                                                        .value(0L)
+                                                        .build()
+                                                )
+                                                .clearToolInputs(true)
+                                                .addExcludeTool("string")
+                                                .keep(BetaToolUsesKeep.builder().value(0L).build())
+                                                .inputTokensTrigger(1L)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .addMcpServer(
                                     BetaRequestMcpServerUrlDefinition.builder()
                                         .name("name")
@@ -274,6 +312,23 @@ internal class BatchCreateParamsTest {
                                 .addUserMessage("Hello, world")
                                 .model(Model.CLAUDE_3_7_SONNET_LATEST)
                                 .container("container")
+                                .contextManagement(
+                                    BetaContextManagementConfig.builder()
+                                        .addEdit(
+                                            BetaClearToolUses20250919Edit.builder()
+                                                .clearAtLeast(
+                                                    BetaInputTokensClearAtLeast.builder()
+                                                        .value(0L)
+                                                        .build()
+                                                )
+                                                .clearToolInputs(true)
+                                                .addExcludeTool("string")
+                                                .keep(BetaToolUsesKeep.builder().value(0L).build())
+                                                .inputTokensTrigger(1L)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .addMcpServer(
                                     BetaRequestMcpServerUrlDefinition.builder()
                                         .name("name")
@@ -378,6 +433,23 @@ internal class BatchCreateParamsTest {
                             .addUserMessage("Hello, world")
                             .model(Model.CLAUDE_3_7_SONNET_LATEST)
                             .container("container")
+                            .contextManagement(
+                                BetaContextManagementConfig.builder()
+                                    .addEdit(
+                                        BetaClearToolUses20250919Edit.builder()
+                                            .clearAtLeast(
+                                                BetaInputTokensClearAtLeast.builder()
+                                                    .value(0L)
+                                                    .build()
+                                            )
+                                            .clearToolInputs(true)
+                                            .addExcludeTool("string")
+                                            .keep(BetaToolUsesKeep.builder().value(0L).build())
+                                            .inputTokensTrigger(1L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
                             .addMcpServer(
                                 BetaRequestMcpServerUrlDefinition.builder()
                                     .name("name")
