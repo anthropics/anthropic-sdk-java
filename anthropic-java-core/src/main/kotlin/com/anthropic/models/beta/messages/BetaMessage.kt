@@ -26,6 +26,7 @@ private constructor(
     private val id: JsonField<String>,
     private val container: JsonField<BetaContainer>,
     private val content: JsonField<List<BetaContentBlock>>,
+    private val contextManagement: JsonField<BetaContextManagementResponse>,
     private val model: JsonField<Model>,
     private val role: JsonValue,
     private val stopReason: JsonField<BetaStopReason>,
@@ -44,6 +45,9 @@ private constructor(
         @JsonProperty("content")
         @ExcludeMissing
         content: JsonField<List<BetaContentBlock>> = JsonMissing.of(),
+        @JsonProperty("context_management")
+        @ExcludeMissing
+        contextManagement: JsonField<BetaContextManagementResponse> = JsonMissing.of(),
         @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
         @JsonProperty("role") @ExcludeMissing role: JsonValue = JsonMissing.of(),
         @JsonProperty("stop_reason")
@@ -58,6 +62,7 @@ private constructor(
         id,
         container,
         content,
+        contextManagement,
         model,
         role,
         stopReason,
@@ -125,6 +130,15 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun content(): List<BetaContentBlock> = content.getRequired("content")
+
+    /**
+     * Information about context management operations applied during the request.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun contextManagement(): Optional<BetaContextManagementResponse> =
+        contextManagement.getOptional("context_management")
 
     /**
      * The model that will complete your prompt.\n\nSee
@@ -243,6 +257,16 @@ private constructor(
     fun _content(): JsonField<List<BetaContentBlock>> = content
 
     /**
+     * Returns the raw JSON value of [contextManagement].
+     *
+     * Unlike [contextManagement], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("context_management")
+    @ExcludeMissing
+    fun _contextManagement(): JsonField<BetaContextManagementResponse> = contextManagement
+
+    /**
      * Returns the raw JSON value of [model].
      *
      * Unlike [model], this method doesn't throw if the JSON field has an unexpected type.
@@ -296,6 +320,7 @@ private constructor(
          * .id()
          * .container()
          * .content()
+         * .contextManagement()
          * .model()
          * .stopReason()
          * .stopSequence()
@@ -311,6 +336,7 @@ private constructor(
         private var id: JsonField<String>? = null
         private var container: JsonField<BetaContainer>? = null
         private var content: JsonField<MutableList<BetaContentBlock>>? = null
+        private var contextManagement: JsonField<BetaContextManagementResponse>? = null
         private var model: JsonField<Model>? = null
         private var role: JsonValue = JsonValue.from("assistant")
         private var stopReason: JsonField<BetaStopReason>? = null
@@ -324,6 +350,7 @@ private constructor(
             id = betaMessage.id
             container = betaMessage.container
             content = betaMessage.content.map { it.toMutableList() }
+            contextManagement = betaMessage.contextManagement
             model = betaMessage.model
             role = betaMessage.role
             stopReason = betaMessage.stopReason
@@ -518,6 +545,25 @@ private constructor(
         fun addContainerUploadContent(fileId: String) =
             addContent(BetaContainerUploadBlock.builder().fileId(fileId).build())
 
+        /** Information about context management operations applied during the request. */
+        fun contextManagement(contextManagement: BetaContextManagementResponse?) =
+            contextManagement(JsonField.ofNullable(contextManagement))
+
+        /** Alias for calling [Builder.contextManagement] with `contextManagement.orElse(null)`. */
+        fun contextManagement(contextManagement: Optional<BetaContextManagementResponse>) =
+            contextManagement(contextManagement.getOrNull())
+
+        /**
+         * Sets [Builder.contextManagement] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.contextManagement] with a well-typed
+         * [BetaContextManagementResponse] value instead. This method is primarily for setting the
+         * field to an undocumented or not yet supported value.
+         */
+        fun contextManagement(contextManagement: JsonField<BetaContextManagementResponse>) = apply {
+            this.contextManagement = contextManagement
+        }
+
         /**
          * The model that will complete your prompt.\n\nSee
          * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
@@ -677,6 +723,7 @@ private constructor(
          * .id()
          * .container()
          * .content()
+         * .contextManagement()
          * .model()
          * .stopReason()
          * .stopSequence()
@@ -690,6 +737,7 @@ private constructor(
                 checkRequired("id", id),
                 checkRequired("container", container),
                 checkRequired("content", content).map { it.toImmutable() },
+                checkRequired("contextManagement", contextManagement),
                 checkRequired("model", model),
                 role,
                 checkRequired("stopReason", stopReason),
@@ -710,6 +758,7 @@ private constructor(
         id()
         container().ifPresent { it.validate() }
         content().forEach { it.validate() }
+        contextManagement().ifPresent { it.validate() }
         model()
         _role().let {
             if (it != JsonValue.from("assistant")) {
@@ -745,6 +794,7 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) +
             (container.asKnown().getOrNull()?.validity() ?: 0) +
             (content.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
             (if (model.asKnown().isPresent) 1 else 0) +
             role.let { if (it == JsonValue.from("assistant")) 1 else 0 } +
             (stopReason.asKnown().getOrNull()?.validity() ?: 0) +
@@ -761,6 +811,7 @@ private constructor(
             id == other.id &&
             container == other.container &&
             content == other.content &&
+            contextManagement == other.contextManagement &&
             model == other.model &&
             role == other.role &&
             stopReason == other.stopReason &&
@@ -775,6 +826,7 @@ private constructor(
             id,
             container,
             content,
+            contextManagement,
             model,
             role,
             stopReason,
@@ -788,5 +840,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaMessage{id=$id, container=$container, content=$content, model=$model, role=$role, stopReason=$stopReason, stopSequence=$stopSequence, type=$type, usage=$usage, additionalProperties=$additionalProperties}"
+        "BetaMessage{id=$id, container=$container, content=$content, contextManagement=$contextManagement, model=$model, role=$role, stopReason=$stopReason, stopSequence=$stopSequence, type=$type, usage=$usage, additionalProperties=$additionalProperties}"
 }

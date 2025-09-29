@@ -121,7 +121,6 @@ internal class BetaMessageAccumulatorTest {
 
     @Test
     fun mergeCitationsDelta() {
-        MessageAccumulator
         // Use all types of citation to exercise the code in [citationsDeltaToTextCitation].
         val text1 =
             BetaMessageAccumulator.mergeCitationsDelta(
@@ -806,6 +805,16 @@ internal class BetaMessageAccumulatorTest {
                                 .expiresAt(java.time.OffsetDateTime.now().plusDays(1))
                                 .build()
                         )
+                        .contextManagement(
+                            BetaContextManagementResponse.builder()
+                                .addAppliedEdit(
+                                    BetaClearToolUses20250919EditResponse.builder()
+                                        .clearedInputTokens(0L)
+                                        .clearedToolUses(0L)
+                                        .build()
+                                )
+                                .build()
+                        )
                         // The default non-null value for `role` suffices.
                         .build()
                 )
@@ -844,6 +853,16 @@ internal class BetaMessageAccumulatorTest {
     ) =
         BetaRawMessageStreamEvent.ofMessageDelta(
             BetaRawMessageDeltaEvent.builder()
+                .contextManagement(
+                    BetaContextManagementResponse.builder()
+                        .addAppliedEdit(
+                            BetaClearToolUses20250919EditResponse.builder()
+                                .clearedInputTokens(0L)
+                                .clearedToolUses(0L)
+                                .build()
+                        )
+                        .build()
+                )
                 .delta(
                     BetaRawMessageDeltaEvent.Delta.builder()
                         .container(

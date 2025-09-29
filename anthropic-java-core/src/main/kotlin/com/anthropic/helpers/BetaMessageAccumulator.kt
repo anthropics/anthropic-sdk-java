@@ -252,6 +252,11 @@ class BetaMessageAccumulator private constructor() {
                         requireMessageBuilder().container(delta.container().get())
                     }
 
+                    if (deltaEvent.contextManagement().isPresent()) {
+                        requireMessageBuilder()
+                            .contextManagement(deltaEvent.contextManagement().get())
+                    }
+
                     messageUsage = mergeMessageUsage(requireMessageUsage(), deltaEvent.usage())
                 }
 

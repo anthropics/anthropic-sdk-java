@@ -20,6 +20,7 @@ import kotlin.jvm.optionals.getOrNull
 class BetaRawMessageDeltaEvent
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
+    private val contextManagement: JsonField<BetaContextManagementResponse>,
     private val delta: JsonField<Delta>,
     private val type: JsonValue,
     private val usage: JsonField<BetaMessageDeltaUsage>,
@@ -28,12 +29,24 @@ private constructor(
 
     @JsonCreator
     private constructor(
+        @JsonProperty("context_management")
+        @ExcludeMissing
+        contextManagement: JsonField<BetaContextManagementResponse> = JsonMissing.of(),
         @JsonProperty("delta") @ExcludeMissing delta: JsonField<Delta> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
         @JsonProperty("usage")
         @ExcludeMissing
         usage: JsonField<BetaMessageDeltaUsage> = JsonMissing.of(),
-    ) : this(delta, type, usage, mutableMapOf())
+    ) : this(contextManagement, delta, type, usage, mutableMapOf())
+
+    /**
+     * Information about context management operations applied during the request.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun contextManagement(): Optional<BetaContextManagementResponse> =
+        contextManagement.getOptional("context_management")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -74,6 +87,16 @@ private constructor(
     fun usage(): BetaMessageDeltaUsage = usage.getRequired("usage")
 
     /**
+     * Returns the raw JSON value of [contextManagement].
+     *
+     * Unlike [contextManagement], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("context_management")
+    @ExcludeMissing
+    fun _contextManagement(): JsonField<BetaContextManagementResponse> = contextManagement
+
+    /**
      * Returns the raw JSON value of [delta].
      *
      * Unlike [delta], this method doesn't throw if the JSON field has an unexpected type.
@@ -106,6 +129,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .contextManagement()
          * .delta()
          * .usage()
          * ```
@@ -116,6 +140,7 @@ private constructor(
     /** A builder for [BetaRawMessageDeltaEvent]. */
     class Builder internal constructor() {
 
+        private var contextManagement: JsonField<BetaContextManagementResponse>? = null
         private var delta: JsonField<Delta>? = null
         private var type: JsonValue = JsonValue.from("message_delta")
         private var usage: JsonField<BetaMessageDeltaUsage>? = null
@@ -123,10 +148,30 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaRawMessageDeltaEvent: BetaRawMessageDeltaEvent) = apply {
+            contextManagement = betaRawMessageDeltaEvent.contextManagement
             delta = betaRawMessageDeltaEvent.delta
             type = betaRawMessageDeltaEvent.type
             usage = betaRawMessageDeltaEvent.usage
             additionalProperties = betaRawMessageDeltaEvent.additionalProperties.toMutableMap()
+        }
+
+        /** Information about context management operations applied during the request. */
+        fun contextManagement(contextManagement: BetaContextManagementResponse?) =
+            contextManagement(JsonField.ofNullable(contextManagement))
+
+        /** Alias for calling [Builder.contextManagement] with `contextManagement.orElse(null)`. */
+        fun contextManagement(contextManagement: Optional<BetaContextManagementResponse>) =
+            contextManagement(contextManagement.getOrNull())
+
+        /**
+         * Sets [Builder.contextManagement] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.contextManagement] with a well-typed
+         * [BetaContextManagementResponse] value instead. This method is primarily for setting the
+         * field to an undocumented or not yet supported value.
+         */
+        fun contextManagement(contextManagement: JsonField<BetaContextManagementResponse>) = apply {
+            this.contextManagement = contextManagement
         }
 
         fun delta(delta: Delta) = delta(JsonField.of(delta))
@@ -207,6 +252,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .contextManagement()
          * .delta()
          * .usage()
          * ```
@@ -215,6 +261,7 @@ private constructor(
          */
         fun build(): BetaRawMessageDeltaEvent =
             BetaRawMessageDeltaEvent(
+                checkRequired("contextManagement", contextManagement),
                 checkRequired("delta", delta),
                 type,
                 checkRequired("usage", usage),
@@ -229,6 +276,7 @@ private constructor(
             return@apply
         }
 
+        contextManagement().ifPresent { it.validate() }
         delta().validate()
         _type().let {
             if (it != JsonValue.from("message_delta")) {
@@ -254,7 +302,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (delta.asKnown().getOrNull()?.validity() ?: 0) +
+        (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
+            (delta.asKnown().getOrNull()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("message_delta")) 1 else 0 } +
             (usage.asKnown().getOrNull()?.validity() ?: 0)
 
@@ -527,16 +576,19 @@ private constructor(
         }
 
         return other is BetaRawMessageDeltaEvent &&
+            contextManagement == other.contextManagement &&
             delta == other.delta &&
             type == other.type &&
             usage == other.usage &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(delta, type, usage, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(contextManagement, delta, type, usage, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaRawMessageDeltaEvent{delta=$delta, type=$type, usage=$usage, additionalProperties=$additionalProperties}"
+        "BetaRawMessageDeltaEvent{contextManagement=$contextManagement, delta=$delta, type=$type, usage=$usage, additionalProperties=$additionalProperties}"
 }
