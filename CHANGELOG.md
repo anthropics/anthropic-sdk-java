@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.8.1 (2025-09-29)
+
+Full Changelog: [v2.8.0...v2.8.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.8.0...v2.8.1)
+
+### Chores
+
+* **client:** add context-management-2025-06-27 beta header ([b6c5683](https://github.com/anthropics/anthropic-sdk-java/commit/b6c56838bc69ba3fe57b683d9c6e168304db9d96))
+* **client:** add model-context-window-exceeded-2025-08-26 beta header ([d9d0493](https://github.com/anthropics/anthropic-sdk-java/commit/d9d0493fc7d01cbe03b9805306739c1ab1ebc7c8))
+
 ## 2.8.0 (2025-09-29)
 
 Full Changelog: [v2.7.0...v2.8.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.7.0...v2.8.0)
