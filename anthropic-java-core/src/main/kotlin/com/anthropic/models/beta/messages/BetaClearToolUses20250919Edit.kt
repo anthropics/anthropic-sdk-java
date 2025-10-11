@@ -300,6 +300,16 @@ private constructor(
          */
         fun keep(keep: JsonField<BetaToolUsesKeep>) = apply { this.keep = keep }
 
+        /**
+         * Alias for calling [keep] with the following:
+         * ```java
+         * BetaToolUsesKeep.builder()
+         *     .value(value)
+         *     .build()
+         * ```
+         */
+        fun toolUsesKeep(value: Long) = keep(BetaToolUsesKeep.builder().value(value).build())
+
         /** Condition that triggers the context management strategy */
         fun trigger(trigger: Trigger) = trigger(JsonField.of(trigger))
 
