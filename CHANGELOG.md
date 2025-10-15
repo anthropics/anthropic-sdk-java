@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.9.0 (2025-10-15)
+
+Full Changelog: [v2.8.1...v2.9.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.8.1...v2.9.0)
+
+### Features
+
+* add more helper methods to instantiate union objects ([3e3a4bb](https://github.com/anthropics/anthropic-sdk-java/commit/3e3a4bbab308c457c03e6291c766d499287c0c0b))
+* **api:** manual updates ([d2170e9](https://github.com/anthropics/anthropic-sdk-java/commit/d2170e9bf101ee3db876edf62792fba2697748c3))
+
 ## 2.8.1 (2025-09-29)
 
 Full Changelog: [v2.8.0...v2.8.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.8.0...v2.8.1)
