@@ -36,6 +36,12 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         /** Our fastest model */
         @JvmField val CLAUDE_3_5_HAIKU_20241022 = of("claude-3-5-haiku-20241022")
 
+        /** Hybrid model, capable of near-instant responses and extended thinking */
+        @JvmField val CLAUDE_HAIKU_4_5 = of("claude-haiku-4-5")
+
+        /** Hybrid model, capable of near-instant responses and extended thinking */
+        @JvmField val CLAUDE_HAIKU_4_5_20251001 = of("claude-haiku-4-5-20251001")
+
         /** High-performance model with extended thinking */
         @JvmField val CLAUDE_SONNET_4_20250514 = of("claude-sonnet-4-20250514")
 
@@ -101,6 +107,10 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         CLAUDE_3_5_HAIKU_LATEST,
         /** Our fastest model */
         CLAUDE_3_5_HAIKU_20241022,
+        /** Hybrid model, capable of near-instant responses and extended thinking */
+        CLAUDE_HAIKU_4_5,
+        /** Hybrid model, capable of near-instant responses and extended thinking */
+        CLAUDE_HAIKU_4_5_20251001,
         /** High-performance model with extended thinking */
         CLAUDE_SONNET_4_20250514,
         /** High-performance model with extended thinking */
@@ -156,6 +166,10 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         CLAUDE_3_5_HAIKU_LATEST,
         /** Our fastest model */
         CLAUDE_3_5_HAIKU_20241022,
+        /** Hybrid model, capable of near-instant responses and extended thinking */
+        CLAUDE_HAIKU_4_5,
+        /** Hybrid model, capable of near-instant responses and extended thinking */
+        CLAUDE_HAIKU_4_5_20251001,
         /** High-performance model with extended thinking */
         CLAUDE_SONNET_4_20250514,
         /** High-performance model with extended thinking */
@@ -208,6 +222,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
             CLAUDE_3_7_SONNET_20250219 -> Value.CLAUDE_3_7_SONNET_20250219
             CLAUDE_3_5_HAIKU_LATEST -> Value.CLAUDE_3_5_HAIKU_LATEST
             CLAUDE_3_5_HAIKU_20241022 -> Value.CLAUDE_3_5_HAIKU_20241022
+            CLAUDE_HAIKU_4_5 -> Value.CLAUDE_HAIKU_4_5
+            CLAUDE_HAIKU_4_5_20251001 -> Value.CLAUDE_HAIKU_4_5_20251001
             CLAUDE_SONNET_4_20250514 -> Value.CLAUDE_SONNET_4_20250514
             CLAUDE_SONNET_4_0 -> Value.CLAUDE_SONNET_4_0
             CLAUDE_4_SONNET_20250514 -> Value.CLAUDE_4_SONNET_20250514
@@ -240,6 +256,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
             CLAUDE_3_7_SONNET_20250219 -> Known.CLAUDE_3_7_SONNET_20250219
             CLAUDE_3_5_HAIKU_LATEST -> Known.CLAUDE_3_5_HAIKU_LATEST
             CLAUDE_3_5_HAIKU_20241022 -> Known.CLAUDE_3_5_HAIKU_20241022
+            CLAUDE_HAIKU_4_5 -> Known.CLAUDE_HAIKU_4_5
+            CLAUDE_HAIKU_4_5_20251001 -> Known.CLAUDE_HAIKU_4_5_20251001
             CLAUDE_SONNET_4_20250514 -> Known.CLAUDE_SONNET_4_20250514
             CLAUDE_SONNET_4_0 -> Known.CLAUDE_SONNET_4_0
             CLAUDE_4_SONNET_20250514 -> Known.CLAUDE_4_SONNET_20250514
