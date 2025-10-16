@@ -18,7 +18,6 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Configuration for context management operations. */
 class BetaContextManagementConfig
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

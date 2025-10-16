@@ -9,6 +9,8 @@ import com.anthropic.services.async.beta.MessageServiceAsync
 import com.anthropic.services.async.beta.MessageServiceAsyncImpl
 import com.anthropic.services.async.beta.ModelServiceAsync
 import com.anthropic.services.async.beta.ModelServiceAsyncImpl
+import com.anthropic.services.async.beta.SkillServiceAsync
+import com.anthropic.services.async.beta.SkillServiceAsyncImpl
 import java.util.function.Consumer
 
 class BetaServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -24,6 +26,8 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
 
     private val files: FileServiceAsync by lazy { FileServiceAsyncImpl(clientOptions) }
 
+    private val skills: SkillServiceAsync by lazy { SkillServiceAsyncImpl(clientOptions) }
+
     override fun withRawResponse(): BetaServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BetaServiceAsync =
@@ -34,6 +38,8 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
     override fun messages(): MessageServiceAsync = messages
 
     override fun files(): FileServiceAsync = files
+
+    override fun skills(): SkillServiceAsync = skills
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         BetaServiceAsync.WithRawResponse {
@@ -50,6 +56,10 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
             FileServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val skills: SkillServiceAsync.WithRawResponse by lazy {
+            SkillServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): BetaServiceAsync.WithRawResponse =
@@ -62,5 +72,7 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
         override fun messages(): MessageServiceAsync.WithRawResponse = messages
 
         override fun files(): FileServiceAsync.WithRawResponse = files
+
+        override fun skills(): SkillServiceAsync.WithRawResponse = skills
     }
 }

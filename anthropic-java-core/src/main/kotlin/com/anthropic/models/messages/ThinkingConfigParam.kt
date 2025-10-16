@@ -25,8 +25,8 @@ import kotlin.jvm.optionals.getOrNull
  * before the final answer. Requires a minimum budget of 1,024 tokens and counts towards your
  * `max_tokens` limit.
  *
- * See [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
- * for details.
+ * See [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking) for
+ * details.
  */
 @JsonDeserialize(using = ThinkingConfigParam.Deserializer::class)
 @JsonSerialize(using = ThinkingConfigParam.Serializer::class)

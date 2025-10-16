@@ -29,11 +29,11 @@ import kotlin.jvm.optionals.getOrNull
  * [Legacy] Create a Text Completion.
  *
  * The Text Completions API is a legacy API. We recommend using the
- * [Messages API](https://docs.anthropic.com/en/api/messages) going forward.
+ * [Messages API](https://docs.claude.com/en/api/messages) going forward.
  *
  * Future models and features will not be compatible with Text Completions. See our
- * [migration guide](https://docs.anthropic.com/en/api/migrating-from-text-completions-to-messages)
- * for guidance in migrating from Text Completions to Messages.
+ * [migration guide](https://docs.claude.com/en/api/migrating-from-text-completions-to-messages) for
+ * guidance in migrating from Text Completions to Messages.
  */
 class CompletionCreateParams
 private constructor(
@@ -76,8 +76,8 @@ private constructor(
      * "\n\nHuman: {userQuestion}\n\nAssistant:"
      * ```
      *
-     * See [prompt validation](https://docs.anthropic.com/en/api/prompt-validation) and our guide to
-     * [prompt design](https://docs.anthropic.com/en/docs/intro-to-prompting) for more details.
+     * See [prompt validation](https://docs.claude.com/en/api/prompt-validation) and our guide to
+     * [prompt design](https://docs.claude.com/en/docs/intro-to-prompting) for more details.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -334,9 +334,8 @@ private constructor(
          * "\n\nHuman: {userQuestion}\n\nAssistant:"
          * ```
          *
-         * See [prompt validation](https://docs.anthropic.com/en/api/prompt-validation) and our
-         * guide to [prompt design](https://docs.anthropic.com/en/docs/intro-to-prompting) for more
-         * details.
+         * See [prompt validation](https://docs.claude.com/en/api/prompt-validation) and our guide
+         * to [prompt design](https://docs.claude.com/en/docs/intro-to-prompting) for more details.
          */
         fun prompt(prompt: String) = apply { body.prompt(prompt) }
 
@@ -670,9 +669,8 @@ private constructor(
          * "\n\nHuman: {userQuestion}\n\nAssistant:"
          * ```
          *
-         * See [prompt validation](https://docs.anthropic.com/en/api/prompt-validation) and our
-         * guide to [prompt design](https://docs.anthropic.com/en/docs/intro-to-prompting) for more
-         * details.
+         * See [prompt validation](https://docs.claude.com/en/api/prompt-validation) and our guide
+         * to [prompt design](https://docs.claude.com/en/docs/intro-to-prompting) for more details.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -911,9 +909,9 @@ private constructor(
              * "\n\nHuman: {userQuestion}\n\nAssistant:"
              * ```
              *
-             * See [prompt validation](https://docs.anthropic.com/en/api/prompt-validation) and our
-             * guide to [prompt design](https://docs.anthropic.com/en/docs/intro-to-prompting) for
-             * more details.
+             * See [prompt validation](https://docs.claude.com/en/api/prompt-validation) and our
+             * guide to [prompt design](https://docs.claude.com/en/docs/intro-to-prompting) for more
+             * details.
              */
             fun prompt(prompt: String) = prompt(JsonField.of(prompt))
 

@@ -62,7 +62,7 @@ private constructor(
      * the absolute maximum number of tokens to generate.
      *
      * Different models have different maximum values for this parameter. See
-     * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
+     * [models](https://docs.claude.com/en/docs/models-overview) for details.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -116,10 +116,10 @@ private constructor(
      * {"role": "user", "content": [{"type": "text", "text": "Hello, Claude"}]}
      * ```
      *
-     * See [input examples](https://docs.anthropic.com/en/api/messages-examples).
+     * See [input examples](https://docs.claude.com/en/api/messages-examples).
      *
      * Note that if you want to include a
-     * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the top-level
+     * [system prompt](https://docs.claude.com/en/docs/system-prompts), you can use the top-level
      * `system` parameter — there is no `"system"` role for input messages in the Messages API.
      *
      * There is a limit of 100,000 messages in a single request.
@@ -145,10 +145,13 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun container(): Optional<String> = body.container()
+    fun container(): Optional<Container> = body.container()
 
     /**
-     * Configuration for context management operations.
+     * Context management configuration.
+     *
+     * This allows you to control how Claude manages context across multiple requests, such as
+     * whether to clear function results or not.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -176,7 +179,7 @@ private constructor(
      * request.
      *
      * Anthropic offers different levels of service for your API requests. See
-     * [service-tiers](https://docs.anthropic.com/en/api/service-tiers) for details.
+     * [service-tiers](https://docs.claude.com/en/api/service-tiers) for details.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -204,7 +207,7 @@ private constructor(
      *
      * A system prompt is a way of providing context and instructions to Claude, such as specifying
      * a particular goal or role. See our
-     * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+     * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -231,8 +234,7 @@ private constructor(
      * before the final answer. Requires a minimum budget of 1,024 tokens and counts towards your
      * `max_tokens` limit.
      *
-     * See
-     * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+     * See [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
      * for details.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -259,9 +261,9 @@ private constructor(
      *
      * There are two types of tools: **client tools** and **server tools**. The behavior described
      * below applies to client tools. For
-     * [server tools](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
+     * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
      * see their individual documentation as each has its own behavior (e.g., the
-     * [web search tool](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+     * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
      *
      * Each tool definition includes:
      * * `name`: Name of the tool.
@@ -317,7 +319,7 @@ private constructor(
      * Tools can be used for workflows that include running client-side tools and functions, or more
      * generally whenever you want the model to produce a particular JSON structure of output.
      *
-     * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+     * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -378,7 +380,7 @@ private constructor(
      *
      * Unlike [container], this method doesn't throw if the JSON field has an unexpected type.
      */
-    fun _container(): JsonField<String> = body._container()
+    fun _container(): JsonField<Container> = body._container()
 
     /**
      * Returns the raw JSON value of [contextManagement].
@@ -551,7 +553,7 @@ private constructor(
          * specifies the absolute maximum number of tokens to generate.
          *
          * Different models have different maximum values for this parameter. See
-         * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
+         * [models](https://docs.claude.com/en/docs/models-overview) for details.
          */
         fun maxTokens(maxTokens: Long) = apply { body.maxTokens(maxTokens) }
 
@@ -612,10 +614,10 @@ private constructor(
          * {"role": "user", "content": [{"type": "text", "text": "Hello, Claude"}]}
          * ```
          *
-         * See [input examples](https://docs.anthropic.com/en/api/messages-examples).
+         * See [input examples](https://docs.claude.com/en/api/messages-examples).
          *
          * Note that if you want to include a
-         * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
+         * [system prompt](https://docs.claude.com/en/docs/system-prompts), you can use the
          * top-level `system` parameter — there is no `"system"` role for input messages in the
          * Messages API.
          *
@@ -718,21 +720,37 @@ private constructor(
         fun model(value: String) = apply { body.model(value) }
 
         /** Container identifier for reuse across requests. */
-        fun container(container: String?) = apply { body.container(container) }
+        fun container(container: Container?) = apply { body.container(container) }
 
         /** Alias for calling [Builder.container] with `container.orElse(null)`. */
-        fun container(container: Optional<String>) = container(container.getOrNull())
+        fun container(container: Optional<Container>) = container(container.getOrNull())
 
         /**
          * Sets [Builder.container] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.container] with a well-typed [String] value instead.
+         * You should usually call [Builder.container] with a well-typed [Container] value instead.
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
-        fun container(container: JsonField<String>) = apply { body.container(container) }
+        fun container(container: JsonField<Container>) = apply { body.container(container) }
 
-        /** Configuration for context management operations. */
+        /**
+         * Alias for calling [container] with
+         * `Container.ofBetaContainerParams(betaContainerParams)`.
+         */
+        fun container(betaContainerParams: BetaContainerParams) = apply {
+            body.container(betaContainerParams)
+        }
+
+        /** Alias for calling [container] with `Container.ofString(string)`. */
+        fun container(string: String) = apply { body.container(string) }
+
+        /**
+         * Context management configuration.
+         *
+         * This allows you to control how Claude manages context across multiple requests, such as
+         * whether to clear function results or not.
+         */
         fun contextManagement(contextManagement: BetaContextManagementConfig?) = apply {
             body.contextManagement(contextManagement)
         }
@@ -794,7 +812,7 @@ private constructor(
          * request.
          *
          * Anthropic offers different levels of service for your API requests. See
-         * [service-tiers](https://docs.anthropic.com/en/api/service-tiers) for details.
+         * [service-tiers](https://docs.claude.com/en/api/service-tiers) for details.
          */
         fun serviceTier(serviceTier: ServiceTier) = apply { body.serviceTier(serviceTier) }
 
@@ -845,7 +863,7 @@ private constructor(
          *
          * A system prompt is a way of providing context and instructions to Claude, such as
          * specifying a particular goal or role. See our
-         * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+         * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
          */
         fun system(system: System) = apply { body.system(system) }
 
@@ -892,7 +910,7 @@ private constructor(
          * towards your `max_tokens` limit.
          *
          * See
-         * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+         * [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
          * for details.
          */
         fun thinking(thinking: BetaThinkingConfigParam) = apply { body.thinking(thinking) }
@@ -973,9 +991,9 @@ private constructor(
          *
          * There are two types of tools: **client tools** and **server tools**. The behavior
          * described below applies to client tools. For
-         * [server tools](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
+         * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
          * see their individual documentation as each has its own behavior (e.g., the
-         * [web search tool](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+         * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
          *
          * Each tool definition includes:
          * * `name`: Name of the tool.
@@ -1032,7 +1050,7 @@ private constructor(
          * more generally whenever you want the model to produce a particular JSON structure of
          * output.
          *
-         * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+         * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
          */
         fun tools(tools: List<BetaToolUnion>) = apply { body.tools(tools) }
 
@@ -1345,7 +1363,7 @@ private constructor(
         private val maxTokens: JsonField<Long>,
         private val messages: JsonField<List<BetaMessageParam>>,
         private val model: JsonField<Model>,
-        private val container: JsonField<String>,
+        private val container: JsonField<Container>,
         private val contextManagement: JsonField<BetaContextManagementConfig>,
         private val mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>,
         private val metadata: JsonField<BetaMetadata>,
@@ -1372,7 +1390,7 @@ private constructor(
             @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
             @JsonProperty("container")
             @ExcludeMissing
-            container: JsonField<String> = JsonMissing.of(),
+            container: JsonField<Container> = JsonMissing.of(),
             @JsonProperty("context_management")
             @ExcludeMissing
             contextManagement: JsonField<BetaContextManagementConfig> = JsonMissing.of(),
@@ -1430,7 +1448,7 @@ private constructor(
          * specifies the absolute maximum number of tokens to generate.
          *
          * Different models have different maximum values for this parameter. See
-         * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
+         * [models](https://docs.claude.com/en/docs/models-overview) for details.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -1486,10 +1504,10 @@ private constructor(
          * {"role": "user", "content": [{"type": "text", "text": "Hello, Claude"}]}
          * ```
          *
-         * See [input examples](https://docs.anthropic.com/en/api/messages-examples).
+         * See [input examples](https://docs.claude.com/en/api/messages-examples).
          *
          * Note that if you want to include a
-         * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
+         * [system prompt](https://docs.claude.com/en/docs/system-prompts), you can use the
          * top-level `system` parameter — there is no `"system"` role for input messages in the
          * Messages API.
          *
@@ -1516,10 +1534,13 @@ private constructor(
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun container(): Optional<String> = container.getOptional("container")
+        fun container(): Optional<Container> = container.getOptional("container")
 
         /**
-         * Configuration for context management operations.
+         * Context management configuration.
+         *
+         * This allows you to control how Claude manages context across multiple requests, such as
+         * whether to clear function results or not.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -1549,7 +1570,7 @@ private constructor(
          * request.
          *
          * Anthropic offers different levels of service for your API requests. See
-         * [service-tiers](https://docs.anthropic.com/en/api/service-tiers) for details.
+         * [service-tiers](https://docs.claude.com/en/api/service-tiers) for details.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -1577,7 +1598,7 @@ private constructor(
          *
          * A system prompt is a way of providing context and instructions to Claude, such as
          * specifying a particular goal or role. See our
-         * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+         * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -1605,7 +1626,7 @@ private constructor(
          * towards your `max_tokens` limit.
          *
          * See
-         * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+         * [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
          * for details.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -1632,9 +1653,9 @@ private constructor(
          *
          * There are two types of tools: **client tools** and **server tools**. The behavior
          * described below applies to client tools. For
-         * [server tools](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
+         * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
          * see their individual documentation as each has its own behavior (e.g., the
-         * [web search tool](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+         * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
          *
          * Each tool definition includes:
          * * `name`: Name of the tool.
@@ -1691,7 +1712,7 @@ private constructor(
          * more generally whenever you want the model to produce a particular JSON structure of
          * output.
          *
-         * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+         * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -1754,7 +1775,9 @@ private constructor(
          *
          * Unlike [container], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("container") @ExcludeMissing fun _container(): JsonField<String> = container
+        @JsonProperty("container")
+        @ExcludeMissing
+        fun _container(): JsonField<Container> = container
 
         /**
          * Returns the raw JSON value of [contextManagement].
@@ -1891,7 +1914,7 @@ private constructor(
             private var maxTokens: JsonField<Long>? = null
             private var messages: JsonField<MutableList<BetaMessageParam>>? = null
             private var model: JsonField<Model>? = null
-            private var container: JsonField<String> = JsonMissing.of()
+            private var container: JsonField<Container> = JsonMissing.of()
             private var contextManagement: JsonField<BetaContextManagementConfig> = JsonMissing.of()
             private var mcpServers: JsonField<MutableList<BetaRequestMcpServerUrlDefinition>>? =
                 null
@@ -1935,7 +1958,7 @@ private constructor(
              * specifies the absolute maximum number of tokens to generate.
              *
              * Different models have different maximum values for this parameter. See
-             * [models](https://docs.anthropic.com/en/docs/models-overview) for details.
+             * [models](https://docs.claude.com/en/docs/models-overview) for details.
              */
             fun maxTokens(maxTokens: Long) = maxTokens(JsonField.of(maxTokens))
 
@@ -1998,10 +2021,10 @@ private constructor(
              * {"role": "user", "content": [{"type": "text", "text": "Hello, Claude"}]}
              * ```
              *
-             * See [input examples](https://docs.anthropic.com/en/api/messages-examples).
+             * See [input examples](https://docs.claude.com/en/api/messages-examples).
              *
              * Note that if you want to include a
-             * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
+             * [system prompt](https://docs.claude.com/en/docs/system-prompts), you can use the
              * top-level `system` parameter — there is no `"system"` role for input messages in the
              * Messages API.
              *
@@ -2130,21 +2153,36 @@ private constructor(
             fun model(value: String) = model(Model.of(value))
 
             /** Container identifier for reuse across requests. */
-            fun container(container: String?) = container(JsonField.ofNullable(container))
+            fun container(container: Container?) = container(JsonField.ofNullable(container))
 
             /** Alias for calling [Builder.container] with `container.orElse(null)`. */
-            fun container(container: Optional<String>) = container(container.getOrNull())
+            fun container(container: Optional<Container>) = container(container.getOrNull())
 
             /**
              * Sets [Builder.container] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.container] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.container] with a well-typed [Container] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun container(container: JsonField<String>) = apply { this.container = container }
+            fun container(container: JsonField<Container>) = apply { this.container = container }
 
-            /** Configuration for context management operations. */
+            /**
+             * Alias for calling [container] with
+             * `Container.ofBetaContainerParams(betaContainerParams)`.
+             */
+            fun container(betaContainerParams: BetaContainerParams) =
+                container(Container.ofBetaContainerParams(betaContainerParams))
+
+            /** Alias for calling [container] with `Container.ofString(string)`. */
+            fun container(string: String) = container(Container.ofString(string))
+
+            /**
+             * Context management configuration.
+             *
+             * This allows you to control how Claude manages context across multiple requests, such
+             * as whether to clear function results or not.
+             */
             fun contextManagement(contextManagement: BetaContextManagementConfig?) =
                 contextManagement(JsonField.ofNullable(contextManagement))
 
@@ -2210,7 +2248,7 @@ private constructor(
              * this request.
              *
              * Anthropic offers different levels of service for your API requests. See
-             * [service-tiers](https://docs.anthropic.com/en/api/service-tiers) for details.
+             * [service-tiers](https://docs.claude.com/en/api/service-tiers) for details.
              */
             fun serviceTier(serviceTier: ServiceTier) = serviceTier(JsonField.of(serviceTier))
 
@@ -2267,7 +2305,7 @@ private constructor(
              *
              * A system prompt is a way of providing context and instructions to Claude, such as
              * specifying a particular goal or role. See our
-             * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+             * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
              */
             fun system(system: System) = system(JsonField.of(system))
 
@@ -2319,7 +2357,7 @@ private constructor(
              * towards your `max_tokens` limit.
              *
              * See
-             * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+             * [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
              * for details.
              */
             fun thinking(thinking: BetaThinkingConfigParam) = thinking(JsonField.of(thinking))
@@ -2404,9 +2442,9 @@ private constructor(
              *
              * There are two types of tools: **client tools** and **server tools**. The behavior
              * described below applies to client tools. For
-             * [server tools](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
+             * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
              * see their individual documentation as each has its own behavior (e.g., the
-             * [web search tool](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+             * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
              *
              * Each tool definition includes:
              * * `name`: Name of the tool.
@@ -2463,7 +2501,7 @@ private constructor(
              * or more generally whenever you want the model to produce a particular JSON structure
              * of output.
              *
-             * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+             * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
              */
             fun tools(tools: List<BetaToolUnion>) = tools(JsonField.of(tools))
 
@@ -2683,7 +2721,7 @@ private constructor(
             maxTokens()
             messages().forEach { it.validate() }
             model()
-            container()
+            container().ifPresent { it.validate() }
             contextManagement().ifPresent { it.validate() }
             mcpServers().ifPresent { it.forEach { it.validate() } }
             metadata().ifPresent { it.validate() }
@@ -2718,7 +2756,7 @@ private constructor(
             (if (maxTokens.asKnown().isPresent) 1 else 0) +
                 (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (model.asKnown().isPresent) 1 else 0) +
-                (if (container.asKnown().isPresent) 1 else 0) +
+                (container.asKnown().getOrNull()?.validity() ?: 0) +
                 (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
                 (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
@@ -2785,12 +2823,199 @@ private constructor(
             "Body{maxTokens=$maxTokens, messages=$messages, model=$model, container=$container, contextManagement=$contextManagement, mcpServers=$mcpServers, metadata=$metadata, serviceTier=$serviceTier, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
     }
 
+    /** Container identifier for reuse across requests. */
+    @JsonDeserialize(using = Container.Deserializer::class)
+    @JsonSerialize(using = Container.Serializer::class)
+    class Container
+    private constructor(
+        private val betaContainerParams: BetaContainerParams? = null,
+        private val string: String? = null,
+        private val _json: JsonValue? = null,
+    ) {
+
+        /** Container parameters with skills to be loaded. */
+        fun betaContainerParams(): Optional<BetaContainerParams> =
+            Optional.ofNullable(betaContainerParams)
+
+        fun string(): Optional<String> = Optional.ofNullable(string)
+
+        fun isBetaContainerParams(): Boolean = betaContainerParams != null
+
+        fun isString(): Boolean = string != null
+
+        /** Container parameters with skills to be loaded. */
+        fun asBetaContainerParams(): BetaContainerParams =
+            betaContainerParams.getOrThrow("betaContainerParams")
+
+        fun asString(): String = string.getOrThrow("string")
+
+        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+        fun <T> accept(visitor: Visitor<T>): T =
+            when {
+                betaContainerParams != null -> visitor.visitBetaContainerParams(betaContainerParams)
+                string != null -> visitor.visitString(string)
+                else -> visitor.unknown(_json)
+            }
+
+        private var validated: Boolean = false
+
+        fun validate(): Container = apply {
+            if (validated) {
+                return@apply
+            }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitBetaContainerParams(
+                        betaContainerParams: BetaContainerParams
+                    ) {
+                        betaContainerParams.validate()
+                    }
+
+                    override fun visitString(string: String) {}
+                }
+            )
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            accept(
+                object : Visitor<Int> {
+                    override fun visitBetaContainerParams(
+                        betaContainerParams: BetaContainerParams
+                    ) = betaContainerParams.validity()
+
+                    override fun visitString(string: String) = 1
+
+                    override fun unknown(json: JsonValue?) = 0
+                }
+            )
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Container &&
+                betaContainerParams == other.betaContainerParams &&
+                string == other.string
+        }
+
+        override fun hashCode(): Int = Objects.hash(betaContainerParams, string)
+
+        override fun toString(): String =
+            when {
+                betaContainerParams != null -> "Container{betaContainerParams=$betaContainerParams}"
+                string != null -> "Container{string=$string}"
+                _json != null -> "Container{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid Container")
+            }
+
+        companion object {
+
+            /** Container parameters with skills to be loaded. */
+            @JvmStatic
+            fun ofBetaContainerParams(betaContainerParams: BetaContainerParams) =
+                Container(betaContainerParams = betaContainerParams)
+
+            @JvmStatic fun ofString(string: String) = Container(string = string)
+        }
+
+        /**
+         * An interface that defines how to map each variant of [Container] to a value of type [T].
+         */
+        interface Visitor<out T> {
+
+            /** Container parameters with skills to be loaded. */
+            fun visitBetaContainerParams(betaContainerParams: BetaContainerParams): T
+
+            fun visitString(string: String): T
+
+            /**
+             * Maps an unknown variant of [Container] to a value of type [T].
+             *
+             * An instance of [Container] can contain an unknown variant if it was deserialized from
+             * data that doesn't match any known variant. For example, if the SDK is on an older
+             * version than the API, then the API may respond with new variants that the SDK is
+             * unaware of.
+             *
+             * @throws AnthropicInvalidDataException in the default implementation.
+             */
+            fun unknown(json: JsonValue?): T {
+                throw AnthropicInvalidDataException("Unknown Container: $json")
+            }
+        }
+
+        internal class Deserializer : BaseDeserializer<Container>(Container::class) {
+
+            override fun ObjectCodec.deserialize(node: JsonNode): Container {
+                val json = JsonValue.fromJsonNode(node)
+
+                val bestMatches =
+                    sequenceOf(
+                            tryDeserialize(node, jacksonTypeRef<BetaContainerParams>())?.let {
+                                Container(betaContainerParams = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<String>())?.let {
+                                Container(string = it, _json = json)
+                            },
+                        )
+                        .filterNotNull()
+                        .allMaxBy { it.validity() }
+                        .toList()
+                return when (bestMatches.size) {
+                    // This can happen if what we're deserializing is completely incompatible with
+                    // all the possible variants (e.g. deserializing from array).
+                    0 -> Container(_json = json)
+                    1 -> bestMatches.single()
+                    // If there's more than one match with the highest validity, then use the first
+                    // completely valid match, or simply the first match if none are completely
+                    // valid.
+                    else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+                }
+            }
+        }
+
+        internal class Serializer : BaseSerializer<Container>(Container::class) {
+
+            override fun serialize(
+                value: Container,
+                generator: JsonGenerator,
+                provider: SerializerProvider,
+            ) {
+                when {
+                    value.betaContainerParams != null ->
+                        generator.writeObject(value.betaContainerParams)
+                    value.string != null -> generator.writeObject(value.string)
+                    value._json != null -> generator.writeObject(value._json)
+                    else -> throw IllegalStateException("Invalid Container")
+                }
+            }
+        }
+    }
+
     /**
      * Determines whether to use priority capacity (if available) or standard capacity for this
      * request.
      *
      * Anthropic offers different levels of service for your API requests. See
-     * [service-tiers](https://docs.anthropic.com/en/api/service-tiers) for details.
+     * [service-tiers](https://docs.claude.com/en/api/service-tiers) for details.
      */
     class ServiceTier @JsonCreator private constructor(private val value: JsonField<String>) :
         Enum {
@@ -2927,7 +3152,7 @@ private constructor(
      *
      * A system prompt is a way of providing context and instructions to Claude, such as specifying
      * a particular goal or role. See our
-     * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+     * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
      */
     @JsonDeserialize(using = System.Deserializer::class)
     @JsonSerialize(using = System.Serializer::class)
