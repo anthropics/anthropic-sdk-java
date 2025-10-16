@@ -22,6 +22,13 @@ internal class BetaRawMessageStartEventTest {
                             BetaContainer.builder()
                                 .id("id")
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .addSkill(
+                                    BetaSkill.builder()
+                                        .skillId("x")
+                                        .type(BetaSkill.Type.ANTHROPIC)
+                                        .version("x")
+                                        .build()
+                                )
                                 .build()
                         )
                         .addContent(
@@ -85,6 +92,13 @@ internal class BetaRawMessageStartEventTest {
                         BetaContainer.builder()
                             .id("id")
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .addSkill(
+                                BetaSkill.builder()
+                                    .skillId("x")
+                                    .type(BetaSkill.Type.ANTHROPIC)
+                                    .version("x")
+                                    .build()
+                            )
                             .build()
                     )
                     .addContent(
@@ -152,6 +166,13 @@ internal class BetaRawMessageStartEventTest {
                             BetaContainer.builder()
                                 .id("id")
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .addSkill(
+                                    BetaSkill.builder()
+                                        .skillId("x")
+                                        .type(BetaSkill.Type.ANTHROPIC)
+                                        .version("x")
+                                        .build()
+                                )
                                 .build()
                         )
                         .addContent(

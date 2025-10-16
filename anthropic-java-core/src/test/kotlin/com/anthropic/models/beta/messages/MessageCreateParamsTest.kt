@@ -19,7 +19,18 @@ internal class MessageCreateParamsTest {
             .maxTokens(1024L)
             .addUserMessage("Hello, world")
             .model(Model.CLAUDE_3_7_SONNET_LATEST)
-            .container("container")
+            .container(
+                BetaContainerParams.builder()
+                    .id("id")
+                    .addSkill(
+                        BetaSkillParams.builder()
+                            .skillId("x")
+                            .type(BetaSkillParams.Type.ANTHROPIC)
+                            .version("x")
+                            .build()
+                    )
+                    .build()
+            )
             .contextManagement(
                 BetaContextManagementConfig.builder()
                     .addEdit(
@@ -121,7 +132,18 @@ internal class MessageCreateParamsTest {
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_7_SONNET_LATEST)
-                .container("container")
+                .container(
+                    BetaContainerParams.builder()
+                        .id("id")
+                        .addSkill(
+                            BetaSkillParams.builder()
+                                .skillId("x")
+                                .type(BetaSkillParams.Type.ANTHROPIC)
+                                .version("x")
+                                .build()
+                        )
+                        .build()
+                )
                 .contextManagement(
                     BetaContextManagementConfig.builder()
                         .addEdit(
@@ -248,7 +270,18 @@ internal class MessageCreateParamsTest {
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_3_7_SONNET_LATEST)
-                .container("container")
+                .container(
+                    BetaContainerParams.builder()
+                        .id("id")
+                        .addSkill(
+                            BetaSkillParams.builder()
+                                .skillId("x")
+                                .type(BetaSkillParams.Type.ANTHROPIC)
+                                .version("x")
+                                .build()
+                        )
+                        .build()
+                )
                 .contextManagement(
                     BetaContextManagementConfig.builder()
                         .addEdit(
@@ -356,7 +389,21 @@ internal class MessageCreateParamsTest {
                     .build()
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
-        assertThat(body.container()).contains("container")
+        assertThat(body.container())
+            .contains(
+                MessageCreateParams.Container.ofBetaContainerParams(
+                    BetaContainerParams.builder()
+                        .id("id")
+                        .addSkill(
+                            BetaSkillParams.builder()
+                                .skillId("x")
+                                .type(BetaSkillParams.Type.ANTHROPIC)
+                                .version("x")
+                                .build()
+                        )
+                        .build()
+                )
+            )
         assertThat(body.contextManagement())
             .contains(
                 BetaContextManagementConfig.builder()

@@ -15,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 
-/** Results for clear_tool_uses_20250919 edit. */
 class BetaClearToolUses20250919EditResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

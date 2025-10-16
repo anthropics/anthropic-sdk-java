@@ -95,10 +95,10 @@ private constructor(
      * {"role": "user", "content": [{"type": "text", "text": "Hello, Claude"}]}
      * ```
      *
-     * See [input examples](https://docs.anthropic.com/en/api/messages-examples).
+     * See [input examples](https://docs.claude.com/en/api/messages-examples).
      *
      * Note that if you want to include a
-     * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the top-level
+     * [system prompt](https://docs.claude.com/en/docs/system-prompts), you can use the top-level
      * `system` parameter — there is no `"system"` role for input messages in the Messages API.
      *
      * There is a limit of 100,000 messages in a single request.
@@ -123,7 +123,7 @@ private constructor(
      *
      * A system prompt is a way of providing context and instructions to Claude, such as specifying
      * a particular goal or role. See our
-     * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+     * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -137,8 +137,7 @@ private constructor(
      * before the final answer. Requires a minimum budget of 1,024 tokens and counts towards your
      * `max_tokens` limit.
      *
-     * See
-     * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+     * See [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
      * for details.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -165,9 +164,9 @@ private constructor(
      *
      * There are two types of tools: **client tools** and **server tools**. The behavior described
      * below applies to client tools. For
-     * [server tools](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
+     * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
      * see their individual documentation as each has its own behavior (e.g., the
-     * [web search tool](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+     * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
      *
      * Each tool definition includes:
      * * `name`: Name of the tool.
@@ -223,7 +222,7 @@ private constructor(
      * Tools can be used for workflows that include running client-side tools and functions, or more
      * generally whenever you want the model to produce a particular JSON structure of output.
      *
-     * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+     * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -373,10 +372,10 @@ private constructor(
          * {"role": "user", "content": [{"type": "text", "text": "Hello, Claude"}]}
          * ```
          *
-         * See [input examples](https://docs.anthropic.com/en/api/messages-examples).
+         * See [input examples](https://docs.claude.com/en/api/messages-examples).
          *
          * Note that if you want to include a
-         * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
+         * [system prompt](https://docs.claude.com/en/docs/system-prompts), you can use the
          * top-level `system` parameter — there is no `"system"` role for input messages in the
          * Messages API.
          *
@@ -477,7 +476,7 @@ private constructor(
          *
          * A system prompt is a way of providing context and instructions to Claude, such as
          * specifying a particular goal or role. See our
-         * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+         * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
          */
         fun system(system: System) = apply { body.system(system) }
 
@@ -505,7 +504,7 @@ private constructor(
          * towards your `max_tokens` limit.
          *
          * See
-         * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+         * [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
          * for details.
          */
         fun thinking(thinking: ThinkingConfigParam) = apply { body.thinking(thinking) }
@@ -582,9 +581,9 @@ private constructor(
          *
          * There are two types of tools: **client tools** and **server tools**. The behavior
          * described below applies to client tools. For
-         * [server tools](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
+         * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
          * see their individual documentation as each has its own behavior (e.g., the
-         * [web search tool](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+         * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
          *
          * Each tool definition includes:
          * * `name`: Name of the tool.
@@ -641,7 +640,7 @@ private constructor(
          * more generally whenever you want the model to produce a particular JSON structure of
          * output.
          *
-         * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+         * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
          */
         fun tools(tools: List<MessageCountTokensTool>) = apply { body.tools(tools) }
 
@@ -925,10 +924,10 @@ private constructor(
          * {"role": "user", "content": [{"type": "text", "text": "Hello, Claude"}]}
          * ```
          *
-         * See [input examples](https://docs.anthropic.com/en/api/messages-examples).
+         * See [input examples](https://docs.claude.com/en/api/messages-examples).
          *
          * Note that if you want to include a
-         * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
+         * [system prompt](https://docs.claude.com/en/docs/system-prompts), you can use the
          * top-level `system` parameter — there is no `"system"` role for input messages in the
          * Messages API.
          *
@@ -954,7 +953,7 @@ private constructor(
          *
          * A system prompt is a way of providing context and instructions to Claude, such as
          * specifying a particular goal or role. See our
-         * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+         * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -969,7 +968,7 @@ private constructor(
          * towards your `max_tokens` limit.
          *
          * See
-         * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+         * [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
          * for details.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -996,9 +995,9 @@ private constructor(
          *
          * There are two types of tools: **client tools** and **server tools**. The behavior
          * described below applies to client tools. For
-         * [server tools](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
+         * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
          * see their individual documentation as each has its own behavior (e.g., the
-         * [web search tool](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+         * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
          *
          * Each tool definition includes:
          * * `name`: Name of the tool.
@@ -1055,7 +1054,7 @@ private constructor(
          * more generally whenever you want the model to produce a particular JSON structure of
          * output.
          *
-         * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+         * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -1210,10 +1209,10 @@ private constructor(
              * {"role": "user", "content": [{"type": "text", "text": "Hello, Claude"}]}
              * ```
              *
-             * See [input examples](https://docs.anthropic.com/en/api/messages-examples).
+             * See [input examples](https://docs.claude.com/en/api/messages-examples).
              *
              * Note that if you want to include a
-             * [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use the
+             * [system prompt](https://docs.claude.com/en/docs/system-prompts), you can use the
              * top-level `system` parameter — there is no `"system"` role for input messages in the
              * Messages API.
              *
@@ -1332,7 +1331,7 @@ private constructor(
              *
              * A system prompt is a way of providing context and instructions to Claude, such as
              * specifying a particular goal or role. See our
-             * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+             * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
              */
             fun system(system: System) = system(JsonField.of(system))
 
@@ -1360,7 +1359,7 @@ private constructor(
              * towards your `max_tokens` limit.
              *
              * See
-             * [extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+             * [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
              * for details.
              */
             fun thinking(thinking: ThinkingConfigParam) = thinking(JsonField.of(thinking))
@@ -1445,9 +1444,9 @@ private constructor(
              *
              * There are two types of tools: **client tools** and **server tools**. The behavior
              * described below applies to client tools. For
-             * [server tools](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
+             * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
              * see their individual documentation as each has its own behavior (e.g., the
-             * [web search tool](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+             * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
              *
              * Each tool definition includes:
              * * `name`: Name of the tool.
@@ -1504,7 +1503,7 @@ private constructor(
              * or more generally whenever you want the model to produce a particular JSON structure
              * of output.
              *
-             * See our [guide](https://docs.anthropic.com/en/docs/tool-use) for more details.
+             * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
              */
             fun tools(tools: List<MessageCountTokensTool>) = tools(JsonField.of(tools))
 
@@ -1682,7 +1681,7 @@ private constructor(
      *
      * A system prompt is a way of providing context and instructions to Claude, such as specifying
      * a particular goal or role. See our
-     * [guide to system prompts](https://docs.anthropic.com/en/docs/system-prompts).
+     * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
      */
     @JsonDeserialize(using = System.Deserializer::class)
     @JsonSerialize(using = System.Serializer::class)
