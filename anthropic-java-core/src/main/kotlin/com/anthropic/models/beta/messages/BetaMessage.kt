@@ -132,7 +132,9 @@ private constructor(
     fun content(): List<BetaContentBlock> = content.getRequired("content")
 
     /**
-     * Information about context management operations applied during the request.
+     * Context management response.
+     *
+     * Information about context management strategies applied during the request.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -545,7 +547,11 @@ private constructor(
         fun addContainerUploadContent(fileId: String) =
             addContent(BetaContainerUploadBlock.builder().fileId(fileId).build())
 
-        /** Information about context management operations applied during the request. */
+        /**
+         * Context management response.
+         *
+         * Information about context management strategies applied during the request.
+         */
         fun contextManagement(contextManagement: BetaContextManagementResponse?) =
             contextManagement(JsonField.ofNullable(contextManagement))
 

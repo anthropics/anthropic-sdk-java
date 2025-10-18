@@ -8,11 +8,13 @@ import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.messages.BetaCacheControlEphemeral
 import com.anthropic.models.beta.messages.BetaCitationCharLocationParam
 import com.anthropic.models.beta.messages.BetaClearToolUses20250919Edit
+import com.anthropic.models.beta.messages.BetaContainerParams
 import com.anthropic.models.beta.messages.BetaContextManagementConfig
 import com.anthropic.models.beta.messages.BetaInputTokensClearAtLeast
 import com.anthropic.models.beta.messages.BetaMetadata
 import com.anthropic.models.beta.messages.BetaRequestMcpServerToolConfiguration
 import com.anthropic.models.beta.messages.BetaRequestMcpServerUrlDefinition
+import com.anthropic.models.beta.messages.BetaSkillParams
 import com.anthropic.models.beta.messages.BetaTextBlockParam
 import com.anthropic.models.beta.messages.BetaTool
 import com.anthropic.models.beta.messages.BetaToolChoiceAuto
@@ -35,7 +37,18 @@ internal class BatchCreateParamsTest {
                             .maxTokens(1024L)
                             .addUserMessage("Hello, world")
                             .model(Model.CLAUDE_3_7_SONNET_LATEST)
-                            .container("container")
+                            .container(
+                                BetaContainerParams.builder()
+                                    .id("id")
+                                    .addSkill(
+                                        BetaSkillParams.builder()
+                                            .skillId("x")
+                                            .type(BetaSkillParams.Type.ANTHROPIC)
+                                            .version("x")
+                                            .build()
+                                    )
+                                    .build()
+                            )
                             .contextManagement(
                                 BetaContextManagementConfig.builder()
                                     .addEdit(
@@ -157,7 +170,18 @@ internal class BatchCreateParamsTest {
                                 .maxTokens(1024L)
                                 .addUserMessage("Hello, world")
                                 .model(Model.CLAUDE_3_7_SONNET_LATEST)
-                                .container("container")
+                                .container(
+                                    BetaContainerParams.builder()
+                                        .id("id")
+                                        .addSkill(
+                                            BetaSkillParams.builder()
+                                                .skillId("x")
+                                                .type(BetaSkillParams.Type.ANTHROPIC)
+                                                .version("x")
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .contextManagement(
                                     BetaContextManagementConfig.builder()
                                         .addEdit(
@@ -311,7 +335,18 @@ internal class BatchCreateParamsTest {
                                 .maxTokens(1024L)
                                 .addUserMessage("Hello, world")
                                 .model(Model.CLAUDE_3_7_SONNET_LATEST)
-                                .container("container")
+                                .container(
+                                    BetaContainerParams.builder()
+                                        .id("id")
+                                        .addSkill(
+                                            BetaSkillParams.builder()
+                                                .skillId("x")
+                                                .type(BetaSkillParams.Type.ANTHROPIC)
+                                                .version("x")
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .contextManagement(
                                     BetaContextManagementConfig.builder()
                                         .addEdit(
@@ -432,7 +467,18 @@ internal class BatchCreateParamsTest {
                             .maxTokens(1024L)
                             .addUserMessage("Hello, world")
                             .model(Model.CLAUDE_3_7_SONNET_LATEST)
-                            .container("container")
+                            .container(
+                                BetaContainerParams.builder()
+                                    .id("id")
+                                    .addSkill(
+                                        BetaSkillParams.builder()
+                                            .skillId("x")
+                                            .type(BetaSkillParams.Type.ANTHROPIC)
+                                            .version("x")
+                                            .build()
+                                    )
+                                    .build()
+                            )
                             .contextManagement(
                                 BetaContextManagementConfig.builder()
                                     .addEdit(

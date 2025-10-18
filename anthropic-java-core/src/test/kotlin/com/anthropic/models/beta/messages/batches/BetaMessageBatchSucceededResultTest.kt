@@ -10,6 +10,7 @@ import com.anthropic.models.beta.messages.BetaContainer
 import com.anthropic.models.beta.messages.BetaContextManagementResponse
 import com.anthropic.models.beta.messages.BetaMessage
 import com.anthropic.models.beta.messages.BetaServerToolUsage
+import com.anthropic.models.beta.messages.BetaSkill
 import com.anthropic.models.beta.messages.BetaStopReason
 import com.anthropic.models.beta.messages.BetaTextBlock
 import com.anthropic.models.beta.messages.BetaUsage
@@ -32,6 +33,13 @@ internal class BetaMessageBatchSucceededResultTest {
                             BetaContainer.builder()
                                 .id("id")
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .addSkill(
+                                    BetaSkill.builder()
+                                        .skillId("x")
+                                        .type(BetaSkill.Type.ANTHROPIC)
+                                        .version("x")
+                                        .build()
+                                )
                                 .build()
                         )
                         .addContent(
@@ -95,6 +103,13 @@ internal class BetaMessageBatchSucceededResultTest {
                         BetaContainer.builder()
                             .id("id")
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .addSkill(
+                                BetaSkill.builder()
+                                    .skillId("x")
+                                    .type(BetaSkill.Type.ANTHROPIC)
+                                    .version("x")
+                                    .build()
+                            )
                             .build()
                     )
                     .addContent(
@@ -162,6 +177,13 @@ internal class BetaMessageBatchSucceededResultTest {
                             BetaContainer.builder()
                                 .id("id")
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .addSkill(
+                                    BetaSkill.builder()
+                                        .skillId("x")
+                                        .type(BetaSkill.Type.ANTHROPIC)
+                                        .version("x")
+                                        .build()
+                                )
                                 .build()
                         )
                         .addContent(

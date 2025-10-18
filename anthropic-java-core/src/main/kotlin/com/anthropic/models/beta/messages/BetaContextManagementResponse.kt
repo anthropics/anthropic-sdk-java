@@ -18,7 +18,6 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** Information about context management operations applied during the request. */
 class BetaContextManagementResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

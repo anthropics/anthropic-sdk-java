@@ -40,7 +40,7 @@ private constructor(
     ) : this(contextManagement, delta, type, usage, mutableMapOf())
 
     /**
-     * Information about context management operations applied during the request.
+     * Information about context management strategies applied during the request
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -155,7 +155,7 @@ private constructor(
             additionalProperties = betaRawMessageDeltaEvent.additionalProperties.toMutableMap()
         }
 
-        /** Information about context management operations applied during the request. */
+        /** Information about context management strategies applied during the request */
         fun contextManagement(contextManagement: BetaContextManagementResponse?) =
             contextManagement(JsonField.ofNullable(contextManagement))
 

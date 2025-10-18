@@ -6,6 +6,7 @@ import com.anthropic.core.ClientOptions
 import com.anthropic.services.async.beta.FileServiceAsync
 import com.anthropic.services.async.beta.MessageServiceAsync
 import com.anthropic.services.async.beta.ModelServiceAsync
+import com.anthropic.services.async.beta.SkillServiceAsync
 import java.util.function.Consumer
 
 interface BetaServiceAsync {
@@ -28,6 +29,8 @@ interface BetaServiceAsync {
 
     fun files(): FileServiceAsync
 
+    fun skills(): SkillServiceAsync
+
     /** A view of [BetaServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
@@ -43,5 +46,7 @@ interface BetaServiceAsync {
         fun messages(): MessageServiceAsync.WithRawResponse
 
         fun files(): FileServiceAsync.WithRawResponse
+
+        fun skills(): SkillServiceAsync.WithRawResponse
     }
 }

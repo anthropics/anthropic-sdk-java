@@ -9,6 +9,8 @@ import com.anthropic.services.blocking.beta.MessageService
 import com.anthropic.services.blocking.beta.MessageServiceImpl
 import com.anthropic.services.blocking.beta.ModelService
 import com.anthropic.services.blocking.beta.ModelServiceImpl
+import com.anthropic.services.blocking.beta.SkillService
+import com.anthropic.services.blocking.beta.SkillServiceImpl
 import java.util.function.Consumer
 
 class BetaServiceImpl internal constructor(private val clientOptions: ClientOptions) : BetaService {
@@ -23,6 +25,8 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
 
     private val files: FileService by lazy { FileServiceImpl(clientOptions) }
 
+    private val skills: SkillService by lazy { SkillServiceImpl(clientOptions) }
+
     override fun withRawResponse(): BetaService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BetaService =
@@ -33,6 +37,8 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
     override fun messages(): MessageService = messages
 
     override fun files(): FileService = files
+
+    override fun skills(): SkillService = skills
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         BetaService.WithRawResponse {
@@ -49,6 +55,10 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
             FileServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val skills: SkillService.WithRawResponse by lazy {
+            SkillServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): BetaService.WithRawResponse =
@@ -61,5 +71,7 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
         override fun messages(): MessageService.WithRawResponse = messages
 
         override fun files(): FileService.WithRawResponse = files
+
+        override fun skills(): SkillService.WithRawResponse = skills
     }
 }
