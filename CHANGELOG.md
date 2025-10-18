@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.10.0 (2025-10-18)
+
+Full Changelog: [v2.9.0...v2.10.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.9.0...v2.10.0)
+
+### Features
+
+* **api:** adding support for agent skills ([2d74866](https://github.com/anthropics/anthropic-sdk-java/commit/2d748660c0a77ea19952598d662a56bc7f30a278))
+
 ## 2.9.0 (2025-10-15)
 
 Full Changelog: [v2.8.1...v2.9.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.8.1...v2.9.0)
