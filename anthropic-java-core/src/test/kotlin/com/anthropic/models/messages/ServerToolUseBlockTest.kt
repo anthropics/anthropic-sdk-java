@@ -15,11 +15,20 @@ internal class ServerToolUseBlockTest {
         val serverToolUseBlock =
             ServerToolUseBlock.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    ServerToolUseBlock.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .build()
 
         assertThat(serverToolUseBlock.id()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
-        assertThat(serverToolUseBlock._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
+        assertThat(serverToolUseBlock.input())
+            .isEqualTo(
+                ServerToolUseBlock.Input.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
     }
 
     @Test
@@ -28,7 +37,11 @@ internal class ServerToolUseBlockTest {
         val serverToolUseBlock =
             ServerToolUseBlock.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    ServerToolUseBlock.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .build()
 
         val roundtrippedServerToolUseBlock =

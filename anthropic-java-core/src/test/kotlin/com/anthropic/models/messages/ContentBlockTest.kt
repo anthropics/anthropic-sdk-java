@@ -135,7 +135,11 @@ internal class ContentBlockTest {
         val toolUse =
             ToolUseBlock.builder()
                 .id("id")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    ToolUseBlock.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name("x")
                 .build()
 
@@ -156,7 +160,11 @@ internal class ContentBlockTest {
             ContentBlock.ofToolUse(
                 ToolUseBlock.builder()
                     .id("id")
-                    .input(JsonValue.from(mapOf<String, Any>()))
+                    .input(
+                        ToolUseBlock.Input.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                     .name("x")
                     .build()
             )
@@ -175,7 +183,11 @@ internal class ContentBlockTest {
         val serverToolUse =
             ServerToolUseBlock.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    ServerToolUseBlock.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .build()
 
         val contentBlock = ContentBlock.ofServerToolUse(serverToolUse)
@@ -195,7 +207,11 @@ internal class ContentBlockTest {
             ContentBlock.ofServerToolUse(
                 ServerToolUseBlock.builder()
                     .id("srvtoolu_SQfNkl1n_JR_")
-                    .input(JsonValue.from(mapOf<String, Any>()))
+                    .input(
+                        ServerToolUseBlock.Input.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                     .build()
             )
 

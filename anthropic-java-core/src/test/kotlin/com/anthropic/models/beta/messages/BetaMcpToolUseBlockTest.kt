@@ -15,13 +15,22 @@ internal class BetaMcpToolUseBlockTest {
         val betaMcpToolUseBlock =
             BetaMcpToolUseBlock.builder()
                 .id("id")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    BetaMcpToolUseBlock.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name("name")
                 .serverName("server_name")
                 .build()
 
         assertThat(betaMcpToolUseBlock.id()).isEqualTo("id")
-        assertThat(betaMcpToolUseBlock._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
+        assertThat(betaMcpToolUseBlock.input())
+            .isEqualTo(
+                BetaMcpToolUseBlock.Input.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
         assertThat(betaMcpToolUseBlock.name()).isEqualTo("name")
         assertThat(betaMcpToolUseBlock.serverName()).isEqualTo("server_name")
     }
@@ -32,7 +41,11 @@ internal class BetaMcpToolUseBlockTest {
         val betaMcpToolUseBlock =
             BetaMcpToolUseBlock.builder()
                 .id("id")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    BetaMcpToolUseBlock.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name("name")
                 .serverName("server_name")
                 .build()

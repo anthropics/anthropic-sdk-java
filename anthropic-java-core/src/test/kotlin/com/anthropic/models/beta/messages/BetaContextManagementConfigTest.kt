@@ -27,13 +27,15 @@ internal class BetaContextManagementConfigTest {
 
         assertThat(betaContextManagementConfig.edits().getOrNull())
             .containsExactly(
-                BetaClearToolUses20250919Edit.builder()
-                    .clearAtLeast(BetaInputTokensClearAtLeast.builder().value(0L).build())
-                    .clearToolInputs(true)
-                    .addExcludeTool("string")
-                    .keep(BetaToolUsesKeep.builder().value(0L).build())
-                    .inputTokensTrigger(1L)
-                    .build()
+                BetaContextManagementConfig.Edit.ofClearToolUses20250919(
+                    BetaClearToolUses20250919Edit.builder()
+                        .clearAtLeast(BetaInputTokensClearAtLeast.builder().value(0L).build())
+                        .clearToolInputs(true)
+                        .addExcludeTool("string")
+                        .keep(BetaToolUsesKeep.builder().value(0L).build())
+                        .inputTokensTrigger(1L)
+                        .build()
+                )
             )
     }
 

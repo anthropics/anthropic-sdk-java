@@ -15,12 +15,21 @@ internal class BetaToolUseBlockTest {
         val betaToolUseBlock =
             BetaToolUseBlock.builder()
                 .id("id")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    BetaToolUseBlock.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name("x")
                 .build()
 
         assertThat(betaToolUseBlock.id()).isEqualTo("id")
-        assertThat(betaToolUseBlock._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
+        assertThat(betaToolUseBlock.input())
+            .isEqualTo(
+                BetaToolUseBlock.Input.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
         assertThat(betaToolUseBlock.name()).isEqualTo("x")
     }
 
@@ -30,7 +39,11 @@ internal class BetaToolUseBlockTest {
         val betaToolUseBlock =
             BetaToolUseBlock.builder()
                 .id("id")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    BetaToolUseBlock.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name("x")
                 .build()
 

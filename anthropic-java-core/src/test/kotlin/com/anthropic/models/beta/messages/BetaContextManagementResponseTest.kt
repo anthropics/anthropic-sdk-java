@@ -23,10 +23,12 @@ internal class BetaContextManagementResponseTest {
 
         assertThat(betaContextManagementResponse.appliedEdits())
             .containsExactly(
-                BetaClearToolUses20250919EditResponse.builder()
-                    .clearedInputTokens(0L)
-                    .clearedToolUses(0L)
-                    .build()
+                BetaContextManagementResponse.AppliedEdit.ofClearToolUses20250919(
+                    BetaClearToolUses20250919EditResponse.builder()
+                        .clearedInputTokens(0L)
+                        .clearedToolUses(0L)
+                        .build()
+                )
             )
     }
 

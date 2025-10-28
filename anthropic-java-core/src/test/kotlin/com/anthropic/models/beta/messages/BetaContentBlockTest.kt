@@ -159,7 +159,11 @@ internal class BetaContentBlockTest {
         val toolUse =
             BetaToolUseBlock.builder()
                 .id("id")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    BetaToolUseBlock.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name("x")
                 .build()
 
@@ -187,7 +191,11 @@ internal class BetaContentBlockTest {
             BetaContentBlock.ofToolUse(
                 BetaToolUseBlock.builder()
                     .id("id")
-                    .input(JsonValue.from(mapOf<String, Any>()))
+                    .input(
+                        BetaToolUseBlock.Input.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                     .name("x")
                     .build()
             )
@@ -206,7 +214,11 @@ internal class BetaContentBlockTest {
         val serverToolUse =
             BetaServerToolUseBlock.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    BetaServerToolUseBlock.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name(BetaServerToolUseBlock.Name.WEB_SEARCH)
                 .build()
 
@@ -234,7 +246,11 @@ internal class BetaContentBlockTest {
             BetaContentBlock.ofServerToolUse(
                 BetaServerToolUseBlock.builder()
                     .id("srvtoolu_SQfNkl1n_JR_")
-                    .input(JsonValue.from(mapOf<String, Any>()))
+                    .input(
+                        BetaServerToolUseBlock.Input.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                     .name(BetaServerToolUseBlock.Name.WEB_SEARCH)
                     .build()
             )
@@ -533,7 +549,11 @@ internal class BetaContentBlockTest {
         val mcpToolUse =
             BetaMcpToolUseBlock.builder()
                 .id("id")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    BetaMcpToolUseBlock.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name("name")
                 .serverName("server_name")
                 .build()
@@ -562,7 +582,11 @@ internal class BetaContentBlockTest {
             BetaContentBlock.ofMcpToolUse(
                 BetaMcpToolUseBlock.builder()
                     .id("id")
-                    .input(JsonValue.from(mapOf<String, Any>()))
+                    .input(
+                        BetaMcpToolUseBlock.Input.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                     .name("name")
                     .serverName("server_name")
                     .build()

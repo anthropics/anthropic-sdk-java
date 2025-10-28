@@ -358,7 +358,11 @@ internal class ContentBlockParamTest {
         val toolUse =
             ToolUseBlockParam.builder()
                 .id("id")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    ToolUseBlockParam.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name("x")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
@@ -386,7 +390,11 @@ internal class ContentBlockParamTest {
             ContentBlockParam.ofToolUse(
                 ToolUseBlockParam.builder()
                     .id("id")
-                    .input(JsonValue.from(mapOf<String, Any>()))
+                    .input(
+                        ToolUseBlockParam.Input.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                     .name("x")
                     .cacheControl(
                         CacheControlEphemeral.builder()
@@ -462,7 +470,11 @@ internal class ContentBlockParamTest {
         val serverToolUse =
             ServerToolUseBlockParam.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    ServerToolUseBlockParam.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
@@ -489,7 +501,11 @@ internal class ContentBlockParamTest {
             ContentBlockParam.ofServerToolUse(
                 ServerToolUseBlockParam.builder()
                     .id("srvtoolu_SQfNkl1n_JR_")
-                    .input(JsonValue.from(mapOf<String, Any>()))
+                    .input(
+                        ServerToolUseBlockParam.Input.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                     .cacheControl(
                         CacheControlEphemeral.builder()
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)

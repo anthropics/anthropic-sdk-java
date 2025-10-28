@@ -15,7 +15,11 @@ internal class BetaServerToolUseBlockParamTest {
         val betaServerToolUseBlockParam =
             BetaServerToolUseBlockParam.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    BetaServerToolUseBlockParam.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name(BetaServerToolUseBlockParam.Name.WEB_SEARCH)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
@@ -25,8 +29,12 @@ internal class BetaServerToolUseBlockParamTest {
                 .build()
 
         assertThat(betaServerToolUseBlockParam.id()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
-        assertThat(betaServerToolUseBlockParam._input())
-            .isEqualTo(JsonValue.from(mapOf<String, Any>()))
+        assertThat(betaServerToolUseBlockParam.input())
+            .isEqualTo(
+                BetaServerToolUseBlockParam.Input.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
         assertThat(betaServerToolUseBlockParam.name())
             .isEqualTo(BetaServerToolUseBlockParam.Name.WEB_SEARCH)
         assertThat(betaServerToolUseBlockParam.cacheControl())
@@ -43,7 +51,11 @@ internal class BetaServerToolUseBlockParamTest {
         val betaServerToolUseBlockParam =
             BetaServerToolUseBlockParam.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    BetaServerToolUseBlockParam.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name(BetaServerToolUseBlockParam.Name.WEB_SEARCH)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
