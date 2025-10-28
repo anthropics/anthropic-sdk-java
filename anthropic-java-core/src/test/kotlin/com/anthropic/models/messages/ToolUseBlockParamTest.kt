@@ -15,7 +15,11 @@ internal class ToolUseBlockParamTest {
         val toolUseBlockParam =
             ToolUseBlockParam.builder()
                 .id("id")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    ToolUseBlockParam.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name("x")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
@@ -23,7 +27,12 @@ internal class ToolUseBlockParamTest {
                 .build()
 
         assertThat(toolUseBlockParam.id()).isEqualTo("id")
-        assertThat(toolUseBlockParam._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
+        assertThat(toolUseBlockParam.input())
+            .isEqualTo(
+                ToolUseBlockParam.Input.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
         assertThat(toolUseBlockParam.name()).isEqualTo("x")
         assertThat(toolUseBlockParam.cacheControl())
             .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
@@ -35,7 +44,11 @@ internal class ToolUseBlockParamTest {
         val toolUseBlockParam =
             ToolUseBlockParam.builder()
                 .id("id")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    ToolUseBlockParam.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name("x")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()

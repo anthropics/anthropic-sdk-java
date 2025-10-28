@@ -408,7 +408,11 @@ internal class BetaContentBlockParamTest {
         val toolUse =
             BetaToolUseBlockParam.builder()
                 .id("id")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    BetaToolUseBlockParam.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name("x")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
@@ -445,7 +449,11 @@ internal class BetaContentBlockParamTest {
             BetaContentBlockParam.ofToolUse(
                 BetaToolUseBlockParam.builder()
                     .id("id")
-                    .input(JsonValue.from(mapOf<String, Any>()))
+                    .input(
+                        BetaToolUseBlockParam.Input.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                     .name("x")
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
@@ -530,7 +538,11 @@ internal class BetaContentBlockParamTest {
         val serverToolUse =
             BetaServerToolUseBlockParam.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    BetaServerToolUseBlockParam.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name(BetaServerToolUseBlockParam.Name.WEB_SEARCH)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
@@ -567,7 +579,11 @@ internal class BetaContentBlockParamTest {
             BetaContentBlockParam.ofServerToolUse(
                 BetaServerToolUseBlockParam.builder()
                     .id("srvtoolu_SQfNkl1n_JR_")
-                    .input(JsonValue.from(mapOf<String, Any>()))
+                    .input(
+                        BetaServerToolUseBlockParam.Input.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                     .name(BetaServerToolUseBlockParam.Name.WEB_SEARCH)
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
@@ -957,7 +973,11 @@ internal class BetaContentBlockParamTest {
         val mcpToolUse =
             BetaMcpToolUseBlockParam.builder()
                 .id("id")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    BetaMcpToolUseBlockParam.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name("name")
                 .serverName("server_name")
                 .cacheControl(
@@ -995,7 +1015,11 @@ internal class BetaContentBlockParamTest {
             BetaContentBlockParam.ofMcpToolUse(
                 BetaMcpToolUseBlockParam.builder()
                     .id("id")
-                    .input(JsonValue.from(mapOf<String, Any>()))
+                    .input(
+                        BetaMcpToolUseBlockParam.Input.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                     .name("name")
                     .serverName("server_name")
                     .cacheControl(

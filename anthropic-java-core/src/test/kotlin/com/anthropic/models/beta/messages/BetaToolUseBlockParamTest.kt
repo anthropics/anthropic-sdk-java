@@ -15,7 +15,11 @@ internal class BetaToolUseBlockParamTest {
         val betaToolUseBlockParam =
             BetaToolUseBlockParam.builder()
                 .id("id")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    BetaToolUseBlockParam.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name("x")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
@@ -25,7 +29,12 @@ internal class BetaToolUseBlockParamTest {
                 .build()
 
         assertThat(betaToolUseBlockParam.id()).isEqualTo("id")
-        assertThat(betaToolUseBlockParam._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
+        assertThat(betaToolUseBlockParam.input())
+            .isEqualTo(
+                BetaToolUseBlockParam.Input.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
         assertThat(betaToolUseBlockParam.name()).isEqualTo("x")
         assertThat(betaToolUseBlockParam.cacheControl())
             .contains(
@@ -41,7 +50,11 @@ internal class BetaToolUseBlockParamTest {
         val betaToolUseBlockParam =
             BetaToolUseBlockParam.builder()
                 .id("id")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    BetaToolUseBlockParam.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name("x")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()

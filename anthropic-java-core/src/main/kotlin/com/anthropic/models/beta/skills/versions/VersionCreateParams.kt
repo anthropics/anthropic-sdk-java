@@ -450,13 +450,7 @@ private constructor(
              * All files must be in the same top-level directory and must include a SKILL.md file at
              * the root of that directory.
              */
-            fun addFile(path: Path) =
-                addFile(
-                    MultipartField.builder<InputStream>()
-                        .value(path.inputStream())
-                        .filename(path.name)
-                        .build()
-                )
+            fun addFile(path: Path) = addFile(path.inputStream())
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()

@@ -21,22 +21,10 @@ internal class BetaToolUnionTest {
                 .inputSchema(
                     BetaTool.InputSchema.builder()
                         .properties(
-                            JsonValue.from(
-                                mapOf(
-                                    "location" to
-                                        mapOf(
-                                            "description" to
-                                                "The city and state, e.g. San Francisco, CA",
-                                            "type" to "string",
-                                        ),
-                                    "unit" to
-                                        mapOf(
-                                            "description" to
-                                                "Unit for the output - one of (celsius, fahrenheit)",
-                                            "type" to "string",
-                                        ),
-                                )
-                            )
+                            BetaTool.InputSchema.Properties.builder()
+                                .putAdditionalProperty("location", JsonValue.from("bar"))
+                                .putAdditionalProperty("unit", JsonValue.from("bar"))
+                                .build()
                         )
                         .addRequired("location")
                         .build()
@@ -78,22 +66,10 @@ internal class BetaToolUnionTest {
                     .inputSchema(
                         BetaTool.InputSchema.builder()
                             .properties(
-                                JsonValue.from(
-                                    mapOf(
-                                        "location" to
-                                            mapOf(
-                                                "description" to
-                                                    "The city and state, e.g. San Francisco, CA",
-                                                "type" to "string",
-                                            ),
-                                        "unit" to
-                                            mapOf(
-                                                "description" to
-                                                    "Unit for the output - one of (celsius, fahrenheit)",
-                                                "type" to "string",
-                                            ),
-                                    )
-                                )
+                                BetaTool.InputSchema.Properties.builder()
+                                    .putAdditionalProperty("location", JsonValue.from("bar"))
+                                    .putAdditionalProperty("unit", JsonValue.from("bar"))
+                                    .build()
                             )
                             .addRequired("location")
                             .build()
