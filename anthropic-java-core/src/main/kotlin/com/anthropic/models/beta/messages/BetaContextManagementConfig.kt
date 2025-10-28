@@ -2,17 +2,27 @@
 
 package com.anthropic.models.beta.messages
 
+import com.anthropic.core.BaseDeserializer
+import com.anthropic.core.BaseSerializer
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkKnown
+import com.anthropic.core.getOrThrow
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.core.ObjectCodec
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -21,15 +31,13 @@ import kotlin.jvm.optionals.getOrNull
 class BetaContextManagementConfig
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val edits: JsonField<List<BetaClearToolUses20250919Edit>>,
+    private val edits: JsonField<List<Edit>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("edits")
-        @ExcludeMissing
-        edits: JsonField<List<BetaClearToolUses20250919Edit>> = JsonMissing.of()
+        @JsonProperty("edits") @ExcludeMissing edits: JsonField<List<Edit>> = JsonMissing.of()
     ) : this(edits, mutableMapOf())
 
     /**
@@ -38,16 +46,14 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun edits(): Optional<List<BetaClearToolUses20250919Edit>> = edits.getOptional("edits")
+    fun edits(): Optional<List<Edit>> = edits.getOptional("edits")
 
     /**
      * Returns the raw JSON value of [edits].
      *
      * Unlike [edits], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("edits")
-    @ExcludeMissing
-    fun _edits(): JsonField<List<BetaClearToolUses20250919Edit>> = edits
+    @JsonProperty("edits") @ExcludeMissing fun _edits(): JsonField<List<Edit>> = edits
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -72,7 +78,7 @@ private constructor(
     /** A builder for [BetaContextManagementConfig]. */
     class Builder internal constructor() {
 
-        private var edits: JsonField<MutableList<BetaClearToolUses20250919Edit>>? = null
+        private var edits: JsonField<MutableList<Edit>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -82,28 +88,40 @@ private constructor(
         }
 
         /** List of context management edits to apply */
-        fun edits(edits: List<BetaClearToolUses20250919Edit>) = edits(JsonField.of(edits))
+        fun edits(edits: List<Edit>) = edits(JsonField.of(edits))
 
         /**
          * Sets [Builder.edits] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.edits] with a well-typed
-         * `List<BetaClearToolUses20250919Edit>` value instead. This method is primarily for setting
-         * the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.edits] with a well-typed `List<Edit>` value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun edits(edits: JsonField<List<BetaClearToolUses20250919Edit>>) = apply {
+        fun edits(edits: JsonField<List<Edit>>) = apply {
             this.edits = edits.map { it.toMutableList() }
         }
 
         /**
-         * Adds a single [BetaClearToolUses20250919Edit] to [edits].
+         * Adds a single [Edit] to [edits].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addEdit(edit: BetaClearToolUses20250919Edit) = apply {
+        fun addEdit(edit: Edit) = apply {
             edits =
                 (edits ?: JsonField.of(mutableListOf())).also { checkKnown("edits", it).add(edit) }
         }
+
+        /**
+         * Alias for calling [addEdit] with `Edit.ofClearToolUses20250919(clearToolUses20250919)`.
+         */
+        fun addEdit(clearToolUses20250919: BetaClearToolUses20250919Edit) =
+            addEdit(Edit.ofClearToolUses20250919(clearToolUses20250919))
+
+        /**
+         * Alias for calling [addEdit] with `Edit.ofClearThinking20251015(clearThinking20251015)`.
+         */
+        fun addEdit(clearThinking20251015: BetaClearThinking20251015Edit) =
+            addEdit(Edit.ofClearThinking20251015(clearThinking20251015))
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -163,6 +181,193 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (edits.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+
+    @JsonDeserialize(using = Edit.Deserializer::class)
+    @JsonSerialize(using = Edit.Serializer::class)
+    class Edit
+    private constructor(
+        private val clearToolUses20250919: BetaClearToolUses20250919Edit? = null,
+        private val clearThinking20251015: BetaClearThinking20251015Edit? = null,
+        private val _json: JsonValue? = null,
+    ) {
+
+        fun clearToolUses20250919(): Optional<BetaClearToolUses20250919Edit> =
+            Optional.ofNullable(clearToolUses20250919)
+
+        fun clearThinking20251015(): Optional<BetaClearThinking20251015Edit> =
+            Optional.ofNullable(clearThinking20251015)
+
+        fun isClearToolUses20250919(): Boolean = clearToolUses20250919 != null
+
+        fun isClearThinking20251015(): Boolean = clearThinking20251015 != null
+
+        fun asClearToolUses20250919(): BetaClearToolUses20250919Edit =
+            clearToolUses20250919.getOrThrow("clearToolUses20250919")
+
+        fun asClearThinking20251015(): BetaClearThinking20251015Edit =
+            clearThinking20251015.getOrThrow("clearThinking20251015")
+
+        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+        fun <T> accept(visitor: Visitor<T>): T =
+            when {
+                clearToolUses20250919 != null ->
+                    visitor.visitClearToolUses20250919(clearToolUses20250919)
+                clearThinking20251015 != null ->
+                    visitor.visitClearThinking20251015(clearThinking20251015)
+                else -> visitor.unknown(_json)
+            }
+
+        private var validated: Boolean = false
+
+        fun validate(): Edit = apply {
+            if (validated) {
+                return@apply
+            }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitClearToolUses20250919(
+                        clearToolUses20250919: BetaClearToolUses20250919Edit
+                    ) {
+                        clearToolUses20250919.validate()
+                    }
+
+                    override fun visitClearThinking20251015(
+                        clearThinking20251015: BetaClearThinking20251015Edit
+                    ) {
+                        clearThinking20251015.validate()
+                    }
+                }
+            )
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            accept(
+                object : Visitor<Int> {
+                    override fun visitClearToolUses20250919(
+                        clearToolUses20250919: BetaClearToolUses20250919Edit
+                    ) = clearToolUses20250919.validity()
+
+                    override fun visitClearThinking20251015(
+                        clearThinking20251015: BetaClearThinking20251015Edit
+                    ) = clearThinking20251015.validity()
+
+                    override fun unknown(json: JsonValue?) = 0
+                }
+            )
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Edit &&
+                clearToolUses20250919 == other.clearToolUses20250919 &&
+                clearThinking20251015 == other.clearThinking20251015
+        }
+
+        override fun hashCode(): Int = Objects.hash(clearToolUses20250919, clearThinking20251015)
+
+        override fun toString(): String =
+            when {
+                clearToolUses20250919 != null ->
+                    "Edit{clearToolUses20250919=$clearToolUses20250919}"
+                clearThinking20251015 != null ->
+                    "Edit{clearThinking20251015=$clearThinking20251015}"
+                _json != null -> "Edit{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid Edit")
+            }
+
+        companion object {
+
+            @JvmStatic
+            fun ofClearToolUses20250919(clearToolUses20250919: BetaClearToolUses20250919Edit) =
+                Edit(clearToolUses20250919 = clearToolUses20250919)
+
+            @JvmStatic
+            fun ofClearThinking20251015(clearThinking20251015: BetaClearThinking20251015Edit) =
+                Edit(clearThinking20251015 = clearThinking20251015)
+        }
+
+        /** An interface that defines how to map each variant of [Edit] to a value of type [T]. */
+        interface Visitor<out T> {
+
+            fun visitClearToolUses20250919(clearToolUses20250919: BetaClearToolUses20250919Edit): T
+
+            fun visitClearThinking20251015(clearThinking20251015: BetaClearThinking20251015Edit): T
+
+            /**
+             * Maps an unknown variant of [Edit] to a value of type [T].
+             *
+             * An instance of [Edit] can contain an unknown variant if it was deserialized from data
+             * that doesn't match any known variant. For example, if the SDK is on an older version
+             * than the API, then the API may respond with new variants that the SDK is unaware of.
+             *
+             * @throws AnthropicInvalidDataException in the default implementation.
+             */
+            fun unknown(json: JsonValue?): T {
+                throw AnthropicInvalidDataException("Unknown Edit: $json")
+            }
+        }
+
+        internal class Deserializer : BaseDeserializer<Edit>(Edit::class) {
+
+            override fun ObjectCodec.deserialize(node: JsonNode): Edit {
+                val json = JsonValue.fromJsonNode(node)
+                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+
+                when (type) {
+                    "clear_tool_uses_20250919" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaClearToolUses20250919Edit>())
+                            ?.let { Edit(clearToolUses20250919 = it, _json = json) }
+                            ?: Edit(_json = json)
+                    }
+                    "clear_thinking_20251015" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaClearThinking20251015Edit>())
+                            ?.let { Edit(clearThinking20251015 = it, _json = json) }
+                            ?: Edit(_json = json)
+                    }
+                }
+
+                return Edit(_json = json)
+            }
+        }
+
+        internal class Serializer : BaseSerializer<Edit>(Edit::class) {
+
+            override fun serialize(
+                value: Edit,
+                generator: JsonGenerator,
+                provider: SerializerProvider,
+            ) {
+                when {
+                    value.clearToolUses20250919 != null ->
+                        generator.writeObject(value.clearToolUses20250919)
+                    value.clearThinking20251015 != null ->
+                        generator.writeObject(value.clearThinking20251015)
+                    value._json != null -> generator.writeObject(value._json)
+                    else -> throw IllegalStateException("Invalid Edit")
+                }
+            }
+        }
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

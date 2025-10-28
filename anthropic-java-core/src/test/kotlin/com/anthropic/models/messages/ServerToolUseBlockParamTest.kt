@@ -15,14 +15,23 @@ internal class ServerToolUseBlockParamTest {
         val serverToolUseBlockParam =
             ServerToolUseBlockParam.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    ServerToolUseBlockParam.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
                 .build()
 
         assertThat(serverToolUseBlockParam.id()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
-        assertThat(serverToolUseBlockParam._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
+        assertThat(serverToolUseBlockParam.input())
+            .isEqualTo(
+                ServerToolUseBlockParam.Input.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
         assertThat(serverToolUseBlockParam.cacheControl())
             .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
     }
@@ -33,7 +42,11 @@ internal class ServerToolUseBlockParamTest {
         val serverToolUseBlockParam =
             ServerToolUseBlockParam.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    ServerToolUseBlockParam.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )

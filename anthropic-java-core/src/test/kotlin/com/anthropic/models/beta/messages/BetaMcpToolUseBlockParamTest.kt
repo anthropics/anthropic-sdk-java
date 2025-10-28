@@ -15,7 +15,11 @@ internal class BetaMcpToolUseBlockParamTest {
         val betaMcpToolUseBlockParam =
             BetaMcpToolUseBlockParam.builder()
                 .id("id")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    BetaMcpToolUseBlockParam.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name("name")
                 .serverName("server_name")
                 .cacheControl(
@@ -26,8 +30,12 @@ internal class BetaMcpToolUseBlockParamTest {
                 .build()
 
         assertThat(betaMcpToolUseBlockParam.id()).isEqualTo("id")
-        assertThat(betaMcpToolUseBlockParam._input())
-            .isEqualTo(JsonValue.from(mapOf<String, Any>()))
+        assertThat(betaMcpToolUseBlockParam.input())
+            .isEqualTo(
+                BetaMcpToolUseBlockParam.Input.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
         assertThat(betaMcpToolUseBlockParam.name()).isEqualTo("name")
         assertThat(betaMcpToolUseBlockParam.serverName()).isEqualTo("server_name")
         assertThat(betaMcpToolUseBlockParam.cacheControl())
@@ -44,7 +52,11 @@ internal class BetaMcpToolUseBlockParamTest {
         val betaMcpToolUseBlockParam =
             BetaMcpToolUseBlockParam.builder()
                 .id("id")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .input(
+                    BetaMcpToolUseBlockParam.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .name("name")
                 .serverName("server_name")
                 .cacheControl(
