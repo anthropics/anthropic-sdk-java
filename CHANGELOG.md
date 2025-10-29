@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.10.0 (2025-10-29)
+
+Full Changelog: [v2.9.0...v2.10.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.9.0...v2.10.0)
+
+### Features
+
+* **api:** add ability to clear thinking in context management ([bfe013e](https://github.com/anthropics/anthropic-sdk-java/commit/bfe013e6809c708aef7acefcf0a98837fa2db225))
+* **api:** adding support for agent skills ([2d74866](https://github.com/anthropics/anthropic-sdk-java/commit/2d748660c0a77ea19952598d662a56bc7f30a278))
+
+
+### Bug Fixes
+
+* **tests:** provide skills in accumulation tests ([dd2d919](https://github.com/anthropics/anthropic-sdk-java/commit/dd2d91994e6f23d53fa6797ac486e68c26b68369))
+
+
+### Chores
+
+* **api:** mark older sonnet models as deprecated ([9327c98](https://github.com/anthropics/anthropic-sdk-java/commit/9327c98c44a99ecd8db8c19fef3302fa3680157b))
+
 ## 2.9.0 (2025-10-15)
 
 Full Changelog: [v2.8.1...v2.9.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.8.1...v2.9.0)
