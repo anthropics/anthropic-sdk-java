@@ -803,6 +803,7 @@ internal class BetaMessageAccumulatorTest {
                             BetaContainer.builder()
                                 .id("container-id")
                                 .expiresAt(java.time.OffsetDateTime.now().plusDays(1))
+                                .skills(listOf())
                                 .build()
                         )
                         .contextManagement(
@@ -869,6 +870,7 @@ internal class BetaMessageAccumulatorTest {
                             BetaContainer.builder()
                                 .id("container-id")
                                 .expiresAt(java.time.OffsetDateTime.now().plusDays(1))
+                                .skills(listOf())
                                 .build()
                         )
                         .stopReason(stopReason)
