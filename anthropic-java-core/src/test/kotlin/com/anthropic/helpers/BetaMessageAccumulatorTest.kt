@@ -320,7 +320,7 @@ internal class BetaMessageAccumulatorTest {
         val message = accumulator.message()
 
         assertThat(message.id()).isEqualTo("message-id")
-        assertThat(message.model()).isEqualTo(Model.CLAUDE_3_5_SONNET_LATEST)
+        assertThat(message.model()).isEqualTo(Model.CLAUDE_SONNET_4_5)
 
         assertThat(message.content()).isEmpty()
 
@@ -348,7 +348,7 @@ internal class BetaMessageAccumulatorTest {
         val message = accumulator.message()
 
         assertThat(message.id()).isEqualTo("message-id")
-        assertThat(message.model()).isEqualTo(Model.CLAUDE_3_5_SONNET_LATEST)
+        assertThat(message.model()).isEqualTo(Model.CLAUDE_SONNET_4_5)
 
         assertThat(message.content()).isEmpty()
 
@@ -790,7 +790,7 @@ internal class BetaMessageAccumulatorTest {
                 .message(
                     BetaMessage.builder()
                         .id("message-id")
-                        .model(Model.CLAUDE_3_5_SONNET_LATEST)
+                        .model(Model.CLAUDE_SONNET_4_5)
                         .content(listOf())
                         .usage(usage(INPUT_TOKENS))
                         // `stopReason()` and `stopSequence()` must be set explicitly or an error

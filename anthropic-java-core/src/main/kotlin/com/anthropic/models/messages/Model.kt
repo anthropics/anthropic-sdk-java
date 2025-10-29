@@ -65,7 +65,6 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         /** Our best model for real-world agents and coding */
         @JvmField val CLAUDE_SONNET_4_5_20250929 = of("claude-sonnet-4-5-20250929")
 
-
         /** Our most capable model */
         @JvmField val CLAUDE_OPUS_4_0 = of("claude-opus-4-0")
 
