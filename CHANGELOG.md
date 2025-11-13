@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.10.1 (2025-11-13)
+
+Full Changelog: [v2.10.0...v2.10.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.10.0...v2.10.1)
+
+### Bug Fixes
+
+* **client:** multi-value header serialization ([e5726af](https://github.com/anthropics/anthropic-sdk-java/commit/e5726af6a67a9fe46373873a3eff9bdccc784f6b))
+
 ## 2.10.0 (2025-10-29)
 
 Full Changelog: [v2.9.0...v2.10.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.9.0...v2.10.0)
