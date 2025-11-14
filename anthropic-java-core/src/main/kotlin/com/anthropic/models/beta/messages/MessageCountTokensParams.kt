@@ -41,7 +41,8 @@ import kotlin.jvm.optionals.getOrNull
  * The Token Count API can be used to count the number of tokens in a Message, including tools,
  * images, and documents, without creating it.
  *
- * Learn more about token counting in our [user guide](/en/docs/build-with-claude/token-counting)
+ * Learn more about token counting in our
+ * [user guide](https://docs.claude.com/en/docs/build-with-claude/token-counting)
  */
 class MessageCountTokensParams
 private constructor(
@@ -142,6 +143,14 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun mcpServers(): Optional<List<BetaRequestMcpServerUrlDefinition>> = body.mcpServers()
+
+    /**
+     * A schema to specify Claude's output format in responses.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun outputFormat(): Optional<BetaJsonOutputFormat> = body.outputFormat()
 
     /**
      * System prompt.
@@ -284,6 +293,13 @@ private constructor(
     fun _mcpServers(): JsonField<List<BetaRequestMcpServerUrlDefinition>> = body._mcpServers()
 
     /**
+     * Returns the raw JSON value of [outputFormat].
+     *
+     * Unlike [outputFormat], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _outputFormat(): JsonField<BetaJsonOutputFormat> = body._outputFormat()
+
+    /**
      * Returns the raw JSON value of [system].
      *
      * Unlike [system], this method doesn't throw if the JSON field has an unexpected type.
@@ -384,7 +400,7 @@ private constructor(
          * - [model]
          * - [contextManagement]
          * - [mcpServers]
-         * - [system]
+         * - [outputFormat]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -591,6 +607,26 @@ private constructor(
          */
         fun addMcpServer(mcpServer: BetaRequestMcpServerUrlDefinition) = apply {
             body.addMcpServer(mcpServer)
+        }
+
+        /** A schema to specify Claude's output format in responses. */
+        fun outputFormat(outputFormat: BetaJsonOutputFormat?) = apply {
+            body.outputFormat(outputFormat)
+        }
+
+        /** Alias for calling [Builder.outputFormat] with `outputFormat.orElse(null)`. */
+        fun outputFormat(outputFormat: Optional<BetaJsonOutputFormat>) =
+            outputFormat(outputFormat.getOrNull())
+
+        /**
+         * Sets [Builder.outputFormat] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.outputFormat] with a well-typed [BetaJsonOutputFormat]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun outputFormat(outputFormat: JsonField<BetaJsonOutputFormat>) = apply {
+            body.outputFormat(outputFormat)
         }
 
         /**
@@ -1044,6 +1080,7 @@ private constructor(
         private val model: JsonField<Model>,
         private val contextManagement: JsonField<BetaContextManagementConfig>,
         private val mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>,
+        private val outputFormat: JsonField<BetaJsonOutputFormat>,
         private val system: JsonField<System>,
         private val thinking: JsonField<BetaThinkingConfigParam>,
         private val toolChoice: JsonField<BetaToolChoice>,
@@ -1063,6 +1100,9 @@ private constructor(
             @JsonProperty("mcp_servers")
             @ExcludeMissing
             mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>> = JsonMissing.of(),
+            @JsonProperty("output_format")
+            @ExcludeMissing
+            outputFormat: JsonField<BetaJsonOutputFormat> = JsonMissing.of(),
             @JsonProperty("system") @ExcludeMissing system: JsonField<System> = JsonMissing.of(),
             @JsonProperty("thinking")
             @ExcludeMissing
@@ -1076,6 +1116,7 @@ private constructor(
             model,
             contextManagement,
             mcpServers,
+            outputFormat,
             system,
             thinking,
             toolChoice,
@@ -1176,6 +1217,15 @@ private constructor(
          */
         fun mcpServers(): Optional<List<BetaRequestMcpServerUrlDefinition>> =
             mcpServers.getOptional("mcp_servers")
+
+        /**
+         * A schema to specify Claude's output format in responses.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun outputFormat(): Optional<BetaJsonOutputFormat> =
+            outputFormat.getOptional("output_format")
 
         /**
          * System prompt.
@@ -1326,6 +1376,16 @@ private constructor(
         fun _mcpServers(): JsonField<List<BetaRequestMcpServerUrlDefinition>> = mcpServers
 
         /**
+         * Returns the raw JSON value of [outputFormat].
+         *
+         * Unlike [outputFormat], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("output_format")
+        @ExcludeMissing
+        fun _outputFormat(): JsonField<BetaJsonOutputFormat> = outputFormat
+
+        /**
          * Returns the raw JSON value of [system].
          *
          * Unlike [system], this method doesn't throw if the JSON field has an unexpected type.
@@ -1391,6 +1451,7 @@ private constructor(
             private var contextManagement: JsonField<BetaContextManagementConfig> = JsonMissing.of()
             private var mcpServers: JsonField<MutableList<BetaRequestMcpServerUrlDefinition>>? =
                 null
+            private var outputFormat: JsonField<BetaJsonOutputFormat> = JsonMissing.of()
             private var system: JsonField<System> = JsonMissing.of()
             private var thinking: JsonField<BetaThinkingConfigParam> = JsonMissing.of()
             private var toolChoice: JsonField<BetaToolChoice> = JsonMissing.of()
@@ -1403,6 +1464,7 @@ private constructor(
                 model = body.model
                 contextManagement = body.contextManagement
                 mcpServers = body.mcpServers.map { it.toMutableList() }
+                outputFormat = body.outputFormat
                 system = body.system
                 thinking = body.thinking
                 toolChoice = body.toolChoice
@@ -1643,6 +1705,25 @@ private constructor(
                     (mcpServers ?: JsonField.of(mutableListOf())).also {
                         checkKnown("mcpServers", it).add(mcpServer)
                     }
+            }
+
+            /** A schema to specify Claude's output format in responses. */
+            fun outputFormat(outputFormat: BetaJsonOutputFormat?) =
+                outputFormat(JsonField.ofNullable(outputFormat))
+
+            /** Alias for calling [Builder.outputFormat] with `outputFormat.orElse(null)`. */
+            fun outputFormat(outputFormat: Optional<BetaJsonOutputFormat>) =
+                outputFormat(outputFormat.getOrNull())
+
+            /**
+             * Sets [Builder.outputFormat] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.outputFormat] with a well-typed
+             * [BetaJsonOutputFormat] value instead. This method is primarily for setting the field
+             * to an undocumented or not yet supported value.
+             */
+            fun outputFormat(outputFormat: JsonField<BetaJsonOutputFormat>) = apply {
+                this.outputFormat = outputFormat
             }
 
             /**
@@ -1981,6 +2062,7 @@ private constructor(
                     checkRequired("model", model),
                     contextManagement,
                     (mcpServers ?: JsonMissing.of()).map { it.toImmutable() },
+                    outputFormat,
                     system,
                     thinking,
                     toolChoice,
@@ -2000,6 +2082,7 @@ private constructor(
             model()
             contextManagement().ifPresent { it.validate() }
             mcpServers().ifPresent { it.forEach { it.validate() } }
+            outputFormat().ifPresent { it.validate() }
             system().ifPresent { it.validate() }
             thinking().ifPresent { it.validate() }
             toolChoice().ifPresent { it.validate() }
@@ -2027,6 +2110,7 @@ private constructor(
                 (if (model.asKnown().isPresent) 1 else 0) +
                 (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
                 (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (outputFormat.asKnown().getOrNull()?.validity() ?: 0) +
                 (system.asKnown().getOrNull()?.validity() ?: 0) +
                 (thinking.asKnown().getOrNull()?.validity() ?: 0) +
                 (toolChoice.asKnown().getOrNull()?.validity() ?: 0) +
@@ -2042,6 +2126,7 @@ private constructor(
                 model == other.model &&
                 contextManagement == other.contextManagement &&
                 mcpServers == other.mcpServers &&
+                outputFormat == other.outputFormat &&
                 system == other.system &&
                 thinking == other.thinking &&
                 toolChoice == other.toolChoice &&
@@ -2055,6 +2140,7 @@ private constructor(
                 model,
                 contextManagement,
                 mcpServers,
+                outputFormat,
                 system,
                 thinking,
                 toolChoice,
@@ -2066,7 +2152,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{messages=$messages, model=$model, contextManagement=$contextManagement, mcpServers=$mcpServers, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
+            "Body{messages=$messages, model=$model, contextManagement=$contextManagement, mcpServers=$mcpServers, outputFormat=$outputFormat, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
     }
 
     /**

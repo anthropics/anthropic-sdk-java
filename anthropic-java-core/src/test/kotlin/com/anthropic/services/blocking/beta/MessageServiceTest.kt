@@ -12,6 +12,7 @@ import com.anthropic.models.beta.messages.BetaClearToolUses20250919Edit
 import com.anthropic.models.beta.messages.BetaContainerParams
 import com.anthropic.models.beta.messages.BetaContextManagementConfig
 import com.anthropic.models.beta.messages.BetaInputTokensClearAtLeast
+import com.anthropic.models.beta.messages.BetaJsonOutputFormat
 import com.anthropic.models.beta.messages.BetaMetadata
 import com.anthropic.models.beta.messages.BetaRequestMcpServerToolConfiguration
 import com.anthropic.models.beta.messages.BetaRequestMcpServerUrlDefinition
@@ -92,6 +93,15 @@ internal class MessageServiceTest {
                             .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
                             .build()
                     )
+                    .outputFormat(
+                        BetaJsonOutputFormat.builder()
+                            .schema(
+                                BetaJsonOutputFormat.Schema.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
+                            .build()
+                    )
                     .serviceTier(MessageCreateParams.ServiceTier.AUTO)
                     .addStopSequence("string")
                     .systemOfBetaTextBlockParams(
@@ -141,6 +151,7 @@ internal class MessageServiceTest {
                                     .build()
                             )
                             .description("Get the current weather in a given location")
+                            .strict(true)
                             .type(BetaTool.Type.CUSTOM)
                             .build()
                     )
@@ -214,6 +225,15 @@ internal class MessageServiceTest {
                             .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
                             .build()
                     )
+                    .outputFormat(
+                        BetaJsonOutputFormat.builder()
+                            .schema(
+                                BetaJsonOutputFormat.Schema.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
+                            .build()
+                    )
                     .serviceTier(MessageCreateParams.ServiceTier.AUTO)
                     .addStopSequence("string")
                     .systemOfBetaTextBlockParams(
@@ -263,6 +283,7 @@ internal class MessageServiceTest {
                                     .build()
                             )
                             .description("Get the current weather in a given location")
+                            .strict(true)
                             .type(BetaTool.Type.CUSTOM)
                             .build()
                     )
@@ -320,6 +341,15 @@ internal class MessageServiceTest {
                             )
                             .build()
                     )
+                    .outputFormat(
+                        BetaJsonOutputFormat.builder()
+                            .schema(
+                                BetaJsonOutputFormat.Schema.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
+                            .build()
+                    )
                     .systemOfBetaTextBlockParams(
                         listOf(
                             BetaTextBlockParam.builder()
@@ -366,6 +396,7 @@ internal class MessageServiceTest {
                                     .build()
                             )
                             .description("Get the current weather in a given location")
+                            .strict(true)
                             .type(BetaTool.Type.CUSTOM)
                             .build()
                     )

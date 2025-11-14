@@ -8,6 +8,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
+import com.anthropic.core.JsonSchemaLocalValidation
 import com.anthropic.core.JsonValue
 import com.anthropic.core.Params
 import com.anthropic.core.allMaxBy
@@ -17,6 +18,7 @@ import com.anthropic.core.getOrThrow
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
+import com.anthropic.core.toolFromClass
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.messages.Model
@@ -42,15 +44,19 @@ import kotlin.jvm.optionals.getOrNull
  *
  * The Messages API can be used for either single queries or stateless multi-turn conversations.
  *
- * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
+ * Learn more about the Messages API in our
+ * [user guide](https://docs.claude.com/en/docs/initial-setup)
  */
 class MessageCreateParams
 private constructor(
+    private val toolParametersTypes: List<Class<*>>,
     private val betas: List<AnthropicBeta>?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    @JvmSynthetic internal fun toolParametersTypes(): List<Class<*>> = toolParametersTypes
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
@@ -173,6 +179,14 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun metadata(): Optional<BetaMetadata> = body.metadata()
+
+    /**
+     * A schema to specify Claude's output format in responses.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun outputFormat(): Optional<BetaJsonOutputFormat> = body.outputFormat()
 
     /**
      * Determines whether to use priority capacity (if available) or standard capacity for this
@@ -405,6 +419,13 @@ private constructor(
     fun _metadata(): JsonField<BetaMetadata> = body._metadata()
 
     /**
+     * Returns the raw JSON value of [outputFormat].
+     *
+     * Unlike [outputFormat], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _outputFormat(): JsonField<BetaJsonOutputFormat> = body._outputFormat()
+
+    /**
      * Returns the raw JSON value of [serviceTier].
      *
      * Unlike [serviceTier], this method doesn't throw if the JSON field has an unexpected type.
@@ -495,6 +516,7 @@ private constructor(
     /** A builder for [MessageCreateParams]. */
     class Builder internal constructor() {
 
+        private var toolParametersTypes: MutableList<Class<*>> = mutableListOf()
         private var betas: MutableList<AnthropicBeta>? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -502,6 +524,7 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(messageCreateParams: MessageCreateParams) = apply {
+            toolParametersTypes = messageCreateParams.toolParametersTypes.toMutableList()
             betas = messageCreateParams.betas?.toMutableList()
             body = messageCreateParams.body.toBuilder()
             additionalHeaders = messageCreateParams.additionalHeaders.toBuilder()
@@ -806,6 +829,47 @@ private constructor(
          * supported value.
          */
         fun metadata(metadata: JsonField<BetaMetadata>) = apply { body.metadata(metadata) }
+
+        /** A schema to specify Claude's output format in responses. */
+        fun outputFormat(outputFormat: BetaJsonOutputFormat?) = apply {
+            body.outputFormat(outputFormat)
+        }
+
+        /** Alias for calling [Builder.outputFormat] with `outputFormat.orElse(null)`. */
+        fun outputFormat(outputFormat: Optional<BetaJsonOutputFormat>) =
+            outputFormat(outputFormat.getOrNull())
+
+        /**
+         * Sets [Builder.outputFormat] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.outputFormat] with a well-typed [BetaJsonOutputFormat]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun outputFormat(outputFormat: JsonField<BetaJsonOutputFormat>) = apply {
+            body.outputFormat(outputFormat)
+        }
+
+        /**
+         * Sets the output format to a JSON schema derived from the structure of the given class.
+         * This changes the builder to a type-safe [StructuredMessageCreateParams.Builder] that will
+         * build a [StructuredMessageCreateParams] instance when `build()` is called.
+         *
+         * @param outputType A class from which a JSON schema will be derived to define the output
+         *   format.
+         * @param localValidation [JsonSchemaLocalValidation.YES] (the default) to validate the JSON
+         *   schema locally when it is generated by this method to confirm that it adheres to the
+         *   requirements and restrictions on JSON schemas imposed by the Anthropic specification;
+         *   or [JsonSchemaLocalValidation.NO] to skip local validation and rely only on remote
+         *   validation. See the SDK documentation for more details.
+         * @throws IllegalArgumentException If local validation is enabled, but it fails because a
+         *   valid JSON schema cannot be derived from the given class.
+         */
+        @JvmOverloads
+        fun <T : Any> outputFormat(
+            outputType: Class<T>,
+            localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
+        ) = StructuredMessageCreateParams.builder<T>().wrap(outputType, this, localValidation)
 
         /**
          * Determines whether to use priority capacity (if available) or standard capacity for this
@@ -1168,6 +1232,24 @@ private constructor(
         }
 
         /**
+         * Adds a single [BetaTool] to [tools] where the JSON schema describing the tool's
+         * parameters is derived from the fields of a given class. Local validation of that JSON
+         * schema can be performed to check if the schema is likely to pass remote validation by the
+         * AI model. By default, local validation is enabled; disable it by setting
+         * [localValidation] to [JsonSchemaLocalValidation.NO].
+         *
+         * @see addTool
+         */
+        @JvmOverloads
+        fun addTool(
+            toolParametersType: Class<*>,
+            localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
+        ) = apply {
+            toolParametersTypes.add(toolParametersType)
+            addTool(toolFromClass(toolParametersType, localValidation))
+        }
+
+        /**
          * Only sample from the top K options for each subsequent token.
          *
          * Used to remove "long tail" low probability responses.
@@ -1338,6 +1420,7 @@ private constructor(
          */
         fun build(): MessageCreateParams =
             MessageCreateParams(
+                toolParametersTypes.toImmutable(),
                 betas?.toImmutable(),
                 body.build(),
                 additionalHeaders.build(),
@@ -1367,6 +1450,7 @@ private constructor(
         private val contextManagement: JsonField<BetaContextManagementConfig>,
         private val mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>,
         private val metadata: JsonField<BetaMetadata>,
+        private val outputFormat: JsonField<BetaJsonOutputFormat>,
         private val serviceTier: JsonField<ServiceTier>,
         private val stopSequences: JsonField<List<String>>,
         private val system: JsonField<System>,
@@ -1400,6 +1484,9 @@ private constructor(
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<BetaMetadata> = JsonMissing.of(),
+            @JsonProperty("output_format")
+            @ExcludeMissing
+            outputFormat: JsonField<BetaJsonOutputFormat> = JsonMissing.of(),
             @JsonProperty("service_tier")
             @ExcludeMissing
             serviceTier: JsonField<ServiceTier> = JsonMissing.of(),
@@ -1429,6 +1516,7 @@ private constructor(
             contextManagement,
             mcpServers,
             metadata,
+            outputFormat,
             serviceTier,
             stopSequences,
             system,
@@ -1564,6 +1652,15 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun metadata(): Optional<BetaMetadata> = metadata.getOptional("metadata")
+
+        /**
+         * A schema to specify Claude's output format in responses.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun outputFormat(): Optional<BetaJsonOutputFormat> =
+            outputFormat.getOptional("output_format")
 
         /**
          * Determines whether to use priority capacity (if available) or standard capacity for this
@@ -1808,6 +1905,16 @@ private constructor(
         fun _metadata(): JsonField<BetaMetadata> = metadata
 
         /**
+         * Returns the raw JSON value of [outputFormat].
+         *
+         * Unlike [outputFormat], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("output_format")
+        @ExcludeMissing
+        fun _outputFormat(): JsonField<BetaJsonOutputFormat> = outputFormat
+
+        /**
          * Returns the raw JSON value of [serviceTier].
          *
          * Unlike [serviceTier], this method doesn't throw if the JSON field has an unexpected type.
@@ -1919,6 +2026,7 @@ private constructor(
             private var mcpServers: JsonField<MutableList<BetaRequestMcpServerUrlDefinition>>? =
                 null
             private var metadata: JsonField<BetaMetadata> = JsonMissing.of()
+            private var outputFormat: JsonField<BetaJsonOutputFormat> = JsonMissing.of()
             private var serviceTier: JsonField<ServiceTier> = JsonMissing.of()
             private var stopSequences: JsonField<MutableList<String>>? = null
             private var system: JsonField<System> = JsonMissing.of()
@@ -1939,6 +2047,7 @@ private constructor(
                 contextManagement = body.contextManagement
                 mcpServers = body.mcpServers.map { it.toMutableList() }
                 metadata = body.metadata
+                outputFormat = body.outputFormat
                 serviceTier = body.serviceTier
                 stopSequences = body.stopSequences.map { it.toMutableList() }
                 system = body.system
@@ -2242,6 +2351,25 @@ private constructor(
              * supported value.
              */
             fun metadata(metadata: JsonField<BetaMetadata>) = apply { this.metadata = metadata }
+
+            /** A schema to specify Claude's output format in responses. */
+            fun outputFormat(outputFormat: BetaJsonOutputFormat?) =
+                outputFormat(JsonField.ofNullable(outputFormat))
+
+            /** Alias for calling [Builder.outputFormat] with `outputFormat.orElse(null)`. */
+            fun outputFormat(outputFormat: Optional<BetaJsonOutputFormat>) =
+                outputFormat(outputFormat.getOrNull())
+
+            /**
+             * Sets [Builder.outputFormat] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.outputFormat] with a well-typed
+             * [BetaJsonOutputFormat] value instead. This method is primarily for setting the field
+             * to an undocumented or not yet supported value.
+             */
+            fun outputFormat(outputFormat: JsonField<BetaJsonOutputFormat>) = apply {
+                this.outputFormat = outputFormat
+            }
 
             /**
              * Determines whether to use priority capacity (if available) or standard capacity for
@@ -2698,6 +2826,7 @@ private constructor(
                     contextManagement,
                     (mcpServers ?: JsonMissing.of()).map { it.toImmutable() },
                     metadata,
+                    outputFormat,
                     serviceTier,
                     (stopSequences ?: JsonMissing.of()).map { it.toImmutable() },
                     system,
@@ -2725,6 +2854,7 @@ private constructor(
             contextManagement().ifPresent { it.validate() }
             mcpServers().ifPresent { it.forEach { it.validate() } }
             metadata().ifPresent { it.validate() }
+            outputFormat().ifPresent { it.validate() }
             serviceTier().ifPresent { it.validate() }
             stopSequences()
             system().ifPresent { it.validate() }
@@ -2760,6 +2890,7 @@ private constructor(
                 (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
                 (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+                (outputFormat.asKnown().getOrNull()?.validity() ?: 0) +
                 (serviceTier.asKnown().getOrNull()?.validity() ?: 0) +
                 (stopSequences.asKnown().getOrNull()?.size ?: 0) +
                 (system.asKnown().getOrNull()?.validity() ?: 0) +
@@ -2783,6 +2914,7 @@ private constructor(
                 contextManagement == other.contextManagement &&
                 mcpServers == other.mcpServers &&
                 metadata == other.metadata &&
+                outputFormat == other.outputFormat &&
                 serviceTier == other.serviceTier &&
                 stopSequences == other.stopSequences &&
                 system == other.system &&
@@ -2804,6 +2936,7 @@ private constructor(
                 contextManagement,
                 mcpServers,
                 metadata,
+                outputFormat,
                 serviceTier,
                 stopSequences,
                 system,
@@ -2820,7 +2953,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, container=$container, contextManagement=$contextManagement, mcpServers=$mcpServers, metadata=$metadata, serviceTier=$serviceTier, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, container=$container, contextManagement=$contextManagement, mcpServers=$mcpServers, metadata=$metadata, outputFormat=$outputFormat, serviceTier=$serviceTier, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
     }
 
     /** Container identifier for reuse across requests. */

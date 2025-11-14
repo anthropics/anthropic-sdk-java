@@ -29,6 +29,7 @@ private constructor(
     private val citations: JsonField<BetaCitationsConfigParam>,
     private val maxContentTokens: JsonField<Long>,
     private val maxUses: JsonField<Long>,
+    private val strict: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -52,6 +53,7 @@ private constructor(
         @ExcludeMissing
         maxContentTokens: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("max_uses") @ExcludeMissing maxUses: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("strict") @ExcludeMissing strict: JsonField<Boolean> = JsonMissing.of(),
     ) : this(
         name,
         type,
@@ -61,6 +63,7 @@ private constructor(
         citations,
         maxContentTokens,
         maxUses,
+        strict,
         mutableMapOf(),
     )
 
@@ -141,6 +144,12 @@ private constructor(
     fun maxUses(): Optional<Long> = maxUses.getOptional("max_uses")
 
     /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun strict(): Optional<Boolean> = strict.getOptional("strict")
+
+    /**
      * Returns the raw JSON value of [allowedDomains].
      *
      * Unlike [allowedDomains], this method doesn't throw if the JSON field has an unexpected type.
@@ -193,6 +202,13 @@ private constructor(
      */
     @JsonProperty("max_uses") @ExcludeMissing fun _maxUses(): JsonField<Long> = maxUses
 
+    /**
+     * Returns the raw JSON value of [strict].
+     *
+     * Unlike [strict], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("strict") @ExcludeMissing fun _strict(): JsonField<Boolean> = strict
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -222,6 +238,7 @@ private constructor(
         private var citations: JsonField<BetaCitationsConfigParam> = JsonMissing.of()
         private var maxContentTokens: JsonField<Long> = JsonMissing.of()
         private var maxUses: JsonField<Long> = JsonMissing.of()
+        private var strict: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -234,6 +251,7 @@ private constructor(
             citations = betaWebFetchTool20250910.citations
             maxContentTokens = betaWebFetchTool20250910.maxContentTokens
             maxUses = betaWebFetchTool20250910.maxUses
+            strict = betaWebFetchTool20250910.strict
             additionalProperties = betaWebFetchTool20250910.additionalProperties.toMutableMap()
         }
 
@@ -415,6 +433,16 @@ private constructor(
          */
         fun maxUses(maxUses: JsonField<Long>) = apply { this.maxUses = maxUses }
 
+        fun strict(strict: Boolean) = strict(JsonField.of(strict))
+
+        /**
+         * Sets [Builder.strict] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.strict] with a well-typed [Boolean] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun strict(strict: JsonField<Boolean>) = apply { this.strict = strict }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -449,6 +477,7 @@ private constructor(
                 citations,
                 maxContentTokens,
                 maxUses,
+                strict,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -476,6 +505,7 @@ private constructor(
         citations().ifPresent { it.validate() }
         maxContentTokens()
         maxUses()
+        strict()
         validated = true
     }
 
@@ -501,7 +531,8 @@ private constructor(
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
             (citations.asKnown().getOrNull()?.validity() ?: 0) +
             (if (maxContentTokens.asKnown().isPresent) 1 else 0) +
-            (if (maxUses.asKnown().isPresent) 1 else 0)
+            (if (maxUses.asKnown().isPresent) 1 else 0) +
+            (if (strict.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -517,6 +548,7 @@ private constructor(
             citations == other.citations &&
             maxContentTokens == other.maxContentTokens &&
             maxUses == other.maxUses &&
+            strict == other.strict &&
             additionalProperties == other.additionalProperties
     }
 
@@ -530,6 +562,7 @@ private constructor(
             citations,
             maxContentTokens,
             maxUses,
+            strict,
             additionalProperties,
         )
     }
@@ -537,5 +570,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaWebFetchTool20250910{name=$name, type=$type, allowedDomains=$allowedDomains, blockedDomains=$blockedDomains, cacheControl=$cacheControl, citations=$citations, maxContentTokens=$maxContentTokens, maxUses=$maxUses, additionalProperties=$additionalProperties}"
+        "BetaWebFetchTool20250910{name=$name, type=$type, allowedDomains=$allowedDomains, blockedDomains=$blockedDomains, cacheControl=$cacheControl, citations=$citations, maxContentTokens=$maxContentTokens, maxUses=$maxUses, strict=$strict, additionalProperties=$additionalProperties}"
 }

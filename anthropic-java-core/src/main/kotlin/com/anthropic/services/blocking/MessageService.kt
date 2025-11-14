@@ -37,7 +37,8 @@ interface MessageService {
      *
      * The Messages API can be used for either single queries or stateless multi-turn conversations.
      *
-     * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
+     * Learn more about the Messages API in our
+     * [user guide](https://docs.claude.com/en/docs/initial-setup)
      */
     fun create(params: MessageCreateParams): Message = create(params, RequestOptions.none())
 
@@ -53,7 +54,8 @@ interface MessageService {
      *
      * The Messages API can be used for either single queries or stateless multi-turn conversations.
      *
-     * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
+     * Learn more about the Messages API in our
+     * [user guide](https://docs.claude.com/en/docs/initial-setup)
      */
     @MustBeClosed
     fun createStreaming(params: MessageCreateParams): StreamResponse<RawMessageStreamEvent> =
@@ -73,7 +75,7 @@ interface MessageService {
      * images, and documents, without creating it.
      *
      * Learn more about token counting in our
-     * [user guide](/en/docs/build-with-claude/token-counting)
+     * [user guide](https://docs.claude.com/en/docs/build-with-claude/token-counting)
      */
     fun countTokens(params: MessageCountTokensParams): MessageTokensCount =
         countTokens(params, RequestOptions.none())

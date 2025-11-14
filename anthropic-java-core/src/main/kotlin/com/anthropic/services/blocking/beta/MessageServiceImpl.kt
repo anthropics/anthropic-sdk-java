@@ -20,11 +20,8 @@ import com.anthropic.core.http.json
 import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
 import com.anthropic.core.prepare
-import com.anthropic.models.beta.messages.BetaMessage
-import com.anthropic.models.beta.messages.BetaMessageTokensCount
-import com.anthropic.models.beta.messages.BetaRawMessageStreamEvent
-import com.anthropic.models.beta.messages.MessageCountTokensParams
-import com.anthropic.models.beta.messages.MessageCreateParams
+import com.anthropic.helpers.BetaToolRunner
+import com.anthropic.models.beta.messages.*
 import com.anthropic.services.blocking.beta.messages.BatchService
 import com.anthropic.services.blocking.beta.messages.BatchServiceImpl
 import java.util.function.Consumer
@@ -62,6 +59,11 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
     ): BetaMessageTokensCount =
         // post /v1/messages/count_tokens?beta=true
         withRawResponse().countTokens(params, requestOptions).parse()
+
+    override fun toolRunner(
+        params: ToolRunnerCreateParams,
+        requestOptions: RequestOptions,
+    ): BetaToolRunner = BetaToolRunner(this, params, requestOptions)
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         MessageService.WithRawResponse {

@@ -22,7 +22,7 @@ import kotlin.jvm.optionals.getOrNull
  * result in any canceled requests if they were non-interruptible.
  *
  * Learn more about the Message Batches API in our
- * [user guide](/en/docs/build-with-claude/batch-processing)
+ * [user guide](https://docs.claude.com/en/docs/build-with-claude/batch-processing)
  */
 class BatchCancelParams
 private constructor(

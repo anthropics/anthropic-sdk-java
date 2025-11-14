@@ -19,6 +19,7 @@ internal class BetaToolTextEditor20250728Test {
                         .build()
                 )
                 .maxCharacters(1L)
+                .strict(true)
                 .build()
 
         assertThat(betaToolTextEditor20250728.cacheControl())
@@ -28,6 +29,7 @@ internal class BetaToolTextEditor20250728Test {
                     .build()
             )
         assertThat(betaToolTextEditor20250728.maxCharacters()).contains(1L)
+        assertThat(betaToolTextEditor20250728.strict()).contains(true)
     }
 
     @Test
@@ -41,6 +43,7 @@ internal class BetaToolTextEditor20250728Test {
                         .build()
                 )
                 .maxCharacters(1L)
+                .strict(true)
                 .build()
 
         val roundtrippedBetaToolTextEditor20250728 =

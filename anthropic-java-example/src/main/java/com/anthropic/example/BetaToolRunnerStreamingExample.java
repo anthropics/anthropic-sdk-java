@@ -1,0 +1,44 @@
+package com.anthropic.example;
+
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+import com.anthropic.core.http.StreamResponse;
+import com.anthropic.helpers.BetaToolRunner;
+import com.anthropic.models.beta.messages.BetaRawMessageStreamEvent;
+import com.anthropic.models.beta.messages.MessageCreateParams;
+import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import java.util.function.Supplier;
+
+public final class BetaToolRunnerStreamingExample {
+    private BetaToolRunnerStreamingExample() {}
+
+    @JsonClassDescription("Get the weather in a given location")
+    static class GetWeather implements Supplier<String> {
+        @JsonPropertyDescription("The city and state, e.g. San Francisco, CA")
+        public String location;
+
+        @Override
+        public String get() {
+            return "The weather in " + location + " is foggy and 60°F";
+        }
+    }
+
+    public static void main(String[] args) {
+        // Configure by setting the `ANTHROPIC_API_KEY` environment variable
+        AnthropicClient client = AnthropicOkHttpClient.fromEnv();
+
+        BetaToolRunner toolRunner = client.beta()
+                .messages()
+                .toolRunner(MessageCreateParams.builder()
+                        .model("claude-sonnet-4-5-20250929-structured-outputs")
+                        .putAdditionalHeader("anthropic-beta", "structured-outputs-2025-09-17")
+                        .maxTokens(1000)
+                        .addUserMessage("What is the weather in San Francisco?")
+                        .addTool(GetWeather.class)
+                        .build());
+        for (StreamResponse<BetaRawMessageStreamEvent> streamResponse : toolRunner.streaming()) {
+            streamResponse.stream().forEach(System.out::println);
+        }
+    }
+}

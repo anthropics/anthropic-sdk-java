@@ -233,6 +233,15 @@ internal class BetaMessageAccumulatorTest {
     }
 
     @Test
+    fun structuredMessageNotStarted() {
+        val accumulator = BetaMessageAccumulator.create()
+
+        assertThatThrownBy { accumulator.message(String::class.java) }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessage("'message_stop' event not yet received.")
+    }
+
+    @Test
     fun messageNotStopped() {
         val accumulator = BetaMessageAccumulator.create()
 
@@ -451,6 +460,28 @@ internal class BetaMessageAccumulatorTest {
         assertThat(accumulator.message()._stopSequence().isMissing()).isEqualTo(false)
         assertThat(accumulator.message()._stopSequence().isNull()).isEqualTo(false)
         assertThat(accumulator.message().stopSequence()).hasValue("hello world")
+    }
+
+    @Test
+    fun structuredMessageDeltaWithNonNullStopSequence() {
+        // Just check that `message(Class<T>)` works like `message()` for this simple test.
+        val accumulator = BetaMessageAccumulator.create()
+
+        accumulator.accumulate(messageStartEvent())
+        // The last non-missing value should "win".
+        accumulator.accumulate(messageDeltaEvent(stopSequence = SET_TO_NULL))
+        accumulator.accumulate(messageDeltaEvent(stopSequence = NOT_SET)) // Should be ignored.
+        accumulator.accumulate(messageDeltaEvent(stopSequence = JsonField.of("hello world")))
+        accumulator.accumulate(messageStopEvent())
+
+        // No deserialization is attempted, so the `Class<T>` does not matter. Deserialization is
+        // beyond the scope of this test; it is tested elsewhere at a lower level. All that is
+        // necessary to test is that the `StructuredMessage<T>` wraps the accumulated `Message`.
+        val message = accumulator.message(String::class.java)
+
+        assertThat(message._stopSequence().isMissing()).isEqualTo(false)
+        assertThat(message._stopSequence().isNull()).isEqualTo(false)
+        assertThat(message.stopSequence()).hasValue("hello world")
     }
 
     @Test

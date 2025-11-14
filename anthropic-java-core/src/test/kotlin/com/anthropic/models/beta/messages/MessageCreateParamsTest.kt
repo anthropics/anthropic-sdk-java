@@ -58,6 +58,15 @@ internal class MessageCreateParamsTest {
                     .build()
             )
             .metadata(BetaMetadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
+            .outputFormat(
+                BetaJsonOutputFormat.builder()
+                    .schema(
+                        BetaJsonOutputFormat.Schema.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
+                    .build()
+            )
             .serviceTier(MessageCreateParams.ServiceTier.AUTO)
             .addStopSequence("string")
             .systemOfBetaTextBlockParams(
@@ -104,6 +113,7 @@ internal class MessageCreateParamsTest {
                             .build()
                     )
                     .description("Get the current weather in a given location")
+                    .strict(true)
                     .type(BetaTool.Type.CUSTOM)
                     .build()
             )
@@ -163,6 +173,15 @@ internal class MessageCreateParamsTest {
                 .metadata(
                     BetaMetadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
                 )
+                .outputFormat(
+                    BetaJsonOutputFormat.builder()
+                        .schema(
+                            BetaJsonOutputFormat.Schema.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
+                        .build()
+                )
                 .serviceTier(MessageCreateParams.ServiceTier.AUTO)
                 .addStopSequence("string")
                 .systemOfBetaTextBlockParams(
@@ -209,6 +228,7 @@ internal class MessageCreateParamsTest {
                                 .build()
                         )
                         .description("Get the current weather in a given location")
+                        .strict(true)
                         .type(BetaTool.Type.CUSTOM)
                         .build()
                 )
@@ -289,6 +309,15 @@ internal class MessageCreateParamsTest {
                 .metadata(
                     BetaMetadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
                 )
+                .outputFormat(
+                    BetaJsonOutputFormat.builder()
+                        .schema(
+                            BetaJsonOutputFormat.Schema.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
+                        .build()
+                )
                 .serviceTier(MessageCreateParams.ServiceTier.AUTO)
                 .addStopSequence("string")
                 .systemOfBetaTextBlockParams(
@@ -335,6 +364,7 @@ internal class MessageCreateParamsTest {
                                 .build()
                         )
                         .description("Get the current weather in a given location")
+                        .strict(true)
                         .type(BetaTool.Type.CUSTOM)
                         .build()
                 )
@@ -398,6 +428,16 @@ internal class MessageCreateParamsTest {
             )
         assertThat(body.metadata())
             .contains(BetaMetadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
+        assertThat(body.outputFormat())
+            .contains(
+                BetaJsonOutputFormat.builder()
+                    .schema(
+                        BetaJsonOutputFormat.Schema.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
+                    .build()
+            )
         assertThat(body.serviceTier()).contains(MessageCreateParams.ServiceTier.AUTO)
         assertThat(body.stopSequences().getOrNull()).containsExactly("string")
         assertThat(body.system())
@@ -459,6 +499,7 @@ internal class MessageCreateParamsTest {
                                 .build()
                         )
                         .description("Get the current weather in a given location")
+                        .strict(true)
                         .type(BetaTool.Type.CUSTOM)
                         .build()
                 )

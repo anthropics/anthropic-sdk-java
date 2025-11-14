@@ -175,12 +175,8 @@ class BetaMessageAccumulator private constructor() {
                         ) = BetaTextCitation.ofContentBlockLocation(contentBlockLocation)
 
                         override fun visitWebSearchResultLocation(
-                            betaCitationsWebSearchResultLocation:
-                                BetaCitationsWebSearchResultLocation
-                        ) =
-                            BetaTextCitation.ofWebSearchResultLocation(
-                                betaCitationsWebSearchResultLocation
-                            )
+                            webSearchResultLocation: BetaCitationsWebSearchResultLocation
+                        ) = BetaTextCitation.ofWebSearchResultLocation(webSearchResultLocation)
 
                         override fun visitSearchResultLocation(
                             searchResultLocation: BetaCitationSearchResultLocation
@@ -200,6 +196,23 @@ class BetaMessageAccumulator private constructor() {
     fun message() = checkNotNull(message) { "'message_stop' event not yet received." }
 
     /**
+     * Gets the final accumulated message with support for structured outputs. Until the last event
+     * has been accumulated, a [StructuredMessage] will not be available. Wait until all events have
+     * been handled by [accumulate] before calling this method. See that method for more details on
+     * how the last event is detected. See the
+     * [SDK documentation](https://github.com/anthropics/anthropic-sdk-java/#usage-with-streaming)
+     * for more details and example code.
+     *
+     * @param outputType The Java class from which the JSON schema in the request was derived. The
+     *   output JSON conforming to that schema can be converted automatically back to an instance of
+     *   that Java class by the [StructuredTextBlock].
+     * @throws IllegalStateException If called before the last event has been accumulated.
+     * @throws AnthropicInvalidDataException If the JSON data cannot be parsed to an instance of the
+     *   [outputType] class.
+     */
+    fun <T : Any> message(outputType: Class<T>) = StructuredMessage(outputType, message())
+
+    /**
      * Accumulates a streamed event and uses it to construct a [BetaMessage]. When all events,
      * including the `message_stop` event, have been accumulated, the message can be retrieved by
      * calling [message].
@@ -216,18 +229,18 @@ class BetaMessageAccumulator private constructor() {
 
         event.accept(
             object : BetaRawMessageStreamEvent.Visitor<Unit> {
-                override fun visitMessageStart(start: BetaRawMessageStartEvent) {
+                override fun visitMessageStart(messageStart: BetaRawMessageStartEvent) {
                     if (messageBuilder != null) {
                         throw AnthropicInvalidDataException(
                             "'message_start' event already received."
                         )
                     }
-                    messageBuilder = start.message().toBuilder()
-                    messageUsage = start.message().usage()
+                    messageBuilder = messageStart.message().toBuilder()
+                    messageUsage = messageStart.message().usage()
                 }
 
-                override fun visitMessageDelta(deltaEvent: BetaRawMessageDeltaEvent) {
-                    val delta = deltaEvent.delta()
+                override fun visitMessageDelta(messageDelta: BetaRawMessageDeltaEvent) {
+                    val delta = messageDelta.delta()
 
                     // The Anthropic API allows that there may be "one or more `message_delta`
                     // events". Here, the interpretation is that if multiple `message_delta` events
@@ -248,19 +261,19 @@ class BetaMessageAccumulator private constructor() {
                         requireMessageBuilder().stopSequence(delta.stopSequence().get())
                     }
 
-                    if (delta.container().isPresent()) {
+                    if (delta.container().isPresent) {
                         requireMessageBuilder().container(delta.container().get())
                     }
 
-                    if (deltaEvent.contextManagement().isPresent()) {
+                    if (messageDelta.contextManagement().isPresent()) {
                         requireMessageBuilder()
-                            .contextManagement(deltaEvent.contextManagement().get())
+                            .contextManagement(messageDelta.contextManagement().get())
                     }
 
-                    messageUsage = mergeMessageUsage(requireMessageUsage(), deltaEvent.usage())
+                    messageUsage = mergeMessageUsage(requireMessageUsage(), messageDelta.usage())
                 }
 
-                override fun visitMessageStop(stop: BetaRawMessageStopEvent) {
+                override fun visitMessageStop(messageStop: BetaRawMessageStopEvent) {
                     message =
                         requireMessageBuilder()
                             // The indexed content block map is converted to a list with the blocks
@@ -295,82 +308,73 @@ class BetaMessageAccumulator private constructor() {
                                     BetaRawContentBlockStartEvent.ContentBlock.Visitor<
                                         BetaContentBlock
                                     > {
-                                    override fun visitText(betaText: BetaTextBlock) =
-                                        BetaContentBlock.ofText(betaText)
+                                    override fun visitText(text: BetaTextBlock) =
+                                        BetaContentBlock.ofText(text)
 
-                                    override fun visitToolUse(betaToolUse: BetaToolUseBlock) =
-                                        BetaContentBlock.ofToolUse(betaToolUse)
+                                    override fun visitToolUse(toolUse: BetaToolUseBlock) =
+                                        BetaContentBlock.ofToolUse(toolUse)
 
                                     override fun visitServerToolUse(
-                                        betaServerToolUse: BetaServerToolUseBlock
+                                        serverToolUse: BetaServerToolUseBlock
                                     ): BetaContentBlock =
-                                        BetaContentBlock.ofServerToolUse(betaServerToolUse)
+                                        BetaContentBlock.ofServerToolUse(serverToolUse)
+
+                                    override fun visitWebSearchToolResult(
+                                        webSearchToolResult: BetaWebSearchToolResultBlock
+                                    ): BetaContentBlock =
+                                        BetaContentBlock.ofWebSearchToolResult(webSearchToolResult)
 
                                     override fun visitWebFetchToolResult(
                                         webFetchToolResult: BetaWebFetchToolResultBlock
                                     ): BetaContentBlock =
                                         BetaContentBlock.ofWebFetchToolResult(webFetchToolResult)
 
-                                    override fun visitWebSearchToolResult(
-                                        betaWebSearchToolResult: BetaWebSearchToolResultBlock
-                                    ): BetaContentBlock =
-                                        BetaContentBlock.ofWebSearchToolResult(
-                                            betaWebSearchToolResult
-                                        )
-
                                     override fun visitCodeExecutionToolResult(
                                         codeExecutionToolResult: BetaCodeExecutionToolResultBlock
-                                    ): BetaContentBlock {
-                                        return BetaContentBlock.ofCodeExecutionToolResult(
+                                    ): BetaContentBlock =
+                                        BetaContentBlock.ofCodeExecutionToolResult(
                                             codeExecutionToolResult
                                         )
-                                    }
 
                                     override fun visitBashCodeExecutionToolResult(
                                         bashCodeExecutionToolResult:
                                             BetaBashCodeExecutionToolResultBlock
-                                    ): BetaContentBlock {
-                                        return BetaContentBlock.ofBashCodeExecutionToolResult(
+                                    ): BetaContentBlock =
+                                        BetaContentBlock.ofBashCodeExecutionToolResult(
                                             bashCodeExecutionToolResult
                                         )
-                                    }
 
                                     override fun visitTextEditorCodeExecutionToolResult(
                                         textEditorCodeExecutionToolResult:
                                             BetaTextEditorCodeExecutionToolResultBlock
-                                    ): BetaContentBlock {
-                                        return BetaContentBlock.ofTextEditorCodeExecutionToolResult(
+                                    ): BetaContentBlock =
+                                        BetaContentBlock.ofTextEditorCodeExecutionToolResult(
                                             textEditorCodeExecutionToolResult
                                         )
-                                    }
 
                                     override fun visitMcpToolUse(
                                         mcpToolUse: BetaMcpToolUseBlock
-                                    ): BetaContentBlock {
-                                        return BetaContentBlock.ofMcpToolUse(mcpToolUse)
-                                    }
+                                    ): BetaContentBlock = BetaContentBlock.ofMcpToolUse(mcpToolUse)
 
                                     override fun visitMcpToolResult(
                                         mcpToolResult: BetaMcpToolResultBlock
-                                    ): BetaContentBlock {
-                                        return BetaContentBlock.ofMcpToolResult(mcpToolResult)
-                                    }
+                                    ): BetaContentBlock =
+                                        BetaContentBlock.ofMcpToolResult(mcpToolResult)
 
                                     override fun visitContainerUpload(
                                         containerUpload: BetaContainerUploadBlock
-                                    ): BetaContentBlock {
-                                        return BetaContentBlock.ofContainerUpload(containerUpload)
-                                    }
+                                    ): BetaContentBlock =
+                                        BetaContentBlock.ofContainerUpload(containerUpload)
 
-                                    override fun visitThinking(betaThinking: BetaThinkingBlock) =
-                                        BetaContentBlock.ofThinking(betaThinking)
+                                    override fun visitThinking(thinking: BetaThinkingBlock) =
+                                        BetaContentBlock.ofThinking(thinking)
 
                                     // Anthropic Extended Thinking API specification:
                                     // "`redacted_thinking` blocks will not have any deltas
                                     // associated and will be sent as a single event."
                                     override fun visitRedactedThinking(
-                                        betaRedactedThinking: BetaRedactedThinkingBlock
-                                    ) = BetaContentBlock.ofRedactedThinking(betaRedactedThinking)
+                                        redactedThinking: BetaRedactedThinkingBlock
+                                    ) = BetaContentBlock.ofRedactedThinking(redactedThinking)
                                 }
                             )
                 }

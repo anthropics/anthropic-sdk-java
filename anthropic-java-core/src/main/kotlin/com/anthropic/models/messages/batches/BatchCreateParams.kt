@@ -63,7 +63,7 @@ import kotlin.jvm.optionals.getOrNull
  * complete.
  *
  * Learn more about the Message Batches API in our
- * [user guide](/en/docs/build-with-claude/batch-processing)
+ * [user guide](https://docs.claude.com/en/docs/build-with-claude/batch-processing)
  */
 class BatchCreateParams
 private constructor(
