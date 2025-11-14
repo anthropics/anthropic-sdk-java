@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.11.0 (2025-11-14)
+
+Full Changelog: [v2.10.1...v2.11.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.10.1...v2.11.0)
+
+### Features
+
+* **api:** add support for structured outputs beta ([4459de9](https://github.com/anthropics/anthropic-sdk-java/commit/4459de954a86de84cdca9352eaa7d777e8f7e40d))
+
 ## 2.10.1 (2025-11-13)
 
 Full Changelog: [v2.10.0...v2.10.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.10.0...v2.10.1)
