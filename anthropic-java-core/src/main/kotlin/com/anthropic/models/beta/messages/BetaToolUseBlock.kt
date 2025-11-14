@@ -7,6 +7,8 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
+import com.anthropic.core.outputTypeFromJson
+import com.anthropic.core.toJsonString
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -43,6 +45,22 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     @JsonProperty("input") @ExcludeMissing fun _input(): JsonValue = input
+
+    /**
+     * Gets the input parameters to the tool use invocation, converting the values from the model in
+     * JSON format to an instance of a class that holds those values. The class must previously have
+     * been used to define the JSON schema for the tool use definition, so that the JSON corresponds
+     * to the structure of the given class.
+     *
+     * @throws AnthropicInvalidDataException If the JSON data is missing, `null`, or cannot be
+     *   parsed to an instance of the [parametersType] class. This might occur if the class is not
+     *   the same as the class that was originally used to define the tool use, or if the data from
+     *   the AI model is invalid or incomplete (e.g., truncated).
+     * @see MessageCreateParams.Builder.addTool
+     * @see _input
+     */
+    fun <T : Any> input(parametersType: Class<T>): T? =
+        outputTypeFromJson(toJsonString(input), parametersType)
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is

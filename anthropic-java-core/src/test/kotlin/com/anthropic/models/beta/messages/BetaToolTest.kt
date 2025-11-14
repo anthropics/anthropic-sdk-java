@@ -32,6 +32,7 @@ internal class BetaToolTest {
                         .build()
                 )
                 .description("Get the current weather in a given location")
+                .strict(true)
                 .type(BetaTool.Type.CUSTOM)
                 .build()
 
@@ -55,6 +56,7 @@ internal class BetaToolTest {
                     .build()
             )
         assertThat(betaTool.description()).contains("Get the current weather in a given location")
+        assertThat(betaTool.strict()).contains(true)
         assertThat(betaTool.type()).contains(BetaTool.Type.CUSTOM)
     }
 
@@ -81,6 +83,7 @@ internal class BetaToolTest {
                         .build()
                 )
                 .description("Get the current weather in a given location")
+                .strict(true)
                 .type(BetaTool.Type.CUSTOM)
                 .build()
 

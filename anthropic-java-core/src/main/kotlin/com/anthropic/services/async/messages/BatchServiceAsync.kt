@@ -43,7 +43,7 @@ interface BatchServiceAsync {
      * to complete.
      *
      * Learn more about the Message Batches API in our
-     * [user guide](/en/docs/build-with-claude/batch-processing)
+     * [user guide](https://docs.claude.com/en/docs/build-with-claude/batch-processing)
      */
     fun create(params: BatchCreateParams): CompletableFuture<MessageBatch> =
         create(params, RequestOptions.none())
@@ -59,7 +59,7 @@ interface BatchServiceAsync {
      * the results of a Message Batch, make a request to the `results_url` field in the response.
      *
      * Learn more about the Message Batches API in our
-     * [user guide](/en/docs/build-with-claude/batch-processing)
+     * [user guide](https://docs.claude.com/en/docs/build-with-claude/batch-processing)
      */
     fun retrieve(messageBatchId: String): CompletableFuture<MessageBatch> =
         retrieve(messageBatchId, BatchRetrieveParams.none())
@@ -100,7 +100,7 @@ interface BatchServiceAsync {
      * first.
      *
      * Learn more about the Message Batches API in our
-     * [user guide](/en/docs/build-with-claude/batch-processing)
+     * [user guide](https://docs.claude.com/en/docs/build-with-claude/batch-processing)
      */
     fun list(): CompletableFuture<BatchListPageAsync> = list(BatchListParams.none())
 
@@ -126,7 +126,7 @@ interface BatchServiceAsync {
      * an in-progress batch, you must first cancel it.
      *
      * Learn more about the Message Batches API in our
-     * [user guide](/en/docs/build-with-claude/batch-processing)
+     * [user guide](https://docs.claude.com/en/docs/build-with-claude/batch-processing)
      */
     fun delete(messageBatchId: String): CompletableFuture<DeletedMessageBatch> =
         delete(messageBatchId, BatchDeleteParams.none())
@@ -173,7 +173,7 @@ interface BatchServiceAsync {
      * result in any canceled requests if they were non-interruptible.
      *
      * Learn more about the Message Batches API in our
-     * [user guide](/en/docs/build-with-claude/batch-processing)
+     * [user guide](https://docs.claude.com/en/docs/build-with-claude/batch-processing)
      */
     fun cancel(messageBatchId: String): CompletableFuture<MessageBatch> =
         cancel(messageBatchId, BatchCancelParams.none())
@@ -217,7 +217,7 @@ interface BatchServiceAsync {
      * `custom_id` field to match results to requests.
      *
      * Learn more about the Message Batches API in our
-     * [user guide](/en/docs/build-with-claude/batch-processing)
+     * [user guide](https://docs.claude.com/en/docs/build-with-claude/batch-processing)
      */
     fun resultsStreaming(
         messageBatchId: String

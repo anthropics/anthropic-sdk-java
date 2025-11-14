@@ -12,6 +12,7 @@ import com.anthropic.core.allMaxBy
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.toImmutable
+import com.anthropic.core.toJsonString
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -221,6 +222,14 @@ private constructor(
 
         /** Alias for calling [content] with `Content.ofString(string)`. */
         fun content(string: String) = content(Content.ofString(string))
+
+        /**
+         * Sets the content to a string representing the JSON serialized form of a given object.
+         * This is useful when passing data that is the result of a tool use invocation.
+         *
+         * @see content
+         */
+        fun contentAsJson(toolUseResult: Any) = apply { content(toJsonString(toolUseResult)) }
 
         /** Alias for calling [content] with `Content.ofBlocks(blocks)`. */
         fun contentOfBlocks(blocks: List<Content.Block>) = content(Content.ofBlocks(blocks))

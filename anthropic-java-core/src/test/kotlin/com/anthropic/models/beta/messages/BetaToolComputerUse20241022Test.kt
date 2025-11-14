@@ -21,6 +21,7 @@ internal class BetaToolComputerUse20241022Test {
                         .build()
                 )
                 .displayNumber(0L)
+                .strict(true)
                 .build()
 
         assertThat(betaToolComputerUse20241022.displayHeightPx()).isEqualTo(1L)
@@ -32,6 +33,7 @@ internal class BetaToolComputerUse20241022Test {
                     .build()
             )
         assertThat(betaToolComputerUse20241022.displayNumber()).contains(0L)
+        assertThat(betaToolComputerUse20241022.strict()).contains(true)
     }
 
     @Test
@@ -47,6 +49,7 @@ internal class BetaToolComputerUse20241022Test {
                         .build()
                 )
                 .displayNumber(0L)
+                .strict(true)
                 .build()
 
         val roundtrippedBetaToolComputerUse20241022 =

@@ -39,7 +39,8 @@ import kotlin.jvm.optionals.getOrNull
  * The Token Count API can be used to count the number of tokens in a Message, including tools,
  * images, and documents, without creating it.
  *
- * Learn more about token counting in our [user guide](/en/docs/build-with-claude/token-counting)
+ * Learn more about token counting in our
+ * [user guide](https://docs.claude.com/en/docs/build-with-claude/token-counting)
  */
 class MessageCountTokensParams
 private constructor(

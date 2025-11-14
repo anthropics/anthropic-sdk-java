@@ -22,6 +22,7 @@ internal class BetaWebSearchTool20250305Test {
                         .build()
                 )
                 .maxUses(1L)
+                .strict(true)
                 .userLocation(
                     BetaWebSearchTool20250305.UserLocation.builder()
                         .city("New York")
@@ -41,6 +42,7 @@ internal class BetaWebSearchTool20250305Test {
                     .build()
             )
         assertThat(betaWebSearchTool20250305.maxUses()).contains(1L)
+        assertThat(betaWebSearchTool20250305.strict()).contains(true)
         assertThat(betaWebSearchTool20250305.userLocation())
             .contains(
                 BetaWebSearchTool20250305.UserLocation.builder()
@@ -65,6 +67,7 @@ internal class BetaWebSearchTool20250305Test {
                         .build()
                 )
                 .maxUses(1L)
+                .strict(true)
                 .userLocation(
                     BetaWebSearchTool20250305.UserLocation.builder()
                         .city("New York")

@@ -41,7 +41,7 @@ interface BatchService {
      * to complete.
      *
      * Learn more about the Message Batches API in our
-     * [user guide](/en/docs/build-with-claude/batch-processing)
+     * [user guide](https://docs.claude.com/en/docs/build-with-claude/batch-processing)
      */
     fun create(params: BatchCreateParams): BetaMessageBatch = create(params, RequestOptions.none())
 
@@ -56,7 +56,7 @@ interface BatchService {
      * the results of a Message Batch, make a request to the `results_url` field in the response.
      *
      * Learn more about the Message Batches API in our
-     * [user guide](/en/docs/build-with-claude/batch-processing)
+     * [user guide](https://docs.claude.com/en/docs/build-with-claude/batch-processing)
      */
     fun retrieve(messageBatchId: String): BetaMessageBatch =
         retrieve(messageBatchId, BatchRetrieveParams.none())
@@ -94,7 +94,7 @@ interface BatchService {
      * first.
      *
      * Learn more about the Message Batches API in our
-     * [user guide](/en/docs/build-with-claude/batch-processing)
+     * [user guide](https://docs.claude.com/en/docs/build-with-claude/batch-processing)
      */
     fun list(): BatchListPage = list(BatchListParams.none())
 
@@ -119,7 +119,7 @@ interface BatchService {
      * an in-progress batch, you must first cancel it.
      *
      * Learn more about the Message Batches API in our
-     * [user guide](/en/docs/build-with-claude/batch-processing)
+     * [user guide](https://docs.claude.com/en/docs/build-with-claude/batch-processing)
      */
     fun delete(messageBatchId: String): BetaDeletedMessageBatch =
         delete(messageBatchId, BatchDeleteParams.none())
@@ -162,7 +162,7 @@ interface BatchService {
      * result in any canceled requests if they were non-interruptible.
      *
      * Learn more about the Message Batches API in our
-     * [user guide](/en/docs/build-with-claude/batch-processing)
+     * [user guide](https://docs.claude.com/en/docs/build-with-claude/batch-processing)
      */
     fun cancel(messageBatchId: String): BetaMessageBatch =
         cancel(messageBatchId, BatchCancelParams.none())
@@ -202,7 +202,7 @@ interface BatchService {
      * `custom_id` field to match results to requests.
      *
      * Learn more about the Message Batches API in our
-     * [user guide](/en/docs/build-with-claude/batch-processing)
+     * [user guide](https://docs.claude.com/en/docs/build-with-claude/batch-processing)
      */
     @MustBeClosed
     fun resultsStreaming(
