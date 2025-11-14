@@ -18,6 +18,7 @@ internal class BetaToolBash20250124Test {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .strict(true)
                 .build()
 
         assertThat(betaToolBash20250124.cacheControl())
@@ -26,6 +27,7 @@ internal class BetaToolBash20250124Test {
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                     .build()
             )
+        assertThat(betaToolBash20250124.strict()).contains(true)
     }
 
     @Test
@@ -38,6 +40,7 @@ internal class BetaToolBash20250124Test {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .strict(true)
                 .build()
 
         val roundtrippedBetaToolBash20250124 =

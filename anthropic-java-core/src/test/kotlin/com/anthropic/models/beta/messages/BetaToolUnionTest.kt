@@ -36,6 +36,7 @@ internal class BetaToolUnionTest {
                         .build()
                 )
                 .description("Get the current weather in a given location")
+                .strict(true)
                 .type(BetaTool.Type.CUSTOM)
                 .build()
 
@@ -81,6 +82,7 @@ internal class BetaToolUnionTest {
                             .build()
                     )
                     .description("Get the current weather in a given location")
+                    .strict(true)
                     .type(BetaTool.Type.CUSTOM)
                     .build()
             )
@@ -103,6 +105,7 @@ internal class BetaToolUnionTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .strict(true)
                 .build()
 
         val betaToolUnion = BetaToolUnion.ofBash20241022(bash20241022)
@@ -134,6 +137,7 @@ internal class BetaToolUnionTest {
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .strict(true)
                     .build()
             )
 
@@ -155,6 +159,7 @@ internal class BetaToolUnionTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .strict(true)
                 .build()
 
         val betaToolUnion = BetaToolUnion.ofBash20250124(bash20250124)
@@ -186,6 +191,7 @@ internal class BetaToolUnionTest {
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .strict(true)
                     .build()
             )
 
@@ -207,6 +213,7 @@ internal class BetaToolUnionTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .strict(true)
                 .build()
 
         val betaToolUnion = BetaToolUnion.ofCodeExecutionTool20250522(codeExecutionTool20250522)
@@ -238,6 +245,7 @@ internal class BetaToolUnionTest {
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .strict(true)
                     .build()
             )
 
@@ -259,6 +267,7 @@ internal class BetaToolUnionTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .strict(true)
                 .build()
 
         val betaToolUnion = BetaToolUnion.ofCodeExecutionTool20250825(codeExecutionTool20250825)
@@ -290,6 +299,7 @@ internal class BetaToolUnionTest {
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .strict(true)
                     .build()
             )
 
@@ -314,6 +324,7 @@ internal class BetaToolUnionTest {
                         .build()
                 )
                 .displayNumber(0L)
+                .strict(true)
                 .build()
 
         val betaToolUnion = BetaToolUnion.ofComputerUse20241022(computerUse20241022)
@@ -348,6 +359,7 @@ internal class BetaToolUnionTest {
                             .build()
                     )
                     .displayNumber(0L)
+                    .strict(true)
                     .build()
             )
 
@@ -369,6 +381,7 @@ internal class BetaToolUnionTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .strict(true)
                 .build()
 
         val betaToolUnion = BetaToolUnion.ofMemoryTool20250818(memoryTool20250818)
@@ -400,6 +413,7 @@ internal class BetaToolUnionTest {
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .strict(true)
                     .build()
             )
 
@@ -424,6 +438,7 @@ internal class BetaToolUnionTest {
                         .build()
                 )
                 .displayNumber(0L)
+                .strict(true)
                 .build()
 
         val betaToolUnion = BetaToolUnion.ofComputerUse20250124(computerUse20250124)
@@ -458,6 +473,7 @@ internal class BetaToolUnionTest {
                             .build()
                     )
                     .displayNumber(0L)
+                    .strict(true)
                     .build()
             )
 
@@ -479,6 +495,7 @@ internal class BetaToolUnionTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .strict(true)
                 .build()
 
         val betaToolUnion = BetaToolUnion.ofTextEditor20241022(textEditor20241022)
@@ -510,6 +527,7 @@ internal class BetaToolUnionTest {
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .strict(true)
                     .build()
             )
 
@@ -531,6 +549,7 @@ internal class BetaToolUnionTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .strict(true)
                 .build()
 
         val betaToolUnion = BetaToolUnion.ofTextEditor20250124(textEditor20250124)
@@ -562,6 +581,7 @@ internal class BetaToolUnionTest {
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .strict(true)
                     .build()
             )
 
@@ -583,6 +603,7 @@ internal class BetaToolUnionTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .strict(true)
                 .build()
 
         val betaToolUnion = BetaToolUnion.ofTextEditor20250429(textEditor20250429)
@@ -614,6 +635,7 @@ internal class BetaToolUnionTest {
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .strict(true)
                     .build()
             )
 
@@ -636,6 +658,7 @@ internal class BetaToolUnionTest {
                         .build()
                 )
                 .maxCharacters(1L)
+                .strict(true)
                 .build()
 
         val betaToolUnion = BetaToolUnion.ofTextEditor20250728(textEditor20250728)
@@ -668,6 +691,7 @@ internal class BetaToolUnionTest {
                             .build()
                     )
                     .maxCharacters(1L)
+                    .strict(true)
                     .build()
             )
 
@@ -692,6 +716,7 @@ internal class BetaToolUnionTest {
                         .build()
                 )
                 .maxUses(1L)
+                .strict(true)
                 .userLocation(
                     BetaWebSearchTool20250305.UserLocation.builder()
                         .city("New York")
@@ -734,6 +759,7 @@ internal class BetaToolUnionTest {
                             .build()
                     )
                     .maxUses(1L)
+                    .strict(true)
                     .userLocation(
                         BetaWebSearchTool20250305.UserLocation.builder()
                             .city("New York")
@@ -768,6 +794,7 @@ internal class BetaToolUnionTest {
                 .citations(BetaCitationsConfigParam.builder().enabled(true).build())
                 .maxContentTokens(1L)
                 .maxUses(1L)
+                .strict(true)
                 .build()
 
         val betaToolUnion = BetaToolUnion.ofWebFetchTool20250910(webFetchTool20250910)
@@ -804,6 +831,7 @@ internal class BetaToolUnionTest {
                     .citations(BetaCitationsConfigParam.builder().enabled(true).build())
                     .maxContentTokens(1L)
                     .maxUses(1L)
+                    .strict(true)
                     .build()
             )
 

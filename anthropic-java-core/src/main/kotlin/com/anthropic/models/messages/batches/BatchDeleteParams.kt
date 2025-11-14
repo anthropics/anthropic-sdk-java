@@ -18,7 +18,7 @@ import kotlin.jvm.optionals.getOrNull
  * in-progress batch, you must first cancel it.
  *
  * Learn more about the Message Batches API in our
- * [user guide](/en/docs/build-with-claude/batch-processing)
+ * [user guide](https://docs.claude.com/en/docs/build-with-claude/batch-processing)
  */
 class BatchDeleteParams
 private constructor(

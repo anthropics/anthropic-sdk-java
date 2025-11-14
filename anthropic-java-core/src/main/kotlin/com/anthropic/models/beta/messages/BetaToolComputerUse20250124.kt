@@ -26,6 +26,7 @@ private constructor(
     private val type: JsonValue,
     private val cacheControl: JsonField<BetaCacheControlEphemeral>,
     private val displayNumber: JsonField<Long>,
+    private val strict: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -45,6 +46,7 @@ private constructor(
         @JsonProperty("display_number")
         @ExcludeMissing
         displayNumber: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("strict") @ExcludeMissing strict: JsonField<Boolean> = JsonMissing.of(),
     ) : this(
         displayHeightPx,
         displayWidthPx,
@@ -52,6 +54,7 @@ private constructor(
         type,
         cacheControl,
         displayNumber,
+        strict,
         mutableMapOf(),
     )
 
@@ -115,6 +118,12 @@ private constructor(
     fun displayNumber(): Optional<Long> = displayNumber.getOptional("display_number")
 
     /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun strict(): Optional<Boolean> = strict.getOptional("strict")
+
+    /**
      * Returns the raw JSON value of [displayHeightPx].
      *
      * Unlike [displayHeightPx], this method doesn't throw if the JSON field has an unexpected type.
@@ -149,6 +158,13 @@ private constructor(
     @JsonProperty("display_number")
     @ExcludeMissing
     fun _displayNumber(): JsonField<Long> = displayNumber
+
+    /**
+     * Returns the raw JSON value of [strict].
+     *
+     * Unlike [strict], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("strict") @ExcludeMissing fun _strict(): JsonField<Boolean> = strict
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -185,6 +201,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("computer_20250124")
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var displayNumber: JsonField<Long> = JsonMissing.of()
+        private var strict: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -195,6 +212,7 @@ private constructor(
             type = betaToolComputerUse20250124.type
             cacheControl = betaToolComputerUse20250124.cacheControl
             displayNumber = betaToolComputerUse20250124.displayNumber
+            strict = betaToolComputerUse20250124.strict
             additionalProperties = betaToolComputerUse20250124.additionalProperties.toMutableMap()
         }
 
@@ -297,6 +315,16 @@ private constructor(
             this.displayNumber = displayNumber
         }
 
+        fun strict(strict: Boolean) = strict(JsonField.of(strict))
+
+        /**
+         * Sets [Builder.strict] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.strict] with a well-typed [Boolean] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun strict(strict: JsonField<Boolean>) = apply { this.strict = strict }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -337,6 +365,7 @@ private constructor(
                 type,
                 cacheControl,
                 displayNumber,
+                strict,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -362,6 +391,7 @@ private constructor(
         }
         cacheControl().ifPresent { it.validate() }
         displayNumber()
+        strict()
         validated = true
     }
 
@@ -385,7 +415,8 @@ private constructor(
             name.let { if (it == JsonValue.from("computer")) 1 else 0 } +
             type.let { if (it == JsonValue.from("computer_20250124")) 1 else 0 } +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (displayNumber.asKnown().isPresent) 1 else 0)
+            (if (displayNumber.asKnown().isPresent) 1 else 0) +
+            (if (strict.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -399,6 +430,7 @@ private constructor(
             type == other.type &&
             cacheControl == other.cacheControl &&
             displayNumber == other.displayNumber &&
+            strict == other.strict &&
             additionalProperties == other.additionalProperties
     }
 
@@ -410,6 +442,7 @@ private constructor(
             type,
             cacheControl,
             displayNumber,
+            strict,
             additionalProperties,
         )
     }
@@ -417,5 +450,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaToolComputerUse20250124{displayHeightPx=$displayHeightPx, displayWidthPx=$displayWidthPx, name=$name, type=$type, cacheControl=$cacheControl, displayNumber=$displayNumber, additionalProperties=$additionalProperties}"
+        "BetaToolComputerUse20250124{displayHeightPx=$displayHeightPx, displayWidthPx=$displayWidthPx, name=$name, type=$type, cacheControl=$cacheControl, displayNumber=$displayNumber, strict=$strict, additionalProperties=$additionalProperties}"
 }

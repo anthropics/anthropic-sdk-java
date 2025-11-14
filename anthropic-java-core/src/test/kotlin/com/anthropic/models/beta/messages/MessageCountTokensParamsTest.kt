@@ -44,6 +44,15 @@ internal class MessageCountTokensParamsTest {
                     )
                     .build()
             )
+            .outputFormat(
+                BetaJsonOutputFormat.builder()
+                    .schema(
+                        BetaJsonOutputFormat.Schema.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
+                    .build()
+            )
             .systemOfBetaTextBlockParams(
                 listOf(
                     BetaTextBlockParam.builder()
@@ -87,6 +96,7 @@ internal class MessageCountTokensParamsTest {
                             .build()
                     )
                     .description("Get the current weather in a given location")
+                    .strict(true)
                     .type(BetaTool.Type.CUSTOM)
                     .build()
             )
@@ -124,6 +134,15 @@ internal class MessageCountTokensParamsTest {
                             BetaRequestMcpServerToolConfiguration.builder()
                                 .addAllowedTool("string")
                                 .enabled(true)
+                                .build()
+                        )
+                        .build()
+                )
+                .outputFormat(
+                    BetaJsonOutputFormat.builder()
+                        .schema(
+                            BetaJsonOutputFormat.Schema.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
                         .build()
@@ -171,6 +190,7 @@ internal class MessageCountTokensParamsTest {
                                 .build()
                         )
                         .description("Get the current weather in a given location")
+                        .strict(true)
                         .type(BetaTool.Type.CUSTOM)
                         .build()
                 )
@@ -232,6 +252,15 @@ internal class MessageCountTokensParamsTest {
                         )
                         .build()
                 )
+                .outputFormat(
+                    BetaJsonOutputFormat.builder()
+                        .schema(
+                            BetaJsonOutputFormat.Schema.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
+                        .build()
+                )
                 .systemOfBetaTextBlockParams(
                     listOf(
                         BetaTextBlockParam.builder()
@@ -275,6 +304,7 @@ internal class MessageCountTokensParamsTest {
                                 .build()
                         )
                         .description("Get the current weather in a given location")
+                        .strict(true)
                         .type(BetaTool.Type.CUSTOM)
                         .build()
                 )
@@ -314,6 +344,16 @@ internal class MessageCountTokensParamsTest {
                         BetaRequestMcpServerToolConfiguration.builder()
                             .addAllowedTool("string")
                             .enabled(true)
+                            .build()
+                    )
+                    .build()
+            )
+        assertThat(body.outputFormat())
+            .contains(
+                BetaJsonOutputFormat.builder()
+                    .schema(
+                        BetaJsonOutputFormat.Schema.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
                             .build()
                     )
                     .build()
@@ -376,6 +416,7 @@ internal class MessageCountTokensParamsTest {
                                 .build()
                         )
                         .description("Get the current weather in a given location")
+                        .strict(true)
                         .type(BetaTool.Type.CUSTOM)
                         .build()
                 )

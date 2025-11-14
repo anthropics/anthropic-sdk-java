@@ -27,6 +27,7 @@ private constructor(
     private val blockedDomains: JsonField<List<String>>,
     private val cacheControl: JsonField<BetaCacheControlEphemeral>,
     private val maxUses: JsonField<Long>,
+    private val strict: JsonField<Boolean>,
     private val userLocation: JsonField<UserLocation>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -45,6 +46,7 @@ private constructor(
         @ExcludeMissing
         cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
         @JsonProperty("max_uses") @ExcludeMissing maxUses: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("strict") @ExcludeMissing strict: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("user_location")
         @ExcludeMissing
         userLocation: JsonField<UserLocation> = JsonMissing.of(),
@@ -55,6 +57,7 @@ private constructor(
         blockedDomains,
         cacheControl,
         maxUses,
+        strict,
         userLocation,
         mutableMapOf(),
     )
@@ -121,6 +124,12 @@ private constructor(
     fun maxUses(): Optional<Long> = maxUses.getOptional("max_uses")
 
     /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun strict(): Optional<Boolean> = strict.getOptional("strict")
+
+    /**
      * Parameters for the user's location. Used to provide more relevant search results.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -163,6 +172,13 @@ private constructor(
     @JsonProperty("max_uses") @ExcludeMissing fun _maxUses(): JsonField<Long> = maxUses
 
     /**
+     * Returns the raw JSON value of [strict].
+     *
+     * Unlike [strict], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("strict") @ExcludeMissing fun _strict(): JsonField<Boolean> = strict
+
+    /**
      * Returns the raw JSON value of [userLocation].
      *
      * Unlike [userLocation], this method doesn't throw if the JSON field has an unexpected type.
@@ -200,6 +216,7 @@ private constructor(
         private var blockedDomains: JsonField<MutableList<String>>? = null
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var maxUses: JsonField<Long> = JsonMissing.of()
+        private var strict: JsonField<Boolean> = JsonMissing.of()
         private var userLocation: JsonField<UserLocation> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -211,6 +228,7 @@ private constructor(
             blockedDomains = betaWebSearchTool20250305.blockedDomains.map { it.toMutableList() }
             cacheControl = betaWebSearchTool20250305.cacheControl
             maxUses = betaWebSearchTool20250305.maxUses
+            strict = betaWebSearchTool20250305.strict
             userLocation = betaWebSearchTool20250305.userLocation
             additionalProperties = betaWebSearchTool20250305.additionalProperties.toMutableMap()
         }
@@ -351,6 +369,16 @@ private constructor(
          */
         fun maxUses(maxUses: JsonField<Long>) = apply { this.maxUses = maxUses }
 
+        fun strict(strict: Boolean) = strict(JsonField.of(strict))
+
+        /**
+         * Sets [Builder.strict] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.strict] with a well-typed [Boolean] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun strict(strict: JsonField<Boolean>) = apply { this.strict = strict }
+
         /** Parameters for the user's location. Used to provide more relevant search results. */
         fun userLocation(userLocation: UserLocation?) =
             userLocation(JsonField.ofNullable(userLocation))
@@ -402,6 +430,7 @@ private constructor(
                 (blockedDomains ?: JsonMissing.of()).map { it.toImmutable() },
                 cacheControl,
                 maxUses,
+                strict,
                 userLocation,
                 additionalProperties.toMutableMap(),
             )
@@ -428,6 +457,7 @@ private constructor(
         blockedDomains()
         cacheControl().ifPresent { it.validate() }
         maxUses()
+        strict()
         userLocation().ifPresent { it.validate() }
         validated = true
     }
@@ -453,6 +483,7 @@ private constructor(
             (blockedDomains.asKnown().getOrNull()?.size ?: 0) +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
             (if (maxUses.asKnown().isPresent) 1 else 0) +
+            (if (strict.asKnown().isPresent) 1 else 0) +
             (userLocation.asKnown().getOrNull()?.validity() ?: 0)
 
     /** Parameters for the user's location. Used to provide more relevant search results. */
@@ -775,6 +806,7 @@ private constructor(
             blockedDomains == other.blockedDomains &&
             cacheControl == other.cacheControl &&
             maxUses == other.maxUses &&
+            strict == other.strict &&
             userLocation == other.userLocation &&
             additionalProperties == other.additionalProperties
     }
@@ -787,6 +819,7 @@ private constructor(
             blockedDomains,
             cacheControl,
             maxUses,
+            strict,
             userLocation,
             additionalProperties,
         )
@@ -795,5 +828,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaWebSearchTool20250305{name=$name, type=$type, allowedDomains=$allowedDomains, blockedDomains=$blockedDomains, cacheControl=$cacheControl, maxUses=$maxUses, userLocation=$userLocation, additionalProperties=$additionalProperties}"
+        "BetaWebSearchTool20250305{name=$name, type=$type, allowedDomains=$allowedDomains, blockedDomains=$blockedDomains, cacheControl=$cacheControl, maxUses=$maxUses, strict=$strict, userLocation=$userLocation, additionalProperties=$additionalProperties}"
 }

@@ -22,6 +22,7 @@ private constructor(
     private val name: JsonValue,
     private val type: JsonValue,
     private val cacheControl: JsonField<BetaCacheControlEphemeral>,
+    private val strict: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -32,7 +33,8 @@ private constructor(
         @JsonProperty("cache_control")
         @ExcludeMissing
         cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
-    ) : this(name, type, cacheControl, mutableMapOf())
+        @JsonProperty("strict") @ExcludeMissing strict: JsonField<Boolean> = JsonMissing.of(),
+    ) : this(name, type, cacheControl, strict, mutableMapOf())
 
     /**
      * Name of the tool.
@@ -70,6 +72,12 @@ private constructor(
         cacheControl.getOptional("cache_control")
 
     /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun strict(): Optional<Boolean> = strict.getOptional("strict")
+
+    /**
      * Returns the raw JSON value of [cacheControl].
      *
      * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected type.
@@ -77,6 +85,13 @@ private constructor(
     @JsonProperty("cache_control")
     @ExcludeMissing
     fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
+
+    /**
+     * Returns the raw JSON value of [strict].
+     *
+     * Unlike [strict], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("strict") @ExcludeMissing fun _strict(): JsonField<Boolean> = strict
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -104,6 +119,7 @@ private constructor(
         private var name: JsonValue = JsonValue.from("str_replace_based_edit_tool")
         private var type: JsonValue = JsonValue.from("text_editor_20250429")
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
+        private var strict: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -111,6 +127,7 @@ private constructor(
             name = betaToolTextEditor20250429.name
             type = betaToolTextEditor20250429.type
             cacheControl = betaToolTextEditor20250429.cacheControl
+            strict = betaToolTextEditor20250429.strict
             additionalProperties = betaToolTextEditor20250429.additionalProperties.toMutableMap()
         }
 
@@ -161,6 +178,16 @@ private constructor(
             this.cacheControl = cacheControl
         }
 
+        fun strict(strict: Boolean) = strict(JsonField.of(strict))
+
+        /**
+         * Sets [Builder.strict] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.strict] with a well-typed [Boolean] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun strict(strict: JsonField<Boolean>) = apply { this.strict = strict }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -190,6 +217,7 @@ private constructor(
                 name,
                 type,
                 cacheControl,
+                strict,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -212,6 +240,7 @@ private constructor(
             }
         }
         cacheControl().ifPresent { it.validate() }
+        strict()
         validated = true
     }
 
@@ -232,7 +261,8 @@ private constructor(
     internal fun validity(): Int =
         name.let { if (it == JsonValue.from("str_replace_based_edit_tool")) 1 else 0 } +
             type.let { if (it == JsonValue.from("text_editor_20250429")) 1 else 0 } +
-            (cacheControl.asKnown().getOrNull()?.validity() ?: 0)
+            (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (strict.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -243,15 +273,16 @@ private constructor(
             name == other.name &&
             type == other.type &&
             cacheControl == other.cacheControl &&
+            strict == other.strict &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(name, type, cacheControl, additionalProperties)
+        Objects.hash(name, type, cacheControl, strict, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaToolTextEditor20250429{name=$name, type=$type, cacheControl=$cacheControl, additionalProperties=$additionalProperties}"
+        "BetaToolTextEditor20250429{name=$name, type=$type, cacheControl=$cacheControl, strict=$strict, additionalProperties=$additionalProperties}"
 }

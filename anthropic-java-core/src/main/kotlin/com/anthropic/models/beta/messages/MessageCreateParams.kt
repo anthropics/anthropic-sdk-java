@@ -42,7 +42,8 @@ import kotlin.jvm.optionals.getOrNull
  *
  * The Messages API can be used for either single queries or stateless multi-turn conversations.
  *
- * Learn more about the Messages API in our [user guide](/en/docs/initial-setup)
+ * Learn more about the Messages API in our
+ * [user guide](https://docs.claude.com/en/docs/initial-setup)
  */
 class MessageCreateParams
 private constructor(
@@ -173,6 +174,14 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun metadata(): Optional<BetaMetadata> = body.metadata()
+
+    /**
+     * A schema to specify Claude's output format in responses.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun outputFormat(): Optional<BetaJsonOutputFormat> = body.outputFormat()
 
     /**
      * Determines whether to use priority capacity (if available) or standard capacity for this
@@ -403,6 +412,13 @@ private constructor(
      * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _metadata(): JsonField<BetaMetadata> = body._metadata()
+
+    /**
+     * Returns the raw JSON value of [outputFormat].
+     *
+     * Unlike [outputFormat], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _outputFormat(): JsonField<BetaJsonOutputFormat> = body._outputFormat()
 
     /**
      * Returns the raw JSON value of [serviceTier].
@@ -806,6 +822,26 @@ private constructor(
          * supported value.
          */
         fun metadata(metadata: JsonField<BetaMetadata>) = apply { body.metadata(metadata) }
+
+        /** A schema to specify Claude's output format in responses. */
+        fun outputFormat(outputFormat: BetaJsonOutputFormat?) = apply {
+            body.outputFormat(outputFormat)
+        }
+
+        /** Alias for calling [Builder.outputFormat] with `outputFormat.orElse(null)`. */
+        fun outputFormat(outputFormat: Optional<BetaJsonOutputFormat>) =
+            outputFormat(outputFormat.getOrNull())
+
+        /**
+         * Sets [Builder.outputFormat] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.outputFormat] with a well-typed [BetaJsonOutputFormat]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun outputFormat(outputFormat: JsonField<BetaJsonOutputFormat>) = apply {
+            body.outputFormat(outputFormat)
+        }
 
         /**
          * Determines whether to use priority capacity (if available) or standard capacity for this
@@ -1367,6 +1403,7 @@ private constructor(
         private val contextManagement: JsonField<BetaContextManagementConfig>,
         private val mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>,
         private val metadata: JsonField<BetaMetadata>,
+        private val outputFormat: JsonField<BetaJsonOutputFormat>,
         private val serviceTier: JsonField<ServiceTier>,
         private val stopSequences: JsonField<List<String>>,
         private val system: JsonField<System>,
@@ -1400,6 +1437,9 @@ private constructor(
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<BetaMetadata> = JsonMissing.of(),
+            @JsonProperty("output_format")
+            @ExcludeMissing
+            outputFormat: JsonField<BetaJsonOutputFormat> = JsonMissing.of(),
             @JsonProperty("service_tier")
             @ExcludeMissing
             serviceTier: JsonField<ServiceTier> = JsonMissing.of(),
@@ -1429,6 +1469,7 @@ private constructor(
             contextManagement,
             mcpServers,
             metadata,
+            outputFormat,
             serviceTier,
             stopSequences,
             system,
@@ -1564,6 +1605,15 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun metadata(): Optional<BetaMetadata> = metadata.getOptional("metadata")
+
+        /**
+         * A schema to specify Claude's output format in responses.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun outputFormat(): Optional<BetaJsonOutputFormat> =
+            outputFormat.getOptional("output_format")
 
         /**
          * Determines whether to use priority capacity (if available) or standard capacity for this
@@ -1808,6 +1858,16 @@ private constructor(
         fun _metadata(): JsonField<BetaMetadata> = metadata
 
         /**
+         * Returns the raw JSON value of [outputFormat].
+         *
+         * Unlike [outputFormat], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("output_format")
+        @ExcludeMissing
+        fun _outputFormat(): JsonField<BetaJsonOutputFormat> = outputFormat
+
+        /**
          * Returns the raw JSON value of [serviceTier].
          *
          * Unlike [serviceTier], this method doesn't throw if the JSON field has an unexpected type.
@@ -1919,6 +1979,7 @@ private constructor(
             private var mcpServers: JsonField<MutableList<BetaRequestMcpServerUrlDefinition>>? =
                 null
             private var metadata: JsonField<BetaMetadata> = JsonMissing.of()
+            private var outputFormat: JsonField<BetaJsonOutputFormat> = JsonMissing.of()
             private var serviceTier: JsonField<ServiceTier> = JsonMissing.of()
             private var stopSequences: JsonField<MutableList<String>>? = null
             private var system: JsonField<System> = JsonMissing.of()
@@ -1939,6 +2000,7 @@ private constructor(
                 contextManagement = body.contextManagement
                 mcpServers = body.mcpServers.map { it.toMutableList() }
                 metadata = body.metadata
+                outputFormat = body.outputFormat
                 serviceTier = body.serviceTier
                 stopSequences = body.stopSequences.map { it.toMutableList() }
                 system = body.system
@@ -2242,6 +2304,25 @@ private constructor(
              * supported value.
              */
             fun metadata(metadata: JsonField<BetaMetadata>) = apply { this.metadata = metadata }
+
+            /** A schema to specify Claude's output format in responses. */
+            fun outputFormat(outputFormat: BetaJsonOutputFormat?) =
+                outputFormat(JsonField.ofNullable(outputFormat))
+
+            /** Alias for calling [Builder.outputFormat] with `outputFormat.orElse(null)`. */
+            fun outputFormat(outputFormat: Optional<BetaJsonOutputFormat>) =
+                outputFormat(outputFormat.getOrNull())
+
+            /**
+             * Sets [Builder.outputFormat] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.outputFormat] with a well-typed
+             * [BetaJsonOutputFormat] value instead. This method is primarily for setting the field
+             * to an undocumented or not yet supported value.
+             */
+            fun outputFormat(outputFormat: JsonField<BetaJsonOutputFormat>) = apply {
+                this.outputFormat = outputFormat
+            }
 
             /**
              * Determines whether to use priority capacity (if available) or standard capacity for
@@ -2698,6 +2779,7 @@ private constructor(
                     contextManagement,
                     (mcpServers ?: JsonMissing.of()).map { it.toImmutable() },
                     metadata,
+                    outputFormat,
                     serviceTier,
                     (stopSequences ?: JsonMissing.of()).map { it.toImmutable() },
                     system,
@@ -2725,6 +2807,7 @@ private constructor(
             contextManagement().ifPresent { it.validate() }
             mcpServers().ifPresent { it.forEach { it.validate() } }
             metadata().ifPresent { it.validate() }
+            outputFormat().ifPresent { it.validate() }
             serviceTier().ifPresent { it.validate() }
             stopSequences()
             system().ifPresent { it.validate() }
@@ -2760,6 +2843,7 @@ private constructor(
                 (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
                 (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+                (outputFormat.asKnown().getOrNull()?.validity() ?: 0) +
                 (serviceTier.asKnown().getOrNull()?.validity() ?: 0) +
                 (stopSequences.asKnown().getOrNull()?.size ?: 0) +
                 (system.asKnown().getOrNull()?.validity() ?: 0) +
@@ -2783,6 +2867,7 @@ private constructor(
                 contextManagement == other.contextManagement &&
                 mcpServers == other.mcpServers &&
                 metadata == other.metadata &&
+                outputFormat == other.outputFormat &&
                 serviceTier == other.serviceTier &&
                 stopSequences == other.stopSequences &&
                 system == other.system &&
@@ -2804,6 +2889,7 @@ private constructor(
                 contextManagement,
                 mcpServers,
                 metadata,
+                outputFormat,
                 serviceTier,
                 stopSequences,
                 system,
@@ -2820,7 +2906,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, container=$container, contextManagement=$contextManagement, mcpServers=$mcpServers, metadata=$metadata, serviceTier=$serviceTier, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, container=$container, contextManagement=$contextManagement, mcpServers=$mcpServers, metadata=$metadata, outputFormat=$outputFormat, serviceTier=$serviceTier, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
     }
 
     /** Container identifier for reuse across requests. */

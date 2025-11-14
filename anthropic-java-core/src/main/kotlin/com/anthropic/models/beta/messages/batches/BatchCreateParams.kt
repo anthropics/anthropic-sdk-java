@@ -24,6 +24,7 @@ import com.anthropic.models.beta.messages.BetaCodeExecutionTool20250825
 import com.anthropic.models.beta.messages.BetaContainerParams
 import com.anthropic.models.beta.messages.BetaContentBlockParam
 import com.anthropic.models.beta.messages.BetaContextManagementConfig
+import com.anthropic.models.beta.messages.BetaJsonOutputFormat
 import com.anthropic.models.beta.messages.BetaMemoryTool20250818
 import com.anthropic.models.beta.messages.BetaMessage
 import com.anthropic.models.beta.messages.BetaMessageParam
@@ -75,7 +76,7 @@ import kotlin.jvm.optionals.getOrNull
  * complete.
  *
  * Learn more about the Message Batches API in our
- * [user guide](/en/docs/build-with-claude/batch-processing)
+ * [user guide](https://docs.claude.com/en/docs/build-with-claude/batch-processing)
  */
 class BatchCreateParams
 private constructor(
@@ -743,6 +744,7 @@ private constructor(
             private val contextManagement: JsonField<BetaContextManagementConfig>,
             private val mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>,
             private val metadata: JsonField<BetaMetadata>,
+            private val outputFormat: JsonField<BetaJsonOutputFormat>,
             private val serviceTier: JsonField<ServiceTier>,
             private val stopSequences: JsonField<List<String>>,
             private val stream: JsonField<Boolean>,
@@ -777,6 +779,9 @@ private constructor(
                 @JsonProperty("metadata")
                 @ExcludeMissing
                 metadata: JsonField<BetaMetadata> = JsonMissing.of(),
+                @JsonProperty("output_format")
+                @ExcludeMissing
+                outputFormat: JsonField<BetaJsonOutputFormat> = JsonMissing.of(),
                 @JsonProperty("service_tier")
                 @ExcludeMissing
                 serviceTier: JsonField<ServiceTier> = JsonMissing.of(),
@@ -811,6 +816,7 @@ private constructor(
                 contextManagement,
                 mcpServers,
                 metadata,
+                outputFormat,
                 serviceTier,
                 stopSequences,
                 stream,
@@ -951,6 +957,15 @@ private constructor(
              *   if the server responded with an unexpected value).
              */
             fun metadata(): Optional<BetaMetadata> = metadata.getOptional("metadata")
+
+            /**
+             * A schema to specify Claude's output format in responses.
+             *
+             * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun outputFormat(): Optional<BetaJsonOutputFormat> =
+                outputFormat.getOptional("output_format")
 
             /**
              * Determines whether to use priority capacity (if available) or standard capacity for
@@ -1214,6 +1229,16 @@ private constructor(
             fun _metadata(): JsonField<BetaMetadata> = metadata
 
             /**
+             * Returns the raw JSON value of [outputFormat].
+             *
+             * Unlike [outputFormat], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("output_format")
+            @ExcludeMissing
+            fun _outputFormat(): JsonField<BetaJsonOutputFormat> = outputFormat
+
+            /**
              * Returns the raw JSON value of [serviceTier].
              *
              * Unlike [serviceTier], this method doesn't throw if the JSON field has an unexpected
@@ -1339,6 +1364,7 @@ private constructor(
                 private var mcpServers: JsonField<MutableList<BetaRequestMcpServerUrlDefinition>>? =
                     null
                 private var metadata: JsonField<BetaMetadata> = JsonMissing.of()
+                private var outputFormat: JsonField<BetaJsonOutputFormat> = JsonMissing.of()
                 private var serviceTier: JsonField<ServiceTier> = JsonMissing.of()
                 private var stopSequences: JsonField<MutableList<String>>? = null
                 private var stream: JsonField<Boolean> = JsonMissing.of()
@@ -1360,6 +1386,7 @@ private constructor(
                     contextManagement = params.contextManagement
                     mcpServers = params.mcpServers.map { it.toMutableList() }
                     metadata = params.metadata
+                    outputFormat = params.outputFormat
                     serviceTier = params.serviceTier
                     stopSequences = params.stopSequences.map { it.toMutableList() }
                     stream = params.stream
@@ -1669,6 +1696,25 @@ private constructor(
                  * yet supported value.
                  */
                 fun metadata(metadata: JsonField<BetaMetadata>) = apply { this.metadata = metadata }
+
+                /** A schema to specify Claude's output format in responses. */
+                fun outputFormat(outputFormat: BetaJsonOutputFormat?) =
+                    outputFormat(JsonField.ofNullable(outputFormat))
+
+                /** Alias for calling [Builder.outputFormat] with `outputFormat.orElse(null)`. */
+                fun outputFormat(outputFormat: Optional<BetaJsonOutputFormat>) =
+                    outputFormat(outputFormat.getOrNull())
+
+                /**
+                 * Sets [Builder.outputFormat] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.outputFormat] with a well-typed
+                 * [BetaJsonOutputFormat] value instead. This method is primarily for setting the
+                 * field to an undocumented or not yet supported value.
+                 */
+                fun outputFormat(outputFormat: JsonField<BetaJsonOutputFormat>) = apply {
+                    this.outputFormat = outputFormat
+                }
 
                 /**
                  * Determines whether to use priority capacity (if available) or standard capacity
@@ -2157,6 +2203,7 @@ private constructor(
                         contextManagement,
                         (mcpServers ?: JsonMissing.of()).map { it.toImmutable() },
                         metadata,
+                        outputFormat,
                         serviceTier,
                         (stopSequences ?: JsonMissing.of()).map { it.toImmutable() },
                         stream,
@@ -2185,6 +2232,7 @@ private constructor(
                 contextManagement().ifPresent { it.validate() }
                 mcpServers().ifPresent { it.forEach { it.validate() } }
                 metadata().ifPresent { it.validate() }
+                outputFormat().ifPresent { it.validate() }
                 serviceTier().ifPresent { it.validate() }
                 stopSequences()
                 stream()
@@ -2221,6 +2269,7 @@ private constructor(
                     (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
                     (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                     (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+                    (outputFormat.asKnown().getOrNull()?.validity() ?: 0) +
                     (serviceTier.asKnown().getOrNull()?.validity() ?: 0) +
                     (stopSequences.asKnown().getOrNull()?.size ?: 0) +
                     (if (stream.asKnown().isPresent) 1 else 0) +
@@ -2766,6 +2815,7 @@ private constructor(
                     contextManagement == other.contextManagement &&
                     mcpServers == other.mcpServers &&
                     metadata == other.metadata &&
+                    outputFormat == other.outputFormat &&
                     serviceTier == other.serviceTier &&
                     stopSequences == other.stopSequences &&
                     stream == other.stream &&
@@ -2788,6 +2838,7 @@ private constructor(
                     contextManagement,
                     mcpServers,
                     metadata,
+                    outputFormat,
                     serviceTier,
                     stopSequences,
                     stream,
@@ -2805,7 +2856,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Params{maxTokens=$maxTokens, messages=$messages, model=$model, container=$container, contextManagement=$contextManagement, mcpServers=$mcpServers, metadata=$metadata, serviceTier=$serviceTier, stopSequences=$stopSequences, stream=$stream, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+                "Params{maxTokens=$maxTokens, messages=$messages, model=$model, container=$container, contextManagement=$contextManagement, mcpServers=$mcpServers, metadata=$metadata, outputFormat=$outputFormat, serviceTier=$serviceTier, stopSequences=$stopSequences, stream=$stream, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {

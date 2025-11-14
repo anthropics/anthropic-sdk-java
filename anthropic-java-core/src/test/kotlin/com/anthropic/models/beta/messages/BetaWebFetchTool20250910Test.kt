@@ -24,6 +24,7 @@ internal class BetaWebFetchTool20250910Test {
                 .citations(BetaCitationsConfigParam.builder().enabled(true).build())
                 .maxContentTokens(1L)
                 .maxUses(1L)
+                .strict(true)
                 .build()
 
         assertThat(betaWebFetchTool20250910.allowedDomains().getOrNull()).containsExactly("string")
@@ -38,6 +39,7 @@ internal class BetaWebFetchTool20250910Test {
             .contains(BetaCitationsConfigParam.builder().enabled(true).build())
         assertThat(betaWebFetchTool20250910.maxContentTokens()).contains(1L)
         assertThat(betaWebFetchTool20250910.maxUses()).contains(1L)
+        assertThat(betaWebFetchTool20250910.strict()).contains(true)
     }
 
     @Test
@@ -55,6 +57,7 @@ internal class BetaWebFetchTool20250910Test {
                 .citations(BetaCitationsConfigParam.builder().enabled(true).build())
                 .maxContentTokens(1L)
                 .maxUses(1L)
+                .strict(true)
                 .build()
 
         val roundtrippedBetaWebFetchTool20250910 =

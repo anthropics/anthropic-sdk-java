@@ -18,6 +18,7 @@ internal class BetaCodeExecutionTool20250825Test {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .strict(true)
                 .build()
 
         assertThat(betaCodeExecutionTool20250825.cacheControl())
@@ -26,6 +27,7 @@ internal class BetaCodeExecutionTool20250825Test {
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                     .build()
             )
+        assertThat(betaCodeExecutionTool20250825.strict()).contains(true)
     }
 
     @Test
@@ -38,6 +40,7 @@ internal class BetaCodeExecutionTool20250825Test {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .strict(true)
                 .build()
 
         val roundtrippedBetaCodeExecutionTool20250825 =
