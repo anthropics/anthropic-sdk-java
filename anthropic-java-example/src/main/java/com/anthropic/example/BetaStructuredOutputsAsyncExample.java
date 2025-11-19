@@ -57,8 +57,8 @@ public final class BetaStructuredOutputsAsyncExample {
         AnthropicClientAsync client = AnthropicOkHttpClientAsync.fromEnv();
 
         StructuredMessageCreateParams<BookList> createParams = MessageCreateParams.builder()
-                .model("claude-sonnet-4-5-20250929-structured-outputs")
-                .putAdditionalHeader("anthropic-beta", "structured-outputs-2025-09-17")
+                .model("claude-sonnet-4-5")
+                .putAdditionalHeader("anthropic-beta", "structured-outputs-2025-11-13")
                 .maxTokens(2048)
                 .outputFormat(BookList.class)
                 .addUserMessage("List some famous late twentieth century novels.")
