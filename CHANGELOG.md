@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.11.1 (2025-11-19)
+
+Full Changelog: [v2.11.0...v2.11.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.11.0...v2.11.1)
+
+### Bug Fixes
+
+* **structured outputs:** use correct beta header ([ec6d404](https://github.com/anthropics/anthropic-sdk-java/commit/ec6d4047c3ae58496ec32dc5853afd1fcb9fb9e8))
+
 ## 2.11.0 (2025-11-14)
 
 Full Changelog: [v2.10.1...v2.11.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.10.1...v2.11.0)
