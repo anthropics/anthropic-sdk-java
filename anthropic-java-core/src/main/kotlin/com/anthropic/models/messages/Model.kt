@@ -24,6 +24,12 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
 
     companion object {
 
+        /** Premium model combining maximum intelligence with practical performance */
+        @JvmField val CLAUDE_OPUS_4_5_20251101 = of("claude-opus-4-5-20251101")
+
+        /** Premium model combining maximum intelligence with practical performance */
+        @JvmField val CLAUDE_OPUS_4_5 = of("claude-opus-4-5")
+
         /** High-performance model with early extended thinking */
         @Deprecated(
             "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
@@ -99,6 +105,10 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
 
     /** An enum containing [Model]'s known values. */
     enum class Known {
+        /** Premium model combining maximum intelligence with practical performance */
+        CLAUDE_OPUS_4_5_20251101,
+        /** Premium model combining maximum intelligence with practical performance */
+        CLAUDE_OPUS_4_5,
         @Deprecated(
             "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
         )
@@ -160,6 +170,10 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /** Premium model combining maximum intelligence with practical performance */
+        CLAUDE_OPUS_4_5_20251101,
+        /** Premium model combining maximum intelligence with practical performance */
+        CLAUDE_OPUS_4_5,
         @Deprecated(
             "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
         )
@@ -222,6 +236,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      */
     fun value(): Value =
         when (this) {
+            CLAUDE_OPUS_4_5_20251101 -> Value.CLAUDE_OPUS_4_5_20251101
+            CLAUDE_OPUS_4_5 -> Value.CLAUDE_OPUS_4_5
             CLAUDE_3_7_SONNET_LATEST -> Value.CLAUDE_3_7_SONNET_LATEST
             CLAUDE_3_7_SONNET_20250219 -> Value.CLAUDE_3_7_SONNET_20250219
             CLAUDE_3_5_HAIKU_LATEST -> Value.CLAUDE_3_5_HAIKU_LATEST
@@ -253,6 +269,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      */
     fun known(): Known =
         when (this) {
+            CLAUDE_OPUS_4_5_20251101 -> Known.CLAUDE_OPUS_4_5_20251101
+            CLAUDE_OPUS_4_5 -> Known.CLAUDE_OPUS_4_5
             CLAUDE_3_7_SONNET_LATEST -> Known.CLAUDE_3_7_SONNET_LATEST
             CLAUDE_3_7_SONNET_20250219 -> Known.CLAUDE_3_7_SONNET_20250219
             CLAUDE_3_5_HAIKU_LATEST -> Known.CLAUDE_3_5_HAIKU_LATEST

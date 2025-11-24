@@ -181,6 +181,15 @@ private constructor(
     fun metadata(): Optional<BetaMetadata> = body.metadata()
 
     /**
+     * Configuration options for the model's output. Controls aspects like how much effort the model
+     * puts into its response.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun outputConfig(): Optional<BetaOutputConfig> = body.outputConfig()
+
+    /**
      * A schema to specify Claude's output format in responses.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -417,6 +426,13 @@ private constructor(
      * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _metadata(): JsonField<BetaMetadata> = body._metadata()
+
+    /**
+     * Returns the raw JSON value of [outputConfig].
+     *
+     * Unlike [outputConfig], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _outputConfig(): JsonField<BetaOutputConfig> = body._outputConfig()
 
     /**
      * Returns the raw JSON value of [outputFormat].
@@ -830,6 +846,23 @@ private constructor(
          */
         fun metadata(metadata: JsonField<BetaMetadata>) = apply { body.metadata(metadata) }
 
+        /**
+         * Configuration options for the model's output. Controls aspects like how much effort the
+         * model puts into its response.
+         */
+        fun outputConfig(outputConfig: BetaOutputConfig) = apply { body.outputConfig(outputConfig) }
+
+        /**
+         * Sets [Builder.outputConfig] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.outputConfig] with a well-typed [BetaOutputConfig] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun outputConfig(outputConfig: JsonField<BetaOutputConfig>) = apply {
+            body.outputConfig(outputConfig)
+        }
+
         /** A schema to specify Claude's output format in responses. */
         fun outputFormat(outputFormat: BetaJsonOutputFormat?) = apply {
             body.outputFormat(outputFormat)
@@ -1193,6 +1226,14 @@ private constructor(
 
         /**
          * Alias for calling [addTool] with
+         * `BetaToolUnion.ofComputerUse20251124(computerUse20251124)`.
+         */
+        fun addTool(computerUse20251124: BetaToolComputerUse20251124) = apply {
+            body.addTool(computerUse20251124)
+        }
+
+        /**
+         * Alias for calling [addTool] with
          * `BetaToolUnion.ofTextEditor20250124(textEditor20250124)`.
          */
         fun addTool(textEditor20250124: BetaToolTextEditor20250124) = apply {
@@ -1248,6 +1289,25 @@ private constructor(
             toolParametersTypes.add(toolParametersType)
             addTool(toolFromClass(toolParametersType, localValidation))
         }
+
+        /**
+         * Alias for calling [addTool] with
+         * `BetaToolUnion.ofSearchToolBm25_20251119(searchToolBm25_20251119)`.
+         */
+        fun addTool(searchToolBm25_20251119: BetaToolSearchToolBm25_20251119) = apply {
+            body.addTool(searchToolBm25_20251119)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `BetaToolUnion.ofSearchToolRegex20251119(searchToolRegex20251119)`.
+         */
+        fun addTool(searchToolRegex20251119: BetaToolSearchToolRegex20251119) = apply {
+            body.addTool(searchToolRegex20251119)
+        }
+
+        /** Alias for calling [addTool] with `BetaToolUnion.ofMcpToolset(mcpToolset)`. */
+        fun addTool(mcpToolset: BetaMcpToolset) = apply { body.addTool(mcpToolset) }
 
         /**
          * Only sample from the top K options for each subsequent token.
@@ -1450,6 +1510,7 @@ private constructor(
         private val contextManagement: JsonField<BetaContextManagementConfig>,
         private val mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>,
         private val metadata: JsonField<BetaMetadata>,
+        private val outputConfig: JsonField<BetaOutputConfig>,
         private val outputFormat: JsonField<BetaJsonOutputFormat>,
         private val serviceTier: JsonField<ServiceTier>,
         private val stopSequences: JsonField<List<String>>,
@@ -1484,6 +1545,9 @@ private constructor(
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<BetaMetadata> = JsonMissing.of(),
+            @JsonProperty("output_config")
+            @ExcludeMissing
+            outputConfig: JsonField<BetaOutputConfig> = JsonMissing.of(),
             @JsonProperty("output_format")
             @ExcludeMissing
             outputFormat: JsonField<BetaJsonOutputFormat> = JsonMissing.of(),
@@ -1516,6 +1580,7 @@ private constructor(
             contextManagement,
             mcpServers,
             metadata,
+            outputConfig,
             outputFormat,
             serviceTier,
             stopSequences,
@@ -1652,6 +1717,15 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun metadata(): Optional<BetaMetadata> = metadata.getOptional("metadata")
+
+        /**
+         * Configuration options for the model's output. Controls aspects like how much effort the
+         * model puts into its response.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun outputConfig(): Optional<BetaOutputConfig> = outputConfig.getOptional("output_config")
 
         /**
          * A schema to specify Claude's output format in responses.
@@ -1905,6 +1979,16 @@ private constructor(
         fun _metadata(): JsonField<BetaMetadata> = metadata
 
         /**
+         * Returns the raw JSON value of [outputConfig].
+         *
+         * Unlike [outputConfig], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("output_config")
+        @ExcludeMissing
+        fun _outputConfig(): JsonField<BetaOutputConfig> = outputConfig
+
+        /**
          * Returns the raw JSON value of [outputFormat].
          *
          * Unlike [outputFormat], this method doesn't throw if the JSON field has an unexpected
@@ -2026,6 +2110,7 @@ private constructor(
             private var mcpServers: JsonField<MutableList<BetaRequestMcpServerUrlDefinition>>? =
                 null
             private var metadata: JsonField<BetaMetadata> = JsonMissing.of()
+            private var outputConfig: JsonField<BetaOutputConfig> = JsonMissing.of()
             private var outputFormat: JsonField<BetaJsonOutputFormat> = JsonMissing.of()
             private var serviceTier: JsonField<ServiceTier> = JsonMissing.of()
             private var stopSequences: JsonField<MutableList<String>>? = null
@@ -2047,6 +2132,7 @@ private constructor(
                 contextManagement = body.contextManagement
                 mcpServers = body.mcpServers.map { it.toMutableList() }
                 metadata = body.metadata
+                outputConfig = body.outputConfig
                 outputFormat = body.outputFormat
                 serviceTier = body.serviceTier
                 stopSequences = body.stopSequences.map { it.toMutableList() }
@@ -2351,6 +2437,24 @@ private constructor(
              * supported value.
              */
             fun metadata(metadata: JsonField<BetaMetadata>) = apply { this.metadata = metadata }
+
+            /**
+             * Configuration options for the model's output. Controls aspects like how much effort
+             * the model puts into its response.
+             */
+            fun outputConfig(outputConfig: BetaOutputConfig) =
+                outputConfig(JsonField.of(outputConfig))
+
+            /**
+             * Sets [Builder.outputConfig] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.outputConfig] with a well-typed [BetaOutputConfig]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun outputConfig(outputConfig: JsonField<BetaOutputConfig>) = apply {
+                this.outputConfig = outputConfig
+            }
 
             /** A schema to specify Claude's output format in responses. */
             fun outputFormat(outputFormat: BetaJsonOutputFormat?) =
@@ -2711,6 +2815,13 @@ private constructor(
 
             /**
              * Alias for calling [addTool] with
+             * `BetaToolUnion.ofComputerUse20251124(computerUse20251124)`.
+             */
+            fun addTool(computerUse20251124: BetaToolComputerUse20251124) =
+                addTool(BetaToolUnion.ofComputerUse20251124(computerUse20251124))
+
+            /**
+             * Alias for calling [addTool] with
              * `BetaToolUnion.ofTextEditor20250124(textEditor20250124)`.
              */
             fun addTool(textEditor20250124: BetaToolTextEditor20250124) =
@@ -2743,6 +2854,24 @@ private constructor(
              */
             fun addTool(webFetchTool20250910: BetaWebFetchTool20250910) =
                 addTool(BetaToolUnion.ofWebFetchTool20250910(webFetchTool20250910))
+
+            /**
+             * Alias for calling [addTool] with
+             * `BetaToolUnion.ofSearchToolBm25_20251119(searchToolBm25_20251119)`.
+             */
+            fun addTool(searchToolBm25_20251119: BetaToolSearchToolBm25_20251119) =
+                addTool(BetaToolUnion.ofSearchToolBm25_20251119(searchToolBm25_20251119))
+
+            /**
+             * Alias for calling [addTool] with
+             * `BetaToolUnion.ofSearchToolRegex20251119(searchToolRegex20251119)`.
+             */
+            fun addTool(searchToolRegex20251119: BetaToolSearchToolRegex20251119) =
+                addTool(BetaToolUnion.ofSearchToolRegex20251119(searchToolRegex20251119))
+
+            /** Alias for calling [addTool] with `BetaToolUnion.ofMcpToolset(mcpToolset)`. */
+            fun addTool(mcpToolset: BetaMcpToolset) =
+                addTool(BetaToolUnion.ofMcpToolset(mcpToolset))
 
             /**
              * Only sample from the top K options for each subsequent token.
@@ -2826,6 +2955,7 @@ private constructor(
                     contextManagement,
                     (mcpServers ?: JsonMissing.of()).map { it.toImmutable() },
                     metadata,
+                    outputConfig,
                     outputFormat,
                     serviceTier,
                     (stopSequences ?: JsonMissing.of()).map { it.toImmutable() },
@@ -2854,6 +2984,7 @@ private constructor(
             contextManagement().ifPresent { it.validate() }
             mcpServers().ifPresent { it.forEach { it.validate() } }
             metadata().ifPresent { it.validate() }
+            outputConfig().ifPresent { it.validate() }
             outputFormat().ifPresent { it.validate() }
             serviceTier().ifPresent { it.validate() }
             stopSequences()
@@ -2890,6 +3021,7 @@ private constructor(
                 (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
                 (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+                (outputConfig.asKnown().getOrNull()?.validity() ?: 0) +
                 (outputFormat.asKnown().getOrNull()?.validity() ?: 0) +
                 (serviceTier.asKnown().getOrNull()?.validity() ?: 0) +
                 (stopSequences.asKnown().getOrNull()?.size ?: 0) +
@@ -2914,6 +3046,7 @@ private constructor(
                 contextManagement == other.contextManagement &&
                 mcpServers == other.mcpServers &&
                 metadata == other.metadata &&
+                outputConfig == other.outputConfig &&
                 outputFormat == other.outputFormat &&
                 serviceTier == other.serviceTier &&
                 stopSequences == other.stopSequences &&
@@ -2936,6 +3069,7 @@ private constructor(
                 contextManagement,
                 mcpServers,
                 metadata,
+                outputConfig,
                 outputFormat,
                 serviceTier,
                 stopSequences,
@@ -2953,7 +3087,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, container=$container, contextManagement=$contextManagement, mcpServers=$mcpServers, metadata=$metadata, outputFormat=$outputFormat, serviceTier=$serviceTier, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, container=$container, contextManagement=$contextManagement, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
     }
 
     /** Container identifier for reuse across requests. */

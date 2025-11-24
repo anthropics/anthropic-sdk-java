@@ -67,7 +67,7 @@ internal class BetaMessageBatchSucceededResultTest {
                                 )
                                 .build()
                         )
-                        .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                        .model(Model.CLAUDE_OPUS_4_5_20251101)
                         .stopReason(BetaStopReason.END_TURN)
                         .stopSequence(null)
                         .usage(
@@ -137,7 +137,7 @@ internal class BetaMessageBatchSucceededResultTest {
                             )
                             .build()
                     )
-                    .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                    .model(Model.CLAUDE_OPUS_4_5_20251101)
                     .stopReason(BetaStopReason.END_TURN)
                     .stopSequence(null)
                     .usage(
@@ -211,7 +211,7 @@ internal class BetaMessageBatchSucceededResultTest {
                                 )
                                 .build()
                         )
-                        .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                        .model(Model.CLAUDE_OPUS_4_5_20251101)
                         .stopReason(BetaStopReason.END_TURN)
                         .stopSequence(null)
                         .usage(

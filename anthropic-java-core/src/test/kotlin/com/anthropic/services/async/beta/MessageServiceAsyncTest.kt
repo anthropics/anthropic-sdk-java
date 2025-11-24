@@ -14,6 +14,7 @@ import com.anthropic.models.beta.messages.BetaContextManagementConfig
 import com.anthropic.models.beta.messages.BetaInputTokensClearAtLeast
 import com.anthropic.models.beta.messages.BetaJsonOutputFormat
 import com.anthropic.models.beta.messages.BetaMetadata
+import com.anthropic.models.beta.messages.BetaOutputConfig
 import com.anthropic.models.beta.messages.BetaRequestMcpServerToolConfiguration
 import com.anthropic.models.beta.messages.BetaRequestMcpServerUrlDefinition
 import com.anthropic.models.beta.messages.BetaSkillParams
@@ -47,7 +48,7 @@ internal class MessageServiceAsyncTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
-                    .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                    .model(Model.CLAUDE_OPUS_4_5_20251101)
                     .container(
                         BetaContainerParams.builder()
                             .id("id")
@@ -92,6 +93,9 @@ internal class MessageServiceAsyncTest {
                         BetaMetadata.builder()
                             .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
                             .build()
+                    )
+                    .outputConfig(
+                        BetaOutputConfig.builder().effort(BetaOutputConfig.Effort.LOW).build()
                     )
                     .outputFormat(
                         BetaJsonOutputFormat.builder()
@@ -145,12 +149,19 @@ internal class MessageServiceAsyncTest {
                                     .build()
                             )
                             .name("name")
+                            .addAllowedCaller(BetaTool.AllowedCaller.DIRECT)
                             .cacheControl(
                                 BetaCacheControlEphemeral.builder()
                                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                                     .build()
                             )
+                            .deferLoading(true)
                             .description("Get the current weather in a given location")
+                            .addInputExample(
+                                BetaTool.InputExample.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
                             .strict(true)
                             .type(BetaTool.Type.CUSTOM)
                             .build()
@@ -180,7 +191,7 @@ internal class MessageServiceAsyncTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
-                    .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                    .model(Model.CLAUDE_OPUS_4_5_20251101)
                     .container(
                         BetaContainerParams.builder()
                             .id("id")
@@ -225,6 +236,9 @@ internal class MessageServiceAsyncTest {
                         BetaMetadata.builder()
                             .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
                             .build()
+                    )
+                    .outputConfig(
+                        BetaOutputConfig.builder().effort(BetaOutputConfig.Effort.LOW).build()
                     )
                     .outputFormat(
                         BetaJsonOutputFormat.builder()
@@ -278,12 +292,19 @@ internal class MessageServiceAsyncTest {
                                     .build()
                             )
                             .name("name")
+                            .addAllowedCaller(BetaTool.AllowedCaller.DIRECT)
                             .cacheControl(
                                 BetaCacheControlEphemeral.builder()
                                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                                     .build()
                             )
+                            .deferLoading(true)
                             .description("Get the current weather in a given location")
+                            .addInputExample(
+                                BetaTool.InputExample.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
                             .strict(true)
                             .type(BetaTool.Type.CUSTOM)
                             .build()
@@ -315,7 +336,7 @@ internal class MessageServiceAsyncTest {
                 MessageCountTokensParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .addUserMessage("Hello, world")
-                    .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                    .model(Model.CLAUDE_OPUS_4_5_20251101)
                     .contextManagement(
                         BetaContextManagementConfig.builder()
                             .addEdit(
@@ -343,6 +364,9 @@ internal class MessageServiceAsyncTest {
                                     .build()
                             )
                             .build()
+                    )
+                    .outputConfig(
+                        BetaOutputConfig.builder().effort(BetaOutputConfig.Effort.LOW).build()
                     )
                     .outputFormat(
                         BetaJsonOutputFormat.builder()
@@ -393,12 +417,19 @@ internal class MessageServiceAsyncTest {
                                     .build()
                             )
                             .name("name")
+                            .addAllowedCaller(BetaTool.AllowedCaller.DIRECT)
                             .cacheControl(
                                 BetaCacheControlEphemeral.builder()
                                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                                     .build()
                             )
+                            .deferLoading(true)
                             .description("Get the current weather in a given location")
+                            .addInputExample(
+                                BetaTool.InputExample.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
                             .strict(true)
                             .type(BetaTool.Type.CUSTOM)
                             .build()

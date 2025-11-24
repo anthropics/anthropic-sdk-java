@@ -34,6 +34,7 @@ private constructor(
     private val bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlock? = null,
     private val textEditorCodeExecutionToolResult: BetaTextEditorCodeExecutionToolResultBlock? =
         null,
+    private val toolSearchToolResult: BetaToolSearchToolResultBlock? = null,
     private val mcpToolUse: BetaMcpToolUseBlock? = null,
     private val mcpToolResult: BetaMcpToolResultBlock? = null,
     private val containerUpload: BetaContainerUploadBlock? = null,
@@ -93,6 +94,11 @@ private constructor(
                         textEditorCodeExecutionToolResult.toParam()
                     )
 
+                override fun visitToolSearchToolResult(
+                    toolSearchToolResult: BetaToolSearchToolResultBlock
+                ): BetaContentBlockParam =
+                    BetaContentBlockParam.ofToolSearchToolResult(toolSearchToolResult.toParam())
+
                 override fun visitMcpToolUse(
                     mcpToolUse: BetaMcpToolUseBlock
                 ): BetaContentBlockParam = BetaContentBlockParam.ofMcpToolUse(mcpToolUse.toParam())
@@ -135,6 +141,9 @@ private constructor(
     fun textEditorCodeExecutionToolResult(): Optional<BetaTextEditorCodeExecutionToolResultBlock> =
         Optional.ofNullable(textEditorCodeExecutionToolResult)
 
+    fun toolSearchToolResult(): Optional<BetaToolSearchToolResultBlock> =
+        Optional.ofNullable(toolSearchToolResult)
+
     fun mcpToolUse(): Optional<BetaMcpToolUseBlock> = Optional.ofNullable(mcpToolUse)
 
     fun mcpToolResult(): Optional<BetaMcpToolResultBlock> = Optional.ofNullable(mcpToolResult)
@@ -161,6 +170,8 @@ private constructor(
     fun isBashCodeExecutionToolResult(): Boolean = bashCodeExecutionToolResult != null
 
     fun isTextEditorCodeExecutionToolResult(): Boolean = textEditorCodeExecutionToolResult != null
+
+    fun isToolSearchToolResult(): Boolean = toolSearchToolResult != null
 
     fun isMcpToolUse(): Boolean = mcpToolUse != null
 
@@ -194,6 +205,9 @@ private constructor(
     fun asTextEditorCodeExecutionToolResult(): BetaTextEditorCodeExecutionToolResultBlock =
         textEditorCodeExecutionToolResult.getOrThrow("textEditorCodeExecutionToolResult")
 
+    fun asToolSearchToolResult(): BetaToolSearchToolResultBlock =
+        toolSearchToolResult.getOrThrow("toolSearchToolResult")
+
     fun asMcpToolUse(): BetaMcpToolUseBlock = mcpToolUse.getOrThrow("mcpToolUse")
 
     fun asMcpToolResult(): BetaMcpToolResultBlock = mcpToolResult.getOrThrow("mcpToolResult")
@@ -219,6 +233,7 @@ private constructor(
                 visitor.visitBashCodeExecutionToolResult(bashCodeExecutionToolResult)
             textEditorCodeExecutionToolResult != null ->
                 visitor.visitTextEditorCodeExecutionToolResult(textEditorCodeExecutionToolResult)
+            toolSearchToolResult != null -> visitor.visitToolSearchToolResult(toolSearchToolResult)
             mcpToolUse != null -> visitor.visitMcpToolUse(mcpToolUse)
             mcpToolResult != null -> visitor.visitMcpToolResult(mcpToolResult)
             containerUpload != null -> visitor.visitContainerUpload(containerUpload)
@@ -282,6 +297,12 @@ private constructor(
                     textEditorCodeExecutionToolResult: BetaTextEditorCodeExecutionToolResultBlock
                 ) {
                     textEditorCodeExecutionToolResult.validate()
+                }
+
+                override fun visitToolSearchToolResult(
+                    toolSearchToolResult: BetaToolSearchToolResultBlock
+                ) {
+                    toolSearchToolResult.validate()
                 }
 
                 override fun visitMcpToolUse(mcpToolUse: BetaMcpToolUseBlock) {
@@ -349,6 +370,10 @@ private constructor(
                     textEditorCodeExecutionToolResult: BetaTextEditorCodeExecutionToolResultBlock
                 ) = textEditorCodeExecutionToolResult.validity()
 
+                override fun visitToolSearchToolResult(
+                    toolSearchToolResult: BetaToolSearchToolResultBlock
+                ) = toolSearchToolResult.validity()
+
                 override fun visitMcpToolUse(mcpToolUse: BetaMcpToolUseBlock) =
                     mcpToolUse.validity()
 
@@ -378,6 +403,7 @@ private constructor(
             codeExecutionToolResult == other.codeExecutionToolResult &&
             bashCodeExecutionToolResult == other.bashCodeExecutionToolResult &&
             textEditorCodeExecutionToolResult == other.textEditorCodeExecutionToolResult &&
+            toolSearchToolResult == other.toolSearchToolResult &&
             mcpToolUse == other.mcpToolUse &&
             mcpToolResult == other.mcpToolResult &&
             containerUpload == other.containerUpload
@@ -395,6 +421,7 @@ private constructor(
             codeExecutionToolResult,
             bashCodeExecutionToolResult,
             textEditorCodeExecutionToolResult,
+            toolSearchToolResult,
             mcpToolUse,
             mcpToolResult,
             containerUpload,
@@ -416,6 +443,8 @@ private constructor(
                 "BetaContentBlock{bashCodeExecutionToolResult=$bashCodeExecutionToolResult}"
             textEditorCodeExecutionToolResult != null ->
                 "BetaContentBlock{textEditorCodeExecutionToolResult=$textEditorCodeExecutionToolResult}"
+            toolSearchToolResult != null ->
+                "BetaContentBlock{toolSearchToolResult=$toolSearchToolResult}"
             mcpToolUse != null -> "BetaContentBlock{mcpToolUse=$mcpToolUse}"
             mcpToolResult != null -> "BetaContentBlock{mcpToolResult=$mcpToolResult}"
             containerUpload != null -> "BetaContentBlock{containerUpload=$containerUpload}"
@@ -463,6 +492,10 @@ private constructor(
         ) = BetaContentBlock(textEditorCodeExecutionToolResult = textEditorCodeExecutionToolResult)
 
         @JvmStatic
+        fun ofToolSearchToolResult(toolSearchToolResult: BetaToolSearchToolResultBlock) =
+            BetaContentBlock(toolSearchToolResult = toolSearchToolResult)
+
+        @JvmStatic
         fun ofMcpToolUse(mcpToolUse: BetaMcpToolUseBlock) =
             BetaContentBlock(mcpToolUse = mcpToolUse)
 
@@ -507,6 +540,8 @@ private constructor(
         fun visitTextEditorCodeExecutionToolResult(
             textEditorCodeExecutionToolResult: BetaTextEditorCodeExecutionToolResultBlock
         ): T
+
+        fun visitToolSearchToolResult(toolSearchToolResult: BetaToolSearchToolResultBlock): T
 
         fun visitMcpToolUse(mcpToolUse: BetaMcpToolUseBlock): T
 
@@ -594,6 +629,11 @@ private constructor(
                             BetaContentBlock(textEditorCodeExecutionToolResult = it, _json = json)
                         } ?: BetaContentBlock(_json = json)
                 }
+                "tool_search_tool_result" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaToolSearchToolResultBlock>())
+                        ?.let { BetaContentBlock(toolSearchToolResult = it, _json = json) }
+                        ?: BetaContentBlock(_json = json)
+                }
                 "mcp_tool_use" -> {
                     return tryDeserialize(node, jacksonTypeRef<BetaMcpToolUseBlock>())?.let {
                         BetaContentBlock(mcpToolUse = it, _json = json)
@@ -637,6 +677,8 @@ private constructor(
                     generator.writeObject(value.bashCodeExecutionToolResult)
                 value.textEditorCodeExecutionToolResult != null ->
                     generator.writeObject(value.textEditorCodeExecutionToolResult)
+                value.toolSearchToolResult != null ->
+                    generator.writeObject(value.toolSearchToolResult)
                 value.mcpToolUse != null -> generator.writeObject(value.mcpToolUse)
                 value.mcpToolResult != null -> generator.writeObject(value.mcpToolResult)
                 value.containerUpload != null -> generator.writeObject(value.containerUpload)
