@@ -332,7 +332,9 @@ class BetaMessageAccumulator private constructor() {
                                     override fun visitToolSearchToolResult(
                                         toolSearchToolResult: BetaToolSearchToolResultBlock
                                     ): BetaContentBlock =
-                                        BetaContentBlock.ofToolSearchToolResult(toolSearchToolResult)
+                                        BetaContentBlock.ofToolSearchToolResult(
+                                            toolSearchToolResult
+                                        )
 
                                     override fun visitCodeExecutionToolResult(
                                         codeExecutionToolResult: BetaCodeExecutionToolResultBlock
