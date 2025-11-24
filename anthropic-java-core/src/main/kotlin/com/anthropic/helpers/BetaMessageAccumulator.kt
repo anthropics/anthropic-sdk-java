@@ -329,6 +329,11 @@ class BetaMessageAccumulator private constructor() {
                                     ): BetaContentBlock =
                                         BetaContentBlock.ofWebFetchToolResult(webFetchToolResult)
 
+                                    override fun visitToolSearchToolResult(
+                                        toolSearchToolResult: BetaToolSearchToolResultBlock
+                                    ): BetaContentBlock =
+                                        BetaContentBlock.ofToolSearchToolResult(toolSearchToolResult)
+
                                     override fun visitCodeExecutionToolResult(
                                         codeExecutionToolResult: BetaCodeExecutionToolResultBlock
                                     ): BetaContentBlock =
