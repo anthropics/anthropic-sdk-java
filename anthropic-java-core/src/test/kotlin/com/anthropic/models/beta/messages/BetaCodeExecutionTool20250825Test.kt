@@ -4,6 +4,7 @@ package com.anthropic.models.beta.messages
 
 import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -13,20 +14,25 @@ internal class BetaCodeExecutionTool20250825Test {
     fun create() {
         val betaCodeExecutionTool20250825 =
             BetaCodeExecutionTool20250825.builder()
+                .addAllowedCaller(BetaCodeExecutionTool20250825.AllowedCaller.DIRECT)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .deferLoading(true)
                 .strict(true)
                 .build()
 
+        assertThat(betaCodeExecutionTool20250825.allowedCallers().getOrNull())
+            .containsExactly(BetaCodeExecutionTool20250825.AllowedCaller.DIRECT)
         assertThat(betaCodeExecutionTool20250825.cacheControl())
             .contains(
                 BetaCacheControlEphemeral.builder()
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                     .build()
             )
+        assertThat(betaCodeExecutionTool20250825.deferLoading()).contains(true)
         assertThat(betaCodeExecutionTool20250825.strict()).contains(true)
     }
 
@@ -35,11 +41,13 @@ internal class BetaCodeExecutionTool20250825Test {
         val jsonMapper = jsonMapper()
         val betaCodeExecutionTool20250825 =
             BetaCodeExecutionTool20250825.builder()
+                .addAllowedCaller(BetaCodeExecutionTool20250825.AllowedCaller.DIRECT)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .deferLoading(true)
                 .strict(true)
                 .build()
 

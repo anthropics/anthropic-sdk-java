@@ -26,6 +26,7 @@ internal class BetaToolUseBlockParamTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .caller(BetaDirectCaller.builder().build())
                 .build()
 
         assertThat(betaToolUseBlockParam.id()).isEqualTo("id")
@@ -42,6 +43,8 @@ internal class BetaToolUseBlockParamTest {
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                     .build()
             )
+        assertThat(betaToolUseBlockParam.caller())
+            .contains(BetaToolUseBlockParam.Caller.ofDirect(BetaDirectCaller.builder().build()))
     }
 
     @Test
@@ -61,6 +64,7 @@ internal class BetaToolUseBlockParamTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .caller(BetaDirectCaller.builder().build())
                 .build()
 
         val roundtrippedBetaToolUseBlockParam =
