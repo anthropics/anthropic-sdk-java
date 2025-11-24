@@ -2,8 +2,10 @@
 
 package com.anthropic.models.beta.messages
 
+import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -13,19 +15,35 @@ internal class BetaToolTextEditor20250728Test {
     fun create() {
         val betaToolTextEditor20250728 =
             BetaToolTextEditor20250728.builder()
+                .addAllowedCaller(BetaToolTextEditor20250728.AllowedCaller.DIRECT)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
+                .deferLoading(true)
+                .addInputExample(
+                    BetaToolTextEditor20250728.InputExample.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
                 .maxCharacters(1L)
                 .strict(true)
                 .build()
 
+        assertThat(betaToolTextEditor20250728.allowedCallers().getOrNull())
+            .containsExactly(BetaToolTextEditor20250728.AllowedCaller.DIRECT)
         assertThat(betaToolTextEditor20250728.cacheControl())
             .contains(
                 BetaCacheControlEphemeral.builder()
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                    .build()
+            )
+        assertThat(betaToolTextEditor20250728.deferLoading()).contains(true)
+        assertThat(betaToolTextEditor20250728.inputExamples().getOrNull())
+            .containsExactly(
+                BetaToolTextEditor20250728.InputExample.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
                     .build()
             )
         assertThat(betaToolTextEditor20250728.maxCharacters()).contains(1L)
@@ -37,9 +55,16 @@ internal class BetaToolTextEditor20250728Test {
         val jsonMapper = jsonMapper()
         val betaToolTextEditor20250728 =
             BetaToolTextEditor20250728.builder()
+                .addAllowedCaller(BetaToolTextEditor20250728.AllowedCaller.DIRECT)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
+                .deferLoading(true)
+                .addInputExample(
+                    BetaToolTextEditor20250728.InputExample.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
                 .maxCharacters(1L)

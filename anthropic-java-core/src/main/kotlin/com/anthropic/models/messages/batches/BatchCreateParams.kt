@@ -511,8 +511,8 @@ private constructor(
         /**
          * Messages API creation parameters for the individual request.
          *
-         * See the [Messages API reference](/en/api/messages) for full documentation on available
-         * parameters.
+         * See the [Messages API reference](https://docs.claude.com/en/api/messages) for full
+         * documentation on available parameters.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -593,8 +593,8 @@ private constructor(
             /**
              * Messages API creation parameters for the individual request.
              *
-             * See the [Messages API reference](/en/api/messages) for full documentation on
-             * available parameters.
+             * See the [Messages API reference](https://docs.claude.com/en/api/messages) for full
+             * documentation on available parameters.
              */
             fun params(params: Params) = params(JsonField.of(params))
 
@@ -681,8 +681,8 @@ private constructor(
         /**
          * Messages API creation parameters for the individual request.
          *
-         * See the [Messages API reference](/en/api/messages) for full documentation on available
-         * parameters.
+         * See the [Messages API reference](https://docs.claude.com/en/api/messages) for full
+         * documentation on available parameters.
          */
         class Params
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)

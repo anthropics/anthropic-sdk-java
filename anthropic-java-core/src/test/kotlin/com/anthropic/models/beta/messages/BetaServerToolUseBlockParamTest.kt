@@ -26,6 +26,7 @@ internal class BetaServerToolUseBlockParamTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .caller(BetaDirectCaller.builder().build())
                 .build()
 
         assertThat(betaServerToolUseBlockParam.id()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
@@ -42,6 +43,10 @@ internal class BetaServerToolUseBlockParamTest {
                 BetaCacheControlEphemeral.builder()
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                     .build()
+            )
+        assertThat(betaServerToolUseBlockParam.caller())
+            .contains(
+                BetaServerToolUseBlockParam.Caller.ofDirect(BetaDirectCaller.builder().build())
             )
     }
 
@@ -62,6 +67,7 @@ internal class BetaServerToolUseBlockParamTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .caller(BetaDirectCaller.builder().build())
                 .build()
 
         val roundtrippedBetaServerToolUseBlockParam =

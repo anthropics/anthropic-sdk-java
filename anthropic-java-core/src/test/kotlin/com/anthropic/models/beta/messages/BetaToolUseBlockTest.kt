@@ -21,6 +21,7 @@ internal class BetaToolUseBlockTest {
                         .build()
                 )
                 .name("x")
+                .caller(BetaDirectCaller.builder().build())
                 .build()
 
         assertThat(betaToolUseBlock.id()).isEqualTo("id")
@@ -31,6 +32,8 @@ internal class BetaToolUseBlockTest {
                     .build()
             )
         assertThat(betaToolUseBlock.name()).isEqualTo("x")
+        assertThat(betaToolUseBlock.caller())
+            .contains(BetaToolUseBlock.Caller.ofDirect(BetaDirectCaller.builder().build()))
     }
 
     @Test
@@ -45,6 +48,7 @@ internal class BetaToolUseBlockTest {
                         .build()
                 )
                 .name("x")
+                .caller(BetaDirectCaller.builder().build())
                 .build()
 
         val roundtrippedBetaToolUseBlock =

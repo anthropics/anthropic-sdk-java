@@ -15,6 +15,7 @@ internal class BetaServerToolUseBlockTest {
         val betaServerToolUseBlock =
             BetaServerToolUseBlock.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
+                .caller(BetaDirectCaller.builder().build())
                 .input(
                     BetaServerToolUseBlock.Input.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -24,6 +25,8 @@ internal class BetaServerToolUseBlockTest {
                 .build()
 
         assertThat(betaServerToolUseBlock.id()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(betaServerToolUseBlock.caller())
+            .isEqualTo(BetaServerToolUseBlock.Caller.ofDirect(BetaDirectCaller.builder().build()))
         assertThat(betaServerToolUseBlock.input())
             .isEqualTo(
                 BetaServerToolUseBlock.Input.builder()
@@ -39,6 +42,7 @@ internal class BetaServerToolUseBlockTest {
         val betaServerToolUseBlock =
             BetaServerToolUseBlock.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
+                .caller(BetaDirectCaller.builder().build())
                 .input(
                     BetaServerToolUseBlock.Input.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
