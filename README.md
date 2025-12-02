@@ -1360,13 +1360,13 @@ The SDK uses the standard [OkHttp logging interceptor](https://github.com/square
 Enable logging by setting the `ANTHROPIC_LOG` environment variable to `info`:
 
 ```sh
-$ export ANTHROPIC_LOG=info
+export ANTHROPIC_LOG=info
 ```
 
 Or to `debug` for more verbose logging:
 
 ```sh
-$ export ANTHROPIC_LOG=debug
+export ANTHROPIC_LOG=debug
 ```
 
 ## ProGuard and R8
