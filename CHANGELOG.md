@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.12.0 (2025-12-06)
+
+Full Changelog: [v2.11.1...v2.12.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.11.1...v2.12.0)
+
+### Features
+
+* **api:** adds support for Claude Opus 4.5, Effort, Advance Tool Use Features, Autocompaction, and Computer Use v5 ([4689271](https://github.com/anthropics/anthropic-sdk-java/commit/4689271c4dba2de056356d314429af36b7ad7205))
+
+
+### Bug Fixes
+
+* **client:** cancel okhttp call when future cancelled ([b52f783](https://github.com/anthropics/anthropic-sdk-java/commit/b52f7831db730af1e398df4362b84002f82d025e))
+* **client:** implement visitToolSearchToolResult for Beta Accumulator ([41191ed](https://github.com/anthropics/anthropic-sdk-java/commit/41191edae162caaf9572c5d1d786160413bdc39c))
+* **client:** run linter ([73e141d](https://github.com/anthropics/anthropic-sdk-java/commit/73e141d1df0cd094f6544b2bd51d5fccf989f28a))
+
+
+### Documentation
+
+* remove `$` for better copy-pasteabality ([b2315f9](https://github.com/anthropics/anthropic-sdk-java/commit/b2315f9d756ad473cd52c4daf52590341e9d3bce))
+
 ## 2.11.1 (2025-11-19)
 
 Full Changelog: [v2.11.0...v2.11.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.11.0...v2.11.1)
