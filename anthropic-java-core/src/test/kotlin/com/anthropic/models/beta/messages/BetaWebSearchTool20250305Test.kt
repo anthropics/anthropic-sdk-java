@@ -14,6 +14,7 @@ internal class BetaWebSearchTool20250305Test {
     fun create() {
         val betaWebSearchTool20250305 =
             BetaWebSearchTool20250305.builder()
+                .addAllowedCaller(BetaWebSearchTool20250305.AllowedCaller.DIRECT)
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
                 .cacheControl(
@@ -21,6 +22,7 @@ internal class BetaWebSearchTool20250305Test {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .deferLoading(true)
                 .maxUses(1L)
                 .strict(true)
                 .userLocation(
@@ -33,6 +35,8 @@ internal class BetaWebSearchTool20250305Test {
                 )
                 .build()
 
+        assertThat(betaWebSearchTool20250305.allowedCallers().getOrNull())
+            .containsExactly(BetaWebSearchTool20250305.AllowedCaller.DIRECT)
         assertThat(betaWebSearchTool20250305.allowedDomains().getOrNull()).containsExactly("string")
         assertThat(betaWebSearchTool20250305.blockedDomains().getOrNull()).containsExactly("string")
         assertThat(betaWebSearchTool20250305.cacheControl())
@@ -41,6 +45,7 @@ internal class BetaWebSearchTool20250305Test {
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                     .build()
             )
+        assertThat(betaWebSearchTool20250305.deferLoading()).contains(true)
         assertThat(betaWebSearchTool20250305.maxUses()).contains(1L)
         assertThat(betaWebSearchTool20250305.strict()).contains(true)
         assertThat(betaWebSearchTool20250305.userLocation())
@@ -59,6 +64,7 @@ internal class BetaWebSearchTool20250305Test {
         val jsonMapper = jsonMapper()
         val betaWebSearchTool20250305 =
             BetaWebSearchTool20250305.builder()
+                .addAllowedCaller(BetaWebSearchTool20250305.AllowedCaller.DIRECT)
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
                 .cacheControl(
@@ -66,6 +72,7 @@ internal class BetaWebSearchTool20250305Test {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .deferLoading(true)
                 .maxUses(1L)
                 .strict(true)
                 .userLocation(

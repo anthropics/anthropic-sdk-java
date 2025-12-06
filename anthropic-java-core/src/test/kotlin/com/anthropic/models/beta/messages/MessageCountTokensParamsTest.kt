@@ -17,7 +17,7 @@ internal class MessageCountTokensParamsTest {
         MessageCountTokensParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .addUserMessage("Hello, world")
-            .model(Model.CLAUDE_3_7_SONNET_LATEST)
+            .model(Model.CLAUDE_OPUS_4_5_20251101)
             .contextManagement(
                 BetaContextManagementConfig.builder()
                     .addEdit(
@@ -44,6 +44,7 @@ internal class MessageCountTokensParamsTest {
                     )
                     .build()
             )
+            .outputConfig(BetaOutputConfig.builder().effort(BetaOutputConfig.Effort.LOW).build())
             .outputFormat(
                 BetaJsonOutputFormat.builder()
                     .schema(
@@ -90,12 +91,19 @@ internal class MessageCountTokensParamsTest {
                             .build()
                     )
                     .name("name")
+                    .addAllowedCaller(BetaTool.AllowedCaller.DIRECT)
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .deferLoading(true)
                     .description("Get the current weather in a given location")
+                    .addInputExample(
+                        BetaTool.InputExample.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                     .strict(true)
                     .type(BetaTool.Type.CUSTOM)
                     .build()
@@ -109,7 +117,7 @@ internal class MessageCountTokensParamsTest {
             MessageCountTokensParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                .model(Model.CLAUDE_OPUS_4_5_20251101)
                 .contextManagement(
                     BetaContextManagementConfig.builder()
                         .addEdit(
@@ -137,6 +145,9 @@ internal class MessageCountTokensParamsTest {
                                 .build()
                         )
                         .build()
+                )
+                .outputConfig(
+                    BetaOutputConfig.builder().effort(BetaOutputConfig.Effort.LOW).build()
                 )
                 .outputFormat(
                     BetaJsonOutputFormat.builder()
@@ -184,12 +195,19 @@ internal class MessageCountTokensParamsTest {
                                 .build()
                         )
                         .name("name")
+                        .addAllowedCaller(BetaTool.AllowedCaller.DIRECT)
                         .cacheControl(
                             BetaCacheControlEphemeral.builder()
                                 .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                                 .build()
                         )
+                        .deferLoading(true)
                         .description("Get the current weather in a given location")
+                        .addInputExample(
+                            BetaTool.InputExample.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
                         .strict(true)
                         .type(BetaTool.Type.CUSTOM)
                         .build()
@@ -209,7 +227,7 @@ internal class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                .model(Model.CLAUDE_OPUS_4_5_20251101)
                 .build()
 
         val headers = params._headers()
@@ -223,7 +241,7 @@ internal class MessageCountTokensParamsTest {
             MessageCountTokensParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                .model(Model.CLAUDE_OPUS_4_5_20251101)
                 .contextManagement(
                     BetaContextManagementConfig.builder()
                         .addEdit(
@@ -251,6 +269,9 @@ internal class MessageCountTokensParamsTest {
                                 .build()
                         )
                         .build()
+                )
+                .outputConfig(
+                    BetaOutputConfig.builder().effort(BetaOutputConfig.Effort.LOW).build()
                 )
                 .outputFormat(
                     BetaJsonOutputFormat.builder()
@@ -298,12 +319,19 @@ internal class MessageCountTokensParamsTest {
                                 .build()
                         )
                         .name("name")
+                        .addAllowedCaller(BetaTool.AllowedCaller.DIRECT)
                         .cacheControl(
                             BetaCacheControlEphemeral.builder()
                                 .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                                 .build()
                         )
+                        .deferLoading(true)
                         .description("Get the current weather in a given location")
+                        .addInputExample(
+                            BetaTool.InputExample.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
                         .strict(true)
                         .type(BetaTool.Type.CUSTOM)
                         .build()
@@ -319,7 +347,7 @@ internal class MessageCountTokensParamsTest {
                     .role(BetaMessageParam.Role.USER)
                     .build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_5_20251101)
         assertThat(body.contextManagement())
             .contains(
                 BetaContextManagementConfig.builder()
@@ -348,6 +376,8 @@ internal class MessageCountTokensParamsTest {
                     )
                     .build()
             )
+        assertThat(body.outputConfig())
+            .contains(BetaOutputConfig.builder().effort(BetaOutputConfig.Effort.LOW).build())
         assertThat(body.outputFormat())
             .contains(
                 BetaJsonOutputFormat.builder()
@@ -410,12 +440,19 @@ internal class MessageCountTokensParamsTest {
                                 .build()
                         )
                         .name("name")
+                        .addAllowedCaller(BetaTool.AllowedCaller.DIRECT)
                         .cacheControl(
                             BetaCacheControlEphemeral.builder()
                                 .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                                 .build()
                         )
+                        .deferLoading(true)
                         .description("Get the current weather in a given location")
+                        .addInputExample(
+                            BetaTool.InputExample.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
                         .strict(true)
                         .type(BetaTool.Type.CUSTOM)
                         .build()
@@ -428,7 +465,7 @@ internal class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                .model(Model.CLAUDE_OPUS_4_5_20251101)
                 .build()
 
         val body = params._body()
@@ -440,6 +477,6 @@ internal class MessageCountTokensParamsTest {
                     .role(BetaMessageParam.Role.USER)
                     .build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_3_7_SONNET_LATEST)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_5_20251101)
     }
 }

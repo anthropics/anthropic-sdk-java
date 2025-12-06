@@ -519,6 +519,13 @@ private constructor(
                 )
             )
 
+        /**
+         * Alias for calling [addContent] with
+         * `BetaContentBlock.ofToolSearchToolResult(toolSearchToolResult)`.
+         */
+        fun addContent(toolSearchToolResult: BetaToolSearchToolResultBlock) =
+            addContent(BetaContentBlock.ofToolSearchToolResult(toolSearchToolResult))
+
         /** Alias for calling [addContent] with `BetaContentBlock.ofMcpToolUse(mcpToolUse)`. */
         fun addContent(mcpToolUse: BetaMcpToolUseBlock) =
             addContent(BetaContentBlock.ofMcpToolUse(mcpToolUse))

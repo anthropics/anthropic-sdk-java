@@ -145,6 +145,15 @@ private constructor(
     fun mcpServers(): Optional<List<BetaRequestMcpServerUrlDefinition>> = body.mcpServers()
 
     /**
+     * Configuration options for the model's output. Controls aspects like how much effort the model
+     * puts into its response.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun outputConfig(): Optional<BetaOutputConfig> = body.outputConfig()
+
+    /**
      * A schema to specify Claude's output format in responses.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -293,6 +302,13 @@ private constructor(
     fun _mcpServers(): JsonField<List<BetaRequestMcpServerUrlDefinition>> = body._mcpServers()
 
     /**
+     * Returns the raw JSON value of [outputConfig].
+     *
+     * Unlike [outputConfig], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _outputConfig(): JsonField<BetaOutputConfig> = body._outputConfig()
+
+    /**
      * Returns the raw JSON value of [outputFormat].
      *
      * Unlike [outputFormat], this method doesn't throw if the JSON field has an unexpected type.
@@ -400,7 +416,7 @@ private constructor(
          * - [model]
          * - [contextManagement]
          * - [mcpServers]
-         * - [outputFormat]
+         * - [outputConfig]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -607,6 +623,23 @@ private constructor(
          */
         fun addMcpServer(mcpServer: BetaRequestMcpServerUrlDefinition) = apply {
             body.addMcpServer(mcpServer)
+        }
+
+        /**
+         * Configuration options for the model's output. Controls aspects like how much effort the
+         * model puts into its response.
+         */
+        fun outputConfig(outputConfig: BetaOutputConfig) = apply { body.outputConfig(outputConfig) }
+
+        /**
+         * Sets [Builder.outputConfig] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.outputConfig] with a well-typed [BetaOutputConfig] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun outputConfig(outputConfig: JsonField<BetaOutputConfig>) = apply {
+            body.outputConfig(outputConfig)
         }
 
         /** A schema to specify Claude's output format in responses. */
@@ -884,6 +917,14 @@ private constructor(
 
         /**
          * Alias for calling [addTool] with
+         * `Tool.ofBetaToolComputerUse20251124(betaToolComputerUse20251124)`.
+         */
+        fun addTool(betaToolComputerUse20251124: BetaToolComputerUse20251124) = apply {
+            body.addTool(betaToolComputerUse20251124)
+        }
+
+        /**
+         * Alias for calling [addTool] with
          * `Tool.ofBetaToolTextEditor20250124(betaToolTextEditor20250124)`.
          */
         fun addTool(betaToolTextEditor20250124: BetaToolTextEditor20250124) = apply {
@@ -921,6 +962,25 @@ private constructor(
         fun addTool(betaWebFetchTool20250910: BetaWebFetchTool20250910) = apply {
             body.addTool(betaWebFetchTool20250910)
         }
+
+        /**
+         * Alias for calling [addTool] with
+         * `Tool.ofBetaToolSearchToolBm25_20251119(betaToolSearchToolBm25_20251119)`.
+         */
+        fun addTool(betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119) = apply {
+            body.addTool(betaToolSearchToolBm25_20251119)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `Tool.ofBetaToolSearchToolRegex20251119(betaToolSearchToolRegex20251119)`.
+         */
+        fun addTool(betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119) = apply {
+            body.addTool(betaToolSearchToolRegex20251119)
+        }
+
+        /** Alias for calling [addTool] with `Tool.ofBetaMcpToolset(betaMcpToolset)`. */
+        fun addTool(betaMcpToolset: BetaMcpToolset) = apply { body.addTool(betaMcpToolset) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -1080,6 +1140,7 @@ private constructor(
         private val model: JsonField<Model>,
         private val contextManagement: JsonField<BetaContextManagementConfig>,
         private val mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>,
+        private val outputConfig: JsonField<BetaOutputConfig>,
         private val outputFormat: JsonField<BetaJsonOutputFormat>,
         private val system: JsonField<System>,
         private val thinking: JsonField<BetaThinkingConfigParam>,
@@ -1100,6 +1161,9 @@ private constructor(
             @JsonProperty("mcp_servers")
             @ExcludeMissing
             mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>> = JsonMissing.of(),
+            @JsonProperty("output_config")
+            @ExcludeMissing
+            outputConfig: JsonField<BetaOutputConfig> = JsonMissing.of(),
             @JsonProperty("output_format")
             @ExcludeMissing
             outputFormat: JsonField<BetaJsonOutputFormat> = JsonMissing.of(),
@@ -1116,6 +1180,7 @@ private constructor(
             model,
             contextManagement,
             mcpServers,
+            outputConfig,
             outputFormat,
             system,
             thinking,
@@ -1217,6 +1282,15 @@ private constructor(
          */
         fun mcpServers(): Optional<List<BetaRequestMcpServerUrlDefinition>> =
             mcpServers.getOptional("mcp_servers")
+
+        /**
+         * Configuration options for the model's output. Controls aspects like how much effort the
+         * model puts into its response.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun outputConfig(): Optional<BetaOutputConfig> = outputConfig.getOptional("output_config")
 
         /**
          * A schema to specify Claude's output format in responses.
@@ -1376,6 +1450,16 @@ private constructor(
         fun _mcpServers(): JsonField<List<BetaRequestMcpServerUrlDefinition>> = mcpServers
 
         /**
+         * Returns the raw JSON value of [outputConfig].
+         *
+         * Unlike [outputConfig], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("output_config")
+        @ExcludeMissing
+        fun _outputConfig(): JsonField<BetaOutputConfig> = outputConfig
+
+        /**
          * Returns the raw JSON value of [outputFormat].
          *
          * Unlike [outputFormat], this method doesn't throw if the JSON field has an unexpected
@@ -1451,6 +1535,7 @@ private constructor(
             private var contextManagement: JsonField<BetaContextManagementConfig> = JsonMissing.of()
             private var mcpServers: JsonField<MutableList<BetaRequestMcpServerUrlDefinition>>? =
                 null
+            private var outputConfig: JsonField<BetaOutputConfig> = JsonMissing.of()
             private var outputFormat: JsonField<BetaJsonOutputFormat> = JsonMissing.of()
             private var system: JsonField<System> = JsonMissing.of()
             private var thinking: JsonField<BetaThinkingConfigParam> = JsonMissing.of()
@@ -1464,6 +1549,7 @@ private constructor(
                 model = body.model
                 contextManagement = body.contextManagement
                 mcpServers = body.mcpServers.map { it.toMutableList() }
+                outputConfig = body.outputConfig
                 outputFormat = body.outputFormat
                 system = body.system
                 thinking = body.thinking
@@ -1705,6 +1791,24 @@ private constructor(
                     (mcpServers ?: JsonField.of(mutableListOf())).also {
                         checkKnown("mcpServers", it).add(mcpServer)
                     }
+            }
+
+            /**
+             * Configuration options for the model's output. Controls aspects like how much effort
+             * the model puts into its response.
+             */
+            fun outputConfig(outputConfig: BetaOutputConfig) =
+                outputConfig(JsonField.of(outputConfig))
+
+            /**
+             * Sets [Builder.outputConfig] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.outputConfig] with a well-typed [BetaOutputConfig]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun outputConfig(outputConfig: JsonField<BetaOutputConfig>) = apply {
+                this.outputConfig = outputConfig
             }
 
             /** A schema to specify Claude's output format in responses. */
@@ -1991,6 +2095,13 @@ private constructor(
 
             /**
              * Alias for calling [addTool] with
+             * `Tool.ofBetaToolComputerUse20251124(betaToolComputerUse20251124)`.
+             */
+            fun addTool(betaToolComputerUse20251124: BetaToolComputerUse20251124) =
+                addTool(Tool.ofBetaToolComputerUse20251124(betaToolComputerUse20251124))
+
+            /**
+             * Alias for calling [addTool] with
              * `Tool.ofBetaToolTextEditor20250124(betaToolTextEditor20250124)`.
              */
             fun addTool(betaToolTextEditor20250124: BetaToolTextEditor20250124) =
@@ -2023,6 +2134,24 @@ private constructor(
              */
             fun addTool(betaWebFetchTool20250910: BetaWebFetchTool20250910) =
                 addTool(Tool.ofBetaWebFetchTool20250910(betaWebFetchTool20250910))
+
+            /**
+             * Alias for calling [addTool] with
+             * `Tool.ofBetaToolSearchToolBm25_20251119(betaToolSearchToolBm25_20251119)`.
+             */
+            fun addTool(betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119) =
+                addTool(Tool.ofBetaToolSearchToolBm25_20251119(betaToolSearchToolBm25_20251119))
+
+            /**
+             * Alias for calling [addTool] with
+             * `Tool.ofBetaToolSearchToolRegex20251119(betaToolSearchToolRegex20251119)`.
+             */
+            fun addTool(betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119) =
+                addTool(Tool.ofBetaToolSearchToolRegex20251119(betaToolSearchToolRegex20251119))
+
+            /** Alias for calling [addTool] with `Tool.ofBetaMcpToolset(betaMcpToolset)`. */
+            fun addTool(betaMcpToolset: BetaMcpToolset) =
+                addTool(Tool.ofBetaMcpToolset(betaMcpToolset))
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -2062,6 +2191,7 @@ private constructor(
                     checkRequired("model", model),
                     contextManagement,
                     (mcpServers ?: JsonMissing.of()).map { it.toImmutable() },
+                    outputConfig,
                     outputFormat,
                     system,
                     thinking,
@@ -2082,6 +2212,7 @@ private constructor(
             model()
             contextManagement().ifPresent { it.validate() }
             mcpServers().ifPresent { it.forEach { it.validate() } }
+            outputConfig().ifPresent { it.validate() }
             outputFormat().ifPresent { it.validate() }
             system().ifPresent { it.validate() }
             thinking().ifPresent { it.validate() }
@@ -2110,6 +2241,7 @@ private constructor(
                 (if (model.asKnown().isPresent) 1 else 0) +
                 (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
                 (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (outputConfig.asKnown().getOrNull()?.validity() ?: 0) +
                 (outputFormat.asKnown().getOrNull()?.validity() ?: 0) +
                 (system.asKnown().getOrNull()?.validity() ?: 0) +
                 (thinking.asKnown().getOrNull()?.validity() ?: 0) +
@@ -2126,6 +2258,7 @@ private constructor(
                 model == other.model &&
                 contextManagement == other.contextManagement &&
                 mcpServers == other.mcpServers &&
+                outputConfig == other.outputConfig &&
                 outputFormat == other.outputFormat &&
                 system == other.system &&
                 thinking == other.thinking &&
@@ -2140,6 +2273,7 @@ private constructor(
                 model,
                 contextManagement,
                 mcpServers,
+                outputConfig,
                 outputFormat,
                 system,
                 thinking,
@@ -2152,7 +2286,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{messages=$messages, model=$model, contextManagement=$contextManagement, mcpServers=$mcpServers, outputFormat=$outputFormat, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
+            "Body{messages=$messages, model=$model, contextManagement=$contextManagement, mcpServers=$mcpServers, outputConfig=$outputConfig, outputFormat=$outputFormat, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
     }
 
     /**
@@ -2342,6 +2476,12 @@ private constructor(
         }
     }
 
+    /**
+     * Configuration for a group of tools from an MCP server.
+     *
+     * Allows configuring enabled status and defer_loading for all tools from an MCP server, with
+     * optional per-tool overrides.
+     */
     @JsonDeserialize(using = Tool.Deserializer::class)
     @JsonSerialize(using = Tool.Serializer::class)
     class Tool
@@ -2355,11 +2495,15 @@ private constructor(
         private val betaMemoryTool20250818: BetaMemoryTool20250818? = null,
         private val betaToolComputerUse20250124: BetaToolComputerUse20250124? = null,
         private val betaToolTextEditor20241022: BetaToolTextEditor20241022? = null,
+        private val betaToolComputerUse20251124: BetaToolComputerUse20251124? = null,
         private val betaToolTextEditor20250124: BetaToolTextEditor20250124? = null,
         private val betaToolTextEditor20250429: BetaToolTextEditor20250429? = null,
         private val betaToolTextEditor20250728: BetaToolTextEditor20250728? = null,
         private val betaWebSearchTool20250305: BetaWebSearchTool20250305? = null,
         private val betaWebFetchTool20250910: BetaWebFetchTool20250910? = null,
+        private val betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119? = null,
+        private val betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119? = null,
+        private val betaMcpToolset: BetaMcpToolset? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -2389,6 +2533,9 @@ private constructor(
         fun betaToolTextEditor20241022(): Optional<BetaToolTextEditor20241022> =
             Optional.ofNullable(betaToolTextEditor20241022)
 
+        fun betaToolComputerUse20251124(): Optional<BetaToolComputerUse20251124> =
+            Optional.ofNullable(betaToolComputerUse20251124)
+
         fun betaToolTextEditor20250124(): Optional<BetaToolTextEditor20250124> =
             Optional.ofNullable(betaToolTextEditor20250124)
 
@@ -2403,6 +2550,20 @@ private constructor(
 
         fun betaWebFetchTool20250910(): Optional<BetaWebFetchTool20250910> =
             Optional.ofNullable(betaWebFetchTool20250910)
+
+        fun betaToolSearchToolBm25_20251119(): Optional<BetaToolSearchToolBm25_20251119> =
+            Optional.ofNullable(betaToolSearchToolBm25_20251119)
+
+        fun betaToolSearchToolRegex20251119(): Optional<BetaToolSearchToolRegex20251119> =
+            Optional.ofNullable(betaToolSearchToolRegex20251119)
+
+        /**
+         * Configuration for a group of tools from an MCP server.
+         *
+         * Allows configuring enabled status and defer_loading for all tools from an MCP server,
+         * with optional per-tool overrides.
+         */
+        fun betaMcpToolset(): Optional<BetaMcpToolset> = Optional.ofNullable(betaMcpToolset)
 
         fun isBeta(): Boolean = beta != null
 
@@ -2422,6 +2583,8 @@ private constructor(
 
         fun isBetaToolTextEditor20241022(): Boolean = betaToolTextEditor20241022 != null
 
+        fun isBetaToolComputerUse20251124(): Boolean = betaToolComputerUse20251124 != null
+
         fun isBetaToolTextEditor20250124(): Boolean = betaToolTextEditor20250124 != null
 
         fun isBetaToolTextEditor20250429(): Boolean = betaToolTextEditor20250429 != null
@@ -2431,6 +2594,12 @@ private constructor(
         fun isBetaWebSearchTool20250305(): Boolean = betaWebSearchTool20250305 != null
 
         fun isBetaWebFetchTool20250910(): Boolean = betaWebFetchTool20250910 != null
+
+        fun isBetaToolSearchToolBm25_20251119(): Boolean = betaToolSearchToolBm25_20251119 != null
+
+        fun isBetaToolSearchToolRegex20251119(): Boolean = betaToolSearchToolRegex20251119 != null
+
+        fun isBetaMcpToolset(): Boolean = betaMcpToolset != null
 
         fun asBeta(): BetaTool = beta.getOrThrow("beta")
 
@@ -2458,6 +2627,9 @@ private constructor(
         fun asBetaToolTextEditor20241022(): BetaToolTextEditor20241022 =
             betaToolTextEditor20241022.getOrThrow("betaToolTextEditor20241022")
 
+        fun asBetaToolComputerUse20251124(): BetaToolComputerUse20251124 =
+            betaToolComputerUse20251124.getOrThrow("betaToolComputerUse20251124")
+
         fun asBetaToolTextEditor20250124(): BetaToolTextEditor20250124 =
             betaToolTextEditor20250124.getOrThrow("betaToolTextEditor20250124")
 
@@ -2472,6 +2644,20 @@ private constructor(
 
         fun asBetaWebFetchTool20250910(): BetaWebFetchTool20250910 =
             betaWebFetchTool20250910.getOrThrow("betaWebFetchTool20250910")
+
+        fun asBetaToolSearchToolBm25_20251119(): BetaToolSearchToolBm25_20251119 =
+            betaToolSearchToolBm25_20251119.getOrThrow("betaToolSearchToolBm25_20251119")
+
+        fun asBetaToolSearchToolRegex20251119(): BetaToolSearchToolRegex20251119 =
+            betaToolSearchToolRegex20251119.getOrThrow("betaToolSearchToolRegex20251119")
+
+        /**
+         * Configuration for a group of tools from an MCP server.
+         *
+         * Allows configuring enabled status and defer_loading for all tools from an MCP server,
+         * with optional per-tool overrides.
+         */
+        fun asBetaMcpToolset(): BetaMcpToolset = betaMcpToolset.getOrThrow("betaMcpToolset")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -2494,6 +2680,8 @@ private constructor(
                     visitor.visitBetaToolComputerUse20250124(betaToolComputerUse20250124)
                 betaToolTextEditor20241022 != null ->
                     visitor.visitBetaToolTextEditor20241022(betaToolTextEditor20241022)
+                betaToolComputerUse20251124 != null ->
+                    visitor.visitBetaToolComputerUse20251124(betaToolComputerUse20251124)
                 betaToolTextEditor20250124 != null ->
                     visitor.visitBetaToolTextEditor20250124(betaToolTextEditor20250124)
                 betaToolTextEditor20250429 != null ->
@@ -2504,6 +2692,11 @@ private constructor(
                     visitor.visitBetaWebSearchTool20250305(betaWebSearchTool20250305)
                 betaWebFetchTool20250910 != null ->
                     visitor.visitBetaWebFetchTool20250910(betaWebFetchTool20250910)
+                betaToolSearchToolBm25_20251119 != null ->
+                    visitor.visitBetaToolSearchToolBm25_20251119(betaToolSearchToolBm25_20251119)
+                betaToolSearchToolRegex20251119 != null ->
+                    visitor.visitBetaToolSearchToolRegex20251119(betaToolSearchToolRegex20251119)
+                betaMcpToolset != null -> visitor.visitBetaMcpToolset(betaMcpToolset)
                 else -> visitor.unknown(_json)
             }
 
@@ -2568,6 +2761,12 @@ private constructor(
                         betaToolTextEditor20241022.validate()
                     }
 
+                    override fun visitBetaToolComputerUse20251124(
+                        betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ) {
+                        betaToolComputerUse20251124.validate()
+                    }
+
                     override fun visitBetaToolTextEditor20250124(
                         betaToolTextEditor20250124: BetaToolTextEditor20250124
                     ) {
@@ -2596,6 +2795,22 @@ private constructor(
                         betaWebFetchTool20250910: BetaWebFetchTool20250910
                     ) {
                         betaWebFetchTool20250910.validate()
+                    }
+
+                    override fun visitBetaToolSearchToolBm25_20251119(
+                        betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                    ) {
+                        betaToolSearchToolBm25_20251119.validate()
+                    }
+
+                    override fun visitBetaToolSearchToolRegex20251119(
+                        betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
+                    ) {
+                        betaToolSearchToolRegex20251119.validate()
+                    }
+
+                    override fun visitBetaMcpToolset(betaMcpToolset: BetaMcpToolset) {
+                        betaMcpToolset.validate()
                     }
                 }
             )
@@ -2654,6 +2869,10 @@ private constructor(
                         betaToolTextEditor20241022: BetaToolTextEditor20241022
                     ) = betaToolTextEditor20241022.validity()
 
+                    override fun visitBetaToolComputerUse20251124(
+                        betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ) = betaToolComputerUse20251124.validity()
+
                     override fun visitBetaToolTextEditor20250124(
                         betaToolTextEditor20250124: BetaToolTextEditor20250124
                     ) = betaToolTextEditor20250124.validity()
@@ -2674,6 +2893,17 @@ private constructor(
                         betaWebFetchTool20250910: BetaWebFetchTool20250910
                     ) = betaWebFetchTool20250910.validity()
 
+                    override fun visitBetaToolSearchToolBm25_20251119(
+                        betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                    ) = betaToolSearchToolBm25_20251119.validity()
+
+                    override fun visitBetaToolSearchToolRegex20251119(
+                        betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
+                    ) = betaToolSearchToolRegex20251119.validity()
+
+                    override fun visitBetaMcpToolset(betaMcpToolset: BetaMcpToolset) =
+                        betaMcpToolset.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -2693,11 +2923,15 @@ private constructor(
                 betaMemoryTool20250818 == other.betaMemoryTool20250818 &&
                 betaToolComputerUse20250124 == other.betaToolComputerUse20250124 &&
                 betaToolTextEditor20241022 == other.betaToolTextEditor20241022 &&
+                betaToolComputerUse20251124 == other.betaToolComputerUse20251124 &&
                 betaToolTextEditor20250124 == other.betaToolTextEditor20250124 &&
                 betaToolTextEditor20250429 == other.betaToolTextEditor20250429 &&
                 betaToolTextEditor20250728 == other.betaToolTextEditor20250728 &&
                 betaWebSearchTool20250305 == other.betaWebSearchTool20250305 &&
-                betaWebFetchTool20250910 == other.betaWebFetchTool20250910
+                betaWebFetchTool20250910 == other.betaWebFetchTool20250910 &&
+                betaToolSearchToolBm25_20251119 == other.betaToolSearchToolBm25_20251119 &&
+                betaToolSearchToolRegex20251119 == other.betaToolSearchToolRegex20251119 &&
+                betaMcpToolset == other.betaMcpToolset
         }
 
         override fun hashCode(): Int =
@@ -2711,11 +2945,15 @@ private constructor(
                 betaMemoryTool20250818,
                 betaToolComputerUse20250124,
                 betaToolTextEditor20241022,
+                betaToolComputerUse20251124,
                 betaToolTextEditor20250124,
                 betaToolTextEditor20250429,
                 betaToolTextEditor20250728,
                 betaWebSearchTool20250305,
                 betaWebFetchTool20250910,
+                betaToolSearchToolBm25_20251119,
+                betaToolSearchToolRegex20251119,
+                betaMcpToolset,
             )
 
         override fun toString(): String =
@@ -2735,6 +2973,8 @@ private constructor(
                     "Tool{betaToolComputerUse20250124=$betaToolComputerUse20250124}"
                 betaToolTextEditor20241022 != null ->
                     "Tool{betaToolTextEditor20241022=$betaToolTextEditor20241022}"
+                betaToolComputerUse20251124 != null ->
+                    "Tool{betaToolComputerUse20251124=$betaToolComputerUse20251124}"
                 betaToolTextEditor20250124 != null ->
                     "Tool{betaToolTextEditor20250124=$betaToolTextEditor20250124}"
                 betaToolTextEditor20250429 != null ->
@@ -2745,6 +2985,11 @@ private constructor(
                     "Tool{betaWebSearchTool20250305=$betaWebSearchTool20250305}"
                 betaWebFetchTool20250910 != null ->
                     "Tool{betaWebFetchTool20250910=$betaWebFetchTool20250910}"
+                betaToolSearchToolBm25_20251119 != null ->
+                    "Tool{betaToolSearchToolBm25_20251119=$betaToolSearchToolBm25_20251119}"
+                betaToolSearchToolRegex20251119 != null ->
+                    "Tool{betaToolSearchToolRegex20251119=$betaToolSearchToolRegex20251119}"
+                betaMcpToolset != null -> "Tool{betaMcpToolset=$betaMcpToolset}"
                 _json != null -> "Tool{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Tool")
             }
@@ -2791,6 +3036,11 @@ private constructor(
             ) = Tool(betaToolTextEditor20241022 = betaToolTextEditor20241022)
 
             @JvmStatic
+            fun ofBetaToolComputerUse20251124(
+                betaToolComputerUse20251124: BetaToolComputerUse20251124
+            ) = Tool(betaToolComputerUse20251124 = betaToolComputerUse20251124)
+
+            @JvmStatic
             fun ofBetaToolTextEditor20250124(
                 betaToolTextEditor20250124: BetaToolTextEditor20250124
             ) = Tool(betaToolTextEditor20250124 = betaToolTextEditor20250124)
@@ -2812,6 +3062,26 @@ private constructor(
             @JvmStatic
             fun ofBetaWebFetchTool20250910(betaWebFetchTool20250910: BetaWebFetchTool20250910) =
                 Tool(betaWebFetchTool20250910 = betaWebFetchTool20250910)
+
+            @JvmStatic
+            fun ofBetaToolSearchToolBm25_20251119(
+                betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+            ) = Tool(betaToolSearchToolBm25_20251119 = betaToolSearchToolBm25_20251119)
+
+            @JvmStatic
+            fun ofBetaToolSearchToolRegex20251119(
+                betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
+            ) = Tool(betaToolSearchToolRegex20251119 = betaToolSearchToolRegex20251119)
+
+            /**
+             * Configuration for a group of tools from an MCP server.
+             *
+             * Allows configuring enabled status and defer_loading for all tools from an MCP server,
+             * with optional per-tool overrides.
+             */
+            @JvmStatic
+            fun ofBetaMcpToolset(betaMcpToolset: BetaMcpToolset) =
+                Tool(betaMcpToolset = betaMcpToolset)
         }
 
         /** An interface that defines how to map each variant of [Tool] to a value of type [T]. */
@@ -2845,6 +3115,10 @@ private constructor(
                 betaToolTextEditor20241022: BetaToolTextEditor20241022
             ): T
 
+            fun visitBetaToolComputerUse20251124(
+                betaToolComputerUse20251124: BetaToolComputerUse20251124
+            ): T
+
             fun visitBetaToolTextEditor20250124(
                 betaToolTextEditor20250124: BetaToolTextEditor20250124
             ): T
@@ -2862,6 +3136,22 @@ private constructor(
             ): T
 
             fun visitBetaWebFetchTool20250910(betaWebFetchTool20250910: BetaWebFetchTool20250910): T
+
+            fun visitBetaToolSearchToolBm25_20251119(
+                betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+            ): T
+
+            fun visitBetaToolSearchToolRegex20251119(
+                betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
+            ): T
+
+            /**
+             * Configuration for a group of tools from an MCP server.
+             *
+             * Allows configuring enabled status and defer_loading for all tools from an MCP server,
+             * with optional per-tool overrides.
+             */
+            fun visitBetaMcpToolset(betaMcpToolset: BetaMcpToolset): T
 
             /**
              * Maps an unknown variant of [Tool] to a value of type [T].
@@ -2906,6 +3196,8 @@ private constructor(
                                 ?.let { Tool(betaToolComputerUse20250124 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20241022>())
                                 ?.let { Tool(betaToolTextEditor20241022 = it, _json = json) },
+                            tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20251124>())
+                                ?.let { Tool(betaToolComputerUse20251124 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20250124>())
                                 ?.let { Tool(betaToolTextEditor20250124 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20250429>())
@@ -2917,6 +3209,13 @@ private constructor(
                             },
                             tryDeserialize(node, jacksonTypeRef<BetaWebFetchTool20250910>())?.let {
                                 Tool(betaWebFetchTool20250910 = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<BetaToolSearchToolBm25_20251119>())
+                                ?.let { Tool(betaToolSearchToolBm25_20251119 = it, _json = json) },
+                            tryDeserialize(node, jacksonTypeRef<BetaToolSearchToolRegex20251119>())
+                                ?.let { Tool(betaToolSearchToolRegex20251119 = it, _json = json) },
+                            tryDeserialize(node, jacksonTypeRef<BetaMcpToolset>())?.let {
+                                Tool(betaMcpToolset = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -2960,6 +3259,8 @@ private constructor(
                         generator.writeObject(value.betaToolComputerUse20250124)
                     value.betaToolTextEditor20241022 != null ->
                         generator.writeObject(value.betaToolTextEditor20241022)
+                    value.betaToolComputerUse20251124 != null ->
+                        generator.writeObject(value.betaToolComputerUse20251124)
                     value.betaToolTextEditor20250124 != null ->
                         generator.writeObject(value.betaToolTextEditor20250124)
                     value.betaToolTextEditor20250429 != null ->
@@ -2970,6 +3271,11 @@ private constructor(
                         generator.writeObject(value.betaWebSearchTool20250305)
                     value.betaWebFetchTool20250910 != null ->
                         generator.writeObject(value.betaWebFetchTool20250910)
+                    value.betaToolSearchToolBm25_20251119 != null ->
+                        generator.writeObject(value.betaToolSearchToolBm25_20251119)
+                    value.betaToolSearchToolRegex20251119 != null ->
+                        generator.writeObject(value.betaToolSearchToolRegex20251119)
+                    value.betaMcpToolset != null -> generator.writeObject(value.betaMcpToolset)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Tool")
                 }

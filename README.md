@@ -2,8 +2,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java/2.11.1)
-[![javadoc](https://javadoc.io/badge2/com.anthropic/anthropic-java/2.11.1/javadoc.svg)](https://javadoc.io/doc/com.anthropic/anthropic-java/2.11.1)
+[![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java/2.12.0)
+[![javadoc](https://javadoc.io/badge2/com.anthropic/anthropic-java/2.12.0/javadoc.svg)](https://javadoc.io/doc/com.anthropic/anthropic-java/2.12.0)
 
 <!-- x-release-please-end -->
 
@@ -11,7 +11,7 @@ The Anthropic Java SDK provides convenient access to the [Anthropic REST API](ht
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [docs.anthropic.com](https://docs.anthropic.com/claude/reference/). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.anthropic/anthropic-java/2.11.1).
+The REST API documentation can be found on [docs.anthropic.com](https://docs.anthropic.com/claude/reference/). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.anthropic/anthropic-java/2.12.0).
 
 <!-- x-release-please-end -->
 
@@ -22,7 +22,7 @@ The REST API documentation can be found on [docs.anthropic.com](https://docs.ant
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java:2.11.1")
+implementation("com.anthropic:anthropic-java:2.12.0")
 ```
 
 ### Maven
@@ -31,7 +31,7 @@ implementation("com.anthropic:anthropic-java:2.11.1")
 <dependency>
   <groupId>com.anthropic</groupId>
   <artifactId>anthropic-java</artifactId>
-  <version>2.11.1</version>
+  <version>2.12.0</version>
 </dependency>
 ```
 
@@ -59,7 +59,7 @@ AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_SONNET_4_20250514)
+    .model(Model.CLAUDE_OPUS_4_5_20251101)
     .build();
 Message message = client.messages().create(params);
 ```
@@ -173,7 +173,7 @@ AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_SONNET_4_20250514)
+    .model(Model.CLAUDE_OPUS_4_5_20251101)
     .build();
 CompletableFuture<Message> message = client.async().messages().create(params);
 ```
@@ -195,7 +195,7 @@ AnthropicClientAsync client = AnthropicOkHttpClientAsync.fromEnv();
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_SONNET_4_20250514)
+    .model(Model.CLAUDE_OPUS_4_5_20251101)
     .build();
 CompletableFuture<Message> message = client.messages().create(params);
 ```
@@ -975,7 +975,7 @@ import com.anthropic.models.messages.Model;
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_SONNET_4_20250514)
+    .model(Model.CLAUDE_OPUS_4_5_20251101)
     .build();
 HttpResponseFor<Message> message = client.messages().withRawResponse().create(params);
 
@@ -1146,7 +1146,7 @@ requires the `anthropic-java-bedrock` library dependency.
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java-bedrock:2.11.1")
+implementation("com.anthropic:anthropic-java-bedrock:2.12.0")
 ```
 
 ### Maven
@@ -1155,7 +1155,7 @@ implementation("com.anthropic:anthropic-java-bedrock:2.11.1")
 <dependency>
     <groupId>com.anthropic</groupId>
     <artifactId>anthropic-java-bedrock</artifactId>
-    <version>2.11.1</version>
+    <version>2.12.0</version>
 </dependency>
 ```
 
@@ -1279,7 +1279,7 @@ This support requires the `anthropic-java-vertex` library dependency.
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java-vertex:2.11.1")
+implementation("com.anthropic:anthropic-java-vertex:2.12.0")
 ```
 
 ### Maven
@@ -1288,7 +1288,7 @@ implementation("com.anthropic:anthropic-java-vertex:2.11.1")
 <dependency>
     <groupId>com.anthropic</groupId>
     <artifactId>anthropic-java-vertex</artifactId>
-    <version>2.11.1</version>
+    <version>2.12.0</version>
 </dependency>
 ```
 
@@ -1360,13 +1360,13 @@ The SDK uses the standard [OkHttp logging interceptor](https://github.com/square
 Enable logging by setting the `ANTHROPIC_LOG` environment variable to `info`:
 
 ```sh
-$ export ANTHROPIC_LOG=info
+export ANTHROPIC_LOG=info
 ```
 
 Or to `debug` for more verbose logging:
 
 ```sh
-$ export ANTHROPIC_LOG=debug
+export ANTHROPIC_LOG=debug
 ```
 
 ## ProGuard and R8
@@ -1586,7 +1586,7 @@ import com.anthropic.models.messages.Model;
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(JsonValue.from(3.14))
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_SONNET_4_20250514)
+    .model(Model.CLAUDE_OPUS_4_5_20251101)
     .build();
 ```
 
@@ -1640,7 +1640,7 @@ import com.anthropic.models.messages.Model;
 
 MessageCreateParams params = MessageCreateParams.builder()
     .addUserMessage("Hello, world")
-    .model(Model.CLAUDE_SONNET_4_20250514)
+    .model(Model.CLAUDE_OPUS_4_5_20251101)
     .maxTokens(JsonMissing.of())
     .build();
 ```

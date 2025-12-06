@@ -18,6 +18,12 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Objects
 import java.util.Optional
 
+/**
+ * Configuration for a group of tools from an MCP server.
+ *
+ * Allows configuring enabled status and defer_loading for all tools from an MCP server, with
+ * optional per-tool overrides.
+ */
 @JsonDeserialize(using = BetaToolUnion.Deserializer::class)
 @JsonSerialize(using = BetaToolUnion.Serializer::class)
 class BetaToolUnion
@@ -31,11 +37,15 @@ private constructor(
     private val memoryTool20250818: BetaMemoryTool20250818? = null,
     private val computerUse20250124: BetaToolComputerUse20250124? = null,
     private val textEditor20241022: BetaToolTextEditor20241022? = null,
+    private val computerUse20251124: BetaToolComputerUse20251124? = null,
     private val textEditor20250124: BetaToolTextEditor20250124? = null,
     private val textEditor20250429: BetaToolTextEditor20250429? = null,
     private val textEditor20250728: BetaToolTextEditor20250728? = null,
     private val webSearchTool20250305: BetaWebSearchTool20250305? = null,
     private val webFetchTool20250910: BetaWebFetchTool20250910? = null,
+    private val searchToolBm25_20251119: BetaToolSearchToolBm25_20251119? = null,
+    private val searchToolRegex20251119: BetaToolSearchToolRegex20251119? = null,
+    private val mcpToolset: BetaMcpToolset? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -63,6 +73,9 @@ private constructor(
     fun textEditor20241022(): Optional<BetaToolTextEditor20241022> =
         Optional.ofNullable(textEditor20241022)
 
+    fun computerUse20251124(): Optional<BetaToolComputerUse20251124> =
+        Optional.ofNullable(computerUse20251124)
+
     fun textEditor20250124(): Optional<BetaToolTextEditor20250124> =
         Optional.ofNullable(textEditor20250124)
 
@@ -77,6 +90,20 @@ private constructor(
 
     fun webFetchTool20250910(): Optional<BetaWebFetchTool20250910> =
         Optional.ofNullable(webFetchTool20250910)
+
+    fun searchToolBm25_20251119(): Optional<BetaToolSearchToolBm25_20251119> =
+        Optional.ofNullable(searchToolBm25_20251119)
+
+    fun searchToolRegex20251119(): Optional<BetaToolSearchToolRegex20251119> =
+        Optional.ofNullable(searchToolRegex20251119)
+
+    /**
+     * Configuration for a group of tools from an MCP server.
+     *
+     * Allows configuring enabled status and defer_loading for all tools from an MCP server, with
+     * optional per-tool overrides.
+     */
+    fun mcpToolset(): Optional<BetaMcpToolset> = Optional.ofNullable(mcpToolset)
 
     fun isBetaTool(): Boolean = betaTool != null
 
@@ -96,6 +123,8 @@ private constructor(
 
     fun isTextEditor20241022(): Boolean = textEditor20241022 != null
 
+    fun isComputerUse20251124(): Boolean = computerUse20251124 != null
+
     fun isTextEditor20250124(): Boolean = textEditor20250124 != null
 
     fun isTextEditor20250429(): Boolean = textEditor20250429 != null
@@ -105,6 +134,12 @@ private constructor(
     fun isWebSearchTool20250305(): Boolean = webSearchTool20250305 != null
 
     fun isWebFetchTool20250910(): Boolean = webFetchTool20250910 != null
+
+    fun isSearchToolBm25_20251119(): Boolean = searchToolBm25_20251119 != null
+
+    fun isSearchToolRegex20251119(): Boolean = searchToolRegex20251119 != null
+
+    fun isMcpToolset(): Boolean = mcpToolset != null
 
     fun asBetaTool(): BetaTool = betaTool.getOrThrow("betaTool")
 
@@ -130,6 +165,9 @@ private constructor(
     fun asTextEditor20241022(): BetaToolTextEditor20241022 =
         textEditor20241022.getOrThrow("textEditor20241022")
 
+    fun asComputerUse20251124(): BetaToolComputerUse20251124 =
+        computerUse20251124.getOrThrow("computerUse20251124")
+
     fun asTextEditor20250124(): BetaToolTextEditor20250124 =
         textEditor20250124.getOrThrow("textEditor20250124")
 
@@ -144,6 +182,20 @@ private constructor(
 
     fun asWebFetchTool20250910(): BetaWebFetchTool20250910 =
         webFetchTool20250910.getOrThrow("webFetchTool20250910")
+
+    fun asSearchToolBm25_20251119(): BetaToolSearchToolBm25_20251119 =
+        searchToolBm25_20251119.getOrThrow("searchToolBm25_20251119")
+
+    fun asSearchToolRegex20251119(): BetaToolSearchToolRegex20251119 =
+        searchToolRegex20251119.getOrThrow("searchToolRegex20251119")
+
+    /**
+     * Configuration for a group of tools from an MCP server.
+     *
+     * Allows configuring enabled status and defer_loading for all tools from an MCP server, with
+     * optional per-tool overrides.
+     */
+    fun asMcpToolset(): BetaMcpToolset = mcpToolset.getOrThrow("mcpToolset")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -160,12 +212,18 @@ private constructor(
             memoryTool20250818 != null -> visitor.visitMemoryTool20250818(memoryTool20250818)
             computerUse20250124 != null -> visitor.visitComputerUse20250124(computerUse20250124)
             textEditor20241022 != null -> visitor.visitTextEditor20241022(textEditor20241022)
+            computerUse20251124 != null -> visitor.visitComputerUse20251124(computerUse20251124)
             textEditor20250124 != null -> visitor.visitTextEditor20250124(textEditor20250124)
             textEditor20250429 != null -> visitor.visitTextEditor20250429(textEditor20250429)
             textEditor20250728 != null -> visitor.visitTextEditor20250728(textEditor20250728)
             webSearchTool20250305 != null ->
                 visitor.visitWebSearchTool20250305(webSearchTool20250305)
             webFetchTool20250910 != null -> visitor.visitWebFetchTool20250910(webFetchTool20250910)
+            searchToolBm25_20251119 != null ->
+                visitor.visitSearchToolBm25_20251119(searchToolBm25_20251119)
+            searchToolRegex20251119 != null ->
+                visitor.visitSearchToolRegex20251119(searchToolRegex20251119)
+            mcpToolset != null -> visitor.visitMcpToolset(mcpToolset)
             else -> visitor.unknown(_json)
         }
 
@@ -224,6 +282,12 @@ private constructor(
                     textEditor20241022.validate()
                 }
 
+                override fun visitComputerUse20251124(
+                    computerUse20251124: BetaToolComputerUse20251124
+                ) {
+                    computerUse20251124.validate()
+                }
+
                 override fun visitTextEditor20250124(
                     textEditor20250124: BetaToolTextEditor20250124
                 ) {
@@ -252,6 +316,22 @@ private constructor(
                     webFetchTool20250910: BetaWebFetchTool20250910
                 ) {
                     webFetchTool20250910.validate()
+                }
+
+                override fun visitSearchToolBm25_20251119(
+                    searchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                ) {
+                    searchToolBm25_20251119.validate()
+                }
+
+                override fun visitSearchToolRegex20251119(
+                    searchToolRegex20251119: BetaToolSearchToolRegex20251119
+                ) {
+                    searchToolRegex20251119.validate()
+                }
+
+                override fun visitMcpToolset(mcpToolset: BetaMcpToolset) {
+                    mcpToolset.validate()
                 }
             }
         )
@@ -306,6 +386,10 @@ private constructor(
                     textEditor20241022: BetaToolTextEditor20241022
                 ) = textEditor20241022.validity()
 
+                override fun visitComputerUse20251124(
+                    computerUse20251124: BetaToolComputerUse20251124
+                ) = computerUse20251124.validity()
+
                 override fun visitTextEditor20250124(
                     textEditor20250124: BetaToolTextEditor20250124
                 ) = textEditor20250124.validity()
@@ -326,6 +410,16 @@ private constructor(
                     webFetchTool20250910: BetaWebFetchTool20250910
                 ) = webFetchTool20250910.validity()
 
+                override fun visitSearchToolBm25_20251119(
+                    searchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                ) = searchToolBm25_20251119.validity()
+
+                override fun visitSearchToolRegex20251119(
+                    searchToolRegex20251119: BetaToolSearchToolRegex20251119
+                ) = searchToolRegex20251119.validity()
+
+                override fun visitMcpToolset(mcpToolset: BetaMcpToolset) = mcpToolset.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -345,11 +439,15 @@ private constructor(
             memoryTool20250818 == other.memoryTool20250818 &&
             computerUse20250124 == other.computerUse20250124 &&
             textEditor20241022 == other.textEditor20241022 &&
+            computerUse20251124 == other.computerUse20251124 &&
             textEditor20250124 == other.textEditor20250124 &&
             textEditor20250429 == other.textEditor20250429 &&
             textEditor20250728 == other.textEditor20250728 &&
             webSearchTool20250305 == other.webSearchTool20250305 &&
-            webFetchTool20250910 == other.webFetchTool20250910
+            webFetchTool20250910 == other.webFetchTool20250910 &&
+            searchToolBm25_20251119 == other.searchToolBm25_20251119 &&
+            searchToolRegex20251119 == other.searchToolRegex20251119 &&
+            mcpToolset == other.mcpToolset
     }
 
     override fun hashCode(): Int =
@@ -363,11 +461,15 @@ private constructor(
             memoryTool20250818,
             computerUse20250124,
             textEditor20241022,
+            computerUse20251124,
             textEditor20250124,
             textEditor20250429,
             textEditor20250728,
             webSearchTool20250305,
             webFetchTool20250910,
+            searchToolBm25_20251119,
+            searchToolRegex20251119,
+            mcpToolset,
         )
 
     override fun toString(): String =
@@ -383,6 +485,7 @@ private constructor(
             memoryTool20250818 != null -> "BetaToolUnion{memoryTool20250818=$memoryTool20250818}"
             computerUse20250124 != null -> "BetaToolUnion{computerUse20250124=$computerUse20250124}"
             textEditor20241022 != null -> "BetaToolUnion{textEditor20241022=$textEditor20241022}"
+            computerUse20251124 != null -> "BetaToolUnion{computerUse20251124=$computerUse20251124}"
             textEditor20250124 != null -> "BetaToolUnion{textEditor20250124=$textEditor20250124}"
             textEditor20250429 != null -> "BetaToolUnion{textEditor20250429=$textEditor20250429}"
             textEditor20250728 != null -> "BetaToolUnion{textEditor20250728=$textEditor20250728}"
@@ -390,6 +493,11 @@ private constructor(
                 "BetaToolUnion{webSearchTool20250305=$webSearchTool20250305}"
             webFetchTool20250910 != null ->
                 "BetaToolUnion{webFetchTool20250910=$webFetchTool20250910}"
+            searchToolBm25_20251119 != null ->
+                "BetaToolUnion{searchToolBm25_20251119=$searchToolBm25_20251119}"
+            searchToolRegex20251119 != null ->
+                "BetaToolUnion{searchToolRegex20251119=$searchToolRegex20251119}"
+            mcpToolset != null -> "BetaToolUnion{mcpToolset=$mcpToolset}"
             _json != null -> "BetaToolUnion{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaToolUnion")
         }
@@ -431,6 +539,10 @@ private constructor(
             BetaToolUnion(textEditor20241022 = textEditor20241022)
 
         @JvmStatic
+        fun ofComputerUse20251124(computerUse20251124: BetaToolComputerUse20251124) =
+            BetaToolUnion(computerUse20251124 = computerUse20251124)
+
+        @JvmStatic
         fun ofTextEditor20250124(textEditor20250124: BetaToolTextEditor20250124) =
             BetaToolUnion(textEditor20250124 = textEditor20250124)
 
@@ -449,6 +561,23 @@ private constructor(
         @JvmStatic
         fun ofWebFetchTool20250910(webFetchTool20250910: BetaWebFetchTool20250910) =
             BetaToolUnion(webFetchTool20250910 = webFetchTool20250910)
+
+        @JvmStatic
+        fun ofSearchToolBm25_20251119(searchToolBm25_20251119: BetaToolSearchToolBm25_20251119) =
+            BetaToolUnion(searchToolBm25_20251119 = searchToolBm25_20251119)
+
+        @JvmStatic
+        fun ofSearchToolRegex20251119(searchToolRegex20251119: BetaToolSearchToolRegex20251119) =
+            BetaToolUnion(searchToolRegex20251119 = searchToolRegex20251119)
+
+        /**
+         * Configuration for a group of tools from an MCP server.
+         *
+         * Allows configuring enabled status and defer_loading for all tools from an MCP server,
+         * with optional per-tool overrides.
+         */
+        @JvmStatic
+        fun ofMcpToolset(mcpToolset: BetaMcpToolset) = BetaToolUnion(mcpToolset = mcpToolset)
     }
 
     /**
@@ -478,6 +607,8 @@ private constructor(
 
         fun visitTextEditor20241022(textEditor20241022: BetaToolTextEditor20241022): T
 
+        fun visitComputerUse20251124(computerUse20251124: BetaToolComputerUse20251124): T
+
         fun visitTextEditor20250124(textEditor20250124: BetaToolTextEditor20250124): T
 
         fun visitTextEditor20250429(textEditor20250429: BetaToolTextEditor20250429): T
@@ -487,6 +618,22 @@ private constructor(
         fun visitWebSearchTool20250305(webSearchTool20250305: BetaWebSearchTool20250305): T
 
         fun visitWebFetchTool20250910(webFetchTool20250910: BetaWebFetchTool20250910): T
+
+        fun visitSearchToolBm25_20251119(
+            searchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+        ): T
+
+        fun visitSearchToolRegex20251119(
+            searchToolRegex20251119: BetaToolSearchToolRegex20251119
+        ): T
+
+        /**
+         * Configuration for a group of tools from an MCP server.
+         *
+         * Allows configuring enabled status and defer_loading for all tools from an MCP server,
+         * with optional per-tool overrides.
+         */
+        fun visitMcpToolset(mcpToolset: BetaMcpToolset): T
 
         /**
          * Maps an unknown variant of [BetaToolUnion] to a value of type [T].
@@ -536,6 +683,9 @@ private constructor(
                         tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20241022>())?.let {
                             BetaToolUnion(textEditor20241022 = it, _json = json)
                         },
+                        tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20251124>())?.let {
+                            BetaToolUnion(computerUse20251124 = it, _json = json)
+                        },
                         tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20250124>())?.let {
                             BetaToolUnion(textEditor20250124 = it, _json = json)
                         },
@@ -550,6 +700,13 @@ private constructor(
                         },
                         tryDeserialize(node, jacksonTypeRef<BetaWebFetchTool20250910>())?.let {
                             BetaToolUnion(webFetchTool20250910 = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<BetaToolSearchToolBm25_20251119>())
+                            ?.let { BetaToolUnion(searchToolBm25_20251119 = it, _json = json) },
+                        tryDeserialize(node, jacksonTypeRef<BetaToolSearchToolRegex20251119>())
+                            ?.let { BetaToolUnion(searchToolRegex20251119 = it, _json = json) },
+                        tryDeserialize(node, jacksonTypeRef<BetaMcpToolset>())?.let {
+                            BetaToolUnion(mcpToolset = it, _json = json)
                         },
                     )
                     .filterNotNull()
@@ -588,6 +745,8 @@ private constructor(
                 value.computerUse20250124 != null ->
                     generator.writeObject(value.computerUse20250124)
                 value.textEditor20241022 != null -> generator.writeObject(value.textEditor20241022)
+                value.computerUse20251124 != null ->
+                    generator.writeObject(value.computerUse20251124)
                 value.textEditor20250124 != null -> generator.writeObject(value.textEditor20250124)
                 value.textEditor20250429 != null -> generator.writeObject(value.textEditor20250429)
                 value.textEditor20250728 != null -> generator.writeObject(value.textEditor20250728)
@@ -595,6 +754,11 @@ private constructor(
                     generator.writeObject(value.webSearchTool20250305)
                 value.webFetchTool20250910 != null ->
                     generator.writeObject(value.webFetchTool20250910)
+                value.searchToolBm25_20251119 != null ->
+                    generator.writeObject(value.searchToolBm25_20251119)
+                value.searchToolRegex20251119 != null ->
+                    generator.writeObject(value.searchToolRegex20251119)
+                value.mcpToolset != null -> generator.writeObject(value.mcpToolset)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaToolUnion")
             }

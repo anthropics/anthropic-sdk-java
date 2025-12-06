@@ -2,6 +2,7 @@
 
 package com.anthropic.models.beta.messages
 
+import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
@@ -23,9 +24,11 @@ class BetaWebSearchTool20250305
 private constructor(
     private val name: JsonValue,
     private val type: JsonValue,
+    private val allowedCallers: JsonField<List<AllowedCaller>>,
     private val allowedDomains: JsonField<List<String>>,
     private val blockedDomains: JsonField<List<String>>,
     private val cacheControl: JsonField<BetaCacheControlEphemeral>,
+    private val deferLoading: JsonField<Boolean>,
     private val maxUses: JsonField<Long>,
     private val strict: JsonField<Boolean>,
     private val userLocation: JsonField<UserLocation>,
@@ -36,6 +39,9 @@ private constructor(
     private constructor(
         @JsonProperty("name") @ExcludeMissing name: JsonValue = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+        @JsonProperty("allowed_callers")
+        @ExcludeMissing
+        allowedCallers: JsonField<List<AllowedCaller>> = JsonMissing.of(),
         @JsonProperty("allowed_domains")
         @ExcludeMissing
         allowedDomains: JsonField<List<String>> = JsonMissing.of(),
@@ -45,6 +51,9 @@ private constructor(
         @JsonProperty("cache_control")
         @ExcludeMissing
         cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
+        @JsonProperty("defer_loading")
+        @ExcludeMissing
+        deferLoading: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("max_uses") @ExcludeMissing maxUses: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("strict") @ExcludeMissing strict: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("user_location")
@@ -53,9 +62,11 @@ private constructor(
     ) : this(
         name,
         type,
+        allowedCallers,
         allowedDomains,
         blockedDomains,
         cacheControl,
+        deferLoading,
         maxUses,
         strict,
         userLocation,
@@ -89,6 +100,13 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun allowedCallers(): Optional<List<AllowedCaller>> =
+        allowedCallers.getOptional("allowed_callers")
+
+    /**
      * If provided, only these domains will be included in results. Cannot be used alongside
      * `blocked_domains`.
      *
@@ -116,6 +134,15 @@ private constructor(
         cacheControl.getOptional("cache_control")
 
     /**
+     * If true, tool will not be included in initial system prompt. Only loaded when returned via
+     * tool_reference from tool search.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun deferLoading(): Optional<Boolean> = deferLoading.getOptional("defer_loading")
+
+    /**
      * Maximum number of times the tool can be used in the API request.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -136,6 +163,15 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun userLocation(): Optional<UserLocation> = userLocation.getOptional("user_location")
+
+    /**
+     * Returns the raw JSON value of [allowedCallers].
+     *
+     * Unlike [allowedCallers], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("allowed_callers")
+    @ExcludeMissing
+    fun _allowedCallers(): JsonField<List<AllowedCaller>> = allowedCallers
 
     /**
      * Returns the raw JSON value of [allowedDomains].
@@ -163,6 +199,15 @@ private constructor(
     @JsonProperty("cache_control")
     @ExcludeMissing
     fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
+
+    /**
+     * Returns the raw JSON value of [deferLoading].
+     *
+     * Unlike [deferLoading], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("defer_loading")
+    @ExcludeMissing
+    fun _deferLoading(): JsonField<Boolean> = deferLoading
 
     /**
      * Returns the raw JSON value of [maxUses].
@@ -212,9 +257,11 @@ private constructor(
 
         private var name: JsonValue = JsonValue.from("web_search")
         private var type: JsonValue = JsonValue.from("web_search_20250305")
+        private var allowedCallers: JsonField<MutableList<AllowedCaller>>? = null
         private var allowedDomains: JsonField<MutableList<String>>? = null
         private var blockedDomains: JsonField<MutableList<String>>? = null
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
+        private var deferLoading: JsonField<Boolean> = JsonMissing.of()
         private var maxUses: JsonField<Long> = JsonMissing.of()
         private var strict: JsonField<Boolean> = JsonMissing.of()
         private var userLocation: JsonField<UserLocation> = JsonMissing.of()
@@ -224,9 +271,11 @@ private constructor(
         internal fun from(betaWebSearchTool20250305: BetaWebSearchTool20250305) = apply {
             name = betaWebSearchTool20250305.name
             type = betaWebSearchTool20250305.type
+            allowedCallers = betaWebSearchTool20250305.allowedCallers.map { it.toMutableList() }
             allowedDomains = betaWebSearchTool20250305.allowedDomains.map { it.toMutableList() }
             blockedDomains = betaWebSearchTool20250305.blockedDomains.map { it.toMutableList() }
             cacheControl = betaWebSearchTool20250305.cacheControl
+            deferLoading = betaWebSearchTool20250305.deferLoading
             maxUses = betaWebSearchTool20250305.maxUses
             strict = betaWebSearchTool20250305.strict
             userLocation = betaWebSearchTool20250305.userLocation
@@ -260,6 +309,32 @@ private constructor(
          * value.
          */
         fun type(type: JsonValue) = apply { this.type = type }
+
+        fun allowedCallers(allowedCallers: List<AllowedCaller>) =
+            allowedCallers(JsonField.of(allowedCallers))
+
+        /**
+         * Sets [Builder.allowedCallers] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.allowedCallers] with a well-typed `List<AllowedCaller>`
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun allowedCallers(allowedCallers: JsonField<List<AllowedCaller>>) = apply {
+            this.allowedCallers = allowedCallers.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [AllowedCaller] to [allowedCallers].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addAllowedCaller(allowedCaller: AllowedCaller) = apply {
+            allowedCallers =
+                (allowedCallers ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("allowedCallers", it).add(allowedCaller)
+                }
+        }
 
         /**
          * If provided, only these domains will be included in results. Cannot be used alongside
@@ -348,6 +423,23 @@ private constructor(
             this.cacheControl = cacheControl
         }
 
+        /**
+         * If true, tool will not be included in initial system prompt. Only loaded when returned
+         * via tool_reference from tool search.
+         */
+        fun deferLoading(deferLoading: Boolean) = deferLoading(JsonField.of(deferLoading))
+
+        /**
+         * Sets [Builder.deferLoading] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.deferLoading] with a well-typed [Boolean] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun deferLoading(deferLoading: JsonField<Boolean>) = apply {
+            this.deferLoading = deferLoading
+        }
+
         /** Maximum number of times the tool can be used in the API request. */
         fun maxUses(maxUses: Long?) = maxUses(JsonField.ofNullable(maxUses))
 
@@ -426,9 +518,11 @@ private constructor(
             BetaWebSearchTool20250305(
                 name,
                 type,
+                (allowedCallers ?: JsonMissing.of()).map { it.toImmutable() },
                 (allowedDomains ?: JsonMissing.of()).map { it.toImmutable() },
                 (blockedDomains ?: JsonMissing.of()).map { it.toImmutable() },
                 cacheControl,
+                deferLoading,
                 maxUses,
                 strict,
                 userLocation,
@@ -453,9 +547,11 @@ private constructor(
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
+        allowedCallers().ifPresent { it.forEach { it.validate() } }
         allowedDomains()
         blockedDomains()
         cacheControl().ifPresent { it.validate() }
+        deferLoading()
         maxUses()
         strict()
         userLocation().ifPresent { it.validate() }
@@ -479,12 +575,145 @@ private constructor(
     internal fun validity(): Int =
         name.let { if (it == JsonValue.from("web_search")) 1 else 0 } +
             type.let { if (it == JsonValue.from("web_search_20250305")) 1 else 0 } +
+            (allowedCallers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (allowedDomains.asKnown().getOrNull()?.size ?: 0) +
             (blockedDomains.asKnown().getOrNull()?.size ?: 0) +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (deferLoading.asKnown().isPresent) 1 else 0) +
             (if (maxUses.asKnown().isPresent) 1 else 0) +
             (if (strict.asKnown().isPresent) 1 else 0) +
             (userLocation.asKnown().getOrNull()?.validity() ?: 0)
+
+    class AllowedCaller @JsonCreator private constructor(private val value: JsonField<String>) :
+        Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val DIRECT = of("direct")
+
+            @JvmField val CODE_EXECUTION_20250825 = of("code_execution_20250825")
+
+            @JvmStatic fun of(value: String) = AllowedCaller(JsonField.of(value))
+        }
+
+        /** An enum containing [AllowedCaller]'s known values. */
+        enum class Known {
+            DIRECT,
+            CODE_EXECUTION_20250825,
+        }
+
+        /**
+         * An enum containing [AllowedCaller]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [AllowedCaller] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            DIRECT,
+            CODE_EXECUTION_20250825,
+            /**
+             * An enum member indicating that [AllowedCaller] was instantiated with an unknown
+             * value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                DIRECT -> Value.DIRECT
+                CODE_EXECUTION_20250825 -> Value.CODE_EXECUTION_20250825
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                DIRECT -> Known.DIRECT
+                CODE_EXECUTION_20250825 -> Known.CODE_EXECUTION_20250825
+                else -> throw AnthropicInvalidDataException("Unknown AllowedCaller: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        fun validate(): AllowedCaller = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is AllowedCaller && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
 
     /** Parameters for the user's location. Used to provide more relevant search results. */
     class UserLocation
@@ -802,9 +1031,11 @@ private constructor(
         return other is BetaWebSearchTool20250305 &&
             name == other.name &&
             type == other.type &&
+            allowedCallers == other.allowedCallers &&
             allowedDomains == other.allowedDomains &&
             blockedDomains == other.blockedDomains &&
             cacheControl == other.cacheControl &&
+            deferLoading == other.deferLoading &&
             maxUses == other.maxUses &&
             strict == other.strict &&
             userLocation == other.userLocation &&
@@ -815,9 +1046,11 @@ private constructor(
         Objects.hash(
             name,
             type,
+            allowedCallers,
             allowedDomains,
             blockedDomains,
             cacheControl,
+            deferLoading,
             maxUses,
             strict,
             userLocation,
@@ -828,5 +1061,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaWebSearchTool20250305{name=$name, type=$type, allowedDomains=$allowedDomains, blockedDomains=$blockedDomains, cacheControl=$cacheControl, maxUses=$maxUses, strict=$strict, userLocation=$userLocation, additionalProperties=$additionalProperties}"
+        "BetaWebSearchTool20250305{name=$name, type=$type, allowedCallers=$allowedCallers, allowedDomains=$allowedDomains, blockedDomains=$blockedDomains, cacheControl=$cacheControl, deferLoading=$deferLoading, maxUses=$maxUses, strict=$strict, userLocation=$userLocation, additionalProperties=$additionalProperties}"
 }

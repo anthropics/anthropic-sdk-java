@@ -5,6 +5,7 @@ package com.anthropic.models.beta.messages
 import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -26,12 +27,19 @@ internal class BetaToolTest {
                         .build()
                 )
                 .name("name")
+                .addAllowedCaller(BetaTool.AllowedCaller.DIRECT)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .deferLoading(true)
                 .description("Get the current weather in a given location")
+                .addInputExample(
+                    BetaTool.InputExample.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .strict(true)
                 .type(BetaTool.Type.CUSTOM)
                 .build()
@@ -49,13 +57,22 @@ internal class BetaToolTest {
                     .build()
             )
         assertThat(betaTool.name()).isEqualTo("name")
+        assertThat(betaTool.allowedCallers().getOrNull())
+            .containsExactly(BetaTool.AllowedCaller.DIRECT)
         assertThat(betaTool.cacheControl())
             .contains(
                 BetaCacheControlEphemeral.builder()
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                     .build()
             )
+        assertThat(betaTool.deferLoading()).contains(true)
         assertThat(betaTool.description()).contains("Get the current weather in a given location")
+        assertThat(betaTool.inputExamples().getOrNull())
+            .containsExactly(
+                BetaTool.InputExample.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
         assertThat(betaTool.strict()).contains(true)
         assertThat(betaTool.type()).contains(BetaTool.Type.CUSTOM)
     }
@@ -77,12 +94,19 @@ internal class BetaToolTest {
                         .build()
                 )
                 .name("name")
+                .addAllowedCaller(BetaTool.AllowedCaller.DIRECT)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .deferLoading(true)
                 .description("Get the current weather in a given location")
+                .addInputExample(
+                    BetaTool.InputExample.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .strict(true)
                 .type(BetaTool.Type.CUSTOM)
                 .build()

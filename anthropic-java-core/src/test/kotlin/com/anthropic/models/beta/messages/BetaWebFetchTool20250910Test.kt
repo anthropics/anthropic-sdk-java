@@ -14,6 +14,7 @@ internal class BetaWebFetchTool20250910Test {
     fun create() {
         val betaWebFetchTool20250910 =
             BetaWebFetchTool20250910.builder()
+                .addAllowedCaller(BetaWebFetchTool20250910.AllowedCaller.DIRECT)
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
                 .cacheControl(
@@ -22,11 +23,14 @@ internal class BetaWebFetchTool20250910Test {
                         .build()
                 )
                 .citations(BetaCitationsConfigParam.builder().enabled(true).build())
+                .deferLoading(true)
                 .maxContentTokens(1L)
                 .maxUses(1L)
                 .strict(true)
                 .build()
 
+        assertThat(betaWebFetchTool20250910.allowedCallers().getOrNull())
+            .containsExactly(BetaWebFetchTool20250910.AllowedCaller.DIRECT)
         assertThat(betaWebFetchTool20250910.allowedDomains().getOrNull()).containsExactly("string")
         assertThat(betaWebFetchTool20250910.blockedDomains().getOrNull()).containsExactly("string")
         assertThat(betaWebFetchTool20250910.cacheControl())
@@ -37,6 +41,7 @@ internal class BetaWebFetchTool20250910Test {
             )
         assertThat(betaWebFetchTool20250910.citations())
             .contains(BetaCitationsConfigParam.builder().enabled(true).build())
+        assertThat(betaWebFetchTool20250910.deferLoading()).contains(true)
         assertThat(betaWebFetchTool20250910.maxContentTokens()).contains(1L)
         assertThat(betaWebFetchTool20250910.maxUses()).contains(1L)
         assertThat(betaWebFetchTool20250910.strict()).contains(true)
@@ -47,6 +52,7 @@ internal class BetaWebFetchTool20250910Test {
         val jsonMapper = jsonMapper()
         val betaWebFetchTool20250910 =
             BetaWebFetchTool20250910.builder()
+                .addAllowedCaller(BetaWebFetchTool20250910.AllowedCaller.DIRECT)
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
                 .cacheControl(
@@ -55,6 +61,7 @@ internal class BetaWebFetchTool20250910Test {
                         .build()
                 )
                 .citations(BetaCitationsConfigParam.builder().enabled(true).build())
+                .deferLoading(true)
                 .maxContentTokens(1L)
                 .maxUses(1L)
                 .strict(true)

@@ -40,7 +40,7 @@ internal class MessageBatchIndividualResponseTest {
                                 .text("Hi! My name is Claude.")
                                 .build()
                         )
-                        .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                        .model(Model.CLAUDE_OPUS_4_5_20251101)
                         .stopReason(StopReason.END_TURN)
                         .stopSequence(null)
                         .usage(
@@ -88,7 +88,7 @@ internal class MessageBatchIndividualResponseTest {
                                         .text("Hi! My name is Claude.")
                                         .build()
                                 )
-                                .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                                .model(Model.CLAUDE_OPUS_4_5_20251101)
                                 .stopReason(StopReason.END_TURN)
                                 .stopSequence(null)
                                 .usage(
@@ -140,7 +140,7 @@ internal class MessageBatchIndividualResponseTest {
                                 .text("Hi! My name is Claude.")
                                 .build()
                         )
-                        .model(Model.CLAUDE_3_7_SONNET_LATEST)
+                        .model(Model.CLAUDE_OPUS_4_5_20251101)
                         .stopReason(StopReason.END_TURN)
                         .stopSequence(null)
                         .usage(

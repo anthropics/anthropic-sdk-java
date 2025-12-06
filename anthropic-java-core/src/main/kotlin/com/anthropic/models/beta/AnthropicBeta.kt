@@ -40,6 +40,8 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
 
         @JvmField val MCP_CLIENT_2025_04_04 = of("mcp-client-2025-04-04")
 
+        @JvmField val MCP_CLIENT_2025_11_20 = of("mcp-client-2025-11-20")
+
         @JvmField val DEV_FULL_THINKING_2025_05_14 = of("dev-full-thinking-2025-05-14")
 
         @JvmField val INTERLEAVED_THINKING_2025_05_14 = of("interleaved-thinking-2025-05-14")
@@ -73,6 +75,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         OUTPUT_128K_2025_02_19,
         FILES_API_2025_04_14,
         MCP_CLIENT_2025_04_04,
+        MCP_CLIENT_2025_11_20,
         DEV_FULL_THINKING_2025_05_14,
         INTERLEAVED_THINKING_2025_05_14,
         CODE_EXECUTION_2025_05_22,
@@ -103,6 +106,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         OUTPUT_128K_2025_02_19,
         FILES_API_2025_04_14,
         MCP_CLIENT_2025_04_04,
+        MCP_CLIENT_2025_11_20,
         DEV_FULL_THINKING_2025_05_14,
         INTERLEAVED_THINKING_2025_05_14,
         CODE_EXECUTION_2025_05_22,
@@ -136,6 +140,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             OUTPUT_128K_2025_02_19 -> Value.OUTPUT_128K_2025_02_19
             FILES_API_2025_04_14 -> Value.FILES_API_2025_04_14
             MCP_CLIENT_2025_04_04 -> Value.MCP_CLIENT_2025_04_04
+            MCP_CLIENT_2025_11_20 -> Value.MCP_CLIENT_2025_11_20
             DEV_FULL_THINKING_2025_05_14 -> Value.DEV_FULL_THINKING_2025_05_14
             INTERLEAVED_THINKING_2025_05_14 -> Value.INTERLEAVED_THINKING_2025_05_14
             CODE_EXECUTION_2025_05_22 -> Value.CODE_EXECUTION_2025_05_22
@@ -168,6 +173,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             OUTPUT_128K_2025_02_19 -> Known.OUTPUT_128K_2025_02_19
             FILES_API_2025_04_14 -> Known.FILES_API_2025_04_14
             MCP_CLIENT_2025_04_04 -> Known.MCP_CLIENT_2025_04_04
+            MCP_CLIENT_2025_11_20 -> Known.MCP_CLIENT_2025_11_20
             DEV_FULL_THINKING_2025_05_14 -> Known.DEV_FULL_THINKING_2025_05_14
             INTERLEAVED_THINKING_2025_05_14 -> Known.INTERLEAVED_THINKING_2025_05_14
             CODE_EXECUTION_2025_05_22 -> Known.CODE_EXECUTION_2025_05_22
