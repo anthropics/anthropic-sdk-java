@@ -1,5 +1,6 @@
 package com.anthropic.helpers
 
+import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonObject
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -448,14 +449,20 @@ class BetaMessageAccumulator private constructor() {
                                 "Missing input JSON for index $index."
                             )
 
+                        // Anthropic Streaming Messages API: "the final `tool_use.input`
+                        // is always an _object_." However, if a tool function has no
+                        // arguments, the concatenated `inputJson` can be an empty
+                        // string. In that case, interpret it as a missing field.
                         val parsedInput =
-                            try {
-                                JSON_MAPPER.readValue(inputJson, JsonObject::class.java)
-                            } catch (e: Exception) {
-                                throw AnthropicInvalidDataException(
-                                    "Unable to parse tool parameter JSON from model. Please retry your request or adjust your prompt. Error: ${e}. JSON: $inputJson"
-                                )
-                            }
+                            if (inputJson.trim() == "") JsonMissing.of()
+                            else
+                                try {
+                                    JSON_MAPPER.readValue(inputJson, JsonObject::class.java)
+                                } catch (e: Exception) {
+                                    throw AnthropicInvalidDataException(
+                                        "Unable to parse tool parameter JSON from model. Please retry your request or adjust your prompt. Error: ${e}. JSON: $inputJson"
+                                    )
+                                }
 
                         messageContent[index] =
                             when {
