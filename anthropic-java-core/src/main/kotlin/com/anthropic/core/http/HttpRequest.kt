@@ -4,6 +4,7 @@ import com.anthropic.core.checkRequired
 import com.anthropic.core.toImmutable
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
+import java.net.URLEncoder
 
 class HttpRequest
 private constructor(
@@ -14,6 +15,35 @@ private constructor(
     @get:JvmName("queryParams") val queryParams: QueryParams,
     @get:JvmName("body") val body: HttpRequestBody?,
 ) {
+
+    fun url(): String = buildString {
+        append(baseUrl)
+
+        pathSegments.forEach { segment ->
+            if (!endsWith("/")) {
+                append("/")
+            }
+            append(URLEncoder.encode(segment, "UTF-8"))
+        }
+
+        if (queryParams.isEmpty()) {
+            return@buildString
+        }
+
+        append("?")
+        var isFirst = true
+        queryParams.keys().forEach { key ->
+            queryParams.values(key).forEach { value ->
+                if (!isFirst) {
+                    append("&")
+                }
+                append(URLEncoder.encode(key, "UTF-8"))
+                append("=")
+                append(URLEncoder.encode(value, "UTF-8"))
+                isFirst = false
+            }
+        }
+    }
 
     fun toBuilder(): Builder = Builder().from(this)
 
