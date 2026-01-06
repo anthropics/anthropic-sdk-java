@@ -1,10 +1,12 @@
-<<<<<<< HEAD
 package com.anthropic.core.http
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 
 internal class HttpRequestTest {
+
     @Test
     fun replaceAllPathSegmentsNoneWithNone() {
         val request1 = createRequest()
@@ -64,16 +66,6 @@ internal class HttpRequestTest {
             .addPathSegments(*pathSegments)
             .build()
     }
-}
-||||||| parent of 29ddc4f8 (feat(client): add `HttpRequest#url()` method)
-=======
-package com.anthropic.core.http
-
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.EnumSource
-
-internal class HttpRequestTest {
 
     enum class UrlTestCase(val request: HttpRequest, val expectedUrl: String) {
         BASE_URL_ONLY(
@@ -177,4 +169,3 @@ internal class HttpRequestTest {
         assertThat(actualUrl).isEqualTo(testCase.expectedUrl)
     }
 }
->>>>>>> 29ddc4f8 (feat(client): add `HttpRequest#url()` method)

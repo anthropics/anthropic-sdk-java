@@ -2,9 +2,9 @@ package com.anthropic.core.http
 
 import com.anthropic.core.checkRequired
 import com.anthropic.core.toImmutable
+import java.net.URLEncoder
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
-import java.net.URLEncoder
 
 class HttpRequest
 private constructor(
