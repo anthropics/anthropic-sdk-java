@@ -29,7 +29,7 @@ internal class VersionServiceAsyncTest {
             versionServiceAsync.create(
                 VersionCreateParams.builder()
                     .skillId("skill_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .addFile("some content".byteInputStream())
                     .build()
             )
@@ -52,7 +52,7 @@ internal class VersionServiceAsyncTest {
                 VersionRetrieveParams.builder()
                     .skillId("skill_id")
                     .version("version")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .build()
             )
 
@@ -89,7 +89,7 @@ internal class VersionServiceAsyncTest {
                 VersionDeleteParams.builder()
                     .skillId("skill_id")
                     .version("version")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .build()
             )
 

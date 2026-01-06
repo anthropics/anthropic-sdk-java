@@ -45,7 +45,7 @@ internal class MessageBatchResultTest {
                                 .text("Hi! My name is Claude.")
                                 .build()
                         )
-                        .model(Model.CLAUDE_OPUS_4_5_20251101)
+                        .model(Model.CLAUDE_SONNET_4_5_20250929)
                         .stopReason(StopReason.END_TURN)
                         .stopSequence(null)
                         .usage(
@@ -102,7 +102,7 @@ internal class MessageBatchResultTest {
                                     .text("Hi! My name is Claude.")
                                     .build()
                             )
-                            .model(Model.CLAUDE_OPUS_4_5_20251101)
+                            .model(Model.CLAUDE_SONNET_4_5_20250929)
                             .stopReason(StopReason.END_TURN)
                             .stopSequence(null)
                             .usage(

@@ -15,9 +15,9 @@ internal class MessageCountTokensParamsTest {
     @Test
     fun create() {
         MessageCountTokensParams.builder()
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.of("string"))
             .addUserMessage("Hello, world")
-            .model(Model.CLAUDE_OPUS_4_5_20251101)
+            .model(Model.CLAUDE_SONNET_4_5_20250929)
             .contextManagement(
                 BetaContextManagementConfig.builder()
                     .addEdit(
@@ -115,9 +115,9 @@ internal class MessageCountTokensParamsTest {
     fun headers() {
         val params =
             MessageCountTokensParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.of("string"))
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.CLAUDE_SONNET_4_5_20250929)
                 .contextManagement(
                     BetaContextManagementConfig.builder()
                         .addEdit(
@@ -216,10 +216,7 @@ internal class MessageCountTokensParamsTest {
 
         val headers = params._headers()
 
-        assertThat(headers)
-            .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
-            )
+        assertThat(headers).isEqualTo(Headers.builder().put("anthropic-beta", "string").build())
     }
 
     @Test
@@ -227,7 +224,7 @@ internal class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.CLAUDE_SONNET_4_5_20250929)
                 .build()
 
         val headers = params._headers()
@@ -239,9 +236,9 @@ internal class MessageCountTokensParamsTest {
     fun body() {
         val params =
             MessageCountTokensParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.of("string"))
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.CLAUDE_SONNET_4_5_20250929)
                 .contextManagement(
                     BetaContextManagementConfig.builder()
                         .addEdit(
@@ -347,7 +344,7 @@ internal class MessageCountTokensParamsTest {
                     .role(BetaMessageParam.Role.USER)
                     .build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_5_20251101)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_SONNET_4_5_20250929)
         assertThat(body.contextManagement())
             .contains(
                 BetaContextManagementConfig.builder()
@@ -465,7 +462,7 @@ internal class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.CLAUDE_SONNET_4_5_20250929)
                 .build()
 
         val body = params._body()
@@ -477,6 +474,6 @@ internal class MessageCountTokensParamsTest {
                     .role(BetaMessageParam.Role.USER)
                     .build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_5_20251101)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_SONNET_4_5_20250929)
     }
 }

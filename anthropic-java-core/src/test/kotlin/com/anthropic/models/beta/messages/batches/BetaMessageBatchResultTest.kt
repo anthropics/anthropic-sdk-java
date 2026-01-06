@@ -73,7 +73,7 @@ internal class BetaMessageBatchResultTest {
                                 )
                                 .build()
                         )
-                        .model(Model.CLAUDE_OPUS_4_5_20251101)
+                        .model(Model.CLAUDE_SONNET_4_5_20250929)
                         .stopReason(BetaStopReason.END_TURN)
                         .stopSequence(null)
                         .usage(
@@ -156,7 +156,7 @@ internal class BetaMessageBatchResultTest {
                                     )
                                     .build()
                             )
-                            .model(Model.CLAUDE_OPUS_4_5_20251101)
+                            .model(Model.CLAUDE_SONNET_4_5_20250929)
                             .stopReason(BetaStopReason.END_TURN)
                             .stopSequence(null)
                             .usage(

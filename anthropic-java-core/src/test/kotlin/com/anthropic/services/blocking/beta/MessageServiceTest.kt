@@ -45,10 +45,10 @@ internal class MessageServiceTest {
         val betaMessage =
             messageService.create(
                 MessageCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
-                    .model(Model.CLAUDE_OPUS_4_5_20251101)
+                    .model(Model.CLAUDE_SONNET_4_5_20250929)
                     .container(
                         BetaContainerParams.builder()
                             .id("id")
@@ -187,10 +187,10 @@ internal class MessageServiceTest {
         val betaMessageStreamResponse =
             messageService.createStreaming(
                 MessageCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
-                    .model(Model.CLAUDE_OPUS_4_5_20251101)
+                    .model(Model.CLAUDE_SONNET_4_5_20250929)
                     .container(
                         BetaContainerParams.builder()
                             .id("id")
@@ -331,9 +331,9 @@ internal class MessageServiceTest {
         val betaMessageTokensCount =
             messageService.countTokens(
                 MessageCountTokensParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .addUserMessage("Hello, world")
-                    .model(Model.CLAUDE_OPUS_4_5_20251101)
+                    .model(Model.CLAUDE_SONNET_4_5_20250929)
                     .contextManagement(
                         BetaContextManagementConfig.builder()
                             .addEdit(

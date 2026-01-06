@@ -26,9 +26,9 @@ internal class CompletionServiceAsyncTest {
         val completionFuture =
             completionServiceAsync.create(
                 CompletionCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .maxTokensToSample(256L)
-                    .model(Model.CLAUDE_OPUS_4_5_20251101)
+                    .model(Model.of("claude-2.1"))
                     .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
                     .metadata(
                         Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
@@ -56,9 +56,9 @@ internal class CompletionServiceAsyncTest {
         val completionStreamResponse =
             completionServiceAsync.createStreaming(
                 CompletionCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .maxTokensToSample(256L)
-                    .model(Model.CLAUDE_OPUS_4_5_20251101)
+                    .model(Model.of("claude-2.1"))
                     .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
                     .metadata(
                         Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
