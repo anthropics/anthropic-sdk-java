@@ -33,7 +33,10 @@ import okhttp3.logging.HttpLoggingInterceptor
 import okio.BufferedSink
 
 class OkHttpClient
-private constructor(@JvmSynthetic internal val okHttpClient: okhttp3.OkHttpClient, private val backend: Backend) : HttpClient {
+private constructor(
+    @JvmSynthetic internal val okHttpClient: okhttp3.OkHttpClient,
+    private val backend: Backend,
+) : HttpClient {
 
     override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse {
         val preparedRequest = prepareRequest(request)
