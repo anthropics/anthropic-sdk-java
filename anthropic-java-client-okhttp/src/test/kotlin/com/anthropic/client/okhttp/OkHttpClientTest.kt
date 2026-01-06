@@ -1,5 +1,6 @@
 package com.anthropic.client.okhttp
 
+import com.anthropic.backends.Backend
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.github.tomakehurst.wiremock.client.WireMock.*
@@ -14,13 +15,19 @@ import org.junit.jupiter.api.parallel.ResourceLock
 @ResourceLock("https://github.com/wiremock/wiremock/issues/169")
 internal class OkHttpClientTest {
 
+    private class TestBackend(private val baseUrl: String) : Backend {
+        override fun baseUrl(): String = baseUrl
+
+        override fun close() {}
+    }
+
     private lateinit var baseUrl: String
     private lateinit var httpClient: OkHttpClient
 
     @BeforeEach
     fun beforeEach(wmRuntimeInfo: WireMockRuntimeInfo) {
         baseUrl = wmRuntimeInfo.httpBaseUrl
-        httpClient = OkHttpClient.builder().build()
+        httpClient = OkHttpClient.builder().backend(TestBackend(baseUrl)).build()
     }
 
     @Test
