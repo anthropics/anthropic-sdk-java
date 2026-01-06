@@ -15,7 +15,7 @@ internal class VersionCreateParamsTest {
     fun create() {
         VersionCreateParams.builder()
             .skillId("skill_id")
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.of("string"))
             .addFile("some content".byteInputStream())
             .build()
     }
@@ -34,16 +34,13 @@ internal class VersionCreateParamsTest {
         val params =
             VersionCreateParams.builder()
                 .skillId("skill_id")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.of("string"))
                 .addFile("some content".byteInputStream())
                 .build()
 
         val headers = params._headers()
 
-        assertThat(headers)
-            .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
-            )
+        assertThat(headers).isEqualTo(Headers.builder().put("anthropic-beta", "string").build())
     }
 
     @Test
@@ -60,7 +57,7 @@ internal class VersionCreateParamsTest {
         val params =
             VersionCreateParams.builder()
                 .skillId("skill_id")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.of("string"))
                 .addFile("some content".byteInputStream())
                 .build()
 

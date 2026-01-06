@@ -30,7 +30,7 @@ internal class BatchCreateParamsTest {
     @Test
     fun create() {
         BatchCreateParams.builder()
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.of("string"))
             .addRequest(
                 BatchCreateParams.Request.builder()
                     .customId("my-custom-id-1")
@@ -38,7 +38,7 @@ internal class BatchCreateParamsTest {
                         BatchCreateParams.Request.Params.builder()
                             .maxTokens(1024L)
                             .addUserMessage("Hello, world")
-                            .model(Model.CLAUDE_OPUS_4_5_20251101)
+                            .model(Model.CLAUDE_SONNET_4_5_20250929)
                             .container(
                                 BetaContainerParams.builder()
                                     .id("id")
@@ -179,7 +179,7 @@ internal class BatchCreateParamsTest {
     fun headers() {
         val params =
             BatchCreateParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.of("string"))
                 .addRequest(
                     BatchCreateParams.Request.builder()
                         .customId("my-custom-id-1")
@@ -187,7 +187,7 @@ internal class BatchCreateParamsTest {
                             BatchCreateParams.Request.Params.builder()
                                 .maxTokens(1024L)
                                 .addUserMessage("Hello, world")
-                                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                                .model(Model.CLAUDE_SONNET_4_5_20250929)
                                 .container(
                                     BetaContainerParams.builder()
                                         .id("id")
@@ -327,10 +327,7 @@ internal class BatchCreateParamsTest {
 
         val headers = params._headers()
 
-        assertThat(headers)
-            .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
-            )
+        assertThat(headers).isEqualTo(Headers.builder().put("anthropic-beta", "string").build())
     }
 
     @Test
@@ -344,7 +341,7 @@ internal class BatchCreateParamsTest {
                             BatchCreateParams.Request.Params.builder()
                                 .maxTokens(1024L)
                                 .addUserMessage("Hello, world")
-                                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                                .model(Model.CLAUDE_SONNET_4_5_20250929)
                                 .build()
                         )
                         .build()
@@ -360,7 +357,7 @@ internal class BatchCreateParamsTest {
     fun body() {
         val params =
             BatchCreateParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.of("string"))
                 .addRequest(
                     BatchCreateParams.Request.builder()
                         .customId("my-custom-id-1")
@@ -368,7 +365,7 @@ internal class BatchCreateParamsTest {
                             BatchCreateParams.Request.Params.builder()
                                 .maxTokens(1024L)
                                 .addUserMessage("Hello, world")
-                                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                                .model(Model.CLAUDE_SONNET_4_5_20250929)
                                 .container(
                                     BetaContainerParams.builder()
                                         .id("id")
@@ -516,7 +513,7 @@ internal class BatchCreateParamsTest {
                         BatchCreateParams.Request.Params.builder()
                             .maxTokens(1024L)
                             .addUserMessage("Hello, world")
-                            .model(Model.CLAUDE_OPUS_4_5_20251101)
+                            .model(Model.CLAUDE_SONNET_4_5_20250929)
                             .container(
                                 BetaContainerParams.builder()
                                     .id("id")
@@ -663,7 +660,7 @@ internal class BatchCreateParamsTest {
                             BatchCreateParams.Request.Params.builder()
                                 .maxTokens(1024L)
                                 .addUserMessage("Hello, world")
-                                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                                .model(Model.CLAUDE_SONNET_4_5_20250929)
                                 .build()
                         )
                         .build()
@@ -680,7 +677,7 @@ internal class BatchCreateParamsTest {
                         BatchCreateParams.Request.Params.builder()
                             .maxTokens(1024L)
                             .addUserMessage("Hello, world")
-                            .model(Model.CLAUDE_OPUS_4_5_20251101)
+                            .model(Model.CLAUDE_SONNET_4_5_20250929)
                             .build()
                     )
                     .build()

@@ -53,7 +53,7 @@ internal class FileServiceAsyncTest {
             fileServiceAsync.delete(
                 FileDeleteParams.builder()
                     .fileId("file_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .build()
             )
 
@@ -75,7 +75,7 @@ internal class FileServiceAsyncTest {
             fileServiceAsync.download(
                 FileDownloadParams.builder()
                     .fileId("file_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .build()
             )
 
@@ -96,7 +96,7 @@ internal class FileServiceAsyncTest {
             fileServiceAsync.retrieveMetadata(
                 FileRetrieveMetadataParams.builder()
                     .fileId("file_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .build()
             )
 
@@ -116,7 +116,7 @@ internal class FileServiceAsyncTest {
         val fileMetadataFuture =
             fileServiceAsync.upload(
                 FileUploadParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .file("some content".byteInputStream())
                     .build()
             )

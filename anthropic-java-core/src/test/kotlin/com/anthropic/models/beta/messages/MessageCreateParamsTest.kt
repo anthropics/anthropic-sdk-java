@@ -15,10 +15,10 @@ internal class MessageCreateParamsTest {
     @Test
     fun create() {
         MessageCreateParams.builder()
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.of("string"))
             .maxTokens(1024L)
             .addUserMessage("Hello, world")
-            .model(Model.CLAUDE_OPUS_4_5_20251101)
+            .model(Model.CLAUDE_SONNET_4_5_20250929)
             .container(
                 BetaContainerParams.builder()
                     .id("id")
@@ -134,10 +134,10 @@ internal class MessageCreateParamsTest {
     fun headers() {
         val params =
             MessageCreateParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.of("string"))
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.CLAUDE_SONNET_4_5_20250929)
                 .container(
                     BetaContainerParams.builder()
                         .id("id")
@@ -256,10 +256,7 @@ internal class MessageCreateParamsTest {
 
         val headers = params._headers()
 
-        assertThat(headers)
-            .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
-            )
+        assertThat(headers).isEqualTo(Headers.builder().put("anthropic-beta", "string").build())
     }
 
     @Test
@@ -268,7 +265,7 @@ internal class MessageCreateParamsTest {
             MessageCreateParams.builder()
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.CLAUDE_SONNET_4_5_20250929)
                 .build()
 
         val headers = params._headers()
@@ -280,10 +277,10 @@ internal class MessageCreateParamsTest {
     fun body() {
         val params =
             MessageCreateParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.of("string"))
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.CLAUDE_SONNET_4_5_20250929)
                 .container(
                     BetaContainerParams.builder()
                         .id("id")
@@ -410,7 +407,7 @@ internal class MessageCreateParamsTest {
                     .role(BetaMessageParam.Role.USER)
                     .build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_5_20251101)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_SONNET_4_5_20250929)
         assertThat(body.container())
             .contains(
                 MessageCreateParams.Container.ofBetaContainerParams(
@@ -551,7 +548,7 @@ internal class MessageCreateParamsTest {
             MessageCreateParams.builder()
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.CLAUDE_SONNET_4_5_20250929)
                 .build()
 
         val body = params._body()
@@ -564,6 +561,6 @@ internal class MessageCreateParamsTest {
                     .role(BetaMessageParam.Role.USER)
                     .build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_5_20251101)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_SONNET_4_5_20250929)
     }
 }

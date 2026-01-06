@@ -16,7 +16,7 @@ internal class BatchListParamsTest {
             .afterId("after_id")
             .beforeId("before_id")
             .limit(1L)
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.of("string"))
             .build()
     }
 
@@ -27,15 +27,12 @@ internal class BatchListParamsTest {
                 .afterId("after_id")
                 .beforeId("before_id")
                 .limit(1L)
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.of("string"))
                 .build()
 
         val headers = params._headers()
 
-        assertThat(headers)
-            .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
-            )
+        assertThat(headers).isEqualTo(Headers.builder().put("anthropic-beta", "string").build())
     }
 
     @Test
@@ -54,7 +51,7 @@ internal class BatchListParamsTest {
                 .afterId("after_id")
                 .beforeId("before_id")
                 .limit(1L)
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.of("string"))
                 .build()
 
         val queryParams = params._queryParams()

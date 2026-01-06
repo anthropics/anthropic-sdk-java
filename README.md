@@ -57,7 +57,7 @@ AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_OPUS_4_5_20251101)
+    .model(Model.CLAUDE_SONNET_4_5_20250929)
     .build();
 Message message = client.messages().create(params);
 ```
@@ -162,7 +162,7 @@ AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_OPUS_4_5_20251101)
+    .model(Model.CLAUDE_SONNET_4_5_20250929)
     .build();
 CompletableFuture<Message> message = client.async().messages().create(params);
 ```
@@ -184,7 +184,7 @@ AnthropicClientAsync client = AnthropicOkHttpClientAsync.fromEnv();
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_OPUS_4_5_20251101)
+    .model(Model.CLAUDE_SONNET_4_5_20250929)
     .build();
 CompletableFuture<Message> message = client.messages().create(params);
 ```
@@ -407,7 +407,7 @@ import com.anthropic.models.messages.Model;
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_OPUS_4_5_20251101)
+    .model(Model.CLAUDE_SONNET_4_5_20250929)
     .build();
 HttpResponseFor<Message> message = client.messages().withRawResponse().create(params);
 
@@ -762,7 +762,7 @@ import com.anthropic.models.messages.Model;
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(JsonValue.from(3.14))
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_OPUS_4_5_20251101)
+    .model(Model.CLAUDE_SONNET_4_5_20250929)
     .build();
 ```
 
@@ -816,7 +816,7 @@ import com.anthropic.models.messages.Model;
 
 MessageCreateParams params = MessageCreateParams.builder()
     .addUserMessage("Hello, world")
-    .model(Model.CLAUDE_OPUS_4_5_20251101)
+    .model(Model.CLAUDE_SONNET_4_5_20250929)
     .maxTokens(JsonMissing.of())
     .build();
 ```

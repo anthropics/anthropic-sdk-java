@@ -13,7 +13,7 @@ internal class MessageCountTokensParamsTest {
     fun create() {
         MessageCountTokensParams.builder()
             .addUserMessage("Hello, world")
-            .model(Model.CLAUDE_OPUS_4_5_20251101)
+            .model(Model.CLAUDE_SONNET_4_5_20250929)
             .systemOfTextBlockParams(
                 listOf(
                     TextBlockParam.builder()
@@ -68,7 +68,7 @@ internal class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.CLAUDE_SONNET_4_5_20250929)
                 .systemOfTextBlockParams(
                     listOf(
                         TextBlockParam.builder()
@@ -123,7 +123,7 @@ internal class MessageCountTokensParamsTest {
             .containsExactly(
                 MessageParam.builder().content("Hello, world").role(MessageParam.Role.USER).build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_5_20251101)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_SONNET_4_5_20250929)
         assertThat(body.system())
             .contains(
                 MessageCountTokensParams.System.ofTextBlockParams(
@@ -191,7 +191,7 @@ internal class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.CLAUDE_SONNET_4_5_20250929)
                 .build()
 
         val body = params._body()
@@ -200,6 +200,6 @@ internal class MessageCountTokensParamsTest {
             .containsExactly(
                 MessageParam.builder().content("Hello, world").role(MessageParam.Role.USER).build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_5_20251101)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_SONNET_4_5_20250929)
     }
 }

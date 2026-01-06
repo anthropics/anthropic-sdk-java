@@ -28,7 +28,7 @@ internal class SkillServiceAsyncTest {
         val skillFuture =
             skillServiceAsync.create(
                 SkillCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .displayTitle("display_title")
                     .addFile("some content".byteInputStream())
                     .build()
@@ -51,7 +51,7 @@ internal class SkillServiceAsyncTest {
             skillServiceAsync.retrieve(
                 SkillRetrieveParams.builder()
                     .skillId("skill_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .build()
             )
 
@@ -87,7 +87,7 @@ internal class SkillServiceAsyncTest {
             skillServiceAsync.delete(
                 SkillDeleteParams.builder()
                     .skillId("skill_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .build()
             )
 

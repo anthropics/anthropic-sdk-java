@@ -48,7 +48,7 @@ internal class BatchServiceTest {
         val betaMessageBatch =
             batchService.create(
                 BatchCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .addRequest(
                         BatchCreateParams.Request.builder()
                             .customId("my-custom-id-1")
@@ -56,7 +56,7 @@ internal class BatchServiceTest {
                                 BatchCreateParams.Request.Params.builder()
                                     .maxTokens(1024L)
                                     .addUserMessage("Hello, world")
-                                    .model(Model.CLAUDE_OPUS_4_5_20251101)
+                                    .model(Model.CLAUDE_SONNET_4_5_20250929)
                                     .container(
                                         BetaContainerParams.builder()
                                             .id("id")
@@ -221,7 +221,7 @@ internal class BatchServiceTest {
             batchService.retrieve(
                 BatchRetrieveParams.builder()
                     .messageBatchId("message_batch_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .build()
             )
 
@@ -255,7 +255,7 @@ internal class BatchServiceTest {
             batchService.delete(
                 BatchDeleteParams.builder()
                     .messageBatchId("message_batch_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .build()
             )
 
@@ -275,7 +275,7 @@ internal class BatchServiceTest {
             batchService.cancel(
                 BatchCancelParams.builder()
                     .messageBatchId("message_batch_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .build()
             )
 
@@ -296,7 +296,7 @@ internal class BatchServiceTest {
             batchService.resultsStreaming(
                 BatchResultsParams.builder()
                     .messageBatchId("message_batch_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .build()
             )
 
