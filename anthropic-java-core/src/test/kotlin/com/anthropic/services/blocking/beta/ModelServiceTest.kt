@@ -25,7 +25,7 @@ internal class ModelServiceTest {
             modelService.retrieve(
                 ModelRetrieveParams.builder()
                     .modelId("model_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.of("string"))
                     .build()
             )
 

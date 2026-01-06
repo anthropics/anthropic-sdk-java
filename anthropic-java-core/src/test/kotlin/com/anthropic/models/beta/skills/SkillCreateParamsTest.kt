@@ -14,7 +14,7 @@ internal class SkillCreateParamsTest {
     @Test
     fun create() {
         SkillCreateParams.builder()
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.of("string"))
             .displayTitle("display_title")
             .addFile("some content".byteInputStream())
             .build()
@@ -24,17 +24,14 @@ internal class SkillCreateParamsTest {
     fun headers() {
         val params =
             SkillCreateParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.of("string"))
                 .displayTitle("display_title")
                 .addFile("some content".byteInputStream())
                 .build()
 
         val headers = params._headers()
 
-        assertThat(headers)
-            .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
-            )
+        assertThat(headers).isEqualTo(Headers.builder().put("anthropic-beta", "string").build())
     }
 
     @Test
@@ -50,7 +47,7 @@ internal class SkillCreateParamsTest {
     fun body() {
         val params =
             SkillCreateParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.of("string"))
                 .displayTitle("display_title")
                 .addFile("some content".byteInputStream())
                 .build()

@@ -39,7 +39,7 @@ internal class BatchServiceAsyncTest {
                                 BatchCreateParams.Request.Params.builder()
                                     .maxTokens(1024L)
                                     .addUserMessage("Hello, world")
-                                    .model(Model.CLAUDE_OPUS_4_5_20251101)
+                                    .model(Model.CLAUDE_SONNET_4_5_20250929)
                                     .metadata(
                                         Metadata.builder()
                                             .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")

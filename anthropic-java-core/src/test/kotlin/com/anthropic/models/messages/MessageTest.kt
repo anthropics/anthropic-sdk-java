@@ -29,7 +29,7 @@ internal class MessageTest {
                         .text("Hi! My name is Claude.")
                         .build()
                 )
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.CLAUDE_SONNET_4_5_20250929)
                 .stopReason(StopReason.END_TURN)
                 .stopSequence(null)
                 .usage(
@@ -69,7 +69,7 @@ internal class MessageTest {
                         .build()
                 )
             )
-        assertThat(message.model()).isEqualTo(Model.CLAUDE_OPUS_4_5_20251101)
+        assertThat(message.model()).isEqualTo(Model.CLAUDE_SONNET_4_5_20250929)
         assertThat(message.stopReason()).contains(StopReason.END_TURN)
         assertThat(message.stopSequence()).isEmpty
         assertThat(message.usage())
@@ -112,7 +112,7 @@ internal class MessageTest {
                         .text("Hi! My name is Claude.")
                         .build()
                 )
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.CLAUDE_SONNET_4_5_20250929)
                 .stopReason(StopReason.END_TURN)
                 .stopSequence(null)
                 .usage(

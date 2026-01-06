@@ -54,7 +54,7 @@ internal class BetaMessageTest {
                         )
                         .build()
                 )
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.CLAUDE_SONNET_4_5_20250929)
                 .stopReason(BetaStopReason.END_TURN)
                 .stopSequence(null)
                 .usage(
@@ -124,7 +124,7 @@ internal class BetaMessageTest {
                     )
                     .build()
             )
-        assertThat(betaMessage.model()).isEqualTo(Model.CLAUDE_OPUS_4_5_20251101)
+        assertThat(betaMessage.model()).isEqualTo(Model.CLAUDE_SONNET_4_5_20250929)
         assertThat(betaMessage.stopReason()).contains(BetaStopReason.END_TURN)
         assertThat(betaMessage.stopSequence()).isEmpty
         assertThat(betaMessage.usage())
@@ -195,7 +195,7 @@ internal class BetaMessageTest {
                         )
                         .build()
                 )
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.CLAUDE_SONNET_4_5_20250929)
                 .stopReason(BetaStopReason.END_TURN)
                 .stopSequence(null)
                 .usage(

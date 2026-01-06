@@ -15,9 +15,9 @@ internal class CompletionCreateParamsTest {
     @Test
     fun create() {
         CompletionCreateParams.builder()
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.of("string"))
             .maxTokensToSample(256L)
-            .model(Model.CLAUDE_OPUS_4_5_20251101)
+            .model(Model.of("claude-2.1"))
             .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
             .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
             .addStopSequence("string")
@@ -31,9 +31,9 @@ internal class CompletionCreateParamsTest {
     fun headers() {
         val params =
             CompletionCreateParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.of("string"))
                 .maxTokensToSample(256L)
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.of("claude-2.1"))
                 .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .addStopSequence("string")
@@ -44,10 +44,7 @@ internal class CompletionCreateParamsTest {
 
         val headers = params._headers()
 
-        assertThat(headers)
-            .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
-            )
+        assertThat(headers).isEqualTo(Headers.builder().put("anthropic-beta", "string").build())
     }
 
     @Test
@@ -55,7 +52,7 @@ internal class CompletionCreateParamsTest {
         val params =
             CompletionCreateParams.builder()
                 .maxTokensToSample(256L)
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.of("claude-2.1"))
                 .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
                 .build()
 
@@ -68,9 +65,9 @@ internal class CompletionCreateParamsTest {
     fun body() {
         val params =
             CompletionCreateParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.of("string"))
                 .maxTokensToSample(256L)
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.of("claude-2.1"))
                 .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .addStopSequence("string")
@@ -82,7 +79,7 @@ internal class CompletionCreateParamsTest {
         val body = params._body()
 
         assertThat(body.maxTokensToSample()).isEqualTo(256L)
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_5_20251101)
+        assertThat(body.model()).isEqualTo(Model.of("claude-2.1"))
         assertThat(body.prompt()).isEqualTo("\n\nHuman: Hello, world!\n\nAssistant:")
         assertThat(body.metadata())
             .contains(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
@@ -97,14 +94,14 @@ internal class CompletionCreateParamsTest {
         val params =
             CompletionCreateParams.builder()
                 .maxTokensToSample(256L)
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.of("claude-2.1"))
                 .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
                 .build()
 
         val body = params._body()
 
         assertThat(body.maxTokensToSample()).isEqualTo(256L)
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_5_20251101)
+        assertThat(body.model()).isEqualTo(Model.of("claude-2.1"))
         assertThat(body.prompt()).isEqualTo("\n\nHuman: Hello, world!\n\nAssistant:")
     }
 }

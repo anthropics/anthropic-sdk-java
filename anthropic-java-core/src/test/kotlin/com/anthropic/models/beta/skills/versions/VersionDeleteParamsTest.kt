@@ -14,7 +14,7 @@ internal class VersionDeleteParamsTest {
         VersionDeleteParams.builder()
             .skillId("skill_id")
             .version("version")
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.of("string"))
             .build()
     }
 
@@ -34,15 +34,12 @@ internal class VersionDeleteParamsTest {
             VersionDeleteParams.builder()
                 .skillId("skill_id")
                 .version("version")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.of("string"))
                 .build()
 
         val headers = params._headers()
 
-        assertThat(headers)
-            .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
-            )
+        assertThat(headers).isEqualTo(Headers.builder().put("anthropic-beta", "string").build())
     }
 
     @Test

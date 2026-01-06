@@ -11,10 +11,7 @@ internal class FileDownloadParamsTest {
 
     @Test
     fun create() {
-        FileDownloadParams.builder()
-            .fileId("file_id")
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-            .build()
+        FileDownloadParams.builder().fileId("file_id").addBeta(AnthropicBeta.of("string")).build()
     }
 
     @Test
@@ -31,15 +28,12 @@ internal class FileDownloadParamsTest {
         val params =
             FileDownloadParams.builder()
                 .fileId("file_id")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.of("string"))
                 .build()
 
         val headers = params._headers()
 
-        assertThat(headers)
-            .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
-            )
+        assertThat(headers).isEqualTo(Headers.builder().put("anthropic-beta", "string").build())
     }
 
     @Test
