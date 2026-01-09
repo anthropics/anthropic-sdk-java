@@ -1153,9 +1153,9 @@ implementation("com.anthropic:anthropic-java-bedrock:2.11.1")
 
 ```xml
 <dependency>
-    <groupId>com.anthropic</groupId>
-    <artifactId>anthropic-java-bedrock</artifactId>
-    <version>2.11.1</version>
+  <groupId>com.anthropic</groupId>
+  <artifactId>anthropic-java-bedrock</artifactId>
+  <version>2.11.1</version>
 </dependency>
 ```
 
@@ -1286,9 +1286,9 @@ implementation("com.anthropic:anthropic-java-vertex:2.11.1")
 
 ```xml
 <dependency>
-    <groupId>com.anthropic</groupId>
-    <artifactId>anthropic-java-vertex</artifactId>
-    <version>2.11.1</version>
+  <groupId>com.anthropic</groupId>
+  <artifactId>anthropic-java-vertex</artifactId>
+  <version>2.11.1</version>
 </dependency>
 ```
 
@@ -1297,7 +1297,8 @@ implementation("com.anthropic:anthropic-java-vertex:2.11.1")
 ### Usage
 
 To use Anthropic on Vertex AI, create the Anthropic client with the
-`VertexBackend`. Usage of the API is otherwise the same.
+[`VertexBackend`](anthropic-java-vertex/src/main/kotlin/com/anthropic/vertex/backends/VertexBackend.kt).
+Usage of the API is otherwise the same.
 
 ```java
 import com.anthropic.client.AnthropicClient;
@@ -1352,6 +1353,132 @@ resolution schemes, you may need additional Google Cloud dependencies.
 Currently, the Vertex backend does _not_ support the following:
 
 - Anthropic Batch API
+
+## Microsoft Foundry
+
+This SDK also provides support for Anthropic Claude models on the
+[Microsoft Foundry](https://azure.microsoft.com/en-us/products/ai-foundry) platform. This support
+requires the `anthropic-java-foundry` library dependency.
+
+<!-- x-release-please-start-version -->
+
+### Gradle
+
+```kotlin
+implementation("com.anthropic:anthropic-java-foundry:2.11.1")
+```
+
+### Maven
+
+```xml
+<dependency>
+  <groupId>com.anthropic</groupId>
+  <artifactId>anthropic-java-foundry</artifactId>
+  <version>2.11.1</version>
+</dependency>
+```
+
+<!-- x-release-please-end -->
+
+### Usage
+
+To use Claude on Microsoft Foundry, create the Anthropic client with the
+[`FoundryBackend`](anthropic-java-foundry/src/main/kotlin/com/anthropic/foundry/backends/FoundryBackend.kt).
+Usage of the API is otherwise the same.
+
+```java
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+import com.anthropic.foundry.backends.FoundryBackend;
+
+AnthropicClient client = AnthropicOkHttpClient.builder()
+        .backend(FoundryBackend.fromEnv())
+        .build();
+```
+
+`FoundryBackend.fromEnv()` automatically resolves the Foundry API key and the Foundry resource name
+or base URL from environment variables.
+
+ - Set `ANTHROPIC_FOUNDRY_API_KEY` to the API key for your Foundry resource.
+ - Set `ANTHROPIC_FOUNDRY_RESOURCE` to the name of the Foundry resource.
+ - Set `ANTHROPIC_FOUNDRY_BASE_URL` to the custom base URL for your resource. If not set, the
+    default Foundry base URL (incorporating your resource name) will be used.
+
+If defined, the base URL will include a resource name. You must set either the resource name or the
+base URL, but not both.
+
+Instead of resolving the API key and resource name or base URL automatically using `fromEnv()`, you
+can resolve them independently using an alternative Foundry facility, or any scheme of your choice,
+and pass them directly to the `FoundryBackend` during building. For example, you could resolve the
+API key directly from an environment variable and hard-code the resource name:
+
+```java
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+import com.anthropic.foundry.backends.FoundryBackend;
+
+String apiKey = System.getenv("ANTHROPIC_FOUNDRY_API_KEY");
+
+AnthropicClient client = AnthropicOkHttpClient.builder()
+        .backend(FoundryBackend.builder()
+                .apiKey(apiKey)
+                .resource("my-foundry-resource")
+                .build())
+        .build();
+```
+
+You can also set a custom base URL instead of a resource name with `FoundryBackend.Builder.baseUrl`.
+
+Currently, the Foundry backend does _not_ support the following:
+
+- Anthropic Text Completions API
+- Anthropic Batch API
+- Anthropic Admin API
+- Anthropic Models API
+- Anthropic Experimental APIs
+
+### Usage with a token supplier
+
+The SDK supports request authorization for Foundry endpoints using a token supplier. This may be
+used to implement authorization using
+[Microsoft Entra ID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id),
+or other authorization scheme supported by the service.
+
+For each service request, a new call is issued to the `get()` method your implementation of a
+[`Supplier<String>`](https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html).
+The result of the method call is set as the value of the `Bearer` in the request `authorization`
+header.
+
+To use a token supplier to supply an Entra ID token for authorization, set the client ID, tenant ID
+and client secret in environment variables (or some other secure source), implement a token
+supplier, and set that on the `FoundryBackend`. In the following example, assume that the required
+values are set in the `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, and `AZURE_CLIENT_SECRET` environment
+variables.
+
+For Entra ID authorization, you will need the
+[Azure Identity client library](https://learn.microsoft.com/en-us/java/api/overview/azure/identity-readme?view=azure-java-stable).
+See that documentation for details on the configuration of the necessary dependencies. 
+
+```java
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+import com.anthropic.foundry.backends.FoundryBackend;
+import com.azure.identity.AuthenticationUtil;
+import com.azure.identity.DefaultAzureCredentialBuilder;
+import java.util.function.Supplier;
+
+Supplier<String> bearerTokenSupplier = AuthenticationUtil.getBearerTokenSupplier(
+        new DefaultAzureCredentialBuilder().build(),
+        "https://cognitiveservices.azure.com/.default"
+);
+
+AnthropicClient client = AnthropicOkHttpClient.builder()
+        .backend(FoundryBackend.builder()
+                .bearerTokenSupplier(bearerTokenSupplier)
+                .resource("my-foundry-resource")
+                .build())
+        .build();
+```
 
 ## Logging
 

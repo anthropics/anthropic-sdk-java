@@ -10,7 +10,10 @@ repositories {
 dependencies {
     implementation(project(":anthropic-java"))
     implementation(project(":anthropic-java-bedrock"))
+    implementation(project(":anthropic-java-foundry"))
     implementation(project(":anthropic-java-vertex"))
+    // Microsoft Entra ID library for Foundry examples.
+    implementation("com.azure:azure-identity:1.18.1")
 }
 
 tasks.withType<JavaCompile>().configureEach {
