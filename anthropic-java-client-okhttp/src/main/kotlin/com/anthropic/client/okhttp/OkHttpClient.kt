@@ -17,11 +17,13 @@ import java.net.Proxy
 import java.time.Duration
 import java.util.concurrent.CancellationException
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ExecutorService
 import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509TrustManager
 import okhttp3.Call
 import okhttp3.Callback
+import okhttp3.Dispatcher
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
@@ -222,6 +224,8 @@ private constructor(
         private var timeout: Timeout = Timeout.default()
         private var proxy: Proxy? = null
         private var backend: Backend? = null
+
+        private var dispatcherExecutorService: ExecutorService? = null
         private var sslSocketFactory: SSLSocketFactory? = null
         private var trustManager: X509TrustManager? = null
         private var hostnameVerifier: HostnameVerifier? = null
@@ -233,6 +237,10 @@ private constructor(
         fun proxy(proxy: Proxy?) = apply { this.proxy = proxy }
 
         fun backend(backend: Backend) = apply { this.backend = backend }
+
+        fun dispatcherExecutorService(dispatcherExecutorService: ExecutorService?) = apply {
+            this.dispatcherExecutorService = dispatcherExecutorService
+        }
 
         fun sslSocketFactory(sslSocketFactory: SSLSocketFactory?) = apply {
             this.sslSocketFactory = sslSocketFactory
@@ -256,6 +264,8 @@ private constructor(
                     .callTimeout(timeout.request())
                     .proxy(proxy)
                     .apply {
+                        dispatcherExecutorService?.let { dispatcher(Dispatcher(it)) }
+
                         val sslSocketFactory = sslSocketFactory
                         val trustManager = trustManager
                         if (sslSocketFactory != null && trustManager != null) {
