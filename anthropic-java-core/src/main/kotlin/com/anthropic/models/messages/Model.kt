@@ -45,10 +45,18 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         val CLAUDE_3_7_SONNET_20250219 = of("claude-3-7-sonnet-20250219")
 
         /** Fastest and most compact model for near-instant responsiveness */
-        @JvmField val CLAUDE_3_5_HAIKU_LATEST = of("claude-3-5-haiku-latest")
+        @Deprecated(
+            "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
+        @JvmField
+        val CLAUDE_3_5_HAIKU_LATEST = of("claude-3-5-haiku-latest")
 
         /** Our fastest model */
-        @JvmField val CLAUDE_3_5_HAIKU_20241022 = of("claude-3-5-haiku-20241022")
+        @Deprecated(
+            "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
+        @JvmField
+        val CLAUDE_3_5_HAIKU_20241022 = of("claude-3-5-haiku-20241022")
 
         /** Hybrid model, capable of near-instant responses and extended thinking */
         @JvmField val CLAUDE_HAIKU_4_5 = of("claude-haiku-4-5")
@@ -119,8 +127,14 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         )
         /** High-performance model with early extended thinking */
         CLAUDE_3_7_SONNET_20250219,
+        @Deprecated(
+            "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Fastest and most compact model for near-instant responsiveness */
         CLAUDE_3_5_HAIKU_LATEST,
+        @Deprecated(
+            "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Our fastest model */
         CLAUDE_3_5_HAIKU_20241022,
         /** Hybrid model, capable of near-instant responses and extended thinking */
@@ -183,8 +197,14 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         )
         /** High-performance model with early extended thinking */
         CLAUDE_3_7_SONNET_20250219,
+        @Deprecated(
+            "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Fastest and most compact model for near-instant responsiveness */
         CLAUDE_3_5_HAIKU_LATEST,
+        @Deprecated(
+            "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Our fastest model */
         CLAUDE_3_5_HAIKU_20241022,
         /** Hybrid model, capable of near-instant responses and extended thinking */
