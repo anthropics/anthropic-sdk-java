@@ -39,11 +39,23 @@ internal class StructuredContentBlockTest {
         private val REDACTED_THINKING = BetaRedactedThinkingBlock.builder().data(STRING).build()
         private val TOOL_USE =
             BetaToolUseBlock.builder().id(STRING).input(JSON_VALUE).name(STRING).build()
+        private val TOOL_SEARCH_TOOL_RESULT =
+            BetaToolSearchToolResultBlock.builder()
+                .content(
+                    BetaToolSearchToolResultBlock.Content.ofBetaToolSearchToolSearchResultBlock(
+                        BetaToolSearchToolSearchResultBlock.builder()
+                            .toolReferences(listOf())
+                            .build()
+                    )
+                )
+                .toolUseId(STRING)
+                .build()
         private val SERVER_TOOL_USE =
             BetaServerToolUseBlock.builder()
                 .id(STRING)
                 .input(JSON_VALUE)
                 .name(BetaServerToolUseBlock.Name.WEB_SEARCH)
+                .caller(BetaDirectCaller.builder().build())
                 .build()
         private val WEB_SEARCH_TOOL_RESULT =
             BetaWebSearchToolResultBlock.builder()
@@ -125,6 +137,7 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("codeExecutionToolResult", OPTIONAL),
                 DelegationReadTestCase("bashCodeExecutionToolResult", OPTIONAL),
                 DelegationReadTestCase("textEditorCodeExecutionToolResult", OPTIONAL),
+                DelegationReadTestCase("toolSearchToolResult", OPTIONAL),
                 DelegationReadTestCase("mcpToolUse", OPTIONAL),
                 DelegationReadTestCase("mcpToolResult", OPTIONAL),
                 DelegationReadTestCase("containerUpload", OPTIONAL),
@@ -151,6 +164,8 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("isBashCodeExecutionToolResult", false),
                 DelegationReadTestCase("isTextEditorCodeExecutionToolResult", true),
                 DelegationReadTestCase("isTextEditorCodeExecutionToolResult", false),
+                DelegationReadTestCase("isToolSearchToolResult", true),
+                DelegationReadTestCase("isToolSearchToolResult", false),
                 DelegationReadTestCase("isMcpToolUse", true),
                 DelegationReadTestCase("isMcpToolUse", false),
                 DelegationReadTestCase("isMcpToolResult", true),
@@ -160,6 +175,7 @@ internal class StructuredContentBlockTest {
                 // `asText()` is a special case and has its own test function.
                 DelegationReadTestCase("asThinking", THINKING),
                 DelegationReadTestCase("asRedactedThinking", REDACTED_THINKING),
+                DelegationReadTestCase("asToolSearchToolResult", TOOL_SEARCH_TOOL_RESULT),
                 DelegationReadTestCase("asToolUse", TOOL_USE),
                 DelegationReadTestCase("asServerToolUse", SERVER_TOOL_USE),
                 DelegationReadTestCase("asWebSearchToolResult", WEB_SEARCH_TOOL_RESULT),
