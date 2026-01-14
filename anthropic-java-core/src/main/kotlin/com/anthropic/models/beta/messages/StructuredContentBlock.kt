@@ -57,6 +57,10 @@ internal constructor(
     fun textEditorCodeExecutionToolResult(): Optional<BetaTextEditorCodeExecutionToolResultBlock> =
         rawContentBlock.textEditorCodeExecutionToolResult()
 
+    /** @see BetaContentBlock.toolSearchToolResult */
+    fun toolSearchToolResult(): Optional<BetaToolSearchToolResultBlock> =
+        rawContentBlock.toolSearchToolResult()
+
     /** @see BetaContentBlock.mcpToolUse */
     fun mcpToolUse(): Optional<BetaMcpToolUseBlock> = rawContentBlock.mcpToolUse()
 
@@ -96,6 +100,9 @@ internal constructor(
     /** @see BetaContentBlock.isTextEditorCodeExecutionToolResult */
     fun isTextEditorCodeExecutionToolResult(): Boolean =
         rawContentBlock.isTextEditorCodeExecutionToolResult()
+
+    /** @see BetaContentBlock.isToolSearchToolResult */
+    fun isToolSearchToolResult(): Boolean = rawContentBlock.isToolSearchToolResult()
 
     /** @see BetaContentBlock.isMcpToolUse */
     fun isMcpToolUse(): Boolean = rawContentBlock.isMcpToolUse()
@@ -144,6 +151,10 @@ internal constructor(
     fun asTextEditorCodeExecutionToolResult(): BetaTextEditorCodeExecutionToolResultBlock =
         rawContentBlock.asTextEditorCodeExecutionToolResult()
 
+    /** @see BetaContentBlock.asToolSearchToolResult */
+    fun asToolSearchToolResult(): BetaToolSearchToolResultBlock =
+        rawContentBlock.asToolSearchToolResult()
+
     /** @see BetaContentBlock.asMcpToolUse */
     fun asMcpToolUse(): BetaMcpToolUseBlock = rawContentBlock.asMcpToolUse()
 
@@ -173,6 +184,7 @@ internal constructor(
                 visitor.visitTextEditorCodeExecutionToolResult(
                     asTextEditorCodeExecutionToolResult()
                 )
+            isToolSearchToolResult() -> visitor.visitToolSearchToolResult(asToolSearchToolResult())
             isMcpToolUse() -> visitor.visitMcpToolUse(asMcpToolUse())
             isMcpToolResult() -> visitor.visitMcpToolResult(asMcpToolResult())
             isContainerUpload() -> visitor.visitContainerUpload(asContainerUpload())
@@ -231,6 +243,12 @@ internal constructor(
                     bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlock
                 ) {
                     bashCodeExecutionToolResult.validate()
+                }
+
+                override fun visitToolSearchToolResult(
+                    toolSearchToolResult: BetaToolSearchToolResultBlock
+                ) {
+                    toolSearchToolResult.validate()
                 }
 
                 override fun visitTextEditorCodeExecutionToolResult(
@@ -314,6 +332,9 @@ internal constructor(
         fun visitBashCodeExecutionToolResult(
             bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlock
         ): T
+
+        /** @see BetaContentBlock.Visitor.visitToolSearchToolResult */
+        fun visitToolSearchToolResult(toolSearchToolResult: BetaToolSearchToolResultBlock): T
 
         /** @see BetaContentBlock.Visitor.visitTextEditorCodeExecutionToolResult */
         fun visitTextEditorCodeExecutionToolResult(

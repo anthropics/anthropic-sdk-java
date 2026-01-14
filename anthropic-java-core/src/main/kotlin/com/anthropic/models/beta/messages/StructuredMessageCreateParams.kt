@@ -201,6 +201,16 @@ internal constructor(
         /** @see MessageCreateParams.Builder.metadata */
         fun metadata(metadata: JsonField<BetaMetadata>) = apply { paramsBuilder.metadata(metadata) }
 
+        /** @see MessageCreateParams.Builder.outputConfig */
+        fun outputConfig(outputConfig: BetaOutputConfig) = apply {
+            paramsBuilder.outputConfig(outputConfig)
+        }
+
+        /** @see MessageCreateParams.Builder.outputConfig */
+        fun outputConfig(outputConfig: JsonField<BetaOutputConfig>) = apply {
+            paramsBuilder.outputConfig(outputConfig)
+        }
+
         /**
          * Sets the output format to a JSON schema derived from the structure of the given class.
          *
@@ -355,6 +365,12 @@ internal constructor(
             paramsBuilder.addTool(computerUse20250124)
         }
 
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(computerUse20251124: BetaToolComputerUse20251124) = apply {
+            paramsBuilder.addTool(computerUse20251124)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
         fun addTool(textEditor20241022: BetaToolTextEditor20241022) = apply {
             paramsBuilder.addTool(textEditor20241022)
         }
@@ -383,6 +399,19 @@ internal constructor(
         fun addTool(webFetchTool20250910: BetaWebFetchTool20250910) = apply {
             paramsBuilder.addTool(webFetchTool20250910)
         }
+
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(searchToolBm25_20251119: BetaToolSearchToolBm25_20251119) = apply {
+            paramsBuilder.addTool(searchToolBm25_20251119)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(searchToolRegex20251119: BetaToolSearchToolRegex20251119) = apply {
+            paramsBuilder.addTool(searchToolRegex20251119)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(mcpToolset: BetaMcpToolset) = apply { paramsBuilder.addTool(mcpToolset) }
 
         /** @see MessageCreateParams.Builder.addTool */
         @JvmOverloads

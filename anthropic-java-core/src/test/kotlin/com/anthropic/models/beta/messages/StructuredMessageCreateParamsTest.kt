@@ -85,6 +85,7 @@ internal class StructuredMessageCreateParamsTest {
         private val MCP_SERVER =
             BetaRequestMcpServerUrlDefinition.builder().name(STRING).url(STRING).build()
         private val METADATA = BetaMetadata.builder().build()
+        private val BETA_OUTPUT_CONFIG = BetaOutputConfig.builder().build()
         private val SERVICE_TIER = MessageCreateParams.ServiceTier.AUTO
         private val SYSTEM = MessageCreateParams.System.ofString(STRING)
         private val THINKING_CONFIG_ENABLED =
@@ -108,6 +109,17 @@ internal class StructuredMessageCreateParamsTest {
         private val TOOL_COMP_USE_20250124 =
             BetaToolComputerUse20250124.builder().displayHeightPx(1080).displayWidthPx(1920).build()
         private val TOOL_MEMORY_TOOL_20250818 = BetaMemoryTool20250818.builder().build()
+        private val TOOL_COMP_USE_20251124 =
+            BetaToolComputerUse20251124.builder().displayHeightPx(0).displayWidthPx(0).build()
+        private val TOOL_SEARCH_TOOL_20251119 =
+            BetaToolSearchToolBm25_20251119.builder()
+                .type(BetaToolSearchToolBm25_20251119.Type.of(STRING))
+                .build()
+        private val TOOL_SEARCH_TOOL_REGEX_20251119 =
+            BetaToolSearchToolRegex20251119.builder()
+                .type(BetaToolSearchToolRegex20251119.Type.of(STRING))
+                .build()
+        private val BETA_MCP_TOOL_SET = BetaMcpToolset.builder().mcpServerName(STRING).build()
         private val TOOL_TEXT_EDIT_20241022 = BetaToolTextEditor20241022.builder().build()
         private val TOOL_TEXT_EDIT_20250124 = BetaToolTextEditor20250124.builder().build()
         private val TOOL_TEXT_EDIT_20250429 = BetaToolTextEditor20250429.builder().build()
@@ -158,6 +170,8 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("addMcpServer", MCP_SERVER),
                 DelegationWriteTestCase("metadata", METADATA),
                 DelegationWriteTestCase("metadata", JSON_FIELD),
+                DelegationWriteTestCase("outputConfig", BETA_OUTPUT_CONFIG),
+                DelegationWriteTestCase("outputConfig", JSON_FIELD),
                 // `outputFormat` is a special case that is tested separately.
                 DelegationWriteTestCase("serviceTier", SERVICE_TIER),
                 DelegationWriteTestCase("serviceTier", JSON_FIELD),
@@ -192,6 +206,7 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("addTool", TOOL_CODE_20250825),
                 DelegationWriteTestCase("addTool", TOOL_COMP_USE_20241022),
                 DelegationWriteTestCase("addTool", TOOL_MEMORY_TOOL_20250818),
+                DelegationWriteTestCase("addTool", TOOL_COMP_USE_20251124),
                 DelegationWriteTestCase("addTool", TOOL_COMP_USE_20250124),
                 DelegationWriteTestCase("addTool", TOOL_TEXT_EDIT_20241022),
                 DelegationWriteTestCase("addTool", TOOL_TEXT_EDIT_20250124),
@@ -199,6 +214,9 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("addTool", TOOL_TEXT_EDIT_20250728),
                 DelegationWriteTestCase("addTool", TOOL_WEB_SEARCH_20250305),
                 DelegationWriteTestCase("addTool", TOOL_WEB_FETCH_20250910),
+                DelegationWriteTestCase("addTool", TOOL_SEARCH_TOOL_20251119),
+                DelegationWriteTestCase("addTool", TOOL_SEARCH_TOOL_REGEX_20251119),
+                DelegationWriteTestCase("addTool", BETA_MCP_TOOL_SET),
                 DelegationWriteTestCase("addTool", CLASS, VALIDATION),
                 DelegationWriteTestCase("topK", LONG),
                 DelegationWriteTestCase("topK", JSON_FIELD),
