@@ -21,13 +21,17 @@ class BetaOutputConfig
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val effort: JsonField<Effort>,
+    private val format: JsonField<BetaJsonOutputFormat>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("effort") @ExcludeMissing effort: JsonField<Effort> = JsonMissing.of()
-    ) : this(effort, mutableMapOf())
+        @JsonProperty("effort") @ExcludeMissing effort: JsonField<Effort> = JsonMissing.of(),
+        @JsonProperty("format")
+        @ExcludeMissing
+        format: JsonField<BetaJsonOutputFormat> = JsonMissing.of(),
+    ) : this(effort, format, mutableMapOf())
 
     /**
      * All possible effort levels.
@@ -38,11 +42,27 @@ private constructor(
     fun effort(): Optional<Effort> = effort.getOptional("effort")
 
     /**
+     * A schema to specify Claude's output format in responses. See
+     * [structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs)
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun format(): Optional<BetaJsonOutputFormat> = format.getOptional("format")
+
+    /**
      * Returns the raw JSON value of [effort].
      *
      * Unlike [effort], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("effort") @ExcludeMissing fun _effort(): JsonField<Effort> = effort
+
+    /**
+     * Returns the raw JSON value of [format].
+     *
+     * Unlike [format], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("format") @ExcludeMissing fun _format(): JsonField<BetaJsonOutputFormat> = format
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -66,11 +86,13 @@ private constructor(
     class Builder internal constructor() {
 
         private var effort: JsonField<Effort> = JsonMissing.of()
+        private var format: JsonField<BetaJsonOutputFormat> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaOutputConfig: BetaOutputConfig) = apply {
             effort = betaOutputConfig.effort
+            format = betaOutputConfig.format
             additionalProperties = betaOutputConfig.additionalProperties.toMutableMap()
         }
 
@@ -87,6 +109,24 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun effort(effort: JsonField<Effort>) = apply { this.effort = effort }
+
+        /**
+         * A schema to specify Claude's output format in responses. See
+         * [structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs)
+         */
+        fun format(format: BetaJsonOutputFormat?) = format(JsonField.ofNullable(format))
+
+        /** Alias for calling [Builder.format] with `format.orElse(null)`. */
+        fun format(format: Optional<BetaJsonOutputFormat>) = format(format.getOrNull())
+
+        /**
+         * Sets [Builder.format] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.format] with a well-typed [BetaJsonOutputFormat] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun format(format: JsonField<BetaJsonOutputFormat>) = apply { this.format = format }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -113,7 +153,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          */
         fun build(): BetaOutputConfig =
-            BetaOutputConfig(effort, additionalProperties.toMutableMap())
+            BetaOutputConfig(effort, format, additionalProperties.toMutableMap())
     }
 
     private var validated: Boolean = false
@@ -124,6 +164,7 @@ private constructor(
         }
 
         effort().ifPresent { it.validate() }
+        format().ifPresent { it.validate() }
         validated = true
     }
 
@@ -140,7 +181,10 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic internal fun validity(): Int = (effort.asKnown().getOrNull()?.validity() ?: 0)
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (effort.asKnown().getOrNull()?.validity() ?: 0) +
+            (format.asKnown().getOrNull()?.validity() ?: 0)
 
     /** All possible effort levels. */
     class Effort @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -283,13 +327,14 @@ private constructor(
 
         return other is BetaOutputConfig &&
             effort == other.effort &&
+            format == other.format &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(effort, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(effort, format, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaOutputConfig{effort=$effort, additionalProperties=$additionalProperties}"
+        "BetaOutputConfig{effort=$effort, format=$format, additionalProperties=$additionalProperties}"
 }

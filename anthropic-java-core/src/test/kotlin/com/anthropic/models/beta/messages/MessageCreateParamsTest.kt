@@ -58,7 +58,20 @@ internal class MessageCreateParamsTest {
                     .build()
             )
             .metadata(BetaMetadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
-            .outputConfig(BetaOutputConfig.builder().effort(BetaOutputConfig.Effort.LOW).build())
+            .outputConfig(
+                BetaOutputConfig.builder()
+                    .effort(BetaOutputConfig.Effort.LOW)
+                    .format(
+                        BetaJsonOutputFormat.builder()
+                            .schema(
+                                BetaJsonOutputFormat.Schema.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .build()
+            )
             .outputFormat(
                 BetaJsonOutputFormat.builder()
                     .schema(
@@ -182,7 +195,18 @@ internal class MessageCreateParamsTest {
                     BetaMetadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
                 )
                 .outputConfig(
-                    BetaOutputConfig.builder().effort(BetaOutputConfig.Effort.LOW).build()
+                    BetaOutputConfig.builder()
+                        .effort(BetaOutputConfig.Effort.LOW)
+                        .format(
+                            BetaJsonOutputFormat.builder()
+                                .schema(
+                                    BetaJsonOutputFormat.Schema.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .build()
                 )
                 .outputFormat(
                     BetaJsonOutputFormat.builder()
@@ -325,7 +349,18 @@ internal class MessageCreateParamsTest {
                     BetaMetadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
                 )
                 .outputConfig(
-                    BetaOutputConfig.builder().effort(BetaOutputConfig.Effort.LOW).build()
+                    BetaOutputConfig.builder()
+                        .effort(BetaOutputConfig.Effort.LOW)
+                        .format(
+                            BetaJsonOutputFormat.builder()
+                                .schema(
+                                    BetaJsonOutputFormat.Schema.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .build()
                 )
                 .outputFormat(
                     BetaJsonOutputFormat.builder()
@@ -454,7 +489,20 @@ internal class MessageCreateParamsTest {
         assertThat(body.metadata())
             .contains(BetaMetadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
         assertThat(body.outputConfig())
-            .contains(BetaOutputConfig.builder().effort(BetaOutputConfig.Effort.LOW).build())
+            .contains(
+                BetaOutputConfig.builder()
+                    .effort(BetaOutputConfig.Effort.LOW)
+                    .format(
+                        BetaJsonOutputFormat.builder()
+                            .schema(
+                                BetaJsonOutputFormat.Schema.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .build()
+            )
         assertThat(body.outputFormat())
             .contains(
                 BetaJsonOutputFormat.builder()

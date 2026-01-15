@@ -95,7 +95,18 @@ internal class MessageServiceTest {
                             .build()
                     )
                     .outputConfig(
-                        BetaOutputConfig.builder().effort(BetaOutputConfig.Effort.LOW).build()
+                        BetaOutputConfig.builder()
+                            .effort(BetaOutputConfig.Effort.LOW)
+                            .format(
+                                BetaJsonOutputFormat.builder()
+                                    .schema(
+                                        BetaJsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                            .build()
                     )
                     .outputFormat(
                         BetaJsonOutputFormat.builder()
@@ -237,7 +248,18 @@ internal class MessageServiceTest {
                             .build()
                     )
                     .outputConfig(
-                        BetaOutputConfig.builder().effort(BetaOutputConfig.Effort.LOW).build()
+                        BetaOutputConfig.builder()
+                            .effort(BetaOutputConfig.Effort.LOW)
+                            .format(
+                                BetaJsonOutputFormat.builder()
+                                    .schema(
+                                        BetaJsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                            .build()
                     )
                     .outputFormat(
                         BetaJsonOutputFormat.builder()
@@ -363,7 +385,18 @@ internal class MessageServiceTest {
                             .build()
                     )
                     .outputConfig(
-                        BetaOutputConfig.builder().effort(BetaOutputConfig.Effort.LOW).build()
+                        BetaOutputConfig.builder()
+                            .effort(BetaOutputConfig.Effort.LOW)
+                            .format(
+                                BetaJsonOutputFormat.builder()
+                                    .schema(
+                                        BetaJsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                            .build()
                     )
                     .outputFormat(
                         BetaJsonOutputFormat.builder()
