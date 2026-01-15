@@ -218,6 +218,8 @@ private constructor(
 
             @JvmField val QUERY_TOO_LONG = of("query_too_long")
 
+            @JvmField val REQUEST_TOO_LARGE = of("request_too_large")
+
             @JvmStatic fun of(value: String) = ErrorCode(JsonField.of(value))
         }
 
@@ -228,6 +230,7 @@ private constructor(
             MAX_USES_EXCEEDED,
             TOO_MANY_REQUESTS,
             QUERY_TOO_LONG,
+            REQUEST_TOO_LARGE,
         }
 
         /**
@@ -245,6 +248,7 @@ private constructor(
             MAX_USES_EXCEEDED,
             TOO_MANY_REQUESTS,
             QUERY_TOO_LONG,
+            REQUEST_TOO_LARGE,
             /**
              * An enum member indicating that [ErrorCode] was instantiated with an unknown value.
              */
@@ -265,6 +269,7 @@ private constructor(
                 MAX_USES_EXCEEDED -> Value.MAX_USES_EXCEEDED
                 TOO_MANY_REQUESTS -> Value.TOO_MANY_REQUESTS
                 QUERY_TOO_LONG -> Value.QUERY_TOO_LONG
+                REQUEST_TOO_LARGE -> Value.REQUEST_TOO_LARGE
                 else -> Value._UNKNOWN
             }
 
@@ -284,6 +289,7 @@ private constructor(
                 MAX_USES_EXCEEDED -> Known.MAX_USES_EXCEEDED
                 TOO_MANY_REQUESTS -> Known.TOO_MANY_REQUESTS
                 QUERY_TOO_LONG -> Known.QUERY_TOO_LONG
+                REQUEST_TOO_LARGE -> Known.REQUEST_TOO_LARGE
                 else -> throw AnthropicInvalidDataException("Unknown ErrorCode: $value")
             }
 

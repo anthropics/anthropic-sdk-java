@@ -220,13 +220,13 @@ internal class BetaContentBlockTest {
         val serverToolUse =
             BetaServerToolUseBlock.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
-                .caller(BetaDirectCaller.builder().build())
                 .input(
                     BetaServerToolUseBlock.Input.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
                 .name(BetaServerToolUseBlock.Name.WEB_SEARCH)
+                .caller(BetaDirectCaller.builder().build())
                 .build()
 
         val betaContentBlock = BetaContentBlock.ofServerToolUse(serverToolUse)
@@ -254,13 +254,13 @@ internal class BetaContentBlockTest {
             BetaContentBlock.ofServerToolUse(
                 BetaServerToolUseBlock.builder()
                     .id("srvtoolu_SQfNkl1n_JR_")
-                    .caller(BetaDirectCaller.builder().build())
                     .input(
                         BetaServerToolUseBlock.Input.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
                             .build()
                     )
                     .name(BetaServerToolUseBlock.Name.WEB_SEARCH)
+                    .caller(BetaDirectCaller.builder().build())
                     .build()
             )
 
