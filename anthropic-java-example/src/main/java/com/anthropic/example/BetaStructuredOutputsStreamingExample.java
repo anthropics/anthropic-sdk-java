@@ -57,11 +57,11 @@ public final class BetaStructuredOutputsStreamingExample {
         // Configure by setting the `ANTHROPIC_API_KEY` environment variable.
         AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
+        // Note: The beta header is auto-injected when using outputConfig
         StructuredMessageCreateParams<BookList> createParams = MessageCreateParams.builder()
                 .model("claude-sonnet-4-5")
-                .putAdditionalHeader("anthropic-beta", "structured-outputs-2025-11-13")
                 .maxTokens(2048)
-                .outputFormat(BookList.class)
+                .outputConfig(BookList.class)
                 .addUserMessage("List some famous late twentieth century novels.")
                 .build();
 
