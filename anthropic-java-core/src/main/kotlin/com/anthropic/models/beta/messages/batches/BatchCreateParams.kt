@@ -969,8 +969,8 @@ private constructor(
             fun metadata(): Optional<BetaMetadata> = metadata.getOptional("metadata")
 
             /**
-             * Configuration options for the model's output. Controls aspects like how much effort
-             * the model puts into its response.
+             * Configuration options for the model's output. Controls aspects like output format or
+             * how much effort the model puts into its response.
              *
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
@@ -979,11 +979,16 @@ private constructor(
                 outputConfig.getOptional("output_config")
 
             /**
-             * A schema to specify Claude's output format in responses.
+             * Deprecated: Use `output_config.format` instead. See
+             * [structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs)
+             *
+             * A schema to specify Claude's output format in responses. This parameter will be
+             * removed in a future release.
              *
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
+            @Deprecated("deprecated")
             fun outputFormat(): Optional<BetaJsonOutputFormat> =
                 outputFormat.getOptional("output_format")
 
@@ -1264,6 +1269,7 @@ private constructor(
              * Unlike [outputFormat], this method doesn't throw if the JSON field has an unexpected
              * type.
              */
+            @Deprecated("deprecated")
             @JsonProperty("output_format")
             @ExcludeMissing
             fun _outputFormat(): JsonField<BetaJsonOutputFormat> = outputFormat
@@ -1730,8 +1736,8 @@ private constructor(
                 fun metadata(metadata: JsonField<BetaMetadata>) = apply { this.metadata = metadata }
 
                 /**
-                 * Configuration options for the model's output. Controls aspects like how much
-                 * effort the model puts into its response.
+                 * Configuration options for the model's output. Controls aspects like output format
+                 * or how much effort the model puts into its response.
                  */
                 fun outputConfig(outputConfig: BetaOutputConfig) =
                     outputConfig(JsonField.of(outputConfig))
@@ -1747,11 +1753,19 @@ private constructor(
                     this.outputConfig = outputConfig
                 }
 
-                /** A schema to specify Claude's output format in responses. */
+                /**
+                 * Deprecated: Use `output_config.format` instead. See
+                 * [structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs)
+                 *
+                 * A schema to specify Claude's output format in responses. This parameter will be
+                 * removed in a future release.
+                 */
+                @Deprecated("deprecated")
                 fun outputFormat(outputFormat: BetaJsonOutputFormat?) =
                     outputFormat(JsonField.ofNullable(outputFormat))
 
                 /** Alias for calling [Builder.outputFormat] with `outputFormat.orElse(null)`. */
+                @Deprecated("deprecated")
                 fun outputFormat(outputFormat: Optional<BetaJsonOutputFormat>) =
                     outputFormat(outputFormat.getOrNull())
 
@@ -1762,6 +1776,7 @@ private constructor(
                  * [BetaJsonOutputFormat] value instead. This method is primarily for setting the
                  * field to an undocumented or not yet supported value.
                  */
+                @Deprecated("deprecated")
                 fun outputFormat(outputFormat: JsonField<BetaJsonOutputFormat>) = apply {
                     this.outputFormat = outputFormat
                 }
