@@ -113,16 +113,17 @@ private constructor(
     /**
      * Returns the raw JSON value of [id].
      *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun caller(): Optional<Caller> = caller.getOptional("caller")
+
+    /**
+     * Returns the raw JSON value of [id].
+     *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
-
-    /**
-     * Returns the raw JSON value of [caller].
-     *
-     * Unlike [caller], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("caller") @ExcludeMissing fun _caller(): JsonField<Caller> = caller
 
     /**
      * Returns the raw JSON value of [name].
@@ -130,6 +131,13 @@ private constructor(
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<Name> = name
+
+    /**
+     * Returns the raw JSON value of [caller].
+     *
+     * Unlike [caller], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("caller") @ExcludeMissing fun _caller(): JsonField<Caller> = caller
 
     /**
      * Returns the raw JSON value of [caller].
