@@ -257,6 +257,8 @@ private constructor(
         fun build(): OkHttpClient =
             OkHttpClient(
                 okhttp3.OkHttpClient.Builder()
+                    // `RetryingHttpClient` handles retries if the user enabled them.
+                    .retryOnConnectionFailure(false)
                     .pingInterval(Duration.ofMinutes(1))
                     .connectTimeout(timeout.connect())
                     .readTimeout(timeout.read())
