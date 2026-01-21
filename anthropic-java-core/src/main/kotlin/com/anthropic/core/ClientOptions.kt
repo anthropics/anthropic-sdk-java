@@ -465,6 +465,7 @@ private constructor(
             headers.put("X-Stainless-Package-Version", getPackageVersion())
             headers.put("X-Stainless-Runtime", "JRE")
             headers.put("X-Stainless-Runtime-Version", getJavaVersion())
+            headers.put("X-Stainless-Kotlin-Version", KotlinVersion.CURRENT.toString())
             headers.put("anthropic-version", "2023-06-01")
             apiKey?.let {
                 if (!it.isEmpty()) {
