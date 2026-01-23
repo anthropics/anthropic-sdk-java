@@ -61,8 +61,7 @@ internal constructor(
             this.outputType = outputType
             this.paramsBuilder = paramsBuilder
             // Convert the class to a JSON schema and apply it to the delegate `Builder`.
-            @Suppress("DEPRECATION")
-            outputFormat(outputType, localValidation)
+            @Suppress("DEPRECATION") outputFormat(outputType, localValidation)
         }
 
         @JvmSynthetic
