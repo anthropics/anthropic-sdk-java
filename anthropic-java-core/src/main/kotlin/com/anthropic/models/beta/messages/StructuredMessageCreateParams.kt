@@ -49,8 +49,10 @@ internal constructor(
     class Builder<T : Any> internal constructor() {
         private var outputType: Class<T>? = null
         private var paramsBuilder = MessageCreateParams.Companion.builder()
+        private var outputConfigSet: Boolean = false
 
         @JvmSynthetic
+        @Deprecated("Use the wrap overload that accepts effort parameter")
         internal fun wrap(
             outputType: Class<T>,
             paramsBuilder: MessageCreateParams.Builder,
@@ -59,7 +61,20 @@ internal constructor(
             this.outputType = outputType
             this.paramsBuilder = paramsBuilder
             // Convert the class to a JSON schema and apply it to the delegate `Builder`.
-            outputFormat(outputType, localValidation)
+            @Suppress("DEPRECATION") outputFormat(outputType, localValidation)
+        }
+
+        @JvmSynthetic
+        internal fun wrap(
+            outputType: Class<T>,
+            paramsBuilder: MessageCreateParams.Builder,
+            effort: BetaOutputConfig.Effort?,
+            localValidation: JsonSchemaLocalValidation,
+        ) = apply {
+            this.outputType = outputType
+            this.paramsBuilder = paramsBuilder
+            // Convert the class to a JSON schema and apply it to the delegate `Builder`.
+            outputConfig(outputType, effort, localValidation)
         }
 
         /** Injects a given `MessageCreateParams.Builder`. For use only when testing. */
@@ -214,15 +229,62 @@ internal constructor(
         /**
          * Sets the output format to a JSON schema derived from the structure of the given class.
          *
-         * @see MessageCreateParams.Builder.outputFormat
+         * **Deprecated:** Use [outputConfig] instead. This method will be removed in a future
+         * release.
+         *
+         * @see MessageCreateParams.Builder.outputConfig
          */
         @JvmOverloads
+        @Deprecated(
+            message =
+                "output_format is deprecated. Use outputConfig instead which sets output_config.format.",
+            replaceWith = ReplaceWith("outputConfig(outputType, localValidation)"),
+        )
         fun outputFormat(
             outputType: Class<T>,
             localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
         ) = apply {
+            if (outputConfigSet) {
+                throw IllegalArgumentException(
+                    "Both outputFormat and outputConfig were called. " +
+                        "Please use only outputConfig (outputFormat is deprecated)."
+                )
+            }
             this.outputType = outputType
-            paramsBuilder.outputFormat(outputFormatFromClass(outputType, localValidation))
+            val format = outputFormatFromClass(outputType, localValidation)
+            // Use output_config.format instead of deprecated output_format
+            paramsBuilder.outputConfig(BetaOutputConfig.builder().format(format).build())
+            // Auto-inject beta header
+            paramsBuilder.addBeta(AnthropicBeta.of("structured-outputs-2025-12-15"))
+            outputConfigSet = true
+        }
+
+        /**
+         * Sets the output configuration with a JSON schema format derived from the structure of the
+         * given class. This is the recommended way to specify structured outputs.
+         *
+         * @see MessageCreateParams.Builder.outputConfig
+         */
+        @JvmOverloads
+        fun outputConfig(
+            outputType: Class<T>,
+            effort: BetaOutputConfig.Effort? = null,
+            localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
+        ) = apply {
+            if (outputConfigSet) {
+                throw IllegalArgumentException(
+                    "Both outputFormat and outputConfig were called. " +
+                        "Please use only outputConfig (outputFormat is deprecated)."
+                )
+            }
+            this.outputType = outputType
+            val format = outputFormatFromClass(outputType, localValidation)
+            val builder = BetaOutputConfig.builder().format(format)
+            effort?.let { builder.effort(it) }
+            paramsBuilder.outputConfig(builder.build())
+            // Auto-inject beta header
+            paramsBuilder.addBeta(AnthropicBeta.of("structured-outputs-2025-12-15"))
+            outputConfigSet = true
         }
 
         /** @see MessageCreateParams.Builder.serviceTier */
