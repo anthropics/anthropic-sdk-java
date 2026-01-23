@@ -52,6 +52,7 @@ internal constructor(
         private var outputConfigSet: Boolean = false
 
         @JvmSynthetic
+        @Deprecated("Use the wrap overload that accepts effort parameter")
         internal fun wrap(
             outputType: Class<T>,
             paramsBuilder: MessageCreateParams.Builder,
@@ -60,7 +61,21 @@ internal constructor(
             this.outputType = outputType
             this.paramsBuilder = paramsBuilder
             // Convert the class to a JSON schema and apply it to the delegate `Builder`.
+            @Suppress("DEPRECATION")
             outputFormat(outputType, localValidation)
+        }
+
+        @JvmSynthetic
+        internal fun wrap(
+            outputType: Class<T>,
+            paramsBuilder: MessageCreateParams.Builder,
+            effort: BetaOutputConfig.Effort?,
+            localValidation: JsonSchemaLocalValidation,
+        ) = apply {
+            this.outputType = outputType
+            this.paramsBuilder = paramsBuilder
+            // Convert the class to a JSON schema and apply it to the delegate `Builder`.
+            outputConfig(outputType, effort, localValidation)
         }
 
         /** Injects a given `MessageCreateParams.Builder`. For use only when testing. */
