@@ -45,7 +45,7 @@ internal class MessageServiceAsyncTest {
         val betaMessageFuture =
             messageServiceAsync.create(
                 MessageCreateParams.builder()
-                    .addBeta(AnthropicBeta.of("string"))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_SONNET_4_5_20250929)
@@ -199,7 +199,7 @@ internal class MessageServiceAsyncTest {
         val betaMessageStreamResponse =
             messageServiceAsync.createStreaming(
                 MessageCreateParams.builder()
-                    .addBeta(AnthropicBeta.of("string"))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_SONNET_4_5_20250929)
@@ -356,7 +356,7 @@ internal class MessageServiceAsyncTest {
         val betaMessageTokensCountFuture =
             messageServiceAsync.countTokens(
                 MessageCountTokensParams.builder()
-                    .addBeta(AnthropicBeta.of("string"))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_SONNET_4_5_20250929)
                     .contextManagement(

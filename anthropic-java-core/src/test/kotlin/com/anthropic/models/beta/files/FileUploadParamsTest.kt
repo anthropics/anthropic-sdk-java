@@ -14,7 +14,7 @@ internal class FileUploadParamsTest {
     @Test
     fun create() {
         FileUploadParams.builder()
-            .addBeta(AnthropicBeta.of("string"))
+            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .file("some content".byteInputStream())
             .build()
     }
@@ -23,13 +23,16 @@ internal class FileUploadParamsTest {
     fun headers() {
         val params =
             FileUploadParams.builder()
-                .addBeta(AnthropicBeta.of("string"))
+                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .file("some content".byteInputStream())
                 .build()
 
         val headers = params._headers()
 
-        assertThat(headers).isEqualTo(Headers.builder().put("anthropic-beta", "string").build())
+        assertThat(headers)
+            .isEqualTo(
+                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+            )
     }
 
     @Test
@@ -45,7 +48,7 @@ internal class FileUploadParamsTest {
     fun body() {
         val params =
             FileUploadParams.builder()
-                .addBeta(AnthropicBeta.of("string"))
+                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .file("some content".byteInputStream())
                 .build()
 

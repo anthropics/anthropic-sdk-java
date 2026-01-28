@@ -29,7 +29,7 @@ internal class VersionServiceTest {
             versionService.create(
                 VersionCreateParams.builder()
                     .skillId("skill_id")
-                    .addBeta(AnthropicBeta.of("string"))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .addFile("some content".byteInputStream())
                     .build()
             )
@@ -51,7 +51,7 @@ internal class VersionServiceTest {
                 VersionRetrieveParams.builder()
                     .skillId("skill_id")
                     .version("version")
-                    .addBeta(AnthropicBeta.of("string"))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
 
@@ -86,7 +86,7 @@ internal class VersionServiceTest {
                 VersionDeleteParams.builder()
                     .skillId("skill_id")
                     .version("version")
-                    .addBeta(AnthropicBeta.of("string"))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
 

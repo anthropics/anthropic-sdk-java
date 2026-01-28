@@ -15,7 +15,7 @@ internal class MessageCreateParamsTest {
     @Test
     fun create() {
         MessageCreateParams.builder()
-            .addBeta(AnthropicBeta.of("string"))
+            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .maxTokens(1024L)
             .addUserMessage("Hello, world")
             .model(Model.CLAUDE_SONNET_4_5_20250929)
@@ -147,7 +147,7 @@ internal class MessageCreateParamsTest {
     fun headers() {
         val params =
             MessageCreateParams.builder()
-                .addBeta(AnthropicBeta.of("string"))
+                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_SONNET_4_5_20250929)
@@ -280,7 +280,10 @@ internal class MessageCreateParamsTest {
 
         val headers = params._headers()
 
-        assertThat(headers).isEqualTo(Headers.builder().put("anthropic-beta", "string").build())
+        assertThat(headers)
+            .isEqualTo(
+                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+            )
     }
 
     @Test
@@ -301,7 +304,7 @@ internal class MessageCreateParamsTest {
     fun body() {
         val params =
             MessageCreateParams.builder()
-                .addBeta(AnthropicBeta.of("string"))
+                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_SONNET_4_5_20250929)
