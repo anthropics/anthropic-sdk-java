@@ -25,7 +25,7 @@ internal class ModelServiceAsyncTest {
             modelServiceAsync.retrieve(
                 ModelRetrieveParams.builder()
                     .modelId("model_id")
-                    .addBeta(AnthropicBeta.of("string"))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
 

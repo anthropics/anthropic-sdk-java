@@ -52,7 +52,7 @@ internal class FileServiceTest {
             fileService.delete(
                 FileDeleteParams.builder()
                     .fileId("file_id")
-                    .addBeta(AnthropicBeta.of("string"))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
 
@@ -73,7 +73,7 @@ internal class FileServiceTest {
             fileService.download(
                 FileDownloadParams.builder()
                     .fileId("file_id")
-                    .addBeta(AnthropicBeta.of("string"))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
 
@@ -93,7 +93,7 @@ internal class FileServiceTest {
             fileService.retrieveMetadata(
                 FileRetrieveMetadataParams.builder()
                     .fileId("file_id")
-                    .addBeta(AnthropicBeta.of("string"))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
 
@@ -112,7 +112,7 @@ internal class FileServiceTest {
         val fileMetadata =
             fileService.upload(
                 FileUploadParams.builder()
-                    .addBeta(AnthropicBeta.of("string"))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .file("some content".byteInputStream())
                     .build()
             )

@@ -16,7 +16,7 @@ internal class ModelListParamsTest {
             .afterId("after_id")
             .beforeId("before_id")
             .limit(1L)
-            .addBeta(AnthropicBeta.of("string"))
+            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .build()
     }
 
@@ -27,12 +27,15 @@ internal class ModelListParamsTest {
                 .afterId("after_id")
                 .beforeId("before_id")
                 .limit(1L)
-                .addBeta(AnthropicBeta.of("string"))
+                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
 
         val headers = params._headers()
 
-        assertThat(headers).isEqualTo(Headers.builder().put("anthropic-beta", "string").build())
+        assertThat(headers)
+            .isEqualTo(
+                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+            )
     }
 
     @Test
@@ -51,7 +54,7 @@ internal class ModelListParamsTest {
                 .afterId("after_id")
                 .beforeId("before_id")
                 .limit(1L)
-                .addBeta(AnthropicBeta.of("string"))
+                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
 
         val queryParams = params._queryParams()

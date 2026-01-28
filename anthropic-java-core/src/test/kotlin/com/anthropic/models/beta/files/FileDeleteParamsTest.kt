@@ -11,7 +11,10 @@ internal class FileDeleteParamsTest {
 
     @Test
     fun create() {
-        FileDeleteParams.builder().fileId("file_id").addBeta(AnthropicBeta.of("string")).build()
+        FileDeleteParams.builder()
+            .fileId("file_id")
+            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .build()
     }
 
     @Test
@@ -26,11 +29,17 @@ internal class FileDeleteParamsTest {
     @Test
     fun headers() {
         val params =
-            FileDeleteParams.builder().fileId("file_id").addBeta(AnthropicBeta.of("string")).build()
+            FileDeleteParams.builder()
+                .fileId("file_id")
+                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .build()
 
         val headers = params._headers()
 
-        assertThat(headers).isEqualTo(Headers.builder().put("anthropic-beta", "string").build())
+        assertThat(headers)
+            .isEqualTo(
+                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+            )
     }
 
     @Test

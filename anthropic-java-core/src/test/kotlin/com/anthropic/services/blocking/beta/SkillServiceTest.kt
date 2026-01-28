@@ -28,7 +28,7 @@ internal class SkillServiceTest {
         val skill =
             skillService.create(
                 SkillCreateParams.builder()
-                    .addBeta(AnthropicBeta.of("string"))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .displayTitle("display_title")
                     .addFile("some content".byteInputStream())
                     .build()
@@ -50,7 +50,7 @@ internal class SkillServiceTest {
             skillService.retrieve(
                 SkillRetrieveParams.builder()
                     .skillId("skill_id")
-                    .addBeta(AnthropicBeta.of("string"))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
 
@@ -84,7 +84,7 @@ internal class SkillServiceTest {
             skillService.delete(
                 SkillDeleteParams.builder()
                     .skillId("skill_id")
-                    .addBeta(AnthropicBeta.of("string"))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
 

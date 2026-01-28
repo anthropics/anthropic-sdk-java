@@ -15,7 +15,7 @@ internal class MessageCountTokensParamsTest {
     @Test
     fun create() {
         MessageCountTokensParams.builder()
-            .addBeta(AnthropicBeta.of("string"))
+            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .addUserMessage("Hello, world")
             .model(Model.CLAUDE_SONNET_4_5_20250929)
             .contextManagement(
@@ -128,7 +128,7 @@ internal class MessageCountTokensParamsTest {
     fun headers() {
         val params =
             MessageCountTokensParams.builder()
-                .addBeta(AnthropicBeta.of("string"))
+                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_SONNET_4_5_20250929)
                 .contextManagement(
@@ -240,7 +240,10 @@ internal class MessageCountTokensParamsTest {
 
         val headers = params._headers()
 
-        assertThat(headers).isEqualTo(Headers.builder().put("anthropic-beta", "string").build())
+        assertThat(headers)
+            .isEqualTo(
+                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+            )
     }
 
     @Test
@@ -260,7 +263,7 @@ internal class MessageCountTokensParamsTest {
     fun body() {
         val params =
             MessageCountTokensParams.builder()
-                .addBeta(AnthropicBeta.of("string"))
+                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_SONNET_4_5_20250929)
                 .contextManagement(
