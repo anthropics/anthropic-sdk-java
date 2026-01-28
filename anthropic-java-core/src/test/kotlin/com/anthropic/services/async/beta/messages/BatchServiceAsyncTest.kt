@@ -48,7 +48,7 @@ internal class BatchServiceAsyncTest {
         val betaMessageBatchFuture =
             batchServiceAsync.create(
                 BatchCreateParams.builder()
-                    .addBeta(AnthropicBeta.of("string"))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .addRequest(
                         BatchCreateParams.Request.builder()
                             .customId("my-custom-id-1")
@@ -234,7 +234,7 @@ internal class BatchServiceAsyncTest {
             batchServiceAsync.retrieve(
                 BatchRetrieveParams.builder()
                     .messageBatchId("message_batch_id")
-                    .addBeta(AnthropicBeta.of("string"))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
 
@@ -270,7 +270,7 @@ internal class BatchServiceAsyncTest {
             batchServiceAsync.delete(
                 BatchDeleteParams.builder()
                     .messageBatchId("message_batch_id")
-                    .addBeta(AnthropicBeta.of("string"))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
 
@@ -291,7 +291,7 @@ internal class BatchServiceAsyncTest {
             batchServiceAsync.cancel(
                 BatchCancelParams.builder()
                     .messageBatchId("message_batch_id")
-                    .addBeta(AnthropicBeta.of("string"))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
 
@@ -313,7 +313,7 @@ internal class BatchServiceAsyncTest {
             batchServiceAsync.resultsStreaming(
                 BatchResultsParams.builder()
                     .messageBatchId("message_batch_id")
-                    .addBeta(AnthropicBeta.of("string"))
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
 

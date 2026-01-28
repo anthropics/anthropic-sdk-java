@@ -30,7 +30,7 @@ internal class BatchCreateParamsTest {
     @Test
     fun create() {
         BatchCreateParams.builder()
-            .addBeta(AnthropicBeta.of("string"))
+            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .addRequest(
                 BatchCreateParams.Request.builder()
                     .customId("my-custom-id-1")
@@ -191,7 +191,7 @@ internal class BatchCreateParamsTest {
     fun headers() {
         val params =
             BatchCreateParams.builder()
-                .addBeta(AnthropicBeta.of("string"))
+                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .addRequest(
                     BatchCreateParams.Request.builder()
                         .customId("my-custom-id-1")
@@ -351,7 +351,10 @@ internal class BatchCreateParamsTest {
 
         val headers = params._headers()
 
-        assertThat(headers).isEqualTo(Headers.builder().put("anthropic-beta", "string").build())
+        assertThat(headers)
+            .isEqualTo(
+                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+            )
     }
 
     @Test
@@ -381,7 +384,7 @@ internal class BatchCreateParamsTest {
     fun body() {
         val params =
             BatchCreateParams.builder()
-                .addBeta(AnthropicBeta.of("string"))
+                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .addRequest(
                     BatchCreateParams.Request.builder()
                         .customId("my-custom-id-1")

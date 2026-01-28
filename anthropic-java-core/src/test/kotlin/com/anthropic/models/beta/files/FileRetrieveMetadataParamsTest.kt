@@ -13,7 +13,7 @@ internal class FileRetrieveMetadataParamsTest {
     fun create() {
         FileRetrieveMetadataParams.builder()
             .fileId("file_id")
-            .addBeta(AnthropicBeta.of("string"))
+            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .build()
     }
 
@@ -31,12 +31,15 @@ internal class FileRetrieveMetadataParamsTest {
         val params =
             FileRetrieveMetadataParams.builder()
                 .fileId("file_id")
-                .addBeta(AnthropicBeta.of("string"))
+                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
 
         val headers = params._headers()
 
-        assertThat(headers).isEqualTo(Headers.builder().put("anthropic-beta", "string").build())
+        assertThat(headers)
+            .isEqualTo(
+                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+            )
     }
 
     @Test
