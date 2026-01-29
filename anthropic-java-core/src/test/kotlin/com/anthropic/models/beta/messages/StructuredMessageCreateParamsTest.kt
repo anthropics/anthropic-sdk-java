@@ -280,7 +280,8 @@ internal class StructuredMessageCreateParamsTest {
         checkAllDelegatorWriteFunctionsAreTested(
             builderDelegator::class,
             builderDelegationTestCases(),
-            exceptionalTestedFns = listOf("outputFormat"),
+            // These functions have non-standard delegation and are tested separately below.
+            exceptionalTestedFns = listOf("outputFormat", "outputConfig"),
             nonDelegatingFns = setOf("build", "wrap", "inject"),
         )
     }
@@ -294,19 +295,38 @@ internal class StructuredMessageCreateParamsTest {
     @Test
     fun `delegation of outputFormat`() {
         // Special unit test case as the delegator method signature does not match that of the
-        // delegate method.
+        // delegate method. The deprecated `outputFormat` now calls `outputConfig` and `addBeta`
+        // internally instead of the delegate's `outputFormat`.
         val delegatorTestCase = DelegationWriteTestCase("outputFormat", X::class.java)
         val delegatorMethod = findDelegationMethod(builderDelegator, delegatorTestCase)
-        val mockDelegateTestCase =
-            DelegationWriteTestCase("outputFormat", betaOutputFormatFromClass(X::class.java))
-        val mockDelegateMethod = findDelegationMethod(mockBuilderDelegate, mockDelegateTestCase)
+
+        @Suppress("DEPRECATION")
+        delegatorMethod.invoke(builderDelegator, delegatorTestCase.inputValues[0])
+
+        // Verify that outputConfig and addBeta were called on the mock delegate.
+        val expectedFormat = betaOutputFormatFromClass(X::class.java)
+        val expectedOutputConfig = BetaOutputConfig.builder().format(expectedFormat).build()
+        verify(mockBuilderDelegate, times(1)).outputConfig(expectedOutputConfig)
+        verify(mockBuilderDelegate, times(1))
+            .addBeta(AnthropicBeta.of("structured-outputs-2025-12-15"))
+        verifyNoMoreInteractions(mockBuilderDelegate)
+    }
+
+    @Test
+    fun `delegation of outputConfig with Class`() {
+        // Special unit test case for the outputConfig(Class<T>, ...) overload which has
+        // non-standard delegation behavior similar to outputFormat.
+        val delegatorTestCase = DelegationWriteTestCase("outputConfig", X::class.java)
+        val delegatorMethod = findDelegationMethod(builderDelegator, delegatorTestCase)
 
         delegatorMethod.invoke(builderDelegator, delegatorTestCase.inputValues[0])
 
-        // Verify that the corresponding method on the mock delegate was called exactly once.
-        verify(mockBuilderDelegate, times(1)).apply {
-            mockDelegateMethod.invoke(mockBuilderDelegate, mockDelegateTestCase.inputValues[0])
-        }
+        // Verify that outputConfig and addBeta were called on the mock delegate.
+        val expectedFormat = betaOutputFormatFromClass(X::class.java)
+        val expectedOutputConfig = BetaOutputConfig.builder().format(expectedFormat).build()
+        verify(mockBuilderDelegate, times(1)).outputConfig(expectedOutputConfig)
+        verify(mockBuilderDelegate, times(1))
+            .addBeta(AnthropicBeta.of("structured-outputs-2025-12-15"))
         verifyNoMoreInteractions(mockBuilderDelegate)
     }
 }
