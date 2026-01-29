@@ -307,7 +307,8 @@ internal class StructuredMessageCreateParamsTest {
         val expectedFormat = betaOutputFormatFromClass(X::class.java)
         val expectedOutputConfig = BetaOutputConfig.builder().format(expectedFormat).build()
         verify(mockBuilderDelegate, times(1)).outputConfig(expectedOutputConfig)
-        verify(mockBuilderDelegate, times(1)).addBeta(AnthropicBeta.of("structured-outputs-2025-12-15"))
+        verify(mockBuilderDelegate, times(1))
+            .addBeta(AnthropicBeta.of("structured-outputs-2025-12-15"))
         verifyNoMoreInteractions(mockBuilderDelegate)
     }
 
@@ -324,7 +325,8 @@ internal class StructuredMessageCreateParamsTest {
         val expectedFormat = betaOutputFormatFromClass(X::class.java)
         val expectedOutputConfig = BetaOutputConfig.builder().format(expectedFormat).build()
         verify(mockBuilderDelegate, times(1)).outputConfig(expectedOutputConfig)
-        verify(mockBuilderDelegate, times(1)).addBeta(AnthropicBeta.of("structured-outputs-2025-12-15"))
+        verify(mockBuilderDelegate, times(1))
+            .addBeta(AnthropicBeta.of("structured-outputs-2025-12-15"))
         verifyNoMoreInteractions(mockBuilderDelegate)
     }
 }
