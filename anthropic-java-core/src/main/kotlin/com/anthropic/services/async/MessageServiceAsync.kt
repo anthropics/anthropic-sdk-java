@@ -12,6 +12,8 @@ import com.anthropic.models.messages.MessageCountTokensParams
 import com.anthropic.models.messages.MessageCreateParams
 import com.anthropic.models.messages.MessageTokensCount
 import com.anthropic.models.messages.RawMessageStreamEvent
+import com.anthropic.models.messages.StructuredMessage
+import com.anthropic.models.messages.StructuredMessageCreateParams
 import com.anthropic.services.async.messages.BatchServiceAsync
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
@@ -52,6 +54,32 @@ interface MessageServiceAsync {
     ): CompletableFuture<Message>
 
     /**
+     * Creates a model response for the given message parameters. The model's structured output in
+     * JSON form will be deserialized automatically into an instance of the class `T`. See the SDK
+     * documentation for more details.
+     *
+     * @see create
+     */
+    fun <T : Any> create(
+        params: StructuredMessageCreateParams<T>
+    ): CompletableFuture<StructuredMessage<T>> = create(params, RequestOptions.none())
+
+    /**
+     * Creates a model response for the given message parameters. The model's structured output in
+     * JSON form will be deserialized automatically into an instance of the class `T`. See the SDK
+     * documentation for more details.
+     *
+     * @see create
+     */
+    fun <T : Any> create(
+        params: StructuredMessageCreateParams<T>,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<StructuredMessage<T>> =
+        create(params.rawParams, requestOptions).thenApply { message ->
+            StructuredMessage<T>(params.outputType, message)
+        }
+
+    /**
      * Send a structured list of input messages with text and/or image content, and the model will
      * generate the next message in the conversation.
      *
@@ -68,6 +96,27 @@ interface MessageServiceAsync {
         params: MessageCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AsyncStreamResponse<RawMessageStreamEvent>
+
+    /**
+     * Creates a streaming model response for the given message. The message parameters can define a
+     * JSON schema derived automatically from an arbitrary class to request a structured output in
+     * JSON form. However, that structured output is split over multiple streamed events, so it will
+     * not be deserialized automatically into an instance of that class. To deserialize the output,
+     * first use a helper class to accumulate the stream of events into a single output value. See
+     * the
+     * [SDK documentation](https://github.com/anthropics/anthropic-sdk-java/#usage-with-streaming)
+     * for full details.
+     */
+    fun createStreaming(
+        params: StructuredMessageCreateParams<*>
+    ): AsyncStreamResponse<RawMessageStreamEvent> = createStreaming(params, RequestOptions.none())
+
+    /** @see [createStreaming] */
+    fun createStreaming(
+        params: StructuredMessageCreateParams<*>,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): AsyncStreamResponse<RawMessageStreamEvent> =
+        createStreaming(params.rawParams, requestOptions)
 
     /**
      * Count the number of tokens in a Message.

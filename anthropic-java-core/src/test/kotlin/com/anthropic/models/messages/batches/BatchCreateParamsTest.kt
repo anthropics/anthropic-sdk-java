@@ -5,8 +5,10 @@ package com.anthropic.models.messages.batches
 import com.anthropic.core.JsonValue
 import com.anthropic.models.messages.CacheControlEphemeral
 import com.anthropic.models.messages.CitationCharLocationParam
+import com.anthropic.models.messages.JsonOutputFormat
 import com.anthropic.models.messages.Metadata
 import com.anthropic.models.messages.Model
+import com.anthropic.models.messages.OutputConfig
 import com.anthropic.models.messages.TextBlockParam
 import com.anthropic.models.messages.Tool
 import com.anthropic.models.messages.ToolChoiceAuto
@@ -29,6 +31,22 @@ internal class BatchCreateParamsTest {
                             .metadata(
                                 Metadata.builder()
                                     .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                    .build()
+                            )
+                            .outputConfig(
+                                OutputConfig.builder()
+                                    .format(
+                                        JsonOutputFormat.builder()
+                                            .schema(
+                                                JsonOutputFormat.Schema.builder()
+                                                    .putAdditionalProperty(
+                                                        "foo",
+                                                        JsonValue.from("bar"),
+                                                    )
+                                                    .build()
+                                            )
+                                            .build()
+                                    )
                                     .build()
                             )
                             .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
@@ -86,6 +104,7 @@ internal class BatchCreateParamsTest {
                                             .build()
                                     )
                                     .description("Get the current weather in a given location")
+                                    .strict(true)
                                     .type(Tool.Type.CUSTOM)
                                     .build()
                             )
@@ -113,6 +132,22 @@ internal class BatchCreateParamsTest {
                                 .metadata(
                                     Metadata.builder()
                                         .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                        .build()
+                                )
+                                .outputConfig(
+                                    OutputConfig.builder()
+                                        .format(
+                                            JsonOutputFormat.builder()
+                                                .schema(
+                                                    JsonOutputFormat.Schema.builder()
+                                                        .putAdditionalProperty(
+                                                            "foo",
+                                                            JsonValue.from("bar"),
+                                                        )
+                                                        .build()
+                                                )
+                                                .build()
+                                        )
                                         .build()
                                 )
                                 .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
@@ -170,6 +205,7 @@ internal class BatchCreateParamsTest {
                                                 .build()
                                         )
                                         .description("Get the current weather in a given location")
+                                        .strict(true)
                                         .type(Tool.Type.CUSTOM)
                                         .build()
                                 )
@@ -195,6 +231,22 @@ internal class BatchCreateParamsTest {
                             .metadata(
                                 Metadata.builder()
                                     .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                    .build()
+                            )
+                            .outputConfig(
+                                OutputConfig.builder()
+                                    .format(
+                                        JsonOutputFormat.builder()
+                                            .schema(
+                                                JsonOutputFormat.Schema.builder()
+                                                    .putAdditionalProperty(
+                                                        "foo",
+                                                        JsonValue.from("bar"),
+                                                    )
+                                                    .build()
+                                            )
+                                            .build()
+                                    )
                                     .build()
                             )
                             .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
@@ -252,6 +304,7 @@ internal class BatchCreateParamsTest {
                                             .build()
                                     )
                                     .description("Get the current weather in a given location")
+                                    .strict(true)
                                     .type(Tool.Type.CUSTOM)
                                     .build()
                             )

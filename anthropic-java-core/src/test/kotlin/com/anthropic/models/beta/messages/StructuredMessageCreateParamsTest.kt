@@ -13,13 +13,13 @@ import com.anthropic.core.OPTIONAL
 import com.anthropic.core.SET
 import com.anthropic.core.STRING
 import com.anthropic.core.X
+import com.anthropic.core.betaOutputFormatFromClass
 import com.anthropic.core.checkAllDelegation
 import com.anthropic.core.checkAllDelegatorWriteFunctionsAreTested
 import com.anthropic.core.checkOneDelegationWrite
 import com.anthropic.core.findDelegationMethod
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
-import com.anthropic.core.outputFormatFromClass
 import com.anthropic.core.toolFromClass
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.messages.Model
@@ -298,7 +298,7 @@ internal class StructuredMessageCreateParamsTest {
         val delegatorTestCase = DelegationWriteTestCase("outputFormat", X::class.java)
         val delegatorMethod = findDelegationMethod(builderDelegator, delegatorTestCase)
         val mockDelegateTestCase =
-            DelegationWriteTestCase("outputFormat", outputFormatFromClass(X::class.java))
+            DelegationWriteTestCase("outputFormat", betaOutputFormatFromClass(X::class.java))
         val mockDelegateMethod = findDelegationMethod(mockBuilderDelegate, mockDelegateTestCase)
 
         delegatorMethod.invoke(builderDelegator, delegatorTestCase.inputValues[0])

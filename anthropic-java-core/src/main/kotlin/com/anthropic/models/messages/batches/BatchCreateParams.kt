@@ -23,6 +23,7 @@ import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.MessageParam
 import com.anthropic.models.messages.Metadata
 import com.anthropic.models.messages.Model
+import com.anthropic.models.messages.OutputConfig
 import com.anthropic.models.messages.TextBlockParam
 import com.anthropic.models.messages.ThinkingConfigDisabled
 import com.anthropic.models.messages.ThinkingConfigEnabled
@@ -691,6 +692,7 @@ private constructor(
             private val messages: JsonField<List<MessageParam>>,
             private val model: JsonField<Model>,
             private val metadata: JsonField<Metadata>,
+            private val outputConfig: JsonField<OutputConfig>,
             private val serviceTier: JsonField<ServiceTier>,
             private val stopSequences: JsonField<List<String>>,
             private val stream: JsonField<Boolean>,
@@ -716,6 +718,9 @@ private constructor(
                 @JsonProperty("metadata")
                 @ExcludeMissing
                 metadata: JsonField<Metadata> = JsonMissing.of(),
+                @JsonProperty("output_config")
+                @ExcludeMissing
+                outputConfig: JsonField<OutputConfig> = JsonMissing.of(),
                 @JsonProperty("service_tier")
                 @ExcludeMissing
                 serviceTier: JsonField<ServiceTier> = JsonMissing.of(),
@@ -747,6 +752,7 @@ private constructor(
                 messages,
                 model,
                 metadata,
+                outputConfig,
                 serviceTier,
                 stopSequences,
                 stream,
@@ -858,6 +864,14 @@ private constructor(
              *   if the server responded with an unexpected value).
              */
             fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
+
+            /**
+             * Configuration options for the model's output, such as the output format.
+             *
+             * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun outputConfig(): Optional<OutputConfig> = outputConfig.getOptional("output_config")
 
             /**
              * Determines whether to use priority capacity (if available) or standard capacity for
@@ -1091,6 +1105,16 @@ private constructor(
             fun _metadata(): JsonField<Metadata> = metadata
 
             /**
+             * Returns the raw JSON value of [outputConfig].
+             *
+             * Unlike [outputConfig], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("output_config")
+            @ExcludeMissing
+            fun _outputConfig(): JsonField<OutputConfig> = outputConfig
+
+            /**
              * Returns the raw JSON value of [serviceTier].
              *
              * Unlike [serviceTier], this method doesn't throw if the JSON field has an unexpected
@@ -1209,6 +1233,7 @@ private constructor(
                 private var messages: JsonField<MutableList<MessageParam>>? = null
                 private var model: JsonField<Model>? = null
                 private var metadata: JsonField<Metadata> = JsonMissing.of()
+                private var outputConfig: JsonField<OutputConfig> = JsonMissing.of()
                 private var serviceTier: JsonField<ServiceTier> = JsonMissing.of()
                 private var stopSequences: JsonField<MutableList<String>>? = null
                 private var stream: JsonField<Boolean> = JsonMissing.of()
@@ -1227,6 +1252,7 @@ private constructor(
                     messages = params.messages.map { it.toMutableList() }
                     model = params.model
                     metadata = params.metadata
+                    outputConfig = params.outputConfig
                     serviceTier = params.serviceTier
                     stopSequences = params.stopSequences.map { it.toMutableList() }
                     stream = params.stream
@@ -1441,6 +1467,39 @@ private constructor(
                  * yet supported value.
                  */
                 fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
+
+                /** Configuration options for the model's output, such as the output format. */
+                fun outputConfig(outputConfig: OutputConfig) =
+                    outputConfig(JsonField.of(outputConfig))
+
+                /**
+                 * Sets [Builder.outputConfig] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.outputConfig] with a well-typed [OutputConfig]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun outputConfig(outputConfig: JsonField<OutputConfig>) = apply {
+                    this.outputConfig = outputConfig
+                }
+
+                /**
+                 * Configuration options for the model's output. Controls aspects like output format
+                 * or how much effort the model puts into its response.
+                 */
+                fun outputConfig(outputConfig: OutputConfig) =
+                    outputConfig(JsonField.of(outputConfig))
+
+                /**
+                 * Sets [Builder.outputConfig] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.outputConfig] with a well-typed [OutputConfig]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun outputConfig(outputConfig: JsonField<OutputConfig>) = apply {
+                    this.outputConfig = outputConfig
+                }
 
                 /**
                  * Determines whether to use priority capacity (if available) or standard capacity
@@ -1862,6 +1921,7 @@ private constructor(
                         checkRequired("messages", messages).map { it.toImmutable() },
                         checkRequired("model", model),
                         metadata,
+                        outputConfig,
                         serviceTier,
                         (stopSequences ?: JsonMissing.of()).map { it.toImmutable() },
                         stream,
@@ -1887,6 +1947,7 @@ private constructor(
                 messages().forEach { it.validate() }
                 model()
                 metadata().ifPresent { it.validate() }
+                outputConfig().ifPresent { it.validate() }
                 serviceTier().ifPresent { it.validate() }
                 stopSequences()
                 stream()
@@ -1920,6 +1981,7 @@ private constructor(
                     (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                     (if (model.asKnown().isPresent) 1 else 0) +
                     (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+                    (outputConfig.asKnown().getOrNull()?.validity() ?: 0) +
                     (serviceTier.asKnown().getOrNull()?.validity() ?: 0) +
                     (stopSequences.asKnown().getOrNull()?.size ?: 0) +
                     (if (stream.asKnown().isPresent) 1 else 0) +
@@ -2270,6 +2332,7 @@ private constructor(
                     messages == other.messages &&
                     model == other.model &&
                     metadata == other.metadata &&
+                    outputConfig == other.outputConfig &&
                     serviceTier == other.serviceTier &&
                     stopSequences == other.stopSequences &&
                     stream == other.stream &&
@@ -2289,6 +2352,7 @@ private constructor(
                     messages,
                     model,
                     metadata,
+                    outputConfig,
                     serviceTier,
                     stopSequences,
                     stream,
@@ -2306,7 +2370,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Params{maxTokens=$maxTokens, messages=$messages, model=$model, metadata=$metadata, serviceTier=$serviceTier, stopSequences=$stopSequences, stream=$stream, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+                "Params{maxTokens=$maxTokens, messages=$messages, model=$model, metadata=$metadata, outputConfig=$outputConfig, serviceTier=$serviceTier, stopSequences=$stopSequences, stream=$stream, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {

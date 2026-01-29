@@ -25,6 +25,7 @@ import com.anthropic.models.messages.RawMessageStreamEvent
 import com.anthropic.models.messages.RedactedThinkingBlock
 import com.anthropic.models.messages.ServerToolUseBlock
 import com.anthropic.models.messages.SignatureDelta
+import com.anthropic.models.messages.StructuredMessage
 import com.anthropic.models.messages.TextBlock
 import com.anthropic.models.messages.TextCitation
 import com.anthropic.models.messages.TextDelta
@@ -218,6 +219,19 @@ class MessageAccumulator private constructor() {
      * @throws IllegalStateException If called before the `message_stop` event has been accumulated.
      */
     fun message() = checkNotNull(message) { "'message_stop' event not yet received." }
+
+    /**
+     * Gets the final accumulated message wrapped in a [StructuredMessage] that provides type-safe
+     * access to structured output content. Until the `message_stop` event has been received, a
+     * message will not be available. Wait until all events have been handled by [accumulate] before
+     * calling this method.
+     *
+     * @param T The type of the class to which the JSON data in the response will be deserialized.
+     * @param outputType The class object for the output type.
+     * @throws IllegalStateException If called before the `message_stop` event has been accumulated.
+     */
+    fun <T : Any> message(outputType: Class<T>): StructuredMessage<T> =
+        StructuredMessage(outputType, message())
 
     /**
      * Accumulates a streamed event and uses it to construct a [Message]. When all events, including

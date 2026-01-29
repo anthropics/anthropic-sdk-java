@@ -7,10 +7,12 @@ import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
 import com.anthropic.core.JsonValue
 import com.anthropic.models.messages.CacheControlEphemeral
 import com.anthropic.models.messages.CitationCharLocationParam
+import com.anthropic.models.messages.JsonOutputFormat
 import com.anthropic.models.messages.MessageCountTokensParams
 import com.anthropic.models.messages.MessageCreateParams
 import com.anthropic.models.messages.Metadata
 import com.anthropic.models.messages.Model
+import com.anthropic.models.messages.OutputConfig
 import com.anthropic.models.messages.TextBlockParam
 import com.anthropic.models.messages.Tool
 import com.anthropic.models.messages.ToolChoiceAuto
@@ -37,6 +39,19 @@ internal class MessageServiceAsyncTest {
                     .model(Model.CLAUDE_SONNET_4_5_20250929)
                     .metadata(
                         Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
+                    )
+                    .outputConfig(
+                        OutputConfig.builder()
+                            .format(
+                                JsonOutputFormat.builder()
+                                    .schema(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                            .build()
                     )
                     .serviceTier(MessageCreateParams.ServiceTier.AUTO)
                     .addStopSequence("string")
@@ -87,6 +102,7 @@ internal class MessageServiceAsyncTest {
                                     .build()
                             )
                             .description("Get the current weather in a given location")
+                            .strict(true)
                             .type(Tool.Type.CUSTOM)
                             .build()
                     )
@@ -117,6 +133,19 @@ internal class MessageServiceAsyncTest {
                     .metadata(
                         Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
                     )
+                    .outputConfig(
+                        OutputConfig.builder()
+                            .format(
+                                JsonOutputFormat.builder()
+                                    .schema(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                            .build()
+                    )
                     .serviceTier(MessageCreateParams.ServiceTier.AUTO)
                     .addStopSequence("string")
                     .systemOfTextBlockParams(
@@ -166,6 +195,7 @@ internal class MessageServiceAsyncTest {
                                     .build()
                             )
                             .description("Get the current weather in a given location")
+                            .strict(true)
                             .type(Tool.Type.CUSTOM)
                             .build()
                     )
@@ -193,6 +223,19 @@ internal class MessageServiceAsyncTest {
                 MessageCountTokensParams.builder()
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_SONNET_4_5_20250929)
+                    .outputConfig(
+                        OutputConfig.builder()
+                            .format(
+                                JsonOutputFormat.builder()
+                                    .schema(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                            .build()
+                    )
                     .systemOfTextBlockParams(
                         listOf(
                             TextBlockParam.builder()
@@ -239,6 +282,7 @@ internal class MessageServiceAsyncTest {
                                     .build()
                             )
                             .description("Get the current weather in a given location")
+                            .strict(true)
                             .type(Tool.Type.CUSTOM)
                             .build()
                     )

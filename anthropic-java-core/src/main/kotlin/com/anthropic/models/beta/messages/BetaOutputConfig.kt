@@ -34,7 +34,10 @@ private constructor(
     ) : this(effort, format, mutableMapOf())
 
     /**
-     * All possible effort levels.
+     * How much effort the model should put into its response. Higher effort levels may result in
+     * more thorough analysis but take longer.
+     *
+     * Valid values are `low`, `medium`, or `high`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -96,7 +99,12 @@ private constructor(
             additionalProperties = betaOutputConfig.additionalProperties.toMutableMap()
         }
 
-        /** All possible effort levels. */
+        /**
+         * How much effort the model should put into its response. Higher effort levels may result
+         * in more thorough analysis but take longer.
+         *
+         * Valid values are `low`, `medium`, or `high`.
+         */
         fun effort(effort: Effort?) = effort(JsonField.ofNullable(effort))
 
         /** Alias for calling [Builder.effort] with `effort.orElse(null)`. */
@@ -186,7 +194,12 @@ private constructor(
         (effort.asKnown().getOrNull()?.validity() ?: 0) +
             (format.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** All possible effort levels. */
+    /**
+     * How much effort the model should put into its response. Higher effort levels may result in
+     * more thorough analysis but take longer.
+     *
+     * Valid values are `low`, `medium`, or `high`.
+     */
     class Effort @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

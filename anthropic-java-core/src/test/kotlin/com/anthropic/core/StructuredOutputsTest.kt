@@ -1311,7 +1311,7 @@ internal class StructuredOutputsTest {
         @Suppress("unused") class X(@get:Schema(pattern = "unsupported") val s: String)
 
         assertThatNoException().isThrownBy {
-            outputFormatFromClass(X::class.java, JsonSchemaLocalValidation.NO)
+            betaOutputFormatFromClass(X::class.java, JsonSchemaLocalValidation.NO)
         }
     }
 
@@ -1321,7 +1321,7 @@ internal class StructuredOutputsTest {
         @Suppress("unused") class X(@get:Schema(format = "email") val s: String)
 
         assertThatNoException().isThrownBy {
-            outputFormatFromClass(X::class.java, JsonSchemaLocalValidation.YES)
+            betaOutputFormatFromClass(X::class.java, JsonSchemaLocalValidation.YES)
         }
     }
 
@@ -1331,7 +1331,9 @@ internal class StructuredOutputsTest {
         // A class that results in an invalid schema (`"pattern"` is not a supported keyword).
         @Suppress("unused") class X(@get:Schema(pattern = "unsupported") val s: String)
 
-        assertThatThrownBy { outputFormatFromClass(X::class.java, JsonSchemaLocalValidation.YES) }
+        assertThatThrownBy {
+                betaOutputFormatFromClass(X::class.java, JsonSchemaLocalValidation.YES)
+            }
             .isExactlyInstanceOf(IllegalArgumentException::class.java)
             .hasMessage(
                 "Local validation failed for JSON schema derived from ${X::class.java}:\n" +
@@ -1347,7 +1349,7 @@ internal class StructuredOutputsTest {
 
         // Confirm that the default value of the `localValidation` argument is `YES` by expecting
         // a validation error when that argument is not given an explicit value.
-        assertThatThrownBy { outputFormatFromClass(X::class.java) }
+        assertThatThrownBy { betaOutputFormatFromClass(X::class.java) }
             .isExactlyInstanceOf(IllegalArgumentException::class.java)
             .hasMessage(
                 "Local validation failed for JSON schema derived from ${X::class.java}:\n" +

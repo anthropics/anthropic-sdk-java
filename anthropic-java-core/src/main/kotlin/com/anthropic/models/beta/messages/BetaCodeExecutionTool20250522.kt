@@ -99,6 +99,8 @@ private constructor(
     fun deferLoading(): Optional<Boolean> = deferLoading.getOptional("defer_loading")
 
     /**
+     * When true, guarantees schema validation on tool names and inputs
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -271,6 +273,7 @@ private constructor(
             this.deferLoading = deferLoading
         }
 
+        /** When true, guarantees schema validation on tool names and inputs */
         fun strict(strict: Boolean) = strict(JsonField.of(strict))
 
         /**

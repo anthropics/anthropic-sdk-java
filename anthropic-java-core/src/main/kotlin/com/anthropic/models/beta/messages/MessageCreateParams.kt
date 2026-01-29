@@ -181,8 +181,7 @@ private constructor(
     fun metadata(): Optional<BetaMetadata> = body.metadata()
 
     /**
-     * Configuration options for the model's output. Controls aspects like output format or how much
-     * effort the model puts into its response.
+     * Configuration options for the model's output, such as the output format.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -852,10 +851,7 @@ private constructor(
          */
         fun metadata(metadata: JsonField<BetaMetadata>) = apply { body.metadata(metadata) }
 
-        /**
-         * Configuration options for the model's output. Controls aspects like output format or how
-         * much effort the model puts into its response.
-         */
+        /** Configuration options for the model's output, such as the output format. */
         fun outputConfig(outputConfig: BetaOutputConfig) = apply { body.outputConfig(outputConfig) }
 
         /**
@@ -1769,8 +1765,7 @@ private constructor(
         fun metadata(): Optional<BetaMetadata> = metadata.getOptional("metadata")
 
         /**
-         * Configuration options for the model's output. Controls aspects like output format or how
-         * much effort the model puts into its response.
+         * Configuration options for the model's output, such as the output format.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -2494,10 +2489,7 @@ private constructor(
              */
             fun metadata(metadata: JsonField<BetaMetadata>) = apply { this.metadata = metadata }
 
-            /**
-             * Configuration options for the model's output. Controls aspects like output format or
-             * how much effort the model puts into its response.
-             */
+            /** Configuration options for the model's output, such as the output format. */
             fun outputConfig(outputConfig: BetaOutputConfig) =
                 outputConfig(JsonField.of(outputConfig))
 

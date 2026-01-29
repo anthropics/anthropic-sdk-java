@@ -120,6 +120,14 @@ private constructor(
     fun model(): Model = body.model()
 
     /**
+     * Configuration options for the model's output, such as the output format.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun outputConfig(): Optional<OutputConfig> = body.outputConfig()
+
+    /**
      * System prompt.
      *
      * A system prompt is a way of providing context and instructions to Claude, such as specifying
@@ -245,6 +253,13 @@ private constructor(
     fun _model(): JsonField<Model> = body._model()
 
     /**
+     * Returns the raw JSON value of [outputConfig].
+     *
+     * Unlike [outputConfig], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _outputConfig(): JsonField<OutputConfig> = body._outputConfig()
+
+    /**
      * Returns the raw JSON value of [system].
      *
      * Unlike [system], this method doesn't throw if the JSON field has an unexpected type.
@@ -317,9 +332,9 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [messages]
          * - [model]
+         * - [outputConfig]
          * - [system]
          * - [thinking]
-         * - [toolChoice]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -471,6 +486,37 @@ private constructor(
          * is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun model(value: String) = apply { body.model(value) }
+
+        /** Configuration options for the model's output, such as the output format. */
+        fun outputConfig(outputConfig: OutputConfig) = apply { body.outputConfig(outputConfig) }
+
+        /**
+         * Sets [Builder.outputConfig] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.outputConfig] with a well-typed [OutputConfig] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun outputConfig(outputConfig: JsonField<OutputConfig>) = apply {
+            body.outputConfig(outputConfig)
+        }
+
+        /**
+         * Configuration options for the model's output. Controls aspects like output format or how
+         * much effort the model puts into its response.
+         */
+        fun outputConfig(outputConfig: OutputConfig) = apply { body.outputConfig(outputConfig) }
+
+        /**
+         * Sets [Builder.outputConfig] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.outputConfig] with a well-typed [OutputConfig] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun outputConfig(outputConfig: JsonField<OutputConfig>) = apply {
+            body.outputConfig(outputConfig)
+        }
 
         /**
          * System prompt.
@@ -851,6 +897,7 @@ private constructor(
     private constructor(
         private val messages: JsonField<List<MessageParam>>,
         private val model: JsonField<Model>,
+        private val outputConfig: JsonField<OutputConfig>,
         private val system: JsonField<System>,
         private val thinking: JsonField<ThinkingConfigParam>,
         private val toolChoice: JsonField<ToolChoice>,
@@ -864,6 +911,9 @@ private constructor(
             @ExcludeMissing
             messages: JsonField<List<MessageParam>> = JsonMissing.of(),
             @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
+            @JsonProperty("output_config")
+            @ExcludeMissing
+            outputConfig: JsonField<OutputConfig> = JsonMissing.of(),
             @JsonProperty("system") @ExcludeMissing system: JsonField<System> = JsonMissing.of(),
             @JsonProperty("thinking")
             @ExcludeMissing
@@ -874,7 +924,7 @@ private constructor(
             @JsonProperty("tools")
             @ExcludeMissing
             tools: JsonField<List<MessageCountTokensTool>> = JsonMissing.of(),
-        ) : this(messages, model, system, thinking, toolChoice, tools, mutableMapOf())
+        ) : this(messages, model, outputConfig, system, thinking, toolChoice, tools, mutableMapOf())
 
         /**
          * Input messages.
@@ -948,6 +998,14 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun model(): Model = model.getRequired("model")
+
+        /**
+         * Configuration options for the model's output, such as the output format.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun outputConfig(): Optional<OutputConfig> = outputConfig.getOptional("output_config")
 
         /**
          * System prompt.
@@ -1079,6 +1137,16 @@ private constructor(
         @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
 
         /**
+         * Returns the raw JSON value of [outputConfig].
+         *
+         * Unlike [outputConfig], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("output_config")
+        @ExcludeMissing
+        fun _outputConfig(): JsonField<OutputConfig> = outputConfig
+
+        /**
          * Returns the raw JSON value of [system].
          *
          * Unlike [system], this method doesn't throw if the JSON field has an unexpected type.
@@ -1143,6 +1211,7 @@ private constructor(
 
             private var messages: JsonField<MutableList<MessageParam>>? = null
             private var model: JsonField<Model>? = null
+            private var outputConfig: JsonField<OutputConfig> = JsonMissing.of()
             private var system: JsonField<System> = JsonMissing.of()
             private var thinking: JsonField<ThinkingConfigParam> = JsonMissing.of()
             private var toolChoice: JsonField<ToolChoice> = JsonMissing.of()
@@ -1153,6 +1222,7 @@ private constructor(
             internal fun from(body: Body) = apply {
                 messages = body.messages.map { it.toMutableList() }
                 model = body.model
+                outputConfig = body.outputConfig
                 system = body.system
                 thinking = body.thinking
                 toolChoice = body.toolChoice
@@ -1326,6 +1396,37 @@ private constructor(
              * value.
              */
             fun model(value: String) = model(Model.of(value))
+
+            /** Configuration options for the model's output, such as the output format. */
+            fun outputConfig(outputConfig: OutputConfig) = outputConfig(JsonField.of(outputConfig))
+
+            /**
+             * Sets [Builder.outputConfig] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.outputConfig] with a well-typed [OutputConfig] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun outputConfig(outputConfig: JsonField<OutputConfig>) = apply {
+                this.outputConfig = outputConfig
+            }
+
+            /**
+             * Configuration options for the model's output. Controls aspects like output format or
+             * how much effort the model puts into its response.
+             */
+            fun outputConfig(outputConfig: OutputConfig) = outputConfig(JsonField.of(outputConfig))
+
+            /**
+             * Sets [Builder.outputConfig] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.outputConfig] with a well-typed [OutputConfig] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun outputConfig(outputConfig: JsonField<OutputConfig>) = apply {
+                this.outputConfig = outputConfig
+            }
 
             /**
              * System prompt.
@@ -1605,6 +1706,7 @@ private constructor(
                 Body(
                     checkRequired("messages", messages).map { it.toImmutable() },
                     checkRequired("model", model),
+                    outputConfig,
                     system,
                     thinking,
                     toolChoice,
@@ -1622,6 +1724,7 @@ private constructor(
 
             messages().forEach { it.validate() }
             model()
+            outputConfig().ifPresent { it.validate() }
             system().ifPresent { it.validate() }
             thinking().ifPresent { it.validate() }
             toolChoice().ifPresent { it.validate() }
@@ -1647,6 +1750,7 @@ private constructor(
         internal fun validity(): Int =
             (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (model.asKnown().isPresent) 1 else 0) +
+                (outputConfig.asKnown().getOrNull()?.validity() ?: 0) +
                 (system.asKnown().getOrNull()?.validity() ?: 0) +
                 (thinking.asKnown().getOrNull()?.validity() ?: 0) +
                 (toolChoice.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1660,6 +1764,7 @@ private constructor(
             return other is Body &&
                 messages == other.messages &&
                 model == other.model &&
+                outputConfig == other.outputConfig &&
                 system == other.system &&
                 thinking == other.thinking &&
                 toolChoice == other.toolChoice &&
@@ -1668,13 +1773,22 @@ private constructor(
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(messages, model, system, thinking, toolChoice, tools, additionalProperties)
+            Objects.hash(
+                messages,
+                model,
+                outputConfig,
+                system,
+                thinking,
+                toolChoice,
+                tools,
+                additionalProperties,
+            )
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{messages=$messages, model=$model, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
+            "Body{messages=$messages, model=$model, outputConfig=$outputConfig, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
     }
 
     /**

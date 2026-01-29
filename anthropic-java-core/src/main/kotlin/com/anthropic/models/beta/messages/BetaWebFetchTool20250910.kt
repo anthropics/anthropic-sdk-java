@@ -171,6 +171,8 @@ private constructor(
     fun maxUses(): Optional<Long> = maxUses.getOptional("max_uses")
 
     /**
+     * When true, guarantees schema validation on tool names and inputs
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -525,6 +527,7 @@ private constructor(
          */
         fun maxUses(maxUses: JsonField<Long>) = apply { this.maxUses = maxUses }
 
+        /** When true, guarantees schema validation on tool names and inputs */
         fun strict(strict: Boolean) = strict(JsonField.of(strict))
 
         /**
