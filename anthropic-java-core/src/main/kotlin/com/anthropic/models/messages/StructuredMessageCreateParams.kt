@@ -1,16 +1,13 @@
-package com.anthropic.models.beta.messages
+package com.anthropic.models.messages
 
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonSchemaLocalValidation
 import com.anthropic.core.JsonValue
-import com.anthropic.core.betaOutputFormatFromClass
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
-import com.anthropic.models.beta.AnthropicBeta
-import com.anthropic.models.messages.Model
+import com.anthropic.core.outputFormatFromClass
 import java.util.Objects
-import java.util.Optional
 
 /**
  * A wrapper for [MessageCreateParams] that provides a type-safe [Builder] that can record the
@@ -48,11 +45,10 @@ internal constructor(
     /** A builder for [StructuredMessageCreateParams]. */
     class Builder<T : Any> internal constructor() {
         private var outputType: Class<T>? = null
-        private var paramsBuilder = MessageCreateParams.Companion.builder()
+        private var paramsBuilder = MessageCreateParams.builder()
         private var outputConfigSet: Boolean = false
 
         @JvmSynthetic
-        @Deprecated("Use the wrap overload that accepts effort parameter")
         internal fun wrap(
             outputType: Class<T>,
             paramsBuilder: MessageCreateParams.Builder,
@@ -61,20 +57,7 @@ internal constructor(
             this.outputType = outputType
             this.paramsBuilder = paramsBuilder
             // Convert the class to a JSON schema and apply it to the delegate `Builder`.
-            @Suppress("DEPRECATION") outputFormat(outputType, localValidation)
-        }
-
-        @JvmSynthetic
-        internal fun wrap(
-            outputType: Class<T>,
-            paramsBuilder: MessageCreateParams.Builder,
-            effort: BetaOutputConfig.Effort?,
-            localValidation: JsonSchemaLocalValidation,
-        ) = apply {
-            this.outputType = outputType
-            this.paramsBuilder = paramsBuilder
-            // Convert the class to a JSON schema and apply it to the delegate `Builder`.
-            outputConfig(outputType, effort, localValidation)
+            outputConfig(outputType, localValidation)
         }
 
         /** Injects a given `MessageCreateParams.Builder`. For use only when testing. */
@@ -82,18 +65,6 @@ internal constructor(
         internal fun inject(paramsBuilder: MessageCreateParams.Builder) = apply {
             this.paramsBuilder = paramsBuilder
         }
-
-        /** @see MessageCreateParams.Builder.betas */
-        fun betas(betas: List<AnthropicBeta>?) = apply { paramsBuilder.betas(betas) }
-
-        /** @see MessageCreateParams.Builder.betas */
-        fun betas(betas: Optional<List<AnthropicBeta>>) = apply { paramsBuilder.betas(betas) }
-
-        /** @see MessageCreateParams.Builder.addBeta */
-        fun addBeta(beta: AnthropicBeta) = apply { paramsBuilder.addBeta(beta) }
-
-        /** @see MessageCreateParams.Builder.addBeta */
-        fun addBeta(value: String) = apply { paramsBuilder.addBeta(value) }
 
         /** @see MessageCreateParams.Builder.body */
         fun body(body: MessageCreateParams.Body) = apply { paramsBuilder.body(body) }
@@ -105,34 +76,34 @@ internal constructor(
         fun maxTokens(maxTokens: JsonField<Long>) = apply { paramsBuilder.maxTokens(maxTokens) }
 
         /** @see MessageCreateParams.Builder.messages */
-        fun messages(messages: List<BetaMessageParam>) = apply { paramsBuilder.messages(messages) }
+        fun messages(messages: List<MessageParam>) = apply { paramsBuilder.messages(messages) }
 
         /** @see MessageCreateParams.Builder.messages */
-        fun messages(messages: JsonField<List<BetaMessageParam>>) = apply {
+        fun messages(messages: JsonField<List<MessageParam>>) = apply {
             paramsBuilder.messages(messages)
         }
 
         /** @see MessageCreateParams.Builder.addMessage */
-        fun addMessage(message: BetaMessageParam) = apply { paramsBuilder.addMessage(message) }
+        fun addMessage(message: MessageParam) = apply { paramsBuilder.addMessage(message) }
 
         /** @see MessageCreateParams.Builder.addMessage */
-        fun addMessage(message: BetaMessage) = apply { paramsBuilder.addMessage(message) }
+        fun addMessage(message: Message) = apply { paramsBuilder.addMessage(message) }
 
         /** @see MessageCreateParams.Builder.addUserMessage */
-        fun addUserMessage(content: BetaMessageParam.Content) = apply {
+        fun addUserMessage(content: MessageParam.Content) = apply {
             paramsBuilder.addUserMessage(content)
         }
 
         /** @see MessageCreateParams.Builder.addUserMessage */
         fun addUserMessage(string: String) = apply { paramsBuilder.addUserMessage(string) }
 
-        /** @see MessageCreateParams.Builder.addUserMessageOfBetaContentBlockParams */
-        fun addUserMessageOfBetaContentBlockParams(
-            betaContentBlockParams: List<BetaContentBlockParam>
-        ) = apply { paramsBuilder.addUserMessageOfBetaContentBlockParams(betaContentBlockParams) }
+        /** @see MessageCreateParams.Builder.addUserMessageOfBlockParams */
+        fun addUserMessageOfBlockParams(blockParams: List<ContentBlockParam>) = apply {
+            paramsBuilder.addUserMessageOfBlockParams(blockParams)
+        }
 
         /** @see MessageCreateParams.Builder.addAssistantMessage */
-        fun addAssistantMessage(content: BetaMessageParam.Content) = apply {
+        fun addAssistantMessage(content: MessageParam.Content) = apply {
             paramsBuilder.addAssistantMessage(content)
         }
 
@@ -141,11 +112,9 @@ internal constructor(
             paramsBuilder.addAssistantMessage(string)
         }
 
-        /** @see MessageCreateParams.Builder.addAssistantMessageOfBetaContentBlockParams */
-        fun addAssistantMessageOfBetaContentBlockParams(
-            betaContentBlockParams: List<BetaContentBlockParam>
-        ) = apply {
-            paramsBuilder.addAssistantMessageOfBetaContentBlockParams(betaContentBlockParams)
+        /** @see MessageCreateParams.Builder.addAssistantMessageOfBlockParams */
+        fun addAssistantMessageOfBlockParams(blockParams: List<ContentBlockParam>) = apply {
+            paramsBuilder.addAssistantMessageOfBlockParams(blockParams)
         }
 
         /** @see MessageCreateParams.Builder.model */
@@ -157,133 +126,44 @@ internal constructor(
         /** @see MessageCreateParams.Builder.model */
         fun model(value: String) = apply { paramsBuilder.model(value) }
 
-        /** @see MessageCreateParams.Builder.container */
-        fun container(container: MessageCreateParams.Container?) = apply {
-            paramsBuilder.container(container)
-        }
-
-        /** @see MessageCreateParams.Builder.container */
-        fun container(container: Optional<MessageCreateParams.Container>) = apply {
-            paramsBuilder.container(container)
-        }
-
-        /** @see MessageCreateParams.Builder.container */
-        fun container(container: JsonField<MessageCreateParams.Container>) = apply {
-            paramsBuilder.container(container)
-        }
-
-        /** @see MessageCreateParams.Builder.container */
-        fun container(betaContainerParams: BetaContainerParams) = apply {
-            paramsBuilder.container(betaContainerParams)
-        }
-
-        /** @see MessageCreateParams.Builder.container */
-        fun container(string: String) = apply { paramsBuilder.container(string) }
-
-        /** @see MessageCreateParams.Builder.contextManagement */
-        fun contextManagement(contextManagement: BetaContextManagementConfig?) = apply {
-            paramsBuilder.contextManagement(contextManagement)
-        }
-
-        /** @see MessageCreateParams.Builder.contextManagement */
-        fun contextManagement(contextManagement: Optional<BetaContextManagementConfig>) = apply {
-            paramsBuilder.contextManagement(contextManagement)
-        }
-
-        /** @see MessageCreateParams.Builder.contextManagement */
-        fun contextManagement(contextManagement: JsonField<BetaContextManagementConfig>) = apply {
-            paramsBuilder.contextManagement(contextManagement)
-        }
-
-        /** @see MessageCreateParams.Builder.mcpServers */
-        fun mcpServers(mcpServers: List<BetaRequestMcpServerUrlDefinition>) = apply {
-            paramsBuilder.mcpServers(mcpServers)
-        }
-
-        /** @see MessageCreateParams.Builder.mcpServers */
-        fun mcpServers(mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>) = apply {
-            paramsBuilder.mcpServers(mcpServers)
-        }
-
-        /** @see MessageCreateParams.Builder.addMcpServer */
-        fun addMcpServer(mcpServer: BetaRequestMcpServerUrlDefinition) = apply {
-            paramsBuilder.addMcpServer(mcpServer)
-        }
+        /** @see MessageCreateParams.Builder.metadata */
+        fun metadata(metadata: Metadata) = apply { paramsBuilder.metadata(metadata) }
 
         /** @see MessageCreateParams.Builder.metadata */
-        fun metadata(metadata: BetaMetadata) = apply { paramsBuilder.metadata(metadata) }
-
-        /** @see MessageCreateParams.Builder.metadata */
-        fun metadata(metadata: JsonField<BetaMetadata>) = apply { paramsBuilder.metadata(metadata) }
+        fun metadata(metadata: JsonField<Metadata>) = apply { paramsBuilder.metadata(metadata) }
 
         /** @see MessageCreateParams.Builder.outputConfig */
-        fun outputConfig(outputConfig: BetaOutputConfig) = apply {
+        fun outputConfig(outputConfig: OutputConfig) = apply {
             paramsBuilder.outputConfig(outputConfig)
         }
 
         /** @see MessageCreateParams.Builder.outputConfig */
-        fun outputConfig(outputConfig: JsonField<BetaOutputConfig>) = apply {
+        fun outputConfig(outputConfig: JsonField<OutputConfig>) = apply {
             paramsBuilder.outputConfig(outputConfig)
-        }
-
-        /**
-         * Sets the output format to a JSON schema derived from the structure of the given class.
-         *
-         * **Deprecated:** Use [outputConfig] instead. This method will be removed in a future
-         * release.
-         *
-         * @see MessageCreateParams.Builder.outputConfig
-         */
-        @JvmOverloads
-        @Deprecated(
-            message =
-                "output_format is deprecated. Use outputConfig instead which sets output_config.format.",
-            replaceWith = ReplaceWith("outputConfig(outputType, localValidation)"),
-        )
-        fun outputFormat(
-            outputType: Class<T>,
-            localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
-        ) = apply {
-            if (outputConfigSet) {
-                throw IllegalArgumentException(
-                    "Both outputFormat and outputConfig were called. " +
-                        "Please use only outputConfig (outputFormat is deprecated)."
-                )
-            }
-            this.outputType = outputType
-            val format = betaOutputFormatFromClass(outputType, localValidation)
-            // Use output_config.format instead of deprecated output_format
-            paramsBuilder.outputConfig(BetaOutputConfig.builder().format(format).build())
-            // Auto-inject beta header
-            paramsBuilder.addBeta(AnthropicBeta.of("structured-outputs-2025-12-15"))
-            outputConfigSet = true
         }
 
         /**
          * Sets the output configuration with a JSON schema format derived from the structure of the
          * given class. This is the recommended way to specify structured outputs.
          *
+         * Unlike the beta version, this GA version does NOT auto-inject any beta header.
+         *
          * @see MessageCreateParams.Builder.outputConfig
          */
         @JvmOverloads
         fun outputConfig(
             outputType: Class<T>,
-            effort: BetaOutputConfig.Effort? = null,
             localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
         ) = apply {
             if (outputConfigSet) {
                 throw IllegalArgumentException(
-                    "Both outputFormat and outputConfig were called. " +
-                        "Please use only outputConfig (outputFormat is deprecated)."
+                    "outputConfig was called multiple times. Please use only one outputConfig call."
                 )
             }
             this.outputType = outputType
-            val format = betaOutputFormatFromClass(outputType, localValidation)
-            val builder = BetaOutputConfig.builder().format(format)
-            effort?.let { builder.effort(it) }
-            paramsBuilder.outputConfig(builder.build())
-            // Auto-inject beta header
-            paramsBuilder.addBeta(AnthropicBeta.of("structured-outputs-2025-12-15"))
+            val format = outputFormatFromClass(outputType, localValidation)
+            paramsBuilder.outputConfig(OutputConfig.builder().format(format).build())
+            // GA version: NO beta header injection
             outputConfigSet = true
         }
 
@@ -323,9 +203,9 @@ internal constructor(
         /** @see MessageCreateParams.Builder.system */
         fun system(string: String) = apply { paramsBuilder.system(string) }
 
-        /** @see MessageCreateParams.Builder.systemOfBetaTextBlockParams */
-        fun systemOfBetaTextBlockParams(betaTextBlockParams: List<BetaTextBlockParam>) = apply {
-            paramsBuilder.systemOfBetaTextBlockParams(betaTextBlockParams)
+        /** @see MessageCreateParams.Builder.systemOfTextBlockParams */
+        fun systemOfTextBlockParams(textBlockParams: List<TextBlockParam>) = apply {
+            paramsBuilder.systemOfTextBlockParams(textBlockParams)
         }
 
         /** @see MessageCreateParams.Builder.temperature */
@@ -337,15 +217,15 @@ internal constructor(
         }
 
         /** @see MessageCreateParams.Builder.thinking */
-        fun thinking(thinking: BetaThinkingConfigParam) = apply { paramsBuilder.thinking(thinking) }
+        fun thinking(thinking: ThinkingConfigParam) = apply { paramsBuilder.thinking(thinking) }
 
         /** @see MessageCreateParams.Builder.thinking */
-        fun thinking(thinking: JsonField<BetaThinkingConfigParam>) = apply {
+        fun thinking(thinking: JsonField<ThinkingConfigParam>) = apply {
             paramsBuilder.thinking(thinking)
         }
 
         /** @see MessageCreateParams.Builder.thinking */
-        fun thinking(enabled: BetaThinkingConfigEnabled) = apply { paramsBuilder.thinking(enabled) }
+        fun thinking(enabled: ThinkingConfigEnabled) = apply { paramsBuilder.thinking(enabled) }
 
         /** @see MessageCreateParams.Builder.enabledThinking */
         fun enabledThinking(budgetTokens: Long) = apply {
@@ -353,134 +233,65 @@ internal constructor(
         }
 
         /** @see MessageCreateParams.Builder.thinking */
-        fun thinking(disabled: BetaThinkingConfigDisabled) = apply {
-            paramsBuilder.thinking(disabled)
-        }
+        fun thinking(disabled: ThinkingConfigDisabled) = apply { paramsBuilder.thinking(disabled) }
 
         /** @see MessageCreateParams.Builder.toolChoice */
-        fun toolChoice(toolChoice: BetaToolChoice) = apply { paramsBuilder.toolChoice(toolChoice) }
+        fun toolChoice(toolChoice: ToolChoice) = apply { paramsBuilder.toolChoice(toolChoice) }
 
         /** @see MessageCreateParams.Builder.toolChoice */
-        fun toolChoice(toolChoice: JsonField<BetaToolChoice>) = apply {
+        fun toolChoice(toolChoice: JsonField<ToolChoice>) = apply {
             paramsBuilder.toolChoice(toolChoice)
         }
 
         /** @see MessageCreateParams.Builder.toolChoice */
-        fun toolChoice(auto: BetaToolChoiceAuto) = apply { paramsBuilder.toolChoice(auto) }
+        fun toolChoice(auto: ToolChoiceAuto) = apply { paramsBuilder.toolChoice(auto) }
 
         /** @see MessageCreateParams.Builder.toolChoice */
-        fun toolChoice(any: BetaToolChoiceAny) = apply { paramsBuilder.toolChoice(any) }
+        fun toolChoice(any: ToolChoiceAny) = apply { paramsBuilder.toolChoice(any) }
 
         /** @see MessageCreateParams.Builder.toolChoice */
-        fun toolChoice(tool: BetaToolChoiceTool) = apply { paramsBuilder.toolChoice(tool) }
+        fun toolChoice(tool: ToolChoiceTool) = apply { paramsBuilder.toolChoice(tool) }
 
         /** @see MessageCreateParams.Builder.toolToolChoice */
         fun toolToolChoice(name: String) = apply { paramsBuilder.toolToolChoice(name) }
 
         /** @see MessageCreateParams.Builder.toolChoice */
-        fun toolChoice(none: BetaToolChoiceNone) = apply { paramsBuilder.toolChoice(none) }
+        fun toolChoice(none: ToolChoiceNone) = apply { paramsBuilder.toolChoice(none) }
 
         /** @see MessageCreateParams.Builder.tools */
-        fun tools(tools: List<BetaToolUnion>) = apply { paramsBuilder.tools(tools) }
+        fun tools(tools: List<ToolUnion>) = apply { paramsBuilder.tools(tools) }
 
         /** @see MessageCreateParams.Builder.tools */
-        fun tools(tools: JsonField<List<BetaToolUnion>>) = apply { paramsBuilder.tools(tools) }
+        fun tools(tools: JsonField<List<ToolUnion>>) = apply { paramsBuilder.tools(tools) }
 
         /** @see MessageCreateParams.Builder.addTool */
-        fun addTool(tool: BetaToolUnion) = apply { paramsBuilder.addTool(tool) }
+        fun addTool(tool: ToolUnion) = apply { paramsBuilder.addTool(tool) }
 
         /** @see MessageCreateParams.Builder.addTool */
-        fun addTool(betaTool: BetaTool) = apply { paramsBuilder.addTool(betaTool) }
+        fun addTool(tool: Tool) = apply { paramsBuilder.addTool(tool) }
 
         /** @see MessageCreateParams.Builder.addTool */
-        fun addTool(bash20241022: BetaToolBash20241022) = apply {
-            paramsBuilder.addTool(bash20241022)
-        }
+        fun addTool(bash20250124: ToolBash20250124) = apply { paramsBuilder.addTool(bash20250124) }
 
         /** @see MessageCreateParams.Builder.addTool */
-        fun addTool(bash20250124: BetaToolBash20250124) = apply {
-            paramsBuilder.addTool(bash20250124)
-        }
-
-        /** @see MessageCreateParams.Builder.addTool */
-        fun addTool(codeExecutionTool20250522: BetaCodeExecutionTool20250522) = apply {
-            paramsBuilder.addTool(codeExecutionTool20250522)
-        }
-
-        /** @see MessageCreateParams.Builder.addTool */
-        fun addTool(codeExecutionTool20250825: BetaCodeExecutionTool20250825) = apply {
-            paramsBuilder.addTool(codeExecutionTool20250825)
-        }
-
-        /** @see MessageCreateParams.Builder.addTool */
-        fun addTool(computerUse20241022: BetaToolComputerUse20241022) = apply {
-            paramsBuilder.addTool(computerUse20241022)
-        }
-
-        /** @see MessageCreateParams.Builder.addTool */
-        fun addTool(memoryTool20250818: BetaMemoryTool20250818) = apply {
-            paramsBuilder.addTool(memoryTool20250818)
-        }
-
-        /** @see MessageCreateParams.Builder.addTool */
-        fun addTool(computerUse20250124: BetaToolComputerUse20250124) = apply {
-            paramsBuilder.addTool(computerUse20250124)
-        }
-
-        /** @see MessageCreateParams.Builder.addTool */
-        fun addTool(computerUse20251124: BetaToolComputerUse20251124) = apply {
-            paramsBuilder.addTool(computerUse20251124)
-        }
-
-        /** @see MessageCreateParams.Builder.addTool */
-        fun addTool(textEditor20241022: BetaToolTextEditor20241022) = apply {
-            paramsBuilder.addTool(textEditor20241022)
-        }
-
-        /** @see MessageCreateParams.Builder.addTool */
-        fun addTool(textEditor20250124: BetaToolTextEditor20250124) = apply {
+        fun addTool(textEditor20250124: ToolTextEditor20250124) = apply {
             paramsBuilder.addTool(textEditor20250124)
         }
 
         /** @see MessageCreateParams.Builder.addTool */
-        fun addTool(textEditor20250429: BetaToolTextEditor20250429) = apply {
+        fun addTool(textEditor20250429: ToolTextEditor20250429) = apply {
             paramsBuilder.addTool(textEditor20250429)
         }
 
         /** @see MessageCreateParams.Builder.addTool */
-        fun addTool(textEditor20250728: BetaToolTextEditor20250728) = apply {
+        fun addTool(textEditor20250728: ToolTextEditor20250728) = apply {
             paramsBuilder.addTool(textEditor20250728)
         }
 
         /** @see MessageCreateParams.Builder.addTool */
-        fun addTool(webSearchTool20250305: BetaWebSearchTool20250305) = apply {
+        fun addTool(webSearchTool20250305: WebSearchTool20250305) = apply {
             paramsBuilder.addTool(webSearchTool20250305)
         }
-
-        /** @see MessageCreateParams.Builder.addTool */
-        fun addTool(webFetchTool20250910: BetaWebFetchTool20250910) = apply {
-            paramsBuilder.addTool(webFetchTool20250910)
-        }
-
-        /** @see MessageCreateParams.Builder.addTool */
-        fun addTool(searchToolBm25_20251119: BetaToolSearchToolBm25_20251119) = apply {
-            paramsBuilder.addTool(searchToolBm25_20251119)
-        }
-
-        /** @see MessageCreateParams.Builder.addTool */
-        fun addTool(searchToolRegex20251119: BetaToolSearchToolRegex20251119) = apply {
-            paramsBuilder.addTool(searchToolRegex20251119)
-        }
-
-        /** @see MessageCreateParams.Builder.addTool */
-        fun addTool(mcpToolset: BetaMcpToolset) = apply { paramsBuilder.addTool(mcpToolset) }
-
-        /** @see MessageCreateParams.Builder.addTool */
-        @JvmOverloads
-        fun addTool(
-            toolParametersType: Class<*>,
-            localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
-        ) = apply { paramsBuilder.addTool(toolParametersType, localValidation) }
 
         /** @see MessageCreateParams.Builder.topK */
         fun topK(topK: Long) = apply { paramsBuilder.topK(topK) }

@@ -23,6 +23,7 @@ private constructor(
     private val type: JsonValue,
     private val cacheControl: JsonField<CacheControlEphemeral>,
     private val maxCharacters: JsonField<Long>,
+    private val strict: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -36,7 +37,8 @@ private constructor(
         @JsonProperty("max_characters")
         @ExcludeMissing
         maxCharacters: JsonField<Long> = JsonMissing.of(),
-    ) : this(name, type, cacheControl, maxCharacters, mutableMapOf())
+        @JsonProperty("strict") @ExcludeMissing strict: JsonField<Boolean> = JsonMissing.of(),
+    ) : this(name, type, cacheControl, maxCharacters, strict, mutableMapOf())
 
     /**
      * Name of the tool.
@@ -82,6 +84,14 @@ private constructor(
     fun maxCharacters(): Optional<Long> = maxCharacters.getOptional("max_characters")
 
     /**
+     * When true, guarantees schema validation on tool names and inputs
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun strict(): Optional<Boolean> = strict.getOptional("strict")
+
+    /**
      * Returns the raw JSON value of [cacheControl].
      *
      * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected type.
@@ -98,6 +108,13 @@ private constructor(
     @JsonProperty("max_characters")
     @ExcludeMissing
     fun _maxCharacters(): JsonField<Long> = maxCharacters
+
+    /**
+     * Returns the raw JSON value of [strict].
+     *
+     * Unlike [strict], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("strict") @ExcludeMissing fun _strict(): JsonField<Boolean> = strict
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -124,6 +141,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("text_editor_20250728")
         private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var maxCharacters: JsonField<Long> = JsonMissing.of()
+        private var strict: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -132,6 +150,7 @@ private constructor(
             type = toolTextEditor20250728.type
             cacheControl = toolTextEditor20250728.cacheControl
             maxCharacters = toolTextEditor20250728.maxCharacters
+            strict = toolTextEditor20250728.strict
             additionalProperties = toolTextEditor20250728.additionalProperties.toMutableMap()
         }
 
@@ -209,6 +228,17 @@ private constructor(
             this.maxCharacters = maxCharacters
         }
 
+        /** When true, guarantees schema validation on tool names and inputs */
+        fun strict(strict: Boolean) = strict(JsonField.of(strict))
+
+        /**
+         * Sets [Builder.strict] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.strict] with a well-typed [Boolean] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun strict(strict: JsonField<Boolean>) = apply { this.strict = strict }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -239,6 +269,7 @@ private constructor(
                 type,
                 cacheControl,
                 maxCharacters,
+                strict,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -262,6 +293,7 @@ private constructor(
         }
         cacheControl().ifPresent { it.validate() }
         maxCharacters()
+        strict()
         validated = true
     }
 
@@ -283,7 +315,8 @@ private constructor(
         name.let { if (it == JsonValue.from("str_replace_based_edit_tool")) 1 else 0 } +
             type.let { if (it == JsonValue.from("text_editor_20250728")) 1 else 0 } +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (maxCharacters.asKnown().isPresent) 1 else 0)
+            (if (maxCharacters.asKnown().isPresent) 1 else 0) +
+            (if (strict.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -295,15 +328,16 @@ private constructor(
             type == other.type &&
             cacheControl == other.cacheControl &&
             maxCharacters == other.maxCharacters &&
+            strict == other.strict &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(name, type, cacheControl, maxCharacters, additionalProperties)
+        Objects.hash(name, type, cacheControl, maxCharacters, strict, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ToolTextEditor20250728{name=$name, type=$type, cacheControl=$cacheControl, maxCharacters=$maxCharacters, additionalProperties=$additionalProperties}"
+        "ToolTextEditor20250728{name=$name, type=$type, cacheControl=$cacheControl, maxCharacters=$maxCharacters, strict=$strict, additionalProperties=$additionalProperties}"
 }

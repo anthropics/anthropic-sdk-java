@@ -3,6 +3,7 @@ package com.anthropic.core
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.messages.BetaJsonOutputFormat
 import com.anthropic.models.beta.messages.BetaTool
+import com.anthropic.models.messages.JsonOutputFormat
 import com.fasterxml.jackson.annotation.JsonTypeName
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -30,11 +31,11 @@ private val MAPPER =
         .build()
 
 /**
- * Builds an output format using a JSON schema derived from the structure of an arbitrary Java
+ * Builds a beta output format using a JSON schema derived from the structure of an arbitrary Java
  * class.
  */
 @JvmSynthetic
-internal fun outputFormatFromClass(
+internal fun betaOutputFormatFromClass(
     outputType: Class<*>,
     localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
 ): BetaJsonOutputFormat =
@@ -43,6 +44,29 @@ internal fun outputFormatFromClass(
             JsonValue.fromJsonNode(
                 validateSchema(extractSchema(outputType), outputType, localValidation)
             )
+        )
+        .build()
+
+/**
+ * Builds a GA output format using a JSON schema derived from the structure of an arbitrary Java
+ * class.
+ */
+@JvmSynthetic
+internal fun outputFormatFromClass(
+    outputType: Class<*>,
+    localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
+): JsonOutputFormat =
+    JsonOutputFormat.builder()
+        .schema(
+            JsonOutputFormat.Schema.builder()
+                .additionalProperties(
+                    JsonValue.fromJsonNode(
+                            validateSchema(extractSchema(outputType), outputType, localValidation)
+                        )
+                        .asObject()
+                        .get()
+                )
+                .build()
         )
         .build()
 

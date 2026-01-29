@@ -27,6 +27,7 @@ private constructor(
     private val name: JsonField<String>,
     private val cacheControl: JsonField<CacheControlEphemeral>,
     private val description: JsonField<String>,
+    private val strict: JsonField<Boolean>,
     private val type: JsonField<Type>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -43,8 +44,9 @@ private constructor(
         @JsonProperty("description")
         @ExcludeMissing
         description: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("strict") @ExcludeMissing strict: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
-    ) : this(inputSchema, name, cacheControl, description, type, mutableMapOf())
+    ) : this(inputSchema, name, cacheControl, description, strict, type, mutableMapOf())
 
     /**
      * [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
@@ -87,6 +89,20 @@ private constructor(
     fun description(): Optional<String> = description.getOptional("description")
 
     /**
+     * When true, guarantees schema validation on tool names and inputs
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun strict(): Optional<Boolean> = strict.getOptional("strict")
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun strict(): Optional<Boolean> = strict.getOptional("strict")
+
+    /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -123,6 +139,13 @@ private constructor(
      * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
+
+    /**
+     * Returns the raw JSON value of [strict].
+     *
+     * Unlike [strict], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("strict") @ExcludeMissing fun _strict(): JsonField<Boolean> = strict
 
     /**
      * Returns the raw JSON value of [type].
@@ -164,6 +187,7 @@ private constructor(
         private var name: JsonField<String>? = null
         private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var description: JsonField<String> = JsonMissing.of()
+        private var strict: JsonField<Boolean> = JsonMissing.of()
         private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -173,6 +197,7 @@ private constructor(
             name = tool.name
             cacheControl = tool.cacheControl
             description = tool.description
+            strict = tool.strict
             type = tool.type
             additionalProperties = tool.additionalProperties.toMutableMap()
         }
@@ -249,6 +274,17 @@ private constructor(
          */
         fun description(description: JsonField<String>) = apply { this.description = description }
 
+        /** When true, guarantees schema validation on tool names and inputs */
+        fun strict(strict: Boolean) = strict(JsonField.of(strict))
+
+        /**
+         * Sets [Builder.strict] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.strict] with a well-typed [Boolean] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun strict(strict: JsonField<Boolean>) = apply { this.strict = strict }
+
         fun type(type: Type?) = type(JsonField.ofNullable(type))
 
         /** Alias for calling [Builder.type] with `type.orElse(null)`. */
@@ -300,6 +336,7 @@ private constructor(
                 checkRequired("name", name),
                 cacheControl,
                 description,
+                strict,
                 type,
                 additionalProperties.toMutableMap(),
             )
@@ -316,6 +353,7 @@ private constructor(
         name()
         cacheControl().ifPresent { it.validate() }
         description()
+        strict()
         type().ifPresent { it.validate() }
         validated = true
     }
@@ -339,6 +377,7 @@ private constructor(
             (if (name.asKnown().isPresent) 1 else 0) +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
             (if (description.asKnown().isPresent) 1 else 0) +
+            (if (strict.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
     /**
@@ -824,16 +863,25 @@ private constructor(
             name == other.name &&
             cacheControl == other.cacheControl &&
             description == other.description &&
+            strict == other.strict &&
             type == other.type &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(inputSchema, name, cacheControl, description, type, additionalProperties)
+        Objects.hash(
+            inputSchema,
+            name,
+            cacheControl,
+            description,
+            strict,
+            type,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Tool{inputSchema=$inputSchema, name=$name, cacheControl=$cacheControl, description=$description, type=$type, additionalProperties=$additionalProperties}"
+        "Tool{inputSchema=$inputSchema, name=$name, cacheControl=$cacheControl, description=$description, strict=$strict, type=$type, additionalProperties=$additionalProperties}"
 }

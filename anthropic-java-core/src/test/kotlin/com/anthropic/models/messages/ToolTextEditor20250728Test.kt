@@ -17,11 +17,13 @@ internal class ToolTextEditor20250728Test {
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
                 .maxCharacters(1L)
+                .strict(true)
                 .build()
 
         assertThat(toolTextEditor20250728.cacheControl())
             .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
         assertThat(toolTextEditor20250728.maxCharacters()).contains(1L)
+        assertThat(toolTextEditor20250728.strict()).contains(true)
     }
 
     @Test
@@ -33,6 +35,7 @@ internal class ToolTextEditor20250728Test {
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
                 .maxCharacters(1L)
+                .strict(true)
                 .build()
 
         val roundtrippedToolTextEditor20250728 =

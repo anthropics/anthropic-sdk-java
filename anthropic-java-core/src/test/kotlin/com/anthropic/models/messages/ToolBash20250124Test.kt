@@ -16,10 +16,12 @@ internal class ToolBash20250124Test {
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
+                .strict(true)
                 .build()
 
         assertThat(toolBash20250124.cacheControl())
             .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
+        assertThat(toolBash20250124.strict()).contains(true)
     }
 
     @Test
@@ -30,6 +32,7 @@ internal class ToolBash20250124Test {
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
+                .strict(true)
                 .build()
 
         val roundtrippedToolBash20250124 =

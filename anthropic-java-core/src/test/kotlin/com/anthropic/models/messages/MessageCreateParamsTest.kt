@@ -16,6 +16,19 @@ internal class MessageCreateParamsTest {
             .addUserMessage("Hello, world")
             .model(Model.CLAUDE_SONNET_4_5_20250929)
             .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
+            .outputConfig(
+                OutputConfig.builder()
+                    .format(
+                        JsonOutputFormat.builder()
+                            .schema(
+                                JsonOutputFormat.Schema.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .build()
+            )
             .serviceTier(MessageCreateParams.ServiceTier.AUTO)
             .addStopSequence("string")
             .systemOfTextBlockParams(
@@ -62,6 +75,7 @@ internal class MessageCreateParamsTest {
                             .build()
                     )
                     .description("Get the current weather in a given location")
+                    .strict(true)
                     .type(Tool.Type.CUSTOM)
                     .build()
             )
@@ -78,6 +92,19 @@ internal class MessageCreateParamsTest {
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_SONNET_4_5_20250929)
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
+                .outputConfig(
+                    OutputConfig.builder()
+                        .format(
+                            JsonOutputFormat.builder()
+                                .schema(
+                                    JsonOutputFormat.Schema.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .build()
+                )
                 .serviceTier(MessageCreateParams.ServiceTier.AUTO)
                 .addStopSequence("string")
                 .systemOfTextBlockParams(
@@ -124,6 +151,7 @@ internal class MessageCreateParamsTest {
                                 .build()
                         )
                         .description("Get the current weather in a given location")
+                        .strict(true)
                         .type(Tool.Type.CUSTOM)
                         .build()
                 )
@@ -141,6 +169,20 @@ internal class MessageCreateParamsTest {
         assertThat(body.model()).isEqualTo(Model.CLAUDE_SONNET_4_5_20250929)
         assertThat(body.metadata())
             .contains(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
+        assertThat(body.outputConfig())
+            .contains(
+                OutputConfig.builder()
+                    .format(
+                        JsonOutputFormat.builder()
+                            .schema(
+                                JsonOutputFormat.Schema.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .build()
+            )
         assertThat(body.serviceTier()).contains(MessageCreateParams.ServiceTier.AUTO)
         assertThat(body.stopSequences().getOrNull()).containsExactly("string")
         assertThat(body.system())
@@ -200,6 +242,7 @@ internal class MessageCreateParamsTest {
                                 .build()
                         )
                         .description("Get the current weather in a given location")
+                        .strict(true)
                         .type(Tool.Type.CUSTOM)
                         .build()
                 )
