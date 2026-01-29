@@ -1,5 +1,65 @@
 # Changelog
 
+## 2.12.0 (2026-01-29)
+
+Full Changelog: [v2.11.1...v2.12.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.11.1...v2.12.0)
+
+### Features
+
+* add output_config to message create params ([4c4bb5d](https://github.com/anthropics/anthropic-sdk-java/commit/4c4bb5ddfe4d31c28c15f2ed2528825512bf2216))
+* **api:** Add new methods to tests ([#748](https://github.com/anthropics/anthropic-sdk-java/issues/748)) ([2c2ebdc](https://github.com/anthropics/anthropic-sdk-java/commit/2c2ebdc6a732b4adf595dbe1b422da1b02fc000f))
+* **api:** add support for Structured Outputs in the Messages API ([50fb232](https://github.com/anthropics/anthropic-sdk-java/commit/50fb232ce00498c664a28f53bbee09539665aba5))
+* **api:** adds support for Claude Opus 4.5, Effort, Advance Tool Use Features, Autocompaction, and Computer Use v5 ([4689271](https://github.com/anthropics/anthropic-sdk-java/commit/4689271c4dba2de056356d314429af36b7ad7205))
+* **api:** migrate sending message format in output_config rather than output_format ([c0103c6](https://github.com/anthropics/anthropic-sdk-java/commit/c0103c6f83ce4df65bab9aaa7def6d628c644a64))
+* **api:** migrate sending message format in output_config rather than output_format ([a6ea665](https://github.com/anthropics/anthropic-sdk-java/commit/a6ea6657640fcd0ec4c9645503d0d87843ec094b))
+* **client:** add `HttpRequest#url()` method ([49afe52](https://github.com/anthropics/anthropic-sdk-java/commit/49afe52d1f478b167d343a94e703d75abc5e09ba))
+* **client:** allow configuring dispatcher executor service ([60554ea](https://github.com/anthropics/anthropic-sdk-java/commit/60554eafb104057399672deefe0bbdb9b82c64bb))
+* **client:** send `X-Stainless-Kotlin-Version` header ([d7bffd2](https://github.com/anthropics/anthropic-sdk-java/commit/d7bffd2117fb4602e13feb18f1dbd36178077e26))
+* **client:** support Anthropic models on Microsoft Foundry ([#698](https://github.com/anthropics/anthropic-sdk-java/issues/698)) ([8077051](https://github.com/anthropics/anthropic-sdk-java/commit/80770511530e0a897d55aeebcaa307d679147f1d))
+
+
+### Bug Fixes
+
+* **client:** BetaMessageAccumulator crash on empty tool input ([e0fe678](https://github.com/anthropics/anthropic-sdk-java/commit/e0fe6788bd8a5529fdc493e73cbc532497622bc3))
+* **client:** cancel okhttp call when future cancelled ([b52f783](https://github.com/anthropics/anthropic-sdk-java/commit/b52f7831db730af1e398df4362b84002f82d025e))
+* **client:** disallow coercion from float to int ([492286b](https://github.com/anthropics/anthropic-sdk-java/commit/492286bc3dfe1848cfa4b3002f0578124a68b00f))
+* **client:** fully respect max retries ([e593174](https://github.com/anthropics/anthropic-sdk-java/commit/e593174c6fd274c420329614bcffae64dfd80b00))
+* **client:** implement visitToolSearchToolResult for Beta Accumulator ([41191ed](https://github.com/anthropics/anthropic-sdk-java/commit/41191edae162caaf9572c5d1d786160413bdc39c))
+* **client:** preserve time zone in lenient date-time parsing ([8e7204c](https://github.com/anthropics/anthropic-sdk-java/commit/8e7204cedd05e2362f816d1ce5318073914b268f))
+* **client:** remove duplicate outputConfig parameters ([b1c37b8](https://github.com/anthropics/anthropic-sdk-java/commit/b1c37b8f3219b4014a2bea2e35eb91a3df4208d1))
+* **client:** run linter ([73e141d](https://github.com/anthropics/anthropic-sdk-java/commit/73e141d1df0cd094f6544b2bd51d5fccf989f28a))
+* **client:** send retry count header for max retries 0 ([e593174](https://github.com/anthropics/anthropic-sdk-java/commit/e593174c6fd274c420329614bcffae64dfd80b00))
+* date time deserialization leniency ([f6f7ad1](https://github.com/anthropics/anthropic-sdk-java/commit/f6f7ad13a7774c92079dbed38944369f519ebcf8))
+* remove duplicate code ([937b34f](https://github.com/anthropics/anthropic-sdk-java/commit/937b34fbf088b9c13fa12b0bf57f47c291313d1c))
+* resolve lint error ([db08d1c](https://github.com/anthropics/anthropic-sdk-java/commit/db08d1c5b636cea5587194659931de60a4b88683))
+* update failing test ([4a7c7a9](https://github.com/anthropics/anthropic-sdk-java/commit/4a7c7a99456b8c4dd99e1fb0127848858cc21897))
+
+
+### Chores
+
+* **ci:** add Claude Code GitHub Workflow ([4eec6e8](https://github.com/anthropics/anthropic-sdk-java/commit/4eec6e844e9914150462ccbe017be1f2acfcd34a))
+* **ci:** upgrade `actions/github-script` ([18fbb1d](https://github.com/anthropics/anthropic-sdk-java/commit/18fbb1d0728a7ebde9b11837221a8c22c2e56d7a))
+* **ci:** upgrade `actions/setup-java` ([de57407](https://github.com/anthropics/anthropic-sdk-java/commit/de574074e5343cc7fcc959db5d5c37fc0f70f467))
+* **client:** improve example values ([d579c45](https://github.com/anthropics/anthropic-sdk-java/commit/d579c456548eedab8e5349b494d850bd3d4f2e84))
+* **client:** mark claude-3-5-haiku as deprecated ([46bf679](https://github.com/anthropics/anthropic-sdk-java/commit/46bf679190664f37269dabcefcff82c4bad7f899))
+* fix merge conflict ([e307fa0](https://github.com/anthropics/anthropic-sdk-java/commit/e307fa0b01207b77210cfc1c6957ca8f4ffbfb5b))
+* fix test ([b612010](https://github.com/anthropics/anthropic-sdk-java/commit/b612010dd341f8f7ebcdf2cd719db9f45ef36841))
+* format code ([3765903](https://github.com/anthropics/anthropic-sdk-java/commit/37659036c5b84d613ef8757fdf66aac80ce3c766))
+* **internal:** clean up maven repo artifact script and add html documentation to repo root ([d319dd7](https://github.com/anthropics/anthropic-sdk-java/commit/d319dd7ac5f06a1a575f5cb9ad8508a4b5d365d3))
+* **internal:** correct cache invalidation for `SKIP_MOCK_TESTS` ([7d40d45](https://github.com/anthropics/anthropic-sdk-java/commit/7d40d45c2a2c9b79362150d0a2b939e0224b345c))
+* **internal:** depend on packages directly in example ([e593174](https://github.com/anthropics/anthropic-sdk-java/commit/e593174c6fd274c420329614bcffae64dfd80b00))
+* **internal:** improve maven repo docs ([852f6dc](https://github.com/anthropics/anthropic-sdk-java/commit/852f6dcc104540ef4871e94de2ed1b9f714f341a))
+* **internal:** support uploading Maven repo artifacts to stainless package server ([17e663a](https://github.com/anthropics/anthropic-sdk-java/commit/17e663afa3096c8869bcce18aa2753f23b3320c0))
+* **internal:** update `actions/checkout` version ([7fd4f0a](https://github.com/anthropics/anthropic-sdk-java/commit/7fd4f0aeed9b6dee1d94361b0c654339f3cfb5ba))
+* **internal:** update maven repo doc to include authentication ([23d5c76](https://github.com/anthropics/anthropic-sdk-java/commit/23d5c762fd608220a520562c66a040a2b642c505))
+* **internal:** use different example values for some enums ([5d45a2f](https://github.com/anthropics/anthropic-sdk-java/commit/5d45a2fbd45aa2fb6561063f80bc2ca984a76150))
+* test on Jackson 2.14.0 to avoid encountering FasterXML/jackson-databind[#3240](https://github.com/anthropics/anthropic-sdk-java/issues/3240) in tests ([f6f7ad1](https://github.com/anthropics/anthropic-sdk-java/commit/f6f7ad13a7774c92079dbed38944369f519ebcf8))
+
+
+### Documentation
+
+* remove `$` for better copy-pasteabality ([b2315f9](https://github.com/anthropics/anthropic-sdk-java/commit/b2315f9d756ad473cd52c4daf52590341e9d3bce))
+
 ## 2.11.1 (2025-11-19)
 
 Full Changelog: [v2.11.0...v2.11.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.11.0...v2.11.1)
