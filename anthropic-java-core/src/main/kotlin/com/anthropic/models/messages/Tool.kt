@@ -100,12 +100,6 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun strict(): Optional<Boolean> = strict.getOptional("strict")
-
-    /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
     fun type(): Optional<Type> = type.getOptional("type")
 
     /**

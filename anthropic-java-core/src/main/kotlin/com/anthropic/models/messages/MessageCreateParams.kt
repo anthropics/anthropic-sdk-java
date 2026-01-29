@@ -676,23 +676,6 @@ private constructor(
         }
 
         /**
-         * Configuration options for the model's output. Controls aspects like output format or how
-         * much effort the model puts into its response.
-         */
-        fun outputConfig(outputConfig: OutputConfig) = apply { body.outputConfig(outputConfig) }
-
-        /**
-         * Sets [Builder.outputConfig] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.outputConfig] with a well-typed [OutputConfig] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun outputConfig(outputConfig: JsonField<OutputConfig>) = apply {
-            body.outputConfig(outputConfig)
-        }
-
-        /**
          * Sets the output configuration with a JSON schema format derived from the structure of the
          * given class. This returns a [StructuredMessageCreateParams.Builder] that can be used to
          * continue building the request and will eventually build a [StructuredMessageCreateParams]
@@ -1930,23 +1913,6 @@ private constructor(
             fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
 
             /** Configuration options for the model's output, such as the output format. */
-            fun outputConfig(outputConfig: OutputConfig) = outputConfig(JsonField.of(outputConfig))
-
-            /**
-             * Sets [Builder.outputConfig] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.outputConfig] with a well-typed [OutputConfig] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun outputConfig(outputConfig: JsonField<OutputConfig>) = apply {
-                this.outputConfig = outputConfig
-            }
-
-            /**
-             * Configuration options for the model's output. Controls aspects like output format or
-             * how much effort the model puts into its response.
-             */
             fun outputConfig(outputConfig: OutputConfig) = outputConfig(JsonField.of(outputConfig))
 
             /**
