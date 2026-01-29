@@ -34,6 +34,7 @@ internal class ToolUnionTest {
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
                 .description("Get the current weather in a given location")
+                .strict(true)
                 .type(Tool.Type.CUSTOM)
                 .build()
 
@@ -71,6 +72,7 @@ internal class ToolUnionTest {
                             .build()
                     )
                     .description("Get the current weather in a given location")
+                    .strict(true)
                     .type(Tool.Type.CUSTOM)
                     .build()
             )
@@ -91,6 +93,7 @@ internal class ToolUnionTest {
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
+                .strict(true)
                 .build()
 
         val toolUnion = ToolUnion.ofBash20250124(bash20250124)
@@ -114,6 +117,7 @@ internal class ToolUnionTest {
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .strict(true)
                     .build()
             )
 
@@ -133,6 +137,7 @@ internal class ToolUnionTest {
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
+                .strict(true)
                 .build()
 
         val toolUnion = ToolUnion.ofTextEditor20250124(textEditor20250124)
@@ -156,6 +161,7 @@ internal class ToolUnionTest {
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .strict(true)
                     .build()
             )
 
@@ -175,6 +181,7 @@ internal class ToolUnionTest {
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
+                .strict(true)
                 .build()
 
         val toolUnion = ToolUnion.ofTextEditor20250429(textEditor20250429)
@@ -198,6 +205,7 @@ internal class ToolUnionTest {
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .strict(true)
                     .build()
             )
 
@@ -218,6 +226,7 @@ internal class ToolUnionTest {
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
                 .maxCharacters(1L)
+                .strict(true)
                 .build()
 
         val toolUnion = ToolUnion.ofTextEditor20250728(textEditor20250728)
@@ -242,6 +251,7 @@ internal class ToolUnionTest {
                             .build()
                     )
                     .maxCharacters(1L)
+                    .strict(true)
                     .build()
             )
 
@@ -264,6 +274,7 @@ internal class ToolUnionTest {
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
                 .maxUses(1L)
+                .strict(true)
                 .userLocation(
                     WebSearchTool20250305.UserLocation.builder()
                         .city("New York")
@@ -298,6 +309,7 @@ internal class ToolUnionTest {
                             .build()
                     )
                     .maxUses(1L)
+                    .strict(true)
                     .userLocation(
                         WebSearchTool20250305.UserLocation.builder()
                             .city("New York")

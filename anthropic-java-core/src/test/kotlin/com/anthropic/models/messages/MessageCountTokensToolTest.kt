@@ -34,6 +34,7 @@ internal class MessageCountTokensToolTest {
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
                 .description("Get the current weather in a given location")
+                .strict(true)
                 .type(Tool.Type.CUSTOM)
                 .build()
 
@@ -71,6 +72,7 @@ internal class MessageCountTokensToolTest {
                             .build()
                     )
                     .description("Get the current weather in a given location")
+                    .strict(true)
                     .type(Tool.Type.CUSTOM)
                     .build()
             )
@@ -91,6 +93,7 @@ internal class MessageCountTokensToolTest {
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
+                .strict(true)
                 .build()
 
         val messageCountTokensTool = MessageCountTokensTool.ofToolBash20250124(toolBash20250124)
@@ -114,6 +117,7 @@ internal class MessageCountTokensToolTest {
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .strict(true)
                     .build()
             )
 
@@ -133,6 +137,7 @@ internal class MessageCountTokensToolTest {
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
+                .strict(true)
                 .build()
 
         val messageCountTokensTool =
@@ -157,6 +162,7 @@ internal class MessageCountTokensToolTest {
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .strict(true)
                     .build()
             )
 
@@ -176,6 +182,7 @@ internal class MessageCountTokensToolTest {
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
+                .strict(true)
                 .build()
 
         val messageCountTokensTool =
@@ -200,6 +207,7 @@ internal class MessageCountTokensToolTest {
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .strict(true)
                     .build()
             )
 
@@ -220,6 +228,7 @@ internal class MessageCountTokensToolTest {
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
                 .maxCharacters(1L)
+                .strict(true)
                 .build()
 
         val messageCountTokensTool =
@@ -245,6 +254,7 @@ internal class MessageCountTokensToolTest {
                             .build()
                     )
                     .maxCharacters(1L)
+                    .strict(true)
                     .build()
             )
 
@@ -267,6 +277,7 @@ internal class MessageCountTokensToolTest {
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
                 .maxUses(1L)
+                .strict(true)
                 .userLocation(
                     WebSearchTool20250305.UserLocation.builder()
                         .city("New York")
@@ -302,6 +313,7 @@ internal class MessageCountTokensToolTest {
                             .build()
                     )
                     .maxUses(1L)
+                    .strict(true)
                     .userLocation(
                         WebSearchTool20250305.UserLocation.builder()
                             .city("New York")

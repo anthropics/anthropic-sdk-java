@@ -118,6 +118,8 @@ private constructor(
     fun inputExamples(): Optional<List<InputExample>> = inputExamples.getOptional("input_examples")
 
     /**
+     * When true, guarantees schema validation on tool names and inputs
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -326,6 +328,7 @@ private constructor(
                 }
         }
 
+        /** When true, guarantees schema validation on tool names and inputs */
         fun strict(strict: Boolean) = strict(JsonField.of(strict))
 
         /**

@@ -14,6 +14,19 @@ internal class MessageCountTokensParamsTest {
         MessageCountTokensParams.builder()
             .addUserMessage("Hello, world")
             .model(Model.CLAUDE_SONNET_4_5_20250929)
+            .outputConfig(
+                OutputConfig.builder()
+                    .format(
+                        JsonOutputFormat.builder()
+                            .schema(
+                                JsonOutputFormat.Schema.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .build()
+            )
             .systemOfTextBlockParams(
                 listOf(
                     TextBlockParam.builder()
@@ -57,6 +70,7 @@ internal class MessageCountTokensParamsTest {
                             .build()
                     )
                     .description("Get the current weather in a given location")
+                    .strict(true)
                     .type(Tool.Type.CUSTOM)
                     .build()
             )
@@ -69,6 +83,19 @@ internal class MessageCountTokensParamsTest {
             MessageCountTokensParams.builder()
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_SONNET_4_5_20250929)
+                .outputConfig(
+                    OutputConfig.builder()
+                        .format(
+                            JsonOutputFormat.builder()
+                                .schema(
+                                    JsonOutputFormat.Schema.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .build()
+                )
                 .systemOfTextBlockParams(
                     listOf(
                         TextBlockParam.builder()
@@ -112,6 +139,7 @@ internal class MessageCountTokensParamsTest {
                                 .build()
                         )
                         .description("Get the current weather in a given location")
+                        .strict(true)
                         .type(Tool.Type.CUSTOM)
                         .build()
                 )
@@ -124,6 +152,20 @@ internal class MessageCountTokensParamsTest {
                 MessageParam.builder().content("Hello, world").role(MessageParam.Role.USER).build()
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_SONNET_4_5_20250929)
+        assertThat(body.outputConfig())
+            .contains(
+                OutputConfig.builder()
+                    .format(
+                        JsonOutputFormat.builder()
+                            .schema(
+                                JsonOutputFormat.Schema.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .build()
+            )
         assertThat(body.system())
             .contains(
                 MessageCountTokensParams.System.ofTextBlockParams(
@@ -180,6 +222,7 @@ internal class MessageCountTokensParamsTest {
                                 .build()
                         )
                         .description("Get the current weather in a given location")
+                        .strict(true)
                         .type(Tool.Type.CUSTOM)
                         .build()
                 )

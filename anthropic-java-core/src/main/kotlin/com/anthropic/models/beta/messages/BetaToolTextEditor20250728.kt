@@ -132,6 +132,8 @@ private constructor(
     fun maxCharacters(): Optional<Long> = maxCharacters.getOptional("max_characters")
 
     /**
+     * When true, guarantees schema validation on tool names and inputs
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -378,6 +380,7 @@ private constructor(
             this.maxCharacters = maxCharacters
         }
 
+        /** When true, guarantees schema validation on tool names and inputs */
         fun strict(strict: Boolean) = strict(JsonField.of(strict))
 
         /**
