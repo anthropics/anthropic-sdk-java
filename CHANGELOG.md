@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.12.1 (2026-01-31)
+
+Full Changelog: [v2.12.0...v2.12.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.12.0...v2.12.1)
+
+### Chores
+
+* **internal:** allow passing args to `./scripts/test` ([509badc](https://github.com/anthropics/anthropic-sdk-java/commit/509badcffb650ca89cf7c840612660c9f0707b65))
+
 ## 2.12.0 (2026-01-29)
 
 Full Changelog: [v2.11.1...v2.12.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.11.1...v2.12.0)
