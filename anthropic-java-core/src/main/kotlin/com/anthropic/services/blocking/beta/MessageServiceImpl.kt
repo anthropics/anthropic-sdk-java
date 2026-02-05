@@ -21,6 +21,7 @@ import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
 import com.anthropic.core.prepare
 import com.anthropic.helpers.BetaToolRunner
+import com.anthropic.helpers.warnIfThinkingEnabled
 import com.anthropic.models.beta.messages.*
 import com.anthropic.services.blocking.beta.messages.BatchService
 import com.anthropic.services.blocking.beta.messages.BatchServiceImpl
@@ -91,6 +92,8 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
             params: MessageCreateParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<BetaMessage> {
+            warnIfThinkingEnabled(params.model().toString(), params.thinking().orElse(null))
+
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -127,6 +130,8 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
             params: MessageCreateParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<StreamResponse<BetaRawMessageStreamEvent>> {
+            warnIfThinkingEnabled(params.model().toString(), params.thinking().orElse(null))
+
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -174,6 +179,8 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
             params: MessageCountTokensParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<BetaMessageTokensCount> {
+            warnIfThinkingEnabled(params.model().toString(), params.thinking().orElse(null))
+
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
