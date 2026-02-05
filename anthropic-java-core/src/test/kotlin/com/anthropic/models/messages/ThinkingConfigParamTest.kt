@@ -22,6 +22,7 @@ internal class ThinkingConfigParamTest {
 
         assertThat(thinkingConfigParam.enabled()).contains(enabled)
         assertThat(thinkingConfigParam.disabled()).isEmpty
+        assertThat(thinkingConfigParam.adaptive()).isEmpty
     }
 
     @Test
@@ -49,6 +50,7 @@ internal class ThinkingConfigParamTest {
 
         assertThat(thinkingConfigParam.enabled()).isEmpty
         assertThat(thinkingConfigParam.disabled()).contains(disabled)
+        assertThat(thinkingConfigParam.adaptive()).isEmpty
     }
 
     @Test
@@ -56,6 +58,32 @@ internal class ThinkingConfigParamTest {
         val jsonMapper = jsonMapper()
         val thinkingConfigParam =
             ThinkingConfigParam.ofDisabled(ThinkingConfigDisabled.builder().build())
+
+        val roundtrippedThinkingConfigParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(thinkingConfigParam),
+                jacksonTypeRef<ThinkingConfigParam>(),
+            )
+
+        assertThat(roundtrippedThinkingConfigParam).isEqualTo(thinkingConfigParam)
+    }
+
+    @Test
+    fun ofAdaptive() {
+        val adaptive = ThinkingConfigAdaptive.builder().build()
+
+        val thinkingConfigParam = ThinkingConfigParam.ofAdaptive(adaptive)
+
+        assertThat(thinkingConfigParam.enabled()).isEmpty
+        assertThat(thinkingConfigParam.disabled()).isEmpty
+        assertThat(thinkingConfigParam.adaptive()).contains(adaptive)
+    }
+
+    @Test
+    fun ofAdaptiveRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val thinkingConfigParam =
+            ThinkingConfigParam.ofAdaptive(ThinkingConfigAdaptive.builder().build())
 
         val roundtrippedThinkingConfigParam =
             jsonMapper.readValue(

@@ -43,6 +43,7 @@ private constructor(
     private val mcpToolUse: BetaMcpToolUseBlockParam? = null,
     private val mcpToolResult: BetaRequestMcpToolResultBlockParam? = null,
     private val containerUpload: BetaContainerUploadBlockParam? = null,
+    private val compaction: BetaCompactionBlockParam? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -107,6 +108,17 @@ private constructor(
     fun containerUpload(): Optional<BetaContainerUploadBlockParam> =
         Optional.ofNullable(containerUpload)
 
+    /**
+     * A compaction block containing summary of previous context.
+     *
+     * Users should round-trip these blocks from responses to subsequent requests to maintain
+     * context across compaction boundaries.
+     *
+     * When content is None, the block represents a failed compaction. The server treats these as
+     * no-ops. Empty string content is not allowed.
+     */
+    fun compaction(): Optional<BetaCompactionBlockParam> = Optional.ofNullable(compaction)
+
     fun isText(): Boolean = text != null
 
     fun isImage(): Boolean = image != null
@@ -142,6 +154,8 @@ private constructor(
     fun isMcpToolResult(): Boolean = mcpToolResult != null
 
     fun isContainerUpload(): Boolean = containerUpload != null
+
+    fun isCompaction(): Boolean = compaction != null
 
     /** Regular text content. */
     fun asText(): BetaTextBlockParam = text.getOrThrow("text")
@@ -203,6 +217,17 @@ private constructor(
     fun asContainerUpload(): BetaContainerUploadBlockParam =
         containerUpload.getOrThrow("containerUpload")
 
+    /**
+     * A compaction block containing summary of previous context.
+     *
+     * Users should round-trip these blocks from responses to subsequent requests to maintain
+     * context across compaction boundaries.
+     *
+     * When content is None, the block represents a failed compaction. The server treats these as
+     * no-ops. Empty string content is not allowed.
+     */
+    fun asCompaction(): BetaCompactionBlockParam = compaction.getOrThrow("compaction")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
@@ -228,6 +253,7 @@ private constructor(
             mcpToolUse != null -> visitor.visitMcpToolUse(mcpToolUse)
             mcpToolResult != null -> visitor.visitMcpToolResult(mcpToolResult)
             containerUpload != null -> visitor.visitContainerUpload(containerUpload)
+            compaction != null -> visitor.visitCompaction(compaction)
             else -> visitor.unknown(_json)
         }
 
@@ -326,6 +352,10 @@ private constructor(
                 override fun visitContainerUpload(containerUpload: BetaContainerUploadBlockParam) {
                     containerUpload.validate()
                 }
+
+                override fun visitCompaction(compaction: BetaCompactionBlockParam) {
+                    compaction.validate()
+                }
             }
         )
         validated = true
@@ -405,6 +435,9 @@ private constructor(
                 override fun visitContainerUpload(containerUpload: BetaContainerUploadBlockParam) =
                     containerUpload.validity()
 
+                override fun visitCompaction(compaction: BetaCompactionBlockParam) =
+                    compaction.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -432,7 +465,8 @@ private constructor(
             toolSearchToolResult == other.toolSearchToolResult &&
             mcpToolUse == other.mcpToolUse &&
             mcpToolResult == other.mcpToolResult &&
-            containerUpload == other.containerUpload
+            containerUpload == other.containerUpload &&
+            compaction == other.compaction
     }
 
     override fun hashCode(): Int =
@@ -455,6 +489,7 @@ private constructor(
             mcpToolUse,
             mcpToolResult,
             containerUpload,
+            compaction,
         )
 
     override fun toString(): String =
@@ -483,6 +518,7 @@ private constructor(
             mcpToolUse != null -> "BetaContentBlockParam{mcpToolUse=$mcpToolUse}"
             mcpToolResult != null -> "BetaContentBlockParam{mcpToolResult=$mcpToolResult}"
             containerUpload != null -> "BetaContentBlockParam{containerUpload=$containerUpload}"
+            compaction != null -> "BetaContentBlockParam{compaction=$compaction}"
             _json != null -> "BetaContentBlockParam{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaContentBlockParam")
         }
@@ -576,6 +612,19 @@ private constructor(
         @JvmStatic
         fun ofContainerUpload(containerUpload: BetaContainerUploadBlockParam) =
             BetaContentBlockParam(containerUpload = containerUpload)
+
+        /**
+         * A compaction block containing summary of previous context.
+         *
+         * Users should round-trip these blocks from responses to subsequent requests to maintain
+         * context across compaction boundaries.
+         *
+         * When content is None, the block represents a failed compaction. The server treats these
+         * as no-ops. Empty string content is not allowed.
+         */
+        @JvmStatic
+        fun ofCompaction(compaction: BetaCompactionBlockParam) =
+            BetaContentBlockParam(compaction = compaction)
     }
 
     /**
@@ -640,6 +689,17 @@ private constructor(
          * this block will be available in the container's input directory.
          */
         fun visitContainerUpload(containerUpload: BetaContainerUploadBlockParam): T
+
+        /**
+         * A compaction block containing summary of previous context.
+         *
+         * Users should round-trip these blocks from responses to subsequent requests to maintain
+         * context across compaction boundaries.
+         *
+         * When content is None, the block represents a failed compaction. The server treats these
+         * as no-ops. Empty string content is not allowed.
+         */
+        fun visitCompaction(compaction: BetaCompactionBlockParam): T
 
         /**
          * Maps an unknown variant of [BetaContentBlockParam] to a value of type [T].
@@ -774,6 +834,11 @@ private constructor(
                         ?.let { BetaContentBlockParam(containerUpload = it, _json = json) }
                         ?: BetaContentBlockParam(_json = json)
                 }
+                "compaction" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaCompactionBlockParam>())?.let {
+                        BetaContentBlockParam(compaction = it, _json = json)
+                    } ?: BetaContentBlockParam(_json = json)
+                }
             }
 
             return BetaContentBlockParam(_json = json)
@@ -812,6 +877,7 @@ private constructor(
                 value.mcpToolUse != null -> generator.writeObject(value.mcpToolUse)
                 value.mcpToolResult != null -> generator.writeObject(value.mcpToolResult)
                 value.containerUpload != null -> generator.writeObject(value.containerUpload)
+                value.compaction != null -> generator.writeObject(value.compaction)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaContentBlockParam")
             }

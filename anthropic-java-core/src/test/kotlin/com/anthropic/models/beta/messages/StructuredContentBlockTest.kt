@@ -121,6 +121,7 @@ internal class StructuredContentBlockTest {
         private val MCP_TOOL_RESULT =
             BetaMcpToolResultBlock.builder().content(STRING).isError(true).toolUseId(STRING).build()
         private val CONTAINER_UPLOAD = BetaContainerUploadBlock.builder().fileId(STRING).build()
+        private val COMPACTION = BetaCompactionBlock.builder().content(STRING).build()
 
         // The list order follows the declaration order in `BetaContentBlock` for easier
         // maintenance.
@@ -141,6 +142,7 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("mcpToolUse", OPTIONAL),
                 DelegationReadTestCase("mcpToolResult", OPTIONAL),
                 DelegationReadTestCase("containerUpload", OPTIONAL),
+                DelegationReadTestCase("compaction", OPTIONAL),
                 // `isText()` is a special case and has its own test function.
                 // For the Boolean functions, call each in turn with both `true` and `false` to
                 // ensure that a return value is not hard-coded.
@@ -172,6 +174,8 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("isMcpToolResult", false),
                 DelegationReadTestCase("isContainerUpload", true),
                 DelegationReadTestCase("isContainerUpload", false),
+                DelegationReadTestCase("isCompaction", true),
+                DelegationReadTestCase("isCompaction", false),
                 // `asText()` is a special case and has its own test function.
                 DelegationReadTestCase("asThinking", THINKING),
                 DelegationReadTestCase("asRedactedThinking", REDACTED_THINKING),
@@ -192,6 +196,7 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("asMcpToolUse", MCP_TOOL_USE),
                 DelegationReadTestCase("asMcpToolResult", MCP_TOOL_RESULT),
                 DelegationReadTestCase("asContainerUpload", CONTAINER_UPLOAD),
+                DelegationReadTestCase("asCompaction", COMPACTION),
                 DelegationReadTestCase("_json", OPTIONAL),
             )
     }

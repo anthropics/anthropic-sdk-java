@@ -30,6 +30,7 @@ internal class ToolTest {
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
                 .description("Get the current weather in a given location")
+                .eagerInputStreaming(true)
                 .strict(true)
                 .type(Tool.Type.CUSTOM)
                 .build()
@@ -50,6 +51,7 @@ internal class ToolTest {
         assertThat(tool.cacheControl())
             .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
         assertThat(tool.description()).contains("Get the current weather in a given location")
+        assertThat(tool.eagerInputStreaming()).contains(true)
         assertThat(tool.strict()).contains(true)
         assertThat(tool.type()).contains(Tool.Type.CUSTOM)
     }
@@ -75,6 +77,7 @@ internal class ToolTest {
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
                 .description("Get the current weather in a given location")
+                .eagerInputStreaming(true)
                 .strict(true)
                 .type(Tool.Type.CUSTOM)
                 .build()

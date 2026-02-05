@@ -210,6 +210,19 @@ internal constructor(
             paramsBuilder.addMcpServer(mcpServer)
         }
 
+        /** @see MessageCreateParams.Builder.inferenceGeo */
+        fun inferenceGeo(inferenceGeo: String?) = apply { paramsBuilder.inferenceGeo(inferenceGeo) }
+
+        /** @see MessageCreateParams.Builder.inferenceGeo */
+        fun inferenceGeo(inferenceGeo: Optional<String>) = apply {
+            paramsBuilder.inferenceGeo(inferenceGeo)
+        }
+
+        /** @see MessageCreateParams.Builder.inferenceGeo */
+        fun inferenceGeo(inferenceGeo: JsonField<String>) = apply {
+            paramsBuilder.inferenceGeo(inferenceGeo)
+        }
+
         /** @see MessageCreateParams.Builder.metadata */
         fun metadata(metadata: BetaMetadata) = apply { paramsBuilder.metadata(metadata) }
 
@@ -355,6 +368,11 @@ internal constructor(
         /** @see MessageCreateParams.Builder.thinking */
         fun thinking(disabled: BetaThinkingConfigDisabled) = apply {
             paramsBuilder.thinking(disabled)
+        }
+
+        /** @see MessageCreateParams.Builder.thinking */
+        fun thinking(adaptive: BetaThinkingConfigAdaptive) = apply {
+            paramsBuilder.thinking(adaptive)
         }
 
         /** @see MessageCreateParams.Builder.toolChoice */

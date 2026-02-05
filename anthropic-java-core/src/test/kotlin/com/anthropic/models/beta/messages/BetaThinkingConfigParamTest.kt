@@ -22,6 +22,7 @@ internal class BetaThinkingConfigParamTest {
 
         assertThat(betaThinkingConfigParam.enabled()).contains(enabled)
         assertThat(betaThinkingConfigParam.disabled()).isEmpty
+        assertThat(betaThinkingConfigParam.adaptive()).isEmpty
     }
 
     @Test
@@ -49,6 +50,7 @@ internal class BetaThinkingConfigParamTest {
 
         assertThat(betaThinkingConfigParam.enabled()).isEmpty
         assertThat(betaThinkingConfigParam.disabled()).contains(disabled)
+        assertThat(betaThinkingConfigParam.adaptive()).isEmpty
     }
 
     @Test
@@ -56,6 +58,32 @@ internal class BetaThinkingConfigParamTest {
         val jsonMapper = jsonMapper()
         val betaThinkingConfigParam =
             BetaThinkingConfigParam.ofDisabled(BetaThinkingConfigDisabled.builder().build())
+
+        val roundtrippedBetaThinkingConfigParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaThinkingConfigParam),
+                jacksonTypeRef<BetaThinkingConfigParam>(),
+            )
+
+        assertThat(roundtrippedBetaThinkingConfigParam).isEqualTo(betaThinkingConfigParam)
+    }
+
+    @Test
+    fun ofAdaptive() {
+        val adaptive = BetaThinkingConfigAdaptive.builder().build()
+
+        val betaThinkingConfigParam = BetaThinkingConfigParam.ofAdaptive(adaptive)
+
+        assertThat(betaThinkingConfigParam.enabled()).isEmpty
+        assertThat(betaThinkingConfigParam.disabled()).isEmpty
+        assertThat(betaThinkingConfigParam.adaptive()).contains(adaptive)
+    }
+
+    @Test
+    fun ofAdaptiveRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaThinkingConfigParam =
+            BetaThinkingConfigParam.ofAdaptive(BetaThinkingConfigAdaptive.builder().build())
 
         val roundtrippedBetaThinkingConfigParam =
             jsonMapper.readValue(

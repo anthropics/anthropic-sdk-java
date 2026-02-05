@@ -63,6 +63,7 @@ internal class StructuredMessageCreateParamsTest {
                                 .cacheReadInputTokens(null)
                                 .serverToolUse(null)
                                 .serviceTier(null)
+                                .inferenceGeo(null)
                                 .build()
                         )
                         .build(),
@@ -126,6 +127,7 @@ internal class StructuredMessageCreateParamsTest {
                 ),
                 DelegationWriteTestCase("enabledThinking", 1024L),
                 DelegationWriteTestCase("thinking", ThinkingConfigDisabled.builder().build()),
+                DelegationWriteTestCase("thinking", ThinkingConfigAdaptive.builder().build()),
                 DelegationWriteTestCase(
                     "toolChoice",
                     ToolChoice.ofAuto(ToolChoiceAuto.builder().build()),
@@ -178,6 +180,9 @@ internal class StructuredMessageCreateParamsTest {
                     "putAllAdditionalBodyProperties",
                     mapOf("k" to JsonValue.from("v")),
                 ),
+                DelegationWriteTestCase("inferenceGeo", "test"),
+                DelegationWriteTestCase("inferenceGeo", JsonField.of("test")),
+                DelegationWriteTestCase("inferenceGeo", java.util.Optional.of("test")),
                 DelegationWriteTestCase("removeAdditionalBodyProperty", "k"),
                 DelegationWriteTestCase("removeAllAdditionalBodyProperties", setOf("k")),
                 DelegationWriteTestCase("additionalHeaders", Headers.builder().build()),

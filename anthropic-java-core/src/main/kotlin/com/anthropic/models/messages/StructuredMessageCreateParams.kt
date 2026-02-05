@@ -8,6 +8,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.outputFormatFromClass
 import java.util.Objects
+import java.util.Optional
 
 /**
  * A wrapper for [MessageCreateParams] that provides a type-safe [Builder] that can record the
@@ -126,6 +127,19 @@ internal constructor(
         /** @see MessageCreateParams.Builder.model */
         fun model(value: String) = apply { paramsBuilder.model(value) }
 
+        /** @see MessageCreateParams.Builder.inferenceGeo */
+        fun inferenceGeo(inferenceGeo: String?) = apply { paramsBuilder.inferenceGeo(inferenceGeo) }
+
+        /** @see MessageCreateParams.Builder.inferenceGeo */
+        fun inferenceGeo(inferenceGeo: Optional<String>) = apply {
+            paramsBuilder.inferenceGeo(inferenceGeo)
+        }
+
+        /** @see MessageCreateParams.Builder.inferenceGeo */
+        fun inferenceGeo(inferenceGeo: JsonField<String>) = apply {
+            paramsBuilder.inferenceGeo(inferenceGeo)
+        }
+
         /** @see MessageCreateParams.Builder.metadata */
         fun metadata(metadata: Metadata) = apply { paramsBuilder.metadata(metadata) }
 
@@ -234,6 +248,9 @@ internal constructor(
 
         /** @see MessageCreateParams.Builder.thinking */
         fun thinking(disabled: ThinkingConfigDisabled) = apply { paramsBuilder.thinking(disabled) }
+
+        /** @see MessageCreateParams.Builder.thinking */
+        fun thinking(adaptive: ThinkingConfigAdaptive) = apply { paramsBuilder.thinking(adaptive) }
 
         /** @see MessageCreateParams.Builder.toolChoice */
         fun toolChoice(toolChoice: ToolChoice) = apply { paramsBuilder.toolChoice(toolChoice) }

@@ -53,10 +53,12 @@ internal class ServiceParamsTest {
             MessageCreateParams.builder()
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_SONNET_4_5_20250929)
+                .model(Model.CLAUDE_OPUS_4_6)
+                .inferenceGeo("inference_geo")
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .outputConfig(
                     OutputConfig.builder()
+                        .effort(OutputConfig.Effort.LOW)
                         .format(
                             JsonOutputFormat.builder()
                                 .schema(
@@ -114,6 +116,7 @@ internal class ServiceParamsTest {
                                 .build()
                         )
                         .description("Get the current weather in a given location")
+                        .eagerInputStreaming(true)
                         .strict(true)
                         .type(Tool.Type.CUSTOM)
                         .build()
