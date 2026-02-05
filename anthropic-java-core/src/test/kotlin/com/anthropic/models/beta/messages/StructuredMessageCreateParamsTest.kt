@@ -60,7 +60,9 @@ internal class StructuredMessageCreateParamsTest {
                         .cacheCreation(null)
                         .cacheCreationInputTokens(null)
                         .cacheReadInputTokens(null)
+                        .inferenceGeo("inference_geo")
                         .inputTokens(LONG)
+                        .iterations(null)
                         .outputTokens(LONG)
                         .serverToolUse(null)
                         .serviceTier(null)
@@ -91,6 +93,7 @@ internal class StructuredMessageCreateParamsTest {
         private val THINKING_CONFIG_ENABLED =
             BetaThinkingConfigEnabled.builder().budgetTokens(LONG).build()
         private val THINKING_CONFIG_DISABLED = BetaThinkingConfigDisabled.builder().build()
+        private val THINKING_CONFIG_ADAPTIVE = BetaThinkingConfigAdaptive.builder().build()
         private val THINKING_CONFIG = BetaThinkingConfigParam.ofEnabled(THINKING_CONFIG_ENABLED)
 
         private val TOOL = toolFromClass(CLASS)
@@ -184,11 +187,15 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("systemOfBetaTextBlockParams", LIST),
                 DelegationWriteTestCase("temperature", DOUBLE),
                 DelegationWriteTestCase("temperature", JSON_FIELD),
+                DelegationWriteTestCase("inferenceGeo", STRING),
+                DelegationWriteTestCase("inferenceGeo", OPTIONAL),
+                DelegationWriteTestCase("inferenceGeo", JSON_FIELD),
                 DelegationWriteTestCase("thinking", THINKING_CONFIG),
                 DelegationWriteTestCase("thinking", JSON_FIELD),
                 DelegationWriteTestCase("thinking", THINKING_CONFIG_ENABLED),
                 DelegationWriteTestCase("enabledThinking", LONG),
                 DelegationWriteTestCase("thinking", THINKING_CONFIG_DISABLED),
+                DelegationWriteTestCase("thinking", THINKING_CONFIG_ADAPTIVE),
                 DelegationWriteTestCase("toolChoice", TOOL_CHOICE),
                 DelegationWriteTestCase("toolChoice", JSON_FIELD),
                 DelegationWriteTestCase("toolChoice", TOOL_CHOICE_AUTO),

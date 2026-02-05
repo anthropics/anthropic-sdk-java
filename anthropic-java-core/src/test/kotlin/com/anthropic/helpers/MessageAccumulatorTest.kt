@@ -1007,6 +1007,7 @@ internal class MessageAccumulatorTest {
             )
             .cacheCreationInputTokens(0L)
             .cacheReadInputTokens(0L)
+            .inferenceGeo("inference_geo")
             .outputTokens(0L)
             .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
             .serviceTier(Usage.ServiceTier.STANDARD)

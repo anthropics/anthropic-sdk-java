@@ -22,6 +22,7 @@ import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
 import com.anthropic.core.http.toAsync
 import com.anthropic.core.prepareAsync
+import com.anthropic.helpers.warnIfThinkingEnabled
 import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.MessageCountTokensParams
 import com.anthropic.models.messages.MessageCreateParams
@@ -97,6 +98,8 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: MessageCreateParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<Message>> {
+            warnIfThinkingEnabled(params.model().toString(), params.thinking().orElse(null))
+
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -135,6 +138,8 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: MessageCreateParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<StreamResponse<RawMessageStreamEvent>>> {
+            warnIfThinkingEnabled(params.model().toString(), params.thinking().orElse(null))
+
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -184,6 +189,8 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: MessageCountTokensParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<MessageTokensCount>> {
+            warnIfThinkingEnabled(params.model().toString(), params.thinking().orElse(null))
+
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
