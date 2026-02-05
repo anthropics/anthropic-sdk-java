@@ -14,15 +14,15 @@ internal class BetaModelInfoTest {
     fun create() {
         val betaModelInfo =
             BetaModelInfo.builder()
-                .id("claude-sonnet-4-20250514")
-                .createdAt(OffsetDateTime.parse("2025-02-19T00:00:00Z"))
-                .displayName("Claude Sonnet 4")
+                .id("claude-opus-4-6")
+                .createdAt(OffsetDateTime.parse("2026-02-04T00:00:00Z"))
+                .displayName("Claude Opus 4.6")
                 .build()
 
-        assertThat(betaModelInfo.id()).isEqualTo("claude-sonnet-4-20250514")
+        assertThat(betaModelInfo.id()).isEqualTo("claude-opus-4-6")
         assertThat(betaModelInfo.createdAt())
-            .isEqualTo(OffsetDateTime.parse("2025-02-19T00:00:00Z"))
-        assertThat(betaModelInfo.displayName()).isEqualTo("Claude Sonnet 4")
+            .isEqualTo(OffsetDateTime.parse("2026-02-04T00:00:00Z"))
+        assertThat(betaModelInfo.displayName()).isEqualTo("Claude Opus 4.6")
     }
 
     @Test
@@ -30,9 +30,9 @@ internal class BetaModelInfoTest {
         val jsonMapper = jsonMapper()
         val betaModelInfo =
             BetaModelInfo.builder()
-                .id("claude-sonnet-4-20250514")
-                .createdAt(OffsetDateTime.parse("2025-02-19T00:00:00Z"))
-                .displayName("Claude Sonnet 4")
+                .id("claude-opus-4-6")
+                .createdAt(OffsetDateTime.parse("2026-02-04T00:00:00Z"))
+                .displayName("Claude Opus 4.6")
                 .build()
 
         val roundtrippedBetaModelInfo =

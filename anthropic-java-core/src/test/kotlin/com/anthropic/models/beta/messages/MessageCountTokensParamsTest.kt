@@ -17,7 +17,7 @@ internal class MessageCountTokensParamsTest {
         MessageCountTokensParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .addUserMessage("Hello, world")
-            .model(Model.CLAUDE_SONNET_4_5_20250929)
+            .model(Model.CLAUDE_OPUS_4_6)
             .contextManagement(
                 BetaContextManagementConfig.builder()
                     .addEdit(
@@ -112,6 +112,7 @@ internal class MessageCountTokensParamsTest {
                     )
                     .deferLoading(true)
                     .description("Get the current weather in a given location")
+                    .eagerInputStreaming(true)
                     .addInputExample(
                         BetaTool.InputExample.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -130,7 +131,7 @@ internal class MessageCountTokensParamsTest {
             MessageCountTokensParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_SONNET_4_5_20250929)
+                .model(Model.CLAUDE_OPUS_4_6)
                 .contextManagement(
                     BetaContextManagementConfig.builder()
                         .addEdit(
@@ -227,6 +228,7 @@ internal class MessageCountTokensParamsTest {
                         )
                         .deferLoading(true)
                         .description("Get the current weather in a given location")
+                        .eagerInputStreaming(true)
                         .addInputExample(
                             BetaTool.InputExample.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -251,7 +253,7 @@ internal class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_SONNET_4_5_20250929)
+                .model(Model.CLAUDE_OPUS_4_6)
                 .build()
 
         val headers = params._headers()
@@ -265,7 +267,7 @@ internal class MessageCountTokensParamsTest {
             MessageCountTokensParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_SONNET_4_5_20250929)
+                .model(Model.CLAUDE_OPUS_4_6)
                 .contextManagement(
                     BetaContextManagementConfig.builder()
                         .addEdit(
@@ -362,6 +364,7 @@ internal class MessageCountTokensParamsTest {
                         )
                         .deferLoading(true)
                         .description("Get the current weather in a given location")
+                        .eagerInputStreaming(true)
                         .addInputExample(
                             BetaTool.InputExample.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -382,7 +385,7 @@ internal class MessageCountTokensParamsTest {
                     .role(BetaMessageParam.Role.USER)
                     .build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_SONNET_4_5_20250929)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_6)
         assertThat(body.contextManagement())
             .contains(
                 BetaContextManagementConfig.builder()
@@ -496,6 +499,7 @@ internal class MessageCountTokensParamsTest {
                         )
                         .deferLoading(true)
                         .description("Get the current weather in a given location")
+                        .eagerInputStreaming(true)
                         .addInputExample(
                             BetaTool.InputExample.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -513,7 +517,7 @@ internal class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_SONNET_4_5_20250929)
+                .model(Model.CLAUDE_OPUS_4_6)
                 .build()
 
         val body = params._body()
@@ -525,6 +529,6 @@ internal class MessageCountTokensParamsTest {
                     .role(BetaMessageParam.Role.USER)
                     .build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_SONNET_4_5_20250929)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_6)
     }
 }

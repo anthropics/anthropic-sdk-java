@@ -47,6 +47,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolUse()).isEmpty
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
+        assertThat(betaContentBlock.compaction()).isEmpty
     }
 
     @Test
@@ -99,6 +100,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolUse()).isEmpty
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
+        assertThat(betaContentBlock.compaction()).isEmpty
     }
 
     @Test
@@ -138,6 +140,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolUse()).isEmpty
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
+        assertThat(betaContentBlock.compaction()).isEmpty
     }
 
     @Test
@@ -183,6 +186,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolUse()).isEmpty
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
+        assertThat(betaContentBlock.compaction()).isEmpty
     }
 
     @Test
@@ -233,6 +237,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolUse()).isEmpty
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
+        assertThat(betaContentBlock.compaction()).isEmpty
     }
 
     @Test
@@ -285,6 +290,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolUse()).isEmpty
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
+        assertThat(betaContentBlock.compaction()).isEmpty
     }
 
     @Test
@@ -339,6 +345,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolUse()).isEmpty
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
+        assertThat(betaContentBlock.compaction()).isEmpty
     }
 
     @Test
@@ -393,6 +400,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolUse()).isEmpty
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
+        assertThat(betaContentBlock.compaction()).isEmpty
     }
 
     @Test
@@ -451,6 +459,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolUse()).isEmpty
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
+        assertThat(betaContentBlock.compaction()).isEmpty
     }
 
     @Test
@@ -512,6 +521,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolUse()).isEmpty
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
+        assertThat(betaContentBlock.compaction()).isEmpty
     }
 
     @Test
@@ -571,6 +581,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolUse()).isEmpty
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
+        assertThat(betaContentBlock.compaction()).isEmpty
     }
 
     @Test
@@ -624,6 +635,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolUse()).contains(mcpToolUse)
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
+        assertThat(betaContentBlock.compaction()).isEmpty
     }
 
     @Test
@@ -673,6 +685,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolUse()).isEmpty
         assertThat(betaContentBlock.mcpToolResult()).contains(mcpToolResult)
         assertThat(betaContentBlock.containerUpload()).isEmpty
+        assertThat(betaContentBlock.compaction()).isEmpty
     }
 
     @Test
@@ -716,6 +729,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolUse()).isEmpty
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).contains(containerUpload)
+        assertThat(betaContentBlock.compaction()).isEmpty
     }
 
     @Test
@@ -725,6 +739,44 @@ internal class BetaContentBlockTest {
             BetaContentBlock.ofContainerUpload(
                 BetaContainerUploadBlock.builder().fileId("file_id").build()
             )
+
+        val roundtrippedBetaContentBlock =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaContentBlock),
+                jacksonTypeRef<BetaContentBlock>(),
+            )
+
+        assertThat(roundtrippedBetaContentBlock).isEqualTo(betaContentBlock)
+    }
+
+    @Test
+    fun ofCompaction() {
+        val compaction = BetaCompactionBlock.builder().content("content").build()
+
+        val betaContentBlock = BetaContentBlock.ofCompaction(compaction)
+
+        assertThat(betaContentBlock.text()).isEmpty
+        assertThat(betaContentBlock.thinking()).isEmpty
+        assertThat(betaContentBlock.redactedThinking()).isEmpty
+        assertThat(betaContentBlock.toolUse()).isEmpty
+        assertThat(betaContentBlock.serverToolUse()).isEmpty
+        assertThat(betaContentBlock.webSearchToolResult()).isEmpty
+        assertThat(betaContentBlock.webFetchToolResult()).isEmpty
+        assertThat(betaContentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlock.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlock.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlock.toolSearchToolResult()).isEmpty
+        assertThat(betaContentBlock.mcpToolUse()).isEmpty
+        assertThat(betaContentBlock.mcpToolResult()).isEmpty
+        assertThat(betaContentBlock.containerUpload()).isEmpty
+        assertThat(betaContentBlock.compaction()).contains(compaction)
+    }
+
+    @Test
+    fun ofCompactionRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaContentBlock =
+            BetaContentBlock.ofCompaction(BetaCompactionBlock.builder().content("content").build())
 
         val roundtrippedBetaContentBlock =
             jsonMapper.readValue(

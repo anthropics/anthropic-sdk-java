@@ -30,6 +30,8 @@ class BetaStopReason @JsonCreator private constructor(private val value: JsonFie
 
         @JvmField val PAUSE_TURN = of("pause_turn")
 
+        @JvmField val COMPACTION = of("compaction")
+
         @JvmField val REFUSAL = of("refusal")
 
         @JvmField val MODEL_CONTEXT_WINDOW_EXCEEDED = of("model_context_window_exceeded")
@@ -44,6 +46,7 @@ class BetaStopReason @JsonCreator private constructor(private val value: JsonFie
         STOP_SEQUENCE,
         TOOL_USE,
         PAUSE_TURN,
+        COMPACTION,
         REFUSAL,
         MODEL_CONTEXT_WINDOW_EXCEEDED,
     }
@@ -63,6 +66,7 @@ class BetaStopReason @JsonCreator private constructor(private val value: JsonFie
         STOP_SEQUENCE,
         TOOL_USE,
         PAUSE_TURN,
+        COMPACTION,
         REFUSAL,
         MODEL_CONTEXT_WINDOW_EXCEEDED,
         /**
@@ -85,6 +89,7 @@ class BetaStopReason @JsonCreator private constructor(private val value: JsonFie
             STOP_SEQUENCE -> Value.STOP_SEQUENCE
             TOOL_USE -> Value.TOOL_USE
             PAUSE_TURN -> Value.PAUSE_TURN
+            COMPACTION -> Value.COMPACTION
             REFUSAL -> Value.REFUSAL
             MODEL_CONTEXT_WINDOW_EXCEEDED -> Value.MODEL_CONTEXT_WINDOW_EXCEEDED
             else -> Value._UNKNOWN
@@ -105,6 +110,7 @@ class BetaStopReason @JsonCreator private constructor(private val value: JsonFie
             STOP_SEQUENCE -> Known.STOP_SEQUENCE
             TOOL_USE -> Known.TOOL_USE
             PAUSE_TURN -> Known.PAUSE_TURN
+            COMPACTION -> Known.COMPACTION
             REFUSAL -> Known.REFUSAL
             MODEL_CONTEXT_WINDOW_EXCEEDED -> Known.MODEL_CONTEXT_WINDOW_EXCEEDED
             else -> throw AnthropicInvalidDataException("Unknown BetaStopReason: $value")

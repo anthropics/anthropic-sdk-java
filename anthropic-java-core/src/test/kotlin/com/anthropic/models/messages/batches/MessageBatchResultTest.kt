@@ -45,7 +45,7 @@ internal class MessageBatchResultTest {
                                 .text("Hi! My name is Claude.")
                                 .build()
                         )
-                        .model(Model.CLAUDE_SONNET_4_5_20250929)
+                        .model(Model.CLAUDE_OPUS_4_6)
                         .stopReason(StopReason.END_TURN)
                         .stopSequence(null)
                         .usage(
@@ -58,6 +58,7 @@ internal class MessageBatchResultTest {
                                 )
                                 .cacheCreationInputTokens(2051L)
                                 .cacheReadInputTokens(2051L)
+                                .inferenceGeo("inference_geo")
                                 .inputTokens(2095L)
                                 .outputTokens(503L)
                                 .serverToolUse(
@@ -102,7 +103,7 @@ internal class MessageBatchResultTest {
                                     .text("Hi! My name is Claude.")
                                     .build()
                             )
-                            .model(Model.CLAUDE_SONNET_4_5_20250929)
+                            .model(Model.CLAUDE_OPUS_4_6)
                             .stopReason(StopReason.END_TURN)
                             .stopSequence(null)
                             .usage(
@@ -115,6 +116,7 @@ internal class MessageBatchResultTest {
                                     )
                                     .cacheCreationInputTokens(2051L)
                                     .cacheReadInputTokens(2051L)
+                                    .inferenceGeo("inference_geo")
                                     .inputTokens(2095L)
                                     .outputTokens(503L)
                                     .serverToolUse(

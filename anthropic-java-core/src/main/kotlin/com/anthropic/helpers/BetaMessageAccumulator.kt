@@ -5,6 +5,7 @@ import com.anthropic.core.JsonObject
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.messages.*
+import kotlin.jvm.optionals.getOrNull
 
 /** Checks if a content block is one that tracks tool input via input_json_delta events */
 @JvmSynthetic
@@ -90,6 +91,24 @@ class BetaMessageAccumulator private constructor() {
                 builder.serverToolUse(deltaUsage.serverToolUse())
             }
 
+            if (!deltaUsage._iterations().isMissing()) {
+                builder.iterations(
+                    deltaUsage.iterations().getOrNull()?.map { deltaIteration ->
+                        when {
+                            deltaIteration.isMessageIterationUsage() ->
+                                BetaUsage.BetaIterationsUsageItems.ofMessageIterationUsage(
+                                    deltaIteration.asMessageIterationUsage()
+                                )
+                            deltaIteration.isCompactionIterationUsage() ->
+                                BetaUsage.BetaIterationsUsageItems.ofCompactionIterationUsage(
+                                    deltaIteration.asCompactionIterationUsage()
+                                )
+                            else -> throw AnthropicInvalidDataException("Unknown iteration type")
+                        }
+                    }
+                )
+            }
+
             return builder.build()
         }
 
@@ -156,6 +175,19 @@ class BetaMessageAccumulator private constructor() {
                 oldThinkingBlock.toBuilder().signature(signatureDelta.signature()).build()
 
             return BetaContentBlock.ofThinking(newThinkingBlock)
+        }
+
+        @JvmSynthetic
+        internal fun mergeCompactionDelta(
+            contentBlock: BetaContentBlock,
+            compactionDelta: BetaCompactionContentBlockDelta,
+        ): BetaContentBlock {
+            require(contentBlock.isCompaction()) { "Content block is not a compaction block." }
+            val oldCompactionBlock = contentBlock.asCompaction()
+            val newCompactionBlock =
+                oldCompactionBlock.toBuilder().content(compactionDelta.content()).build()
+
+            return BetaContentBlock.ofCompaction(newCompactionBlock)
         }
 
         @JvmSynthetic
@@ -383,6 +415,9 @@ class BetaMessageAccumulator private constructor() {
                                     override fun visitRedactedThinking(
                                         redactedThinking: BetaRedactedThinkingBlock
                                     ) = BetaContentBlock.ofRedactedThinking(redactedThinking)
+
+                                    override fun visitCompaction(compaction: BetaCompactionBlock) =
+                                        BetaContentBlock.ofCompaction(compaction)
                                 }
                             )
                 }
@@ -423,6 +458,10 @@ class BetaMessageAccumulator private constructor() {
 
                                     override fun visitSignature(signature: BetaSignatureDelta) =
                                         mergeSignatureDelta(oldContentBlock, signature)
+
+                                    override fun visitCompaction(
+                                        compaction: BetaCompactionContentBlockDelta
+                                    ) = mergeCompactionDelta(oldContentBlock, compaction)
                                 }
                             )
                 }

@@ -45,6 +45,8 @@ internal class StructuredMessageTest {
                 .outputTokens(LONG)
                 .serverToolUse(null)
                 .serviceTier(null)
+                .inferenceGeo(null)
+                .iterations(null)
                 .build()
         private val CONTENT =
             BetaContentBlock.ofText(BetaTextBlock.builder().citations(null).text(STRING).build())

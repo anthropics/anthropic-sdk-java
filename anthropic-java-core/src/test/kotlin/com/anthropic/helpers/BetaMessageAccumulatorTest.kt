@@ -40,6 +40,7 @@ internal class BetaMessageAccumulatorTest {
                             .webFetchRequests(0L)
                             .build()
                     )
+                    .iterations(null)
                     .build(),
             )
         val usage2 =
@@ -56,6 +57,7 @@ internal class BetaMessageAccumulatorTest {
                             .webFetchRequests(0L)
                             .build()
                     )
+                    .iterations(null)
                     .build(),
             )
 
@@ -221,6 +223,33 @@ internal class BetaMessageAccumulatorTest {
         assertThat(thinking2.isThinking()).isTrue()
         assertThat(thinking2.thinking().get().thinking()).isEqualTo("Hmm...")
         assertThat(thinking2.thinking().get().signature()).isEqualTo("sig-3")
+    }
+
+    @Test
+    fun mergeCompactionDeltaWrongBlockType() {
+        assertThatThrownBy {
+                BetaMessageAccumulator.mergeCompactionDelta(
+                    com.anthropic.models.beta.messages.BetaContentBlock.ofText(textBlock("hello")),
+                    compactionDelta("Summary of conversation"),
+                )
+            }
+            .isExactlyInstanceOf(IllegalArgumentException::class.java)
+            .hasMessage("Content block is not a compaction block.")
+    }
+
+    @Test
+    fun mergeCompactionDelta() {
+        val compaction1 =
+            BetaMessageAccumulator.mergeCompactionDelta(
+                com.anthropic.models.beta.messages.BetaContentBlock.ofCompaction(
+                    compactionBlock("")
+                ),
+                compactionDelta("Summary of the conversation so far."),
+            )
+
+        assertThat(compaction1.isCompaction()).isTrue()
+        assertThat(compaction1.compaction().get().content().get())
+            .isEqualTo("Summary of the conversation so far.")
     }
 
     @Test
@@ -780,6 +809,46 @@ internal class BetaMessageAccumulatorTest {
     }
 
     @Test
+    fun accumulateCompactionAndTextContentBlocks() {
+        val accumulator = BetaMessageAccumulator.create()
+
+        accumulator.accumulate(messageStartEvent())
+
+        accumulator.accumulate(textContentBlockStartEvent(0L, "Hello."))
+        accumulator.accumulate(compactionContentBlockStartEvent(1L, ""))
+
+        accumulator.accumulate(textContentBlockDeltaEvent(0L, " World."))
+        accumulator.accumulate(
+            compactionContentBlockDeltaEvent(1L, "Summary of the conversation so far.")
+        )
+
+        accumulator.accumulate(contentBlockStopEvent(0L))
+        accumulator.accumulate(contentBlockStopEvent(1L))
+
+        accumulator.accumulate(
+            messageDeltaEvent(
+                stopReason = JsonField.of(BetaStopReason.END_TURN),
+                outputTokens = 50L,
+            )
+        )
+        accumulator.accumulate(messageStopEvent())
+
+        val message = accumulator.message()
+        val content = message.content()
+
+        assertThat(message.stopSequence()).isEmpty()
+        assertThat(message.stopReason()).hasValue(BetaStopReason.END_TURN)
+        assertThat(message.usage().inputTokens()).isEqualTo(INPUT_TOKENS)
+        assertThat(message.usage().outputTokens()).isEqualTo(50L)
+
+        assertThat(content.size).isEqualTo(2)
+        assertThat(content[0].asText().text()).isEqualTo("Hello. World.")
+
+        assertThat(content[1].asCompaction().content())
+            .hasValue("Summary of the conversation so far.")
+    }
+
+    @Test
     fun accumulateRedactedThinkingAndTextContentBlocks() {
         val accumulator = BetaMessageAccumulator.create()
 
@@ -874,6 +943,10 @@ internal class BetaMessageAccumulatorTest {
         // REDACTED THINKING CONTENT BLOCK EVENTS
         assertThatNoException().isThrownBy { redactedThinkingContentBlockStartEvent(1L, null) }
         assertThatNoException().isThrownBy { redactedThinkingContentBlockStartEvent(1L, "data") }
+
+        // COMPACTION CONTENT BLOCK EVENTS
+        assertThatNoException().isThrownBy { compactionContentBlockStartEvent(1L) }
+        assertThatNoException().isThrownBy { compactionContentBlockDeltaEvent(1L, "summary") }
 
         // COMMON CONTENT BLOCK STOP EVENT
         assertThatNoException().isThrownBy { contentBlockStopEvent(1L) }
@@ -988,6 +1061,7 @@ internal class BetaMessageAccumulatorTest {
                                 .webFetchRequests(0L)
                                 .build()
                         )
+                        .iterations(null)
                         .build()
                 )
                 .build()
@@ -1076,6 +1150,15 @@ internal class BetaMessageAccumulatorTest {
             ),
         )
 
+    private fun compactionContentBlockStartEvent(index: Long, content: String = "") =
+        contentBlockStartEvent(
+            index,
+            ContentBlock.ofCompaction(BetaCompactionBlock.builder().content(content).build()),
+        )
+
+    private fun compactionContentBlockDeltaEvent(index: Long, content: String) =
+        contentBlockDeltaEvent(index, compactionDelta(content))
+
     /**
      * Creates a signature content block delta event. This can be used to add a signature to a
      * `tool_use` content block and should be used between [toolUseContentBlockStartEvent] and its
@@ -1100,6 +1183,7 @@ internal class BetaMessageAccumulatorTest {
                         is BetaInputJsonDelta -> delta(delta)
                         is BetaThinkingDelta -> delta(delta)
                         is BetaSignatureDelta -> delta(delta)
+                        is BetaCompactionContentBlockDelta -> delta(delta)
                         // There are no delta events for `redacted_thinking` content blocks.
                         else ->
                             throw IllegalArgumentException(
@@ -1127,6 +1211,8 @@ internal class BetaMessageAccumulatorTest {
             )
             .cacheCreationInputTokens(0L)
             .cacheReadInputTokens(0L)
+            .inferenceGeo("us")
+            .iterations(listOf())
             .outputTokens(0L)
             .serverToolUse(
                 BetaServerToolUsage.builder().webSearchRequests(0L).webFetchRequests(0L).build()
@@ -1178,9 +1264,15 @@ internal class BetaMessageAccumulatorTest {
     private fun signatureDelta(signature: String) =
         BetaSignatureDelta.builder().signature(signature).build()
 
+    private fun compactionDelta(content: String) =
+        BetaCompactionContentBlockDelta.builder().content(content).build()
+
     private fun textBlock(text: String) =
         BetaTextBlock.builder().text(text).citations(listOf()).build()
 
     private fun thinkingBlock(thinking: String = "[thinking]", signature: String = "[signature]") =
         BetaThinkingBlock.builder().thinking(thinking).signature(signature).build()
+
+    private fun compactionBlock(content: String = "") =
+        BetaCompactionBlock.builder().content(content).build()
 }

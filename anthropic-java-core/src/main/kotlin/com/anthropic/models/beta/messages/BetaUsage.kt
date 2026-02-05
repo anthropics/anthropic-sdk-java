@@ -2,17 +2,30 @@
 
 package com.anthropic.models.beta.messages
 
+import com.anthropic.core.BaseDeserializer
+import com.anthropic.core.BaseSerializer
 import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
+import com.anthropic.core.allMaxBy
+import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
+import com.anthropic.core.getOrThrow
+import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.core.ObjectCodec
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -24,7 +37,9 @@ private constructor(
     private val cacheCreation: JsonField<BetaCacheCreation>,
     private val cacheCreationInputTokens: JsonField<Long>,
     private val cacheReadInputTokens: JsonField<Long>,
+    private val inferenceGeo: JsonField<String>,
     private val inputTokens: JsonField<Long>,
+    private val iterations: JsonField<List<BetaIterationsUsageItems>>,
     private val outputTokens: JsonField<Long>,
     private val serverToolUse: JsonField<BetaServerToolUsage>,
     private val serviceTier: JsonField<ServiceTier>,
@@ -42,9 +57,15 @@ private constructor(
         @JsonProperty("cache_read_input_tokens")
         @ExcludeMissing
         cacheReadInputTokens: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("inference_geo")
+        @ExcludeMissing
+        inferenceGeo: JsonField<String> = JsonMissing.of(),
         @JsonProperty("input_tokens")
         @ExcludeMissing
         inputTokens: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("iterations")
+        @ExcludeMissing
+        iterations: JsonField<List<BetaIterationsUsageItems>> = JsonMissing.of(),
         @JsonProperty("output_tokens")
         @ExcludeMissing
         outputTokens: JsonField<Long> = JsonMissing.of(),
@@ -58,7 +79,9 @@ private constructor(
         cacheCreation,
         cacheCreationInputTokens,
         cacheReadInputTokens,
+        inferenceGeo,
         inputTokens,
+        iterations,
         outputTokens,
         serverToolUse,
         serviceTier,
@@ -92,12 +115,35 @@ private constructor(
         cacheReadInputTokens.getOptional("cache_read_input_tokens")
 
     /**
+     * The geographic region where inference was performed for this request.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun inferenceGeo(): Optional<String> = inferenceGeo.getOptional("inference_geo")
+
+    /**
      * The number of input tokens which were used.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun inputTokens(): Long = inputTokens.getRequired("input_tokens")
+
+    /**
+     * Per-iteration token usage breakdown.
+     *
+     * Each entry represents one sampling iteration, with its own input/output token counts and
+     * cache statistics. This allows you to:
+     * - Determine which iterations exceeded long context thresholds (>=200k tokens)
+     * - Calculate the true context window size from the last iteration
+     * - Understand token accumulation across server-side tool use loops
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun iterations(): Optional<List<BetaIterationsUsageItems>> =
+        iterations.getOptional("iterations")
 
     /**
      * The number of output tokens which were used.
@@ -154,11 +200,29 @@ private constructor(
     fun _cacheReadInputTokens(): JsonField<Long> = cacheReadInputTokens
 
     /**
+     * Returns the raw JSON value of [inferenceGeo].
+     *
+     * Unlike [inferenceGeo], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("inference_geo")
+    @ExcludeMissing
+    fun _inferenceGeo(): JsonField<String> = inferenceGeo
+
+    /**
      * Returns the raw JSON value of [inputTokens].
      *
      * Unlike [inputTokens], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("input_tokens") @ExcludeMissing fun _inputTokens(): JsonField<Long> = inputTokens
+
+    /**
+     * Returns the raw JSON value of [iterations].
+     *
+     * Unlike [iterations], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("iterations")
+    @ExcludeMissing
+    fun _iterations(): JsonField<List<BetaIterationsUsageItems>> = iterations
 
     /**
      * Returns the raw JSON value of [outputTokens].
@@ -209,7 +273,9 @@ private constructor(
          * .cacheCreation()
          * .cacheCreationInputTokens()
          * .cacheReadInputTokens()
+         * .inferenceGeo()
          * .inputTokens()
+         * .iterations()
          * .outputTokens()
          * .serverToolUse()
          * .serviceTier()
@@ -224,7 +290,9 @@ private constructor(
         private var cacheCreation: JsonField<BetaCacheCreation>? = null
         private var cacheCreationInputTokens: JsonField<Long>? = null
         private var cacheReadInputTokens: JsonField<Long>? = null
+        private var inferenceGeo: JsonField<String>? = null
         private var inputTokens: JsonField<Long>? = null
+        private var iterations: JsonField<MutableList<BetaIterationsUsageItems>>? = null
         private var outputTokens: JsonField<Long>? = null
         private var serverToolUse: JsonField<BetaServerToolUsage>? = null
         private var serviceTier: JsonField<ServiceTier>? = null
@@ -235,7 +303,9 @@ private constructor(
             cacheCreation = betaUsage.cacheCreation
             cacheCreationInputTokens = betaUsage.cacheCreationInputTokens
             cacheReadInputTokens = betaUsage.cacheReadInputTokens
+            inferenceGeo = betaUsage.inferenceGeo
             inputTokens = betaUsage.inputTokens
+            iterations = betaUsage.iterations.map { it.toMutableList() }
             outputTokens = betaUsage.outputTokens
             serverToolUse = betaUsage.serverToolUse
             serviceTier = betaUsage.serviceTier
@@ -321,6 +391,23 @@ private constructor(
             this.cacheReadInputTokens = cacheReadInputTokens
         }
 
+        /** The geographic region where inference was performed for this request. */
+        fun inferenceGeo(inferenceGeo: String?) = inferenceGeo(JsonField.ofNullable(inferenceGeo))
+
+        /** Alias for calling [Builder.inferenceGeo] with `inferenceGeo.orElse(null)`. */
+        fun inferenceGeo(inferenceGeo: Optional<String>) = inferenceGeo(inferenceGeo.getOrNull())
+
+        /**
+         * Sets [Builder.inferenceGeo] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.inferenceGeo] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun inferenceGeo(inferenceGeo: JsonField<String>) = apply {
+            this.inferenceGeo = inferenceGeo
+        }
+
         /** The number of input tokens which were used. */
         fun inputTokens(inputTokens: Long) = inputTokens(JsonField.of(inputTokens))
 
@@ -332,6 +419,61 @@ private constructor(
          * value.
          */
         fun inputTokens(inputTokens: JsonField<Long>) = apply { this.inputTokens = inputTokens }
+
+        /**
+         * Per-iteration token usage breakdown.
+         *
+         * Each entry represents one sampling iteration, with its own input/output token counts and
+         * cache statistics. This allows you to:
+         * - Determine which iterations exceeded long context thresholds (>=200k tokens)
+         * - Calculate the true context window size from the last iteration
+         * - Understand token accumulation across server-side tool use loops
+         */
+        fun iterations(iterations: List<BetaIterationsUsageItems>?) =
+            iterations(JsonField.ofNullable(iterations))
+
+        /** Alias for calling [Builder.iterations] with `iterations.orElse(null)`. */
+        fun iterations(iterations: Optional<List<BetaIterationsUsageItems>>) =
+            iterations(iterations.getOrNull())
+
+        /**
+         * Sets [Builder.iterations] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.iterations] with a well-typed
+         * `List<BetaIterationsUsageItems>` value instead. This method is primarily for setting the
+         * field to an undocumented or not yet supported value.
+         */
+        fun iterations(iterations: JsonField<List<BetaIterationsUsageItems>>) = apply {
+            this.iterations = iterations.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [BetaIterationsUsageItems] to [iterations].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addIteration(iteration: BetaIterationsUsageItems) = apply {
+            iterations =
+                (iterations ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("iterations", it).add(iteration)
+                }
+        }
+
+        /**
+         * Alias for calling [addIteration] with
+         * `BetaIterationsUsageItems.ofMessageIterationUsage(messageIterationUsage)`.
+         */
+        fun addIteration(messageIterationUsage: BetaMessageIterationUsage) =
+            addIteration(BetaIterationsUsageItems.ofMessageIterationUsage(messageIterationUsage))
+
+        /**
+         * Alias for calling [addIteration] with
+         * `BetaIterationsUsageItems.ofCompactionIterationUsage(compactionIterationUsage)`.
+         */
+        fun addIteration(compactionIterationUsage: BetaCompactionIterationUsage) =
+            addIteration(
+                BetaIterationsUsageItems.ofCompactionIterationUsage(compactionIterationUsage)
+            )
 
         /** The number of output tokens which were used. */
         fun outputTokens(outputTokens: Long) = outputTokens(JsonField.of(outputTokens))
@@ -410,7 +552,9 @@ private constructor(
          * .cacheCreation()
          * .cacheCreationInputTokens()
          * .cacheReadInputTokens()
+         * .inferenceGeo()
          * .inputTokens()
+         * .iterations()
          * .outputTokens()
          * .serverToolUse()
          * .serviceTier()
@@ -423,7 +567,9 @@ private constructor(
                 checkRequired("cacheCreation", cacheCreation),
                 checkRequired("cacheCreationInputTokens", cacheCreationInputTokens),
                 checkRequired("cacheReadInputTokens", cacheReadInputTokens),
+                checkRequired("inferenceGeo", inferenceGeo),
                 checkRequired("inputTokens", inputTokens),
+                checkRequired("iterations", iterations).map { it.toImmutable() },
                 checkRequired("outputTokens", outputTokens),
                 checkRequired("serverToolUse", serverToolUse),
                 checkRequired("serviceTier", serviceTier),
@@ -441,7 +587,9 @@ private constructor(
         cacheCreation().ifPresent { it.validate() }
         cacheCreationInputTokens()
         cacheReadInputTokens()
+        inferenceGeo()
         inputTokens()
+        iterations().ifPresent { it.forEach { it.validate() } }
         outputTokens()
         serverToolUse().ifPresent { it.validate() }
         serviceTier().ifPresent { it.validate() }
@@ -466,10 +614,227 @@ private constructor(
         (cacheCreation.asKnown().getOrNull()?.validity() ?: 0) +
             (if (cacheCreationInputTokens.asKnown().isPresent) 1 else 0) +
             (if (cacheReadInputTokens.asKnown().isPresent) 1 else 0) +
+            (if (inferenceGeo.asKnown().isPresent) 1 else 0) +
             (if (inputTokens.asKnown().isPresent) 1 else 0) +
+            (iterations.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (outputTokens.asKnown().isPresent) 1 else 0) +
             (serverToolUse.asKnown().getOrNull()?.validity() ?: 0) +
             (serviceTier.asKnown().getOrNull()?.validity() ?: 0)
+
+    /** Token usage for a sampling iteration. */
+    @JsonDeserialize(using = BetaIterationsUsageItems.Deserializer::class)
+    @JsonSerialize(using = BetaIterationsUsageItems.Serializer::class)
+    class BetaIterationsUsageItems
+    private constructor(
+        private val messageIterationUsage: BetaMessageIterationUsage? = null,
+        private val compactionIterationUsage: BetaCompactionIterationUsage? = null,
+        private val _json: JsonValue? = null,
+    ) {
+
+        /** Token usage for a sampling iteration. */
+        fun messageIterationUsage(): Optional<BetaMessageIterationUsage> =
+            Optional.ofNullable(messageIterationUsage)
+
+        /** Token usage for a compaction iteration. */
+        fun compactionIterationUsage(): Optional<BetaCompactionIterationUsage> =
+            Optional.ofNullable(compactionIterationUsage)
+
+        fun isMessageIterationUsage(): Boolean = messageIterationUsage != null
+
+        fun isCompactionIterationUsage(): Boolean = compactionIterationUsage != null
+
+        /** Token usage for a sampling iteration. */
+        fun asMessageIterationUsage(): BetaMessageIterationUsage =
+            messageIterationUsage.getOrThrow("messageIterationUsage")
+
+        /** Token usage for a compaction iteration. */
+        fun asCompactionIterationUsage(): BetaCompactionIterationUsage =
+            compactionIterationUsage.getOrThrow("compactionIterationUsage")
+
+        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+        fun <T> accept(visitor: Visitor<T>): T =
+            when {
+                messageIterationUsage != null ->
+                    visitor.visitMessageIterationUsage(messageIterationUsage)
+                compactionIterationUsage != null ->
+                    visitor.visitCompactionIterationUsage(compactionIterationUsage)
+                else -> visitor.unknown(_json)
+            }
+
+        private var validated: Boolean = false
+
+        fun validate(): BetaIterationsUsageItems = apply {
+            if (validated) {
+                return@apply
+            }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitMessageIterationUsage(
+                        messageIterationUsage: BetaMessageIterationUsage
+                    ) {
+                        messageIterationUsage.validate()
+                    }
+
+                    override fun visitCompactionIterationUsage(
+                        compactionIterationUsage: BetaCompactionIterationUsage
+                    ) {
+                        compactionIterationUsage.validate()
+                    }
+                }
+            )
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            accept(
+                object : Visitor<Int> {
+                    override fun visitMessageIterationUsage(
+                        messageIterationUsage: BetaMessageIterationUsage
+                    ) = messageIterationUsage.validity()
+
+                    override fun visitCompactionIterationUsage(
+                        compactionIterationUsage: BetaCompactionIterationUsage
+                    ) = compactionIterationUsage.validity()
+
+                    override fun unknown(json: JsonValue?) = 0
+                }
+            )
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is BetaIterationsUsageItems &&
+                messageIterationUsage == other.messageIterationUsage &&
+                compactionIterationUsage == other.compactionIterationUsage
+        }
+
+        override fun hashCode(): Int = Objects.hash(messageIterationUsage, compactionIterationUsage)
+
+        override fun toString(): String =
+            when {
+                messageIterationUsage != null ->
+                    "BetaIterationsUsageItems{messageIterationUsage=$messageIterationUsage}"
+                compactionIterationUsage != null ->
+                    "BetaIterationsUsageItems{compactionIterationUsage=$compactionIterationUsage}"
+                _json != null -> "BetaIterationsUsageItems{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid BetaIterationsUsageItems")
+            }
+
+        companion object {
+
+            /** Token usage for a sampling iteration. */
+            @JvmStatic
+            fun ofMessageIterationUsage(messageIterationUsage: BetaMessageIterationUsage) =
+                BetaIterationsUsageItems(messageIterationUsage = messageIterationUsage)
+
+            /** Token usage for a compaction iteration. */
+            @JvmStatic
+            fun ofCompactionIterationUsage(compactionIterationUsage: BetaCompactionIterationUsage) =
+                BetaIterationsUsageItems(compactionIterationUsage = compactionIterationUsage)
+        }
+
+        /**
+         * An interface that defines how to map each variant of [BetaIterationsUsageItems] to a
+         * value of type [T].
+         */
+        interface Visitor<out T> {
+
+            /** Token usage for a sampling iteration. */
+            fun visitMessageIterationUsage(messageIterationUsage: BetaMessageIterationUsage): T
+
+            /** Token usage for a compaction iteration. */
+            fun visitCompactionIterationUsage(
+                compactionIterationUsage: BetaCompactionIterationUsage
+            ): T
+
+            /**
+             * Maps an unknown variant of [BetaIterationsUsageItems] to a value of type [T].
+             *
+             * An instance of [BetaIterationsUsageItems] can contain an unknown variant if it was
+             * deserialized from data that doesn't match any known variant. For example, if the SDK
+             * is on an older version than the API, then the API may respond with new variants that
+             * the SDK is unaware of.
+             *
+             * @throws AnthropicInvalidDataException in the default implementation.
+             */
+            fun unknown(json: JsonValue?): T {
+                throw AnthropicInvalidDataException("Unknown BetaIterationsUsageItems: $json")
+            }
+        }
+
+        internal class Deserializer :
+            BaseDeserializer<BetaIterationsUsageItems>(BetaIterationsUsageItems::class) {
+
+            override fun ObjectCodec.deserialize(node: JsonNode): BetaIterationsUsageItems {
+                val json = JsonValue.fromJsonNode(node)
+
+                val bestMatches =
+                    sequenceOf(
+                            tryDeserialize(node, jacksonTypeRef<BetaMessageIterationUsage>())?.let {
+                                BetaIterationsUsageItems(messageIterationUsage = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<BetaCompactionIterationUsage>())
+                                ?.let {
+                                    BetaIterationsUsageItems(
+                                        compactionIterationUsage = it,
+                                        _json = json,
+                                    )
+                                },
+                        )
+                        .filterNotNull()
+                        .allMaxBy { it.validity() }
+                        .toList()
+                return when (bestMatches.size) {
+                    // This can happen if what we're deserializing is completely incompatible with
+                    // all the possible variants (e.g. deserializing from boolean).
+                    0 -> BetaIterationsUsageItems(_json = json)
+                    1 -> bestMatches.single()
+                    // If there's more than one match with the highest validity, then use the first
+                    // completely valid match, or simply the first match if none are completely
+                    // valid.
+                    else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+                }
+            }
+        }
+
+        internal class Serializer :
+            BaseSerializer<BetaIterationsUsageItems>(BetaIterationsUsageItems::class) {
+
+            override fun serialize(
+                value: BetaIterationsUsageItems,
+                generator: JsonGenerator,
+                provider: SerializerProvider,
+            ) {
+                when {
+                    value.messageIterationUsage != null ->
+                        generator.writeObject(value.messageIterationUsage)
+                    value.compactionIterationUsage != null ->
+                        generator.writeObject(value.compactionIterationUsage)
+                    value._json != null -> generator.writeObject(value._json)
+                    else -> throw IllegalStateException("Invalid BetaIterationsUsageItems")
+                }
+            }
+        }
+    }
 
     /** If the request used the priority, standard, or batch tier. */
     class ServiceTier @JsonCreator private constructor(private val value: JsonField<String>) :
@@ -617,7 +982,9 @@ private constructor(
             cacheCreation == other.cacheCreation &&
             cacheCreationInputTokens == other.cacheCreationInputTokens &&
             cacheReadInputTokens == other.cacheReadInputTokens &&
+            inferenceGeo == other.inferenceGeo &&
             inputTokens == other.inputTokens &&
+            iterations == other.iterations &&
             outputTokens == other.outputTokens &&
             serverToolUse == other.serverToolUse &&
             serviceTier == other.serviceTier &&
@@ -629,7 +996,9 @@ private constructor(
             cacheCreation,
             cacheCreationInputTokens,
             cacheReadInputTokens,
+            inferenceGeo,
             inputTokens,
+            iterations,
             outputTokens,
             serverToolUse,
             serviceTier,
@@ -640,5 +1009,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaUsage{cacheCreation=$cacheCreation, cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inputTokens=$inputTokens, outputTokens=$outputTokens, serverToolUse=$serverToolUse, serviceTier=$serviceTier, additionalProperties=$additionalProperties}"
+        "BetaUsage{cacheCreation=$cacheCreation, cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inferenceGeo=$inferenceGeo, inputTokens=$inputTokens, iterations=$iterations, outputTokens=$outputTokens, serverToolUse=$serverToolUse, serviceTier=$serviceTier, additionalProperties=$additionalProperties}"
 }

@@ -27,6 +27,7 @@ private constructor(
     private val citations: BetaCitationsDelta? = null,
     private val thinking: BetaThinkingDelta? = null,
     private val signature: BetaSignatureDelta? = null,
+    private val compaction: BetaCompactionContentBlockDelta? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -40,6 +41,8 @@ private constructor(
 
     fun signature(): Optional<BetaSignatureDelta> = Optional.ofNullable(signature)
 
+    fun compaction(): Optional<BetaCompactionContentBlockDelta> = Optional.ofNullable(compaction)
+
     fun isText(): Boolean = text != null
 
     fun isInputJson(): Boolean = inputJson != null
@@ -49,6 +52,8 @@ private constructor(
     fun isThinking(): Boolean = thinking != null
 
     fun isSignature(): Boolean = signature != null
+
+    fun isCompaction(): Boolean = compaction != null
 
     fun asText(): BetaTextDelta = text.getOrThrow("text")
 
@@ -60,6 +65,8 @@ private constructor(
 
     fun asSignature(): BetaSignatureDelta = signature.getOrThrow("signature")
 
+    fun asCompaction(): BetaCompactionContentBlockDelta = compaction.getOrThrow("compaction")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
@@ -69,6 +76,7 @@ private constructor(
             citations != null -> visitor.visitCitations(citations)
             thinking != null -> visitor.visitThinking(thinking)
             signature != null -> visitor.visitSignature(signature)
+            compaction != null -> visitor.visitCompaction(compaction)
             else -> visitor.unknown(_json)
         }
 
@@ -99,6 +107,10 @@ private constructor(
 
                 override fun visitSignature(signature: BetaSignatureDelta) {
                     signature.validate()
+                }
+
+                override fun visitCompaction(compaction: BetaCompactionContentBlockDelta) {
+                    compaction.validate()
                 }
             }
         )
@@ -132,6 +144,9 @@ private constructor(
 
                 override fun visitSignature(signature: BetaSignatureDelta) = signature.validity()
 
+                override fun visitCompaction(compaction: BetaCompactionContentBlockDelta) =
+                    compaction.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -146,10 +161,12 @@ private constructor(
             inputJson == other.inputJson &&
             citations == other.citations &&
             thinking == other.thinking &&
-            signature == other.signature
+            signature == other.signature &&
+            compaction == other.compaction
     }
 
-    override fun hashCode(): Int = Objects.hash(text, inputJson, citations, thinking, signature)
+    override fun hashCode(): Int =
+        Objects.hash(text, inputJson, citations, thinking, signature, compaction)
 
     override fun toString(): String =
         when {
@@ -158,6 +175,7 @@ private constructor(
             citations != null -> "BetaRawContentBlockDelta{citations=$citations}"
             thinking != null -> "BetaRawContentBlockDelta{thinking=$thinking}"
             signature != null -> "BetaRawContentBlockDelta{signature=$signature}"
+            compaction != null -> "BetaRawContentBlockDelta{compaction=$compaction}"
             _json != null -> "BetaRawContentBlockDelta{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaRawContentBlockDelta")
         }
@@ -180,6 +198,10 @@ private constructor(
         @JvmStatic
         fun ofSignature(signature: BetaSignatureDelta) =
             BetaRawContentBlockDelta(signature = signature)
+
+        @JvmStatic
+        fun ofCompaction(compaction: BetaCompactionContentBlockDelta) =
+            BetaRawContentBlockDelta(compaction = compaction)
     }
 
     /**
@@ -197,6 +219,8 @@ private constructor(
         fun visitThinking(thinking: BetaThinkingDelta): T
 
         fun visitSignature(signature: BetaSignatureDelta): T
+
+        fun visitCompaction(compaction: BetaCompactionContentBlockDelta): T
 
         /**
          * Maps an unknown variant of [BetaRawContentBlockDelta] to a value of type [T].
@@ -246,6 +270,11 @@ private constructor(
                         BetaRawContentBlockDelta(signature = it, _json = json)
                     } ?: BetaRawContentBlockDelta(_json = json)
                 }
+                "compaction_delta" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaCompactionContentBlockDelta>())
+                        ?.let { BetaRawContentBlockDelta(compaction = it, _json = json) }
+                        ?: BetaRawContentBlockDelta(_json = json)
+                }
             }
 
             return BetaRawContentBlockDelta(_json = json)
@@ -266,6 +295,7 @@ private constructor(
                 value.citations != null -> generator.writeObject(value.citations)
                 value.thinking != null -> generator.writeObject(value.thinking)
                 value.signature != null -> generator.writeObject(value.signature)
+                value.compaction != null -> generator.writeObject(value.compaction)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaRawContentBlockDelta")
             }

@@ -16,13 +16,13 @@ internal class CompletionTest {
             Completion.builder()
                 .id("compl_018CKm6gsux7P8yMcwZbeCPw")
                 .completion(" Hello! My name is Claude.")
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.CLAUDE_OPUS_4_6)
                 .stopReason("stop_sequence")
                 .build()
 
         assertThat(completion.id()).isEqualTo("compl_018CKm6gsux7P8yMcwZbeCPw")
         assertThat(completion.completion()).isEqualTo(" Hello! My name is Claude.")
-        assertThat(completion.model()).isEqualTo(Model.CLAUDE_OPUS_4_5_20251101)
+        assertThat(completion.model()).isEqualTo(Model.CLAUDE_OPUS_4_6)
         assertThat(completion.stopReason()).contains("stop_sequence")
     }
 
@@ -33,7 +33,7 @@ internal class CompletionTest {
             Completion.builder()
                 .id("compl_018CKm6gsux7P8yMcwZbeCPw")
                 .completion(" Hello! My name is Claude.")
-                .model(Model.CLAUDE_OPUS_4_5_20251101)
+                .model(Model.CLAUDE_OPUS_4_6)
                 .stopReason("stop_sequence")
                 .build()
 

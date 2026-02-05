@@ -14,6 +14,7 @@ internal class OutputConfigTest {
     fun create() {
         val outputConfig =
             OutputConfig.builder()
+                .effort(OutputConfig.Effort.LOW)
                 .format(
                     JsonOutputFormat.builder()
                         .schema(
@@ -25,6 +26,7 @@ internal class OutputConfigTest {
                 )
                 .build()
 
+        assertThat(outputConfig.effort()).contains(OutputConfig.Effort.LOW)
         assertThat(outputConfig.format())
             .contains(
                 JsonOutputFormat.builder()
@@ -42,6 +44,7 @@ internal class OutputConfigTest {
         val jsonMapper = jsonMapper()
         val outputConfig =
             OutputConfig.builder()
+                .effort(OutputConfig.Effort.LOW)
                 .format(
                     JsonOutputFormat.builder()
                         .schema(

@@ -24,6 +24,7 @@ private constructor(
     private val cacheCreation: JsonField<CacheCreation>,
     private val cacheCreationInputTokens: JsonField<Long>,
     private val cacheReadInputTokens: JsonField<Long>,
+    private val inferenceGeo: JsonField<String>,
     private val inputTokens: JsonField<Long>,
     private val outputTokens: JsonField<Long>,
     private val serverToolUse: JsonField<ServerToolUsage>,
@@ -42,6 +43,9 @@ private constructor(
         @JsonProperty("cache_read_input_tokens")
         @ExcludeMissing
         cacheReadInputTokens: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("inference_geo")
+        @ExcludeMissing
+        inferenceGeo: JsonField<String> = JsonMissing.of(),
         @JsonProperty("input_tokens")
         @ExcludeMissing
         inputTokens: JsonField<Long> = JsonMissing.of(),
@@ -58,6 +62,7 @@ private constructor(
         cacheCreation,
         cacheCreationInputTokens,
         cacheReadInputTokens,
+        inferenceGeo,
         inputTokens,
         outputTokens,
         serverToolUse,
@@ -90,6 +95,14 @@ private constructor(
      */
     fun cacheReadInputTokens(): Optional<Long> =
         cacheReadInputTokens.getOptional("cache_read_input_tokens")
+
+    /**
+     * The geographic region where inference was performed for this request.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun inferenceGeo(): Optional<String> = inferenceGeo.getOptional("inference_geo")
 
     /**
      * The number of input tokens which were used.
@@ -153,6 +166,15 @@ private constructor(
     fun _cacheReadInputTokens(): JsonField<Long> = cacheReadInputTokens
 
     /**
+     * Returns the raw JSON value of [inferenceGeo].
+     *
+     * Unlike [inferenceGeo], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("inference_geo")
+    @ExcludeMissing
+    fun _inferenceGeo(): JsonField<String> = inferenceGeo
+
+    /**
      * Returns the raw JSON value of [inputTokens].
      *
      * Unlike [inputTokens], this method doesn't throw if the JSON field has an unexpected type.
@@ -208,6 +230,7 @@ private constructor(
          * .cacheCreation()
          * .cacheCreationInputTokens()
          * .cacheReadInputTokens()
+         * .inferenceGeo()
          * .inputTokens()
          * .outputTokens()
          * .serverToolUse()
@@ -223,6 +246,7 @@ private constructor(
         private var cacheCreation: JsonField<CacheCreation>? = null
         private var cacheCreationInputTokens: JsonField<Long>? = null
         private var cacheReadInputTokens: JsonField<Long>? = null
+        private var inferenceGeo: JsonField<String>? = null
         private var inputTokens: JsonField<Long>? = null
         private var outputTokens: JsonField<Long>? = null
         private var serverToolUse: JsonField<ServerToolUsage>? = null
@@ -234,6 +258,7 @@ private constructor(
             cacheCreation = usage.cacheCreation
             cacheCreationInputTokens = usage.cacheCreationInputTokens
             cacheReadInputTokens = usage.cacheReadInputTokens
+            inferenceGeo = usage.inferenceGeo
             inputTokens = usage.inputTokens
             outputTokens = usage.outputTokens
             serverToolUse = usage.serverToolUse
@@ -318,6 +343,23 @@ private constructor(
          */
         fun cacheReadInputTokens(cacheReadInputTokens: JsonField<Long>) = apply {
             this.cacheReadInputTokens = cacheReadInputTokens
+        }
+
+        /** The geographic region where inference was performed for this request. */
+        fun inferenceGeo(inferenceGeo: String?) = inferenceGeo(JsonField.ofNullable(inferenceGeo))
+
+        /** Alias for calling [Builder.inferenceGeo] with `inferenceGeo.orElse(null)`. */
+        fun inferenceGeo(inferenceGeo: Optional<String>) = inferenceGeo(inferenceGeo.getOrNull())
+
+        /**
+         * Sets [Builder.inferenceGeo] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.inferenceGeo] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun inferenceGeo(inferenceGeo: JsonField<String>) = apply {
+            this.inferenceGeo = inferenceGeo
         }
 
         /** The number of input tokens which were used. */
@@ -409,6 +451,7 @@ private constructor(
          * .cacheCreation()
          * .cacheCreationInputTokens()
          * .cacheReadInputTokens()
+         * .inferenceGeo()
          * .inputTokens()
          * .outputTokens()
          * .serverToolUse()
@@ -422,6 +465,7 @@ private constructor(
                 checkRequired("cacheCreation", cacheCreation),
                 checkRequired("cacheCreationInputTokens", cacheCreationInputTokens),
                 checkRequired("cacheReadInputTokens", cacheReadInputTokens),
+                checkRequired("inferenceGeo", inferenceGeo),
                 checkRequired("inputTokens", inputTokens),
                 checkRequired("outputTokens", outputTokens),
                 checkRequired("serverToolUse", serverToolUse),
@@ -440,6 +484,7 @@ private constructor(
         cacheCreation().ifPresent { it.validate() }
         cacheCreationInputTokens()
         cacheReadInputTokens()
+        inferenceGeo()
         inputTokens()
         outputTokens()
         serverToolUse().ifPresent { it.validate() }
@@ -465,6 +510,7 @@ private constructor(
         (cacheCreation.asKnown().getOrNull()?.validity() ?: 0) +
             (if (cacheCreationInputTokens.asKnown().isPresent) 1 else 0) +
             (if (cacheReadInputTokens.asKnown().isPresent) 1 else 0) +
+            (if (inferenceGeo.asKnown().isPresent) 1 else 0) +
             (if (inputTokens.asKnown().isPresent) 1 else 0) +
             (if (outputTokens.asKnown().isPresent) 1 else 0) +
             (serverToolUse.asKnown().getOrNull()?.validity() ?: 0) +
@@ -616,6 +662,7 @@ private constructor(
             cacheCreation == other.cacheCreation &&
             cacheCreationInputTokens == other.cacheCreationInputTokens &&
             cacheReadInputTokens == other.cacheReadInputTokens &&
+            inferenceGeo == other.inferenceGeo &&
             inputTokens == other.inputTokens &&
             outputTokens == other.outputTokens &&
             serverToolUse == other.serverToolUse &&
@@ -628,6 +675,7 @@ private constructor(
             cacheCreation,
             cacheCreationInputTokens,
             cacheReadInputTokens,
+            inferenceGeo,
             inputTokens,
             outputTokens,
             serverToolUse,
@@ -639,5 +687,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Usage{cacheCreation=$cacheCreation, cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inputTokens=$inputTokens, outputTokens=$outputTokens, serverToolUse=$serverToolUse, serviceTier=$serviceTier, additionalProperties=$additionalProperties}"
+        "Usage{cacheCreation=$cacheCreation, cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inferenceGeo=$inferenceGeo, inputTokens=$inputTokens, outputTokens=$outputTokens, serverToolUse=$serverToolUse, serviceTier=$serviceTier, additionalProperties=$additionalProperties}"
 }

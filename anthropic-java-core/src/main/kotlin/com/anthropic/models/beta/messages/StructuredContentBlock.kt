@@ -70,6 +70,9 @@ internal constructor(
     /** @see BetaContentBlock.containerUpload */
     fun containerUpload(): Optional<BetaContainerUploadBlock> = rawContentBlock.containerUpload()
 
+    /** @see BetaContentBlock.compaction */
+    fun compaction(): Optional<BetaCompactionBlock> = rawContentBlock.compaction()
+
     /** @see BetaContentBlock.isText */
     fun isText(): Boolean = text().isPresent
 
@@ -112,6 +115,9 @@ internal constructor(
 
     /** @see BetaContentBlock.isContainerUpload */
     fun isContainerUpload(): Boolean = rawContentBlock.isContainerUpload()
+
+    /** @see BetaContentBlock.isCompaction */
+    fun isCompaction(): Boolean = rawContentBlock.isCompaction()
 
     /** @see BetaContentBlock.asText */
     fun asText(): StructuredTextBlock<T> =
@@ -164,6 +170,9 @@ internal constructor(
     /** @see BetaContentBlock.asContainerUpload */
     fun asContainerUpload(): BetaContainerUploadBlock = rawContentBlock.asContainerUpload()
 
+    /** @see BetaContentBlock.asCompaction */
+    fun asCompaction(): BetaCompactionBlock = rawContentBlock.asCompaction()
+
     /** @see BetaContentBlock._json */
     fun _json(): Optional<JsonValue> = rawContentBlock._json()
 
@@ -188,6 +197,7 @@ internal constructor(
             isMcpToolUse() -> visitor.visitMcpToolUse(asMcpToolUse())
             isMcpToolResult() -> visitor.visitMcpToolResult(asMcpToolResult())
             isContainerUpload() -> visitor.visitContainerUpload(asContainerUpload())
+            isCompaction() -> visitor.visitCompaction(asCompaction())
             else -> visitor.unknown(_json().getOrNull())
         }
 
@@ -267,6 +277,10 @@ internal constructor(
 
                 override fun visitContainerUpload(containerUpload: BetaContainerUploadBlock) {
                     containerUpload.validate()
+                }
+
+                override fun visitCompaction(compaction: BetaCompactionBlock) {
+                    compaction.validate()
                 }
             }
         )
@@ -349,6 +363,9 @@ internal constructor(
 
         /** @see BetaContentBlock.Visitor.visitContainerUpload */
         fun visitContainerUpload(containerUpload: BetaContainerUploadBlock): T
+
+        /** @see BetaContentBlock.Visitor.visitCompaction */
+        fun visitCompaction(compaction: BetaCompactionBlock): T
 
         /** @see BetaContentBlock.Visitor.unknown */
         fun unknown(json: JsonValue?): T {

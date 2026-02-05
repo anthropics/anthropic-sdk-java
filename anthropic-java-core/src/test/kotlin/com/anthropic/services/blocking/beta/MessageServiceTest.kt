@@ -48,7 +48,7 @@ internal class MessageServiceTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
-                    .model(Model.CLAUDE_SONNET_4_5_20250929)
+                    .model(Model.CLAUDE_OPUS_4_6)
                     .container(
                         BetaContainerParams.builder()
                             .id("id")
@@ -76,6 +76,7 @@ internal class MessageServiceTest {
                             )
                             .build()
                     )
+                    .inferenceGeo("inference_geo")
                     .addMcpServer(
                         BetaRequestMcpServerUrlDefinition.builder()
                             .name("name")
@@ -168,6 +169,7 @@ internal class MessageServiceTest {
                             )
                             .deferLoading(true)
                             .description("Get the current weather in a given location")
+                            .eagerInputStreaming(true)
                             .addInputExample(
                                 BetaTool.InputExample.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -201,7 +203,7 @@ internal class MessageServiceTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
-                    .model(Model.CLAUDE_SONNET_4_5_20250929)
+                    .model(Model.CLAUDE_OPUS_4_6)
                     .container(
                         BetaContainerParams.builder()
                             .id("id")
@@ -229,6 +231,7 @@ internal class MessageServiceTest {
                             )
                             .build()
                     )
+                    .inferenceGeo("inference_geo")
                     .addMcpServer(
                         BetaRequestMcpServerUrlDefinition.builder()
                             .name("name")
@@ -321,6 +324,7 @@ internal class MessageServiceTest {
                             )
                             .deferLoading(true)
                             .description("Get the current weather in a given location")
+                            .eagerInputStreaming(true)
                             .addInputExample(
                                 BetaTool.InputExample.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -355,7 +359,7 @@ internal class MessageServiceTest {
                 MessageCountTokensParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .addUserMessage("Hello, world")
-                    .model(Model.CLAUDE_SONNET_4_5_20250929)
+                    .model(Model.CLAUDE_OPUS_4_6)
                     .contextManagement(
                         BetaContextManagementConfig.builder()
                             .addEdit(
@@ -455,6 +459,7 @@ internal class MessageServiceTest {
                             )
                             .deferLoading(true)
                             .description("Get the current weather in a given location")
+                            .eagerInputStreaming(true)
                             .addInputExample(
                                 BetaTool.InputExample.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("bar"))

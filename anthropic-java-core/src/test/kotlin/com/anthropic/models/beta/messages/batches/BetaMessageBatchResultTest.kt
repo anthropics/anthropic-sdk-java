@@ -12,6 +12,7 @@ import com.anthropic.models.beta.messages.BetaClearToolUses20250919EditResponse
 import com.anthropic.models.beta.messages.BetaContainer
 import com.anthropic.models.beta.messages.BetaContextManagementResponse
 import com.anthropic.models.beta.messages.BetaMessage
+import com.anthropic.models.beta.messages.BetaMessageIterationUsage
 import com.anthropic.models.beta.messages.BetaServerToolUsage
 import com.anthropic.models.beta.messages.BetaSkill
 import com.anthropic.models.beta.messages.BetaStopReason
@@ -73,7 +74,7 @@ internal class BetaMessageBatchResultTest {
                                 )
                                 .build()
                         )
-                        .model(Model.CLAUDE_SONNET_4_5_20250929)
+                        .model(Model.CLAUDE_OPUS_4_6)
                         .stopReason(BetaStopReason.END_TURN)
                         .stopSequence(null)
                         .usage(
@@ -86,7 +87,22 @@ internal class BetaMessageBatchResultTest {
                                 )
                                 .cacheCreationInputTokens(2051L)
                                 .cacheReadInputTokens(2051L)
+                                .inferenceGeo("inference_geo")
                                 .inputTokens(2095L)
+                                .addIteration(
+                                    BetaMessageIterationUsage.builder()
+                                        .cacheCreation(
+                                            BetaCacheCreation.builder()
+                                                .ephemeral1hInputTokens(0L)
+                                                .ephemeral5mInputTokens(0L)
+                                                .build()
+                                        )
+                                        .cacheCreationInputTokens(0L)
+                                        .cacheReadInputTokens(0L)
+                                        .inputTokens(0L)
+                                        .outputTokens(0L)
+                                        .build()
+                                )
                                 .outputTokens(503L)
                                 .serverToolUse(
                                     BetaServerToolUsage.builder()
@@ -156,7 +172,7 @@ internal class BetaMessageBatchResultTest {
                                     )
                                     .build()
                             )
-                            .model(Model.CLAUDE_SONNET_4_5_20250929)
+                            .model(Model.CLAUDE_OPUS_4_6)
                             .stopReason(BetaStopReason.END_TURN)
                             .stopSequence(null)
                             .usage(
@@ -169,7 +185,22 @@ internal class BetaMessageBatchResultTest {
                                     )
                                     .cacheCreationInputTokens(2051L)
                                     .cacheReadInputTokens(2051L)
+                                    .inferenceGeo("inference_geo")
                                     .inputTokens(2095L)
+                                    .addIteration(
+                                        BetaMessageIterationUsage.builder()
+                                            .cacheCreation(
+                                                BetaCacheCreation.builder()
+                                                    .ephemeral1hInputTokens(0L)
+                                                    .ephemeral5mInputTokens(0L)
+                                                    .build()
+                                            )
+                                            .cacheCreationInputTokens(0L)
+                                            .cacheReadInputTokens(0L)
+                                            .inputTokens(0L)
+                                            .outputTokens(0L)
+                                            .build()
+                                    )
                                     .outputTokens(503L)
                                     .serverToolUse(
                                         BetaServerToolUsage.builder()
