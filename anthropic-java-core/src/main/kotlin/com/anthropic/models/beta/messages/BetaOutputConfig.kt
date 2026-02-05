@@ -34,10 +34,7 @@ private constructor(
     ) : this(effort, format, mutableMapOf())
 
     /**
-     * How much effort the model should put into its response. Higher effort levels may result in
-     * more thorough analysis but take longer.
-     *
-     * Valid values are `low`, `medium`, or `high`.
+     * All possible effort levels.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -99,12 +96,7 @@ private constructor(
             additionalProperties = betaOutputConfig.additionalProperties.toMutableMap()
         }
 
-        /**
-         * How much effort the model should put into its response. Higher effort levels may result
-         * in more thorough analysis but take longer.
-         *
-         * Valid values are `low`, `medium`, or `high`.
-         */
+        /** All possible effort levels. */
         fun effort(effort: Effort?) = effort(JsonField.ofNullable(effort))
 
         /** Alias for calling [Builder.effort] with `effort.orElse(null)`. */
@@ -194,12 +186,7 @@ private constructor(
         (effort.asKnown().getOrNull()?.validity() ?: 0) +
             (format.asKnown().getOrNull()?.validity() ?: 0)
 
-    /**
-     * How much effort the model should put into its response. Higher effort levels may result in
-     * more thorough analysis but take longer.
-     *
-     * Valid values are `low`, `medium`, or `high`.
-     */
+    /** All possible effort levels. */
     class Effort @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
@@ -220,6 +207,8 @@ private constructor(
 
             @JvmField val HIGH = of("high")
 
+            @JvmField val MAX = of("max")
+
             @JvmStatic fun of(value: String) = Effort(JsonField.of(value))
         }
 
@@ -228,6 +217,7 @@ private constructor(
             LOW,
             MEDIUM,
             HIGH,
+            MAX,
         }
 
         /**
@@ -243,6 +233,7 @@ private constructor(
             LOW,
             MEDIUM,
             HIGH,
+            MAX,
             /** An enum member indicating that [Effort] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -259,6 +250,7 @@ private constructor(
                 LOW -> Value.LOW
                 MEDIUM -> Value.MEDIUM
                 HIGH -> Value.HIGH
+                MAX -> Value.MAX
                 else -> Value._UNKNOWN
             }
 
@@ -276,6 +268,7 @@ private constructor(
                 LOW -> Known.LOW
                 MEDIUM -> Known.MEDIUM
                 HIGH -> Known.HIGH
+                MAX -> Known.MAX
                 else -> throw AnthropicInvalidDataException("Unknown Effort: $value")
             }
 

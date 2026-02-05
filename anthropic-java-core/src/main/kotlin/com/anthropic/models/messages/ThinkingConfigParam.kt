@@ -34,6 +34,7 @@ class ThinkingConfigParam
 private constructor(
     private val enabled: ThinkingConfigEnabled? = null,
     private val disabled: ThinkingConfigDisabled? = null,
+    private val adaptive: ThinkingConfigAdaptive? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -41,13 +42,19 @@ private constructor(
 
     fun disabled(): Optional<ThinkingConfigDisabled> = Optional.ofNullable(disabled)
 
+    fun adaptive(): Optional<ThinkingConfigAdaptive> = Optional.ofNullable(adaptive)
+
     fun isEnabled(): Boolean = enabled != null
 
     fun isDisabled(): Boolean = disabled != null
 
+    fun isAdaptive(): Boolean = adaptive != null
+
     fun asEnabled(): ThinkingConfigEnabled = enabled.getOrThrow("enabled")
 
     fun asDisabled(): ThinkingConfigDisabled = disabled.getOrThrow("disabled")
+
+    fun asAdaptive(): ThinkingConfigAdaptive = adaptive.getOrThrow("adaptive")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -55,6 +62,7 @@ private constructor(
         when {
             enabled != null -> visitor.visitEnabled(enabled)
             disabled != null -> visitor.visitDisabled(disabled)
+            adaptive != null -> visitor.visitAdaptive(adaptive)
             else -> visitor.unknown(_json)
         }
 
@@ -73,6 +81,10 @@ private constructor(
 
                 override fun visitDisabled(disabled: ThinkingConfigDisabled) {
                     disabled.validate()
+                }
+
+                override fun visitAdaptive(adaptive: ThinkingConfigAdaptive) {
+                    adaptive.validate()
                 }
             }
         )
@@ -100,6 +112,8 @@ private constructor(
 
                 override fun visitDisabled(disabled: ThinkingConfigDisabled) = disabled.validity()
 
+                override fun visitAdaptive(adaptive: ThinkingConfigAdaptive) = adaptive.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -111,15 +125,17 @@ private constructor(
 
         return other is ThinkingConfigParam &&
             enabled == other.enabled &&
-            disabled == other.disabled
+            disabled == other.disabled &&
+            adaptive == other.adaptive
     }
 
-    override fun hashCode(): Int = Objects.hash(enabled, disabled)
+    override fun hashCode(): Int = Objects.hash(enabled, disabled, adaptive)
 
     override fun toString(): String =
         when {
             enabled != null -> "ThinkingConfigParam{enabled=$enabled}"
             disabled != null -> "ThinkingConfigParam{disabled=$disabled}"
+            adaptive != null -> "ThinkingConfigParam{adaptive=$adaptive}"
             _json != null -> "ThinkingConfigParam{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid ThinkingConfigParam")
         }
@@ -131,6 +147,9 @@ private constructor(
 
         @JvmStatic
         fun ofDisabled(disabled: ThinkingConfigDisabled) = ThinkingConfigParam(disabled = disabled)
+
+        @JvmStatic
+        fun ofAdaptive(adaptive: ThinkingConfigAdaptive) = ThinkingConfigParam(adaptive = adaptive)
     }
 
     /**
@@ -142,6 +161,8 @@ private constructor(
         fun visitEnabled(enabled: ThinkingConfigEnabled): T
 
         fun visitDisabled(disabled: ThinkingConfigDisabled): T
+
+        fun visitAdaptive(adaptive: ThinkingConfigAdaptive): T
 
         /**
          * Maps an unknown variant of [ThinkingConfigParam] to a value of type [T].
@@ -176,6 +197,11 @@ private constructor(
                         ThinkingConfigParam(disabled = it, _json = json)
                     } ?: ThinkingConfigParam(_json = json)
                 }
+                "adaptive" -> {
+                    return tryDeserialize(node, jacksonTypeRef<ThinkingConfigAdaptive>())?.let {
+                        ThinkingConfigParam(adaptive = it, _json = json)
+                    } ?: ThinkingConfigParam(_json = json)
+                }
             }
 
             return ThinkingConfigParam(_json = json)
@@ -192,6 +218,7 @@ private constructor(
             when {
                 value.enabled != null -> generator.writeObject(value.enabled)
                 value.disabled != null -> generator.writeObject(value.disabled)
+                value.adaptive != null -> generator.writeObject(value.adaptive)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid ThinkingConfigParam")
             }

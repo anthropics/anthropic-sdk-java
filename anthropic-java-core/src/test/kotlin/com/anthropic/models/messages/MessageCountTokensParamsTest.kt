@@ -13,9 +13,10 @@ internal class MessageCountTokensParamsTest {
     fun create() {
         MessageCountTokensParams.builder()
             .addUserMessage("Hello, world")
-            .model(Model.CLAUDE_SONNET_4_5_20250929)
+            .model(Model.CLAUDE_OPUS_4_6)
             .outputConfig(
                 OutputConfig.builder()
+                    .effort(OutputConfig.Effort.LOW)
                     .format(
                         JsonOutputFormat.builder()
                             .schema(
@@ -70,6 +71,7 @@ internal class MessageCountTokensParamsTest {
                             .build()
                     )
                     .description("Get the current weather in a given location")
+                    .eagerInputStreaming(true)
                     .strict(true)
                     .type(Tool.Type.CUSTOM)
                     .build()
@@ -82,9 +84,10 @@ internal class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_SONNET_4_5_20250929)
+                .model(Model.CLAUDE_OPUS_4_6)
                 .outputConfig(
                     OutputConfig.builder()
+                        .effort(OutputConfig.Effort.LOW)
                         .format(
                             JsonOutputFormat.builder()
                                 .schema(
@@ -139,6 +142,7 @@ internal class MessageCountTokensParamsTest {
                                 .build()
                         )
                         .description("Get the current weather in a given location")
+                        .eagerInputStreaming(true)
                         .strict(true)
                         .type(Tool.Type.CUSTOM)
                         .build()
@@ -151,10 +155,11 @@ internal class MessageCountTokensParamsTest {
             .containsExactly(
                 MessageParam.builder().content("Hello, world").role(MessageParam.Role.USER).build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_SONNET_4_5_20250929)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_6)
         assertThat(body.outputConfig())
             .contains(
                 OutputConfig.builder()
+                    .effort(OutputConfig.Effort.LOW)
                     .format(
                         JsonOutputFormat.builder()
                             .schema(
@@ -222,6 +227,7 @@ internal class MessageCountTokensParamsTest {
                                 .build()
                         )
                         .description("Get the current weather in a given location")
+                        .eagerInputStreaming(true)
                         .strict(true)
                         .type(Tool.Type.CUSTOM)
                         .build()
@@ -234,7 +240,7 @@ internal class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_SONNET_4_5_20250929)
+                .model(Model.CLAUDE_OPUS_4_6)
                 .build()
 
         val body = params._body()
@@ -243,6 +249,6 @@ internal class MessageCountTokensParamsTest {
             .containsExactly(
                 MessageParam.builder().content("Hello, world").role(MessageParam.Role.USER).build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_SONNET_4_5_20250929)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_6)
     }
 }

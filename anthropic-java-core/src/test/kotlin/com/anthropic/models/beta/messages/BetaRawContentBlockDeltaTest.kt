@@ -25,6 +25,7 @@ internal class BetaRawContentBlockDeltaTest {
         assertThat(betaRawContentBlockDelta.citations()).isEmpty
         assertThat(betaRawContentBlockDelta.thinking()).isEmpty
         assertThat(betaRawContentBlockDelta.signature()).isEmpty
+        assertThat(betaRawContentBlockDelta.compaction()).isEmpty
     }
 
     @Test
@@ -53,6 +54,7 @@ internal class BetaRawContentBlockDeltaTest {
         assertThat(betaRawContentBlockDelta.citations()).isEmpty
         assertThat(betaRawContentBlockDelta.thinking()).isEmpty
         assertThat(betaRawContentBlockDelta.signature()).isEmpty
+        assertThat(betaRawContentBlockDelta.compaction()).isEmpty
     }
 
     @Test
@@ -95,6 +97,7 @@ internal class BetaRawContentBlockDeltaTest {
         assertThat(betaRawContentBlockDelta.citations()).contains(citations)
         assertThat(betaRawContentBlockDelta.thinking()).isEmpty
         assertThat(betaRawContentBlockDelta.signature()).isEmpty
+        assertThat(betaRawContentBlockDelta.compaction()).isEmpty
     }
 
     @Test
@@ -136,6 +139,7 @@ internal class BetaRawContentBlockDeltaTest {
         assertThat(betaRawContentBlockDelta.citations()).isEmpty
         assertThat(betaRawContentBlockDelta.thinking()).contains(thinking)
         assertThat(betaRawContentBlockDelta.signature()).isEmpty
+        assertThat(betaRawContentBlockDelta.compaction()).isEmpty
     }
 
     @Test
@@ -166,6 +170,7 @@ internal class BetaRawContentBlockDeltaTest {
         assertThat(betaRawContentBlockDelta.citations()).isEmpty
         assertThat(betaRawContentBlockDelta.thinking()).isEmpty
         assertThat(betaRawContentBlockDelta.signature()).contains(signature)
+        assertThat(betaRawContentBlockDelta.compaction()).isEmpty
     }
 
     @Test
@@ -174,6 +179,37 @@ internal class BetaRawContentBlockDeltaTest {
         val betaRawContentBlockDelta =
             BetaRawContentBlockDelta.ofSignature(
                 BetaSignatureDelta.builder().signature("signature").build()
+            )
+
+        val roundtrippedBetaRawContentBlockDelta =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaRawContentBlockDelta),
+                jacksonTypeRef<BetaRawContentBlockDelta>(),
+            )
+
+        assertThat(roundtrippedBetaRawContentBlockDelta).isEqualTo(betaRawContentBlockDelta)
+    }
+
+    @Test
+    fun ofCompaction() {
+        val compaction = BetaCompactionContentBlockDelta.builder().content("content").build()
+
+        val betaRawContentBlockDelta = BetaRawContentBlockDelta.ofCompaction(compaction)
+
+        assertThat(betaRawContentBlockDelta.text()).isEmpty
+        assertThat(betaRawContentBlockDelta.inputJson()).isEmpty
+        assertThat(betaRawContentBlockDelta.citations()).isEmpty
+        assertThat(betaRawContentBlockDelta.thinking()).isEmpty
+        assertThat(betaRawContentBlockDelta.signature()).isEmpty
+        assertThat(betaRawContentBlockDelta.compaction()).contains(compaction)
+    }
+
+    @Test
+    fun ofCompactionRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaRawContentBlockDelta =
+            BetaRawContentBlockDelta.ofCompaction(
+                BetaCompactionContentBlockDelta.builder().content("content").build()
             )
 
         val roundtrippedBetaRawContentBlockDelta =

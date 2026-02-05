@@ -27,6 +27,7 @@ private constructor(
     private val name: JsonField<String>,
     private val cacheControl: JsonField<CacheControlEphemeral>,
     private val description: JsonField<String>,
+    private val eagerInputStreaming: JsonField<Boolean>,
     private val strict: JsonField<Boolean>,
     private val type: JsonField<Type>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -44,9 +45,21 @@ private constructor(
         @JsonProperty("description")
         @ExcludeMissing
         description: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("eager_input_streaming")
+        @ExcludeMissing
+        eagerInputStreaming: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("strict") @ExcludeMissing strict: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
-    ) : this(inputSchema, name, cacheControl, description, strict, type, mutableMapOf())
+    ) : this(
+        inputSchema,
+        name,
+        cacheControl,
+        description,
+        eagerInputStreaming,
+        strict,
+        type,
+        mutableMapOf(),
+    )
 
     /**
      * [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
@@ -87,6 +100,19 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun description(): Optional<String> = description.getOptional("description")
+
+    /**
+     * Enable eager input streaming for this tool. When true, tool input parameters will be streamed
+     * incrementally as they are generated, and types will be inferred on-the-fly rather than
+     * buffering the full JSON output. When false, streaming is disabled for this tool even if the
+     * fine-grained-tool-streaming beta is active. When null (default), uses the default behavior
+     * based on beta headers.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun eagerInputStreaming(): Optional<Boolean> =
+        eagerInputStreaming.getOptional("eager_input_streaming")
 
     /**
      * When true, guarantees schema validation on tool names and inputs
@@ -135,6 +161,16 @@ private constructor(
     @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
 
     /**
+     * Returns the raw JSON value of [eagerInputStreaming].
+     *
+     * Unlike [eagerInputStreaming], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("eager_input_streaming")
+    @ExcludeMissing
+    fun _eagerInputStreaming(): JsonField<Boolean> = eagerInputStreaming
+
+    /**
      * Returns the raw JSON value of [strict].
      *
      * Unlike [strict], this method doesn't throw if the JSON field has an unexpected type.
@@ -181,6 +217,7 @@ private constructor(
         private var name: JsonField<String>? = null
         private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var description: JsonField<String> = JsonMissing.of()
+        private var eagerInputStreaming: JsonField<Boolean> = JsonMissing.of()
         private var strict: JsonField<Boolean> = JsonMissing.of()
         private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -191,6 +228,7 @@ private constructor(
             name = tool.name
             cacheControl = tool.cacheControl
             description = tool.description
+            eagerInputStreaming = tool.eagerInputStreaming
             strict = tool.strict
             type = tool.type
             additionalProperties = tool.additionalProperties.toMutableMap()
@@ -268,6 +306,41 @@ private constructor(
          */
         fun description(description: JsonField<String>) = apply { this.description = description }
 
+        /**
+         * Enable eager input streaming for this tool. When true, tool input parameters will be
+         * streamed incrementally as they are generated, and types will be inferred on-the-fly
+         * rather than buffering the full JSON output. When false, streaming is disabled for this
+         * tool even if the fine-grained-tool-streaming beta is active. When null (default), uses
+         * the default behavior based on beta headers.
+         */
+        fun eagerInputStreaming(eagerInputStreaming: Boolean?) =
+            eagerInputStreaming(JsonField.ofNullable(eagerInputStreaming))
+
+        /**
+         * Alias for [Builder.eagerInputStreaming].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun eagerInputStreaming(eagerInputStreaming: Boolean) =
+            eagerInputStreaming(eagerInputStreaming as Boolean?)
+
+        /**
+         * Alias for calling [Builder.eagerInputStreaming] with `eagerInputStreaming.orElse(null)`.
+         */
+        fun eagerInputStreaming(eagerInputStreaming: Optional<Boolean>) =
+            eagerInputStreaming(eagerInputStreaming.getOrNull())
+
+        /**
+         * Sets [Builder.eagerInputStreaming] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.eagerInputStreaming] with a well-typed [Boolean] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun eagerInputStreaming(eagerInputStreaming: JsonField<Boolean>) = apply {
+            this.eagerInputStreaming = eagerInputStreaming
+        }
+
         /** When true, guarantees schema validation on tool names and inputs */
         fun strict(strict: Boolean) = strict(JsonField.of(strict))
 
@@ -330,6 +403,7 @@ private constructor(
                 checkRequired("name", name),
                 cacheControl,
                 description,
+                eagerInputStreaming,
                 strict,
                 type,
                 additionalProperties.toMutableMap(),
@@ -347,6 +421,7 @@ private constructor(
         name()
         cacheControl().ifPresent { it.validate() }
         description()
+        eagerInputStreaming()
         strict()
         type().ifPresent { it.validate() }
         validated = true
@@ -371,6 +446,7 @@ private constructor(
             (if (name.asKnown().isPresent) 1 else 0) +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
             (if (description.asKnown().isPresent) 1 else 0) +
+            (if (eagerInputStreaming.asKnown().isPresent) 1 else 0) +
             (if (strict.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
@@ -857,6 +933,7 @@ private constructor(
             name == other.name &&
             cacheControl == other.cacheControl &&
             description == other.description &&
+            eagerInputStreaming == other.eagerInputStreaming &&
             strict == other.strict &&
             type == other.type &&
             additionalProperties == other.additionalProperties
@@ -868,6 +945,7 @@ private constructor(
             name,
             cacheControl,
             description,
+            eagerInputStreaming,
             strict,
             type,
             additionalProperties,
@@ -877,5 +955,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Tool{inputSchema=$inputSchema, name=$name, cacheControl=$cacheControl, description=$description, strict=$strict, type=$type, additionalProperties=$additionalProperties}"
+        "Tool{inputSchema=$inputSchema, name=$name, cacheControl=$cacheControl, description=$description, eagerInputStreaming=$eagerInputStreaming, strict=$strict, type=$type, additionalProperties=$additionalProperties}"
 }

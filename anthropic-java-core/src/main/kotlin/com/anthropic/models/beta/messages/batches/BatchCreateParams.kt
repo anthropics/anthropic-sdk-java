@@ -33,6 +33,7 @@ import com.anthropic.models.beta.messages.BetaMetadata
 import com.anthropic.models.beta.messages.BetaOutputConfig
 import com.anthropic.models.beta.messages.BetaRequestMcpServerUrlDefinition
 import com.anthropic.models.beta.messages.BetaTextBlockParam
+import com.anthropic.models.beta.messages.BetaThinkingConfigAdaptive
 import com.anthropic.models.beta.messages.BetaThinkingConfigDisabled
 import com.anthropic.models.beta.messages.BetaThinkingConfigEnabled
 import com.anthropic.models.beta.messages.BetaThinkingConfigParam
@@ -747,6 +748,7 @@ private constructor(
             private val model: JsonField<Model>,
             private val container: JsonField<Container>,
             private val contextManagement: JsonField<BetaContextManagementConfig>,
+            private val inferenceGeo: JsonField<String>,
             private val mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>,
             private val metadata: JsonField<BetaMetadata>,
             private val outputConfig: JsonField<BetaOutputConfig>,
@@ -779,6 +781,9 @@ private constructor(
                 @JsonProperty("context_management")
                 @ExcludeMissing
                 contextManagement: JsonField<BetaContextManagementConfig> = JsonMissing.of(),
+                @JsonProperty("inference_geo")
+                @ExcludeMissing
+                inferenceGeo: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("mcp_servers")
                 @ExcludeMissing
                 mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>> = JsonMissing.of(),
@@ -823,6 +828,7 @@ private constructor(
                 model,
                 container,
                 contextManagement,
+                inferenceGeo,
                 mcpServers,
                 metadata,
                 outputConfig,
@@ -950,6 +956,15 @@ private constructor(
              */
             fun contextManagement(): Optional<BetaContextManagementConfig> =
                 contextManagement.getOptional("context_management")
+
+            /**
+             * Specifies the geographic region for inference processing. If not specified, the
+             * workspace's `default_inference_geo` is used.
+             *
+             * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun inferenceGeo(): Optional<String> = inferenceGeo.getOptional("inference_geo")
 
             /**
              * MCP servers to be utilized in this request
@@ -1233,6 +1248,16 @@ private constructor(
             fun _contextManagement(): JsonField<BetaContextManagementConfig> = contextManagement
 
             /**
+             * Returns the raw JSON value of [inferenceGeo].
+             *
+             * Unlike [inferenceGeo], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("inference_geo")
+            @ExcludeMissing
+            fun _inferenceGeo(): JsonField<String> = inferenceGeo
+
+            /**
              * Returns the raw JSON value of [mcpServers].
              *
              * Unlike [mcpServers], this method doesn't throw if the JSON field has an unexpected
@@ -1396,6 +1421,7 @@ private constructor(
                 private var container: JsonField<Container> = JsonMissing.of()
                 private var contextManagement: JsonField<BetaContextManagementConfig> =
                     JsonMissing.of()
+                private var inferenceGeo: JsonField<String> = JsonMissing.of()
                 private var mcpServers: JsonField<MutableList<BetaRequestMcpServerUrlDefinition>>? =
                     null
                 private var metadata: JsonField<BetaMetadata> = JsonMissing.of()
@@ -1420,6 +1446,7 @@ private constructor(
                     model = params.model
                     container = params.container
                     contextManagement = params.contextManagement
+                    inferenceGeo = params.inferenceGeo
                     mcpServers = params.mcpServers.map { it.toMutableList() }
                     metadata = params.metadata
                     outputConfig = params.outputConfig
@@ -1694,6 +1721,28 @@ private constructor(
                         this.contextManagement = contextManagement
                     }
 
+                /**
+                 * Specifies the geographic region for inference processing. If not specified, the
+                 * workspace's `default_inference_geo` is used.
+                 */
+                fun inferenceGeo(inferenceGeo: String?) =
+                    inferenceGeo(JsonField.ofNullable(inferenceGeo))
+
+                /** Alias for calling [Builder.inferenceGeo] with `inferenceGeo.orElse(null)`. */
+                fun inferenceGeo(inferenceGeo: Optional<String>) =
+                    inferenceGeo(inferenceGeo.getOrNull())
+
+                /**
+                 * Sets [Builder.inferenceGeo] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.inferenceGeo] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun inferenceGeo(inferenceGeo: JsonField<String>) = apply {
+                    this.inferenceGeo = inferenceGeo
+                }
+
                 /** MCP servers to be utilized in this request */
                 fun mcpServers(mcpServers: List<BetaRequestMcpServerUrlDefinition>) =
                     mcpServers(JsonField.of(mcpServers))
@@ -1947,6 +1996,12 @@ private constructor(
                  */
                 fun thinking(disabled: BetaThinkingConfigDisabled) =
                     thinking(BetaThinkingConfigParam.ofDisabled(disabled))
+
+                /**
+                 * Alias for calling [thinking] with `BetaThinkingConfigParam.ofAdaptive(adaptive)`.
+                 */
+                fun thinking(adaptive: BetaThinkingConfigAdaptive) =
+                    thinking(BetaThinkingConfigParam.ofAdaptive(adaptive))
 
                 /**
                  * How the model should use the provided tools. The model can use a specific tool,
@@ -2287,6 +2342,7 @@ private constructor(
                         checkRequired("model", model),
                         container,
                         contextManagement,
+                        inferenceGeo,
                         (mcpServers ?: JsonMissing.of()).map { it.toImmutable() },
                         metadata,
                         outputConfig,
@@ -2317,6 +2373,7 @@ private constructor(
                 model()
                 container().ifPresent { it.validate() }
                 contextManagement().ifPresent { it.validate() }
+                inferenceGeo()
                 mcpServers().ifPresent { it.forEach { it.validate() } }
                 metadata().ifPresent { it.validate() }
                 outputConfig().ifPresent { it.validate() }
@@ -2355,6 +2412,7 @@ private constructor(
                     (if (model.asKnown().isPresent) 1 else 0) +
                     (container.asKnown().getOrNull()?.validity() ?: 0) +
                     (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
+                    (if (inferenceGeo.asKnown().isPresent) 1 else 0) +
                     (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                     (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                     (outputConfig.asKnown().getOrNull()?.validity() ?: 0) +
@@ -2902,6 +2960,7 @@ private constructor(
                     model == other.model &&
                     container == other.container &&
                     contextManagement == other.contextManagement &&
+                    inferenceGeo == other.inferenceGeo &&
                     mcpServers == other.mcpServers &&
                     metadata == other.metadata &&
                     outputConfig == other.outputConfig &&
@@ -2926,6 +2985,7 @@ private constructor(
                     model,
                     container,
                     contextManagement,
+                    inferenceGeo,
                     mcpServers,
                     metadata,
                     outputConfig,
@@ -2947,7 +3007,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Params{maxTokens=$maxTokens, messages=$messages, model=$model, container=$container, contextManagement=$contextManagement, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, stopSequences=$stopSequences, stream=$stream, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+                "Params{maxTokens=$maxTokens, messages=$messages, model=$model, container=$container, contextManagement=$contextManagement, inferenceGeo=$inferenceGeo, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, stopSequences=$stopSequences, stream=$stream, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {

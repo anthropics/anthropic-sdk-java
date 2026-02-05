@@ -56,7 +56,7 @@ internal class BatchServiceAsyncTest {
                                 BatchCreateParams.Request.Params.builder()
                                     .maxTokens(1024L)
                                     .addUserMessage("Hello, world")
-                                    .model(Model.CLAUDE_SONNET_4_5_20250929)
+                                    .model(Model.CLAUDE_OPUS_4_6)
                                     .container(
                                         BetaContainerParams.builder()
                                             .id("id")
@@ -88,6 +88,7 @@ internal class BatchServiceAsyncTest {
                                             )
                                             .build()
                                     )
+                                    .inferenceGeo("inference_geo")
                                     .addMcpServer(
                                         BetaRequestMcpServerUrlDefinition.builder()
                                             .name("name")
@@ -196,6 +197,7 @@ internal class BatchServiceAsyncTest {
                                             .description(
                                                 "Get the current weather in a given location"
                                             )
+                                            .eagerInputStreaming(true)
                                             .addInputExample(
                                                 BetaTool.InputExample.builder()
                                                     .putAdditionalProperty(

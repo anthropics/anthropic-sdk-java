@@ -48,6 +48,20 @@ internal class BetaRawMessageDeltaEventTest {
                         .cacheCreationInputTokens(2051L)
                         .cacheReadInputTokens(2051L)
                         .inputTokens(2095L)
+                        .addIteration(
+                            BetaMessageIterationUsage.builder()
+                                .cacheCreation(
+                                    BetaCacheCreation.builder()
+                                        .ephemeral1hInputTokens(0L)
+                                        .ephemeral5mInputTokens(0L)
+                                        .build()
+                                )
+                                .cacheCreationInputTokens(0L)
+                                .cacheReadInputTokens(0L)
+                                .inputTokens(0L)
+                                .outputTokens(0L)
+                                .build()
+                        )
                         .outputTokens(503L)
                         .serverToolUse(
                             BetaServerToolUsage.builder()
@@ -96,6 +110,20 @@ internal class BetaRawMessageDeltaEventTest {
                     .cacheCreationInputTokens(2051L)
                     .cacheReadInputTokens(2051L)
                     .inputTokens(2095L)
+                    .addIteration(
+                        BetaMessageIterationUsage.builder()
+                            .cacheCreation(
+                                BetaCacheCreation.builder()
+                                    .ephemeral1hInputTokens(0L)
+                                    .ephemeral5mInputTokens(0L)
+                                    .build()
+                            )
+                            .cacheCreationInputTokens(0L)
+                            .cacheReadInputTokens(0L)
+                            .inputTokens(0L)
+                            .outputTokens(0L)
+                            .build()
+                    )
                     .outputTokens(503L)
                     .serverToolUse(
                         BetaServerToolUsage.builder()
@@ -146,6 +174,20 @@ internal class BetaRawMessageDeltaEventTest {
                         .cacheCreationInputTokens(2051L)
                         .cacheReadInputTokens(2051L)
                         .inputTokens(2095L)
+                        .addIteration(
+                            BetaMessageIterationUsage.builder()
+                                .cacheCreation(
+                                    BetaCacheCreation.builder()
+                                        .ephemeral1hInputTokens(0L)
+                                        .ephemeral5mInputTokens(0L)
+                                        .build()
+                                )
+                                .cacheCreationInputTokens(0L)
+                                .cacheReadInputTokens(0L)
+                                .inputTokens(0L)
+                                .outputTokens(0L)
+                                .build()
+                        )
                         .outputTokens(503L)
                         .serverToolUse(
                             BetaServerToolUsage.builder()

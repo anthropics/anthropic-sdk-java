@@ -34,6 +34,7 @@ class BetaThinkingConfigParam
 private constructor(
     private val enabled: BetaThinkingConfigEnabled? = null,
     private val disabled: BetaThinkingConfigDisabled? = null,
+    private val adaptive: BetaThinkingConfigAdaptive? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -41,13 +42,19 @@ private constructor(
 
     fun disabled(): Optional<BetaThinkingConfigDisabled> = Optional.ofNullable(disabled)
 
+    fun adaptive(): Optional<BetaThinkingConfigAdaptive> = Optional.ofNullable(adaptive)
+
     fun isEnabled(): Boolean = enabled != null
 
     fun isDisabled(): Boolean = disabled != null
 
+    fun isAdaptive(): Boolean = adaptive != null
+
     fun asEnabled(): BetaThinkingConfigEnabled = enabled.getOrThrow("enabled")
 
     fun asDisabled(): BetaThinkingConfigDisabled = disabled.getOrThrow("disabled")
+
+    fun asAdaptive(): BetaThinkingConfigAdaptive = adaptive.getOrThrow("adaptive")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -55,6 +62,7 @@ private constructor(
         when {
             enabled != null -> visitor.visitEnabled(enabled)
             disabled != null -> visitor.visitDisabled(disabled)
+            adaptive != null -> visitor.visitAdaptive(adaptive)
             else -> visitor.unknown(_json)
         }
 
@@ -73,6 +81,10 @@ private constructor(
 
                 override fun visitDisabled(disabled: BetaThinkingConfigDisabled) {
                     disabled.validate()
+                }
+
+                override fun visitAdaptive(adaptive: BetaThinkingConfigAdaptive) {
+                    adaptive.validate()
                 }
             }
         )
@@ -101,6 +113,9 @@ private constructor(
                 override fun visitDisabled(disabled: BetaThinkingConfigDisabled) =
                     disabled.validity()
 
+                override fun visitAdaptive(adaptive: BetaThinkingConfigAdaptive) =
+                    adaptive.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -112,15 +127,17 @@ private constructor(
 
         return other is BetaThinkingConfigParam &&
             enabled == other.enabled &&
-            disabled == other.disabled
+            disabled == other.disabled &&
+            adaptive == other.adaptive
     }
 
-    override fun hashCode(): Int = Objects.hash(enabled, disabled)
+    override fun hashCode(): Int = Objects.hash(enabled, disabled, adaptive)
 
     override fun toString(): String =
         when {
             enabled != null -> "BetaThinkingConfigParam{enabled=$enabled}"
             disabled != null -> "BetaThinkingConfigParam{disabled=$disabled}"
+            adaptive != null -> "BetaThinkingConfigParam{adaptive=$adaptive}"
             _json != null -> "BetaThinkingConfigParam{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaThinkingConfigParam")
         }
@@ -134,6 +151,10 @@ private constructor(
         @JvmStatic
         fun ofDisabled(disabled: BetaThinkingConfigDisabled) =
             BetaThinkingConfigParam(disabled = disabled)
+
+        @JvmStatic
+        fun ofAdaptive(adaptive: BetaThinkingConfigAdaptive) =
+            BetaThinkingConfigParam(adaptive = adaptive)
     }
 
     /**
@@ -145,6 +166,8 @@ private constructor(
         fun visitEnabled(enabled: BetaThinkingConfigEnabled): T
 
         fun visitDisabled(disabled: BetaThinkingConfigDisabled): T
+
+        fun visitAdaptive(adaptive: BetaThinkingConfigAdaptive): T
 
         /**
          * Maps an unknown variant of [BetaThinkingConfigParam] to a value of type [T].
@@ -179,6 +202,11 @@ private constructor(
                         BetaThinkingConfigParam(disabled = it, _json = json)
                     } ?: BetaThinkingConfigParam(_json = json)
                 }
+                "adaptive" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaThinkingConfigAdaptive>())?.let {
+                        BetaThinkingConfigParam(adaptive = it, _json = json)
+                    } ?: BetaThinkingConfigParam(_json = json)
+                }
             }
 
             return BetaThinkingConfigParam(_json = json)
@@ -196,6 +224,7 @@ private constructor(
             when {
                 value.enabled != null -> generator.writeObject(value.enabled)
                 value.disabled != null -> generator.writeObject(value.disabled)
+                value.adaptive != null -> generator.writeObject(value.adaptive)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaThinkingConfigParam")
             }

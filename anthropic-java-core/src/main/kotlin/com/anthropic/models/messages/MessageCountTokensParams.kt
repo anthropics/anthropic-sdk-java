@@ -564,6 +564,9 @@ private constructor(
         /** Alias for calling [thinking] with `ThinkingConfigParam.ofDisabled(disabled)`. */
         fun thinking(disabled: ThinkingConfigDisabled) = apply { body.thinking(disabled) }
 
+        /** Alias for calling [thinking] with `ThinkingConfigParam.ofAdaptive(adaptive)`. */
+        fun thinking(adaptive: ThinkingConfigAdaptive) = apply { body.thinking(adaptive) }
+
         /**
          * How the model should use the provided tools. The model can use a specific tool, any
          * available tool, decide by itself, or not use tools at all.
@@ -1461,6 +1464,10 @@ private constructor(
             /** Alias for calling [thinking] with `ThinkingConfigParam.ofDisabled(disabled)`. */
             fun thinking(disabled: ThinkingConfigDisabled) =
                 thinking(ThinkingConfigParam.ofDisabled(disabled))
+
+            /** Alias for calling [thinking] with `ThinkingConfigParam.ofAdaptive(adaptive)`. */
+            fun thinking(adaptive: ThinkingConfigAdaptive) =
+                thinking(ThinkingConfigParam.ofAdaptive(adaptive))
 
             /**
              * How the model should use the provided tools. The model can use a specific tool, any

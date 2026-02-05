@@ -135,6 +135,15 @@ private constructor(
     fun model(): Model = body.model()
 
     /**
+     * Specifies the geographic region for inference processing. If not specified, the workspace's
+     * `default_inference_geo` is used.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun inferenceGeo(): Optional<String> = body.inferenceGeo()
+
+    /**
      * An object describing metadata about the request.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -352,6 +361,13 @@ private constructor(
     fun _model(): JsonField<Model> = body._model()
 
     /**
+     * Returns the raw JSON value of [inferenceGeo].
+     *
+     * Unlike [inferenceGeo], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _inferenceGeo(): JsonField<String> = body._inferenceGeo()
+
+    /**
      * Returns the raw JSON value of [metadata].
      *
      * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
@@ -475,8 +491,8 @@ private constructor(
          * - [maxTokens]
          * - [messages]
          * - [model]
+         * - [inferenceGeo]
          * - [metadata]
-         * - [outputConfig]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -648,6 +664,26 @@ private constructor(
          */
         fun model(value: String) = apply { body.model(value) }
 
+        /**
+         * Specifies the geographic region for inference processing. If not specified, the
+         * workspace's `default_inference_geo` is used.
+         */
+        fun inferenceGeo(inferenceGeo: String?) = apply { body.inferenceGeo(inferenceGeo) }
+
+        /** Alias for calling [Builder.inferenceGeo] with `inferenceGeo.orElse(null)`. */
+        fun inferenceGeo(inferenceGeo: Optional<String>) = inferenceGeo(inferenceGeo.getOrNull())
+
+        /**
+         * Sets [Builder.inferenceGeo] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.inferenceGeo] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun inferenceGeo(inferenceGeo: JsonField<String>) = apply {
+            body.inferenceGeo(inferenceGeo)
+        }
+
         /** An object describing metadata about the request. */
         fun metadata(metadata: Metadata) = apply { body.metadata(metadata) }
 
@@ -806,6 +842,9 @@ private constructor(
 
         /** Alias for calling [thinking] with `ThinkingConfigParam.ofDisabled(disabled)`. */
         fun thinking(disabled: ThinkingConfigDisabled) = apply { body.thinking(disabled) }
+
+        /** Alias for calling [thinking] with `ThinkingConfigParam.ofAdaptive(adaptive)`. */
+        fun thinking(adaptive: ThinkingConfigAdaptive) = apply { body.thinking(adaptive) }
 
         /**
          * How the model should use the provided tools. The model can use a specific tool, any
@@ -1157,6 +1196,7 @@ private constructor(
         private val maxTokens: JsonField<Long>,
         private val messages: JsonField<List<MessageParam>>,
         private val model: JsonField<Model>,
+        private val inferenceGeo: JsonField<String>,
         private val metadata: JsonField<Metadata>,
         private val outputConfig: JsonField<OutputConfig>,
         private val serviceTier: JsonField<ServiceTier>,
@@ -1180,6 +1220,9 @@ private constructor(
             @ExcludeMissing
             messages: JsonField<List<MessageParam>> = JsonMissing.of(),
             @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
+            @JsonProperty("inference_geo")
+            @ExcludeMissing
+            inferenceGeo: JsonField<String> = JsonMissing.of(),
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
@@ -1211,6 +1254,7 @@ private constructor(
             maxTokens,
             messages,
             model,
+            inferenceGeo,
             metadata,
             outputConfig,
             serviceTier,
@@ -1311,6 +1355,15 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun model(): Model = model.getRequired("model")
+
+        /**
+         * Specifies the geographic region for inference processing. If not specified, the
+         * workspace's `default_inference_geo` is used.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun inferenceGeo(): Optional<String> = inferenceGeo.getOptional("inference_geo")
 
         /**
          * An object describing metadata about the request.
@@ -1534,6 +1587,16 @@ private constructor(
         @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
 
         /**
+         * Returns the raw JSON value of [inferenceGeo].
+         *
+         * Unlike [inferenceGeo], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("inference_geo")
+        @ExcludeMissing
+        fun _inferenceGeo(): JsonField<String> = inferenceGeo
+
+        /**
          * Returns the raw JSON value of [metadata].
          *
          * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
@@ -1657,6 +1720,7 @@ private constructor(
             private var maxTokens: JsonField<Long>? = null
             private var messages: JsonField<MutableList<MessageParam>>? = null
             private var model: JsonField<Model>? = null
+            private var inferenceGeo: JsonField<String> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var outputConfig: JsonField<OutputConfig> = JsonMissing.of()
             private var serviceTier: JsonField<ServiceTier> = JsonMissing.of()
@@ -1675,6 +1739,7 @@ private constructor(
                 maxTokens = body.maxTokens
                 messages = body.messages.map { it.toMutableList() }
                 model = body.model
+                inferenceGeo = body.inferenceGeo
                 metadata = body.metadata
                 outputConfig = body.outputConfig
                 serviceTier = body.serviceTier
@@ -1876,6 +1941,28 @@ private constructor(
              */
             fun model(value: String) = model(Model.of(value))
 
+            /**
+             * Specifies the geographic region for inference processing. If not specified, the
+             * workspace's `default_inference_geo` is used.
+             */
+            fun inferenceGeo(inferenceGeo: String?) =
+                inferenceGeo(JsonField.ofNullable(inferenceGeo))
+
+            /** Alias for calling [Builder.inferenceGeo] with `inferenceGeo.orElse(null)`. */
+            fun inferenceGeo(inferenceGeo: Optional<String>) =
+                inferenceGeo(inferenceGeo.getOrNull())
+
+            /**
+             * Sets [Builder.inferenceGeo] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.inferenceGeo] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun inferenceGeo(inferenceGeo: JsonField<String>) = apply {
+                this.inferenceGeo = inferenceGeo
+            }
+
             /** An object describing metadata about the request. */
             fun metadata(metadata: Metadata) = metadata(JsonField.of(metadata))
 
@@ -2048,6 +2135,10 @@ private constructor(
             /** Alias for calling [thinking] with `ThinkingConfigParam.ofDisabled(disabled)`. */
             fun thinking(disabled: ThinkingConfigDisabled) =
                 thinking(ThinkingConfigParam.ofDisabled(disabled))
+
+            /** Alias for calling [thinking] with `ThinkingConfigParam.ofAdaptive(adaptive)`. */
+            fun thinking(adaptive: ThinkingConfigAdaptive) =
+                thinking(ThinkingConfigParam.ofAdaptive(adaptive))
 
             /**
              * How the model should use the provided tools. The model can use a specific tool, any
@@ -2298,6 +2389,7 @@ private constructor(
                     checkRequired("maxTokens", maxTokens),
                     checkRequired("messages", messages).map { it.toImmutable() },
                     checkRequired("model", model),
+                    inferenceGeo,
                     metadata,
                     outputConfig,
                     serviceTier,
@@ -2323,6 +2415,7 @@ private constructor(
             maxTokens()
             messages().forEach { it.validate() }
             model()
+            inferenceGeo()
             metadata().ifPresent { it.validate() }
             outputConfig().ifPresent { it.validate() }
             serviceTier().ifPresent { it.validate() }
@@ -2356,6 +2449,7 @@ private constructor(
             (if (maxTokens.asKnown().isPresent) 1 else 0) +
                 (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (model.asKnown().isPresent) 1 else 0) +
+                (if (inferenceGeo.asKnown().isPresent) 1 else 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (outputConfig.asKnown().getOrNull()?.validity() ?: 0) +
                 (serviceTier.asKnown().getOrNull()?.validity() ?: 0) +
@@ -2377,6 +2471,7 @@ private constructor(
                 maxTokens == other.maxTokens &&
                 messages == other.messages &&
                 model == other.model &&
+                inferenceGeo == other.inferenceGeo &&
                 metadata == other.metadata &&
                 outputConfig == other.outputConfig &&
                 serviceTier == other.serviceTier &&
@@ -2396,6 +2491,7 @@ private constructor(
                 maxTokens,
                 messages,
                 model,
+                inferenceGeo,
                 metadata,
                 outputConfig,
                 serviceTier,
@@ -2414,7 +2510,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, metadata=$metadata, outputConfig=$outputConfig, serviceTier=$serviceTier, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, inferenceGeo=$inferenceGeo, metadata=$metadata, outputConfig=$outputConfig, serviceTier=$serviceTier, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
     }
 
     /**

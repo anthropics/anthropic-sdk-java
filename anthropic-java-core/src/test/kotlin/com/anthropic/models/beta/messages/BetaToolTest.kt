@@ -35,6 +35,7 @@ internal class BetaToolTest {
                 )
                 .deferLoading(true)
                 .description("Get the current weather in a given location")
+                .eagerInputStreaming(true)
                 .addInputExample(
                     BetaTool.InputExample.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -67,6 +68,7 @@ internal class BetaToolTest {
             )
         assertThat(betaTool.deferLoading()).contains(true)
         assertThat(betaTool.description()).contains("Get the current weather in a given location")
+        assertThat(betaTool.eagerInputStreaming()).contains(true)
         assertThat(betaTool.inputExamples().getOrNull())
             .containsExactly(
                 BetaTool.InputExample.builder()
@@ -102,6 +104,7 @@ internal class BetaToolTest {
                 )
                 .deferLoading(true)
                 .description("Get the current weather in a given location")
+                .eagerInputStreaming(true)
                 .addInputExample(
                     BetaTool.InputExample.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))

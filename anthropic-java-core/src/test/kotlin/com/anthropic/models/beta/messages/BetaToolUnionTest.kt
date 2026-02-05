@@ -38,6 +38,7 @@ internal class BetaToolUnionTest {
                 )
                 .deferLoading(true)
                 .description("Get the current weather in a given location")
+                .eagerInputStreaming(true)
                 .addInputExample(
                     BetaTool.InputExample.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -95,6 +96,7 @@ internal class BetaToolUnionTest {
                     )
                     .deferLoading(true)
                     .description("Get the current weather in a given location")
+                    .eagerInputStreaming(true)
                     .addInputExample(
                         BetaTool.InputExample.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))

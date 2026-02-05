@@ -818,7 +818,7 @@ import com.anthropic.models.messages.Model;
 
 MessageCreateParams params = MessageCreateParams.builder()
     .addUserMessage("Hello, world")
-    .model(Model.CLAUDE_SONNET_4_5_20250929)
+    .model(Model.CLAUDE_OPUS_4_6)
     .maxTokens(JsonMissing.of())
     .build();
 ```

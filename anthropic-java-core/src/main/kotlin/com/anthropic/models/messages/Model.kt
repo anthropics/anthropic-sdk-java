@@ -24,6 +24,9 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
 
     companion object {
 
+        /** Most intelligent model for building agents and coding */
+        @JvmField val CLAUDE_OPUS_4_6 = of("claude-opus-4-6")
+
         /** Premium model combining maximum intelligence with practical performance */
         @JvmField val CLAUDE_OPUS_4_5_20251101 = of("claude-opus-4-5-20251101")
 
@@ -113,6 +116,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
 
     /** An enum containing [Model]'s known values. */
     enum class Known {
+        /** Most intelligent model for building agents and coding */
+        CLAUDE_OPUS_4_6,
         /** Premium model combining maximum intelligence with practical performance */
         CLAUDE_OPUS_4_5_20251101,
         /** Premium model combining maximum intelligence with practical performance */
@@ -183,6 +188,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /** Most intelligent model for building agents and coding */
+        CLAUDE_OPUS_4_6,
         /** Premium model combining maximum intelligence with practical performance */
         CLAUDE_OPUS_4_5_20251101,
         /** Premium model combining maximum intelligence with practical performance */
@@ -254,6 +261,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      */
     fun value(): Value =
         when (this) {
+            CLAUDE_OPUS_4_6 -> Value.CLAUDE_OPUS_4_6
             CLAUDE_OPUS_4_5_20251101 -> Value.CLAUDE_OPUS_4_5_20251101
             CLAUDE_OPUS_4_5 -> Value.CLAUDE_OPUS_4_5
             CLAUDE_3_7_SONNET_LATEST -> Value.CLAUDE_3_7_SONNET_LATEST
@@ -287,6 +295,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      */
     fun known(): Known =
         when (this) {
+            CLAUDE_OPUS_4_6 -> Known.CLAUDE_OPUS_4_6
             CLAUDE_OPUS_4_5_20251101 -> Known.CLAUDE_OPUS_4_5_20251101
             CLAUDE_OPUS_4_5 -> Known.CLAUDE_OPUS_4_5
             CLAUDE_3_7_SONNET_LATEST -> Known.CLAUDE_3_7_SONNET_LATEST

@@ -738,6 +738,9 @@ private constructor(
         /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofDisabled(disabled)`. */
         fun thinking(disabled: BetaThinkingConfigDisabled) = apply { body.thinking(disabled) }
 
+        /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofAdaptive(adaptive)`. */
+        fun thinking(adaptive: BetaThinkingConfigAdaptive) = apply { body.thinking(adaptive) }
+
         /**
          * How the model should use the provided tools. The model can use a specific tool, any
          * available tool, decide by itself, or not use tools at all.
@@ -1921,6 +1924,10 @@ private constructor(
             /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofDisabled(disabled)`. */
             fun thinking(disabled: BetaThinkingConfigDisabled) =
                 thinking(BetaThinkingConfigParam.ofDisabled(disabled))
+
+            /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofAdaptive(adaptive)`. */
+            fun thinking(adaptive: BetaThinkingConfigAdaptive) =
+                thinking(BetaThinkingConfigParam.ofAdaptive(adaptive))
 
             /**
              * How the model should use the provided tools. The model can use a specific tool, any

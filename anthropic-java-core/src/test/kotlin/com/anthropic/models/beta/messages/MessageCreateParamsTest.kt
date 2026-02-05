@@ -18,7 +18,7 @@ internal class MessageCreateParamsTest {
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .maxTokens(1024L)
             .addUserMessage("Hello, world")
-            .model(Model.CLAUDE_SONNET_4_5_20250929)
+            .model(Model.CLAUDE_OPUS_4_6)
             .container(
                 BetaContainerParams.builder()
                     .id("id")
@@ -44,6 +44,7 @@ internal class MessageCreateParamsTest {
                     )
                     .build()
             )
+            .inferenceGeo("inference_geo")
             .addMcpServer(
                 BetaRequestMcpServerUrlDefinition.builder()
                     .name("name")
@@ -129,6 +130,7 @@ internal class MessageCreateParamsTest {
                     )
                     .deferLoading(true)
                     .description("Get the current weather in a given location")
+                    .eagerInputStreaming(true)
                     .addInputExample(
                         BetaTool.InputExample.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -150,7 +152,7 @@ internal class MessageCreateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_SONNET_4_5_20250929)
+                .model(Model.CLAUDE_OPUS_4_6)
                 .container(
                     BetaContainerParams.builder()
                         .id("id")
@@ -178,6 +180,7 @@ internal class MessageCreateParamsTest {
                         )
                         .build()
                 )
+                .inferenceGeo("inference_geo")
                 .addMcpServer(
                     BetaRequestMcpServerUrlDefinition.builder()
                         .name("name")
@@ -265,6 +268,7 @@ internal class MessageCreateParamsTest {
                         )
                         .deferLoading(true)
                         .description("Get the current weather in a given location")
+                        .eagerInputStreaming(true)
                         .addInputExample(
                             BetaTool.InputExample.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -292,7 +296,7 @@ internal class MessageCreateParamsTest {
             MessageCreateParams.builder()
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_SONNET_4_5_20250929)
+                .model(Model.CLAUDE_OPUS_4_6)
                 .build()
 
         val headers = params._headers()
@@ -307,7 +311,7 @@ internal class MessageCreateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_SONNET_4_5_20250929)
+                .model(Model.CLAUDE_OPUS_4_6)
                 .container(
                     BetaContainerParams.builder()
                         .id("id")
@@ -335,6 +339,7 @@ internal class MessageCreateParamsTest {
                         )
                         .build()
                 )
+                .inferenceGeo("inference_geo")
                 .addMcpServer(
                     BetaRequestMcpServerUrlDefinition.builder()
                         .name("name")
@@ -422,6 +427,7 @@ internal class MessageCreateParamsTest {
                         )
                         .deferLoading(true)
                         .description("Get the current weather in a given location")
+                        .eagerInputStreaming(true)
                         .addInputExample(
                             BetaTool.InputExample.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -445,7 +451,7 @@ internal class MessageCreateParamsTest {
                     .role(BetaMessageParam.Role.USER)
                     .build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_SONNET_4_5_20250929)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_6)
         assertThat(body.container())
             .contains(
                 MessageCreateParams.Container.ofBetaContainerParams(
@@ -475,6 +481,7 @@ internal class MessageCreateParamsTest {
                     )
                     .build()
             )
+        assertThat(body.inferenceGeo()).contains("inference_geo")
         assertThat(body.mcpServers().getOrNull())
             .containsExactly(
                 BetaRequestMcpServerUrlDefinition.builder()
@@ -579,6 +586,7 @@ internal class MessageCreateParamsTest {
                         )
                         .deferLoading(true)
                         .description("Get the current weather in a given location")
+                        .eagerInputStreaming(true)
                         .addInputExample(
                             BetaTool.InputExample.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -599,7 +607,7 @@ internal class MessageCreateParamsTest {
             MessageCreateParams.builder()
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_SONNET_4_5_20250929)
+                .model(Model.CLAUDE_OPUS_4_6)
                 .build()
 
         val body = params._body()
@@ -612,6 +620,6 @@ internal class MessageCreateParamsTest {
                     .role(BetaMessageParam.Role.USER)
                     .build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_SONNET_4_5_20250929)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_6)
     }
 }

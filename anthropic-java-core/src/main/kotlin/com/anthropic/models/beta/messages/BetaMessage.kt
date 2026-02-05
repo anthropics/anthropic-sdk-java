@@ -554,6 +554,25 @@ private constructor(
         fun addContainerUploadContent(fileId: String) =
             addContent(BetaContainerUploadBlock.builder().fileId(fileId).build())
 
+        /** Alias for calling [addContent] with `BetaContentBlock.ofCompaction(compaction)`. */
+        fun addContent(compaction: BetaCompactionBlock) =
+            addContent(BetaContentBlock.ofCompaction(compaction))
+
+        /**
+         * Alias for calling [addContent] with the following:
+         * ```java
+         * BetaCompactionBlock.builder()
+         *     .content(content)
+         *     .build()
+         * ```
+         */
+        fun addCompactionContent(content: String?) =
+            addContent(BetaCompactionBlock.builder().content(content).build())
+
+        /** Alias for calling [addCompactionContent] with `content.orElse(null)`. */
+        fun addCompactionContent(content: Optional<String>) =
+            addCompactionContent(content.getOrNull())
+
         /**
          * Context management response.
          *

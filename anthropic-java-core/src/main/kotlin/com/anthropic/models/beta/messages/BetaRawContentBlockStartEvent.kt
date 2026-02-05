@@ -246,6 +246,25 @@ private constructor(
         fun containerUploadContentBlock(fileId: String) =
             contentBlock(BetaContainerUploadBlock.builder().fileId(fileId).build())
 
+        /** Alias for calling [contentBlock] with `ContentBlock.ofCompaction(compaction)`. */
+        fun contentBlock(compaction: BetaCompactionBlock) =
+            contentBlock(ContentBlock.ofCompaction(compaction))
+
+        /**
+         * Alias for calling [contentBlock] with the following:
+         * ```java
+         * BetaCompactionBlock.builder()
+         *     .content(content)
+         *     .build()
+         * ```
+         */
+        fun compactionContentBlock(content: String?) =
+            contentBlock(BetaCompactionBlock.builder().content(content).build())
+
+        /** Alias for calling [compactionContentBlock] with `content.orElse(null)`. */
+        fun compactionContentBlock(content: Optional<String>) =
+            compactionContentBlock(content.getOrNull())
+
         fun index(index: Long) = index(JsonField.of(index))
 
         /**
@@ -367,6 +386,7 @@ private constructor(
         private val mcpToolUse: BetaMcpToolUseBlock? = null,
         private val mcpToolResult: BetaMcpToolResultBlock? = null,
         private val containerUpload: BetaContainerUploadBlock? = null,
+        private val compaction: BetaCompactionBlock? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -408,6 +428,15 @@ private constructor(
         fun containerUpload(): Optional<BetaContainerUploadBlock> =
             Optional.ofNullable(containerUpload)
 
+        /**
+         * A compaction block returned when autocompact is triggered.
+         *
+         * When content is None, it indicates the compaction failed to produce a valid summary
+         * (e.g., malformed output from the model). Clients may round-trip compaction blocks with
+         * null content; the server treats them as no-ops.
+         */
+        fun compaction(): Optional<BetaCompactionBlock> = Optional.ofNullable(compaction)
+
         fun isText(): Boolean = text != null
 
         fun isThinking(): Boolean = thinking != null
@@ -436,6 +465,8 @@ private constructor(
         fun isMcpToolResult(): Boolean = mcpToolResult != null
 
         fun isContainerUpload(): Boolean = containerUpload != null
+
+        fun isCompaction(): Boolean = compaction != null
 
         fun asText(): BetaTextBlock = text.getOrThrow("text")
 
@@ -474,6 +505,15 @@ private constructor(
         fun asContainerUpload(): BetaContainerUploadBlock =
             containerUpload.getOrThrow("containerUpload")
 
+        /**
+         * A compaction block returned when autocompact is triggered.
+         *
+         * When content is None, it indicates the compaction failed to produce a valid summary
+         * (e.g., malformed output from the model). Clients may round-trip compaction blocks with
+         * null content; the server treats them as no-ops.
+         */
+        fun asCompaction(): BetaCompactionBlock = compaction.getOrThrow("compaction")
+
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
@@ -498,6 +538,7 @@ private constructor(
                 mcpToolUse != null -> visitor.visitMcpToolUse(mcpToolUse)
                 mcpToolResult != null -> visitor.visitMcpToolResult(mcpToolResult)
                 containerUpload != null -> visitor.visitContainerUpload(containerUpload)
+                compaction != null -> visitor.visitCompaction(compaction)
                 else -> visitor.unknown(_json)
             }
 
@@ -580,6 +621,10 @@ private constructor(
                     override fun visitContainerUpload(containerUpload: BetaContainerUploadBlock) {
                         containerUpload.validate()
                     }
+
+                    override fun visitCompaction(compaction: BetaCompactionBlock) {
+                        compaction.validate()
+                    }
                 }
             )
             validated = true
@@ -650,6 +695,9 @@ private constructor(
                     override fun visitContainerUpload(containerUpload: BetaContainerUploadBlock) =
                         containerUpload.validity()
 
+                    override fun visitCompaction(compaction: BetaCompactionBlock) =
+                        compaction.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -673,7 +721,8 @@ private constructor(
                 toolSearchToolResult == other.toolSearchToolResult &&
                 mcpToolUse == other.mcpToolUse &&
                 mcpToolResult == other.mcpToolResult &&
-                containerUpload == other.containerUpload
+                containerUpload == other.containerUpload &&
+                compaction == other.compaction
         }
 
         override fun hashCode(): Int =
@@ -692,6 +741,7 @@ private constructor(
                 mcpToolUse,
                 mcpToolResult,
                 containerUpload,
+                compaction,
             )
 
         override fun toString(): String =
@@ -715,6 +765,7 @@ private constructor(
                 mcpToolUse != null -> "ContentBlock{mcpToolUse=$mcpToolUse}"
                 mcpToolResult != null -> "ContentBlock{mcpToolResult=$mcpToolResult}"
                 containerUpload != null -> "ContentBlock{containerUpload=$containerUpload}"
+                compaction != null -> "ContentBlock{compaction=$compaction}"
                 _json != null -> "ContentBlock{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid ContentBlock")
             }
@@ -775,6 +826,17 @@ private constructor(
             @JvmStatic
             fun ofContainerUpload(containerUpload: BetaContainerUploadBlock) =
                 ContentBlock(containerUpload = containerUpload)
+
+            /**
+             * A compaction block returned when autocompact is triggered.
+             *
+             * When content is None, it indicates the compaction failed to produce a valid summary
+             * (e.g., malformed output from the model). Clients may round-trip compaction blocks
+             * with null content; the server treats them as no-ops.
+             */
+            @JvmStatic
+            fun ofCompaction(compaction: BetaCompactionBlock) =
+                ContentBlock(compaction = compaction)
         }
 
         /**
@@ -817,6 +879,15 @@ private constructor(
 
             /** Response model for a file uploaded to the container. */
             fun visitContainerUpload(containerUpload: BetaContainerUploadBlock): T
+
+            /**
+             * A compaction block returned when autocompact is triggered.
+             *
+             * When content is None, it indicates the compaction failed to produce a valid summary
+             * (e.g., malformed output from the model). Clients may round-trip compaction blocks
+             * with null content; the server treats them as no-ops.
+             */
+            fun visitCompaction(compaction: BetaCompactionBlock): T
 
             /**
              * Maps an unknown variant of [ContentBlock] to a value of type [T].
@@ -920,6 +991,11 @@ private constructor(
                             ?.let { ContentBlock(containerUpload = it, _json = json) }
                             ?: ContentBlock(_json = json)
                     }
+                    "compaction" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaCompactionBlock>())?.let {
+                            ContentBlock(compaction = it, _json = json)
+                        } ?: ContentBlock(_json = json)
+                    }
                 }
 
                 return ContentBlock(_json = json)
@@ -954,6 +1030,7 @@ private constructor(
                     value.mcpToolUse != null -> generator.writeObject(value.mcpToolUse)
                     value.mcpToolResult != null -> generator.writeObject(value.mcpToolResult)
                     value.containerUpload != null -> generator.writeObject(value.containerUpload)
+                    value.compaction != null -> generator.writeObject(value.compaction)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid ContentBlock")
                 }
