@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.13.0 (2026-02-05)
+
+Full Changelog: [v2.12.0...v2.13.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.12.0...v2.13.0)
+
+### Features
+
+* add warning for thinking enabled usage on new model ([#801](https://github.com/anthropics/anthropic-sdk-java/issues/801)) ([ad68dfc](https://github.com/anthropics/anthropic-sdk-java/commit/ad68dfc0e7a79959a55c02fa1a21a1e219146c45))
+* **api:** manual updates ([9014e16](https://github.com/anthropics/anthropic-sdk-java/commit/9014e165f2ebbc9849734e46efdf62d18640ae1b))
+
+
+### Chores
+
+* **ci:** remove claude-code-review workflow ([c623793](https://github.com/anthropics/anthropic-sdk-java/commit/c6237933265dc2055a94c2ee593d929b2a134fbe))
+* **internal:** allow passing args to `./scripts/test` ([509badc](https://github.com/anthropics/anthropic-sdk-java/commit/509badcffb650ca89cf7c840612660c9f0707b65))
+* remove claude-code-review workflow ([c623793](https://github.com/anthropics/anthropic-sdk-java/commit/c6237933265dc2055a94c2ee593d929b2a134fbe))
+* remove claude-code-review workflow ([d578437](https://github.com/anthropics/anthropic-sdk-java/commit/d5784375d96776692817087672e2915063d7f79d))
+
 ## 2.12.0 (2026-01-29)
 
 Full Changelog: [v2.11.1...v2.12.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.11.1...v2.12.0)
