@@ -41,7 +41,7 @@ AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_SONNET_4_20250514)
+    .model(Model.CLAUDE_OPUS_4_6)
     .build();
 Message message = client.messages().create(params);
 ```
