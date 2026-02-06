@@ -7,7 +7,7 @@ Full Changelog: [v2.12.0...v2.13.0](https://github.com/anthropics/anthropic-sdk-
 ### Features
 
 * add warning for thinking enabled usage on new model ([#801](https://github.com/anthropics/anthropic-sdk-java/issues/801)) ([ad68dfc](https://github.com/anthropics/anthropic-sdk-java/commit/ad68dfc0e7a79959a55c02fa1a21a1e219146c45))
-* **api:** manual updates ([9014e16](https://github.com/anthropics/anthropic-sdk-java/commit/9014e165f2ebbc9849734e46efdf62d18640ae1b))
+* **api:** Release Claude Opus 4.6, adaptive thinking, and other features ([9014e16](https://github.com/anthropics/anthropic-sdk-java/commit/9014e165f2ebbc9849734e46efdf62d18640ae1b))
 
 
 ### Chores
