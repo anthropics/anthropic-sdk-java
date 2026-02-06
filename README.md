@@ -2,7 +2,7 @@
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java)
 
-The Anthropic Java library provides access to the [Anthropic API](https://docs.anthropic.com/en/api/) from Java applications.
+The Anthropic Java library provides access to the [Claude API](https://docs.anthropic.com/en/api/) from Java applications.
 
 ## Documentation
 
