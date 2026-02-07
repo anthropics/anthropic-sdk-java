@@ -13,14 +13,17 @@ import java.lang.System.setProperty
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatNoException
 import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledIf
 import org.junit.jupiter.api.parallel.ResourceLock
 import org.mockito.Mockito
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.AwsSessionCredentials
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider
 import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.regions.providers.DefaultAwsRegionProviderChain
 
 @ResourceLock("environment")
 internal class BedrockBackendTest {
@@ -41,6 +44,24 @@ internal class BedrockBackendTest {
         private const val PROP_AWS_REGION = "aws.region"
 
         private const val ENV_API_KEY = "AWS_BEARER_TOKEN_BEDROCK"
+
+        private val hasRegionInEnvironment by lazy {
+            try {
+                DefaultAwsRegionProviderChain.builder().build().region
+                true
+            } catch (_: Exception) {
+                false
+            }
+        }
+
+        private val hasCredentialsInEnvironment by lazy {
+            try {
+                DefaultCredentialsProvider.builder().build().resolveCredentials()
+                true
+            } catch (_: Exception) {
+                false
+            }
+        }
     }
 
     @BeforeEach
@@ -48,10 +69,17 @@ internal class BedrockBackendTest {
         clearEnv()
     }
 
+    @AfterEach
+    fun tearDown() {
+        // Ensure a clean state before any `@DisabledIf` annotation is processed for the _next_
+        // test, as that annotation is processed before `@BeforeEach fun setUp()` is invoked.
+        clearEnv()
+    }
+
     @Test
     fun awsSessionCredentialsFromEnv() {
         initEnv()
-        val backend = BedrockBackend.fromEnv()
+        val backend = BedrockBackend.builder().withoutApiKeyEnvVar().fromEnv().build()
 
         // When the session token is present, the provided credentials should
         // have a different type to the type when it is absent.
@@ -96,12 +124,9 @@ internal class BedrockBackendTest {
         initEnv()
         // Set the API key (mock) environment variable. It should be ignored when the explicit
         // credentials provider is given.
-        val builder = Mockito.spy(BedrockBackend.builder())
-
-        Mockito.doReturn(API_KEY).`when`(builder).getEnv(ENV_API_KEY)
-
         val backend =
-            builder
+            BedrockBackend.builder()
+                .withApiKeyEnvVar()
                 .fromEnv(
                     BedrockBackend.providerOf(
                         AwsBasicCredentials.create(
@@ -119,6 +144,9 @@ internal class BedrockBackendTest {
     }
 
     @Test
+    // Skip test if AWS credentials are defined in the environment (either in environment variables
+    // or an AWS configuration), otherwise the test will fail as it expects nothing to be set.
+    @DisabledIf("hasCredentialsInEnvironment")
     fun awsCredentialsProviderExplicitToFromEnvButNotResolvedWithRegion() {
         initEnv(
             isSetAccessKeyID = false,
@@ -136,6 +164,9 @@ internal class BedrockBackendTest {
     }
 
     @Test
+    // Skip test if AWS region is defined in the environment (either in an environment variable or
+    // an AWS configuration), otherwise the test will fail as it expects nothing to be set.
+    @DisabledIf("hasRegionInEnvironment")
     fun awsCredentialsProviderViaFromEnvWithNoRegion() {
         initEnv(
             isSetAccessKeyID = true,
@@ -164,7 +195,9 @@ internal class BedrockBackendTest {
     @Test
     fun awsCredentialsProviderClashWithApiKeyViaFromEnv() {
         initEnv()
-        assertThatThrownBy { BedrockBackend.builder().apiKey(API_KEY).fromEnv().build() }
+        assertThatThrownBy {
+                BedrockBackend.builder().withoutApiKeyEnvVar().apiKey(API_KEY).fromEnv().build()
+            }
             .isExactlyInstanceOf(IllegalStateException::class.java)
             .hasMessage("An AWS credentials provider or an API key must be set, but not both.")
     }
@@ -185,9 +218,7 @@ internal class BedrockBackendTest {
     @Test
     fun apiKeyClashWithAwsCredentialsProviderViaFromEnv() {
         initEnv()
-        val builder = Mockito.spy(BedrockBackend.builder())
-
-        Mockito.doReturn(API_KEY).`when`(builder).getEnv(ENV_API_KEY)
+        val builder = BedrockBackend.builder().withApiKeyEnvVar()
 
         assertThatThrownBy {
                 builder
@@ -234,11 +265,7 @@ internal class BedrockBackendTest {
         // The AWS credentials are set, but they should be ignored because the API key environment
         // variable is set and `fromEnv()` is not explicitly passed an AWS credentials provider.
         initEnv()
-        val builder = Mockito.spy(BedrockBackend.builder())
-
-        Mockito.doReturn(API_KEY).`when`(builder).getEnv(ENV_API_KEY)
-
-        val backend = builder.fromEnv().build()
+        val backend = BedrockBackend.builder().withApiKeyEnvVar().fromEnv().build()
 
         assertThat(backend.apiKey).isEqualTo(API_KEY)
         assertThat(backend.region.toString()).isEqualTo(AWS_REGION)
@@ -247,7 +274,7 @@ internal class BedrockBackendTest {
     @Test
     fun regionPresent() {
         initEnv()
-        val backend = BedrockBackend.fromEnv()
+        val backend = BedrockBackend.builder().withoutApiKeyEnvVar().fromEnv().build()
 
         assertThat(backend.awsCredentials).isExactlyInstanceOf(AwsSessionCredentials::class.java)
         assertThat(backend.region.toString()).isEqualTo(AWS_REGION)
@@ -284,7 +311,7 @@ internal class BedrockBackendTest {
     @Test
     fun baseUrl() {
         initEnv()
-        val backend = BedrockBackend.fromEnv()
+        val backend = BedrockBackend.builder().withoutApiKeyEnvVar().fromEnv().build()
 
         assertThat(backend.awsCredentials).isExactlyInstanceOf(AwsSessionCredentials::class.java)
         assertThat(backend.baseUrl()).isEqualTo("https://bedrock-runtime.$AWS_REGION.amazonaws.com")
@@ -665,7 +692,7 @@ internal class BedrockBackendTest {
     @Test
     fun authorizeRequestContentTypeFromHeaders() {
         initEnv()
-        val backend = BedrockBackend.fromEnv()
+        val backend = BedrockBackend.builder().withoutApiKeyEnvVar().fromEnv().build()
         val request =
             HttpRequest.builder()
                 .method(HttpMethod.POST)
@@ -728,7 +755,7 @@ internal class BedrockBackendTest {
     @Test
     fun authorizeRequestContentTypeFromBody() {
         initEnv()
-        val backend = BedrockBackend.fromEnv()
+        val backend = BedrockBackend.builder().withoutApiKeyEnvVar().fromEnv().build()
         val request =
             HttpRequest.builder()
                 .method(HttpMethod.POST)
@@ -757,7 +784,7 @@ internal class BedrockBackendTest {
     @Test
     fun authorizeRequestNoBodyNoContentType() {
         initEnv()
-        val backend = BedrockBackend.fromEnv()
+        val backend = BedrockBackend.builder().withoutApiKeyEnvVar().fromEnv().build()
         val request =
             HttpRequest.builder()
                 .method(HttpMethod.POST)
@@ -875,6 +902,35 @@ internal class BedrockBackendTest {
             isSetRegion = false,
         )
     }
+
+    /**
+     * Creates a new backend builder wrapping this builder with a mock non-`null`value set for the
+     * API key environment variable. This overrides any variable set in the actual system
+     * environment.
+     */
+    private fun BedrockBackend.Builder.withApiKeyEnvVar(): BedrockBackend.Builder {
+        val builder = Mockito.spy(this)
+
+        Mockito.doReturn(API_KEY).`when`(builder).getEnv(ENV_API_KEY)
+
+        return builder
+    }
+
+    /**
+     * Creates a new backend builder wrapping this builder with a mock `null` value set for the API
+     * key environment variable. This overrides any variable set in the actual system environment.
+     */
+    private fun BedrockBackend.Builder.withoutApiKeyEnvVar(): BedrockBackend.Builder {
+        val builder = Mockito.spy(this)
+
+        Mockito.doReturn(null).`when`(builder).getEnv(ENV_API_KEY)
+
+        return builder
+    }
+
+    @Suppress("unused") private fun hasRegionInEnvironment() = hasRegionInEnvironment
+
+    @Suppress("unused") private fun hasCredentialsInEnvironment() = hasCredentialsInEnvironment
 
     private fun parseJson(jsonData: String): ObjectNode =
         jsonMapper().readValue(jsonData, ObjectNode::class.java)
