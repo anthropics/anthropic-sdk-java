@@ -67,6 +67,7 @@ internal class MessageCountTokensParamsTest {
                     )
                     .build()
             )
+            .speed(MessageCountTokensParams.Speed.STANDARD)
             .systemOfBetaTextBlockParams(
                 listOf(
                     BetaTextBlockParam.builder()
@@ -183,6 +184,7 @@ internal class MessageCountTokensParamsTest {
                         )
                         .build()
                 )
+                .speed(MessageCountTokensParams.Speed.STANDARD)
                 .systemOfBetaTextBlockParams(
                     listOf(
                         BetaTextBlockParam.builder()
@@ -319,6 +321,7 @@ internal class MessageCountTokensParamsTest {
                         )
                         .build()
                 )
+                .speed(MessageCountTokensParams.Speed.STANDARD)
                 .systemOfBetaTextBlockParams(
                     listOf(
                         BetaTextBlockParam.builder()
@@ -439,6 +442,7 @@ internal class MessageCountTokensParamsTest {
                     )
                     .build()
             )
+        assertThat(body.speed()).contains(MessageCountTokensParams.Speed.STANDARD)
         assertThat(body.system())
             .contains(
                 MessageCountTokensParams.System.ofBetaTextBlockParams(

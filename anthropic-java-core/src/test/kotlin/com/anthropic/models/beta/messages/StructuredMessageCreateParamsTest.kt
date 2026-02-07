@@ -66,6 +66,7 @@ internal class StructuredMessageCreateParamsTest {
                         .outputTokens(LONG)
                         .serverToolUse(null)
                         .serviceTier(null)
+                        .speed(null)
                         .build()
                 )
                 .contextManagement(null)
@@ -89,6 +90,7 @@ internal class StructuredMessageCreateParamsTest {
         private val METADATA = BetaMetadata.builder().build()
         private val BETA_OUTPUT_CONFIG = BetaOutputConfig.builder().build()
         private val SERVICE_TIER = MessageCreateParams.ServiceTier.AUTO
+        private val SPEED = MessageCreateParams.Speed.FAST
         private val SYSTEM = MessageCreateParams.System.ofString(STRING)
         private val THINKING_CONFIG_ENABLED =
             BetaThinkingConfigEnabled.builder().budgetTokens(LONG).build()
@@ -178,6 +180,9 @@ internal class StructuredMessageCreateParamsTest {
                 // `outputFormat` is a special case that is tested separately.
                 DelegationWriteTestCase("serviceTier", SERVICE_TIER),
                 DelegationWriteTestCase("serviceTier", JSON_FIELD),
+                DelegationWriteTestCase("speed", SPEED),
+                DelegationWriteTestCase("speed", OPTIONAL),
+                DelegationWriteTestCase("speed", JSON_FIELD),
                 DelegationWriteTestCase("stopSequences", LIST),
                 DelegationWriteTestCase("stopSequences", JSON_FIELD),
                 DelegationWriteTestCase("addStopSequence", STRING),

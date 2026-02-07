@@ -501,6 +501,7 @@ internal class BetaToolRunnerTest {
                 BetaServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
             )
             .serviceTier(BetaUsage.ServiceTier.STANDARD)
+            .speed(null)
             .inferenceGeo(null)
             .iterations(null)
             .build()

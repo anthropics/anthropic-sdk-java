@@ -91,6 +91,7 @@ internal class BetaMessageTest {
                                 .build()
                         )
                         .serviceTier(BetaUsage.ServiceTier.STANDARD)
+                        .speed(BetaUsage.Speed.STANDARD)
                         .build()
                 )
                 .build()
@@ -177,6 +178,7 @@ internal class BetaMessageTest {
                             .build()
                     )
                     .serviceTier(BetaUsage.ServiceTier.STANDARD)
+                    .speed(BetaUsage.Speed.STANDARD)
                     .build()
             )
     }
@@ -262,6 +264,7 @@ internal class BetaMessageTest {
                                 .build()
                         )
                         .serviceTier(BetaUsage.ServiceTier.STANDARD)
+                        .speed(BetaUsage.Speed.STANDARD)
                         .build()
                 )
                 .build()
