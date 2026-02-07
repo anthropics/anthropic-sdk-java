@@ -1218,6 +1218,7 @@ internal class BetaMessageAccumulatorTest {
                 BetaServerToolUsage.builder().webSearchRequests(0L).webFetchRequests(0L).build()
             )
             .serviceTier(BetaUsage.ServiceTier.STANDARD)
+            .speed(null)
             .build()
 
     private fun textDelta(text: String) = BetaTextDelta.builder().text(text).build()

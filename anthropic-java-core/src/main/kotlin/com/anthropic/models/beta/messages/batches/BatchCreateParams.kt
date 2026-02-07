@@ -754,6 +754,7 @@ private constructor(
             private val outputConfig: JsonField<BetaOutputConfig>,
             private val outputFormat: JsonField<BetaJsonOutputFormat>,
             private val serviceTier: JsonField<ServiceTier>,
+            private val speed: JsonField<Speed>,
             private val stopSequences: JsonField<List<String>>,
             private val stream: JsonField<Boolean>,
             private val system: JsonField<System>,
@@ -799,6 +800,7 @@ private constructor(
                 @JsonProperty("service_tier")
                 @ExcludeMissing
                 serviceTier: JsonField<ServiceTier> = JsonMissing.of(),
+                @JsonProperty("speed") @ExcludeMissing speed: JsonField<Speed> = JsonMissing.of(),
                 @JsonProperty("stop_sequences")
                 @ExcludeMissing
                 stopSequences: JsonField<List<String>> = JsonMissing.of(),
@@ -834,6 +836,7 @@ private constructor(
                 outputConfig,
                 outputFormat,
                 serviceTier,
+                speed,
                 stopSequences,
                 stream,
                 system,
@@ -1017,6 +1020,15 @@ private constructor(
              *   if the server responded with an unexpected value).
              */
             fun serviceTier(): Optional<ServiceTier> = serviceTier.getOptional("service_tier")
+
+            /**
+             * The inference speed mode for this request. `"fast"` enables high
+             * output-tokens-per-second inference.
+             *
+             * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun speed(): Optional<Speed> = speed.getOptional("speed")
 
             /**
              * Custom text sequences that will cause the model to stop generating.
@@ -1309,6 +1321,13 @@ private constructor(
             fun _serviceTier(): JsonField<ServiceTier> = serviceTier
 
             /**
+             * Returns the raw JSON value of [speed].
+             *
+             * Unlike [speed], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("speed") @ExcludeMissing fun _speed(): JsonField<Speed> = speed
+
+            /**
              * Returns the raw JSON value of [stopSequences].
              *
              * Unlike [stopSequences], this method doesn't throw if the JSON field has an unexpected
@@ -1428,6 +1447,7 @@ private constructor(
                 private var outputConfig: JsonField<BetaOutputConfig> = JsonMissing.of()
                 private var outputFormat: JsonField<BetaJsonOutputFormat> = JsonMissing.of()
                 private var serviceTier: JsonField<ServiceTier> = JsonMissing.of()
+                private var speed: JsonField<Speed> = JsonMissing.of()
                 private var stopSequences: JsonField<MutableList<String>>? = null
                 private var stream: JsonField<Boolean> = JsonMissing.of()
                 private var system: JsonField<System> = JsonMissing.of()
@@ -1452,6 +1472,7 @@ private constructor(
                     outputConfig = params.outputConfig
                     outputFormat = params.outputFormat
                     serviceTier = params.serviceTier
+                    speed = params.speed
                     stopSequences = params.stopSequences.map { it.toMutableList() }
                     stream = params.stream
                     system = params.system
@@ -1845,6 +1866,24 @@ private constructor(
                 fun serviceTier(serviceTier: JsonField<ServiceTier>) = apply {
                     this.serviceTier = serviceTier
                 }
+
+                /**
+                 * The inference speed mode for this request. `"fast"` enables high
+                 * output-tokens-per-second inference.
+                 */
+                fun speed(speed: Speed?) = speed(JsonField.ofNullable(speed))
+
+                /** Alias for calling [Builder.speed] with `speed.orElse(null)`. */
+                fun speed(speed: Optional<Speed>) = speed(speed.getOrNull())
+
+                /**
+                 * Sets [Builder.speed] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.speed] with a well-typed [Speed] value instead.
+                 * This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
+                 */
+                fun speed(speed: JsonField<Speed>) = apply { this.speed = speed }
 
                 /**
                  * Custom text sequences that will cause the model to stop generating.
@@ -2348,6 +2387,7 @@ private constructor(
                         outputConfig,
                         outputFormat,
                         serviceTier,
+                        speed,
                         (stopSequences ?: JsonMissing.of()).map { it.toImmutable() },
                         stream,
                         system,
@@ -2379,6 +2419,7 @@ private constructor(
                 outputConfig().ifPresent { it.validate() }
                 outputFormat().ifPresent { it.validate() }
                 serviceTier().ifPresent { it.validate() }
+                speed().ifPresent { it.validate() }
                 stopSequences()
                 stream()
                 system().ifPresent { it.validate() }
@@ -2418,6 +2459,7 @@ private constructor(
                     (outputConfig.asKnown().getOrNull()?.validity() ?: 0) +
                     (outputFormat.asKnown().getOrNull()?.validity() ?: 0) +
                     (serviceTier.asKnown().getOrNull()?.validity() ?: 0) +
+                    (speed.asKnown().getOrNull()?.validity() ?: 0) +
                     (stopSequences.asKnown().getOrNull()?.size ?: 0) +
                     (if (stream.asKnown().isPresent) 1 else 0) +
                     (system.asKnown().getOrNull()?.validity() ?: 0) +
@@ -2758,6 +2800,141 @@ private constructor(
             }
 
             /**
+             * The inference speed mode for this request. `"fast"` enables high
+             * output-tokens-per-second inference.
+             */
+            class Speed @JsonCreator private constructor(private val value: JsonField<String>) :
+                Enum {
+
+                /**
+                 * Returns this class instance's raw value.
+                 *
+                 * This is usually only useful if this instance was deserialized from data that
+                 * doesn't match any known member, and you want to know that value. For example, if
+                 * the SDK is on an older version than the API, then the API may respond with new
+                 * members that the SDK is unaware of.
+                 */
+                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+                companion object {
+
+                    @JvmField val STANDARD = of("standard")
+
+                    @JvmField val FAST = of("fast")
+
+                    @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
+                }
+
+                /** An enum containing [Speed]'s known values. */
+                enum class Known {
+                    STANDARD,
+                    FAST,
+                }
+
+                /**
+                 * An enum containing [Speed]'s known values, as well as an [_UNKNOWN] member.
+                 *
+                 * An instance of [Speed] can contain an unknown value in a couple of cases:
+                 * - It was deserialized from data that doesn't match any known member. For example,
+                 *   if the SDK is on an older version than the API, then the API may respond with
+                 *   new members that the SDK is unaware of.
+                 * - It was constructed with an arbitrary value using the [of] method.
+                 */
+                enum class Value {
+                    STANDARD,
+                    FAST,
+                    /**
+                     * An enum member indicating that [Speed] was instantiated with an unknown
+                     * value.
+                     */
+                    _UNKNOWN,
+                }
+
+                /**
+                 * Returns an enum member corresponding to this class instance's value, or
+                 * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+                 *
+                 * Use the [known] method instead if you're certain the value is always known or if
+                 * you want to throw for the unknown case.
+                 */
+                fun value(): Value =
+                    when (this) {
+                        STANDARD -> Value.STANDARD
+                        FAST -> Value.FAST
+                        else -> Value._UNKNOWN
+                    }
+
+                /**
+                 * Returns an enum member corresponding to this class instance's value.
+                 *
+                 * Use the [value] method instead if you're uncertain the value is always known and
+                 * don't want to throw for the unknown case.
+                 *
+                 * @throws AnthropicInvalidDataException if this class instance's value is a not a
+                 *   known member.
+                 */
+                fun known(): Known =
+                    when (this) {
+                        STANDARD -> Known.STANDARD
+                        FAST -> Known.FAST
+                        else -> throw AnthropicInvalidDataException("Unknown Speed: $value")
+                    }
+
+                /**
+                 * Returns this class instance's primitive wire representation.
+                 *
+                 * This differs from the [toString] method because that method is primarily for
+                 * debugging and generally doesn't throw.
+                 *
+                 * @throws AnthropicInvalidDataException if this class instance's value does not
+                 *   have the expected primitive type.
+                 */
+                fun asString(): String =
+                    _value().asString().orElseThrow {
+                        AnthropicInvalidDataException("Value is not a String")
+                    }
+
+                private var validated: Boolean = false
+
+                fun validate(): Speed = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    known()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: AnthropicInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is Speed && value == other.value
+                }
+
+                override fun hashCode() = value.hashCode()
+
+                override fun toString() = value.toString()
+            }
+
+            /**
              * System prompt.
              *
              * A system prompt is a way of providing context and instructions to Claude, such as
@@ -2966,6 +3143,7 @@ private constructor(
                     outputConfig == other.outputConfig &&
                     outputFormat == other.outputFormat &&
                     serviceTier == other.serviceTier &&
+                    speed == other.speed &&
                     stopSequences == other.stopSequences &&
                     stream == other.stream &&
                     system == other.system &&
@@ -2991,6 +3169,7 @@ private constructor(
                     outputConfig,
                     outputFormat,
                     serviceTier,
+                    speed,
                     stopSequences,
                     stream,
                     system,
@@ -3007,7 +3186,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Params{maxTokens=$maxTokens, messages=$messages, model=$model, container=$container, contextManagement=$contextManagement, inferenceGeo=$inferenceGeo, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, stopSequences=$stopSequences, stream=$stream, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+                "Params{maxTokens=$maxTokens, messages=$messages, model=$model, container=$container, contextManagement=$contextManagement, inferenceGeo=$inferenceGeo, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, stream=$stream, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {

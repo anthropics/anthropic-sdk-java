@@ -83,6 +83,7 @@ internal class MessageCreateParamsTest {
                     .build()
             )
             .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+            .speed(MessageCreateParams.Speed.STANDARD)
             .addStopSequence("string")
             .systemOfBetaTextBlockParams(
                 listOf(
@@ -221,6 +222,7 @@ internal class MessageCreateParamsTest {
                         .build()
                 )
                 .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                .speed(MessageCreateParams.Speed.STANDARD)
                 .addStopSequence("string")
                 .systemOfBetaTextBlockParams(
                     listOf(
@@ -380,6 +382,7 @@ internal class MessageCreateParamsTest {
                         .build()
                 )
                 .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                .speed(MessageCreateParams.Speed.STANDARD)
                 .addStopSequence("string")
                 .systemOfBetaTextBlockParams(
                     listOf(
@@ -524,6 +527,7 @@ internal class MessageCreateParamsTest {
                     .build()
             )
         assertThat(body.serviceTier()).contains(MessageCreateParams.ServiceTier.AUTO)
+        assertThat(body.speed()).contains(MessageCreateParams.Speed.STANDARD)
         assertThat(body.stopSequences().getOrNull()).containsExactly("string")
         assertThat(body.system())
             .contains(

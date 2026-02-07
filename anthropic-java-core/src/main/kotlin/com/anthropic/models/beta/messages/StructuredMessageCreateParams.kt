@@ -310,6 +310,17 @@ internal constructor(
             paramsBuilder.serviceTier(serviceTier)
         }
 
+        /** @see MessageCreateParams.Builder.speed */
+        fun speed(speed: MessageCreateParams.Speed?) = apply { paramsBuilder.speed(speed) }
+
+        /** @see MessageCreateParams.Builder.speed */
+        fun speed(speed: Optional<MessageCreateParams.Speed>) = apply { paramsBuilder.speed(speed) }
+
+        /** @see MessageCreateParams.Builder.speed */
+        fun speed(speed: JsonField<MessageCreateParams.Speed>) = apply {
+            paramsBuilder.speed(speed)
+        }
+
         /** @see MessageCreateParams.Builder.stopSequences */
         fun stopSequences(stopSequences: List<String>) = apply {
             paramsBuilder.stopSequences(stopSequences)

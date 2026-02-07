@@ -45,6 +45,7 @@ internal class StructuredMessageTest {
                 .outputTokens(LONG)
                 .serverToolUse(null)
                 .serviceTier(null)
+                .speed(null)
                 .inferenceGeo(null)
                 .iterations(null)
                 .build()

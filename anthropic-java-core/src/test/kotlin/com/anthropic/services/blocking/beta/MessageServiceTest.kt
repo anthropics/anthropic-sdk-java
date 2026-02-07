@@ -119,6 +119,7 @@ internal class MessageServiceTest {
                             .build()
                     )
                     .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                    .speed(MessageCreateParams.Speed.STANDARD)
                     .addStopSequence("string")
                     .systemOfBetaTextBlockParams(
                         listOf(
@@ -274,6 +275,7 @@ internal class MessageServiceTest {
                             .build()
                     )
                     .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                    .speed(MessageCreateParams.Speed.STANDARD)
                     .addStopSequence("string")
                     .systemOfBetaTextBlockParams(
                         listOf(
@@ -411,6 +413,7 @@ internal class MessageServiceTest {
                             )
                             .build()
                     )
+                    .speed(MessageCountTokensParams.Speed.STANDARD)
                     .systemOfBetaTextBlockParams(
                         listOf(
                             BetaTextBlockParam.builder()
