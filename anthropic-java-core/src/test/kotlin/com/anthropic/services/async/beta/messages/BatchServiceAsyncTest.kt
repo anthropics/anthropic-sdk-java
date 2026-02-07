@@ -137,6 +137,7 @@ internal class BatchServiceAsyncTest {
                                             .build()
                                     )
                                     .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
+                                    .speed(BatchCreateParams.Request.Params.Speed.STANDARD)
                                     .addStopSequence("string")
                                     .stream(true)
                                     .systemOfBetaTextBlockParams(

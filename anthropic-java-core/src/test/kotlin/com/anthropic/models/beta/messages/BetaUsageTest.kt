@@ -44,6 +44,7 @@ internal class BetaUsageTest {
                     BetaServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
                 )
                 .serviceTier(BetaUsage.ServiceTier.STANDARD)
+                .speed(BetaUsage.Speed.STANDARD)
                 .build()
 
         assertThat(betaUsage.cacheCreation())
@@ -80,6 +81,7 @@ internal class BetaUsageTest {
                 BetaServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
             )
         assertThat(betaUsage.serviceTier()).contains(BetaUsage.ServiceTier.STANDARD)
+        assertThat(betaUsage.speed()).contains(BetaUsage.Speed.STANDARD)
     }
 
     @Test
@@ -116,6 +118,7 @@ internal class BetaUsageTest {
                     BetaServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
                 )
                 .serviceTier(BetaUsage.ServiceTier.STANDARD)
+                .speed(BetaUsage.Speed.STANDARD)
                 .build()
 
         val roundtrippedBetaUsage =
