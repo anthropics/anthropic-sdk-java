@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.14.0 (2026-02-07)
+
+Full Changelog: [v2.13.0...v2.14.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.13.0...v2.14.0)
+
+### Features
+
+* **api:** add support for speed mode ([82451ae](https://github.com/anthropics/anthropic-sdk-java/commit/82451aecd28a96012c91607a38450cbb37196b91))
+
+
+### Chores
+
+* **internal:** make BedrockBackendTest resilient to ambient AWS config ([1d32ff0](https://github.com/anthropics/anthropic-sdk-java/commit/1d32ff0f47f9602459aec8742769ee149edf126f))
+* **internal:** upgrade AssertJ ([497621a](https://github.com/anthropics/anthropic-sdk-java/commit/497621a1b0a7974660b3ecd7b2b32ff4e7361dd1))
+
 ## 2.13.0 (2026-02-05)
 
 Full Changelog: [v2.12.0...v2.13.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.12.0...v2.13.0)
