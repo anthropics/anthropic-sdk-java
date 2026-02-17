@@ -28,7 +28,6 @@ internal class MessageCountTokensParamsTest {
                     )
                     .build()
             )
-            .speed(MessageCountTokensParams.Speed.STANDARD)
             .systemOfTextBlockParams(
                 listOf(
                     TextBlockParam.builder()
@@ -107,7 +106,6 @@ internal class MessageCountTokensParamsTest {
                         )
                         .build()
                 )
-                .speed(MessageCountTokensParams.Speed.STANDARD)
                 .systemOfTextBlockParams(
                     listOf(
                         TextBlockParam.builder()
@@ -187,7 +185,6 @@ internal class MessageCountTokensParamsTest {
                     )
                     .build()
             )
-        assertThat(body.speed()).contains(MessageCountTokensParams.Speed.STANDARD)
         assertThat(body.system())
             .contains(
                 MessageCountTokensParams.System.ofTextBlockParams(
