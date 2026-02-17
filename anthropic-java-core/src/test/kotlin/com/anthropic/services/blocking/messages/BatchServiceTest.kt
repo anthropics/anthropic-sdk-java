@@ -67,7 +67,6 @@ internal class BatchServiceTest {
                                             .build()
                                     )
                                     .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
-                                    .speed(BatchCreateParams.Request.Params.Speed.STANDARD)
                                     .addStopSequence("string")
                                     .stream(true)
                                     .systemOfTextBlockParams(

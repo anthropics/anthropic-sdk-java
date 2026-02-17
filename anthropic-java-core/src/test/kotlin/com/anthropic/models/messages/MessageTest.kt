@@ -59,7 +59,6 @@ internal class MessageTest {
                                 .build()
                         )
                         .serviceTier(Usage.ServiceTier.STANDARD)
-                        .speed(Usage.Speed.STANDARD)
                         .build()
                 )
                 .build()
@@ -111,7 +110,6 @@ internal class MessageTest {
                         ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
                     )
                     .serviceTier(Usage.ServiceTier.STANDARD)
-                    .speed(Usage.Speed.STANDARD)
                     .build()
             )
     }
@@ -166,7 +164,6 @@ internal class MessageTest {
                                 .build()
                         )
                         .serviceTier(Usage.ServiceTier.STANDARD)
-                        .speed(Usage.Speed.STANDARD)
                         .build()
                 )
                 .build()
