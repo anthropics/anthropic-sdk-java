@@ -497,6 +497,7 @@ private constructor(
             }
         }
 
+        /** Tool reference block that can be included in tool_result content. */
         @JsonDeserialize(using = Block.Deserializer::class)
         @JsonSerialize(using = Block.Serializer::class)
         class Block
@@ -505,6 +506,7 @@ private constructor(
             private val image: ImageBlockParam? = null,
             private val searchResult: SearchResultBlockParam? = null,
             private val document: DocumentBlockParam? = null,
+            private val toolReference: ToolReferenceBlockParam? = null,
             private val _json: JsonValue? = null,
         ) {
 
@@ -516,6 +518,10 @@ private constructor(
 
             fun document(): Optional<DocumentBlockParam> = Optional.ofNullable(document)
 
+            /** Tool reference block that can be included in tool_result content. */
+            fun toolReference(): Optional<ToolReferenceBlockParam> =
+                Optional.ofNullable(toolReference)
+
             fun isText(): Boolean = text != null
 
             fun isImage(): Boolean = image != null
@@ -523,6 +529,8 @@ private constructor(
             fun isSearchResult(): Boolean = searchResult != null
 
             fun isDocument(): Boolean = document != null
+
+            fun isToolReference(): Boolean = toolReference != null
 
             fun asText(): TextBlockParam = text.getOrThrow("text")
 
@@ -532,6 +540,10 @@ private constructor(
 
             fun asDocument(): DocumentBlockParam = document.getOrThrow("document")
 
+            /** Tool reference block that can be included in tool_result content. */
+            fun asToolReference(): ToolReferenceBlockParam =
+                toolReference.getOrThrow("toolReference")
+
             fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
             fun <T> accept(visitor: Visitor<T>): T =
@@ -540,6 +552,7 @@ private constructor(
                     image != null -> visitor.visitImage(image)
                     searchResult != null -> visitor.visitSearchResult(searchResult)
                     document != null -> visitor.visitDocument(document)
+                    toolReference != null -> visitor.visitToolReference(toolReference)
                     else -> visitor.unknown(_json)
                 }
 
@@ -566,6 +579,10 @@ private constructor(
 
                         override fun visitDocument(document: DocumentBlockParam) {
                             document.validate()
+                        }
+
+                        override fun visitToolReference(toolReference: ToolReferenceBlockParam) {
+                            toolReference.validate()
                         }
                     }
                 )
@@ -600,6 +617,9 @@ private constructor(
                         override fun visitDocument(document: DocumentBlockParam) =
                             document.validity()
 
+                        override fun visitToolReference(toolReference: ToolReferenceBlockParam) =
+                            toolReference.validity()
+
                         override fun unknown(json: JsonValue?) = 0
                     }
                 )
@@ -613,10 +633,12 @@ private constructor(
                     text == other.text &&
                     image == other.image &&
                     searchResult == other.searchResult &&
-                    document == other.document
+                    document == other.document &&
+                    toolReference == other.toolReference
             }
 
-            override fun hashCode(): Int = Objects.hash(text, image, searchResult, document)
+            override fun hashCode(): Int =
+                Objects.hash(text, image, searchResult, document, toolReference)
 
             override fun toString(): String =
                 when {
@@ -624,6 +646,7 @@ private constructor(
                     image != null -> "Block{image=$image}"
                     searchResult != null -> "Block{searchResult=$searchResult}"
                     document != null -> "Block{document=$document}"
+                    toolReference != null -> "Block{toolReference=$toolReference}"
                     _json != null -> "Block{_unknown=$_json}"
                     else -> throw IllegalStateException("Invalid Block")
                 }
@@ -639,6 +662,11 @@ private constructor(
                     Block(searchResult = searchResult)
 
                 @JvmStatic fun ofDocument(document: DocumentBlockParam) = Block(document = document)
+
+                /** Tool reference block that can be included in tool_result content. */
+                @JvmStatic
+                fun ofToolReference(toolReference: ToolReferenceBlockParam) =
+                    Block(toolReference = toolReference)
             }
 
             /**
@@ -653,6 +681,9 @@ private constructor(
                 fun visitSearchResult(searchResult: SearchResultBlockParam): T
 
                 fun visitDocument(document: DocumentBlockParam): T
+
+                /** Tool reference block that can be included in tool_result content. */
+                fun visitToolReference(toolReference: ToolReferenceBlockParam): T
 
                 /**
                  * Maps an unknown variant of [Block] to a value of type [T].
@@ -696,6 +727,11 @@ private constructor(
                                 Block(document = it, _json = json)
                             } ?: Block(_json = json)
                         }
+                        "tool_reference" -> {
+                            return tryDeserialize(node, jacksonTypeRef<ToolReferenceBlockParam>())
+                                ?.let { Block(toolReference = it, _json = json) }
+                                ?: Block(_json = json)
+                        }
                     }
 
                     return Block(_json = json)
@@ -714,6 +750,7 @@ private constructor(
                         value.image != null -> generator.writeObject(value.image)
                         value.searchResult != null -> generator.writeObject(value.searchResult)
                         value.document != null -> generator.writeObject(value.document)
+                        value.toolReference != null -> generator.writeObject(value.toolReference)
                         value._json != null -> generator.writeObject(value._json)
                         else -> throw IllegalStateException("Invalid Block")
                     }

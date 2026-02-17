@@ -24,6 +24,7 @@ internal class ToolUseBlockParamTest {
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
+                .caller(DirectCaller.builder().build())
                 .build()
 
         assertThat(toolUseBlockParam.id()).isEqualTo("id")
@@ -36,6 +37,8 @@ internal class ToolUseBlockParamTest {
         assertThat(toolUseBlockParam.name()).isEqualTo("x")
         assertThat(toolUseBlockParam.cacheControl())
             .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
+        assertThat(toolUseBlockParam.caller())
+            .contains(ToolUseBlockParam.Caller.ofDirect(DirectCaller.builder().build()))
     }
 
     @Test
@@ -53,6 +56,7 @@ internal class ToolUseBlockParamTest {
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
+                .caller(DirectCaller.builder().build())
                 .build()
 
         val roundtrippedToolUseBlockParam =

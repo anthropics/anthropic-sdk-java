@@ -15,11 +15,20 @@ internal class ServerToolUseBlockTest {
         val serverToolUseBlock =
             ServerToolUseBlock.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
-                .input(JsonValue.from(mapOf<String, Any>()))
+                .caller(DirectCaller.builder().build())
+                .input(
+                    ServerToolUseBlock.Input.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
+                .name(ServerToolUseBlock.Name.WEB_SEARCH)
                 .build()
 
         assertThat(serverToolUseBlock.id()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(serverToolUseBlock.caller())
+            .isEqualTo(ServerToolUseBlock.Caller.ofDirect(DirectCaller.builder().build()))
         assertThat(serverToolUseBlock._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
+        assertThat(serverToolUseBlock.name()).isEqualTo(ServerToolUseBlock.Name.WEB_SEARCH)
     }
 
     @Test
@@ -28,6 +37,7 @@ internal class ServerToolUseBlockTest {
         val serverToolUseBlock =
             ServerToolUseBlock.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
+                .caller(DirectCaller.builder().build())
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .build()
 

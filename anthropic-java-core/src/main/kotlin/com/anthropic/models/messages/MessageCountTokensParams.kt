@@ -4,6 +4,7 @@ package com.anthropic.models.messages
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
+import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
@@ -126,6 +127,15 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun outputConfig(): Optional<OutputConfig> = body.outputConfig()
+
+    /**
+     * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
+     * inference.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun speed(): Optional<Speed> = body.speed()
 
     /**
      * System prompt.
@@ -260,6 +270,13 @@ private constructor(
     fun _outputConfig(): JsonField<OutputConfig> = body._outputConfig()
 
     /**
+     * Returns the raw JSON value of [speed].
+     *
+     * Unlike [speed], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _speed(): JsonField<Speed> = body._speed()
+
+    /**
      * Returns the raw JSON value of [system].
      *
      * Unlike [system], this method doesn't throw if the JSON field has an unexpected type.
@@ -333,8 +350,8 @@ private constructor(
          * - [messages]
          * - [model]
          * - [outputConfig]
+         * - [speed]
          * - [system]
-         * - [thinking]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -500,6 +517,23 @@ private constructor(
         fun outputConfig(outputConfig: JsonField<OutputConfig>) = apply {
             body.outputConfig(outputConfig)
         }
+
+        /**
+         * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
+         * inference.
+         */
+        fun speed(speed: Speed?) = apply { body.speed(speed) }
+
+        /** Alias for calling [Builder.speed] with `speed.orElse(null)`. */
+        fun speed(speed: Optional<Speed>) = speed(speed.getOrNull())
+
+        /**
+         * Sets [Builder.speed] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.speed] with a well-typed [Speed] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun speed(speed: JsonField<Speed>) = apply { body.speed(speed) }
 
         /**
          * System prompt.
@@ -704,6 +738,39 @@ private constructor(
 
         /**
          * Alias for calling [addTool] with
+         * `MessageCountTokensTool.ofCodeExecutionTool20250522(codeExecutionTool20250522)`.
+         */
+        fun addTool(codeExecutionTool20250522: CodeExecutionTool20250522) = apply {
+            body.addTool(codeExecutionTool20250522)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `MessageCountTokensTool.ofCodeExecutionTool20250825(codeExecutionTool20250825)`.
+         */
+        fun addTool(codeExecutionTool20250825: CodeExecutionTool20250825) = apply {
+            body.addTool(codeExecutionTool20250825)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `MessageCountTokensTool.ofCodeExecutionTool20260120(codeExecutionTool20260120)`.
+         */
+        fun addTool(codeExecutionTool20260120: MessageCountTokensTool.CodeExecutionTool20260120) =
+            apply {
+                body.addTool(codeExecutionTool20260120)
+            }
+
+        /**
+         * Alias for calling [addTool] with
+         * `MessageCountTokensTool.ofMemoryTool20250818(memoryTool20250818)`.
+         */
+        fun addTool(memoryTool20250818: MemoryTool20250818) = apply {
+            body.addTool(memoryTool20250818)
+        }
+
+        /**
+         * Alias for calling [addTool] with
          * `MessageCountTokensTool.ofToolTextEditor20250124(toolTextEditor20250124)`.
          */
         fun addTool(toolTextEditor20250124: ToolTextEditor20250124) = apply {
@@ -732,6 +799,46 @@ private constructor(
          */
         fun addTool(webSearchTool20250305: WebSearchTool20250305) = apply {
             body.addTool(webSearchTool20250305)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `MessageCountTokensTool.ofWebFetchTool20250910(webFetchTool20250910)`.
+         */
+        fun addTool(webFetchTool20250910: WebFetchTool20250910) = apply {
+            body.addTool(webFetchTool20250910)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `MessageCountTokensTool.ofWebSearchTool20260209(webSearchTool20260209)`.
+         */
+        fun addTool(webSearchTool20260209: MessageCountTokensTool.WebSearchTool20260209) = apply {
+            body.addTool(webSearchTool20260209)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `MessageCountTokensTool.ofWebFetchTool20260209(webFetchTool20260209)`.
+         */
+        fun addTool(webFetchTool20260209: MessageCountTokensTool.WebFetchTool20260209) = apply {
+            body.addTool(webFetchTool20260209)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `MessageCountTokensTool.ofToolSearchToolBm25_20251119(toolSearchToolBm25_20251119)`.
+         */
+        fun addTool(toolSearchToolBm25_20251119: ToolSearchToolBm25_20251119) = apply {
+            body.addTool(toolSearchToolBm25_20251119)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `MessageCountTokensTool.ofToolSearchToolRegex20251119(toolSearchToolRegex20251119)`.
+         */
+        fun addTool(toolSearchToolRegex20251119: ToolSearchToolRegex20251119) = apply {
+            body.addTool(toolSearchToolRegex20251119)
         }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
@@ -884,6 +991,7 @@ private constructor(
         private val messages: JsonField<List<MessageParam>>,
         private val model: JsonField<Model>,
         private val outputConfig: JsonField<OutputConfig>,
+        private val speed: JsonField<Speed>,
         private val system: JsonField<System>,
         private val thinking: JsonField<ThinkingConfigParam>,
         private val toolChoice: JsonField<ToolChoice>,
@@ -900,6 +1008,7 @@ private constructor(
             @JsonProperty("output_config")
             @ExcludeMissing
             outputConfig: JsonField<OutputConfig> = JsonMissing.of(),
+            @JsonProperty("speed") @ExcludeMissing speed: JsonField<Speed> = JsonMissing.of(),
             @JsonProperty("system") @ExcludeMissing system: JsonField<System> = JsonMissing.of(),
             @JsonProperty("thinking")
             @ExcludeMissing
@@ -910,7 +1019,17 @@ private constructor(
             @JsonProperty("tools")
             @ExcludeMissing
             tools: JsonField<List<MessageCountTokensTool>> = JsonMissing.of(),
-        ) : this(messages, model, outputConfig, system, thinking, toolChoice, tools, mutableMapOf())
+        ) : this(
+            messages,
+            model,
+            outputConfig,
+            speed,
+            system,
+            thinking,
+            toolChoice,
+            tools,
+            mutableMapOf(),
+        )
 
         /**
          * Input messages.
@@ -992,6 +1111,15 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun outputConfig(): Optional<OutputConfig> = outputConfig.getOptional("output_config")
+
+        /**
+         * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
+         * inference.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun speed(): Optional<Speed> = speed.getOptional("speed")
 
         /**
          * System prompt.
@@ -1133,6 +1261,13 @@ private constructor(
         fun _outputConfig(): JsonField<OutputConfig> = outputConfig
 
         /**
+         * Returns the raw JSON value of [speed].
+         *
+         * Unlike [speed], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("speed") @ExcludeMissing fun _speed(): JsonField<Speed> = speed
+
+        /**
          * Returns the raw JSON value of [system].
          *
          * Unlike [system], this method doesn't throw if the JSON field has an unexpected type.
@@ -1198,6 +1333,7 @@ private constructor(
             private var messages: JsonField<MutableList<MessageParam>>? = null
             private var model: JsonField<Model>? = null
             private var outputConfig: JsonField<OutputConfig> = JsonMissing.of()
+            private var speed: JsonField<Speed> = JsonMissing.of()
             private var system: JsonField<System> = JsonMissing.of()
             private var thinking: JsonField<ThinkingConfigParam> = JsonMissing.of()
             private var toolChoice: JsonField<ToolChoice> = JsonMissing.of()
@@ -1209,6 +1345,7 @@ private constructor(
                 messages = body.messages.map { it.toMutableList() }
                 model = body.model
                 outputConfig = body.outputConfig
+                speed = body.speed
                 system = body.system
                 thinking = body.thinking
                 toolChoice = body.toolChoice
@@ -1396,6 +1533,24 @@ private constructor(
             fun outputConfig(outputConfig: JsonField<OutputConfig>) = apply {
                 this.outputConfig = outputConfig
             }
+
+            /**
+             * The inference speed mode for this request. `"fast"` enables high
+             * output-tokens-per-second inference.
+             */
+            fun speed(speed: Speed?) = speed(JsonField.ofNullable(speed))
+
+            /** Alias for calling [Builder.speed] with `speed.orElse(null)`. */
+            fun speed(speed: Optional<Speed>) = speed(speed.getOrNull())
+
+            /**
+             * Sets [Builder.speed] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.speed] with a well-typed [Speed] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun speed(speed: JsonField<Speed>) = apply { this.speed = speed }
 
             /**
              * System prompt.
@@ -1617,6 +1772,42 @@ private constructor(
 
             /**
              * Alias for calling [addTool] with
+             * `MessageCountTokensTool.ofCodeExecutionTool20250522(codeExecutionTool20250522)`.
+             */
+            fun addTool(codeExecutionTool20250522: CodeExecutionTool20250522) =
+                addTool(
+                    MessageCountTokensTool.ofCodeExecutionTool20250522(codeExecutionTool20250522)
+                )
+
+            /**
+             * Alias for calling [addTool] with
+             * `MessageCountTokensTool.ofCodeExecutionTool20250825(codeExecutionTool20250825)`.
+             */
+            fun addTool(codeExecutionTool20250825: CodeExecutionTool20250825) =
+                addTool(
+                    MessageCountTokensTool.ofCodeExecutionTool20250825(codeExecutionTool20250825)
+                )
+
+            /**
+             * Alias for calling [addTool] with
+             * `MessageCountTokensTool.ofCodeExecutionTool20260120(codeExecutionTool20260120)`.
+             */
+            fun addTool(
+                codeExecutionTool20260120: MessageCountTokensTool.CodeExecutionTool20260120
+            ) =
+                addTool(
+                    MessageCountTokensTool.ofCodeExecutionTool20260120(codeExecutionTool20260120)
+                )
+
+            /**
+             * Alias for calling [addTool] with
+             * `MessageCountTokensTool.ofMemoryTool20250818(memoryTool20250818)`.
+             */
+            fun addTool(memoryTool20250818: MemoryTool20250818) =
+                addTool(MessageCountTokensTool.ofMemoryTool20250818(memoryTool20250818))
+
+            /**
+             * Alias for calling [addTool] with
              * `MessageCountTokensTool.ofToolTextEditor20250124(toolTextEditor20250124)`.
              */
             fun addTool(toolTextEditor20250124: ToolTextEditor20250124) =
@@ -1642,6 +1833,49 @@ private constructor(
              */
             fun addTool(webSearchTool20250305: WebSearchTool20250305) =
                 addTool(MessageCountTokensTool.ofWebSearchTool20250305(webSearchTool20250305))
+
+            /**
+             * Alias for calling [addTool] with
+             * `MessageCountTokensTool.ofWebFetchTool20250910(webFetchTool20250910)`.
+             */
+            fun addTool(webFetchTool20250910: WebFetchTool20250910) =
+                addTool(MessageCountTokensTool.ofWebFetchTool20250910(webFetchTool20250910))
+
+            /**
+             * Alias for calling [addTool] with
+             * `MessageCountTokensTool.ofWebSearchTool20260209(webSearchTool20260209)`.
+             */
+            fun addTool(webSearchTool20260209: MessageCountTokensTool.WebSearchTool20260209) =
+                addTool(MessageCountTokensTool.ofWebSearchTool20260209(webSearchTool20260209))
+
+            /**
+             * Alias for calling [addTool] with
+             * `MessageCountTokensTool.ofWebFetchTool20260209(webFetchTool20260209)`.
+             */
+            fun addTool(webFetchTool20260209: MessageCountTokensTool.WebFetchTool20260209) =
+                addTool(MessageCountTokensTool.ofWebFetchTool20260209(webFetchTool20260209))
+
+            /**
+             * Alias for calling [addTool] with
+             * `MessageCountTokensTool.ofToolSearchToolBm25_20251119(toolSearchToolBm25_20251119)`.
+             */
+            fun addTool(toolSearchToolBm25_20251119: ToolSearchToolBm25_20251119) =
+                addTool(
+                    MessageCountTokensTool.ofToolSearchToolBm25_20251119(
+                        toolSearchToolBm25_20251119
+                    )
+                )
+
+            /**
+             * Alias for calling [addTool] with
+             * `MessageCountTokensTool.ofToolSearchToolRegex20251119(toolSearchToolRegex20251119)`.
+             */
+            fun addTool(toolSearchToolRegex20251119: ToolSearchToolRegex20251119) =
+                addTool(
+                    MessageCountTokensTool.ofToolSearchToolRegex20251119(
+                        toolSearchToolRegex20251119
+                    )
+                )
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -1680,6 +1914,7 @@ private constructor(
                     checkRequired("messages", messages).map { it.toImmutable() },
                     checkRequired("model", model),
                     outputConfig,
+                    speed,
                     system,
                     thinking,
                     toolChoice,
@@ -1698,6 +1933,7 @@ private constructor(
             messages().forEach { it.validate() }
             model()
             outputConfig().ifPresent { it.validate() }
+            speed().ifPresent { it.validate() }
             system().ifPresent { it.validate() }
             thinking().ifPresent { it.validate() }
             toolChoice().ifPresent { it.validate() }
@@ -1724,6 +1960,7 @@ private constructor(
             (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (model.asKnown().isPresent) 1 else 0) +
                 (outputConfig.asKnown().getOrNull()?.validity() ?: 0) +
+                (speed.asKnown().getOrNull()?.validity() ?: 0) +
                 (system.asKnown().getOrNull()?.validity() ?: 0) +
                 (thinking.asKnown().getOrNull()?.validity() ?: 0) +
                 (toolChoice.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1738,6 +1975,7 @@ private constructor(
                 messages == other.messages &&
                 model == other.model &&
                 outputConfig == other.outputConfig &&
+                speed == other.speed &&
                 system == other.system &&
                 thinking == other.thinking &&
                 toolChoice == other.toolChoice &&
@@ -1750,6 +1988,7 @@ private constructor(
                 messages,
                 model,
                 outputConfig,
+                speed,
                 system,
                 thinking,
                 toolChoice,
@@ -1761,7 +2000,138 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{messages=$messages, model=$model, outputConfig=$outputConfig, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
+            "Body{messages=$messages, model=$model, outputConfig=$outputConfig, speed=$speed, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
+    }
+
+    /**
+     * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
+     * inference.
+     */
+    class Speed @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val STANDARD = of("standard")
+
+            @JvmField val FAST = of("fast")
+
+            @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
+        }
+
+        /** An enum containing [Speed]'s known values. */
+        enum class Known {
+            STANDARD,
+            FAST,
+        }
+
+        /**
+         * An enum containing [Speed]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Speed] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            STANDARD,
+            FAST,
+            /** An enum member indicating that [Speed] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                STANDARD -> Value.STANDARD
+                FAST -> Value.FAST
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                STANDARD -> Known.STANDARD
+                FAST -> Known.FAST
+                else -> throw AnthropicInvalidDataException("Unknown Speed: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        fun validate(): Speed = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Speed && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
     }
 
     /**

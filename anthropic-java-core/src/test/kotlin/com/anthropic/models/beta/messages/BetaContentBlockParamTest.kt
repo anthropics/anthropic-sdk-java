@@ -644,6 +644,7 @@ internal class BetaContentBlockParamTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .caller(BetaDirectCaller.builder().build())
                 .build()
 
         val betaContentBlockParam = BetaContentBlockParam.ofWebSearchToolResult(webSearchToolResult)
@@ -691,6 +692,7 @@ internal class BetaContentBlockParamTest {
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .caller(BetaDirectCaller.builder().build())
                     .build()
             )
 
@@ -718,6 +720,7 @@ internal class BetaContentBlockParamTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .caller(BetaDirectCaller.builder().build())
                 .build()
 
         val betaContentBlockParam = BetaContentBlockParam.ofWebFetchToolResult(webFetchToolResult)
@@ -760,6 +763,7 @@ internal class BetaContentBlockParamTest {
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .caller(BetaDirectCaller.builder().build())
                     .build()
             )
 

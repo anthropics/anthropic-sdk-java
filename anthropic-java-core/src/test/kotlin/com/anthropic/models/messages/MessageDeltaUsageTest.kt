@@ -17,7 +17,9 @@ internal class MessageDeltaUsageTest {
                 .cacheReadInputTokens(2051L)
                 .inputTokens(2095L)
                 .outputTokens(503L)
-                .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                .serverToolUse(
+                    ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
+                )
                 .build()
 
         assertThat(messageDeltaUsage.cacheCreationInputTokens()).contains(2051L)
@@ -25,7 +27,7 @@ internal class MessageDeltaUsageTest {
         assertThat(messageDeltaUsage.inputTokens()).contains(2095L)
         assertThat(messageDeltaUsage.outputTokens()).isEqualTo(503L)
         assertThat(messageDeltaUsage.serverToolUse())
-            .contains(ServerToolUsage.builder().webSearchRequests(0L).build())
+            .contains(ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build())
     }
 
     @Test
@@ -37,7 +39,9 @@ internal class MessageDeltaUsageTest {
                 .cacheReadInputTokens(2051L)
                 .inputTokens(2095L)
                 .outputTokens(503L)
-                .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                .serverToolUse(
+                    ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
+                )
                 .build()
 
         val roundtrippedMessageDeltaUsage =

@@ -42,7 +42,7 @@ configure<MavenPublishBaseExtension> {
     )
 
     pom {
-        name.set("Anthropic API + fast-mode")
+        name.set("Anthropic API + churro")
         description.set("An SDK library for anthropic")
         url.set("https://docs.anthropic.com/claude/reference/")
 

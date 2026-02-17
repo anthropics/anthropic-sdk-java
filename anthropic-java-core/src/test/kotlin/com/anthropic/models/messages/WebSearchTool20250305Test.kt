@@ -14,11 +14,13 @@ internal class WebSearchTool20250305Test {
     fun create() {
         val webSearchTool20250305 =
             WebSearchTool20250305.builder()
+                .addAllowedCaller(WebSearchTool20250305.AllowedCaller.DIRECT)
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
+                .deferLoading(true)
                 .maxUses(1L)
                 .strict(true)
                 .userLocation(
@@ -31,10 +33,13 @@ internal class WebSearchTool20250305Test {
                 )
                 .build()
 
+        assertThat(webSearchTool20250305.allowedCallers().getOrNull())
+            .containsExactly(WebSearchTool20250305.AllowedCaller.DIRECT)
         assertThat(webSearchTool20250305.allowedDomains().getOrNull()).containsExactly("string")
         assertThat(webSearchTool20250305.blockedDomains().getOrNull()).containsExactly("string")
         assertThat(webSearchTool20250305.cacheControl())
             .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
+        assertThat(webSearchTool20250305.deferLoading()).contains(true)
         assertThat(webSearchTool20250305.maxUses()).contains(1L)
         assertThat(webSearchTool20250305.strict()).contains(true)
         assertThat(webSearchTool20250305.userLocation())
@@ -53,11 +58,13 @@ internal class WebSearchTool20250305Test {
         val jsonMapper = jsonMapper()
         val webSearchTool20250305 =
             WebSearchTool20250305.builder()
+                .addAllowedCaller(WebSearchTool20250305.AllowedCaller.DIRECT)
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
+                .deferLoading(true)
                 .maxUses(1L)
                 .strict(true)
                 .userLocation(

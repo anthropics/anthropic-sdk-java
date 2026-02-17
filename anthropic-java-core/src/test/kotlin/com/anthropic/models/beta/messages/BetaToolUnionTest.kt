@@ -55,6 +55,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
@@ -65,6 +66,8 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
         assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
         assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
         assertThat(betaToolUnion.mcpToolset()).isEmpty
@@ -142,6 +145,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
@@ -152,6 +156,8 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
         assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
         assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
         assertThat(betaToolUnion.mcpToolset()).isEmpty
@@ -214,6 +220,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.bash20250124()).contains(bash20250124)
         assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
@@ -224,6 +231,8 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
         assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
         assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
         assertThat(betaToolUnion.mcpToolset()).isEmpty
@@ -281,6 +290,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250522()).contains(codeExecutionTool20250522)
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
@@ -291,6 +301,8 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
         assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
         assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
         assertThat(betaToolUnion.mcpToolset()).isEmpty
@@ -343,6 +355,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250825()).contains(codeExecutionTool20250825)
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
@@ -353,6 +366,8 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
         assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
         assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
         assertThat(betaToolUnion.mcpToolset()).isEmpty
@@ -365,6 +380,71 @@ internal class BetaToolUnionTest {
             BetaToolUnion.ofCodeExecutionTool20250825(
                 BetaCodeExecutionTool20250825.builder()
                     .addAllowedCaller(BetaCodeExecutionTool20250825.AllowedCaller.DIRECT)
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .deferLoading(true)
+                    .strict(true)
+                    .build()
+            )
+
+        val roundtrippedBetaToolUnion =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaToolUnion),
+                jacksonTypeRef<BetaToolUnion>(),
+            )
+
+        assertThat(roundtrippedBetaToolUnion).isEqualTo(betaToolUnion)
+    }
+
+    @Test
+    fun ofCodeExecutionTool20260120() {
+        val codeExecutionTool20260120 =
+            BetaCodeExecutionTool20260120.builder()
+                .addAllowedCaller(BetaCodeExecutionTool20260120.AllowedCaller.DIRECT)
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
+                .deferLoading(true)
+                .strict(true)
+                .build()
+
+        val betaToolUnion = BetaToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120)
+
+        assertThat(betaToolUnion.betaTool()).isEmpty
+        assertThat(betaToolUnion.bash20241022()).isEmpty
+        assertThat(betaToolUnion.bash20250124()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).contains(codeExecutionTool20260120)
+        assertThat(betaToolUnion.computerUse20241022()).isEmpty
+        assertThat(betaToolUnion.memoryTool20250818()).isEmpty
+        assertThat(betaToolUnion.computerUse20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20241022()).isEmpty
+        assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.textEditor20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20250429()).isEmpty
+        assertThat(betaToolUnion.textEditor20250728()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
+        assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
+        assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(betaToolUnion.mcpToolset()).isEmpty
+    }
+
+    @Test
+    fun ofCodeExecutionTool20260120Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaToolUnion =
+            BetaToolUnion.ofCodeExecutionTool20260120(
+                BetaCodeExecutionTool20260120.builder()
+                    .addAllowedCaller(BetaCodeExecutionTool20260120.AllowedCaller.DIRECT)
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -413,6 +493,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).contains(computerUse20241022)
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
@@ -423,6 +504,8 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
         assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
         assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
         assertThat(betaToolUnion.mcpToolset()).isEmpty
@@ -488,6 +571,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).contains(memoryTool20250818)
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
@@ -498,6 +582,8 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
         assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
         assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
         assertThat(betaToolUnion.mcpToolset()).isEmpty
@@ -563,6 +649,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).contains(computerUse20250124)
@@ -573,6 +660,8 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
         assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
         assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
         assertThat(betaToolUnion.mcpToolset()).isEmpty
@@ -638,6 +727,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
@@ -648,6 +738,8 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
         assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
         assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
         assertThat(betaToolUnion.mcpToolset()).isEmpty
@@ -714,6 +806,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
@@ -724,6 +817,8 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
         assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
         assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
         assertThat(betaToolUnion.mcpToolset()).isEmpty
@@ -790,6 +885,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
@@ -800,6 +896,8 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
         assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
         assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
         assertThat(betaToolUnion.mcpToolset()).isEmpty
@@ -862,6 +960,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
@@ -872,6 +971,8 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
         assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
         assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
         assertThat(betaToolUnion.mcpToolset()).isEmpty
@@ -935,6 +1036,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
@@ -945,6 +1047,8 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.textEditor20250728()).contains(textEditor20250728)
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
         assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
         assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
         assertThat(betaToolUnion.mcpToolset()).isEmpty
@@ -998,7 +1102,7 @@ internal class BetaToolUnionTest {
                 .maxUses(1L)
                 .strict(true)
                 .userLocation(
-                    BetaWebSearchTool20250305.UserLocation.builder()
+                    BetaUserLocation.builder()
                         .city("New York")
                         .country("US")
                         .region("California")
@@ -1014,6 +1118,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
@@ -1024,6 +1129,8 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).contains(webSearchTool20250305)
         assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
         assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
         assertThat(betaToolUnion.mcpToolset()).isEmpty
@@ -1047,7 +1154,7 @@ internal class BetaToolUnionTest {
                     .maxUses(1L)
                     .strict(true)
                     .userLocation(
-                        BetaWebSearchTool20250305.UserLocation.builder()
+                        BetaUserLocation.builder()
                             .city("New York")
                             .country("US")
                             .region("California")
@@ -1092,6 +1199,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
@@ -1102,6 +1210,8 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
         assertThat(betaToolUnion.webFetchTool20250910()).contains(webFetchTool20250910)
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
         assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
         assertThat(betaToolUnion.mcpToolset()).isEmpty
@@ -1114,6 +1224,168 @@ internal class BetaToolUnionTest {
             BetaToolUnion.ofWebFetchTool20250910(
                 BetaWebFetchTool20250910.builder()
                     .addAllowedCaller(BetaWebFetchTool20250910.AllowedCaller.DIRECT)
+                    .addAllowedDomain("string")
+                    .addBlockedDomain("string")
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .citations(BetaCitationsConfigParam.builder().enabled(true).build())
+                    .deferLoading(true)
+                    .maxContentTokens(1L)
+                    .maxUses(1L)
+                    .strict(true)
+                    .build()
+            )
+
+        val roundtrippedBetaToolUnion =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaToolUnion),
+                jacksonTypeRef<BetaToolUnion>(),
+            )
+
+        assertThat(roundtrippedBetaToolUnion).isEqualTo(betaToolUnion)
+    }
+
+    @Test
+    fun ofWebSearchTool20260209() {
+        val webSearchTool20260209 =
+            BetaWebSearchTool20260209.builder()
+                .addAllowedCaller(BetaWebSearchTool20260209.AllowedCaller.DIRECT)
+                .addAllowedDomain("string")
+                .addBlockedDomain("string")
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
+                .deferLoading(true)
+                .maxUses(1L)
+                .strict(true)
+                .userLocation(
+                    BetaUserLocation.builder()
+                        .city("New York")
+                        .country("US")
+                        .region("California")
+                        .timezone("America/New_York")
+                        .build()
+                )
+                .build()
+
+        val betaToolUnion = BetaToolUnion.ofWebSearchTool20260209(webSearchTool20260209)
+
+        assertThat(betaToolUnion.betaTool()).isEmpty
+        assertThat(betaToolUnion.bash20241022()).isEmpty
+        assertThat(betaToolUnion.bash20250124()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(betaToolUnion.computerUse20241022()).isEmpty
+        assertThat(betaToolUnion.memoryTool20250818()).isEmpty
+        assertThat(betaToolUnion.computerUse20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20241022()).isEmpty
+        assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.textEditor20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20250429()).isEmpty
+        assertThat(betaToolUnion.textEditor20250728()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).contains(webSearchTool20260209)
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
+        assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
+        assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(betaToolUnion.mcpToolset()).isEmpty
+    }
+
+    @Test
+    fun ofWebSearchTool20260209Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaToolUnion =
+            BetaToolUnion.ofWebSearchTool20260209(
+                BetaWebSearchTool20260209.builder()
+                    .addAllowedCaller(BetaWebSearchTool20260209.AllowedCaller.DIRECT)
+                    .addAllowedDomain("string")
+                    .addBlockedDomain("string")
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .deferLoading(true)
+                    .maxUses(1L)
+                    .strict(true)
+                    .userLocation(
+                        BetaUserLocation.builder()
+                            .city("New York")
+                            .country("US")
+                            .region("California")
+                            .timezone("America/New_York")
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedBetaToolUnion =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaToolUnion),
+                jacksonTypeRef<BetaToolUnion>(),
+            )
+
+        assertThat(roundtrippedBetaToolUnion).isEqualTo(betaToolUnion)
+    }
+
+    @Test
+    fun ofWebFetchTool20260209() {
+        val webFetchTool20260209 =
+            BetaWebFetchTool20260209.builder()
+                .addAllowedCaller(BetaWebFetchTool20260209.AllowedCaller.DIRECT)
+                .addAllowedDomain("string")
+                .addBlockedDomain("string")
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
+                .citations(BetaCitationsConfigParam.builder().enabled(true).build())
+                .deferLoading(true)
+                .maxContentTokens(1L)
+                .maxUses(1L)
+                .strict(true)
+                .build()
+
+        val betaToolUnion = BetaToolUnion.ofWebFetchTool20260209(webFetchTool20260209)
+
+        assertThat(betaToolUnion.betaTool()).isEmpty
+        assertThat(betaToolUnion.bash20241022()).isEmpty
+        assertThat(betaToolUnion.bash20250124()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(betaToolUnion.computerUse20241022()).isEmpty
+        assertThat(betaToolUnion.memoryTool20250818()).isEmpty
+        assertThat(betaToolUnion.computerUse20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20241022()).isEmpty
+        assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.textEditor20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20250429()).isEmpty
+        assertThat(betaToolUnion.textEditor20250728()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).contains(webFetchTool20260209)
+        assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
+        assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(betaToolUnion.mcpToolset()).isEmpty
+    }
+
+    @Test
+    fun ofWebFetchTool20260209Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaToolUnion =
+            BetaToolUnion.ofWebFetchTool20260209(
+                BetaWebFetchTool20260209.builder()
+                    .addAllowedCaller(BetaWebFetchTool20260209.AllowedCaller.DIRECT)
                     .addAllowedDomain("string")
                     .addBlockedDomain("string")
                     .cacheControl(
@@ -1160,6 +1432,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
@@ -1170,6 +1443,8 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
         assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
         assertThat(betaToolUnion.searchToolBm25_20251119()).contains(searchToolBm25_20251119)
         assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
         assertThat(betaToolUnion.mcpToolset()).isEmpty
@@ -1224,6 +1499,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
@@ -1234,6 +1510,8 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
         assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
         assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(betaToolUnion.searchToolRegex20251119()).contains(searchToolRegex20251119)
         assertThat(betaToolUnion.mcpToolset()).isEmpty
@@ -1296,6 +1574,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.bash20250124()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
@@ -1306,6 +1585,8 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
         assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
         assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
         assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
         assertThat(betaToolUnion.mcpToolset()).contains(mcpToolset)

@@ -45,6 +45,12 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.toolResult()).isEmpty
         assertThat(contentBlockParam.serverToolUse()).isEmpty
         assertThat(contentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
+        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.containerUpload()).isEmpty
     }
 
     @Test
@@ -107,6 +113,12 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.toolResult()).isEmpty
         assertThat(contentBlockParam.serverToolUse()).isEmpty
         assertThat(contentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
+        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.containerUpload()).isEmpty
     }
 
     @Test
@@ -163,6 +175,12 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.toolResult()).isEmpty
         assertThat(contentBlockParam.serverToolUse()).isEmpty
         assertThat(contentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
+        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.containerUpload()).isEmpty
     }
 
     @Test
@@ -235,6 +253,12 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.toolResult()).isEmpty
         assertThat(contentBlockParam.serverToolUse()).isEmpty
         assertThat(contentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
+        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.containerUpload()).isEmpty
     }
 
     @Test
@@ -299,6 +323,12 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.toolResult()).isEmpty
         assertThat(contentBlockParam.serverToolUse()).isEmpty
         assertThat(contentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
+        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.containerUpload()).isEmpty
     }
 
     @Test
@@ -334,6 +364,12 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.toolResult()).isEmpty
         assertThat(contentBlockParam.serverToolUse()).isEmpty
         assertThat(contentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
+        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.containerUpload()).isEmpty
     }
 
     @Test
@@ -367,6 +403,7 @@ internal class ContentBlockParamTest {
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
+                .caller(DirectCaller.builder().build())
                 .build()
 
         val contentBlockParam = ContentBlockParam.ofToolUse(toolUse)
@@ -381,6 +418,12 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.toolResult()).isEmpty
         assertThat(contentBlockParam.serverToolUse()).isEmpty
         assertThat(contentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
+        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.containerUpload()).isEmpty
     }
 
     @Test
@@ -401,6 +444,7 @@ internal class ContentBlockParamTest {
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .caller(DirectCaller.builder().build())
                     .build()
             )
 
@@ -437,6 +481,12 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.toolResult()).contains(toolResult)
         assertThat(contentBlockParam.serverToolUse()).isEmpty
         assertThat(contentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
+        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.containerUpload()).isEmpty
     }
 
     @Test
@@ -475,9 +525,11 @@ internal class ContentBlockParamTest {
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
+                .name(ServerToolUseBlockParam.Name.WEB_SEARCH)
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
+                .caller(DirectCaller.builder().build())
                 .build()
 
         val contentBlockParam = ContentBlockParam.ofServerToolUse(serverToolUse)
@@ -492,6 +544,12 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.toolResult()).isEmpty
         assertThat(contentBlockParam.serverToolUse()).contains(serverToolUse)
         assertThat(contentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
+        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.containerUpload()).isEmpty
     }
 
     @Test
@@ -506,11 +564,13 @@ internal class ContentBlockParamTest {
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
                             .build()
                     )
+                    .name(ServerToolUseBlockParam.Name.WEB_SEARCH)
                     .cacheControl(
                         CacheControlEphemeral.builder()
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .caller(DirectCaller.builder().build())
                     .build()
             )
 
@@ -541,6 +601,7 @@ internal class ContentBlockParamTest {
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
+                .caller(DirectCaller.builder().build())
                 .build()
 
         val contentBlockParam = ContentBlockParam.ofWebSearchToolResult(webSearchToolResult)
@@ -555,6 +616,12 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.toolResult()).isEmpty
         assertThat(contentBlockParam.serverToolUse()).isEmpty
         assertThat(contentBlockParam.webSearchToolResult()).contains(webSearchToolResult)
+        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
+        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.containerUpload()).isEmpty
     }
 
     @Test
@@ -574,6 +641,391 @@ internal class ContentBlockParamTest {
                         )
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .caller(DirectCaller.builder().build())
+                    .build()
+            )
+
+        val roundtrippedContentBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlockParam),
+                jacksonTypeRef<ContentBlockParam>(),
+            )
+
+        assertThat(roundtrippedContentBlockParam).isEqualTo(contentBlockParam)
+    }
+
+    @Test
+    fun ofWebFetchToolResult() {
+        val webFetchToolResult =
+            WebFetchToolResultBlockParam.builder()
+                .content(
+                    WebFetchToolResultErrorBlockParam.builder()
+                        .errorCode(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
+                        .build()
+                )
+                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
+                .caller(DirectCaller.builder().build())
+                .build()
+
+        val contentBlockParam = ContentBlockParam.ofWebFetchToolResult(webFetchToolResult)
+
+        assertThat(contentBlockParam.text()).isEmpty
+        assertThat(contentBlockParam.image()).isEmpty
+        assertThat(contentBlockParam.document()).isEmpty
+        assertThat(contentBlockParam.searchResult()).isEmpty
+        assertThat(contentBlockParam.thinking()).isEmpty
+        assertThat(contentBlockParam.redactedThinking()).isEmpty
+        assertThat(contentBlockParam.toolUse()).isEmpty
+        assertThat(contentBlockParam.toolResult()).isEmpty
+        assertThat(contentBlockParam.serverToolUse()).isEmpty
+        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.webFetchToolResult()).contains(webFetchToolResult)
+        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.containerUpload()).isEmpty
+    }
+
+    @Test
+    fun ofWebFetchToolResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlockParam =
+            ContentBlockParam.ofWebFetchToolResult(
+                WebFetchToolResultBlockParam.builder()
+                    .content(
+                        WebFetchToolResultErrorBlockParam.builder()
+                            .errorCode(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
+                            .build()
+                    )
+                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .caller(DirectCaller.builder().build())
+                    .build()
+            )
+
+        val roundtrippedContentBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlockParam),
+                jacksonTypeRef<ContentBlockParam>(),
+            )
+
+        assertThat(roundtrippedContentBlockParam).isEqualTo(contentBlockParam)
+    }
+
+    @Test
+    fun ofCodeExecutionToolResult() {
+        val codeExecutionToolResult =
+            CodeExecutionToolResultBlockParam.builder()
+                .content(
+                    CodeExecutionToolResultErrorParam.builder()
+                        .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
+                        .build()
+                )
+                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
+                .build()
+
+        val contentBlockParam = ContentBlockParam.ofCodeExecutionToolResult(codeExecutionToolResult)
+
+        assertThat(contentBlockParam.text()).isEmpty
+        assertThat(contentBlockParam.image()).isEmpty
+        assertThat(contentBlockParam.document()).isEmpty
+        assertThat(contentBlockParam.searchResult()).isEmpty
+        assertThat(contentBlockParam.thinking()).isEmpty
+        assertThat(contentBlockParam.redactedThinking()).isEmpty
+        assertThat(contentBlockParam.toolUse()).isEmpty
+        assertThat(contentBlockParam.toolResult()).isEmpty
+        assertThat(contentBlockParam.serverToolUse()).isEmpty
+        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
+        assertThat(contentBlockParam.codeExecutionToolResult()).contains(codeExecutionToolResult)
+        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.containerUpload()).isEmpty
+    }
+
+    @Test
+    fun ofCodeExecutionToolResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlockParam =
+            ContentBlockParam.ofCodeExecutionToolResult(
+                CodeExecutionToolResultBlockParam.builder()
+                    .content(
+                        CodeExecutionToolResultErrorParam.builder()
+                            .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
+                            .build()
+                    )
+                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedContentBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlockParam),
+                jacksonTypeRef<ContentBlockParam>(),
+            )
+
+        assertThat(roundtrippedContentBlockParam).isEqualTo(contentBlockParam)
+    }
+
+    @Test
+    fun ofBashCodeExecutionToolResult() {
+        val bashCodeExecutionToolResult =
+            BashCodeExecutionToolResultBlockParam.builder()
+                .content(
+                    BashCodeExecutionToolResultErrorParam.builder()
+                        .errorCode(BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
+                        .build()
+                )
+                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
+                .build()
+
+        val contentBlockParam =
+            ContentBlockParam.ofBashCodeExecutionToolResult(bashCodeExecutionToolResult)
+
+        assertThat(contentBlockParam.text()).isEmpty
+        assertThat(contentBlockParam.image()).isEmpty
+        assertThat(contentBlockParam.document()).isEmpty
+        assertThat(contentBlockParam.searchResult()).isEmpty
+        assertThat(contentBlockParam.thinking()).isEmpty
+        assertThat(contentBlockParam.redactedThinking()).isEmpty
+        assertThat(contentBlockParam.toolUse()).isEmpty
+        assertThat(contentBlockParam.toolResult()).isEmpty
+        assertThat(contentBlockParam.serverToolUse()).isEmpty
+        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
+        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.bashCodeExecutionToolResult())
+            .contains(bashCodeExecutionToolResult)
+        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.containerUpload()).isEmpty
+    }
+
+    @Test
+    fun ofBashCodeExecutionToolResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlockParam =
+            ContentBlockParam.ofBashCodeExecutionToolResult(
+                BashCodeExecutionToolResultBlockParam.builder()
+                    .content(
+                        BashCodeExecutionToolResultErrorParam.builder()
+                            .errorCode(BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
+                            .build()
+                    )
+                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedContentBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlockParam),
+                jacksonTypeRef<ContentBlockParam>(),
+            )
+
+        assertThat(roundtrippedContentBlockParam).isEqualTo(contentBlockParam)
+    }
+
+    @Test
+    fun ofTextEditorCodeExecutionToolResult() {
+        val textEditorCodeExecutionToolResult =
+            TextEditorCodeExecutionToolResultBlockParam.builder()
+                .content(
+                    TextEditorCodeExecutionToolResultErrorParam.builder()
+                        .errorCode(TextEditorCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
+                        .errorMessage("error_message")
+                        .build()
+                )
+                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
+                .build()
+
+        val contentBlockParam =
+            ContentBlockParam.ofTextEditorCodeExecutionToolResult(textEditorCodeExecutionToolResult)
+
+        assertThat(contentBlockParam.text()).isEmpty
+        assertThat(contentBlockParam.image()).isEmpty
+        assertThat(contentBlockParam.document()).isEmpty
+        assertThat(contentBlockParam.searchResult()).isEmpty
+        assertThat(contentBlockParam.thinking()).isEmpty
+        assertThat(contentBlockParam.redactedThinking()).isEmpty
+        assertThat(contentBlockParam.toolUse()).isEmpty
+        assertThat(contentBlockParam.toolResult()).isEmpty
+        assertThat(contentBlockParam.serverToolUse()).isEmpty
+        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
+        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.textEditorCodeExecutionToolResult())
+            .contains(textEditorCodeExecutionToolResult)
+        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.containerUpload()).isEmpty
+    }
+
+    @Test
+    fun ofTextEditorCodeExecutionToolResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlockParam =
+            ContentBlockParam.ofTextEditorCodeExecutionToolResult(
+                TextEditorCodeExecutionToolResultBlockParam.builder()
+                    .content(
+                        TextEditorCodeExecutionToolResultErrorParam.builder()
+                            .errorCode(
+                                TextEditorCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                            )
+                            .errorMessage("error_message")
+                            .build()
+                    )
+                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedContentBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlockParam),
+                jacksonTypeRef<ContentBlockParam>(),
+            )
+
+        assertThat(roundtrippedContentBlockParam).isEqualTo(contentBlockParam)
+    }
+
+    @Test
+    fun ofToolSearchToolResult() {
+        val toolSearchToolResult =
+            ToolSearchToolResultBlockParam.builder()
+                .content(
+                    ToolSearchToolResultErrorParam.builder()
+                        .errorCode(ToolSearchToolResultErrorCode.INVALID_TOOL_INPUT)
+                        .build()
+                )
+                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
+                .build()
+
+        val contentBlockParam = ContentBlockParam.ofToolSearchToolResult(toolSearchToolResult)
+
+        assertThat(contentBlockParam.text()).isEmpty
+        assertThat(contentBlockParam.image()).isEmpty
+        assertThat(contentBlockParam.document()).isEmpty
+        assertThat(contentBlockParam.searchResult()).isEmpty
+        assertThat(contentBlockParam.thinking()).isEmpty
+        assertThat(contentBlockParam.redactedThinking()).isEmpty
+        assertThat(contentBlockParam.toolUse()).isEmpty
+        assertThat(contentBlockParam.toolResult()).isEmpty
+        assertThat(contentBlockParam.serverToolUse()).isEmpty
+        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
+        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.toolSearchToolResult()).contains(toolSearchToolResult)
+        assertThat(contentBlockParam.containerUpload()).isEmpty
+    }
+
+    @Test
+    fun ofToolSearchToolResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlockParam =
+            ContentBlockParam.ofToolSearchToolResult(
+                ToolSearchToolResultBlockParam.builder()
+                    .content(
+                        ToolSearchToolResultErrorParam.builder()
+                            .errorCode(ToolSearchToolResultErrorCode.INVALID_TOOL_INPUT)
+                            .build()
+                    )
+                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedContentBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlockParam),
+                jacksonTypeRef<ContentBlockParam>(),
+            )
+
+        assertThat(roundtrippedContentBlockParam).isEqualTo(contentBlockParam)
+    }
+
+    @Test
+    fun ofContainerUpload() {
+        val containerUpload =
+            ContainerUploadBlockParam.builder()
+                .fileId("file_id")
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
+                .build()
+
+        val contentBlockParam = ContentBlockParam.ofContainerUpload(containerUpload)
+
+        assertThat(contentBlockParam.text()).isEmpty
+        assertThat(contentBlockParam.image()).isEmpty
+        assertThat(contentBlockParam.document()).isEmpty
+        assertThat(contentBlockParam.searchResult()).isEmpty
+        assertThat(contentBlockParam.thinking()).isEmpty
+        assertThat(contentBlockParam.redactedThinking()).isEmpty
+        assertThat(contentBlockParam.toolUse()).isEmpty
+        assertThat(contentBlockParam.toolResult()).isEmpty
+        assertThat(contentBlockParam.serverToolUse()).isEmpty
+        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
+        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
+        assertThat(contentBlockParam.containerUpload()).contains(containerUpload)
+    }
+
+    @Test
+    fun ofContainerUploadRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlockParam =
+            ContentBlockParam.ofContainerUpload(
+                ContainerUploadBlockParam.builder()
+                    .fileId("file_id")
                     .cacheControl(
                         CacheControlEphemeral.builder()
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)

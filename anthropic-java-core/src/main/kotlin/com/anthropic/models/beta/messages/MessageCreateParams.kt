@@ -1312,6 +1312,14 @@ private constructor(
 
         /**
          * Alias for calling [addTool] with
+         * `BetaToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120)`.
+         */
+        fun addTool(codeExecutionTool20260120: BetaCodeExecutionTool20260120) = apply {
+            body.addTool(codeExecutionTool20260120)
+        }
+
+        /**
+         * Alias for calling [addTool] with
          * `BetaToolUnion.ofComputerUse20241022(computerUse20241022)`.
          */
         fun addTool(computerUse20241022: BetaToolComputerUse20241022) = apply {
@@ -1406,6 +1414,22 @@ private constructor(
         ) = apply {
             toolParametersTypes.add(toolParametersType)
             addTool(toolFromClass(toolParametersType, localValidation))
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `BetaToolUnion.ofWebSearchTool20260209(webSearchTool20260209)`.
+         */
+        fun addTool(webSearchTool20260209: BetaWebSearchTool20260209) = apply {
+            body.addTool(webSearchTool20260209)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `BetaToolUnion.ofWebFetchTool20260209(webFetchTool20260209)`.
+         */
+        fun addTool(webFetchTool20260209: BetaWebFetchTool20260209) = apply {
+            body.addTool(webFetchTool20260209)
         }
 
         /**
@@ -3007,6 +3031,13 @@ private constructor(
 
             /**
              * Alias for calling [addTool] with
+             * `BetaToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120)`.
+             */
+            fun addTool(codeExecutionTool20260120: BetaCodeExecutionTool20260120) =
+                addTool(BetaToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120))
+
+            /**
+             * Alias for calling [addTool] with
              * `BetaToolUnion.ofComputerUse20241022(computerUse20241022)`.
              */
             fun addTool(computerUse20241022: BetaToolComputerUse20241022) =
@@ -3074,6 +3105,20 @@ private constructor(
              */
             fun addTool(webFetchTool20250910: BetaWebFetchTool20250910) =
                 addTool(BetaToolUnion.ofWebFetchTool20250910(webFetchTool20250910))
+
+            /**
+             * Alias for calling [addTool] with
+             * `BetaToolUnion.ofWebSearchTool20260209(webSearchTool20260209)`.
+             */
+            fun addTool(webSearchTool20260209: BetaWebSearchTool20260209) =
+                addTool(BetaToolUnion.ofWebSearchTool20260209(webSearchTool20260209))
+
+            /**
+             * Alias for calling [addTool] with
+             * `BetaToolUnion.ofWebFetchTool20260209(webFetchTool20260209)`.
+             */
+            fun addTool(webFetchTool20260209: BetaWebFetchTool20260209) =
+                addTool(BetaToolUnion.ofWebFetchTool20260209(webFetchTool20260209))
 
             /**
              * Alias for calling [addTool] with

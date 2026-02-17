@@ -11,15 +11,18 @@ internal class ServerToolUsageTest {
 
     @Test
     fun create() {
-        val serverToolUsage = ServerToolUsage.builder().webSearchRequests(0L).build()
+        val serverToolUsage =
+            ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
 
+        assertThat(serverToolUsage.webFetchRequests()).isEqualTo(2L)
         assertThat(serverToolUsage.webSearchRequests()).isEqualTo(0L)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val serverToolUsage = ServerToolUsage.builder().webSearchRequests(0L).build()
+        val serverToolUsage =
+            ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
 
         val roundtrippedServerToolUsage =
             jsonMapper.readValue(

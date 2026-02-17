@@ -15,11 +15,14 @@ internal class ToolUseBlockTest {
         val toolUseBlock =
             ToolUseBlock.builder()
                 .id("id")
+                .caller(DirectCaller.builder().build())
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name("x")
                 .build()
 
         assertThat(toolUseBlock.id()).isEqualTo("id")
+        assertThat(toolUseBlock.caller())
+            .isEqualTo(ToolUseBlock.Caller.ofDirect(DirectCaller.builder().build()))
         assertThat(toolUseBlock._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
         assertThat(toolUseBlock.name()).isEqualTo("x")
     }
@@ -30,6 +33,7 @@ internal class ToolUseBlockTest {
         val toolUseBlock =
             ToolUseBlock.builder()
                 .id("id")
+                .caller(DirectCaller.builder().build())
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name("x")
                 .build()
