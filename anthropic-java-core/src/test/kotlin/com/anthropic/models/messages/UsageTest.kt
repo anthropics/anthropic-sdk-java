@@ -28,7 +28,6 @@ internal class UsageTest {
                     ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
                 )
                 .serviceTier(Usage.ServiceTier.STANDARD)
-                .speed(Usage.Speed.STANDARD)
                 .build()
 
         assertThat(usage.cacheCreation())
@@ -46,7 +45,6 @@ internal class UsageTest {
         assertThat(usage.serverToolUse())
             .contains(ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build())
         assertThat(usage.serviceTier()).contains(Usage.ServiceTier.STANDARD)
-        assertThat(usage.speed()).contains(Usage.Speed.STANDARD)
     }
 
     @Test
@@ -69,7 +67,6 @@ internal class UsageTest {
                     ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
                 )
                 .serviceTier(Usage.ServiceTier.STANDARD)
-                .speed(Usage.Speed.STANDARD)
                 .build()
 
         val roundtrippedUsage =
