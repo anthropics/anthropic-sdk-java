@@ -6,6 +6,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -21,6 +22,12 @@ internal class RawMessageStreamEventTest {
                 .message(
                     Message.builder()
                         .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
+                        .container(
+                            Container.builder()
+                                .id("id")
+                                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .build()
+                        )
                         .addContent(
                             TextBlock.builder()
                                 .addCitation(
@@ -53,9 +60,13 @@ internal class RawMessageStreamEventTest {
                                 .inputTokens(2095L)
                                 .outputTokens(503L)
                                 .serverToolUse(
-                                    ServerToolUsage.builder().webSearchRequests(0L).build()
+                                    ServerToolUsage.builder()
+                                        .webFetchRequests(2L)
+                                        .webSearchRequests(0L)
+                                        .build()
                                 )
                                 .serviceTier(Usage.ServiceTier.STANDARD)
+                                .speed(Usage.Speed.STANDARD)
                                 .build()
                         )
                         .build()
@@ -81,6 +92,12 @@ internal class RawMessageStreamEventTest {
                     .message(
                         Message.builder()
                             .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
+                            .container(
+                                Container.builder()
+                                    .id("id")
+                                    .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .build()
+                            )
                             .addContent(
                                 TextBlock.builder()
                                     .addCitation(
@@ -113,9 +130,13 @@ internal class RawMessageStreamEventTest {
                                     .inputTokens(2095L)
                                     .outputTokens(503L)
                                     .serverToolUse(
-                                        ServerToolUsage.builder().webSearchRequests(0L).build()
+                                        ServerToolUsage.builder()
+                                            .webFetchRequests(2L)
+                                            .webSearchRequests(0L)
+                                            .build()
                                     )
                                     .serviceTier(Usage.ServiceTier.STANDARD)
+                                    .speed(Usage.Speed.STANDARD)
                                     .build()
                             )
                             .build()
@@ -138,6 +159,12 @@ internal class RawMessageStreamEventTest {
             RawMessageDeltaEvent.builder()
                 .delta(
                     RawMessageDeltaEvent.Delta.builder()
+                        .container(
+                            Container.builder()
+                                .id("id")
+                                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .build()
+                        )
                         .stopReason(StopReason.END_TURN)
                         .stopSequence("stop_sequence")
                         .build()
@@ -148,7 +175,12 @@ internal class RawMessageStreamEventTest {
                         .cacheReadInputTokens(2051L)
                         .inputTokens(2095L)
                         .outputTokens(503L)
-                        .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                        .serverToolUse(
+                            ServerToolUsage.builder()
+                                .webFetchRequests(2L)
+                                .webSearchRequests(0L)
+                                .build()
+                        )
                         .build()
                 )
                 .build()
@@ -171,6 +203,12 @@ internal class RawMessageStreamEventTest {
                 RawMessageDeltaEvent.builder()
                     .delta(
                         RawMessageDeltaEvent.Delta.builder()
+                            .container(
+                                Container.builder()
+                                    .id("id")
+                                    .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .build()
+                            )
                             .stopReason(StopReason.END_TURN)
                             .stopSequence("stop_sequence")
                             .build()
@@ -181,7 +219,12 @@ internal class RawMessageStreamEventTest {
                             .cacheReadInputTokens(2051L)
                             .inputTokens(2095L)
                             .outputTokens(503L)
-                            .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                            .serverToolUse(
+                                ServerToolUsage.builder()
+                                    .webFetchRequests(2L)
+                                    .webSearchRequests(0L)
+                                    .build()
+                            )
                             .build()
                     )
                     .build()

@@ -24,8 +24,11 @@ internal class UsageTest {
                 .inferenceGeo("inference_geo")
                 .inputTokens(2095L)
                 .outputTokens(503L)
-                .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                .serverToolUse(
+                    ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
+                )
                 .serviceTier(Usage.ServiceTier.STANDARD)
+                .speed(Usage.Speed.STANDARD)
                 .build()
 
         assertThat(usage.cacheCreation())
@@ -41,8 +44,9 @@ internal class UsageTest {
         assertThat(usage.inputTokens()).isEqualTo(2095L)
         assertThat(usage.outputTokens()).isEqualTo(503L)
         assertThat(usage.serverToolUse())
-            .contains(ServerToolUsage.builder().webSearchRequests(0L).build())
+            .contains(ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build())
         assertThat(usage.serviceTier()).contains(Usage.ServiceTier.STANDARD)
+        assertThat(usage.speed()).contains(Usage.Speed.STANDARD)
     }
 
     @Test
@@ -61,8 +65,11 @@ internal class UsageTest {
                 .inferenceGeo("inference_geo")
                 .inputTokens(2095L)
                 .outputTokens(503L)
-                .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                .serverToolUse(
+                    ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
+                )
                 .serviceTier(Usage.ServiceTier.STANDARD)
+                .speed(Usage.Speed.STANDARD)
                 .build()
 
         val roundtrippedUsage =

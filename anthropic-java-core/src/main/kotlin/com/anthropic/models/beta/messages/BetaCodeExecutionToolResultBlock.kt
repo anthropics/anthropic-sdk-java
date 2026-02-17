@@ -59,13 +59,14 @@ private constructor(
                                     resultBlock.toParam()
                                 )
 
-                            override fun unknown(
-                                json: JsonValue?
-                            ): BetaCodeExecutionToolResultBlockParamContent {
-                                throw AnthropicInvalidDataException(
-                                    "Unknown BetaCodeExecutionToolResultBlockContent: $json"
-                                )
-                            }
+                            override fun visitEncryptedCodeExecutionResultBlock(
+                                encryptedCodeExecutionResultBlock:
+                                    BetaEncryptedCodeExecutionResultBlock
+                            ): BetaCodeExecutionToolResultBlockParamContent =
+                                BetaCodeExecutionToolResultBlockParamContent
+                                    .ofEncryptedCodeExecutionResultBlockParam(
+                                        encryptedCodeExecutionResultBlock.toParam()
+                                    )
                         }
                     )
                 }
@@ -74,6 +75,8 @@ private constructor(
             .build()
 
     /**
+     * Code execution result with encrypted stdout for PFC + web_search results.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -157,6 +160,7 @@ private constructor(
                     betaCodeExecutionToolResultBlock.additionalProperties.toMutableMap()
             }
 
+        /** Code execution result with encrypted stdout for PFC + web_search results. */
         fun content(content: BetaCodeExecutionToolResultBlockContent) =
             content(JsonField.of(content))
 
@@ -184,6 +188,17 @@ private constructor(
          */
         fun content(resultBlock: BetaCodeExecutionResultBlock) =
             content(BetaCodeExecutionToolResultBlockContent.ofResultBlock(resultBlock))
+
+        /**
+         * Alias for calling [content] with
+         * `BetaCodeExecutionToolResultBlockContent.ofEncryptedCodeExecutionResultBlock(encryptedCodeExecutionResultBlock)`.
+         */
+        fun content(encryptedCodeExecutionResultBlock: BetaEncryptedCodeExecutionResultBlock) =
+            content(
+                BetaCodeExecutionToolResultBlockContent.ofEncryptedCodeExecutionResultBlock(
+                    encryptedCodeExecutionResultBlock
+                )
+            )
 
         fun toolUseId(toolUseId: String) = toolUseId(JsonField.of(toolUseId))
 

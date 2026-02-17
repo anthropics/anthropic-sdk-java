@@ -21,6 +21,7 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.messages.BetaCodeExecutionTool20250522
 import com.anthropic.models.beta.messages.BetaCodeExecutionTool20250825
+import com.anthropic.models.beta.messages.BetaCodeExecutionTool20260120
 import com.anthropic.models.beta.messages.BetaContainerParams
 import com.anthropic.models.beta.messages.BetaContentBlockParam
 import com.anthropic.models.beta.messages.BetaContextManagementConfig
@@ -56,7 +57,9 @@ import com.anthropic.models.beta.messages.BetaToolTextEditor20250429
 import com.anthropic.models.beta.messages.BetaToolTextEditor20250728
 import com.anthropic.models.beta.messages.BetaToolUnion
 import com.anthropic.models.beta.messages.BetaWebFetchTool20250910
+import com.anthropic.models.beta.messages.BetaWebFetchTool20260209
 import com.anthropic.models.beta.messages.BetaWebSearchTool20250305
+import com.anthropic.models.beta.messages.BetaWebSearchTool20260209
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -2210,6 +2213,13 @@ private constructor(
 
                 /**
                  * Alias for calling [addTool] with
+                 * `BetaToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120)`.
+                 */
+                fun addTool(codeExecutionTool20260120: BetaCodeExecutionTool20260120) =
+                    addTool(BetaToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120))
+
+                /**
+                 * Alias for calling [addTool] with
                  * `BetaToolUnion.ofComputerUse20241022(computerUse20241022)`.
                  */
                 fun addTool(computerUse20241022: BetaToolComputerUse20241022) =
@@ -2277,6 +2287,20 @@ private constructor(
                  */
                 fun addTool(webFetchTool20250910: BetaWebFetchTool20250910) =
                     addTool(BetaToolUnion.ofWebFetchTool20250910(webFetchTool20250910))
+
+                /**
+                 * Alias for calling [addTool] with
+                 * `BetaToolUnion.ofWebSearchTool20260209(webSearchTool20260209)`.
+                 */
+                fun addTool(webSearchTool20260209: BetaWebSearchTool20260209) =
+                    addTool(BetaToolUnion.ofWebSearchTool20260209(webSearchTool20260209))
+
+                /**
+                 * Alias for calling [addTool] with
+                 * `BetaToolUnion.ofWebFetchTool20260209(webFetchTool20260209)`.
+                 */
+                fun addTool(webFetchTool20260209: BetaWebFetchTool20260209) =
+                    addTool(BetaToolUnion.ofWebFetchTool20260209(webFetchTool20260209))
 
                 /**
                  * Alias for calling [addTool] with

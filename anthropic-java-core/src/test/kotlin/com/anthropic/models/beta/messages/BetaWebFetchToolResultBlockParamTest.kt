@@ -24,6 +24,7 @@ internal class BetaWebFetchToolResultBlockParamTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .caller(BetaDirectCaller.builder().build())
                 .build()
 
         assertThat(betaWebFetchToolResultBlockParam.content())
@@ -40,6 +41,10 @@ internal class BetaWebFetchToolResultBlockParamTest {
                 BetaCacheControlEphemeral.builder()
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                     .build()
+            )
+        assertThat(betaWebFetchToolResultBlockParam.caller())
+            .contains(
+                BetaWebFetchToolResultBlockParam.Caller.ofDirect(BetaDirectCaller.builder().build())
             )
     }
 
@@ -59,6 +64,7 @@ internal class BetaWebFetchToolResultBlockParamTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .caller(BetaDirectCaller.builder().build())
                 .build()
 
         val roundtrippedBetaWebFetchToolResultBlockParam =

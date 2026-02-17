@@ -26,6 +26,8 @@ internal class BetaCodeExecutionToolResultBlockContentTest {
 
         assertThat(betaCodeExecutionToolResultBlockContent.error()).contains(error)
         assertThat(betaCodeExecutionToolResultBlockContent.resultBlock()).isEmpty
+        assertThat(betaCodeExecutionToolResultBlockContent.encryptedCodeExecutionResultBlock())
+            .isEmpty
     }
 
     @Test
@@ -63,6 +65,8 @@ internal class BetaCodeExecutionToolResultBlockContentTest {
 
         assertThat(betaCodeExecutionToolResultBlockContent.error()).isEmpty
         assertThat(betaCodeExecutionToolResultBlockContent.resultBlock()).contains(resultBlock)
+        assertThat(betaCodeExecutionToolResultBlockContent.encryptedCodeExecutionResultBlock())
+            .isEmpty
     }
 
     @Test
@@ -75,6 +79,50 @@ internal class BetaCodeExecutionToolResultBlockContentTest {
                     .returnCode(0L)
                     .stderr("stderr")
                     .stdout("stdout")
+                    .build()
+            )
+
+        val roundtrippedBetaCodeExecutionToolResultBlockContent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaCodeExecutionToolResultBlockContent),
+                jacksonTypeRef<BetaCodeExecutionToolResultBlockContent>(),
+            )
+
+        assertThat(roundtrippedBetaCodeExecutionToolResultBlockContent)
+            .isEqualTo(betaCodeExecutionToolResultBlockContent)
+    }
+
+    @Test
+    fun ofEncryptedCodeExecutionResultBlock() {
+        val encryptedCodeExecutionResultBlock =
+            BetaEncryptedCodeExecutionResultBlock.builder()
+                .addContent(BetaCodeExecutionOutputBlock.builder().fileId("file_id").build())
+                .encryptedStdout("encrypted_stdout")
+                .returnCode(0L)
+                .stderr("stderr")
+                .build()
+
+        val betaCodeExecutionToolResultBlockContent =
+            BetaCodeExecutionToolResultBlockContent.ofEncryptedCodeExecutionResultBlock(
+                encryptedCodeExecutionResultBlock
+            )
+
+        assertThat(betaCodeExecutionToolResultBlockContent.error()).isEmpty
+        assertThat(betaCodeExecutionToolResultBlockContent.resultBlock()).isEmpty
+        assertThat(betaCodeExecutionToolResultBlockContent.encryptedCodeExecutionResultBlock())
+            .contains(encryptedCodeExecutionResultBlock)
+    }
+
+    @Test
+    fun ofEncryptedCodeExecutionResultBlockRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaCodeExecutionToolResultBlockContent =
+            BetaCodeExecutionToolResultBlockContent.ofEncryptedCodeExecutionResultBlock(
+                BetaEncryptedCodeExecutionResultBlock.builder()
+                    .addContent(BetaCodeExecutionOutputBlock.builder().fileId("file_id").build())
+                    .encryptedStdout("encrypted_stdout")
+                    .returnCode(0L)
+                    .stderr("stderr")
                     .build()
             )
 

@@ -261,6 +261,7 @@ private constructor(
     class Delta
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
+        private val container: JsonField<Container>,
         private val stopReason: JsonField<StopReason>,
         private val stopSequence: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -268,13 +269,24 @@ private constructor(
 
         @JsonCreator
         private constructor(
+            @JsonProperty("container")
+            @ExcludeMissing
+            container: JsonField<Container> = JsonMissing.of(),
             @JsonProperty("stop_reason")
             @ExcludeMissing
             stopReason: JsonField<StopReason> = JsonMissing.of(),
             @JsonProperty("stop_sequence")
             @ExcludeMissing
             stopSequence: JsonField<String> = JsonMissing.of(),
-        ) : this(stopReason, stopSequence, mutableMapOf())
+        ) : this(container, stopReason, stopSequence, mutableMapOf())
+
+        /**
+         * Information about the container used in the request (for the code execution tool)
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun container(): Optional<Container> = container.getOptional("container")
 
         /**
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -287,6 +299,15 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun stopSequence(): Optional<String> = stopSequence.getOptional("stop_sequence")
+
+        /**
+         * Returns the raw JSON value of [container].
+         *
+         * Unlike [container], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("container")
+        @ExcludeMissing
+        fun _container(): JsonField<Container> = container
 
         /**
          * Returns the raw JSON value of [stopReason].
@@ -326,6 +347,7 @@ private constructor(
              *
              * The following fields are required:
              * ```java
+             * .container()
              * .stopReason()
              * .stopSequence()
              * ```
@@ -336,16 +358,33 @@ private constructor(
         /** A builder for [Delta]. */
         class Builder internal constructor() {
 
+            private var container: JsonField<Container>? = null
             private var stopReason: JsonField<StopReason>? = null
             private var stopSequence: JsonField<String>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(delta: Delta) = apply {
+                container = delta.container
                 stopReason = delta.stopReason
                 stopSequence = delta.stopSequence
                 additionalProperties = delta.additionalProperties.toMutableMap()
             }
+
+            /** Information about the container used in the request (for the code execution tool) */
+            fun container(container: Container?) = container(JsonField.ofNullable(container))
+
+            /** Alias for calling [Builder.container] with `container.orElse(null)`. */
+            fun container(container: Optional<Container>) = container(container.getOrNull())
+
+            /**
+             * Sets [Builder.container] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.container] with a well-typed [Container] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun container(container: JsonField<Container>) = apply { this.container = container }
 
             fun stopReason(stopReason: StopReason?) = stopReason(JsonField.ofNullable(stopReason))
 
@@ -407,6 +446,7 @@ private constructor(
              *
              * The following fields are required:
              * ```java
+             * .container()
              * .stopReason()
              * .stopSequence()
              * ```
@@ -415,6 +455,7 @@ private constructor(
              */
             fun build(): Delta =
                 Delta(
+                    checkRequired("container", container),
                     checkRequired("stopReason", stopReason),
                     checkRequired("stopSequence", stopSequence),
                     additionalProperties.toMutableMap(),
@@ -428,6 +469,7 @@ private constructor(
                 return@apply
             }
 
+            container().ifPresent { it.validate() }
             stopReason().ifPresent { it.validate() }
             stopSequence()
             validated = true
@@ -449,7 +491,8 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (stopReason.asKnown().getOrNull()?.validity() ?: 0) +
+            (container.asKnown().getOrNull()?.validity() ?: 0) +
+                (stopReason.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (stopSequence.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
@@ -458,19 +501,20 @@ private constructor(
             }
 
             return other is Delta &&
+                container == other.container &&
                 stopReason == other.stopReason &&
                 stopSequence == other.stopSequence &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(stopReason, stopSequence, additionalProperties)
+            Objects.hash(container, stopReason, stopSequence, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Delta{stopReason=$stopReason, stopSequence=$stopSequence, additionalProperties=$additionalProperties}"
+            "Delta{container=$container, stopReason=$stopReason, stopSequence=$stopSequence, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

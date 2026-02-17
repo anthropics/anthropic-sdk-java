@@ -34,6 +34,7 @@ private constructor(
     private val content: JsonField<Content>,
     private val toolUseId: JsonField<String>,
     private val type: JsonValue,
+    private val caller: JsonField<Caller>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -44,7 +45,8 @@ private constructor(
         @ExcludeMissing
         toolUseId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(content, toolUseId, type, mutableMapOf())
+        @JsonProperty("caller") @ExcludeMissing caller: JsonField<Caller> = JsonMissing.of(),
+    ) : this(content, toolUseId, type, caller, mutableMapOf())
 
     fun toParam(): BetaWebFetchToolResultBlockParam =
         BetaWebFetchToolResultBlockParam.builder()
@@ -74,6 +76,35 @@ private constructor(
                 }
             )
             .toolUseId(_toolUseId())
+            .caller(
+                _caller().map {
+                    it.accept(
+                        object :
+                            BetaWebFetchToolResultBlock.Caller.Visitor<
+                                BetaWebFetchToolResultBlockParam.Caller
+                            > {
+                            override fun visitDirect(
+                                direct: BetaDirectCaller
+                            ): BetaWebFetchToolResultBlockParam.Caller =
+                                BetaWebFetchToolResultBlockParam.Caller.ofDirect(direct)
+
+                            override fun visitCodeExecution20250825(
+                                codeExecution20250825: BetaServerToolCaller
+                            ): BetaWebFetchToolResultBlockParam.Caller =
+                                BetaWebFetchToolResultBlockParam.Caller.ofDirect(
+                                    BetaDirectCaller.builder().build()
+                                )
+
+                            override fun visitCodeExecution20260120(
+                                codeExecution20260120: BetaServerToolCaller20260120
+                            ): BetaWebFetchToolResultBlockParam.Caller =
+                                BetaWebFetchToolResultBlockParam.Caller.ofDirect(
+                                    BetaDirectCaller.builder().build()
+                                )
+                        }
+                    )
+                }
+            )
             .build()
 
     /**
@@ -100,6 +131,14 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
+     * Tool invocation directly from the model.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun caller(): Optional<Caller> = caller.getOptional("caller")
+
+    /**
      * Returns the raw JSON value of [content].
      *
      * Unlike [content], this method doesn't throw if the JSON field has an unexpected type.
@@ -112,6 +151,13 @@ private constructor(
      * Unlike [toolUseId], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("tool_use_id") @ExcludeMissing fun _toolUseId(): JsonField<String> = toolUseId
+
+    /**
+     * Returns the raw JSON value of [caller].
+     *
+     * Unlike [caller], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("caller") @ExcludeMissing fun _caller(): JsonField<Caller> = caller
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -145,6 +191,7 @@ private constructor(
         private var content: JsonField<Content>? = null
         private var toolUseId: JsonField<String>? = null
         private var type: JsonValue = JsonValue.from("web_fetch_tool_result")
+        private var caller: JsonField<Caller> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -152,6 +199,7 @@ private constructor(
             content = betaWebFetchToolResultBlock.content
             toolUseId = betaWebFetchToolResultBlock.toolUseId
             type = betaWebFetchToolResultBlock.type
+            caller = betaWebFetchToolResultBlock.caller
             additionalProperties = betaWebFetchToolResultBlock.additionalProperties.toMutableMap()
         }
 
@@ -201,6 +249,54 @@ private constructor(
          */
         fun type(type: JsonValue) = apply { this.type = type }
 
+        /** Tool invocation directly from the model. */
+        fun caller(caller: Caller) = caller(JsonField.of(caller))
+
+        /**
+         * Sets [Builder.caller] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.caller] with a well-typed [Caller] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun caller(caller: JsonField<Caller>) = apply { this.caller = caller }
+
+        /** Alias for calling [caller] with `Caller.ofDirect(direct)`. */
+        fun caller(direct: BetaDirectCaller) = caller(Caller.ofDirect(direct))
+
+        /**
+         * Alias for calling [caller] with `Caller.ofCodeExecution20250825(codeExecution20250825)`.
+         */
+        fun caller(codeExecution20250825: BetaServerToolCaller) =
+            caller(Caller.ofCodeExecution20250825(codeExecution20250825))
+
+        /**
+         * Alias for calling [caller] with the following:
+         * ```java
+         * BetaServerToolCaller.builder()
+         *     .toolId(toolId)
+         *     .build()
+         * ```
+         */
+        fun codeExecution20250825Caller(toolId: String) =
+            caller(BetaServerToolCaller.builder().toolId(toolId).build())
+
+        /**
+         * Alias for calling [caller] with `Caller.ofCodeExecution20260120(codeExecution20260120)`.
+         */
+        fun caller(codeExecution20260120: BetaServerToolCaller20260120) =
+            caller(Caller.ofCodeExecution20260120(codeExecution20260120))
+
+        /**
+         * Alias for calling [caller] with the following:
+         * ```java
+         * BetaServerToolCaller20260120.builder()
+         *     .toolId(toolId)
+         *     .build()
+         * ```
+         */
+        fun codeExecution20260120Caller(toolId: String) =
+            caller(BetaServerToolCaller20260120.builder().toolId(toolId).build())
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -238,6 +334,7 @@ private constructor(
                 checkRequired("content", content),
                 checkRequired("toolUseId", toolUseId),
                 type,
+                caller,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -256,6 +353,7 @@ private constructor(
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
+        caller().ifPresent { it.validate() }
         validated = true
     }
 
@@ -276,7 +374,8 @@ private constructor(
     internal fun validity(): Int =
         (content.asKnown().getOrNull()?.validity() ?: 0) +
             (if (toolUseId.asKnown().isPresent) 1 else 0) +
-            type.let { if (it == JsonValue.from("web_fetch_tool_result")) 1 else 0 }
+            type.let { if (it == JsonValue.from("web_fetch_tool_result")) 1 else 0 } +
+            (caller.asKnown().getOrNull()?.validity() ?: 0)
 
     @JsonDeserialize(using = Content.Deserializer::class)
     @JsonSerialize(using = Content.Serializer::class)
@@ -475,6 +574,230 @@ private constructor(
         }
     }
 
+    /** Tool invocation directly from the model. */
+    @JsonDeserialize(using = Caller.Deserializer::class)
+    @JsonSerialize(using = Caller.Serializer::class)
+    class Caller
+    private constructor(
+        private val direct: BetaDirectCaller? = null,
+        private val codeExecution20250825: BetaServerToolCaller? = null,
+        private val codeExecution20260120: BetaServerToolCaller20260120? = null,
+        private val _json: JsonValue? = null,
+    ) {
+
+        /** Tool invocation directly from the model. */
+        fun direct(): Optional<BetaDirectCaller> = Optional.ofNullable(direct)
+
+        /** Tool invocation generated by a server-side tool. */
+        fun codeExecution20250825(): Optional<BetaServerToolCaller> =
+            Optional.ofNullable(codeExecution20250825)
+
+        fun codeExecution20260120(): Optional<BetaServerToolCaller20260120> =
+            Optional.ofNullable(codeExecution20260120)
+
+        fun isDirect(): Boolean = direct != null
+
+        fun isCodeExecution20250825(): Boolean = codeExecution20250825 != null
+
+        fun isCodeExecution20260120(): Boolean = codeExecution20260120 != null
+
+        /** Tool invocation directly from the model. */
+        fun asDirect(): BetaDirectCaller = direct.getOrThrow("direct")
+
+        /** Tool invocation generated by a server-side tool. */
+        fun asCodeExecution20250825(): BetaServerToolCaller =
+            codeExecution20250825.getOrThrow("codeExecution20250825")
+
+        fun asCodeExecution20260120(): BetaServerToolCaller20260120 =
+            codeExecution20260120.getOrThrow("codeExecution20260120")
+
+        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+        fun <T> accept(visitor: Visitor<T>): T =
+            when {
+                direct != null -> visitor.visitDirect(direct)
+                codeExecution20250825 != null ->
+                    visitor.visitCodeExecution20250825(codeExecution20250825)
+                codeExecution20260120 != null ->
+                    visitor.visitCodeExecution20260120(codeExecution20260120)
+                else -> visitor.unknown(_json)
+            }
+
+        private var validated: Boolean = false
+
+        fun validate(): Caller = apply {
+            if (validated) {
+                return@apply
+            }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitDirect(direct: BetaDirectCaller) {
+                        direct.validate()
+                    }
+
+                    override fun visitCodeExecution20250825(
+                        codeExecution20250825: BetaServerToolCaller
+                    ) {
+                        codeExecution20250825.validate()
+                    }
+
+                    override fun visitCodeExecution20260120(
+                        codeExecution20260120: BetaServerToolCaller20260120
+                    ) {
+                        codeExecution20260120.validate()
+                    }
+                }
+            )
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            accept(
+                object : Visitor<Int> {
+                    override fun visitDirect(direct: BetaDirectCaller) = direct.validity()
+
+                    override fun visitCodeExecution20250825(
+                        codeExecution20250825: BetaServerToolCaller
+                    ) = codeExecution20250825.validity()
+
+                    override fun visitCodeExecution20260120(
+                        codeExecution20260120: BetaServerToolCaller20260120
+                    ) = codeExecution20260120.validity()
+
+                    override fun unknown(json: JsonValue?) = 0
+                }
+            )
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Caller &&
+                direct == other.direct &&
+                codeExecution20250825 == other.codeExecution20250825 &&
+                codeExecution20260120 == other.codeExecution20260120
+        }
+
+        override fun hashCode(): Int =
+            Objects.hash(direct, codeExecution20250825, codeExecution20260120)
+
+        override fun toString(): String =
+            when {
+                direct != null -> "Caller{direct=$direct}"
+                codeExecution20250825 != null ->
+                    "Caller{codeExecution20250825=$codeExecution20250825}"
+                codeExecution20260120 != null ->
+                    "Caller{codeExecution20260120=$codeExecution20260120}"
+                _json != null -> "Caller{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid Caller")
+            }
+
+        companion object {
+
+            /** Tool invocation directly from the model. */
+            @JvmStatic fun ofDirect(direct: BetaDirectCaller) = Caller(direct = direct)
+
+            /** Tool invocation generated by a server-side tool. */
+            @JvmStatic
+            fun ofCodeExecution20250825(codeExecution20250825: BetaServerToolCaller) =
+                Caller(codeExecution20250825 = codeExecution20250825)
+
+            @JvmStatic
+            fun ofCodeExecution20260120(codeExecution20260120: BetaServerToolCaller20260120) =
+                Caller(codeExecution20260120 = codeExecution20260120)
+        }
+
+        /** An interface that defines how to map each variant of [Caller] to a value of type [T]. */
+        interface Visitor<out T> {
+
+            /** Tool invocation directly from the model. */
+            fun visitDirect(direct: BetaDirectCaller): T
+
+            /** Tool invocation generated by a server-side tool. */
+            fun visitCodeExecution20250825(codeExecution20250825: BetaServerToolCaller): T
+
+            fun visitCodeExecution20260120(codeExecution20260120: BetaServerToolCaller20260120): T
+
+            /**
+             * Maps an unknown variant of [Caller] to a value of type [T].
+             *
+             * An instance of [Caller] can contain an unknown variant if it was deserialized from
+             * data that doesn't match any known variant. For example, if the SDK is on an older
+             * version than the API, then the API may respond with new variants that the SDK is
+             * unaware of.
+             *
+             * @throws AnthropicInvalidDataException in the default implementation.
+             */
+            fun unknown(json: JsonValue?): T {
+                throw AnthropicInvalidDataException("Unknown Caller: $json")
+            }
+        }
+
+        internal class Deserializer : BaseDeserializer<Caller>(Caller::class) {
+
+            override fun ObjectCodec.deserialize(node: JsonNode): Caller {
+                val json = JsonValue.fromJsonNode(node)
+                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+
+                when (type) {
+                    "direct" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaDirectCaller>())?.let {
+                            Caller(direct = it, _json = json)
+                        } ?: Caller(_json = json)
+                    }
+                    "code_execution_20250825" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaServerToolCaller>())?.let {
+                            Caller(codeExecution20250825 = it, _json = json)
+                        } ?: Caller(_json = json)
+                    }
+                    "code_execution_20260120" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaServerToolCaller20260120>())
+                            ?.let { Caller(codeExecution20260120 = it, _json = json) }
+                            ?: Caller(_json = json)
+                    }
+                }
+
+                return Caller(_json = json)
+            }
+        }
+
+        internal class Serializer : BaseSerializer<Caller>(Caller::class) {
+
+            override fun serialize(
+                value: Caller,
+                generator: JsonGenerator,
+                provider: SerializerProvider,
+            ) {
+                when {
+                    value.direct != null -> generator.writeObject(value.direct)
+                    value.codeExecution20250825 != null ->
+                        generator.writeObject(value.codeExecution20250825)
+                    value.codeExecution20260120 != null ->
+                        generator.writeObject(value.codeExecution20260120)
+                    value._json != null -> generator.writeObject(value._json)
+                    else -> throw IllegalStateException("Invalid Caller")
+                }
+            }
+        }
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -484,15 +807,16 @@ private constructor(
             content == other.content &&
             toolUseId == other.toolUseId &&
             type == other.type &&
+            caller == other.caller &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(content, toolUseId, type, additionalProperties)
+        Objects.hash(content, toolUseId, type, caller, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaWebFetchToolResultBlock{content=$content, toolUseId=$toolUseId, type=$type, additionalProperties=$additionalProperties}"
+        "BetaWebFetchToolResultBlock{content=$content, toolUseId=$toolUseId, type=$type, caller=$caller, additionalProperties=$additionalProperties}"
 }

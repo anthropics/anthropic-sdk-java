@@ -18,12 +18,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Objects
 import java.util.Optional
 
-/**
- * Configuration for a group of tools from an MCP server.
- *
- * Allows configuring enabled status and defer_loading for all tools from an MCP server, with
- * optional per-tool overrides.
- */
+/** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
 @JsonDeserialize(using = BetaToolUnion.Deserializer::class)
 @JsonSerialize(using = BetaToolUnion.Serializer::class)
 class BetaToolUnion
@@ -33,6 +28,7 @@ private constructor(
     private val bash20250124: BetaToolBash20250124? = null,
     private val codeExecutionTool20250522: BetaCodeExecutionTool20250522? = null,
     private val codeExecutionTool20250825: BetaCodeExecutionTool20250825? = null,
+    private val codeExecutionTool20260120: BetaCodeExecutionTool20260120? = null,
     private val computerUse20241022: BetaToolComputerUse20241022? = null,
     private val memoryTool20250818: BetaMemoryTool20250818? = null,
     private val computerUse20250124: BetaToolComputerUse20250124? = null,
@@ -43,6 +39,8 @@ private constructor(
     private val textEditor20250728: BetaToolTextEditor20250728? = null,
     private val webSearchTool20250305: BetaWebSearchTool20250305? = null,
     private val webFetchTool20250910: BetaWebFetchTool20250910? = null,
+    private val webSearchTool20260209: BetaWebSearchTool20260209? = null,
+    private val webFetchTool20260209: BetaWebFetchTool20260209? = null,
     private val searchToolBm25_20251119: BetaToolSearchToolBm25_20251119? = null,
     private val searchToolRegex20251119: BetaToolSearchToolRegex20251119? = null,
     private val mcpToolset: BetaMcpToolset? = null,
@@ -60,6 +58,10 @@ private constructor(
 
     fun codeExecutionTool20250825(): Optional<BetaCodeExecutionTool20250825> =
         Optional.ofNullable(codeExecutionTool20250825)
+
+    /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
+    fun codeExecutionTool20260120(): Optional<BetaCodeExecutionTool20260120> =
+        Optional.ofNullable(codeExecutionTool20260120)
 
     fun computerUse20241022(): Optional<BetaToolComputerUse20241022> =
         Optional.ofNullable(computerUse20241022)
@@ -91,6 +93,12 @@ private constructor(
     fun webFetchTool20250910(): Optional<BetaWebFetchTool20250910> =
         Optional.ofNullable(webFetchTool20250910)
 
+    fun webSearchTool20260209(): Optional<BetaWebSearchTool20260209> =
+        Optional.ofNullable(webSearchTool20260209)
+
+    fun webFetchTool20260209(): Optional<BetaWebFetchTool20260209> =
+        Optional.ofNullable(webFetchTool20260209)
+
     fun searchToolBm25_20251119(): Optional<BetaToolSearchToolBm25_20251119> =
         Optional.ofNullable(searchToolBm25_20251119)
 
@@ -115,6 +123,8 @@ private constructor(
 
     fun isCodeExecutionTool20250825(): Boolean = codeExecutionTool20250825 != null
 
+    fun isCodeExecutionTool20260120(): Boolean = codeExecutionTool20260120 != null
+
     fun isComputerUse20241022(): Boolean = computerUse20241022 != null
 
     fun isMemoryTool20250818(): Boolean = memoryTool20250818 != null
@@ -135,6 +145,10 @@ private constructor(
 
     fun isWebFetchTool20250910(): Boolean = webFetchTool20250910 != null
 
+    fun isWebSearchTool20260209(): Boolean = webSearchTool20260209 != null
+
+    fun isWebFetchTool20260209(): Boolean = webFetchTool20260209 != null
+
     fun isSearchToolBm25_20251119(): Boolean = searchToolBm25_20251119 != null
 
     fun isSearchToolRegex20251119(): Boolean = searchToolRegex20251119 != null
@@ -152,6 +166,10 @@ private constructor(
 
     fun asCodeExecutionTool20250825(): BetaCodeExecutionTool20250825 =
         codeExecutionTool20250825.getOrThrow("codeExecutionTool20250825")
+
+    /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
+    fun asCodeExecutionTool20260120(): BetaCodeExecutionTool20260120 =
+        codeExecutionTool20260120.getOrThrow("codeExecutionTool20260120")
 
     fun asComputerUse20241022(): BetaToolComputerUse20241022 =
         computerUse20241022.getOrThrow("computerUse20241022")
@@ -183,6 +201,12 @@ private constructor(
     fun asWebFetchTool20250910(): BetaWebFetchTool20250910 =
         webFetchTool20250910.getOrThrow("webFetchTool20250910")
 
+    fun asWebSearchTool20260209(): BetaWebSearchTool20260209 =
+        webSearchTool20260209.getOrThrow("webSearchTool20260209")
+
+    fun asWebFetchTool20260209(): BetaWebFetchTool20260209 =
+        webFetchTool20260209.getOrThrow("webFetchTool20260209")
+
     fun asSearchToolBm25_20251119(): BetaToolSearchToolBm25_20251119 =
         searchToolBm25_20251119.getOrThrow("searchToolBm25_20251119")
 
@@ -208,6 +232,8 @@ private constructor(
                 visitor.visitCodeExecutionTool20250522(codeExecutionTool20250522)
             codeExecutionTool20250825 != null ->
                 visitor.visitCodeExecutionTool20250825(codeExecutionTool20250825)
+            codeExecutionTool20260120 != null ->
+                visitor.visitCodeExecutionTool20260120(codeExecutionTool20260120)
             computerUse20241022 != null -> visitor.visitComputerUse20241022(computerUse20241022)
             memoryTool20250818 != null -> visitor.visitMemoryTool20250818(memoryTool20250818)
             computerUse20250124 != null -> visitor.visitComputerUse20250124(computerUse20250124)
@@ -219,6 +245,9 @@ private constructor(
             webSearchTool20250305 != null ->
                 visitor.visitWebSearchTool20250305(webSearchTool20250305)
             webFetchTool20250910 != null -> visitor.visitWebFetchTool20250910(webFetchTool20250910)
+            webSearchTool20260209 != null ->
+                visitor.visitWebSearchTool20260209(webSearchTool20260209)
+            webFetchTool20260209 != null -> visitor.visitWebFetchTool20260209(webFetchTool20260209)
             searchToolBm25_20251119 != null ->
                 visitor.visitSearchToolBm25_20251119(searchToolBm25_20251119)
             searchToolRegex20251119 != null ->
@@ -258,6 +287,12 @@ private constructor(
                     codeExecutionTool20250825: BetaCodeExecutionTool20250825
                 ) {
                     codeExecutionTool20250825.validate()
+                }
+
+                override fun visitCodeExecutionTool20260120(
+                    codeExecutionTool20260120: BetaCodeExecutionTool20260120
+                ) {
+                    codeExecutionTool20260120.validate()
                 }
 
                 override fun visitComputerUse20241022(
@@ -318,6 +353,18 @@ private constructor(
                     webFetchTool20250910.validate()
                 }
 
+                override fun visitWebSearchTool20260209(
+                    webSearchTool20260209: BetaWebSearchTool20260209
+                ) {
+                    webSearchTool20260209.validate()
+                }
+
+                override fun visitWebFetchTool20260209(
+                    webFetchTool20260209: BetaWebFetchTool20260209
+                ) {
+                    webFetchTool20260209.validate()
+                }
+
                 override fun visitSearchToolBm25_20251119(
                     searchToolBm25_20251119: BetaToolSearchToolBm25_20251119
                 ) {
@@ -371,6 +418,10 @@ private constructor(
                     codeExecutionTool20250825: BetaCodeExecutionTool20250825
                 ) = codeExecutionTool20250825.validity()
 
+                override fun visitCodeExecutionTool20260120(
+                    codeExecutionTool20260120: BetaCodeExecutionTool20260120
+                ) = codeExecutionTool20260120.validity()
+
                 override fun visitComputerUse20241022(
                     computerUse20241022: BetaToolComputerUse20241022
                 ) = computerUse20241022.validity()
@@ -410,6 +461,14 @@ private constructor(
                     webFetchTool20250910: BetaWebFetchTool20250910
                 ) = webFetchTool20250910.validity()
 
+                override fun visitWebSearchTool20260209(
+                    webSearchTool20260209: BetaWebSearchTool20260209
+                ) = webSearchTool20260209.validity()
+
+                override fun visitWebFetchTool20260209(
+                    webFetchTool20260209: BetaWebFetchTool20260209
+                ) = webFetchTool20260209.validity()
+
                 override fun visitSearchToolBm25_20251119(
                     searchToolBm25_20251119: BetaToolSearchToolBm25_20251119
                 ) = searchToolBm25_20251119.validity()
@@ -435,6 +494,7 @@ private constructor(
             bash20250124 == other.bash20250124 &&
             codeExecutionTool20250522 == other.codeExecutionTool20250522 &&
             codeExecutionTool20250825 == other.codeExecutionTool20250825 &&
+            codeExecutionTool20260120 == other.codeExecutionTool20260120 &&
             computerUse20241022 == other.computerUse20241022 &&
             memoryTool20250818 == other.memoryTool20250818 &&
             computerUse20250124 == other.computerUse20250124 &&
@@ -445,6 +505,8 @@ private constructor(
             textEditor20250728 == other.textEditor20250728 &&
             webSearchTool20250305 == other.webSearchTool20250305 &&
             webFetchTool20250910 == other.webFetchTool20250910 &&
+            webSearchTool20260209 == other.webSearchTool20260209 &&
+            webFetchTool20260209 == other.webFetchTool20260209 &&
             searchToolBm25_20251119 == other.searchToolBm25_20251119 &&
             searchToolRegex20251119 == other.searchToolRegex20251119 &&
             mcpToolset == other.mcpToolset
@@ -457,6 +519,7 @@ private constructor(
             bash20250124,
             codeExecutionTool20250522,
             codeExecutionTool20250825,
+            codeExecutionTool20260120,
             computerUse20241022,
             memoryTool20250818,
             computerUse20250124,
@@ -467,6 +530,8 @@ private constructor(
             textEditor20250728,
             webSearchTool20250305,
             webFetchTool20250910,
+            webSearchTool20260209,
+            webFetchTool20260209,
             searchToolBm25_20251119,
             searchToolRegex20251119,
             mcpToolset,
@@ -481,6 +546,8 @@ private constructor(
                 "BetaToolUnion{codeExecutionTool20250522=$codeExecutionTool20250522}"
             codeExecutionTool20250825 != null ->
                 "BetaToolUnion{codeExecutionTool20250825=$codeExecutionTool20250825}"
+            codeExecutionTool20260120 != null ->
+                "BetaToolUnion{codeExecutionTool20260120=$codeExecutionTool20260120}"
             computerUse20241022 != null -> "BetaToolUnion{computerUse20241022=$computerUse20241022}"
             memoryTool20250818 != null -> "BetaToolUnion{memoryTool20250818=$memoryTool20250818}"
             computerUse20250124 != null -> "BetaToolUnion{computerUse20250124=$computerUse20250124}"
@@ -493,6 +560,10 @@ private constructor(
                 "BetaToolUnion{webSearchTool20250305=$webSearchTool20250305}"
             webFetchTool20250910 != null ->
                 "BetaToolUnion{webFetchTool20250910=$webFetchTool20250910}"
+            webSearchTool20260209 != null ->
+                "BetaToolUnion{webSearchTool20260209=$webSearchTool20260209}"
+            webFetchTool20260209 != null ->
+                "BetaToolUnion{webFetchTool20260209=$webFetchTool20260209}"
             searchToolBm25_20251119 != null ->
                 "BetaToolUnion{searchToolBm25_20251119=$searchToolBm25_20251119}"
             searchToolRegex20251119 != null ->
@@ -521,6 +592,11 @@ private constructor(
         @JvmStatic
         fun ofCodeExecutionTool20250825(codeExecutionTool20250825: BetaCodeExecutionTool20250825) =
             BetaToolUnion(codeExecutionTool20250825 = codeExecutionTool20250825)
+
+        /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
+        @JvmStatic
+        fun ofCodeExecutionTool20260120(codeExecutionTool20260120: BetaCodeExecutionTool20260120) =
+            BetaToolUnion(codeExecutionTool20260120 = codeExecutionTool20260120)
 
         @JvmStatic
         fun ofComputerUse20241022(computerUse20241022: BetaToolComputerUse20241022) =
@@ -563,6 +639,14 @@ private constructor(
             BetaToolUnion(webFetchTool20250910 = webFetchTool20250910)
 
         @JvmStatic
+        fun ofWebSearchTool20260209(webSearchTool20260209: BetaWebSearchTool20260209) =
+            BetaToolUnion(webSearchTool20260209 = webSearchTool20260209)
+
+        @JvmStatic
+        fun ofWebFetchTool20260209(webFetchTool20260209: BetaWebFetchTool20260209) =
+            BetaToolUnion(webFetchTool20260209 = webFetchTool20260209)
+
+        @JvmStatic
         fun ofSearchToolBm25_20251119(searchToolBm25_20251119: BetaToolSearchToolBm25_20251119) =
             BetaToolUnion(searchToolBm25_20251119 = searchToolBm25_20251119)
 
@@ -599,6 +683,11 @@ private constructor(
             codeExecutionTool20250825: BetaCodeExecutionTool20250825
         ): T
 
+        /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
+        fun visitCodeExecutionTool20260120(
+            codeExecutionTool20260120: BetaCodeExecutionTool20260120
+        ): T
+
         fun visitComputerUse20241022(computerUse20241022: BetaToolComputerUse20241022): T
 
         fun visitMemoryTool20250818(memoryTool20250818: BetaMemoryTool20250818): T
@@ -618,6 +707,10 @@ private constructor(
         fun visitWebSearchTool20250305(webSearchTool20250305: BetaWebSearchTool20250305): T
 
         fun visitWebFetchTool20250910(webFetchTool20250910: BetaWebFetchTool20250910): T
+
+        fun visitWebSearchTool20260209(webSearchTool20260209: BetaWebSearchTool20260209): T
+
+        fun visitWebFetchTool20260209(webFetchTool20260209: BetaWebFetchTool20260209): T
 
         fun visitSearchToolBm25_20251119(
             searchToolBm25_20251119: BetaToolSearchToolBm25_20251119
@@ -671,6 +764,9 @@ private constructor(
                         tryDeserialize(node, jacksonTypeRef<BetaCodeExecutionTool20250825>())?.let {
                             BetaToolUnion(codeExecutionTool20250825 = it, _json = json)
                         },
+                        tryDeserialize(node, jacksonTypeRef<BetaCodeExecutionTool20260120>())?.let {
+                            BetaToolUnion(codeExecutionTool20260120 = it, _json = json)
+                        },
                         tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20241022>())?.let {
                             BetaToolUnion(computerUse20241022 = it, _json = json)
                         },
@@ -700,6 +796,12 @@ private constructor(
                         },
                         tryDeserialize(node, jacksonTypeRef<BetaWebFetchTool20250910>())?.let {
                             BetaToolUnion(webFetchTool20250910 = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<BetaWebSearchTool20260209>())?.let {
+                            BetaToolUnion(webSearchTool20260209 = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<BetaWebFetchTool20260209>())?.let {
+                            BetaToolUnion(webFetchTool20260209 = it, _json = json)
                         },
                         tryDeserialize(node, jacksonTypeRef<BetaToolSearchToolBm25_20251119>())
                             ?.let { BetaToolUnion(searchToolBm25_20251119 = it, _json = json) },
@@ -739,6 +841,8 @@ private constructor(
                     generator.writeObject(value.codeExecutionTool20250522)
                 value.codeExecutionTool20250825 != null ->
                     generator.writeObject(value.codeExecutionTool20250825)
+                value.codeExecutionTool20260120 != null ->
+                    generator.writeObject(value.codeExecutionTool20260120)
                 value.computerUse20241022 != null ->
                     generator.writeObject(value.computerUse20241022)
                 value.memoryTool20250818 != null -> generator.writeObject(value.memoryTool20250818)
@@ -754,6 +858,10 @@ private constructor(
                     generator.writeObject(value.webSearchTool20250305)
                 value.webFetchTool20250910 != null ->
                     generator.writeObject(value.webFetchTool20250910)
+                value.webSearchTool20260209 != null ->
+                    generator.writeObject(value.webSearchTool20260209)
+                value.webFetchTool20260209 != null ->
+                    generator.writeObject(value.webFetchTool20260209)
                 value.searchToolBm25_20251119 != null ->
                     generator.writeObject(value.searchToolBm25_20251119)
                 value.searchToolRegex20251119 != null ->

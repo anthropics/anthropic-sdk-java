@@ -28,6 +28,7 @@ internal class MessageCountTokensParamsTest {
                     )
                     .build()
             )
+            .speed(MessageCountTokensParams.Speed.STANDARD)
             .systemOfTextBlockParams(
                 listOf(
                     TextBlockParam.builder()
@@ -65,13 +66,20 @@ internal class MessageCountTokensParamsTest {
                             .build()
                     )
                     .name("name")
+                    .addAllowedCaller(Tool.AllowedCaller.DIRECT)
                     .cacheControl(
                         CacheControlEphemeral.builder()
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .deferLoading(true)
                     .description("Get the current weather in a given location")
                     .eagerInputStreaming(true)
+                    .addInputExample(
+                        Tool.InputExample.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                     .strict(true)
                     .type(Tool.Type.CUSTOM)
                     .build()
@@ -99,6 +107,7 @@ internal class MessageCountTokensParamsTest {
                         )
                         .build()
                 )
+                .speed(MessageCountTokensParams.Speed.STANDARD)
                 .systemOfTextBlockParams(
                     listOf(
                         TextBlockParam.builder()
@@ -136,13 +145,20 @@ internal class MessageCountTokensParamsTest {
                                 .build()
                         )
                         .name("name")
+                        .addAllowedCaller(Tool.AllowedCaller.DIRECT)
                         .cacheControl(
                             CacheControlEphemeral.builder()
                                 .ttl(CacheControlEphemeral.Ttl.TTL_5M)
                                 .build()
                         )
+                        .deferLoading(true)
                         .description("Get the current weather in a given location")
                         .eagerInputStreaming(true)
+                        .addInputExample(
+                            Tool.InputExample.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
                         .strict(true)
                         .type(Tool.Type.CUSTOM)
                         .build()
@@ -171,6 +187,7 @@ internal class MessageCountTokensParamsTest {
                     )
                     .build()
             )
+        assertThat(body.speed()).contains(MessageCountTokensParams.Speed.STANDARD)
         assertThat(body.system())
             .contains(
                 MessageCountTokensParams.System.ofTextBlockParams(
@@ -221,13 +238,20 @@ internal class MessageCountTokensParamsTest {
                                 .build()
                         )
                         .name("name")
+                        .addAllowedCaller(Tool.AllowedCaller.DIRECT)
                         .cacheControl(
                             CacheControlEphemeral.builder()
                                 .ttl(CacheControlEphemeral.Ttl.TTL_5M)
                                 .build()
                         )
+                        .deferLoading(true)
                         .description("Get the current weather in a given location")
                         .eagerInputStreaming(true)
+                        .addInputExample(
+                            Tool.InputExample.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
                         .strict(true)
                         .type(Tool.Type.CUSTOM)
                         .build()

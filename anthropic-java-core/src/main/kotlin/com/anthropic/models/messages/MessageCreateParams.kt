@@ -136,6 +136,14 @@ private constructor(
     fun model(): Model = body.model()
 
     /**
+     * Container identifier for reuse across requests.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun container(): Optional<String> = body.container()
+
+    /**
      * Specifies the geographic region for inference processing. If not specified, the workspace's
      * `default_inference_geo` is used.
      *
@@ -171,6 +179,15 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun serviceTier(): Optional<ServiceTier> = body.serviceTier()
+
+    /**
+     * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
+     * inference.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun speed(): Optional<Speed> = body.speed()
 
     /**
      * Custom text sequences that will cause the model to stop generating.
@@ -362,6 +379,13 @@ private constructor(
     fun _model(): JsonField<Model> = body._model()
 
     /**
+     * Returns the raw JSON value of [container].
+     *
+     * Unlike [container], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _container(): JsonField<String> = body._container()
+
+    /**
      * Returns the raw JSON value of [inferenceGeo].
      *
      * Unlike [inferenceGeo], this method doesn't throw if the JSON field has an unexpected type.
@@ -388,6 +412,13 @@ private constructor(
      * Unlike [serviceTier], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _serviceTier(): JsonField<ServiceTier> = body._serviceTier()
+
+    /**
+     * Returns the raw JSON value of [speed].
+     *
+     * Unlike [speed], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _speed(): JsonField<Speed> = body._speed()
 
     /**
      * Returns the raw JSON value of [stopSequences].
@@ -492,8 +523,8 @@ private constructor(
          * - [maxTokens]
          * - [messages]
          * - [model]
+         * - [container]
          * - [inferenceGeo]
-         * - [metadata]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -665,6 +696,21 @@ private constructor(
          */
         fun model(value: String) = apply { body.model(value) }
 
+        /** Container identifier for reuse across requests. */
+        fun container(container: String?) = apply { body.container(container) }
+
+        /** Alias for calling [Builder.container] with `container.orElse(null)`. */
+        fun container(container: Optional<String>) = container(container.getOrNull())
+
+        /**
+         * Sets [Builder.container] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.container] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun container(container: JsonField<String>) = apply { body.container(container) }
+
         /**
          * Specifies the geographic region for inference processing. If not specified, the
          * workspace's `default_inference_geo` is used.
@@ -753,6 +799,23 @@ private constructor(
         fun serviceTier(serviceTier: JsonField<ServiceTier>) = apply {
             body.serviceTier(serviceTier)
         }
+
+        /**
+         * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
+         * inference.
+         */
+        fun speed(speed: Speed?) = apply { body.speed(speed) }
+
+        /** Alias for calling [Builder.speed] with `speed.orElse(null)`. */
+        fun speed(speed: Optional<Speed>) = speed(speed.getOrNull())
+
+        /**
+         * Sets [Builder.speed] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.speed] with a well-typed [Speed] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun speed(speed: JsonField<Speed>) = apply { body.speed(speed) }
 
         /**
          * Custom text sequences that will cause the model to stop generating.
@@ -1003,6 +1066,37 @@ private constructor(
         fun addTool(bash20250124: ToolBash20250124) = apply { body.addTool(bash20250124) }
 
         /**
+         * Alias for calling [addTool] with
+         * `ToolUnion.ofCodeExecutionTool20250522(codeExecutionTool20250522)`.
+         */
+        fun addTool(codeExecutionTool20250522: CodeExecutionTool20250522) = apply {
+            body.addTool(codeExecutionTool20250522)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `ToolUnion.ofCodeExecutionTool20250825(codeExecutionTool20250825)`.
+         */
+        fun addTool(codeExecutionTool20250825: CodeExecutionTool20250825) = apply {
+            body.addTool(codeExecutionTool20250825)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `ToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120)`.
+         */
+        fun addTool(codeExecutionTool20260120: ToolUnion.CodeExecutionTool20260120) = apply {
+            body.addTool(codeExecutionTool20260120)
+        }
+
+        /**
+         * Alias for calling [addTool] with `ToolUnion.ofMemoryTool20250818(memoryTool20250818)`.
+         */
+        fun addTool(memoryTool20250818: MemoryTool20250818) = apply {
+            body.addTool(memoryTool20250818)
+        }
+
+        /**
          * Alias for calling [addTool] with `ToolUnion.ofTextEditor20250124(textEditor20250124)`.
          */
         fun addTool(textEditor20250124: ToolTextEditor20250124) = apply {
@@ -1029,6 +1123,46 @@ private constructor(
          */
         fun addTool(webSearchTool20250305: WebSearchTool20250305) = apply {
             body.addTool(webSearchTool20250305)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `ToolUnion.ofWebFetchTool20250910(webFetchTool20250910)`.
+         */
+        fun addTool(webFetchTool20250910: WebFetchTool20250910) = apply {
+            body.addTool(webFetchTool20250910)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `ToolUnion.ofWebSearchTool20260209(webSearchTool20260209)`.
+         */
+        fun addTool(webSearchTool20260209: ToolUnion.WebSearchTool20260209) = apply {
+            body.addTool(webSearchTool20260209)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `ToolUnion.ofWebFetchTool20260209(webFetchTool20260209)`.
+         */
+        fun addTool(webFetchTool20260209: ToolUnion.WebFetchTool20260209) = apply {
+            body.addTool(webFetchTool20260209)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `ToolUnion.ofSearchToolBm25_20251119(searchToolBm25_20251119)`.
+         */
+        fun addTool(searchToolBm25_20251119: ToolSearchToolBm25_20251119) = apply {
+            body.addTool(searchToolBm25_20251119)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `ToolUnion.ofSearchToolRegex20251119(searchToolRegex20251119)`.
+         */
+        fun addTool(searchToolRegex20251119: ToolSearchToolRegex20251119) = apply {
+            body.addTool(searchToolRegex20251119)
         }
 
         /**
@@ -1220,10 +1354,12 @@ private constructor(
         private val maxTokens: JsonField<Long>,
         private val messages: JsonField<List<MessageParam>>,
         private val model: JsonField<Model>,
+        private val container: JsonField<String>,
         private val inferenceGeo: JsonField<String>,
         private val metadata: JsonField<Metadata>,
         private val outputConfig: JsonField<OutputConfig>,
         private val serviceTier: JsonField<ServiceTier>,
+        private val speed: JsonField<Speed>,
         private val stopSequences: JsonField<List<String>>,
         private val system: JsonField<System>,
         private val temperature: JsonField<Double>,
@@ -1244,6 +1380,9 @@ private constructor(
             @ExcludeMissing
             messages: JsonField<List<MessageParam>> = JsonMissing.of(),
             @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
+            @JsonProperty("container")
+            @ExcludeMissing
+            container: JsonField<String> = JsonMissing.of(),
             @JsonProperty("inference_geo")
             @ExcludeMissing
             inferenceGeo: JsonField<String> = JsonMissing.of(),
@@ -1256,6 +1395,7 @@ private constructor(
             @JsonProperty("service_tier")
             @ExcludeMissing
             serviceTier: JsonField<ServiceTier> = JsonMissing.of(),
+            @JsonProperty("speed") @ExcludeMissing speed: JsonField<Speed> = JsonMissing.of(),
             @JsonProperty("stop_sequences")
             @ExcludeMissing
             stopSequences: JsonField<List<String>> = JsonMissing.of(),
@@ -1278,10 +1418,12 @@ private constructor(
             maxTokens,
             messages,
             model,
+            container,
             inferenceGeo,
             metadata,
             outputConfig,
             serviceTier,
+            speed,
             stopSequences,
             system,
             temperature,
@@ -1381,6 +1523,14 @@ private constructor(
         fun model(): Model = model.getRequired("model")
 
         /**
+         * Container identifier for reuse across requests.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun container(): Optional<String> = container.getOptional("container")
+
+        /**
          * Specifies the geographic region for inference processing. If not specified, the
          * workspace's `default_inference_geo` is used.
          *
@@ -1416,6 +1566,15 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun serviceTier(): Optional<ServiceTier> = serviceTier.getOptional("service_tier")
+
+        /**
+         * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
+         * inference.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun speed(): Optional<Speed> = speed.getOptional("speed")
 
         /**
          * Custom text sequences that will cause the model to stop generating.
@@ -1611,6 +1770,13 @@ private constructor(
         @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
 
         /**
+         * Returns the raw JSON value of [container].
+         *
+         * Unlike [container], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("container") @ExcludeMissing fun _container(): JsonField<String> = container
+
+        /**
          * Returns the raw JSON value of [inferenceGeo].
          *
          * Unlike [inferenceGeo], this method doesn't throw if the JSON field has an unexpected
@@ -1645,6 +1811,13 @@ private constructor(
         @JsonProperty("service_tier")
         @ExcludeMissing
         fun _serviceTier(): JsonField<ServiceTier> = serviceTier
+
+        /**
+         * Returns the raw JSON value of [speed].
+         *
+         * Unlike [speed], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("speed") @ExcludeMissing fun _speed(): JsonField<Speed> = speed
 
         /**
          * Returns the raw JSON value of [stopSequences].
@@ -1744,10 +1917,12 @@ private constructor(
             private var maxTokens: JsonField<Long>? = null
             private var messages: JsonField<MutableList<MessageParam>>? = null
             private var model: JsonField<Model>? = null
+            private var container: JsonField<String> = JsonMissing.of()
             private var inferenceGeo: JsonField<String> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var outputConfig: JsonField<OutputConfig> = JsonMissing.of()
             private var serviceTier: JsonField<ServiceTier> = JsonMissing.of()
+            private var speed: JsonField<Speed> = JsonMissing.of()
             private var stopSequences: JsonField<MutableList<String>>? = null
             private var system: JsonField<System> = JsonMissing.of()
             private var temperature: JsonField<Double> = JsonMissing.of()
@@ -1763,10 +1938,12 @@ private constructor(
                 maxTokens = body.maxTokens
                 messages = body.messages.map { it.toMutableList() }
                 model = body.model
+                container = body.container
                 inferenceGeo = body.inferenceGeo
                 metadata = body.metadata
                 outputConfig = body.outputConfig
                 serviceTier = body.serviceTier
+                speed = body.speed
                 stopSequences = body.stopSequences.map { it.toMutableList() }
                 system = body.system
                 temperature = body.temperature
@@ -1965,6 +2142,21 @@ private constructor(
              */
             fun model(value: String) = model(Model.of(value))
 
+            /** Container identifier for reuse across requests. */
+            fun container(container: String?) = container(JsonField.ofNullable(container))
+
+            /** Alias for calling [Builder.container] with `container.orElse(null)`. */
+            fun container(container: Optional<String>) = container(container.getOrNull())
+
+            /**
+             * Sets [Builder.container] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.container] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun container(container: JsonField<String>) = apply { this.container = container }
+
             /**
              * Specifies the geographic region for inference processing. If not specified, the
              * workspace's `default_inference_geo` is used.
@@ -2032,6 +2224,24 @@ private constructor(
             fun serviceTier(serviceTier: JsonField<ServiceTier>) = apply {
                 this.serviceTier = serviceTier
             }
+
+            /**
+             * The inference speed mode for this request. `"fast"` enables high
+             * output-tokens-per-second inference.
+             */
+            fun speed(speed: Speed?) = speed(JsonField.ofNullable(speed))
+
+            /** Alias for calling [Builder.speed] with `speed.orElse(null)`. */
+            fun speed(speed: Optional<Speed>) = speed(speed.getOrNull())
+
+            /**
+             * Sets [Builder.speed] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.speed] with a well-typed [Speed] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun speed(speed: JsonField<Speed>) = apply { this.speed = speed }
 
             /**
              * Custom text sequences that will cause the model to stop generating.
@@ -2309,6 +2519,34 @@ private constructor(
 
             /**
              * Alias for calling [addTool] with
+             * `ToolUnion.ofCodeExecutionTool20250522(codeExecutionTool20250522)`.
+             */
+            fun addTool(codeExecutionTool20250522: CodeExecutionTool20250522) =
+                addTool(ToolUnion.ofCodeExecutionTool20250522(codeExecutionTool20250522))
+
+            /**
+             * Alias for calling [addTool] with
+             * `ToolUnion.ofCodeExecutionTool20250825(codeExecutionTool20250825)`.
+             */
+            fun addTool(codeExecutionTool20250825: CodeExecutionTool20250825) =
+                addTool(ToolUnion.ofCodeExecutionTool20250825(codeExecutionTool20250825))
+
+            /**
+             * Alias for calling [addTool] with
+             * `ToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120)`.
+             */
+            fun addTool(codeExecutionTool20260120: ToolUnion.CodeExecutionTool20260120) =
+                addTool(ToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120))
+
+            /**
+             * Alias for calling [addTool] with
+             * `ToolUnion.ofMemoryTool20250818(memoryTool20250818)`.
+             */
+            fun addTool(memoryTool20250818: MemoryTool20250818) =
+                addTool(ToolUnion.ofMemoryTool20250818(memoryTool20250818))
+
+            /**
+             * Alias for calling [addTool] with
              * `ToolUnion.ofTextEditor20250124(textEditor20250124)`.
              */
             fun addTool(textEditor20250124: ToolTextEditor20250124) =
@@ -2334,6 +2572,41 @@ private constructor(
              */
             fun addTool(webSearchTool20250305: WebSearchTool20250305) =
                 addTool(ToolUnion.ofWebSearchTool20250305(webSearchTool20250305))
+
+            /**
+             * Alias for calling [addTool] with
+             * `ToolUnion.ofWebFetchTool20250910(webFetchTool20250910)`.
+             */
+            fun addTool(webFetchTool20250910: WebFetchTool20250910) =
+                addTool(ToolUnion.ofWebFetchTool20250910(webFetchTool20250910))
+
+            /**
+             * Alias for calling [addTool] with
+             * `ToolUnion.ofWebSearchTool20260209(webSearchTool20260209)`.
+             */
+            fun addTool(webSearchTool20260209: ToolUnion.WebSearchTool20260209) =
+                addTool(ToolUnion.ofWebSearchTool20260209(webSearchTool20260209))
+
+            /**
+             * Alias for calling [addTool] with
+             * `ToolUnion.ofWebFetchTool20260209(webFetchTool20260209)`.
+             */
+            fun addTool(webFetchTool20260209: ToolUnion.WebFetchTool20260209) =
+                addTool(ToolUnion.ofWebFetchTool20260209(webFetchTool20260209))
+
+            /**
+             * Alias for calling [addTool] with
+             * `ToolUnion.ofSearchToolBm25_20251119(searchToolBm25_20251119)`.
+             */
+            fun addTool(searchToolBm25_20251119: ToolSearchToolBm25_20251119) =
+                addTool(ToolUnion.ofSearchToolBm25_20251119(searchToolBm25_20251119))
+
+            /**
+             * Alias for calling [addTool] with
+             * `ToolUnion.ofSearchToolRegex20251119(searchToolRegex20251119)`.
+             */
+            fun addTool(searchToolRegex20251119: ToolSearchToolRegex20251119) =
+                addTool(ToolUnion.ofSearchToolRegex20251119(searchToolRegex20251119))
 
             /**
              * Only sample from the top K options for each subsequent token.
@@ -2413,10 +2686,12 @@ private constructor(
                     checkRequired("maxTokens", maxTokens),
                     checkRequired("messages", messages).map { it.toImmutable() },
                     checkRequired("model", model),
+                    container,
                     inferenceGeo,
                     metadata,
                     outputConfig,
                     serviceTier,
+                    speed,
                     (stopSequences ?: JsonMissing.of()).map { it.toImmutable() },
                     system,
                     temperature,
@@ -2439,10 +2714,12 @@ private constructor(
             maxTokens()
             messages().forEach { it.validate() }
             model()
+            container()
             inferenceGeo()
             metadata().ifPresent { it.validate() }
             outputConfig().ifPresent { it.validate() }
             serviceTier().ifPresent { it.validate() }
+            speed().ifPresent { it.validate() }
             stopSequences()
             system().ifPresent { it.validate() }
             temperature()
@@ -2473,10 +2750,12 @@ private constructor(
             (if (maxTokens.asKnown().isPresent) 1 else 0) +
                 (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (model.asKnown().isPresent) 1 else 0) +
+                (if (container.asKnown().isPresent) 1 else 0) +
                 (if (inferenceGeo.asKnown().isPresent) 1 else 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (outputConfig.asKnown().getOrNull()?.validity() ?: 0) +
                 (serviceTier.asKnown().getOrNull()?.validity() ?: 0) +
+                (speed.asKnown().getOrNull()?.validity() ?: 0) +
                 (stopSequences.asKnown().getOrNull()?.size ?: 0) +
                 (system.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (temperature.asKnown().isPresent) 1 else 0) +
@@ -2495,10 +2774,12 @@ private constructor(
                 maxTokens == other.maxTokens &&
                 messages == other.messages &&
                 model == other.model &&
+                container == other.container &&
                 inferenceGeo == other.inferenceGeo &&
                 metadata == other.metadata &&
                 outputConfig == other.outputConfig &&
                 serviceTier == other.serviceTier &&
+                speed == other.speed &&
                 stopSequences == other.stopSequences &&
                 system == other.system &&
                 temperature == other.temperature &&
@@ -2515,10 +2796,12 @@ private constructor(
                 maxTokens,
                 messages,
                 model,
+                container,
                 inferenceGeo,
                 metadata,
                 outputConfig,
                 serviceTier,
+                speed,
                 stopSequences,
                 system,
                 temperature,
@@ -2534,7 +2817,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, inferenceGeo=$inferenceGeo, metadata=$metadata, outputConfig=$outputConfig, serviceTier=$serviceTier, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, container=$container, inferenceGeo=$inferenceGeo, metadata=$metadata, outputConfig=$outputConfig, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
     }
 
     /**
@@ -2667,6 +2950,137 @@ private constructor(
             }
 
             return other is ServiceTier && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
+    /**
+     * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
+     * inference.
+     */
+    class Speed @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val STANDARD = of("standard")
+
+            @JvmField val FAST = of("fast")
+
+            @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
+        }
+
+        /** An enum containing [Speed]'s known values. */
+        enum class Known {
+            STANDARD,
+            FAST,
+        }
+
+        /**
+         * An enum containing [Speed]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Speed] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            STANDARD,
+            FAST,
+            /** An enum member indicating that [Speed] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                STANDARD -> Value.STANDARD
+                FAST -> Value.FAST
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                STANDARD -> Known.STANDARD
+                FAST -> Known.FAST
+                else -> throw AnthropicInvalidDataException("Unknown Speed: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        fun validate(): Speed = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Speed && value == other.value
         }
 
         override fun hashCode() = value.hashCode()

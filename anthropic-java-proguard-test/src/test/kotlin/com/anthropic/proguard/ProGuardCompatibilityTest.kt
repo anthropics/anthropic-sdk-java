@@ -5,10 +5,10 @@ package com.anthropic.proguard
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.core.jsonMapper
 import com.anthropic.models.messages.Base64ImageSource
-import com.anthropic.models.messages.CitationCharLocation
-import com.anthropic.models.messages.ContentBlock
-import com.anthropic.models.messages.StopReason
-import com.anthropic.models.messages.TextBlock
+import com.anthropic.models.messages.BashCodeExecutionToolResultErrorCode
+import com.anthropic.models.messages.CodeExecutionToolResultBlockContent
+import com.anthropic.models.messages.CodeExecutionToolResultError
+import com.anthropic.models.messages.CodeExecutionToolResultErrorCode
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.javaMethod
@@ -76,45 +76,38 @@ internal class ProGuardCompatibilityTest {
     }
 
     @Test
-    fun contentBlockRoundtrip() {
+    fun codeExecutionToolResultBlockContentRoundtrip() {
         val jsonMapper = jsonMapper()
-        val contentBlock =
-            ContentBlock.ofText(
-                TextBlock.builder()
-                    .addCitation(
-                        CitationCharLocation.builder()
-                            .citedText("cited_text")
-                            .documentIndex(0L)
-                            .documentTitle("document_title")
-                            .endCharIndex(0L)
-                            .fileId("file_id")
-                            .startCharIndex(0L)
-                            .build()
-                    )
-                    .text("text")
+        val codeExecutionToolResultBlockContent =
+            CodeExecutionToolResultBlockContent.ofError(
+                CodeExecutionToolResultError.builder()
+                    .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
                     .build()
             )
 
-        val roundtrippedContentBlock =
+        val roundtrippedCodeExecutionToolResultBlockContent =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(contentBlock),
-                jacksonTypeRef<ContentBlock>(),
+                jsonMapper.writeValueAsString(codeExecutionToolResultBlockContent),
+                jacksonTypeRef<CodeExecutionToolResultBlockContent>(),
             )
 
-        assertThat(roundtrippedContentBlock).isEqualTo(contentBlock)
+        assertThat(roundtrippedCodeExecutionToolResultBlockContent)
+            .isEqualTo(codeExecutionToolResultBlockContent)
     }
 
     @Test
-    fun stopReasonRoundtrip() {
+    fun bashCodeExecutionToolResultErrorCodeRoundtrip() {
         val jsonMapper = jsonMapper()
-        val stopReason = StopReason.END_TURN
+        val bashCodeExecutionToolResultErrorCode =
+            BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
 
-        val roundtrippedStopReason =
+        val roundtrippedBashCodeExecutionToolResultErrorCode =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(stopReason),
-                jacksonTypeRef<StopReason>(),
+                jsonMapper.writeValueAsString(bashCodeExecutionToolResultErrorCode),
+                jacksonTypeRef<BashCodeExecutionToolResultErrorCode>(),
             )
 
-        assertThat(roundtrippedStopReason).isEqualTo(stopReason)
+        assertThat(roundtrippedBashCodeExecutionToolResultErrorCode)
+            .isEqualTo(bashCodeExecutionToolResultErrorCode)
     }
 }
