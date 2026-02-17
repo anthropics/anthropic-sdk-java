@@ -288,6 +288,7 @@ internal class BetaContentBlockTest {
                         .build()
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .caller(BetaDirectCaller.builder().build())
                 .build()
 
         val betaContentBlock = BetaContentBlock.ofWebSearchToolResult(webSearchToolResult)
@@ -321,6 +322,7 @@ internal class BetaContentBlockTest {
                             .build()
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .caller(BetaDirectCaller.builder().build())
                     .build()
             )
 
@@ -343,6 +345,7 @@ internal class BetaContentBlockTest {
                         .build()
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .caller(BetaDirectCaller.builder().build())
                 .build()
 
         val betaContentBlock = BetaContentBlock.ofWebFetchToolResult(webFetchToolResult)
@@ -376,6 +379,7 @@ internal class BetaContentBlockTest {
                             .build()
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .caller(BetaDirectCaller.builder().build())
                     .build()
             )
 

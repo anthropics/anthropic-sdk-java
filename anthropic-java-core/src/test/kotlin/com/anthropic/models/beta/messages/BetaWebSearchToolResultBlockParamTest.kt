@@ -29,6 +29,7 @@ internal class BetaWebSearchToolResultBlockParamTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .caller(BetaDirectCaller.builder().build())
                 .build()
 
         assertThat(betaWebSearchToolResultBlockParam.content())
@@ -50,6 +51,12 @@ internal class BetaWebSearchToolResultBlockParamTest {
                 BetaCacheControlEphemeral.builder()
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                     .build()
+            )
+        assertThat(betaWebSearchToolResultBlockParam.caller())
+            .contains(
+                BetaWebSearchToolResultBlockParam.Caller.ofDirect(
+                    BetaDirectCaller.builder().build()
+                )
             )
     }
 
@@ -74,6 +81,7 @@ internal class BetaWebSearchToolResultBlockParamTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .caller(BetaDirectCaller.builder().build())
                 .build()
 
         val roundtrippedBetaWebSearchToolResultBlockParam =

@@ -25,9 +25,12 @@ class Tool
 private constructor(
     private val inputSchema: JsonField<InputSchema>,
     private val name: JsonField<String>,
+    private val allowedCallers: JsonField<List<AllowedCaller>>,
     private val cacheControl: JsonField<CacheControlEphemeral>,
+    private val deferLoading: JsonField<Boolean>,
     private val description: JsonField<String>,
     private val eagerInputStreaming: JsonField<Boolean>,
+    private val inputExamples: JsonField<List<InputExample>>,
     private val strict: JsonField<Boolean>,
     private val type: JsonField<Type>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -39,23 +42,35 @@ private constructor(
         @ExcludeMissing
         inputSchema: JsonField<InputSchema> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("allowed_callers")
+        @ExcludeMissing
+        allowedCallers: JsonField<List<AllowedCaller>> = JsonMissing.of(),
         @JsonProperty("cache_control")
         @ExcludeMissing
         cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of(),
+        @JsonProperty("defer_loading")
+        @ExcludeMissing
+        deferLoading: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("description")
         @ExcludeMissing
         description: JsonField<String> = JsonMissing.of(),
         @JsonProperty("eager_input_streaming")
         @ExcludeMissing
         eagerInputStreaming: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("input_examples")
+        @ExcludeMissing
+        inputExamples: JsonField<List<InputExample>> = JsonMissing.of(),
         @JsonProperty("strict") @ExcludeMissing strict: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
     ) : this(
         inputSchema,
         name,
+        allowedCallers,
         cacheControl,
+        deferLoading,
         description,
         eagerInputStreaming,
+        inputExamples,
         strict,
         type,
         mutableMapOf(),
@@ -82,12 +97,28 @@ private constructor(
     fun name(): String = name.getRequired("name")
 
     /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun allowedCallers(): Optional<List<AllowedCaller>> =
+        allowedCallers.getOptional("allowed_callers")
+
+    /**
      * Create a cache control breakpoint at this content block.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun cacheControl(): Optional<CacheControlEphemeral> = cacheControl.getOptional("cache_control")
+
+    /**
+     * If true, tool will not be included in initial system prompt. Only loaded when returned via
+     * tool_reference from tool search.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun deferLoading(): Optional<Boolean> = deferLoading.getOptional("defer_loading")
 
     /**
      * Description of what this tool does.
@@ -113,6 +144,12 @@ private constructor(
      */
     fun eagerInputStreaming(): Optional<Boolean> =
         eagerInputStreaming.getOptional("eager_input_streaming")
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun inputExamples(): Optional<List<InputExample>> = inputExamples.getOptional("input_examples")
 
     /**
      * When true, guarantees schema validation on tool names and inputs
@@ -145,6 +182,15 @@ private constructor(
     @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
 
     /**
+     * Returns the raw JSON value of [allowedCallers].
+     *
+     * Unlike [allowedCallers], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("allowed_callers")
+    @ExcludeMissing
+    fun _allowedCallers(): JsonField<List<AllowedCaller>> = allowedCallers
+
+    /**
      * Returns the raw JSON value of [cacheControl].
      *
      * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected type.
@@ -152,6 +198,15 @@ private constructor(
     @JsonProperty("cache_control")
     @ExcludeMissing
     fun _cacheControl(): JsonField<CacheControlEphemeral> = cacheControl
+
+    /**
+     * Returns the raw JSON value of [deferLoading].
+     *
+     * Unlike [deferLoading], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("defer_loading")
+    @ExcludeMissing
+    fun _deferLoading(): JsonField<Boolean> = deferLoading
 
     /**
      * Returns the raw JSON value of [description].
@@ -169,6 +224,15 @@ private constructor(
     @JsonProperty("eager_input_streaming")
     @ExcludeMissing
     fun _eagerInputStreaming(): JsonField<Boolean> = eagerInputStreaming
+
+    /**
+     * Returns the raw JSON value of [inputExamples].
+     *
+     * Unlike [inputExamples], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("input_examples")
+    @ExcludeMissing
+    fun _inputExamples(): JsonField<List<InputExample>> = inputExamples
 
     /**
      * Returns the raw JSON value of [strict].
@@ -215,9 +279,12 @@ private constructor(
 
         private var inputSchema: JsonField<InputSchema>? = null
         private var name: JsonField<String>? = null
+        private var allowedCallers: JsonField<MutableList<AllowedCaller>>? = null
         private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
+        private var deferLoading: JsonField<Boolean> = JsonMissing.of()
         private var description: JsonField<String> = JsonMissing.of()
         private var eagerInputStreaming: JsonField<Boolean> = JsonMissing.of()
+        private var inputExamples: JsonField<MutableList<InputExample>>? = null
         private var strict: JsonField<Boolean> = JsonMissing.of()
         private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -226,9 +293,12 @@ private constructor(
         internal fun from(tool: Tool) = apply {
             inputSchema = tool.inputSchema
             name = tool.name
+            allowedCallers = tool.allowedCallers.map { it.toMutableList() }
             cacheControl = tool.cacheControl
+            deferLoading = tool.deferLoading
             description = tool.description
             eagerInputStreaming = tool.eagerInputStreaming
+            inputExamples = tool.inputExamples.map { it.toMutableList() }
             strict = tool.strict
             type = tool.type
             additionalProperties = tool.additionalProperties.toMutableMap()
@@ -268,6 +338,32 @@ private constructor(
          */
         fun name(name: JsonField<String>) = apply { this.name = name }
 
+        fun allowedCallers(allowedCallers: List<AllowedCaller>) =
+            allowedCallers(JsonField.of(allowedCallers))
+
+        /**
+         * Sets [Builder.allowedCallers] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.allowedCallers] with a well-typed `List<AllowedCaller>`
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun allowedCallers(allowedCallers: JsonField<List<AllowedCaller>>) = apply {
+            this.allowedCallers = allowedCallers.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [AllowedCaller] to [allowedCallers].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addAllowedCaller(allowedCaller: AllowedCaller) = apply {
+            allowedCallers =
+                (allowedCallers ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("allowedCallers", it).add(allowedCaller)
+                }
+        }
+
         /** Create a cache control breakpoint at this content block. */
         fun cacheControl(cacheControl: CacheControlEphemeral?) =
             cacheControl(JsonField.ofNullable(cacheControl))
@@ -285,6 +381,23 @@ private constructor(
          */
         fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
+        }
+
+        /**
+         * If true, tool will not be included in initial system prompt. Only loaded when returned
+         * via tool_reference from tool search.
+         */
+        fun deferLoading(deferLoading: Boolean) = deferLoading(JsonField.of(deferLoading))
+
+        /**
+         * Sets [Builder.deferLoading] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.deferLoading] with a well-typed [Boolean] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun deferLoading(deferLoading: JsonField<Boolean>) = apply {
+            this.deferLoading = deferLoading
         }
 
         /**
@@ -339,6 +452,32 @@ private constructor(
          */
         fun eagerInputStreaming(eagerInputStreaming: JsonField<Boolean>) = apply {
             this.eagerInputStreaming = eagerInputStreaming
+        }
+
+        fun inputExamples(inputExamples: List<InputExample>) =
+            inputExamples(JsonField.of(inputExamples))
+
+        /**
+         * Sets [Builder.inputExamples] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.inputExamples] with a well-typed `List<InputExample>`
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun inputExamples(inputExamples: JsonField<List<InputExample>>) = apply {
+            this.inputExamples = inputExamples.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [InputExample] to [inputExamples].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addInputExample(inputExample: InputExample) = apply {
+            inputExamples =
+                (inputExamples ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("inputExamples", it).add(inputExample)
+                }
         }
 
         /** When true, guarantees schema validation on tool names and inputs */
@@ -401,9 +540,12 @@ private constructor(
             Tool(
                 checkRequired("inputSchema", inputSchema),
                 checkRequired("name", name),
+                (allowedCallers ?: JsonMissing.of()).map { it.toImmutable() },
                 cacheControl,
+                deferLoading,
                 description,
                 eagerInputStreaming,
+                (inputExamples ?: JsonMissing.of()).map { it.toImmutable() },
                 strict,
                 type,
                 additionalProperties.toMutableMap(),
@@ -419,9 +561,12 @@ private constructor(
 
         inputSchema().validate()
         name()
+        allowedCallers().ifPresent { it.forEach { it.validate() } }
         cacheControl().ifPresent { it.validate() }
+        deferLoading()
         description()
         eagerInputStreaming()
+        inputExamples().ifPresent { it.forEach { it.validate() } }
         strict()
         type().ifPresent { it.validate() }
         validated = true
@@ -444,9 +589,12 @@ private constructor(
     internal fun validity(): Int =
         (inputSchema.asKnown().getOrNull()?.validity() ?: 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
+            (allowedCallers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (deferLoading.asKnown().isPresent) 1 else 0) +
             (if (description.asKnown().isPresent) 1 else 0) +
             (if (eagerInputStreaming.asKnown().isPresent) 1 else 0) +
+            (inputExamples.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (strict.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
@@ -802,6 +950,236 @@ private constructor(
             "InputSchema{type=$type, properties=$properties, required=$required, additionalProperties=$additionalProperties}"
     }
 
+    class AllowedCaller @JsonCreator private constructor(private val value: JsonField<String>) :
+        Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val DIRECT = of("direct")
+
+            @JvmField val CODE_EXECUTION_20250825 = of("code_execution_20250825")
+
+            @JvmStatic fun of(value: String) = AllowedCaller(JsonField.of(value))
+        }
+
+        /** An enum containing [AllowedCaller]'s known values. */
+        enum class Known {
+            DIRECT,
+            CODE_EXECUTION_20250825,
+        }
+
+        /**
+         * An enum containing [AllowedCaller]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [AllowedCaller] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            DIRECT,
+            CODE_EXECUTION_20250825,
+            /**
+             * An enum member indicating that [AllowedCaller] was instantiated with an unknown
+             * value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                DIRECT -> Value.DIRECT
+                CODE_EXECUTION_20250825 -> Value.CODE_EXECUTION_20250825
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                DIRECT -> Known.DIRECT
+                CODE_EXECUTION_20250825 -> Known.CODE_EXECUTION_20250825
+                else -> throw AnthropicInvalidDataException("Unknown AllowedCaller: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        fun validate(): AllowedCaller = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is AllowedCaller && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
+    class InputExample
+    @JsonCreator
+    private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue
+        private val additionalProperties: Map<String, JsonValue>
+    ) {
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [InputExample]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [InputExample]. */
+        class Builder internal constructor() {
+
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(inputExample: InputExample) = apply {
+                additionalProperties = inputExample.additionalProperties.toMutableMap()
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [InputExample].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): InputExample = InputExample(additionalProperties.toImmutable())
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): InputExample = apply {
+            if (validated) {
+                return@apply
+            }
+
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is InputExample && additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() = "InputExample{additionalProperties=$additionalProperties}"
+    }
+
     class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
@@ -931,9 +1309,12 @@ private constructor(
         return other is Tool &&
             inputSchema == other.inputSchema &&
             name == other.name &&
+            allowedCallers == other.allowedCallers &&
             cacheControl == other.cacheControl &&
+            deferLoading == other.deferLoading &&
             description == other.description &&
             eagerInputStreaming == other.eagerInputStreaming &&
+            inputExamples == other.inputExamples &&
             strict == other.strict &&
             type == other.type &&
             additionalProperties == other.additionalProperties
@@ -943,9 +1324,12 @@ private constructor(
         Objects.hash(
             inputSchema,
             name,
+            allowedCallers,
             cacheControl,
+            deferLoading,
             description,
             eagerInputStreaming,
+            inputExamples,
             strict,
             type,
             additionalProperties,
@@ -955,5 +1339,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Tool{inputSchema=$inputSchema, name=$name, cacheControl=$cacheControl, description=$description, eagerInputStreaming=$eagerInputStreaming, strict=$strict, type=$type, additionalProperties=$additionalProperties}"
+        "Tool{inputSchema=$inputSchema, name=$name, allowedCallers=$allowedCallers, cacheControl=$cacheControl, deferLoading=$deferLoading, description=$description, eagerInputStreaming=$eagerInputStreaming, inputExamples=$inputExamples, strict=$strict, type=$type, additionalProperties=$additionalProperties}"
 }

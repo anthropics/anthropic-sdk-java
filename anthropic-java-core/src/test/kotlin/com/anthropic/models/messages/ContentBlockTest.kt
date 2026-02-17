@@ -39,6 +39,12 @@ internal class ContentBlockTest {
         assertThat(contentBlock.toolUse()).isEmpty
         assertThat(contentBlock.serverToolUse()).isEmpty
         assertThat(contentBlock.webSearchToolResult()).isEmpty
+        assertThat(contentBlock.webFetchToolResult()).isEmpty
+        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.toolSearchToolResult()).isEmpty
+        assertThat(contentBlock.containerUpload()).isEmpty
     }
 
     @Test
@@ -82,6 +88,12 @@ internal class ContentBlockTest {
         assertThat(contentBlock.toolUse()).isEmpty
         assertThat(contentBlock.serverToolUse()).isEmpty
         assertThat(contentBlock.webSearchToolResult()).isEmpty
+        assertThat(contentBlock.webFetchToolResult()).isEmpty
+        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.toolSearchToolResult()).isEmpty
+        assertThat(contentBlock.containerUpload()).isEmpty
     }
 
     @Test
@@ -113,6 +125,12 @@ internal class ContentBlockTest {
         assertThat(contentBlock.toolUse()).isEmpty
         assertThat(contentBlock.serverToolUse()).isEmpty
         assertThat(contentBlock.webSearchToolResult()).isEmpty
+        assertThat(contentBlock.webFetchToolResult()).isEmpty
+        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.toolSearchToolResult()).isEmpty
+        assertThat(contentBlock.containerUpload()).isEmpty
     }
 
     @Test
@@ -135,6 +153,7 @@ internal class ContentBlockTest {
         val toolUse =
             ToolUseBlock.builder()
                 .id("id")
+                .caller(DirectCaller.builder().build())
                 .input(
                     ToolUseBlock.Input.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -151,6 +170,12 @@ internal class ContentBlockTest {
         assertThat(contentBlock.toolUse()).contains(toolUse)
         assertThat(contentBlock.serverToolUse()).isEmpty
         assertThat(contentBlock.webSearchToolResult()).isEmpty
+        assertThat(contentBlock.webFetchToolResult()).isEmpty
+        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.toolSearchToolResult()).isEmpty
+        assertThat(contentBlock.containerUpload()).isEmpty
     }
 
     @Test
@@ -160,6 +185,7 @@ internal class ContentBlockTest {
             ContentBlock.ofToolUse(
                 ToolUseBlock.builder()
                     .id("id")
+                    .caller(DirectCaller.builder().build())
                     .input(
                         ToolUseBlock.Input.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -183,11 +209,13 @@ internal class ContentBlockTest {
         val serverToolUse =
             ServerToolUseBlock.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
+                .caller(DirectCaller.builder().build())
                 .input(
                     ServerToolUseBlock.Input.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
+                .name(ServerToolUseBlock.Name.WEB_SEARCH)
                 .build()
 
         val contentBlock = ContentBlock.ofServerToolUse(serverToolUse)
@@ -198,6 +226,12 @@ internal class ContentBlockTest {
         assertThat(contentBlock.toolUse()).isEmpty
         assertThat(contentBlock.serverToolUse()).contains(serverToolUse)
         assertThat(contentBlock.webSearchToolResult()).isEmpty
+        assertThat(contentBlock.webFetchToolResult()).isEmpty
+        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.toolSearchToolResult()).isEmpty
+        assertThat(contentBlock.containerUpload()).isEmpty
     }
 
     @Test
@@ -207,11 +241,13 @@ internal class ContentBlockTest {
             ContentBlock.ofServerToolUse(
                 ServerToolUseBlock.builder()
                     .id("srvtoolu_SQfNkl1n_JR_")
+                    .caller(DirectCaller.builder().build())
                     .input(
                         ServerToolUseBlock.Input.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
                             .build()
                     )
+                    .name(ServerToolUseBlock.Name.WEB_SEARCH)
                     .build()
             )
 
@@ -228,6 +264,7 @@ internal class ContentBlockTest {
     fun ofWebSearchToolResult() {
         val webSearchToolResult =
             WebSearchToolResultBlock.builder()
+                .caller(DirectCaller.builder().build())
                 .content(
                     WebSearchToolResultError.builder()
                         .errorCode(WebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
@@ -244,6 +281,12 @@ internal class ContentBlockTest {
         assertThat(contentBlock.toolUse()).isEmpty
         assertThat(contentBlock.serverToolUse()).isEmpty
         assertThat(contentBlock.webSearchToolResult()).contains(webSearchToolResult)
+        assertThat(contentBlock.webFetchToolResult()).isEmpty
+        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.toolSearchToolResult()).isEmpty
+        assertThat(contentBlock.containerUpload()).isEmpty
     }
 
     @Test
@@ -252,6 +295,7 @@ internal class ContentBlockTest {
         val contentBlock =
             ContentBlock.ofWebSearchToolResult(
                 WebSearchToolResultBlock.builder()
+                    .caller(DirectCaller.builder().build())
                     .content(
                         WebSearchToolResultError.builder()
                             .errorCode(WebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
@@ -260,6 +304,311 @@ internal class ContentBlockTest {
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .build()
             )
+
+        val roundtrippedContentBlock =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlock),
+                jacksonTypeRef<ContentBlock>(),
+            )
+
+        assertThat(roundtrippedContentBlock).isEqualTo(contentBlock)
+    }
+
+    @Test
+    fun ofWebFetchToolResult() {
+        val webFetchToolResult =
+            WebFetchToolResultBlock.builder()
+                .caller(DirectCaller.builder().build())
+                .content(
+                    WebFetchToolResultErrorBlock.builder()
+                        .errorCode(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
+                        .build()
+                )
+                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .build()
+
+        val contentBlock = ContentBlock.ofWebFetchToolResult(webFetchToolResult)
+
+        assertThat(contentBlock.text()).isEmpty
+        assertThat(contentBlock.thinking()).isEmpty
+        assertThat(contentBlock.redactedThinking()).isEmpty
+        assertThat(contentBlock.toolUse()).isEmpty
+        assertThat(contentBlock.serverToolUse()).isEmpty
+        assertThat(contentBlock.webSearchToolResult()).isEmpty
+        assertThat(contentBlock.webFetchToolResult()).contains(webFetchToolResult)
+        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.toolSearchToolResult()).isEmpty
+        assertThat(contentBlock.containerUpload()).isEmpty
+    }
+
+    @Test
+    fun ofWebFetchToolResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlock =
+            ContentBlock.ofWebFetchToolResult(
+                WebFetchToolResultBlock.builder()
+                    .caller(DirectCaller.builder().build())
+                    .content(
+                        WebFetchToolResultErrorBlock.builder()
+                            .errorCode(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
+                            .build()
+                    )
+                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .build()
+            )
+
+        val roundtrippedContentBlock =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlock),
+                jacksonTypeRef<ContentBlock>(),
+            )
+
+        assertThat(roundtrippedContentBlock).isEqualTo(contentBlock)
+    }
+
+    @Test
+    fun ofCodeExecutionToolResult() {
+        val codeExecutionToolResult =
+            CodeExecutionToolResultBlock.builder()
+                .content(
+                    CodeExecutionToolResultError.builder()
+                        .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
+                        .build()
+                )
+                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .build()
+
+        val contentBlock = ContentBlock.ofCodeExecutionToolResult(codeExecutionToolResult)
+
+        assertThat(contentBlock.text()).isEmpty
+        assertThat(contentBlock.thinking()).isEmpty
+        assertThat(contentBlock.redactedThinking()).isEmpty
+        assertThat(contentBlock.toolUse()).isEmpty
+        assertThat(contentBlock.serverToolUse()).isEmpty
+        assertThat(contentBlock.webSearchToolResult()).isEmpty
+        assertThat(contentBlock.webFetchToolResult()).isEmpty
+        assertThat(contentBlock.codeExecutionToolResult()).contains(codeExecutionToolResult)
+        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.toolSearchToolResult()).isEmpty
+        assertThat(contentBlock.containerUpload()).isEmpty
+    }
+
+    @Test
+    fun ofCodeExecutionToolResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlock =
+            ContentBlock.ofCodeExecutionToolResult(
+                CodeExecutionToolResultBlock.builder()
+                    .content(
+                        CodeExecutionToolResultError.builder()
+                            .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
+                            .build()
+                    )
+                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .build()
+            )
+
+        val roundtrippedContentBlock =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlock),
+                jacksonTypeRef<ContentBlock>(),
+            )
+
+        assertThat(roundtrippedContentBlock).isEqualTo(contentBlock)
+    }
+
+    @Test
+    fun ofBashCodeExecutionToolResult() {
+        val bashCodeExecutionToolResult =
+            BashCodeExecutionToolResultBlock.builder()
+                .content(
+                    BashCodeExecutionToolResultError.builder()
+                        .errorCode(BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
+                        .build()
+                )
+                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .build()
+
+        val contentBlock = ContentBlock.ofBashCodeExecutionToolResult(bashCodeExecutionToolResult)
+
+        assertThat(contentBlock.text()).isEmpty
+        assertThat(contentBlock.thinking()).isEmpty
+        assertThat(contentBlock.redactedThinking()).isEmpty
+        assertThat(contentBlock.toolUse()).isEmpty
+        assertThat(contentBlock.serverToolUse()).isEmpty
+        assertThat(contentBlock.webSearchToolResult()).isEmpty
+        assertThat(contentBlock.webFetchToolResult()).isEmpty
+        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.bashCodeExecutionToolResult()).contains(bashCodeExecutionToolResult)
+        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.toolSearchToolResult()).isEmpty
+        assertThat(contentBlock.containerUpload()).isEmpty
+    }
+
+    @Test
+    fun ofBashCodeExecutionToolResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlock =
+            ContentBlock.ofBashCodeExecutionToolResult(
+                BashCodeExecutionToolResultBlock.builder()
+                    .content(
+                        BashCodeExecutionToolResultError.builder()
+                            .errorCode(BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
+                            .build()
+                    )
+                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .build()
+            )
+
+        val roundtrippedContentBlock =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlock),
+                jacksonTypeRef<ContentBlock>(),
+            )
+
+        assertThat(roundtrippedContentBlock).isEqualTo(contentBlock)
+    }
+
+    @Test
+    fun ofTextEditorCodeExecutionToolResult() {
+        val textEditorCodeExecutionToolResult =
+            TextEditorCodeExecutionToolResultBlock.builder()
+                .content(
+                    TextEditorCodeExecutionToolResultError.builder()
+                        .errorCode(TextEditorCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
+                        .errorMessage("error_message")
+                        .build()
+                )
+                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .build()
+
+        val contentBlock =
+            ContentBlock.ofTextEditorCodeExecutionToolResult(textEditorCodeExecutionToolResult)
+
+        assertThat(contentBlock.text()).isEmpty
+        assertThat(contentBlock.thinking()).isEmpty
+        assertThat(contentBlock.redactedThinking()).isEmpty
+        assertThat(contentBlock.toolUse()).isEmpty
+        assertThat(contentBlock.serverToolUse()).isEmpty
+        assertThat(contentBlock.webSearchToolResult()).isEmpty
+        assertThat(contentBlock.webFetchToolResult()).isEmpty
+        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.textEditorCodeExecutionToolResult())
+            .contains(textEditorCodeExecutionToolResult)
+        assertThat(contentBlock.toolSearchToolResult()).isEmpty
+        assertThat(contentBlock.containerUpload()).isEmpty
+    }
+
+    @Test
+    fun ofTextEditorCodeExecutionToolResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlock =
+            ContentBlock.ofTextEditorCodeExecutionToolResult(
+                TextEditorCodeExecutionToolResultBlock.builder()
+                    .content(
+                        TextEditorCodeExecutionToolResultError.builder()
+                            .errorCode(
+                                TextEditorCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                            )
+                            .errorMessage("error_message")
+                            .build()
+                    )
+                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .build()
+            )
+
+        val roundtrippedContentBlock =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlock),
+                jacksonTypeRef<ContentBlock>(),
+            )
+
+        assertThat(roundtrippedContentBlock).isEqualTo(contentBlock)
+    }
+
+    @Test
+    fun ofToolSearchToolResult() {
+        val toolSearchToolResult =
+            ToolSearchToolResultBlock.builder()
+                .content(
+                    ToolSearchToolResultError.builder()
+                        .errorCode(ToolSearchToolResultErrorCode.INVALID_TOOL_INPUT)
+                        .errorMessage("error_message")
+                        .build()
+                )
+                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .build()
+
+        val contentBlock = ContentBlock.ofToolSearchToolResult(toolSearchToolResult)
+
+        assertThat(contentBlock.text()).isEmpty
+        assertThat(contentBlock.thinking()).isEmpty
+        assertThat(contentBlock.redactedThinking()).isEmpty
+        assertThat(contentBlock.toolUse()).isEmpty
+        assertThat(contentBlock.serverToolUse()).isEmpty
+        assertThat(contentBlock.webSearchToolResult()).isEmpty
+        assertThat(contentBlock.webFetchToolResult()).isEmpty
+        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.toolSearchToolResult()).contains(toolSearchToolResult)
+        assertThat(contentBlock.containerUpload()).isEmpty
+    }
+
+    @Test
+    fun ofToolSearchToolResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlock =
+            ContentBlock.ofToolSearchToolResult(
+                ToolSearchToolResultBlock.builder()
+                    .content(
+                        ToolSearchToolResultError.builder()
+                            .errorCode(ToolSearchToolResultErrorCode.INVALID_TOOL_INPUT)
+                            .errorMessage("error_message")
+                            .build()
+                    )
+                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .build()
+            )
+
+        val roundtrippedContentBlock =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(contentBlock),
+                jacksonTypeRef<ContentBlock>(),
+            )
+
+        assertThat(roundtrippedContentBlock).isEqualTo(contentBlock)
+    }
+
+    @Test
+    fun ofContainerUpload() {
+        val containerUpload = ContainerUploadBlock.builder().fileId("file_id").build()
+
+        val contentBlock = ContentBlock.ofContainerUpload(containerUpload)
+
+        assertThat(contentBlock.text()).isEmpty
+        assertThat(contentBlock.thinking()).isEmpty
+        assertThat(contentBlock.redactedThinking()).isEmpty
+        assertThat(contentBlock.toolUse()).isEmpty
+        assertThat(contentBlock.serverToolUse()).isEmpty
+        assertThat(contentBlock.webSearchToolResult()).isEmpty
+        assertThat(contentBlock.webFetchToolResult()).isEmpty
+        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(contentBlock.toolSearchToolResult()).isEmpty
+        assertThat(contentBlock.containerUpload()).contains(containerUpload)
+    }
+
+    @Test
+    fun ofContainerUploadRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val contentBlock =
+            ContentBlock.ofContainerUpload(ContainerUploadBlock.builder().fileId("file_id").build())
 
         val roundtrippedContentBlock =
             jsonMapper.readValue(

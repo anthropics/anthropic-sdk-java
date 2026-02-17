@@ -4,6 +4,7 @@ package com.anthropic.models.messages
 
 import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -14,6 +15,12 @@ internal class MessageTest {
         val message =
             Message.builder()
                 .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
+                .container(
+                    Container.builder()
+                        .id("id")
+                        .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
                 .addContent(
                     TextBlock.builder()
                         .addCitation(
@@ -45,13 +52,26 @@ internal class MessageTest {
                         .inferenceGeo("inference_geo")
                         .inputTokens(2095L)
                         .outputTokens(503L)
-                        .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                        .serverToolUse(
+                            ServerToolUsage.builder()
+                                .webFetchRequests(2L)
+                                .webSearchRequests(0L)
+                                .build()
+                        )
                         .serviceTier(Usage.ServiceTier.STANDARD)
+                        .speed(Usage.Speed.STANDARD)
                         .build()
                 )
                 .build()
 
         assertThat(message.id()).isEqualTo("msg_013Zva2CMHLNnXjNJJKqJ2EF")
+        assertThat(message.container())
+            .contains(
+                Container.builder()
+                    .id("id")
+                    .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
         assertThat(message.content())
             .containsExactly(
                 ContentBlock.ofText(
@@ -87,8 +107,11 @@ internal class MessageTest {
                     .inferenceGeo("inference_geo")
                     .inputTokens(2095L)
                     .outputTokens(503L)
-                    .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                    .serverToolUse(
+                        ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
+                    )
                     .serviceTier(Usage.ServiceTier.STANDARD)
+                    .speed(Usage.Speed.STANDARD)
                     .build()
             )
     }
@@ -99,6 +122,12 @@ internal class MessageTest {
         val message =
             Message.builder()
                 .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
+                .container(
+                    Container.builder()
+                        .id("id")
+                        .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
                 .addContent(
                     TextBlock.builder()
                         .addCitation(
@@ -130,8 +159,14 @@ internal class MessageTest {
                         .inferenceGeo("inference_geo")
                         .inputTokens(2095L)
                         .outputTokens(503L)
-                        .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                        .serverToolUse(
+                            ServerToolUsage.builder()
+                                .webFetchRequests(2L)
+                                .webSearchRequests(0L)
+                                .build()
+                        )
                         .serviceTier(Usage.ServiceTier.STANDARD)
+                        .speed(Usage.Speed.STANDARD)
                         .build()
                 )
                 .build()

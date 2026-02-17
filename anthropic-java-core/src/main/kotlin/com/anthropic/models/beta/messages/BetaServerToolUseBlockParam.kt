@@ -279,6 +279,23 @@ private constructor(
         fun codeExecution20250825Caller(toolId: String) =
             caller(BetaServerToolCaller.builder().toolId(toolId).build())
 
+        /**
+         * Alias for calling [caller] with `Caller.ofCodeExecution20260120(codeExecution20260120)`.
+         */
+        fun caller(codeExecution20260120: BetaServerToolCaller20260120) =
+            caller(Caller.ofCodeExecution20260120(codeExecution20260120))
+
+        /**
+         * Alias for calling [caller] with the following:
+         * ```java
+         * BetaServerToolCaller20260120.builder()
+         *     .toolId(toolId)
+         *     .build()
+         * ```
+         */
+        fun codeExecution20260120Caller(toolId: String) =
+            caller(BetaServerToolCaller20260120.builder().toolId(toolId).build())
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -629,6 +646,7 @@ private constructor(
     private constructor(
         private val direct: BetaDirectCaller? = null,
         private val codeExecution20250825: BetaServerToolCaller? = null,
+        private val codeExecution20260120: BetaServerToolCaller20260120? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -639,9 +657,14 @@ private constructor(
         fun codeExecution20250825(): Optional<BetaServerToolCaller> =
             Optional.ofNullable(codeExecution20250825)
 
+        fun codeExecution20260120(): Optional<BetaServerToolCaller20260120> =
+            Optional.ofNullable(codeExecution20260120)
+
         fun isDirect(): Boolean = direct != null
 
         fun isCodeExecution20250825(): Boolean = codeExecution20250825 != null
+
+        fun isCodeExecution20260120(): Boolean = codeExecution20260120 != null
 
         /** Tool invocation directly from the model. */
         fun asDirect(): BetaDirectCaller = direct.getOrThrow("direct")
@@ -650,6 +673,9 @@ private constructor(
         fun asCodeExecution20250825(): BetaServerToolCaller =
             codeExecution20250825.getOrThrow("codeExecution20250825")
 
+        fun asCodeExecution20260120(): BetaServerToolCaller20260120 =
+            codeExecution20260120.getOrThrow("codeExecution20260120")
+
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
@@ -657,6 +683,8 @@ private constructor(
                 direct != null -> visitor.visitDirect(direct)
                 codeExecution20250825 != null ->
                     visitor.visitCodeExecution20250825(codeExecution20250825)
+                codeExecution20260120 != null ->
+                    visitor.visitCodeExecution20260120(codeExecution20260120)
                 else -> visitor.unknown(_json)
             }
 
@@ -677,6 +705,12 @@ private constructor(
                         codeExecution20250825: BetaServerToolCaller
                     ) {
                         codeExecution20250825.validate()
+                    }
+
+                    override fun visitCodeExecution20260120(
+                        codeExecution20260120: BetaServerToolCaller20260120
+                    ) {
+                        codeExecution20260120.validate()
                     }
                 }
             )
@@ -707,6 +741,10 @@ private constructor(
                         codeExecution20250825: BetaServerToolCaller
                     ) = codeExecution20250825.validity()
 
+                    override fun visitCodeExecution20260120(
+                        codeExecution20260120: BetaServerToolCaller20260120
+                    ) = codeExecution20260120.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -718,16 +756,20 @@ private constructor(
 
             return other is Caller &&
                 direct == other.direct &&
-                codeExecution20250825 == other.codeExecution20250825
+                codeExecution20250825 == other.codeExecution20250825 &&
+                codeExecution20260120 == other.codeExecution20260120
         }
 
-        override fun hashCode(): Int = Objects.hash(direct, codeExecution20250825)
+        override fun hashCode(): Int =
+            Objects.hash(direct, codeExecution20250825, codeExecution20260120)
 
         override fun toString(): String =
             when {
                 direct != null -> "Caller{direct=$direct}"
                 codeExecution20250825 != null ->
                     "Caller{codeExecution20250825=$codeExecution20250825}"
+                codeExecution20260120 != null ->
+                    "Caller{codeExecution20260120=$codeExecution20260120}"
                 _json != null -> "Caller{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Caller")
             }
@@ -741,6 +783,10 @@ private constructor(
             @JvmStatic
             fun ofCodeExecution20250825(codeExecution20250825: BetaServerToolCaller) =
                 Caller(codeExecution20250825 = codeExecution20250825)
+
+            @JvmStatic
+            fun ofCodeExecution20260120(codeExecution20260120: BetaServerToolCaller20260120) =
+                Caller(codeExecution20260120 = codeExecution20260120)
         }
 
         /** An interface that defines how to map each variant of [Caller] to a value of type [T]. */
@@ -751,6 +797,8 @@ private constructor(
 
             /** Tool invocation generated by a server-side tool. */
             fun visitCodeExecution20250825(codeExecution20250825: BetaServerToolCaller): T
+
+            fun visitCodeExecution20260120(codeExecution20260120: BetaServerToolCaller20260120): T
 
             /**
              * Maps an unknown variant of [Caller] to a value of type [T].
@@ -784,6 +832,11 @@ private constructor(
                             Caller(codeExecution20250825 = it, _json = json)
                         } ?: Caller(_json = json)
                     }
+                    "code_execution_20260120" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaServerToolCaller20260120>())
+                            ?.let { Caller(codeExecution20260120 = it, _json = json) }
+                            ?: Caller(_json = json)
+                    }
                 }
 
                 return Caller(_json = json)
@@ -801,6 +854,8 @@ private constructor(
                     value.direct != null -> generator.writeObject(value.direct)
                     value.codeExecution20250825 != null ->
                         generator.writeObject(value.codeExecution20250825)
+                    value.codeExecution20260120 != null ->
+                        generator.writeObject(value.codeExecution20260120)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Caller")
                 }

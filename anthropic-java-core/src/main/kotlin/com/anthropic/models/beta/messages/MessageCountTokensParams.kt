@@ -934,6 +934,14 @@ private constructor(
 
         /**
          * Alias for calling [addTool] with
+         * `Tool.ofBetaCodeExecutionTool20260120(betaCodeExecutionTool20260120)`.
+         */
+        fun addTool(betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120) = apply {
+            body.addTool(betaCodeExecutionTool20260120)
+        }
+
+        /**
+         * Alias for calling [addTool] with
          * `Tool.ofBetaToolComputerUse20241022(betaToolComputerUse20241022)`.
          */
         fun addTool(betaToolComputerUse20241022: BetaToolComputerUse20241022) = apply {
@@ -1009,6 +1017,22 @@ private constructor(
          */
         fun addTool(betaWebFetchTool20250910: BetaWebFetchTool20250910) = apply {
             body.addTool(betaWebFetchTool20250910)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `Tool.ofBetaWebSearchTool20260209(betaWebSearchTool20260209)`.
+         */
+        fun addTool(betaWebSearchTool20260209: BetaWebSearchTool20260209) = apply {
+            body.addTool(betaWebSearchTool20260209)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `Tool.ofBetaWebFetchTool20260209(betaWebFetchTool20260209)`.
+         */
+        fun addTool(betaWebFetchTool20260209: BetaWebFetchTool20260209) = apply {
+            body.addTool(betaWebFetchTool20260209)
         }
 
         /**
@@ -2169,6 +2193,13 @@ private constructor(
 
             /**
              * Alias for calling [addTool] with
+             * `Tool.ofBetaCodeExecutionTool20260120(betaCodeExecutionTool20260120)`.
+             */
+            fun addTool(betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120) =
+                addTool(Tool.ofBetaCodeExecutionTool20260120(betaCodeExecutionTool20260120))
+
+            /**
+             * Alias for calling [addTool] with
              * `Tool.ofBetaToolComputerUse20241022(betaToolComputerUse20241022)`.
              */
             fun addTool(betaToolComputerUse20241022: BetaToolComputerUse20241022) =
@@ -2236,6 +2267,20 @@ private constructor(
              */
             fun addTool(betaWebFetchTool20250910: BetaWebFetchTool20250910) =
                 addTool(Tool.ofBetaWebFetchTool20250910(betaWebFetchTool20250910))
+
+            /**
+             * Alias for calling [addTool] with
+             * `Tool.ofBetaWebSearchTool20260209(betaWebSearchTool20260209)`.
+             */
+            fun addTool(betaWebSearchTool20260209: BetaWebSearchTool20260209) =
+                addTool(Tool.ofBetaWebSearchTool20260209(betaWebSearchTool20260209))
+
+            /**
+             * Alias for calling [addTool] with
+             * `Tool.ofBetaWebFetchTool20260209(betaWebFetchTool20260209)`.
+             */
+            fun addTool(betaWebFetchTool20260209: BetaWebFetchTool20260209) =
+                addTool(Tool.ofBetaWebFetchTool20260209(betaWebFetchTool20260209))
 
             /**
              * Alias for calling [addTool] with
@@ -2714,12 +2759,7 @@ private constructor(
         }
     }
 
-    /**
-     * Configuration for a group of tools from an MCP server.
-     *
-     * Allows configuring enabled status and defer_loading for all tools from an MCP server, with
-     * optional per-tool overrides.
-     */
+    /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
     @JsonDeserialize(using = Tool.Deserializer::class)
     @JsonSerialize(using = Tool.Serializer::class)
     class Tool
@@ -2729,6 +2769,7 @@ private constructor(
         private val betaToolBash20250124: BetaToolBash20250124? = null,
         private val betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522? = null,
         private val betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825? = null,
+        private val betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120? = null,
         private val betaToolComputerUse20241022: BetaToolComputerUse20241022? = null,
         private val betaMemoryTool20250818: BetaMemoryTool20250818? = null,
         private val betaToolComputerUse20250124: BetaToolComputerUse20250124? = null,
@@ -2739,6 +2780,8 @@ private constructor(
         private val betaToolTextEditor20250728: BetaToolTextEditor20250728? = null,
         private val betaWebSearchTool20250305: BetaWebSearchTool20250305? = null,
         private val betaWebFetchTool20250910: BetaWebFetchTool20250910? = null,
+        private val betaWebSearchTool20260209: BetaWebSearchTool20260209? = null,
+        private val betaWebFetchTool20260209: BetaWebFetchTool20260209? = null,
         private val betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119? = null,
         private val betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119? = null,
         private val betaMcpToolset: BetaMcpToolset? = null,
@@ -2758,6 +2801,10 @@ private constructor(
 
         fun betaCodeExecutionTool20250825(): Optional<BetaCodeExecutionTool20250825> =
             Optional.ofNullable(betaCodeExecutionTool20250825)
+
+        /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
+        fun betaCodeExecutionTool20260120(): Optional<BetaCodeExecutionTool20260120> =
+            Optional.ofNullable(betaCodeExecutionTool20260120)
 
         fun betaToolComputerUse20241022(): Optional<BetaToolComputerUse20241022> =
             Optional.ofNullable(betaToolComputerUse20241022)
@@ -2789,6 +2836,12 @@ private constructor(
         fun betaWebFetchTool20250910(): Optional<BetaWebFetchTool20250910> =
             Optional.ofNullable(betaWebFetchTool20250910)
 
+        fun betaWebSearchTool20260209(): Optional<BetaWebSearchTool20260209> =
+            Optional.ofNullable(betaWebSearchTool20260209)
+
+        fun betaWebFetchTool20260209(): Optional<BetaWebFetchTool20260209> =
+            Optional.ofNullable(betaWebFetchTool20260209)
+
         fun betaToolSearchToolBm25_20251119(): Optional<BetaToolSearchToolBm25_20251119> =
             Optional.ofNullable(betaToolSearchToolBm25_20251119)
 
@@ -2813,6 +2866,8 @@ private constructor(
 
         fun isBetaCodeExecutionTool20250825(): Boolean = betaCodeExecutionTool20250825 != null
 
+        fun isBetaCodeExecutionTool20260120(): Boolean = betaCodeExecutionTool20260120 != null
+
         fun isBetaToolComputerUse20241022(): Boolean = betaToolComputerUse20241022 != null
 
         fun isBetaMemoryTool20250818(): Boolean = betaMemoryTool20250818 != null
@@ -2833,6 +2888,10 @@ private constructor(
 
         fun isBetaWebFetchTool20250910(): Boolean = betaWebFetchTool20250910 != null
 
+        fun isBetaWebSearchTool20260209(): Boolean = betaWebSearchTool20260209 != null
+
+        fun isBetaWebFetchTool20260209(): Boolean = betaWebFetchTool20260209 != null
+
         fun isBetaToolSearchToolBm25_20251119(): Boolean = betaToolSearchToolBm25_20251119 != null
 
         fun isBetaToolSearchToolRegex20251119(): Boolean = betaToolSearchToolRegex20251119 != null
@@ -2852,6 +2911,10 @@ private constructor(
 
         fun asBetaCodeExecutionTool20250825(): BetaCodeExecutionTool20250825 =
             betaCodeExecutionTool20250825.getOrThrow("betaCodeExecutionTool20250825")
+
+        /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
+        fun asBetaCodeExecutionTool20260120(): BetaCodeExecutionTool20260120 =
+            betaCodeExecutionTool20260120.getOrThrow("betaCodeExecutionTool20260120")
 
         fun asBetaToolComputerUse20241022(): BetaToolComputerUse20241022 =
             betaToolComputerUse20241022.getOrThrow("betaToolComputerUse20241022")
@@ -2883,6 +2946,12 @@ private constructor(
         fun asBetaWebFetchTool20250910(): BetaWebFetchTool20250910 =
             betaWebFetchTool20250910.getOrThrow("betaWebFetchTool20250910")
 
+        fun asBetaWebSearchTool20260209(): BetaWebSearchTool20260209 =
+            betaWebSearchTool20260209.getOrThrow("betaWebSearchTool20260209")
+
+        fun asBetaWebFetchTool20260209(): BetaWebFetchTool20260209 =
+            betaWebFetchTool20260209.getOrThrow("betaWebFetchTool20260209")
+
         fun asBetaToolSearchToolBm25_20251119(): BetaToolSearchToolBm25_20251119 =
             betaToolSearchToolBm25_20251119.getOrThrow("betaToolSearchToolBm25_20251119")
 
@@ -2910,6 +2979,8 @@ private constructor(
                     visitor.visitBetaCodeExecutionTool20250522(betaCodeExecutionTool20250522)
                 betaCodeExecutionTool20250825 != null ->
                     visitor.visitBetaCodeExecutionTool20250825(betaCodeExecutionTool20250825)
+                betaCodeExecutionTool20260120 != null ->
+                    visitor.visitBetaCodeExecutionTool20260120(betaCodeExecutionTool20260120)
                 betaToolComputerUse20241022 != null ->
                     visitor.visitBetaToolComputerUse20241022(betaToolComputerUse20241022)
                 betaMemoryTool20250818 != null ->
@@ -2930,6 +3001,10 @@ private constructor(
                     visitor.visitBetaWebSearchTool20250305(betaWebSearchTool20250305)
                 betaWebFetchTool20250910 != null ->
                     visitor.visitBetaWebFetchTool20250910(betaWebFetchTool20250910)
+                betaWebSearchTool20260209 != null ->
+                    visitor.visitBetaWebSearchTool20260209(betaWebSearchTool20260209)
+                betaWebFetchTool20260209 != null ->
+                    visitor.visitBetaWebFetchTool20260209(betaWebFetchTool20260209)
                 betaToolSearchToolBm25_20251119 != null ->
                     visitor.visitBetaToolSearchToolBm25_20251119(betaToolSearchToolBm25_20251119)
                 betaToolSearchToolRegex20251119 != null ->
@@ -2973,6 +3048,12 @@ private constructor(
                         betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
                     ) {
                         betaCodeExecutionTool20250825.validate()
+                    }
+
+                    override fun visitBetaCodeExecutionTool20260120(
+                        betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
+                    ) {
+                        betaCodeExecutionTool20260120.validate()
                     }
 
                     override fun visitBetaToolComputerUse20241022(
@@ -3035,6 +3116,18 @@ private constructor(
                         betaWebFetchTool20250910.validate()
                     }
 
+                    override fun visitBetaWebSearchTool20260209(
+                        betaWebSearchTool20260209: BetaWebSearchTool20260209
+                    ) {
+                        betaWebSearchTool20260209.validate()
+                    }
+
+                    override fun visitBetaWebFetchTool20260209(
+                        betaWebFetchTool20260209: BetaWebFetchTool20260209
+                    ) {
+                        betaWebFetchTool20260209.validate()
+                    }
+
                     override fun visitBetaToolSearchToolBm25_20251119(
                         betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
                     ) {
@@ -3091,6 +3184,10 @@ private constructor(
                         betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
                     ) = betaCodeExecutionTool20250825.validity()
 
+                    override fun visitBetaCodeExecutionTool20260120(
+                        betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
+                    ) = betaCodeExecutionTool20260120.validity()
+
                     override fun visitBetaToolComputerUse20241022(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ) = betaToolComputerUse20241022.validity()
@@ -3131,6 +3228,14 @@ private constructor(
                         betaWebFetchTool20250910: BetaWebFetchTool20250910
                     ) = betaWebFetchTool20250910.validity()
 
+                    override fun visitBetaWebSearchTool20260209(
+                        betaWebSearchTool20260209: BetaWebSearchTool20260209
+                    ) = betaWebSearchTool20260209.validity()
+
+                    override fun visitBetaWebFetchTool20260209(
+                        betaWebFetchTool20260209: BetaWebFetchTool20260209
+                    ) = betaWebFetchTool20260209.validity()
+
                     override fun visitBetaToolSearchToolBm25_20251119(
                         betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
                     ) = betaToolSearchToolBm25_20251119.validity()
@@ -3157,6 +3262,7 @@ private constructor(
                 betaToolBash20250124 == other.betaToolBash20250124 &&
                 betaCodeExecutionTool20250522 == other.betaCodeExecutionTool20250522 &&
                 betaCodeExecutionTool20250825 == other.betaCodeExecutionTool20250825 &&
+                betaCodeExecutionTool20260120 == other.betaCodeExecutionTool20260120 &&
                 betaToolComputerUse20241022 == other.betaToolComputerUse20241022 &&
                 betaMemoryTool20250818 == other.betaMemoryTool20250818 &&
                 betaToolComputerUse20250124 == other.betaToolComputerUse20250124 &&
@@ -3167,6 +3273,8 @@ private constructor(
                 betaToolTextEditor20250728 == other.betaToolTextEditor20250728 &&
                 betaWebSearchTool20250305 == other.betaWebSearchTool20250305 &&
                 betaWebFetchTool20250910 == other.betaWebFetchTool20250910 &&
+                betaWebSearchTool20260209 == other.betaWebSearchTool20260209 &&
+                betaWebFetchTool20260209 == other.betaWebFetchTool20260209 &&
                 betaToolSearchToolBm25_20251119 == other.betaToolSearchToolBm25_20251119 &&
                 betaToolSearchToolRegex20251119 == other.betaToolSearchToolRegex20251119 &&
                 betaMcpToolset == other.betaMcpToolset
@@ -3179,6 +3287,7 @@ private constructor(
                 betaToolBash20250124,
                 betaCodeExecutionTool20250522,
                 betaCodeExecutionTool20250825,
+                betaCodeExecutionTool20260120,
                 betaToolComputerUse20241022,
                 betaMemoryTool20250818,
                 betaToolComputerUse20250124,
@@ -3189,6 +3298,8 @@ private constructor(
                 betaToolTextEditor20250728,
                 betaWebSearchTool20250305,
                 betaWebFetchTool20250910,
+                betaWebSearchTool20260209,
+                betaWebFetchTool20260209,
                 betaToolSearchToolBm25_20251119,
                 betaToolSearchToolRegex20251119,
                 betaMcpToolset,
@@ -3203,6 +3314,8 @@ private constructor(
                     "Tool{betaCodeExecutionTool20250522=$betaCodeExecutionTool20250522}"
                 betaCodeExecutionTool20250825 != null ->
                     "Tool{betaCodeExecutionTool20250825=$betaCodeExecutionTool20250825}"
+                betaCodeExecutionTool20260120 != null ->
+                    "Tool{betaCodeExecutionTool20260120=$betaCodeExecutionTool20260120}"
                 betaToolComputerUse20241022 != null ->
                     "Tool{betaToolComputerUse20241022=$betaToolComputerUse20241022}"
                 betaMemoryTool20250818 != null ->
@@ -3223,6 +3336,10 @@ private constructor(
                     "Tool{betaWebSearchTool20250305=$betaWebSearchTool20250305}"
                 betaWebFetchTool20250910 != null ->
                     "Tool{betaWebFetchTool20250910=$betaWebFetchTool20250910}"
+                betaWebSearchTool20260209 != null ->
+                    "Tool{betaWebSearchTool20260209=$betaWebSearchTool20260209}"
+                betaWebFetchTool20260209 != null ->
+                    "Tool{betaWebFetchTool20260209=$betaWebFetchTool20260209}"
                 betaToolSearchToolBm25_20251119 != null ->
                     "Tool{betaToolSearchToolBm25_20251119=$betaToolSearchToolBm25_20251119}"
                 betaToolSearchToolRegex20251119 != null ->
@@ -3253,6 +3370,14 @@ private constructor(
             fun ofBetaCodeExecutionTool20250825(
                 betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
             ) = Tool(betaCodeExecutionTool20250825 = betaCodeExecutionTool20250825)
+
+            /**
+             * Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint).
+             */
+            @JvmStatic
+            fun ofBetaCodeExecutionTool20260120(
+                betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
+            ) = Tool(betaCodeExecutionTool20260120 = betaCodeExecutionTool20260120)
 
             @JvmStatic
             fun ofBetaToolComputerUse20241022(
@@ -3302,6 +3427,14 @@ private constructor(
                 Tool(betaWebFetchTool20250910 = betaWebFetchTool20250910)
 
             @JvmStatic
+            fun ofBetaWebSearchTool20260209(betaWebSearchTool20260209: BetaWebSearchTool20260209) =
+                Tool(betaWebSearchTool20260209 = betaWebSearchTool20260209)
+
+            @JvmStatic
+            fun ofBetaWebFetchTool20260209(betaWebFetchTool20260209: BetaWebFetchTool20260209) =
+                Tool(betaWebFetchTool20260209 = betaWebFetchTool20260209)
+
+            @JvmStatic
             fun ofBetaToolSearchToolBm25_20251119(
                 betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
             ) = Tool(betaToolSearchToolBm25_20251119 = betaToolSearchToolBm25_20251119)
@@ -3339,6 +3472,13 @@ private constructor(
                 betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
             ): T
 
+            /**
+             * Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint).
+             */
+            fun visitBetaCodeExecutionTool20260120(
+                betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
+            ): T
+
             fun visitBetaToolComputerUse20241022(
                 betaToolComputerUse20241022: BetaToolComputerUse20241022
             ): T
@@ -3374,6 +3514,12 @@ private constructor(
             ): T
 
             fun visitBetaWebFetchTool20250910(betaWebFetchTool20250910: BetaWebFetchTool20250910): T
+
+            fun visitBetaWebSearchTool20260209(
+                betaWebSearchTool20260209: BetaWebSearchTool20260209
+            ): T
+
+            fun visitBetaWebFetchTool20260209(betaWebFetchTool20260209: BetaWebFetchTool20260209): T
 
             fun visitBetaToolSearchToolBm25_20251119(
                 betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
@@ -3425,6 +3571,8 @@ private constructor(
                                 ?.let { Tool(betaCodeExecutionTool20250522 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaCodeExecutionTool20250825>())
                                 ?.let { Tool(betaCodeExecutionTool20250825 = it, _json = json) },
+                            tryDeserialize(node, jacksonTypeRef<BetaCodeExecutionTool20260120>())
+                                ?.let { Tool(betaCodeExecutionTool20260120 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20241022>())
                                 ?.let { Tool(betaToolComputerUse20241022 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaMemoryTool20250818>())?.let {
@@ -3447,6 +3595,12 @@ private constructor(
                             },
                             tryDeserialize(node, jacksonTypeRef<BetaWebFetchTool20250910>())?.let {
                                 Tool(betaWebFetchTool20250910 = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<BetaWebSearchTool20260209>())?.let {
+                                Tool(betaWebSearchTool20260209 = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<BetaWebFetchTool20260209>())?.let {
+                                Tool(betaWebFetchTool20260209 = it, _json = json)
                             },
                             tryDeserialize(node, jacksonTypeRef<BetaToolSearchToolBm25_20251119>())
                                 ?.let { Tool(betaToolSearchToolBm25_20251119 = it, _json = json) },
@@ -3489,6 +3643,8 @@ private constructor(
                         generator.writeObject(value.betaCodeExecutionTool20250522)
                     value.betaCodeExecutionTool20250825 != null ->
                         generator.writeObject(value.betaCodeExecutionTool20250825)
+                    value.betaCodeExecutionTool20260120 != null ->
+                        generator.writeObject(value.betaCodeExecutionTool20260120)
                     value.betaToolComputerUse20241022 != null ->
                         generator.writeObject(value.betaToolComputerUse20241022)
                     value.betaMemoryTool20250818 != null ->
@@ -3509,6 +3665,10 @@ private constructor(
                         generator.writeObject(value.betaWebSearchTool20250305)
                     value.betaWebFetchTool20250910 != null ->
                         generator.writeObject(value.betaWebFetchTool20250910)
+                    value.betaWebSearchTool20260209 != null ->
+                        generator.writeObject(value.betaWebSearchTool20260209)
+                    value.betaWebFetchTool20260209 != null ->
+                        generator.writeObject(value.betaWebFetchTool20260209)
                     value.betaToolSearchToolBm25_20251119 != null ->
                         generator.writeObject(value.betaToolSearchToolBm25_20251119)
                     value.betaToolSearchToolRegex20251119 != null ->

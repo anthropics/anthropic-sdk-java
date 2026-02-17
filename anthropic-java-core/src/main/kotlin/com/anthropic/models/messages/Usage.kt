@@ -29,6 +29,7 @@ private constructor(
     private val outputTokens: JsonField<Long>,
     private val serverToolUse: JsonField<ServerToolUsage>,
     private val serviceTier: JsonField<ServiceTier>,
+    private val speed: JsonField<Speed>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -58,6 +59,7 @@ private constructor(
         @JsonProperty("service_tier")
         @ExcludeMissing
         serviceTier: JsonField<ServiceTier> = JsonMissing.of(),
+        @JsonProperty("speed") @ExcludeMissing speed: JsonField<Speed> = JsonMissing.of(),
     ) : this(
         cacheCreation,
         cacheCreationInputTokens,
@@ -67,6 +69,7 @@ private constructor(
         outputTokens,
         serverToolUse,
         serviceTier,
+        speed,
         mutableMapOf(),
     )
 
@@ -135,6 +138,14 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun serviceTier(): Optional<ServiceTier> = serviceTier.getOptional("service_tier")
+
+    /**
+     * The inference speed mode used for this request.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun speed(): Optional<Speed> = speed.getOptional("speed")
 
     /**
      * Returns the raw JSON value of [cacheCreation].
@@ -208,6 +219,13 @@ private constructor(
     @ExcludeMissing
     fun _serviceTier(): JsonField<ServiceTier> = serviceTier
 
+    /**
+     * Returns the raw JSON value of [speed].
+     *
+     * Unlike [speed], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("speed") @ExcludeMissing fun _speed(): JsonField<Speed> = speed
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -235,6 +253,7 @@ private constructor(
          * .outputTokens()
          * .serverToolUse()
          * .serviceTier()
+         * .speed()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -251,6 +270,7 @@ private constructor(
         private var outputTokens: JsonField<Long>? = null
         private var serverToolUse: JsonField<ServerToolUsage>? = null
         private var serviceTier: JsonField<ServiceTier>? = null
+        private var speed: JsonField<Speed>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -263,6 +283,7 @@ private constructor(
             outputTokens = usage.outputTokens
             serverToolUse = usage.serverToolUse
             serviceTier = usage.serviceTier
+            speed = usage.speed
             additionalProperties = usage.additionalProperties.toMutableMap()
         }
 
@@ -422,6 +443,20 @@ private constructor(
             this.serviceTier = serviceTier
         }
 
+        /** The inference speed mode used for this request. */
+        fun speed(speed: Speed?) = speed(JsonField.ofNullable(speed))
+
+        /** Alias for calling [Builder.speed] with `speed.orElse(null)`. */
+        fun speed(speed: Optional<Speed>) = speed(speed.getOrNull())
+
+        /**
+         * Sets [Builder.speed] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.speed] with a well-typed [Speed] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun speed(speed: JsonField<Speed>) = apply { this.speed = speed }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -456,6 +491,7 @@ private constructor(
          * .outputTokens()
          * .serverToolUse()
          * .serviceTier()
+         * .speed()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -470,6 +506,7 @@ private constructor(
                 checkRequired("outputTokens", outputTokens),
                 checkRequired("serverToolUse", serverToolUse),
                 checkRequired("serviceTier", serviceTier),
+                checkRequired("speed", speed),
                 additionalProperties.toMutableMap(),
             )
     }
@@ -489,6 +526,7 @@ private constructor(
         outputTokens()
         serverToolUse().ifPresent { it.validate() }
         serviceTier().ifPresent { it.validate() }
+        speed().ifPresent { it.validate() }
         validated = true
     }
 
@@ -514,7 +552,8 @@ private constructor(
             (if (inputTokens.asKnown().isPresent) 1 else 0) +
             (if (outputTokens.asKnown().isPresent) 1 else 0) +
             (serverToolUse.asKnown().getOrNull()?.validity() ?: 0) +
-            (serviceTier.asKnown().getOrNull()?.validity() ?: 0)
+            (serviceTier.asKnown().getOrNull()?.validity() ?: 0) +
+            (speed.asKnown().getOrNull()?.validity() ?: 0)
 
     /** If the request used the priority, standard, or batch tier. */
     class ServiceTier @JsonCreator private constructor(private val value: JsonField<String>) :
@@ -653,6 +692,134 @@ private constructor(
         override fun toString() = value.toString()
     }
 
+    /** The inference speed mode used for this request. */
+    class Speed @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val STANDARD = of("standard")
+
+            @JvmField val FAST = of("fast")
+
+            @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
+        }
+
+        /** An enum containing [Speed]'s known values. */
+        enum class Known {
+            STANDARD,
+            FAST,
+        }
+
+        /**
+         * An enum containing [Speed]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Speed] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            STANDARD,
+            FAST,
+            /** An enum member indicating that [Speed] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                STANDARD -> Value.STANDARD
+                FAST -> Value.FAST
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                STANDARD -> Known.STANDARD
+                FAST -> Known.FAST
+                else -> throw AnthropicInvalidDataException("Unknown Speed: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        fun validate(): Speed = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Speed && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -667,6 +834,7 @@ private constructor(
             outputTokens == other.outputTokens &&
             serverToolUse == other.serverToolUse &&
             serviceTier == other.serviceTier &&
+            speed == other.speed &&
             additionalProperties == other.additionalProperties
     }
 
@@ -680,6 +848,7 @@ private constructor(
             outputTokens,
             serverToolUse,
             serviceTier,
+            speed,
             additionalProperties,
         )
     }
@@ -687,5 +856,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Usage{cacheCreation=$cacheCreation, cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inferenceGeo=$inferenceGeo, inputTokens=$inputTokens, outputTokens=$outputTokens, serverToolUse=$serverToolUse, serviceTier=$serviceTier, additionalProperties=$additionalProperties}"
+        "Usage{cacheCreation=$cacheCreation, cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inferenceGeo=$inferenceGeo, inputTokens=$inputTokens, outputTokens=$outputTokens, serverToolUse=$serverToolUse, serviceTier=$serviceTier, speed=$speed, additionalProperties=$additionalProperties}"
 }

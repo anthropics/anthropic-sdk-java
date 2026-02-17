@@ -42,6 +42,7 @@ internal class BatchServiceAsyncTest {
                                     .maxTokens(1024L)
                                     .addUserMessage("Hello, world")
                                     .model(Model.CLAUDE_OPUS_4_6)
+                                    .container("container")
                                     .inferenceGeo("inference_geo")
                                     .metadata(
                                         Metadata.builder()
@@ -66,6 +67,7 @@ internal class BatchServiceAsyncTest {
                                             .build()
                                     )
                                     .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
+                                    .speed(BatchCreateParams.Request.Params.Speed.STANDARD)
                                     .addStopSequence("string")
                                     .stream(true)
                                     .systemOfTextBlockParams(
@@ -116,15 +118,25 @@ internal class BatchServiceAsyncTest {
                                                     .build()
                                             )
                                             .name("name")
+                                            .addAllowedCaller(Tool.AllowedCaller.DIRECT)
                                             .cacheControl(
                                                 CacheControlEphemeral.builder()
                                                     .ttl(CacheControlEphemeral.Ttl.TTL_5M)
                                                     .build()
                                             )
+                                            .deferLoading(true)
                                             .description(
                                                 "Get the current weather in a given location"
                                             )
                                             .eagerInputStreaming(true)
+                                            .addInputExample(
+                                                Tool.InputExample.builder()
+                                                    .putAdditionalProperty(
+                                                        "foo",
+                                                        JsonValue.from("bar"),
+                                                    )
+                                                    .build()
+                                            )
                                             .strict(true)
                                             .type(Tool.Type.CUSTOM)
                                             .build()

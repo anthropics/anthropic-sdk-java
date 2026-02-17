@@ -42,6 +42,8 @@ private constructor(
     ) : this(content, toolUseId, type, cacheControl, mutableMapOf())
 
     /**
+     * Code execution result with encrypted stdout for PFC + web_search results.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -146,6 +148,7 @@ private constructor(
                 betaCodeExecutionToolResultBlockParam.additionalProperties.toMutableMap()
         }
 
+        /** Code execution result with encrypted stdout for PFC + web_search results. */
         fun content(content: BetaCodeExecutionToolResultBlockParamContent) =
             content(JsonField.of(content))
 
@@ -182,6 +185,24 @@ private constructor(
         /** Alias for calling [content] with `resultBlockParam.toParam()`. */
         fun content(resultBlockParam: BetaCodeExecutionResultBlock) =
             content(resultBlockParam.toParam())
+
+        /**
+         * Alias for calling [content] with
+         * `BetaCodeExecutionToolResultBlockParamContent.ofEncryptedCodeExecutionResultBlockParam(encryptedCodeExecutionResultBlockParam)`.
+         */
+        fun content(
+            encryptedCodeExecutionResultBlockParam: BetaEncryptedCodeExecutionResultBlockParam
+        ) =
+            content(
+                BetaCodeExecutionToolResultBlockParamContent
+                    .ofEncryptedCodeExecutionResultBlockParam(
+                        encryptedCodeExecutionResultBlockParam
+                    )
+            )
+
+        /** Alias for calling [content] with `encryptedCodeExecutionResultBlockParam.toParam()`. */
+        fun content(encryptedCodeExecutionResultBlockParam: BetaEncryptedCodeExecutionResultBlock) =
+            content(encryptedCodeExecutionResultBlockParam.toParam())
 
         fun toolUseId(toolUseId: String) = toolUseId(JsonField.of(toolUseId))
 

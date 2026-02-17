@@ -33,6 +33,13 @@ private constructor(
     private val toolResult: ToolResultBlockParam? = null,
     private val serverToolUse: ServerToolUseBlockParam? = null,
     private val webSearchToolResult: WebSearchToolResultBlockParam? = null,
+    private val webFetchToolResult: WebFetchToolResultBlockParam? = null,
+    private val codeExecutionToolResult: CodeExecutionToolResultBlockParam? = null,
+    private val bashCodeExecutionToolResult: BashCodeExecutionToolResultBlockParam? = null,
+    private val textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlockParam? =
+        null,
+    private val toolSearchToolResult: ToolSearchToolResultBlockParam? = null,
+    private val containerUpload: ContainerUploadBlockParam? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -69,6 +76,28 @@ private constructor(
     fun webSearchToolResult(): Optional<WebSearchToolResultBlockParam> =
         Optional.ofNullable(webSearchToolResult)
 
+    fun webFetchToolResult(): Optional<WebFetchToolResultBlockParam> =
+        Optional.ofNullable(webFetchToolResult)
+
+    fun codeExecutionToolResult(): Optional<CodeExecutionToolResultBlockParam> =
+        Optional.ofNullable(codeExecutionToolResult)
+
+    fun bashCodeExecutionToolResult(): Optional<BashCodeExecutionToolResultBlockParam> =
+        Optional.ofNullable(bashCodeExecutionToolResult)
+
+    fun textEditorCodeExecutionToolResult(): Optional<TextEditorCodeExecutionToolResultBlockParam> =
+        Optional.ofNullable(textEditorCodeExecutionToolResult)
+
+    fun toolSearchToolResult(): Optional<ToolSearchToolResultBlockParam> =
+        Optional.ofNullable(toolSearchToolResult)
+
+    /**
+     * A content block that represents a file to be uploaded to the container Files uploaded via
+     * this block will be available in the container's input directory.
+     */
+    fun containerUpload(): Optional<ContainerUploadBlockParam> =
+        Optional.ofNullable(containerUpload)
+
     fun isText(): Boolean = text != null
 
     fun isImage(): Boolean = image != null
@@ -88,6 +117,18 @@ private constructor(
     fun isServerToolUse(): Boolean = serverToolUse != null
 
     fun isWebSearchToolResult(): Boolean = webSearchToolResult != null
+
+    fun isWebFetchToolResult(): Boolean = webFetchToolResult != null
+
+    fun isCodeExecutionToolResult(): Boolean = codeExecutionToolResult != null
+
+    fun isBashCodeExecutionToolResult(): Boolean = bashCodeExecutionToolResult != null
+
+    fun isTextEditorCodeExecutionToolResult(): Boolean = textEditorCodeExecutionToolResult != null
+
+    fun isToolSearchToolResult(): Boolean = toolSearchToolResult != null
+
+    fun isContainerUpload(): Boolean = containerUpload != null
 
     /** Regular text content. */
     fun asText(): TextBlockParam = text.getOrThrow("text")
@@ -122,6 +163,28 @@ private constructor(
     fun asWebSearchToolResult(): WebSearchToolResultBlockParam =
         webSearchToolResult.getOrThrow("webSearchToolResult")
 
+    fun asWebFetchToolResult(): WebFetchToolResultBlockParam =
+        webFetchToolResult.getOrThrow("webFetchToolResult")
+
+    fun asCodeExecutionToolResult(): CodeExecutionToolResultBlockParam =
+        codeExecutionToolResult.getOrThrow("codeExecutionToolResult")
+
+    fun asBashCodeExecutionToolResult(): BashCodeExecutionToolResultBlockParam =
+        bashCodeExecutionToolResult.getOrThrow("bashCodeExecutionToolResult")
+
+    fun asTextEditorCodeExecutionToolResult(): TextEditorCodeExecutionToolResultBlockParam =
+        textEditorCodeExecutionToolResult.getOrThrow("textEditorCodeExecutionToolResult")
+
+    fun asToolSearchToolResult(): ToolSearchToolResultBlockParam =
+        toolSearchToolResult.getOrThrow("toolSearchToolResult")
+
+    /**
+     * A content block that represents a file to be uploaded to the container Files uploaded via
+     * this block will be available in the container's input directory.
+     */
+    fun asContainerUpload(): ContainerUploadBlockParam =
+        containerUpload.getOrThrow("containerUpload")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
@@ -136,6 +199,15 @@ private constructor(
             toolResult != null -> visitor.visitToolResult(toolResult)
             serverToolUse != null -> visitor.visitServerToolUse(serverToolUse)
             webSearchToolResult != null -> visitor.visitWebSearchToolResult(webSearchToolResult)
+            webFetchToolResult != null -> visitor.visitWebFetchToolResult(webFetchToolResult)
+            codeExecutionToolResult != null ->
+                visitor.visitCodeExecutionToolResult(codeExecutionToolResult)
+            bashCodeExecutionToolResult != null ->
+                visitor.visitBashCodeExecutionToolResult(bashCodeExecutionToolResult)
+            textEditorCodeExecutionToolResult != null ->
+                visitor.visitTextEditorCodeExecutionToolResult(textEditorCodeExecutionToolResult)
+            toolSearchToolResult != null -> visitor.visitToolSearchToolResult(toolSearchToolResult)
+            containerUpload != null -> visitor.visitContainerUpload(containerUpload)
             else -> visitor.unknown(_json)
         }
 
@@ -189,6 +261,40 @@ private constructor(
                 ) {
                     webSearchToolResult.validate()
                 }
+
+                override fun visitWebFetchToolResult(
+                    webFetchToolResult: WebFetchToolResultBlockParam
+                ) {
+                    webFetchToolResult.validate()
+                }
+
+                override fun visitCodeExecutionToolResult(
+                    codeExecutionToolResult: CodeExecutionToolResultBlockParam
+                ) {
+                    codeExecutionToolResult.validate()
+                }
+
+                override fun visitBashCodeExecutionToolResult(
+                    bashCodeExecutionToolResult: BashCodeExecutionToolResultBlockParam
+                ) {
+                    bashCodeExecutionToolResult.validate()
+                }
+
+                override fun visitTextEditorCodeExecutionToolResult(
+                    textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlockParam
+                ) {
+                    textEditorCodeExecutionToolResult.validate()
+                }
+
+                override fun visitToolSearchToolResult(
+                    toolSearchToolResult: ToolSearchToolResultBlockParam
+                ) {
+                    toolSearchToolResult.validate()
+                }
+
+                override fun visitContainerUpload(containerUpload: ContainerUploadBlockParam) {
+                    containerUpload.validate()
+                }
             }
         )
         validated = true
@@ -237,6 +343,29 @@ private constructor(
                     webSearchToolResult: WebSearchToolResultBlockParam
                 ) = webSearchToolResult.validity()
 
+                override fun visitWebFetchToolResult(
+                    webFetchToolResult: WebFetchToolResultBlockParam
+                ) = webFetchToolResult.validity()
+
+                override fun visitCodeExecutionToolResult(
+                    codeExecutionToolResult: CodeExecutionToolResultBlockParam
+                ) = codeExecutionToolResult.validity()
+
+                override fun visitBashCodeExecutionToolResult(
+                    bashCodeExecutionToolResult: BashCodeExecutionToolResultBlockParam
+                ) = bashCodeExecutionToolResult.validity()
+
+                override fun visitTextEditorCodeExecutionToolResult(
+                    textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlockParam
+                ) = textEditorCodeExecutionToolResult.validity()
+
+                override fun visitToolSearchToolResult(
+                    toolSearchToolResult: ToolSearchToolResultBlockParam
+                ) = toolSearchToolResult.validity()
+
+                override fun visitContainerUpload(containerUpload: ContainerUploadBlockParam) =
+                    containerUpload.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -256,7 +385,13 @@ private constructor(
             toolUse == other.toolUse &&
             toolResult == other.toolResult &&
             serverToolUse == other.serverToolUse &&
-            webSearchToolResult == other.webSearchToolResult
+            webSearchToolResult == other.webSearchToolResult &&
+            webFetchToolResult == other.webFetchToolResult &&
+            codeExecutionToolResult == other.codeExecutionToolResult &&
+            bashCodeExecutionToolResult == other.bashCodeExecutionToolResult &&
+            textEditorCodeExecutionToolResult == other.textEditorCodeExecutionToolResult &&
+            toolSearchToolResult == other.toolSearchToolResult &&
+            containerUpload == other.containerUpload
     }
 
     override fun hashCode(): Int =
@@ -271,6 +406,12 @@ private constructor(
             toolResult,
             serverToolUse,
             webSearchToolResult,
+            webFetchToolResult,
+            codeExecutionToolResult,
+            bashCodeExecutionToolResult,
+            textEditorCodeExecutionToolResult,
+            toolSearchToolResult,
+            containerUpload,
         )
 
     override fun toString(): String =
@@ -286,6 +427,17 @@ private constructor(
             serverToolUse != null -> "ContentBlockParam{serverToolUse=$serverToolUse}"
             webSearchToolResult != null ->
                 "ContentBlockParam{webSearchToolResult=$webSearchToolResult}"
+            webFetchToolResult != null ->
+                "ContentBlockParam{webFetchToolResult=$webFetchToolResult}"
+            codeExecutionToolResult != null ->
+                "ContentBlockParam{codeExecutionToolResult=$codeExecutionToolResult}"
+            bashCodeExecutionToolResult != null ->
+                "ContentBlockParam{bashCodeExecutionToolResult=$bashCodeExecutionToolResult}"
+            textEditorCodeExecutionToolResult != null ->
+                "ContentBlockParam{textEditorCodeExecutionToolResult=$textEditorCodeExecutionToolResult}"
+            toolSearchToolResult != null ->
+                "ContentBlockParam{toolSearchToolResult=$toolSearchToolResult}"
+            containerUpload != null -> "ContentBlockParam{containerUpload=$containerUpload}"
             _json != null -> "ContentBlockParam{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid ContentBlockParam")
         }
@@ -334,6 +486,36 @@ private constructor(
         @JvmStatic
         fun ofWebSearchToolResult(webSearchToolResult: WebSearchToolResultBlockParam) =
             ContentBlockParam(webSearchToolResult = webSearchToolResult)
+
+        @JvmStatic
+        fun ofWebFetchToolResult(webFetchToolResult: WebFetchToolResultBlockParam) =
+            ContentBlockParam(webFetchToolResult = webFetchToolResult)
+
+        @JvmStatic
+        fun ofCodeExecutionToolResult(codeExecutionToolResult: CodeExecutionToolResultBlockParam) =
+            ContentBlockParam(codeExecutionToolResult = codeExecutionToolResult)
+
+        @JvmStatic
+        fun ofBashCodeExecutionToolResult(
+            bashCodeExecutionToolResult: BashCodeExecutionToolResultBlockParam
+        ) = ContentBlockParam(bashCodeExecutionToolResult = bashCodeExecutionToolResult)
+
+        @JvmStatic
+        fun ofTextEditorCodeExecutionToolResult(
+            textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlockParam
+        ) = ContentBlockParam(textEditorCodeExecutionToolResult = textEditorCodeExecutionToolResult)
+
+        @JvmStatic
+        fun ofToolSearchToolResult(toolSearchToolResult: ToolSearchToolResultBlockParam) =
+            ContentBlockParam(toolSearchToolResult = toolSearchToolResult)
+
+        /**
+         * A content block that represents a file to be uploaded to the container Files uploaded via
+         * this block will be available in the container's input directory.
+         */
+        @JvmStatic
+        fun ofContainerUpload(containerUpload: ContainerUploadBlockParam) =
+            ContentBlockParam(containerUpload = containerUpload)
     }
 
     /**
@@ -372,6 +554,28 @@ private constructor(
         fun visitServerToolUse(serverToolUse: ServerToolUseBlockParam): T
 
         fun visitWebSearchToolResult(webSearchToolResult: WebSearchToolResultBlockParam): T
+
+        fun visitWebFetchToolResult(webFetchToolResult: WebFetchToolResultBlockParam): T
+
+        fun visitCodeExecutionToolResult(
+            codeExecutionToolResult: CodeExecutionToolResultBlockParam
+        ): T
+
+        fun visitBashCodeExecutionToolResult(
+            bashCodeExecutionToolResult: BashCodeExecutionToolResultBlockParam
+        ): T
+
+        fun visitTextEditorCodeExecutionToolResult(
+            textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlockParam
+        ): T
+
+        fun visitToolSearchToolResult(toolSearchToolResult: ToolSearchToolResultBlockParam): T
+
+        /**
+         * A content block that represents a file to be uploaded to the container Files uploaded via
+         * this block will be available in the container's input directory.
+         */
+        fun visitContainerUpload(containerUpload: ContainerUploadBlockParam): T
 
         /**
          * Maps an unknown variant of [ContentBlockParam] to a value of type [T].
@@ -445,6 +649,43 @@ private constructor(
                         ?.let { ContentBlockParam(webSearchToolResult = it, _json = json) }
                         ?: ContentBlockParam(_json = json)
                 }
+                "web_fetch_tool_result" -> {
+                    return tryDeserialize(node, jacksonTypeRef<WebFetchToolResultBlockParam>())
+                        ?.let { ContentBlockParam(webFetchToolResult = it, _json = json) }
+                        ?: ContentBlockParam(_json = json)
+                }
+                "code_execution_tool_result" -> {
+                    return tryDeserialize(node, jacksonTypeRef<CodeExecutionToolResultBlockParam>())
+                        ?.let { ContentBlockParam(codeExecutionToolResult = it, _json = json) }
+                        ?: ContentBlockParam(_json = json)
+                }
+                "bash_code_execution_tool_result" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BashCodeExecutionToolResultBlockParam>(),
+                        )
+                        ?.let { ContentBlockParam(bashCodeExecutionToolResult = it, _json = json) }
+                        ?: ContentBlockParam(_json = json)
+                }
+                "text_editor_code_execution_tool_result" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<TextEditorCodeExecutionToolResultBlockParam>(),
+                        )
+                        ?.let {
+                            ContentBlockParam(textEditorCodeExecutionToolResult = it, _json = json)
+                        } ?: ContentBlockParam(_json = json)
+                }
+                "tool_search_tool_result" -> {
+                    return tryDeserialize(node, jacksonTypeRef<ToolSearchToolResultBlockParam>())
+                        ?.let { ContentBlockParam(toolSearchToolResult = it, _json = json) }
+                        ?: ContentBlockParam(_json = json)
+                }
+                "container_upload" -> {
+                    return tryDeserialize(node, jacksonTypeRef<ContainerUploadBlockParam>())?.let {
+                        ContentBlockParam(containerUpload = it, _json = json)
+                    } ?: ContentBlockParam(_json = json)
+                }
             }
 
             return ContentBlockParam(_json = json)
@@ -470,6 +711,16 @@ private constructor(
                 value.serverToolUse != null -> generator.writeObject(value.serverToolUse)
                 value.webSearchToolResult != null ->
                     generator.writeObject(value.webSearchToolResult)
+                value.webFetchToolResult != null -> generator.writeObject(value.webFetchToolResult)
+                value.codeExecutionToolResult != null ->
+                    generator.writeObject(value.codeExecutionToolResult)
+                value.bashCodeExecutionToolResult != null ->
+                    generator.writeObject(value.bashCodeExecutionToolResult)
+                value.textEditorCodeExecutionToolResult != null ->
+                    generator.writeObject(value.textEditorCodeExecutionToolResult)
+                value.toolSearchToolResult != null ->
+                    generator.writeObject(value.toolSearchToolResult)
+                value.containerUpload != null -> generator.writeObject(value.containerUpload)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid ContentBlockParam")
             }

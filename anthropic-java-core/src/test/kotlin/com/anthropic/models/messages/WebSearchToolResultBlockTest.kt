@@ -13,6 +13,7 @@ internal class WebSearchToolResultBlockTest {
     fun create() {
         val webSearchToolResultBlock =
             WebSearchToolResultBlock.builder()
+                .caller(DirectCaller.builder().build())
                 .content(
                     WebSearchToolResultError.builder()
                         .errorCode(WebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
@@ -21,6 +22,8 @@ internal class WebSearchToolResultBlockTest {
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()
 
+        assertThat(webSearchToolResultBlock.caller())
+            .isEqualTo(WebSearchToolResultBlock.Caller.ofDirect(DirectCaller.builder().build()))
         assertThat(webSearchToolResultBlock.content())
             .isEqualTo(
                 WebSearchToolResultBlockContent.ofError(
@@ -37,6 +40,7 @@ internal class WebSearchToolResultBlockTest {
         val jsonMapper = jsonMapper()
         val webSearchToolResultBlock =
             WebSearchToolResultBlock.builder()
+                .caller(DirectCaller.builder().build())
                 .content(
                     WebSearchToolResultError.builder()
                         .errorCode(WebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)

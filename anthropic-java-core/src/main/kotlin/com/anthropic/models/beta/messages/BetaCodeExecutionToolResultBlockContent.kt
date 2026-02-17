@@ -18,12 +18,14 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Objects
 import java.util.Optional
 
+/** Code execution result with encrypted stdout for PFC + web_search results. */
 @JsonDeserialize(using = BetaCodeExecutionToolResultBlockContent.Deserializer::class)
 @JsonSerialize(using = BetaCodeExecutionToolResultBlockContent.Serializer::class)
 class BetaCodeExecutionToolResultBlockContent
 private constructor(
     private val error: BetaCodeExecutionToolResultError? = null,
     private val resultBlock: BetaCodeExecutionResultBlock? = null,
+    private val encryptedCodeExecutionResultBlock: BetaEncryptedCodeExecutionResultBlock? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -31,13 +33,23 @@ private constructor(
 
     fun resultBlock(): Optional<BetaCodeExecutionResultBlock> = Optional.ofNullable(resultBlock)
 
+    /** Code execution result with encrypted stdout for PFC + web_search results. */
+    fun encryptedCodeExecutionResultBlock(): Optional<BetaEncryptedCodeExecutionResultBlock> =
+        Optional.ofNullable(encryptedCodeExecutionResultBlock)
+
     fun isError(): Boolean = error != null
 
     fun isResultBlock(): Boolean = resultBlock != null
 
+    fun isEncryptedCodeExecutionResultBlock(): Boolean = encryptedCodeExecutionResultBlock != null
+
     fun asError(): BetaCodeExecutionToolResultError = error.getOrThrow("error")
 
     fun asResultBlock(): BetaCodeExecutionResultBlock = resultBlock.getOrThrow("resultBlock")
+
+    /** Code execution result with encrypted stdout for PFC + web_search results. */
+    fun asEncryptedCodeExecutionResultBlock(): BetaEncryptedCodeExecutionResultBlock =
+        encryptedCodeExecutionResultBlock.getOrThrow("encryptedCodeExecutionResultBlock")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -45,6 +57,8 @@ private constructor(
         when {
             error != null -> visitor.visitError(error)
             resultBlock != null -> visitor.visitResultBlock(resultBlock)
+            encryptedCodeExecutionResultBlock != null ->
+                visitor.visitEncryptedCodeExecutionResultBlock(encryptedCodeExecutionResultBlock)
             else -> visitor.unknown(_json)
         }
 
@@ -63,6 +77,12 @@ private constructor(
 
                 override fun visitResultBlock(resultBlock: BetaCodeExecutionResultBlock) {
                     resultBlock.validate()
+                }
+
+                override fun visitEncryptedCodeExecutionResultBlock(
+                    encryptedCodeExecutionResultBlock: BetaEncryptedCodeExecutionResultBlock
+                ) {
+                    encryptedCodeExecutionResultBlock.validate()
                 }
             }
         )
@@ -91,6 +111,10 @@ private constructor(
                 override fun visitResultBlock(resultBlock: BetaCodeExecutionResultBlock) =
                     resultBlock.validity()
 
+                override fun visitEncryptedCodeExecutionResultBlock(
+                    encryptedCodeExecutionResultBlock: BetaEncryptedCodeExecutionResultBlock
+                ) = encryptedCodeExecutionResultBlock.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -102,16 +126,20 @@ private constructor(
 
         return other is BetaCodeExecutionToolResultBlockContent &&
             error == other.error &&
-            resultBlock == other.resultBlock
+            resultBlock == other.resultBlock &&
+            encryptedCodeExecutionResultBlock == other.encryptedCodeExecutionResultBlock
     }
 
-    override fun hashCode(): Int = Objects.hash(error, resultBlock)
+    override fun hashCode(): Int =
+        Objects.hash(error, resultBlock, encryptedCodeExecutionResultBlock)
 
     override fun toString(): String =
         when {
             error != null -> "BetaCodeExecutionToolResultBlockContent{error=$error}"
             resultBlock != null ->
                 "BetaCodeExecutionToolResultBlockContent{resultBlock=$resultBlock}"
+            encryptedCodeExecutionResultBlock != null ->
+                "BetaCodeExecutionToolResultBlockContent{encryptedCodeExecutionResultBlock=$encryptedCodeExecutionResultBlock}"
             _json != null -> "BetaCodeExecutionToolResultBlockContent{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaCodeExecutionToolResultBlockContent")
         }
@@ -125,6 +153,15 @@ private constructor(
         @JvmStatic
         fun ofResultBlock(resultBlock: BetaCodeExecutionResultBlock) =
             BetaCodeExecutionToolResultBlockContent(resultBlock = resultBlock)
+
+        /** Code execution result with encrypted stdout for PFC + web_search results. */
+        @JvmStatic
+        fun ofEncryptedCodeExecutionResultBlock(
+            encryptedCodeExecutionResultBlock: BetaEncryptedCodeExecutionResultBlock
+        ) =
+            BetaCodeExecutionToolResultBlockContent(
+                encryptedCodeExecutionResultBlock = encryptedCodeExecutionResultBlock
+            )
     }
 
     /**
@@ -136,6 +173,11 @@ private constructor(
         fun visitError(error: BetaCodeExecutionToolResultError): T
 
         fun visitResultBlock(resultBlock: BetaCodeExecutionResultBlock): T
+
+        /** Code execution result with encrypted stdout for PFC + web_search results. */
+        fun visitEncryptedCodeExecutionResultBlock(
+            encryptedCodeExecutionResultBlock: BetaEncryptedCodeExecutionResultBlock
+        ): T
 
         /**
          * Maps an unknown variant of [BetaCodeExecutionToolResultBlockContent] to a value of type
@@ -174,6 +216,16 @@ private constructor(
                         tryDeserialize(node, jacksonTypeRef<BetaCodeExecutionResultBlock>())?.let {
                             BetaCodeExecutionToolResultBlockContent(resultBlock = it, _json = json)
                         },
+                        tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaEncryptedCodeExecutionResultBlock>(),
+                            )
+                            ?.let {
+                                BetaCodeExecutionToolResultBlockContent(
+                                    encryptedCodeExecutionResultBlock = it,
+                                    _json = json,
+                                )
+                            },
                     )
                     .filterNotNull()
                     .allMaxBy { it.validity() }
@@ -203,6 +255,8 @@ private constructor(
             when {
                 value.error != null -> generator.writeObject(value.error)
                 value.resultBlock != null -> generator.writeObject(value.resultBlock)
+                value.encryptedCodeExecutionResultBlock != null ->
+                    generator.writeObject(value.encryptedCodeExecutionResultBlock)
                 value._json != null -> generator.writeObject(value._json)
                 else ->
                     throw IllegalStateException("Invalid BetaCodeExecutionToolResultBlockContent")

@@ -8,6 +8,7 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.ErrorResponse
 import com.anthropic.models.messages.CacheCreation
 import com.anthropic.models.messages.CitationCharLocation
+import com.anthropic.models.messages.Container
 import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.Model
 import com.anthropic.models.messages.ServerToolUsage
@@ -15,6 +16,7 @@ import com.anthropic.models.messages.StopReason
 import com.anthropic.models.messages.TextBlock
 import com.anthropic.models.messages.Usage
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -30,6 +32,12 @@ internal class MessageBatchResultTest {
                 .message(
                     Message.builder()
                         .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
+                        .container(
+                            Container.builder()
+                                .id("id")
+                                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .build()
+                        )
                         .addContent(
                             TextBlock.builder()
                                 .addCitation(
@@ -62,9 +70,13 @@ internal class MessageBatchResultTest {
                                 .inputTokens(2095L)
                                 .outputTokens(503L)
                                 .serverToolUse(
-                                    ServerToolUsage.builder().webSearchRequests(0L).build()
+                                    ServerToolUsage.builder()
+                                        .webFetchRequests(2L)
+                                        .webSearchRequests(0L)
+                                        .build()
                                 )
                                 .serviceTier(Usage.ServiceTier.STANDARD)
+                                .speed(Usage.Speed.STANDARD)
                                 .build()
                         )
                         .build()
@@ -88,6 +100,12 @@ internal class MessageBatchResultTest {
                     .message(
                         Message.builder()
                             .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
+                            .container(
+                                Container.builder()
+                                    .id("id")
+                                    .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .build()
+                            )
                             .addContent(
                                 TextBlock.builder()
                                     .addCitation(
@@ -120,9 +138,13 @@ internal class MessageBatchResultTest {
                                     .inputTokens(2095L)
                                     .outputTokens(503L)
                                     .serverToolUse(
-                                        ServerToolUsage.builder().webSearchRequests(0L).build()
+                                        ServerToolUsage.builder()
+                                            .webFetchRequests(2L)
+                                            .webSearchRequests(0L)
+                                            .build()
                                     )
                                     .serviceTier(Usage.ServiceTier.STANDARD)
+                                    .speed(Usage.Speed.STANDARD)
                                     .build()
                             )
                             .build()

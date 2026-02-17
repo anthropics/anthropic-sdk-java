@@ -27,6 +27,9 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         /** Most intelligent model for building agents and coding */
         @JvmField val CLAUDE_OPUS_4_6 = of("claude-opus-4-6")
 
+        /** Frontier intelligence at scale — built for coding, agents, and enterprise workflows */
+        @JvmField val CLAUDE_SONNET_4_6 = of("claude-sonnet-4-6")
+
         /** Premium model combining maximum intelligence with practical performance */
         @JvmField val CLAUDE_OPUS_4_5_20251101 = of("claude-opus-4-5-20251101")
 
@@ -118,6 +121,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
     enum class Known {
         /** Most intelligent model for building agents and coding */
         CLAUDE_OPUS_4_6,
+        /** Frontier intelligence at scale — built for coding, agents, and enterprise workflows */
+        CLAUDE_SONNET_4_6,
         /** Premium model combining maximum intelligence with practical performance */
         CLAUDE_OPUS_4_5_20251101,
         /** Premium model combining maximum intelligence with practical performance */
@@ -190,6 +195,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
     enum class Value {
         /** Most intelligent model for building agents and coding */
         CLAUDE_OPUS_4_6,
+        /** Frontier intelligence at scale — built for coding, agents, and enterprise workflows */
+        CLAUDE_SONNET_4_6,
         /** Premium model combining maximum intelligence with practical performance */
         CLAUDE_OPUS_4_5_20251101,
         /** Premium model combining maximum intelligence with practical performance */
@@ -262,6 +269,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
     fun value(): Value =
         when (this) {
             CLAUDE_OPUS_4_6 -> Value.CLAUDE_OPUS_4_6
+            CLAUDE_SONNET_4_6 -> Value.CLAUDE_SONNET_4_6
             CLAUDE_OPUS_4_5_20251101 -> Value.CLAUDE_OPUS_4_5_20251101
             CLAUDE_OPUS_4_5 -> Value.CLAUDE_OPUS_4_5
             CLAUDE_3_7_SONNET_LATEST -> Value.CLAUDE_3_7_SONNET_LATEST
@@ -296,6 +304,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
     fun known(): Known =
         when (this) {
             CLAUDE_OPUS_4_6 -> Known.CLAUDE_OPUS_4_6
+            CLAUDE_SONNET_4_6 -> Known.CLAUDE_SONNET_4_6
             CLAUDE_OPUS_4_5_20251101 -> Known.CLAUDE_OPUS_4_5_20251101
             CLAUDE_OPUS_4_5 -> Known.CLAUDE_OPUS_4_5
             CLAUDE_3_7_SONNET_LATEST -> Known.CLAUDE_3_7_SONNET_LATEST
