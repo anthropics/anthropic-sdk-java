@@ -495,6 +495,8 @@ private constructor(
 
             @JvmField val CODE_EXECUTION_20250825 = of("code_execution_20250825")
 
+            @JvmField val CODE_EXECUTION_20260120 = of("code_execution_20260120")
+
             @JvmStatic fun of(value: String) = AllowedCaller(JsonField.of(value))
         }
 
@@ -502,6 +504,7 @@ private constructor(
         enum class Known {
             DIRECT,
             CODE_EXECUTION_20250825,
+            CODE_EXECUTION_20260120,
         }
 
         /**
@@ -516,6 +519,7 @@ private constructor(
         enum class Value {
             DIRECT,
             CODE_EXECUTION_20250825,
+            CODE_EXECUTION_20260120,
             /**
              * An enum member indicating that [AllowedCaller] was instantiated with an unknown
              * value.
@@ -534,6 +538,7 @@ private constructor(
             when (this) {
                 DIRECT -> Value.DIRECT
                 CODE_EXECUTION_20250825 -> Value.CODE_EXECUTION_20250825
+                CODE_EXECUTION_20260120 -> Value.CODE_EXECUTION_20260120
                 else -> Value._UNKNOWN
             }
 
@@ -550,6 +555,7 @@ private constructor(
             when (this) {
                 DIRECT -> Known.DIRECT
                 CODE_EXECUTION_20250825 -> Known.CODE_EXECUTION_20250825
+                CODE_EXECUTION_20260120 -> Known.CODE_EXECUTION_20260120
                 else -> throw AnthropicInvalidDataException("Unknown AllowedCaller: $value")
             }
 

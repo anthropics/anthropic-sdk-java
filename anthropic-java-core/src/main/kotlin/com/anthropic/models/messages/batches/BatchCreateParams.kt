@@ -20,6 +20,7 @@ import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.messages.CodeExecutionTool20250522
 import com.anthropic.models.messages.CodeExecutionTool20250825
+import com.anthropic.models.messages.CodeExecutionTool20260120
 import com.anthropic.models.messages.ContentBlockParam
 import com.anthropic.models.messages.MemoryTool20250818
 import com.anthropic.models.messages.Message
@@ -46,7 +47,9 @@ import com.anthropic.models.messages.ToolTextEditor20250429
 import com.anthropic.models.messages.ToolTextEditor20250728
 import com.anthropic.models.messages.ToolUnion
 import com.anthropic.models.messages.WebFetchTool20250910
+import com.anthropic.models.messages.WebFetchTool20260209
 import com.anthropic.models.messages.WebSearchTool20250305
+import com.anthropic.models.messages.WebSearchTool20260209
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -1908,7 +1911,7 @@ private constructor(
                  * Alias for calling [addTool] with
                  * `ToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120)`.
                  */
-                fun addTool(codeExecutionTool20260120: ToolUnion.CodeExecutionTool20260120) =
+                fun addTool(codeExecutionTool20260120: CodeExecutionTool20260120) =
                     addTool(ToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120))
 
                 /**
@@ -1957,14 +1960,14 @@ private constructor(
                  * Alias for calling [addTool] with
                  * `ToolUnion.ofWebSearchTool20260209(webSearchTool20260209)`.
                  */
-                fun addTool(webSearchTool20260209: ToolUnion.WebSearchTool20260209) =
+                fun addTool(webSearchTool20260209: WebSearchTool20260209) =
                     addTool(ToolUnion.ofWebSearchTool20260209(webSearchTool20260209))
 
                 /**
                  * Alias for calling [addTool] with
                  * `ToolUnion.ofWebFetchTool20260209(webFetchTool20260209)`.
                  */
-                fun addTool(webFetchTool20260209: ToolUnion.WebFetchTool20260209) =
+                fun addTool(webFetchTool20260209: WebFetchTool20260209) =
                     addTool(ToolUnion.ofWebFetchTool20260209(webFetchTool20260209))
 
                 /**

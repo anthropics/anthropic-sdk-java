@@ -295,8 +295,8 @@ internal class ToolUnionTest {
     @Test
     fun ofCodeExecutionTool20260120() {
         val codeExecutionTool20260120 =
-            ToolUnion.CodeExecutionTool20260120.builder()
-                .addAllowedCaller(ToolUnion.CodeExecutionTool20260120.AllowedCaller.DIRECT)
+            CodeExecutionTool20260120.builder()
+                .addAllowedCaller(CodeExecutionTool20260120.AllowedCaller.DIRECT)
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
@@ -328,8 +328,8 @@ internal class ToolUnionTest {
         val jsonMapper = jsonMapper()
         val toolUnion =
             ToolUnion.ofCodeExecutionTool20260120(
-                ToolUnion.CodeExecutionTool20260120.builder()
-                    .addAllowedCaller(ToolUnion.CodeExecutionTool20260120.AllowedCaller.DIRECT)
+                CodeExecutionTool20260120.builder()
+                    .addAllowedCaller(CodeExecutionTool20260120.AllowedCaller.DIRECT)
                     .cacheControl(
                         CacheControlEphemeral.builder()
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
@@ -768,8 +768,8 @@ internal class ToolUnionTest {
     @Test
     fun ofWebSearchTool20260209() {
         val webSearchTool20260209 =
-            ToolUnion.WebSearchTool20260209.builder()
-                .addAllowedCaller(ToolUnion.WebSearchTool20260209.AllowedCaller.DIRECT)
+            WebSearchTool20260209.builder()
+                .addAllowedCaller(WebSearchTool20260209.AllowedCaller.DIRECT)
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
                 .cacheControl(
@@ -779,7 +779,7 @@ internal class ToolUnionTest {
                 .maxUses(1L)
                 .strict(true)
                 .userLocation(
-                    ToolUnion.WebSearchTool20260209.UserLocation.builder()
+                    WebSearchTool20260209.UserLocation.builder()
                         .city("New York")
                         .country("US")
                         .region("California")
@@ -812,8 +812,8 @@ internal class ToolUnionTest {
         val jsonMapper = jsonMapper()
         val toolUnion =
             ToolUnion.ofWebSearchTool20260209(
-                ToolUnion.WebSearchTool20260209.builder()
-                    .addAllowedCaller(ToolUnion.WebSearchTool20260209.AllowedCaller.DIRECT)
+                WebSearchTool20260209.builder()
+                    .addAllowedCaller(WebSearchTool20260209.AllowedCaller.DIRECT)
                     .addAllowedDomain("string")
                     .addBlockedDomain("string")
                     .cacheControl(
@@ -825,7 +825,7 @@ internal class ToolUnionTest {
                     .maxUses(1L)
                     .strict(true)
                     .userLocation(
-                        ToolUnion.WebSearchTool20260209.UserLocation.builder()
+                        WebSearchTool20260209.UserLocation.builder()
                             .city("New York")
                             .country("US")
                             .region("California")
@@ -847,8 +847,8 @@ internal class ToolUnionTest {
     @Test
     fun ofWebFetchTool20260209() {
         val webFetchTool20260209 =
-            ToolUnion.WebFetchTool20260209.builder()
-                .addAllowedCaller(ToolUnion.WebFetchTool20260209.AllowedCaller.DIRECT)
+            WebFetchTool20260209.builder()
+                .addAllowedCaller(WebFetchTool20260209.AllowedCaller.DIRECT)
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
                 .cacheControl(
@@ -885,8 +885,8 @@ internal class ToolUnionTest {
         val jsonMapper = jsonMapper()
         val toolUnion =
             ToolUnion.ofWebFetchTool20260209(
-                ToolUnion.WebFetchTool20260209.builder()
-                    .addAllowedCaller(ToolUnion.WebFetchTool20260209.AllowedCaller.DIRECT)
+                WebFetchTool20260209.builder()
+                    .addAllowedCaller(WebFetchTool20260209.AllowedCaller.DIRECT)
                     .addAllowedDomain("string")
                     .addBlockedDomain("string")
                     .cacheControl(

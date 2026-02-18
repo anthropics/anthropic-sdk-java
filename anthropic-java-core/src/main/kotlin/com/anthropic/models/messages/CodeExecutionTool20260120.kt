@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.models.beta.messages
+package com.anthropic.models.messages
 
 import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
@@ -19,15 +19,15 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class BetaToolTextEditor20241022
+/** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
+class CodeExecutionTool20260120
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val name: JsonValue,
     private val type: JsonValue,
     private val allowedCallers: JsonField<List<AllowedCaller>>,
-    private val cacheControl: JsonField<BetaCacheControlEphemeral>,
+    private val cacheControl: JsonField<CacheControlEphemeral>,
     private val deferLoading: JsonField<Boolean>,
-    private val inputExamples: JsonField<List<InputExample>>,
     private val strict: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -41,24 +41,12 @@ private constructor(
         allowedCallers: JsonField<List<AllowedCaller>> = JsonMissing.of(),
         @JsonProperty("cache_control")
         @ExcludeMissing
-        cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
+        cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of(),
         @JsonProperty("defer_loading")
         @ExcludeMissing
         deferLoading: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("input_examples")
-        @ExcludeMissing
-        inputExamples: JsonField<List<InputExample>> = JsonMissing.of(),
         @JsonProperty("strict") @ExcludeMissing strict: JsonField<Boolean> = JsonMissing.of(),
-    ) : this(
-        name,
-        type,
-        allowedCallers,
-        cacheControl,
-        deferLoading,
-        inputExamples,
-        strict,
-        mutableMapOf(),
-    )
+    ) : this(name, type, allowedCallers, cacheControl, deferLoading, strict, mutableMapOf())
 
     /**
      * Name of the tool.
@@ -67,7 +55,7 @@ private constructor(
      *
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("str_replace_editor")
+     * JsonValue.from("code_execution")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -78,7 +66,7 @@ private constructor(
     /**
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("text_editor_20241022")
+     * JsonValue.from("code_execution_20260120")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -99,8 +87,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun cacheControl(): Optional<BetaCacheControlEphemeral> =
-        cacheControl.getOptional("cache_control")
+    fun cacheControl(): Optional<CacheControlEphemeral> = cacheControl.getOptional("cache_control")
 
     /**
      * If true, tool will not be included in initial system prompt. Only loaded when returned via
@@ -110,12 +97,6 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun deferLoading(): Optional<Boolean> = deferLoading.getOptional("defer_loading")
-
-    /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun inputExamples(): Optional<List<InputExample>> = inputExamples.getOptional("input_examples")
 
     /**
      * When true, guarantees schema validation on tool names and inputs
@@ -141,7 +122,7 @@ private constructor(
      */
     @JsonProperty("cache_control")
     @ExcludeMissing
-    fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
+    fun _cacheControl(): JsonField<CacheControlEphemeral> = cacheControl
 
     /**
      * Returns the raw JSON value of [deferLoading].
@@ -151,15 +132,6 @@ private constructor(
     @JsonProperty("defer_loading")
     @ExcludeMissing
     fun _deferLoading(): JsonField<Boolean> = deferLoading
-
-    /**
-     * Returns the raw JSON value of [inputExamples].
-     *
-     * Unlike [inputExamples], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("input_examples")
-    @ExcludeMissing
-    fun _inputExamples(): JsonField<List<InputExample>> = inputExamples
 
     /**
      * Returns the raw JSON value of [strict].
@@ -183,33 +155,31 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [BetaToolTextEditor20241022].
+         * Returns a mutable builder for constructing an instance of [CodeExecutionTool20260120].
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [BetaToolTextEditor20241022]. */
+    /** A builder for [CodeExecutionTool20260120]. */
     class Builder internal constructor() {
 
-        private var name: JsonValue = JsonValue.from("str_replace_editor")
-        private var type: JsonValue = JsonValue.from("text_editor_20241022")
+        private var name: JsonValue = JsonValue.from("code_execution")
+        private var type: JsonValue = JsonValue.from("code_execution_20260120")
         private var allowedCallers: JsonField<MutableList<AllowedCaller>>? = null
-        private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
+        private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var deferLoading: JsonField<Boolean> = JsonMissing.of()
-        private var inputExamples: JsonField<MutableList<InputExample>>? = null
         private var strict: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(betaToolTextEditor20241022: BetaToolTextEditor20241022) = apply {
-            name = betaToolTextEditor20241022.name
-            type = betaToolTextEditor20241022.type
-            allowedCallers = betaToolTextEditor20241022.allowedCallers.map { it.toMutableList() }
-            cacheControl = betaToolTextEditor20241022.cacheControl
-            deferLoading = betaToolTextEditor20241022.deferLoading
-            inputExamples = betaToolTextEditor20241022.inputExamples.map { it.toMutableList() }
-            strict = betaToolTextEditor20241022.strict
-            additionalProperties = betaToolTextEditor20241022.additionalProperties.toMutableMap()
+        internal fun from(codeExecutionTool20260120: CodeExecutionTool20260120) = apply {
+            name = codeExecutionTool20260120.name
+            type = codeExecutionTool20260120.type
+            allowedCallers = codeExecutionTool20260120.allowedCallers.map { it.toMutableList() }
+            cacheControl = codeExecutionTool20260120.cacheControl
+            deferLoading = codeExecutionTool20260120.deferLoading
+            strict = codeExecutionTool20260120.strict
+            additionalProperties = codeExecutionTool20260120.additionalProperties.toMutableMap()
         }
 
         /**
@@ -218,7 +188,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("str_replace_editor")
+         * JsonValue.from("code_execution")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -232,7 +202,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("text_editor_20241022")
+         * JsonValue.from("code_execution_20260120")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -267,21 +237,21 @@ private constructor(
         }
 
         /** Create a cache control breakpoint at this content block. */
-        fun cacheControl(cacheControl: BetaCacheControlEphemeral?) =
+        fun cacheControl(cacheControl: CacheControlEphemeral?) =
             cacheControl(JsonField.ofNullable(cacheControl))
 
         /** Alias for calling [Builder.cacheControl] with `cacheControl.orElse(null)`. */
-        fun cacheControl(cacheControl: Optional<BetaCacheControlEphemeral>) =
+        fun cacheControl(cacheControl: Optional<CacheControlEphemeral>) =
             cacheControl(cacheControl.getOrNull())
 
         /**
          * Sets [Builder.cacheControl] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.cacheControl] with a well-typed
-         * [BetaCacheControlEphemeral] value instead. This method is primarily for setting the field
-         * to an undocumented or not yet supported value.
+         * You should usually call [Builder.cacheControl] with a well-typed [CacheControlEphemeral]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
          */
-        fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
+        fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
 
@@ -300,32 +270,6 @@ private constructor(
          */
         fun deferLoading(deferLoading: JsonField<Boolean>) = apply {
             this.deferLoading = deferLoading
-        }
-
-        fun inputExamples(inputExamples: List<InputExample>) =
-            inputExamples(JsonField.of(inputExamples))
-
-        /**
-         * Sets [Builder.inputExamples] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.inputExamples] with a well-typed `List<InputExample>`
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
-         */
-        fun inputExamples(inputExamples: JsonField<List<InputExample>>) = apply {
-            this.inputExamples = inputExamples.map { it.toMutableList() }
-        }
-
-        /**
-         * Adds a single [InputExample] to [inputExamples].
-         *
-         * @throws IllegalStateException if the field was previously set to a non-list.
-         */
-        fun addInputExample(inputExample: InputExample) = apply {
-            inputExamples =
-                (inputExamples ?: JsonField.of(mutableListOf())).also {
-                    checkKnown("inputExamples", it).add(inputExample)
-                }
         }
 
         /** When true, guarantees schema validation on tool names and inputs */
@@ -359,18 +303,17 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [BetaToolTextEditor20241022].
+         * Returns an immutable instance of [CodeExecutionTool20260120].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): BetaToolTextEditor20241022 =
-            BetaToolTextEditor20241022(
+        fun build(): CodeExecutionTool20260120 =
+            CodeExecutionTool20260120(
                 name,
                 type,
                 (allowedCallers ?: JsonMissing.of()).map { it.toImmutable() },
                 cacheControl,
                 deferLoading,
-                (inputExamples ?: JsonMissing.of()).map { it.toImmutable() },
                 strict,
                 additionalProperties.toMutableMap(),
             )
@@ -378,25 +321,24 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): BetaToolTextEditor20241022 = apply {
+    fun validate(): CodeExecutionTool20260120 = apply {
         if (validated) {
             return@apply
         }
 
         _name().let {
-            if (it != JsonValue.from("str_replace_editor")) {
+            if (it != JsonValue.from("code_execution")) {
                 throw AnthropicInvalidDataException("'name' is invalid, received $it")
             }
         }
         _type().let {
-            if (it != JsonValue.from("text_editor_20241022")) {
+            if (it != JsonValue.from("code_execution_20260120")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
         allowedCallers().ifPresent { it.forEach { it.validate() } }
         cacheControl().ifPresent { it.validate() }
         deferLoading()
-        inputExamples().ifPresent { it.forEach { it.validate() } }
         strict()
         validated = true
     }
@@ -416,12 +358,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        name.let { if (it == JsonValue.from("str_replace_editor")) 1 else 0 } +
-            type.let { if (it == JsonValue.from("text_editor_20241022")) 1 else 0 } +
+        name.let { if (it == JsonValue.from("code_execution")) 1 else 0 } +
+            type.let { if (it == JsonValue.from("code_execution_20260120")) 1 else 0 } +
             (allowedCallers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
             (if (deferLoading.asKnown().isPresent) 1 else 0) +
-            (inputExamples.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (strict.asKnown().isPresent) 1 else 0)
 
     class AllowedCaller @JsonCreator private constructor(private val value: JsonField<String>) :
@@ -561,117 +502,17 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    class InputExample
-    @JsonCreator
-    private constructor(
-        @com.fasterxml.jackson.annotation.JsonValue
-        private val additionalProperties: Map<String, JsonValue>
-    ) {
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /** Returns a mutable builder for constructing an instance of [InputExample]. */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [InputExample]. */
-        class Builder internal constructor() {
-
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(inputExample: InputExample) = apply {
-                additionalProperties = inputExample.additionalProperties.toMutableMap()
-            }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [InputExample].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             */
-            fun build(): InputExample = InputExample(additionalProperties.toImmutable())
-        }
-
-        private var validated: Boolean = false
-
-        fun validate(): InputExample = apply {
-            if (validated) {
-                return@apply
-            }
-
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is InputExample && additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() = "InputExample{additionalProperties=$additionalProperties}"
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is BetaToolTextEditor20241022 &&
+        return other is CodeExecutionTool20260120 &&
             name == other.name &&
             type == other.type &&
             allowedCallers == other.allowedCallers &&
             cacheControl == other.cacheControl &&
             deferLoading == other.deferLoading &&
-            inputExamples == other.inputExamples &&
             strict == other.strict &&
             additionalProperties == other.additionalProperties
     }
@@ -683,7 +524,6 @@ private constructor(
             allowedCallers,
             cacheControl,
             deferLoading,
-            inputExamples,
             strict,
             additionalProperties,
         )
@@ -692,5 +532,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaToolTextEditor20241022{name=$name, type=$type, allowedCallers=$allowedCallers, cacheControl=$cacheControl, deferLoading=$deferLoading, inputExamples=$inputExamples, strict=$strict, additionalProperties=$additionalProperties}"
+        "CodeExecutionTool20260120{name=$name, type=$type, allowedCallers=$allowedCallers, cacheControl=$cacheControl, deferLoading=$deferLoading, strict=$strict, additionalProperties=$additionalProperties}"
 }
