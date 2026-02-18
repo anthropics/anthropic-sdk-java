@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.models.beta.messages
+package com.anthropic.models.messages
 
 import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
@@ -19,15 +19,19 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class BetaToolTextEditor20241022
+class WebFetchTool20260209
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val name: JsonValue,
     private val type: JsonValue,
     private val allowedCallers: JsonField<List<AllowedCaller>>,
-    private val cacheControl: JsonField<BetaCacheControlEphemeral>,
+    private val allowedDomains: JsonField<List<String>>,
+    private val blockedDomains: JsonField<List<String>>,
+    private val cacheControl: JsonField<CacheControlEphemeral>,
+    private val citations: JsonField<CitationsConfigParam>,
     private val deferLoading: JsonField<Boolean>,
-    private val inputExamples: JsonField<List<InputExample>>,
+    private val maxContentTokens: JsonField<Long>,
+    private val maxUses: JsonField<Long>,
     private val strict: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -39,23 +43,37 @@ private constructor(
         @JsonProperty("allowed_callers")
         @ExcludeMissing
         allowedCallers: JsonField<List<AllowedCaller>> = JsonMissing.of(),
+        @JsonProperty("allowed_domains")
+        @ExcludeMissing
+        allowedDomains: JsonField<List<String>> = JsonMissing.of(),
+        @JsonProperty("blocked_domains")
+        @ExcludeMissing
+        blockedDomains: JsonField<List<String>> = JsonMissing.of(),
         @JsonProperty("cache_control")
         @ExcludeMissing
-        cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
+        cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of(),
+        @JsonProperty("citations")
+        @ExcludeMissing
+        citations: JsonField<CitationsConfigParam> = JsonMissing.of(),
         @JsonProperty("defer_loading")
         @ExcludeMissing
         deferLoading: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("input_examples")
+        @JsonProperty("max_content_tokens")
         @ExcludeMissing
-        inputExamples: JsonField<List<InputExample>> = JsonMissing.of(),
+        maxContentTokens: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("max_uses") @ExcludeMissing maxUses: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("strict") @ExcludeMissing strict: JsonField<Boolean> = JsonMissing.of(),
     ) : this(
         name,
         type,
         allowedCallers,
+        allowedDomains,
+        blockedDomains,
         cacheControl,
+        citations,
         deferLoading,
-        inputExamples,
+        maxContentTokens,
+        maxUses,
         strict,
         mutableMapOf(),
     )
@@ -67,7 +85,7 @@ private constructor(
      *
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("str_replace_editor")
+     * JsonValue.from("web_fetch")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -78,7 +96,7 @@ private constructor(
     /**
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("text_editor_20241022")
+     * JsonValue.from("web_fetch_20260209")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -94,13 +112,36 @@ private constructor(
         allowedCallers.getOptional("allowed_callers")
 
     /**
+     * List of domains to allow fetching from
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun allowedDomains(): Optional<List<String>> = allowedDomains.getOptional("allowed_domains")
+
+    /**
+     * List of domains to block fetching from
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun blockedDomains(): Optional<List<String>> = blockedDomains.getOptional("blocked_domains")
+
+    /**
      * Create a cache control breakpoint at this content block.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun cacheControl(): Optional<BetaCacheControlEphemeral> =
-        cacheControl.getOptional("cache_control")
+    fun cacheControl(): Optional<CacheControlEphemeral> = cacheControl.getOptional("cache_control")
+
+    /**
+     * Citations configuration for fetched documents. Citations are disabled by default.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun citations(): Optional<CitationsConfigParam> = citations.getOptional("citations")
 
     /**
      * If true, tool will not be included in initial system prompt. Only loaded when returned via
@@ -112,10 +153,21 @@ private constructor(
     fun deferLoading(): Optional<Boolean> = deferLoading.getOptional("defer_loading")
 
     /**
+     * Maximum number of tokens used by including web page text content in the context. The limit is
+     * approximate and does not apply to binary content such as PDFs.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun inputExamples(): Optional<List<InputExample>> = inputExamples.getOptional("input_examples")
+    fun maxContentTokens(): Optional<Long> = maxContentTokens.getOptional("max_content_tokens")
+
+    /**
+     * Maximum number of times the tool can be used in the API request.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun maxUses(): Optional<Long> = maxUses.getOptional("max_uses")
 
     /**
      * When true, guarantees schema validation on tool names and inputs
@@ -135,13 +187,40 @@ private constructor(
     fun _allowedCallers(): JsonField<List<AllowedCaller>> = allowedCallers
 
     /**
+     * Returns the raw JSON value of [allowedDomains].
+     *
+     * Unlike [allowedDomains], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("allowed_domains")
+    @ExcludeMissing
+    fun _allowedDomains(): JsonField<List<String>> = allowedDomains
+
+    /**
+     * Returns the raw JSON value of [blockedDomains].
+     *
+     * Unlike [blockedDomains], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("blocked_domains")
+    @ExcludeMissing
+    fun _blockedDomains(): JsonField<List<String>> = blockedDomains
+
+    /**
      * Returns the raw JSON value of [cacheControl].
      *
      * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("cache_control")
     @ExcludeMissing
-    fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
+    fun _cacheControl(): JsonField<CacheControlEphemeral> = cacheControl
+
+    /**
+     * Returns the raw JSON value of [citations].
+     *
+     * Unlike [citations], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("citations")
+    @ExcludeMissing
+    fun _citations(): JsonField<CitationsConfigParam> = citations
 
     /**
      * Returns the raw JSON value of [deferLoading].
@@ -153,13 +232,21 @@ private constructor(
     fun _deferLoading(): JsonField<Boolean> = deferLoading
 
     /**
-     * Returns the raw JSON value of [inputExamples].
+     * Returns the raw JSON value of [maxContentTokens].
      *
-     * Unlike [inputExamples], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [maxContentTokens], this method doesn't throw if the JSON field has an unexpected
+     * type.
      */
-    @JsonProperty("input_examples")
+    @JsonProperty("max_content_tokens")
     @ExcludeMissing
-    fun _inputExamples(): JsonField<List<InputExample>> = inputExamples
+    fun _maxContentTokens(): JsonField<Long> = maxContentTokens
+
+    /**
+     * Returns the raw JSON value of [maxUses].
+     *
+     * Unlike [maxUses], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("max_uses") @ExcludeMissing fun _maxUses(): JsonField<Long> = maxUses
 
     /**
      * Returns the raw JSON value of [strict].
@@ -182,34 +269,40 @@ private constructor(
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of [BetaToolTextEditor20241022].
-         */
+        /** Returns a mutable builder for constructing an instance of [WebFetchTool20260209]. */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [BetaToolTextEditor20241022]. */
+    /** A builder for [WebFetchTool20260209]. */
     class Builder internal constructor() {
 
-        private var name: JsonValue = JsonValue.from("str_replace_editor")
-        private var type: JsonValue = JsonValue.from("text_editor_20241022")
+        private var name: JsonValue = JsonValue.from("web_fetch")
+        private var type: JsonValue = JsonValue.from("web_fetch_20260209")
         private var allowedCallers: JsonField<MutableList<AllowedCaller>>? = null
-        private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
+        private var allowedDomains: JsonField<MutableList<String>>? = null
+        private var blockedDomains: JsonField<MutableList<String>>? = null
+        private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
+        private var citations: JsonField<CitationsConfigParam> = JsonMissing.of()
         private var deferLoading: JsonField<Boolean> = JsonMissing.of()
-        private var inputExamples: JsonField<MutableList<InputExample>>? = null
+        private var maxContentTokens: JsonField<Long> = JsonMissing.of()
+        private var maxUses: JsonField<Long> = JsonMissing.of()
         private var strict: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(betaToolTextEditor20241022: BetaToolTextEditor20241022) = apply {
-            name = betaToolTextEditor20241022.name
-            type = betaToolTextEditor20241022.type
-            allowedCallers = betaToolTextEditor20241022.allowedCallers.map { it.toMutableList() }
-            cacheControl = betaToolTextEditor20241022.cacheControl
-            deferLoading = betaToolTextEditor20241022.deferLoading
-            inputExamples = betaToolTextEditor20241022.inputExamples.map { it.toMutableList() }
-            strict = betaToolTextEditor20241022.strict
-            additionalProperties = betaToolTextEditor20241022.additionalProperties.toMutableMap()
+        internal fun from(webFetchTool20260209: WebFetchTool20260209) = apply {
+            name = webFetchTool20260209.name
+            type = webFetchTool20260209.type
+            allowedCallers = webFetchTool20260209.allowedCallers.map { it.toMutableList() }
+            allowedDomains = webFetchTool20260209.allowedDomains.map { it.toMutableList() }
+            blockedDomains = webFetchTool20260209.blockedDomains.map { it.toMutableList() }
+            cacheControl = webFetchTool20260209.cacheControl
+            citations = webFetchTool20260209.citations
+            deferLoading = webFetchTool20260209.deferLoading
+            maxContentTokens = webFetchTool20260209.maxContentTokens
+            maxUses = webFetchTool20260209.maxUses
+            strict = webFetchTool20260209.strict
+            additionalProperties = webFetchTool20260209.additionalProperties.toMutableMap()
         }
 
         /**
@@ -218,7 +311,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("str_replace_editor")
+         * JsonValue.from("web_fetch")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -232,7 +325,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("text_editor_20241022")
+         * JsonValue.from("web_fetch_20260209")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -266,23 +359,102 @@ private constructor(
                 }
         }
 
+        /** List of domains to allow fetching from */
+        fun allowedDomains(allowedDomains: List<String>?) =
+            allowedDomains(JsonField.ofNullable(allowedDomains))
+
+        /** Alias for calling [Builder.allowedDomains] with `allowedDomains.orElse(null)`. */
+        fun allowedDomains(allowedDomains: Optional<List<String>>) =
+            allowedDomains(allowedDomains.getOrNull())
+
+        /**
+         * Sets [Builder.allowedDomains] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.allowedDomains] with a well-typed `List<String>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun allowedDomains(allowedDomains: JsonField<List<String>>) = apply {
+            this.allowedDomains = allowedDomains.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [String] to [allowedDomains].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addAllowedDomain(allowedDomain: String) = apply {
+            allowedDomains =
+                (allowedDomains ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("allowedDomains", it).add(allowedDomain)
+                }
+        }
+
+        /** List of domains to block fetching from */
+        fun blockedDomains(blockedDomains: List<String>?) =
+            blockedDomains(JsonField.ofNullable(blockedDomains))
+
+        /** Alias for calling [Builder.blockedDomains] with `blockedDomains.orElse(null)`. */
+        fun blockedDomains(blockedDomains: Optional<List<String>>) =
+            blockedDomains(blockedDomains.getOrNull())
+
+        /**
+         * Sets [Builder.blockedDomains] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.blockedDomains] with a well-typed `List<String>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun blockedDomains(blockedDomains: JsonField<List<String>>) = apply {
+            this.blockedDomains = blockedDomains.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [String] to [blockedDomains].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addBlockedDomain(blockedDomain: String) = apply {
+            blockedDomains =
+                (blockedDomains ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("blockedDomains", it).add(blockedDomain)
+                }
+        }
+
         /** Create a cache control breakpoint at this content block. */
-        fun cacheControl(cacheControl: BetaCacheControlEphemeral?) =
+        fun cacheControl(cacheControl: CacheControlEphemeral?) =
             cacheControl(JsonField.ofNullable(cacheControl))
 
         /** Alias for calling [Builder.cacheControl] with `cacheControl.orElse(null)`. */
-        fun cacheControl(cacheControl: Optional<BetaCacheControlEphemeral>) =
+        fun cacheControl(cacheControl: Optional<CacheControlEphemeral>) =
             cacheControl(cacheControl.getOrNull())
 
         /**
          * Sets [Builder.cacheControl] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.cacheControl] with a well-typed
-         * [BetaCacheControlEphemeral] value instead. This method is primarily for setting the field
-         * to an undocumented or not yet supported value.
+         * You should usually call [Builder.cacheControl] with a well-typed [CacheControlEphemeral]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
          */
-        fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
+        fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
+        }
+
+        /** Citations configuration for fetched documents. Citations are disabled by default. */
+        fun citations(citations: CitationsConfigParam?) = citations(JsonField.ofNullable(citations))
+
+        /** Alias for calling [Builder.citations] with `citations.orElse(null)`. */
+        fun citations(citations: Optional<CitationsConfigParam>) = citations(citations.getOrNull())
+
+        /**
+         * Sets [Builder.citations] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.citations] with a well-typed [CitationsConfigParam]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun citations(citations: JsonField<CitationsConfigParam>) = apply {
+            this.citations = citations
         }
 
         /**
@@ -302,31 +474,55 @@ private constructor(
             this.deferLoading = deferLoading
         }
 
-        fun inputExamples(inputExamples: List<InputExample>) =
-            inputExamples(JsonField.of(inputExamples))
+        /**
+         * Maximum number of tokens used by including web page text content in the context. The
+         * limit is approximate and does not apply to binary content such as PDFs.
+         */
+        fun maxContentTokens(maxContentTokens: Long?) =
+            maxContentTokens(JsonField.ofNullable(maxContentTokens))
 
         /**
-         * Sets [Builder.inputExamples] to an arbitrary JSON value.
+         * Alias for [Builder.maxContentTokens].
          *
-         * You should usually call [Builder.inputExamples] with a well-typed `List<InputExample>`
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * This unboxed primitive overload exists for backwards compatibility.
          */
-        fun inputExamples(inputExamples: JsonField<List<InputExample>>) = apply {
-            this.inputExamples = inputExamples.map { it.toMutableList() }
-        }
+        fun maxContentTokens(maxContentTokens: Long) = maxContentTokens(maxContentTokens as Long?)
+
+        /** Alias for calling [Builder.maxContentTokens] with `maxContentTokens.orElse(null)`. */
+        fun maxContentTokens(maxContentTokens: Optional<Long>) =
+            maxContentTokens(maxContentTokens.getOrNull())
 
         /**
-         * Adds a single [InputExample] to [inputExamples].
+         * Sets [Builder.maxContentTokens] to an arbitrary JSON value.
          *
-         * @throws IllegalStateException if the field was previously set to a non-list.
+         * You should usually call [Builder.maxContentTokens] with a well-typed [Long] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun addInputExample(inputExample: InputExample) = apply {
-            inputExamples =
-                (inputExamples ?: JsonField.of(mutableListOf())).also {
-                    checkKnown("inputExamples", it).add(inputExample)
-                }
+        fun maxContentTokens(maxContentTokens: JsonField<Long>) = apply {
+            this.maxContentTokens = maxContentTokens
         }
+
+        /** Maximum number of times the tool can be used in the API request. */
+        fun maxUses(maxUses: Long?) = maxUses(JsonField.ofNullable(maxUses))
+
+        /**
+         * Alias for [Builder.maxUses].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun maxUses(maxUses: Long) = maxUses(maxUses as Long?)
+
+        /** Alias for calling [Builder.maxUses] with `maxUses.orElse(null)`. */
+        fun maxUses(maxUses: Optional<Long>) = maxUses(maxUses.getOrNull())
+
+        /**
+         * Sets [Builder.maxUses] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.maxUses] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun maxUses(maxUses: JsonField<Long>) = apply { this.maxUses = maxUses }
 
         /** When true, guarantees schema validation on tool names and inputs */
         fun strict(strict: Boolean) = strict(JsonField.of(strict))
@@ -359,18 +555,22 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [BetaToolTextEditor20241022].
+         * Returns an immutable instance of [WebFetchTool20260209].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): BetaToolTextEditor20241022 =
-            BetaToolTextEditor20241022(
+        fun build(): WebFetchTool20260209 =
+            WebFetchTool20260209(
                 name,
                 type,
                 (allowedCallers ?: JsonMissing.of()).map { it.toImmutable() },
+                (allowedDomains ?: JsonMissing.of()).map { it.toImmutable() },
+                (blockedDomains ?: JsonMissing.of()).map { it.toImmutable() },
                 cacheControl,
+                citations,
                 deferLoading,
-                (inputExamples ?: JsonMissing.of()).map { it.toImmutable() },
+                maxContentTokens,
+                maxUses,
                 strict,
                 additionalProperties.toMutableMap(),
             )
@@ -378,25 +578,29 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): BetaToolTextEditor20241022 = apply {
+    fun validate(): WebFetchTool20260209 = apply {
         if (validated) {
             return@apply
         }
 
         _name().let {
-            if (it != JsonValue.from("str_replace_editor")) {
+            if (it != JsonValue.from("web_fetch")) {
                 throw AnthropicInvalidDataException("'name' is invalid, received $it")
             }
         }
         _type().let {
-            if (it != JsonValue.from("text_editor_20241022")) {
+            if (it != JsonValue.from("web_fetch_20260209")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
         allowedCallers().ifPresent { it.forEach { it.validate() } }
+        allowedDomains()
+        blockedDomains()
         cacheControl().ifPresent { it.validate() }
+        citations().ifPresent { it.validate() }
         deferLoading()
-        inputExamples().ifPresent { it.forEach { it.validate() } }
+        maxContentTokens()
+        maxUses()
         strict()
         validated = true
     }
@@ -416,12 +620,16 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        name.let { if (it == JsonValue.from("str_replace_editor")) 1 else 0 } +
-            type.let { if (it == JsonValue.from("text_editor_20241022")) 1 else 0 } +
+        name.let { if (it == JsonValue.from("web_fetch")) 1 else 0 } +
+            type.let { if (it == JsonValue.from("web_fetch_20260209")) 1 else 0 } +
             (allowedCallers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (allowedDomains.asKnown().getOrNull()?.size ?: 0) +
+            (blockedDomains.asKnown().getOrNull()?.size ?: 0) +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
+            (citations.asKnown().getOrNull()?.validity() ?: 0) +
             (if (deferLoading.asKnown().isPresent) 1 else 0) +
-            (inputExamples.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (maxContentTokens.asKnown().isPresent) 1 else 0) +
+            (if (maxUses.asKnown().isPresent) 1 else 0) +
             (if (strict.asKnown().isPresent) 1 else 0)
 
     class AllowedCaller @JsonCreator private constructor(private val value: JsonField<String>) :
@@ -561,117 +769,22 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    class InputExample
-    @JsonCreator
-    private constructor(
-        @com.fasterxml.jackson.annotation.JsonValue
-        private val additionalProperties: Map<String, JsonValue>
-    ) {
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /** Returns a mutable builder for constructing an instance of [InputExample]. */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [InputExample]. */
-        class Builder internal constructor() {
-
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(inputExample: InputExample) = apply {
-                additionalProperties = inputExample.additionalProperties.toMutableMap()
-            }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [InputExample].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             */
-            fun build(): InputExample = InputExample(additionalProperties.toImmutable())
-        }
-
-        private var validated: Boolean = false
-
-        fun validate(): InputExample = apply {
-            if (validated) {
-                return@apply
-            }
-
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is InputExample && additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() = "InputExample{additionalProperties=$additionalProperties}"
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is BetaToolTextEditor20241022 &&
+        return other is WebFetchTool20260209 &&
             name == other.name &&
             type == other.type &&
             allowedCallers == other.allowedCallers &&
+            allowedDomains == other.allowedDomains &&
+            blockedDomains == other.blockedDomains &&
             cacheControl == other.cacheControl &&
+            citations == other.citations &&
             deferLoading == other.deferLoading &&
-            inputExamples == other.inputExamples &&
+            maxContentTokens == other.maxContentTokens &&
+            maxUses == other.maxUses &&
             strict == other.strict &&
             additionalProperties == other.additionalProperties
     }
@@ -681,9 +794,13 @@ private constructor(
             name,
             type,
             allowedCallers,
+            allowedDomains,
+            blockedDomains,
             cacheControl,
+            citations,
             deferLoading,
-            inputExamples,
+            maxContentTokens,
+            maxUses,
             strict,
             additionalProperties,
         )
@@ -692,5 +809,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaToolTextEditor20241022{name=$name, type=$type, allowedCallers=$allowedCallers, cacheControl=$cacheControl, deferLoading=$deferLoading, inputExamples=$inputExamples, strict=$strict, additionalProperties=$additionalProperties}"
+        "WebFetchTool20260209{name=$name, type=$type, allowedCallers=$allowedCallers, allowedDomains=$allowedDomains, blockedDomains=$blockedDomains, cacheControl=$cacheControl, citations=$citations, deferLoading=$deferLoading, maxContentTokens=$maxContentTokens, maxUses=$maxUses, strict=$strict, additionalProperties=$additionalProperties}"
 }
