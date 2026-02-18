@@ -763,4 +763,17 @@ private constructor(
 
     override fun toString() =
         "BetaWebSearchTool20250305{name=$name, type=$type, allowedCallers=$allowedCallers, allowedDomains=$allowedDomains, blockedDomains=$blockedDomains, cacheControl=$cacheControl, deferLoading=$deferLoading, maxUses=$maxUses, strict=$strict, userLocation=$userLocation, additionalProperties=$additionalProperties}"
+
+    /**
+     * @deprecated Use [BetaUserLocation] directly instead.
+     */
+    @Deprecated(
+        "Use BetaUserLocation directly instead",
+        ReplaceWith("BetaUserLocation"),
+    )
+    object UserLocation {
+
+        /** Returns a mutable builder for constructing an instance of [BetaUserLocation]. */
+        @JvmStatic fun builder() = BetaUserLocation.builder()
+    }
 }

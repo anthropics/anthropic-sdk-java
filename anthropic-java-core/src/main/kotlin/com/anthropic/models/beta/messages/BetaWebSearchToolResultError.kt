@@ -215,4 +215,30 @@ private constructor(
 
     override fun toString() =
         "BetaWebSearchToolResultError{errorCode=$errorCode, type=$type, additionalProperties=$additionalProperties}"
+
+    /**
+     * @deprecated Use [BetaWebSearchToolResultErrorCode] directly instead.
+     */
+    @Deprecated(
+        "Use BetaWebSearchToolResultErrorCode directly instead",
+        ReplaceWith("BetaWebSearchToolResultErrorCode"),
+    )
+    object ErrorCode {
+
+        @JvmField val INVALID_TOOL_INPUT = BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT
+
+        @JvmField val UNAVAILABLE = BetaWebSearchToolResultErrorCode.UNAVAILABLE
+
+        @JvmField val MAX_USES_EXCEEDED = BetaWebSearchToolResultErrorCode.MAX_USES_EXCEEDED
+
+        @JvmField val TOO_MANY_REQUESTS = BetaWebSearchToolResultErrorCode.TOO_MANY_REQUESTS
+
+        @JvmField val QUERY_TOO_LONG = BetaWebSearchToolResultErrorCode.QUERY_TOO_LONG
+
+        @JvmField val REQUEST_TOO_LARGE = BetaWebSearchToolResultErrorCode.REQUEST_TOO_LARGE
+
+        @JvmStatic
+        fun of(value: String): BetaWebSearchToolResultErrorCode =
+            BetaWebSearchToolResultErrorCode.of(value)
+    }
 }

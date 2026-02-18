@@ -214,4 +214,30 @@ private constructor(
 
     override fun toString() =
         "WebSearchToolResultError{errorCode=$errorCode, type=$type, additionalProperties=$additionalProperties}"
+
+    /**
+     * @deprecated Use [WebSearchToolResultErrorCode] directly instead.
+     */
+    @Deprecated(
+        "Use WebSearchToolResultErrorCode directly instead",
+        ReplaceWith("WebSearchToolResultErrorCode"),
+    )
+    object ErrorCode {
+
+        @JvmField val INVALID_TOOL_INPUT = WebSearchToolResultErrorCode.INVALID_TOOL_INPUT
+
+        @JvmField val UNAVAILABLE = WebSearchToolResultErrorCode.UNAVAILABLE
+
+        @JvmField val MAX_USES_EXCEEDED = WebSearchToolResultErrorCode.MAX_USES_EXCEEDED
+
+        @JvmField val TOO_MANY_REQUESTS = WebSearchToolResultErrorCode.TOO_MANY_REQUESTS
+
+        @JvmField val QUERY_TOO_LONG = WebSearchToolResultErrorCode.QUERY_TOO_LONG
+
+        @JvmField val REQUEST_TOO_LARGE = WebSearchToolResultErrorCode.REQUEST_TOO_LARGE
+
+        @JvmStatic
+        fun of(value: String): WebSearchToolResultErrorCode =
+            WebSearchToolResultErrorCode.of(value)
+    }
 }

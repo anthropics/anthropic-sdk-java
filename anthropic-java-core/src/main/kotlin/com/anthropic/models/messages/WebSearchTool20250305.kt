@@ -31,7 +31,7 @@ private constructor(
     private val deferLoading: JsonField<Boolean>,
     private val maxUses: JsonField<Long>,
     private val strict: JsonField<Boolean>,
-    private val userLocation: JsonField<UserLocation>,
+    private val userLocation: JsonField<com.anthropic.models.messages.UserLocation>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -58,7 +58,7 @@ private constructor(
         @JsonProperty("strict") @ExcludeMissing strict: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("user_location")
         @ExcludeMissing
-        userLocation: JsonField<UserLocation> = JsonMissing.of(),
+        userLocation: JsonField<com.anthropic.models.messages.UserLocation> = JsonMissing.of(),
     ) : this(
         name,
         type,
@@ -163,7 +163,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun userLocation(): Optional<UserLocation> = userLocation.getOptional("user_location")
+    fun userLocation(): Optional<com.anthropic.models.messages.UserLocation> = userLocation.getOptional("user_location")
 
     /**
      * Returns the raw JSON value of [allowedCallers].
@@ -231,7 +231,7 @@ private constructor(
      */
     @JsonProperty("user_location")
     @ExcludeMissing
-    fun _userLocation(): JsonField<UserLocation> = userLocation
+    fun _userLocation(): JsonField<com.anthropic.models.messages.UserLocation> = userLocation
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -263,7 +263,7 @@ private constructor(
         private var deferLoading: JsonField<Boolean> = JsonMissing.of()
         private var maxUses: JsonField<Long> = JsonMissing.of()
         private var strict: JsonField<Boolean> = JsonMissing.of()
-        private var userLocation: JsonField<UserLocation> = JsonMissing.of()
+        private var userLocation: JsonField<com.anthropic.models.messages.UserLocation> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -472,21 +472,21 @@ private constructor(
         fun strict(strict: JsonField<Boolean>) = apply { this.strict = strict }
 
         /** Parameters for the user's location. Used to provide more relevant search results. */
-        fun userLocation(userLocation: UserLocation?) =
+        fun userLocation(userLocation: com.anthropic.models.messages.UserLocation?) =
             userLocation(JsonField.ofNullable(userLocation))
 
         /** Alias for calling [Builder.userLocation] with `userLocation.orElse(null)`. */
-        fun userLocation(userLocation: Optional<UserLocation>) =
+        fun userLocation(userLocation: Optional<com.anthropic.models.messages.UserLocation>) =
             userLocation(userLocation.getOrNull())
 
         /**
          * Sets [Builder.userLocation] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.userLocation] with a well-typed [UserLocation] value
+         * You should usually call [Builder.userLocation] with a well-typed [com.anthropic.models.messages.UserLocation] value
          * instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun userLocation(userLocation: JsonField<UserLocation>) = apply {
+        fun userLocation(userLocation: JsonField<com.anthropic.models.messages.UserLocation>) = apply {
             this.userLocation = userLocation
         }
 
@@ -760,4 +760,21 @@ private constructor(
 
     override fun toString() =
         "WebSearchTool20250305{name=$name, type=$type, allowedCallers=$allowedCallers, allowedDomains=$allowedDomains, blockedDomains=$blockedDomains, cacheControl=$cacheControl, deferLoading=$deferLoading, maxUses=$maxUses, strict=$strict, userLocation=$userLocation, additionalProperties=$additionalProperties}"
+
+    /**
+     * @deprecated Use [com.anthropic.models.messages.UserLocation] directly instead.
+     */
+    @Deprecated(
+        "Use com.anthropic.models.messages.UserLocation directly instead",
+        ReplaceWith("com.anthropic.models.messages.UserLocation"),
+    )
+    object UserLocation {
+
+        /**
+         * Returns a mutable builder for constructing an instance of
+         * [com.anthropic.models.messages.UserLocation].
+         */
+        @JvmStatic
+        fun builder() = com.anthropic.models.messages.UserLocation.builder()
+    }
 }
