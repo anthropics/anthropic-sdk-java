@@ -33,7 +33,9 @@ internal class MessageAccumulatorTest {
                     .cacheCreationInputTokens(0L)
                     .cacheReadInputTokens(0L)
                     .inputTokens(INPUT_TOKENS) // Use test constant
-                    .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                    .serverToolUse(
+                        ServerToolUsage.builder().webFetchRequests(0L).webSearchRequests(0L).build()
+                    )
                     .build(),
             )
         val usage2 =
@@ -44,7 +46,9 @@ internal class MessageAccumulatorTest {
                     .cacheCreationInputTokens(0L)
                     .cacheReadInputTokens(0L)
                     .inputTokens(INPUT_TOKENS) // Use test constant
-                    .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+                    .serverToolUse(
+                        ServerToolUsage.builder().webFetchRequests(0L).webSearchRequests(0L).build()
+                    )
                     .build(),
             )
 
@@ -866,7 +870,10 @@ internal class MessageAccumulatorTest {
                         .cacheReadInputTokens(cacheReadInputTokens)
                         .inputTokens(inputTokens)
                         .serverToolUse(
-                            ServerToolUsage.builder().webSearchRequests(webSearchRequests).build()
+                            ServerToolUsage.builder()
+                                .webFetchRequests(0L)
+                                .webSearchRequests(webSearchRequests)
+                                .build()
                         )
                         .build()
                 )
@@ -920,7 +927,12 @@ internal class MessageAccumulatorTest {
         contentBlockStartEvent(
             index,
             ContentBlock.ofToolUse(
-                ToolUseBlock.builder().id("tool-id").name(name).input(SET_TO_NULL).build()
+                ToolUseBlock.builder()
+                    .id("tool-id")
+                    .caller(DirectCaller.builder().build())
+                    .name(name)
+                    .input(SET_TO_NULL)
+                    .build()
             ),
         )
 
@@ -1009,7 +1021,9 @@ internal class MessageAccumulatorTest {
             .cacheReadInputTokens(0L)
             .inferenceGeo("inference_geo")
             .outputTokens(0L)
-            .serverToolUse(ServerToolUsage.builder().webSearchRequests(0L).build())
+            .serverToolUse(
+                ServerToolUsage.builder().webFetchRequests(0L).webSearchRequests(0L).build()
+            )
             .serviceTier(Usage.ServiceTier.STANDARD)
             .build()
 

@@ -131,6 +131,9 @@ internal class StructuredMessageCreateParamsTest {
         private val TOOL_TEXT_EDIT_20250728 = BetaToolTextEditor20250728.builder().build()
         private val TOOL_WEB_SEARCH_20250305 = BetaWebSearchTool20250305.builder().build()
         private val TOOL_WEB_FETCH_20250910 = BetaWebFetchTool20250910.builder().build()
+        private val TOOL_CODE_20260120 = BetaCodeExecutionTool20260120.builder().build()
+        private val TOOL_WEB_SEARCH_20260209 = BetaWebSearchTool20260209.builder().build()
+        private val TOOL_WEB_FETCH_20260209 = BetaWebFetchTool20260209.builder().build()
 
         private val HEADERS = Headers.builder().build()
         private val QUERY_PARAMS = QueryParams.builder().build()
@@ -226,6 +229,9 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("addTool", TOOL_TEXT_EDIT_20250728),
                 DelegationWriteTestCase("addTool", TOOL_WEB_SEARCH_20250305),
                 DelegationWriteTestCase("addTool", TOOL_WEB_FETCH_20250910),
+                DelegationWriteTestCase("addTool", TOOL_CODE_20260120),
+                DelegationWriteTestCase("addTool", TOOL_WEB_SEARCH_20260209),
+                DelegationWriteTestCase("addTool", TOOL_WEB_FETCH_20260209),
                 DelegationWriteTestCase("addTool", TOOL_SEARCH_TOOL_20251119),
                 DelegationWriteTestCase("addTool", TOOL_SEARCH_TOOL_REGEX_20251119),
                 DelegationWriteTestCase("addTool", BETA_MCP_TOOL_SET),

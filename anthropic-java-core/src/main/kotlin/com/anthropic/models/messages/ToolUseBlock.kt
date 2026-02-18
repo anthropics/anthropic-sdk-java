@@ -9,7 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
-
+import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -24,17 +24,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Collections
 import java.util.Objects
-
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 class ToolUseBlock
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val id: JsonField<String>,
-private constructor(
-    private val id: JsonField<String>,
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
-    private val id: JsonField<String>,
     private val id: JsonField<String>,
     private val caller: JsonField<Caller>,
     private val input: JsonValue,
@@ -113,7 +108,19 @@ private constructor(
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
     /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun caller(): Caller = caller.getRequired("caller")
 
+    /**
+     * Returns the raw JSON value of [caller].
+     *
+     * Unlike [caller], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("caller") @ExcludeMissing fun _caller(): JsonField<Caller> = caller
+
+    /**
      * Returns the raw JSON value of [name].
      *
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
@@ -149,23 +156,6 @@ private constructor(
     }
 
     /** A builder for [ToolUseBlock]. */
-    class Builder internal constructor() {
-
-        private var id: JsonField<String>? = null
-        private var id: JsonField<String>? = null
-        private var id: JsonField<String>? = null
-         * The following fields are required:
-         * ```java
-         * .id()
-         * .caller()
-         * .input()
-         * .name()
-         * ```
-         */
-        @JvmStatic fun builder() = Builder()
-    }
-
-    /** A builder for [BetaServerToolUseBlock]. */
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
@@ -243,13 +233,11 @@ private constructor(
         fun codeExecution20260120Caller(toolId: String) =
             caller(ServerToolCaller20260120.builder().toolId(toolId).build())
 
-        fun input(input: Input) = input(JsonField.of(input))
-
         /**
          * Sets [Builder.input] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.input] with a well-typed [Input] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.input] with a well-typed value instead. This method is
+         * primarily for setting the field to an undocumented or not yet supported value.
          */
         fun input(input: JsonValue) = apply { this.input = input }
 
@@ -356,7 +344,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
-
+            (caller.asKnown().getOrNull()?.validity() ?: 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("tool_use")) 1 else 0 }
 

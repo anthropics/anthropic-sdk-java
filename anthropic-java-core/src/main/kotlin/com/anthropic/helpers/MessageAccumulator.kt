@@ -4,12 +4,15 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonObject
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.messages.BashCodeExecutionToolResultBlock
 import com.anthropic.models.messages.CitationCharLocation
 import com.anthropic.models.messages.CitationContentBlockLocation
 import com.anthropic.models.messages.CitationPageLocation
 import com.anthropic.models.messages.CitationsDelta
 import com.anthropic.models.messages.CitationsSearchResultLocation
 import com.anthropic.models.messages.CitationsWebSearchResultLocation
+import com.anthropic.models.messages.CodeExecutionToolResultBlock
+import com.anthropic.models.messages.ContainerUploadBlock
 import com.anthropic.models.messages.ContentBlock
 import com.anthropic.models.messages.InputJsonDelta
 import com.anthropic.models.messages.Message
@@ -29,10 +32,13 @@ import com.anthropic.models.messages.StructuredMessage
 import com.anthropic.models.messages.TextBlock
 import com.anthropic.models.messages.TextCitation
 import com.anthropic.models.messages.TextDelta
+import com.anthropic.models.messages.TextEditorCodeExecutionToolResultBlock
 import com.anthropic.models.messages.ThinkingBlock
 import com.anthropic.models.messages.ThinkingDelta
+import com.anthropic.models.messages.ToolSearchToolResultBlock
 import com.anthropic.models.messages.ToolUseBlock
 import com.anthropic.models.messages.Usage
+import com.anthropic.models.messages.WebFetchToolResultBlock
 import com.anthropic.models.messages.WebSearchToolResultBlock
 
 /** Checks if a content block is one that tracks tool input via input_json_delta events */
@@ -332,8 +338,46 @@ class MessageAccumulator private constructor() {
                                     ): ContentBlock =
                                         ContentBlock.ofWebSearchToolResult(webSearchToolResult)
 
+                                    override fun visitWebFetchToolResult(
+                                        webFetchToolResult: WebFetchToolResultBlock
+                                    ): ContentBlock =
+                                        ContentBlock.ofWebFetchToolResult(webFetchToolResult)
+
+                                    override fun visitCodeExecutionToolResult(
+                                        codeExecutionToolResult: CodeExecutionToolResultBlock
+                                    ): ContentBlock =
+                                        ContentBlock.ofCodeExecutionToolResult(
+                                            codeExecutionToolResult
+                                        )
+
+                                    override fun visitTextEditorCodeExecutionToolResult(
+                                        textEditorCodeExecutionToolResult:
+                                            TextEditorCodeExecutionToolResultBlock
+                                    ): ContentBlock =
+                                        ContentBlock.ofTextEditorCodeExecutionToolResult(
+                                            textEditorCodeExecutionToolResult
+                                        )
+
+                                    override fun visitToolSearchToolResult(
+                                        toolSearchToolResult: ToolSearchToolResultBlock
+                                    ): ContentBlock =
+                                        ContentBlock.ofToolSearchToolResult(toolSearchToolResult)
+
+                                    override fun visitContainerUpload(
+                                        containerUpload: ContainerUploadBlock
+                                    ): ContentBlock =
+                                        ContentBlock.ofContainerUpload(containerUpload)
+
                                     override fun visitThinking(thinking: ThinkingBlock) =
                                         ContentBlock.ofThinking(thinking)
+
+                                    override fun visitBashCodeExecutionToolResult(
+                                        bashCodeExecutionToolResult:
+                                            BashCodeExecutionToolResultBlock
+                                    ): ContentBlock =
+                                        ContentBlock.ofBashCodeExecutionToolResult(
+                                            bashCodeExecutionToolResult
+                                        )
 
                                     // Anthropic Extended Thinking API specification:
                                     // "`redacted_thinking` blocks will not have any deltas

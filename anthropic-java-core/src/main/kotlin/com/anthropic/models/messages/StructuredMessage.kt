@@ -46,6 +46,9 @@ internal constructor(
     /** @see Message._type */
     fun _type(): JsonValue = rawMessage._type()
 
+    /** @see Message.container */
+    fun container(): Optional<Container> = rawMessage.container()
+
     /** @see Message.usage */
     fun usage(): Usage = rawMessage.usage()
 
@@ -54,6 +57,9 @@ internal constructor(
 
     /** @see Message._content */
     fun _content(): JsonField<List<StructuredContentBlock<T>>> = content
+
+    /** @see Message._container */
+    fun _container(): JsonField<Container> = rawMessage._container()
 
     /** @see Message._model */
     fun _model(): JsonField<Model> = rawMessage._model()

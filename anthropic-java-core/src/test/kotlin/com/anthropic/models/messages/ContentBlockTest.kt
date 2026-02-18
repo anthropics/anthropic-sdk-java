@@ -203,6 +203,7 @@ internal class ContentBlockTest {
                 .id("srvtoolu_SQfNkl1n_JR_")
                 .caller(DirectCaller.builder().build())
                 .input(JsonValue.from(mapOf<String, Any>()))
+                .name(ServerToolUseBlock.Name.WEB_SEARCH)
                 .build()
 
         val contentBlock = ContentBlock.ofServerToolUse(serverToolUse)
@@ -230,6 +231,7 @@ internal class ContentBlockTest {
                     .id("srvtoolu_SQfNkl1n_JR_")
                     .caller(DirectCaller.builder().build())
                     .input(JsonValue.from(mapOf<String, Any>()))
+                    .name(ServerToolUseBlock.Name.WEB_SEARCH)
                     .build()
             )
 

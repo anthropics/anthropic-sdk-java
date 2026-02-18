@@ -300,7 +300,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
-        private var container: JsonField<Container>? = null
+        private var container: JsonField<Container> = JsonMissing.of()
         private var content: JsonField<MutableList<ContentBlock>>? = null
         private var model: JsonField<Model>? = null
         private var role: JsonValue = JsonValue.from("assistant")

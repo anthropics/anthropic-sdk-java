@@ -492,6 +492,21 @@ internal constructor(
         }
 
         /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(codeExecutionTool20260120: BetaCodeExecutionTool20260120) = apply {
+            paramsBuilder.addTool(codeExecutionTool20260120)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(webSearchTool20260209: BetaWebSearchTool20260209) = apply {
+            paramsBuilder.addTool(webSearchTool20260209)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(webFetchTool20260209: BetaWebFetchTool20260209) = apply {
+            paramsBuilder.addTool(webFetchTool20260209)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
         fun addTool(searchToolBm25_20251119: BetaToolSearchToolBm25_20251119) = apply {
             paramsBuilder.addTool(searchToolBm25_20251119)
         }
