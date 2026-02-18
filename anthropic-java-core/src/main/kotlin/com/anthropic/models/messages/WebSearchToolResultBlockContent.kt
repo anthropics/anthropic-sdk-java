@@ -35,13 +35,7 @@ private constructor(
                     error: WebSearchToolResultError
                 ): WebSearchToolResultBlockParamContent =
                     WebSearchToolResultBlockParamContent.ofRequestError(
-                        WebSearchToolRequestError.builder()
-                            .errorCode(
-                                error._errorCode().map {
-                                    WebSearchToolRequestError.ErrorCode.of(it.toString())
-                                }
-                            )
-                            .build()
+                        WebSearchToolRequestError.builder().errorCode(error._errorCode()).build()
                     )
 
                 override fun visitResultBlocks(

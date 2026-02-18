@@ -633,7 +633,7 @@ internal class ToolUnionTest {
                 .maxUses(1L)
                 .strict(true)
                 .userLocation(
-                    WebSearchTool20250305.UserLocation.builder()
+                    UserLocation.builder()
                         .city("New York")
                         .country("US")
                         .region("California")
@@ -679,7 +679,7 @@ internal class ToolUnionTest {
                     .maxUses(1L)
                     .strict(true)
                     .userLocation(
-                        WebSearchTool20250305.UserLocation.builder()
+                        UserLocation.builder()
                             .city("New York")
                             .country("US")
                             .region("California")
@@ -779,7 +779,7 @@ internal class ToolUnionTest {
                 .maxUses(1L)
                 .strict(true)
                 .userLocation(
-                    WebSearchTool20260209.UserLocation.builder()
+                    UserLocation.builder()
                         .city("New York")
                         .country("US")
                         .region("California")
@@ -825,7 +825,7 @@ internal class ToolUnionTest {
                     .maxUses(1L)
                     .strict(true)
                     .userLocation(
-                        WebSearchTool20260209.UserLocation.builder()
+                        UserLocation.builder()
                             .city("New York")
                             .country("US")
                             .region("California")
