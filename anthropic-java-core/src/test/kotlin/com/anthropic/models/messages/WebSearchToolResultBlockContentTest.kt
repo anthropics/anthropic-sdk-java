@@ -18,7 +18,7 @@ internal class WebSearchToolResultBlockContentTest {
     fun ofError() {
         val error =
             WebSearchToolResultError.builder()
-                .errorCode(WebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                .errorCode(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                 .build()
 
         val webSearchToolResultBlockContent = WebSearchToolResultBlockContent.ofError(error)
@@ -33,7 +33,7 @@ internal class WebSearchToolResultBlockContentTest {
         val webSearchToolResultBlockContent =
             WebSearchToolResultBlockContent.ofError(
                 WebSearchToolResultError.builder()
-                    .errorCode(WebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                    .errorCode(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                     .build()
             )
 

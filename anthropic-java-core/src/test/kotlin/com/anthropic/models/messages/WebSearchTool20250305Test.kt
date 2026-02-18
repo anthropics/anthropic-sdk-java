@@ -24,7 +24,7 @@ internal class WebSearchTool20250305Test {
                 .maxUses(1L)
                 .strict(true)
                 .userLocation(
-                    WebSearchTool20250305.UserLocation.builder()
+                    UserLocation.builder()
                         .city("New York")
                         .country("US")
                         .region("California")
@@ -44,7 +44,7 @@ internal class WebSearchTool20250305Test {
         assertThat(webSearchTool20250305.strict()).contains(true)
         assertThat(webSearchTool20250305.userLocation())
             .contains(
-                WebSearchTool20250305.UserLocation.builder()
+                UserLocation.builder()
                     .city("New York")
                     .country("US")
                     .region("California")
@@ -68,7 +68,7 @@ internal class WebSearchTool20250305Test {
                 .maxUses(1L)
                 .strict(true)
                 .userLocation(
-                    WebSearchTool20250305.UserLocation.builder()
+                    UserLocation.builder()
                         .city("New York")
                         .country("US")
                         .region("California")
