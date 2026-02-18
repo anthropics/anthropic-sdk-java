@@ -299,10 +299,8 @@ internal class MessageCountTokensToolTest {
     @Test
     fun ofCodeExecutionTool20260120() {
         val codeExecutionTool20260120 =
-            MessageCountTokensTool.CodeExecutionTool20260120.builder()
-                .addAllowedCaller(
-                    MessageCountTokensTool.CodeExecutionTool20260120.AllowedCaller.DIRECT
-                )
+            CodeExecutionTool20260120.builder()
+                .addAllowedCaller(CodeExecutionTool20260120.AllowedCaller.DIRECT)
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
@@ -336,10 +334,8 @@ internal class MessageCountTokensToolTest {
         val jsonMapper = jsonMapper()
         val messageCountTokensTool =
             MessageCountTokensTool.ofCodeExecutionTool20260120(
-                MessageCountTokensTool.CodeExecutionTool20260120.builder()
-                    .addAllowedCaller(
-                        MessageCountTokensTool.CodeExecutionTool20260120.AllowedCaller.DIRECT
-                    )
+                CodeExecutionTool20260120.builder()
+                    .addAllowedCaller(CodeExecutionTool20260120.AllowedCaller.DIRECT)
                     .cacheControl(
                         CacheControlEphemeral.builder()
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
@@ -783,8 +779,8 @@ internal class MessageCountTokensToolTest {
     @Test
     fun ofWebSearchTool20260209() {
         val webSearchTool20260209 =
-            MessageCountTokensTool.WebSearchTool20260209.builder()
-                .addAllowedCaller(MessageCountTokensTool.WebSearchTool20260209.AllowedCaller.DIRECT)
+            WebSearchTool20260209.builder()
+                .addAllowedCaller(WebSearchTool20260209.AllowedCaller.DIRECT)
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
                 .cacheControl(
@@ -794,7 +790,7 @@ internal class MessageCountTokensToolTest {
                 .maxUses(1L)
                 .strict(true)
                 .userLocation(
-                    MessageCountTokensTool.WebSearchTool20260209.UserLocation.builder()
+                    WebSearchTool20260209.UserLocation.builder()
                         .city("New York")
                         .country("US")
                         .region("California")
@@ -828,10 +824,8 @@ internal class MessageCountTokensToolTest {
         val jsonMapper = jsonMapper()
         val messageCountTokensTool =
             MessageCountTokensTool.ofWebSearchTool20260209(
-                MessageCountTokensTool.WebSearchTool20260209.builder()
-                    .addAllowedCaller(
-                        MessageCountTokensTool.WebSearchTool20260209.AllowedCaller.DIRECT
-                    )
+                WebSearchTool20260209.builder()
+                    .addAllowedCaller(WebSearchTool20260209.AllowedCaller.DIRECT)
                     .addAllowedDomain("string")
                     .addBlockedDomain("string")
                     .cacheControl(
@@ -843,7 +837,7 @@ internal class MessageCountTokensToolTest {
                     .maxUses(1L)
                     .strict(true)
                     .userLocation(
-                        MessageCountTokensTool.WebSearchTool20260209.UserLocation.builder()
+                        WebSearchTool20260209.UserLocation.builder()
                             .city("New York")
                             .country("US")
                             .region("California")
@@ -865,8 +859,8 @@ internal class MessageCountTokensToolTest {
     @Test
     fun ofWebFetchTool20260209() {
         val webFetchTool20260209 =
-            MessageCountTokensTool.WebFetchTool20260209.builder()
-                .addAllowedCaller(MessageCountTokensTool.WebFetchTool20260209.AllowedCaller.DIRECT)
+            WebFetchTool20260209.builder()
+                .addAllowedCaller(WebFetchTool20260209.AllowedCaller.DIRECT)
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
                 .cacheControl(
@@ -904,10 +898,8 @@ internal class MessageCountTokensToolTest {
         val jsonMapper = jsonMapper()
         val messageCountTokensTool =
             MessageCountTokensTool.ofWebFetchTool20260209(
-                MessageCountTokensTool.WebFetchTool20260209.builder()
-                    .addAllowedCaller(
-                        MessageCountTokensTool.WebFetchTool20260209.AllowedCaller.DIRECT
-                    )
+                WebFetchTool20260209.builder()
+                    .addAllowedCaller(WebFetchTool20260209.AllowedCaller.DIRECT)
                     .addAllowedDomain("string")
                     .addBlockedDomain("string")
                     .cacheControl(

@@ -722,10 +722,9 @@ private constructor(
          * Alias for calling [addTool] with
          * `MessageCountTokensTool.ofCodeExecutionTool20260120(codeExecutionTool20260120)`.
          */
-        fun addTool(codeExecutionTool20260120: MessageCountTokensTool.CodeExecutionTool20260120) =
-            apply {
-                body.addTool(codeExecutionTool20260120)
-            }
+        fun addTool(codeExecutionTool20260120: CodeExecutionTool20260120) = apply {
+            body.addTool(codeExecutionTool20260120)
+        }
 
         /**
          * Alias for calling [addTool] with
@@ -779,7 +778,7 @@ private constructor(
          * Alias for calling [addTool] with
          * `MessageCountTokensTool.ofWebSearchTool20260209(webSearchTool20260209)`.
          */
-        fun addTool(webSearchTool20260209: MessageCountTokensTool.WebSearchTool20260209) = apply {
+        fun addTool(webSearchTool20260209: WebSearchTool20260209) = apply {
             body.addTool(webSearchTool20260209)
         }
 
@@ -787,7 +786,7 @@ private constructor(
          * Alias for calling [addTool] with
          * `MessageCountTokensTool.ofWebFetchTool20260209(webFetchTool20260209)`.
          */
-        fun addTool(webFetchTool20260209: MessageCountTokensTool.WebFetchTool20260209) = apply {
+        fun addTool(webFetchTool20260209: WebFetchTool20260209) = apply {
             body.addTool(webFetchTool20260209)
         }
 
@@ -1710,9 +1709,7 @@ private constructor(
              * Alias for calling [addTool] with
              * `MessageCountTokensTool.ofCodeExecutionTool20260120(codeExecutionTool20260120)`.
              */
-            fun addTool(
-                codeExecutionTool20260120: MessageCountTokensTool.CodeExecutionTool20260120
-            ) =
+            fun addTool(codeExecutionTool20260120: CodeExecutionTool20260120) =
                 addTool(
                     MessageCountTokensTool.ofCodeExecutionTool20260120(codeExecutionTool20260120)
                 )
@@ -1763,14 +1760,14 @@ private constructor(
              * Alias for calling [addTool] with
              * `MessageCountTokensTool.ofWebSearchTool20260209(webSearchTool20260209)`.
              */
-            fun addTool(webSearchTool20260209: MessageCountTokensTool.WebSearchTool20260209) =
+            fun addTool(webSearchTool20260209: WebSearchTool20260209) =
                 addTool(MessageCountTokensTool.ofWebSearchTool20260209(webSearchTool20260209))
 
             /**
              * Alias for calling [addTool] with
              * `MessageCountTokensTool.ofWebFetchTool20260209(webFetchTool20260209)`.
              */
-            fun addTool(webFetchTool20260209: MessageCountTokensTool.WebFetchTool20260209) =
+            fun addTool(webFetchTool20260209: WebFetchTool20260209) =
                 addTool(MessageCountTokensTool.ofWebFetchTool20260209(webFetchTool20260209))
 
             /**

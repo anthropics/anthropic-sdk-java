@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.models.beta.messages
+package com.anthropic.models.messages
 
 import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
@@ -19,7 +19,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class BetaWebFetchTool20250910
+class WebSearchTool20260209
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val name: JsonValue,
@@ -27,12 +27,11 @@ private constructor(
     private val allowedCallers: JsonField<List<AllowedCaller>>,
     private val allowedDomains: JsonField<List<String>>,
     private val blockedDomains: JsonField<List<String>>,
-    private val cacheControl: JsonField<BetaCacheControlEphemeral>,
-    private val citations: JsonField<BetaCitationsConfigParam>,
+    private val cacheControl: JsonField<CacheControlEphemeral>,
     private val deferLoading: JsonField<Boolean>,
-    private val maxContentTokens: JsonField<Long>,
     private val maxUses: JsonField<Long>,
     private val strict: JsonField<Boolean>,
+    private val userLocation: JsonField<UserLocation>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -51,18 +50,15 @@ private constructor(
         blockedDomains: JsonField<List<String>> = JsonMissing.of(),
         @JsonProperty("cache_control")
         @ExcludeMissing
-        cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
-        @JsonProperty("citations")
-        @ExcludeMissing
-        citations: JsonField<BetaCitationsConfigParam> = JsonMissing.of(),
+        cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of(),
         @JsonProperty("defer_loading")
         @ExcludeMissing
         deferLoading: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("max_content_tokens")
-        @ExcludeMissing
-        maxContentTokens: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("max_uses") @ExcludeMissing maxUses: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("strict") @ExcludeMissing strict: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("user_location")
+        @ExcludeMissing
+        userLocation: JsonField<UserLocation> = JsonMissing.of(),
     ) : this(
         name,
         type,
@@ -70,11 +66,10 @@ private constructor(
         allowedDomains,
         blockedDomains,
         cacheControl,
-        citations,
         deferLoading,
-        maxContentTokens,
         maxUses,
         strict,
+        userLocation,
         mutableMapOf(),
     )
 
@@ -85,7 +80,7 @@ private constructor(
      *
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("web_fetch")
+     * JsonValue.from("web_search")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -96,7 +91,7 @@ private constructor(
     /**
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("web_fetch_20250910")
+     * JsonValue.from("web_search_20260209")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -112,7 +107,8 @@ private constructor(
         allowedCallers.getOptional("allowed_callers")
 
     /**
-     * List of domains to allow fetching from
+     * If provided, only these domains will be included in results. Cannot be used alongside
+     * `blocked_domains`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -120,7 +116,8 @@ private constructor(
     fun allowedDomains(): Optional<List<String>> = allowedDomains.getOptional("allowed_domains")
 
     /**
-     * List of domains to block fetching from
+     * If provided, these domains will never appear in results. Cannot be used alongside
+     * `allowed_domains`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -133,16 +130,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun cacheControl(): Optional<BetaCacheControlEphemeral> =
-        cacheControl.getOptional("cache_control")
-
-    /**
-     * Citations configuration for fetched documents. Citations are disabled by default.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun citations(): Optional<BetaCitationsConfigParam> = citations.getOptional("citations")
+    fun cacheControl(): Optional<CacheControlEphemeral> = cacheControl.getOptional("cache_control")
 
     /**
      * If true, tool will not be included in initial system prompt. Only loaded when returned via
@@ -152,15 +140,6 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun deferLoading(): Optional<Boolean> = deferLoading.getOptional("defer_loading")
-
-    /**
-     * Maximum number of tokens used by including web page text content in the context. The limit is
-     * approximate and does not apply to binary content such as PDFs.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun maxContentTokens(): Optional<Long> = maxContentTokens.getOptional("max_content_tokens")
 
     /**
      * Maximum number of times the tool can be used in the API request.
@@ -177,6 +156,14 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun strict(): Optional<Boolean> = strict.getOptional("strict")
+
+    /**
+     * Parameters for the user's location. Used to provide more relevant search results.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun userLocation(): Optional<UserLocation> = userLocation.getOptional("user_location")
 
     /**
      * Returns the raw JSON value of [allowedCallers].
@@ -212,16 +199,7 @@ private constructor(
      */
     @JsonProperty("cache_control")
     @ExcludeMissing
-    fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
-
-    /**
-     * Returns the raw JSON value of [citations].
-     *
-     * Unlike [citations], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("citations")
-    @ExcludeMissing
-    fun _citations(): JsonField<BetaCitationsConfigParam> = citations
+    fun _cacheControl(): JsonField<CacheControlEphemeral> = cacheControl
 
     /**
      * Returns the raw JSON value of [deferLoading].
@@ -231,16 +209,6 @@ private constructor(
     @JsonProperty("defer_loading")
     @ExcludeMissing
     fun _deferLoading(): JsonField<Boolean> = deferLoading
-
-    /**
-     * Returns the raw JSON value of [maxContentTokens].
-     *
-     * Unlike [maxContentTokens], this method doesn't throw if the JSON field has an unexpected
-     * type.
-     */
-    @JsonProperty("max_content_tokens")
-    @ExcludeMissing
-    fun _maxContentTokens(): JsonField<Long> = maxContentTokens
 
     /**
      * Returns the raw JSON value of [maxUses].
@@ -256,6 +224,15 @@ private constructor(
      */
     @JsonProperty("strict") @ExcludeMissing fun _strict(): JsonField<Boolean> = strict
 
+    /**
+     * Returns the raw JSON value of [userLocation].
+     *
+     * Unlike [userLocation], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("user_location")
+    @ExcludeMissing
+    fun _userLocation(): JsonField<UserLocation> = userLocation
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -270,40 +247,38 @@ private constructor(
 
     companion object {
 
-        /** Returns a mutable builder for constructing an instance of [BetaWebFetchTool20250910]. */
+        /** Returns a mutable builder for constructing an instance of [WebSearchTool20260209]. */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [BetaWebFetchTool20250910]. */
+    /** A builder for [WebSearchTool20260209]. */
     class Builder internal constructor() {
 
-        private var name: JsonValue = JsonValue.from("web_fetch")
-        private var type: JsonValue = JsonValue.from("web_fetch_20250910")
+        private var name: JsonValue = JsonValue.from("web_search")
+        private var type: JsonValue = JsonValue.from("web_search_20260209")
         private var allowedCallers: JsonField<MutableList<AllowedCaller>>? = null
         private var allowedDomains: JsonField<MutableList<String>>? = null
         private var blockedDomains: JsonField<MutableList<String>>? = null
-        private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
-        private var citations: JsonField<BetaCitationsConfigParam> = JsonMissing.of()
+        private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var deferLoading: JsonField<Boolean> = JsonMissing.of()
-        private var maxContentTokens: JsonField<Long> = JsonMissing.of()
         private var maxUses: JsonField<Long> = JsonMissing.of()
         private var strict: JsonField<Boolean> = JsonMissing.of()
+        private var userLocation: JsonField<UserLocation> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(betaWebFetchTool20250910: BetaWebFetchTool20250910) = apply {
-            name = betaWebFetchTool20250910.name
-            type = betaWebFetchTool20250910.type
-            allowedCallers = betaWebFetchTool20250910.allowedCallers.map { it.toMutableList() }
-            allowedDomains = betaWebFetchTool20250910.allowedDomains.map { it.toMutableList() }
-            blockedDomains = betaWebFetchTool20250910.blockedDomains.map { it.toMutableList() }
-            cacheControl = betaWebFetchTool20250910.cacheControl
-            citations = betaWebFetchTool20250910.citations
-            deferLoading = betaWebFetchTool20250910.deferLoading
-            maxContentTokens = betaWebFetchTool20250910.maxContentTokens
-            maxUses = betaWebFetchTool20250910.maxUses
-            strict = betaWebFetchTool20250910.strict
-            additionalProperties = betaWebFetchTool20250910.additionalProperties.toMutableMap()
+        internal fun from(webSearchTool20260209: WebSearchTool20260209) = apply {
+            name = webSearchTool20260209.name
+            type = webSearchTool20260209.type
+            allowedCallers = webSearchTool20260209.allowedCallers.map { it.toMutableList() }
+            allowedDomains = webSearchTool20260209.allowedDomains.map { it.toMutableList() }
+            blockedDomains = webSearchTool20260209.blockedDomains.map { it.toMutableList() }
+            cacheControl = webSearchTool20260209.cacheControl
+            deferLoading = webSearchTool20260209.deferLoading
+            maxUses = webSearchTool20260209.maxUses
+            strict = webSearchTool20260209.strict
+            userLocation = webSearchTool20260209.userLocation
+            additionalProperties = webSearchTool20260209.additionalProperties.toMutableMap()
         }
 
         /**
@@ -312,7 +287,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("web_fetch")
+         * JsonValue.from("web_search")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -326,7 +301,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("web_fetch_20250910")
+         * JsonValue.from("web_search_20260209")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -360,7 +335,10 @@ private constructor(
                 }
         }
 
-        /** List of domains to allow fetching from */
+        /**
+         * If provided, only these domains will be included in results. Cannot be used alongside
+         * `blocked_domains`.
+         */
         fun allowedDomains(allowedDomains: List<String>?) =
             allowedDomains(JsonField.ofNullable(allowedDomains))
 
@@ -391,7 +369,10 @@ private constructor(
                 }
         }
 
-        /** List of domains to block fetching from */
+        /**
+         * If provided, these domains will never appear in results. Cannot be used alongside
+         * `allowed_domains`.
+         */
         fun blockedDomains(blockedDomains: List<String>?) =
             blockedDomains(JsonField.ofNullable(blockedDomains))
 
@@ -423,41 +404,22 @@ private constructor(
         }
 
         /** Create a cache control breakpoint at this content block. */
-        fun cacheControl(cacheControl: BetaCacheControlEphemeral?) =
+        fun cacheControl(cacheControl: CacheControlEphemeral?) =
             cacheControl(JsonField.ofNullable(cacheControl))
 
         /** Alias for calling [Builder.cacheControl] with `cacheControl.orElse(null)`. */
-        fun cacheControl(cacheControl: Optional<BetaCacheControlEphemeral>) =
+        fun cacheControl(cacheControl: Optional<CacheControlEphemeral>) =
             cacheControl(cacheControl.getOrNull())
 
         /**
          * Sets [Builder.cacheControl] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.cacheControl] with a well-typed
-         * [BetaCacheControlEphemeral] value instead. This method is primarily for setting the field
-         * to an undocumented or not yet supported value.
-         */
-        fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
-            this.cacheControl = cacheControl
-        }
-
-        /** Citations configuration for fetched documents. Citations are disabled by default. */
-        fun citations(citations: BetaCitationsConfigParam?) =
-            citations(JsonField.ofNullable(citations))
-
-        /** Alias for calling [Builder.citations] with `citations.orElse(null)`. */
-        fun citations(citations: Optional<BetaCitationsConfigParam>) =
-            citations(citations.getOrNull())
-
-        /**
-         * Sets [Builder.citations] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.citations] with a well-typed [BetaCitationsConfigParam]
+         * You should usually call [Builder.cacheControl] with a well-typed [CacheControlEphemeral]
          * value instead. This method is primarily for setting the field to an undocumented or not
          * yet supported value.
          */
-        fun citations(citations: JsonField<BetaCitationsConfigParam>) = apply {
-            this.citations = citations
+        fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
+            this.cacheControl = cacheControl
         }
 
         /**
@@ -475,35 +437,6 @@ private constructor(
          */
         fun deferLoading(deferLoading: JsonField<Boolean>) = apply {
             this.deferLoading = deferLoading
-        }
-
-        /**
-         * Maximum number of tokens used by including web page text content in the context. The
-         * limit is approximate and does not apply to binary content such as PDFs.
-         */
-        fun maxContentTokens(maxContentTokens: Long?) =
-            maxContentTokens(JsonField.ofNullable(maxContentTokens))
-
-        /**
-         * Alias for [Builder.maxContentTokens].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
-        fun maxContentTokens(maxContentTokens: Long) = maxContentTokens(maxContentTokens as Long?)
-
-        /** Alias for calling [Builder.maxContentTokens] with `maxContentTokens.orElse(null)`. */
-        fun maxContentTokens(maxContentTokens: Optional<Long>) =
-            maxContentTokens(maxContentTokens.getOrNull())
-
-        /**
-         * Sets [Builder.maxContentTokens] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.maxContentTokens] with a well-typed [Long] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun maxContentTokens(maxContentTokens: JsonField<Long>) = apply {
-            this.maxContentTokens = maxContentTokens
         }
 
         /** Maximum number of times the tool can be used in the API request. */
@@ -538,6 +471,25 @@ private constructor(
          */
         fun strict(strict: JsonField<Boolean>) = apply { this.strict = strict }
 
+        /** Parameters for the user's location. Used to provide more relevant search results. */
+        fun userLocation(userLocation: UserLocation?) =
+            userLocation(JsonField.ofNullable(userLocation))
+
+        /** Alias for calling [Builder.userLocation] with `userLocation.orElse(null)`. */
+        fun userLocation(userLocation: Optional<UserLocation>) =
+            userLocation(userLocation.getOrNull())
+
+        /**
+         * Sets [Builder.userLocation] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.userLocation] with a well-typed [UserLocation] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun userLocation(userLocation: JsonField<UserLocation>) = apply {
+            this.userLocation = userLocation
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -558,41 +510,40 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [BetaWebFetchTool20250910].
+         * Returns an immutable instance of [WebSearchTool20260209].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): BetaWebFetchTool20250910 =
-            BetaWebFetchTool20250910(
+        fun build(): WebSearchTool20260209 =
+            WebSearchTool20260209(
                 name,
                 type,
                 (allowedCallers ?: JsonMissing.of()).map { it.toImmutable() },
                 (allowedDomains ?: JsonMissing.of()).map { it.toImmutable() },
                 (blockedDomains ?: JsonMissing.of()).map { it.toImmutable() },
                 cacheControl,
-                citations,
                 deferLoading,
-                maxContentTokens,
                 maxUses,
                 strict,
+                userLocation,
                 additionalProperties.toMutableMap(),
             )
     }
 
     private var validated: Boolean = false
 
-    fun validate(): BetaWebFetchTool20250910 = apply {
+    fun validate(): WebSearchTool20260209 = apply {
         if (validated) {
             return@apply
         }
 
         _name().let {
-            if (it != JsonValue.from("web_fetch")) {
+            if (it != JsonValue.from("web_search")) {
                 throw AnthropicInvalidDataException("'name' is invalid, received $it")
             }
         }
         _type().let {
-            if (it != JsonValue.from("web_fetch_20250910")) {
+            if (it != JsonValue.from("web_search_20260209")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
@@ -600,11 +551,10 @@ private constructor(
         allowedDomains()
         blockedDomains()
         cacheControl().ifPresent { it.validate() }
-        citations().ifPresent { it.validate() }
         deferLoading()
-        maxContentTokens()
         maxUses()
         strict()
+        userLocation().ifPresent { it.validate() }
         validated = true
     }
 
@@ -623,17 +573,16 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        name.let { if (it == JsonValue.from("web_fetch")) 1 else 0 } +
-            type.let { if (it == JsonValue.from("web_fetch_20250910")) 1 else 0 } +
+        name.let { if (it == JsonValue.from("web_search")) 1 else 0 } +
+            type.let { if (it == JsonValue.from("web_search_20260209")) 1 else 0 } +
             (allowedCallers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (allowedDomains.asKnown().getOrNull()?.size ?: 0) +
             (blockedDomains.asKnown().getOrNull()?.size ?: 0) +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
-            (citations.asKnown().getOrNull()?.validity() ?: 0) +
             (if (deferLoading.asKnown().isPresent) 1 else 0) +
-            (if (maxContentTokens.asKnown().isPresent) 1 else 0) +
             (if (maxUses.asKnown().isPresent) 1 else 0) +
-            (if (strict.asKnown().isPresent) 1 else 0)
+            (if (strict.asKnown().isPresent) 1 else 0) +
+            (userLocation.asKnown().getOrNull()?.validity() ?: 0)
 
     class AllowedCaller @JsonCreator private constructor(private val value: JsonField<String>) :
         Enum {
@@ -772,23 +721,330 @@ private constructor(
         override fun toString() = value.toString()
     }
 
+    /** Parameters for the user's location. Used to provide more relevant search results. */
+    class UserLocation
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val type: JsonValue,
+        private val city: JsonField<String>,
+        private val country: JsonField<String>,
+        private val region: JsonField<String>,
+        private val timezone: JsonField<String>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+            @JsonProperty("city") @ExcludeMissing city: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("country") @ExcludeMissing country: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("region") @ExcludeMissing region: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("timezone") @ExcludeMissing timezone: JsonField<String> = JsonMissing.of(),
+        ) : this(type, city, country, region, timezone, mutableMapOf())
+
+        /**
+         * Expected to always return the following:
+         * ```java
+         * JsonValue.from("approximate")
+         * ```
+         *
+         * However, this method can be useful for debugging and logging (e.g. if the server
+         * responded with an unexpected value).
+         */
+        @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
+
+        /**
+         * The city of the user.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun city(): Optional<String> = city.getOptional("city")
+
+        /**
+         * The two letter [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) of
+         * the user.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun country(): Optional<String> = country.getOptional("country")
+
+        /**
+         * The region of the user.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun region(): Optional<String> = region.getOptional("region")
+
+        /**
+         * The [IANA timezone](https://nodatime.org/TimeZones) of the user.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun timezone(): Optional<String> = timezone.getOptional("timezone")
+
+        /**
+         * Returns the raw JSON value of [city].
+         *
+         * Unlike [city], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("city") @ExcludeMissing fun _city(): JsonField<String> = city
+
+        /**
+         * Returns the raw JSON value of [country].
+         *
+         * Unlike [country], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("country") @ExcludeMissing fun _country(): JsonField<String> = country
+
+        /**
+         * Returns the raw JSON value of [region].
+         *
+         * Unlike [region], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("region") @ExcludeMissing fun _region(): JsonField<String> = region
+
+        /**
+         * Returns the raw JSON value of [timezone].
+         *
+         * Unlike [timezone], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("timezone") @ExcludeMissing fun _timezone(): JsonField<String> = timezone
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [UserLocation]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [UserLocation]. */
+        class Builder internal constructor() {
+
+            private var type: JsonValue = JsonValue.from("approximate")
+            private var city: JsonField<String> = JsonMissing.of()
+            private var country: JsonField<String> = JsonMissing.of()
+            private var region: JsonField<String> = JsonMissing.of()
+            private var timezone: JsonField<String> = JsonMissing.of()
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(userLocation: UserLocation) = apply {
+                type = userLocation.type
+                city = userLocation.city
+                country = userLocation.country
+                region = userLocation.region
+                timezone = userLocation.timezone
+                additionalProperties = userLocation.additionalProperties.toMutableMap()
+            }
+
+            /**
+             * Sets the field to an arbitrary JSON value.
+             *
+             * It is usually unnecessary to call this method because the field defaults to the
+             * following:
+             * ```java
+             * JsonValue.from("approximate")
+             * ```
+             *
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun type(type: JsonValue) = apply { this.type = type }
+
+            /** The city of the user. */
+            fun city(city: String?) = city(JsonField.ofNullable(city))
+
+            /** Alias for calling [Builder.city] with `city.orElse(null)`. */
+            fun city(city: Optional<String>) = city(city.getOrNull())
+
+            /**
+             * Sets [Builder.city] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.city] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun city(city: JsonField<String>) = apply { this.city = city }
+
+            /**
+             * The two letter [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+             * of the user.
+             */
+            fun country(country: String?) = country(JsonField.ofNullable(country))
+
+            /** Alias for calling [Builder.country] with `country.orElse(null)`. */
+            fun country(country: Optional<String>) = country(country.getOrNull())
+
+            /**
+             * Sets [Builder.country] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.country] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun country(country: JsonField<String>) = apply { this.country = country }
+
+            /** The region of the user. */
+            fun region(region: String?) = region(JsonField.ofNullable(region))
+
+            /** Alias for calling [Builder.region] with `region.orElse(null)`. */
+            fun region(region: Optional<String>) = region(region.getOrNull())
+
+            /**
+             * Sets [Builder.region] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.region] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun region(region: JsonField<String>) = apply { this.region = region }
+
+            /** The [IANA timezone](https://nodatime.org/TimeZones) of the user. */
+            fun timezone(timezone: String?) = timezone(JsonField.ofNullable(timezone))
+
+            /** Alias for calling [Builder.timezone] with `timezone.orElse(null)`. */
+            fun timezone(timezone: Optional<String>) = timezone(timezone.getOrNull())
+
+            /**
+             * Sets [Builder.timezone] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.timezone] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun timezone(timezone: JsonField<String>) = apply { this.timezone = timezone }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [UserLocation].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): UserLocation =
+                UserLocation(
+                    type,
+                    city,
+                    country,
+                    region,
+                    timezone,
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): UserLocation = apply {
+            if (validated) {
+                return@apply
+            }
+
+            _type().let {
+                if (it != JsonValue.from("approximate")) {
+                    throw AnthropicInvalidDataException("'type' is invalid, received $it")
+                }
+            }
+            city()
+            country()
+            region()
+            timezone()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            type.let { if (it == JsonValue.from("approximate")) 1 else 0 } +
+                (if (city.asKnown().isPresent) 1 else 0) +
+                (if (country.asKnown().isPresent) 1 else 0) +
+                (if (region.asKnown().isPresent) 1 else 0) +
+                (if (timezone.asKnown().isPresent) 1 else 0)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is UserLocation &&
+                type == other.type &&
+                city == other.city &&
+                country == other.country &&
+                region == other.region &&
+                timezone == other.timezone &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy {
+            Objects.hash(type, city, country, region, timezone, additionalProperties)
+        }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "UserLocation{type=$type, city=$city, country=$country, region=$region, timezone=$timezone, additionalProperties=$additionalProperties}"
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is BetaWebFetchTool20250910 &&
+        return other is WebSearchTool20260209 &&
             name == other.name &&
             type == other.type &&
             allowedCallers == other.allowedCallers &&
             allowedDomains == other.allowedDomains &&
             blockedDomains == other.blockedDomains &&
             cacheControl == other.cacheControl &&
-            citations == other.citations &&
             deferLoading == other.deferLoading &&
-            maxContentTokens == other.maxContentTokens &&
             maxUses == other.maxUses &&
             strict == other.strict &&
+            userLocation == other.userLocation &&
             additionalProperties == other.additionalProperties
     }
 
@@ -800,11 +1056,10 @@ private constructor(
             allowedDomains,
             blockedDomains,
             cacheControl,
-            citations,
             deferLoading,
-            maxContentTokens,
             maxUses,
             strict,
+            userLocation,
             additionalProperties,
         )
     }
@@ -812,5 +1067,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaWebFetchTool20250910{name=$name, type=$type, allowedCallers=$allowedCallers, allowedDomains=$allowedDomains, blockedDomains=$blockedDomains, cacheControl=$cacheControl, citations=$citations, deferLoading=$deferLoading, maxContentTokens=$maxContentTokens, maxUses=$maxUses, strict=$strict, additionalProperties=$additionalProperties}"
+        "WebSearchTool20260209{name=$name, type=$type, allowedCallers=$allowedCallers, allowedDomains=$allowedDomains, blockedDomains=$blockedDomains, cacheControl=$cacheControl, deferLoading=$deferLoading, maxUses=$maxUses, strict=$strict, userLocation=$userLocation, additionalProperties=$additionalProperties}"
 }
