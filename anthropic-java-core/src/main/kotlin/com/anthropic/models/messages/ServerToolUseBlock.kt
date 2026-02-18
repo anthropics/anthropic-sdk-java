@@ -10,7 +10,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
-
+import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -25,20 +25,16 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Collections
 import java.util.Objects
-
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 class ServerToolUseBlock
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
-private constructor(
-    private val id: JsonField<String>,
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
-    private val id: JsonField<String>,
     private val caller: JsonField<Caller>,
     private val input: JsonValue,
-    private val name: JsonValue,
+    private val name: JsonField<Name>,
     private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -48,7 +44,7 @@ private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
         @JsonProperty("caller") @ExcludeMissing caller: JsonField<Caller> = JsonMissing.of(),
         @JsonProperty("input") @ExcludeMissing input: JsonValue = JsonMissing.of(),
-        @JsonProperty("name") @ExcludeMissing name: JsonValue = JsonMissing.of(),
+        @JsonProperty("name") @ExcludeMissing name: JsonField<Name> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
     ) : this(id, caller, input, name, type, mutableMapOf())
 
@@ -117,6 +113,25 @@ private constructor(
      */
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun caller(): Caller = caller.getRequired("caller")
+
+    /**
+     * Returns the raw JSON value of [name].
+     *
+     * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<Name> = name
+
+    /**
+     * Returns the raw JSON value of [caller].
+     *
+     * Unlike [caller], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("caller") @ExcludeMissing fun _caller(): JsonField<Caller> = caller
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -150,17 +165,9 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
-        private var id: JsonField<String>? = null
-        @JvmStatic fun builder() = Builder()
-    }
-
-    /** A builder for [ServerToolUseBlock]. */
-    class Builder internal constructor() {
-
-        private var id: JsonField<String>? = null
         private var caller: JsonField<Caller>? = null
         private var input: JsonValue? = null
-        private var name: JsonValue = JsonValue.from("web_search")
+        private var name: JsonField<Name>? = null
         private var type: JsonValue = JsonValue.from("server_tool_use")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -342,7 +349,6 @@ private constructor(
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (caller.asKnown().getOrNull()?.validity() ?: 0) +
-            (input.asKnown().getOrNull()?.validity() ?: 0) +
             (name.asKnown().getOrNull()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("server_tool_use")) 1 else 0 }
 

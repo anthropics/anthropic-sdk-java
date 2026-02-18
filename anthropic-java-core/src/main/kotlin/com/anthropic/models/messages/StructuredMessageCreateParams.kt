@@ -310,6 +310,60 @@ internal constructor(
             paramsBuilder.addTool(webSearchTool20250305)
         }
 
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(webFetchTool20250910: WebFetchTool20250910) = apply {
+            paramsBuilder.addTool(webFetchTool20250910)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(codeExecutionTool20250522: CodeExecutionTool20250522) = apply {
+            paramsBuilder.addTool(codeExecutionTool20250522)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(codeExecutionTool20250825: CodeExecutionTool20250825) = apply {
+            paramsBuilder.addTool(codeExecutionTool20250825)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(codeExecutionTool20260120: CodeExecutionTool20260120) = apply {
+            paramsBuilder.addTool(codeExecutionTool20260120)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(memoryTool20250818: MemoryTool20250818) = apply {
+            paramsBuilder.addTool(memoryTool20250818)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(webSearchTool20260209: WebSearchTool20260209) = apply {
+            paramsBuilder.addTool(webSearchTool20260209)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(webFetchTool20260209: WebFetchTool20260209) = apply {
+            paramsBuilder.addTool(webFetchTool20260209)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(searchToolBm25_20251119: ToolSearchToolBm25_20251119) = apply {
+            paramsBuilder.addTool(searchToolBm25_20251119)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(searchToolRegex20251119: ToolSearchToolRegex20251119) = apply {
+            paramsBuilder.addTool(searchToolRegex20251119)
+        }
+
+        /** @see MessageCreateParams.Builder.container */
+        fun container(container: String?) = apply { paramsBuilder.container(container) }
+
+        /** @see MessageCreateParams.Builder.container */
+        fun container(container: Optional<String>) = apply { paramsBuilder.container(container) }
+
+        /** @see MessageCreateParams.Builder.container */
+        fun container(container: JsonField<String>) = apply { paramsBuilder.container(container) }
+
         /** @see MessageCreateParams.Builder.topK */
         fun topK(topK: Long) = apply { paramsBuilder.topK(topK) }
 

@@ -36,11 +36,22 @@ internal class StructuredContentBlockTest {
         private val THINKING = ThinkingBlock.builder().signature(STRING).thinking(STRING).build()
         private val REDACTED_THINKING = RedactedThinkingBlock.builder().data(STRING).build()
         private val TOOL_USE =
-            ToolUseBlock.builder().id(STRING).input(JSON_VALUE).name(STRING).build()
+            ToolUseBlock.builder()
+                .id(STRING)
+                .caller(DirectCaller.builder().build())
+                .input(JSON_VALUE)
+                .name(STRING)
+                .build()
         private val SERVER_TOOL_USE =
-            ServerToolUseBlock.builder().id(STRING).input(JSON_VALUE).build()
+            ServerToolUseBlock.builder()
+                .id(STRING)
+                .caller(DirectCaller.builder().build())
+                .input(JSON_VALUE)
+                .name(ServerToolUseBlock.Name.WEB_SEARCH)
+                .build()
         private val WEB_SEARCH_TOOL_RESULT =
             WebSearchToolResultBlock.builder()
+                .caller(DirectCaller.builder().build())
                 .content(
                     WebSearchToolResultBlockContent.ofError(
                         WebSearchToolResultError.builder()
@@ -50,6 +61,68 @@ internal class StructuredContentBlockTest {
                 )
                 .toolUseId(STRING)
                 .build()
+        private val WEB_FETCH_TOOL_RESULT =
+            WebFetchToolResultBlock.builder()
+                .caller(DirectCaller.builder().build())
+                .content(
+                    WebFetchToolResultBlock.Content.ofWebFetchToolResultErrorBlock(
+                        WebFetchToolResultErrorBlock.builder()
+                            .errorCode(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
+                            .build()
+                    )
+                )
+                .toolUseId(STRING)
+                .build()
+        private val CODE_EXECUTION_TOOL_RESULT =
+            CodeExecutionToolResultBlock.builder()
+                .content(
+                    CodeExecutionToolResultBlockContent.ofError(
+                        CodeExecutionToolResultError.builder()
+                            .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
+                            .build()
+                    )
+                )
+                .toolUseId(STRING)
+                .build()
+        private val BASH_CODE_EXECUTION_TOOL_RESULT =
+            BashCodeExecutionToolResultBlock.builder()
+                .content(
+                    BashCodeExecutionToolResultBlock.Content.ofBashCodeExecutionToolResultError(
+                        BashCodeExecutionToolResultError.builder()
+                            .errorCode(BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
+                            .build()
+                    )
+                )
+                .toolUseId(STRING)
+                .build()
+        private val TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT =
+            TextEditorCodeExecutionToolResultBlock.builder()
+                .content(
+                    TextEditorCodeExecutionToolResultBlock.Content
+                        .ofTextEditorCodeExecutionToolResultError(
+                            TextEditorCodeExecutionToolResultError.builder()
+                                .errorCode(
+                                    TextEditorCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                                )
+                                .errorMessage(STRING)
+                                .build()
+                        )
+                )
+                .toolUseId(STRING)
+                .build()
+        private val TOOL_SEARCH_TOOL_RESULT =
+            ToolSearchToolResultBlock.builder()
+                .content(
+                    ToolSearchToolResultBlock.Content.ofToolSearchToolResultError(
+                        ToolSearchToolResultError.builder()
+                            .errorCode(ToolSearchToolResultErrorCode.INVALID_TOOL_INPUT)
+                            .errorMessage(STRING)
+                            .build()
+                    )
+                )
+                .toolUseId(STRING)
+                .build()
+        private val CONTAINER_UPLOAD = ContainerUploadBlock.builder().fileId(STRING).build()
 
         // The list order follows the declaration order in `ContentBlock` for easier
         // maintenance.
@@ -62,6 +135,12 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("toolUse", OPTIONAL),
                 DelegationReadTestCase("serverToolUse", OPTIONAL),
                 DelegationReadTestCase("webSearchToolResult", OPTIONAL),
+                DelegationReadTestCase("webFetchToolResult", OPTIONAL),
+                DelegationReadTestCase("codeExecutionToolResult", OPTIONAL),
+                DelegationReadTestCase("bashCodeExecutionToolResult", OPTIONAL),
+                DelegationReadTestCase("textEditorCodeExecutionToolResult", OPTIONAL),
+                DelegationReadTestCase("toolSearchToolResult", OPTIONAL),
+                DelegationReadTestCase("containerUpload", OPTIONAL),
                 // `isText()` is a special case and has its own test function.
                 // For the Boolean functions, call each in turn with both `true` and `false` to
                 // ensure that a return value is not hard-coded.
@@ -75,12 +154,36 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("isServerToolUse", false),
                 DelegationReadTestCase("isWebSearchToolResult", true),
                 DelegationReadTestCase("isWebSearchToolResult", false),
+                DelegationReadTestCase("isWebFetchToolResult", true),
+                DelegationReadTestCase("isWebFetchToolResult", false),
+                DelegationReadTestCase("isCodeExecutionToolResult", true),
+                DelegationReadTestCase("isCodeExecutionToolResult", false),
+                DelegationReadTestCase("isBashCodeExecutionToolResult", true),
+                DelegationReadTestCase("isBashCodeExecutionToolResult", false),
+                DelegationReadTestCase("isTextEditorCodeExecutionToolResult", true),
+                DelegationReadTestCase("isTextEditorCodeExecutionToolResult", false),
+                DelegationReadTestCase("isToolSearchToolResult", true),
+                DelegationReadTestCase("isToolSearchToolResult", false),
+                DelegationReadTestCase("isContainerUpload", true),
+                DelegationReadTestCase("isContainerUpload", false),
                 // `asText()` is a special case and has its own test function.
                 DelegationReadTestCase("asThinking", THINKING),
                 DelegationReadTestCase("asRedactedThinking", REDACTED_THINKING),
                 DelegationReadTestCase("asToolUse", TOOL_USE),
                 DelegationReadTestCase("asServerToolUse", SERVER_TOOL_USE),
                 DelegationReadTestCase("asWebSearchToolResult", WEB_SEARCH_TOOL_RESULT),
+                DelegationReadTestCase("asWebFetchToolResult", WEB_FETCH_TOOL_RESULT),
+                DelegationReadTestCase("asCodeExecutionToolResult", CODE_EXECUTION_TOOL_RESULT),
+                DelegationReadTestCase(
+                    "asBashCodeExecutionToolResult",
+                    BASH_CODE_EXECUTION_TOOL_RESULT,
+                ),
+                DelegationReadTestCase(
+                    "asTextEditorCodeExecutionToolResult",
+                    TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT,
+                ),
+                DelegationReadTestCase("asToolSearchToolResult", TOOL_SEARCH_TOOL_RESULT),
+                DelegationReadTestCase("asContainerUpload", CONTAINER_UPLOAD),
                 DelegationReadTestCase("_json", OPTIONAL),
             )
     }

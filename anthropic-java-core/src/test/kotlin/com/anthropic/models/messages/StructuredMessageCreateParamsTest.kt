@@ -167,6 +167,28 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("addTool", ToolTextEditor20250429.builder().build()),
                 DelegationWriteTestCase("addTool", ToolTextEditor20250728.builder().build()),
                 DelegationWriteTestCase("addTool", WebSearchTool20250305.builder().build()),
+                DelegationWriteTestCase("addTool", WebFetchTool20250910.builder().build()),
+                DelegationWriteTestCase("addTool", CodeExecutionTool20250522.builder().build()),
+                DelegationWriteTestCase("addTool", CodeExecutionTool20250825.builder().build()),
+                DelegationWriteTestCase("addTool", CodeExecutionTool20260120.builder().build()),
+                DelegationWriteTestCase("addTool", MemoryTool20250818.builder().build()),
+                DelegationWriteTestCase("addTool", WebSearchTool20260209.builder().build()),
+                DelegationWriteTestCase("addTool", WebFetchTool20260209.builder().build()),
+                DelegationWriteTestCase(
+                    "addTool",
+                    ToolSearchToolBm25_20251119.builder()
+                        .type(ToolSearchToolBm25_20251119.Type.TOOL_SEARCH_TOOL_BM25_20251119)
+                        .build(),
+                ),
+                DelegationWriteTestCase(
+                    "addTool",
+                    ToolSearchToolRegex20251119.builder()
+                        .type(ToolSearchToolRegex20251119.Type.TOOL_SEARCH_TOOL_REGEX_20251119)
+                        .build(),
+                ),
+                DelegationWriteTestCase("container", null as String?),
+                DelegationWriteTestCase("container", java.util.Optional.of("test")),
+                DelegationWriteTestCase("container", JsonField.of("test")),
                 DelegationWriteTestCase("topK", 10L),
                 DelegationWriteTestCase("topK", JsonField.of(10L)),
                 DelegationWriteTestCase("topP", 0.9),

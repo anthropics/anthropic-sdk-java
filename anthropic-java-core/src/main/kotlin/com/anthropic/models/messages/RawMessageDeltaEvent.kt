@@ -358,7 +358,7 @@ private constructor(
         /** A builder for [Delta]. */
         class Builder internal constructor() {
 
-            private var container: JsonField<Container>? = null
+            private var container: JsonField<Container> = JsonMissing.of()
             private var stopReason: JsonField<StopReason>? = null
             private var stopSequence: JsonField<String>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()

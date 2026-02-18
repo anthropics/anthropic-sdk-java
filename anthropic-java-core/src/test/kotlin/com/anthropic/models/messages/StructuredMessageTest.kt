@@ -57,12 +57,14 @@ internal class StructuredMessageTest {
                 // `content()` is a special case and has its own test function.
                 DelegationReadTestCase("model", MODEL),
                 DelegationReadTestCase("_role", JSON_VALUE),
+                DelegationReadTestCase("container", OPTIONAL),
                 DelegationReadTestCase("stopReason", OPTIONAL),
                 DelegationReadTestCase("stopSequence", OPTIONAL),
                 DelegationReadTestCase("_type", JSON_VALUE),
                 DelegationReadTestCase("usage", USAGE),
                 DelegationReadTestCase("_id", JSON_FIELD),
                 // `_content()` is a special case and has its own test function.
+                DelegationReadTestCase("_container", JSON_FIELD),
                 DelegationReadTestCase("_model", JSON_FIELD),
                 DelegationReadTestCase("_stopReason", JSON_FIELD),
                 DelegationReadTestCase("_stopSequence", JSON_FIELD),
