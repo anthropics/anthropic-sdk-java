@@ -13,11 +13,11 @@ internal class WebSearchToolResultErrorTest {
     fun create() {
         val webSearchToolResultError =
             WebSearchToolResultError.builder()
-                .errorCode(WebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                .errorCode(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                 .build()
 
         assertThat(webSearchToolResultError.errorCode())
-            .isEqualTo(WebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+            .isEqualTo(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
     }
 
     @Test
@@ -25,7 +25,7 @@ internal class WebSearchToolResultErrorTest {
         val jsonMapper = jsonMapper()
         val webSearchToolResultError =
             WebSearchToolResultError.builder()
-                .errorCode(WebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                .errorCode(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                 .build()
 
         val roundtrippedWebSearchToolResultError =

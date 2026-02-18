@@ -267,7 +267,7 @@ internal class ContentBlockTest {
                 .caller(DirectCaller.builder().build())
                 .content(
                     WebSearchToolResultError.builder()
-                        .errorCode(WebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                        .errorCode(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                         .build()
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
@@ -298,7 +298,7 @@ internal class ContentBlockTest {
                     .caller(DirectCaller.builder().build())
                     .content(
                         WebSearchToolResultError.builder()
-                            .errorCode(WebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                            .errorCode(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                             .build()
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
