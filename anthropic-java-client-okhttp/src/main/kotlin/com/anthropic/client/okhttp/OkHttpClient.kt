@@ -35,7 +35,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import okio.BufferedSink
 
 class OkHttpClient
-private constructor(
+internal constructor(
     @JvmSynthetic internal val okHttpClient: okhttp3.OkHttpClient,
     private val backend: Backend,
 ) : HttpClient {
