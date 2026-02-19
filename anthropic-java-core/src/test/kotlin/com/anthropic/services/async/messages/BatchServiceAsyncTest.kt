@@ -213,7 +213,7 @@ internal class BatchServiceAsyncTest {
         messageBatch.validate()
     }
 
-    @Disabled("Prism doesn't support application/x-jsonl responses")
+    @Disabled("Mock server doesn't support application/x-jsonl responses")
     @Test
     fun resultsStreaming() {
         val client =
