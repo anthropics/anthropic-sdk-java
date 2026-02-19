@@ -55,7 +55,7 @@ internal class StructuredContentBlockTest {
                 .content(
                     WebSearchToolResultBlockContent.ofError(
                         WebSearchToolResultError.builder()
-                            .errorCode(WebSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                            .errorCode(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                             .build()
                     )
                 )
