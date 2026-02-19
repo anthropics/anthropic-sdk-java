@@ -1,5 +1,32 @@
 # Changelog
 
+## 2.15.0 (2026-02-19)
+
+Full Changelog: [v2.14.0...v2.15.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.14.0...v2.15.0)
+
+### Features
+
+* **api:** Add top-level cache control (automatic caching) ([836d140](https://github.com/anthropics/anthropic-sdk-java/commit/836d1404cc10991d4a2924f419ed30c4dbf45bd6))
+* **api:** Deprecate haiku-3 ([a04dca8](https://github.com/anthropics/anthropic-sdk-java/commit/a04dca8b80e54b8452f17c325bae0cd56e238346))
+* **api:** fix shared UserLocation and error code types ([8b2a797](https://github.com/anthropics/anthropic-sdk-java/commit/8b2a797e1188dbebaa9993f827ab403475e301ab))
+* **api:** manual updates ([148cd98](https://github.com/anthropics/anthropic-sdk-java/commit/148cd98279808a746f7912f5df53600963d1b595))
+* **api:** Releasing claude-sonnet-4-6 ([b32f5d2](https://github.com/anthropics/anthropic-sdk-java/commit/b32f5d2f33ccc2770713316b5b8c6c025d4e6b3a))
+* **client:** add connection pooling option ([5064a08](https://github.com/anthropics/anthropic-sdk-java/commit/5064a0881e55871091f30b9a59e3760cb36e50f2))
+
+
+### Bug Fixes
+
+* **api:** fix spec errors ([5f7a7e6](https://github.com/anthropics/anthropic-sdk-java/commit/5f7a7e685adc648be1ad90f6f43e512c4bbb31a0))
+* resolve build issues ([#829](https://github.com/anthropics/anthropic-sdk-java/issues/829)) ([f72bfa9](https://github.com/anthropics/anthropic-sdk-java/commit/f72bfa9812e91516d4f7ac7d14c204736a60455c))
+* resolve changed ref ([#833](https://github.com/anthropics/anthropic-sdk-java/issues/833)) ([29ecece](https://github.com/anthropics/anthropic-sdk-java/commit/29ececed9a903c34de6e41034134aedd0350755b))
+
+
+### Chores
+
+* **internal:** make `OkHttp` constructor internal ([eadeb1b](https://github.com/anthropics/anthropic-sdk-java/commit/eadeb1bc26897d54812cf3f341be66fe4bd061e3))
+* **internal:** update `TestServerExtension` comment ([01ee3fb](https://github.com/anthropics/anthropic-sdk-java/commit/01ee3fb2cc094e7670f7089da393e067df18488b))
+* update mock server docs ([034370b](https://github.com/anthropics/anthropic-sdk-java/commit/034370b91452dc00c2ccda426abede5e2c9e27ba))
+
 ## 2.14.0 (2026-02-07)
 
 Full Changelog: [v2.13.0...v2.14.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.13.0...v2.14.0)
