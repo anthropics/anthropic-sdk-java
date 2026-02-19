@@ -49,6 +49,11 @@ internal class MessageServiceTest {
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_OPUS_4_6)
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .container(
                         BetaContainerParams.builder()
                             .id("id")
@@ -205,6 +210,11 @@ internal class MessageServiceTest {
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_OPUS_4_6)
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .container(
                         BetaContainerParams.builder()
                             .id("id")
@@ -362,6 +372,11 @@ internal class MessageServiceTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_OPUS_4_6)
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .contextManagement(
                         BetaContextManagementConfig.builder()
                             .addEdit(

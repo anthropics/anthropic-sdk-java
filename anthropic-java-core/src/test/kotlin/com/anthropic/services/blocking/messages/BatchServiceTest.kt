@@ -42,6 +42,11 @@ internal class BatchServiceTest {
                                     .maxTokens(1024L)
                                     .addUserMessage("Hello, world")
                                     .model(Model.CLAUDE_OPUS_4_6)
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
                                     .container("container")
                                     .inferenceGeo("inference_geo")
                                     .metadata(

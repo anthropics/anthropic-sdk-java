@@ -14,6 +14,9 @@ internal class MessageCountTokensParamsTest {
         MessageCountTokensParams.builder()
             .addUserMessage("Hello, world")
             .model(Model.CLAUDE_OPUS_4_6)
+            .cacheControl(
+                CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+            )
             .outputConfig(
                 OutputConfig.builder()
                     .effort(OutputConfig.Effort.LOW)
@@ -92,6 +95,9 @@ internal class MessageCountTokensParamsTest {
             MessageCountTokensParams.builder()
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_4_6)
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .outputConfig(
                     OutputConfig.builder()
                         .effort(OutputConfig.Effort.LOW)
@@ -170,6 +176,8 @@ internal class MessageCountTokensParamsTest {
                 MessageParam.builder().content("Hello, world").role(MessageParam.Role.USER).build()
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_6)
+        assertThat(body.cacheControl())
+            .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
         assertThat(body.outputConfig())
             .contains(
                 OutputConfig.builder()
