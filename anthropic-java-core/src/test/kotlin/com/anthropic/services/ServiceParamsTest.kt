@@ -54,6 +54,9 @@ internal class ServiceParamsTest {
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_4_6)
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .container("container")
                 .inferenceGeo("inference_geo")
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())

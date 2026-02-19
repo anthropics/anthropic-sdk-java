@@ -141,6 +141,15 @@ private constructor(
     fun model(): Model = body.model()
 
     /**
+     * Top-level cache control automatically applies a cache_control marker to the last cacheable
+     * block in the request.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun cacheControl(): Optional<BetaCacheControlEphemeral> = body.cacheControl()
+
+    /**
      * Container identifier for reuse across requests.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -416,6 +425,13 @@ private constructor(
     fun _model(): JsonField<Model> = body._model()
 
     /**
+     * Returns the raw JSON value of [cacheControl].
+     *
+     * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = body._cacheControl()
+
+    /**
      * Returns the raw JSON value of [container].
      *
      * Unlike [container], this method doesn't throw if the JSON field has an unexpected type.
@@ -609,8 +625,8 @@ private constructor(
          * - [maxTokens]
          * - [messages]
          * - [model]
+         * - [cacheControl]
          * - [container]
-         * - [contextManagement]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -787,6 +803,29 @@ private constructor(
          * is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun model(value: String) = apply { body.model(value) }
+
+        /**
+         * Top-level cache control automatically applies a cache_control marker to the last
+         * cacheable block in the request.
+         */
+        fun cacheControl(cacheControl: BetaCacheControlEphemeral?) = apply {
+            body.cacheControl(cacheControl)
+        }
+
+        /** Alias for calling [Builder.cacheControl] with `cacheControl.orElse(null)`. */
+        fun cacheControl(cacheControl: Optional<BetaCacheControlEphemeral>) =
+            cacheControl(cacheControl.getOrNull())
+
+        /**
+         * Sets [Builder.cacheControl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.cacheControl] with a well-typed
+         * [BetaCacheControlEphemeral] value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
+         */
+        fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
+            body.cacheControl(cacheControl)
+        }
 
         /** Container identifier for reuse across requests. */
         fun container(container: Container?) = apply { body.container(container) }
@@ -1566,6 +1605,7 @@ private constructor(
         private val maxTokens: JsonField<Long>,
         private val messages: JsonField<List<BetaMessageParam>>,
         private val model: JsonField<Model>,
+        private val cacheControl: JsonField<BetaCacheControlEphemeral>,
         private val container: JsonField<Container>,
         private val contextManagement: JsonField<BetaContextManagementConfig>,
         private val inferenceGeo: JsonField<String>,
@@ -1595,6 +1635,9 @@ private constructor(
             @ExcludeMissing
             messages: JsonField<List<BetaMessageParam>> = JsonMissing.of(),
             @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
+            @JsonProperty("cache_control")
+            @ExcludeMissing
+            cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
             @JsonProperty("container")
             @ExcludeMissing
             container: JsonField<Container> = JsonMissing.of(),
@@ -1642,6 +1685,7 @@ private constructor(
             maxTokens,
             messages,
             model,
+            cacheControl,
             container,
             contextManagement,
             inferenceGeo,
@@ -1748,6 +1792,16 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun model(): Model = model.getRequired("model")
+
+        /**
+         * Top-level cache control automatically applies a cache_control marker to the last
+         * cacheable block in the request.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun cacheControl(): Optional<BetaCacheControlEphemeral> =
+            cacheControl.getOptional("cache_control")
 
         /**
          * Container identifier for reuse across requests.
@@ -2032,6 +2086,16 @@ private constructor(
         @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
 
         /**
+         * Returns the raw JSON value of [cacheControl].
+         *
+         * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("cache_control")
+        @ExcludeMissing
+        fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
+
+        /**
          * Returns the raw JSON value of [container].
          *
          * Unlike [container], this method doesn't throw if the JSON field has an unexpected type.
@@ -2213,6 +2277,7 @@ private constructor(
             private var maxTokens: JsonField<Long>? = null
             private var messages: JsonField<MutableList<BetaMessageParam>>? = null
             private var model: JsonField<Model>? = null
+            private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
             private var container: JsonField<Container> = JsonMissing.of()
             private var contextManagement: JsonField<BetaContextManagementConfig> = JsonMissing.of()
             private var inferenceGeo: JsonField<String> = JsonMissing.of()
@@ -2238,6 +2303,7 @@ private constructor(
                 maxTokens = body.maxTokens
                 messages = body.messages.map { it.toMutableList() }
                 model = body.model
+                cacheControl = body.cacheControl
                 container = body.container
                 contextManagement = body.contextManagement
                 inferenceGeo = body.inferenceGeo
@@ -2458,6 +2524,28 @@ private constructor(
              * value.
              */
             fun model(value: String) = model(Model.of(value))
+
+            /**
+             * Top-level cache control automatically applies a cache_control marker to the last
+             * cacheable block in the request.
+             */
+            fun cacheControl(cacheControl: BetaCacheControlEphemeral?) =
+                cacheControl(JsonField.ofNullable(cacheControl))
+
+            /** Alias for calling [Builder.cacheControl] with `cacheControl.orElse(null)`. */
+            fun cacheControl(cacheControl: Optional<BetaCacheControlEphemeral>) =
+                cacheControl(cacheControl.getOrNull())
+
+            /**
+             * Sets [Builder.cacheControl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.cacheControl] with a well-typed
+             * [BetaCacheControlEphemeral] value instead. This method is primarily for setting the
+             * field to an undocumented or not yet supported value.
+             */
+            fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
+                this.cacheControl = cacheControl
+            }
 
             /** Container identifier for reuse across requests. */
             fun container(container: Container?) = container(JsonField.ofNullable(container))
@@ -3134,6 +3222,7 @@ private constructor(
                     checkRequired("maxTokens", maxTokens),
                     checkRequired("messages", messages).map { it.toImmutable() },
                     checkRequired("model", model),
+                    cacheControl,
                     container,
                     contextManagement,
                     inferenceGeo,
@@ -3165,6 +3254,7 @@ private constructor(
             maxTokens()
             messages().forEach { it.validate() }
             model()
+            cacheControl().ifPresent { it.validate() }
             container().ifPresent { it.validate() }
             contextManagement().ifPresent { it.validate() }
             inferenceGeo()
@@ -3204,6 +3294,7 @@ private constructor(
             (if (maxTokens.asKnown().isPresent) 1 else 0) +
                 (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (model.asKnown().isPresent) 1 else 0) +
+                (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
                 (container.asKnown().getOrNull()?.validity() ?: 0) +
                 (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (inferenceGeo.asKnown().isPresent) 1 else 0) +
@@ -3231,6 +3322,7 @@ private constructor(
                 maxTokens == other.maxTokens &&
                 messages == other.messages &&
                 model == other.model &&
+                cacheControl == other.cacheControl &&
                 container == other.container &&
                 contextManagement == other.contextManagement &&
                 inferenceGeo == other.inferenceGeo &&
@@ -3256,6 +3348,7 @@ private constructor(
                 maxTokens,
                 messages,
                 model,
+                cacheControl,
                 container,
                 contextManagement,
                 inferenceGeo,
@@ -3280,7 +3373,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, container=$container, contextManagement=$contextManagement, inferenceGeo=$inferenceGeo, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, cacheControl=$cacheControl, container=$container, contextManagement=$contextManagement, inferenceGeo=$inferenceGeo, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
     }
 
     /** Container identifier for reuse across requests. */

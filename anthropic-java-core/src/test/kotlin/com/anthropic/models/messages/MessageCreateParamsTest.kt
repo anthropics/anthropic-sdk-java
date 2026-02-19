@@ -15,6 +15,9 @@ internal class MessageCreateParamsTest {
             .maxTokens(1024L)
             .addUserMessage("Hello, world")
             .model(Model.CLAUDE_OPUS_4_6)
+            .cacheControl(
+                CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+            )
             .container("container")
             .inferenceGeo("inference_geo")
             .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
@@ -102,6 +105,9 @@ internal class MessageCreateParamsTest {
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_4_6)
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
                 .container("container")
                 .inferenceGeo("inference_geo")
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
@@ -189,6 +195,8 @@ internal class MessageCreateParamsTest {
                 MessageParam.builder().content("Hello, world").role(MessageParam.Role.USER).build()
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_6)
+        assertThat(body.cacheControl())
+            .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
         assertThat(body.container()).contains("container")
         assertThat(body.inferenceGeo()).contains("inference_geo")
         assertThat(body.metadata())

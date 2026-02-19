@@ -761,11 +761,11 @@ To set undocumented parameters on _nested_ headers, query params, or body classe
 
 ```java
 import com.anthropic.core.JsonValue;
+import com.anthropic.models.messages.CacheControlEphemeral;
 import com.anthropic.models.messages.MessageCreateParams;
-import com.anthropic.models.messages.Metadata;
 
 MessageCreateParams params = MessageCreateParams.builder()
-    .metadata(Metadata.builder()
+    .cacheControl(CacheControlEphemeral.builder()
         .putAdditionalProperty("secretProperty", JsonValue.from("42"))
         .build())
     .build();
