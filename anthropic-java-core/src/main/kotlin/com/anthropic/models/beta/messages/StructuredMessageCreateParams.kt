@@ -157,6 +157,21 @@ internal constructor(
         /** @see MessageCreateParams.Builder.model */
         fun model(value: String) = apply { paramsBuilder.model(value) }
 
+        /** @see MessageCreateParams.Builder.cacheControl */
+        fun cacheControl(cacheControl: BetaCacheControlEphemeral?) = apply {
+            paramsBuilder.cacheControl(cacheControl)
+        }
+
+        /** @see MessageCreateParams.Builder.cacheControl */
+        fun cacheControl(cacheControl: Optional<BetaCacheControlEphemeral>) = apply {
+            paramsBuilder.cacheControl(cacheControl)
+        }
+
+        /** @see MessageCreateParams.Builder.cacheControl */
+        fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
+            paramsBuilder.cacheControl(cacheControl)
+        }
+
         /** @see MessageCreateParams.Builder.container */
         fun container(container: MessageCreateParams.Container?) = apply {
             paramsBuilder.container(container)

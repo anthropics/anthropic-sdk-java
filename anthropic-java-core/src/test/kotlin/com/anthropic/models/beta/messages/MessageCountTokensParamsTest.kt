@@ -18,6 +18,11 @@ internal class MessageCountTokensParamsTest {
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .addUserMessage("Hello, world")
             .model(Model.CLAUDE_OPUS_4_6)
+            .cacheControl(
+                BetaCacheControlEphemeral.builder()
+                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                    .build()
+            )
             .contextManagement(
                 BetaContextManagementConfig.builder()
                     .addEdit(
@@ -133,6 +138,11 @@ internal class MessageCountTokensParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_4_6)
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .contextManagement(
                     BetaContextManagementConfig.builder()
                         .addEdit(
@@ -270,6 +280,11 @@ internal class MessageCountTokensParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_4_6)
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
                 .contextManagement(
                     BetaContextManagementConfig.builder()
                         .addEdit(
@@ -389,6 +404,12 @@ internal class MessageCountTokensParamsTest {
                     .build()
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_6)
+        assertThat(body.cacheControl())
+            .contains(
+                BetaCacheControlEphemeral.builder()
+                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                    .build()
+            )
         assertThat(body.contextManagement())
             .contains(
                 BetaContextManagementConfig.builder()

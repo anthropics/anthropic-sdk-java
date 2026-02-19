@@ -83,6 +83,15 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("model", Model.CLAUDE_4_SONNET_20250514),
                 DelegationWriteTestCase("model", JsonField.of(Model.CLAUDE_4_SONNET_20250514)),
                 DelegationWriteTestCase("model", "claude-4-sonnet-20250514"),
+                DelegationWriteTestCase("cacheControl", null as CacheControlEphemeral?),
+                DelegationWriteTestCase(
+                    "cacheControl",
+                    java.util.Optional.of(CacheControlEphemeral.builder().build()),
+                ),
+                DelegationWriteTestCase(
+                    "cacheControl",
+                    JsonField.of(CacheControlEphemeral.builder().build()),
+                ),
                 DelegationWriteTestCase("metadata", Metadata.builder().build()),
                 DelegationWriteTestCase("metadata", JsonField.of(Metadata.builder().build())),
                 DelegationWriteTestCase("outputConfig", OutputConfig.builder().build()),

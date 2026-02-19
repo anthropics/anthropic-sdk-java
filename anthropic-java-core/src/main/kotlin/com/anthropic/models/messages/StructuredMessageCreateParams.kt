@@ -127,6 +127,21 @@ internal constructor(
         /** @see MessageCreateParams.Builder.model */
         fun model(value: String) = apply { paramsBuilder.model(value) }
 
+        /** @see MessageCreateParams.Builder.cacheControl */
+        fun cacheControl(cacheControl: CacheControlEphemeral?) = apply {
+            paramsBuilder.cacheControl(cacheControl)
+        }
+
+        /** @see MessageCreateParams.Builder.cacheControl */
+        fun cacheControl(cacheControl: Optional<CacheControlEphemeral>) = apply {
+            paramsBuilder.cacheControl(cacheControl)
+        }
+
+        /** @see MessageCreateParams.Builder.cacheControl */
+        fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
+            paramsBuilder.cacheControl(cacheControl)
+        }
+
         /** @see MessageCreateParams.Builder.inferenceGeo */
         fun inferenceGeo(inferenceGeo: String?) = apply { paramsBuilder.inferenceGeo(inferenceGeo) }
 

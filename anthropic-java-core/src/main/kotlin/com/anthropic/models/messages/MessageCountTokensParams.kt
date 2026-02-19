@@ -120,6 +120,15 @@ private constructor(
     fun model(): Model = body.model()
 
     /**
+     * Top-level cache control automatically applies a cache_control marker to the last cacheable
+     * block in the request.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun cacheControl(): Optional<CacheControlEphemeral> = body.cacheControl()
+
+    /**
      * Configuration options for the model's output, such as the output format.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -253,6 +262,13 @@ private constructor(
     fun _model(): JsonField<Model> = body._model()
 
     /**
+     * Returns the raw JSON value of [cacheControl].
+     *
+     * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _cacheControl(): JsonField<CacheControlEphemeral> = body._cacheControl()
+
+    /**
      * Returns the raw JSON value of [outputConfig].
      *
      * Unlike [outputConfig], this method doesn't throw if the JSON field has an unexpected type.
@@ -332,9 +348,9 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [messages]
          * - [model]
+         * - [cacheControl]
          * - [outputConfig]
          * - [system]
-         * - [thinking]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -486,6 +502,29 @@ private constructor(
          * is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun model(value: String) = apply { body.model(value) }
+
+        /**
+         * Top-level cache control automatically applies a cache_control marker to the last
+         * cacheable block in the request.
+         */
+        fun cacheControl(cacheControl: CacheControlEphemeral?) = apply {
+            body.cacheControl(cacheControl)
+        }
+
+        /** Alias for calling [Builder.cacheControl] with `cacheControl.orElse(null)`. */
+        fun cacheControl(cacheControl: Optional<CacheControlEphemeral>) =
+            cacheControl(cacheControl.getOrNull())
+
+        /**
+         * Sets [Builder.cacheControl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.cacheControl] with a well-typed [CacheControlEphemeral]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
+            body.cacheControl(cacheControl)
+        }
 
         /** Configuration options for the model's output, such as the output format. */
         fun outputConfig(outputConfig: OutputConfig) = apply { body.outputConfig(outputConfig) }
@@ -955,6 +994,7 @@ private constructor(
     private constructor(
         private val messages: JsonField<List<MessageParam>>,
         private val model: JsonField<Model>,
+        private val cacheControl: JsonField<CacheControlEphemeral>,
         private val outputConfig: JsonField<OutputConfig>,
         private val system: JsonField<System>,
         private val thinking: JsonField<ThinkingConfigParam>,
@@ -969,6 +1009,9 @@ private constructor(
             @ExcludeMissing
             messages: JsonField<List<MessageParam>> = JsonMissing.of(),
             @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
+            @JsonProperty("cache_control")
+            @ExcludeMissing
+            cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of(),
             @JsonProperty("output_config")
             @ExcludeMissing
             outputConfig: JsonField<OutputConfig> = JsonMissing.of(),
@@ -982,7 +1025,17 @@ private constructor(
             @JsonProperty("tools")
             @ExcludeMissing
             tools: JsonField<List<MessageCountTokensTool>> = JsonMissing.of(),
-        ) : this(messages, model, outputConfig, system, thinking, toolChoice, tools, mutableMapOf())
+        ) : this(
+            messages,
+            model,
+            cacheControl,
+            outputConfig,
+            system,
+            thinking,
+            toolChoice,
+            tools,
+            mutableMapOf(),
+        )
 
         /**
          * Input messages.
@@ -1056,6 +1109,16 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun model(): Model = model.getRequired("model")
+
+        /**
+         * Top-level cache control automatically applies a cache_control marker to the last
+         * cacheable block in the request.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun cacheControl(): Optional<CacheControlEphemeral> =
+            cacheControl.getOptional("cache_control")
 
         /**
          * Configuration options for the model's output, such as the output format.
@@ -1195,6 +1258,16 @@ private constructor(
         @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
 
         /**
+         * Returns the raw JSON value of [cacheControl].
+         *
+         * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("cache_control")
+        @ExcludeMissing
+        fun _cacheControl(): JsonField<CacheControlEphemeral> = cacheControl
+
+        /**
          * Returns the raw JSON value of [outputConfig].
          *
          * Unlike [outputConfig], this method doesn't throw if the JSON field has an unexpected
@@ -1269,6 +1342,7 @@ private constructor(
 
             private var messages: JsonField<MutableList<MessageParam>>? = null
             private var model: JsonField<Model>? = null
+            private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
             private var outputConfig: JsonField<OutputConfig> = JsonMissing.of()
             private var system: JsonField<System> = JsonMissing.of()
             private var thinking: JsonField<ThinkingConfigParam> = JsonMissing.of()
@@ -1280,6 +1354,7 @@ private constructor(
             internal fun from(body: Body) = apply {
                 messages = body.messages.map { it.toMutableList() }
                 model = body.model
+                cacheControl = body.cacheControl
                 outputConfig = body.outputConfig
                 system = body.system
                 thinking = body.thinking
@@ -1454,6 +1529,28 @@ private constructor(
              * value.
              */
             fun model(value: String) = model(Model.of(value))
+
+            /**
+             * Top-level cache control automatically applies a cache_control marker to the last
+             * cacheable block in the request.
+             */
+            fun cacheControl(cacheControl: CacheControlEphemeral?) =
+                cacheControl(JsonField.ofNullable(cacheControl))
+
+            /** Alias for calling [Builder.cacheControl] with `cacheControl.orElse(null)`. */
+            fun cacheControl(cacheControl: Optional<CacheControlEphemeral>) =
+                cacheControl(cacheControl.getOrNull())
+
+            /**
+             * Sets [Builder.cacheControl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.cacheControl] with a well-typed
+             * [CacheControlEphemeral] value instead. This method is primarily for setting the field
+             * to an undocumented or not yet supported value.
+             */
+            fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
+                this.cacheControl = cacheControl
+            }
 
             /** Configuration options for the model's output, such as the output format. */
             fun outputConfig(outputConfig: OutputConfig) = outputConfig(JsonField.of(outputConfig))
@@ -1828,6 +1925,7 @@ private constructor(
                 Body(
                     checkRequired("messages", messages).map { it.toImmutable() },
                     checkRequired("model", model),
+                    cacheControl,
                     outputConfig,
                     system,
                     thinking,
@@ -1846,6 +1944,7 @@ private constructor(
 
             messages().forEach { it.validate() }
             model()
+            cacheControl().ifPresent { it.validate() }
             outputConfig().ifPresent { it.validate() }
             system().ifPresent { it.validate() }
             thinking().ifPresent { it.validate() }
@@ -1872,6 +1971,7 @@ private constructor(
         internal fun validity(): Int =
             (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (model.asKnown().isPresent) 1 else 0) +
+                (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
                 (outputConfig.asKnown().getOrNull()?.validity() ?: 0) +
                 (system.asKnown().getOrNull()?.validity() ?: 0) +
                 (thinking.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1886,6 +1986,7 @@ private constructor(
             return other is Body &&
                 messages == other.messages &&
                 model == other.model &&
+                cacheControl == other.cacheControl &&
                 outputConfig == other.outputConfig &&
                 system == other.system &&
                 thinking == other.thinking &&
@@ -1898,6 +1999,7 @@ private constructor(
             Objects.hash(
                 messages,
                 model,
+                cacheControl,
                 outputConfig,
                 system,
                 thinking,
@@ -1910,7 +2012,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{messages=$messages, model=$model, outputConfig=$outputConfig, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
+            "Body{messages=$messages, model=$model, cacheControl=$cacheControl, outputConfig=$outputConfig, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
     }
 
     /**

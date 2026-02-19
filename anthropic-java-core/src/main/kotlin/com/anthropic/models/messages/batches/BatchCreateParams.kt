@@ -18,6 +18,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.messages.CacheControlEphemeral
 import com.anthropic.models.messages.CodeExecutionTool20250522
 import com.anthropic.models.messages.CodeExecutionTool20250825
 import com.anthropic.models.messages.CodeExecutionTool20260120
@@ -701,6 +702,7 @@ private constructor(
             private val maxTokens: JsonField<Long>,
             private val messages: JsonField<List<MessageParam>>,
             private val model: JsonField<Model>,
+            private val cacheControl: JsonField<CacheControlEphemeral>,
             private val container: JsonField<String>,
             private val inferenceGeo: JsonField<String>,
             private val metadata: JsonField<Metadata>,
@@ -727,6 +729,9 @@ private constructor(
                 @ExcludeMissing
                 messages: JsonField<List<MessageParam>> = JsonMissing.of(),
                 @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
+                @JsonProperty("cache_control")
+                @ExcludeMissing
+                cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of(),
                 @JsonProperty("container")
                 @ExcludeMissing
                 container: JsonField<String> = JsonMissing.of(),
@@ -769,6 +774,7 @@ private constructor(
                 maxTokens,
                 messages,
                 model,
+                cacheControl,
                 container,
                 inferenceGeo,
                 metadata,
@@ -876,6 +882,16 @@ private constructor(
              *   value).
              */
             fun model(): Model = model.getRequired("model")
+
+            /**
+             * Top-level cache control automatically applies a cache_control marker to the last
+             * cacheable block in the request.
+             *
+             * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun cacheControl(): Optional<CacheControlEphemeral> =
+                cacheControl.getOptional("cache_control")
 
             /**
              * Container identifier for reuse across requests.
@@ -1132,6 +1148,16 @@ private constructor(
             @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
 
             /**
+             * Returns the raw JSON value of [cacheControl].
+             *
+             * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("cache_control")
+            @ExcludeMissing
+            fun _cacheControl(): JsonField<CacheControlEphemeral> = cacheControl
+
+            /**
              * Returns the raw JSON value of [container].
              *
              * Unlike [container], this method doesn't throw if the JSON field has an unexpected
@@ -1289,6 +1315,7 @@ private constructor(
                 private var maxTokens: JsonField<Long>? = null
                 private var messages: JsonField<MutableList<MessageParam>>? = null
                 private var model: JsonField<Model>? = null
+                private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
                 private var container: JsonField<String> = JsonMissing.of()
                 private var inferenceGeo: JsonField<String> = JsonMissing.of()
                 private var metadata: JsonField<Metadata> = JsonMissing.of()
@@ -1310,6 +1337,7 @@ private constructor(
                     maxTokens = params.maxTokens
                     messages = params.messages.map { it.toMutableList() }
                     model = params.model
+                    cacheControl = params.cacheControl
                     container = params.container
                     inferenceGeo = params.inferenceGeo
                     metadata = params.metadata
@@ -1516,6 +1544,28 @@ private constructor(
                  * value.
                  */
                 fun model(value: String) = model(Model.of(value))
+
+                /**
+                 * Top-level cache control automatically applies a cache_control marker to the last
+                 * cacheable block in the request.
+                 */
+                fun cacheControl(cacheControl: CacheControlEphemeral?) =
+                    cacheControl(JsonField.ofNullable(cacheControl))
+
+                /** Alias for calling [Builder.cacheControl] with `cacheControl.orElse(null)`. */
+                fun cacheControl(cacheControl: Optional<CacheControlEphemeral>) =
+                    cacheControl(cacheControl.getOrNull())
+
+                /**
+                 * Sets [Builder.cacheControl] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.cacheControl] with a well-typed
+                 * [CacheControlEphemeral] value instead. This method is primarily for setting the
+                 * field to an undocumented or not yet supported value.
+                 */
+                fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
+                    this.cacheControl = cacheControl
+                }
 
                 /** Container identifier for reuse across requests. */
                 fun container(container: String?) = container(JsonField.ofNullable(container))
@@ -2067,6 +2117,7 @@ private constructor(
                         checkRequired("maxTokens", maxTokens),
                         checkRequired("messages", messages).map { it.toImmutable() },
                         checkRequired("model", model),
+                        cacheControl,
                         container,
                         inferenceGeo,
                         metadata,
@@ -2095,6 +2146,7 @@ private constructor(
                 maxTokens()
                 messages().forEach { it.validate() }
                 model()
+                cacheControl().ifPresent { it.validate() }
                 container()
                 inferenceGeo()
                 metadata().ifPresent { it.validate() }
@@ -2131,6 +2183,7 @@ private constructor(
                 (if (maxTokens.asKnown().isPresent) 1 else 0) +
                     (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                     (if (model.asKnown().isPresent) 1 else 0) +
+                    (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (container.asKnown().isPresent) 1 else 0) +
                     (if (inferenceGeo.asKnown().isPresent) 1 else 0) +
                     (metadata.asKnown().getOrNull()?.validity() ?: 0) +
@@ -2484,6 +2537,7 @@ private constructor(
                     maxTokens == other.maxTokens &&
                     messages == other.messages &&
                     model == other.model &&
+                    cacheControl == other.cacheControl &&
                     container == other.container &&
                     inferenceGeo == other.inferenceGeo &&
                     metadata == other.metadata &&
@@ -2506,6 +2560,7 @@ private constructor(
                     maxTokens,
                     messages,
                     model,
+                    cacheControl,
                     container,
                     inferenceGeo,
                     metadata,
@@ -2527,7 +2582,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Params{maxTokens=$maxTokens, messages=$messages, model=$model, container=$container, inferenceGeo=$inferenceGeo, metadata=$metadata, outputConfig=$outputConfig, serviceTier=$serviceTier, stopSequences=$stopSequences, stream=$stream, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+                "Params{maxTokens=$maxTokens, messages=$messages, model=$model, cacheControl=$cacheControl, container=$container, inferenceGeo=$inferenceGeo, metadata=$metadata, outputConfig=$outputConfig, serviceTier=$serviceTier, stopSequences=$stopSequences, stream=$stream, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {
