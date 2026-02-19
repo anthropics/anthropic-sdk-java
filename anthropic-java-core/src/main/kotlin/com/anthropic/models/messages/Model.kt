@@ -112,7 +112,11 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         val CLAUDE_3_OPUS_20240229 = of("claude-3-opus-20240229")
 
         /** Our previous most fast and cost-effective */
-        @JvmField val CLAUDE_3_HAIKU_20240307 = of("claude-3-haiku-20240307")
+        @Deprecated(
+            "Will reach end-of-life on April 20th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
+        @JvmField
+        val CLAUDE_3_HAIKU_20240307 = of("claude-3-haiku-20240307")
 
         @JvmStatic fun of(value: String) = Model(JsonField.of(value))
     }
@@ -180,6 +184,9 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         )
         /** Excels at writing and complex tasks */
         CLAUDE_3_OPUS_20240229,
+        @Deprecated(
+            "Will reach end-of-life on April 20th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Our previous most fast and cost-effective */
         CLAUDE_3_HAIKU_20240307,
     }
@@ -255,6 +262,9 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         )
         /** Excels at writing and complex tasks */
         CLAUDE_3_OPUS_20240229,
+        @Deprecated(
+            "Will reach end-of-life on April 20th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Our previous most fast and cost-effective */
         CLAUDE_3_HAIKU_20240307,
         /** An enum member indicating that [Model] was instantiated with an unknown value. */
