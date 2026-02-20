@@ -80,9 +80,31 @@ internal fun multipartFormData(
                 JsonNodeType.NUMBER ->
                     sequenceOf(name to node.numberValue().toString().inputStream())
                 JsonNodeType.ARRAY ->
-                    node.elements().asSequence().flatMap { element ->
-                        serializePart("$name[]", element)
-                    }
+                    sequenceOf(
+                        name to
+                            node
+                                .elements()
+                                .asSequence()
+                                .mapNotNull { element ->
+                                    when (element.nodeType) {
+                                        JsonNodeType.MISSING,
+                                        JsonNodeType.NULL -> null
+                                        JsonNodeType.STRING -> node.textValue()
+                                        JsonNodeType.BOOLEAN -> node.booleanValue().toString()
+                                        JsonNodeType.NUMBER -> node.numberValue().toString()
+                                        null,
+                                        JsonNodeType.BINARY,
+                                        JsonNodeType.ARRAY,
+                                        JsonNodeType.OBJECT,
+                                        JsonNodeType.POJO ->
+                                            throw AnthropicInvalidDataException(
+                                                "Unexpected JsonNode type in array: ${node.nodeType}"
+                                            )
+                                    }
+                                }
+                                .joinToString(",")
+                                .inputStream()
+                    )
                 JsonNodeType.OBJECT ->
                     node.fields().asSequence().flatMap { (key, value) ->
                         serializePart("$name[$key]", value)
