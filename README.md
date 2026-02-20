@@ -352,19 +352,19 @@ Message message = messageAccumulator.message();
 
 ## Structured outputs with JSON schemas
 
-Anthropic [Structured Outputs](https://docs.claude.com/docs/en/build-with-claude/structured-outputs)
-(beta) is a feature that ensures that the model will always generate responses that adhere to a
-supplied [JSON schema](https://json-schema.org/overview/what-is-jsonschema).
+Claude [Structured Outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs)
+is a feature that ensures that the model will always generate responses that adhere to a supplied
+[JSON schema](https://json-schema.org/overview/what-is-jsonschema).
 
-A JSON schema can be defined by creating a
-[`BetaJsonOutputFormat`](anthropic-java-core/src/main/kotlin/com/anthropic/models/beta/messages/BetaJsonOutputFormat.kt)
-and setting it on the input parameters. However, for greater convenience, a JSON schema can instead
-be derived automatically from the structure of an arbitrary Java class. The JSON content from the
-response will then be converted automatically to an instance of that Java class. A full, working
-example of the use of Structured Outputs with arbitrary Java classes can be seen in
-[`BetaStructuredOutputsExample`](anthropic-java-example/src/main/java/com/anthropic/example/BetaStructuredOutputsExample.java).
+You can define a JSON schema explicitly and set it on the input parameters (see
+[Creating JSON schemas without a Java class](#creating-json-schemas-without-a-java-class)), but for
+greater convenience, you can instead derive a JSON schema automatically from the structure of an 
+arbitrary Java class. The JSON content from the response will then be converted automatically to
+an instance of that Java class. A full, working example of the use of Structured Outputs with
+arbitrary Java classes can be seen in
+[`StructuredOutputsExample`](anthropic-java-example/src/main/java/com/anthropic/example/StructuredOutputsExample.java).
 
-Java classes can contain fields declared to be instances of other classes and can use collections
+Java classes can use inheritance, composition and collections
 (see [Defining JSON schema properties](#defining-json-schema-properties) for more details):
 
 ```java
@@ -384,34 +384,34 @@ class BookList {
 }
 ```
 
-Pass the top-level class—`BookList` in this example—to `outputFormat(Class<T>)` when building the
+Pass the top-level class—`BookList` in this example—to `outputConfig(Class<T>)` when building the
 parameters and then access an instance of `BookList` from the generated message content in the
 response:
 
 ```java
-import com.anthropic.models.beta.messages.MessageCreateParams;
-import com.anthropic.models.beta.messages.StructuredMessageCreateParams;
+import com.anthropic.models.messages.MessageCreateParams;
+import com.anthropic.models.messages.StructuredMessageCreateParams;
 import com.anthropic.models.messages.Model;
 
 StructuredMessageCreateParams<BookList> createParams = MessageCreateParams.builder()
-        .model(Model.CLAUDE_SONNET_4_20250514)
+        .model(Model.CLAUDE_SONNET_4_5_20250929)
         .maxTokens(2048)
-        .outputFormat(BookList.class)
+        .outputConfig(BookList.class)
         .addUserMessage("List some famous late twentieth century novels.")
         .build();
 
-client.beta().messages().create(createParams).content().stream()
+client.messages().create(createParams).content().stream()
         .flatMap(contentBlock -> contentBlock.text().stream())
         .flatMap(textBlock -> textBlock.text().books.stream())
         .forEach(book -> System.out.println(book.title + " by " + book.author.name));
 ```
 
 You can start building the parameters with an instance of
-[`MessageCreateParams.Builder`](anthropic-java-core/src/main/kotlin/com/anthropic/models/beta/messages/MessageCreateParams.kt)
+[`MessageCreateParams.Builder`](anthropic-java-core/src/main/kotlin/com/anthropic/models/messages/MessageCreateParams.kt)
 or
-[`StructuredMessageCreateParams.Builder`](anthropic-java-core/src/main/kotlin/com/anthropic/models/beta/messages/StructuredMessageCreateParams.kt).
+[`StructuredMessageCreateParams.Builder`](anthropic-java-core/src/main/kotlin/com/anthropic/models/messages/StructuredMessageCreateParams.kt).
 If you start with the former (which allows for more compact code) the builder type will change to
-the latter when `MessageCreateParams.Builder.outputFormat(Class<T>)` is called.
+the latter when `MessageCreateParams.Builder.outputConfig(Class<T>)` is called.
 
 If a field in a class is optional and does not require a defined value, you can represent this using
 the [`java.util.Optional`](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html) class.
@@ -437,7 +437,7 @@ local variable of that same type, so the following will _not_ work:
 List<Book> books = new ArrayList<>();
 
 StructuredMessageCreateParams<List<Book>> params = MessageCreateParams.builder()
-        .outputFormat(books.getClass())
+        .outputConfig(books.getClass())
         // ...
         .build();
 ```
@@ -454,9 +454,9 @@ _Structured Outputs_ supports a
 [subset](https://docs.claude.com/docs/en/build-with-claude/structured-outputs#json-schema-limitations)
 of the JSON Schema language. Schemas are generated automatically from classes to align with this
 subset. However, due to the inherent structure of the classes, the generated schema may still
-violate certain Anthropic schema restrictions, such as utilizing unsupported data types.
+violate certain Claude schema restrictions, such as utilizing unsupported data types.
 
-To facilitate compliance, the method `outputFormat(Class<T>)` performs a validation check on the
+To facilitate compliance, the method `outputConfig(Class<T>)` performs a validation check on the
 schema derived from the specified class. This validation ensures that all restrictions are adhered
 to. If any issues are detected, an exception will be thrown, providing a detailed message outlining
 the reasons for the validation failure.
@@ -472,19 +472,19 @@ the reasons for the validation failure.
 - **Disabling Local Validation**: If you encounter compatibility issues and wish to bypass local
   validation, you can disable it by passing
   [`JsonSchemaLocalValidation.NO`](anthropic-java-core/src/main/kotlin/com/anthropic/core/JsonSchemaLocalValidation.kt)
-  to the `outputFormat(Class<T>, JsonSchemaLocalValidation)` method when building the parameters.
+  to the `outputConfig(Class<T>, JsonSchemaLocalValidation)` method when building the parameters.
   (The default value for this parameter is `JsonSchemaLocalValidation.YES`.)
 
 ```java
 import com.anthropic.core.JsonSchemaLocalValidation;
-import com.anthropic.models.beta.messages.MessageCreateParams;
-import com.anthropic.models.beta.messages.StructuredMessageCreateParams;
+import com.anthropic.models.messages.MessageCreateParams;
+import com.anthropic.models.messages.StructuredMessageCreateParams;
 import com.anthropic.models.messages.Model;
 
 StructuredMessageCreateParams<BookList> createParams = MessageCreateParams.builder()
-        .model(Model.CLAUDE_SONNET_4_20250514)
+        .model(Model.CLAUDE_SONNET_4_5_20250929)
         .maxTokens(2048)
-        .outputFormat(BookList.class, JsonSchemaLocalValidation.NO)
+        .outputConfig(BookList.class, JsonSchemaLocalValidation.NO)
         .addUserMessage("List some famous late twentieth century novels.")
         .build();
 
@@ -500,16 +500,16 @@ responses are returned in "stream events", the full response must first be accum
 concatenate the JSON strings that can then be converted into instances of the arbitrary Java class.
 Normal streaming operations can be performed while accumulating the JSON strings.
 
-Use the [`BetaMessageAccumulator`](anthropic-java-core/src/main/kotlin/com/anthropic/helpers/BetaMessageAccumulator.kt)
+Use the [`MessageAccumulator`](anthropic-java-core/src/main/kotlin/com/anthropic/helpers/MessageAccumulator.kt)
 as described in the section on [Streaming helpers](#streaming-helpers) to accumulate the JSON
-strings. Once accumulated, use `BetaMessageAccumulator.message(Class<T>)` to convert the
-accumulated `BetaMessage` into a
-[`StructuredMessage`](anthropic-java-core/src/main/kotlin/com/anthropic/models/beta/messages/StructuredMessage.kt).
+strings. Once accumulated, use `MessageAccumulator.message(Class<T>)` to convert the accumulated
+`Message` into a
+[`StructuredMessage`](anthropic-java-core/src/main/kotlin/com/anthropic/models/messages/StructuredMessage.kt).
 The `StructuredMessage` can then automatically deserialize the JSON strings into instances of your
 Java class.
 
 For a full example of the usage of _Structured Outputs_ with Streaming and the Messages API, see
-[`BetaStructuredOutputsStreamingExample`](anthropic-java-example/src/main/java/com/anthropic/example/BetaStructuredOutputsStreamingExample.java).
+[`StructuredOutputsStreamingExample`](anthropic-java-example/src/main/java/com/anthropic/example/StructuredOutputsStreamingExample.java).
 
 ### Defining JSON schema properties
 
@@ -536,6 +536,63 @@ properties can be derived. This may occur if, for example:
 - All fields and getter methods are non-`public`, but none are annotated with `@JsonProperty`.
 - A field or getter method is declared with a `Map` type. A `Map` is treated like a separate class
   with no named properties, so it will result in an empty `"properties"` field in the JSON schema.
+
+Your Java classes can use composition and inheritance to allow classes to be reused when you define
+your JSON schemas. Each affects the structure of the JSON schema and the corresponding JSON output 
+format differently.
+
+When you use composition, the JSON output will have additional nesting in its structure. For
+example, if a JSON schema is derived from the following class `C`:
+
+```java
+class A {
+    public String a;
+}
+
+class B {
+    public String b;
+}
+
+class C {
+    public A composedA;
+    public B composedB;
+}
+```
+
+Then the JSON output will have this nested structure:
+
+```json
+{
+    "composedA" : {
+        "a": "hello"
+    },
+    "composedB" : {
+        "b": "world"
+    }
+}
+```
+
+When you use inheritance instead of composition, the JSON output will have a flatter structure. For 
+example, if the JSON schema is derived from the following class `B`:
+
+```java
+class A {
+    public String a;
+}
+
+class B extends A {
+    public String b;
+}
+```
+
+Then the JSON output will have this flat structure:
+
+```json
+{
+    "a": "hello",
+    "b": "world"
+}
+```
 
 ### Annotating classes and JSON schemas
 
@@ -579,16 +636,16 @@ class BookList {
 - Use `@JsonProperty` to include a non-`public` field or getter method of a class in the generated
   JSON schema.
 
-If you use `@JsonProperty(required = false)`, the `false` value will be ignored. Anthropic JSON
-schemas must mark all properties as _required_, so the schema generated from your Java classes will
-respect that restriction and ignore any annotation that would violate it.
+If you use `@JsonProperty(required = false)`, the `false` value will be ignored. Claude JSON schemas
+must mark all properties as _required_, so the schema generated from your Java classes will respect
+that restriction and ignore any annotation that would violate it.
 
 You can also use [OpenAPI Swagger 2](https://swagger.io/specification/v2/)
 [`@Schema`](https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Annotations#schema) and
 [`@ArraySchema`](https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Annotations#arrayschema)
 annotations. These allow type-specific constraints to be added to your schema properties. You can
-learn more about the supported constraints in the Anthropic documentation on
-[Supported properties](https://docs.claude.com/docs/en/build-with-claude/structured-outputs).
+learn more about the supported constraints in the Claude documentation on
+[Supported properties](https://platform.claude.com/docs/en/build-with-claude/structured-outputs#json-schema-limitations).
 
 ```java
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -611,7 +668,7 @@ class Article {
 Local validation will check that you have not used any unsupported constraint keywords. However, the
 values of the constraints are _not_ validated locally. For example, if you use a value for the
 `"format"` constraint of a string property that is not in the list of
-[supported format names](https://docs.claude.com/docs/en/build-with-claude/structured-outputs),
+[supported format names](https://platform.claude.com/docs/en/build-with-claude/structured-outputs#json-schema-limitations),
 then local validation will pass, but the AI model may report an error.
 
 If you use both Jackson and Swagger annotations to set the same schema field, the Jackson annotation
@@ -628,6 +685,71 @@ class MyObject {
     public String myProperty;
 }
 ```
+
+### Creating JSON schemas without a Java class
+
+The example using Java classes above results in the automatic generation of the following JSON
+schema:
+
+```json
+{
+  "$schema" : "https://json-schema.org/draft/2020-12/schema",
+  "type" : "object",
+  "properties" : {
+    "books" : {
+      "minItems" : 1,
+      "type" : "array",
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "author" : {
+            "type" : "object",
+            "properties" : {
+              "birthYear" : {
+                "type" : "integer"
+              },
+              "deathYear" : {
+                "type" : "string",
+                "description" : "The year the person died, or 'present' if the person is living."
+              },
+              "name" : {
+                "type" : "string",
+                "description" : "The first name and surname of the person."
+              }
+            },
+            "required" : [ "birthYear", "deathYear", "name" ],
+            "additionalProperties" : false
+          },
+          "genre" : {
+            "type" : "string"
+          },
+          "publicationYear" : {
+            "type" : "integer",
+            "description" : "The year in which the book was first published. No earlier than 1500."
+          },
+          "title" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "author", "genre", "publicationYear", "title" ],
+        "additionalProperties" : false
+      }
+    }
+  },
+  "required" : [ "books" ],
+  "additionalProperties" : false
+}
+```
+
+While a Java class can make the definition of a JSON schema more convenient, there may be use cases
+where you need to create a JSON schema directly for greater control. You can define a JSON schema
+by creating a
+[`JsonOutputFormat.Schema`](anthropic-java-core/src/main/kotlin/com/anthropic/models/messages/JsonOutputFormat.kt),
+adding that to a `JsonOutputFormat`, adding that in turn to an
+[`OutputConfig`](anthropic-java-core/src/main/kotlin/com/anthropic/models/messages/OutputConfig.kt),
+and then setting that on the input parameters. For an example showing how to define the above
+schema in that manner _without_ using Java classes, see
+[`StructuredOutputsRawExample`](anthropic-java-example/src/main/java/com/anthropic/example/StructuredOutputsRawExample.java).
 
 ## Tool use with JSON schemas
 
@@ -780,9 +902,9 @@ private static Object callTool(BetaToolUseBlock toolUseBlock) {
 ```
 
 In the code above, an `execute()` method encapsulates each tool's logic. However, there is no
-requirement to follow that pattern. You are free to implement your tool's logic in any way that
-best suits your use case. The pattern above is only intended to _suggest_ that a suitable pattern
-may make the process of tool use simpler to understand and implement.
+requirement to follow that pattern. You are free to implement your tool's logic in any way and in
+any place that best suits your use case. The pattern above is only intended to _suggest_ that a
+suitable pattern may make the process of tool use simpler to understand and implement.
 
 The tool names are derived from the camel case tool class names (e.g., `GetWeather`) and converted
 to snake case (e.g., `get_weather`). All characters are converted to lower-case and underscores are
