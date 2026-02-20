@@ -43,7 +43,27 @@ private constructor(
                 is JsonBoolean -> put(key, value.value.toString())
                 is JsonNumber -> put(key, value.value.toString())
                 is JsonString -> put(key, value.value)
-                is JsonArray -> value.values.forEach { put("$key[]", it) }
+                is JsonArray ->
+                    put(
+                        key,
+                        value.values
+                            .asSequence()
+                            .mapNotNull {
+                                when (it) {
+                                    is JsonMissing,
+                                    is JsonNull -> null
+                                    is JsonBoolean -> it.value.toString()
+                                    is JsonNumber -> it.value.toString()
+                                    is JsonString -> it.value
+                                    is JsonArray,
+                                    is JsonObject ->
+                                        throw IllegalArgumentException(
+                                            "Cannot comma separate non-primitives in query params"
+                                        )
+                                }
+                            }
+                            .joinToString(","),
+                    )
                 is JsonObject ->
                     value.values.forEach { (nestedKey, value) -> put("$key[$nestedKey]", value) }
             }
