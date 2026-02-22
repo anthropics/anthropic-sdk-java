@@ -3,6 +3,7 @@ package com.anthropic.example;
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.models.messages.MessageCreateParams;
+import com.anthropic.models.messages.Model;
 import com.anthropic.models.messages.StructuredMessageCreateParams;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -10,10 +11,18 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import java.util.List;
 
 /**
+ * <p>
  * Example demonstrating GA (non-beta) structured outputs.
- *
- * <p>This example uses the GA Messages API with structured outputs, which does NOT require any beta
+ * </p>
+ * <p>
+ * This example derives the JSON schema for the output format from the structure of Java classes.
+ * Compare to {@link StructuredOutputsRawExample} where the low-level API is used to define the same
+ * JSON schema without using Java classes.
+ * </p>
+ * <p>
+ * This example uses the GA Messages API with structured outputs, which does NOT require any beta
  * headers. Compare with {@link BetaStructuredOutputsExample} which uses the beta API.
+ * </p>
  */
 public final class StructuredOutputsExample {
 
@@ -65,7 +74,7 @@ public final class StructuredOutputsExample {
         // GA structured outputs - no beta header required!
         // Use client.messages() instead of client.beta().messages()
         StructuredMessageCreateParams<BookList> createParams = MessageCreateParams.builder()
-                .model("claude-sonnet-4-5")
+                .model(Model.CLAUDE_SONNET_4_5_20250929)
                 .maxTokens(2048)
                 .outputConfig(BookList.class)
                 .addUserMessage("List some famous late twentieth century novels.")
