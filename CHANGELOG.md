@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.16.0 (2026-02-22)
+
+Full Changelog: [v2.15.0...v2.16.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.15.0...v2.16.0)
+
+### Features
+
+* **api:** change array_format to brackets ([f9eef6e](https://github.com/anthropics/anthropic-sdk-java/commit/f9eef6ecfdfc0e4ab88a089814412ff0cbf2b04c))
+* **api:** remove publishing section from cli target ([f802cb0](https://github.com/anthropics/anthropic-sdk-java/commit/f802cb0b4cffaaf618c51c630b61275c888d742f))
+
+
+### Documentation
+
+* additional structured outputs documentation ([#302](https://github.com/anthropics/anthropic-sdk-java/issues/302)) ([3b1f131](https://github.com/anthropics/anthropic-sdk-java/commit/3b1f131312954856ecdaa66f06741e1e5f86d81d))
+
 ## 2.15.0 (2026-02-19)
 
 Full Changelog: [v2.14.0...v2.15.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.14.0...v2.15.0)
