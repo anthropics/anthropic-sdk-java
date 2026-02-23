@@ -145,6 +145,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages")
+                    .putHeader("Accept", "text/event-stream")
                     .body(
                         json(
                             clientOptions.jsonMapper,
