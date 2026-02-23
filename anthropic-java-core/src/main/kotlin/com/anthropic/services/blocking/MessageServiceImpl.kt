@@ -133,6 +133,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages")
+                    .putHeader("Accept", "text/event-stream")
                     .body(
                         json(
                             clientOptions.jsonMapper,

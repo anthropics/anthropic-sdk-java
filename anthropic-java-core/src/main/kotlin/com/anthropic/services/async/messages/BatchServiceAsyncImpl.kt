@@ -292,6 +292,7 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "batches", params._pathParam(0), "results")
+                    .putHeader("Accept", "application/x-jsonl")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
