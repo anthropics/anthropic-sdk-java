@@ -187,6 +187,7 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .addPathSegments("v1", "files", params._pathParam(0), "content")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
+                    .putHeader("Accept", "application/binary")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))

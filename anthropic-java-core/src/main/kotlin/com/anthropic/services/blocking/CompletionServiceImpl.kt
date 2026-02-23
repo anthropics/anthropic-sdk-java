@@ -107,6 +107,7 @@ class CompletionServiceImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "complete")
+                    .putHeader("Accept", "text/event-stream")
                     .body(
                         json(
                             clientOptions.jsonMapper,

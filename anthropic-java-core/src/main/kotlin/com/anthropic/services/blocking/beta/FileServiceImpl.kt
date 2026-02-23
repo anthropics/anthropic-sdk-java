@@ -169,6 +169,7 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .addPathSegments("v1", "files", params._pathParam(0), "content")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
+                    .putHeader("Accept", "application/binary")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))

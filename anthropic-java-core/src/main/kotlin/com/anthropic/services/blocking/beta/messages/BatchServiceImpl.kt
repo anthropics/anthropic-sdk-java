@@ -286,6 +286,7 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .addPathSegments("v1", "messages", "batches", params._pathParam(0), "results")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
+                    .putHeader("Accept", "application/x-jsonl")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
