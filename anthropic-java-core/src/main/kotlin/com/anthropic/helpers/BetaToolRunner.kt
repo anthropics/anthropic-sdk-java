@@ -105,8 +105,9 @@ internal constructor(
     /** Returns the current params being used by [BetaToolRunner]. */
     fun params(): MessageCreateParams = currentParams
 
-    /** Sets the parameters for the next API call. */
+    /** Sets the parameters for the next API call, invalidating any cached tool response. */
     fun setNextParams(nextParams: MessageCreateParams) {
+        lastToolResponse = null
         this.nextParams = nextParams
     }
 
