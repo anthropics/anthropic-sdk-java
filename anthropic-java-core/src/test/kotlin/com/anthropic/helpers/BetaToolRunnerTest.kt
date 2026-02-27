@@ -476,6 +476,64 @@ internal class BetaToolRunnerTest {
         assertThat(messages).containsExactly(assistantMessage1, assistantMessage2)
     }
 
+    @Test
+    fun setNextParams_invalidatesLastToolResponse() {
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(
+                    BetaToolUseBlock.builder()
+                        .id("toolUseId")
+                        .name("get_weather")
+                        .input(JsonValue.from(mapOf("location" to "San Francisco")))
+                        .build()
+                )
+                .contextManagement(null)
+                .build()
+        val expectedToolResponseMessageParam =
+            BetaMessageParam.builder()
+                .role(BetaMessageParam.Role.USER)
+                .contentOfBetaContentBlockParams(
+                    listOf(
+                        BetaContentBlockParam.ofToolResult(
+                            BetaToolResultBlockParam.builder()
+                                .toolUseId("toolUseId")
+                                .content("The weather in San Francisco is foggy and 60°F")
+                                .build()
+                        )
+                    )
+                )
+                .build()
+        val assistantMessage2 =
+            betaMessageBuilder()
+                .addContent(
+                    BetaTextBlock.builder()
+                        .citations(null)
+                        .text("The weather in San Francisco is foggy and 60°F, done!")
+                        .build()
+                )
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(initialMessageParams, requestOptions))
+            .thenReturn(assistantMessage1)
+        whenever(
+                messageService.create(
+                    initialMessageParams
+                        .toBuilder()
+                        .addMessage(assistantMessage1)
+                        .addMessage(expectedToolResponseMessageParam)
+                        .build(),
+                    requestOptions,
+                )
+            )
+            .thenReturn(assistantMessage2)
+
+        toolRunner.toList()
+
+        assertThat(toolRunner.lastToolResponse()).hasValue(expectedToolResponseMessageParam)
+        toolRunner.setNextParams(toolRunner.params())
+        assertThat(toolRunner.lastToolResponse()).isEmpty
+    }
+
     private fun betaMessageBuilder() =
         BetaMessage.builder()
             .id("id")
