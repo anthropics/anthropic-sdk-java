@@ -5,19 +5,19 @@
 package com.anthropic.core.http
 
 import com.anthropic.core.MultipartField
+import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.node.JsonNodeType
+import java.io.ByteArrayInputStream
 import com.fasterxml.jackson.databind.node.ObjectNode
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.io.OutputStream
+import java.util.UUID
 import kotlin.jvm.optionals.getOrNull
-import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder
-import org.apache.hc.core5.http.ContentType
-import org.apache.hc.core5.http.HttpEntity
 
 /**
  * Creates a new [HttpRequestBody] containing the given value serialized to a JSON string. The
@@ -67,94 +67,231 @@ internal fun multipartFormData(
     jsonMapper: JsonMapper,
     fields: Map<String, MultipartField<*>>,
 ): HttpRequestBody =
-    object : HttpRequestBody {
-        private val entity: HttpEntity by lazy {
-            MultipartEntityBuilder.create()
-                .apply {
-                    fields.forEach { (name, field) ->
-                        val knownValue = field.value.asKnown().getOrNull()
-                        val parts =
-                            if (knownValue is InputStream) {
-                                // Read directly from the `InputStream` instead of reading it all
-                                // into memory due to the `jsonMapper` serialization below.
-                                sequenceOf(name to knownValue)
-                            } else {
-                                val node = jsonMapper.valueToTree<JsonNode>(field.value)
-                                serializePart(name, node)
-                            }
-
-                        parts.forEach { (name, bytes) ->
-                            addBinaryBody(
-                                name,
-                                bytes,
-                                ContentType.parseLenient(field.contentType),
-                                field.filename().getOrNull(),
-                            )
-                        }
+    MultipartBody.Builder()
+        .apply {
+            fields.forEach { (name, field) ->
+                val knownValue = field.value.asKnown().getOrNull()
+                val parts =
+                    if (knownValue is InputStream) {
+                        // Read directly from the `InputStream` instead of reading it all
+                        // into memory due to the `jsonMapper` serialization below.
+                        sequenceOf(name to knownValue)
+                    } else {
+                        val node = jsonMapper.valueToTree<JsonNode>(field.value)
+                        serializePart(name, node)
                     }
+
+                parts.forEach { (name, bytes) ->
+                    val partBody =
+                        if (bytes is ByteArrayInputStream) {
+                            val byteArray = bytes.readBytes()
+
+                            object : HttpRequestBody {
+
+                                override fun writeTo(outputStream: OutputStream) {
+                                    outputStream.write(byteArray)
+                                }
+
+                                override fun contentType(): String = field.contentType
+
+                                override fun contentLength(): Long = byteArray.size.toLong()
+
+                                override fun repeatable(): Boolean = true
+
+                                override fun close() {}
+                            }
+                        } else {
+                            object : HttpRequestBody {
+
+                                override fun writeTo(outputStream: OutputStream) {
+                                    bytes.copyTo(outputStream)
+                                }
+
+                                override fun contentType(): String = field.contentType
+
+                                override fun contentLength(): Long = -1L
+
+                                override fun repeatable(): Boolean = false
+
+                                override fun close() = bytes.close()
+                            }
+                        }
+
+                    addPart(
+                        MultipartBody.Part.create(
+                            name,
+                            field.filename().getOrNull(),
+                            field.contentType,
+                            partBody,
+                        )
+                    )
                 }
-                .build()
+            }
+        }
+        .build()
+
+private fun serializePart(name: String, node: JsonNode): Sequence<Pair<String, InputStream>> =
+    when (node.nodeType) {
+        JsonNodeType.MISSING,
+        JsonNodeType.NULL -> emptySequence()
+        JsonNodeType.BINARY -> sequenceOf(name to node.binaryValue().inputStream())
+        JsonNodeType.STRING -> sequenceOf(name to node.textValue().byteInputStream())
+        JsonNodeType.BOOLEAN -> sequenceOf(name to node.booleanValue().toString().byteInputStream())
+        JsonNodeType.NUMBER -> sequenceOf(name to node.numberValue().toString().byteInputStream())
+        JsonNodeType.ARRAY ->
+            sequenceOf(
+                name to
+                    node
+                        .elements()
+                        .asSequence()
+                        .mapNotNull { element ->
+                            when (element.nodeType) {
+                                JsonNodeType.MISSING,
+                                JsonNodeType.NULL -> null
+                                JsonNodeType.STRING -> element.textValue()
+                                JsonNodeType.BOOLEAN -> element.booleanValue().toString()
+                                JsonNodeType.NUMBER -> element.numberValue().toString()
+                                null,
+                                JsonNodeType.BINARY,
+                                JsonNodeType.ARRAY,
+                                JsonNodeType.OBJECT,
+                                JsonNodeType.POJO ->
+                                    throw AnthropicInvalidDataException(
+                                        "Unexpected JsonNode type in array: ${element.nodeType}"
+                                    )
+                            }
+                        }
+                        .joinToString(",")
+                        .byteInputStream()
+            )
+        JsonNodeType.OBJECT ->
+            node.fields().asSequence().flatMap { (key, value) ->
+                serializePart("$name[$key]", value)
+            }
+        JsonNodeType.POJO,
+        null -> throw AnthropicInvalidDataException("Unexpected JsonNode type: ${node.nodeType}")
+    }
+
+private class MultipartBody
+private constructor(private val boundary: String, private val parts: List<Part>) : HttpRequestBody {
+    private val boundaryBytes: ByteArray = boundary.toByteArray()
+    private val contentType = "multipart/form-data; boundary=$boundary"
+
+    // This must remain in sync with `contentLength`.
+    override fun writeTo(outputStream: OutputStream) {
+        parts.forEach { part ->
+            outputStream.write(DASHDASH)
+            outputStream.write(boundaryBytes)
+            outputStream.write(CRLF)
+
+            outputStream.write(CONTENT_DISPOSITION)
+            outputStream.write(part.contentDisposition.toByteArray())
+            outputStream.write(CRLF)
+
+            outputStream.write(CONTENT_TYPE)
+            outputStream.write(part.contentType.toByteArray())
+            outputStream.write(CRLF)
+
+            outputStream.write(CRLF)
+            part.body.writeTo(outputStream)
+            outputStream.write(CRLF)
         }
 
-        private fun serializePart(
-            name: String,
-            node: JsonNode,
-        ): Sequence<Pair<String, InputStream>> =
-            when (node.nodeType) {
-                JsonNodeType.MISSING,
-                JsonNodeType.NULL -> emptySequence()
-                JsonNodeType.BINARY -> sequenceOf(name to node.binaryValue().inputStream())
-                JsonNodeType.STRING -> sequenceOf(name to node.textValue().inputStream())
-                JsonNodeType.BOOLEAN ->
-                    sequenceOf(name to node.booleanValue().toString().inputStream())
-                JsonNodeType.NUMBER ->
-                    sequenceOf(name to node.numberValue().toString().inputStream())
-                JsonNodeType.ARRAY ->
-                    sequenceOf(
-                        name to
-                            node
-                                .elements()
-                                .asSequence()
-                                .mapNotNull { element ->
-                                    when (element.nodeType) {
-                                        JsonNodeType.MISSING,
-                                        JsonNodeType.NULL -> null
-                                        JsonNodeType.STRING -> node.textValue()
-                                        JsonNodeType.BOOLEAN -> node.booleanValue().toString()
-                                        JsonNodeType.NUMBER -> node.numberValue().toString()
-                                        null,
-                                        JsonNodeType.BINARY,
-                                        JsonNodeType.ARRAY,
-                                        JsonNodeType.OBJECT,
-                                        JsonNodeType.POJO ->
-                                            throw AnthropicInvalidDataException(
-                                                "Unexpected JsonNode type in array: ${node.nodeType}"
-                                            )
-                                    }
-                                }
-                                .joinToString(",")
-                                .inputStream()
-                    )
-                JsonNodeType.OBJECT ->
-                    node.fields().asSequence().flatMap { (key, value) ->
-                        serializePart("$name[$key]", value)
-                    }
-                JsonNodeType.POJO,
-                null ->
-                    throw AnthropicInvalidDataException(
-                        "Unexpected JsonNode type: ${node.nodeType}"
-                    )
+        outputStream.write(DASHDASH)
+        outputStream.write(boundaryBytes)
+        outputStream.write(DASHDASH)
+        outputStream.write(CRLF)
+    }
+
+    override fun contentType(): String = contentType
+
+    // This must remain in sync with `writeTo`.
+    override fun contentLength(): Long {
+        var byteCount = 0L
+
+        parts.forEach { part ->
+            val contentLength = part.body.contentLength()
+            if (contentLength == -1L) {
+                return -1L
             }
 
-        private fun String.inputStream(): InputStream = toByteArray().inputStream()
+            byteCount +=
+                DASHDASH.size +
+                    boundaryBytes.size +
+                    CRLF.size +
+                    CONTENT_DISPOSITION.size +
+                    part.contentDisposition.toByteArray().size +
+                    CRLF.size +
+                    CONTENT_TYPE.size +
+                    part.contentType.toByteArray().size +
+                    CRLF.size +
+                    CRLF.size +
+                    contentLength +
+                    CRLF.size
+        }
 
-        override fun writeTo(outputStream: OutputStream) = entity.writeTo(outputStream)
-
-        override fun contentType(): String = entity.contentType
-
-        override fun contentLength(): Long = entity.contentLength
-
-        override fun repeatable(): Boolean = entity.isRepeatable
-
-        override fun close() = entity.close()
+        byteCount += DASHDASH.size + boundaryBytes.size + DASHDASH.size + CRLF.size
+        return byteCount
     }
+
+    override fun repeatable(): Boolean = parts.all { it.body.repeatable() }
+
+    override fun close() {
+        parts.forEach { it.body.close() }
+    }
+
+    class Builder {
+        private val boundary = UUID.randomUUID().toString()
+        private val parts: MutableList<Part> = mutableListOf()
+
+        fun addPart(part: Part) = apply { parts.add(part) }
+
+        fun build() = MultipartBody(boundary, parts.toImmutable())
+    }
+
+    class Part
+    private constructor(
+        val contentDisposition: String,
+        val contentType: String,
+        val body: HttpRequestBody,
+    ) {
+        companion object {
+            fun create(
+                name: String,
+                filename: String?,
+                contentType: String,
+                body: HttpRequestBody,
+            ): Part {
+                val disposition = buildString {
+                    append("form-data; name=")
+                    appendQuotedString(name)
+                    if (filename != null) {
+                        append("; filename=")
+                        appendQuotedString(filename)
+                    }
+                }
+                return Part(disposition, contentType, body)
+            }
+        }
+    }
+
+    companion object {
+        private val CRLF = byteArrayOf('\r'.code.toByte(), '\n'.code.toByte())
+        private val DASHDASH = byteArrayOf('-'.code.toByte(), '-'.code.toByte())
+        private val CONTENT_DISPOSITION = "Content-Disposition: ".toByteArray()
+        private val CONTENT_TYPE = "Content-Type: ".toByteArray()
+
+        private fun StringBuilder.appendQuotedString(key: String) {
+            append('"')
+            for (ch in key) {
+                when (ch) {
+                    '\n' -> append("%0A")
+                    '\r' -> append("%0D")
+                    '"' -> append("%22")
+                    else -> append(ch)
+                }
+            }
+            append('"')
+        }
+    }
+}
