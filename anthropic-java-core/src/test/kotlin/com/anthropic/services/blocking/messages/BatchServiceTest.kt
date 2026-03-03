@@ -15,7 +15,6 @@ import com.anthropic.models.messages.TextBlockParam
 import com.anthropic.models.messages.Tool
 import com.anthropic.models.messages.ToolChoiceAuto
 import com.anthropic.models.messages.batches.BatchCreateParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -213,7 +212,6 @@ internal class BatchServiceTest {
         messageBatch.validate()
     }
 
-    @Disabled("Mock server doesn't support application/x-jsonl responses")
     @Test
     fun resultsStreaming() {
         val client =
