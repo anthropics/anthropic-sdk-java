@@ -38,15 +38,15 @@ private constructor(
      *
      * @see SkillListPageResponse.nextPage
      */
-    fun nextPageToken(): Optional<String> = response._nextPage().getOptional("next_page")
+    fun nextPageRaw(): Optional<String> = response._nextPage().getOptional("next_page")
 
     override fun items(): List<SkillListResponse> = data()
 
-    override fun hasNextPage(): Boolean = items().isNotEmpty() && nextPageToken().isPresent
+    override fun hasNextPage(): Boolean = items().isNotEmpty() && nextPageRaw().isPresent
 
     fun nextPageParams(): SkillListParams {
         val nextCursor =
-            nextPageToken().getOrNull()
+            nextPageRaw().getOrNull()
                 ?: throw IllegalStateException("Cannot construct next page params")
         return params.toBuilder().page(nextCursor).build()
     }
