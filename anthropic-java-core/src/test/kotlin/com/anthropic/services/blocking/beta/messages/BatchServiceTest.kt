@@ -302,7 +302,6 @@ internal class BatchServiceTest {
         betaMessageBatch.validate()
     }
 
-    @Disabled("Mock server doesn't support application/x-jsonl responses")
     @Test
     fun resultsStreaming() {
         val client =
