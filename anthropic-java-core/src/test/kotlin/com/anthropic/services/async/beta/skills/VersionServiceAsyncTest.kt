@@ -8,14 +8,12 @@ import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.skills.versions.VersionCreateParams
 import com.anthropic.models.beta.skills.versions.VersionDeleteParams
 import com.anthropic.models.beta.skills.versions.VersionRetrieveParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(TestServerExtension::class)
 internal class VersionServiceAsyncTest {
 
-    @Disabled("prism binary unsupported")
     @Test
     fun create() {
         val client =
