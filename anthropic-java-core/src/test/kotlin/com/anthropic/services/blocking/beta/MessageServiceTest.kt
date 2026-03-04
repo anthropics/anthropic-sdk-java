@@ -25,14 +25,12 @@ import com.anthropic.models.beta.messages.BetaToolUsesKeep
 import com.anthropic.models.beta.messages.MessageCountTokensParams
 import com.anthropic.models.beta.messages.MessageCreateParams
 import com.anthropic.models.messages.Model
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(TestServerExtension::class)
 internal class MessageServiceTest {
 
-    @Disabled("prism validates based on the non-beta endpoint")
     @Test
     fun create() {
         val client =
@@ -193,7 +191,6 @@ internal class MessageServiceTest {
         betaMessage.validate()
     }
 
-    @Disabled("prism validates based on the non-beta endpoint")
     @Test
     fun createStreaming() {
         val client =
@@ -356,7 +353,6 @@ internal class MessageServiceTest {
         }
     }
 
-    @Disabled("prism validates based on the non-beta endpoint")
     @Test
     fun countTokens() {
         val client =

@@ -28,14 +28,12 @@ import com.anthropic.models.beta.messages.batches.BatchDeleteParams
 import com.anthropic.models.beta.messages.batches.BatchResultsParams
 import com.anthropic.models.beta.messages.batches.BatchRetrieveParams
 import com.anthropic.models.messages.Model
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(TestServerExtension::class)
 internal class BatchServiceAsyncTest {
 
-    @Disabled("prism validates based on the non-beta endpoint")
     @Test
     fun create() {
         val client =
