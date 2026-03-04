@@ -27,92 +27,51 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         /** Most intelligent model for building agents and coding */
         @JvmField val CLAUDE_OPUS_4_6 = of("claude-opus-4-6")
 
-        /** Frontier intelligence at scale — built for coding, agents, and enterprise workflows */
+        /** Best combination of speed and intelligence */
         @JvmField val CLAUDE_SONNET_4_6 = of("claude-sonnet-4-6")
 
-        /** Premium model combining maximum intelligence with practical performance */
-        @JvmField val CLAUDE_OPUS_4_5_20251101 = of("claude-opus-4-5-20251101")
+        /** Fastest model with near-frontier intelligence */
+        @JvmField val CLAUDE_HAIKU_4_5 = of("claude-haiku-4-5")
+
+        /** Fastest model with near-frontier intelligence */
+        @JvmField val CLAUDE_HAIKU_4_5_20251001 = of("claude-haiku-4-5-20251001")
 
         /** Premium model combining maximum intelligence with practical performance */
         @JvmField val CLAUDE_OPUS_4_5 = of("claude-opus-4-5")
 
-        /** High-performance model with early extended thinking */
-        @Deprecated(
-            "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        @JvmField
-        val CLAUDE_3_7_SONNET_LATEST = of("claude-3-7-sonnet-latest")
+        /** Premium model combining maximum intelligence with practical performance */
+        @JvmField val CLAUDE_OPUS_4_5_20251101 = of("claude-opus-4-5-20251101")
 
-        /** High-performance model with early extended thinking */
-        @Deprecated(
-            "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        @JvmField
-        val CLAUDE_3_7_SONNET_20250219 = of("claude-3-7-sonnet-20250219")
+        /** High-performance model for agents and coding */
+        @JvmField val CLAUDE_SONNET_4_5 = of("claude-sonnet-4-5")
 
-        /** Fastest and most compact model for near-instant responsiveness */
-        @Deprecated(
-            "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        @JvmField
-        val CLAUDE_3_5_HAIKU_LATEST = of("claude-3-5-haiku-latest")
+        /** High-performance model for agents and coding */
+        @JvmField val CLAUDE_SONNET_4_5_20250929 = of("claude-sonnet-4-5-20250929")
 
-        /** Our fastest model */
-        @Deprecated(
-            "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        @JvmField
-        val CLAUDE_3_5_HAIKU_20241022 = of("claude-3-5-haiku-20241022")
+        /** Exceptional model for specialized complex tasks */
+        @JvmField val CLAUDE_OPUS_4_1 = of("claude-opus-4-1")
 
-        /** Hybrid model, capable of near-instant responses and extended thinking */
-        @JvmField val CLAUDE_HAIKU_4_5 = of("claude-haiku-4-5")
+        /** Exceptional model for specialized complex tasks */
+        @JvmField val CLAUDE_OPUS_4_1_20250805 = of("claude-opus-4-1-20250805")
 
-        /** Hybrid model, capable of near-instant responses and extended thinking */
-        @JvmField val CLAUDE_HAIKU_4_5_20251001 = of("claude-haiku-4-5-20251001")
+        /** Powerful model for complex tasks */
+        @JvmField val CLAUDE_OPUS_4_0 = of("claude-opus-4-0")
 
-        /** High-performance model with extended thinking */
-        @JvmField val CLAUDE_SONNET_4_20250514 = of("claude-sonnet-4-20250514")
+        /** Powerful model for complex tasks */
+        @JvmField val CLAUDE_OPUS_4_20250514 = of("claude-opus-4-20250514")
 
         /** High-performance model with extended thinking */
         @JvmField val CLAUDE_SONNET_4_0 = of("claude-sonnet-4-0")
 
         /** High-performance model with extended thinking */
-        @JvmField val CLAUDE_4_SONNET_20250514 = of("claude-4-sonnet-20250514")
+        @JvmField val CLAUDE_SONNET_4_20250514 = of("claude-sonnet-4-20250514")
 
-        /** Our best model for real-world agents and coding */
-        @JvmField val CLAUDE_SONNET_4_5 = of("claude-sonnet-4-5")
-
-        /** Our best model for real-world agents and coding */
-        @JvmField val CLAUDE_SONNET_4_5_20250929 = of("claude-sonnet-4-5-20250929")
-
-        /** Our most capable model */
-        @JvmField val CLAUDE_OPUS_4_0 = of("claude-opus-4-0")
-
-        /** Our most capable model */
-        @JvmField val CLAUDE_OPUS_4_20250514 = of("claude-opus-4-20250514")
-
-        /** Our most capable model */
-        @JvmField val CLAUDE_4_OPUS_20250514 = of("claude-4-opus-20250514")
-
-        /** Our most capable model */
-        @JvmField val CLAUDE_OPUS_4_1_20250805 = of("claude-opus-4-1-20250805")
-
-        /** Excels at writing and complex tasks */
+        /** Fast and cost-effective model */
         @Deprecated(
-            "Will reach end-of-life on January 5th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+            "Will reach end-of-life on April 20th, 2026. Please migrate to claude-haiku-4-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
         )
         @JvmField
-        val CLAUDE_3_OPUS_LATEST = of("claude-3-opus-latest")
-
-        /** Excels at writing and complex tasks */
-        @Deprecated(
-            "Will reach end-of-life on January 5th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        @JvmField
-        val CLAUDE_3_OPUS_20240229 = of("claude-3-opus-20240229")
-
-        /** Our previous most fast and cost-effective */
-        @JvmField val CLAUDE_3_HAIKU_20240307 = of("claude-3-haiku-20240307")
+        val CLAUDE_3_HAIKU_20240307 = of("claude-3-haiku-20240307")
 
         @JvmStatic fun of(value: String) = Model(JsonField.of(value))
     }
@@ -121,66 +80,36 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
     enum class Known {
         /** Most intelligent model for building agents and coding */
         CLAUDE_OPUS_4_6,
-        /** Frontier intelligence at scale — built for coding, agents, and enterprise workflows */
+        /** Best combination of speed and intelligence */
         CLAUDE_SONNET_4_6,
-        /** Premium model combining maximum intelligence with practical performance */
-        CLAUDE_OPUS_4_5_20251101,
+        /** Fastest model with near-frontier intelligence */
+        CLAUDE_HAIKU_4_5,
+        /** Fastest model with near-frontier intelligence */
+        CLAUDE_HAIKU_4_5_20251001,
         /** Premium model combining maximum intelligence with practical performance */
         CLAUDE_OPUS_4_5,
-        @Deprecated(
-            "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        /** High-performance model with early extended thinking */
-        CLAUDE_3_7_SONNET_LATEST,
-        @Deprecated(
-            "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        /** High-performance model with early extended thinking */
-        CLAUDE_3_7_SONNET_20250219,
-        @Deprecated(
-            "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        /** Fastest and most compact model for near-instant responsiveness */
-        CLAUDE_3_5_HAIKU_LATEST,
-        @Deprecated(
-            "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        /** Our fastest model */
-        CLAUDE_3_5_HAIKU_20241022,
-        /** Hybrid model, capable of near-instant responses and extended thinking */
-        CLAUDE_HAIKU_4_5,
-        /** Hybrid model, capable of near-instant responses and extended thinking */
-        CLAUDE_HAIKU_4_5_20251001,
-        /** High-performance model with extended thinking */
-        CLAUDE_SONNET_4_20250514,
+        /** Premium model combining maximum intelligence with practical performance */
+        CLAUDE_OPUS_4_5_20251101,
+        /** High-performance model for agents and coding */
+        CLAUDE_SONNET_4_5,
+        /** High-performance model for agents and coding */
+        CLAUDE_SONNET_4_5_20250929,
+        /** Exceptional model for specialized complex tasks */
+        CLAUDE_OPUS_4_1,
+        /** Exceptional model for specialized complex tasks */
+        CLAUDE_OPUS_4_1_20250805,
+        /** Powerful model for complex tasks */
+        CLAUDE_OPUS_4_0,
+        /** Powerful model for complex tasks */
+        CLAUDE_OPUS_4_20250514,
         /** High-performance model with extended thinking */
         CLAUDE_SONNET_4_0,
         /** High-performance model with extended thinking */
-        CLAUDE_4_SONNET_20250514,
-        /** Our best model for real-world agents and coding */
-        CLAUDE_SONNET_4_5,
-        /** Our best model for real-world agents and coding */
-        CLAUDE_SONNET_4_5_20250929,
-
-        /** Our most capable model */
-        CLAUDE_OPUS_4_0,
-        /** Our most capable model */
-        CLAUDE_OPUS_4_20250514,
-        /** Our most capable model */
-        CLAUDE_4_OPUS_20250514,
-        /** Our most capable model */
-        CLAUDE_OPUS_4_1_20250805,
+        CLAUDE_SONNET_4_20250514,
         @Deprecated(
-            "Will reach end-of-life on January 5th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+            "Will reach end-of-life on April 20th, 2026. Please migrate to claude-haiku-4-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
         )
-        /** Excels at writing and complex tasks */
-        CLAUDE_3_OPUS_LATEST,
-        @Deprecated(
-            "Will reach end-of-life on January 5th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        /** Excels at writing and complex tasks */
-        CLAUDE_3_OPUS_20240229,
-        /** Our previous most fast and cost-effective */
+        /** Fast and cost-effective model */
         CLAUDE_3_HAIKU_20240307,
     }
 
@@ -196,66 +125,36 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
     enum class Value {
         /** Most intelligent model for building agents and coding */
         CLAUDE_OPUS_4_6,
-        /** Frontier intelligence at scale — built for coding, agents, and enterprise workflows */
+        /** Best combination of speed and intelligence */
         CLAUDE_SONNET_4_6,
-        /** Premium model combining maximum intelligence with practical performance */
-        CLAUDE_OPUS_4_5_20251101,
+        /** Fastest model with near-frontier intelligence */
+        CLAUDE_HAIKU_4_5,
+        /** Fastest model with near-frontier intelligence */
+        CLAUDE_HAIKU_4_5_20251001,
         /** Premium model combining maximum intelligence with practical performance */
         CLAUDE_OPUS_4_5,
-        @Deprecated(
-            "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        /** High-performance model with early extended thinking */
-        CLAUDE_3_7_SONNET_LATEST,
-        @Deprecated(
-            "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        /** High-performance model with early extended thinking */
-        CLAUDE_3_7_SONNET_20250219,
-        @Deprecated(
-            "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        /** Fastest and most compact model for near-instant responsiveness */
-        CLAUDE_3_5_HAIKU_LATEST,
-        @Deprecated(
-            "Will reach end-of-life on February 19th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        /** Our fastest model */
-        CLAUDE_3_5_HAIKU_20241022,
-        /** Hybrid model, capable of near-instant responses and extended thinking */
-        CLAUDE_HAIKU_4_5,
-        /** Hybrid model, capable of near-instant responses and extended thinking */
-        CLAUDE_HAIKU_4_5_20251001,
-        /** High-performance model with extended thinking */
-        CLAUDE_SONNET_4_20250514,
+        /** Premium model combining maximum intelligence with practical performance */
+        CLAUDE_OPUS_4_5_20251101,
+        /** High-performance model for agents and coding */
+        CLAUDE_SONNET_4_5,
+        /** High-performance model for agents and coding */
+        CLAUDE_SONNET_4_5_20250929,
+        /** Exceptional model for specialized complex tasks */
+        CLAUDE_OPUS_4_1,
+        /** Exceptional model for specialized complex tasks */
+        CLAUDE_OPUS_4_1_20250805,
+        /** Powerful model for complex tasks */
+        CLAUDE_OPUS_4_0,
+        /** Powerful model for complex tasks */
+        CLAUDE_OPUS_4_20250514,
         /** High-performance model with extended thinking */
         CLAUDE_SONNET_4_0,
         /** High-performance model with extended thinking */
-        CLAUDE_4_SONNET_20250514,
-        /** Our best model for real-world agents and coding */
-        CLAUDE_SONNET_4_5,
-        /** Our best model for real-world agents and coding */
-        CLAUDE_SONNET_4_5_20250929,
-
-        /** Our most capable model */
-        CLAUDE_OPUS_4_0,
-        /** Our most capable model */
-        CLAUDE_OPUS_4_20250514,
-        /** Our most capable model */
-        CLAUDE_4_OPUS_20250514,
-        /** Our most capable model */
-        CLAUDE_OPUS_4_1_20250805,
+        CLAUDE_SONNET_4_20250514,
         @Deprecated(
-            "Will reach end-of-life on January 5th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+            "Will reach end-of-life on April 20th, 2026. Please migrate to claude-haiku-4-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
         )
-        /** Excels at writing and complex tasks */
-        CLAUDE_3_OPUS_LATEST,
-        @Deprecated(
-            "Will reach end-of-life on January 5th, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
-        )
-        /** Excels at writing and complex tasks */
-        CLAUDE_3_OPUS_20240229,
-        /** Our previous most fast and cost-effective */
+        /** Fast and cost-effective model */
         CLAUDE_3_HAIKU_20240307,
         /** An enum member indicating that [Model] was instantiated with an unknown value. */
         _UNKNOWN,
@@ -272,25 +171,18 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         when (this) {
             CLAUDE_OPUS_4_6 -> Value.CLAUDE_OPUS_4_6
             CLAUDE_SONNET_4_6 -> Value.CLAUDE_SONNET_4_6
-            CLAUDE_OPUS_4_5_20251101 -> Value.CLAUDE_OPUS_4_5_20251101
-            CLAUDE_OPUS_4_5 -> Value.CLAUDE_OPUS_4_5
-            CLAUDE_3_7_SONNET_LATEST -> Value.CLAUDE_3_7_SONNET_LATEST
-            CLAUDE_3_7_SONNET_20250219 -> Value.CLAUDE_3_7_SONNET_20250219
-            CLAUDE_3_5_HAIKU_LATEST -> Value.CLAUDE_3_5_HAIKU_LATEST
-            CLAUDE_3_5_HAIKU_20241022 -> Value.CLAUDE_3_5_HAIKU_20241022
             CLAUDE_HAIKU_4_5 -> Value.CLAUDE_HAIKU_4_5
             CLAUDE_HAIKU_4_5_20251001 -> Value.CLAUDE_HAIKU_4_5_20251001
-            CLAUDE_SONNET_4_20250514 -> Value.CLAUDE_SONNET_4_20250514
-            CLAUDE_SONNET_4_0 -> Value.CLAUDE_SONNET_4_0
-            CLAUDE_4_SONNET_20250514 -> Value.CLAUDE_4_SONNET_20250514
+            CLAUDE_OPUS_4_5 -> Value.CLAUDE_OPUS_4_5
+            CLAUDE_OPUS_4_5_20251101 -> Value.CLAUDE_OPUS_4_5_20251101
             CLAUDE_SONNET_4_5 -> Value.CLAUDE_SONNET_4_5
             CLAUDE_SONNET_4_5_20250929 -> Value.CLAUDE_SONNET_4_5_20250929
+            CLAUDE_OPUS_4_1 -> Value.CLAUDE_OPUS_4_1
+            CLAUDE_OPUS_4_1_20250805 -> Value.CLAUDE_OPUS_4_1_20250805
             CLAUDE_OPUS_4_0 -> Value.CLAUDE_OPUS_4_0
             CLAUDE_OPUS_4_20250514 -> Value.CLAUDE_OPUS_4_20250514
-            CLAUDE_4_OPUS_20250514 -> Value.CLAUDE_4_OPUS_20250514
-            CLAUDE_OPUS_4_1_20250805 -> Value.CLAUDE_OPUS_4_1_20250805
-            CLAUDE_3_OPUS_LATEST -> Value.CLAUDE_3_OPUS_LATEST
-            CLAUDE_3_OPUS_20240229 -> Value.CLAUDE_3_OPUS_20240229
+            CLAUDE_SONNET_4_0 -> Value.CLAUDE_SONNET_4_0
+            CLAUDE_SONNET_4_20250514 -> Value.CLAUDE_SONNET_4_20250514
             CLAUDE_3_HAIKU_20240307 -> Value.CLAUDE_3_HAIKU_20240307
             else -> Value._UNKNOWN
         }
@@ -307,25 +199,18 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         when (this) {
             CLAUDE_OPUS_4_6 -> Known.CLAUDE_OPUS_4_6
             CLAUDE_SONNET_4_6 -> Known.CLAUDE_SONNET_4_6
-            CLAUDE_OPUS_4_5_20251101 -> Known.CLAUDE_OPUS_4_5_20251101
-            CLAUDE_OPUS_4_5 -> Known.CLAUDE_OPUS_4_5
-            CLAUDE_3_7_SONNET_LATEST -> Known.CLAUDE_3_7_SONNET_LATEST
-            CLAUDE_3_7_SONNET_20250219 -> Known.CLAUDE_3_7_SONNET_20250219
-            CLAUDE_3_5_HAIKU_LATEST -> Known.CLAUDE_3_5_HAIKU_LATEST
-            CLAUDE_3_5_HAIKU_20241022 -> Known.CLAUDE_3_5_HAIKU_20241022
             CLAUDE_HAIKU_4_5 -> Known.CLAUDE_HAIKU_4_5
             CLAUDE_HAIKU_4_5_20251001 -> Known.CLAUDE_HAIKU_4_5_20251001
-            CLAUDE_SONNET_4_20250514 -> Known.CLAUDE_SONNET_4_20250514
-            CLAUDE_SONNET_4_0 -> Known.CLAUDE_SONNET_4_0
-            CLAUDE_4_SONNET_20250514 -> Known.CLAUDE_4_SONNET_20250514
+            CLAUDE_OPUS_4_5 -> Known.CLAUDE_OPUS_4_5
+            CLAUDE_OPUS_4_5_20251101 -> Known.CLAUDE_OPUS_4_5_20251101
             CLAUDE_SONNET_4_5 -> Known.CLAUDE_SONNET_4_5
             CLAUDE_SONNET_4_5_20250929 -> Known.CLAUDE_SONNET_4_5_20250929
+            CLAUDE_OPUS_4_1 -> Known.CLAUDE_OPUS_4_1
+            CLAUDE_OPUS_4_1_20250805 -> Known.CLAUDE_OPUS_4_1_20250805
             CLAUDE_OPUS_4_0 -> Known.CLAUDE_OPUS_4_0
             CLAUDE_OPUS_4_20250514 -> Known.CLAUDE_OPUS_4_20250514
-            CLAUDE_4_OPUS_20250514 -> Known.CLAUDE_4_OPUS_20250514
-            CLAUDE_OPUS_4_1_20250805 -> Known.CLAUDE_OPUS_4_1_20250805
-            CLAUDE_3_OPUS_LATEST -> Known.CLAUDE_3_OPUS_LATEST
-            CLAUDE_3_OPUS_20240229 -> Known.CLAUDE_3_OPUS_20240229
+            CLAUDE_SONNET_4_0 -> Known.CLAUDE_SONNET_4_0
+            CLAUDE_SONNET_4_20250514 -> Known.CLAUDE_SONNET_4_20250514
             CLAUDE_3_HAIKU_20240307 -> Known.CLAUDE_3_HAIKU_20240307
             else -> throw AnthropicInvalidDataException("Unknown Model: $value")
         }
