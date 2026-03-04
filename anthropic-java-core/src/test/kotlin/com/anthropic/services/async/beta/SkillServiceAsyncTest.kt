@@ -15,7 +15,9 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class SkillServiceAsyncTest {
 
-    @Disabled("prism binary unsupported")
+    @Disabled(
+        "multipartFormData does not handle List<InputStream>: AnthropicInvalidDataException: Unexpected JsonNode type in array: BINARY"
+    )
     @Test
     fun create() {
         val client =
