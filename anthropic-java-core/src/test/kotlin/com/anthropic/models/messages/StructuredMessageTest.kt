@@ -34,7 +34,7 @@ import org.mockito.kotlin.verify
  */
 internal class StructuredMessageTest {
     companion object {
-        private val MODEL = Model.CLAUDE_4_SONNET_20250514
+        private val MODEL = Model.CLAUDE_SONNET_4_5
         private val USAGE =
             Usage.builder()
                 .cacheCreation(null)

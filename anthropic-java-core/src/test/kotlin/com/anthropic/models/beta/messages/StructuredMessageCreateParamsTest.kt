@@ -44,7 +44,7 @@ import org.mockito.kotlin.verify
  */
 internal class StructuredMessageCreateParamsTest {
     companion object {
-        private val MODEL = Model.CLAUDE_4_SONNET_20250514
+        private val MODEL = Model.CLAUDE_SONNET_4_5
         private val ANTHROPIC_BETA = AnthropicBeta.TOKEN_COUNTING_2024_11_01
 
         private val MESSAGE =

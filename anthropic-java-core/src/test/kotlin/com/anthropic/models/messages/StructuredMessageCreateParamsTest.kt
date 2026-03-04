@@ -31,7 +31,7 @@ internal class StructuredMessageCreateParamsTest {
             MessageCreateParams.Body.builder()
                 .maxTokens(1024)
                 .messages(emptyList())
-                .model(Model.CLAUDE_4_SONNET_20250514)
+                .model(Model.CLAUDE_SONNET_4_5)
                 .build()
 
         @JvmStatic
@@ -51,7 +51,7 @@ internal class StructuredMessageCreateParamsTest {
                     Message.builder()
                         .id("msg_1")
                         .content(emptyList())
-                        .model(Model.CLAUDE_4_SONNET_20250514)
+                        .model(Model.CLAUDE_SONNET_4_5)
                         .stopReason(StopReason.END_TURN)
                         .stopSequence(null)
                         .usage(
@@ -80,8 +80,8 @@ internal class StructuredMessageCreateParamsTest {
                     "addAssistantMessageOfBlockParams",
                     emptyList<ContentBlockParam>(),
                 ),
-                DelegationWriteTestCase("model", Model.CLAUDE_4_SONNET_20250514),
-                DelegationWriteTestCase("model", JsonField.of(Model.CLAUDE_4_SONNET_20250514)),
+                DelegationWriteTestCase("model", Model.CLAUDE_SONNET_4_5),
+                DelegationWriteTestCase("model", JsonField.of(Model.CLAUDE_SONNET_4_5)),
                 DelegationWriteTestCase("model", "claude-4-sonnet-20250514"),
                 DelegationWriteTestCase("cacheControl", null as CacheControlEphemeral?),
                 DelegationWriteTestCase(
@@ -318,7 +318,7 @@ internal class StructuredMessageCreateParamsTest {
         val builder =
             MessageCreateParams.builder()
                 .maxTokens(1024)
-                .model(Model.CLAUDE_4_SONNET_20250514)
+                .model(Model.CLAUDE_SONNET_4_5)
                 .addUserMessage("test")
                 .outputConfig(X::class.java)
                 .build()
