@@ -321,6 +321,9 @@ internal class StructuredMessageCreateParamsTest {
         // internally instead of the delegate's `outputFormat`.
         val delegatorTestCase = DelegationWriteTestCase("outputFormat", X::class.java)
         val delegatorMethod = findDelegationMethod(builderDelegator, delegatorTestCase)
+        val mockDelegateTestCase =
+            DelegationWriteTestCase("outputFormat", betaOutputFormatFromClass(X::class.java))
+        val mockDelegateMethod = findDelegationMethod(mockBuilderDelegate, mockDelegateTestCase)
 
         @Suppress("DEPRECATION")
         delegatorMethod.invoke(builderDelegator, delegatorTestCase.inputValues[0])

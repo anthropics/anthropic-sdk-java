@@ -2400,7 +2400,7 @@ private constructor(
                 temperature = body.temperature
                 thinking = body.thinking
                 toolChoice = body.toolChoice
-                tools = body.tools.map { it.toMutableList() }
+                tools = body.tools.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 topK = body.topK
                 topP = body.topP
                 additionalProperties = body.additionalProperties.toMutableMap()

@@ -39,17 +39,6 @@ internal class StructuredContentBlockTest {
         private val REDACTED_THINKING = BetaRedactedThinkingBlock.builder().data(STRING).build()
         private val TOOL_USE =
             BetaToolUseBlock.builder().id(STRING).input(JSON_VALUE).name(STRING).build()
-        private val TOOL_SEARCH_TOOL_RESULT =
-            BetaToolSearchToolResultBlock.builder()
-                .content(
-                    BetaToolSearchToolResultBlock.Content.ofBetaToolSearchToolSearchResultBlock(
-                        BetaToolSearchToolSearchResultBlock.builder()
-                            .toolReferences(listOf())
-                            .build()
-                    )
-                )
-                .toolUseId(STRING)
-                .build()
         private val SERVER_TOOL_USE =
             BetaServerToolUseBlock.builder()
                 .id(STRING)
@@ -108,6 +97,18 @@ internal class StructuredContentBlockTest {
                         )
                         .errorMessage(null)
                         .build()
+                )
+                .toolUseId(STRING)
+                .build()
+        private val TOOL_SEARCH_TOOL_RESULT =
+            BetaToolSearchToolResultBlock.builder()
+                .content(
+                    BetaToolSearchToolResultBlock.Content.ofBetaToolSearchToolResultError(
+                        BetaToolSearchToolResultError.builder()
+                            .errorCode(BetaToolSearchToolResultError.ErrorCode.INVALID_TOOL_INPUT)
+                            .errorMessage(null)
+                            .build()
+                    )
                 )
                 .toolUseId(STRING)
                 .build()

@@ -160,6 +160,17 @@ internal constructor(
     private fun generateToolUseResult(
         toolUse: BetaToolUseBlockParam,
         toolsByName: Map<String, List<RunnableTool>>,
+    ): BetaToolResultBlockParam =
+        when (toolUse.name()) {
+            // Memory tool commands have the same type (`"tool_use"`) as other tool use blocks, but
+            // the tool name is always `"memory"`.
+            "memory" -> generateMemoryToolUseResult(toolUse)
+            else -> generateGenericToolUseResult(toolUse, toolsByName)
+        }
+
+    private fun generateGenericToolUseResult(
+        toolUse: BetaToolUseBlockParam,
+        toolsByName: Map<String, List<RunnableTool>>,
     ): BetaToolResultBlockParam {
         val tool =
             toolsByName[toolUse.name()]?.firstOrNull()
@@ -180,6 +191,69 @@ internal constructor(
             }
 
         return BetaToolResultBlockParam.builder().toolUseId(toolUse.id()).content(content).build()
+    }
+
+    /**
+     * Generates a tool use result for a memory tool command. There can be only one memory tool and
+     * its name must be `"memory"`.
+     */
+    private fun generateMemoryToolUseResult(
+        toolUse: BetaToolUseBlockParam
+    ): BetaToolResultBlockParam {
+        val command =
+            outputTypeFromJson(
+                toJsonString(toolUse._input()),
+                BetaMemoryTool20250818Command::class.java,
+            )
+        // Allow an exception if this is not set. `ToolRunnerCreateParams.Builder` should ensure
+        // that it is present if the request declared a memory tool.
+        val handler = params.betaMemoryToolHandler().get()
+        val memoryToolOutput =
+            try {
+                command.accept(
+                    object : BetaMemoryTool20250818Command.Visitor<String> {
+                        override fun visitView(view: BetaMemoryTool20250818ViewCommand): String =
+                            handler.view(view.path(), view.viewRange())
+
+                        override fun visitCreate(
+                            create: BetaMemoryTool20250818CreateCommand
+                        ): String = handler.create(create.path(), create.fileText())
+
+                        override fun visitStrReplace(
+                            strReplace: BetaMemoryTool20250818StrReplaceCommand
+                        ): String =
+                            handler.strReplace(
+                                strReplace.path(),
+                                strReplace.oldStr(),
+                                strReplace.newStr(),
+                            )
+
+                        override fun visitInsert(
+                            insert: BetaMemoryTool20250818InsertCommand
+                        ): String =
+                            handler.insert(insert.path(), insert.insertLine(), insert.insertText())
+
+                        override fun visitDelete(
+                            delete: BetaMemoryTool20250818DeleteCommand
+                        ): String = handler.delete(delete.path())
+
+                        override fun visitRename(
+                            rename: BetaMemoryTool20250818RenameCommand
+                        ): String = handler.rename(rename.oldPath(), rename.newPath())
+                    }
+                )
+            } catch (e: Exception) {
+                return BetaToolResultBlockParam.builder()
+                    .toolUseId(toolUse.id())
+                    .content("Error: ${e.message}")
+                    .isError(true)
+                    .build()
+            }
+
+        return BetaToolResultBlockParam.builder()
+            .toolUseId(toolUse.id())
+            .content(memoryToolOutput)
+            .build()
     }
 }
 
