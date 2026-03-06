@@ -38,7 +38,9 @@ public final class BetaToolRunnerStreamingExample {
                         .addTool(GetWeather.class)
                         .build());
         for (StreamResponse<BetaRawMessageStreamEvent> streamResponse : toolRunner.streaming()) {
-            streamResponse.stream().forEach(System.out::println);
+            try (streamResponse) {
+                streamResponse.stream().forEach(System.out::println);
+            }
         }
     }
 }
