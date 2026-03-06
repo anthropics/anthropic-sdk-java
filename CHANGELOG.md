@@ -1,5 +1,40 @@
 # Changelog
 
+## 2.16.0 (2026-03-06)
+
+Full Changelog: [v2.15.0...v2.16.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.15.0...v2.16.0)
+
+### Features
+
+* **api:** change array_format to brackets ([f9eef6e](https://github.com/anthropics/anthropic-sdk-java/commit/f9eef6ecfdfc0e4ab88a089814412ff0cbf2b04c))
+* **api:** chore(config): clean up model enum list ([#31](https://github.com/anthropics/anthropic-sdk-java/issues/31)) ([b19aa51](https://github.com/anthropics/anthropic-sdk-java/commit/b19aa51b22b53448ad11252b5f546d6fb7dc711e))
+* **api:** remove publishing section from cli target ([f802cb0](https://github.com/anthropics/anthropic-sdk-java/commit/f802cb0b4cffaaf618c51c630b61275c888d742f))
+* **client:** support memory tools ([#853](https://github.com/anthropics/anthropic-sdk-java/issues/853)) ([f824954](https://github.com/anthropics/anthropic-sdk-java/commit/f8249549dadd9761bf844b5f95f9a497624c894a))
+* **tests:** update mock server ([1ec509c](https://github.com/anthropics/anthropic-sdk-java/commit/1ec509c7fa541309bd5c21226e5a8c1737410fe4))
+
+
+### Bug Fixes
+
+* clear last tool response when user sets next params ([#895](https://github.com/anthropics/anthropic-sdk-java/issues/895)) ([5b082a0](https://github.com/anthropics/anthropic-sdk-java/commit/5b082a0121726ea1699d84b202e91203293120f1))
+* **client:** update model references from claude-4-sonnet-20250514 to claude-sonnet-4-5 ([746d5da](https://github.com/anthropics/anthropic-sdk-java/commit/746d5da19056a51be7ff5944ae02f13c75ff9859))
+* set Accept header in more places ([bc159c8](https://github.com/anthropics/anthropic-sdk-java/commit/bc159c81f3d8db19547743b6245334ba865db73d))
+
+
+### Chores
+
+* drop apache dependency ([ee7f3d4](https://github.com/anthropics/anthropic-sdk-java/commit/ee7f3d492c91958fa7fe5ca73195dd2fa96284d4))
+* **internal:** codegen related update ([159c037](https://github.com/anthropics/anthropic-sdk-java/commit/159c0376d6ad217e6f6eb675b5e56b94259be553))
+* **internal:** expand imports ([6a3adca](https://github.com/anthropics/anthropic-sdk-java/commit/6a3adca5f3ba072dbf10e3d95c3dd6116f64b353))
+* make `Properties` more resilient to `null` ([5c7ad57](https://github.com/anthropics/anthropic-sdk-java/commit/5c7ad57d2a9c6ee69fe1c96a6cd8e5e2ada67f87))
+* rename method to avoid conflict ([b9b400d](https://github.com/anthropics/anthropic-sdk-java/commit/b9b400dbd836080a1a4f5cf9eca2a2895e56430c))
+* **tests:** unskip tests that are now supported in steady ([8cad6ac](https://github.com/anthropics/anthropic-sdk-java/commit/8cad6ac00c3e7cf25666c22bee7b823bd561ba07))
+
+
+### Documentation
+
+* additional structured outputs documentation ([#302](https://github.com/anthropics/anthropic-sdk-java/issues/302)) ([3b1f131](https://github.com/anthropics/anthropic-sdk-java/commit/3b1f131312954856ecdaa66f06741e1e5f86d81d))
+* streamline README and rebrand to Claude SDK ([#815](https://github.com/anthropics/anthropic-sdk-java/issues/815)) ([6b550bf](https://github.com/anthropics/anthropic-sdk-java/commit/6b550bf8e9a3106a521eeabbda9b12240ab3bb3f))
+
 ## 2.15.0 (2026-02-19)
 
 Full Changelog: [v2.14.0...v2.15.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.14.0...v2.15.0)
