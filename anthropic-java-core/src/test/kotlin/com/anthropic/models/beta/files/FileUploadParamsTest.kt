@@ -15,7 +15,7 @@ internal class FileUploadParamsTest {
     fun create() {
         FileUploadParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-            .file("some content".byteInputStream())
+            .file("Example data".byteInputStream())
             .build()
     }
 
@@ -24,7 +24,7 @@ internal class FileUploadParamsTest {
         val params =
             FileUploadParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                .file("some content".byteInputStream())
+                .file("Example data".byteInputStream())
                 .build()
 
         val headers = params._headers()
@@ -37,7 +37,7 @@ internal class FileUploadParamsTest {
 
     @Test
     fun headersWithoutOptionalFields() {
-        val params = FileUploadParams.builder().file("some content".byteInputStream()).build()
+        val params = FileUploadParams.builder().file("Example data".byteInputStream()).build()
 
         val headers = params._headers()
 
@@ -49,7 +49,7 @@ internal class FileUploadParamsTest {
         val params =
             FileUploadParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                .file("some content".byteInputStream())
+                .file("Example data".byteInputStream())
                 .build()
 
         val body = params._body()
@@ -63,7 +63,7 @@ internal class FileUploadParamsTest {
                 InputStream::class.java,
             )
             .isEqualTo(
-                mapOf("file" to MultipartField.of("some content".byteInputStream())).mapValues {
+                mapOf("file" to MultipartField.of("Example data".byteInputStream())).mapValues {
                     (_, field) ->
                     field.map { (it as? ByteArray)?.inputStream() ?: it }
                 }
@@ -72,7 +72,7 @@ internal class FileUploadParamsTest {
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = FileUploadParams.builder().file("some content".byteInputStream()).build()
+        val params = FileUploadParams.builder().file("Example data".byteInputStream()).build()
 
         val body = params._body()
 
@@ -85,7 +85,7 @@ internal class FileUploadParamsTest {
                 InputStream::class.java,
             )
             .isEqualTo(
-                mapOf("file" to MultipartField.of("some content".byteInputStream())).mapValues {
+                mapOf("file" to MultipartField.of("Example data".byteInputStream())).mapValues {
                     (_, field) ->
                     field.map { (it as? ByteArray)?.inputStream() ?: it }
                 }

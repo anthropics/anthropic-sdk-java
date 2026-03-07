@@ -117,7 +117,7 @@ internal class FileServiceAsyncTest {
             fileServiceAsync.upload(
                 FileUploadParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                    .file("some content".byteInputStream())
+                    .file("Example data".byteInputStream())
                     .build()
             )
 
