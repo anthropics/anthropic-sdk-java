@@ -16,7 +16,7 @@ internal class VersionCreateParamsTest {
         VersionCreateParams.builder()
             .skillId("skill_id")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-            .addFile("some content".byteInputStream())
+            .addFile("Example data".byteInputStream())
             .build()
     }
 
@@ -35,7 +35,7 @@ internal class VersionCreateParamsTest {
             VersionCreateParams.builder()
                 .skillId("skill_id")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                .addFile("some content".byteInputStream())
+                .addFile("Example data".byteInputStream())
                 .build()
 
         val headers = params._headers()
@@ -61,7 +61,7 @@ internal class VersionCreateParamsTest {
             VersionCreateParams.builder()
                 .skillId("skill_id")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                .addFile("some content".byteInputStream())
+                .addFile("Example data".byteInputStream())
                 .build()
 
         val body = params._body()
@@ -78,7 +78,7 @@ internal class VersionCreateParamsTest {
                 mapOf(
                         "files" to
                             MultipartField.builder<List<InputStream>>()
-                                .value(listOf("some content".byteInputStream()))
+                                .value(listOf("Example data".byteInputStream()))
                                 .contentType("application/octet-stream")
                                 .build()
                     )

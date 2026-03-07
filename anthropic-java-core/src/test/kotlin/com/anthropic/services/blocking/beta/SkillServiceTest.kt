@@ -28,7 +28,7 @@ internal class SkillServiceTest {
                 SkillCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .displayTitle("display_title")
-                    .addFile("some content".byteInputStream())
+                    .addFile("Example data".byteInputStream())
                     .build()
             )
 
