@@ -16,7 +16,7 @@ internal class SkillCreateParamsTest {
         SkillCreateParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .displayTitle("display_title")
-            .addFile("some content".byteInputStream())
+            .addFile("Example data".byteInputStream())
             .build()
     }
 
@@ -26,7 +26,7 @@ internal class SkillCreateParamsTest {
             SkillCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .displayTitle("display_title")
-                .addFile("some content".byteInputStream())
+                .addFile("Example data".byteInputStream())
                 .build()
 
         val headers = params._headers()
@@ -52,7 +52,7 @@ internal class SkillCreateParamsTest {
             SkillCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .displayTitle("display_title")
-                .addFile("some content".byteInputStream())
+                .addFile("Example data".byteInputStream())
                 .build()
 
         val body = params._body()
@@ -70,7 +70,7 @@ internal class SkillCreateParamsTest {
                         "display_title" to MultipartField.of("display_title"),
                         "files" to
                             MultipartField.builder<List<InputStream>>()
-                                .value(listOf("some content".byteInputStream()))
+                                .value(listOf("Example data".byteInputStream()))
                                 .contentType("application/octet-stream")
                                 .build(),
                     )

@@ -32,7 +32,7 @@ internal class VersionServiceAsyncTest {
                 VersionCreateParams.builder()
                     .skillId("skill_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                    .addFile("some content".byteInputStream())
+                    .addFile("Example data".byteInputStream())
                     .build()
             )
 
