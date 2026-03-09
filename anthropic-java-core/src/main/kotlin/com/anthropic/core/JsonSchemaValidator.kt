@@ -213,8 +213,9 @@ internal class JsonSchemaValidator private constructor() {
         val type = schema.get(TYPE)
         val ref = schema.get(REF)
 
+        val presentCount = listOf(anyOf != null, type != null, ref != null).count { it }
         verify(
-            (anyOf != null).xor(type != null).xor(ref != null),
+            presentCount == 1,
             path,
             { "Expected exactly one of '$TYPE' or '$ANY_OF' or '$REF'." },
         ) {
