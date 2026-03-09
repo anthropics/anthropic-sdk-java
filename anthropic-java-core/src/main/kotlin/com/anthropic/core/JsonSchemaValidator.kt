@@ -213,8 +213,7 @@ internal class JsonSchemaValidator private constructor() {
         val type = schema.get(TYPE)
         val ref = schema.get(REF)
 
-        val presentCount =
-            listOf(anyOf != null, type != null, ref != null).count { it }
+        val presentCount = listOf(anyOf != null, type != null, ref != null).count { it }
         verify(
             presentCount == 1,
             path,
