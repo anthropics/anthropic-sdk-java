@@ -38,6 +38,7 @@ import org.junit.jupiter.params.provider.ValueSource
 internal class RetryingHttpClientTest {
 
     private var openResponseCount = 0
+    private lateinit var baseUrl: String
     private lateinit var httpClient: HttpClient
 
     private class TestBackend(private val baseUrl: String) : Backend {
@@ -63,6 +64,7 @@ internal class RetryingHttpClientTest {
 
     @BeforeEach
     fun beforeEach(wmRuntimeInfo: WireMockRuntimeInfo) {
+        baseUrl = wmRuntimeInfo.httpBaseUrl
         val okHttpClient =
             OkHttpClient.builder().backend(TestBackend(wmRuntimeInfo.httpBaseUrl)).build()
         httpClient =
