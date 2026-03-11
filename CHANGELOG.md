@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.16.1 (2026-03-11)
+
+Full Changelog: [v2.16.0...v2.16.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.16.0...v2.16.1)
+
+### Bug Fixes
+
+* **client:** correct "exactly one" check in JSON schema validator ([#309](https://github.com/anthropics/anthropic-sdk-java/issues/309)) ([6e58ba9](https://github.com/anthropics/anthropic-sdk-java/commit/6e58ba95500b8eaf5b8810c3c7d407ec1bc24375))
+* **tests:** declare baseUrl field in RetryingHttpClientTest ([#1003](https://github.com/anthropics/anthropic-sdk-java/issues/1003)) ([4546f83](https://github.com/anthropics/anthropic-sdk-java/commit/4546f832613b67f80990c2f85ff2b62e7187f872))
+
+
+### Chores
+
+* **internal:** codegen related update ([7a3a942](https://github.com/anthropics/anthropic-sdk-java/commit/7a3a942c81733e896c380a84e0419db1890bf112))
+* **internal:** codegen related update ([a293049](https://github.com/anthropics/anthropic-sdk-java/commit/a293049d665ddc9fc6ab9b92f752d72d128ed981))
+
 ## 2.16.0 (2026-03-06)
 
 Full Changelog: [v2.15.0...v2.16.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.15.0...v2.16.0)
