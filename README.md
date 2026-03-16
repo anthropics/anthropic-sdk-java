@@ -15,7 +15,7 @@ Full documentation is available at **[platform.claude.com/docs/en/api/sdks/java]
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java:2.16.1")
+implementation("com.anthropic:anthropic-java:2.17.0")
 ```
 
 ### Maven
@@ -24,7 +24,7 @@ implementation("com.anthropic:anthropic-java:2.16.1")
 <dependency>
   <groupId>com.anthropic</groupId>
   <artifactId>anthropic-java</artifactId>
-  <version>2.16.1</version>
+  <version>2.17.0</version>
 </dependency>
 ```
 

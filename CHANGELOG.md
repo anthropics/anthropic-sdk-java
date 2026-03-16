@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.17.0 (2026-03-16)
+
+Full Changelog: [v2.16.1...v2.17.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.16.1...v2.17.0)
+
+### Features
+
+* **api:** GA thinking-display-setting ([422b461](https://github.com/anthropics/anthropic-sdk-java/commit/422b461b862c4260a426fb31e3f3db34479ddbf4))
+
 ## 2.16.1 (2026-03-11)
 
 Full Changelog: [v2.16.0...v2.16.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.16.0...v2.16.1)
