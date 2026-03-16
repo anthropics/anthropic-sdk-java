@@ -13,6 +13,7 @@ import com.anthropic.models.messages.Metadata
 import com.anthropic.models.messages.Model
 import com.anthropic.models.messages.OutputConfig
 import com.anthropic.models.messages.TextBlockParam
+import com.anthropic.models.messages.ThinkingConfigAdaptive
 import com.anthropic.models.messages.Tool
 import com.anthropic.models.messages.ToolChoiceAuto
 import com.github.tomakehurst.wiremock.client.WireMock.anyUrl
@@ -98,7 +99,11 @@ internal class ServiceParamsTest {
                     )
                 )
                 .temperature(1.0)
-                .enabledThinking(1024L)
+                .thinking(
+                    ThinkingConfigAdaptive.builder()
+                        .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                        .build()
+                )
                 .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
                     Tool.builder()

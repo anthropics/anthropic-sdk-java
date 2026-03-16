@@ -16,7 +16,11 @@ internal class BetaThinkingConfigParamTest {
 
     @Test
     fun ofEnabled() {
-        val enabled = BetaThinkingConfigEnabled.builder().budgetTokens(1024L).build()
+        val enabled =
+            BetaThinkingConfigEnabled.builder()
+                .budgetTokens(1024L)
+                .display(BetaThinkingConfigEnabled.Display.SUMMARIZED)
+                .build()
 
         val betaThinkingConfigParam = BetaThinkingConfigParam.ofEnabled(enabled)
 
@@ -30,7 +34,10 @@ internal class BetaThinkingConfigParamTest {
         val jsonMapper = jsonMapper()
         val betaThinkingConfigParam =
             BetaThinkingConfigParam.ofEnabled(
-                BetaThinkingConfigEnabled.builder().budgetTokens(1024L).build()
+                BetaThinkingConfigEnabled.builder()
+                    .budgetTokens(1024L)
+                    .display(BetaThinkingConfigEnabled.Display.SUMMARIZED)
+                    .build()
             )
 
         val roundtrippedBetaThinkingConfigParam =
@@ -70,7 +77,10 @@ internal class BetaThinkingConfigParamTest {
 
     @Test
     fun ofAdaptive() {
-        val adaptive = BetaThinkingConfigAdaptive.builder().build()
+        val adaptive =
+            BetaThinkingConfigAdaptive.builder()
+                .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
+                .build()
 
         val betaThinkingConfigParam = BetaThinkingConfigParam.ofAdaptive(adaptive)
 
@@ -83,7 +93,11 @@ internal class BetaThinkingConfigParamTest {
     fun ofAdaptiveRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaThinkingConfigParam =
-            BetaThinkingConfigParam.ofAdaptive(BetaThinkingConfigAdaptive.builder().build())
+            BetaThinkingConfigParam.ofAdaptive(
+                BetaThinkingConfigAdaptive.builder()
+                    .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
+                    .build()
+            )
 
         val roundtrippedBetaThinkingConfigParam =
             jsonMapper.readValue(

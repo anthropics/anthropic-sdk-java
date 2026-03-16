@@ -11,15 +11,25 @@ internal class ThinkingConfigEnabledTest {
 
     @Test
     fun create() {
-        val thinkingConfigEnabled = ThinkingConfigEnabled.builder().budgetTokens(1024L).build()
+        val thinkingConfigEnabled =
+            ThinkingConfigEnabled.builder()
+                .budgetTokens(1024L)
+                .display(ThinkingConfigEnabled.Display.SUMMARIZED)
+                .build()
 
         assertThat(thinkingConfigEnabled.budgetTokens()).isEqualTo(1024L)
+        assertThat(thinkingConfigEnabled.display())
+            .contains(ThinkingConfigEnabled.Display.SUMMARIZED)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val thinkingConfigEnabled = ThinkingConfigEnabled.builder().budgetTokens(1024L).build()
+        val thinkingConfigEnabled =
+            ThinkingConfigEnabled.builder()
+                .budgetTokens(1024L)
+                .display(ThinkingConfigEnabled.Display.SUMMARIZED)
+                .build()
 
         val roundtrippedThinkingConfigEnabled =
             jsonMapper.readValue(

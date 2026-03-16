@@ -61,6 +61,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20250910()).isEmpty
         assertThat(toolUnion.webSearchTool20260209()).isEmpty
         assertThat(toolUnion.webFetchTool20260209()).isEmpty
+        assertThat(toolUnion.webFetchTool20260309()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
     }
@@ -143,6 +144,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20250910()).isEmpty
         assertThat(toolUnion.webSearchTool20260209()).isEmpty
         assertThat(toolUnion.webFetchTool20260209()).isEmpty
+        assertThat(toolUnion.webFetchTool20260309()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
     }
@@ -205,6 +207,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20250910()).isEmpty
         assertThat(toolUnion.webSearchTool20260209()).isEmpty
         assertThat(toolUnion.webFetchTool20260209()).isEmpty
+        assertThat(toolUnion.webFetchTool20260309()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
     }
@@ -262,6 +265,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20250910()).isEmpty
         assertThat(toolUnion.webSearchTool20260209()).isEmpty
         assertThat(toolUnion.webFetchTool20260209()).isEmpty
+        assertThat(toolUnion.webFetchTool20260309()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
     }
@@ -319,6 +323,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20250910()).isEmpty
         assertThat(toolUnion.webSearchTool20260209()).isEmpty
         assertThat(toolUnion.webFetchTool20260209()).isEmpty
+        assertThat(toolUnion.webFetchTool20260309()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
     }
@@ -381,6 +386,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20250910()).isEmpty
         assertThat(toolUnion.webSearchTool20260209()).isEmpty
         assertThat(toolUnion.webFetchTool20260209()).isEmpty
+        assertThat(toolUnion.webFetchTool20260309()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
     }
@@ -448,6 +454,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20250910()).isEmpty
         assertThat(toolUnion.webSearchTool20260209()).isEmpty
         assertThat(toolUnion.webFetchTool20260209()).isEmpty
+        assertThat(toolUnion.webFetchTool20260309()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
     }
@@ -515,6 +522,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20250910()).isEmpty
         assertThat(toolUnion.webSearchTool20260209()).isEmpty
         assertThat(toolUnion.webFetchTool20260209()).isEmpty
+        assertThat(toolUnion.webFetchTool20260309()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
     }
@@ -583,6 +591,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20250910()).isEmpty
         assertThat(toolUnion.webSearchTool20260209()).isEmpty
         assertThat(toolUnion.webFetchTool20260209()).isEmpty
+        assertThat(toolUnion.webFetchTool20260309()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
     }
@@ -657,6 +666,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20250910()).isEmpty
         assertThat(toolUnion.webSearchTool20260209()).isEmpty
         assertThat(toolUnion.webFetchTool20260209()).isEmpty
+        assertThat(toolUnion.webFetchTool20260309()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
     }
@@ -730,6 +740,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20250910()).contains(webFetchTool20250910)
         assertThat(toolUnion.webSearchTool20260209()).isEmpty
         assertThat(toolUnion.webFetchTool20260209()).isEmpty
+        assertThat(toolUnion.webFetchTool20260309()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
     }
@@ -803,6 +814,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20250910()).isEmpty
         assertThat(toolUnion.webSearchTool20260209()).contains(webSearchTool20260209)
         assertThat(toolUnion.webFetchTool20260209()).isEmpty
+        assertThat(toolUnion.webFetchTool20260309()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
     }
@@ -876,6 +888,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20250910()).isEmpty
         assertThat(toolUnion.webSearchTool20260209()).isEmpty
         assertThat(toolUnion.webFetchTool20260209()).contains(webFetchTool20260209)
+        assertThat(toolUnion.webFetchTool20260309()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
     }
@@ -899,6 +912,76 @@ internal class ToolUnionTest {
                     .maxContentTokens(1L)
                     .maxUses(1L)
                     .strict(true)
+                    .build()
+            )
+
+        val roundtrippedToolUnion =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(toolUnion),
+                jacksonTypeRef<ToolUnion>(),
+            )
+
+        assertThat(roundtrippedToolUnion).isEqualTo(toolUnion)
+    }
+
+    @Test
+    fun ofWebFetchTool20260309() {
+        val webFetchTool20260309 =
+            WebFetchTool20260309.builder()
+                .addAllowedCaller(WebFetchTool20260309.AllowedCaller.DIRECT)
+                .addAllowedDomain("string")
+                .addBlockedDomain("string")
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
+                .citations(CitationsConfigParam.builder().enabled(true).build())
+                .deferLoading(true)
+                .maxContentTokens(1L)
+                .maxUses(1L)
+                .strict(true)
+                .useCache(true)
+                .build()
+
+        val toolUnion = ToolUnion.ofWebFetchTool20260309(webFetchTool20260309)
+
+        assertThat(toolUnion.tool()).isEmpty
+        assertThat(toolUnion.bash20250124()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(toolUnion.memoryTool20250818()).isEmpty
+        assertThat(toolUnion.textEditor20250124()).isEmpty
+        assertThat(toolUnion.textEditor20250429()).isEmpty
+        assertThat(toolUnion.textEditor20250728()).isEmpty
+        assertThat(toolUnion.webSearchTool20250305()).isEmpty
+        assertThat(toolUnion.webFetchTool20250910()).isEmpty
+        assertThat(toolUnion.webSearchTool20260209()).isEmpty
+        assertThat(toolUnion.webFetchTool20260209()).isEmpty
+        assertThat(toolUnion.webFetchTool20260309()).contains(webFetchTool20260309)
+        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
+        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+    }
+
+    @Test
+    fun ofWebFetchTool20260309Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val toolUnion =
+            ToolUnion.ofWebFetchTool20260309(
+                WebFetchTool20260309.builder()
+                    .addAllowedCaller(WebFetchTool20260309.AllowedCaller.DIRECT)
+                    .addAllowedDomain("string")
+                    .addBlockedDomain("string")
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .citations(CitationsConfigParam.builder().enabled(true).build())
+                    .deferLoading(true)
+                    .maxContentTokens(1L)
+                    .maxUses(1L)
+                    .strict(true)
+                    .useCache(true)
                     .build()
             )
 
@@ -939,6 +1022,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20250910()).isEmpty
         assertThat(toolUnion.webSearchTool20260209()).isEmpty
         assertThat(toolUnion.webFetchTool20260209()).isEmpty
+        assertThat(toolUnion.webFetchTool20260309()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).contains(searchToolBm25_20251119)
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
     }
@@ -998,6 +1082,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20250910()).isEmpty
         assertThat(toolUnion.webSearchTool20260209()).isEmpty
         assertThat(toolUnion.webFetchTool20260209()).isEmpty
+        assertThat(toolUnion.webFetchTool20260309()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).contains(searchToolRegex20251119)
     }

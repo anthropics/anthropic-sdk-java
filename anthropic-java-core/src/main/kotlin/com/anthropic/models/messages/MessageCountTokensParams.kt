@@ -831,6 +831,14 @@ private constructor(
 
         /**
          * Alias for calling [addTool] with
+         * `MessageCountTokensTool.ofWebFetchTool20260309(webFetchTool20260309)`.
+         */
+        fun addTool(webFetchTool20260309: WebFetchTool20260309) = apply {
+            body.addTool(webFetchTool20260309)
+        }
+
+        /**
+         * Alias for calling [addTool] with
          * `MessageCountTokensTool.ofToolSearchToolBm25_20251119(toolSearchToolBm25_20251119)`.
          */
         fun addTool(toolSearchToolBm25_20251119: ToolSearchToolBm25_20251119) = apply {
@@ -1866,6 +1874,13 @@ private constructor(
              */
             fun addTool(webFetchTool20260209: WebFetchTool20260209) =
                 addTool(MessageCountTokensTool.ofWebFetchTool20260209(webFetchTool20260209))
+
+            /**
+             * Alias for calling [addTool] with
+             * `MessageCountTokensTool.ofWebFetchTool20260309(webFetchTool20260309)`.
+             */
+            fun addTool(webFetchTool20260309: WebFetchTool20260309) =
+                addTool(MessageCountTokensTool.ofWebFetchTool20260309(webFetchTool20260309))
 
             /**
              * Alias for calling [addTool] with

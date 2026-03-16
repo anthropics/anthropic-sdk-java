@@ -11,13 +11,22 @@ internal class ThinkingConfigAdaptiveTest {
 
     @Test
     fun create() {
-        val thinkingConfigAdaptive = ThinkingConfigAdaptive.builder().build()
+        val thinkingConfigAdaptive =
+            ThinkingConfigAdaptive.builder()
+                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                .build()
+
+        assertThat(thinkingConfigAdaptive.display())
+            .contains(ThinkingConfigAdaptive.Display.SUMMARIZED)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val thinkingConfigAdaptive = ThinkingConfigAdaptive.builder().build()
+        val thinkingConfigAdaptive =
+            ThinkingConfigAdaptive.builder()
+                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                .build()
 
         val roundtrippedThinkingConfigAdaptive =
             jsonMapper.readValue(
