@@ -49,6 +49,7 @@ import com.anthropic.models.messages.ToolTextEditor20250728
 import com.anthropic.models.messages.ToolUnion
 import com.anthropic.models.messages.WebFetchTool20250910
 import com.anthropic.models.messages.WebFetchTool20260209
+import com.anthropic.models.messages.WebFetchTool20260309
 import com.anthropic.models.messages.WebSearchTool20250305
 import com.anthropic.models.messages.WebSearchTool20260209
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -2019,6 +2020,13 @@ private constructor(
                  */
                 fun addTool(webFetchTool20260209: WebFetchTool20260209) =
                     addTool(ToolUnion.ofWebFetchTool20260209(webFetchTool20260209))
+
+                /**
+                 * Alias for calling [addTool] with
+                 * `ToolUnion.ofWebFetchTool20260309(webFetchTool20260309)`.
+                 */
+                fun addTool(webFetchTool20260309: WebFetchTool20260309) =
+                    addTool(ToolUnion.ofWebFetchTool20260309(webFetchTool20260309))
 
                 /**
                  * Alias for calling [addTool] with

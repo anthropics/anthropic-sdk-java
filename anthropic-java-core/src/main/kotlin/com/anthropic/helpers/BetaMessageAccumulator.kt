@@ -95,13 +95,13 @@ class BetaMessageAccumulator private constructor() {
                 builder.iterations(
                     deltaUsage.iterations().getOrNull()?.map { deltaIteration ->
                         when {
-                            deltaIteration.isMessageIterationUsage() ->
-                                BetaUsage.BetaIterationsUsageItems.ofMessageIterationUsage(
-                                    deltaIteration.asMessageIterationUsage()
+                            deltaIteration.isMessage() ->
+                                BetaUsage.BetaIterationsUsageItems.ofMessage(
+                                    deltaIteration.asMessage()
                                 )
-                            deltaIteration.isCompactionIterationUsage() ->
-                                BetaUsage.BetaIterationsUsageItems.ofCompactionIterationUsage(
-                                    deltaIteration.asCompactionIterationUsage()
+                            deltaIteration.isCompaction() ->
+                                BetaUsage.BetaIterationsUsageItems.ofCompaction(
+                                    deltaIteration.asCompaction()
                                 )
                             else -> throw AnthropicInvalidDataException("Unknown iteration type")
                         }

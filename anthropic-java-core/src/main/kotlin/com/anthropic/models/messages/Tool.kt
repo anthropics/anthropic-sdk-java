@@ -950,6 +950,13 @@ private constructor(
             "InputSchema{type=$type, properties=$properties, required=$required, additionalProperties=$additionalProperties}"
     }
 
+    /**
+     * Specifies who can invoke a tool.
+     *
+     * Values: direct: The model can call this tool directly. code_execution_20250825: The tool can
+     * be called from the code execution environment (v1). code_execution_20260120: The tool can be
+     * called from the code execution environment (v2 with persistence).
+     */
     class AllowedCaller @JsonCreator private constructor(private val value: JsonField<String>) :
         Enum {
 

@@ -361,6 +361,11 @@ internal constructor(
         }
 
         /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(webFetchTool20260309: WebFetchTool20260309) = apply {
+            paramsBuilder.addTool(webFetchTool20260309)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
         fun addTool(searchToolBm25_20251119: ToolSearchToolBm25_20251119) = apply {
             paramsBuilder.addTool(searchToolBm25_20251119)
         }

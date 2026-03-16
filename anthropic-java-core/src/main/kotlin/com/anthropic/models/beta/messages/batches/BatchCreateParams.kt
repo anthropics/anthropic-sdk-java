@@ -59,6 +59,7 @@ import com.anthropic.models.beta.messages.BetaToolTextEditor20250728
 import com.anthropic.models.beta.messages.BetaToolUnion
 import com.anthropic.models.beta.messages.BetaWebFetchTool20250910
 import com.anthropic.models.beta.messages.BetaWebFetchTool20260209
+import com.anthropic.models.beta.messages.BetaWebFetchTool20260309
 import com.anthropic.models.beta.messages.BetaWebSearchTool20250305
 import com.anthropic.models.beta.messages.BetaWebSearchTool20260209
 import com.anthropic.models.messages.Model
@@ -2351,6 +2352,13 @@ private constructor(
                  */
                 fun addTool(webFetchTool20260209: BetaWebFetchTool20260209) =
                     addTool(BetaToolUnion.ofWebFetchTool20260209(webFetchTool20260209))
+
+                /**
+                 * Alias for calling [addTool] with
+                 * `BetaToolUnion.ofWebFetchTool20260309(webFetchTool20260309)`.
+                 */
+                fun addTool(webFetchTool20260309: BetaWebFetchTool20260309) =
+                    addTool(BetaToolUnion.ofWebFetchTool20260309(webFetchTool20260309))
 
                 /**
                  * Alias for calling [addTool] with

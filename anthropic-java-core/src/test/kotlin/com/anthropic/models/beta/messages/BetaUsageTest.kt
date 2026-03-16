@@ -59,7 +59,7 @@ internal class BetaUsageTest {
         assertThat(betaUsage.inputTokens()).isEqualTo(2095L)
         assertThat(betaUsage.iterations().getOrNull())
             .containsExactly(
-                BetaUsage.BetaIterationsUsageItems.ofMessageIterationUsage(
+                BetaUsage.BetaIterationsUsageItems.ofMessage(
                     BetaMessageIterationUsage.builder()
                         .cacheCreation(
                             BetaCacheCreation.builder()
