@@ -16,7 +16,11 @@ internal class ThinkingConfigParamTest {
 
     @Test
     fun ofEnabled() {
-        val enabled = ThinkingConfigEnabled.builder().budgetTokens(1024L).build()
+        val enabled =
+            ThinkingConfigEnabled.builder()
+                .budgetTokens(1024L)
+                .display(ThinkingConfigEnabled.Display.SUMMARIZED)
+                .build()
 
         val thinkingConfigParam = ThinkingConfigParam.ofEnabled(enabled)
 
@@ -30,7 +34,10 @@ internal class ThinkingConfigParamTest {
         val jsonMapper = jsonMapper()
         val thinkingConfigParam =
             ThinkingConfigParam.ofEnabled(
-                ThinkingConfigEnabled.builder().budgetTokens(1024L).build()
+                ThinkingConfigEnabled.builder()
+                    .budgetTokens(1024L)
+                    .display(ThinkingConfigEnabled.Display.SUMMARIZED)
+                    .build()
             )
 
         val roundtrippedThinkingConfigParam =
@@ -70,7 +77,10 @@ internal class ThinkingConfigParamTest {
 
     @Test
     fun ofAdaptive() {
-        val adaptive = ThinkingConfigAdaptive.builder().build()
+        val adaptive =
+            ThinkingConfigAdaptive.builder()
+                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                .build()
 
         val thinkingConfigParam = ThinkingConfigParam.ofAdaptive(adaptive)
 
@@ -83,7 +93,11 @@ internal class ThinkingConfigParamTest {
     fun ofAdaptiveRoundtrip() {
         val jsonMapper = jsonMapper()
         val thinkingConfigParam =
-            ThinkingConfigParam.ofAdaptive(ThinkingConfigAdaptive.builder().build())
+            ThinkingConfigParam.ofAdaptive(
+                ThinkingConfigAdaptive.builder()
+                    .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                    .build()
+            )
 
         val roundtrippedThinkingConfigParam =
             jsonMapper.readValue(

@@ -18,6 +18,7 @@ import com.anthropic.models.beta.messages.BetaRequestMcpServerToolConfiguration
 import com.anthropic.models.beta.messages.BetaRequestMcpServerUrlDefinition
 import com.anthropic.models.beta.messages.BetaSkillParams
 import com.anthropic.models.beta.messages.BetaTextBlockParam
+import com.anthropic.models.beta.messages.BetaThinkingConfigAdaptive
 import com.anthropic.models.beta.messages.BetaTool
 import com.anthropic.models.beta.messages.BetaToolChoiceAuto
 import com.anthropic.models.beta.messages.BetaToolUsesKeep
@@ -144,7 +145,11 @@ internal class BatchCreateParamsTest {
                                 )
                             )
                             .temperature(1.0)
-                            .enabledThinking(1024L)
+                            .thinking(
+                                BetaThinkingConfigAdaptive.builder()
+                                    .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
+                                    .build()
+                            )
                             .toolChoice(
                                 BetaToolChoiceAuto.builder().disableParallelToolUse(true).build()
                             )
@@ -313,7 +318,11 @@ internal class BatchCreateParamsTest {
                                     )
                                 )
                                 .temperature(1.0)
-                                .enabledThinking(1024L)
+                                .thinking(
+                                    BetaThinkingConfigAdaptive.builder()
+                                        .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
+                                        .build()
+                                )
                                 .toolChoice(
                                     BetaToolChoiceAuto.builder()
                                         .disableParallelToolUse(true)
@@ -514,7 +523,11 @@ internal class BatchCreateParamsTest {
                                     )
                                 )
                                 .temperature(1.0)
-                                .enabledThinking(1024L)
+                                .thinking(
+                                    BetaThinkingConfigAdaptive.builder()
+                                        .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
+                                        .build()
+                                )
                                 .toolChoice(
                                     BetaToolChoiceAuto.builder()
                                         .disableParallelToolUse(true)
@@ -682,7 +695,11 @@ internal class BatchCreateParamsTest {
                                 )
                             )
                             .temperature(1.0)
-                            .enabledThinking(1024L)
+                            .thinking(
+                                BetaThinkingConfigAdaptive.builder()
+                                    .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
+                                    .build()
+                            )
                             .toolChoice(
                                 BetaToolChoiceAuto.builder().disableParallelToolUse(true).build()
                             )

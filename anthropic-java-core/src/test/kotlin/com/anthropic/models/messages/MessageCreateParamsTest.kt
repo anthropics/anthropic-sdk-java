@@ -59,7 +59,11 @@ internal class MessageCreateParamsTest {
                 )
             )
             .temperature(1.0)
-            .enabledThinking(1024L)
+            .thinking(
+                ThinkingConfigAdaptive.builder()
+                    .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                    .build()
+            )
             .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
             .addTool(
                 Tool.builder()
@@ -149,7 +153,11 @@ internal class MessageCreateParamsTest {
                     )
                 )
                 .temperature(1.0)
-                .enabledThinking(1024L)
+                .thinking(
+                    ThinkingConfigAdaptive.builder()
+                        .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                        .build()
+                )
                 .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
                     Tool.builder()
@@ -245,8 +253,10 @@ internal class MessageCreateParamsTest {
         assertThat(body.temperature()).contains(1.0)
         assertThat(body.thinking())
             .contains(
-                ThinkingConfigParam.ofEnabled(
-                    ThinkingConfigEnabled.builder().budgetTokens(1024L).build()
+                ThinkingConfigParam.ofAdaptive(
+                    ThinkingConfigAdaptive.builder()
+                        .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                        .build()
                 )
             )
         assertThat(body.toolChoice())

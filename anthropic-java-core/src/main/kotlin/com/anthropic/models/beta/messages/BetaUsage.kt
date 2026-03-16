@@ -9,7 +9,6 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.allMaxBy
 import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
@@ -480,21 +479,16 @@ private constructor(
                 }
         }
 
-        /**
-         * Alias for calling [addIteration] with
-         * `BetaIterationsUsageItems.ofMessageIterationUsage(messageIterationUsage)`.
-         */
-        fun addIteration(messageIterationUsage: BetaMessageIterationUsage) =
-            addIteration(BetaIterationsUsageItems.ofMessageIterationUsage(messageIterationUsage))
+        /** Alias for calling [addIteration] with `BetaIterationsUsageItems.ofMessage(message)`. */
+        fun addIteration(message: BetaMessageIterationUsage) =
+            addIteration(BetaIterationsUsageItems.ofMessage(message))
 
         /**
          * Alias for calling [addIteration] with
-         * `BetaIterationsUsageItems.ofCompactionIterationUsage(compactionIterationUsage)`.
+         * `BetaIterationsUsageItems.ofCompaction(compaction)`.
          */
-        fun addIteration(compactionIterationUsage: BetaCompactionIterationUsage) =
-            addIteration(
-                BetaIterationsUsageItems.ofCompactionIterationUsage(compactionIterationUsage)
-            )
+        fun addIteration(compaction: BetaCompactionIterationUsage) =
+            addIteration(BetaIterationsUsageItems.ofCompaction(compaction))
 
         /** The number of output tokens which were used. */
         fun outputTokens(outputTokens: Long) = outputTokens(JsonField.of(outputTokens))
@@ -665,39 +659,33 @@ private constructor(
     @JsonSerialize(using = BetaIterationsUsageItems.Serializer::class)
     class BetaIterationsUsageItems
     private constructor(
-        private val messageIterationUsage: BetaMessageIterationUsage? = null,
-        private val compactionIterationUsage: BetaCompactionIterationUsage? = null,
+        private val message: BetaMessageIterationUsage? = null,
+        private val compaction: BetaCompactionIterationUsage? = null,
         private val _json: JsonValue? = null,
     ) {
 
         /** Token usage for a sampling iteration. */
-        fun messageIterationUsage(): Optional<BetaMessageIterationUsage> =
-            Optional.ofNullable(messageIterationUsage)
+        fun message(): Optional<BetaMessageIterationUsage> = Optional.ofNullable(message)
 
         /** Token usage for a compaction iteration. */
-        fun compactionIterationUsage(): Optional<BetaCompactionIterationUsage> =
-            Optional.ofNullable(compactionIterationUsage)
+        fun compaction(): Optional<BetaCompactionIterationUsage> = Optional.ofNullable(compaction)
 
-        fun isMessageIterationUsage(): Boolean = messageIterationUsage != null
+        fun isMessage(): Boolean = message != null
 
-        fun isCompactionIterationUsage(): Boolean = compactionIterationUsage != null
+        fun isCompaction(): Boolean = compaction != null
 
         /** Token usage for a sampling iteration. */
-        fun asMessageIterationUsage(): BetaMessageIterationUsage =
-            messageIterationUsage.getOrThrow("messageIterationUsage")
+        fun asMessage(): BetaMessageIterationUsage = message.getOrThrow("message")
 
         /** Token usage for a compaction iteration. */
-        fun asCompactionIterationUsage(): BetaCompactionIterationUsage =
-            compactionIterationUsage.getOrThrow("compactionIterationUsage")
+        fun asCompaction(): BetaCompactionIterationUsage = compaction.getOrThrow("compaction")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                messageIterationUsage != null ->
-                    visitor.visitMessageIterationUsage(messageIterationUsage)
-                compactionIterationUsage != null ->
-                    visitor.visitCompactionIterationUsage(compactionIterationUsage)
+                message != null -> visitor.visitMessage(message)
+                compaction != null -> visitor.visitCompaction(compaction)
                 else -> visitor.unknown(_json)
             }
 
@@ -710,16 +698,12 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitMessageIterationUsage(
-                        messageIterationUsage: BetaMessageIterationUsage
-                    ) {
-                        messageIterationUsage.validate()
+                    override fun visitMessage(message: BetaMessageIterationUsage) {
+                        message.validate()
                     }
 
-                    override fun visitCompactionIterationUsage(
-                        compactionIterationUsage: BetaCompactionIterationUsage
-                    ) {
-                        compactionIterationUsage.validate()
+                    override fun visitCompaction(compaction: BetaCompactionIterationUsage) {
+                        compaction.validate()
                     }
                 }
             )
@@ -744,13 +728,11 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitMessageIterationUsage(
-                        messageIterationUsage: BetaMessageIterationUsage
-                    ) = messageIterationUsage.validity()
+                    override fun visitMessage(message: BetaMessageIterationUsage) =
+                        message.validity()
 
-                    override fun visitCompactionIterationUsage(
-                        compactionIterationUsage: BetaCompactionIterationUsage
-                    ) = compactionIterationUsage.validity()
+                    override fun visitCompaction(compaction: BetaCompactionIterationUsage) =
+                        compaction.validity()
 
                     override fun unknown(json: JsonValue?) = 0
                 }
@@ -762,18 +744,16 @@ private constructor(
             }
 
             return other is BetaIterationsUsageItems &&
-                messageIterationUsage == other.messageIterationUsage &&
-                compactionIterationUsage == other.compactionIterationUsage
+                message == other.message &&
+                compaction == other.compaction
         }
 
-        override fun hashCode(): Int = Objects.hash(messageIterationUsage, compactionIterationUsage)
+        override fun hashCode(): Int = Objects.hash(message, compaction)
 
         override fun toString(): String =
             when {
-                messageIterationUsage != null ->
-                    "BetaIterationsUsageItems{messageIterationUsage=$messageIterationUsage}"
-                compactionIterationUsage != null ->
-                    "BetaIterationsUsageItems{compactionIterationUsage=$compactionIterationUsage}"
+                message != null -> "BetaIterationsUsageItems{message=$message}"
+                compaction != null -> "BetaIterationsUsageItems{compaction=$compaction}"
                 _json != null -> "BetaIterationsUsageItems{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid BetaIterationsUsageItems")
             }
@@ -782,13 +762,13 @@ private constructor(
 
             /** Token usage for a sampling iteration. */
             @JvmStatic
-            fun ofMessageIterationUsage(messageIterationUsage: BetaMessageIterationUsage) =
-                BetaIterationsUsageItems(messageIterationUsage = messageIterationUsage)
+            fun ofMessage(message: BetaMessageIterationUsage) =
+                BetaIterationsUsageItems(message = message)
 
             /** Token usage for a compaction iteration. */
             @JvmStatic
-            fun ofCompactionIterationUsage(compactionIterationUsage: BetaCompactionIterationUsage) =
-                BetaIterationsUsageItems(compactionIterationUsage = compactionIterationUsage)
+            fun ofCompaction(compaction: BetaCompactionIterationUsage) =
+                BetaIterationsUsageItems(compaction = compaction)
         }
 
         /**
@@ -798,12 +778,10 @@ private constructor(
         interface Visitor<out T> {
 
             /** Token usage for a sampling iteration. */
-            fun visitMessageIterationUsage(messageIterationUsage: BetaMessageIterationUsage): T
+            fun visitMessage(message: BetaMessageIterationUsage): T
 
             /** Token usage for a compaction iteration. */
-            fun visitCompactionIterationUsage(
-                compactionIterationUsage: BetaCompactionIterationUsage
-            ): T
+            fun visitCompaction(compaction: BetaCompactionIterationUsage): T
 
             /**
              * Maps an unknown variant of [BetaIterationsUsageItems] to a value of type [T].
@@ -825,33 +803,22 @@ private constructor(
 
             override fun ObjectCodec.deserialize(node: JsonNode): BetaIterationsUsageItems {
                 val json = JsonValue.fromJsonNode(node)
+                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
 
-                val bestMatches =
-                    sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<BetaMessageIterationUsage>())?.let {
-                                BetaIterationsUsageItems(messageIterationUsage = it, _json = json)
-                            },
-                            tryDeserialize(node, jacksonTypeRef<BetaCompactionIterationUsage>())
-                                ?.let {
-                                    BetaIterationsUsageItems(
-                                        compactionIterationUsage = it,
-                                        _json = json,
-                                    )
-                                },
-                        )
-                        .filterNotNull()
-                        .allMaxBy { it.validity() }
-                        .toList()
-                return when (bestMatches.size) {
-                    // This can happen if what we're deserializing is completely incompatible with
-                    // all the possible variants (e.g. deserializing from boolean).
-                    0 -> BetaIterationsUsageItems(_json = json)
-                    1 -> bestMatches.single()
-                    // If there's more than one match with the highest validity, then use the first
-                    // completely valid match, or simply the first match if none are completely
-                    // valid.
-                    else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+                when (type) {
+                    "message" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaMessageIterationUsage>())
+                            ?.let { BetaIterationsUsageItems(message = it, _json = json) }
+                            ?: BetaIterationsUsageItems(_json = json)
+                    }
+                    "compaction" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaCompactionIterationUsage>())
+                            ?.let { BetaIterationsUsageItems(compaction = it, _json = json) }
+                            ?: BetaIterationsUsageItems(_json = json)
+                    }
                 }
+
+                return BetaIterationsUsageItems(_json = json)
             }
         }
 
@@ -864,10 +831,8 @@ private constructor(
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.messageIterationUsage != null ->
-                        generator.writeObject(value.messageIterationUsage)
-                    value.compactionIterationUsage != null ->
-                        generator.writeObject(value.compactionIterationUsage)
+                    value.message != null -> generator.writeObject(value.message)
+                    value.compaction != null -> generator.writeObject(value.compaction)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid BetaIterationsUsageItems")
                 }

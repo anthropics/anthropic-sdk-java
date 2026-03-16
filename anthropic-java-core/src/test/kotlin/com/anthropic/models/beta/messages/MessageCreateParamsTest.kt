@@ -112,7 +112,11 @@ internal class MessageCreateParamsTest {
                 )
             )
             .temperature(1.0)
-            .enabledThinking(1024L)
+            .thinking(
+                BetaThinkingConfigAdaptive.builder()
+                    .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
+                    .build()
+            )
             .toolChoice(BetaToolChoiceAuto.builder().disableParallelToolUse(true).build())
             .addTool(
                 BetaTool.builder()
@@ -256,7 +260,11 @@ internal class MessageCreateParamsTest {
                     )
                 )
                 .temperature(1.0)
-                .enabledThinking(1024L)
+                .thinking(
+                    BetaThinkingConfigAdaptive.builder()
+                        .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
+                        .build()
+                )
                 .toolChoice(BetaToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
                     BetaTool.builder()
@@ -421,7 +429,11 @@ internal class MessageCreateParamsTest {
                     )
                 )
                 .temperature(1.0)
-                .enabledThinking(1024L)
+                .thinking(
+                    BetaThinkingConfigAdaptive.builder()
+                        .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
+                        .build()
+                )
                 .toolChoice(BetaToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
                     BetaTool.builder()
@@ -577,8 +589,10 @@ internal class MessageCreateParamsTest {
         assertThat(body.temperature()).contains(1.0)
         assertThat(body.thinking())
             .contains(
-                BetaThinkingConfigParam.ofEnabled(
-                    BetaThinkingConfigEnabled.builder().budgetTokens(1024L).build()
+                BetaThinkingConfigParam.ofAdaptive(
+                    BetaThinkingConfigAdaptive.builder()
+                        .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
+                        .build()
                 )
             )
         assertThat(body.toolChoice())

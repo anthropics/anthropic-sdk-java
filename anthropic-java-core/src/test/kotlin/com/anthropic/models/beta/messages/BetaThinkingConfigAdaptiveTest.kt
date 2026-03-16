@@ -11,13 +11,22 @@ internal class BetaThinkingConfigAdaptiveTest {
 
     @Test
     fun create() {
-        val betaThinkingConfigAdaptive = BetaThinkingConfigAdaptive.builder().build()
+        val betaThinkingConfigAdaptive =
+            BetaThinkingConfigAdaptive.builder()
+                .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
+                .build()
+
+        assertThat(betaThinkingConfigAdaptive.display())
+            .contains(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaThinkingConfigAdaptive = BetaThinkingConfigAdaptive.builder().build()
+        val betaThinkingConfigAdaptive =
+            BetaThinkingConfigAdaptive.builder()
+                .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
+                .build()
 
         val roundtrippedBetaThinkingConfigAdaptive =
             jsonMapper.readValue(
