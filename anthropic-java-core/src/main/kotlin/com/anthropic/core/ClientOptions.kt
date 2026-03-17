@@ -467,18 +467,19 @@ private constructor(
             headers.put("X-Stainless-Runtime-Version", getJavaVersion())
             headers.put("X-Stainless-Kotlin-Version", KotlinVersion.CURRENT.toString())
             headers.put("anthropic-version", "2023-06-01")
+            // We replace after all the default headers to allow end-users to overwrite them.
+            headers.replaceAll(this.headers.build())
+            queryParams.replaceAll(this.queryParams.build())
             apiKey?.let {
                 if (!it.isEmpty()) {
-                    headers.put("X-Api-Key", it)
+                    headers.replace("X-Api-Key", it)
                 }
             }
             authToken?.let {
                 if (!it.isEmpty()) {
-                    headers.put("Authorization", "Bearer $it")
+                    headers.replace("Authorization", "Bearer $it")
                 }
             }
-            headers.replaceAll(this.headers.build())
-            queryParams.replaceAll(this.queryParams.build())
 
             return ClientOptions(
                 httpClient,
