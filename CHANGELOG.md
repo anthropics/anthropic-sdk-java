@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.18.0 (2026-03-18)
+
+Full Changelog: [v2.17.0...v2.18.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.17.0...v2.18.0)
+
+### Features
+
+* **api:** manual updates ([c938f65](https://github.com/anthropics/anthropic-sdk-java/commit/c938f65781df9576a991d73218ac0f30c3c5601f))
+* **api:** manual updates ([ea3c82f](https://github.com/anthropics/anthropic-sdk-java/commit/ea3c82fb0162e734a909fdac3cebcaeb836cac71))
+
+
+### Bug Fixes
+
+* **client:** allow updating header/query affecting fields in `toBuilder()` ([81c22ee](https://github.com/anthropics/anthropic-sdk-java/commit/81c22eea986a18ecbb3b0ee75b858ab073c6bcdc))
+
+
+### Chores
+
+* **internal:** tweak CI branches ([34b9875](https://github.com/anthropics/anthropic-sdk-java/commit/34b9875680a181f9c0b6adcff062e58ea83ab378))
+* **internal:** update retry delay tests ([704bc83](https://github.com/anthropics/anthropic-sdk-java/commit/704bc83fb4adf2648f43a6e09a569eec7fae78ba))
+
 ## 2.17.0 (2026-03-16)
 
 Full Changelog: [v2.16.1...v2.17.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.16.1...v2.17.0)
