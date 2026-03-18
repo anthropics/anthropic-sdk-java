@@ -13,14 +13,14 @@ internal class BetaSkillParamsTest {
     fun create() {
         val betaSkillParams =
             BetaSkillParams.builder()
-                .skillId("x")
+                .skillId("pdf")
                 .type(BetaSkillParams.Type.ANTHROPIC)
-                .version("x")
+                .version("latest")
                 .build()
 
-        assertThat(betaSkillParams.skillId()).isEqualTo("x")
+        assertThat(betaSkillParams.skillId()).isEqualTo("pdf")
         assertThat(betaSkillParams.type()).isEqualTo(BetaSkillParams.Type.ANTHROPIC)
-        assertThat(betaSkillParams.version()).contains("x")
+        assertThat(betaSkillParams.version()).contains("latest")
     }
 
     @Test
@@ -28,9 +28,9 @@ internal class BetaSkillParamsTest {
         val jsonMapper = jsonMapper()
         val betaSkillParams =
             BetaSkillParams.builder()
-                .skillId("x")
+                .skillId("pdf")
                 .type(BetaSkillParams.Type.ANTHROPIC)
-                .version("x")
+                .version("latest")
                 .build()
 
         val roundtrippedBetaSkillParams =

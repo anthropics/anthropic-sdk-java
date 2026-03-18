@@ -11,16 +11,24 @@ internal class DeletedFileTest {
 
     @Test
     fun create() {
-        val deletedFile = DeletedFile.builder().id("id").type(DeletedFile.Type.FILE_DELETED).build()
+        val deletedFile =
+            DeletedFile.builder()
+                .id("file_011CNha8iCJcU1wXNR6q4V8w")
+                .type(DeletedFile.Type.FILE_DELETED)
+                .build()
 
-        assertThat(deletedFile.id()).isEqualTo("id")
+        assertThat(deletedFile.id()).isEqualTo("file_011CNha8iCJcU1wXNR6q4V8w")
         assertThat(deletedFile.type()).contains(DeletedFile.Type.FILE_DELETED)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val deletedFile = DeletedFile.builder().id("id").type(DeletedFile.Type.FILE_DELETED).build()
+        val deletedFile =
+            DeletedFile.builder()
+                .id("file_011CNha8iCJcU1wXNR6q4V8w")
+                .type(DeletedFile.Type.FILE_DELETED)
+                .build()
 
         val roundtrippedDeletedFile =
             jsonMapper.readValue(

@@ -19,9 +19,9 @@ internal class BetaContainerTest {
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .addSkill(
                     BetaSkill.builder()
-                        .skillId("x")
+                        .skillId("pdf")
                         .type(BetaSkill.Type.ANTHROPIC)
-                        .version("x")
+                        .version("latest")
                         .build()
                 )
                 .build()
@@ -31,7 +31,11 @@ internal class BetaContainerTest {
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(betaContainer.skills().getOrNull())
             .containsExactly(
-                BetaSkill.builder().skillId("x").type(BetaSkill.Type.ANTHROPIC).version("x").build()
+                BetaSkill.builder()
+                    .skillId("pdf")
+                    .type(BetaSkill.Type.ANTHROPIC)
+                    .version("latest")
+                    .build()
             )
     }
 
@@ -44,9 +48,9 @@ internal class BetaContainerTest {
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .addSkill(
                     BetaSkill.builder()
-                        .skillId("x")
+                        .skillId("pdf")
                         .type(BetaSkill.Type.ANTHROPIC)
-                        .version("x")
+                        .version("latest")
                         .build()
                 )
                 .build()
