@@ -14,21 +14,21 @@ internal class FileMetadataTest {
     fun create() {
         val fileMetadata =
             FileMetadata.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .filename("x")
-                .mimeType("x")
-                .sizeBytes(0L)
-                .downloadable(true)
+                .id("file_011CNha8iCJcU1wXNR6q4V8w")
+                .createdAt(OffsetDateTime.parse("2025-04-15T18:37:24.100435Z"))
+                .filename("document.pdf")
+                .mimeType("application/pdf")
+                .sizeBytes(102400L)
+                .downloadable(false)
                 .build()
 
-        assertThat(fileMetadata.id()).isEqualTo("id")
+        assertThat(fileMetadata.id()).isEqualTo("file_011CNha8iCJcU1wXNR6q4V8w")
         assertThat(fileMetadata.createdAt())
-            .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(fileMetadata.filename()).isEqualTo("x")
-        assertThat(fileMetadata.mimeType()).isEqualTo("x")
-        assertThat(fileMetadata.sizeBytes()).isEqualTo(0L)
-        assertThat(fileMetadata.downloadable()).contains(true)
+            .isEqualTo(OffsetDateTime.parse("2025-04-15T18:37:24.100435Z"))
+        assertThat(fileMetadata.filename()).isEqualTo("document.pdf")
+        assertThat(fileMetadata.mimeType()).isEqualTo("application/pdf")
+        assertThat(fileMetadata.sizeBytes()).isEqualTo(102400L)
+        assertThat(fileMetadata.downloadable()).contains(false)
     }
 
     @Test
@@ -36,12 +36,12 @@ internal class FileMetadataTest {
         val jsonMapper = jsonMapper()
         val fileMetadata =
             FileMetadata.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .filename("x")
-                .mimeType("x")
-                .sizeBytes(0L)
-                .downloadable(true)
+                .id("file_011CNha8iCJcU1wXNR6q4V8w")
+                .createdAt(OffsetDateTime.parse("2025-04-15T18:37:24.100435Z"))
+                .filename("document.pdf")
+                .mimeType("application/pdf")
+                .sizeBytes(102400L)
+                .downloadable(false)
                 .build()
 
         val roundtrippedFileMetadata =

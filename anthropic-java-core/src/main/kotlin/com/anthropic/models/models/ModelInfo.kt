@@ -15,13 +15,18 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 class ModelInfo
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
+    private val capabilities: JsonField<ModelCapabilities>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val displayName: JsonField<String>,
+    private val maxInputTokens: JsonField<Long>,
+    private val maxTokens: JsonField<Long>,
     private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -29,14 +34,30 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("capabilities")
+        @ExcludeMissing
+        capabilities: JsonField<ModelCapabilities> = JsonMissing.of(),
         @JsonProperty("created_at")
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("display_name")
         @ExcludeMissing
         displayName: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("max_input_tokens")
+        @ExcludeMissing
+        maxInputTokens: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("max_tokens") @ExcludeMissing maxTokens: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(id, createdAt, displayName, type, mutableMapOf())
+    ) : this(
+        id,
+        capabilities,
+        createdAt,
+        displayName,
+        maxInputTokens,
+        maxTokens,
+        type,
+        mutableMapOf(),
+    )
 
     /**
      * Unique model identifier.
@@ -45,6 +66,14 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun id(): String = id.getRequired("id")
+
+    /**
+     * Model capability information.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun capabilities(): Optional<ModelCapabilities> = capabilities.getOptional("capabilities")
 
     /**
      * RFC 3339 datetime string representing the time at which the model was released. May be set to
@@ -62,6 +91,22 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun displayName(): String = displayName.getRequired("display_name")
+
+    /**
+     * Maximum input context window size in tokens for this model.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun maxInputTokens(): Optional<Long> = maxInputTokens.getOptional("max_input_tokens")
+
+    /**
+     * Maximum value for the `max_tokens` parameter when using this model.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun maxTokens(): Optional<Long> = maxTokens.getOptional("max_tokens")
 
     /**
      * Object type.
@@ -86,6 +131,15 @@ private constructor(
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
     /**
+     * Returns the raw JSON value of [capabilities].
+     *
+     * Unlike [capabilities], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("capabilities")
+    @ExcludeMissing
+    fun _capabilities(): JsonField<ModelCapabilities> = capabilities
+
+    /**
      * Returns the raw JSON value of [createdAt].
      *
      * Unlike [createdAt], this method doesn't throw if the JSON field has an unexpected type.
@@ -102,6 +156,22 @@ private constructor(
     @JsonProperty("display_name")
     @ExcludeMissing
     fun _displayName(): JsonField<String> = displayName
+
+    /**
+     * Returns the raw JSON value of [maxInputTokens].
+     *
+     * Unlike [maxInputTokens], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("max_input_tokens")
+    @ExcludeMissing
+    fun _maxInputTokens(): JsonField<Long> = maxInputTokens
+
+    /**
+     * Returns the raw JSON value of [maxTokens].
+     *
+     * Unlike [maxTokens], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("max_tokens") @ExcludeMissing fun _maxTokens(): JsonField<Long> = maxTokens
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -123,8 +193,11 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
+         * .capabilities()
          * .createdAt()
          * .displayName()
+         * .maxInputTokens()
+         * .maxTokens()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -134,16 +207,22 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
+        private var capabilities: JsonField<ModelCapabilities>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var displayName: JsonField<String>? = null
+        private var maxInputTokens: JsonField<Long>? = null
+        private var maxTokens: JsonField<Long>? = null
         private var type: JsonValue = JsonValue.from("model")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(modelInfo: ModelInfo) = apply {
             id = modelInfo.id
+            capabilities = modelInfo.capabilities
             createdAt = modelInfo.createdAt
             displayName = modelInfo.displayName
+            maxInputTokens = modelInfo.maxInputTokens
+            maxTokens = modelInfo.maxTokens
             type = modelInfo.type
             additionalProperties = modelInfo.additionalProperties.toMutableMap()
         }
@@ -158,6 +237,25 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
+
+        /** Model capability information. */
+        fun capabilities(capabilities: ModelCapabilities?) =
+            capabilities(JsonField.ofNullable(capabilities))
+
+        /** Alias for calling [Builder.capabilities] with `capabilities.orElse(null)`. */
+        fun capabilities(capabilities: Optional<ModelCapabilities>) =
+            capabilities(capabilities.getOrNull())
+
+        /**
+         * Sets [Builder.capabilities] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.capabilities] with a well-typed [ModelCapabilities]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun capabilities(capabilities: JsonField<ModelCapabilities>) = apply {
+            this.capabilities = capabilities
+        }
 
         /**
          * RFC 3339 datetime string representing the time at which the model was released. May be
@@ -185,6 +283,53 @@ private constructor(
          * value.
          */
         fun displayName(displayName: JsonField<String>) = apply { this.displayName = displayName }
+
+        /** Maximum input context window size in tokens for this model. */
+        fun maxInputTokens(maxInputTokens: Long?) =
+            maxInputTokens(JsonField.ofNullable(maxInputTokens))
+
+        /**
+         * Alias for [Builder.maxInputTokens].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun maxInputTokens(maxInputTokens: Long) = maxInputTokens(maxInputTokens as Long?)
+
+        /** Alias for calling [Builder.maxInputTokens] with `maxInputTokens.orElse(null)`. */
+        fun maxInputTokens(maxInputTokens: Optional<Long>) =
+            maxInputTokens(maxInputTokens.getOrNull())
+
+        /**
+         * Sets [Builder.maxInputTokens] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.maxInputTokens] with a well-typed [Long] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun maxInputTokens(maxInputTokens: JsonField<Long>) = apply {
+            this.maxInputTokens = maxInputTokens
+        }
+
+        /** Maximum value for the `max_tokens` parameter when using this model. */
+        fun maxTokens(maxTokens: Long?) = maxTokens(JsonField.ofNullable(maxTokens))
+
+        /**
+         * Alias for [Builder.maxTokens].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun maxTokens(maxTokens: Long) = maxTokens(maxTokens as Long?)
+
+        /** Alias for calling [Builder.maxTokens] with `maxTokens.orElse(null)`. */
+        fun maxTokens(maxTokens: Optional<Long>) = maxTokens(maxTokens.getOrNull())
+
+        /**
+         * Sets [Builder.maxTokens] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.maxTokens] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun maxTokens(maxTokens: JsonField<Long>) = apply { this.maxTokens = maxTokens }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -227,8 +372,11 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
+         * .capabilities()
          * .createdAt()
          * .displayName()
+         * .maxInputTokens()
+         * .maxTokens()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -236,8 +384,11 @@ private constructor(
         fun build(): ModelInfo =
             ModelInfo(
                 checkRequired("id", id),
+                checkRequired("capabilities", capabilities),
                 checkRequired("createdAt", createdAt),
                 checkRequired("displayName", displayName),
+                checkRequired("maxInputTokens", maxInputTokens),
+                checkRequired("maxTokens", maxTokens),
                 type,
                 additionalProperties.toMutableMap(),
             )
@@ -251,8 +402,11 @@ private constructor(
         }
 
         id()
+        capabilities().ifPresent { it.validate() }
         createdAt()
         displayName()
+        maxInputTokens()
+        maxTokens()
         _type().let {
             if (it != JsonValue.from("model")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
@@ -277,8 +431,11 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
+            (capabilities.asKnown().getOrNull()?.validity() ?: 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (displayName.asKnown().isPresent) 1 else 0) +
+            (if (maxInputTokens.asKnown().isPresent) 1 else 0) +
+            (if (maxTokens.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("model")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
@@ -288,18 +445,30 @@ private constructor(
 
         return other is ModelInfo &&
             id == other.id &&
+            capabilities == other.capabilities &&
             createdAt == other.createdAt &&
             displayName == other.displayName &&
+            maxInputTokens == other.maxInputTokens &&
+            maxTokens == other.maxTokens &&
             type == other.type &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, createdAt, displayName, type, additionalProperties)
+        Objects.hash(
+            id,
+            capabilities,
+            createdAt,
+            displayName,
+            maxInputTokens,
+            maxTokens,
+            type,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ModelInfo{id=$id, createdAt=$createdAt, displayName=$displayName, type=$type, additionalProperties=$additionalProperties}"
+        "ModelInfo{id=$id, capabilities=$capabilities, createdAt=$createdAt, displayName=$displayName, maxInputTokens=$maxInputTokens, maxTokens=$maxTokens, type=$type, additionalProperties=$additionalProperties}"
 }

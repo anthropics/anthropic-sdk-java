@@ -66,9 +66,9 @@ internal class BatchServiceTest {
                                             .id("id")
                                             .addSkill(
                                                 BetaSkillParams.builder()
-                                                    .skillId("x")
+                                                    .skillId("pdf")
                                                     .type(BetaSkillParams.Type.ANTHROPIC)
-                                                    .version("x")
+                                                    .version("latest")
                                                     .build()
                                             )
                                             .build()
