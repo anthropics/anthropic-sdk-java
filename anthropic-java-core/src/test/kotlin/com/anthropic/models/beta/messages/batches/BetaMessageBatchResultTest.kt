@@ -42,9 +42,9 @@ internal class BetaMessageBatchResultTest {
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .addSkill(
                                     BetaSkill.builder()
-                                        .skillId("x")
+                                        .skillId("pdf")
                                         .type(BetaSkill.Type.ANTHROPIC)
-                                        .version("x")
+                                        .version("latest")
                                         .build()
                                 )
                                 .build()
@@ -141,9 +141,9 @@ internal class BetaMessageBatchResultTest {
                                     .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .addSkill(
                                         BetaSkill.builder()
-                                            .skillId("x")
+                                            .skillId("pdf")
                                             .type(BetaSkill.Type.ANTHROPIC)
-                                            .version("x")
+                                            .version("latest")
                                             .build()
                                     )
                                     .build()
