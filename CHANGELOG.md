@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.18.1 (2026-03-22)
+
+Full Changelog: [v2.18.0...v2.18.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.18.0...v2.18.1)
+
+### Bug Fixes
+
+* **format:** re-format files after ktfmt upgrade ([fa338cd](https://github.com/anthropics/anthropic-sdk-java/commit/fa338cd5c842ca7c5045460233301206e94735a4))
+
+
+### Chores
+
+* **tests:** bump steady to v0.19.4 ([b277312](https://github.com/anthropics/anthropic-sdk-java/commit/b277312d3cfc3e1a5ca77e04e1fbe8326aab6d82))
+* **tests:** bump steady to v0.19.5 ([04ae00a](https://github.com/anthropics/anthropic-sdk-java/commit/04ae00aa08a1c1e693174d48203cef541747bd1d))
+
 ## 2.18.0 (2026-03-18)
 
 Full Changelog: [v2.17.0...v2.18.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.17.0...v2.18.0)
