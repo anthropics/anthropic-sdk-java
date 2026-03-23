@@ -13,9 +13,11 @@ import com.anthropic.errors.InternalServerException
 import com.anthropic.errors.NotFoundException
 import com.anthropic.errors.PermissionDeniedException
 import com.anthropic.errors.RateLimitException
+import com.anthropic.errors.SseException
 import com.anthropic.errors.UnauthorizedException
 import com.anthropic.errors.UnexpectedStatusCodeException
 import com.anthropic.errors.UnprocessableEntityException
+import com.anthropic.models.ErrorType
 import com.anthropic.models.messages.CacheControlEphemeral
 import com.anthropic.models.messages.CitationCharLocationParam
 import com.anthropic.models.messages.JsonOutputFormat
@@ -2136,6 +2138,125 @@ internal class ErrorHandlingTest {
             }
 
         assertThat(e).hasMessage("Error reading response")
+    }
+
+    @Test
+    fun messagesCreate400ErrorType() {
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(400)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(
+                            """{"type":"error","error":{"type":"invalid_request_error","message":"Bad request"}}"""
+                        )
+                )
+        )
+
+        val e =
+            assertThrows<BadRequestException> {
+                client
+                    .messages()
+                    .create(
+                        MessageCreateParams.builder()
+                            .maxTokens(1024L)
+                            .addUserMessage("Hello")
+                            .model(Model.CLAUDE_OPUS_4_6)
+                            .build()
+                    )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(400)
+        assertThat(e.errorType()).contains(ErrorType.INVALID_REQUEST_ERROR)
+    }
+
+    @Test
+    fun messagesCreateStreamingMidStreamErrorHasErrorType() {
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(200)
+                        .withHeader("Content-Type", "text/event-stream")
+                        .withBody(
+                            buildString {
+                                append("event: error\n")
+                                append(
+                                    """data: {"type":"error","error":{"type":"overloaded_error","message":"Overloaded"}}"""
+                                )
+                                append("\n\n")
+                            }
+                        )
+                )
+        )
+
+        val e =
+            assertThrows<SseException> {
+                client
+                    .messages()
+                    .createStreaming(
+                        MessageCreateParams.builder()
+                            .maxTokens(1024L)
+                            .addUserMessage("Hello")
+                            .model(Model.CLAUDE_OPUS_4_6)
+                            .build()
+                    )
+                    .use { it.stream().forEach {} }
+            }
+
+        assertThat(e.statusCode()).isEqualTo(200)
+        assertThat(e.errorType()).contains(ErrorType.OVERLOADED_ERROR)
+    }
+
+    @Test
+    fun errorTypeEmptyWhenNoTypeField() {
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(400)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<BadRequestException> {
+                client
+                    .messages()
+                    .create(
+                        MessageCreateParams.builder()
+                            .maxTokens(1024L)
+                            .addUserMessage("Hello")
+                            .model(Model.CLAUDE_OPUS_4_6)
+                            .build()
+                    )
+            }
+
+        assertThat(e.errorType()).isEmpty
+    }
+
+    @Test
+    fun errorTypeEmptyWhenBodyIsNotJson() {
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(400).withHeader("Content-Type", "text/plain").withBody("Not JSON")
+                )
+        )
+
+        val e =
+            assertThrows<BadRequestException> {
+                client
+                    .messages()
+                    .create(
+                        MessageCreateParams.builder()
+                            .maxTokens(1024L)
+                            .addUserMessage("Hello")
+                            .model(Model.CLAUDE_OPUS_4_6)
+                            .build()
+                    )
+            }
+
+        assertThat(e.errorType()).isEmpty
     }
 
     private fun Headers.toMap(): Map<String, List<String>> =
