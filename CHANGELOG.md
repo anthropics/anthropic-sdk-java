@@ -1,5 +1,32 @@
 # Changelog
 
+## 2.19.0 (2026-03-31)
+
+Full Changelog: [v2.18.0...v2.19.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.18.0...v2.19.0)
+
+### Features
+
+* add errorType() method to AnthropicServiceException ([#1031](https://github.com/anthropics/anthropic-sdk-java/issues/1031)) ([c5be332](https://github.com/anthropics/anthropic-sdk-java/commit/c5be332dcc3300609888ada60e137c9ae8bc3091))
+
+
+### Bug Fixes
+
+* **format:** re-format files after ktfmt upgrade ([fa338cd](https://github.com/anthropics/anthropic-sdk-java/commit/fa338cd5c842ca7c5045460233301206e94735a4))
+
+
+### Chores
+
+* **ci:** run builds on CI even if only spec metadata changed ([2030200](https://github.com/anthropics/anthropic-sdk-java/commit/20302008c7418e9255ad4941d9fa4a93e1dcf9a9))
+* **ci:** skip lint on metadata-only changes ([608b05a](https://github.com/anthropics/anthropic-sdk-java/commit/608b05a3a6390e0ee448ffc6cec60e125b183ee4))
+* **internal:** update gitignore ([35e8874](https://github.com/anthropics/anthropic-sdk-java/commit/35e88748f5eb39bb836cd7fb8f1e7b01f7eb9ec5))
+* **internal:** update multipart form array serialization ([0d3f304](https://github.com/anthropics/anthropic-sdk-java/commit/0d3f3048c2c70067230c7a7cdc7b1df5f58c6371))
+* **tests:** bump steady to v0.19.4 ([b277312](https://github.com/anthropics/anthropic-sdk-java/commit/b277312d3cfc3e1a5ca77e04e1fbe8326aab6d82))
+* **tests:** bump steady to v0.19.5 ([04ae00a](https://github.com/anthropics/anthropic-sdk-java/commit/04ae00aa08a1c1e693174d48203cef541747bd1d))
+* **tests:** bump steady to v0.19.6 ([4871d3a](https://github.com/anthropics/anthropic-sdk-java/commit/4871d3af0aece43a4aebd6b63051f6bc35a8812e))
+* **tests:** bump steady to v0.19.7 ([c2b26b9](https://github.com/anthropics/anthropic-sdk-java/commit/c2b26b9d4ecfa43418f85eb62f90921715ef24f3))
+* **tests:** bump steady to v0.20.1 ([372a97f](https://github.com/anthropics/anthropic-sdk-java/commit/372a97fc334fd54693bcef45281f7abb06cd408a))
+* **tests:** bump steady to v0.20.2 ([4118af2](https://github.com/anthropics/anthropic-sdk-java/commit/4118af279be76957fb8aedbbbdc3e45ebd3b81d3))
+
 ## 2.18.0 (2026-03-18)
 
 Full Changelog: [v2.17.0...v2.18.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.17.0...v2.18.0)
