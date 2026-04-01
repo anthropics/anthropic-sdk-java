@@ -39,7 +39,7 @@ public final class BedrockMessagesApiKeyExample {
 
     public static void main(String[] args) throws Exception {
         AnthropicClient client = AnthropicOkHttpClient.builder()
-                .backend(BedrockBackend.builder().fromEnv().build())
+                .backend(BedrockBackend.fromEnv())
                 .build();
 
         MessageCreateParams createParams = MessageCreateParams.builder()
