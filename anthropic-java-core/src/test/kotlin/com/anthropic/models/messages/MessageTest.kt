@@ -37,6 +37,12 @@ internal class MessageTest {
                         .build()
                 )
                 .model(Model.CLAUDE_OPUS_4_6)
+                .stopDetails(
+                    RefusalStopDetails.builder()
+                        .category(RefusalStopDetails.Category.CYBER)
+                        .explanation("explanation")
+                        .build()
+                )
                 .stopReason(StopReason.END_TURN)
                 .stopSequence(null)
                 .usage(
@@ -90,6 +96,13 @@ internal class MessageTest {
                 )
             )
         assertThat(message.model()).isEqualTo(Model.CLAUDE_OPUS_4_6)
+        assertThat(message.stopDetails())
+            .contains(
+                RefusalStopDetails.builder()
+                    .category(RefusalStopDetails.Category.CYBER)
+                    .explanation("explanation")
+                    .build()
+            )
         assertThat(message.stopReason()).contains(StopReason.END_TURN)
         assertThat(message.stopSequence()).isEmpty
         assertThat(message.usage())
@@ -142,6 +155,12 @@ internal class MessageTest {
                         .build()
                 )
                 .model(Model.CLAUDE_OPUS_4_6)
+                .stopDetails(
+                    RefusalStopDetails.builder()
+                        .category(RefusalStopDetails.Category.CYBER)
+                        .explanation("explanation")
+                        .build()
+                )
                 .stopReason(StopReason.END_TURN)
                 .stopSequence(null)
                 .usage(

@@ -262,6 +262,7 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val container: JsonField<Container>,
+        private val stopDetails: JsonField<RefusalStopDetails>,
         private val stopReason: JsonField<StopReason>,
         private val stopSequence: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -272,13 +273,16 @@ private constructor(
             @JsonProperty("container")
             @ExcludeMissing
             container: JsonField<Container> = JsonMissing.of(),
+            @JsonProperty("stop_details")
+            @ExcludeMissing
+            stopDetails: JsonField<RefusalStopDetails> = JsonMissing.of(),
             @JsonProperty("stop_reason")
             @ExcludeMissing
             stopReason: JsonField<StopReason> = JsonMissing.of(),
             @JsonProperty("stop_sequence")
             @ExcludeMissing
             stopSequence: JsonField<String> = JsonMissing.of(),
-        ) : this(container, stopReason, stopSequence, mutableMapOf())
+        ) : this(container, stopDetails, stopReason, stopSequence, mutableMapOf())
 
         /**
          * Information about the container used in the request (for the code execution tool)
@@ -287,6 +291,14 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun container(): Optional<Container> = container.getOptional("container")
+
+        /**
+         * Structured information about a refusal.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun stopDetails(): Optional<RefusalStopDetails> = stopDetails.getOptional("stop_details")
 
         /**
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -308,6 +320,15 @@ private constructor(
         @JsonProperty("container")
         @ExcludeMissing
         fun _container(): JsonField<Container> = container
+
+        /**
+         * Returns the raw JSON value of [stopDetails].
+         *
+         * Unlike [stopDetails], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("stop_details")
+        @ExcludeMissing
+        fun _stopDetails(): JsonField<RefusalStopDetails> = stopDetails
 
         /**
          * Returns the raw JSON value of [stopReason].
@@ -348,6 +369,7 @@ private constructor(
              * The following fields are required:
              * ```java
              * .container()
+             * .stopDetails()
              * .stopReason()
              * .stopSequence()
              * ```
@@ -359,6 +381,7 @@ private constructor(
         class Builder internal constructor() {
 
             private var container: JsonField<Container>? = null
+            private var stopDetails: JsonField<RefusalStopDetails>? = null
             private var stopReason: JsonField<StopReason>? = null
             private var stopSequence: JsonField<String>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -366,6 +389,7 @@ private constructor(
             @JvmSynthetic
             internal fun from(delta: Delta) = apply {
                 container = delta.container
+                stopDetails = delta.stopDetails
                 stopReason = delta.stopReason
                 stopSequence = delta.stopSequence
                 additionalProperties = delta.additionalProperties.toMutableMap()
@@ -385,6 +409,25 @@ private constructor(
              * supported value.
              */
             fun container(container: JsonField<Container>) = apply { this.container = container }
+
+            /** Structured information about a refusal. */
+            fun stopDetails(stopDetails: RefusalStopDetails?) =
+                stopDetails(JsonField.ofNullable(stopDetails))
+
+            /** Alias for calling [Builder.stopDetails] with `stopDetails.orElse(null)`. */
+            fun stopDetails(stopDetails: Optional<RefusalStopDetails>) =
+                stopDetails(stopDetails.getOrNull())
+
+            /**
+             * Sets [Builder.stopDetails] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.stopDetails] with a well-typed [RefusalStopDetails]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun stopDetails(stopDetails: JsonField<RefusalStopDetails>) = apply {
+                this.stopDetails = stopDetails
+            }
 
             fun stopReason(stopReason: StopReason?) = stopReason(JsonField.ofNullable(stopReason))
 
@@ -447,6 +490,7 @@ private constructor(
              * The following fields are required:
              * ```java
              * .container()
+             * .stopDetails()
              * .stopReason()
              * .stopSequence()
              * ```
@@ -456,6 +500,7 @@ private constructor(
             fun build(): Delta =
                 Delta(
                     checkRequired("container", container),
+                    checkRequired("stopDetails", stopDetails),
                     checkRequired("stopReason", stopReason),
                     checkRequired("stopSequence", stopSequence),
                     additionalProperties.toMutableMap(),
@@ -470,6 +515,7 @@ private constructor(
             }
 
             container().ifPresent { it.validate() }
+            stopDetails().ifPresent { it.validate() }
             stopReason().ifPresent { it.validate() }
             stopSequence()
             validated = true
@@ -492,6 +538,7 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (container.asKnown().getOrNull()?.validity() ?: 0) +
+                (stopDetails.asKnown().getOrNull()?.validity() ?: 0) +
                 (stopReason.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (stopSequence.asKnown().isPresent) 1 else 0)
 
@@ -502,19 +549,20 @@ private constructor(
 
             return other is Delta &&
                 container == other.container &&
+                stopDetails == other.stopDetails &&
                 stopReason == other.stopReason &&
                 stopSequence == other.stopSequence &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(container, stopReason, stopSequence, additionalProperties)
+            Objects.hash(container, stopDetails, stopReason, stopSequence, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Delta{container=$container, stopReason=$stopReason, stopSequence=$stopSequence, additionalProperties=$additionalProperties}"
+            "Delta{container=$container, stopDetails=$stopDetails, stopReason=$stopReason, stopSequence=$stopSequence, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

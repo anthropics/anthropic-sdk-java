@@ -8,6 +8,7 @@ import com.anthropic.models.messages.CitationCharLocation
 import com.anthropic.models.messages.Container
 import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.Model
+import com.anthropic.models.messages.RefusalStopDetails
 import com.anthropic.models.messages.ServerToolUsage
 import com.anthropic.models.messages.StopReason
 import com.anthropic.models.messages.TextBlock
@@ -48,6 +49,12 @@ internal class MessageBatchSucceededResultTest {
                                 .build()
                         )
                         .model(Model.CLAUDE_OPUS_4_6)
+                        .stopDetails(
+                            RefusalStopDetails.builder()
+                                .category(RefusalStopDetails.Category.CYBER)
+                                .explanation("explanation")
+                                .build()
+                        )
                         .stopReason(StopReason.END_TURN)
                         .stopSequence(null)
                         .usage(
@@ -102,6 +109,12 @@ internal class MessageBatchSucceededResultTest {
                             .build()
                     )
                     .model(Model.CLAUDE_OPUS_4_6)
+                    .stopDetails(
+                        RefusalStopDetails.builder()
+                            .category(RefusalStopDetails.Category.CYBER)
+                            .explanation("explanation")
+                            .build()
+                    )
                     .stopReason(StopReason.END_TURN)
                     .stopSequence(null)
                     .usage(
@@ -160,6 +173,12 @@ internal class MessageBatchSucceededResultTest {
                                 .build()
                         )
                         .model(Model.CLAUDE_OPUS_4_6)
+                        .stopDetails(
+                            RefusalStopDetails.builder()
+                                .category(RefusalStopDetails.Category.CYBER)
+                                .explanation("explanation")
+                                .build()
+                        )
                         .stopReason(StopReason.END_TURN)
                         .stopSequence(null)
                         .usage(
