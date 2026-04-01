@@ -285,6 +285,12 @@ class BetaMessageAccumulator private constructor() {
                         requireMessageBuilder().stopReason(delta.stopReason())
                     }
 
+                    if (delta._stopDetails().isNull()) {
+                        requireMessageBuilder().stopDetails(null)
+                    } else if (!delta._stopDetails().isMissing()) {
+                        requireMessageBuilder().stopDetails(delta.stopDetails().get())
+                    }
+
                     // The same applies to the `stop_sequence` string; only the last value will
                     // survive; multiple `stop_sequence` string values from multiple events are
                     // _not_ concatenated.

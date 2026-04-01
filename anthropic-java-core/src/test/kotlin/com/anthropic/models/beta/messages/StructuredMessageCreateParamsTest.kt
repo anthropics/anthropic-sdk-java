@@ -53,6 +53,7 @@ internal class StructuredMessageCreateParamsTest {
                 .container(null)
                 .content(listOf())
                 .model(MODEL)
+                .stopDetails(null)
                 .stopReason(BetaStopReason.STOP_SEQUENCE)
                 .stopSequence(null)
                 .usage(

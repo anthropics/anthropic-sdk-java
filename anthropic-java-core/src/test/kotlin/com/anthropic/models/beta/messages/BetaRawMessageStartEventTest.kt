@@ -57,6 +57,12 @@ internal class BetaRawMessageStartEventTest {
                                 .build()
                         )
                         .model(Model.CLAUDE_OPUS_4_6)
+                        .stopDetails(
+                            BetaRefusalStopDetails.builder()
+                                .category(BetaRefusalStopDetails.Category.CYBER)
+                                .explanation("explanation")
+                                .build()
+                        )
                         .stopReason(BetaStopReason.END_TURN)
                         .stopSequence(null)
                         .usage(
@@ -143,6 +149,12 @@ internal class BetaRawMessageStartEventTest {
                             .build()
                     )
                     .model(Model.CLAUDE_OPUS_4_6)
+                    .stopDetails(
+                        BetaRefusalStopDetails.builder()
+                            .category(BetaRefusalStopDetails.Category.CYBER)
+                            .explanation("explanation")
+                            .build()
+                    )
                     .stopReason(BetaStopReason.END_TURN)
                     .stopSequence(null)
                     .usage(
@@ -233,6 +245,12 @@ internal class BetaRawMessageStartEventTest {
                                 .build()
                         )
                         .model(Model.CLAUDE_OPUS_4_6)
+                        .stopDetails(
+                            BetaRefusalStopDetails.builder()
+                                .category(BetaRefusalStopDetails.Category.CYBER)
+                                .explanation("explanation")
+                                .build()
+                        )
                         .stopReason(BetaStopReason.END_TURN)
                         .stopSequence(null)
                         .usage(

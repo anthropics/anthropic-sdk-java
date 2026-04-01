@@ -39,6 +39,12 @@ internal class RawMessageStartEventTest {
                                 .build()
                         )
                         .model(Model.CLAUDE_OPUS_4_6)
+                        .stopDetails(
+                            RefusalStopDetails.builder()
+                                .category(RefusalStopDetails.Category.CYBER)
+                                .explanation("explanation")
+                                .build()
+                        )
                         .stopReason(StopReason.END_TURN)
                         .stopSequence(null)
                         .usage(
@@ -93,6 +99,12 @@ internal class RawMessageStartEventTest {
                             .build()
                     )
                     .model(Model.CLAUDE_OPUS_4_6)
+                    .stopDetails(
+                        RefusalStopDetails.builder()
+                            .category(RefusalStopDetails.Category.CYBER)
+                            .explanation("explanation")
+                            .build()
+                    )
                     .stopReason(StopReason.END_TURN)
                     .stopSequence(null)
                     .usage(
@@ -151,6 +163,12 @@ internal class RawMessageStartEventTest {
                                 .build()
                         )
                         .model(Model.CLAUDE_OPUS_4_6)
+                        .stopDetails(
+                            RefusalStopDetails.builder()
+                                .category(RefusalStopDetails.Category.CYBER)
+                                .explanation("explanation")
+                                .build()
+                        )
                         .stopReason(StopReason.END_TURN)
                         .stopSequence(null)
                         .usage(

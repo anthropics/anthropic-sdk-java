@@ -37,6 +37,9 @@ internal constructor(
     /** @see Message._role */
     fun _role(): JsonValue = rawMessage._role()
 
+    /** @see Message.stopDetails */
+    fun stopDetails(): Optional<RefusalStopDetails> = rawMessage.stopDetails()
+
     /** @see Message.stopReason */
     fun stopReason(): Optional<StopReason> = rawMessage.stopReason()
 
@@ -63,6 +66,9 @@ internal constructor(
 
     /** @see Message._model */
     fun _model(): JsonField<Model> = rawMessage._model()
+
+    /** @see Message._stopDetails */
+    fun _stopDetails(): JsonField<RefusalStopDetails> = rawMessage._stopDetails()
 
     /** @see Message._stopReason */
     fun _stopReason(): JsonField<StopReason> = rawMessage._stopReason()

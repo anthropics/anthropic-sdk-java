@@ -44,6 +44,12 @@ internal class RawMessageStreamEventTest {
                                 .build()
                         )
                         .model(Model.CLAUDE_OPUS_4_6)
+                        .stopDetails(
+                            RefusalStopDetails.builder()
+                                .category(RefusalStopDetails.Category.CYBER)
+                                .explanation("explanation")
+                                .build()
+                        )
                         .stopReason(StopReason.END_TURN)
                         .stopSequence(null)
                         .usage(
@@ -113,6 +119,12 @@ internal class RawMessageStreamEventTest {
                                     .build()
                             )
                             .model(Model.CLAUDE_OPUS_4_6)
+                            .stopDetails(
+                                RefusalStopDetails.builder()
+                                    .category(RefusalStopDetails.Category.CYBER)
+                                    .explanation("explanation")
+                                    .build()
+                            )
                             .stopReason(StopReason.END_TURN)
                             .stopSequence(null)
                             .usage(
@@ -163,6 +175,12 @@ internal class RawMessageStreamEventTest {
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .build()
                         )
+                        .stopDetails(
+                            RefusalStopDetails.builder()
+                                .category(RefusalStopDetails.Category.CYBER)
+                                .explanation("explanation")
+                                .build()
+                        )
                         .stopReason(StopReason.END_TURN)
                         .stopSequence("stop_sequence")
                         .build()
@@ -205,6 +223,12 @@ internal class RawMessageStreamEventTest {
                                 Container.builder()
                                     .id("id")
                                     .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .build()
+                            )
+                            .stopDetails(
+                                RefusalStopDetails.builder()
+                                    .category(RefusalStopDetails.Category.CYBER)
+                                    .explanation("explanation")
                                     .build()
                             )
                             .stopReason(StopReason.END_TURN)
