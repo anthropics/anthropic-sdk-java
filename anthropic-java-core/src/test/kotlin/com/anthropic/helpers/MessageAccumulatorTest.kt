@@ -817,6 +817,7 @@ internal class MessageAccumulatorTest {
                         // will occur, but there is no appropriate value other than an explicit "not
                         // set" for a `message_start` event. The final values will be notified in
                         // one or more later `message_delta` events.
+                        .stopDetails(NOT_SET)
                         .stopReason(NOT_SET)
                         .stopSequence(NOT_SET)
                         // The default non-null value for `role` suffices.
@@ -859,6 +860,7 @@ internal class MessageAccumulatorTest {
             RawMessageDeltaEvent.builder()
                 .delta(
                     RawMessageDeltaEvent.Delta.builder()
+                        .stopDetails(NOT_SET)
                         .stopReason(stopReason)
                         .stopSequence(stopSequence)
                         .build()

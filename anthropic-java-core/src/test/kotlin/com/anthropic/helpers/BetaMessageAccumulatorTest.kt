@@ -969,6 +969,7 @@ internal class BetaMessageAccumulatorTest {
                         // will occur, but there is no appropriate value other than an explicit "not
                         // set" for a `message_start` event. The final values will be notified in
                         // one or more later `message_delta` events.
+                        .stopDetails(NOT_SET)
                         .stopReason(NOT_SET)
                         .stopSequence(NOT_SET)
                         .container(
@@ -1045,6 +1046,7 @@ internal class BetaMessageAccumulatorTest {
                                 .skills(listOf())
                                 .build()
                         )
+                        .stopDetails(NOT_SET)
                         .stopReason(stopReason)
                         .stopSequence(stopSequence)
                         .build()

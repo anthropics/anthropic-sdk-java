@@ -27,6 +27,7 @@ private constructor(
     private val content: JsonField<List<ContentBlock>>,
     private val model: JsonField<Model>,
     private val role: JsonValue,
+    private val stopDetails: JsonField<RefusalStopDetails>,
     private val stopReason: JsonField<StopReason>,
     private val stopSequence: JsonField<String>,
     private val type: JsonValue,
@@ -45,6 +46,9 @@ private constructor(
         content: JsonField<List<ContentBlock>> = JsonMissing.of(),
         @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
         @JsonProperty("role") @ExcludeMissing role: JsonValue = JsonMissing.of(),
+        @JsonProperty("stop_details")
+        @ExcludeMissing
+        stopDetails: JsonField<RefusalStopDetails> = JsonMissing.of(),
         @JsonProperty("stop_reason")
         @ExcludeMissing
         stopReason: JsonField<StopReason> = JsonMissing.of(),
@@ -59,6 +63,7 @@ private constructor(
         content,
         model,
         role,
+        stopDetails,
         stopReason,
         stopSequence,
         type,
@@ -145,6 +150,14 @@ private constructor(
      * with an unexpected value).
      */
     @JsonProperty("role") @ExcludeMissing fun _role(): JsonValue = role
+
+    /**
+     * Structured information about a refusal.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun stopDetails(): Optional<RefusalStopDetails> = stopDetails.getOptional("stop_details")
 
     /**
      * The reason that we stopped.
@@ -241,6 +254,15 @@ private constructor(
     @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
 
     /**
+     * Returns the raw JSON value of [stopDetails].
+     *
+     * Unlike [stopDetails], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("stop_details")
+    @ExcludeMissing
+    fun _stopDetails(): JsonField<RefusalStopDetails> = stopDetails
+
+    /**
      * Returns the raw JSON value of [stopReason].
      *
      * Unlike [stopReason], this method doesn't throw if the JSON field has an unexpected type.
@@ -288,6 +310,7 @@ private constructor(
          * .container()
          * .content()
          * .model()
+         * .stopDetails()
          * .stopReason()
          * .stopSequence()
          * .usage()
@@ -304,6 +327,7 @@ private constructor(
         private var content: JsonField<MutableList<ContentBlock>>? = null
         private var model: JsonField<Model>? = null
         private var role: JsonValue = JsonValue.from("assistant")
+        private var stopDetails: JsonField<RefusalStopDetails>? = null
         private var stopReason: JsonField<StopReason>? = null
         private var stopSequence: JsonField<String>? = null
         private var type: JsonValue = JsonValue.from("message")
@@ -317,6 +341,7 @@ private constructor(
             content = message.content.map { it.toMutableList() }
             model = message.model
             role = message.role
+            stopDetails = message.stopDetails
             stopReason = message.stopReason
             stopSequence = message.stopSequence
             type = message.type
@@ -534,6 +559,25 @@ private constructor(
          */
         fun role(role: JsonValue) = apply { this.role = role }
 
+        /** Structured information about a refusal. */
+        fun stopDetails(stopDetails: RefusalStopDetails?) =
+            stopDetails(JsonField.ofNullable(stopDetails))
+
+        /** Alias for calling [Builder.stopDetails] with `stopDetails.orElse(null)`. */
+        fun stopDetails(stopDetails: Optional<RefusalStopDetails>) =
+            stopDetails(stopDetails.getOrNull())
+
+        /**
+         * Sets [Builder.stopDetails] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.stopDetails] with a well-typed [RefusalStopDetails]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun stopDetails(stopDetails: JsonField<RefusalStopDetails>) = apply {
+            this.stopDetails = stopDetails
+        }
+
         /**
          * The reason that we stopped.
          *
@@ -655,6 +699,7 @@ private constructor(
          * .container()
          * .content()
          * .model()
+         * .stopDetails()
          * .stopReason()
          * .stopSequence()
          * .usage()
@@ -669,6 +714,7 @@ private constructor(
                 checkRequired("content", content).map { it.toImmutable() },
                 checkRequired("model", model),
                 role,
+                checkRequired("stopDetails", stopDetails),
                 checkRequired("stopReason", stopReason),
                 checkRequired("stopSequence", stopSequence),
                 type,
@@ -693,6 +739,7 @@ private constructor(
                 throw AnthropicInvalidDataException("'role' is invalid, received $it")
             }
         }
+        stopDetails().ifPresent { it.validate() }
         stopReason().ifPresent { it.validate() }
         stopSequence()
         _type().let {
@@ -724,6 +771,7 @@ private constructor(
             (content.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (model.asKnown().isPresent) 1 else 0) +
             role.let { if (it == JsonValue.from("assistant")) 1 else 0 } +
+            (stopDetails.asKnown().getOrNull()?.validity() ?: 0) +
             (stopReason.asKnown().getOrNull()?.validity() ?: 0) +
             (if (stopSequence.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("message")) 1 else 0 } +
@@ -740,6 +788,7 @@ private constructor(
             content == other.content &&
             model == other.model &&
             role == other.role &&
+            stopDetails == other.stopDetails &&
             stopReason == other.stopReason &&
             stopSequence == other.stopSequence &&
             type == other.type &&
@@ -754,6 +803,7 @@ private constructor(
             content,
             model,
             role,
+            stopDetails,
             stopReason,
             stopSequence,
             type,
@@ -765,5 +815,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Message{id=$id, container=$container, content=$content, model=$model, role=$role, stopReason=$stopReason, stopSequence=$stopSequence, type=$type, usage=$usage, additionalProperties=$additionalProperties}"
+        "Message{id=$id, container=$container, content=$content, model=$model, role=$role, stopDetails=$stopDetails, stopReason=$stopReason, stopSequence=$stopSequence, type=$type, usage=$usage, additionalProperties=$additionalProperties}"
 }

@@ -55,6 +55,12 @@ internal class BetaMessageTest {
                         .build()
                 )
                 .model(Model.CLAUDE_OPUS_4_6)
+                .stopDetails(
+                    BetaRefusalStopDetails.builder()
+                        .category(BetaRefusalStopDetails.Category.CYBER)
+                        .explanation("explanation")
+                        .build()
+                )
                 .stopReason(BetaStopReason.END_TURN)
                 .stopSequence(null)
                 .usage(
@@ -141,6 +147,13 @@ internal class BetaMessageTest {
                     .build()
             )
         assertThat(betaMessage.model()).isEqualTo(Model.CLAUDE_OPUS_4_6)
+        assertThat(betaMessage.stopDetails())
+            .contains(
+                BetaRefusalStopDetails.builder()
+                    .category(BetaRefusalStopDetails.Category.CYBER)
+                    .explanation("explanation")
+                    .build()
+            )
         assertThat(betaMessage.stopReason()).contains(BetaStopReason.END_TURN)
         assertThat(betaMessage.stopSequence()).isEmpty
         assertThat(betaMessage.usage())
@@ -228,6 +241,12 @@ internal class BetaMessageTest {
                         .build()
                 )
                 .model(Model.CLAUDE_OPUS_4_6)
+                .stopDetails(
+                    BetaRefusalStopDetails.builder()
+                        .category(BetaRefusalStopDetails.Category.CYBER)
+                        .explanation("explanation")
+                        .build()
+                )
                 .stopReason(BetaStopReason.END_TURN)
                 .stopSequence(null)
                 .usage(

@@ -45,6 +45,9 @@ internal constructor(
     /** @see BetaMessage._role */
     fun _role(): JsonValue = rawMessage._role()
 
+    /** @see BetaMessage.stopDetails */
+    fun stopDetails(): Optional<BetaRefusalStopDetails> = rawMessage.stopDetails()
+
     /** @see BetaMessage.stopReason */
     fun stopReason(): Optional<BetaStopReason> = rawMessage.stopReason()
 
@@ -72,6 +75,9 @@ internal constructor(
 
     /** @see BetaMessage._model */
     fun _model(): JsonField<Model> = rawMessage._model()
+
+    /** @see BetaMessage._stopDetails */
+    fun _stopDetails(): JsonField<BetaRefusalStopDetails> = rawMessage._stopDetails()
 
     /** @see BetaMessage._stopReason */
     fun _stopReason(): JsonField<BetaStopReason> = rawMessage._stopReason()

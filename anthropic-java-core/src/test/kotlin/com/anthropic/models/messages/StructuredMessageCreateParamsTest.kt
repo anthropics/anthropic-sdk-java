@@ -52,6 +52,7 @@ internal class StructuredMessageCreateParamsTest {
                         .id("msg_1")
                         .content(emptyList())
                         .model(Model.CLAUDE_SONNET_4_5)
+                        .stopDetails(null)
                         .stopReason(StopReason.END_TURN)
                         .stopSequence(null)
                         .usage(

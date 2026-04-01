@@ -13,6 +13,7 @@ import com.anthropic.models.beta.messages.BetaContainer
 import com.anthropic.models.beta.messages.BetaContextManagementResponse
 import com.anthropic.models.beta.messages.BetaMessage
 import com.anthropic.models.beta.messages.BetaMessageIterationUsage
+import com.anthropic.models.beta.messages.BetaRefusalStopDetails
 import com.anthropic.models.beta.messages.BetaServerToolUsage
 import com.anthropic.models.beta.messages.BetaSkill
 import com.anthropic.models.beta.messages.BetaStopReason
@@ -75,6 +76,12 @@ internal class BetaMessageBatchResultTest {
                                 .build()
                         )
                         .model(Model.CLAUDE_OPUS_4_6)
+                        .stopDetails(
+                            BetaRefusalStopDetails.builder()
+                                .category(BetaRefusalStopDetails.Category.CYBER)
+                                .explanation("explanation")
+                                .build()
+                        )
                         .stopReason(BetaStopReason.END_TURN)
                         .stopSequence(null)
                         .usage(
@@ -174,6 +181,12 @@ internal class BetaMessageBatchResultTest {
                                     .build()
                             )
                             .model(Model.CLAUDE_OPUS_4_6)
+                            .stopDetails(
+                                BetaRefusalStopDetails.builder()
+                                    .category(BetaRefusalStopDetails.Category.CYBER)
+                                    .explanation("explanation")
+                                    .build()
+                            )
                             .stopReason(BetaStopReason.END_TURN)
                             .stopSequence(null)
                             .usage(
