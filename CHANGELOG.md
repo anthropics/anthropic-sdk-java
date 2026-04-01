@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.20.0 (2026-04-01)
+
+Full Changelog: [v2.19.0...v2.20.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.19.0...v2.20.0)
+
+### Features
+
+* **api:** add structured stop_details to message responses ([771898a](https://github.com/anthropics/anthropic-sdk-java/commit/771898a6af81dfbf178dc197e3b0d679be1f48ef))
+
+
+### Chores
+
+* **internal:** client updates ([3300daa](https://github.com/anthropics/anthropic-sdk-java/commit/3300daab031d759976e15a7a2f5fe16be4b8c02f))
+
+
+### Documentation
+
+* simplify example ([7c36696](https://github.com/anthropics/anthropic-sdk-java/commit/7c366968258f142cf77a023a1131e22ec82c7169))
+
 ## 2.19.0 (2026-03-31)
 
 Full Changelog: [v2.18.0...v2.19.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.18.0...v2.19.0)
