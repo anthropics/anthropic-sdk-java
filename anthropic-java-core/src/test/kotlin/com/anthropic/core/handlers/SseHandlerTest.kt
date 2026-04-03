@@ -140,7 +140,7 @@ internal class SseHandlerTest {
 
         try {
             messages =
-                sseHandler(jsonMapper()).handle(response).use { it.stream().toList() }
+                sseHandler(jsonMapper()).handle(response).use { runBlocking { it.stream().toList() } }
         } catch (e: Exception) {
             exception = e
         }
@@ -161,8 +161,8 @@ internal class SseHandlerTest {
 
         val throwable =
             streamResponse.use {
-                it.stream().toList()
-                catchThrowable { it.stream().toList() }
+                runBlocking { it.stream().toList() }
+                catchThrowable { runBlocking { it.stream().toList() } }
             }
 
         assertThat(throwable).isInstanceOf(IllegalStateException::class.java)

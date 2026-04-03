@@ -5,7 +5,9 @@ import com.anthropic.core.http.HttpResponse
 import com.anthropic.errors.AnthropicIoException
 import java.io.IOException
 import java.io.InputStream
-import kotlin.streams.asSequence
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.assertThrows
@@ -17,7 +19,7 @@ internal class StreamHandlerTest {
         val handler = streamHandler { _, lines -> yieldAll(lines) }
         val streamResponse = handler.handle(httpResponse("a\nbb\nccc\ndddd".byteInputStream()))
 
-        val lines = streamResponse.stream().asSequence().toList()
+        val lines = runBlocking { streamResponse.stream().toList() }
 
         assertThat(lines).containsExactly("a", "bb", "ccc", "dddd")
     }
@@ -27,16 +29,16 @@ internal class StreamHandlerTest {
         val handler = streamHandler { _, lines -> yieldAll(lines) }
         val streamResponse = handler.handle(httpResponse("a\nbb\nccc\ndddd".byteInputStream()))
 
-        val lines =
+        val lines = runBlocking {
             streamResponse
                 .stream()
-                .asSequence()
                 .onEach {
                     if (it == "bb") {
                         streamResponse.close()
                     }
                 }
                 .toList()
+        }
 
         assertThat(lines).containsExactly("a", "bb")
     }
@@ -46,7 +48,7 @@ internal class StreamHandlerTest {
         val handler = streamHandler<String> { _, lines -> lines.forEach {} }
         val streamResponse = handler.handle(httpResponse("a\nb\nc\n".byteInputStream().throwing()))
 
-        val e = assertThrows<AnthropicIoException> { streamResponsekotlinx.coroutines.runBlocking { stream().collect {} }
+        val e = assertThrows<AnthropicIoException> { runBlocking { streamResponse.stream().collect {} } }
         assertThat(e).hasMessage("Stream failed")
         assertThat(e).hasCauseInstanceOf(IOException::class.java)
     }
@@ -64,7 +66,7 @@ internal class StreamHandlerTest {
             }
         val streamResponse = handler.handle(httpResponse("a\nb\nc\n".byteInputStream()))
 
-        val e = assertThrows<IOException> { streamResponsekotlinx.coroutines.runBlocking { stream().collect {} }
+        val e = assertThrows<IOException> { runBlocking { streamResponse.stream().collect {} } }
         assertThat(e).isSameAs(ioException)
     }
 
