@@ -5,7 +5,7 @@ package com.anthropic.core.http
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 internal class SseMessage
 private constructor(
@@ -68,7 +68,7 @@ private constructor(
             retry == other.retry
     }
 
-    override fun hashCode(): Int = Objects.hash(event, data, id, retry)
+    override fun hashCode(): Int = contentHash(event, data, id, retry)
 
     override fun toString(): String = "SseMessage{event=$event, data=$data, id=$id, retry=$retry}"
 }
