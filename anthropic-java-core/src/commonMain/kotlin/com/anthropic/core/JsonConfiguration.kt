@@ -73,3 +73,32 @@ fun JsonValue.toJsonString(): String = anthropicJson.encodeToString(
 /** Decode JSON string to SDK JsonValue using kotlinx.serialization */
 fun JsonValue.Companion.fromJsonString(json: String): JsonValue =
     fromJsonElement(anthropicJson.parseToJsonElement(json))
+
+// --- JsonField<T> ↔ kotlinx.serialization bridge ---
+// JsonField<T> is conceptually equivalent to a nullable JsonElement:
+// - KnownValue<T> → the actual JsonElement (with typed value)
+// - JsonMissing → null (absent from JSON)
+// - JsonNull → kotlinx.serialization.json.JsonNull
+// - JsonValue subtypes → JsonElement
+
+/**
+ * Convert a JsonField to a nullable kotlinx.serialization JsonElement.
+ * Returns null for JsonMissing (absent fields).
+ */
+fun <T : Any> JsonField<T>.toJsonElement(): JsonElement? = when (this) {
+    is JsonMissing -> null
+    is JsonValue -> (this as JsonValue).toJsonElement()
+    is KnownValue -> {
+        // Convert known value to JsonElement via JsonValue.from()
+        val jv = JsonValue.from(value)
+        jv.toJsonElement()
+    }
+}
+
+/**
+ * Create a JsonField from a kotlinx.serialization JsonElement.
+ * A null element becomes JsonMissing.
+ */
+fun JsonField.Companion.fromJsonElement(element: JsonElement?): JsonField<*> =
+    if (element == null) JsonMissing.of()
+    else JsonValue.fromJsonElement(element)
