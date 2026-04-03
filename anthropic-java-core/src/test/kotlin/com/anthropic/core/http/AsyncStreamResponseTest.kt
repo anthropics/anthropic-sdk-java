@@ -3,8 +3,6 @@ package com.anthropic.core.http
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
-import java.util.stream.Stream
-import kotlin.streams.asStream
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.Test
@@ -21,21 +19,17 @@ internal class AsyncStreamResponseTest {
     }
 
     private val streamResponse =
-        spy<StreamResponse<String>> {
-            doReturn(Stream.of("chunk1", "chunk2", "chunk3")).whenever(it).stream()
+        mock<StreamResponse<String>> {
+            on { stream() } doReturn kotlinx.coroutines.flow.flowOf("chunk1", "chunk2", "chunk3")
         }
     private val erroringStreamResponse =
-        spy<StreamResponse<String>> {
-            doReturn(
-                    sequence {
-                            yield("chunk1")
-                            yield("chunk2")
-                            throw ERROR
-                        }
-                        .asStream()
-                )
-                .whenever(it)
-                .stream()
+        mock<StreamResponse<String>> {
+            on { stream() } doReturn
+                kotlinx.coroutines.flow.flow {
+                    emit("chunk1")
+                    emit("chunk2")
+                    throw ERROR
+                }
         }
     private val executor =
         spy<Executor> {
