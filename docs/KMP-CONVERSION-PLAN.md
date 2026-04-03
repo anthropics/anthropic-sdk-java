@@ -631,238 +631,216 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 | `KtorBridge.kt` | HttpMethod/Headers/QueryParams ↔ Ktor types |
 | `KmpOptional.kt` | typealias to java.util.Optional + Kotlin extensions |
 
-### 🔲 GAPS — Remaining java.* Usage in commonMain
-| Import | Count | Needed For | Gap |
-|---|---|---|---|
-| `java.util.Optional` | 309 | Model public API | Need KMP Optional or nullable migration |
-| `java.util.function.Consumer` | 48 | Builder fluent API for Java | Need Kotlin lambda replacement |
-| `CompletableFuture` | 39 | Async API surface | Need suspend/Flow migration |
-| `Executor`/`ExecutorService` | 13 | Async threading | Need coroutine dispatcher |
-| `java.time.OffsetDateTime` | 9 | Model date fields | Need kotlinx.datetime.Instant |
-| `java.io.InputStream` | 7 | File upload models | Need okio.Source |
-| `java.nio.file.Path` | 3 | File path models | Need okio.Path |
-| `java.io.OutputStream` | 2 | HTTP body writing | Need okio.Sink |
-| `java.io.IOException` | 2 | Stream error handling | Need AnthropicIoException |
-| `java.time.Clock` | 2 | Retry timing | Need kotlinx.datetime.Clock |
-| `Jackson annotations` | ~2200 | Model serialization | Need kotlinx.serialization migration |
-| `Jackson core/databind` | ~15 files | JSON parsing, ObjectMappers | Need kotlinx.serialization |
+### 🔲 GAPS — Remaining java.* in Core (22 files, NOT models/services)
 
-### 🔲 GAPS — Custom Code Duplicating Stable KT Libs (~730 lines)
-| Custom Code | Lines | Stable Lib Replacement |
+**Phase 0: expect/actual infrastructure (new files, no existing changes)**
+| New File | Purpose |
+|---|---|
+| `core/Async.kt` (commonMain) | `expect class CompletableFuture<T>` with thenApply/thenCompose/etc |
+| `core/AsyncJvm.kt` (jvmMain) | `actual typealias CompletableFuture<T> = j.u.c.CompletableFuture<T>` |
+| `core/Concurrency.kt` (commonMain) | `expect` for Executor, AtomicReference |
+| `core/ConcurrencyJvm.kt` (jvmMain) | `actual typealias` to java.util.concurrent types |
+| `core/PlatformTime.kt` (commonMain) | `expect` for Clock, parseHttpDate, nanosUntil |
+| `core/PlatformTimeJvm.kt` (jvmMain) | `actual` using java.time.Clock, OffsetDateTime, DateTimeFormatter |
+
+**Phase 1: Leaf files (no dependents) — 7 files**
+| File | java.* Import | Replacement |
 |---|---|---|
-| `RetryingHttpClient.kt` | 120 | Ktor HttpRequestRetry plugin |
-| `HttpRequestBodies.kt` MultipartBody | 130 | Ktor MultiPartFormDataContent |
+| `handlers/StreamHandler.kt` | `java.io.IOException` | `kotlin.io.IOException` |
+| `PrepareRequest.kt` | `CompletableFuture` | import from `core/Async.kt` |
+| `PhantomReachable.kt` | `reflect.InvocationTargetException` | → expect/actual, JVM impl in jvmMain |
+| `PhantomReachableExecutorService.kt` | `ExecutorService`, `Callable`, etc | → move entire file to jvmMain |
+| `RetryingHttpClient.kt` | Clock, OffsetDateTime, ThreadLocalRandom, etc | PlatformTime + `kotlin.random.Random` |
+| `ValuesJvm.kt` | Optional, SortedMap, Lock | Move JVM-specific utils to jvmMain |
+| `ObjectMappers.kt` | OffsetDateTime, InputStream, etc | → `expect fun jsonMapper()`, JVM actual with time/InputStream |
+
+**Phase 2: Core interfaces — 6 files**
+| File | java.* Import | Replacement |
+|---|---|---|
+| `http/HttpRequestBody.kt` | `java.io.OutputStream` | `okio.BufferedSink` |
+| `http/HttpResponse.kt` | `java.io.InputStream` | `okio.BufferedSource` |
+| `http/HttpResponseFor.kt` | `java.io.InputStream` | follows HttpResponse |
+| `http/HttpClient.kt` | `CompletableFuture` | import from `core/Async.kt` |
+| `http/AsyncStreamResponse.kt` | CompletableFuture, Optional, Executor, AtomicReference | Async/Concurrency + nullable |
+| `Sleeper.kt` | CompletableFuture, AutoCloseable | Async + kotlin.AutoCloseable |
+
+**Phase 3: Implementations — 6 files**
+| File | java.* Import | Replacement |
+|---|---|---|
+| `http/HttpRequestBodies.kt` | ByteArrayInputStream/OutputStream | `okio.Buffer` |
+| `http/KtorHttpClient.kt` | ByteArrayInputStream/OutputStream, CompletableFuture | okio.Buffer + Async |
+| `DefaultSleeper.kt` | CompletableFuture | Async |
+| `PhantomReachableSleeper.kt` | CompletableFuture | Async |
+| `PhantomReachableClosingHttpClient.kt` | CompletableFuture | Async |
+| `PhantomReachableClosingAsyncStreamResponse.kt` | CompletableFuture, Optional, Executor | Async/Concurrency + nullable |
+
+**Phase 4: Consumers — 3 files**
+| File | java.* Import | Replacement |
+|---|---|---|
+| `AutoPagerAsync.kt` | CompletableFuture, Optional, Executor, AtomicReference | Async/Concurrency + nullable |
+| `PageAsync.kt` | CompletableFuture | Async |
+| `ClientOptions.kt` | Clock, Optional, Executor, ExecutorService, ThreadFactory, AtomicLong | PlatformTime, Concurrency, nullable |
+
+### 🔲 GAPS — Custom Code Duplicating Ktor/MCP SDK (~730 lines)
+| Custom Code | Lines | Ktor/MCP SDK Replacement |
+|---|---|---|
+| `RetryingHttpClient.kt` | 120 | Ktor `HttpRequestRetry` plugin |
+| `HttpRequestBodies.kt` MultipartBody | 130 | Ktor `MultiPartFormDataContent` |
 | `SseHandler.kt` SSE parser | 70 | Ktor SSE plugin |
-| `StreamHandler.kt` wrappers | 45 | kotlinx.coroutines.flow.Flow |
-| `AsyncStreamResponse.kt` | 70 | kotlinx.coroutines.flow.Flow |
-| `AutoPagerAsync.kt` | 60 | kotlinx.coroutines.flow.Flow |
-| `ObjectMappers.kt` Jackson config | 162 | kotlinx.serialization.Json |
-| `BaseSerializer/Deserializer` | 40 | kotlinx.serialization.KSerializer |
+| `StreamHandler.kt` wrappers | 45 | `kotlinx.coroutines.flow.Flow` |
+| `AsyncStreamResponse.kt` | 70 | `kotlinx.coroutines.flow.Flow` |
+| `AutoPagerAsync.kt` | 60 | `kotlinx.coroutines.flow.Flow` |
+| `ObjectMappers.kt` Jackson config | 162 | `kotlinx.serialization.Json` (MCP SDK uses `McpJson`) |
+| `BaseSerializer/Deserializer` | 40 | `kotlinx.serialization.KSerializer` |
 
 ### 🔲 GAPS — MCP SDK Integration
-- MCP SDK dependency not yet added (`io.modelcontextprotocol:kotlin-sdk:0.11.0`)
-- `AnthropicMcpToolProvider` not yet created
-- `AnthropicMcpClient` not yet created
-- Bridge functions exist (`JsonValue.toJsonElement()`) but MCP integration code doesn't use them yet
+| Item | Status |
+|---|---|
+| Dependency `io.modelcontextprotocol:kotlin-sdk:0.11.0` | NOT ADDED |
+| `AnthropicMcpToolProvider` (listTools→BetaTool bridge) | NOT CREATED |
+| `AnthropicMcpClient` (tool loop: callTool→BetaToolResultBlockParam) | NOT CREATED |
+| MCP Transport integration (Ktor-based, same engine) | NOT CREATED |
 
 ---
 
-## Phase 9: MCP SDK Integration — Using Ktor/kotlinx/MCP Directly
+## Phase 9: Remove java.* from Core + Use MCP SDK/Ktor Directly
 
-### Research: Kotlin MCP SDK (io.modelcontextprotocol:kotlin-sdk:0.11.0)
+### MCP SDK Research Summary
 
-The MCP SDK uses the same stack we want:
-- `kotlinx.serialization.json.JsonElement/JsonObject` for JSON (via McpJson wrapper)
-- `io.ktor.client.HttpClient` for HTTP (no engine bundled — user provides CIO/etc.)
-- `kotlinx.coroutines` for async (suspend, Flow)
-- KMP: JVM, Native, JS, Wasm
+**Kotlin MCP SDK** (io.modelcontextprotocol:kotlin-sdk:0.11.0):
+- **Kotlin 2.3.10**, Ktor 3.3.3, kotlinx-serialization 1.10.0, kotlinx-coroutines 1.10.2
+- **McpJson** config: `ignoreUnknownKeys=true`, no classDiscriminator, `prettyPrint=false`
+- **Client API**: all `suspend` functions, returns typed results
+  - `client.listTools().tools` → `List<Tool>` (name, description, inputSchema: JsonObject)
+  - `client.callTool(name, arguments: Map<String,Any>)` → `CallToolResult` (content: List<Content>)
+- **Transport abstraction**: `Transport` interface, impls: WebSocket, StreamableHTTP, SSE, STDIO
+- **No tight Ktor coupling**: Ktor is behind Transport, not exposed to users
+- **KMP**: JVM, Native, JS, Wasm
 
-#### Why Direct JsonField<T> Replacement Won't Work
-`JsonField<T>` has `JsonMissing` (absent vs null) + `KnownValue<T>` (typed wrapper) — 
-`JsonElement` has no equivalent. 6,643 references would break.
+### What MCP SDK Uses That We Duplicate
 
-#### Strategy: Coexist via Bridge
-```
-Existing code (Jackson+JsonField) ←→ Bridge functions ←→ New code (MCP SDK/kotlinx types)
-```
+| Our Custom Code | MCP SDK's Approach | Direct Reuse? |
+|---|---|---|
+| `RetryingHttpClient` (120 lines) | Ktor `HttpRequestRetry` plugin | YES — configure on Ktor client |
+| `SseHandler` (70 lines) | Ktor SSE plugin via Transport | YES — use MCP Transport |
+| `MultipartBody` (130 lines) | Ktor `MultiPartFormDataContent` | YES — use Ktor directly |
+| `ObjectMappers` Jackson (162 lines) | `McpJson` (kotlinx.serialization.Json) | YES — `anthropicJson` already matches |
+| `AsyncStreamResponse` (70 lines) | kotlinx.coroutines Flow | YES — suspend + Flow |
+| `CompletableFuture` everywhere | `suspend` functions | YES — all MCP Client methods are suspend |
+| `Executor`/`ExecutorService` | `CoroutineDispatcher` | YES — coroutines |
+| `java.time.Clock` | `kotlinx.datetime.Clock.System` | YES |
+| Custom `Headers`/`HttpMethod` | `io.ktor.http.Headers`/`HttpMethod` | YES — bridges already exist |
 
-Bridges already exist:
-- `JsonValue.toJsonElement()` ↔ `JsonValue.fromJsonElement()`
-- `JsonField<T>.toJsonElement()` ↔ `JsonField.fromJsonElement()`
+### 9.1 Phase 0: Create expect/actual Infrastructure (New Files Only)
 
-### Context
-The SDK still uses Jackson for JSON, CompletableFuture for async, and custom implementations
-for HTTP retry, multipart, SSE parsing. These duplicate stable KT library functionality.
-We add a Kotlin-native layer using Ktor, kotlinx.serialization, and kotlinx.coroutines directly,
-while keeping the Jackson layer for backward compatibility.
+**No existing files modified.** Create platform abstractions used by subsequent phases.
 
-### 9.1 Create KtorHttpClient Implementation
+| New File (commonMain) | Content |
+|---|---|
+| `core/Async.kt` | `expect class CompletableFuture<T>` with thenApply, thenCompose, thenComposeAsync, handleAsync, whenComplete, whenCompleteAsync, complete, completeExceptionally, get; `expect fun <T> completedFuture(value: T)` |
+| `core/Concurrency.kt` | `expect interface Executor { fun execute(command: Runnable) }`; `expect class AtomicReference<T>(initial: T) { fun get/set/getAndSet/compareAndSet }` |
+| `core/PlatformTime.kt` | `expect fun systemClock(): PlatformClock`; `expect fun parseHttpDate(value: String): PlatformInstant?`; `expect fun nanosUntil(from, to): Long` |
 
-**File: `src/commonMain/kotlin/com/anthropic/core/http/KtorHttpClient.kt`**
+| New File (jvmMain) | Content |
+|---|---|
+| `core/AsyncJvm.kt` | `actual typealias CompletableFuture<T> = java.util.concurrent.CompletableFuture<T>` |
+| `core/ConcurrencyJvm.kt` | `actual typealias Executor = j.u.c.Executor`; `actual typealias AtomicReference<T> = j.u.c.atomic.AtomicReference<T>` |
+| `core/PlatformTimeJvm.kt` | `actual` using java.time.Clock, OffsetDateTime, DateTimeFormatter.RFC_1123_DATE_TIME |
 
-Implement the existing `HttpClient` interface using Ktor client directly:
+**Key insight:** `actual typealias` on JVM means Java callers still get real `j.u.c.CompletableFuture` — zero binary/source compat break.
 
+### 9.2 Phase 1: Leaf Files (No Dependents) — 7 Files
+
+| File | Change |
+|---|---|
+| `handlers/StreamHandler.kt` | `java.io.IOException` → `kotlin.io.IOException` (typealias on JVM since Kotlin 1.9) |
+| `PrepareRequest.kt` | Import CompletableFuture from `core/Async.kt` instead of `j.u.c` |
+| `PhantomReachable.kt` | → `expect fun closeWhenPhantomReachable(observed, close)` in commonMain; JVM reflection impl in jvmMain |
+| `PhantomReachableExecutorService.kt` | → Move entire file to jvmMain (purely JVM ExecutorService wrapper) |
+| `RetryingHttpClient.kt` | Clock→PlatformTime, `ThreadLocalRandom`→`kotlin.random.Random`, `TimeUnit.SECONDS.toNanos(1)`→`1_000_000_000L`, `Function.identity()`→`{ it }` |
+| `ValuesJvm.kt` | Move JVM-specific utils (SortedMap, Lock.withLockAsync) to jvmMain |
+| `ObjectMappers.kt` | → `expect fun jsonMapper(): JsonMapper` in commonMain; JVM actual has InputStream/OffsetDateTime serializers |
+
+### 9.3 Phase 2: Core Interfaces — 6 Files
+
+| File | Change |
+|---|---|
+| `http/HttpRequestBody.kt` | `fun writeTo(outputStream: OutputStream)` → `fun writeTo(sink: okio.BufferedSink)` |
+| `http/HttpResponse.kt` | `fun body(): InputStream` → `fun body(): okio.BufferedSource` |
+| `http/HttpResponseFor.kt` | Follows HttpResponse interface change |
+| `http/HttpClient.kt` | Import CompletableFuture from `core/Async.kt` |
+| `http/AsyncStreamResponse.kt` | CompletableFuture→Async, Optional→nullable, Executor→Concurrency, AtomicReference→Concurrency |
+| `Sleeper.kt` | CompletableFuture→Async, `java.lang.AutoCloseable`→`kotlin.AutoCloseable` |
+
+### 9.4 Phase 3: Implementations — 6 Files
+
+| File | Change |
+|---|---|
+| `http/HttpRequestBodies.kt` | ByteArrayOutputStream→`okio.Buffer`, InputStream→`okio.BufferedSource` |
+| `http/KtorHttpClient.kt` | ByteArrayInputStream/OutputStream→`okio.Buffer`, CompletableFuture→Async |
+| `DefaultSleeper.kt` | CompletableFuture→Async |
+| `PhantomReachableSleeper.kt` | CompletableFuture→Async |
+| `PhantomReachableClosingHttpClient.kt` | CompletableFuture→Async |
+| `PhantomReachableClosingAsyncStreamResponse.kt` | CompletableFuture→Async, Optional→nullable, Executor→Concurrency |
+
+### 9.5 Phase 4: Consumers — 3 Files
+
+| File | Change |
+|---|---|
+| `AutoPagerAsync.kt` | CompletableFuture→Async, Optional→nullable, Executor→Concurrency, AtomicReference→Concurrency |
+| `PageAsync.kt` | CompletableFuture→Async |
+| `ClientOptions.kt` | Clock→PlatformTime, Optional→nullable, Executor→Concurrency, `ExecutorService`→expect/actual, AtomicLong→atomicfu |
+
+### 9.6 MCP SDK Integration
+
+**Add to build.gradle.kts:**
 ```kotlin
-import io.ktor.client.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import io.ktor.utils.io.jvm.javaio.*
+commonMain { implementation("io.modelcontextprotocol:kotlin-sdk:0.11.0") }
+```
 
-class KtorHttpClient(
-    private val engine: io.ktor.client.HttpClient,
-) : HttpClient {
-    
-    override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse {
-        return runBlocking { executeAsync(request, requestOptions).get() }
-    }
-    
-    override fun executeAsync(
-        request: HttpRequest,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<HttpResponse> {
-        val future = CompletableFuture<HttpResponse>()
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response = engine.request {
-                    method = request.method.toKtorMethod()
-                    url(request.url())
-                    request.headers.names().forEach { name ->
-                        request.headers.values(name).forEach { value ->
-                            headers.append(name, value)
-                        }
-                    }
-                    request.body?.let { body ->
-                        val bytes = ByteArrayOutputStream().also { body.writeTo(it) }.toByteArray()
-                        setBody(bytes)
-                        body.contentType()?.let { contentType(ContentType.parse(it)) }
-                    }
-                }
-                future.complete(KtorHttpResponse(response))
-            } catch (e: Exception) {
-                future.completeExceptionally(e)
-            }
+**New file: `com/anthropic/mcp/AnthropicMcpToolProvider.kt`**
+```kotlin
+class AnthropicMcpToolProvider(private val mcpClient: Client) {
+    suspend fun listTools(): List<BetaTool> =
+        mcpClient.listTools().tools.map { tool ->
+            BetaTool.builder()
+                .name(tool.name)
+                .description(tool.description)
+                .inputSchema(JsonValue.fromJsonElement(tool.inputSchema))
+                .build()
         }
-        return future
-    }
-    
-    override fun close() { engine.close() }
+    suspend fun callTool(block: BetaToolUseBlock): BetaToolResultBlockParam { ... }
 }
 ```
 
-This uses Ktor's built-in:
-- Content negotiation (replaces Jackson for request bodies)
-- Retry plugin (replaces RetryingHttpClient)
-- SSE support (replaces SseHandler)
-- Multipart support (replaces custom MultipartBody)
-
-### 9.2 Add Ktor SSE Support
-
-**File: `src/commonMain/kotlin/com/anthropic/core/handlers/KtorSseHandler.kt`**
-
-Use Ktor's built-in SSE support instead of custom SseState parser:
-
-```kotlin
-import io.ktor.client.plugins.sse.*
-
-internal fun ktorSseHandler(): Handler<StreamResponse<SseMessage>> =
-    object : Handler<StreamResponse<SseMessage>> {
-        override fun handle(response: HttpResponse): StreamResponse<SseMessage> {
-            // Use Ktor's SSE plugin for spec-compliant parsing
-        }
-    }
-```
-
-### 9.3 Add kotlinx.serialization JSON Handler
-
-**File: `src/commonMain/kotlin/com/anthropic/core/handlers/KotlinxJsonHandler.kt`**
-
-Use kotlinx.serialization instead of Jackson for JSON deserialization:
-
-```kotlin
-import kotlinx.serialization.json.Json
-import com.anthropic.core.anthropicJson
-
-internal inline fun <reified T> kotlinxJsonHandler(): Handler<T> =
-    object : Handler<T> {
-        override fun handle(response: HttpResponse): T {
-            val body = response.body().readBytes().toString(Charsets.UTF_8)
-            return anthropicJson.decodeFromString<T>(body)
-        }
-    }
-```
-
-### 9.4 Replace Custom MultipartBody with Ktor
-
-Use Ktor's `MultiPartFormDataContent` instead of custom boundary/CRLF handling:
-
-```kotlin
-import io.ktor.client.request.forms.*
-import io.ktor.http.*
-
-fun buildMultipartBody(fields: Map<String, MultipartField<*>>): MultiPartFormDataContent {
-    return MultiPartFormDataContent(formData {
-        fields.forEach { (name, field) ->
-            val value = field.value.asKnown() ?: return@forEach
-            append(name, value.toString(), Headers.build {
-                field.contentType.let { append(HttpHeaders.ContentType, it) }
-            })
-        }
-    })
-}
-```
-
-### 9.5 Verification
+### 9.7 Verification
 
 ```bash
 ./gradlew :anthropic-java-core:compileKotlinJvm :anthropic-java-client-okhttp:compileKotlin --no-configuration-cache
 SKIP_MOCK_TESTS=true ./gradlew :anthropic-java-core:jvmTest --no-configuration-cache
 ```
 
-Critical files created:
-- DONE: `core/http/KtorHttpClient.kt` — Ktor-based HttpClient impl
-- DONE: `core/handlers/KotlinxJsonHandler.kt` — kotlinx.serialization JSON handler
-- DONE: `core/JsonConfiguration.kt` — anthropicJson + bridge functions
-- DONE: `core/KtorBridge.kt` — HttpMethod/Headers/QueryParams ↔ Ktor types
-
-### 9.6 Add MCP SDK Dependency + MCP Tool Provider
-
-**Add to build.gradle.kts commonMain:**
-```kotlin
-implementation("io.modelcontextprotocol:kotlin-sdk:0.11.0")
-```
-
-**New file: `src/commonMain/kotlin/com/anthropic/mcp/AnthropicMcpToolProvider.kt`**
-
-Uses MCP SDK's `Client` to discover and invoke tools, bridging via `JsonValue.toJsonElement()`:
-
-```kotlin
-class AnthropicMcpToolProvider(private val mcpClient: io.modelcontextprotocol.sdk.Client) {
-    suspend fun listTools(): List<BetaTool> {
-        return mcpClient.listTools().tools.map { mcpTool ->
-            BetaTool.builder()
-                .name(mcpTool.name)
-                .description(mcpTool.description)
-                .inputSchema(JsonValue.fromJsonElement(mcpTool.inputSchema))
-                .build()
-        }
-    }
-}
-```
-
-### 9.7 What We Replace vs Keep
+### 9.8 Summary: What We Replace vs Keep
 
 | Custom Code | Action | Replacement |
 |---|---|---|
-| KtorHttpClient.kt | DONE | io.ktor.client.HttpClient |
-| KotlinxJsonHandler.kt | DONE | kotlinx.serialization.Json |
-| JsonConfiguration.kt | DONE | anthropicJson + bridges |
-| KtorBridge.kt | DONE | HttpMethod/Headers ↔ Ktor |
-| KmpOptional.kt | DONE | typealias + extensions |
-| DefaultSleeper.kt | DONE | kotlinx.coroutines.delay() |
-| Jackson (ObjectMappers) | KEEP | Models depend on it (Stainless-generated) |
+| KtorHttpClient.kt | ✅ DONE | io.ktor.client.HttpClient |
+| KotlinxJsonHandler.kt | ✅ DONE | kotlinx.serialization.Json |
+| JsonConfiguration.kt | ✅ DONE | anthropicJson + bridges |
+| KtorBridge.kt | ✅ DONE | HttpMethod/Headers ↔ Ktor |
+| KmpOptional.kt | ✅ DONE | typealias + extensions |
+| DefaultSleeper.kt | ✅ DONE | kotlinx.coroutines.delay() |
+| java.io.IOException | Phase 1 | kotlin.io.IOException |
+| java.time.* (Clock, OffsetDateTime) | Phase 1 | expect/actual PlatformTime |
+| CompletableFuture (11 files) | Phase 0-4 | expect/actual (typealias on JVM) |
+| Executor/ExecutorService | Phase 0-4 | expect/actual Concurrency |
+| AtomicReference/AtomicLong | Phase 0-4 | expect/actual or kotlinx.atomicfu |
+| InputStream/OutputStream | Phase 2-3 | okio.BufferedSource/BufferedSink |
+| Optional (3 core files) | Phase 2-4 | Kotlin nullable |
+| PhantomReachable reflection | Phase 1 | expect/actual (JVM Cleaner) |
+| Jackson (ObjectMappers) | Phase 1 | expect fun jsonMapper() |
+| Jackson model annotations | KEEP | Stainless-generated, 485 files |
 | JsonField<T>/JsonValue | KEEP | JsonMissing semantics, 14K references |
-| BaseSerializer/Deserializer | KEEP | Model inner classes need them |
 
 ---
 
@@ -1711,208 +1689,159 @@ they're compile-time only (no Jackson runtime).
 | AnthropicMcpClient (tool loop) | 🔲 NOT CREATED |
 | Bridge: MCP Tool → Anthropic BetaTool | 🔲 NOT CREATED (bridge functions exist) |
 
-### B. KMP Target Folder Structure (Final)
+### B. KMP Folder Structure — ACTUAL Current State
 
 ```
-anthropic-java-core/
-  src/
-    commonMain/
-      kotlin/
-        com/anthropic/
-          client/                    ← AnthropicClient, AnthropicClientAsync interfaces + impls
-          backends/                  ← Backend interface, AnthropicBackend
-          core/
-            Values.kt               ← JsonField, JsonValue hierarchy (pure Kotlin)
-            JsonConfiguration.kt    ← kotlinx.serialization Json config (replaces ObjectMappers)
-            Utils.kt                ← Collection helpers (pure Kotlin)
-            Check.kt                ← Validation helpers (remove Jackson check)
-            Timeout.kt              ← kotlin.time.Duration based
-            Sleeper.kt              ← suspend-based interface
-            DefaultSleeper.kt       ← coroutine delay-based
-            ClientOptions.kt        ← No Jackson, no Executor, no Clock JVM types
-            RequestOptions.kt       ← kotlin.time.Duration based
-            Params.kt               ← Pure interface (already common-ready)
-            PrepareRequest.kt       ← Suspend version (no CompletableFuture)
-            Page.kt                 ← Already pure (no changes)
-            PageAsync.kt            ← suspend fun nextPage() (was CompletableFuture)
-            AutoPager.kt            ← Sequence-based (remove java.util.stream)
-            AutoPagerAsync.kt       ← Flow-based (replace CompletableFuture/Executor)
-            Platform.kt             ← expect declarations (see below)
-            handlers/
-              JsonHandler.kt        ← kotlinx.serialization decodeFromString
-              SseHandler.kt         ← kotlinx.serialization
-              StreamHandler.kt      ← Sequence-based (remove java.util.stream)
-              StringHandler.kt      ← ByteArray-based (remove InputStream)
-              ErrorHandler.kt       ← No changes needed
-            http/
-              HttpClient.kt         ← suspend fun execute() (no CompletableFuture)
-              HttpRequest.kt        ← Pure Kotlin (already mostly common-ready)
-              HttpResponse.kt       ← body(): ByteArray (was InputStream)
-              HttpResponseFor.kt    ← No changes
-              HttpMethod.kt         ← Pure enum (already common-ready)
-              HttpRequestBody.kt    ← toByteArray() (was OutputStream)
-              HttpRequestBodies.kt  ← kotlinx.serialization + ByteArray
-              Headers.kt            ← TreeMap → sortedMapOf (pure Kotlin)
-              QueryParams.kt        ← Already mostly pure
-              StreamResponse.kt     ← asSequence() (was stream(): Stream<T>)
-              AsyncStreamResponse.kt ← Flow-based (replace CompletableFuture)
-              SseMessage.kt         ← kotlinx.serialization (was Jackson)
-              RetryingHttpClient.kt ← coroutine-based retry (was CompletableFuture)
-              KtorHttpClient.kt     ← NEW: Ktor CIO client impl
-              KtorHttpResponse.kt   ← NEW: Ktor response wrapper
-          errors/                   ← All error classes (remove @JvmOverloads)
-          helpers/                  ← MessageAccumulator, etc.
-          models/                   ← ALL 485 model files (@Serializable, no Jackson)
-            messages/
-            beta/
-            completions/
-            models/
-          services/                 ← ALL service interfaces + impls (suspend, no CompletableFuture)
-            blocking/
-            async/
+anthropic-java-core/src/
+  commonMain/kotlin/com/anthropic/     ← 607 files (ALL source code)
+    core/                               ← 53 files (infrastructure)
+      Values.kt                         ← ✅ Jackson annotations restored, compile OK
+      ValuesJvm.kt                      ← 🔲 java.util.Optional, SortedMap, Lock, CompletableFuture
+      JsonConfiguration.kt              ← ✅ NEW: anthropicJson + JsonValue↔JsonElement bridge
+      KtorBridge.kt                     ← ✅ NEW: HttpMethod/Headers/QueryParams ↔ Ktor
+      KmpOptional.kt                    ← ✅ typealias KmpOptional<T> = java.util.Optional<T>
+      ObjectMappers.kt                  ← 🔲 java.io.InputStream, java.time.* (8 imports)
+      ClientOptions.kt                  ← 🔲 Clock, Optional, Executor/Service, ThreadFactory, AtomicLong
+      Sleeper.kt                        ← 🔲 CompletableFuture, java.lang.AutoCloseable
+      DefaultSleeper.kt                 ← 🔲 CompletableFuture (uses coroutine delay internally)
+      PrepareRequest.kt                 ← 🔲 CompletableFuture
+      PageAsync.kt                      ← 🔲 CompletableFuture
+      AutoPagerAsync.kt                 ← 🔲 Optional, CompletableFuture, Executor, AtomicReference
+      PhantomReachable.kt               ← 🔲 java.lang.reflect.InvocationTargetException
+      PhantomReachableExecutorService.kt ← 🔲 Callable, ExecutorService, Future, TimeUnit
+      PhantomReachableSleeper.kt        ← 🔲 CompletableFuture
+      Utils.kt                          ← ✅ pure Kotlin (contentHash, etc.)
+      Timeout.kt                        ← ✅ kotlin.time.Duration
+      RequestOptions.kt                 ← ✅ kotlin.time.Duration
+      Platform.kt                       ← ✅ expect declarations
+      handlers/
+        KotlinxJsonHandler.kt           ← ✅ NEW: kotlinx.serialization JSON handler
+        StreamHandler.kt                ← 🔲 java.io.IOException
+        JsonHandler.kt                  ← ✅ pure (Jackson-based, no java.* direct)
+        SseHandler.kt                   ← ✅ pure (uses Jackson ObjectMapper)
+        ErrorHandler.kt                 ← ✅ pure
+        StringHandler.kt                ← ✅ pure
+        JsonlHandler.kt                 ← ✅ pure
+      http/
+        KtorHttpClient.kt              ← ✅ NEW but 🔲 has ByteArrayI/O + CompletableFuture
+        HttpClient.kt                  ← 🔲 CompletableFuture
+        HttpResponse.kt                ← 🔲 java.io.InputStream
+        HttpResponseFor.kt             ← 🔲 java.io.InputStream
+        HttpRequestBody.kt             ← 🔲 java.io.OutputStream
+        HttpRequestBodies.kt           ← 🔲 ByteArrayI/O + InputStream + OutputStream
+        AsyncStreamResponse.kt         ← 🔲 Optional, CompletableFuture, Executor, AtomicReference
+        RetryingHttpClient.kt          ← 🔲 10 java.* imports (Clock, DateTime, CF, etc.)
+        PhantomReachableClosingAsyncStreamResponse.kt ← 🔲 Optional, CF, Executor
+        PhantomReachableClosingHttpClient.kt ← 🔲 CompletableFuture
+        PhantomReachableClosingStreamResponse.kt ← ✅ pure
+        StreamResponse.kt              ← ✅ Flow<T> (done)
+        Headers.kt                     ← ✅ pure (sortedMapOf)
+        QueryParams.kt                 ← ✅ pure
+        HttpRequest.kt                 ← ✅ pure
+        HttpMethod.kt                  ← ✅ pure
+        SseMessage.kt                  ← ✅ pure
+    client/                            ← 4 files ✅ pure
+    backends/                          ← 2 files ✅ pure
+    errors/                            ← 14 files ✅ pure (Optional→nullable done)
+    helpers/                           ← 3 files ✅ pure
+    models/                            ← 485 files (Jackson annotations, java.util.Optional)
+    services/                          ← 44 files (CompletableFuture in async, Optional)
 
-    commonTest/
-      kotlin/
-        com/anthropic/
-          TestServer.kt             ← NEW: Ktor CIO server with API key auth
-          core/                     ← Ported core tests (kotlin.test)
-          models/                   ← Ported model tests (kotlin.test)
-          services/                 ← Ported service tests (Ktor server stubs)
-          helpers/                  ← Ported helper tests
-          backends/                 ← Ported backend tests
+  jvmMain/kotlin/com/anthropic/core/  ← 3 files
+    PlatformJvm.kt                     ← ✅ actual urlEncode()
+    PropertiesJvm.kt                   ← ✅ actual getOsArch/Name/Version etc.
+    errors/AnthropicServiceExceptionExtensions.kt ← ✅ JVM ext
 
-    jvmMain/
-      kotlin/
-        com/anthropic/
-          core/
-            Platform.jvm.kt        ← actual fun getSystemProperty, getEnvironmentVariable, etc.
-            PhantomReachable.kt     ← actual closeWhenPhantomReachable (Java Cleaner)
-            StructuredOutputs.kt    ← actual extractSchema (victools jsonschema-generator)
-            PhantomReachableExecutorService.kt ← JVM-only (keep as-is)
-            PhantomReachableSleeper.kt ← JVM-only (keep as-is)
-            JsonSchemaLocalValidation.kt ← JVM-only
-            http/
-              PhantomReachableClosingStreamResponse.kt  ← JVM-only wrapper
-              PhantomReachableClosingHttpClient.kt       ← JVM-only wrapper
-              PhantomReachableClosingAsyncStreamResponse.kt ← JVM-only wrapper
-
-    jsMain/
-      kotlin/
-        com/anthropic/core/
-          Platform.js.kt           ← actual using js("process.env"), navigator.platform, etc.
-
-    wasmJsMain/                    ← delegates to jsMain via dependsOn or duplicates
-      kotlin/
-        com/anthropic/core/
-          Platform.wasmJs.kt
-
-    nativeMain/                    ← shared by all native targets (linux, macos, ios, mingw, etc.)
-      kotlin/
-        com/anthropic/core/
-          Platform.native.kt      ← actual using platform.posix (getenv, uname, etc.)
-
-    appleMain/                     ← shared by macOS, iOS, watchOS, tvOS
-      kotlin/
-        com/anthropic/core/
-          Platform.apple.kt       ← actual using Foundation (NSProcessInfo, etc.)
-
-    linuxMain/                     ← shared by linuxX64, linuxArm64
-    mingwMain/                     ← Windows native
-
-    jvmTest/
-      kotlin/
-        com/anthropic/              ← ALL existing tests UNCHANGED
-          TestServerExtension.kt    ← WireMock-based (kept as-is)
-          core/
-          models/
-          services/
-          helpers/
-          backends/
+  jvmTest/                             ← 502 test files (ALL existing tests, unchanged)
 ```
 
-### C. expect/actual Declarations (Platform.kt)
+### B2. Target State: Pure KT KMP Libs in Core
 
-**File: `src/commonMain/kotlin/com/anthropic/core/Platform.kt`**
+Goal: **22 core files** with java.* → pure Kotlin/KMP libs
+
+| java.* Category | Count | Pure KT Replacement | Lib |
+|---|---|---|---|
+| `CompletableFuture` | 11 files | `expect class` + JVM typealias | kotlinx.coroutines |
+| `InputStream/OutputStream` | 6 files | `okio.BufferedSource/Sink/Buffer` | okio 3.17.0 |
+| `Clock/OffsetDateTime/etc` | 3 files | `expect` PlatformTime + JVM actual | kotlinx.datetime |
+| `Optional` | 4 files | Kotlin nullable `T?` | stdlib |
+| `Executor/ExecutorService` | 3 files | `expect` + JVM typealias | kotlinx.coroutines |
+| `AtomicReference/AtomicLong` | 3 files | `kotlinx.atomicfu.atomic()` | kotlinx.atomicfu |
+| `IOException` | 2 files | `kotlin.io.IOException` | stdlib (since 1.9) |
+| `reflect.InvocationTargetException` | 1 file | → expect/actual (JVM Cleaner) | platform |
+| `ThreadLocalRandom` | 1 file | `kotlin.random.Random` | stdlib |
+| `TimeUnit/Function` | 1 file | inline constants + lambdas | stdlib |
+
+### C. expect/actual Declarations — Actual Current State + Planned
+
+**✅ DONE — Already Implemented:**
+
+`commonMain/core/Platform.kt`:
 ```kotlin
-package com.anthropic.core
+internal expect fun urlEncode(value: String): String
+```
 
-// Environment access
-internal expect fun getSystemProperty(key: String): String?
-internal expect fun getEnvironmentVariable(key: String): String?
+`commonMain/core/Properties.kt`:
+```kotlin
+expect fun getOsArch(): String
+expect fun getOsName(): String
+expect fun getOsVersion(): String
+expect fun getPackageVersion(): String
+expect fun getJavaVersion(): String
+```
 
-// Platform info for User-Agent headers
-internal expect fun platformOsArch(): String
-internal expect fun platformOsName(): String
-internal expect fun platformOsVersion(): String
-internal expect fun platformRuntimeVersion(): String
-internal expect fun packageVersion(): String
+`jvmMain/core/PlatformJvm.kt`: actual urlEncode → java.net.URLEncoder
+`jvmMain/core/PropertiesJvm.kt`: actual → System.getProperty()
 
-// Resource cleanup (no-op on non-JVM)
+**🔲 PLANNED — New expect/actual for java.* removal:**
+
+`commonMain/core/Async.kt` (NEW):
+```kotlin
+expect class CompletableFuture<T> {
+    fun thenApply<U>(fn: (T) -> U): CompletableFuture<U>
+    fun thenCompose<U>(fn: (T) -> CompletableFuture<U>): CompletableFuture<U>
+    fun thenComposeAsync<U>(fn: (T) -> CompletableFuture<U>, executor: Executor): CompletableFuture<U>
+    fun handleAsync<U>(fn: (T?, Throwable?) -> U, executor: Executor): CompletableFuture<U>
+    fun whenComplete(action: (T?, Throwable?) -> Unit): CompletableFuture<T>
+    fun whenCompleteAsync(action: (T?, Throwable?) -> Unit, executor: Executor): CompletableFuture<T>
+    fun complete(value: T): Boolean
+    fun completeExceptionally(ex: Throwable): Boolean
+    fun get(): T
+    companion object {
+        fun <T> completedFuture(value: T): CompletableFuture<T>
+    }
+}
+```
+
+`commonMain/core/Concurrency.kt` (NEW):
+```kotlin
+expect interface Executor { fun execute(command: Runnable) }
+expect class AtomicReference<V>(initialValue: V) {
+    fun get(): V; fun set(newValue: V)
+    fun getAndSet(newValue: V): V
+    fun compareAndSet(expect: V, update: V): Boolean
+}
+```
+
+`commonMain/core/PlatformTime.kt` (NEW):
+```kotlin
+expect fun systemClock(): PlatformClock
+expect fun parseHttpDate(value: String): PlatformInstant?
+expect fun nanosUntil(from: PlatformInstant, to: PlatformInstant): Long
+```
+
+`commonMain/core/PhantomReachable.kt` (REFACTOR):
+```kotlin
 internal expect fun closeWhenPhantomReachable(observed: Any, close: () -> Unit)
-
-// Monotonic time source (for retry jitter)
-internal expect fun currentTimeMillis(): Long
-
-// Random (for retry jitter, multipart boundary)
-internal expect fun randomDouble(): Double
-internal expect fun randomUuidString(): String
 ```
 
-**File: `src/jvmMain/kotlin/com/anthropic/core/Platform.jvm.kt`**
-```kotlin
-package com.anthropic.core
+**JVM actuals** → typealias to java.util.concurrent types (zero binary break)
+**Non-JVM actuals** → coroutine-based or no-op implementations
 
-internal actual fun getSystemProperty(key: String): String? = System.getProperty(key)
-internal actual fun getEnvironmentVariable(key: String): String? = System.getenv(key)
-internal actual fun platformOsArch(): String = // existing getOsArch() logic
-internal actual fun platformOsName(): String = // existing getOsName() logic
-internal actual fun platformOsVersion(): String = System.getProperty("os.version", "unknown")
-internal actual fun platformRuntimeVersion(): String = System.getProperty("java.version", "unknown")
-internal actual fun packageVersion(): String =
-    com.anthropic.client.AnthropicClient::class.java.`package`?.implementationVersion ?: "unknown"
-internal actual fun closeWhenPhantomReachable(observed: Any, close: () -> Unit) = // existing Cleaner logic
-internal actual fun currentTimeMillis(): Long = System.currentTimeMillis()
-internal actual fun randomDouble(): Double = java.util.concurrent.ThreadLocalRandom.current().nextDouble()
-internal actual fun randomUuidString(): String = java.util.UUID.randomUUID().toString()
+**(Old platform code removed — see actual implementations in PlatformJvm.kt, PropertiesJvm.kt)**
 ```
 
-**File: `src/nativeMain/kotlin/com/anthropic/core/Platform.native.kt`**
-```kotlin
-package com.anthropic.core
-
-import kotlinx.cinterop.*
-import platform.posix.*
-
-internal actual fun getSystemProperty(key: String): String? = null // no system properties on native
-internal actual fun getEnvironmentVariable(key: String): String? = getenv(key)?.toKString()
-internal actual fun platformOsArch(): String = // uname().machine
-internal actual fun platformOsName(): String = // uname().sysname
-internal actual fun platformOsVersion(): String = // uname().release
-internal actual fun platformRuntimeVersion(): String = "native"
-internal actual fun packageVersion(): String = "unknown" // no JAR manifest
-internal actual fun closeWhenPhantomReachable(observed: Any, close: () -> Unit) {} // no-op
-internal actual fun currentTimeMillis(): Long = // clock_gettime or kotlin.system.getTimeMillis()
-internal actual fun randomDouble(): Double = kotlin.random.Random.nextDouble()
-internal actual fun randomUuidString(): String = // Kotlin 2.0+ kotlin.uuid.Uuid.random().toString()
-```
-
-**File: `src/jsMain/kotlin/com/anthropic/core/Platform.js.kt`**
-```kotlin
-package com.anthropic.core
-
-internal actual fun getSystemProperty(key: String): String? = null
-internal actual fun getEnvironmentVariable(key: String): String? =
-    js("typeof process !== 'undefined' && process.env ? process.env[key] : undefined") as? String
-internal actual fun platformOsArch(): String = js("typeof process !== 'undefined' ? process.arch : 'browser'") as String
-internal actual fun platformOsName(): String = js("typeof process !== 'undefined' ? process.platform : 'browser'") as String
-internal actual fun platformOsVersion(): String = "unknown"
-internal actual fun platformRuntimeVersion(): String = "js"
-internal actual fun packageVersion(): String = "unknown"
-internal actual fun closeWhenPhantomReachable(observed: Any, close: () -> Unit) {} // no-op (or FinalizationRegistry)
-internal actual fun currentTimeMillis(): Long = kotlin.js.Date.now().toLong()
-internal actual fun randomDouble(): Double = kotlin.random.Random.nextDouble()
-internal actual fun randomUuidString(): String = kotlin.uuid.Uuid.random().toString()
-```
+**(Native/JS platform actuals will be created when those targets are enabled — currently JVM only)**
 
 ### D. kotlinx.serialization: Model Patterns
 
