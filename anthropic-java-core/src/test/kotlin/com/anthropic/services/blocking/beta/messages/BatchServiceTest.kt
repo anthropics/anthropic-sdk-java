@@ -323,9 +323,11 @@ internal class BatchServiceTest {
             )
 
         betaMessageBatchIndividualResponseStreamResponse.use {
-            betaMessageBatchIndividualResponseStreamResponse.stream().forEach {
-                betaMessageBatchIndividualResponse ->
-                betaMessageBatchIndividualResponse.validate()
+            kotlinx.coroutines.runBlocking {
+                betaMessageBatchIndividualResponseStreamResponse.stream().collect {
+                    betaMessageBatchIndividualResponse ->
+                    betaMessageBatchIndividualResponse.validate()
+                }
             }
         }
     }

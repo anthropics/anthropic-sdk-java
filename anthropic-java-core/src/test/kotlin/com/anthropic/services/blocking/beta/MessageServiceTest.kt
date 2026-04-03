@@ -358,7 +358,11 @@ internal class MessageServiceTest {
             )
 
         betaMessageStreamResponse.use {
-            betaMessageStreamResponse.stream().forEach { betaMessage -> betaMessage.validate() }
+            kotlinx.coroutines.runBlocking {
+                betaMessageStreamResponse.stream().collect { betaMessage ->
+                    betaMessage.validate()
+                }
+            }
         }
     }
 

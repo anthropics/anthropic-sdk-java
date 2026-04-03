@@ -2200,7 +2200,7 @@ internal class ErrorHandlingTest {
                             .model(Model.CLAUDE_OPUS_4_6)
                             .build()
                     )
-                    .use { it.stream().forEach {} }
+                    .use { kotlinx.coroutines.runBlocking { it.stream().collect {} } }
             }
 
         assertThat(e.statusCode()).isEqualTo(200)

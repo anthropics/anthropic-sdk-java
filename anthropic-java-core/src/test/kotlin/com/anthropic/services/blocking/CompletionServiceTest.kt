@@ -70,7 +70,9 @@ internal class CompletionServiceTest {
             )
 
         completionStreamResponse.use {
-            completionStreamResponse.stream().forEach { completion -> completion.validate() }
+            kotlinx.coroutines.runBlocking {
+                completionStreamResponse.stream().collect { completion -> completion.validate() }
+            }
         }
     }
 }

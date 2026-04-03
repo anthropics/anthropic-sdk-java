@@ -230,9 +230,11 @@ internal class BatchServiceTest {
             batchService.resultsStreaming("message_batch_id")
 
         messageBatchIndividualResponseStreamResponse.use {
-            messageBatchIndividualResponseStreamResponse.stream().forEach {
-                messageBatchIndividualResponse ->
-                messageBatchIndividualResponse.validate()
+            kotlinx.coroutines.runBlocking {
+                messageBatchIndividualResponseStreamResponse.stream().collect {
+                    messageBatchIndividualResponse ->
+                    messageBatchIndividualResponse.validate()
+                }
             }
         }
     }

@@ -245,7 +245,9 @@ internal class MessageServiceTest {
             )
 
         messageStreamResponse.use {
-            messageStreamResponse.stream().forEach { message -> message.validate() }
+            kotlinx.coroutines.runBlocking {
+                messageStreamResponse.stream().collect { message -> message.validate() }
+            }
         }
     }
 
