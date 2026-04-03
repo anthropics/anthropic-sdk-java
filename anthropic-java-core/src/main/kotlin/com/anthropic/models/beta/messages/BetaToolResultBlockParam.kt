@@ -28,8 +28,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 class BetaToolResultBlockParam
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -335,9 +336,9 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        fun string(): Optional<String> = Optional.ofNullable(string)
+        fun string(): Optional<String> = optionalOfNullable(string)
 
-        fun blocks(): Optional<List<Block>> = Optional.ofNullable(blocks)
+        fun blocks(): Optional<List<Block>> = optionalOfNullable(blocks)
 
         fun isString(): Boolean = string != null
 
@@ -347,7 +348,7 @@ private constructor(
 
         fun asBlocks(): List<Block> = blocks.getOrThrow("blocks")
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
@@ -509,18 +510,18 @@ private constructor(
             private val _json: JsonValue? = null,
         ) {
 
-            fun text(): Optional<BetaTextBlockParam> = Optional.ofNullable(text)
+            fun text(): Optional<BetaTextBlockParam> = optionalOfNullable(text)
 
-            fun image(): Optional<BetaImageBlockParam> = Optional.ofNullable(image)
+            fun image(): Optional<BetaImageBlockParam> = optionalOfNullable(image)
 
             fun searchResult(): Optional<BetaSearchResultBlockParam> =
-                Optional.ofNullable(searchResult)
+                optionalOfNullable(searchResult)
 
-            fun document(): Optional<BetaRequestDocumentBlock> = Optional.ofNullable(document)
+            fun document(): Optional<BetaRequestDocumentBlock> = optionalOfNullable(document)
 
             /** Tool reference block that can be included in tool_result content. */
             fun toolReference(): Optional<BetaToolReferenceBlockParam> =
-                Optional.ofNullable(toolReference)
+                optionalOfNullable(toolReference)
 
             fun isText(): Boolean = text != null
 
@@ -545,7 +546,7 @@ private constructor(
             fun asToolReference(): BetaToolReferenceBlockParam =
                 toolReference.getOrThrow("toolReference")
 
-            fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+            fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
             fun <T> accept(visitor: Visitor<T>): T =
                 when {

@@ -23,7 +23,7 @@ import com.anthropic.models.beta.models.ModelListParams
 import com.anthropic.models.beta.models.ModelRetrieveParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.getOrNull
 
 class ModelServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     ModelServiceAsync {

@@ -26,7 +26,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
 
 class BetaContentBlockSource
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -220,10 +221,10 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        fun string(): Optional<String> = Optional.ofNullable(string)
+        fun string(): Optional<String> = optionalOfNullable(string)
 
         fun betaContentBlockSource(): Optional<List<BetaContentBlockSourceContent>> =
-            Optional.ofNullable(betaContentBlockSource)
+            optionalOfNullable(betaContentBlockSource)
 
         fun isString(): Boolean = string != null
 
@@ -234,7 +235,7 @@ private constructor(
         fun asBetaContentBlockSource(): List<BetaContentBlockSourceContent> =
             betaContentBlockSource.getOrThrow("betaContentBlockSource")
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {

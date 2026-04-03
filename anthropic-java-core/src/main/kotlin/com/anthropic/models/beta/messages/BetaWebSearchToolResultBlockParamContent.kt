@@ -18,7 +18,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
 
 @JsonDeserialize(using = BetaWebSearchToolResultBlockParamContent.Deserializer::class)
 @JsonSerialize(using = BetaWebSearchToolResultBlockParamContent.Serializer::class)
@@ -30,9 +31,9 @@ private constructor(
 ) {
 
     fun resultBlock(): Optional<List<BetaWebSearchResultBlockParam>> =
-        Optional.ofNullable(resultBlock)
+        optionalOfNullable(resultBlock)
 
-    fun requestError(): Optional<BetaWebSearchToolRequestError> = Optional.ofNullable(requestError)
+    fun requestError(): Optional<BetaWebSearchToolRequestError> = optionalOfNullable(requestError)
 
     fun isResultBlock(): Boolean = resultBlock != null
 
@@ -42,7 +43,7 @@ private constructor(
 
     fun asRequestError(): BetaWebSearchToolRequestError = requestError.getOrThrow("requestError")
 
-    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+    fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {

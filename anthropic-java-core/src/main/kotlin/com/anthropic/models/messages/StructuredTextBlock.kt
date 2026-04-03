@@ -5,7 +5,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.outputTypeFromJson
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.core.contentHash
-import java.util.Optional
+import com.anthropic.core.Optional
 
 /**
  * A wrapper for [TextBlock] that provides type-safe access to the [text] when using the _Structured

@@ -32,7 +32,7 @@ import com.anthropic.services.async.beta.skills.VersionServiceAsync
 import com.anthropic.services.async.beta.skills.VersionServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.getOrNull
 
 class SkillServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     SkillServiceAsync {

@@ -16,8 +16,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 /**
  * Processing result for this request.
@@ -36,13 +37,13 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    fun succeeded(): Optional<MessageBatchSucceededResult> = Optional.ofNullable(succeeded)
+    fun succeeded(): Optional<MessageBatchSucceededResult> = optionalOfNullable(succeeded)
 
-    fun errored(): Optional<MessageBatchErroredResult> = Optional.ofNullable(errored)
+    fun errored(): Optional<MessageBatchErroredResult> = optionalOfNullable(errored)
 
-    fun canceled(): Optional<MessageBatchCanceledResult> = Optional.ofNullable(canceled)
+    fun canceled(): Optional<MessageBatchCanceledResult> = optionalOfNullable(canceled)
 
-    fun expired(): Optional<MessageBatchExpiredResult> = Optional.ofNullable(expired)
+    fun expired(): Optional<MessageBatchExpiredResult> = optionalOfNullable(expired)
 
     fun isSucceeded(): Boolean = succeeded != null
 
@@ -60,7 +61,7 @@ private constructor(
 
     fun asExpired(): MessageBatchExpiredResult = expired.getOrThrow("expired")
 
-    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+    fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {

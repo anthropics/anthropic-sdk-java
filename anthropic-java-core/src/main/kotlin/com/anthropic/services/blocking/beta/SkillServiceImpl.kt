@@ -31,7 +31,7 @@ import com.anthropic.models.beta.skills.SkillRetrieveResponse
 import com.anthropic.services.blocking.beta.skills.VersionService
 import com.anthropic.services.blocking.beta.skills.VersionServiceImpl
 import java.util.function.Consumer
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.getOrNull
 
 class SkillServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     SkillService {

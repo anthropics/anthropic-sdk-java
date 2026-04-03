@@ -8,8 +8,8 @@ import com.anthropic.core.Page
 import com.anthropic.core.checkRequired
 import com.anthropic.services.blocking.messages.BatchService
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.getOrNull
 
 /** @see BatchService.list */
 class BatchListPage

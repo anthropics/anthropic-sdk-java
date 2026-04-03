@@ -4,7 +4,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonValue
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.core.contentHash
-import java.util.Optional
+import com.anthropic.core.Optional
 
 /**
  * A wrapper for [Message] that provides type-safe access to the [content] when using the

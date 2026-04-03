@@ -1,7 +1,9 @@
 package com.anthropic.core.http
 
 import com.anthropic.core.http.AsyncStreamResponse.Handler
-import java.util.Optional
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.optionalOf
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import java.util.concurrent.atomic.AtomicReference
@@ -100,7 +102,7 @@ internal fun <T> CompletableFuture<StreamResponse<T>>.toAsync(streamHandlerExecu
 
                         if (futureError != null) {
                             // An error occurred before we started passing chunks to the handler.
-                            handler.onComplete(Optional.of(futureError))
+                            handler.onComplete(optionalOf(futureError))
                             return@whenCompleteAsync
                         }
 
@@ -112,7 +114,7 @@ internal fun <T> CompletableFuture<StreamResponse<T>>.toAsync(streamHandlerExecu
                         }
 
                         try {
-                            handler.onComplete(Optional.ofNullable(streamError))
+                            handler.onComplete(optionalOfNullable(streamError))
                         } finally {
                             try {
                                 // Notify completion via the `onCompleteFuture` as well. This is in

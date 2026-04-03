@@ -25,7 +25,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
 
 class BetaTextEditorCodeExecutionToolResultBlock
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -366,19 +367,19 @@ private constructor(
 
         fun betaTextEditorCodeExecutionToolResultError():
             Optional<BetaTextEditorCodeExecutionToolResultError> =
-            Optional.ofNullable(betaTextEditorCodeExecutionToolResultError)
+            optionalOfNullable(betaTextEditorCodeExecutionToolResultError)
 
         fun betaTextEditorCodeExecutionViewResultBlock():
             Optional<BetaTextEditorCodeExecutionViewResultBlock> =
-            Optional.ofNullable(betaTextEditorCodeExecutionViewResultBlock)
+            optionalOfNullable(betaTextEditorCodeExecutionViewResultBlock)
 
         fun betaTextEditorCodeExecutionCreateResultBlock():
             Optional<BetaTextEditorCodeExecutionCreateResultBlock> =
-            Optional.ofNullable(betaTextEditorCodeExecutionCreateResultBlock)
+            optionalOfNullable(betaTextEditorCodeExecutionCreateResultBlock)
 
         fun betaTextEditorCodeExecutionStrReplaceResultBlock():
             Optional<BetaTextEditorCodeExecutionStrReplaceResultBlock> =
-            Optional.ofNullable(betaTextEditorCodeExecutionStrReplaceResultBlock)
+            optionalOfNullable(betaTextEditorCodeExecutionStrReplaceResultBlock)
 
         fun isBetaTextEditorCodeExecutionToolResultError(): Boolean =
             betaTextEditorCodeExecutionToolResultError != null
@@ -416,7 +417,7 @@ private constructor(
                 "betaTextEditorCodeExecutionStrReplaceResultBlock"
             )
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {

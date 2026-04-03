@@ -28,8 +28,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 class BetaUsage
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -664,10 +665,10 @@ private constructor(
     ) {
 
         /** Token usage for a sampling iteration. */
-        fun message(): Optional<BetaMessageIterationUsage> = Optional.ofNullable(message)
+        fun message(): Optional<BetaMessageIterationUsage> = optionalOfNullable(message)
 
         /** Token usage for a compaction iteration. */
-        fun compaction(): Optional<BetaCompactionIterationUsage> = Optional.ofNullable(compaction)
+        fun compaction(): Optional<BetaCompactionIterationUsage> = optionalOfNullable(compaction)
 
         fun isMessage(): Boolean = message != null
 
@@ -679,7 +680,7 @@ private constructor(
         /** Token usage for a compaction iteration. */
         fun asCompaction(): BetaCompactionIterationUsage = compaction.getOrThrow("compaction")
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {

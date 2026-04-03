@@ -3,8 +3,9 @@ package com.anthropic.models.beta.messages
 import com.anthropic.core.checkRequired
 import com.anthropic.helpers.BetaMemoryToolHandler
 import com.anthropic.services.blocking.beta.MessageService
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 /** @see MessageService.toolRunner */
 class ToolRunnerCreateParams
@@ -14,10 +15,10 @@ private constructor(
     private val betaMemoryToolHandler: BetaMemoryToolHandler?,
 ) {
 
-    fun maxIterations(): Optional<Long> = Optional.ofNullable(maxIterations)
+    fun maxIterations(): Optional<Long> = optionalOfNullable(maxIterations)
 
     fun betaMemoryToolHandler(): Optional<BetaMemoryToolHandler> =
-        Optional.ofNullable(betaMemoryToolHandler)
+        optionalOfNullable(betaMemoryToolHandler)
 
     fun toBuilder() = Builder().from(this)
 

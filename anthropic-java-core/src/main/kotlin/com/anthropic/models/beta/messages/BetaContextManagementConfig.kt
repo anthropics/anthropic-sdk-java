@@ -26,8 +26,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 class BetaContextManagementConfig
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -197,14 +198,14 @@ private constructor(
     ) {
 
         fun clearToolUses20250919(): Optional<BetaClearToolUses20250919Edit> =
-            Optional.ofNullable(clearToolUses20250919)
+            optionalOfNullable(clearToolUses20250919)
 
         fun clearThinking20251015(): Optional<BetaClearThinking20251015Edit> =
-            Optional.ofNullable(clearThinking20251015)
+            optionalOfNullable(clearThinking20251015)
 
         /** Automatically compact older context when reaching the configured trigger threshold. */
         fun compact20260112(): Optional<BetaCompact20260112Edit> =
-            Optional.ofNullable(compact20260112)
+            optionalOfNullable(compact20260112)
 
         fun isClearToolUses20250919(): Boolean = clearToolUses20250919 != null
 
@@ -222,7 +223,7 @@ private constructor(
         fun asCompact20260112(): BetaCompact20260112Edit =
             compact20260112.getOrThrow("compact20260112")
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {

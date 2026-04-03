@@ -11,13 +11,13 @@ import com.anthropic.core.http.RetryingHttpClient
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.time.Clock
 import java.time.Duration
-import java.util.Optional
+import com.anthropic.core.Optional
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicLong
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.getOrNull
 
 /** A class representing the SDK client configuration. */
 class ClientOptions

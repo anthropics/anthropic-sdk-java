@@ -8,8 +8,9 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 /**
  * Streams the results of a Message Batch as a `.jsonl` file.
@@ -30,10 +31,10 @@ private constructor(
 ) : Params {
 
     /** ID of the Message Batch. */
-    fun messageBatchId(): Optional<String> = Optional.ofNullable(messageBatchId)
+    fun messageBatchId(): Optional<String> = optionalOfNullable(messageBatchId)
 
     /** Optional header to specify the beta version(s) you want to use. */
-    fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+    fun betas(): Optional<List<AnthropicBeta>> = optionalOfNullable(betas)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders

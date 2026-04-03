@@ -25,7 +25,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
 
 class BetaClearThinking20251015Edit
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -217,12 +218,12 @@ private constructor(
     ) {
 
         fun betaThinkingTurns(): Optional<BetaThinkingTurns> =
-            Optional.ofNullable(betaThinkingTurns)
+            optionalOfNullable(betaThinkingTurns)
 
         fun betaAllThinkingTurns(): Optional<BetaAllThinkingTurns> =
-            Optional.ofNullable(betaAllThinkingTurns)
+            optionalOfNullable(betaAllThinkingTurns)
 
-        fun all(): Optional<JsonValue> = Optional.ofNullable(all)
+        fun all(): Optional<JsonValue> = optionalOfNullable(all)
 
         fun isBetaThinkingTurns(): Boolean = betaThinkingTurns != null
 
@@ -238,7 +239,7 @@ private constructor(
 
         fun asAll(): JsonValue = all.getOrThrow("all")
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {

@@ -19,10 +19,11 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.io.InputStream
 import java.nio.file.Path
 import com.anthropic.core.contentHash
-import java.util.Optional
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
 import kotlin.io.path.inputStream
 import kotlin.io.path.name
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.getOrNull
 
 /** Create Skill Version */
 class VersionCreateParams
@@ -39,10 +40,10 @@ private constructor(
      *
      * The format and length of IDs may change over time.
      */
-    fun skillId(): Optional<String> = Optional.ofNullable(skillId)
+    fun skillId(): Optional<String> = optionalOfNullable(skillId)
 
     /** Optional header to specify the beta version(s) you want to use. */
-    fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+    fun betas(): Optional<List<AnthropicBeta>> = optionalOfNullable(betas)
 
     /**
      * Files to upload for the skill.

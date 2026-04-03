@@ -6,8 +6,9 @@ import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 /**
  * List all Message Batches within a Workspace. Most recently created batches are returned first.
@@ -28,20 +29,20 @@ private constructor(
      * ID of the object to use as a cursor for pagination. When provided, returns the page of
      * results immediately after this object.
      */
-    fun afterId(): Optional<String> = Optional.ofNullable(afterId)
+    fun afterId(): Optional<String> = optionalOfNullable(afterId)
 
     /**
      * ID of the object to use as a cursor for pagination. When provided, returns the page of
      * results immediately before this object.
      */
-    fun beforeId(): Optional<String> = Optional.ofNullable(beforeId)
+    fun beforeId(): Optional<String> = optionalOfNullable(beforeId)
 
     /**
      * Number of items to return per page.
      *
      * Defaults to `20`. Ranges from `1` to `1000`.
      */
-    fun limit(): Optional<Long> = Optional.ofNullable(limit)
+    fun limit(): Optional<Long> = optionalOfNullable(limit)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders

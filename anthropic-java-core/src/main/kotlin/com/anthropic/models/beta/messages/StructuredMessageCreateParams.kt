@@ -10,7 +10,7 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.messages.Model
 import com.anthropic.core.contentHash
-import java.util.Optional
+import com.anthropic.core.Optional
 
 /**
  * A wrapper for [MessageCreateParams] that provides a type-safe [Builder] that can record the

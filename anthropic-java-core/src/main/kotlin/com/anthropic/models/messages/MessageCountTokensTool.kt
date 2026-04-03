@@ -17,7 +17,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
 
 /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
 @JsonDeserialize(using = MessageCountTokensTool.Deserializer::class)
@@ -43,52 +44,52 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    fun tool(): Optional<Tool> = Optional.ofNullable(tool)
+    fun tool(): Optional<Tool> = optionalOfNullable(tool)
 
-    fun toolBash20250124(): Optional<ToolBash20250124> = Optional.ofNullable(toolBash20250124)
+    fun toolBash20250124(): Optional<ToolBash20250124> = optionalOfNullable(toolBash20250124)
 
     fun codeExecutionTool20250522(): Optional<CodeExecutionTool20250522> =
-        Optional.ofNullable(codeExecutionTool20250522)
+        optionalOfNullable(codeExecutionTool20250522)
 
     fun codeExecutionTool20250825(): Optional<CodeExecutionTool20250825> =
-        Optional.ofNullable(codeExecutionTool20250825)
+        optionalOfNullable(codeExecutionTool20250825)
 
     /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
     fun codeExecutionTool20260120(): Optional<CodeExecutionTool20260120> =
-        Optional.ofNullable(codeExecutionTool20260120)
+        optionalOfNullable(codeExecutionTool20260120)
 
-    fun memoryTool20250818(): Optional<MemoryTool20250818> = Optional.ofNullable(memoryTool20250818)
+    fun memoryTool20250818(): Optional<MemoryTool20250818> = optionalOfNullable(memoryTool20250818)
 
     fun toolTextEditor20250124(): Optional<ToolTextEditor20250124> =
-        Optional.ofNullable(toolTextEditor20250124)
+        optionalOfNullable(toolTextEditor20250124)
 
     fun toolTextEditor20250429(): Optional<ToolTextEditor20250429> =
-        Optional.ofNullable(toolTextEditor20250429)
+        optionalOfNullable(toolTextEditor20250429)
 
     fun toolTextEditor20250728(): Optional<ToolTextEditor20250728> =
-        Optional.ofNullable(toolTextEditor20250728)
+        optionalOfNullable(toolTextEditor20250728)
 
     fun webSearchTool20250305(): Optional<WebSearchTool20250305> =
-        Optional.ofNullable(webSearchTool20250305)
+        optionalOfNullable(webSearchTool20250305)
 
     fun webFetchTool20250910(): Optional<WebFetchTool20250910> =
-        Optional.ofNullable(webFetchTool20250910)
+        optionalOfNullable(webFetchTool20250910)
 
     fun webSearchTool20260209(): Optional<WebSearchTool20260209> =
-        Optional.ofNullable(webSearchTool20260209)
+        optionalOfNullable(webSearchTool20260209)
 
     fun webFetchTool20260209(): Optional<WebFetchTool20260209> =
-        Optional.ofNullable(webFetchTool20260209)
+        optionalOfNullable(webFetchTool20260209)
 
     /** Web fetch tool with use_cache parameter for bypassing cached content. */
     fun webFetchTool20260309(): Optional<WebFetchTool20260309> =
-        Optional.ofNullable(webFetchTool20260309)
+        optionalOfNullable(webFetchTool20260309)
 
     fun toolSearchToolBm25_20251119(): Optional<ToolSearchToolBm25_20251119> =
-        Optional.ofNullable(toolSearchToolBm25_20251119)
+        optionalOfNullable(toolSearchToolBm25_20251119)
 
     fun toolSearchToolRegex20251119(): Optional<ToolSearchToolRegex20251119> =
-        Optional.ofNullable(toolSearchToolRegex20251119)
+        optionalOfNullable(toolSearchToolRegex20251119)
 
     fun isTool(): Boolean = tool != null
 
@@ -170,7 +171,7 @@ private constructor(
     fun asToolSearchToolRegex20251119(): ToolSearchToolRegex20251119 =
         toolSearchToolRegex20251119.getOrThrow("toolSearchToolRegex20251119")
 
-    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+    fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {

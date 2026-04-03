@@ -16,8 +16,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 /** Response model for a file uploaded to the container. */
 @JsonDeserialize(using = ContentBlock.Deserializer::class)
@@ -101,36 +102,36 @@ private constructor(
             }
         )
 
-    fun text(): Optional<TextBlock> = Optional.ofNullable(text)
+    fun text(): Optional<TextBlock> = optionalOfNullable(text)
 
-    fun thinking(): Optional<ThinkingBlock> = Optional.ofNullable(thinking)
+    fun thinking(): Optional<ThinkingBlock> = optionalOfNullable(thinking)
 
-    fun redactedThinking(): Optional<RedactedThinkingBlock> = Optional.ofNullable(redactedThinking)
+    fun redactedThinking(): Optional<RedactedThinkingBlock> = optionalOfNullable(redactedThinking)
 
-    fun toolUse(): Optional<ToolUseBlock> = Optional.ofNullable(toolUse)
+    fun toolUse(): Optional<ToolUseBlock> = optionalOfNullable(toolUse)
 
-    fun serverToolUse(): Optional<ServerToolUseBlock> = Optional.ofNullable(serverToolUse)
+    fun serverToolUse(): Optional<ServerToolUseBlock> = optionalOfNullable(serverToolUse)
 
     fun webSearchToolResult(): Optional<WebSearchToolResultBlock> =
-        Optional.ofNullable(webSearchToolResult)
+        optionalOfNullable(webSearchToolResult)
 
     fun webFetchToolResult(): Optional<WebFetchToolResultBlock> =
-        Optional.ofNullable(webFetchToolResult)
+        optionalOfNullable(webFetchToolResult)
 
     fun codeExecutionToolResult(): Optional<CodeExecutionToolResultBlock> =
-        Optional.ofNullable(codeExecutionToolResult)
+        optionalOfNullable(codeExecutionToolResult)
 
     fun bashCodeExecutionToolResult(): Optional<BashCodeExecutionToolResultBlock> =
-        Optional.ofNullable(bashCodeExecutionToolResult)
+        optionalOfNullable(bashCodeExecutionToolResult)
 
     fun textEditorCodeExecutionToolResult(): Optional<TextEditorCodeExecutionToolResultBlock> =
-        Optional.ofNullable(textEditorCodeExecutionToolResult)
+        optionalOfNullable(textEditorCodeExecutionToolResult)
 
     fun toolSearchToolResult(): Optional<ToolSearchToolResultBlock> =
-        Optional.ofNullable(toolSearchToolResult)
+        optionalOfNullable(toolSearchToolResult)
 
     /** Response model for a file uploaded to the container. */
-    fun containerUpload(): Optional<ContainerUploadBlock> = Optional.ofNullable(containerUpload)
+    fun containerUpload(): Optional<ContainerUploadBlock> = optionalOfNullable(containerUpload)
 
     fun isText(): Boolean = text != null
 
@@ -188,7 +189,7 @@ private constructor(
     /** Response model for a file uploaded to the container. */
     fun asContainerUpload(): ContainerUploadBlock = containerUpload.getOrThrow("containerUpload")
 
-    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+    fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {

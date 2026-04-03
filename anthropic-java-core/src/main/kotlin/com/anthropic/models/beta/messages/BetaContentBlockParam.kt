@@ -16,8 +16,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 /** Regular text content. */
 @JsonDeserialize(using = BetaContentBlockParam.Deserializer::class)
@@ -49,65 +50,65 @@ private constructor(
 ) {
 
     /** Regular text content. */
-    fun text(): Optional<BetaTextBlockParam> = Optional.ofNullable(text)
+    fun text(): Optional<BetaTextBlockParam> = optionalOfNullable(text)
 
     /** Image content specified directly as base64 data or as a reference via a URL. */
-    fun image(): Optional<BetaImageBlockParam> = Optional.ofNullable(image)
+    fun image(): Optional<BetaImageBlockParam> = optionalOfNullable(image)
 
     /**
      * Document content, either specified directly as base64 data, as text, or as a reference via a
      * URL.
      */
-    fun document(): Optional<BetaRequestDocumentBlock> = Optional.ofNullable(document)
+    fun document(): Optional<BetaRequestDocumentBlock> = optionalOfNullable(document)
 
     /** A search result block containing source, title, and content from search operations. */
-    fun searchResult(): Optional<BetaSearchResultBlockParam> = Optional.ofNullable(searchResult)
+    fun searchResult(): Optional<BetaSearchResultBlockParam> = optionalOfNullable(searchResult)
 
     /** A block specifying internal thinking by the model. */
-    fun thinking(): Optional<BetaThinkingBlockParam> = Optional.ofNullable(thinking)
+    fun thinking(): Optional<BetaThinkingBlockParam> = optionalOfNullable(thinking)
 
     /** A block specifying internal, redacted thinking by the model. */
     fun redactedThinking(): Optional<BetaRedactedThinkingBlockParam> =
-        Optional.ofNullable(redactedThinking)
+        optionalOfNullable(redactedThinking)
 
     /** A block indicating a tool use by the model. */
-    fun toolUse(): Optional<BetaToolUseBlockParam> = Optional.ofNullable(toolUse)
+    fun toolUse(): Optional<BetaToolUseBlockParam> = optionalOfNullable(toolUse)
 
     /** A block specifying the results of a tool use by the model. */
-    fun toolResult(): Optional<BetaToolResultBlockParam> = Optional.ofNullable(toolResult)
+    fun toolResult(): Optional<BetaToolResultBlockParam> = optionalOfNullable(toolResult)
 
-    fun serverToolUse(): Optional<BetaServerToolUseBlockParam> = Optional.ofNullable(serverToolUse)
+    fun serverToolUse(): Optional<BetaServerToolUseBlockParam> = optionalOfNullable(serverToolUse)
 
     fun webSearchToolResult(): Optional<BetaWebSearchToolResultBlockParam> =
-        Optional.ofNullable(webSearchToolResult)
+        optionalOfNullable(webSearchToolResult)
 
     fun webFetchToolResult(): Optional<BetaWebFetchToolResultBlockParam> =
-        Optional.ofNullable(webFetchToolResult)
+        optionalOfNullable(webFetchToolResult)
 
     fun codeExecutionToolResult(): Optional<BetaCodeExecutionToolResultBlockParam> =
-        Optional.ofNullable(codeExecutionToolResult)
+        optionalOfNullable(codeExecutionToolResult)
 
     fun bashCodeExecutionToolResult(): Optional<BetaBashCodeExecutionToolResultBlockParam> =
-        Optional.ofNullable(bashCodeExecutionToolResult)
+        optionalOfNullable(bashCodeExecutionToolResult)
 
     fun textEditorCodeExecutionToolResult():
         Optional<BetaTextEditorCodeExecutionToolResultBlockParam> =
-        Optional.ofNullable(textEditorCodeExecutionToolResult)
+        optionalOfNullable(textEditorCodeExecutionToolResult)
 
     fun toolSearchToolResult(): Optional<BetaToolSearchToolResultBlockParam> =
-        Optional.ofNullable(toolSearchToolResult)
+        optionalOfNullable(toolSearchToolResult)
 
-    fun mcpToolUse(): Optional<BetaMcpToolUseBlockParam> = Optional.ofNullable(mcpToolUse)
+    fun mcpToolUse(): Optional<BetaMcpToolUseBlockParam> = optionalOfNullable(mcpToolUse)
 
     fun mcpToolResult(): Optional<BetaRequestMcpToolResultBlockParam> =
-        Optional.ofNullable(mcpToolResult)
+        optionalOfNullable(mcpToolResult)
 
     /**
      * A content block that represents a file to be uploaded to the container Files uploaded via
      * this block will be available in the container's input directory.
      */
     fun containerUpload(): Optional<BetaContainerUploadBlockParam> =
-        Optional.ofNullable(containerUpload)
+        optionalOfNullable(containerUpload)
 
     /**
      * A compaction block containing summary of previous context.
@@ -118,7 +119,7 @@ private constructor(
      * When content is None, the block represents a failed compaction. The server treats these as
      * no-ops. Empty string content is not allowed.
      */
-    fun compaction(): Optional<BetaCompactionBlockParam> = Optional.ofNullable(compaction)
+    fun compaction(): Optional<BetaCompactionBlockParam> = optionalOfNullable(compaction)
 
     fun isText(): Boolean = text != null
 
@@ -229,7 +230,7 @@ private constructor(
      */
     fun asCompaction(): BetaCompactionBlockParam = compaction.getOrThrow("compaction")
 
-    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+    fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {

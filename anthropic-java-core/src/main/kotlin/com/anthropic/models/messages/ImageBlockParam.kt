@@ -25,8 +25,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 class ImageBlockParam
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -270,9 +271,9 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        fun base64(): Optional<Base64ImageSource> = Optional.ofNullable(base64)
+        fun base64(): Optional<Base64ImageSource> = optionalOfNullable(base64)
 
-        fun url(): Optional<UrlImageSource> = Optional.ofNullable(url)
+        fun url(): Optional<UrlImageSource> = optionalOfNullable(url)
 
         fun isBase64(): Boolean = base64 != null
 
@@ -282,7 +283,7 @@ private constructor(
 
         fun asUrl(): UrlImageSource = url.getOrThrow("url")
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {

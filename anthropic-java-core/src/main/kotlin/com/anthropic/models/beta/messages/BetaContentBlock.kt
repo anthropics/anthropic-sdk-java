@@ -16,8 +16,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 /** Response model for a file uploaded to the container. */
 @JsonDeserialize(using = BetaContentBlock.Deserializer::class)
@@ -121,41 +122,41 @@ private constructor(
             }
         )
 
-    fun text(): Optional<BetaTextBlock> = Optional.ofNullable(text)
+    fun text(): Optional<BetaTextBlock> = optionalOfNullable(text)
 
-    fun thinking(): Optional<BetaThinkingBlock> = Optional.ofNullable(thinking)
+    fun thinking(): Optional<BetaThinkingBlock> = optionalOfNullable(thinking)
 
     fun redactedThinking(): Optional<BetaRedactedThinkingBlock> =
-        Optional.ofNullable(redactedThinking)
+        optionalOfNullable(redactedThinking)
 
-    fun toolUse(): Optional<BetaToolUseBlock> = Optional.ofNullable(toolUse)
+    fun toolUse(): Optional<BetaToolUseBlock> = optionalOfNullable(toolUse)
 
-    fun serverToolUse(): Optional<BetaServerToolUseBlock> = Optional.ofNullable(serverToolUse)
+    fun serverToolUse(): Optional<BetaServerToolUseBlock> = optionalOfNullable(serverToolUse)
 
     fun webSearchToolResult(): Optional<BetaWebSearchToolResultBlock> =
-        Optional.ofNullable(webSearchToolResult)
+        optionalOfNullable(webSearchToolResult)
 
     fun webFetchToolResult(): Optional<BetaWebFetchToolResultBlock> =
-        Optional.ofNullable(webFetchToolResult)
+        optionalOfNullable(webFetchToolResult)
 
     fun codeExecutionToolResult(): Optional<BetaCodeExecutionToolResultBlock> =
-        Optional.ofNullable(codeExecutionToolResult)
+        optionalOfNullable(codeExecutionToolResult)
 
     fun bashCodeExecutionToolResult(): Optional<BetaBashCodeExecutionToolResultBlock> =
-        Optional.ofNullable(bashCodeExecutionToolResult)
+        optionalOfNullable(bashCodeExecutionToolResult)
 
     fun textEditorCodeExecutionToolResult(): Optional<BetaTextEditorCodeExecutionToolResultBlock> =
-        Optional.ofNullable(textEditorCodeExecutionToolResult)
+        optionalOfNullable(textEditorCodeExecutionToolResult)
 
     fun toolSearchToolResult(): Optional<BetaToolSearchToolResultBlock> =
-        Optional.ofNullable(toolSearchToolResult)
+        optionalOfNullable(toolSearchToolResult)
 
-    fun mcpToolUse(): Optional<BetaMcpToolUseBlock> = Optional.ofNullable(mcpToolUse)
+    fun mcpToolUse(): Optional<BetaMcpToolUseBlock> = optionalOfNullable(mcpToolUse)
 
-    fun mcpToolResult(): Optional<BetaMcpToolResultBlock> = Optional.ofNullable(mcpToolResult)
+    fun mcpToolResult(): Optional<BetaMcpToolResultBlock> = optionalOfNullable(mcpToolResult)
 
     /** Response model for a file uploaded to the container. */
-    fun containerUpload(): Optional<BetaContainerUploadBlock> = Optional.ofNullable(containerUpload)
+    fun containerUpload(): Optional<BetaContainerUploadBlock> = optionalOfNullable(containerUpload)
 
     /**
      * A compaction block returned when autocompact is triggered.
@@ -164,7 +165,7 @@ private constructor(
      * malformed output from the model). Clients may round-trip compaction blocks with null content;
      * the server treats them as no-ops.
      */
-    fun compaction(): Optional<BetaCompactionBlock> = Optional.ofNullable(compaction)
+    fun compaction(): Optional<BetaCompactionBlock> = optionalOfNullable(compaction)
 
     fun isText(): Boolean = text != null
 
@@ -242,7 +243,7 @@ private constructor(
      */
     fun asCompaction(): BetaCompactionBlock = compaction.getOrThrow("compaction")
 
-    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+    fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {

@@ -17,8 +17,8 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.getOrNull
 
 class ToolSearchToolBm25_20251119
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)

@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.anthropic.core.contentHash
-import java.util.Optional
+import com.anthropic.core.Optional
 
 /** Default configuration for tools in an MCP toolset. */
 class BetaMcpToolDefaultConfig

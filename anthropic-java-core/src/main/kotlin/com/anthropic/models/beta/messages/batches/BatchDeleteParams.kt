@@ -9,8 +9,9 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 /**
  * Delete a Message Batch.
@@ -31,10 +32,10 @@ private constructor(
 ) : Params {
 
     /** ID of the Message Batch. */
-    fun messageBatchId(): Optional<String> = Optional.ofNullable(messageBatchId)
+    fun messageBatchId(): Optional<String> = optionalOfNullable(messageBatchId)
 
     /** Optional header to specify the beta version(s) you want to use. */
-    fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+    fun betas(): Optional<List<AnthropicBeta>> = optionalOfNullable(betas)
 
     /** Additional body properties to send with the request. */
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
@@ -239,7 +240,7 @@ private constructor(
     }
 
     fun _body(): Optional<Map<String, JsonValue>> =
-        Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
+        optionalOfNullable(additionalBodyProperties.ifEmpty { null })
 
     fun _pathParam(index: Int): String =
         when (index) {

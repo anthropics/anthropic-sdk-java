@@ -25,8 +25,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 class BetaImageBlockParam
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -286,11 +287,11 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        fun base64(): Optional<BetaBase64ImageSource> = Optional.ofNullable(base64)
+        fun base64(): Optional<BetaBase64ImageSource> = optionalOfNullable(base64)
 
-        fun url(): Optional<BetaUrlImageSource> = Optional.ofNullable(url)
+        fun url(): Optional<BetaUrlImageSource> = optionalOfNullable(url)
 
-        fun file(): Optional<BetaFileImageSource> = Optional.ofNullable(file)
+        fun file(): Optional<BetaFileImageSource> = optionalOfNullable(file)
 
         fun isBase64(): Boolean = base64 != null
 
@@ -304,7 +305,7 @@ private constructor(
 
         fun asFile(): BetaFileImageSource = file.getOrThrow("file")
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {

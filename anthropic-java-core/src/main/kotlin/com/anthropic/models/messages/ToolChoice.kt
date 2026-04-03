@@ -16,8 +16,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 /**
  * How the model should use the provided tools. The model can use a specific tool, any available
@@ -35,16 +36,16 @@ private constructor(
 ) {
 
     /** The model will automatically decide whether to use tools. */
-    fun auto(): Optional<ToolChoiceAuto> = Optional.ofNullable(auto)
+    fun auto(): Optional<ToolChoiceAuto> = optionalOfNullable(auto)
 
     /** The model will use any available tools. */
-    fun any(): Optional<ToolChoiceAny> = Optional.ofNullable(any)
+    fun any(): Optional<ToolChoiceAny> = optionalOfNullable(any)
 
     /** The model will use the specified tool with `tool_choice.name`. */
-    fun tool(): Optional<ToolChoiceTool> = Optional.ofNullable(tool)
+    fun tool(): Optional<ToolChoiceTool> = optionalOfNullable(tool)
 
     /** The model will not be allowed to use tools. */
-    fun none(): Optional<ToolChoiceNone> = Optional.ofNullable(none)
+    fun none(): Optional<ToolChoiceNone> = optionalOfNullable(none)
 
     fun isAuto(): Boolean = auto != null
 
@@ -66,7 +67,7 @@ private constructor(
     /** The model will not be allowed to use tools. */
     fun asNone(): ToolChoiceNone = none.getOrThrow("none")
 
-    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+    fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {

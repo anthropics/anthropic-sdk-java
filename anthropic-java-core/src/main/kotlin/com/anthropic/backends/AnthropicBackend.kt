@@ -2,7 +2,7 @@ package com.anthropic.backends
 
 import com.anthropic.backends.AnthropicBackend.Builder
 import com.anthropic.core.http.HttpRequest
-import java.util.Optional
+import com.anthropic.core.Optional
 
 /**
  * The Anthropic backend that manages the API key or authorization token credentials and base URL

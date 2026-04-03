@@ -25,7 +25,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
 
 class BetaBashCodeExecutionToolResultBlock
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -297,10 +298,10 @@ private constructor(
     ) {
 
         fun betaBashCodeExecutionToolResultError(): Optional<BetaBashCodeExecutionToolResultError> =
-            Optional.ofNullable(betaBashCodeExecutionToolResultError)
+            optionalOfNullable(betaBashCodeExecutionToolResultError)
 
         fun betaBashCodeExecutionResultBlock(): Optional<BetaBashCodeExecutionResultBlock> =
-            Optional.ofNullable(betaBashCodeExecutionResultBlock)
+            optionalOfNullable(betaBashCodeExecutionResultBlock)
 
         fun isBetaBashCodeExecutionToolResultError(): Boolean =
             betaBashCodeExecutionToolResultError != null
@@ -313,7 +314,7 @@ private constructor(
         fun asBetaBashCodeExecutionResultBlock(): BetaBashCodeExecutionResultBlock =
             betaBashCodeExecutionResultBlock.getOrThrow("betaBashCodeExecutionResultBlock")
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {

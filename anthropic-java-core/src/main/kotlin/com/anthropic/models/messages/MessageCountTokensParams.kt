@@ -31,8 +31,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 /**
  * Count the number of tokens in a Message.
@@ -2044,9 +2045,9 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        fun string(): Optional<String> = Optional.ofNullable(string)
+        fun string(): Optional<String> = optionalOfNullable(string)
 
-        fun textBlockParams(): Optional<List<TextBlockParam>> = Optional.ofNullable(textBlockParams)
+        fun textBlockParams(): Optional<List<TextBlockParam>> = optionalOfNullable(textBlockParams)
 
         fun isString(): Boolean = string != null
 
@@ -2057,7 +2058,7 @@ private constructor(
         fun asTextBlockParams(): List<TextBlockParam> =
             textBlockParams.getOrThrow("textBlockParams")
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {

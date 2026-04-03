@@ -26,8 +26,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 class BashCodeExecutionToolResultBlockParam
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -323,10 +324,10 @@ private constructor(
 
         fun bashCodeExecutionToolResultErrorParam():
             Optional<BashCodeExecutionToolResultErrorParam> =
-            Optional.ofNullable(bashCodeExecutionToolResultErrorParam)
+            optionalOfNullable(bashCodeExecutionToolResultErrorParam)
 
         fun bashCodeExecutionResultBlockParam(): Optional<BashCodeExecutionResultBlockParam> =
-            Optional.ofNullable(bashCodeExecutionResultBlockParam)
+            optionalOfNullable(bashCodeExecutionResultBlockParam)
 
         fun isBashCodeExecutionToolResultErrorParam(): Boolean =
             bashCodeExecutionToolResultErrorParam != null
@@ -342,7 +343,7 @@ private constructor(
         fun asBashCodeExecutionResultBlockParam(): BashCodeExecutionResultBlockParam =
             bashCodeExecutionResultBlockParam.getOrThrow("bashCodeExecutionResultBlockParam")
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {

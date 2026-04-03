@@ -5,7 +5,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.messages.Model
 import com.anthropic.core.contentHash
-import java.util.Optional
+import com.anthropic.core.Optional
 
 /**
  * A wrapper for [BetaMessage] that provides type-safe access to the [content] when using the

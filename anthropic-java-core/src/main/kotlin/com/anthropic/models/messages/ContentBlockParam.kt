@@ -16,8 +16,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 /** Regular text content. */
 @JsonDeserialize(using = ContentBlockParam.Deserializer::class)
@@ -45,59 +46,59 @@ private constructor(
 ) {
 
     /** Regular text content. */
-    fun text(): Optional<TextBlockParam> = Optional.ofNullable(text)
+    fun text(): Optional<TextBlockParam> = optionalOfNullable(text)
 
     /** Image content specified directly as base64 data or as a reference via a URL. */
-    fun image(): Optional<ImageBlockParam> = Optional.ofNullable(image)
+    fun image(): Optional<ImageBlockParam> = optionalOfNullable(image)
 
     /**
      * Document content, either specified directly as base64 data, as text, or as a reference via a
      * URL.
      */
-    fun document(): Optional<DocumentBlockParam> = Optional.ofNullable(document)
+    fun document(): Optional<DocumentBlockParam> = optionalOfNullable(document)
 
     /** A search result block containing source, title, and content from search operations. */
-    fun searchResult(): Optional<SearchResultBlockParam> = Optional.ofNullable(searchResult)
+    fun searchResult(): Optional<SearchResultBlockParam> = optionalOfNullable(searchResult)
 
     /** A block specifying internal thinking by the model. */
-    fun thinking(): Optional<ThinkingBlockParam> = Optional.ofNullable(thinking)
+    fun thinking(): Optional<ThinkingBlockParam> = optionalOfNullable(thinking)
 
     /** A block specifying internal, redacted thinking by the model. */
     fun redactedThinking(): Optional<RedactedThinkingBlockParam> =
-        Optional.ofNullable(redactedThinking)
+        optionalOfNullable(redactedThinking)
 
     /** A block indicating a tool use by the model. */
-    fun toolUse(): Optional<ToolUseBlockParam> = Optional.ofNullable(toolUse)
+    fun toolUse(): Optional<ToolUseBlockParam> = optionalOfNullable(toolUse)
 
     /** A block specifying the results of a tool use by the model. */
-    fun toolResult(): Optional<ToolResultBlockParam> = Optional.ofNullable(toolResult)
+    fun toolResult(): Optional<ToolResultBlockParam> = optionalOfNullable(toolResult)
 
-    fun serverToolUse(): Optional<ServerToolUseBlockParam> = Optional.ofNullable(serverToolUse)
+    fun serverToolUse(): Optional<ServerToolUseBlockParam> = optionalOfNullable(serverToolUse)
 
     fun webSearchToolResult(): Optional<WebSearchToolResultBlockParam> =
-        Optional.ofNullable(webSearchToolResult)
+        optionalOfNullable(webSearchToolResult)
 
     fun webFetchToolResult(): Optional<WebFetchToolResultBlockParam> =
-        Optional.ofNullable(webFetchToolResult)
+        optionalOfNullable(webFetchToolResult)
 
     fun codeExecutionToolResult(): Optional<CodeExecutionToolResultBlockParam> =
-        Optional.ofNullable(codeExecutionToolResult)
+        optionalOfNullable(codeExecutionToolResult)
 
     fun bashCodeExecutionToolResult(): Optional<BashCodeExecutionToolResultBlockParam> =
-        Optional.ofNullable(bashCodeExecutionToolResult)
+        optionalOfNullable(bashCodeExecutionToolResult)
 
     fun textEditorCodeExecutionToolResult(): Optional<TextEditorCodeExecutionToolResultBlockParam> =
-        Optional.ofNullable(textEditorCodeExecutionToolResult)
+        optionalOfNullable(textEditorCodeExecutionToolResult)
 
     fun toolSearchToolResult(): Optional<ToolSearchToolResultBlockParam> =
-        Optional.ofNullable(toolSearchToolResult)
+        optionalOfNullable(toolSearchToolResult)
 
     /**
      * A content block that represents a file to be uploaded to the container Files uploaded via
      * this block will be available in the container's input directory.
      */
     fun containerUpload(): Optional<ContainerUploadBlockParam> =
-        Optional.ofNullable(containerUpload)
+        optionalOfNullable(containerUpload)
 
     fun isText(): Boolean = text != null
 
@@ -186,7 +187,7 @@ private constructor(
     fun asContainerUpload(): ContainerUploadBlockParam =
         containerUpload.getOrThrow("containerUpload")
 
-    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+    fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {

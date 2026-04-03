@@ -2,7 +2,7 @@ package com.anthropic.core.http
 
 import com.anthropic.core.closeWhenPhantomReachable
 import com.anthropic.core.http.AsyncStreamResponse.Handler
-import java.util.Optional
+import com.anthropic.core.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 

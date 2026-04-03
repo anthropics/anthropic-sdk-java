@@ -5,7 +5,7 @@ import com.anthropic.core.JsonObject
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.messages.*
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.getOrNull
 
 /** Checks if a content block is one that tracks tool input via input_json_delta events */
 internal fun BetaContentBlock.tracksToolInput(): Boolean =

@@ -16,8 +16,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 @JsonDeserialize(using = ContentBlockSourceContent.Deserializer::class)
 @JsonSerialize(using = ContentBlockSourceContent.Serializer::class)
@@ -28,9 +29,9 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    fun text(): Optional<TextBlockParam> = Optional.ofNullable(text)
+    fun text(): Optional<TextBlockParam> = optionalOfNullable(text)
 
-    fun image(): Optional<ImageBlockParam> = Optional.ofNullable(image)
+    fun image(): Optional<ImageBlockParam> = optionalOfNullable(image)
 
     fun isText(): Boolean = text != null
 
@@ -40,7 +41,7 @@ private constructor(
 
     fun asImage(): ImageBlockParam = image.getOrThrow("image")
 
-    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+    fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {

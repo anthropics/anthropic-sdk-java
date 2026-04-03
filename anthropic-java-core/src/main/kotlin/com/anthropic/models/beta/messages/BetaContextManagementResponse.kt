@@ -26,8 +26,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 class BetaContextManagementResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -212,10 +213,10 @@ private constructor(
     ) {
 
         fun clearToolUses20250919(): Optional<BetaClearToolUses20250919EditResponse> =
-            Optional.ofNullable(clearToolUses20250919)
+            optionalOfNullable(clearToolUses20250919)
 
         fun clearThinking20251015(): Optional<BetaClearThinking20251015EditResponse> =
-            Optional.ofNullable(clearThinking20251015)
+            optionalOfNullable(clearThinking20251015)
 
         fun isClearToolUses20250919(): Boolean = clearToolUses20250919 != null
 
@@ -227,7 +228,7 @@ private constructor(
         fun asClearThinking20251015(): BetaClearThinking20251015EditResponse =
             clearThinking20251015.getOrThrow("clearThinking20251015")
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {

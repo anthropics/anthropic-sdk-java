@@ -25,7 +25,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
 
 class TextEditorCodeExecutionToolResultBlock
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -365,19 +366,19 @@ private constructor(
 
         fun textEditorCodeExecutionToolResultError():
             Optional<TextEditorCodeExecutionToolResultError> =
-            Optional.ofNullable(textEditorCodeExecutionToolResultError)
+            optionalOfNullable(textEditorCodeExecutionToolResultError)
 
         fun textEditorCodeExecutionViewResultBlock():
             Optional<TextEditorCodeExecutionViewResultBlock> =
-            Optional.ofNullable(textEditorCodeExecutionViewResultBlock)
+            optionalOfNullable(textEditorCodeExecutionViewResultBlock)
 
         fun textEditorCodeExecutionCreateResultBlock():
             Optional<TextEditorCodeExecutionCreateResultBlock> =
-            Optional.ofNullable(textEditorCodeExecutionCreateResultBlock)
+            optionalOfNullable(textEditorCodeExecutionCreateResultBlock)
 
         fun textEditorCodeExecutionStrReplaceResultBlock():
             Optional<TextEditorCodeExecutionStrReplaceResultBlock> =
-            Optional.ofNullable(textEditorCodeExecutionStrReplaceResultBlock)
+            optionalOfNullable(textEditorCodeExecutionStrReplaceResultBlock)
 
         fun isTextEditorCodeExecutionToolResultError(): Boolean =
             textEditorCodeExecutionToolResultError != null
@@ -412,7 +413,7 @@ private constructor(
                 "textEditorCodeExecutionStrReplaceResultBlock"
             )
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {

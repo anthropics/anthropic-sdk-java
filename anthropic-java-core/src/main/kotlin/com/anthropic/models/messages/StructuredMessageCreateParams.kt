@@ -8,7 +8,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.outputFormatFromClass
 import com.anthropic.core.contentHash
-import java.util.Optional
+import com.anthropic.core.Optional
 
 /**
  * A wrapper for [MessageCreateParams] that provides a type-safe [Builder] that can record the

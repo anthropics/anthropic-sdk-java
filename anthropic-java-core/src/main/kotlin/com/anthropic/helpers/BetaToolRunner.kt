@@ -8,11 +8,13 @@ import com.anthropic.core.toJsonString
 import com.anthropic.core.toolFromClass
 import com.anthropic.models.beta.messages.*
 import com.anthropic.services.blocking.beta.MessageService
-import java.util.Optional
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.emptyOptional
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.function.Supplier
 import kotlin.jvm.optionals.asSequence
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.getOrNull
 
 /**
  * A [BetaToolRunner] handles the automatic conversation loop between the assistant and tools.
@@ -121,11 +123,11 @@ internal constructor(
      */
     fun lastToolResponse(): Optional<BetaMessageParam> {
         if (lastToolResponse != null) {
-            return Optional.ofNullable(lastToolResponse)
+            return optionalOfNullable(lastToolResponse)
         }
 
-        val lastMessage = currentParams.messages().lastOrNull() ?: return Optional.empty()
-        return Optional.ofNullable(generateToolResponse(lastMessage))
+        val lastMessage = currentParams.messages().lastOrNull() ?: return emptyOptional()
+        return optionalOfNullable(generateToolResponse(lastMessage))
     }
 
     private fun generateToolResponse(lastMessage: BetaMessageParam): BetaMessageParam? {

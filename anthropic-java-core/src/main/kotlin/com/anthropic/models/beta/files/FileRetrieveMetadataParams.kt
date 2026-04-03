@@ -8,8 +8,9 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 /** Get File Metadata */
 class FileRetrieveMetadataParams
@@ -21,10 +22,10 @@ private constructor(
 ) : Params {
 
     /** ID of the File. */
-    fun fileId(): Optional<String> = Optional.ofNullable(fileId)
+    fun fileId(): Optional<String> = optionalOfNullable(fileId)
 
     /** Optional header to specify the beta version(s) you want to use. */
-    fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+    fun betas(): Optional<List<AnthropicBeta>> = optionalOfNullable(betas)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders

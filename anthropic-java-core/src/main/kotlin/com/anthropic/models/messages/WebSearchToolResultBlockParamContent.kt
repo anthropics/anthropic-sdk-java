@@ -18,7 +18,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
 
 @JsonDeserialize(using = WebSearchToolResultBlockParamContent.Deserializer::class)
 @JsonSerialize(using = WebSearchToolResultBlockParamContent.Serializer::class)
@@ -29,9 +30,9 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    fun item(): Optional<List<WebSearchResultBlockParam>> = Optional.ofNullable(item)
+    fun item(): Optional<List<WebSearchResultBlockParam>> = optionalOfNullable(item)
 
-    fun requestError(): Optional<WebSearchToolRequestError> = Optional.ofNullable(requestError)
+    fun requestError(): Optional<WebSearchToolRequestError> = optionalOfNullable(requestError)
 
     fun isItem(): Boolean = item != null
 
@@ -41,7 +42,7 @@ private constructor(
 
     fun asRequestError(): WebSearchToolRequestError = requestError.getOrThrow("requestError")
 
-    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+    fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {

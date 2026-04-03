@@ -16,8 +16,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 @JsonDeserialize(using = BetaTextCitationParam.Deserializer::class)
 @JsonSerialize(using = BetaTextCitationParam.Serializer::class)
@@ -31,18 +32,18 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    fun charLocation(): Optional<BetaCitationCharLocationParam> = Optional.ofNullable(charLocation)
+    fun charLocation(): Optional<BetaCitationCharLocationParam> = optionalOfNullable(charLocation)
 
-    fun pageLocation(): Optional<BetaCitationPageLocationParam> = Optional.ofNullable(pageLocation)
+    fun pageLocation(): Optional<BetaCitationPageLocationParam> = optionalOfNullable(pageLocation)
 
     fun contentBlockLocation(): Optional<BetaCitationContentBlockLocationParam> =
-        Optional.ofNullable(contentBlockLocation)
+        optionalOfNullable(contentBlockLocation)
 
     fun webSearchResultLocation(): Optional<BetaCitationWebSearchResultLocationParam> =
-        Optional.ofNullable(webSearchResultLocation)
+        optionalOfNullable(webSearchResultLocation)
 
     fun searchResultLocation(): Optional<BetaCitationSearchResultLocationParam> =
-        Optional.ofNullable(searchResultLocation)
+        optionalOfNullable(searchResultLocation)
 
     fun isCharLocation(): Boolean = charLocation != null
 
@@ -67,7 +68,7 @@ private constructor(
     fun asSearchResultLocation(): BetaCitationSearchResultLocationParam =
         searchResultLocation.getOrThrow("searchResultLocation")
 
-    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+    fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {

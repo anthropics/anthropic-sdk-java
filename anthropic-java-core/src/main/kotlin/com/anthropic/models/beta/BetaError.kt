@@ -16,8 +16,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 @JsonDeserialize(using = BetaError.Deserializer::class)
 @JsonSerialize(using = BetaError.Serializer::class)
@@ -35,23 +36,23 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    fun invalidRequest(): Optional<BetaInvalidRequestError> = Optional.ofNullable(invalidRequest)
+    fun invalidRequest(): Optional<BetaInvalidRequestError> = optionalOfNullable(invalidRequest)
 
-    fun authentication(): Optional<BetaAuthenticationError> = Optional.ofNullable(authentication)
+    fun authentication(): Optional<BetaAuthenticationError> = optionalOfNullable(authentication)
 
-    fun billing(): Optional<BetaBillingError> = Optional.ofNullable(billing)
+    fun billing(): Optional<BetaBillingError> = optionalOfNullable(billing)
 
-    fun permission(): Optional<BetaPermissionError> = Optional.ofNullable(permission)
+    fun permission(): Optional<BetaPermissionError> = optionalOfNullable(permission)
 
-    fun notFound(): Optional<BetaNotFoundError> = Optional.ofNullable(notFound)
+    fun notFound(): Optional<BetaNotFoundError> = optionalOfNullable(notFound)
 
-    fun rateLimit(): Optional<BetaRateLimitError> = Optional.ofNullable(rateLimit)
+    fun rateLimit(): Optional<BetaRateLimitError> = optionalOfNullable(rateLimit)
 
-    fun timeout(): Optional<BetaGatewayTimeoutError> = Optional.ofNullable(timeout)
+    fun timeout(): Optional<BetaGatewayTimeoutError> = optionalOfNullable(timeout)
 
-    fun api(): Optional<BetaApiError> = Optional.ofNullable(api)
+    fun api(): Optional<BetaApiError> = optionalOfNullable(api)
 
-    fun overloaded(): Optional<BetaOverloadedError> = Optional.ofNullable(overloaded)
+    fun overloaded(): Optional<BetaOverloadedError> = optionalOfNullable(overloaded)
 
     fun isInvalidRequest(): Boolean = invalidRequest != null
 
@@ -89,7 +90,7 @@ private constructor(
 
     fun asOverloaded(): BetaOverloadedError = overloaded.getOrThrow("overloaded")
 
-    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+    fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {

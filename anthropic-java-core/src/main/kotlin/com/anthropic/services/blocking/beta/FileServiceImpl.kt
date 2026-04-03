@@ -29,7 +29,7 @@ import com.anthropic.models.beta.files.FileMetadata
 import com.anthropic.models.beta.files.FileRetrieveMetadataParams
 import com.anthropic.models.beta.files.FileUploadParams
 import java.util.function.Consumer
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.getOrNull
 
 class FileServiceImpl internal constructor(private val clientOptions: ClientOptions) : FileService {
 

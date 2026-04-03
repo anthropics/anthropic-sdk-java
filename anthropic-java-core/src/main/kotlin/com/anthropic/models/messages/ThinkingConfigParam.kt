@@ -16,8 +16,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 /**
  * Configuration for enabling Claude's extended thinking.
@@ -39,11 +40,11 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    fun enabled(): Optional<ThinkingConfigEnabled> = Optional.ofNullable(enabled)
+    fun enabled(): Optional<ThinkingConfigEnabled> = optionalOfNullable(enabled)
 
-    fun disabled(): Optional<ThinkingConfigDisabled> = Optional.ofNullable(disabled)
+    fun disabled(): Optional<ThinkingConfigDisabled> = optionalOfNullable(disabled)
 
-    fun adaptive(): Optional<ThinkingConfigAdaptive> = Optional.ofNullable(adaptive)
+    fun adaptive(): Optional<ThinkingConfigAdaptive> = optionalOfNullable(adaptive)
 
     fun isEnabled(): Boolean = enabled != null
 
@@ -57,7 +58,7 @@ private constructor(
 
     fun asAdaptive(): ThinkingConfigAdaptive = adaptive.getOrThrow("adaptive")
 
-    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+    fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {

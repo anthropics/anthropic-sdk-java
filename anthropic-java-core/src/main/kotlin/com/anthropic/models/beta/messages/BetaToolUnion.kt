@@ -17,7 +17,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
 
 /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
 @JsonDeserialize(using = BetaToolUnion.Deserializer::class)
@@ -49,67 +50,67 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    fun betaTool(): Optional<BetaTool> = Optional.ofNullable(betaTool)
+    fun betaTool(): Optional<BetaTool> = optionalOfNullable(betaTool)
 
-    fun bash20241022(): Optional<BetaToolBash20241022> = Optional.ofNullable(bash20241022)
+    fun bash20241022(): Optional<BetaToolBash20241022> = optionalOfNullable(bash20241022)
 
-    fun bash20250124(): Optional<BetaToolBash20250124> = Optional.ofNullable(bash20250124)
+    fun bash20250124(): Optional<BetaToolBash20250124> = optionalOfNullable(bash20250124)
 
     fun codeExecutionTool20250522(): Optional<BetaCodeExecutionTool20250522> =
-        Optional.ofNullable(codeExecutionTool20250522)
+        optionalOfNullable(codeExecutionTool20250522)
 
     fun codeExecutionTool20250825(): Optional<BetaCodeExecutionTool20250825> =
-        Optional.ofNullable(codeExecutionTool20250825)
+        optionalOfNullable(codeExecutionTool20250825)
 
     /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
     fun codeExecutionTool20260120(): Optional<BetaCodeExecutionTool20260120> =
-        Optional.ofNullable(codeExecutionTool20260120)
+        optionalOfNullable(codeExecutionTool20260120)
 
     fun computerUse20241022(): Optional<BetaToolComputerUse20241022> =
-        Optional.ofNullable(computerUse20241022)
+        optionalOfNullable(computerUse20241022)
 
     fun memoryTool20250818(): Optional<BetaMemoryTool20250818> =
-        Optional.ofNullable(memoryTool20250818)
+        optionalOfNullable(memoryTool20250818)
 
     fun computerUse20250124(): Optional<BetaToolComputerUse20250124> =
-        Optional.ofNullable(computerUse20250124)
+        optionalOfNullable(computerUse20250124)
 
     fun textEditor20241022(): Optional<BetaToolTextEditor20241022> =
-        Optional.ofNullable(textEditor20241022)
+        optionalOfNullable(textEditor20241022)
 
     fun computerUse20251124(): Optional<BetaToolComputerUse20251124> =
-        Optional.ofNullable(computerUse20251124)
+        optionalOfNullable(computerUse20251124)
 
     fun textEditor20250124(): Optional<BetaToolTextEditor20250124> =
-        Optional.ofNullable(textEditor20250124)
+        optionalOfNullable(textEditor20250124)
 
     fun textEditor20250429(): Optional<BetaToolTextEditor20250429> =
-        Optional.ofNullable(textEditor20250429)
+        optionalOfNullable(textEditor20250429)
 
     fun textEditor20250728(): Optional<BetaToolTextEditor20250728> =
-        Optional.ofNullable(textEditor20250728)
+        optionalOfNullable(textEditor20250728)
 
     fun webSearchTool20250305(): Optional<BetaWebSearchTool20250305> =
-        Optional.ofNullable(webSearchTool20250305)
+        optionalOfNullable(webSearchTool20250305)
 
     fun webFetchTool20250910(): Optional<BetaWebFetchTool20250910> =
-        Optional.ofNullable(webFetchTool20250910)
+        optionalOfNullable(webFetchTool20250910)
 
     fun webSearchTool20260209(): Optional<BetaWebSearchTool20260209> =
-        Optional.ofNullable(webSearchTool20260209)
+        optionalOfNullable(webSearchTool20260209)
 
     fun webFetchTool20260209(): Optional<BetaWebFetchTool20260209> =
-        Optional.ofNullable(webFetchTool20260209)
+        optionalOfNullable(webFetchTool20260209)
 
     /** Web fetch tool with use_cache parameter for bypassing cached content. */
     fun webFetchTool20260309(): Optional<BetaWebFetchTool20260309> =
-        Optional.ofNullable(webFetchTool20260309)
+        optionalOfNullable(webFetchTool20260309)
 
     fun searchToolBm25_20251119(): Optional<BetaToolSearchToolBm25_20251119> =
-        Optional.ofNullable(searchToolBm25_20251119)
+        optionalOfNullable(searchToolBm25_20251119)
 
     fun searchToolRegex20251119(): Optional<BetaToolSearchToolRegex20251119> =
-        Optional.ofNullable(searchToolRegex20251119)
+        optionalOfNullable(searchToolRegex20251119)
 
     /**
      * Configuration for a group of tools from an MCP server.
@@ -117,7 +118,7 @@ private constructor(
      * Allows configuring enabled status and defer_loading for all tools from an MCP server, with
      * optional per-tool overrides.
      */
-    fun mcpToolset(): Optional<BetaMcpToolset> = Optional.ofNullable(mcpToolset)
+    fun mcpToolset(): Optional<BetaMcpToolset> = optionalOfNullable(mcpToolset)
 
     fun isBetaTool(): Boolean = betaTool != null
 
@@ -233,7 +234,7 @@ private constructor(
      */
     fun asMcpToolset(): BetaMcpToolset = mcpToolset.getOrThrow("mcpToolset")
 
-    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+    fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {

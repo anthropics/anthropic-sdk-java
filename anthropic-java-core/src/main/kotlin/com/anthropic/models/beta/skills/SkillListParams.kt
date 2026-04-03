@@ -8,8 +8,9 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 /** List Skills */
 class SkillListParams
@@ -27,14 +28,14 @@ private constructor(
      *
      * Maximum value is 100. Defaults to 20.
      */
-    fun limit(): Optional<Long> = Optional.ofNullable(limit)
+    fun limit(): Optional<Long> = optionalOfNullable(limit)
 
     /**
      * Pagination token for fetching a specific page of results.
      *
      * Pass the value from a previous response's `next_page` field to get the next page of results.
      */
-    fun page(): Optional<String> = Optional.ofNullable(page)
+    fun page(): Optional<String> = optionalOfNullable(page)
 
     /**
      * Filter skills by source.
@@ -43,10 +44,10 @@ private constructor(
      * * `"custom"`: only return user-created skills
      * * `"anthropic"`: only return Anthropic-created skills
      */
-    fun source(): Optional<String> = Optional.ofNullable(source)
+    fun source(): Optional<String> = optionalOfNullable(source)
 
     /** Optional header to specify the beta version(s) you want to use. */
-    fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+    fun betas(): Optional<List<AnthropicBeta>> = optionalOfNullable(betas)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders

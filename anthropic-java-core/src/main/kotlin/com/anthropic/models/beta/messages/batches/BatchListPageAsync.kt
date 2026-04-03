@@ -8,10 +8,10 @@ import com.anthropic.core.PageAsync
 import com.anthropic.core.checkRequired
 import com.anthropic.services.async.beta.messages.BatchServiceAsync
 import com.anthropic.core.contentHash
-import java.util.Optional
+import com.anthropic.core.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.getOrNull
 
 /** @see BatchServiceAsync.list */
 class BatchListPageAsync

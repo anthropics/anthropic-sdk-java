@@ -1,6 +1,6 @@
 package com.anthropic.helpers
 
-import java.util.Optional
+import com.anthropic.core.Optional
 
 /**
  * A memory tool handler enables Claude to store and retrieve information across conversations

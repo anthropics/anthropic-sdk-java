@@ -27,8 +27,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 class BetaRequestMcpToolResultBlockParam
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -334,10 +335,10 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        fun string(): Optional<String> = Optional.ofNullable(string)
+        fun string(): Optional<String> = optionalOfNullable(string)
 
         fun betaMcpToolResultBlockParam(): Optional<List<BetaTextBlockParam>> =
-            Optional.ofNullable(betaMcpToolResultBlockParam)
+            optionalOfNullable(betaMcpToolResultBlockParam)
 
         fun isString(): Boolean = string != null
 
@@ -348,7 +349,7 @@ private constructor(
         fun asBetaMcpToolResultBlockParam(): List<BetaTextBlockParam> =
             betaMcpToolResultBlockParam.getOrThrow("betaMcpToolResultBlockParam")
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {

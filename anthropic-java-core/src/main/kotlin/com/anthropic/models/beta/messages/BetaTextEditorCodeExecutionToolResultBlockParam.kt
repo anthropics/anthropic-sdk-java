@@ -26,8 +26,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 class BetaTextEditorCodeExecutionToolResultBlockParam
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -402,19 +403,19 @@ private constructor(
 
         fun betaTextEditorCodeExecutionToolResultErrorParam():
             Optional<BetaTextEditorCodeExecutionToolResultErrorParam> =
-            Optional.ofNullable(betaTextEditorCodeExecutionToolResultErrorParam)
+            optionalOfNullable(betaTextEditorCodeExecutionToolResultErrorParam)
 
         fun betaTextEditorCodeExecutionViewResultBlockParam():
             Optional<BetaTextEditorCodeExecutionViewResultBlockParam> =
-            Optional.ofNullable(betaTextEditorCodeExecutionViewResultBlockParam)
+            optionalOfNullable(betaTextEditorCodeExecutionViewResultBlockParam)
 
         fun betaTextEditorCodeExecutionCreateResultBlockParam():
             Optional<BetaTextEditorCodeExecutionCreateResultBlockParam> =
-            Optional.ofNullable(betaTextEditorCodeExecutionCreateResultBlockParam)
+            optionalOfNullable(betaTextEditorCodeExecutionCreateResultBlockParam)
 
         fun betaTextEditorCodeExecutionStrReplaceResultBlockParam():
             Optional<BetaTextEditorCodeExecutionStrReplaceResultBlockParam> =
-            Optional.ofNullable(betaTextEditorCodeExecutionStrReplaceResultBlockParam)
+            optionalOfNullable(betaTextEditorCodeExecutionStrReplaceResultBlockParam)
 
         fun isBetaTextEditorCodeExecutionToolResultErrorParam(): Boolean =
             betaTextEditorCodeExecutionToolResultErrorParam != null
@@ -452,7 +453,7 @@ private constructor(
                 "betaTextEditorCodeExecutionStrReplaceResultBlockParam"
             )
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {

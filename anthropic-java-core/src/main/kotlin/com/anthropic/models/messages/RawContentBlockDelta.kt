@@ -16,8 +16,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 @JsonDeserialize(using = RawContentBlockDelta.Deserializer::class)
 @JsonSerialize(using = RawContentBlockDelta.Serializer::class)
@@ -31,15 +32,15 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    fun text(): Optional<TextDelta> = Optional.ofNullable(text)
+    fun text(): Optional<TextDelta> = optionalOfNullable(text)
 
-    fun inputJson(): Optional<InputJsonDelta> = Optional.ofNullable(inputJson)
+    fun inputJson(): Optional<InputJsonDelta> = optionalOfNullable(inputJson)
 
-    fun citations(): Optional<CitationsDelta> = Optional.ofNullable(citations)
+    fun citations(): Optional<CitationsDelta> = optionalOfNullable(citations)
 
-    fun thinking(): Optional<ThinkingDelta> = Optional.ofNullable(thinking)
+    fun thinking(): Optional<ThinkingDelta> = optionalOfNullable(thinking)
 
-    fun signature(): Optional<SignatureDelta> = Optional.ofNullable(signature)
+    fun signature(): Optional<SignatureDelta> = optionalOfNullable(signature)
 
     fun isText(): Boolean = text != null
 
@@ -61,7 +62,7 @@ private constructor(
 
     fun asSignature(): SignatureDelta = signature.getOrThrow("signature")
 
-    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+    fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {

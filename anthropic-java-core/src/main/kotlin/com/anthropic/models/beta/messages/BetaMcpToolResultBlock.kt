@@ -26,7 +26,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
 
 class BetaMcpToolResultBlock
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -315,10 +316,10 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        fun string(): Optional<String> = Optional.ofNullable(string)
+        fun string(): Optional<String> = optionalOfNullable(string)
 
         fun betaMcpToolResultBlock(): Optional<List<BetaTextBlock>> =
-            Optional.ofNullable(betaMcpToolResultBlock)
+            optionalOfNullable(betaMcpToolResultBlock)
 
         fun isString(): Boolean = string != null
 
@@ -329,7 +330,7 @@ private constructor(
         fun asBetaMcpToolResultBlock(): List<BetaTextBlock> =
             betaMcpToolResultBlock.getOrThrow("betaMcpToolResultBlock")
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {

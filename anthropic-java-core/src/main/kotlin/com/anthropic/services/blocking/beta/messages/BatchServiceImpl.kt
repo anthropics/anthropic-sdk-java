@@ -33,7 +33,7 @@ import com.anthropic.models.beta.messages.batches.BetaDeletedMessageBatch
 import com.anthropic.models.beta.messages.batches.BetaMessageBatch
 import com.anthropic.models.beta.messages.batches.BetaMessageBatchIndividualResponse
 import java.util.function.Consumer
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.getOrNull
 
 class BatchServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     BatchService {

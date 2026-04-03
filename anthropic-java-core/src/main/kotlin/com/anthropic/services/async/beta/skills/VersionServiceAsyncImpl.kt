@@ -30,7 +30,7 @@ import com.anthropic.models.beta.skills.versions.VersionRetrieveParams
 import com.anthropic.models.beta.skills.versions.VersionRetrieveResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.getOrNull
 
 class VersionServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     VersionServiceAsync {

@@ -27,8 +27,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 class BetaClearToolUses20250919Edit
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -437,9 +438,9 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        fun bool(): Optional<Boolean> = Optional.ofNullable(bool)
+        fun bool(): Optional<Boolean> = optionalOfNullable(bool)
 
-        fun strings(): Optional<List<String>> = Optional.ofNullable(strings)
+        fun strings(): Optional<List<String>> = optionalOfNullable(strings)
 
         fun isBool(): Boolean = bool != null
 
@@ -449,7 +450,7 @@ private constructor(
 
         fun asStrings(): List<String> = strings.getOrThrow("strings")
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
@@ -608,9 +609,9 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        fun inputTokens(): Optional<BetaInputTokensTrigger> = Optional.ofNullable(inputTokens)
+        fun inputTokens(): Optional<BetaInputTokensTrigger> = optionalOfNullable(inputTokens)
 
-        fun toolUses(): Optional<BetaToolUsesTrigger> = Optional.ofNullable(toolUses)
+        fun toolUses(): Optional<BetaToolUsesTrigger> = optionalOfNullable(toolUses)
 
         fun isInputTokens(): Boolean = inputTokens != null
 
@@ -620,7 +621,7 @@ private constructor(
 
         fun asToolUses(): BetaToolUsesTrigger = toolUses.getOrThrow("toolUses")
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {

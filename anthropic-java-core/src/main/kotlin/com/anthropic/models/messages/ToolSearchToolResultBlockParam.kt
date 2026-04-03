@@ -26,8 +26,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 class ToolSearchToolResultBlockParam
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -318,10 +319,10 @@ private constructor(
     ) {
 
         fun toolSearchToolResultErrorParam(): Optional<ToolSearchToolResultErrorParam> =
-            Optional.ofNullable(toolSearchToolResultErrorParam)
+            optionalOfNullable(toolSearchToolResultErrorParam)
 
         fun toolSearchToolSearchResultBlockParam(): Optional<ToolSearchToolSearchResultBlockParam> =
-            Optional.ofNullable(toolSearchToolSearchResultBlockParam)
+            optionalOfNullable(toolSearchToolSearchResultBlockParam)
 
         fun isToolSearchToolResultErrorParam(): Boolean = toolSearchToolResultErrorParam != null
 
@@ -334,7 +335,7 @@ private constructor(
         fun asToolSearchToolSearchResultBlockParam(): ToolSearchToolSearchResultBlockParam =
             toolSearchToolSearchResultBlockParam.getOrThrow("toolSearchToolSearchResultBlockParam")
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {

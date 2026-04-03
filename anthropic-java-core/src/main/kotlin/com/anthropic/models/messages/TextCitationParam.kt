@@ -16,8 +16,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 @JsonDeserialize(using = TextCitationParam.Deserializer::class)
 @JsonSerialize(using = TextCitationParam.Serializer::class)
@@ -31,18 +32,18 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    fun charLocation(): Optional<CitationCharLocationParam> = Optional.ofNullable(charLocation)
+    fun charLocation(): Optional<CitationCharLocationParam> = optionalOfNullable(charLocation)
 
-    fun pageLocation(): Optional<CitationPageLocationParam> = Optional.ofNullable(pageLocation)
+    fun pageLocation(): Optional<CitationPageLocationParam> = optionalOfNullable(pageLocation)
 
     fun contentBlockLocation(): Optional<CitationContentBlockLocationParam> =
-        Optional.ofNullable(contentBlockLocation)
+        optionalOfNullable(contentBlockLocation)
 
     fun webSearchResultLocation(): Optional<CitationWebSearchResultLocationParam> =
-        Optional.ofNullable(webSearchResultLocation)
+        optionalOfNullable(webSearchResultLocation)
 
     fun searchResultLocation(): Optional<CitationSearchResultLocationParam> =
-        Optional.ofNullable(searchResultLocation)
+        optionalOfNullable(searchResultLocation)
 
     fun isCharLocation(): Boolean = charLocation != null
 
@@ -67,7 +68,7 @@ private constructor(
     fun asSearchResultLocation(): CitationSearchResultLocationParam =
         searchResultLocation.getOrThrow("searchResultLocation")
 
-    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+    fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {

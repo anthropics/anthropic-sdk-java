@@ -25,8 +25,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 class BetaDocumentBlock
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -318,9 +319,9 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        fun base64(): Optional<BetaBase64PdfSource> = Optional.ofNullable(base64)
+        fun base64(): Optional<BetaBase64PdfSource> = optionalOfNullable(base64)
 
-        fun text(): Optional<BetaPlainTextSource> = Optional.ofNullable(text)
+        fun text(): Optional<BetaPlainTextSource> = optionalOfNullable(text)
 
         fun isBase64(): Boolean = base64 != null
 
@@ -330,7 +331,7 @@ private constructor(
 
         fun asText(): BetaPlainTextSource = text.getOrThrow("text")
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {

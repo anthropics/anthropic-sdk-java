@@ -17,7 +17,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
 
 /** Code execution result with encrypted stdout for PFC + web_search results. */
 @JsonDeserialize(using = CodeExecutionToolResultBlockContent.Deserializer::class)
@@ -30,13 +31,13 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    fun error(): Optional<CodeExecutionToolResultError> = Optional.ofNullable(error)
+    fun error(): Optional<CodeExecutionToolResultError> = optionalOfNullable(error)
 
-    fun resultBlock(): Optional<CodeExecutionResultBlock> = Optional.ofNullable(resultBlock)
+    fun resultBlock(): Optional<CodeExecutionResultBlock> = optionalOfNullable(resultBlock)
 
     /** Code execution result with encrypted stdout for PFC + web_search results. */
     fun encryptedCodeExecutionResultBlock(): Optional<EncryptedCodeExecutionResultBlock> =
-        Optional.ofNullable(encryptedCodeExecutionResultBlock)
+        optionalOfNullable(encryptedCodeExecutionResultBlock)
 
     fun isError(): Boolean = error != null
 
@@ -52,7 +53,7 @@ private constructor(
     fun asEncryptedCodeExecutionResultBlock(): EncryptedCodeExecutionResultBlock =
         encryptedCodeExecutionResultBlock.getOrThrow("encryptedCodeExecutionResultBlock")
 
-    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+    fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {

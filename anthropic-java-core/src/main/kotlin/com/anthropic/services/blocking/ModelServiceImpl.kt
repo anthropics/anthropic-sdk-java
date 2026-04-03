@@ -22,7 +22,7 @@ import com.anthropic.models.models.ModelListPageResponse
 import com.anthropic.models.models.ModelListParams
 import com.anthropic.models.models.ModelRetrieveParams
 import java.util.function.Consumer
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.getOrNull
 
 class ModelServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     ModelService {

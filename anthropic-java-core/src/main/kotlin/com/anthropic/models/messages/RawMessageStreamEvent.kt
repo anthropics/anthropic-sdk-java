@@ -16,8 +16,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 @JsonDeserialize(using = RawMessageStreamEvent.Deserializer::class)
 @JsonSerialize(using = RawMessageStreamEvent.Serializer::class)
@@ -32,20 +33,20 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    fun messageStart(): Optional<RawMessageStartEvent> = Optional.ofNullable(messageStart)
+    fun messageStart(): Optional<RawMessageStartEvent> = optionalOfNullable(messageStart)
 
-    fun messageDelta(): Optional<RawMessageDeltaEvent> = Optional.ofNullable(messageDelta)
+    fun messageDelta(): Optional<RawMessageDeltaEvent> = optionalOfNullable(messageDelta)
 
-    fun messageStop(): Optional<RawMessageStopEvent> = Optional.ofNullable(messageStop)
+    fun messageStop(): Optional<RawMessageStopEvent> = optionalOfNullable(messageStop)
 
     fun contentBlockStart(): Optional<RawContentBlockStartEvent> =
-        Optional.ofNullable(contentBlockStart)
+        optionalOfNullable(contentBlockStart)
 
     fun contentBlockDelta(): Optional<RawContentBlockDeltaEvent> =
-        Optional.ofNullable(contentBlockDelta)
+        optionalOfNullable(contentBlockDelta)
 
     fun contentBlockStop(): Optional<RawContentBlockStopEvent> =
-        Optional.ofNullable(contentBlockStop)
+        optionalOfNullable(contentBlockStop)
 
     fun isMessageStart(): Boolean = messageStart != null
 
@@ -74,7 +75,7 @@ private constructor(
     fun asContentBlockStop(): RawContentBlockStopEvent =
         contentBlockStop.getOrThrow("contentBlockStop")
 
-    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+    fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {

@@ -36,8 +36,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 /**
  * Send a structured list of input messages with text and/or image content, and the model will
@@ -60,7 +61,7 @@ private constructor(
     @JvmSynthetic internal fun toolParametersTypes(): List<Class<*>> = toolParametersTypes
 
     /** Optional header to specify the beta version(s) you want to use. */
-    fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+    fun betas(): Optional<List<AnthropicBeta>> = optionalOfNullable(betas)
 
     /**
      * The maximum number of tokens to generate before stopping.
@@ -3483,9 +3484,9 @@ private constructor(
 
         /** Container parameters with skills to be loaded. */
         fun betaContainerParams(): Optional<BetaContainerParams> =
-            Optional.ofNullable(betaContainerParams)
+            optionalOfNullable(betaContainerParams)
 
-        fun string(): Optional<String> = Optional.ofNullable(string)
+        fun string(): Optional<String> = optionalOfNullable(string)
 
         fun isBetaContainerParams(): Boolean = betaContainerParams != null
 
@@ -3497,7 +3498,7 @@ private constructor(
 
         fun asString(): String = string.getOrThrow("string")
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
@@ -3937,10 +3938,10 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
-        fun string(): Optional<String> = Optional.ofNullable(string)
+        fun string(): Optional<String> = optionalOfNullable(string)
 
         fun betaTextBlockParams(): Optional<List<BetaTextBlockParam>> =
-            Optional.ofNullable(betaTextBlockParams)
+            optionalOfNullable(betaTextBlockParams)
 
         fun isString(): Boolean = string != null
 
@@ -3951,7 +3952,7 @@ private constructor(
         fun asBetaTextBlockParams(): List<BetaTextBlockParam> =
             betaTextBlockParams.getOrThrow("betaTextBlockParams")
 
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+        fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {

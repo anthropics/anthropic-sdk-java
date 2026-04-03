@@ -10,8 +10,9 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 /** Delete Skill Version */
 class VersionDeleteParams
@@ -36,10 +37,10 @@ private constructor(
      *
      * Each version is identified by a Unix epoch timestamp (e.g., "1759178010641129").
      */
-    fun version(): Optional<String> = Optional.ofNullable(version)
+    fun version(): Optional<String> = optionalOfNullable(version)
 
     /** Optional header to specify the beta version(s) you want to use. */
-    fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+    fun betas(): Optional<List<AnthropicBeta>> = optionalOfNullable(betas)
 
     /** Additional body properties to send with the request. */
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
@@ -269,7 +270,7 @@ private constructor(
     }
 
     fun _body(): Optional<Map<String, JsonValue>> =
-        Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
+        optionalOfNullable(additionalBodyProperties.ifEmpty { null })
 
     fun _pathParam(index: Int): String =
         when (index) {

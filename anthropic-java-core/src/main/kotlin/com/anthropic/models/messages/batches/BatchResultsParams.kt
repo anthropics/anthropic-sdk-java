@@ -6,8 +6,9 @@ import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 /**
  * Streams the results of a Message Batch as a `.jsonl` file.
@@ -27,7 +28,7 @@ private constructor(
 ) : Params {
 
     /** ID of the Message Batch. */
-    fun messageBatchId(): Optional<String> = Optional.ofNullable(messageBatchId)
+    fun messageBatchId(): Optional<String> = optionalOfNullable(messageBatchId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders

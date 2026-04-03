@@ -30,7 +30,7 @@ import com.anthropic.models.beta.files.FileRetrieveMetadataParams
 import com.anthropic.models.beta.files.FileUploadParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.getOrNull
 
 class FileServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     FileServiceAsync {

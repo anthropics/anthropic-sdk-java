@@ -16,8 +16,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.anthropic.core.contentHash
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.Optional
+import com.anthropic.core.optionalOfNullable
+import com.anthropic.core.getOrNull
 
 @JsonDeserialize(using = BetaRawContentBlockDelta.Deserializer::class)
 @JsonSerialize(using = BetaRawContentBlockDelta.Serializer::class)
@@ -32,17 +33,17 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    fun text(): Optional<BetaTextDelta> = Optional.ofNullable(text)
+    fun text(): Optional<BetaTextDelta> = optionalOfNullable(text)
 
-    fun inputJson(): Optional<BetaInputJsonDelta> = Optional.ofNullable(inputJson)
+    fun inputJson(): Optional<BetaInputJsonDelta> = optionalOfNullable(inputJson)
 
-    fun citations(): Optional<BetaCitationsDelta> = Optional.ofNullable(citations)
+    fun citations(): Optional<BetaCitationsDelta> = optionalOfNullable(citations)
 
-    fun thinking(): Optional<BetaThinkingDelta> = Optional.ofNullable(thinking)
+    fun thinking(): Optional<BetaThinkingDelta> = optionalOfNullable(thinking)
 
-    fun signature(): Optional<BetaSignatureDelta> = Optional.ofNullable(signature)
+    fun signature(): Optional<BetaSignatureDelta> = optionalOfNullable(signature)
 
-    fun compaction(): Optional<BetaCompactionContentBlockDelta> = Optional.ofNullable(compaction)
+    fun compaction(): Optional<BetaCompactionContentBlockDelta> = optionalOfNullable(compaction)
 
     fun isText(): Boolean = text != null
 
@@ -68,7 +69,7 @@ private constructor(
 
     fun asCompaction(): BetaCompactionContentBlockDelta = compaction.getOrThrow("compaction")
 
-    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+    fun _json(): Optional<JsonValue> = optionalOfNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {

@@ -36,7 +36,7 @@ import com.anthropic.models.beta.messages.batches.BetaMessageBatch
 import com.anthropic.models.beta.messages.batches.BetaMessageBatchIndividualResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.getOrNull
 
 class BatchServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     BatchServiceAsync {
