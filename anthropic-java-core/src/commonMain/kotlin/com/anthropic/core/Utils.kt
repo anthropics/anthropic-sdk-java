@@ -5,6 +5,9 @@ import com.anthropic.errors.AnthropicInvalidDataException
 internal fun <T : Any> T?.getOrThrow(name: String): T =
     this ?: throw AnthropicInvalidDataException("`${name}` is not present")
 
+// These helpers defensively copy collections. The empty check is an optimization to return
+// singleton empty instances instead of allocating, though toList()/toMap() handle empty inputs
+// correctly on their own. Kept because they are used widely across the codebase.
 internal fun <T> List<T>.toImmutable(): List<T> = if (isEmpty()) emptyList() else toList()
 internal fun <K, V> Map<K, V>.toImmutable(): Map<K, V> = if (isEmpty()) emptyMap() else toMap()
 
