@@ -89,7 +89,7 @@ internal class AutoPagerAsyncTest {
             verify(handler, times(1)).onNext("item1")
             verify(handler, times(1)).onNext("item2")
             verify(handler, times(1)).onNext("item3")
-            verify(handler, times(1)).onComplete(Optional.empty())
+            verify(handler, times(1)).onComplete(null)
         }
     }
 
@@ -104,7 +104,7 @@ internal class AutoPagerAsyncTest {
 
         verify(handler, times(1)).onNext("page1")
         verify(handler, never()).onNext("page2")
-        verify(handler, times(1)).onComplete(Optional.empty())
+        verify(handler, times(1)).onComplete(null)
         verify(executor, times(1)).execute(any())
     }
 
@@ -118,7 +118,7 @@ internal class AutoPagerAsyncTest {
 
         verify(executor, times(1)).execute(any())
         verify(handler, never()).onNext(any())
-        verify(handler, times(1)).onComplete(Optional.of(ERROR))
+        verify(handler, times(1)).onComplete(ERROR)
     }
 
     @Test
@@ -142,7 +142,7 @@ internal class AutoPagerAsyncTest {
         inOrder(handler) {
             verify(handler, times(1)).onNext("chunk3")
             verify(handler, times(1)).onNext("chunk4")
-            verify(handler, times(1)).onComplete(Optional.empty())
+            verify(handler, times(1)).onComplete(null)
         }
     }
 

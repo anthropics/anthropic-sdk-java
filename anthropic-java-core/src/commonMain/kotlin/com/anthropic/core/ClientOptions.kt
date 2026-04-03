@@ -10,14 +10,13 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.http.RetryingHttpClient
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.time.Clock
-import java.util.Optional
+
 import kotlin.time.Duration
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicLong
-import kotlin.jvm.optionals.getOrNull
 
 /** A class representing the SDK client configuration. */
 class ClientOptions
@@ -240,7 +239,6 @@ private constructor(
         fun baseUrl(baseUrl: String?) = apply { this.baseUrl = baseUrl }
 
         /** Alias for calling [Builder.baseUrl] with `baseUrl.orElse(null)`. */
-        fun baseUrl(baseUrl: Optional<String>) = baseUrl(baseUrl.getOrNull())
 
         /**
          * Whether to call `validate` on every response before returning it.

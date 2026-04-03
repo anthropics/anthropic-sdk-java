@@ -84,7 +84,7 @@ internal class AsyncStreamResponseTest {
         future.completeExceptionally(ERROR)
 
         verify(handler, never()).onNext(any())
-        verify(handler, times(1)).onComplete(Optional.of(ERROR))
+        verify(handler, times(1)).onComplete(ERROR)
         verify(executor, times(1)).execute(any())
     }
 
@@ -100,7 +100,7 @@ internal class AsyncStreamResponseTest {
             verify(handler, times(1)).onNext("chunk1")
             verify(handler, times(1)).onNext("chunk2")
             verify(handler, times(1)).onNext("chunk3")
-            verify(handler, times(1)).onComplete(Optional.empty())
+            verify(handler, times(1)).onComplete(null)
             verify(streamResponse, times(1)).close()
         }
         verify(executor, times(1)).execute(any())
@@ -117,7 +117,7 @@ internal class AsyncStreamResponseTest {
         inOrder(handler, erroringStreamResponse) {
             verify(handler, times(1)).onNext("chunk1")
             verify(handler, times(1)).onNext("chunk2")
-            verify(handler, times(1)).onComplete(Optional.of(ERROR))
+            verify(handler, times(1)).onComplete(ERROR)
             verify(erroringStreamResponse, times(1)).close()
         }
         verify(executor, times(1)).execute(any())
@@ -187,7 +187,7 @@ internal class AsyncStreamResponseTest {
             object : AsyncStreamResponse.Handler<String> {
                 override fun onNext(value: String) {}
 
-                override fun onComplete(error: Optional<Throwable>) = throw ERROR
+                override fun onComplete(error: Throwable?) = throw ERROR
             }
         )
         future.complete(streamResponse)
@@ -205,7 +205,7 @@ internal class AsyncStreamResponseTest {
             object : AsyncStreamResponse.Handler<String> {
                 override fun onNext(value: String) {}
 
-                override fun onComplete(error: Optional<Throwable>) = throw ERROR
+                override fun onComplete(error: Throwable?) = throw ERROR
             }
         )
         future.complete(erroringStreamResponse)

@@ -1,7 +1,7 @@
 package com.anthropic.core.http
 
 import com.anthropic.core.http.AsyncStreamResponse.Handler
-import java.util.Optional
+
 
 
 import java.util.concurrent.CompletableFuture
@@ -60,7 +60,7 @@ interface AsyncStreamResponse<T> {
          *
          * @param error Non-empty if the stream completed due to an error.
          */
-        fun onComplete(error: Optional<Throwable>) {}
+        fun onComplete(error: Throwable?) {}
     }
 }
 
@@ -102,7 +102,7 @@ internal fun <T> CompletableFuture<StreamResponse<T>>.toAsync(streamHandlerExecu
 
                         if (futureError != null) {
                             // An error occurred before we started passing chunks to the handler.
-                            handler.onComplete(Optional.of(futureError))
+                            handler.onComplete(futureError)
                             return@whenCompleteAsync
                         }
 
@@ -114,7 +114,7 @@ internal fun <T> CompletableFuture<StreamResponse<T>>.toAsync(streamHandlerExecu
                         }
 
                         try {
-                            handler.onComplete(Optional.ofNullable(streamError))
+                            handler.onComplete(streamError)
                         } finally {
                             try {
                                 // Notify completion via the `onCompleteFuture` as well. This is in

@@ -3,7 +3,7 @@
 package com.anthropic.core
 
 import com.anthropic.core.http.AsyncStreamResponse
-import java.util.Optional
+
 
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionException
@@ -51,7 +51,7 @@ private constructor(private val firstPage: PageAsync<T>, private val defaultExec
                 val actualError =
                     if (error is CompletionException && error.cause != null) error.cause else error
                 try {
-                    handler.onComplete(Optional.ofNullable(actualError))
+                    handler.onComplete(actualError)
                 } finally {
                     try {
                         if (actualError == null) {

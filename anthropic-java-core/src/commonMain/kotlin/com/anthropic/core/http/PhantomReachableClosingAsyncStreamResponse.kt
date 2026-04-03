@@ -2,7 +2,7 @@ package com.anthropic.core.http
 
 import com.anthropic.core.closeWhenPhantomReachable
 import com.anthropic.core.http.AsyncStreamResponse.Handler
-import java.util.Optional
+
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 
@@ -52,5 +52,5 @@ private class TrackedHandler<T>(
 ) : Handler<T> {
     override fun onNext(value: T) = handler.onNext(value)
 
-    override fun onComplete(error: Optional<Throwable>) = handler.onComplete(error)
+    override fun onComplete(error: Throwable?) = handler.onComplete(error)
 }
