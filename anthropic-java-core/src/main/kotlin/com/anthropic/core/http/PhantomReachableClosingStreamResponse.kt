@@ -14,7 +14,7 @@ internal class PhantomReachableClosingStreamResponse<T>(
         closeWhenPhantomReachable(this, streamResponse)
     }
 
-    override fun stream(): Sequence<T> = streamResponse.stream()
+    override fun stream(): kotlinx.coroutines.flow.Flow<T> = streamResponse.stream()
 
     override fun close() = streamResponse.close()
 }

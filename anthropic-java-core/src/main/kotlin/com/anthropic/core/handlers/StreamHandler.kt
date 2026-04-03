@@ -38,7 +38,7 @@ internal fun <T> streamHandler(
             return PhantomReachableClosingStreamResponse(
                 object : StreamResponse<T> {
 
-                    override fun stream(): Sequence<T> = sequence
+                    override fun stream(): kotlinx.coroutines.flow.Flow<T> = kotlinx.coroutines.flow.flow { sequence.forEach { emit(it) } }
 
                     override fun close() {
                         sequence.close()

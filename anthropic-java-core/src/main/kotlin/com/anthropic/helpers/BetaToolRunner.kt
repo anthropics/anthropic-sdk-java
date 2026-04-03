@@ -79,7 +79,7 @@ internal constructor(
                                 private val delegate =
                                     messageService.createStreaming(currentParams, requestOptions)
 
-                                override fun stream(): Sequence<BetaRawMessageStreamEvent> =
+                                override fun stream(): kotlinx.coroutines.flow.Flow<BetaRawMessageStreamEvent> =
                                     delegate.stream().onEach { accumulator.accumulate(it) }
 
                                 override fun close() = delegate.close()

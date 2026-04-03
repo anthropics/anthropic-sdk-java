@@ -107,7 +107,7 @@ internal fun <T> CompletableFuture<StreamResponse<T>>.toAsync(streamHandlerExecu
 
                         var streamError: Throwable? = null
                         try {
-                            streamResponse.stream().forEach { handler.onNext(it) }
+                            kotlinx.coroutines.runBlocking { streamResponse.stream().collect { handler.onNext(it) } }
                         } catch (e: Throwable) {
                             streamError = e
                         }

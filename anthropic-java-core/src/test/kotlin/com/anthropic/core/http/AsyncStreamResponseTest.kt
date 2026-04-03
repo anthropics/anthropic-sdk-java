@@ -20,12 +20,12 @@ internal class AsyncStreamResponseTest {
 
     private val streamResponse =
         mock<StreamResponse<String>> {
-            on { stream() } doReturn kotlinx.coroutines.flow.flowOf("chunk1", "chunk2", "chunk3")
+            on { stream() } doReturn kotlin.sequences.sequenceOf("chunk1", "chunk2", "chunk3")
         }
     private val erroringStreamResponse =
         mock<StreamResponse<String>> {
             on { stream() } doReturn
-                kotlinx.coroutines.flow.flow {
+                kotlin.sequences.kotlinx.coroutines.flow.flow {
                     emit("chunk1")
                     emit("chunk2")
                     throw ERROR
