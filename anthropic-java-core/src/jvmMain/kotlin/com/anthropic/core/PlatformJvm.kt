@@ -1,7 +1,9 @@
 package com.anthropic.core
 
-/**
- * JVM-specific platform implementations.
- * These will be populated as expect/actual declarations are added to commonMain.
- * For now, existing code in src/main/kotlin provides JVM implementations directly.
- */
+import java.net.URLEncoder
+
+internal actual fun urlEncode(value: String): String = URLEncoder.encode(value, "UTF-8")
+
+actual typealias PlatformInputStream = java.io.InputStream
+actual typealias PlatformOutputStream = java.io.OutputStream
+actual typealias PlatformCloseable = java.lang.AutoCloseable

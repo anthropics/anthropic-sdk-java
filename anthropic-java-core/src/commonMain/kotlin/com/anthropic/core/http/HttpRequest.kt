@@ -2,18 +2,16 @@ package com.anthropic.core.http
 
 import com.anthropic.core.checkRequired
 import com.anthropic.core.toImmutable
-import java.net.URLEncoder
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.urlEncode
 
 class HttpRequest
 private constructor(
-    @get:JvmName("method") val method: HttpMethod,
-    @get:JvmName("baseUrl") val baseUrl: String?,
-    @get:JvmName("pathSegments") val pathSegments: List<String>,
-    @get:JvmName("headers") val headers: Headers,
-    @get:JvmName("queryParams") val queryParams: QueryParams,
-    @get:JvmName("body") val body: HttpRequestBody?,
+    val method: HttpMethod,
+    val baseUrl: String?,
+    val pathSegments: List<String>,
+    val headers: Headers,
+    val queryParams: QueryParams,
+    val body: HttpRequestBody?,
 ) {
 
     fun url(): String = buildString {
@@ -23,7 +21,7 @@ private constructor(
             if (!endsWith("/")) {
                 append("/")
             }
-            append(URLEncoder.encode(segment, "UTF-8"))
+            append(urlEncode(segment))
         }
 
         if (queryParams.isEmpty()) {
@@ -37,9 +35,9 @@ private constructor(
                 if (!isFirst) {
                     append("&")
                 }
-                append(URLEncoder.encode(key, "UTF-8"))
+                append(urlEncode(key))
                 append("=")
-                append(URLEncoder.encode(value, "UTF-8"))
+                append(urlEncode(value))
                 isFirst = false
             }
         }
@@ -51,7 +49,7 @@ private constructor(
         "HttpRequest{method=$method, baseUrl=$baseUrl, pathSegments=$pathSegments, headers=$headers, queryParams=$queryParams, body=$body}"
 
     companion object {
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     class Builder internal constructor() {
@@ -63,7 +61,6 @@ private constructor(
         private var queryParams: QueryParams.Builder = QueryParams.builder()
         private var body: HttpRequestBody? = null
 
-        @JvmSynthetic
         internal fun from(request: HttpRequest) = apply {
             method = request.method
             baseUrl = request.baseUrl
@@ -76,9 +73,6 @@ private constructor(
         fun method(method: HttpMethod) = apply { this.method = method }
 
         fun baseUrl(baseUrl: String?) = apply { this.baseUrl = baseUrl }
-
-        /** Alias for calling [Builder.baseUrl] with `baseUrl.orElse(null)`. */
-        fun baseUrl(baseUrl: Optional<String>) = baseUrl(baseUrl.getOrNull())
 
         fun addPathSegment(pathSegment: String) = apply { pathSegments.add(pathSegment) }
 

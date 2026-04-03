@@ -15,7 +15,7 @@ import com.anthropic.core.toImmutable
 class QueryParams
 private constructor(
     private val map: Map<String, List<String>>,
-    @get:JvmName("size") val size: Int,
+    val size: Int,
 ) {
 
     fun isEmpty(): Boolean = map.isEmpty()
@@ -27,8 +27,7 @@ private constructor(
     fun toBuilder(): Builder = Builder().putAll(map)
 
     companion object {
-
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     class Builder internal constructor() {

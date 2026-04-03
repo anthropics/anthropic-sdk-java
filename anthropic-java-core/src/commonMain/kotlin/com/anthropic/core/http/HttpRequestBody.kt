@@ -1,11 +1,11 @@
 package com.anthropic.core.http
 
-import java.io.OutputStream
-import java.lang.AutoCloseable
+import com.anthropic.core.PlatformOutputStream
+import com.anthropic.core.PlatformCloseable
 
-interface HttpRequestBody : AutoCloseable {
+interface HttpRequestBody : PlatformCloseable {
 
-    fun writeTo(outputStream: OutputStream)
+    fun writeTo(outputStream: PlatformOutputStream)
 
     fun contentType(): String?
 
@@ -20,6 +20,5 @@ interface HttpRequestBody : AutoCloseable {
      */
     fun repeatable(): Boolean
 
-    /** Overridden from [AutoCloseable] to not have a checked exception in its signature. */
     override fun close()
 }

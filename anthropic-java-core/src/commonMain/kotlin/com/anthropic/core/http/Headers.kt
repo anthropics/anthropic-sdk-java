@@ -11,12 +11,12 @@ import com.anthropic.core.JsonObject
 import com.anthropic.core.JsonString
 import com.anthropic.core.JsonValue
 import com.anthropic.core.toImmutable
-import java.util.TreeMap
+
 
 class Headers
 private constructor(
     private val map: Map<String, List<String>>,
-    @get:JvmName("size") val size: Int,
+    val size: Int,
 ) {
 
     fun isEmpty(): Boolean = map.isEmpty()
@@ -28,14 +28,13 @@ private constructor(
     fun toBuilder(): Builder = Builder().putAll(map)
 
     companion object {
-
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     class Builder internal constructor() {
 
         private val map: MutableMap<String, MutableList<String>> =
-            TreeMap(String.CASE_INSENSITIVE_ORDER)
+            sortedMapOf(String.CASE_INSENSITIVE_ORDER)
         private var size: Int = 0
 
         fun put(name: String, value: JsonValue): Builder = apply {
@@ -91,14 +90,11 @@ private constructor(
             size = 0
         }
 
-        fun build() =
-            Headers(
-                map.mapValuesTo(TreeMap(String.CASE_INSENSITIVE_ORDER)) { (_, values) ->
-                        values.toImmutable()
-                    }
-                    .toImmutable(),
-                size,
-            )
+        fun build(): Headers {
+            val result = sortedMapOf<String, List<String>>(String.CASE_INSENSITIVE_ORDER)
+            map.forEach { (key, values) -> result[key] = values.toImmutable() }
+            return Headers(result, size)
+        }
     }
 
     override fun hashCode(): Int = map.hashCode()
