@@ -46,7 +46,7 @@ internal class StreamHandlerTest {
         val handler = streamHandler<String> { _, lines -> lines.forEach {} }
         val streamResponse = handler.handle(httpResponse("a\nb\nc\n".byteInputStream().throwing()))
 
-        val e = assertThrows<AnthropicIoException> { streamResponse.stream().forEach {} }
+        val e = assertThrows<AnthropicIoException> { streamResponsekotlinx.coroutines.runBlocking { stream().collect {} }
         assertThat(e).hasMessage("Stream failed")
         assertThat(e).hasCauseInstanceOf(IOException::class.java)
     }
@@ -64,7 +64,7 @@ internal class StreamHandlerTest {
             }
         val streamResponse = handler.handle(httpResponse("a\nb\nc\n".byteInputStream()))
 
-        val e = assertThrows<IOException> { streamResponse.stream().forEach {} }
+        val e = assertThrows<IOException> { streamResponsekotlinx.coroutines.runBlocking { stream().collect {} }
         assertThat(e).isSameAs(ioException)
     }
 

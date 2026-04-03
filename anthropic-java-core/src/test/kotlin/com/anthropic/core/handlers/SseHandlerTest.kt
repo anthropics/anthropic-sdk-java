@@ -9,6 +9,8 @@ import com.anthropic.core.http.SseMessage
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.SseException
 import java.io.InputStream
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.Test
