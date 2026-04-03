@@ -11,8 +11,6 @@ import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.SerializerProvider
-import java.util.Optional
-
 // --- Jackson fromJsonNode ---
 
 
@@ -22,8 +20,6 @@ fun <R : Any> JsonValue.convert(type: TypeReference<R>): R? = JSON_MAPPER.conver
 fun <R : Any> JsonValue.convert(type: Class<R>): R? = JSON_MAPPER.convertValue(this, type)
 
 // getOptional and checkKnown moved to commonMain Utils.kt
-
-fun <T : Any> MultipartField<T>.filenameOptional(): Optional<String> = java.util.Optional.ofNullable(filename())
 
 // --- Jackson Deserializers ---
 

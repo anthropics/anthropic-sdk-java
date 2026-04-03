@@ -12,18 +12,16 @@ import com.anthropic.errors.AnthropicRetryableException
 import java.io.IOException
 import java.time.Clock
 import java.time.OffsetDateTime
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.nanoseconds
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoUnit
-import kotlin.uuid.Uuid
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.ThreadLocalRandom
-import java.util.concurrent.TimeUnit
-import java.util.function.Function
 import kotlin.math.min
 import kotlin.math.pow
+import kotlin.random.Random
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.nanoseconds
+import kotlin.uuid.Uuid
 
 class RetryingHttpClient
 private constructor(
@@ -128,7 +126,7 @@ private constructor(
                     // Run in the same thread.
                     it.run()
                 }
-                .thenCompose(Function.identity())
+                .thenCompose { it }
         }
 
         return executeWithRetries(modifiedRequest, requestOptions)
@@ -199,9 +197,9 @@ private constructor(
                     .values("Retry-After-Ms")
                     .getOrNull(0)
                     ?.toFloatOrNull()
-                    ?.times(TimeUnit.MILLISECONDS.toNanos(1))
+                    ?.times(1_000_000L)
                     ?: headers.values("Retry-After").getOrNull(0)?.let { retryAfter ->
-                        retryAfter.toFloatOrNull()?.times(TimeUnit.SECONDS.toNanos(1))
+                        retryAfter.toFloatOrNull()?.times(1_000_000_000L)
                             ?: try {
                                 ChronoUnit.NANOS.between(
                                     OffsetDateTime.now(clock),
@@ -224,9 +222,9 @@ private constructor(
         val backoffSeconds = min(0.5 * 2.0.pow(retries - 1), 8.0)
 
         // Apply some jitter
-        val jitter = 1.0 - 0.25 * ThreadLocalRandom.current().nextDouble()
+        val jitter = 1.0 - 0.25 * Random.nextDouble()
 
-        return (TimeUnit.SECONDS.toNanos(1) * backoffSeconds * jitter).toLong().nanoseconds
+        return (1_000_000_000L * backoffSeconds * jitter).toLong().nanoseconds
     }
 
     companion object {
