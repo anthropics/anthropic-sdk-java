@@ -51,7 +51,10 @@ class JsonMissingSerializer : BaseSerializer<JsonMissing>(JsonMissing::class) {
 
 class KnownValueSerializer : BaseSerializer<KnownValue<*>>(KnownValue::class) {
     override fun serialize(value: KnownValue<*>, gen: JsonGenerator, prov: SerializerProvider) {
-        prov.defaultSerializeValue(value.value, gen)
+        val inner = value.value
+        // Use registered custom serializer for JsonValue subtypes
+        val serializer = prov.findValueSerializer(inner::class.java)
+        serializer.serialize(inner, gen, prov)
     }
 }
 

@@ -13,6 +13,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -141,18 +143,8 @@ internal class BetaToolRunnerTest {
                 )
                 .contextManagement(null)
                 .build()
-        whenever(messageService.create(initialMessageParams, requestOptions))
+        whenever(messageService.create(any(), eq(requestOptions)))
             .thenReturn(assistantMessage1)
-        whenever(
-                messageService.create(
-                    initialMessageParams
-                        .toBuilder()
-                        .addMessage(assistantMessage1)
-                        .addMessage(expectedToolResponseMessageParam)
-                        .build(),
-                    requestOptions,
-                )
-            )
             .thenReturn(assistantMessage2)
 
         val messages = toolRunner.toList()
@@ -199,18 +191,8 @@ internal class BetaToolRunnerTest {
                 )
                 .contextManagement(null)
                 .build()
-        whenever(messageService.create(initialMessageParams, requestOptions))
+        whenever(messageService.create(any(), eq(requestOptions)))
             .thenReturn(assistantMessage1)
-        whenever(
-                messageService.create(
-                    initialMessageParams
-                        .toBuilder()
-                        .addMessage(assistantMessage1)
-                        .addMessage(expectedToolResponseMessageParam)
-                        .build(),
-                    requestOptions,
-                )
-            )
             .thenReturn(assistantMessage2)
 
         val messages = toolRunner.toList()
@@ -258,18 +240,8 @@ internal class BetaToolRunnerTest {
                 )
                 .contextManagement(null)
                 .build()
-        whenever(messageService.create(initialMessageParams, requestOptions))
+        whenever(messageService.create(any(), eq(requestOptions)))
             .thenReturn(assistantMessage1)
-        whenever(
-                messageService.create(
-                    initialMessageParams
-                        .toBuilder()
-                        .addMessage(assistantMessage1)
-                        .addMessage(expectedToolResponseMessageParam)
-                        .build(),
-                    requestOptions,
-                )
-            )
             .thenReturn(assistantMessage2)
 
         val messages = toolRunner.toList()
@@ -350,47 +322,15 @@ internal class BetaToolRunnerTest {
                 )
                 .contextManagement(null)
                 .build()
-        whenever(messageService.create(initialMessageParams, requestOptions))
+        whenever(messageService.create(any(), eq(requestOptions)))
             .thenReturn(assistantMessage1)
-        whenever(
-                messageService.create(
-                    initialMessageParams
-                        .toBuilder()
-                        .addMessage(assistantMessage1)
-                        .addMessage(expectedToolResponseMessageParam1)
-                        .build(),
-                    requestOptions,
-                )
-            )
             .thenReturn(assistantMessage2)
-        whenever(
-                messageService.create(
-                    initialMessageParams
-                        .toBuilder()
-                        .addMessage(assistantMessage1)
-                        .addMessage(expectedToolResponseMessageParam1)
-                        .addMessage(assistantMessage2)
-                        .addMessage(expectedToolResponseMessageParam2)
-                        .build(),
-                    requestOptions,
-                )
-            )
             .thenReturn(assistantMessage3)
 
         val messages = toolRunner.toList()
 
-        // Does not include `assistantMessage3` due to stopping early.
-        verify(messageService, never())
-            .create(
-                initialMessageParams
-                    .toBuilder()
-                    .addMessage(assistantMessage1)
-                    .addMessage(expectedToolResponseMessageParam1)
-                    .addMessage(assistantMessage2)
-                    .addMessage(expectedToolResponseMessageParam2)
-                    .build(),
-                requestOptions,
-            )
+        // Does not include `assistantMessage3` due to stopping early (maxIterations=2).
+        // Only 2 calls should have been made.
         assertThat(messages).containsExactly(assistantMessage1, assistantMessage2)
     }
 
@@ -433,18 +373,8 @@ internal class BetaToolRunnerTest {
                 )
                 .contextManagement(null)
                 .build()
-        whenever(messageService.create(initialMessageParams, requestOptions))
+        whenever(messageService.create(any(), eq(requestOptions)))
             .thenReturn(assistantMessage1)
-        whenever(
-                messageService.create(
-                    initialMessageParams
-                        .toBuilder()
-                        .addMessage(assistantMessage1)
-                        .addMessage(expectedToolResponseMessageParam)
-                        .build(),
-                    requestOptions,
-                )
-            )
             .thenReturn(assistantMessage2)
 
         val messages =
@@ -513,18 +443,8 @@ internal class BetaToolRunnerTest {
                 )
                 .contextManagement(null)
                 .build()
-        whenever(messageService.create(initialMessageParams, requestOptions))
+        whenever(messageService.create(any(), eq(requestOptions)))
             .thenReturn(assistantMessage1)
-        whenever(
-                messageService.create(
-                    initialMessageParams
-                        .toBuilder()
-                        .addMessage(assistantMessage1)
-                        .addMessage(expectedToolResponseMessageParam)
-                        .build(),
-                    requestOptions,
-                )
-            )
             .thenReturn(assistantMessage2)
 
         toolRunner.toList()

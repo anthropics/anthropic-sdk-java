@@ -72,7 +72,10 @@ internal fun multipartFormData(
                         // into memory due to the `jsonMapper` serialization below.
                         sequenceOf(name to knownValue)
                     } else {
-                        val node = jsonMapper.valueToTree<JsonNode>(field.value)
+                        // Serialize the inner value directly to avoid Jackson key serializer
+                        // issues with KnownValue wrapper on older Jackson versions.
+                        val nodeValue = if (knownValue != null) knownValue else field.value
+                        val node = jsonMapper.valueToTree<JsonNode>(nodeValue)
                         serializePart(name, node)
                     }
 
