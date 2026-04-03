@@ -10,8 +10,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class BetaMessageBatchCanceledResult
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -44,7 +43,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -54,7 +53,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of
          * [BetaMessageBatchCanceledResult].
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaMessageBatchCanceledResult]. */
@@ -63,7 +62,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("canceled")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaMessageBatchCanceledResult: BetaMessageBatchCanceledResult) = apply {
             type = betaMessageBatchCanceledResult.type
             additionalProperties =
@@ -140,7 +138,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int = type.let { if (it == JsonValue.from("canceled")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
@@ -153,7 +150,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(type, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

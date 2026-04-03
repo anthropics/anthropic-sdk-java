@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 /** Thinking capability details. */
 class BetaThinkingCapability
@@ -70,7 +69,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -85,7 +84,7 @@ private constructor(
          * .types()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaThinkingCapability]. */
@@ -95,7 +94,6 @@ private constructor(
         private var types: JsonField<BetaThinkingTypes>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaThinkingCapability: BetaThinkingCapability) = apply {
             supported = betaThinkingCapability.supported
             types = betaThinkingCapability.types
@@ -191,7 +189,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (supported.asKnown() != null) 1 else 0) +
             (types.asKnown()?.validity() ?: 0)
@@ -207,7 +204,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(supported, types, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(supported, types, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

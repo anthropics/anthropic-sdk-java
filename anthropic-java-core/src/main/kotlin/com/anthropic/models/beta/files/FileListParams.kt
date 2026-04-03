@@ -7,7 +7,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -54,10 +54,10 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): FileListParams = builder().build()
+        fun none(): FileListParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [FileListParams]. */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [FileListParams]. */
@@ -70,7 +70,6 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        @JvmSynthetic
         internal fun from(fileListParams: FileListParams) = apply {
             afterId = fileListParams.afterId
             beforeId = fileListParams.beforeId
@@ -286,7 +285,7 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(afterId, beforeId, limit, betas, additionalHeaders, additionalQueryParams)
+        contentHash(afterId, beforeId, limit, betas, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "FileListParams{afterId=$afterId, beforeId=$beforeId, limit=$limit, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

@@ -13,8 +13,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -119,7 +118,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -135,7 +134,7 @@ private constructor(
          * .usage()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaRawMessageDeltaEvent]. */
@@ -147,7 +146,6 @@ private constructor(
         private var usage: JsonField<BetaMessageDeltaUsage>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaRawMessageDeltaEvent: BetaRawMessageDeltaEvent) = apply {
             contextManagement = betaRawMessageDeltaEvent.contextManagement
             delta = betaRawMessageDeltaEvent.delta
@@ -301,7 +299,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (contextManagement.asKnown()?.validity() ?: 0) +
             (delta.asKnown()?.validity() ?: 0) +
@@ -408,7 +405,7 @@ private constructor(
         @JsonAnyGetter
         @ExcludeMissing
         fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+            additionalProperties.toMap()
 
         fun toBuilder() = Builder().from(this)
 
@@ -425,7 +422,7 @@ private constructor(
              * .stopSequence()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            fun builder() = Builder()
         }
 
         /** A builder for [Delta]. */
@@ -437,7 +434,6 @@ private constructor(
             private var stopSequence: JsonField<String>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic
             internal fun from(delta: Delta) = apply {
                 container = delta.container
                 stopDetails = delta.stopDetails
@@ -590,7 +586,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             (container.asKnown()?.validity() ?: 0) +
                 (stopDetails.asKnown()?.validity() ?: 0) +
@@ -611,7 +606,7 @@ private constructor(
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(container, stopDetails, stopReason, stopSequence, additionalProperties)
+            contentHash(container, stopDetails, stopReason, stopSequence, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
@@ -634,7 +629,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(contextManagement, delta, type, usage, additionalProperties)
+        contentHash(contextManagement, delta, type, usage, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

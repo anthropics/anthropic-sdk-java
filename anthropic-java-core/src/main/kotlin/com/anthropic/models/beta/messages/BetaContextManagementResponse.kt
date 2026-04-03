@@ -25,8 +25,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -69,7 +68,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -84,7 +83,7 @@ private constructor(
          * .appliedEdits()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaContextManagementResponse]. */
@@ -93,7 +92,6 @@ private constructor(
         private var appliedEdits: JsonField<MutableList<AppliedEdit>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaContextManagementResponse: BetaContextManagementResponse) = apply {
             appliedEdits = betaContextManagementResponse.appliedEdits.map { it.toMutableList() }
             additionalProperties = betaContextManagementResponse.additionalProperties.toMutableMap()
@@ -201,7 +199,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (appliedEdits.asKnown()?.sumOf { it.validity().toInt() } ?: 0)
 
@@ -280,7 +277,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
@@ -306,7 +302,7 @@ private constructor(
                 clearThinking20251015 == other.clearThinking20251015
         }
 
-        override fun hashCode(): Int = Objects.hash(clearToolUses20250919, clearThinking20251015)
+        override fun hashCode(): Int = contentHash(clearToolUses20250919, clearThinking20251015)
 
         override fun toString(): String =
             when {
@@ -418,7 +414,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(appliedEdits, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(appliedEdits, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

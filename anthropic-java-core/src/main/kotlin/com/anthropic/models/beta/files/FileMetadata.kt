@@ -14,8 +14,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 
 class FileMetadata
@@ -165,7 +164,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -183,7 +182,7 @@ private constructor(
          * .sizeBytes()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [FileMetadata]. */
@@ -198,7 +197,6 @@ private constructor(
         private var downloadable: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(fileMetadata: FileMetadata) = apply {
             id = fileMetadata.id
             createdAt = fileMetadata.createdAt
@@ -380,7 +378,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown() != null) 1 else 0) +
             (if (createdAt.asKnown() != null) 1 else 0) +
@@ -407,7 +404,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(
+        contentHash(
             id,
             createdAt,
             filename,

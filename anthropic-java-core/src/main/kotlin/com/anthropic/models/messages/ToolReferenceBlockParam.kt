@@ -13,8 +13,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -86,7 +85,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -100,7 +99,7 @@ private constructor(
          * .toolName()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [ToolReferenceBlockParam]. */
@@ -111,7 +110,6 @@ private constructor(
         private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(toolReferenceBlockParam: ToolReferenceBlockParam) = apply {
             toolName = toolReferenceBlockParam.toolName
             type = toolReferenceBlockParam.type
@@ -232,7 +230,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (toolName.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("tool_reference")) 1 else 0 } +
@@ -251,7 +248,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(toolName, type, cacheControl, additionalProperties)
+        contentHash(toolName, type, cacheControl, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

@@ -13,8 +13,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class MessageBatchSucceededResult
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -62,7 +61,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -76,7 +75,7 @@ private constructor(
          * .message()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [MessageBatchSucceededResult]. */
@@ -86,7 +85,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("succeeded")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(messageBatchSucceededResult: MessageBatchSucceededResult) = apply {
             message = messageBatchSucceededResult.message
             type = messageBatchSucceededResult.type
@@ -185,7 +183,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (message.asKnown()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("succeeded")) 1 else 0 }
@@ -201,7 +198,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(message, type, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(message, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

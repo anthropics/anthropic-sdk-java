@@ -16,8 +16,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -97,7 +96,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -113,7 +112,7 @@ private constructor(
          * .skills()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaContainer]. */
@@ -124,7 +123,6 @@ private constructor(
         private var skills: JsonField<MutableList<BetaSkill>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaContainer: BetaContainer) = apply {
             id = betaContainer.id
             expiresAt = betaContainer.expiresAt
@@ -252,7 +250,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown() != null) 1 else 0) +
             (if (expiresAt.asKnown() != null) 1 else 0) +
@@ -270,7 +267,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, expiresAt, skills, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(id, expiresAt, skills, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

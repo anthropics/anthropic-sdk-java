@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class VersionRetrieveResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -183,7 +182,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -204,7 +203,7 @@ private constructor(
          * .version()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [VersionRetrieveResponse]. */
@@ -220,7 +219,6 @@ private constructor(
         private var version: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(versionRetrieveResponse: VersionRetrieveResponse) = apply {
             id = versionRetrieveResponse.id
             createdAt = versionRetrieveResponse.createdAt
@@ -431,7 +429,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown() != null) 1 else 0) +
             (if (createdAt.asKnown() != null) 1 else 0) +
@@ -460,7 +457,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(
+        contentHash(
             id,
             createdAt,
             description,

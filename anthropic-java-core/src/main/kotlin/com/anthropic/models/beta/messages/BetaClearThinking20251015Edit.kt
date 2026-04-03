@@ -24,8 +24,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 
 class BetaClearThinking20251015Edit
@@ -77,7 +76,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -87,7 +86,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of
          * [BetaClearThinking20251015Edit].
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaClearThinking20251015Edit]. */
@@ -97,7 +96,6 @@ private constructor(
         private var keep: JsonField<Keep> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaClearThinking20251015Edit: BetaClearThinking20251015Edit) = apply {
             type = betaClearThinking20251015Edit.type
             keep = betaClearThinking20251015Edit.keep
@@ -200,7 +198,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         type.let { if (it == JsonValue.from("clear_thinking_20251015")) 1 else 0 } +
             (keep.asKnown()?.validity() ?: 0)
@@ -299,7 +296,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
@@ -328,7 +324,7 @@ private constructor(
                 all == other.all
         }
 
-        override fun hashCode(): Int = Objects.hash(betaThinkingTurns, betaAllThinkingTurns, all)
+        override fun hashCode(): Int = contentHash(betaThinkingTurns, betaAllThinkingTurns, all)
 
         override fun toString(): String =
             when {
@@ -349,7 +345,7 @@ private constructor(
             fun ofBetaAllThinkingTurns(betaAllThinkingTurns: BetaAllThinkingTurns) =
                 Keep(betaAllThinkingTurns = betaAllThinkingTurns)
 
-            @JvmStatic fun ofAll() = Keep(all = JsonValue.from("all"))
+            fun ofAll() = Keep(all = JsonValue.from("all"))
         }
 
         /** An interface that defines how to map each variant of [Keep] to a value of type [T]. */
@@ -439,7 +435,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(type, keep, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(type, keep, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

@@ -1,4 +1,3 @@
-@file:JvmName("PhantomReachable")
 
 package com.anthropic.core
 
@@ -10,7 +9,6 @@ import java.lang.reflect.InvocationTargetException
  *
  * This is a wrapper around a Java 9+ [java.lang.ref.Cleaner], or a no-op in older Java versions.
  */
-@JvmSynthetic
 internal fun closeWhenPhantomReachable(observed: Any, closeable: AutoCloseable) {
     check(observed !== closeable) {
         "`observed` cannot be the same object as `closeable` because it would never become phantom reachable"
@@ -23,7 +21,6 @@ internal fun closeWhenPhantomReachable(observed: Any, closeable: AutoCloseable) 
  *
  * This is a wrapper around a Java 9+ [java.lang.ref.Cleaner], or a no-op in older Java versions.
  */
-@JvmSynthetic
 internal fun closeWhenPhantomReachable(observed: Any, close: () -> Unit) {
     closeWhenPhantomReachable?.let { it(observed, close) }
 }

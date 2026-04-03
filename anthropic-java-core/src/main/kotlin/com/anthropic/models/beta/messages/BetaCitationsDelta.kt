@@ -23,8 +23,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -74,7 +73,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -88,7 +87,7 @@ private constructor(
          * .citation()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaCitationsDelta]. */
@@ -98,7 +97,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("citations_delta")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaCitationsDelta: BetaCitationsDelta) = apply {
             citation = betaCitationsDelta.citation
             type = betaCitationsDelta.type
@@ -227,7 +225,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (citation.asKnown()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("citations_delta")) 1 else 0 }
@@ -348,7 +345,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
@@ -388,7 +384,7 @@ private constructor(
         }
 
         override fun hashCode(): Int =
-            Objects.hash(
+            contentHash(
                 charLocation,
                 pageLocation,
                 contentBlockLocation,
@@ -547,7 +543,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(citation, type, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(citation, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

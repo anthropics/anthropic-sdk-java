@@ -14,8 +14,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class BetaToolSearchToolSearchResultBlock
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -73,7 +72,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -88,7 +87,7 @@ private constructor(
          * .toolReferences()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaToolSearchToolSearchResultBlock]. */
@@ -98,7 +97,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("tool_search_tool_search_result")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(
             betaToolSearchToolSearchResultBlock: BetaToolSearchToolSearchResultBlock
         ) = apply {
@@ -217,7 +215,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (toolReferences.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
             type.let { if (it == JsonValue.from("tool_search_tool_search_result")) 1 else 0 }
@@ -233,7 +230,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(toolReferences, type, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(toolReferences, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

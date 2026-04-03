@@ -1,4 +1,3 @@
-@file:JvmName("StringHandler")
 
 package com.anthropic.core.handlers
 

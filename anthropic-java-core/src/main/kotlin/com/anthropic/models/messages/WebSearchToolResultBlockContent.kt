@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 
 @JsonDeserialize(using = WebSearchToolResultBlockContent.Deserializer::class)
@@ -101,7 +101,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         accept(
             object : Visitor<Int> {
@@ -124,7 +123,7 @@ private constructor(
             resultBlocks == other.resultBlocks
     }
 
-    override fun hashCode(): Int = Objects.hash(error, resultBlocks)
+    override fun hashCode(): Int = contentHash(error, resultBlocks)
 
     override fun toString(): String =
         when {

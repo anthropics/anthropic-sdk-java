@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 
 /** The model will automatically decide whether to use tools. */
@@ -73,14 +72,14 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [ToolChoiceAuto]. */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [ToolChoiceAuto]. */
@@ -90,7 +89,6 @@ private constructor(
         private var disableParallelToolUse: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(toolChoiceAuto: ToolChoiceAuto) = apply {
             type = toolChoiceAuto.type
             disableParallelToolUse = toolChoiceAuto.disableParallelToolUse
@@ -187,7 +185,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         type.let { if (it == JsonValue.from("auto")) 1 else 0 } +
             (if (disableParallelToolUse.asKnown() != null) 1 else 0)
@@ -204,7 +201,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(type, disableParallelToolUse, additionalProperties)
+        contentHash(type, disableParallelToolUse, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

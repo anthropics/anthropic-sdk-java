@@ -7,7 +7,7 @@ import com.anthropic.core.AutoPager
 import com.anthropic.core.Page
 import com.anthropic.core.checkRequired
 import com.anthropic.services.blocking.messages.BatchService
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -81,7 +81,7 @@ private constructor(
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BatchListPage]. */
@@ -91,7 +91,6 @@ private constructor(
         private var params: BatchListParams? = null
         private var response: BatchListPageResponse? = null
 
-        @JvmSynthetic
         internal fun from(batchListPage: BatchListPage) = apply {
             service = batchListPage.service
             params = batchListPage.params
@@ -139,7 +138,7 @@ private constructor(
             response == other.response
     }
 
-    override fun hashCode(): Int = Objects.hash(service, params, response)
+    override fun hashCode(): Int = contentHash(service, params, response)
 
     override fun toString() = "BatchListPage{service=$service, params=$params, response=$response}"
 }

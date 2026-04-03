@@ -30,8 +30,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -326,7 +325,7 @@ private constructor(
          * .model()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [MessageCountTokensParams]. */
@@ -336,7 +335,6 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        @JvmSynthetic
         internal fun from(messageCountTokensParams: MessageCountTokensParams) = apply {
             body = messageCountTokensParams.body.toBuilder()
             additionalHeaders = messageCountTokensParams.additionalHeaders.toBuilder()
@@ -1329,7 +1327,7 @@ private constructor(
         @JsonAnyGetter
         @ExcludeMissing
         fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+            additionalProperties.toMap()
 
         fun toBuilder() = Builder().from(this)
 
@@ -1344,7 +1342,7 @@ private constructor(
              * .model()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -1360,7 +1358,6 @@ private constructor(
             private var tools: JsonField<MutableList<MessageCountTokensTool>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic
             internal fun from(body: Body) = apply {
                 messages = body.messages.map { it.toMutableList() }
                 model = body.model
@@ -1984,7 +1981,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             (messages.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (model.asKnown() != null) 1 else 0) +
@@ -2013,7 +2009,7 @@ private constructor(
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(
+            contentHash(
                 messages,
                 model,
                 cacheControl,
@@ -2103,7 +2099,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
@@ -2126,7 +2121,7 @@ private constructor(
                 textBlockParams == other.textBlockParams
         }
 
-        override fun hashCode(): Int = Objects.hash(string, textBlockParams)
+        override fun hashCode(): Int = contentHash(string, textBlockParams)
 
         override fun toString(): String =
             when {
@@ -2138,7 +2133,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic fun ofString(string: String) = System(string = string)
+            fun ofString(string: String) = System(string = string)
 
             @JvmStatic
             fun ofTextBlockParams(textBlockParams: List<TextBlockParam>) =
@@ -2225,7 +2220,7 @@ private constructor(
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int = contentHash(body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "MessageCountTokensParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

@@ -5,7 +5,7 @@ package com.anthropic.models.messages.batches
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -36,10 +36,10 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): BatchRetrieveParams = builder().build()
+        fun none(): BatchRetrieveParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [BatchRetrieveParams]. */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BatchRetrieveParams]. */
@@ -49,7 +49,6 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        @JvmSynthetic
         internal fun from(batchRetrieveParams: BatchRetrieveParams) = apply {
             messageBatchId = batchRetrieveParams.messageBatchId
             additionalHeaders = batchRetrieveParams.additionalHeaders.toBuilder()
@@ -196,7 +195,7 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(messageBatchId, additionalHeaders, additionalQueryParams)
+        contentHash(messageBatchId, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "BatchRetrieveParams{messageBatchId=$messageBatchId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

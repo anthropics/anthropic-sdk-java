@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 
 /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
@@ -313,7 +313,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         accept(
             object : Visitor<Int> {
@@ -403,7 +402,7 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(
+        contentHash(
             tool,
             toolBash20250124,
             codeExecutionTool20250522,
@@ -460,7 +459,7 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun ofTool(tool: Tool) = MessageCountTokensTool(tool = tool)
+        fun ofTool(tool: Tool) = MessageCountTokensTool(tool = tool)
 
         @JvmStatic
         fun ofToolBash20250124(toolBash20250124: ToolBash20250124) =

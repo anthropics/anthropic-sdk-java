@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class ServerToolCaller20260120
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -61,7 +60,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -75,7 +74,7 @@ private constructor(
          * .toolId()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [ServerToolCaller20260120]. */
@@ -85,7 +84,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("code_execution_20260120")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(serverToolCaller20260120: ServerToolCaller20260120) = apply {
             toolId = serverToolCaller20260120.toolId
             type = serverToolCaller20260120.type
@@ -184,7 +182,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (toolId.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("code_execution_20260120")) 1 else 0 }
@@ -200,7 +197,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(toolId, type, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(toolId, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

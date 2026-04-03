@@ -14,8 +14,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -96,7 +95,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -110,7 +109,7 @@ private constructor(
          * .budgetTokens()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaThinkingConfigEnabled]. */
@@ -121,7 +120,6 @@ private constructor(
         private var display: JsonField<Display> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaThinkingConfigEnabled: BetaThinkingConfigEnabled) = apply {
             budgetTokens = betaThinkingConfigEnabled.budgetTokens
             type = betaThinkingConfigEnabled.type
@@ -253,7 +251,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (budgetTokens.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("enabled")) 1 else 0 } +
@@ -278,11 +275,11 @@ private constructor(
 
         companion object {
 
-            @JvmField val SUMMARIZED = of("summarized")
+            val SUMMARIZED = of("summarized")
 
-            @JvmField val OMITTED = of("omitted")
+            val OMITTED = of("omitted")
 
-            @JvmStatic fun of(value: String) = Display(JsonField.of(value))
+            fun of(value: String) = Display(JsonField.of(value))
         }
 
         /** An enum containing [Display]'s known values. */
@@ -402,7 +399,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(budgetTokens, type, display, additionalProperties)
+        contentHash(budgetTokens, type, display, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

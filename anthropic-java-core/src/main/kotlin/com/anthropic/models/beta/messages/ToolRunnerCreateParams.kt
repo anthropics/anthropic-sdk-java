@@ -31,7 +31,7 @@ private constructor(
          * .initialMessageParams()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [ToolRunnerCreateParams]. */
@@ -41,7 +41,6 @@ private constructor(
         private var maxIterations: Long? = null
         private var betaMemoryToolHandler: BetaMemoryToolHandler? = null
 
-        @JvmSynthetic
         internal fun from(toolRunnerCreateParams: ToolRunnerCreateParams) = apply {
             initialMessageParams = toolRunnerCreateParams.initialMessageParams
             maxIterations = toolRunnerCreateParams.maxIterations

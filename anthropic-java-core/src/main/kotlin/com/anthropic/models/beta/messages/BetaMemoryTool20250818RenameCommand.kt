@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class BetaMemoryTool20250818RenameCommand
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -82,7 +81,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -98,7 +97,7 @@ private constructor(
          * .oldPath()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaMemoryTool20250818RenameCommand]. */
@@ -109,7 +108,6 @@ private constructor(
         private var oldPath: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(
             betaMemoryTool20250818RenameCommand: BetaMemoryTool20250818RenameCommand
         ) = apply {
@@ -227,7 +225,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         command.let { if (it == JsonValue.from("rename")) 1 else 0 } +
             (if (newPath.asKnown() != null) 1 else 0) +
@@ -246,7 +243,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(command, newPath, oldPath, additionalProperties)
+        contentHash(command, newPath, oldPath, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

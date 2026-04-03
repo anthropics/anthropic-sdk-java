@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class BetaMcpToolUseBlock
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -109,7 +108,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -126,7 +125,7 @@ private constructor(
          * .serverName()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaMcpToolUseBlock]. */
@@ -139,7 +138,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("mcp_tool_use")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaMcpToolUseBlock: BetaMcpToolUseBlock) = apply {
             id = betaMcpToolUseBlock.id
             input = betaMcpToolUseBlock.input
@@ -274,7 +272,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown() != null) 1 else 0) +
             (if (name.asKnown() != null) 1 else 0) +
@@ -296,7 +293,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, input, name, serverName, type, additionalProperties)
+        contentHash(id, input, name, serverName, type, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

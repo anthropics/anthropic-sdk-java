@@ -1,6 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:JvmName("ErrorHandler")
 
 package com.anthropic.core.handlers
 
@@ -18,7 +17,6 @@ import com.anthropic.errors.UnexpectedStatusCodeException
 import com.anthropic.errors.UnprocessableEntityException
 import com.fasterxml.jackson.databind.json.JsonMapper
 
-@JvmSynthetic
 internal fun errorBodyHandler(jsonMapper: JsonMapper): Handler<JsonValue> {
     val handler = jsonHandler<JsonValue>(jsonMapper)
 
@@ -32,7 +30,6 @@ internal fun errorBodyHandler(jsonMapper: JsonMapper): Handler<JsonValue> {
     }
 }
 
-@JvmSynthetic
 internal fun errorHandler(errorBodyHandler: Handler<JsonValue>): Handler<HttpResponse> =
     object : Handler<HttpResponse> {
         override fun handle(response: HttpResponse): HttpResponse =

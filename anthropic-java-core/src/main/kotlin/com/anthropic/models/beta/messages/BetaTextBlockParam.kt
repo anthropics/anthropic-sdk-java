@@ -15,8 +15,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -107,7 +106,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -121,7 +120,7 @@ private constructor(
          * .text()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaTextBlockParam]. */
@@ -133,7 +132,6 @@ private constructor(
         private var citations: JsonField<MutableList<BetaTextCitationParam>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaTextBlockParam: BetaTextBlockParam) = apply {
             text = betaTextBlockParam.text
             type = betaTextBlockParam.type
@@ -354,7 +352,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (text.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("text")) 1 else 0 } +
@@ -375,7 +372,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(text, type, cacheControl, citations, additionalProperties)
+        contentHash(text, type, cacheControl, citations, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

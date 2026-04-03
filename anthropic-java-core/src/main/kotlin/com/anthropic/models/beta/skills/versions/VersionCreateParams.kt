@@ -18,8 +18,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.io.InputStream
 import java.nio.file.Path
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.io.path.inputStream
 import kotlin.io.path.name
@@ -75,10 +74,10 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): VersionCreateParams = builder().build()
+        fun none(): VersionCreateParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [VersionCreateParams]. */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [VersionCreateParams]. */
@@ -90,7 +89,6 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        @JvmSynthetic
         internal fun from(versionCreateParams: VersionCreateParams) = apply {
             skillId = versionCreateParams.skillId
             betas = versionCreateParams.betas?.toMutableList()
@@ -372,14 +370,14 @@ private constructor(
         @JsonAnyGetter
         @ExcludeMissing
         fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+            additionalProperties.toMap()
 
         fun toBuilder() = Builder().from(this)
 
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Body]. */
-            @JvmStatic fun builder() = Builder()
+            fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -388,7 +386,6 @@ private constructor(
             private var files: MultipartField<MutableList<InputStream>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic
             internal fun from(body: Body) = apply {
                 files = body.files.map { it.toMutableList() }
                 additionalProperties = body.additionalProperties.toMutableMap()
@@ -513,7 +510,7 @@ private constructor(
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(files, additionalProperties) }
+        private val hashCode: Int by lazy { contentHash(files, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
@@ -534,7 +531,7 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(skillId, betas, body, additionalHeaders, additionalQueryParams)
+        contentHash(skillId, betas, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "VersionCreateParams{skillId=$skillId, betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

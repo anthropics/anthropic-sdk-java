@@ -14,8 +14,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -135,7 +134,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -152,7 +151,7 @@ private constructor(
          * .stopReason()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [Completion]. */
@@ -165,7 +164,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("completion")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(completion: Completion) = apply {
             id = completion.id
             this.completion = completion.completion
@@ -338,7 +336,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown() != null) 1 else 0) +
             (if (completion.asKnown() != null) 1 else 0) +
@@ -361,7 +358,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, completion, model, stopReason, type, additionalProperties)
+        contentHash(id, completion, model, stopReason, type, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

@@ -1,6 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:JvmName("SseHandler")
 
 package com.anthropic.core.handlers
 
@@ -14,7 +13,6 @@ import com.anthropic.errors.SseException
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 
-@JvmSynthetic
 internal fun sseHandler(jsonMapper: JsonMapper): Handler<StreamResponse<SseMessage>> =
     streamHandler { response, lines ->
         val state = SseState(jsonMapper)
@@ -120,7 +118,6 @@ private class SseState(
         event.isNullOrEmpty() && data.isEmpty() && lastId.isNullOrEmpty() && retry == null
 }
 
-@JvmSynthetic
 internal inline fun <reified T> Handler<StreamResponse<SseMessage>>.mapJson():
     Handler<StreamResponse<T>> =
     object : Handler<StreamResponse<T>> {

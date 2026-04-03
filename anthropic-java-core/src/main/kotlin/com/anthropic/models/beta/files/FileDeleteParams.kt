@@ -8,7 +8,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -41,10 +41,10 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): FileDeleteParams = builder().build()
+        fun none(): FileDeleteParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [FileDeleteParams]. */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [FileDeleteParams]. */
@@ -56,7 +56,6 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(fileDeleteParams: FileDeleteParams) = apply {
             fileId = fileDeleteParams.fileId
             betas = fileDeleteParams.betas?.toMutableList()
@@ -263,7 +262,7 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(
+        contentHash(
             fileId,
             betas,
             additionalHeaders,

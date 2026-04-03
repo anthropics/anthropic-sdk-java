@@ -10,8 +10,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 /** The model will not be allowed to use tools. */
 class BetaToolChoiceNone
@@ -45,14 +44,14 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [BetaToolChoiceNone]. */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaToolChoiceNone]. */
@@ -61,7 +60,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("none")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaToolChoiceNone: BetaToolChoiceNone) = apply {
             type = betaToolChoiceNone.type
             additionalProperties = betaToolChoiceNone.additionalProperties.toMutableMap()
@@ -137,7 +135,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int = type.let { if (it == JsonValue.from("none")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
@@ -150,7 +147,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(type, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

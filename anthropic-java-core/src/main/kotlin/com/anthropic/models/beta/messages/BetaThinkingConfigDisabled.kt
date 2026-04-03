@@ -10,8 +10,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class BetaThinkingConfigDisabled
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -44,7 +43,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -53,7 +52,7 @@ private constructor(
         /**
          * Returns a mutable builder for constructing an instance of [BetaThinkingConfigDisabled].
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaThinkingConfigDisabled]. */
@@ -62,7 +61,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("disabled")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaThinkingConfigDisabled: BetaThinkingConfigDisabled) = apply {
             type = betaThinkingConfigDisabled.type
             additionalProperties = betaThinkingConfigDisabled.additionalProperties.toMutableMap()
@@ -138,7 +136,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int = type.let { if (it == JsonValue.from("disabled")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
@@ -151,7 +148,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(type, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

@@ -9,7 +9,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -62,7 +62,7 @@ private constructor(
          * .skillId()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [VersionDeleteParams]. */
@@ -75,7 +75,6 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(versionDeleteParams: VersionDeleteParams) = apply {
             skillId = versionDeleteParams.skillId
             version = versionDeleteParams.version
@@ -304,7 +303,7 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(
+        contentHash(
             skillId,
             version,
             betas,

@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -117,14 +116,14 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [UserLocation]. */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [UserLocation]. */
@@ -137,7 +136,6 @@ private constructor(
         private var timezone: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(userLocation: UserLocation) = apply {
             type = userLocation.type
             city = userLocation.city
@@ -280,7 +278,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         type.let { if (it == JsonValue.from("approximate")) 1 else 0 } +
             (if (city.asKnown() != null) 1 else 0) +
@@ -303,7 +300,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(type, city, country, region, timezone, additionalProperties)
+        contentHash(type, city, country, region, timezone, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

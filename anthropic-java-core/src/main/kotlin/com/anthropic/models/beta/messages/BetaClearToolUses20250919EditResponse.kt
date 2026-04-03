@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class BetaClearToolUses20250919EditResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -91,7 +90,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -107,7 +106,7 @@ private constructor(
          * .clearedToolUses()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaClearToolUses20250919EditResponse]. */
@@ -118,7 +117,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("clear_tool_uses_20250919")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(
             betaClearToolUses20250919EditResponse: BetaClearToolUses20250919EditResponse
         ) = apply {
@@ -243,7 +241,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (clearedInputTokens.asKnown() != null) 1 else 0) +
             (if (clearedToolUses.asKnown() != null) 1 else 0) +
@@ -262,7 +259,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(clearedInputTokens, clearedToolUses, type, additionalProperties)
+        contentHash(clearedInputTokens, clearedToolUses, type, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

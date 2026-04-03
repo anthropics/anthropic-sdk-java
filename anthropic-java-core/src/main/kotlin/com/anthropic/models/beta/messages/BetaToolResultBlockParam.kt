@@ -27,8 +27,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -132,7 +131,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -146,7 +145,7 @@ private constructor(
          * .toolUseId()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaToolResultBlockParam]. */
@@ -159,7 +158,6 @@ private constructor(
         private var isError: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaToolResultBlockParam: BetaToolResultBlockParam) = apply {
             toolUseId = betaToolResultBlockParam.toolUseId
             type = betaToolResultBlockParam.type
@@ -321,7 +319,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (toolUseId.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("tool_result")) 1 else 0 } +
@@ -392,7 +389,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
@@ -413,7 +409,7 @@ private constructor(
             return other is Content && string == other.string && blocks == other.blocks
         }
 
-        override fun hashCode(): Int = Objects.hash(string, blocks)
+        override fun hashCode(): Int = contentHash(string, blocks)
 
         override fun toString(): String =
             when {
@@ -425,9 +421,9 @@ private constructor(
 
         companion object {
 
-            @JvmStatic fun ofString(string: String) = Content(string = string)
+            fun ofString(string: String) = Content(string = string)
 
-            @JvmStatic fun ofBlocks(blocks: List<Block>) = Content(blocks = blocks.toImmutable())
+            fun ofBlocks(blocks: List<Block>) = Content(blocks = blocks.toImmutable())
         }
 
         /**
@@ -610,7 +606,6 @@ private constructor(
              *
              * Used for best match union deserialization.
              */
-            @JvmSynthetic
             internal fun validity(): Int =
                 accept(
                     object : Visitor<Int> {
@@ -646,7 +641,7 @@ private constructor(
             }
 
             override fun hashCode(): Int =
-                Objects.hash(text, image, searchResult, document, toolReference)
+                contentHash(text, image, searchResult, document, toolReference)
 
             override fun toString(): String =
                 when {
@@ -661,9 +656,9 @@ private constructor(
 
             companion object {
 
-                @JvmStatic fun ofText(text: BetaTextBlockParam) = Block(text = text)
+                fun ofText(text: BetaTextBlockParam) = Block(text = text)
 
-                @JvmStatic fun ofImage(image: BetaImageBlockParam) = Block(image = image)
+                fun ofImage(image: BetaImageBlockParam) = Block(image = image)
 
                 @JvmStatic
                 fun ofSearchResult(searchResult: BetaSearchResultBlockParam) =
@@ -787,7 +782,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(toolUseId, type, cacheControl, content, isError, additionalProperties)
+        contentHash(toolUseId, type, cacheControl, content, isError, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

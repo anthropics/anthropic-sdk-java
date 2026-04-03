@@ -8,7 +8,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -57,7 +57,7 @@ private constructor(
          * .skillId()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [VersionRetrieveParams]. */
@@ -69,7 +69,6 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        @JvmSynthetic
         internal fun from(versionRetrieveParams: VersionRetrieveParams) = apply {
             skillId = versionRetrieveParams.skillId
             version = versionRetrieveParams.version
@@ -270,7 +269,7 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(skillId, version, betas, additionalHeaders, additionalQueryParams)
+        contentHash(skillId, version, betas, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "VersionRetrieveParams{skillId=$skillId, version=$version, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

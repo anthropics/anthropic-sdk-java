@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -83,7 +83,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         accept(
             object : Visitor<Int> {
@@ -103,7 +102,7 @@ private constructor(
         return other is BetaContentBlockSourceContent && text == other.text && image == other.image
     }
 
-    override fun hashCode(): Int = Objects.hash(text, image)
+    override fun hashCode(): Int = contentHash(text, image)
 
     override fun toString(): String =
         when {
@@ -115,7 +114,7 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun ofText(text: BetaTextBlockParam) = BetaContentBlockSourceContent(text = text)
+        fun ofText(text: BetaTextBlockParam) = BetaContentBlockSourceContent(text = text)
 
         @JvmStatic
         fun ofImage(image: BetaImageBlockParam) = BetaContentBlockSourceContent(image = image)

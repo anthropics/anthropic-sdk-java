@@ -14,8 +14,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -136,7 +135,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -153,7 +152,7 @@ private constructor(
          * .serverName()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaMcpToolUseBlockParam]. */
@@ -167,7 +166,6 @@ private constructor(
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaMcpToolUseBlockParam: BetaMcpToolUseBlockParam) = apply {
             id = betaMcpToolUseBlockParam.id
             input = betaMcpToolUseBlockParam.input
@@ -332,7 +330,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown() != null) 1 else 0) +
             (input.asKnown()?.validity() ?: 0) +
@@ -357,7 +354,7 @@ private constructor(
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Input]. */
-            @JvmStatic fun builder() = Builder()
+            fun builder() = Builder()
         }
 
         /** A builder for [Input]. */
@@ -365,7 +362,6 @@ private constructor(
 
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic
             internal fun from(input: Input) = apply {
                 additionalProperties = input.additionalProperties.toMutableMap()
             }
@@ -421,7 +417,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
 
@@ -433,7 +428,7 @@ private constructor(
             return other is Input && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+        private val hashCode: Int by lazy { contentHash(additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
@@ -456,7 +451,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, input, name, serverName, type, cacheControl, additionalProperties)
+        contentHash(id, input, name, serverName, type, cacheControl, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

@@ -9,7 +9,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.messages.Model
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 
 /**
@@ -42,7 +42,7 @@ internal constructor(
          * .model()
          * ```
          */
-        @JvmStatic fun <T : Any> builder() = Builder<T>()
+        fun <T : Any> builder() = Builder<T>()
     }
 
     /** A builder for [StructuredMessageCreateParams]. */
@@ -51,7 +51,6 @@ internal constructor(
         private var paramsBuilder = MessageCreateParams.Companion.builder()
         private var outputConfigSet: Boolean = false
 
-        @JvmSynthetic
         @Deprecated("Use the wrap overload that accepts effort parameter")
         internal fun wrap(
             outputType: Class<T>,
@@ -64,7 +63,6 @@ internal constructor(
             @Suppress("DEPRECATION") outputFormat(outputType, localValidation)
         }
 
-        @JvmSynthetic
         internal fun wrap(
             outputType: Class<T>,
             paramsBuilder: MessageCreateParams.Builder,
@@ -78,7 +76,6 @@ internal constructor(
         }
 
         /** Injects a given `MessageCreateParams.Builder`. For use only when testing. */
-        @JvmSynthetic
         internal fun inject(paramsBuilder: MessageCreateParams.Builder) = apply {
             this.paramsBuilder = paramsBuilder
         }
@@ -737,7 +734,7 @@ internal constructor(
             rawParams == other.rawParams
     }
 
-    override fun hashCode(): Int = Objects.hash(outputType, rawParams)
+    override fun hashCode(): Int = contentHash(outputType, rawParams)
 
     override fun toString() =
         "${javaClass.simpleName}{outputType=$outputType, rawParams=$rawParams}"

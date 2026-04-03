@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class BetaRawMessageStartEvent
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -61,7 +60,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -75,7 +74,7 @@ private constructor(
          * .message()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaRawMessageStartEvent]. */
@@ -85,7 +84,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("message_start")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaRawMessageStartEvent: BetaRawMessageStartEvent) = apply {
             message = betaRawMessageStartEvent.message
             type = betaRawMessageStartEvent.type
@@ -185,7 +183,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (message.asKnown()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("message_start")) 1 else 0 }
@@ -201,7 +198,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(message, type, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(message, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

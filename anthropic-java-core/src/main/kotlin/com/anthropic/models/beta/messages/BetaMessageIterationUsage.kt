@@ -13,8 +13,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -166,7 +165,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -184,7 +183,7 @@ private constructor(
          * .outputTokens()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaMessageIterationUsage]. */
@@ -198,7 +197,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("message")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaMessageIterationUsage: BetaMessageIterationUsage) = apply {
             cacheCreation = betaMessageIterationUsage.cacheCreation
             cacheCreationInputTokens = betaMessageIterationUsage.cacheCreationInputTokens
@@ -376,7 +374,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (cacheCreation.asKnown()?.validity() ?: 0) +
             (if (cacheCreationInputTokens.asKnown() != null) 1 else 0) +
@@ -401,7 +398,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(
+        contentHash(
             cacheCreation,
             cacheCreationInputTokens,
             cacheReadInputTokens,

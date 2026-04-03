@@ -7,7 +7,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -41,10 +41,10 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): ModelRetrieveParams = builder().build()
+        fun none(): ModelRetrieveParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [ModelRetrieveParams]. */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [ModelRetrieveParams]. */
@@ -55,7 +55,6 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        @JvmSynthetic
         internal fun from(modelRetrieveParams: ModelRetrieveParams) = apply {
             modelId = modelRetrieveParams.modelId
             betas = modelRetrieveParams.betas?.toMutableList()
@@ -234,7 +233,7 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(modelId, betas, additionalHeaders, additionalQueryParams)
+        contentHash(modelId, betas, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "ModelRetrieveParams{modelId=$modelId, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

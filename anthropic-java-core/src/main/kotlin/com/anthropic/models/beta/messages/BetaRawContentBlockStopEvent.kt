@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class BetaRawContentBlockStopEvent
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -61,7 +60,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -75,7 +74,7 @@ private constructor(
          * .index()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaRawContentBlockStopEvent]. */
@@ -85,7 +84,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("content_block_stop")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaRawContentBlockStopEvent: BetaRawContentBlockStopEvent) = apply {
             index = betaRawContentBlockStopEvent.index
             type = betaRawContentBlockStopEvent.type
@@ -184,7 +182,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (index.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("content_block_stop")) 1 else 0 }
@@ -200,7 +197,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(index, type, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(index, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

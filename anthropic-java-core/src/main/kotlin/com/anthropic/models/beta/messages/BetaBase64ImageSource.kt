@@ -13,8 +13,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class BetaBase64ImageSource
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -79,7 +78,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -94,7 +93,7 @@ private constructor(
          * .mediaType()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaBase64ImageSource]. */
@@ -105,7 +104,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("base64")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaBase64ImageSource: BetaBase64ImageSource) = apply {
             data = betaBase64ImageSource.data
             mediaType = betaBase64ImageSource.mediaType
@@ -219,7 +217,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (data.asKnown() != null) 1 else 0) +
             (mediaType.asKnown()?.validity() ?: 0) +
@@ -239,15 +236,15 @@ private constructor(
 
         companion object {
 
-            @JvmField val IMAGE_JPEG = of("image/jpeg")
+            val IMAGE_JPEG = of("image/jpeg")
 
-            @JvmField val IMAGE_PNG = of("image/png")
+            val IMAGE_PNG = of("image/png")
 
-            @JvmField val IMAGE_GIF = of("image/gif")
+            val IMAGE_GIF = of("image/gif")
 
-            @JvmField val IMAGE_WEBP = of("image/webp")
+            val IMAGE_WEBP = of("image/webp")
 
-            @JvmStatic fun of(value: String) = MediaType(JsonField.of(value))
+            fun of(value: String) = MediaType(JsonField.of(value))
         }
 
         /** An enum containing [MediaType]'s known values. */
@@ -376,7 +373,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(data, mediaType, type, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(data, mediaType, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

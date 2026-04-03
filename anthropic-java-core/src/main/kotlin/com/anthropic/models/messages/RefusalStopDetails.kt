@@ -14,8 +14,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -92,7 +91,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -107,7 +106,7 @@ private constructor(
          * .explanation()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [RefusalStopDetails]. */
@@ -118,7 +117,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("refusal")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(refusalStopDetails: RefusalStopDetails) = apply {
             category = refusalStopDetails.category
             explanation = refusalStopDetails.explanation
@@ -250,7 +248,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (category.asKnown()?.validity() ?: 0) +
             (if (explanation.asKnown() != null) 1 else 0) +
@@ -275,11 +272,11 @@ private constructor(
 
         companion object {
 
-            @JvmField val CYBER = of("cyber")
+            val CYBER = of("cyber")
 
-            @JvmField val BIO = of("bio")
+            val BIO = of("bio")
 
-            @JvmStatic fun of(value: String) = Category(JsonField.of(value))
+            fun of(value: String) = Category(JsonField.of(value))
         }
 
         /** An enum containing [Category]'s known values. */
@@ -399,7 +396,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(category, explanation, type, additionalProperties)
+        contentHash(category, explanation, type, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

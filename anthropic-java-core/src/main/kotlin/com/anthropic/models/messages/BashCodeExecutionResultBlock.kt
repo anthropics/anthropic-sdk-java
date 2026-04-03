@@ -14,8 +14,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class BashCodeExecutionResultBlock
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -120,7 +119,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -137,7 +136,7 @@ private constructor(
          * .stdout()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BashCodeExecutionResultBlock]. */
@@ -150,7 +149,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("bash_code_execution_result")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(bashCodeExecutionResultBlock: BashCodeExecutionResultBlock) = apply {
             content = bashCodeExecutionResultBlock.content.map { it.toMutableList() }
             returnCode = bashCodeExecutionResultBlock.returnCode
@@ -306,7 +304,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (content.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (returnCode.asKnown() != null) 1 else 0) +
@@ -329,7 +326,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(content, returnCode, stderr, stdout, type, additionalProperties)
+        contentHash(content, returnCode, stderr, stdout, type, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

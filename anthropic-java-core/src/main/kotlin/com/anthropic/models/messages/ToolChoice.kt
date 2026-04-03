@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -119,7 +119,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         accept(
             object : Visitor<Int> {
@@ -147,7 +146,7 @@ private constructor(
             none == other.none
     }
 
-    override fun hashCode(): Int = Objects.hash(auto, any, tool, none)
+    override fun hashCode(): Int = contentHash(auto, any, tool, none)
 
     override fun toString(): String =
         when {
@@ -162,16 +161,16 @@ private constructor(
     companion object {
 
         /** The model will automatically decide whether to use tools. */
-        @JvmStatic fun ofAuto(auto: ToolChoiceAuto) = ToolChoice(auto = auto)
+        fun ofAuto(auto: ToolChoiceAuto) = ToolChoice(auto = auto)
 
         /** The model will use any available tools. */
-        @JvmStatic fun ofAny(any: ToolChoiceAny) = ToolChoice(any = any)
+        fun ofAny(any: ToolChoiceAny) = ToolChoice(any = any)
 
         /** The model will use the specified tool with `tool_choice.name`. */
-        @JvmStatic fun ofTool(tool: ToolChoiceTool) = ToolChoice(tool = tool)
+        fun ofTool(tool: ToolChoiceTool) = ToolChoice(tool = tool)
 
         /** The model will not be allowed to use tools. */
-        @JvmStatic fun ofNone(none: ToolChoiceNone) = ToolChoice(none = none)
+        fun ofNone(none: ToolChoiceNone) = ToolChoice(none = none)
     }
 
     /** An interface that defines how to map each variant of [ToolChoice] to a value of type [T]. */

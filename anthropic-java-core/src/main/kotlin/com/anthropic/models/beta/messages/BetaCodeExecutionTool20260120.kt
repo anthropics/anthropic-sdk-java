@@ -15,8 +15,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -150,7 +149,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -160,7 +159,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of
          * [BetaCodeExecutionTool20260120].
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaCodeExecutionTool20260120]. */
@@ -174,7 +173,6 @@ private constructor(
         private var strict: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120) = apply {
             name = betaCodeExecutionTool20260120.name
             type = betaCodeExecutionTool20260120.type
@@ -359,7 +357,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         name.let { if (it == JsonValue.from("code_execution")) 1 else 0 } +
             type.let { if (it == JsonValue.from("code_execution_20260120")) 1 else 0 } +
@@ -390,13 +387,13 @@ private constructor(
 
         companion object {
 
-            @JvmField val DIRECT = of("direct")
+            val DIRECT = of("direct")
 
-            @JvmField val CODE_EXECUTION_20250825 = of("code_execution_20250825")
+            val CODE_EXECUTION_20250825 = of("code_execution_20250825")
 
-            @JvmField val CODE_EXECUTION_20260120 = of("code_execution_20260120")
+            val CODE_EXECUTION_20260120 = of("code_execution_20260120")
 
-            @JvmStatic fun of(value: String) = AllowedCaller(JsonField.of(value))
+            fun of(value: String) = AllowedCaller(JsonField.of(value))
         }
 
         /** An enum containing [AllowedCaller]'s known values. */
@@ -526,7 +523,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(
+        contentHash(
             name,
             type,
             allowedCallers,

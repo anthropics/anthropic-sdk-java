@@ -22,15 +22,15 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
-        @JvmField val INVALID_TOOL_INPUT = of("invalid_tool_input")
+        val INVALID_TOOL_INPUT = of("invalid_tool_input")
 
-        @JvmField val UNAVAILABLE = of("unavailable")
+        val UNAVAILABLE = of("unavailable")
 
-        @JvmField val TOO_MANY_REQUESTS = of("too_many_requests")
+        val TOO_MANY_REQUESTS = of("too_many_requests")
 
-        @JvmField val EXECUTION_TIME_EXCEEDED = of("execution_time_exceeded")
+        val EXECUTION_TIME_EXCEEDED = of("execution_time_exceeded")
 
-        @JvmStatic fun of(value: String) = ToolSearchToolResultErrorCode(JsonField.of(value))
+        fun of(value: String) = ToolSearchToolResultErrorCode(JsonField.of(value))
     }
 
     /** An enum containing [ToolSearchToolResultErrorCode]'s known values. */

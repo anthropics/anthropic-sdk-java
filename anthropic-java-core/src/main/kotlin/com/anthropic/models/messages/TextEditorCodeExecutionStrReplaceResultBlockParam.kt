@@ -14,8 +14,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -125,7 +124,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -135,7 +134,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of
          * [TextEditorCodeExecutionStrReplaceResultBlockParam].
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [TextEditorCodeExecutionStrReplaceResultBlockParam]. */
@@ -150,7 +149,6 @@ private constructor(
         private var oldStart: JsonField<Long> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(
             textEditorCodeExecutionStrReplaceResultBlockParam:
                 TextEditorCodeExecutionStrReplaceResultBlockParam
@@ -356,7 +354,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         type.let {
             if (it == JsonValue.from("text_editor_code_execution_str_replace_result")) 1 else 0
@@ -383,7 +380,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(type, lines, newLines, newStart, oldLines, oldStart, additionalProperties)
+        contentHash(type, lines, newLines, newStart, oldLines, oldStart, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

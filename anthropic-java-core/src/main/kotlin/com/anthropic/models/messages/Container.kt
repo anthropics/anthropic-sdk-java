@@ -13,8 +13,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 /** Information about the container used in the request (for the code execution tool) */
 class Container
@@ -73,7 +72,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -88,7 +87,7 @@ private constructor(
          * .expiresAt()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [Container]. */
@@ -98,7 +97,6 @@ private constructor(
         private var expiresAt: JsonField<OffsetDateTime>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(container: Container) = apply {
             id = container.id
             expiresAt = container.expiresAt
@@ -193,7 +191,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown() != null) 1 else 0) + (if (expiresAt.asKnown() != null) 1 else 0)
 
@@ -208,7 +205,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, expiresAt, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(id, expiresAt, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

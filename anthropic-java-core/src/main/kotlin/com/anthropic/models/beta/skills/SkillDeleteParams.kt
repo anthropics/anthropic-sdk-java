@@ -8,7 +8,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -45,10 +45,10 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): SkillDeleteParams = builder().build()
+        fun none(): SkillDeleteParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [SkillDeleteParams]. */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [SkillDeleteParams]. */
@@ -60,7 +60,6 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(skillDeleteParams: SkillDeleteParams) = apply {
             skillId = skillDeleteParams.skillId
             betas = skillDeleteParams.betas?.toMutableList()
@@ -271,7 +270,7 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(
+        contentHash(
             skillId,
             betas,
             additionalHeaders,

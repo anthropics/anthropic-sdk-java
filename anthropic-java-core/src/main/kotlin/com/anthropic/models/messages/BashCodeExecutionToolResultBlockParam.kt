@@ -25,8 +25,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -114,7 +113,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -130,7 +129,7 @@ private constructor(
          * .toolUseId()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BashCodeExecutionToolResultBlockParam]. */
@@ -142,7 +141,6 @@ private constructor(
         private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(
             bashCodeExecutionToolResultBlockParam: BashCodeExecutionToolResultBlockParam
         ) = apply {
@@ -307,7 +305,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (content.asKnown()?.validity() ?: 0) +
             (if (toolUseId.asKnown() != null) 1 else 0) +
@@ -399,7 +396,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
@@ -427,7 +423,7 @@ private constructor(
         }
 
         override fun hashCode(): Int =
-            Objects.hash(bashCodeExecutionToolResultErrorParam, bashCodeExecutionResultBlockParam)
+            contentHash(bashCodeExecutionToolResultErrorParam, bashCodeExecutionResultBlockParam)
 
         override fun toString(): String =
             when {
@@ -557,7 +553,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(content, toolUseId, type, cacheControl, additionalProperties)
+        contentHash(content, toolUseId, type, cacheControl, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

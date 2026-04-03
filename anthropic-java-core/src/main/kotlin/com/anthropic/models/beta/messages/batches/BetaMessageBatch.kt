@@ -15,8 +15,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -268,7 +267,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -290,7 +289,7 @@ private constructor(
          * .resultsUrl()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaMessageBatch]. */
@@ -308,7 +307,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("message_batch")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaMessageBatch: BetaMessageBatch) = apply {
             id = betaMessageBatch.id
             archivedAt = betaMessageBatch.archivedAt
@@ -593,7 +591,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown() != null) 1 else 0) +
             (if (archivedAt.asKnown() != null) 1 else 0) +
@@ -622,13 +619,13 @@ private constructor(
 
         companion object {
 
-            @JvmField val IN_PROGRESS = of("in_progress")
+            val IN_PROGRESS = of("in_progress")
 
-            @JvmField val CANCELING = of("canceling")
+            val CANCELING = of("canceling")
 
-            @JvmField val ENDED = of("ended")
+            val ENDED = of("ended")
 
-            @JvmStatic fun of(value: String) = ProcessingStatus(JsonField.of(value))
+            fun of(value: String) = ProcessingStatus(JsonField.of(value))
         }
 
         /** An enum containing [ProcessingStatus]'s known values. */
@@ -762,7 +759,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(
+        contentHash(
             id,
             archivedAt,
             cancelInitiatedAt,

@@ -32,8 +32,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -500,7 +499,7 @@ private constructor(
          * .model()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [MessageCreateParams]. */
@@ -510,7 +509,6 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        @JvmSynthetic
         internal fun from(messageCreateParams: MessageCreateParams) = apply {
             body = messageCreateParams.body.toBuilder()
             additionalHeaders = messageCreateParams.additionalHeaders.toBuilder()
@@ -1914,7 +1912,7 @@ private constructor(
         @JsonAnyGetter
         @ExcludeMissing
         fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+            additionalProperties.toMap()
 
         fun toBuilder() = Builder().from(this)
 
@@ -1930,7 +1928,7 @@ private constructor(
              * .model()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -1955,7 +1953,6 @@ private constructor(
             private var topP: JsonField<Double> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic
             internal fun from(body: Body) = apply {
                 maxTokens = body.maxTokens
                 messages = body.messages.map { it.toMutableList() }
@@ -2778,7 +2775,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             (if (maxTokens.asKnown() != null) 1 else 0) +
                 (messages.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
@@ -2825,7 +2821,7 @@ private constructor(
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(
+            contentHash(
                 maxTokens,
                 messages,
                 model,
@@ -2875,11 +2871,11 @@ private constructor(
 
         companion object {
 
-            @JvmField val AUTO = of("auto")
+            val AUTO = of("auto")
 
-            @JvmField val STANDARD_ONLY = of("standard_only")
+            val STANDARD_ONLY = of("standard_only")
 
-            @JvmStatic fun of(value: String) = ServiceTier(JsonField.of(value))
+            fun of(value: String) = ServiceTier(JsonField.of(value))
         }
 
         /** An enum containing [ServiceTier]'s known values. */
@@ -3059,7 +3055,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
@@ -3082,7 +3077,7 @@ private constructor(
                 textBlockParams == other.textBlockParams
         }
 
-        override fun hashCode(): Int = Objects.hash(string, textBlockParams)
+        override fun hashCode(): Int = contentHash(string, textBlockParams)
 
         override fun toString(): String =
             when {
@@ -3094,7 +3089,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic fun ofString(string: String) = System(string = string)
+            fun ofString(string: String) = System(string = string)
 
             @JvmStatic
             fun ofTextBlockParams(textBlockParams: List<TextBlockParam>) =
@@ -3181,7 +3176,7 @@ private constructor(
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int = contentHash(body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "MessageCreateParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

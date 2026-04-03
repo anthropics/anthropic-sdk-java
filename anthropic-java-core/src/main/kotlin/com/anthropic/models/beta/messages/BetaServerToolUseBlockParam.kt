@@ -26,8 +26,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -146,7 +145,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -162,7 +161,7 @@ private constructor(
          * .name()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaServerToolUseBlockParam]. */
@@ -176,7 +175,6 @@ private constructor(
         private var caller: JsonField<Caller> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaServerToolUseBlockParam: BetaServerToolUseBlockParam) = apply {
             id = betaServerToolUseBlockParam.id
             input = betaServerToolUseBlockParam.input
@@ -376,7 +374,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown() != null) 1 else 0) +
             (input.asKnown()?.validity() ?: 0) +
@@ -401,7 +398,7 @@ private constructor(
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Input]. */
-            @JvmStatic fun builder() = Builder()
+            fun builder() = Builder()
         }
 
         /** A builder for [Input]. */
@@ -409,7 +406,6 @@ private constructor(
 
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic
             internal fun from(input: Input) = apply {
                 additionalProperties = input.additionalProperties.toMutableMap()
             }
@@ -465,7 +461,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
 
@@ -477,7 +472,7 @@ private constructor(
             return other is Input && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+        private val hashCode: Int by lazy { contentHash(additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
@@ -498,21 +493,21 @@ private constructor(
 
         companion object {
 
-            @JvmField val WEB_SEARCH = of("web_search")
+            val WEB_SEARCH = of("web_search")
 
-            @JvmField val WEB_FETCH = of("web_fetch")
+            val WEB_FETCH = of("web_fetch")
 
-            @JvmField val CODE_EXECUTION = of("code_execution")
+            val CODE_EXECUTION = of("code_execution")
 
-            @JvmField val BASH_CODE_EXECUTION = of("bash_code_execution")
+            val BASH_CODE_EXECUTION = of("bash_code_execution")
 
-            @JvmField val TEXT_EDITOR_CODE_EXECUTION = of("text_editor_code_execution")
+            val TEXT_EDITOR_CODE_EXECUTION = of("text_editor_code_execution")
 
-            @JvmField val TOOL_SEARCH_TOOL_REGEX = of("tool_search_tool_regex")
+            val TOOL_SEARCH_TOOL_REGEX = of("tool_search_tool_regex")
 
-            @JvmField val TOOL_SEARCH_TOOL_BM25 = of("tool_search_tool_bm25")
+            val TOOL_SEARCH_TOOL_BM25 = of("tool_search_tool_bm25")
 
-            @JvmStatic fun of(value: String) = Name(JsonField.of(value))
+            fun of(value: String) = Name(JsonField.of(value))
         }
 
         /** An enum containing [Name]'s known values. */
@@ -731,7 +726,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
@@ -761,7 +755,7 @@ private constructor(
         }
 
         override fun hashCode(): Int =
-            Objects.hash(direct, codeExecution20250825, codeExecution20260120)
+            contentHash(direct, codeExecution20250825, codeExecution20260120)
 
         override fun toString(): String =
             when {
@@ -777,7 +771,7 @@ private constructor(
         companion object {
 
             /** Tool invocation directly from the model. */
-            @JvmStatic fun ofDirect(direct: BetaDirectCaller) = Caller(direct = direct)
+            fun ofDirect(direct: BetaDirectCaller) = Caller(direct = direct)
 
             /** Tool invocation generated by a server-side tool. */
             @JvmStatic
@@ -879,7 +873,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, input, name, type, cacheControl, caller, additionalProperties)
+        contentHash(id, input, name, type, cacheControl, caller, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

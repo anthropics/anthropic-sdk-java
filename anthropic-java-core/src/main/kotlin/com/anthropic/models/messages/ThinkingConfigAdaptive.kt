@@ -13,8 +13,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -68,14 +67,14 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [ThinkingConfigAdaptive]. */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [ThinkingConfigAdaptive]. */
@@ -85,7 +84,6 @@ private constructor(
         private var display: JsonField<Display> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(thinkingConfigAdaptive: ThinkingConfigAdaptive) = apply {
             type = thinkingConfigAdaptive.type
             display = thinkingConfigAdaptive.display
@@ -181,7 +179,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         type.let { if (it == JsonValue.from("adaptive")) 1 else 0 } +
             (display.asKnown()?.validity() ?: 0)
@@ -205,11 +202,11 @@ private constructor(
 
         companion object {
 
-            @JvmField val SUMMARIZED = of("summarized")
+            val SUMMARIZED = of("summarized")
 
-            @JvmField val OMITTED = of("omitted")
+            val OMITTED = of("omitted")
 
-            @JvmStatic fun of(value: String) = Display(JsonField.of(value))
+            fun of(value: String) = Display(JsonField.of(value))
         }
 
         /** An enum containing [Display]'s known values. */
@@ -327,7 +324,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(type, display, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(type, display, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

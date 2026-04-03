@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 /** Model capability information. */
 class BetaModelCapabilities
@@ -234,7 +233,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -256,7 +255,7 @@ private constructor(
          * .thinking()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaModelCapabilities]. */
@@ -273,7 +272,6 @@ private constructor(
         private var thinking: JsonField<BetaThinkingCapability>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaModelCapabilities: BetaModelCapabilities) = apply {
             batch = betaModelCapabilities.batch
             citations = betaModelCapabilities.citations
@@ -499,7 +497,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (batch.asKnown()?.validity() ?: 0) +
             (citations.asKnown()?.validity() ?: 0) +
@@ -530,7 +527,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(
+        contentHash(
             batch,
             citations,
             codeExecution,

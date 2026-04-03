@@ -14,8 +14,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -138,7 +137,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -157,7 +156,7 @@ private constructor(
          * .totalLines()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaTextEditorCodeExecutionViewResultBlock]. */
@@ -171,7 +170,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("text_editor_code_execution_view_result")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(
             betaTextEditorCodeExecutionViewResultBlock: BetaTextEditorCodeExecutionViewResultBlock
         ) = apply {
@@ -360,7 +358,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (content.asKnown() != null) 1 else 0) +
             (fileType.asKnown()?.validity() ?: 0) +
@@ -385,13 +382,13 @@ private constructor(
 
         companion object {
 
-            @JvmField val TEXT = of("text")
+            val TEXT = of("text")
 
-            @JvmField val IMAGE = of("image")
+            val IMAGE = of("image")
 
-            @JvmField val PDF = of("pdf")
+            val PDF = of("pdf")
 
-            @JvmStatic fun of(value: String) = FileType(JsonField.of(value))
+            fun of(value: String) = FileType(JsonField.of(value))
         }
 
         /** An enum containing [FileType]'s known values. */
@@ -518,7 +515,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(content, fileType, numLines, startLine, totalLines, type, additionalProperties)
+        contentHash(content, fileType, numLines, startLine, totalLines, type, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

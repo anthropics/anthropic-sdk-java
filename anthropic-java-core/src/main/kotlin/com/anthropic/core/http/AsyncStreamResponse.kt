@@ -62,7 +62,6 @@ interface AsyncStreamResponse<T> {
     }
 }
 
-@JvmSynthetic
 internal fun <T> CompletableFuture<StreamResponse<T>>.toAsync(streamHandlerExecutor: Executor) =
     PhantomReachableClosingAsyncStreamResponse(
         object : AsyncStreamResponse<T> {

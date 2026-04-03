@@ -20,23 +20,23 @@ class BetaStopReason @JsonCreator private constructor(private val value: JsonFie
 
     companion object {
 
-        @JvmField val END_TURN = of("end_turn")
+        val END_TURN = of("end_turn")
 
-        @JvmField val MAX_TOKENS = of("max_tokens")
+        val MAX_TOKENS = of("max_tokens")
 
-        @JvmField val STOP_SEQUENCE = of("stop_sequence")
+        val STOP_SEQUENCE = of("stop_sequence")
 
-        @JvmField val TOOL_USE = of("tool_use")
+        val TOOL_USE = of("tool_use")
 
-        @JvmField val PAUSE_TURN = of("pause_turn")
+        val PAUSE_TURN = of("pause_turn")
 
-        @JvmField val COMPACTION = of("compaction")
+        val COMPACTION = of("compaction")
 
-        @JvmField val REFUSAL = of("refusal")
+        val REFUSAL = of("refusal")
 
-        @JvmField val MODEL_CONTEXT_WINDOW_EXCEEDED = of("model_context_window_exceeded")
+        val MODEL_CONTEXT_WINDOW_EXCEEDED = of("model_context_window_exceeded")
 
-        @JvmStatic fun of(value: String) = BetaStopReason(JsonField.of(value))
+        fun of(value: String) = BetaStopReason(JsonField.of(value))
     }
 
     /** An enum containing [BetaStopReason]'s known values. */

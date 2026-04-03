@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class BetaBase64PdfSource
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -74,7 +73,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -88,7 +87,7 @@ private constructor(
          * .data()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaBase64PdfSource]. */
@@ -99,7 +98,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("base64")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaBase64PdfSource: BetaBase64PdfSource) = apply {
             data = betaBase64PdfSource.data
             mediaType = betaBase64PdfSource.mediaType
@@ -219,7 +217,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (data.asKnown() != null) 1 else 0) +
             mediaType.let { if (it == JsonValue.from("application/pdf")) 1 else 0 } +
@@ -237,7 +234,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(data, mediaType, type, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(data, mediaType, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

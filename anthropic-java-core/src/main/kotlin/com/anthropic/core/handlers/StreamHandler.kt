@@ -1,4 +1,3 @@
-@file:JvmName("StreamHandler")
 
 package com.anthropic.core.handlers
 
@@ -9,7 +8,6 @@ import com.anthropic.core.http.StreamResponse
 import com.anthropic.errors.AnthropicIoException
 import java.io.IOException
 
-@JvmSynthetic
 internal fun <T> streamHandler(
     block: suspend SequenceScope<T>.(response: HttpResponse, lines: Sequence<String>) -> Unit
 ): Handler<StreamResponse<T>> =

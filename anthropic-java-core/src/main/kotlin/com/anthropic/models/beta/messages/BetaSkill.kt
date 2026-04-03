@@ -13,8 +13,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 /** A skill that was loaded in a container (response model). */
 class BetaSkill
@@ -86,7 +85,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -102,7 +101,7 @@ private constructor(
          * .version()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaSkill]. */
@@ -113,7 +112,6 @@ private constructor(
         private var version: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaSkill: BetaSkill) = apply {
             skillId = betaSkill.skillId
             type = betaSkill.type
@@ -222,7 +220,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (skillId.asKnown() != null) 1 else 0) +
             (type.asKnown()?.validity() ?: 0) +
@@ -243,11 +240,11 @@ private constructor(
 
         companion object {
 
-            @JvmField val ANTHROPIC = of("anthropic")
+            val ANTHROPIC = of("anthropic")
 
-            @JvmField val CUSTOM = of("custom")
+            val CUSTOM = of("custom")
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            fun of(value: String) = Type(JsonField.of(value))
         }
 
         /** An enum containing [Type]'s known values. */
@@ -366,7 +363,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(skillId, type, version, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(skillId, type, version, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

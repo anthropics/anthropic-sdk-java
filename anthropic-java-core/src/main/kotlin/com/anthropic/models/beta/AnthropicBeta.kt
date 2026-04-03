@@ -20,51 +20,51 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
 
     companion object {
 
-        @JvmField val MESSAGE_BATCHES_2024_09_24 = of("message-batches-2024-09-24")
+        val MESSAGE_BATCHES_2024_09_24 = of("message-batches-2024-09-24")
 
-        @JvmField val PROMPT_CACHING_2024_07_31 = of("prompt-caching-2024-07-31")
+        val PROMPT_CACHING_2024_07_31 = of("prompt-caching-2024-07-31")
 
-        @JvmField val COMPUTER_USE_2024_10_22 = of("computer-use-2024-10-22")
+        val COMPUTER_USE_2024_10_22 = of("computer-use-2024-10-22")
 
-        @JvmField val COMPUTER_USE_2025_01_24 = of("computer-use-2025-01-24")
+        val COMPUTER_USE_2025_01_24 = of("computer-use-2025-01-24")
 
-        @JvmField val PDFS_2024_09_25 = of("pdfs-2024-09-25")
+        val PDFS_2024_09_25 = of("pdfs-2024-09-25")
 
-        @JvmField val TOKEN_COUNTING_2024_11_01 = of("token-counting-2024-11-01")
+        val TOKEN_COUNTING_2024_11_01 = of("token-counting-2024-11-01")
 
-        @JvmField val TOKEN_EFFICIENT_TOOLS_2025_02_19 = of("token-efficient-tools-2025-02-19")
+        val TOKEN_EFFICIENT_TOOLS_2025_02_19 = of("token-efficient-tools-2025-02-19")
 
-        @JvmField val OUTPUT_128K_2025_02_19 = of("output-128k-2025-02-19")
+        val OUTPUT_128K_2025_02_19 = of("output-128k-2025-02-19")
 
-        @JvmField val FILES_API_2025_04_14 = of("files-api-2025-04-14")
+        val FILES_API_2025_04_14 = of("files-api-2025-04-14")
 
-        @JvmField val MCP_CLIENT_2025_04_04 = of("mcp-client-2025-04-04")
+        val MCP_CLIENT_2025_04_04 = of("mcp-client-2025-04-04")
 
-        @JvmField val MCP_CLIENT_2025_11_20 = of("mcp-client-2025-11-20")
+        val MCP_CLIENT_2025_11_20 = of("mcp-client-2025-11-20")
 
-        @JvmField val DEV_FULL_THINKING_2025_05_14 = of("dev-full-thinking-2025-05-14")
+        val DEV_FULL_THINKING_2025_05_14 = of("dev-full-thinking-2025-05-14")
 
-        @JvmField val INTERLEAVED_THINKING_2025_05_14 = of("interleaved-thinking-2025-05-14")
+        val INTERLEAVED_THINKING_2025_05_14 = of("interleaved-thinking-2025-05-14")
 
-        @JvmField val CODE_EXECUTION_2025_05_22 = of("code-execution-2025-05-22")
+        val CODE_EXECUTION_2025_05_22 = of("code-execution-2025-05-22")
 
-        @JvmField val EXTENDED_CACHE_TTL_2025_04_11 = of("extended-cache-ttl-2025-04-11")
+        val EXTENDED_CACHE_TTL_2025_04_11 = of("extended-cache-ttl-2025-04-11")
 
-        @JvmField val CONTEXT_1M_2025_08_07 = of("context-1m-2025-08-07")
+        val CONTEXT_1M_2025_08_07 = of("context-1m-2025-08-07")
 
-        @JvmField val CONTEXT_MANAGEMENT_2025_06_27 = of("context-management-2025-06-27")
+        val CONTEXT_MANAGEMENT_2025_06_27 = of("context-management-2025-06-27")
 
         @JvmField
         val MODEL_CONTEXT_WINDOW_EXCEEDED_2025_08_26 =
             of("model-context-window-exceeded-2025-08-26")
 
-        @JvmField val SKILLS_2025_10_02 = of("skills-2025-10-02")
+        val SKILLS_2025_10_02 = of("skills-2025-10-02")
 
-        @JvmField val FAST_MODE_2026_02_01 = of("fast-mode-2026-02-01")
+        val FAST_MODE_2026_02_01 = of("fast-mode-2026-02-01")
 
-        @JvmField val OUTPUT_300K_2026_03_24 = of("output-300k-2026-03-24")
+        val OUTPUT_300K_2026_03_24 = of("output-300k-2026-03-24")
 
-        @JvmStatic fun of(value: String) = AnthropicBeta(JsonField.of(value))
+        fun of(value: String) = AnthropicBeta(JsonField.of(value))
     }
 
     /** An enum containing [AnthropicBeta]'s known values. */

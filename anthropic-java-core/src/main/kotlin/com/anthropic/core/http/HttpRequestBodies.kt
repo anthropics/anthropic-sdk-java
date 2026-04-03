@@ -1,6 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:JvmName("HttpRequestBodies")
 
 package com.anthropic.core.http
 
@@ -28,7 +27,6 @@ import java.util.UUID
  * @param value The data to form the request body. This may be any object; it is not limited to JSON
  *   objects or nodes.
  */
-@JvmSynthetic
 inline fun <reified T> json(jsonMapper: JsonMapper, value: T): HttpRequestBody =
     object : HttpRequestBody {
         private val bytes: ByteArray by lazy { jsonMapper.writeValueAsBytes(value) }
@@ -50,7 +48,6 @@ inline fun <reified T> json(jsonMapper: JsonMapper, value: T): HttpRequestBody =
  * The use of this method is _not supported_ as part of the public API of the Anthropic SDK. This
  * method may change or be removed without any prior notice.
  */
-@JvmSynthetic
 fun bodyToJson(jsonMapper: ObjectMapper, body: HttpRequestBody?): ObjectNode? {
     val jsonData = ByteArrayOutputStream()
 
@@ -61,7 +58,6 @@ fun bodyToJson(jsonMapper: ObjectMapper, body: HttpRequestBody?): ObjectNode? {
     return null
 }
 
-@JvmSynthetic
 internal fun multipartFormData(
     jsonMapper: JsonMapper,
     fields: Map<String, MultipartField<*>>,

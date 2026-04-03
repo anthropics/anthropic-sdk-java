@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -167,7 +167,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         accept(
             object : Visitor<Int> {
@@ -215,7 +214,7 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(
+        contentHash(
             invalidRequest,
             authentication,
             billing,
@@ -252,18 +251,18 @@ private constructor(
         fun ofAuthentication(authentication: BetaAuthenticationError) =
             BetaError(authentication = authentication)
 
-        @JvmStatic fun ofBilling(billing: BetaBillingError) = BetaError(billing = billing)
+        fun ofBilling(billing: BetaBillingError) = BetaError(billing = billing)
 
         @JvmStatic
         fun ofPermission(permission: BetaPermissionError) = BetaError(permission = permission)
 
-        @JvmStatic fun ofNotFound(notFound: BetaNotFoundError) = BetaError(notFound = notFound)
+        fun ofNotFound(notFound: BetaNotFoundError) = BetaError(notFound = notFound)
 
-        @JvmStatic fun ofRateLimit(rateLimit: BetaRateLimitError) = BetaError(rateLimit = rateLimit)
+        fun ofRateLimit(rateLimit: BetaRateLimitError) = BetaError(rateLimit = rateLimit)
 
-        @JvmStatic fun ofTimeout(timeout: BetaGatewayTimeoutError) = BetaError(timeout = timeout)
+        fun ofTimeout(timeout: BetaGatewayTimeoutError) = BetaError(timeout = timeout)
 
-        @JvmStatic fun ofApi(api: BetaApiError) = BetaError(api = api)
+        fun ofApi(api: BetaApiError) = BetaError(api = api)
 
         @JvmStatic
         fun ofOverloaded(overloaded: BetaOverloadedError) = BetaError(overloaded = overloaded)

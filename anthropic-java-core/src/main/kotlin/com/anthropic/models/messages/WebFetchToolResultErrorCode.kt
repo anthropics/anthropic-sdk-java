@@ -22,23 +22,23 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
-        @JvmField val INVALID_TOOL_INPUT = of("invalid_tool_input")
+        val INVALID_TOOL_INPUT = of("invalid_tool_input")
 
-        @JvmField val URL_TOO_LONG = of("url_too_long")
+        val URL_TOO_LONG = of("url_too_long")
 
-        @JvmField val URL_NOT_ALLOWED = of("url_not_allowed")
+        val URL_NOT_ALLOWED = of("url_not_allowed")
 
-        @JvmField val URL_NOT_ACCESSIBLE = of("url_not_accessible")
+        val URL_NOT_ACCESSIBLE = of("url_not_accessible")
 
-        @JvmField val UNSUPPORTED_CONTENT_TYPE = of("unsupported_content_type")
+        val UNSUPPORTED_CONTENT_TYPE = of("unsupported_content_type")
 
-        @JvmField val TOO_MANY_REQUESTS = of("too_many_requests")
+        val TOO_MANY_REQUESTS = of("too_many_requests")
 
-        @JvmField val MAX_USES_EXCEEDED = of("max_uses_exceeded")
+        val MAX_USES_EXCEEDED = of("max_uses_exceeded")
 
-        @JvmField val UNAVAILABLE = of("unavailable")
+        val UNAVAILABLE = of("unavailable")
 
-        @JvmStatic fun of(value: String) = WebFetchToolResultErrorCode(JsonField.of(value))
+        fun of(value: String) = WebFetchToolResultErrorCode(JsonField.of(value))
     }
 
     /** An enum containing [WebFetchToolResultErrorCode]'s known values. */

@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 /** Indicates whether a capability is supported. */
 class BetaCapabilitySupport
@@ -51,7 +50,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -65,7 +64,7 @@ private constructor(
          * .supported()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaCapabilitySupport]. */
@@ -74,7 +73,6 @@ private constructor(
         private var supported: JsonField<Boolean>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaCapabilitySupport: BetaCapabilitySupport) = apply {
             supported = betaCapabilitySupport.supported
             additionalProperties = betaCapabilitySupport.additionalProperties.toMutableMap()
@@ -166,7 +164,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(supported, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(supported, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

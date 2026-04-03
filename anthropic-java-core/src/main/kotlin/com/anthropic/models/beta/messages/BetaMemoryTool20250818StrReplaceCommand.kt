@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class BetaMemoryTool20250818StrReplaceCommand
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -99,7 +98,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -116,7 +115,7 @@ private constructor(
          * .path()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaMemoryTool20250818StrReplaceCommand]. */
@@ -128,7 +127,6 @@ private constructor(
         private var path: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(
             betaMemoryTool20250818StrReplaceCommand: BetaMemoryTool20250818StrReplaceCommand
         ) = apply {
@@ -261,7 +259,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         command.let { if (it == JsonValue.from("str_replace")) 1 else 0 } +
             (if (newStr.asKnown() != null) 1 else 0) +
@@ -282,7 +279,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(command, newStr, oldStr, path, additionalProperties)
+        contentHash(command, newStr, oldStr, path, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

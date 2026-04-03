@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -314,7 +314,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         accept(
             object : Visitor<Int> {
@@ -396,7 +395,7 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(
+        contentHash(
             text,
             image,
             document,
@@ -446,10 +445,10 @@ private constructor(
     companion object {
 
         /** Regular text content. */
-        @JvmStatic fun ofText(text: TextBlockParam) = ContentBlockParam(text = text)
+        fun ofText(text: TextBlockParam) = ContentBlockParam(text = text)
 
         /** Image content specified directly as base64 data or as a reference via a URL. */
-        @JvmStatic fun ofImage(image: ImageBlockParam) = ContentBlockParam(image = image)
+        fun ofImage(image: ImageBlockParam) = ContentBlockParam(image = image)
 
         /**
          * Document content, either specified directly as base64 data, as text, or as a reference
@@ -473,7 +472,7 @@ private constructor(
             ContentBlockParam(redactedThinking = redactedThinking)
 
         /** A block indicating a tool use by the model. */
-        @JvmStatic fun ofToolUse(toolUse: ToolUseBlockParam) = ContentBlockParam(toolUse = toolUse)
+        fun ofToolUse(toolUse: ToolUseBlockParam) = ContentBlockParam(toolUse = toolUse)
 
         /** A block specifying the results of a tool use by the model. */
         @JvmStatic

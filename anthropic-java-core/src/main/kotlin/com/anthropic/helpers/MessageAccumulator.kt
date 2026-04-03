@@ -42,7 +42,6 @@ import com.anthropic.models.messages.WebFetchToolResultBlock
 import com.anthropic.models.messages.WebSearchToolResultBlock
 
 /** Checks if a content block is one that tracks tool input via input_json_delta events */
-@JvmSynthetic
 internal fun ContentBlock.tracksToolInput(): Boolean = isToolUse() || isServerToolUse()
 
 /**
@@ -95,9 +94,8 @@ class MessageAccumulator private constructor() {
     companion object {
         private val JSON_MAPPER = jsonMapper()
 
-        @JvmStatic fun create() = MessageAccumulator()
+        fun create() = MessageAccumulator()
 
-        @JvmSynthetic
         internal fun mergeMessageUsage(usage: Usage, deltaUsage: MessageDeltaUsage): Usage {
             val builder = usage.toBuilder()
 
@@ -124,7 +122,6 @@ class MessageAccumulator private constructor() {
             return builder.build()
         }
 
-        @JvmSynthetic
         internal fun mergeTextDelta(
             contentBlock: ContentBlock,
             textDelta: TextDelta,
@@ -137,7 +134,6 @@ class MessageAccumulator private constructor() {
             return ContentBlock.ofText(newTextBlock)
         }
 
-        @JvmSynthetic
         internal fun mergeCitationsDelta(
             contentBlock: ContentBlock,
             citationsDelta: CitationsDelta,
@@ -153,7 +149,6 @@ class MessageAccumulator private constructor() {
             return ContentBlock.ofText(newTextBlock)
         }
 
-        @JvmSynthetic
         internal fun mergeThinkingDelta(
             contentBlock: ContentBlock,
             thinkingDelta: ThinkingDelta,
@@ -169,7 +164,6 @@ class MessageAccumulator private constructor() {
             return ContentBlock.ofThinking(newThinkingBlock)
         }
 
-        @JvmSynthetic
         internal fun mergeSignatureDelta(
             contentBlock: ContentBlock,
             signatureDelta: SignatureDelta,
@@ -189,7 +183,6 @@ class MessageAccumulator private constructor() {
             return ContentBlock.ofThinking(newThinkingBlock)
         }
 
-        @JvmSynthetic
         internal fun citationsDeltaToTextCitation(citationsDelta: CitationsDelta) =
             // A `CitationsDelta` only holds _one_ citation.
             citationsDelta

@@ -22,19 +22,19 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
-        @JvmField val INVALID_TOOL_INPUT = of("invalid_tool_input")
+        val INVALID_TOOL_INPUT = of("invalid_tool_input")
 
-        @JvmField val UNAVAILABLE = of("unavailable")
+        val UNAVAILABLE = of("unavailable")
 
-        @JvmField val MAX_USES_EXCEEDED = of("max_uses_exceeded")
+        val MAX_USES_EXCEEDED = of("max_uses_exceeded")
 
-        @JvmField val TOO_MANY_REQUESTS = of("too_many_requests")
+        val TOO_MANY_REQUESTS = of("too_many_requests")
 
-        @JvmField val QUERY_TOO_LONG = of("query_too_long")
+        val QUERY_TOO_LONG = of("query_too_long")
 
-        @JvmField val REQUEST_TOO_LARGE = of("request_too_large")
+        val REQUEST_TOO_LARGE = of("request_too_large")
 
-        @JvmStatic fun of(value: String) = WebSearchToolResultErrorCode(JsonField.of(value))
+        fun of(value: String) = WebSearchToolResultErrorCode(JsonField.of(value))
     }
 
     /** An enum containing [WebSearchToolResultErrorCode]'s known values. */

@@ -3,7 +3,7 @@ package com.anthropic.models.messages
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonValue
 import com.anthropic.errors.AnthropicInvalidDataException
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 
 /**
@@ -105,7 +105,7 @@ internal constructor(
             rawMessage == other.rawMessage
     }
 
-    private val hashCode: Int by lazy { Objects.hash(outputType, rawMessage) }
+    private val hashCode: Int by lazy { contentHash(outputType, rawMessage) }
 
     override fun hashCode(): Int = hashCode
 

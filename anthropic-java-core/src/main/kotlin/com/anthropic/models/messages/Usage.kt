@@ -14,8 +14,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -217,7 +216,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -238,7 +237,7 @@ private constructor(
          * .serviceTier()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [Usage]. */
@@ -254,7 +253,6 @@ private constructor(
         private var serviceTier: JsonField<ServiceTier>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(usage: Usage) = apply {
             cacheCreation = usage.cacheCreation
             cacheCreationInputTokens = usage.cacheCreationInputTokens
@@ -506,7 +504,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (cacheCreation.asKnown()?.validity() ?: 0) +
             (if (cacheCreationInputTokens.asKnown() != null) 1 else 0) +
@@ -533,13 +530,13 @@ private constructor(
 
         companion object {
 
-            @JvmField val STANDARD = of("standard")
+            val STANDARD = of("standard")
 
-            @JvmField val PRIORITY = of("priority")
+            val PRIORITY = of("priority")
 
-            @JvmField val BATCH = of("batch")
+            val BATCH = of("batch")
 
-            @JvmStatic fun of(value: String) = ServiceTier(JsonField.of(value))
+            fun of(value: String) = ServiceTier(JsonField.of(value))
         }
 
         /** An enum containing [ServiceTier]'s known values. */
@@ -670,7 +667,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(
+        contentHash(
             cacheCreation,
             cacheCreationInputTokens,
             cacheReadInputTokens,

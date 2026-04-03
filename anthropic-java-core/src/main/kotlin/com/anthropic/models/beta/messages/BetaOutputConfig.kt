@@ -13,8 +13,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -73,14 +72,14 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [BetaOutputConfig]. */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaOutputConfig]. */
@@ -90,7 +89,6 @@ private constructor(
         private var format: JsonField<BetaJsonOutputFormat> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaOutputConfig: BetaOutputConfig) = apply {
             effort = betaOutputConfig.effort
             format = betaOutputConfig.format
@@ -182,7 +180,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (effort.asKnown()?.validity() ?: 0) +
             (format.asKnown()?.validity() ?: 0)
@@ -202,15 +199,15 @@ private constructor(
 
         companion object {
 
-            @JvmField val LOW = of("low")
+            val LOW = of("low")
 
-            @JvmField val MEDIUM = of("medium")
+            val MEDIUM = of("medium")
 
-            @JvmField val HIGH = of("high")
+            val HIGH = of("high")
 
-            @JvmField val MAX = of("max")
+            val MAX = of("max")
 
-            @JvmStatic fun of(value: String) = Effort(JsonField.of(value))
+            fun of(value: String) = Effort(JsonField.of(value))
         }
 
         /** An enum containing [Effort]'s known values. */
@@ -336,7 +333,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(effort, format, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(effort, format, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

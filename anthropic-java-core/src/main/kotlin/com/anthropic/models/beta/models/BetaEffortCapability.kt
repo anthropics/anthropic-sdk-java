@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 /** Effort (reasoning_effort) capability details. */
 class BetaEffortCapability
@@ -127,7 +126,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -145,7 +144,7 @@ private constructor(
          * .supported()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaEffortCapability]. */
@@ -158,7 +157,6 @@ private constructor(
         private var supported: JsonField<Boolean>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaEffortCapability: BetaEffortCapability) = apply {
             high = betaEffortCapability.high
             low = betaEffortCapability.low
@@ -302,7 +300,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (high.asKnown()?.validity() ?: 0) +
             (low.asKnown()?.validity() ?: 0) +
@@ -325,7 +322,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(high, low, max, medium, supported, additionalProperties)
+        contentHash(high, low, max, medium, supported, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

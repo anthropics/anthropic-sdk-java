@@ -1,11 +1,9 @@
-@file:JvmName("PrepareRequest")
 
 package com.anthropic.core
 
 import com.anthropic.core.http.HttpRequest
 import java.util.concurrent.CompletableFuture
 
-@JvmSynthetic
 internal fun HttpRequest.prepare(clientOptions: ClientOptions, params: Params): HttpRequest =
     toBuilder()
         .putAllQueryParams(clientOptions.queryParams)
@@ -14,7 +12,6 @@ internal fun HttpRequest.prepare(clientOptions: ClientOptions, params: Params): 
         .replaceAllHeaders(params._headers())
         .build()
 
-@JvmSynthetic
 internal fun HttpRequest.prepareAsync(
     clientOptions: ClientOptions,
     params: Params,

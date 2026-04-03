@@ -34,7 +34,6 @@ private val MAPPER =
  * Builds a beta output format using a JSON schema derived from the structure of an arbitrary Java
  * class.
  */
-@JvmSynthetic
 internal fun betaOutputFormatFromClass(
     outputType: Class<*>,
     localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
@@ -51,7 +50,6 @@ internal fun betaOutputFormatFromClass(
  * Builds a GA output format using a JSON schema derived from the structure of an arbitrary Java
  * class.
  */
-@JvmSynthetic
 internal fun outputFormatFromClass(
     outputType: Class<*>,
     localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
@@ -78,7 +76,6 @@ internal fun outputFormatFromClass(
  * @param localValidation Set to [JsonSchemaLocalValidation.YES] to perform the validation. Other
  *   values will cause validation to be skipped.
  */
-@JvmSynthetic
 internal fun validateSchema(
     schema: ObjectNode,
     sourceType: Class<*>,
@@ -98,7 +95,6 @@ internal fun validateSchema(
 // "internal" instead of "private" for testing purposes.
 internal data class FunctionInfo(val name: String, val description: String?, val schema: ObjectNode)
 
-@JvmSynthetic
 // "internal" instead of "private" for testing purposes.
 internal fun extractFunctionInfo(
     parametersType: Class<*>,
@@ -136,7 +132,6 @@ internal fun extractFunctionInfo(
  *
  * If the input is not a camel case string, the output is not defined.
  */
-@JvmSynthetic
 internal fun String.toSnakeCase(): String {
     val snakeCaseBuilder = StringBuilder()
 
@@ -162,7 +157,6 @@ internal fun String.toSnakeCase(): String {
  * Creates a Messages API tool defining a function whose input schema (defining its parameters) is
  * derived from the fields of a class.
  */
-@JvmSynthetic
 internal fun toolFromClass(
     parametersType: Class<*>,
     localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
@@ -185,7 +179,6 @@ internal fun toolFromClass(
  * validation of the schema to be controlled more easily when unit testing, as no exceptions will be
  * thrown and any recorded validation errors can be inspected at leisure by the tests.
  */
-@JvmSynthetic
 internal fun extractSchema(type: Class<*>): ObjectNode {
     val configBuilder =
         SchemaGeneratorConfigBuilder(
@@ -219,7 +212,6 @@ internal fun extractSchema(type: Class<*>): ObjectNode {
  * @throws AnthropicInvalidDataException If the JSON data cannot be parsed to an instance of the
  *   [outputType] class.
  */
-@JvmSynthetic
 internal fun <T> outputTypeFromJson(json: String, outputType: Class<T>): T =
     try {
         MAPPER.readValue(json, outputType)

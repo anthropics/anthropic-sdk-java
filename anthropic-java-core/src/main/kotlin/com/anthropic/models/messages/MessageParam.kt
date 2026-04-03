@@ -26,8 +26,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 
 class MessageParam
@@ -78,7 +77,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -93,7 +92,7 @@ private constructor(
          * .role()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [MessageParam]. */
@@ -103,7 +102,6 @@ private constructor(
         private var role: JsonField<Role>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(messageParam: MessageParam) = apply {
             content = messageParam.content
             role = messageParam.role
@@ -202,7 +200,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (content.asKnown()?.validity() ?: 0) +
             (role.asKnown()?.validity() ?: 0)
@@ -270,7 +267,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
@@ -291,7 +287,7 @@ private constructor(
             return other is Content && string == other.string && blockParams == other.blockParams
         }
 
-        override fun hashCode(): Int = Objects.hash(string, blockParams)
+        override fun hashCode(): Int = contentHash(string, blockParams)
 
         override fun toString(): String =
             when {
@@ -303,7 +299,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic fun ofString(string: String) = Content(string = string)
+            fun ofString(string: String) = Content(string = string)
 
             @JvmStatic
             fun ofBlockParams(blockParams: List<ContentBlockParam>) =
@@ -395,11 +391,11 @@ private constructor(
 
         companion object {
 
-            @JvmField val USER = of("user")
+            val USER = of("user")
 
-            @JvmField val ASSISTANT = of("assistant")
+            val ASSISTANT = of("assistant")
 
-            @JvmStatic fun of(value: String) = Role(JsonField.of(value))
+            fun of(value: String) = Role(JsonField.of(value))
         }
 
         /** An enum containing [Role]'s known values. */
@@ -517,7 +513,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(content, role, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(content, role, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

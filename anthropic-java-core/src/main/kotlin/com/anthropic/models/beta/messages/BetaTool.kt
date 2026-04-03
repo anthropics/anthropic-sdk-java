@@ -16,8 +16,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -258,7 +257,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -273,7 +272,7 @@ private constructor(
          * .name()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaTool]. */
@@ -291,7 +290,6 @@ private constructor(
         private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaTool: BetaTool) = apply {
             inputSchema = betaTool.inputSchema
             name = betaTool.name
@@ -587,7 +585,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (inputSchema.asKnown()?.validity() ?: 0) +
             (if (name.asKnown() != null) 1 else 0) +
@@ -674,14 +671,14 @@ private constructor(
         @JsonAnyGetter
         @ExcludeMissing
         fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+            additionalProperties.toMap()
 
         fun toBuilder() = Builder().from(this)
 
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [InputSchema]. */
-            @JvmStatic fun builder() = Builder()
+            fun builder() = Builder()
         }
 
         /** A builder for [InputSchema]. */
@@ -692,7 +689,6 @@ private constructor(
             private var required: JsonField<MutableList<String>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic
             internal fun from(inputSchema: InputSchema) = apply {
                 type = inputSchema.type
                 properties = inputSchema.properties
@@ -822,7 +818,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             type.let { if (it == JsonValue.from("object")) 1 else 0 } +
                 (properties.asKnown()?.validity() ?: 0) +
@@ -844,7 +839,7 @@ private constructor(
             companion object {
 
                 /** Returns a mutable builder for constructing an instance of [Properties]. */
-                @JvmStatic fun builder() = Builder()
+                fun builder() = Builder()
             }
 
             /** A builder for [Properties]. */
@@ -852,7 +847,6 @@ private constructor(
 
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-                @JvmSynthetic
                 internal fun from(properties: Properties) = apply {
                     additionalProperties = properties.additionalProperties.toMutableMap()
                 }
@@ -911,7 +905,6 @@ private constructor(
              *
              * Used for best match union deserialization.
              */
-            @JvmSynthetic
             internal fun validity(): Int =
                 additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
 
@@ -923,7 +916,7 @@ private constructor(
                 return other is Properties && additionalProperties == other.additionalProperties
             }
 
-            private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+            private val hashCode: Int by lazy { contentHash(additionalProperties) }
 
             override fun hashCode(): Int = hashCode
 
@@ -943,7 +936,7 @@ private constructor(
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(type, properties, required, additionalProperties)
+            contentHash(type, properties, required, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
@@ -974,13 +967,13 @@ private constructor(
 
         companion object {
 
-            @JvmField val DIRECT = of("direct")
+            val DIRECT = of("direct")
 
-            @JvmField val CODE_EXECUTION_20250825 = of("code_execution_20250825")
+            val CODE_EXECUTION_20250825 = of("code_execution_20250825")
 
-            @JvmField val CODE_EXECUTION_20260120 = of("code_execution_20260120")
+            val CODE_EXECUTION_20260120 = of("code_execution_20260120")
 
-            @JvmStatic fun of(value: String) = AllowedCaller(JsonField.of(value))
+            fun of(value: String) = AllowedCaller(JsonField.of(value))
         }
 
         /** An enum containing [AllowedCaller]'s known values. */
@@ -1110,7 +1103,7 @@ private constructor(
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [InputExample]. */
-            @JvmStatic fun builder() = Builder()
+            fun builder() = Builder()
         }
 
         /** A builder for [InputExample]. */
@@ -1118,7 +1111,6 @@ private constructor(
 
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic
             internal fun from(inputExample: InputExample) = apply {
                 additionalProperties = inputExample.additionalProperties.toMutableMap()
             }
@@ -1174,7 +1166,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
 
@@ -1186,7 +1177,7 @@ private constructor(
             return other is InputExample && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+        private val hashCode: Int by lazy { contentHash(additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
@@ -1207,9 +1198,9 @@ private constructor(
 
         companion object {
 
-            @JvmField val CUSTOM = of("custom")
+            val CUSTOM = of("custom")
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            fun of(value: String) = Type(JsonField.of(value))
         }
 
         /** An enum containing [Type]'s known values. */
@@ -1332,7 +1323,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(
+        contentHash(
             inputSchema,
             name,
             allowedCallers,

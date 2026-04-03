@@ -17,8 +17,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.io.InputStream
 import java.nio.file.Path
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.io.path.inputStream
 import kotlin.io.path.name
@@ -71,7 +70,7 @@ private constructor(
          * .file()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [FileUploadParams]. */
@@ -82,7 +81,6 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        @JvmSynthetic
         internal fun from(fileUploadParams: FileUploadParams) = apply {
             betas = fileUploadParams.betas?.toMutableList()
             body = fileUploadParams.body.toBuilder()
@@ -323,7 +321,7 @@ private constructor(
         @JsonAnyGetter
         @ExcludeMissing
         fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+            additionalProperties.toMap()
 
         fun toBuilder() = Builder().from(this)
 
@@ -337,7 +335,7 @@ private constructor(
              * .file()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -346,7 +344,6 @@ private constructor(
             private var file: MultipartField<InputStream>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic
             internal fun from(body: Body) = apply {
                 file = body.file
                 additionalProperties = body.additionalProperties.toMutableMap()
@@ -440,7 +437,7 @@ private constructor(
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(file, additionalProperties) }
+        private val hashCode: Int by lazy { contentHash(file, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
@@ -460,7 +457,7 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(betas, body, additionalHeaders, additionalQueryParams)
+        contentHash(betas, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "FileUploadParams{betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

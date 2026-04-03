@@ -21,8 +21,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -225,7 +224,7 @@ private constructor(
          * .prompt()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [CompletionCreateParams]. */
@@ -236,7 +235,6 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        @JvmSynthetic
         internal fun from(completionCreateParams: CompletionCreateParams) = apply {
             betas = completionCreateParams.betas?.toMutableList()
             body = completionCreateParams.body.toBuilder()
@@ -811,7 +809,7 @@ private constructor(
         @JsonAnyGetter
         @ExcludeMissing
         fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+            additionalProperties.toMap()
 
         fun toBuilder() = Builder().from(this)
 
@@ -827,7 +825,7 @@ private constructor(
              * .prompt()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -843,7 +841,6 @@ private constructor(
             private var topP: JsonField<Double> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic
             internal fun from(body: Body) = apply {
                 maxTokensToSample = body.maxTokensToSample
                 model = body.model
@@ -1111,7 +1108,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             (if (maxTokensToSample.asKnown() != null) 1 else 0) +
                 (if (model.asKnown() != null) 1 else 0) +
@@ -1140,7 +1136,7 @@ private constructor(
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(
+            contentHash(
                 maxTokensToSample,
                 model,
                 prompt,
@@ -1172,7 +1168,7 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(betas, body, additionalHeaders, additionalQueryParams)
+        contentHash(betas, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "CompletionCreateParams{betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

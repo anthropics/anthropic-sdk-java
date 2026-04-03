@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class BetaMemoryTool20250818DeleteCommand
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -65,7 +64,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -80,7 +79,7 @@ private constructor(
          * .path()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaMemoryTool20250818DeleteCommand]. */
@@ -90,7 +89,6 @@ private constructor(
         private var path: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(
             betaMemoryTool20250818DeleteCommand: BetaMemoryTool20250818DeleteCommand
         ) = apply {
@@ -193,7 +191,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         command.let { if (it == JsonValue.from("delete")) 1 else 0 } +
             (if (path.asKnown() != null) 1 else 0)
@@ -209,7 +206,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(command, path, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(command, path, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

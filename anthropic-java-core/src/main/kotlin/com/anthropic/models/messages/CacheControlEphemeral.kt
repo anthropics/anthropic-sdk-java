@@ -13,8 +13,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 
 class CacheControlEphemeral
@@ -71,14 +70,14 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [CacheControlEphemeral]. */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [CacheControlEphemeral]. */
@@ -88,7 +87,6 @@ private constructor(
         private var ttl: JsonField<Ttl> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(cacheControlEphemeral: CacheControlEphemeral) = apply {
             type = cacheControlEphemeral.type
             ttl = cacheControlEphemeral.ttl
@@ -185,7 +183,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         type.let { if (it == JsonValue.from("ephemeral")) 1 else 0 } +
             (ttl.asKnown()?.validity() ?: 0)
@@ -213,11 +210,11 @@ private constructor(
 
         companion object {
 
-            @JvmField val TTL_5M = of("5m")
+            val TTL_5M = of("5m")
 
-            @JvmField val TTL_1H = of("1h")
+            val TTL_1H = of("1h")
 
-            @JvmStatic fun of(value: String) = Ttl(JsonField.of(value))
+            fun of(value: String) = Ttl(JsonField.of(value))
         }
 
         /** An enum containing [Ttl]'s known values. */
@@ -335,7 +332,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(type, ttl, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(type, ttl, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

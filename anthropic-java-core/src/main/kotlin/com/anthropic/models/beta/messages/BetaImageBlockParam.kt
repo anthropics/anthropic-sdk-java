@@ -24,8 +24,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -97,7 +96,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -111,7 +110,7 @@ private constructor(
          * .source()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaImageBlockParam]. */
@@ -122,7 +121,6 @@ private constructor(
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaImageBlockParam: BetaImageBlockParam) = apply {
             source = betaImageBlockParam.source
             type = betaImageBlockParam.type
@@ -273,7 +271,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (source.asKnown()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("image")) 1 else 0 } +
@@ -356,7 +353,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
@@ -381,7 +377,7 @@ private constructor(
                 file == other.file
         }
 
-        override fun hashCode(): Int = Objects.hash(base64, url, file)
+        override fun hashCode(): Int = contentHash(base64, url, file)
 
         override fun toString(): String =
             when {
@@ -394,11 +390,11 @@ private constructor(
 
         companion object {
 
-            @JvmStatic fun ofBase64(base64: BetaBase64ImageSource) = Source(base64 = base64)
+            fun ofBase64(base64: BetaBase64ImageSource) = Source(base64 = base64)
 
-            @JvmStatic fun ofUrl(url: BetaUrlImageSource) = Source(url = url)
+            fun ofUrl(url: BetaUrlImageSource) = Source(url = url)
 
-            @JvmStatic fun ofFile(file: BetaFileImageSource) = Source(file = file)
+            fun ofFile(file: BetaFileImageSource) = Source(file = file)
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */
@@ -484,7 +480,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(source, type, cacheControl, additionalProperties)
+        contentHash(source, type, cacheControl, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

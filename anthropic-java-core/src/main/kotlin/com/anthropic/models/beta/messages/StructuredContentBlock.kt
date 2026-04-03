@@ -2,7 +2,7 @@ package com.anthropic.models.beta.messages
 
 import com.anthropic.core.JsonValue
 import com.anthropic.errors.AnthropicInvalidDataException
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrElse
 import kotlin.jvm.optionals.getOrNull
@@ -305,7 +305,7 @@ internal constructor(
             rawContentBlock == other.rawContentBlock
     }
 
-    override fun hashCode(): Int = Objects.hash(outputType, rawContentBlock)
+    override fun hashCode(): Int = contentHash(outputType, rawContentBlock)
 
     override fun toString(): String =
         "${javaClass.simpleName}{outputType=$outputType, rawContentBlock=$rawContentBlock}"

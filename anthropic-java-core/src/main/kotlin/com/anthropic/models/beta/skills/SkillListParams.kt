@@ -7,7 +7,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -58,10 +58,10 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): SkillListParams = builder().build()
+        fun none(): SkillListParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [SkillListParams]. */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [SkillListParams]. */
@@ -74,7 +74,6 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        @JvmSynthetic
         internal fun from(skillListParams: SkillListParams) = apply {
             limit = skillListParams.limit
             page = skillListParams.page
@@ -295,7 +294,7 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(limit, page, source, betas, additionalHeaders, additionalQueryParams)
+        contentHash(limit, page, source, betas, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "SkillListParams{limit=$limit, page=$page, source=$source, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

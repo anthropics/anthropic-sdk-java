@@ -14,8 +14,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 /**
  * This is a single line in the response `.jsonl` file and does not represent the response as a
@@ -83,7 +82,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -99,7 +98,7 @@ private constructor(
          * .result()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaMessageBatchIndividualResponse]. */
@@ -109,7 +108,6 @@ private constructor(
         private var result: JsonField<BetaMessageBatchResult>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaMessageBatchIndividualResponse: BetaMessageBatchIndividualResponse) =
             apply {
                 customId = betaMessageBatchIndividualResponse.customId
@@ -255,7 +253,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (customId.asKnown() != null) 1 else 0) +
             (result.asKnown()?.validity() ?: 0)
@@ -271,7 +268,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(customId, result, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(customId, result, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

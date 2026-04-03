@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -365,7 +365,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         accept(
             object : Visitor<Int> {
@@ -445,7 +444,7 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(
+        contentHash(
             text,
             thinking,
             redactedThinking,
@@ -491,7 +490,7 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun ofText(text: BetaTextBlock) = BetaContentBlock(text = text)
+        fun ofText(text: BetaTextBlock) = BetaContentBlock(text = text)
 
         @JvmStatic
         fun ofThinking(thinking: BetaThinkingBlock) = BetaContentBlock(thinking = thinking)
@@ -500,7 +499,7 @@ private constructor(
         fun ofRedactedThinking(redactedThinking: BetaRedactedThinkingBlock) =
             BetaContentBlock(redactedThinking = redactedThinking)
 
-        @JvmStatic fun ofToolUse(toolUse: BetaToolUseBlock) = BetaContentBlock(toolUse = toolUse)
+        fun ofToolUse(toolUse: BetaToolUseBlock) = BetaContentBlock(toolUse = toolUse)
 
         @JvmStatic
         fun ofServerToolUse(serverToolUse: BetaServerToolUseBlock) =

@@ -13,8 +13,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -173,7 +172,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -192,7 +191,7 @@ private constructor(
          * .startBlockIndex()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [CitationContentBlockLocation]. */
@@ -207,7 +206,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("content_block_location")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(citationContentBlockLocation: CitationContentBlockLocation) = apply {
             citedText = citationContentBlockLocation.citedText
             documentIndex = citationContentBlockLocation.documentIndex
@@ -397,7 +395,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (citedText.asKnown() != null) 1 else 0) +
             (if (documentIndex.asKnown() != null) 1 else 0) +
@@ -424,7 +421,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(
+        contentHash(
             citedText,
             documentIndex,
             documentTitle,

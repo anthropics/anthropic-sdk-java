@@ -1,4 +1,3 @@
-@file:JvmName("ObjectMappers")
 
 package com.anthropic.core
 

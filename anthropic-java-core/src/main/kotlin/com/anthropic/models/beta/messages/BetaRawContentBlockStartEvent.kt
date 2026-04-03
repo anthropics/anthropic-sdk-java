@@ -23,8 +23,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -95,7 +94,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -111,7 +110,7 @@ private constructor(
          * .index()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaRawContentBlockStartEvent]. */
@@ -122,7 +121,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("content_block_start")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaRawContentBlockStartEvent: BetaRawContentBlockStartEvent) = apply {
             contentBlock = betaRawContentBlockStartEvent.contentBlock
             index = betaRawContentBlockStartEvent.index
@@ -361,7 +359,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (contentBlock.asKnown()?.validity() ?: 0) +
             (if (index.asKnown() != null) 1 else 0) +
@@ -645,7 +642,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
@@ -727,7 +723,7 @@ private constructor(
         }
 
         override fun hashCode(): Int =
-            Objects.hash(
+            contentHash(
                 text,
                 thinking,
                 redactedThinking,
@@ -773,7 +769,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic fun ofText(text: BetaTextBlock) = ContentBlock(text = text)
+            fun ofText(text: BetaTextBlock) = ContentBlock(text = text)
 
             @JvmStatic
             fun ofThinking(thinking: BetaThinkingBlock) = ContentBlock(thinking = thinking)
@@ -782,7 +778,7 @@ private constructor(
             fun ofRedactedThinking(redactedThinking: BetaRedactedThinkingBlock) =
                 ContentBlock(redactedThinking = redactedThinking)
 
-            @JvmStatic fun ofToolUse(toolUse: BetaToolUseBlock) = ContentBlock(toolUse = toolUse)
+            fun ofToolUse(toolUse: BetaToolUseBlock) = ContentBlock(toolUse = toolUse)
 
             @JvmStatic
             fun ofServerToolUse(serverToolUse: BetaServerToolUseBlock) =
@@ -1052,7 +1048,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(contentBlock, index, type, additionalProperties)
+        contentHash(contentBlock, index, type, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

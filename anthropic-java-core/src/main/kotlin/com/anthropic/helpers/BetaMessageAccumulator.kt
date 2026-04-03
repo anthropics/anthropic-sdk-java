@@ -8,7 +8,6 @@ import com.anthropic.models.beta.messages.*
 import kotlin.jvm.optionals.getOrNull
 
 /** Checks if a content block is one that tracks tool input via input_json_delta events */
-@JvmSynthetic
 internal fun BetaContentBlock.tracksToolInput(): Boolean =
     isToolUse() || isServerToolUse() || isMcpToolUse()
 
@@ -62,9 +61,8 @@ class BetaMessageAccumulator private constructor() {
     companion object {
         private val JSON_MAPPER = jsonMapper()
 
-        @JvmStatic fun create() = BetaMessageAccumulator()
+        fun create() = BetaMessageAccumulator()
 
-        @JvmSynthetic
         internal fun mergeMessageUsage(
             usage: BetaUsage,
             deltaUsage: BetaMessageDeltaUsage,
@@ -112,7 +110,6 @@ class BetaMessageAccumulator private constructor() {
             return builder.build()
         }
 
-        @JvmSynthetic
         internal fun mergeTextDelta(
             contentBlock: BetaContentBlock,
             textDelta: BetaTextDelta,
@@ -125,7 +122,6 @@ class BetaMessageAccumulator private constructor() {
             return BetaContentBlock.ofText(newTextBlock)
         }
 
-        @JvmSynthetic
         internal fun mergeCitationsDelta(
             contentBlock: BetaContentBlock,
             citationsDelta: BetaCitationsDelta,
@@ -141,7 +137,6 @@ class BetaMessageAccumulator private constructor() {
             return BetaContentBlock.ofText(newTextBlock)
         }
 
-        @JvmSynthetic
         internal fun mergeThinkingDelta(
             contentBlock: BetaContentBlock,
             thinkingDelta: BetaThinkingDelta,
@@ -157,7 +152,6 @@ class BetaMessageAccumulator private constructor() {
             return BetaContentBlock.ofThinking(newThinkingBlock)
         }
 
-        @JvmSynthetic
         internal fun mergeSignatureDelta(
             contentBlock: BetaContentBlock,
             signatureDelta: BetaSignatureDelta,
@@ -177,7 +171,6 @@ class BetaMessageAccumulator private constructor() {
             return BetaContentBlock.ofThinking(newThinkingBlock)
         }
 
-        @JvmSynthetic
         internal fun mergeCompactionDelta(
             contentBlock: BetaContentBlock,
             compactionDelta: BetaCompactionContentBlockDelta,
@@ -190,7 +183,6 @@ class BetaMessageAccumulator private constructor() {
             return BetaContentBlock.ofCompaction(newCompactionBlock)
         }
 
-        @JvmSynthetic
         internal fun citationsDeltaToTextCitation(citationsDelta: BetaCitationsDelta) =
             // A `CitationsDelta` only holds _one_ citation.
             citationsDelta

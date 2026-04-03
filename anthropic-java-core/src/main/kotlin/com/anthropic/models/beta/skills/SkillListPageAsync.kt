@@ -7,7 +7,7 @@ import com.anthropic.core.AutoPagerAsync
 import com.anthropic.core.PageAsync
 import com.anthropic.core.checkRequired
 import com.anthropic.services.async.beta.SkillServiceAsync
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
@@ -81,7 +81,7 @@ private constructor(
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [SkillListPageAsync]. */
@@ -92,7 +92,6 @@ private constructor(
         private var params: SkillListParams? = null
         private var response: SkillListPageResponse? = null
 
-        @JvmSynthetic
         internal fun from(skillListPageAsync: SkillListPageAsync) = apply {
             service = skillListPageAsync.service
             streamHandlerExecutor = skillListPageAsync.streamHandlerExecutor
@@ -148,7 +147,7 @@ private constructor(
             response == other.response
     }
 
-    override fun hashCode(): Int = Objects.hash(service, streamHandlerExecutor, params, response)
+    override fun hashCode(): Int = contentHash(service, streamHandlerExecutor, params, response)
 
     override fun toString() =
         "SkillListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"

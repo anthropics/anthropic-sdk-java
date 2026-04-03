@@ -27,8 +27,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -278,7 +277,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -301,7 +300,7 @@ private constructor(
          * .speed()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaUsage]. */
@@ -319,7 +318,6 @@ private constructor(
         private var speed: JsonField<Speed>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaUsage: BetaUsage) = apply {
             cacheCreation = betaUsage.cacheCreation
             cacheCreationInputTokens = betaUsage.cacheCreationInputTokens
@@ -643,7 +641,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (cacheCreation.asKnown()?.validity() ?: 0) +
             (if (cacheCreationInputTokens.asKnown() != null) 1 else 0) +
@@ -726,7 +723,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
@@ -750,7 +746,7 @@ private constructor(
                 compaction == other.compaction
         }
 
-        override fun hashCode(): Int = Objects.hash(message, compaction)
+        override fun hashCode(): Int = contentHash(message, compaction)
 
         override fun toString(): String =
             when {
@@ -858,13 +854,13 @@ private constructor(
 
         companion object {
 
-            @JvmField val STANDARD = of("standard")
+            val STANDARD = of("standard")
 
-            @JvmField val PRIORITY = of("priority")
+            val PRIORITY = of("priority")
 
-            @JvmField val BATCH = of("batch")
+            val BATCH = of("batch")
 
-            @JvmStatic fun of(value: String) = ServiceTier(JsonField.of(value))
+            fun of(value: String) = ServiceTier(JsonField.of(value))
         }
 
         /** An enum containing [ServiceTier]'s known values. */
@@ -992,11 +988,11 @@ private constructor(
 
         companion object {
 
-            @JvmField val STANDARD = of("standard")
+            val STANDARD = of("standard")
 
-            @JvmField val FAST = of("fast")
+            val FAST = of("fast")
 
-            @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
+            fun of(value: String) = Speed(JsonField.of(value))
         }
 
         /** An enum containing [Speed]'s known values. */
@@ -1123,7 +1119,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(
+        contentHash(
             cacheCreation,
             cacheCreationInputTokens,
             cacheReadInputTokens,

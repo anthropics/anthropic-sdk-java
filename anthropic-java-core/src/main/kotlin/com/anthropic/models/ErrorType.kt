@@ -20,25 +20,25 @@ class ErrorType @JsonCreator private constructor(private val value: JsonField<St
 
     companion object {
 
-        @JvmField val INVALID_REQUEST_ERROR = of("invalid_request_error")
+        val INVALID_REQUEST_ERROR = of("invalid_request_error")
 
-        @JvmField val AUTHENTICATION_ERROR = of("authentication_error")
+        val AUTHENTICATION_ERROR = of("authentication_error")
 
-        @JvmField val PERMISSION_ERROR = of("permission_error")
+        val PERMISSION_ERROR = of("permission_error")
 
-        @JvmField val NOT_FOUND_ERROR = of("not_found_error")
+        val NOT_FOUND_ERROR = of("not_found_error")
 
-        @JvmField val RATE_LIMIT_ERROR = of("rate_limit_error")
+        val RATE_LIMIT_ERROR = of("rate_limit_error")
 
-        @JvmField val TIMEOUT_ERROR = of("timeout_error")
+        val TIMEOUT_ERROR = of("timeout_error")
 
-        @JvmField val OVERLOADED_ERROR = of("overloaded_error")
+        val OVERLOADED_ERROR = of("overloaded_error")
 
-        @JvmField val API_ERROR = of("api_error")
+        val API_ERROR = of("api_error")
 
-        @JvmField val BILLING_ERROR = of("billing_error")
+        val BILLING_ERROR = of("billing_error")
 
-        @JvmStatic fun of(value: String) = ErrorType(JsonField.of(value))
+        fun of(value: String) = ErrorType(JsonField.of(value))
     }
 
     /** An enum containing [ErrorType]'s known values. */

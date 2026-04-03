@@ -33,8 +33,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -404,7 +403,7 @@ private constructor(
          * .model()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [MessageCountTokensParams]. */
@@ -415,7 +414,6 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        @JvmSynthetic
         internal fun from(messageCountTokensParams: MessageCountTokensParams) = apply {
             betas = messageCountTokensParams.betas?.toMutableList()
             body = messageCountTokensParams.body.toBuilder()
@@ -1679,7 +1677,7 @@ private constructor(
         @JsonAnyGetter
         @ExcludeMissing
         fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+            additionalProperties.toMap()
 
         fun toBuilder() = Builder().from(this)
 
@@ -1694,7 +1692,7 @@ private constructor(
              * .model()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -1715,7 +1713,6 @@ private constructor(
             private var tools: JsonField<MutableList<Tool>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic
             internal fun from(body: Body) = apply {
                 messages = body.messages.map { it.toMutableList() }
                 model = body.model
@@ -2491,7 +2488,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             (messages.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (model.asKnown() != null) 1 else 0) +
@@ -2528,7 +2524,7 @@ private constructor(
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(
+            contentHash(
                 messages,
                 model,
                 cacheControl,
@@ -2569,11 +2565,11 @@ private constructor(
 
         companion object {
 
-            @JvmField val STANDARD = of("standard")
+            val STANDARD = of("standard")
 
-            @JvmField val FAST = of("fast")
+            val FAST = of("fast")
 
-            @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
+            fun of(value: String) = Speed(JsonField.of(value))
         }
 
         /** An enum containing [Speed]'s known values. */
@@ -2754,7 +2750,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
@@ -2778,7 +2773,7 @@ private constructor(
                 betaTextBlockParams == other.betaTextBlockParams
         }
 
-        override fun hashCode(): Int = Objects.hash(string, betaTextBlockParams)
+        override fun hashCode(): Int = contentHash(string, betaTextBlockParams)
 
         override fun toString(): String =
             when {
@@ -2790,7 +2785,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic fun ofString(string: String) = System(string = string)
+            fun ofString(string: String) = System(string = string)
 
             @JvmStatic
             fun ofBetaTextBlockParams(betaTextBlockParams: List<BetaTextBlockParam>) =
@@ -3289,7 +3284,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
@@ -3413,7 +3407,7 @@ private constructor(
         }
 
         override fun hashCode(): Int =
-            Objects.hash(
+            contentHash(
                 beta,
                 betaToolBash20241022,
                 betaToolBash20250124,
@@ -3486,7 +3480,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic fun ofBeta(beta: BetaTool) = Tool(beta = beta)
+            fun ofBeta(beta: BetaTool) = Tool(beta = beta)
 
             @JvmStatic
             fun ofBetaToolBash20241022(betaToolBash20241022: BetaToolBash20241022) =
@@ -3842,7 +3836,7 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(betas, body, additionalHeaders, additionalQueryParams)
+        contentHash(betas, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "MessageCountTokensParams{betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

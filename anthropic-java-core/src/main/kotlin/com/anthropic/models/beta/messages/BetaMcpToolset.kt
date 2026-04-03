@@ -14,8 +14,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -138,7 +137,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -152,7 +151,7 @@ private constructor(
          * .mcpServerName()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaMcpToolset]. */
@@ -165,7 +164,6 @@ private constructor(
         private var defaultConfig: JsonField<BetaMcpToolDefaultConfig> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaMcpToolset: BetaMcpToolset) = apply {
             mcpServerName = betaMcpToolset.mcpServerName
             type = betaMcpToolset.type
@@ -325,7 +323,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (mcpServerName.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("mcp_toolset")) 1 else 0 } +
@@ -350,7 +347,7 @@ private constructor(
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Configs]. */
-            @JvmStatic fun builder() = Builder()
+            fun builder() = Builder()
         }
 
         /** A builder for [Configs]. */
@@ -358,7 +355,6 @@ private constructor(
 
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic
             internal fun from(configs: Configs) = apply {
                 additionalProperties = configs.additionalProperties.toMutableMap()
             }
@@ -414,7 +410,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
 
@@ -426,7 +421,7 @@ private constructor(
             return other is Configs && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+        private val hashCode: Int by lazy { contentHash(additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
@@ -448,7 +443,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(
+        contentHash(
             mcpServerName,
             type,
             cacheControl,

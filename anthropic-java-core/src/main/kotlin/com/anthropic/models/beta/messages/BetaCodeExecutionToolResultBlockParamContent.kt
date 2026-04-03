@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 
 /** Code execution result with encrypted stdout for PFC + web_search results. */
@@ -115,7 +115,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         accept(
             object : Visitor<Int> {
@@ -147,7 +146,7 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(errorParam, resultBlockParam, encryptedCodeExecutionResultBlockParam)
+        contentHash(errorParam, resultBlockParam, encryptedCodeExecutionResultBlockParam)
 
     override fun toString(): String =
         when {

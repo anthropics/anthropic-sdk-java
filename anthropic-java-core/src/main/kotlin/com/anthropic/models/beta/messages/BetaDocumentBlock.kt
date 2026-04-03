@@ -24,8 +24,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -113,7 +112,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -129,7 +128,7 @@ private constructor(
          * .title()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaDocumentBlock]. */
@@ -141,7 +140,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("document")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaDocumentBlock: BetaDocumentBlock) = apply {
             citations = betaDocumentBlock.citations
             source = betaDocumentBlock.source
@@ -305,7 +303,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (citations.asKnown()?.validity() ?: 0) +
             (source.asKnown()?.validity() ?: 0) +
@@ -377,7 +374,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
@@ -397,7 +393,7 @@ private constructor(
             return other is Source && base64 == other.base64 && text == other.text
         }
 
-        override fun hashCode(): Int = Objects.hash(base64, text)
+        override fun hashCode(): Int = contentHash(base64, text)
 
         override fun toString(): String =
             when {
@@ -409,9 +405,9 @@ private constructor(
 
         companion object {
 
-            @JvmStatic fun ofBase64(base64: BetaBase64PdfSource) = Source(base64 = base64)
+            fun ofBase64(base64: BetaBase64PdfSource) = Source(base64 = base64)
 
-            @JvmStatic fun ofText(text: BetaPlainTextSource) = Source(text = text)
+            fun ofText(text: BetaPlainTextSource) = Source(text = text)
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */
@@ -490,7 +486,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(citations, source, title, type, additionalProperties)
+        contentHash(citations, source, title, type, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

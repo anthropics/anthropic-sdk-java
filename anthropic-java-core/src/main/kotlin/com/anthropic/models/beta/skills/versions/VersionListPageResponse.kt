@@ -15,8 +15,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -91,7 +90,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -107,7 +106,7 @@ private constructor(
          * .nextPage()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [VersionListPageResponse]. */
@@ -118,7 +117,6 @@ private constructor(
         private var nextPage: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(versionListPageResponse: VersionListPageResponse) = apply {
             data = versionListPageResponse.data.map { it.toMutableList() }
             hasMore = versionListPageResponse.hasMore
@@ -248,7 +246,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (data.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (hasMore.asKnown() != null) 1 else 0) +
@@ -267,7 +264,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(data, hasMore, nextPage, additionalProperties)
+        contentHash(data, hasMore, nextPage, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

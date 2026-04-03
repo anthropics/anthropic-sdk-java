@@ -14,8 +14,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 
 class DeletedFile
@@ -72,7 +71,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -86,7 +85,7 @@ private constructor(
          * .id()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [DeletedFile]. */
@@ -96,7 +95,6 @@ private constructor(
         private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(deletedFile: DeletedFile) = apply {
             id = deletedFile.id
             type = deletedFile.type
@@ -189,7 +187,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown() != null) 1 else 0) + (type.asKnown()?.validity() ?: 0)
 
@@ -212,9 +209,9 @@ private constructor(
 
         companion object {
 
-            @JvmField val FILE_DELETED = of("file_deleted")
+            val FILE_DELETED = of("file_deleted")
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            fun of(value: String) = Type(JsonField.of(value))
         }
 
         /** An enum containing [Type]'s known values. */
@@ -328,7 +325,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, type, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(id, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

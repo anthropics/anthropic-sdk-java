@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class MessageTokensCount
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -52,7 +51,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -66,7 +65,7 @@ private constructor(
          * .inputTokens()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [MessageTokensCount]. */
@@ -75,7 +74,6 @@ private constructor(
         private var inputTokens: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(messageTokensCount: MessageTokensCount) = apply {
             inputTokens = messageTokensCount.inputTokens
             additionalProperties = messageTokensCount.additionalProperties.toMutableMap()
@@ -170,7 +168,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(inputTokens, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(inputTokens, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

@@ -25,8 +25,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 
 class ContentBlockSource
@@ -75,7 +74,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -89,7 +88,7 @@ private constructor(
          * .content()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [ContentBlockSource]. */
@@ -99,7 +98,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("content")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(contentBlockSource: ContentBlockSource) = apply {
             content = contentBlockSource.content
             type = contentBlockSource.type
@@ -205,7 +203,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (content.asKnown()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("content")) 1 else 0 }
@@ -274,7 +271,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
@@ -295,7 +291,7 @@ private constructor(
             return other is Content && string == other.string && blockSource == other.blockSource
         }
 
-        override fun hashCode(): Int = Objects.hash(string, blockSource)
+        override fun hashCode(): Int = contentHash(string, blockSource)
 
         override fun toString(): String =
             when {
@@ -307,7 +303,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic fun ofString(string: String) = Content(string = string)
+            fun ofString(string: String) = Content(string = string)
 
             @JvmStatic
             fun ofBlockSource(blockSource: List<ContentBlockSourceContent>) =
@@ -395,7 +391,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(content, type, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(content, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

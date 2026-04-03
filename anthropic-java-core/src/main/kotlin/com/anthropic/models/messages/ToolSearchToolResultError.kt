@@ -13,8 +13,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -90,7 +89,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -105,7 +104,7 @@ private constructor(
          * .errorMessage()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [ToolSearchToolResultError]. */
@@ -116,7 +115,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("tool_search_tool_result_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(toolSearchToolResultError: ToolSearchToolResultError) = apply {
             errorCode = toolSearchToolResultError.errorCode
             errorMessage = toolSearchToolResultError.errorMessage
@@ -238,7 +236,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (errorCode.asKnown()?.validity() ?: 0) +
             (if (errorMessage.asKnown() != null) 1 else 0) +
@@ -257,7 +254,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(errorCode, errorMessage, type, additionalProperties)
+        contentHash(errorCode, errorMessage, type, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

@@ -7,7 +7,7 @@ import com.anthropic.core.AutoPager
 import com.anthropic.core.Page
 import com.anthropic.core.checkRequired
 import com.anthropic.services.blocking.beta.SkillService
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -76,7 +76,7 @@ private constructor(
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [SkillListPage]. */
@@ -86,7 +86,6 @@ private constructor(
         private var params: SkillListParams? = null
         private var response: SkillListPageResponse? = null
 
-        @JvmSynthetic
         internal fun from(skillListPage: SkillListPage) = apply {
             service = skillListPage.service
             params = skillListPage.params
@@ -134,7 +133,7 @@ private constructor(
             response == other.response
     }
 
-    override fun hashCode(): Int = Objects.hash(service, params, response)
+    override fun hashCode(): Int = contentHash(service, params, response)
 
     override fun toString() = "SkillListPage{service=$service, params=$params, response=$response}"
 }

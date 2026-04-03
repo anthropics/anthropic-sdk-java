@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class BetaServerToolUsage
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -77,7 +76,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -92,7 +91,7 @@ private constructor(
          * .webSearchRequests()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaServerToolUsage]. */
@@ -102,7 +101,6 @@ private constructor(
         private var webSearchRequests: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaServerToolUsage: BetaServerToolUsage) = apply {
             webFetchRequests = betaServerToolUsage.webFetchRequests
             webSearchRequests = betaServerToolUsage.webSearchRequests
@@ -204,7 +202,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (webFetchRequests.asKnown() != null) 1 else 0) +
             (if (webSearchRequests.asKnown() != null) 1 else 0)
@@ -221,7 +218,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(webFetchRequests, webSearchRequests, additionalProperties)
+        contentHash(webFetchRequests, webSearchRequests, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

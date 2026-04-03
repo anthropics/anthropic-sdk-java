@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class BetaFileImageSource
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -61,7 +60,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -75,7 +74,7 @@ private constructor(
          * .fileId()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaFileImageSource]. */
@@ -85,7 +84,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("file")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaFileImageSource: BetaFileImageSource) = apply {
             fileId = betaFileImageSource.fileId
             type = betaFileImageSource.type
@@ -184,7 +182,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (fileId.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("file")) 1 else 0 }
@@ -200,7 +197,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(fileId, type, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(fileId, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

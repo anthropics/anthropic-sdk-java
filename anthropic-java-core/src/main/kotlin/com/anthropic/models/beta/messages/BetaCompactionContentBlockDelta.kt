@@ -13,8 +13,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -64,7 +63,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -79,7 +78,7 @@ private constructor(
          * .content()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaCompactionContentBlockDelta]. */
@@ -89,7 +88,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("compaction_delta")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaCompactionContentBlockDelta: BetaCompactionContentBlockDelta) =
             apply {
                 content = betaCompactionContentBlockDelta.content
@@ -193,7 +191,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (content.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("compaction_delta")) 1 else 0 }
@@ -209,7 +206,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(content, type, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(content, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

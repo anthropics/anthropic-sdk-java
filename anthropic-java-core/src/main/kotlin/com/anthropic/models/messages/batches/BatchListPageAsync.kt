@@ -7,7 +7,7 @@ import com.anthropic.core.AutoPagerAsync
 import com.anthropic.core.PageAsync
 import com.anthropic.core.checkRequired
 import com.anthropic.services.async.messages.BatchServiceAsync
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
@@ -85,7 +85,7 @@ private constructor(
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BatchListPageAsync]. */
@@ -96,7 +96,6 @@ private constructor(
         private var params: BatchListParams? = null
         private var response: BatchListPageResponse? = null
 
-        @JvmSynthetic
         internal fun from(batchListPageAsync: BatchListPageAsync) = apply {
             service = batchListPageAsync.service
             streamHandlerExecutor = batchListPageAsync.streamHandlerExecutor
@@ -152,7 +151,7 @@ private constructor(
             response == other.response
     }
 
-    override fun hashCode(): Int = Objects.hash(service, streamHandlerExecutor, params, response)
+    override fun hashCode(): Int = contentHash(service, streamHandlerExecutor, params, response)
 
     override fun toString() =
         "BatchListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"

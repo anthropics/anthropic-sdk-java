@@ -13,8 +13,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class JsonOutputFormat
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -64,7 +63,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -78,7 +77,7 @@ private constructor(
          * .schema()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [JsonOutputFormat]. */
@@ -88,7 +87,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("json_schema")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(jsonOutputFormat: JsonOutputFormat) = apply {
             schema = jsonOutputFormat.schema
             type = jsonOutputFormat.type
@@ -188,7 +186,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (schema.asKnown()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("json_schema")) 1 else 0 }
@@ -210,7 +207,7 @@ private constructor(
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Schema]. */
-            @JvmStatic fun builder() = Builder()
+            fun builder() = Builder()
         }
 
         /** A builder for [Schema]. */
@@ -218,7 +215,6 @@ private constructor(
 
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic
             internal fun from(schema: Schema) = apply {
                 additionalProperties = schema.additionalProperties.toMutableMap()
             }
@@ -274,7 +270,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
 
@@ -286,7 +281,7 @@ private constructor(
             return other is Schema && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+        private val hashCode: Int by lazy { contentHash(additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
@@ -304,7 +299,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(schema, type, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(schema, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

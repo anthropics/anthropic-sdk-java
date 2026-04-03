@@ -20,19 +20,19 @@ class StopReason @JsonCreator private constructor(private val value: JsonField<S
 
     companion object {
 
-        @JvmField val END_TURN = of("end_turn")
+        val END_TURN = of("end_turn")
 
-        @JvmField val MAX_TOKENS = of("max_tokens")
+        val MAX_TOKENS = of("max_tokens")
 
-        @JvmField val STOP_SEQUENCE = of("stop_sequence")
+        val STOP_SEQUENCE = of("stop_sequence")
 
-        @JvmField val TOOL_USE = of("tool_use")
+        val TOOL_USE = of("tool_use")
 
-        @JvmField val PAUSE_TURN = of("pause_turn")
+        val PAUSE_TURN = of("pause_turn")
 
-        @JvmField val REFUSAL = of("refusal")
+        val REFUSAL = of("refusal")
 
-        @JvmStatic fun of(value: String) = StopReason(JsonField.of(value))
+        fun of(value: String) = StopReason(JsonField.of(value))
     }
 
     /** An enum containing [StopReason]'s known values. */

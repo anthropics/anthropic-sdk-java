@@ -26,8 +26,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -162,7 +161,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -172,7 +171,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of
          * [BetaClearToolUses20250919Edit].
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaClearToolUses20250919Edit]. */
@@ -186,7 +185,6 @@ private constructor(
         private var trigger: JsonField<Trigger> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(betaClearToolUses20250919Edit: BetaClearToolUses20250919Edit) = apply {
             type = betaClearToolUses20250919Edit.type
             clearAtLeast = betaClearToolUses20250919Edit.clearAtLeast
@@ -421,7 +419,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         type.let { if (it == JsonValue.from("clear_tool_uses_20250919")) 1 else 0 } +
             (clearAtLeast.asKnown()?.validity() ?: 0) +
@@ -492,7 +489,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
@@ -512,7 +508,7 @@ private constructor(
             return other is ClearToolInputs && bool == other.bool && strings == other.strings
         }
 
-        override fun hashCode(): Int = Objects.hash(bool, strings)
+        override fun hashCode(): Int = contentHash(bool, strings)
 
         override fun toString(): String =
             when {
@@ -524,7 +520,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic fun ofBool(bool: Boolean) = ClearToolInputs(bool = bool)
+            fun ofBool(bool: Boolean) = ClearToolInputs(bool = bool)
 
             @JvmStatic
             fun ofStrings(strings: List<String>) = ClearToolInputs(strings = strings.toImmutable())
@@ -668,7 +664,6 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
@@ -691,7 +686,7 @@ private constructor(
                 toolUses == other.toolUses
         }
 
-        override fun hashCode(): Int = Objects.hash(inputTokens, toolUses)
+        override fun hashCode(): Int = contentHash(inputTokens, toolUses)
 
         override fun toString(): String =
             when {
@@ -707,7 +702,7 @@ private constructor(
             fun ofInputTokens(inputTokens: BetaInputTokensTrigger) =
                 Trigger(inputTokens = inputTokens)
 
-            @JvmStatic fun ofToolUses(toolUses: BetaToolUsesTrigger) = Trigger(toolUses = toolUses)
+            fun ofToolUses(toolUses: BetaToolUsesTrigger) = Trigger(toolUses = toolUses)
         }
 
         /**
@@ -790,7 +785,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(
+        contentHash(
             type,
             clearAtLeast,
             clearToolInputs,

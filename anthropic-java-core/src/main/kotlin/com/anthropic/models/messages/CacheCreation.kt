@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class CacheCreation
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -79,7 +78,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -94,7 +93,7 @@ private constructor(
          * .ephemeral5mInputTokens()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [CacheCreation]. */
@@ -104,7 +103,6 @@ private constructor(
         private var ephemeral5mInputTokens: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(cacheCreation: CacheCreation) = apply {
             ephemeral1hInputTokens = cacheCreation.ephemeral1hInputTokens
             ephemeral5mInputTokens = cacheCreation.ephemeral5mInputTokens
@@ -206,7 +204,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (ephemeral1hInputTokens.asKnown() != null) 1 else 0) +
             (if (ephemeral5mInputTokens.asKnown() != null) 1 else 0)
@@ -223,7 +220,7 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(ephemeral1hInputTokens, ephemeral5mInputTokens, additionalProperties)
+        contentHash(ephemeral1hInputTokens, ephemeral5mInputTokens, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode

@@ -7,7 +7,7 @@ import com.anthropic.core.AutoPagerAsync
 import com.anthropic.core.PageAsync
 import com.anthropic.core.checkRequired
 import com.anthropic.services.async.beta.ModelServiceAsync
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
@@ -87,7 +87,7 @@ private constructor(
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [ModelListPageAsync]. */
@@ -98,7 +98,6 @@ private constructor(
         private var params: ModelListParams? = null
         private var response: ModelListPageResponse? = null
 
-        @JvmSynthetic
         internal fun from(modelListPageAsync: ModelListPageAsync) = apply {
             service = modelListPageAsync.service
             streamHandlerExecutor = modelListPageAsync.streamHandlerExecutor
@@ -154,7 +153,7 @@ private constructor(
             response == other.response
     }
 
-    override fun hashCode(): Int = Objects.hash(service, streamHandlerExecutor, params, response)
+    override fun hashCode(): Int = contentHash(service, streamHandlerExecutor, params, response)
 
     override fun toString() =
         "ModelListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"

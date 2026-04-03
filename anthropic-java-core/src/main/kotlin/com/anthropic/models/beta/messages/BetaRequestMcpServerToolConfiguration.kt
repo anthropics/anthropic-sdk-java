@@ -14,8 +14,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -71,7 +70,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -81,7 +80,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of
          * [BetaRequestMcpServerToolConfiguration].
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [BetaRequestMcpServerToolConfiguration]. */
@@ -91,7 +90,6 @@ private constructor(
         private var enabled: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(
             betaRequestMcpServerToolConfiguration: BetaRequestMcpServerToolConfiguration
         ) = apply {
@@ -209,7 +207,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (allowedTools.asKnown()?.size ?: 0) +
             (if (enabled.asKnown() != null) 1 else 0)
@@ -225,7 +222,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(allowedTools, enabled, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(allowedTools, enabled, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 

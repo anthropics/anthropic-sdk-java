@@ -25,46 +25,46 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
     companion object {
 
         /** Most intelligent model for building agents and coding */
-        @JvmField val CLAUDE_OPUS_4_6 = of("claude-opus-4-6")
+        val CLAUDE_OPUS_4_6 = of("claude-opus-4-6")
 
         /** Best combination of speed and intelligence */
-        @JvmField val CLAUDE_SONNET_4_6 = of("claude-sonnet-4-6")
+        val CLAUDE_SONNET_4_6 = of("claude-sonnet-4-6")
 
         /** Fastest model with near-frontier intelligence */
-        @JvmField val CLAUDE_HAIKU_4_5 = of("claude-haiku-4-5")
+        val CLAUDE_HAIKU_4_5 = of("claude-haiku-4-5")
 
         /** Fastest model with near-frontier intelligence */
-        @JvmField val CLAUDE_HAIKU_4_5_20251001 = of("claude-haiku-4-5-20251001")
+        val CLAUDE_HAIKU_4_5_20251001 = of("claude-haiku-4-5-20251001")
 
         /** Premium model combining maximum intelligence with practical performance */
-        @JvmField val CLAUDE_OPUS_4_5 = of("claude-opus-4-5")
+        val CLAUDE_OPUS_4_5 = of("claude-opus-4-5")
 
         /** Premium model combining maximum intelligence with practical performance */
-        @JvmField val CLAUDE_OPUS_4_5_20251101 = of("claude-opus-4-5-20251101")
+        val CLAUDE_OPUS_4_5_20251101 = of("claude-opus-4-5-20251101")
 
         /** High-performance model for agents and coding */
-        @JvmField val CLAUDE_SONNET_4_5 = of("claude-sonnet-4-5")
+        val CLAUDE_SONNET_4_5 = of("claude-sonnet-4-5")
 
         /** High-performance model for agents and coding */
-        @JvmField val CLAUDE_SONNET_4_5_20250929 = of("claude-sonnet-4-5-20250929")
+        val CLAUDE_SONNET_4_5_20250929 = of("claude-sonnet-4-5-20250929")
 
         /** Exceptional model for specialized complex tasks */
-        @JvmField val CLAUDE_OPUS_4_1 = of("claude-opus-4-1")
+        val CLAUDE_OPUS_4_1 = of("claude-opus-4-1")
 
         /** Exceptional model for specialized complex tasks */
-        @JvmField val CLAUDE_OPUS_4_1_20250805 = of("claude-opus-4-1-20250805")
+        val CLAUDE_OPUS_4_1_20250805 = of("claude-opus-4-1-20250805")
 
         /** Powerful model for complex tasks */
-        @JvmField val CLAUDE_OPUS_4_0 = of("claude-opus-4-0")
+        val CLAUDE_OPUS_4_0 = of("claude-opus-4-0")
 
         /** Powerful model for complex tasks */
-        @JvmField val CLAUDE_OPUS_4_20250514 = of("claude-opus-4-20250514")
+        val CLAUDE_OPUS_4_20250514 = of("claude-opus-4-20250514")
 
         /** High-performance model with extended thinking */
-        @JvmField val CLAUDE_SONNET_4_0 = of("claude-sonnet-4-0")
+        val CLAUDE_SONNET_4_0 = of("claude-sonnet-4-0")
 
         /** High-performance model with extended thinking */
-        @JvmField val CLAUDE_SONNET_4_20250514 = of("claude-sonnet-4-20250514")
+        val CLAUDE_SONNET_4_20250514 = of("claude-sonnet-4-20250514")
 
         /** Fast and cost-effective model */
         @Deprecated(
@@ -73,7 +73,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         @JvmField
         val CLAUDE_3_HAIKU_20240307 = of("claude-3-haiku-20240307")
 
-        @JvmStatic fun of(value: String) = Model(JsonField.of(value))
+        fun of(value: String) = Model(JsonField.of(value))
     }
 
     /** An enum containing [Model]'s known values. */

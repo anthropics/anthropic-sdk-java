@@ -7,7 +7,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
-import java.util.Objects
+import com.anthropic.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -36,12 +36,12 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): FileRetrieveMetadataParams = builder().build()
+        fun none(): FileRetrieveMetadataParams = builder().build()
 
         /**
          * Returns a mutable builder for constructing an instance of [FileRetrieveMetadataParams].
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [FileRetrieveMetadataParams]. */
@@ -52,7 +52,6 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        @JvmSynthetic
         internal fun from(fileRetrieveMetadataParams: FileRetrieveMetadataParams) = apply {
             fileId = fileRetrieveMetadataParams.fileId
             betas = fileRetrieveMetadataParams.betas?.toMutableList()
@@ -231,7 +230,7 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(fileId, betas, additionalHeaders, additionalQueryParams)
+        contentHash(fileId, betas, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "FileRetrieveMetadataParams{fileId=$fileId, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

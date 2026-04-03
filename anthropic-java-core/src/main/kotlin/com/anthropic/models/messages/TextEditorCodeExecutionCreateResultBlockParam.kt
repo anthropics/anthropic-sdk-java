@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Collections
-import java.util.Objects
+import com.anthropic.core.contentHash
 
 class TextEditorCodeExecutionCreateResultBlockParam
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -65,7 +64,7 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+        additionalProperties.toMap()
 
     fun toBuilder() = Builder().from(this)
 
@@ -80,7 +79,7 @@ private constructor(
          * .isFileUpdate()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [TextEditorCodeExecutionCreateResultBlockParam]. */
@@ -90,7 +89,6 @@ private constructor(
         private var type: JsonValue = JsonValue.from("text_editor_code_execution_create_result")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic
         internal fun from(
             textEditorCodeExecutionCreateResultBlockParam:
                 TextEditorCodeExecutionCreateResultBlockParam
@@ -196,7 +194,6 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
     internal fun validity(): Int =
         (if (isFileUpdate.asKnown() != null) 1 else 0) +
             type.let {
@@ -214,7 +211,7 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(isFileUpdate, type, additionalProperties) }
+    private val hashCode: Int by lazy { contentHash(isFileUpdate, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
