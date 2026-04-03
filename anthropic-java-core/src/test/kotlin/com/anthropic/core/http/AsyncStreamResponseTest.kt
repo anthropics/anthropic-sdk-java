@@ -11,6 +11,23 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.*
 
+private fun createStringSequence(vararg items: String): Sequence<String> =
+    items.asSequence()
+
+private fun createErroringSequence(error: Throwable): Sequence<String> {
+    val items = listOf("chunk1", "chunk2")
+    return Sequence {
+        object : Iterator<String> {
+            private var index = 0
+            override fun hasNext(): Boolean = true
+            override fun next(): String {
+                if (index < items.size) return items[index++]
+                throw error
+            }
+        }
+    }
+}
+
 @ExtendWith(MockitoExtension::class)
 internal class AsyncStreamResponseTest {
 
@@ -20,16 +37,11 @@ internal class AsyncStreamResponseTest {
 
     private val streamResponse =
         mock<StreamResponse<String>> {
-            on { stream() } doReturn kotlin.sequences.sequenceOf("chunk1", "chunk2", "chunk3")
+            on { stream() } doReturn createStringSequence("chunk1", "chunk2", "chunk3")
         }
     private val erroringStreamResponse =
         mock<StreamResponse<String>> {
-            on { stream() } doReturn
-                kotlin.sequences.kotlinx.coroutines.flow.flow {
-                    emit("chunk1")
-                    emit("chunk2")
-                    throw ERROR
-                }
+            on { stream() } doReturn createErroringSequence(ERROR)
         }
     private val executor =
         spy<Executor> {
