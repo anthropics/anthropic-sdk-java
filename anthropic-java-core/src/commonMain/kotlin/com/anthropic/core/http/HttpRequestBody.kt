@@ -1,9 +1,8 @@
 package com.anthropic.core.http
 
 import java.io.OutputStream
-import java.lang.AutoCloseable
 
-interface HttpRequestBody : java.lang.AutoCloseable {
+interface HttpRequestBody : AutoCloseable {
 
     fun writeTo(outputStream: java.io.OutputStream)
 

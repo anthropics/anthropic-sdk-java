@@ -1,3 +1,4 @@
+@file:OptIn(kotlin.uuid.ExperimentalUuidApi::class)
 // File generated from our OpenAPI spec by Stainless.
 
 
@@ -15,7 +16,8 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * Creates a new [HttpRequestBody] containing the given value serialized to a JSON string. The
@@ -239,7 +241,8 @@ private constructor(private val boundary: String, private val parts: List<Part>)
     }
 
     class Builder {
-        private val boundary = UUID.randomUUID().toString()
+    @OptIn(ExperimentalUuidApi::class)
+        private val boundary = Uuid.random().toString()
         private val parts: MutableList<Part> = mutableListOf()
 
         fun addPart(part: Part) = apply { parts.add(part) }

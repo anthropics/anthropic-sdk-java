@@ -1,9 +1,8 @@
 package com.anthropic.core.http
 
-import java.lang.AutoCloseable
 import java.io.InputStream
 
-interface HttpResponse : java.lang.AutoCloseable {
+interface HttpResponse : AutoCloseable {
     fun statusCode(): Int
     fun headers(): Headers
     fun requestId(): String? = headers().values("request-id").firstOrNull()

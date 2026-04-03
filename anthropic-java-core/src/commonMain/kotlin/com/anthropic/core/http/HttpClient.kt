@@ -1,10 +1,9 @@
 package com.anthropic.core.http
 
-import java.lang.AutoCloseable
 import java.util.concurrent.CompletableFuture
 import com.anthropic.core.RequestOptions
 
-interface HttpClient : java.lang.AutoCloseable {
+interface HttpClient : AutoCloseable {
 
     fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse
 

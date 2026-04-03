@@ -1,3 +1,4 @@
+@file:OptIn(kotlin.uuid.ExperimentalUuidApi::class)
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.core.http
@@ -16,7 +17,7 @@ import kotlin.time.Duration.Companion.nanoseconds
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoUnit
-import java.util.UUID
+import kotlin.uuid.Uuid
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ThreadLocalRandom
 import java.util.concurrent.TimeUnit
@@ -146,7 +147,7 @@ private constructor(
     private fun setRetryCountHeader(request: HttpRequest, retries: Int): HttpRequest =
         request.toBuilder().replaceHeaders("X-Stainless-Retry-Count", retries.toString()).build()
 
-    private fun idempotencyKey(): String = "stainless-java-retry-${UUID.randomUUID()}"
+    private fun idempotencyKey(): String = "stainless-java-retry-${Uuid.random()}"
 
     private fun maybeAddIdempotencyHeader(request: HttpRequest): HttpRequest {
         if (idempotencyHeader == null || request.headers.names().contains(idempotencyHeader)) {
