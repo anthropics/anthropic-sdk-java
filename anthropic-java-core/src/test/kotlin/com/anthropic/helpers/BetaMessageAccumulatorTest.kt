@@ -661,7 +661,7 @@ internal class BetaMessageAccumulatorTest {
 
         assertThat(content.size).isEqualTo(1)
         assertThat(content[0].asToolUse().name()).isEqualTo("1-TOOL.")
-        assertThat(content[0].asToolUse()._input().asObject().get()).isEmpty()
+        assertThat(content[0].asToolUse()._input().asObject()!!).isEmpty()
     }
 
     @Test
@@ -739,7 +739,7 @@ internal class BetaMessageAccumulatorTest {
 
         assertThat(content.size).isEqualTo(2)
         assertThat(content[0].asToolUse().name()).isEqualTo("1-TOOL.")
-        assertThat(content[0].asToolUse()._input().asObject().get()["hello"])
+        assertThat(content[0].asToolUse()._input().asObject()!!["hello"])
             .isEqualTo(JsonString.of("world"))
 
         assertThat(content[1].asText().text()).isEqualTo("3-ONE.3-TWO.3-THREE.")

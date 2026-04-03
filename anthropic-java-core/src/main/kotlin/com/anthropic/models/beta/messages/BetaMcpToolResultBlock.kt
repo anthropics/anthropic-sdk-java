@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages
+import com.anthropic.core.fromJsonNode
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
@@ -27,7 +28,6 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
 class BetaMcpToolResultBlock
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -304,9 +304,9 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (content.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (isError.asKnown().isPresent) 1 else 0) +
-            (if (toolUseId.asKnown().isPresent) 1 else 0) +
+        (content.asKnown()?.validity() ?: 0) +
+            (if (isError.asKnown() != null) 1 else 0) +
+            (if (toolUseId.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("mcp_tool_result")) 1 else 0 }
 
     @JsonDeserialize(using = Content.Deserializer::class)

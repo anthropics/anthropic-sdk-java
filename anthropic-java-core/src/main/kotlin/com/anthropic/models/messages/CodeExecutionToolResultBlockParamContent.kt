@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.messages
+import com.anthropic.core.fromJsonNode
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer

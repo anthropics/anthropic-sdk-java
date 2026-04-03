@@ -15,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
-import kotlin.jvm.optionals.getOrNull
 
 /** A skill that was loaded in a container (response model). */
 class BetaSkill
@@ -225,9 +224,9 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (skillId.asKnown().isPresent) 1 else 0) +
-            (type.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (version.asKnown().isPresent) 1 else 0)
+        (if (skillId.asKnown() != null) 1 else 0) +
+            (type.asKnown()?.validity() ?: 0) +
+            (if (version.asKnown() != null) 1 else 0)
 
     /** Type of skill - either 'anthropic' (built-in) or 'custom' (user-defined) */
     class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -313,9 +312,7 @@ private constructor(
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
+            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 

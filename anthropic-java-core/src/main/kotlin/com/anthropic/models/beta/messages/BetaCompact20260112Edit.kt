@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
@@ -270,9 +271,9 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         type.let { if (it == JsonValue.from("compact_20260112")) 1 else 0 } +
-            (if (instructions.asKnown().isPresent) 1 else 0) +
-            (if (pauseAfterCompaction.asKnown().isPresent) 1 else 0) +
-            (trigger.asKnown().getOrNull()?.validity() ?: 0)
+            (if (instructions.asKnown() != null) 1 else 0) +
+            (if (pauseAfterCompaction.asKnown() != null) 1 else 0) +
+            (trigger.asKnown()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -221,7 +221,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (data.asKnown().isPresent) 1 else 0) +
+        (if (data.asKnown() != null) 1 else 0) +
             mediaType.let { if (it == JsonValue.from("text/plain")) 1 else 0 } +
             type.let { if (it == JsonValue.from("text")) 1 else 0 }
 

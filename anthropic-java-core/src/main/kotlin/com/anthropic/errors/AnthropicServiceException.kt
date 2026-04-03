@@ -6,7 +6,6 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.http.Headers
 import com.anthropic.models.ErrorType
 import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
 abstract class AnthropicServiceException
 protected constructor(message: String, cause: Throwable? = null) :
@@ -26,8 +25,8 @@ protected constructor(message: String, cause: Throwable? = null) :
      * structured error with a type field.
      */
     fun errorType(): Optional<ErrorType> {
-        val error = body().asObject().getOrNull()?.get("error") ?: return Optional.empty()
-        val type = error.asObject().getOrNull()?.get("type") ?: return Optional.empty()
-        return type.asString().map { ErrorType.of(it) }
+        val error = body().asObject()?.get("error") ?: return Optional.empty()
+        val type = error.asObject()?.get("type") ?: return Optional.empty()
+        return Optional.ofNullable(type.asString()?.let { ErrorType.of(it) })
     }
 }

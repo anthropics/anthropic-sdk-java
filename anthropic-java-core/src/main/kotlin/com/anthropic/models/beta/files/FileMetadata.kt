@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.files
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
@@ -381,13 +382,13 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) +
-            (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (if (filename.asKnown().isPresent) 1 else 0) +
-            (if (mimeType.asKnown().isPresent) 1 else 0) +
-            (if (sizeBytes.asKnown().isPresent) 1 else 0) +
+        (if (id.asKnown() != null) 1 else 0) +
+            (if (createdAt.asKnown() != null) 1 else 0) +
+            (if (filename.asKnown() != null) 1 else 0) +
+            (if (mimeType.asKnown() != null) 1 else 0) +
+            (if (sizeBytes.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("file")) 1 else 0 } +
-            (if (downloadable.asKnown().isPresent) 1 else 0)
+            (if (downloadable.asKnown() != null) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

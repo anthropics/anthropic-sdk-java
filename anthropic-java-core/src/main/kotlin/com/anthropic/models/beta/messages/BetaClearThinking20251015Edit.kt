@@ -1,6 +1,8 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages
+import com.anthropic.core.fromJsonNode
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
@@ -25,7 +27,6 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
 class BetaClearThinking20251015Edit
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -202,7 +203,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         type.let { if (it == JsonValue.from("clear_thinking_20251015")) 1 else 0 } +
-            (keep.asKnown().getOrNull()?.validity() ?: 0)
+            (keep.asKnown()?.validity() ?: 0)
 
     /**
      * Number of most recent assistant turns to keep thinking blocks for. Older turns will have

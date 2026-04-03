@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.messages
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
@@ -385,11 +386,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (lines.asKnown().getOrNull()?.size ?: 0) +
-            (if (newLines.asKnown().isPresent) 1 else 0) +
-            (if (newStart.asKnown().isPresent) 1 else 0) +
-            (if (oldLines.asKnown().isPresent) 1 else 0) +
-            (if (oldStart.asKnown().isPresent) 1 else 0) +
+        (lines.asKnown()?.size ?: 0) +
+            (if (newLines.asKnown() != null) 1 else 0) +
+            (if (newStart.asKnown() != null) 1 else 0) +
+            (if (oldLines.asKnown() != null) 1 else 0) +
+            (if (oldStart.asKnown() != null) 1 else 0) +
             type.let {
                 if (it == JsonValue.from("text_editor_code_execution_str_replace_result")) 1 else 0
             }

@@ -221,7 +221,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (data.asKnown().isPresent) 1 else 0) +
+        (if (data.asKnown() != null) 1 else 0) +
             mediaType.let { if (it == JsonValue.from("application/pdf")) 1 else 0 } +
             type.let { if (it == JsonValue.from("base64")) 1 else 0 }
 

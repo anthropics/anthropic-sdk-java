@@ -186,7 +186,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (message.asKnown().isPresent) 1 else 0) +
+        (if (message.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("authentication_error")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {

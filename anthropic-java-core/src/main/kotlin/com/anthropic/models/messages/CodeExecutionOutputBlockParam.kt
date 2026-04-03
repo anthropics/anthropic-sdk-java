@@ -187,7 +187,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (fileId.asKnown().isPresent) 1 else 0) +
+        (if (fileId.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("code_execution_output")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {

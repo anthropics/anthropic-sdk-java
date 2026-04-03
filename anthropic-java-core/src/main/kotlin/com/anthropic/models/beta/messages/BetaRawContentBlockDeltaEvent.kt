@@ -351,8 +351,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (delta.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (index.asKnown().isPresent) 1 else 0) +
+        (delta.asKnown()?.validity() ?: 0) +
+            (if (index.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("content_block_delta")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {

@@ -1,6 +1,8 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.messages
+import com.anthropic.core.fromJsonNode
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
@@ -2778,23 +2780,23 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (maxTokens.asKnown().isPresent) 1 else 0) +
-                (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-                (if (model.asKnown().isPresent) 1 else 0) +
-                (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (container.asKnown().isPresent) 1 else 0) +
-                (if (inferenceGeo.asKnown().isPresent) 1 else 0) +
-                (metadata.asKnown().getOrNull()?.validity() ?: 0) +
-                (outputConfig.asKnown().getOrNull()?.validity() ?: 0) +
-                (serviceTier.asKnown().getOrNull()?.validity() ?: 0) +
-                (stopSequences.asKnown().getOrNull()?.size ?: 0) +
-                (system.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (temperature.asKnown().isPresent) 1 else 0) +
-                (thinking.asKnown().getOrNull()?.validity() ?: 0) +
-                (toolChoice.asKnown().getOrNull()?.validity() ?: 0) +
-                (tools.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-                (if (topK.asKnown().isPresent) 1 else 0) +
-                (if (topP.asKnown().isPresent) 1 else 0)
+            (if (maxTokens.asKnown() != null) 1 else 0) +
+                (messages.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
+                (if (model.asKnown() != null) 1 else 0) +
+                (cacheControl.asKnown()?.validity() ?: 0) +
+                (if (container.asKnown() != null) 1 else 0) +
+                (if (inferenceGeo.asKnown() != null) 1 else 0) +
+                (metadata.asKnown()?.validity() ?: 0) +
+                (outputConfig.asKnown()?.validity() ?: 0) +
+                (serviceTier.asKnown()?.validity() ?: 0) +
+                (stopSequences.asKnown()?.size ?: 0) +
+                (system.asKnown()?.validity() ?: 0) +
+                (if (temperature.asKnown() != null) 1 else 0) +
+                (thinking.asKnown()?.validity() ?: 0) +
+                (toolChoice.asKnown()?.validity() ?: 0) +
+                (tools.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
+                (if (topK.asKnown() != null) 1 else 0) +
+                (if (topP.asKnown() != null) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -2944,9 +2946,7 @@ private constructor(
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
+            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 

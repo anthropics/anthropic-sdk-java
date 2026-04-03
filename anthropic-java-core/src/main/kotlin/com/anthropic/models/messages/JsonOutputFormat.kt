@@ -15,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
-import kotlin.jvm.optionals.getOrNull
 
 class JsonOutputFormat
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -191,7 +190,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (schema.asKnown().getOrNull()?.validity() ?: 0) +
+        (schema.asKnown()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("json_schema")) 1 else 0 }
 
     /** The JSON schema of the format */

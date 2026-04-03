@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.messages
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
@@ -507,14 +508,14 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (cacheCreation.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (cacheCreationInputTokens.asKnown().isPresent) 1 else 0) +
-            (if (cacheReadInputTokens.asKnown().isPresent) 1 else 0) +
-            (if (inferenceGeo.asKnown().isPresent) 1 else 0) +
-            (if (inputTokens.asKnown().isPresent) 1 else 0) +
-            (if (outputTokens.asKnown().isPresent) 1 else 0) +
-            (serverToolUse.asKnown().getOrNull()?.validity() ?: 0) +
-            (serviceTier.asKnown().getOrNull()?.validity() ?: 0)
+        (cacheCreation.asKnown()?.validity() ?: 0) +
+            (if (cacheCreationInputTokens.asKnown() != null) 1 else 0) +
+            (if (cacheReadInputTokens.asKnown() != null) 1 else 0) +
+            (if (inferenceGeo.asKnown() != null) 1 else 0) +
+            (if (inputTokens.asKnown() != null) 1 else 0) +
+            (if (outputTokens.asKnown() != null) 1 else 0) +
+            (serverToolUse.asKnown()?.validity() ?: 0) +
+            (serviceTier.asKnown()?.validity() ?: 0)
 
     /** If the request used the priority, standard, or batch tier. */
     class ServiceTier @JsonCreator private constructor(private val value: JsonField<String>) :
@@ -609,9 +610,7 @@ private constructor(
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
+            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 

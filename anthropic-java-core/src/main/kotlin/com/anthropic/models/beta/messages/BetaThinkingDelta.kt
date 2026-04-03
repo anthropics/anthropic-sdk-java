@@ -186,7 +186,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (thinking.asKnown().isPresent) 1 else 0) +
+        (if (thinking.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("thinking_delta")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {

@@ -16,7 +16,6 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
-import kotlin.jvm.optionals.getOrNull
 
 class BashCodeExecutionResultBlock
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -309,10 +308,10 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (content.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (if (returnCode.asKnown().isPresent) 1 else 0) +
-            (if (stderr.asKnown().isPresent) 1 else 0) +
-            (if (stdout.asKnown().isPresent) 1 else 0) +
+        (content.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (returnCode.asKnown() != null) 1 else 0) +
+            (if (stderr.asKnown() != null) 1 else 0) +
+            (if (stdout.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("bash_code_execution_result")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {

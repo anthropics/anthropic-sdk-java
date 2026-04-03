@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
@@ -355,10 +356,10 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (text.asKnown().isPresent) 1 else 0) +
+        (if (text.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("text")) 1 else 0 } +
-            (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
-            (citations.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+            (cacheControl.asKnown()?.validity() ?: 0) +
+            (citations.asKnown()?.sumOf { it.validity().toInt() } ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

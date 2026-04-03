@@ -1,6 +1,8 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages
+import com.anthropic.core.fromJsonNode
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
@@ -422,11 +424,11 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         type.let { if (it == JsonValue.from("clear_tool_uses_20250919")) 1 else 0 } +
-            (clearAtLeast.asKnown().getOrNull()?.validity() ?: 0) +
-            (clearToolInputs.asKnown().getOrNull()?.validity() ?: 0) +
-            (excludeTools.asKnown().getOrNull()?.size ?: 0) +
-            (keep.asKnown().getOrNull()?.validity() ?: 0) +
-            (trigger.asKnown().getOrNull()?.validity() ?: 0)
+            (clearAtLeast.asKnown()?.validity() ?: 0) +
+            (clearToolInputs.asKnown()?.validity() ?: 0) +
+            (excludeTools.asKnown()?.size ?: 0) +
+            (keep.asKnown()?.validity() ?: 0) +
+            (trigger.asKnown()?.validity() ?: 0)
 
     /** Whether to clear all tool inputs (bool) or specific tool inputs to clear (list) */
     @JsonDeserialize(using = ClearToolInputs.Deserializer::class)
@@ -736,7 +738,7 @@ private constructor(
 
             override fun ObjectCodec.deserialize(node: JsonNode): Trigger {
                 val json = JsonValue.fromJsonNode(node)
-                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+                val type = json.asObject()?.get("type")?.asString()
 
                 when (type) {
                     "input_tokens" -> {

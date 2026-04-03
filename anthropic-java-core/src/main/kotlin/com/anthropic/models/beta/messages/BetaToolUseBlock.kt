@@ -1,6 +1,8 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages
+import com.anthropic.core.fromJsonNode
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
@@ -360,10 +362,10 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) +
-            (if (name.asKnown().isPresent) 1 else 0) +
+        (if (id.asKnown() != null) 1 else 0) +
+            (if (name.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("tool_use")) 1 else 0 } +
-            (caller.asKnown().getOrNull()?.validity() ?: 0)
+            (caller.asKnown()?.validity() ?: 0)
 
     /** Tool invocation directly from the model. */
     @JsonDeserialize(using = Caller.Deserializer::class)
@@ -545,7 +547,7 @@ private constructor(
 
             override fun ObjectCodec.deserialize(node: JsonNode): Caller {
                 val json = JsonValue.fromJsonNode(node)
-                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+                val type = json.asObject()?.get("type")?.asString()
 
                 when (type) {
                     "direct" -> {

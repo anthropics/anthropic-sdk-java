@@ -15,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
-import kotlin.jvm.optionals.getOrNull
 
 class BetaBashCodeExecutionToolResultErrorParam
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -195,7 +194,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (errorCode.asKnown().getOrNull()?.validity() ?: 0) +
+        (errorCode.asKnown()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("bash_code_execution_tool_result_error")) 1 else 0 }
 
     class ErrorCode @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -301,9 +300,7 @@ private constructor(
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
+            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 

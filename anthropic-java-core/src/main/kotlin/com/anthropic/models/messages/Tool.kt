@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.messages
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
@@ -587,16 +588,16 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (inputSchema.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (name.asKnown().isPresent) 1 else 0) +
-            (allowedCallers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (deferLoading.asKnown().isPresent) 1 else 0) +
-            (if (description.asKnown().isPresent) 1 else 0) +
-            (if (eagerInputStreaming.asKnown().isPresent) 1 else 0) +
-            (inputExamples.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (if (strict.asKnown().isPresent) 1 else 0) +
-            (type.asKnown().getOrNull()?.validity() ?: 0)
+        (inputSchema.asKnown()?.validity() ?: 0) +
+            (if (name.asKnown() != null) 1 else 0) +
+            (allowedCallers.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
+            (cacheControl.asKnown()?.validity() ?: 0) +
+            (if (deferLoading.asKnown() != null) 1 else 0) +
+            (if (description.asKnown() != null) 1 else 0) +
+            (if (eagerInputStreaming.asKnown() != null) 1 else 0) +
+            (inputExamples.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (strict.asKnown() != null) 1 else 0) +
+            (type.asKnown()?.validity() ?: 0)
 
     /**
      * [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
@@ -823,8 +824,8 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             type.let { if (it == JsonValue.from("object")) 1 else 0 } +
-                (properties.asKnown().getOrNull()?.validity() ?: 0) +
-                (required.asKnown().getOrNull()?.size ?: 0)
+                (properties.asKnown()?.validity() ?: 0) +
+                (required.asKnown()?.size ?: 0)
 
         class Properties
         @JsonCreator
@@ -1050,9 +1051,7 @@ private constructor(
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
+            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 
@@ -1270,9 +1269,7 @@ private constructor(
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
+            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 

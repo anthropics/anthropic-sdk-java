@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages
+import com.anthropic.core.fromJsonNode
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
@@ -202,7 +203,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (appliedEdits.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+        (appliedEdits.asKnown()?.sumOf { it.validity().toInt() } ?: 0)
 
     @JsonDeserialize(using = AppliedEdit.Deserializer::class)
     @JsonSerialize(using = AppliedEdit.Serializer::class)
@@ -363,7 +364,7 @@ private constructor(
 
             override fun ObjectCodec.deserialize(node: JsonNode): AppliedEdit {
                 val json = JsonValue.fromJsonNode(node)
-                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+                val type = json.asObject()?.get("type")?.asString()
 
                 when (type) {
                     "clear_tool_uses_20250919" -> {

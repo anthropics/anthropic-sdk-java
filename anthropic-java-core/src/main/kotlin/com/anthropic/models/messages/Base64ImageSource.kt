@@ -15,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
-import kotlin.jvm.optionals.getOrNull
 
 class Base64ImageSource
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -222,8 +221,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (data.asKnown().isPresent) 1 else 0) +
-            (mediaType.asKnown().getOrNull()?.validity() ?: 0) +
+        (if (data.asKnown() != null) 1 else 0) +
+            (mediaType.asKnown()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("base64")) 1 else 0 }
 
     class MediaType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -323,9 +322,7 @@ private constructor(
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
+            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 

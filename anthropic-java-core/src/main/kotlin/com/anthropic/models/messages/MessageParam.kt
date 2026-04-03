@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.messages
+import com.anthropic.core.fromJsonNode
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
@@ -28,7 +29,6 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
 class MessageParam
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -204,8 +204,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (content.asKnown().getOrNull()?.validity() ?: 0) +
-            (role.asKnown().getOrNull()?.validity() ?: 0)
+        (content.asKnown()?.validity() ?: 0) +
+            (role.asKnown()?.validity() ?: 0)
 
     @JsonDeserialize(using = Content.Deserializer::class)
     @JsonSerialize(using = Content.Serializer::class)
@@ -464,9 +464,7 @@ private constructor(
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
+            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 

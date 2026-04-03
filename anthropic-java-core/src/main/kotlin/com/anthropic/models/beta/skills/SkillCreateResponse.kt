@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.skills
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
@@ -418,13 +419,13 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) +
-            (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (if (displayTitle.asKnown().isPresent) 1 else 0) +
-            (if (latestVersion.asKnown().isPresent) 1 else 0) +
-            (if (source.asKnown().isPresent) 1 else 0) +
-            (if (type.asKnown().isPresent) 1 else 0) +
-            (if (updatedAt.asKnown().isPresent) 1 else 0)
+        (if (id.asKnown() != null) 1 else 0) +
+            (if (createdAt.asKnown() != null) 1 else 0) +
+            (if (displayTitle.asKnown() != null) 1 else 0) +
+            (if (latestVersion.asKnown() != null) 1 else 0) +
+            (if (source.asKnown() != null) 1 else 0) +
+            (if (type.asKnown() != null) 1 else 0) +
+            (if (updatedAt.asKnown() != null) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -108,7 +108,7 @@ private constructor(private val value: JsonField<String>) : Enum {
      *   expected primitive type.
      */
     fun asString(): String =
-        _value().asString().orElseThrow { AnthropicInvalidDataException("Value is not a String") }
+        _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
 
     private var validated: Boolean = false
 

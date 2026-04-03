@@ -191,7 +191,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (partialJson.asKnown().isPresent) 1 else 0) +
+        (if (partialJson.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("input_json_delta")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {

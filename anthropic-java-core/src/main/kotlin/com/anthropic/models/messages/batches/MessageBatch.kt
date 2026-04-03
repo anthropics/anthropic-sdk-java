@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.messages.batches
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
@@ -594,15 +595,15 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) +
-            (if (archivedAt.asKnown().isPresent) 1 else 0) +
-            (if (cancelInitiatedAt.asKnown().isPresent) 1 else 0) +
-            (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (if (endedAt.asKnown().isPresent) 1 else 0) +
-            (if (expiresAt.asKnown().isPresent) 1 else 0) +
-            (processingStatus.asKnown().getOrNull()?.validity() ?: 0) +
-            (requestCounts.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (resultsUrl.asKnown().isPresent) 1 else 0) +
+        (if (id.asKnown() != null) 1 else 0) +
+            (if (archivedAt.asKnown() != null) 1 else 0) +
+            (if (cancelInitiatedAt.asKnown() != null) 1 else 0) +
+            (if (createdAt.asKnown() != null) 1 else 0) +
+            (if (endedAt.asKnown() != null) 1 else 0) +
+            (if (expiresAt.asKnown() != null) 1 else 0) +
+            (processingStatus.asKnown()?.validity() ?: 0) +
+            (requestCounts.asKnown()?.validity() ?: 0) +
+            (if (resultsUrl.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("message_batch")) 1 else 0 }
 
     /** Processing status of the Message Batch. */
@@ -699,9 +700,7 @@ private constructor(
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
+            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 

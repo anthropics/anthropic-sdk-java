@@ -1,6 +1,8 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.messages
+import com.anthropic.core.fromJsonNode
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
@@ -1984,14 +1986,14 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-                (if (model.asKnown().isPresent) 1 else 0) +
-                (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
-                (outputConfig.asKnown().getOrNull()?.validity() ?: 0) +
-                (system.asKnown().getOrNull()?.validity() ?: 0) +
-                (thinking.asKnown().getOrNull()?.validity() ?: 0) +
-                (toolChoice.asKnown().getOrNull()?.validity() ?: 0) +
-                (tools.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+            (messages.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
+                (if (model.asKnown() != null) 1 else 0) +
+                (cacheControl.asKnown()?.validity() ?: 0) +
+                (outputConfig.asKnown()?.validity() ?: 0) +
+                (system.asKnown()?.validity() ?: 0) +
+                (thinking.asKnown()?.validity() ?: 0) +
+                (toolChoice.asKnown()?.validity() ?: 0) +
+                (tools.asKnown()?.sumOf { it.validity().toInt() } ?: 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

@@ -1,6 +1,8 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages
+import com.anthropic.core.fromJsonNode
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
@@ -643,16 +645,16 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (cacheCreation.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (cacheCreationInputTokens.asKnown().isPresent) 1 else 0) +
-            (if (cacheReadInputTokens.asKnown().isPresent) 1 else 0) +
-            (if (inferenceGeo.asKnown().isPresent) 1 else 0) +
-            (if (inputTokens.asKnown().isPresent) 1 else 0) +
-            (iterations.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (if (outputTokens.asKnown().isPresent) 1 else 0) +
-            (serverToolUse.asKnown().getOrNull()?.validity() ?: 0) +
-            (serviceTier.asKnown().getOrNull()?.validity() ?: 0) +
-            (speed.asKnown().getOrNull()?.validity() ?: 0)
+        (cacheCreation.asKnown()?.validity() ?: 0) +
+            (if (cacheCreationInputTokens.asKnown() != null) 1 else 0) +
+            (if (cacheReadInputTokens.asKnown() != null) 1 else 0) +
+            (if (inferenceGeo.asKnown() != null) 1 else 0) +
+            (if (inputTokens.asKnown() != null) 1 else 0) +
+            (iterations.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (outputTokens.asKnown() != null) 1 else 0) +
+            (serverToolUse.asKnown()?.validity() ?: 0) +
+            (serviceTier.asKnown()?.validity() ?: 0) +
+            (speed.asKnown()?.validity() ?: 0)
 
     /** Token usage for a sampling iteration. */
     @JsonDeserialize(using = BetaIterationsUsageItems.Deserializer::class)
@@ -803,7 +805,7 @@ private constructor(
 
             override fun ObjectCodec.deserialize(node: JsonNode): BetaIterationsUsageItems {
                 val json = JsonValue.fromJsonNode(node)
-                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+                val type = json.asObject()?.get("type")?.asString()
 
                 when (type) {
                     "message" -> {
@@ -933,9 +935,7 @@ private constructor(
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
+            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 
@@ -1061,9 +1061,7 @@ private constructor(
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
+            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 

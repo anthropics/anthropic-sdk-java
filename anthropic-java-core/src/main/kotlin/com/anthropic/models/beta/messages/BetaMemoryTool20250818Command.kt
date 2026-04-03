@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages
+import com.anthropic.core.fromJsonNode
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
@@ -250,7 +251,7 @@ private constructor(
 
         override fun ObjectCodec.deserialize(node: JsonNode): BetaMemoryTool20250818Command {
             val json = JsonValue.fromJsonNode(node)
-            val command = json.asObject().getOrNull()?.get("command")?.asString()?.getOrNull()
+            val command = json.asObject()?.get("command")?.asString()
 
             when (command) {
                 "view" -> {

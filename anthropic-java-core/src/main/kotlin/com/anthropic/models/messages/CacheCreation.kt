@@ -208,8 +208,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (ephemeral1hInputTokens.asKnown().isPresent) 1 else 0) +
-            (if (ephemeral5mInputTokens.asKnown().isPresent) 1 else 0)
+        (if (ephemeral1hInputTokens.asKnown() != null) 1 else 0) +
+            (if (ephemeral5mInputTokens.asKnown() != null) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

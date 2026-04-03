@@ -63,8 +63,7 @@ internal fun outputFormatFromClass(
                     JsonValue.fromJsonNode(
                             validateSchema(extractSchema(outputType), outputType, localValidation)
                         )
-                        .asObject()
-                        .get()
+                        .asObject()!!
                 )
                 .build()
         )

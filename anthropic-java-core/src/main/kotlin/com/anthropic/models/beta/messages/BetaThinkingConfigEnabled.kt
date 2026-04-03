@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
@@ -254,9 +255,9 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (budgetTokens.asKnown().isPresent) 1 else 0) +
+        (if (budgetTokens.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("enabled")) 1 else 0 } +
-            (display.asKnown().getOrNull()?.validity() ?: 0)
+            (display.asKnown()?.validity() ?: 0)
 
     /**
      * Controls how thinking content appears in the response. When set to `summarized`, thinking is
@@ -346,9 +347,7 @@ private constructor(
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
+            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 

@@ -189,7 +189,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (toolName.asKnown().isPresent) 1 else 0) +
+        (if (toolName.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("tool_reference")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {

@@ -186,7 +186,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (index.asKnown().isPresent) 1 else 0) +
+        (if (index.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("content_block_stop")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {

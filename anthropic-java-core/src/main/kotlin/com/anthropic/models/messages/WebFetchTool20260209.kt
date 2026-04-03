@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.messages
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
@@ -622,15 +623,15 @@ private constructor(
     internal fun validity(): Int =
         name.let { if (it == JsonValue.from("web_fetch")) 1 else 0 } +
             type.let { if (it == JsonValue.from("web_fetch_20260209")) 1 else 0 } +
-            (allowedCallers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (allowedDomains.asKnown().getOrNull()?.size ?: 0) +
-            (blockedDomains.asKnown().getOrNull()?.size ?: 0) +
-            (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
-            (citations.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (deferLoading.asKnown().isPresent) 1 else 0) +
-            (if (maxContentTokens.asKnown().isPresent) 1 else 0) +
-            (if (maxUses.asKnown().isPresent) 1 else 0) +
-            (if (strict.asKnown().isPresent) 1 else 0)
+            (allowedCallers.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
+            (allowedDomains.asKnown()?.size ?: 0) +
+            (blockedDomains.asKnown()?.size ?: 0) +
+            (cacheControl.asKnown()?.validity() ?: 0) +
+            (citations.asKnown()?.validity() ?: 0) +
+            (if (deferLoading.asKnown() != null) 1 else 0) +
+            (if (maxContentTokens.asKnown() != null) 1 else 0) +
+            (if (maxUses.asKnown() != null) 1 else 0) +
+            (if (strict.asKnown() != null) 1 else 0)
 
     /**
      * Specifies who can invoke a tool.
@@ -732,9 +733,7 @@ private constructor(
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
+            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 

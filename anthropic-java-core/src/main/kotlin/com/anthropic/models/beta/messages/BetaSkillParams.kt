@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
@@ -16,7 +17,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
 /** Specification for a skill to be loaded in a container (request model). */
 class BetaSkillParams
@@ -224,9 +224,9 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (skillId.asKnown().isPresent) 1 else 0) +
-            (type.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (version.asKnown().isPresent) 1 else 0)
+        (if (skillId.asKnown() != null) 1 else 0) +
+            (type.asKnown()?.validity() ?: 0) +
+            (if (version.asKnown() != null) 1 else 0)
 
     /** Type of skill - either 'anthropic' (built-in) or 'custom' (user-defined) */
     class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -312,9 +312,7 @@ private constructor(
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
+            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 

@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
@@ -17,7 +18,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
 class BetaMemoryTool20250818ViewCommand
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -248,8 +248,8 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         command.let { if (it == JsonValue.from("view")) 1 else 0 } +
-            (if (path.asKnown().isPresent) 1 else 0) +
-            (viewRange.asKnown().getOrNull()?.size ?: 0)
+            (if (path.asKnown() != null) 1 else 0) +
+            (viewRange.asKnown()?.size ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -245,8 +245,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (clearedInputTokens.asKnown().isPresent) 1 else 0) +
-            (if (clearedToolUses.asKnown().isPresent) 1 else 0) +
+        (if (clearedInputTokens.asKnown() != null) 1 else 0) +
+            (if (clearedToolUses.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("clear_tool_uses_20250919")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {

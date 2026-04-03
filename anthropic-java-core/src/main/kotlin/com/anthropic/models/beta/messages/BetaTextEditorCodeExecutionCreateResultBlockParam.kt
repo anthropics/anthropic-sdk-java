@@ -199,7 +199,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (isFileUpdate.asKnown().isPresent) 1 else 0) +
+        (if (isFileUpdate.asKnown() != null) 1 else 0) +
             type.let {
                 if (it == JsonValue.from("text_editor_code_execution_create_result")) 1 else 0
             }

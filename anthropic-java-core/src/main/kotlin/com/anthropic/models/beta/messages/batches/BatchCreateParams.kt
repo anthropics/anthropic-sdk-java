@@ -1,6 +1,8 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages.batches
+import com.anthropic.core.fromJsonNode
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
@@ -522,7 +524,7 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (requests.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+            (requests.asKnown()?.sumOf { it.validity().toInt() } ?: 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -736,8 +738,8 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (customId.asKnown().isPresent) 1 else 0) +
-                (params.asKnown().getOrNull()?.validity() ?: 0)
+            (if (customId.asKnown() != null) 1 else 0) +
+                (params.asKnown()?.validity() ?: 0)
 
         /**
          * Messages API creation parameters for the individual request.
@@ -2532,28 +2534,28 @@ private constructor(
              */
             @JvmSynthetic
             internal fun validity(): Int =
-                (if (maxTokens.asKnown().isPresent) 1 else 0) +
-                    (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-                    (if (model.asKnown().isPresent) 1 else 0) +
-                    (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
-                    (container.asKnown().getOrNull()?.validity() ?: 0) +
-                    (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
-                    (if (inferenceGeo.asKnown().isPresent) 1 else 0) +
-                    (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-                    (metadata.asKnown().getOrNull()?.validity() ?: 0) +
-                    (outputConfig.asKnown().getOrNull()?.validity() ?: 0) +
-                    (outputFormat.asKnown().getOrNull()?.validity() ?: 0) +
-                    (serviceTier.asKnown().getOrNull()?.validity() ?: 0) +
-                    (speed.asKnown().getOrNull()?.validity() ?: 0) +
-                    (stopSequences.asKnown().getOrNull()?.size ?: 0) +
-                    (if (stream.asKnown().isPresent) 1 else 0) +
-                    (system.asKnown().getOrNull()?.validity() ?: 0) +
-                    (if (temperature.asKnown().isPresent) 1 else 0) +
-                    (thinking.asKnown().getOrNull()?.validity() ?: 0) +
-                    (toolChoice.asKnown().getOrNull()?.validity() ?: 0) +
-                    (tools.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-                    (if (topK.asKnown().isPresent) 1 else 0) +
-                    (if (topP.asKnown().isPresent) 1 else 0)
+                (if (maxTokens.asKnown() != null) 1 else 0) +
+                    (messages.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
+                    (if (model.asKnown() != null) 1 else 0) +
+                    (cacheControl.asKnown()?.validity() ?: 0) +
+                    (container.asKnown()?.validity() ?: 0) +
+                    (contextManagement.asKnown()?.validity() ?: 0) +
+                    (if (inferenceGeo.asKnown() != null) 1 else 0) +
+                    (mcpServers.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
+                    (metadata.asKnown()?.validity() ?: 0) +
+                    (outputConfig.asKnown()?.validity() ?: 0) +
+                    (outputFormat.asKnown()?.validity() ?: 0) +
+                    (serviceTier.asKnown()?.validity() ?: 0) +
+                    (speed.asKnown()?.validity() ?: 0) +
+                    (stopSequences.asKnown()?.size ?: 0) +
+                    (if (stream.asKnown() != null) 1 else 0) +
+                    (system.asKnown()?.validity() ?: 0) +
+                    (if (temperature.asKnown() != null) 1 else 0) +
+                    (thinking.asKnown()?.validity() ?: 0) +
+                    (toolChoice.asKnown()?.validity() ?: 0) +
+                    (tools.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
+                    (if (topK.asKnown() != null) 1 else 0) +
+                    (if (topP.asKnown() != null) 1 else 0)
 
             /** Container identifier for reuse across requests. */
             @JsonDeserialize(using = Container.Deserializer::class)
@@ -2840,9 +2842,7 @@ private constructor(
                  *   have the expected primitive type.
                  */
                 fun asString(): String =
-                    _value().asString().orElseThrow {
-                        AnthropicInvalidDataException("Value is not a String")
-                    }
+                    _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
 
                 private var validated: Boolean = false
 
@@ -2975,9 +2975,7 @@ private constructor(
                  *   have the expected primitive type.
                  */
                 fun asString(): String =
-                    _value().asString().orElseThrow {
-                        AnthropicInvalidDataException("Value is not a String")
-                    }
+                    _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
 
                 private var validated: Boolean = false
 

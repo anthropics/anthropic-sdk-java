@@ -1,6 +1,8 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.messages
+import com.anthropic.core.fromJsonNode
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
@@ -375,12 +377,12 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) +
-            (input.asKnown().getOrNull()?.validity() ?: 0) +
-            (name.asKnown().getOrNull()?.validity() ?: 0) +
+        (if (id.asKnown() != null) 1 else 0) +
+            (input.asKnown()?.validity() ?: 0) +
+            (name.asKnown()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("server_tool_use")) 1 else 0 } +
-            (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
-            (caller.asKnown().getOrNull()?.validity() ?: 0)
+            (cacheControl.asKnown()?.validity() ?: 0) +
+            (caller.asKnown()?.validity() ?: 0)
 
     class Input
     @JsonCreator
@@ -594,9 +596,7 @@ private constructor(
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
+            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 
@@ -818,7 +818,7 @@ private constructor(
 
             override fun ObjectCodec.deserialize(node: JsonNode): Caller {
                 val json = JsonValue.fromJsonNode(node)
-                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+                val type = json.asObject()?.get("type")?.asString()
 
                 when (type) {
                     "direct" -> {

@@ -189,7 +189,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) +
+        (if (id.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("message_batch_deleted")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {

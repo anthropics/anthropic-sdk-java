@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages
+import com.anthropic.core.fromJsonNode
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
@@ -625,7 +626,7 @@ private constructor(
 
         override fun ObjectCodec.deserialize(node: JsonNode): BetaContentBlock {
             val json = JsonValue.fromJsonNode(node)
-            val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+            val type = json.asObject()?.get("type")?.asString()
 
             when (type) {
                 "text" -> {

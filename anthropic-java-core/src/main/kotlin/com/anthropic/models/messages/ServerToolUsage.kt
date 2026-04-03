@@ -206,8 +206,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (webFetchRequests.asKnown().isPresent) 1 else 0) +
-            (if (webSearchRequests.asKnown().isPresent) 1 else 0)
+        (if (webFetchRequests.asKnown() != null) 1 else 0) +
+            (if (webSearchRequests.asKnown() != null) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

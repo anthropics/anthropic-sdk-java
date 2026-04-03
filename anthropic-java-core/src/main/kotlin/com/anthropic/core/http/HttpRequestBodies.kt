@@ -17,7 +17,6 @@ import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.UUID
-import kotlin.jvm.optionals.getOrNull
 
 /**
  * Creates a new [HttpRequestBody] containing the given value serialized to a JSON string. The
@@ -70,7 +69,7 @@ internal fun multipartFormData(
     MultipartBody.Builder()
         .apply {
             fields.forEach { (name, field) ->
-                val knownValue = field.value.asKnown().getOrNull()
+                val knownValue = field.value.asKnown()
                 val parts =
                     if (knownValue is InputStream) {
                         // Read directly from the `InputStream` instead of reading it all
@@ -120,7 +119,7 @@ internal fun multipartFormData(
                     addPart(
                         MultipartBody.Part.create(
                             name,
-                            field.filename().getOrNull(),
+                            field.filename(),
                             field.contentType,
                             partBody,
                         )

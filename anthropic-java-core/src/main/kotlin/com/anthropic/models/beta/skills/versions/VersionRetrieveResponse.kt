@@ -433,14 +433,14 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) +
-            (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (if (description.asKnown().isPresent) 1 else 0) +
-            (if (directory.asKnown().isPresent) 1 else 0) +
-            (if (name.asKnown().isPresent) 1 else 0) +
-            (if (skillId.asKnown().isPresent) 1 else 0) +
-            (if (type.asKnown().isPresent) 1 else 0) +
-            (if (version.asKnown().isPresent) 1 else 0)
+        (if (id.asKnown() != null) 1 else 0) +
+            (if (createdAt.asKnown() != null) 1 else 0) +
+            (if (description.asKnown() != null) 1 else 0) +
+            (if (directory.asKnown() != null) 1 else 0) +
+            (if (name.asKnown() != null) 1 else 0) +
+            (if (skillId.asKnown() != null) 1 else 0) +
+            (if (type.asKnown() != null) 1 else 0) +
+            (if (version.asKnown() != null) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

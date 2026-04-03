@@ -14,7 +14,6 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
-import kotlin.jvm.optionals.getOrNull
 
 class WebSearchToolRequestError
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -194,7 +193,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (errorCode.asKnown().getOrNull()?.validity() ?: 0) +
+        (errorCode.asKnown()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("web_search_tool_result_error")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {

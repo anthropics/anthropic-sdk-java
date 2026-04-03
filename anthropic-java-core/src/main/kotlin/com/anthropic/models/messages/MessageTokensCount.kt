@@ -158,7 +158,7 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic internal fun validity(): Int = (if (inputTokens.asKnown().isPresent) 1 else 0)
+    @JvmSynthetic internal fun validity(): Int = (if (inputTokens.asKnown() != null) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -267,9 +267,9 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         command.let { if (it == JsonValue.from("insert")) 1 else 0 } +
-            (if (insertLine.asKnown().isPresent) 1 else 0) +
-            (if (insertText.asKnown().isPresent) 1 else 0) +
-            (if (path.asKnown().isPresent) 1 else 0)
+            (if (insertLine.asKnown() != null) 1 else 0) +
+            (if (insertText.asKnown() != null) 1 else 0) +
+            (if (path.asKnown() != null) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -14,7 +14,6 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
-import kotlin.jvm.optionals.getOrNull
 
 /** Model capability information. */
 class ModelCapabilities
@@ -496,15 +495,15 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (batch.asKnown().getOrNull()?.validity() ?: 0) +
-            (citations.asKnown().getOrNull()?.validity() ?: 0) +
-            (codeExecution.asKnown().getOrNull()?.validity() ?: 0) +
-            (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
-            (effort.asKnown().getOrNull()?.validity() ?: 0) +
-            (imageInput.asKnown().getOrNull()?.validity() ?: 0) +
-            (pdfInput.asKnown().getOrNull()?.validity() ?: 0) +
-            (structuredOutputs.asKnown().getOrNull()?.validity() ?: 0) +
-            (thinking.asKnown().getOrNull()?.validity() ?: 0)
+        (batch.asKnown()?.validity() ?: 0) +
+            (citations.asKnown()?.validity() ?: 0) +
+            (codeExecution.asKnown()?.validity() ?: 0) +
+            (contextManagement.asKnown()?.validity() ?: 0) +
+            (effort.asKnown()?.validity() ?: 0) +
+            (imageInput.asKnown()?.validity() ?: 0) +
+            (pdfInput.asKnown()?.validity() ?: 0) +
+            (structuredOutputs.asKnown()?.validity() ?: 0) +
+            (thinking.asKnown()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

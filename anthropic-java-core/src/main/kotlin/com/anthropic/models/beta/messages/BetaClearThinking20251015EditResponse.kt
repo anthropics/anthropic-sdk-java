@@ -247,8 +247,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (clearedInputTokens.asKnown().isPresent) 1 else 0) +
-            (if (clearedThinkingTurns.asKnown().isPresent) 1 else 0) +
+        (if (clearedInputTokens.asKnown() != null) 1 else 0) +
+            (if (clearedThinkingTurns.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("clear_thinking_20251015")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {

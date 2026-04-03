@@ -183,7 +183,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         type.let { if (it == JsonValue.from("url")) 1 else 0 } +
-            (if (url.asKnown().isPresent) 1 else 0)
+            (if (url.asKnown() != null) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

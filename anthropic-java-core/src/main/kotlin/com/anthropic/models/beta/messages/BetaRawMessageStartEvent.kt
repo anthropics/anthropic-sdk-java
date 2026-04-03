@@ -14,7 +14,6 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
-import kotlin.jvm.optionals.getOrNull
 
 class BetaRawMessageStartEvent
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -188,7 +187,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (message.asKnown().getOrNull()?.validity() ?: 0) +
+        (message.asKnown()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("message_start")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {

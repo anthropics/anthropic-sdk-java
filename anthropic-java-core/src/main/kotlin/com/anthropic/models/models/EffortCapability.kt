@@ -14,7 +14,6 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
-import kotlin.jvm.optionals.getOrNull
 
 /** Effort (reasoning_effort) capability details. */
 class EffortCapability
@@ -299,11 +298,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (high.asKnown().getOrNull()?.validity() ?: 0) +
-            (low.asKnown().getOrNull()?.validity() ?: 0) +
-            (max.asKnown().getOrNull()?.validity() ?: 0) +
-            (medium.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (supported.asKnown().isPresent) 1 else 0)
+        (high.asKnown()?.validity() ?: 0) +
+            (low.asKnown()?.validity() ?: 0) +
+            (max.asKnown()?.validity() ?: 0) +
+            (medium.asKnown()?.validity() ?: 0) +
+            (if (supported.asKnown() != null) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

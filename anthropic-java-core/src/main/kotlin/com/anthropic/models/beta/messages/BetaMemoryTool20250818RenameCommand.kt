@@ -230,8 +230,8 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         command.let { if (it == JsonValue.from("rename")) 1 else 0 } +
-            (if (newPath.asKnown().isPresent) 1 else 0) +
-            (if (oldPath.asKnown().isPresent) 1 else 0)
+            (if (newPath.asKnown() != null) 1 else 0) +
+            (if (oldPath.asKnown() != null) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

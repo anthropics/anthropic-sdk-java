@@ -315,11 +315,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (canceled.asKnown().isPresent) 1 else 0) +
-            (if (errored.asKnown().isPresent) 1 else 0) +
-            (if (expired.asKnown().isPresent) 1 else 0) +
-            (if (processing.asKnown().isPresent) 1 else 0) +
-            (if (succeeded.asKnown().isPresent) 1 else 0)
+        (if (canceled.asKnown() != null) 1 else 0) +
+            (if (errored.asKnown() != null) 1 else 0) +
+            (if (expired.asKnown() != null) 1 else 0) +
+            (if (processing.asKnown() != null) 1 else 0) +
+            (if (succeeded.asKnown() != null) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

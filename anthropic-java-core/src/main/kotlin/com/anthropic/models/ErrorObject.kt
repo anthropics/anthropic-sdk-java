@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models
+import com.anthropic.core.fromJsonNode
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
@@ -325,7 +326,7 @@ private constructor(
 
         override fun ObjectCodec.deserialize(node: JsonNode): ErrorObject {
             val json = JsonValue.fromJsonNode(node)
-            val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+            val type = json.asObject()?.get("type")?.asString()
 
             when (type) {
                 "invalid_request_error" -> {

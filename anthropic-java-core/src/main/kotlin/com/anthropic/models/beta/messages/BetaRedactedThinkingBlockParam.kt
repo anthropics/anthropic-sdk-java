@@ -188,7 +188,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (data.asKnown().isPresent) 1 else 0) +
+        (if (data.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("redacted_thinking")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {

@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
@@ -241,8 +242,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (errorCode.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (errorMessage.asKnown().isPresent) 1 else 0) +
+        (errorCode.asKnown()?.validity() ?: 0) +
+            (if (errorMessage.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("tool_search_tool_result_error")) 1 else 0 }
 
     class ErrorCode @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -342,9 +343,7 @@ private constructor(
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
+            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 

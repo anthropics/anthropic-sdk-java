@@ -16,7 +16,6 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
-import kotlin.jvm.optionals.getOrNull
 
 /**
  * This is a single line in the response `.jsonl` file and does not represent the response as a
@@ -255,8 +254,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (customId.asKnown().isPresent) 1 else 0) +
-            (result.asKnown().getOrNull()?.validity() ?: 0)
+        (if (customId.asKnown() != null) 1 else 0) +
+            (result.asKnown()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

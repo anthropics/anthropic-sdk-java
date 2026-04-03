@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages
+import com.anthropic.core.fromJsonNode
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
@@ -362,8 +363,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (contentBlock.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (index.asKnown().isPresent) 1 else 0) +
+        (contentBlock.asKnown()?.validity() ?: 0) +
+            (if (index.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("content_block_start")) 1 else 0 }
 
     /** Response model for a file uploaded to the container. */
@@ -908,7 +909,7 @@ private constructor(
 
             override fun ObjectCodec.deserialize(node: JsonNode): ContentBlock {
                 val json = JsonValue.fromJsonNode(node)
-                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+                val type = json.asObject()?.get("type")?.asString()
 
                 when (type) {
                     "text" -> {

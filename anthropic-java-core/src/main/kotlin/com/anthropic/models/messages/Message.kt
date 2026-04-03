@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.messages
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
@@ -766,16 +767,16 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) +
-            (container.asKnown().getOrNull()?.validity() ?: 0) +
-            (content.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (if (model.asKnown().isPresent) 1 else 0) +
+        (if (id.asKnown() != null) 1 else 0) +
+            (container.asKnown()?.validity() ?: 0) +
+            (content.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (model.asKnown() != null) 1 else 0) +
             role.let { if (it == JsonValue.from("assistant")) 1 else 0 } +
-            (stopDetails.asKnown().getOrNull()?.validity() ?: 0) +
-            (stopReason.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (stopSequence.asKnown().isPresent) 1 else 0) +
+            (stopDetails.asKnown()?.validity() ?: 0) +
+            (stopReason.asKnown()?.validity() ?: 0) +
+            (if (stopSequence.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("message")) 1 else 0 } +
-            (usage.asKnown().getOrNull()?.validity() ?: 0)
+            (usage.asKnown()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

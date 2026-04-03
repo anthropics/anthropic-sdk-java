@@ -14,7 +14,6 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
-import kotlin.jvm.optionals.getOrNull
 
 /** Supported thinking type configurations. */
 class ThinkingTypes
@@ -198,8 +197,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (adaptive.asKnown().getOrNull()?.validity() ?: 0) +
-            (enabled.asKnown().getOrNull()?.validity() ?: 0)
+        (adaptive.asKnown()?.validity() ?: 0) +
+            (enabled.asKnown()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

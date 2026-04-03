@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages.batches
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.AutoPagerAsync
 import com.anthropic.core.PageAsync

@@ -37,6 +37,16 @@ fun jsonMapper(): JsonMapper =
         .addModule(
             SimpleModule()
                 .addSerializer(InputStreamSerializer)
+                .addSerializer(JsonMissingSerializer())
+                .addSerializer(JsonNullSerializer())
+                .addSerializer(KnownValueSerializer())
+                .addSerializer(JsonBooleanSerializer())
+                .addSerializer(JsonNumberSerializer())
+                .addSerializer(JsonStringSerializer())
+                .addSerializer(JsonArraySerializer())
+                .addSerializer(JsonObjectSerializer())
+                .addDeserializer(JsonField::class.java, JsonFieldDeserializer())
+                .addDeserializer(JsonValue::class.java, JsonValueDeserializer())
                 .addDeserializer(OffsetDateTime::class.java, LenientOffsetDateTimeDeserializer())
         )
         .withCoercionConfig(LogicalType.Boolean) {
@@ -101,6 +111,10 @@ fun jsonMapper(): JsonMapper =
                 .setCoercion(CoercionInputShape.Array, CoercionAction.Fail)
         }
         .serializationInclusion(JsonInclude.Include.NON_ABSENT)
+        .defaultPropertyInclusion(
+            JsonInclude.Value.construct(JsonInclude.Include.CUSTOM, JsonInclude.Include.ALWAYS)
+                .withValueFilter(JsonField.IsMissing::class.java)
+        )
         .disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE)
         .disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE)
         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)

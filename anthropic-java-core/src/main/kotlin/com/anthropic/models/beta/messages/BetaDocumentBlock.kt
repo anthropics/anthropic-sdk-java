@@ -1,6 +1,8 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages
+import com.anthropic.core.fromJsonNode
+import com.anthropic.core.getOptional
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
@@ -305,9 +307,9 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (citations.asKnown().getOrNull()?.validity() ?: 0) +
-            (source.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (title.asKnown().isPresent) 1 else 0) +
+        (citations.asKnown()?.validity() ?: 0) +
+            (source.asKnown()?.validity() ?: 0) +
+            (if (title.asKnown() != null) 1 else 0) +
             type.let { if (it == JsonValue.from("document")) 1 else 0 }
 
     @JsonDeserialize(using = Source.Deserializer::class)
@@ -438,7 +440,7 @@ private constructor(
 
             override fun ObjectCodec.deserialize(node: JsonNode): Source {
                 val json = JsonValue.fromJsonNode(node)
-                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+                val type = json.asObject()?.get("type")?.asString()
 
                 when (type) {
                     "base64" -> {

@@ -196,7 +196,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         command.let { if (it == JsonValue.from("delete")) 1 else 0 } +
-            (if (path.asKnown().isPresent) 1 else 0)
+            (if (path.asKnown() != null) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

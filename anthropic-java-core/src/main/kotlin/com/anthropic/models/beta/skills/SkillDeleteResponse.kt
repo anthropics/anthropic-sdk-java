@@ -200,7 +200,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) + (if (type.asKnown().isPresent) 1 else 0)
+        (if (id.asKnown() != null) 1 else 0) + (if (type.asKnown() != null) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
