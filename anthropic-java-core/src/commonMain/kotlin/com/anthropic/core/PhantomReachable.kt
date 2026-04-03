@@ -1,13 +1,11 @@
 
 package com.anthropic.core
 
-import com.anthropic.errors.AnthropicException
-import java.lang.reflect.InvocationTargetException
-
 /**
  * Closes [closeable] when [observed] becomes only phantom reachable.
  *
- * This is a wrapper around a Java 9+ [java.lang.ref.Cleaner], or a no-op in older Java versions.
+ * On JVM: wrapper around Java 9+ [java.lang.ref.Cleaner], or no-op on older JVMs.
+ * On non-JVM: no-op (no phantom reachability concept).
  */
 internal fun closeWhenPhantomReachable(observed: Any, closeable: AutoCloseable) {
     check(observed !== closeable) {
@@ -19,35 +17,6 @@ internal fun closeWhenPhantomReachable(observed: Any, closeable: AutoCloseable) 
 /**
  * Calls [close] when [observed] becomes only phantom reachable.
  *
- * This is a wrapper around a Java 9+ [java.lang.ref.Cleaner], or a no-op in older Java versions.
+ * Platform-specific implementation via expect/actual.
  */
-internal fun closeWhenPhantomReachable(observed: Any, close: () -> Unit) {
-    closeWhenPhantomReachable?.let { it(observed, close) }
-}
-
-private val closeWhenPhantomReachable: ((Any, () -> Unit) -> Unit)? by lazy {
-    try {
-        val cleanerClass = Class.forName("java.lang.ref.Cleaner")
-        val cleanerCreate = cleanerClass.getMethod("create")
-        val cleanerRegister =
-            cleanerClass.getMethod("register", Any::class.java, Runnable::class.java)
-        val cleanerObject = cleanerCreate.invoke(null);
-
-        { observed, close ->
-            try {
-                cleanerRegister.invoke(cleanerObject, observed, Runnable { close() })
-            } catch (e: ReflectiveOperationException) {
-                if (e is InvocationTargetException) {
-                    when (val cause = e.cause) {
-                        is RuntimeException,
-                        is Error -> throw cause
-                    }
-                }
-                throw AnthropicException("Unexpected reflective invocation failure", e)
-            }
-        }
-    } catch (e: ReflectiveOperationException) {
-        // We're running Java 8, which has no Cleaner.
-        null
-    }
-}
+internal expect fun closeWhenPhantomReachable(observed: Any, close: () -> Unit)
