@@ -1,6 +1,6 @@
 package com.anthropic.core.http
 
-import com.anthropic.core.PlatformInputStream
+import java.io.InputStream
 
 interface HttpResponseFor<T> : HttpResponse {
     fun parse(): T
@@ -12,6 +12,6 @@ internal fun <T> HttpResponse.parseable(parse: () -> T): HttpResponseFor<T> =
         override fun parse(): T = parsed
         override fun statusCode(): Int = this@parseable.statusCode()
         override fun headers(): Headers = this@parseable.headers()
-        override fun body(): PlatformInputStream = this@parseable.body()
+        override fun body(): java.io.InputStream = this@parseable.body()
         override fun close() = this@parseable.close()
     }

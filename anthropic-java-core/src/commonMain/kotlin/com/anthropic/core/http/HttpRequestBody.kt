@@ -1,11 +1,11 @@
 package com.anthropic.core.http
 
-import com.anthropic.core.PlatformOutputStream
-import com.anthropic.core.PlatformCloseable
+import java.io.OutputStream
+import java.lang.AutoCloseable
 
-interface HttpRequestBody : PlatformCloseable {
+interface HttpRequestBody : java.lang.AutoCloseable {
 
-    fun writeTo(outputStream: PlatformOutputStream)
+    fun writeTo(outputStream: java.io.OutputStream)
 
     fun contentType(): String?
 

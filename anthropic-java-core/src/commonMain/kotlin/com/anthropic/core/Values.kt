@@ -200,3 +200,16 @@ class MultipartField<T : Any> private constructor(
         fun <T : Any> builder() = Builder<T>()
     }
 }
+
+// Jackson bridge - fromJsonNode
+fun JsonValue.Companion.fromJsonNode(node: com.fasterxml.jackson.databind.JsonNode): JsonValue =
+    when (node.nodeType) {
+        com.fasterxml.jackson.databind.node.JsonNodeType.MISSING -> JsonMissing.of()
+        com.fasterxml.jackson.databind.node.JsonNodeType.NULL -> JsonNull.of()
+        com.fasterxml.jackson.databind.node.JsonNodeType.BOOLEAN -> JsonBoolean.of(node.booleanValue())
+        com.fasterxml.jackson.databind.node.JsonNodeType.NUMBER -> JsonNumber.of(node.numberValue())
+        com.fasterxml.jackson.databind.node.JsonNodeType.STRING -> JsonString.of(node.textValue())
+        com.fasterxml.jackson.databind.node.JsonNodeType.ARRAY -> JsonArray.of(node.elements().asSequence().map { fromJsonNode(it) }.toList())
+        com.fasterxml.jackson.databind.node.JsonNodeType.OBJECT -> JsonObject.of(node.fields().asSequence().map { it.key to fromJsonNode(it.value) }.toMap())
+        com.fasterxml.jackson.databind.node.JsonNodeType.BINARY, com.fasterxml.jackson.databind.node.JsonNodeType.POJO, null -> throw IllegalStateException("Unexpected JsonNode type: ${node.nodeType}")
+    }

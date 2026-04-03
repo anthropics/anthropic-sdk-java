@@ -1,0 +1,144 @@
+// File generated from our OpenAPI spec by Stainless.
+
+package com.anthropic.models.messages.batches
+import com.anthropic.core.getOptional
+
+import com.anthropic.core.AutoPager
+import com.anthropic.core.Page
+import com.anthropic.core.checkRequired
+import com.anthropic.services.blocking.messages.BatchService
+import com.anthropic.core.contentHash
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
+
+/** @see BatchService.list */
+class BatchListPage
+private constructor(
+    private val service: BatchService,
+    private val params: BatchListParams,
+    private val response: BatchListPageResponse,
+) : Page<MessageBatch> {
+
+    /**
+     * Delegates to [BatchListPageResponse], but gracefully handles missing data.
+     *
+     * @see BatchListPageResponse.data
+     */
+    fun data(): List<MessageBatch> = response._data().getOptional("data").getOrNull() ?: emptyList()
+
+    /**
+     * Delegates to [BatchListPageResponse], but gracefully handles missing data.
+     *
+     * @see BatchListPageResponse.hasMore
+     */
+    fun hasMore(): Optional<Boolean> = response._hasMore().getOptional("has_more")
+
+    /**
+     * Delegates to [BatchListPageResponse], but gracefully handles missing data.
+     *
+     * @see BatchListPageResponse.firstId
+     */
+    fun firstId(): Optional<String> = response._firstId().getOptional("first_id")
+
+    /**
+     * Delegates to [BatchListPageResponse], but gracefully handles missing data.
+     *
+     * @see BatchListPageResponse.lastId
+     */
+    fun lastId(): Optional<String> = response._lastId().getOptional("last_id")
+
+    override fun items(): List<MessageBatch> = data()
+
+    override fun hasNextPage(): Boolean = items().isNotEmpty() && lastId().isPresent
+
+    fun nextPageParams(): BatchListParams {
+        val nextCursor =
+            lastId().getOrNull() ?: throw IllegalStateException("Cannot construct next page params")
+        return params.toBuilder().afterId(nextCursor).build()
+    }
+
+    override fun nextPage(): BatchListPage = service.list(nextPageParams())
+
+    fun autoPager(): AutoPager<MessageBatch> = AutoPager.from(this)
+
+    /** The parameters that were used to request this page. */
+    fun params(): BatchListParams = params
+
+    /** The response that this page was parsed from. */
+    fun response(): BatchListPageResponse = response
+
+    fun toBuilder() = Builder().from(this)
+
+    companion object {
+
+        /**
+         * Returns a mutable builder for constructing an instance of [BatchListPage].
+         *
+         * The following fields are required:
+         * ```java
+         * .service()
+         * .params()
+         * .response()
+         * ```
+         */
+        fun builder() = Builder()
+    }
+
+    /** A builder for [BatchListPage]. */
+    class Builder internal constructor() {
+
+        private var service: BatchService? = null
+        private var params: BatchListParams? = null
+        private var response: BatchListPageResponse? = null
+
+        internal fun from(batchListPage: BatchListPage) = apply {
+            service = batchListPage.service
+            params = batchListPage.params
+            response = batchListPage.response
+        }
+
+        fun service(service: BatchService) = apply { this.service = service }
+
+        /** The parameters that were used to request this page. */
+        fun params(params: BatchListParams) = apply { this.params = params }
+
+        /** The response that this page was parsed from. */
+        fun response(response: BatchListPageResponse) = apply { this.response = response }
+
+        /**
+         * Returns an immutable instance of [BatchListPage].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .service()
+         * .params()
+         * .response()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
+        fun build(): BatchListPage =
+            BatchListPage(
+                checkRequired("service", service),
+                checkRequired("params", params),
+                checkRequired("response", response),
+            )
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+
+        return other is BatchListPage &&
+            service == other.service &&
+            params == other.params &&
+            response == other.response
+    }
+
+    override fun hashCode(): Int = contentHash(service, params, response)
+
+    override fun toString() = "BatchListPage{service=$service, params=$params, response=$response}"
+}

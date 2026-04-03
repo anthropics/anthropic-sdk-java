@@ -22,6 +22,13 @@ kotlin {
                 api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
                 api("com.squareup.okio:okio:3.17.0")
+                // Jackson in commonMain — enables model files to use Jackson annotations
+                // and serializers in commonMain. On JVM these work with Jackson runtime.
+                // On non-JVM platforms these are compile-time only (no Jackson runtime).
+                api("com.fasterxml.jackson.core:jackson-annotations:2.18.2")
+                api("com.fasterxml.jackson.core:jackson-core:2.18.2")
+                api("com.fasterxml.jackson.core:jackson-databind:2.18.2")
+                api("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
                 implementation("io.ktor:ktor-client-core:3.4.2")
                 implementation("io.ktor:ktor-client-content-negotiation:3.4.2")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:3.4.2")

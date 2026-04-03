@@ -1,13 +1,13 @@
 package com.anthropic.core.http
 
-import com.anthropic.core.PlatformCloseable
-import com.anthropic.core.PlatformInputStream
+import java.lang.AutoCloseable
+import java.io.InputStream
 
-interface HttpResponse : PlatformCloseable {
+interface HttpResponse : java.lang.AutoCloseable {
     fun statusCode(): Int
     fun headers(): Headers
     fun requestId(): String? = headers().values("request-id").firstOrNull()
-    fun body(): PlatformInputStream
+    fun body(): java.io.InputStream
     override fun close()
 
     interface Handler<T> {

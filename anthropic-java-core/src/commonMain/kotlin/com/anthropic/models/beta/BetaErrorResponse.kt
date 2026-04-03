@@ -1,0 +1,373 @@
+// File generated from our OpenAPI spec by Stainless.
+
+package com.anthropic.models.beta
+import com.anthropic.core.getOptional
+
+import com.anthropic.core.ExcludeMissing
+import com.anthropic.core.JsonField
+import com.anthropic.core.JsonMissing
+import com.anthropic.core.JsonValue
+import com.anthropic.core.checkRequired
+import com.anthropic.errors.AnthropicInvalidDataException
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.anthropic.core.contentHash
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
+
+class BetaErrorResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
+private constructor(
+    private val error: JsonField<BetaError>,
+    private val requestId: JsonField<String>,
+    private val type: JsonValue,
+    private val additionalProperties: MutableMap<String, JsonValue>,
+) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("error") @ExcludeMissing error: JsonField<BetaError> = JsonMissing.of(),
+        @JsonProperty("request_id") @ExcludeMissing requestId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+    ) : this(error, requestId, type, mutableMapOf())
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun error(): BetaError = error.getRequired("error")
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun requestId(): Optional<String> = requestId.getOptional("request_id")
+
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("error")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
+
+    /**
+     * Returns the raw JSON value of [error].
+     *
+     * Unlike [error], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("error") @ExcludeMissing fun _error(): JsonField<BetaError> = error
+
+    /**
+     * Returns the raw JSON value of [requestId].
+     *
+     * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("request_id") @ExcludeMissing fun _requestId(): JsonField<String> = requestId
+
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
+    @JsonAnyGetter
+    @ExcludeMissing
+    fun _additionalProperties(): Map<String, JsonValue> =
+        additionalProperties.toMap()
+
+    fun toBuilder() = Builder().from(this)
+
+    companion object {
+
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaErrorResponse].
+         *
+         * The following fields are required:
+         * ```java
+         * .error()
+         * .requestId()
+         * ```
+         */
+        fun builder() = Builder()
+    }
+
+    /** A builder for [BetaErrorResponse]. */
+    class Builder internal constructor() {
+
+        private var error: JsonField<BetaError>? = null
+        private var requestId: JsonField<String>? = null
+        private var type: JsonValue = JsonValue.from("error")
+        private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+        internal fun from(betaErrorResponse: BetaErrorResponse) = apply {
+            error = betaErrorResponse.error
+            requestId = betaErrorResponse.requestId
+            type = betaErrorResponse.type
+            additionalProperties = betaErrorResponse.additionalProperties.toMutableMap()
+        }
+
+        fun error(error: BetaError) = error(JsonField.of(error))
+
+        /**
+         * Sets [Builder.error] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.error] with a well-typed [BetaError] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun error(error: JsonField<BetaError>) = apply { this.error = error }
+
+        /** Alias for calling [error] with `BetaError.ofInvalidRequest(invalidRequest)`. */
+        fun error(invalidRequest: BetaInvalidRequestError) =
+            error(BetaError.ofInvalidRequest(invalidRequest))
+
+        /**
+         * Alias for calling [error] with the following:
+         * ```java
+         * BetaInvalidRequestError.builder()
+         *     .message(message)
+         *     .build()
+         * ```
+         */
+        fun invalidRequestError(message: String) =
+            error(BetaInvalidRequestError.builder().message(message).build())
+
+        /** Alias for calling [error] with `BetaError.ofAuthentication(authentication)`. */
+        fun error(authentication: BetaAuthenticationError) =
+            error(BetaError.ofAuthentication(authentication))
+
+        /**
+         * Alias for calling [error] with the following:
+         * ```java
+         * BetaAuthenticationError.builder()
+         *     .message(message)
+         *     .build()
+         * ```
+         */
+        fun authenticationError(message: String) =
+            error(BetaAuthenticationError.builder().message(message).build())
+
+        /** Alias for calling [error] with `BetaError.ofBilling(billing)`. */
+        fun error(billing: BetaBillingError) = error(BetaError.ofBilling(billing))
+
+        /**
+         * Alias for calling [error] with the following:
+         * ```java
+         * BetaBillingError.builder()
+         *     .message(message)
+         *     .build()
+         * ```
+         */
+        fun billingError(message: String) =
+            error(BetaBillingError.builder().message(message).build())
+
+        /** Alias for calling [error] with `BetaError.ofPermission(permission)`. */
+        fun error(permission: BetaPermissionError) = error(BetaError.ofPermission(permission))
+
+        /**
+         * Alias for calling [error] with the following:
+         * ```java
+         * BetaPermissionError.builder()
+         *     .message(message)
+         *     .build()
+         * ```
+         */
+        fun permissionError(message: String) =
+            error(BetaPermissionError.builder().message(message).build())
+
+        /** Alias for calling [error] with `BetaError.ofNotFound(notFound)`. */
+        fun error(notFound: BetaNotFoundError) = error(BetaError.ofNotFound(notFound))
+
+        /**
+         * Alias for calling [error] with the following:
+         * ```java
+         * BetaNotFoundError.builder()
+         *     .message(message)
+         *     .build()
+         * ```
+         */
+        fun notFoundError(message: String) =
+            error(BetaNotFoundError.builder().message(message).build())
+
+        /** Alias for calling [error] with `BetaError.ofRateLimit(rateLimit)`. */
+        fun error(rateLimit: BetaRateLimitError) = error(BetaError.ofRateLimit(rateLimit))
+
+        /**
+         * Alias for calling [error] with the following:
+         * ```java
+         * BetaRateLimitError.builder()
+         *     .message(message)
+         *     .build()
+         * ```
+         */
+        fun rateLimitError(message: String) =
+            error(BetaRateLimitError.builder().message(message).build())
+
+        /** Alias for calling [error] with `BetaError.ofTimeout(timeout)`. */
+        fun error(timeout: BetaGatewayTimeoutError) = error(BetaError.ofTimeout(timeout))
+
+        /**
+         * Alias for calling [error] with the following:
+         * ```java
+         * BetaGatewayTimeoutError.builder()
+         *     .message(message)
+         *     .build()
+         * ```
+         */
+        fun timeoutError(message: String) =
+            error(BetaGatewayTimeoutError.builder().message(message).build())
+
+        /** Alias for calling [error] with `BetaError.ofApi(api)`. */
+        fun error(api: BetaApiError) = error(BetaError.ofApi(api))
+
+        /**
+         * Alias for calling [error] with the following:
+         * ```java
+         * BetaApiError.builder()
+         *     .message(message)
+         *     .build()
+         * ```
+         */
+        fun apiError(message: String) = error(BetaApiError.builder().message(message).build())
+
+        /** Alias for calling [error] with `BetaError.ofOverloaded(overloaded)`. */
+        fun error(overloaded: BetaOverloadedError) = error(BetaError.ofOverloaded(overloaded))
+
+        /**
+         * Alias for calling [error] with the following:
+         * ```java
+         * BetaOverloadedError.builder()
+         *     .message(message)
+         *     .build()
+         * ```
+         */
+        fun overloadedError(message: String) =
+            error(BetaOverloadedError.builder().message(message).build())
+
+        fun requestId(requestId: String?) = requestId(JsonField.ofNullable(requestId))
+
+        /** Alias for calling [Builder.requestId] with `requestId.orElse(null)`. */
+        fun requestId(requestId: Optional<String>) = requestId(requestId.getOrNull())
+
+        /**
+         * Sets [Builder.requestId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun requestId(requestId: JsonField<String>) = apply { this.requestId = requestId }
+
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("error")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun type(type: JsonValue) = apply { this.type = type }
+
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+            this.additionalProperties.clear()
+            putAllAdditionalProperties(additionalProperties)
+        }
+
+        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+            additionalProperties.put(key, value)
+        }
+
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+            this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
+        }
+
+        /**
+         * Returns an immutable instance of [BetaErrorResponse].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .error()
+         * .requestId()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
+        fun build(): BetaErrorResponse =
+            BetaErrorResponse(
+                checkRequired("error", error),
+                checkRequired("requestId", requestId),
+                type,
+                additionalProperties.toMutableMap(),
+            )
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): BetaErrorResponse = apply {
+        if (validated) {
+            return@apply
+        }
+
+        error().validate()
+        requestId()
+        _type().let {
+            if (it != JsonValue.from("error")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
+        validated = true
+    }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    internal fun validity(): Int =
+        (error.asKnown()?.validity() ?: 0) +
+            (if (requestId.asKnown() != null) 1 else 0) +
+            type.let { if (it == JsonValue.from("error")) 1 else 0 }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+
+        return other is BetaErrorResponse &&
+            error == other.error &&
+            requestId == other.requestId &&
+            type == other.type &&
+            additionalProperties == other.additionalProperties
+    }
+
+    private val hashCode: Int by lazy { contentHash(error, requestId, type, additionalProperties) }
+
+    override fun hashCode(): Int = hashCode
+
+    override fun toString() =
+        "BetaErrorResponse{error=$error, requestId=$requestId, type=$type, additionalProperties=$additionalProperties}"
+}
