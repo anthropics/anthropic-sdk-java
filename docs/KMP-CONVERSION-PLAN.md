@@ -31,8 +31,14 @@ The Anthropic Java SDK is a JVM-only Kotlin project using Jackson for JSON, OkHt
 | kotlinx.serialization | N/A | **1.10.0** |
 | kotlinx.coroutines | N/A | **1.10.2** |
 | Ktor | N/A | **3.4.2** |
+| Okio | N/A | **3.17.0** (common filesystem + I/O) |
 | Jackson | 2.18.2 | removed from common (kept in jvmMain for structured outputs) |
 | OkHttp | 4.12.0 | unchanged (JVM-only module) |
+| LangChain4j | N/A | **1.12.2** (JVM-only integration) |
+| Apache Camel | N/A | **4.12.0** (JVM-only integration) |
+| Kotlin MCP SDK | N/A | **0.11.0** (KMP integration) |
+| Wire (protobuf/gRPC) | N/A | **6.2.0** (KMP proto + gRPC) |
+| kotlinx-io | N/A | **0.9.0** (KMP I/O supplement) |
 
 ---
 
@@ -122,6 +128,7 @@ kotlin {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+                api("com.squareup.okio:okio:3.17.0")
                 implementation("io.ktor:ktor-client-core:3.4.2")
                 implementation("io.ktor:ktor-client-content-negotiation:3.4.2")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:3.4.2")
@@ -137,6 +144,7 @@ kotlin {
                 implementation("io.ktor:ktor-server-auth:3.4.2")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:3.4.2")
                 implementation("io.ktor:ktor-server-test-host:3.4.2")
+                implementation("com.squareup.okio:okio-fakefilesystem:3.17.0")
             }
         }
         // Platform-specific Ktor engines
@@ -153,6 +161,7 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-js:3.4.2")   // JS engine for browser/node
+                implementation("com.squareup.okio:okio-nodefilesystem:3.17.0") // Node.js filesystem
             }
         }
         val wasmJsMain by getting {
@@ -722,7 +731,545 @@ Key classes:
 - `McpToolResultAdapter` — maps MCP tool results ↔ Anthropic `BetaToolResultBlockParam`
 - Enables using MCP servers as tool providers for Claude conversations
 
-### 8.4 Update settings.gradle.kts
+### 8.4 Low-Level Design: LangChain4j Integration
+
+**Interface mapping (LangChain4j → Anthropic SDK):**
+
+```kotlin
+// AnthropicChatModel.kt
+class AnthropicChatModel(
+    private val client: AnthropicClient,
+    private val defaultModel: Model = Model.CLAUDE_SONNET_4_6,
+    private val defaultMaxTokens: Long = 4096,
+) : ChatLanguageModel {
+
+    override fun chat(request: ChatRequest): ChatResponse {
+        val params = MessageCreateParams.builder()
+            .model(request.model()?.let { Model.of(it) } ?: defaultModel)
+            .maxTokens(request.maxTokens()?.toLong() ?: defaultMaxTokens)
+            .apply {
+                request.messages().forEach { msg ->
+                    when (msg) {
+                        is UserMessage -> addUserMessage(msg.singleText())
+                        is AiMessage -> addAssistantMessage(msg.text())
+                        is SystemMessage -> system(msg.text())
+                    }
+                }
+                // Map LangChain4j ToolSpecification → Anthropic Tool
+                request.toolSpecifications()?.forEach { spec ->
+                    addTool(Tool.builder()
+                        .name(spec.name())
+                        .description(spec.description())
+                        .inputSchema(mapJsonSchema(spec.parameters()))
+                        .build())
+                }
+            }
+            .build()
+
+        val message = runBlocking { client.messages().create(params) }
+        return mapToLangChainResponse(message)
+    }
+}
+
+// AnthropicStreamingChatModel.kt
+class AnthropicStreamingChatModel(
+    private val client: AnthropicClient,
+    private val defaultModel: Model = Model.CLAUDE_SONNET_4_6,
+) : StreamingChatLanguageModel {
+
+    override fun chat(request: ChatRequest, handler: StreamingChatResponseHandler) {
+        // Uses client.messages().createStreaming() → collect Flow → call handler.onPartialResponse/onComplete
+    }
+}
+
+// AnthropicTokenizer.kt
+class AnthropicTokenizer(private val client: AnthropicClient) : Tokenizer {
+    override fun estimateTokenCountInText(text: String): Int {
+        val params = MessageCountTokensParams.builder()
+            .model(Model.CLAUDE_SONNET_4_6)
+            .addUserMessage(text)
+            .build()
+        return runBlocking { client.messages().countTokens(params) }.inputTokens().toInt()
+    }
+}
+```
+
+**Type mappings:**
+| LangChain4j | Anthropic SDK |
+|---|---|
+| `UserMessage` | `MessageParam.ofUserMessage()` |
+| `AiMessage` | `MessageParam.ofAssistantMessage()` |
+| `SystemMessage` | `MessageCreateParams.system()` |
+| `ToolSpecification` | `Tool` |
+| `ToolExecutionRequest` | `ToolUseBlock` |
+| `ToolExecutionResult` | `ToolResultBlockParam` |
+| `AiMessage.text()` | `ContentBlock.text().text()` |
+| `TokenUsage` | `Usage` (inputTokens, outputTokens) |
+| `FinishReason.STOP` | `StopReason.END_TURN` |
+| `FinishReason.TOOL_EXECUTION` | `StopReason.TOOL_USE` |
+| `FinishReason.LENGTH` | `StopReason.MAX_TOKENS` |
+
+### 8.5 Low-Level Design: Apache Camel Integration
+
+**Component hierarchy:**
+
+```kotlin
+// AnthropicComponent.kt
+class AnthropicComponent : DefaultComponent() {
+    var apiKey: String? = null
+    var defaultModel: String = "claude-sonnet-4-6"
+
+    override fun createEndpoint(uri: String, remaining: String, parameters: Map<String, Any>): Endpoint {
+        val endpoint = AnthropicEndpoint(uri, this)
+        setProperties(endpoint, parameters)
+        return endpoint
+    }
+}
+
+// AnthropicEndpoint.kt  
+// URI: anthropic:messages?model=claude-sonnet-4-6&maxTokens=2048&streaming=true
+class AnthropicEndpoint(
+    uri: String,
+    component: AnthropicComponent,
+) : DefaultEndpoint(uri, component) {
+    var model: String = component.defaultModel
+    var maxTokens: Long = 4096
+    var streaming: Boolean = false
+    var systemPrompt: String? = null
+
+    override fun createProducer(): Producer = AnthropicProducer(this)
+    override fun createConsumer(processor: Processor): Consumer =
+        throw UnsupportedOperationException("anthropic: endpoint does not support consumers")
+}
+
+// AnthropicProducer.kt
+class AnthropicProducer(private val endpoint: AnthropicEndpoint) : DefaultProducer(endpoint) {
+    private lateinit var client: AnthropicClient
+
+    override fun doStart() {
+        client = AnthropicClient.builder()
+            .apiKey(endpoint.component().apiKey ?: getEnvironmentVariable("ANTHROPIC_API_KEY"))
+            .build()
+    }
+
+    override fun process(exchange: Exchange) {
+        val userMessage = exchange.getIn().getBody(String::class.java)
+        val params = MessageCreateParams.builder()
+            .model(Model.of(endpoint.model))
+            .maxTokens(endpoint.maxTokens)
+            .addUserMessage(userMessage)
+            .apply { endpoint.systemPrompt?.let { system(it) } }
+            .build()
+
+        if (endpoint.streaming) {
+            // Collect Flow<RawMessageStreamEvent>, set streaming body
+            val events = runBlocking { client.messages().createStreaming(params).toList() }
+            exchange.getIn().body = events
+        } else {
+            val message = runBlocking { client.messages().create(params) }
+            exchange.getIn().body = message.content()
+                .mapNotNull { it.text()?.text() }
+                .joinToString("")
+            exchange.getIn().setHeader("AnthropicModel", message.model())
+            exchange.getIn().setHeader("AnthropicStopReason", message.stopReason().toString())
+            exchange.getIn().setHeader("AnthropicInputTokens", message.usage().inputTokens())
+            exchange.getIn().setHeader("AnthropicOutputTokens", message.usage().outputTokens())
+        }
+    }
+}
+```
+
+**Camel route example:**
+```kotlin
+from("direct:chat")
+    .to("anthropic:messages?model=claude-sonnet-4-6&maxTokens=2048")
+    .log("Claude response: \${body}")
+
+from("direct:stream")
+    .to("anthropic:messages?model=claude-sonnet-4-6&streaming=true")
+    .split(body())
+    .log("Chunk: \${body}")
+```
+
+### 8.6 Low-Level Design: Kotlin MCP SDK Integration
+
+**Interface mapping (MCP SDK → Anthropic SDK):**
+
+```kotlin
+// AnthropicMcpToolProvider.kt - converts MCP tools to Anthropic tool definitions
+class AnthropicMcpToolProvider(private val mcpClient: Client) {
+
+    /**
+     * Lists all tools from the MCP server and converts them to Anthropic BetaTool definitions.
+     */
+    suspend fun listTools(): List<BetaTool> {
+        val mcpTools = mcpClient.listTools()
+        return mcpTools.tools.map { mcpTool ->
+            BetaTool.builder()
+                .name(mcpTool.name)
+                .apply { mcpTool.description?.let { description(it) } }
+                .inputSchema(JsonValue.from(mcpTool.inputSchema))  // MCP JSON Schema → Anthropic JsonValue
+                .build()
+        }
+    }
+
+    /**
+     * Invokes an MCP tool with arguments from an Anthropic tool use block.
+     */
+    suspend fun invokeTool(toolUseBlock: BetaToolUseBlock): BetaToolResultBlockParam {
+        val result = mcpClient.callTool(
+            name = toolUseBlock.name(),
+            arguments = toolUseBlock._input().asObject()?.mapValues { (_, v) ->
+                // Convert Anthropic JsonValue → kotlinx.serialization JsonElement for MCP
+                v.toJsonElement()
+            } ?: emptyMap()
+        )
+
+        return BetaToolResultBlockParam.builder()
+            .toolUseId(toolUseBlock.id())
+            .apply {
+                if (result.isError == true) {
+                    isError(true)
+                }
+                // Map MCP content → Anthropic content
+                val textContent = result.content
+                    .filterIsInstance<TextContent>()
+                    .joinToString("\n") { it.text }
+                content(textContent)
+            }
+            .build()
+    }
+}
+
+// AnthropicMcpClient.kt - orchestrates Claude + MCP tools in a conversation loop
+class AnthropicMcpClient(
+    private val anthropicClient: AnthropicClient,
+    private val mcpToolProvider: AnthropicMcpToolProvider,
+    private val model: Model = Model.CLAUDE_SONNET_4_6,
+    private val maxTokens: Long = 4096,
+) {
+    /**
+     * Runs a conversation loop: send message → if tool_use → invoke MCP tool → send result → repeat
+     */
+    suspend fun chat(userMessage: String, systemPrompt: String? = null): String {
+        val tools = mcpToolProvider.listTools()
+        val messages = mutableListOf<MessageParam>()
+        messages.add(MessageParam.ofUserMessage(userMessage))
+
+        while (true) {
+            val params = MessageCreateParams.builder()
+                .model(model)
+                .maxTokens(maxTokens)
+                .apply {
+                    systemPrompt?.let { system(it) }
+                    tools.forEach { addTool(it) }
+                    messages.forEach { addMessage(it) }
+                }
+                .build()
+
+            val response = anthropicClient.beta().messages().create(params)
+
+            // Check if Claude wants to use tools
+            val toolUseBlocks = response.content().mapNotNull { it.toolUse() }
+            if (toolUseBlocks.isEmpty() || response.stopReason() != BetaStopReason.TOOL_USE) {
+                // Final text response
+                return response.content()
+                    .mapNotNull { it.text()?.text() }
+                    .joinToString("")
+            }
+
+            // Add assistant response with tool use
+            messages.add(MessageParam.ofAssistantMessage(
+                response.content().map { /* map to content block params */ }
+            ))
+
+            // Invoke each tool and add results
+            val toolResults = toolUseBlocks.map { mcpToolProvider.invokeTool(it) }
+            messages.add(MessageParam.ofUserMessage(
+                toolResults.map { BetaContentBlockParam.ofToolResult(it) }
+            ))
+        }
+    }
+}
+```
+
+**Type mappings:**
+| MCP SDK (io.modelcontextprotocol) | Anthropic SDK |
+|---|---|
+| `Tool` (name, description, inputSchema) | `BetaTool` |
+| `Tool.inputSchema` (JsonObject) | `BetaTool.inputSchema` (JsonValue) |
+| `CallToolResult` | `BetaToolResultBlockParam` |
+| `TextContent` | `BetaToolResultBlockParam.content(String)` |
+| `ImageContent` | `BetaToolResultBlockParam` with base64 image |
+| `ResourceContent` | text extraction → `BetaToolResultBlockParam` |
+| `Client.listTools()` | used to populate `MessageCreateParams.addTool()` |
+| `Client.callTool()` | invoked when Claude returns `StopReason.TOOL_USE` |
+
+### 8.7 Low-Level Design: Protobuf/gRPC Integration (KMP via Wire)
+
+Uses Square Wire for KMP-compatible protobuf/gRPC (same ecosystem as Okio/Ktor).
+
+**New module: `anthropic-kotlin-proto/`**
+
+```kotlin
+// build.gradle.kts
+plugins {
+    kotlin("multiplatform")
+    id("com.squareup.wire") version "6.2.0"
+    id("anthropic.publish")
+}
+
+wire {
+    kotlin { out = "src/commonMain/kotlin" }
+    sourcePath { srcDir("src/commonMain/proto") }
+}
+
+kotlin {
+    jvm()
+    macosArm64(); macosX64(); linuxX64(); mingwX64()
+    js(IR) { browser(); nodejs() }
+
+    sourceSets {
+        commonMain {
+            dependencies {
+                api(project(":anthropic-java-core"))
+                api("com.squareup.wire:wire-runtime:6.2.0")
+                api("com.squareup.wire:wire-grpc-client:6.2.0")
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation("com.squareup.wire:wire-grpc-server-generator:6.2.0")
+            }
+        }
+    }
+}
+```
+
+**Proto definitions:**
+```protobuf
+// src/commonMain/proto/anthropic/v1/messages.proto
+syntax = "proto3";
+package anthropic.v1;
+
+option java_package = "com.anthropic.proto.v1";
+
+service AnthropicService {
+  rpc CreateMessage (CreateMessageRequest) returns (CreateMessageResponse);
+  rpc CreateMessageStream (CreateMessageRequest) returns (stream MessageStreamEvent);
+  rpc CountTokens (CountTokensRequest) returns (CountTokensResponse);
+  rpc ListModels (ListModelsRequest) returns (ListModelsResponse);
+}
+
+message CreateMessageRequest {
+  string model = 1;
+  int64 max_tokens = 2;
+  repeated MessageParam messages = 3;
+  string system = 4;
+  repeated Tool tools = 5;
+}
+
+message CreateMessageResponse {
+  string id = 1;
+  string type = 2;
+  string role = 3;
+  repeated ContentBlock content = 4;
+  string model = 5;
+  string stop_reason = 6;
+  Usage usage = 7;
+}
+
+message MessageStreamEvent {
+  string type = 1;
+  oneof event {
+    MessageStart message_start = 2;
+    ContentBlockStart content_block_start = 3;
+    ContentBlockDelta content_block_delta = 4;
+    ContentBlockStop content_block_stop = 5;
+    MessageDelta message_delta = 6;
+  }
+}
+// ... additional messages for Tool, Usage, ContentBlock, etc.
+```
+
+**gRPC client adapter:**
+```kotlin
+// AnthropicGrpcClient.kt
+class AnthropicGrpcClient(
+    private val grpcClient: GrpcClient,  // Wire GrpcClient
+) {
+    private val service = grpcClient.create(AnthropicServiceClient::class)
+
+    suspend fun createMessage(params: MessageCreateParams): Message {
+        val request = params.toProto()  // SDK model → proto
+        val response = service.CreateMessage().execute(request)
+        return response.toSdkModel()     // proto → SDK model
+    }
+
+    fun createMessageStream(params: MessageCreateParams): Flow<RawMessageStreamEvent> {
+        val request = params.toProto()
+        return service.CreateMessageStream().execute(request)
+            .map { it.toSdkModel() }
+    }
+}
+
+// Extension functions for bidirectional mapping
+internal fun MessageCreateParams.toProto(): CreateMessageRequest = CreateMessageRequest(
+    model = model().toString(),
+    max_tokens = maxTokens(),
+    messages = messages().map { it.toProto() },
+    // ...
+)
+
+internal fun CreateMessageResponse.toSdkModel(): Message = Message.builder()
+    .id(id)
+    .model(Model.of(model))
+    .content(content.map { it.toSdkModel() })
+    .usage(usage.toSdkModel())
+    .build()
+```
+
+### 8.8 Low-Level Design: MessagePack Content Negotiation
+
+Adds MessagePack as an alternative serialization format alongside JSON, using Ktor content negotiation.
+
+**New file: `src/commonMain/kotlin/com/anthropic/core/http/MessagePackSupport.kt`**
+
+```kotlin
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.http.*
+import io.ktor.serialization.*
+import io.ktor.utils.io.*
+import io.ktor.utils.io.charsets.*
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.msgpack.MsgPack
+
+/**
+ * Content type for MessagePack: application/msgpack or application/x-msgpack
+ */
+val ContentType.Application.MsgPack: ContentType
+    get() = ContentType("application", "msgpack")
+
+/**
+ * Ktor ContentNegotiation converter for MessagePack.
+ */
+@OptIn(ExperimentalSerializationApi::class)
+class MessagePackConverter(
+    private val msgPack: MsgPack = MsgPack { }
+) : ContentConverter {
+
+    override suspend fun serialize(
+        contentType: ContentType,
+        charset: Charset,
+        typeInfo: TypeInfo,
+        value: Any?
+    ): OutgoingContent {
+        val serializer = msgPack.serializersModule.serializer(typeInfo.type)
+        val bytes = msgPack.encodeToByteArray(serializer, value)
+        return ByteArrayContent(bytes, contentType)
+    }
+
+    override suspend fun deserialize(
+        charset: Charset,
+        typeInfo: TypeInfo,
+        content: ByteReadChannel
+    ): Any? {
+        val bytes = content.toByteArray()
+        val serializer = msgPack.serializersModule.serializer(typeInfo.type)
+        return msgPack.decodeFromByteArray(serializer, bytes)
+    }
+}
+
+/**
+ * Install MessagePack content negotiation on the Ktor client.
+ */
+fun ContentNegotiation.Config.msgpack(
+    contentType: ContentType = ContentType.Application.MsgPack,
+    block: MsgPack.() -> Unit = {}
+) {
+    register(contentType, MessagePackConverter(MsgPack(builderAction = block)))
+}
+```
+
+**Usage in KtorHttpClient:**
+```kotlin
+class KtorHttpClient(...) : HttpClient {
+    private val client = io.ktor.client.HttpClient(engine) {
+        install(ContentNegotiation) {
+            json(anthropicJson)        // JSON (default)
+            msgpack()                  // MessagePack (opt-in via Accept header)
+        }
+    }
+}
+```
+
+**Content negotiation on request:**
+```kotlin
+// Client can request MessagePack responses via Accept header
+val params = MessageCreateParams.builder()
+    .model(Model.CLAUDE_SONNET_4_6)
+    .maxTokens(2048)
+    .addUserMessage("Hello")
+    .putAdditionalHeader("Accept", "application/msgpack")  // opt-in
+    .build()
+```
+
+**Dependencies (add to commonMain):**
+```kotlin
+implementation("org.jetbrains.kotlinx:kotlinx-serialization-msgpack:0.5.6")
+```
+
+### 8.9 Common Annotations Module
+
+Shared annotations used across the SDK for API exposure, validation, and documentation.
+
+**New file: `src/commonMain/kotlin/com/anthropic/core/annotations/Annotations.kt`**
+
+```kotlin
+package com.anthropic.core.annotations
+
+/** Marks an API as part of the public SDK surface. */
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY)
+@Retention(AnnotationRetention.BINARY)
+annotation class AnthropicApi
+
+/** Marks an API as internal SDK implementation detail. */
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY)
+@Retention(AnnotationRetention.BINARY)
+annotation class InternalAnthropicApi
+
+/** Marks an API as beta/experimental. */
+@RequiresOptIn(
+    message = "This API is experimental and may change without notice.",
+    level = RequiresOptIn.Level.WARNING
+)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY)
+@Retention(AnnotationRetention.BINARY)
+annotation class ExperimentalAnthropicApi
+
+/** Replaces @MustBeClosed from error_prone (JVM-only). */
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.BINARY)
+annotation class MustBeClosed
+
+/** Replaces @ExcludeMissing — signals serializer to skip JsonMissing values. */
+@Target(AnnotationTarget.PROPERTY, AnnotationTarget.FIELD)
+@Retention(AnnotationRetention.BINARY)
+annotation class ExcludeMissing
+
+/** Marks a proto/gRPC service definition. */
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.BINARY)
+annotation class ProtoService(val service: String)
+
+/** Marks a field for MessagePack serialization with a specific key. */
+@Target(AnnotationTarget.PROPERTY)
+@Retention(AnnotationRetention.BINARY)
+annotation class MsgPackKey(val key: Int)
+```
+
+### 8.10 Update settings.gradle.kts
 Add new modules to auto-discovery (they already match `anthropic-java*` or add `anthropic-kotlin*` pattern):
 ```kotlin
 val projectNames = rootDir.listFiles()
@@ -1082,7 +1629,7 @@ fun JsonValue.toJsonElement(): kotlinx.serialization.json.JsonElement = when (th
 fun JsonValue.Companion.fromJsonElement(element: kotlinx.serialization.json.JsonElement): JsonValue = ...
 ```
 
-### E. HTTP Body Abstraction Change
+### E. HTTP Body Abstraction Change (using Okio)
 
 **Before (JVM):**
 ```kotlin
@@ -1097,29 +1644,58 @@ interface HttpResponse : AutoCloseable {
 }
 ```
 
-**After (common):**
+**After (common with Okio):**
 ```kotlin
+import okio.BufferedSink
+import okio.BufferedSource
+import okio.FileSystem
+import okio.Path
+
 interface HttpRequestBody {
-    fun toByteArray(): ByteArray    // for simple bodies
+    fun writeTo(sink: BufferedSink)  // Okio sink replaces OutputStream
     fun contentType(): String?
     fun contentLength(): Long
     fun repeatable(): Boolean
     fun close()
 }
+
 interface HttpResponse {
     fun statusCode(): Int
     fun headers(): Headers
-    fun body(): ByteArray            // for simple responses
-    fun bodyAsText(): String         // convenience
+    fun body(): BufferedSource        // Okio source replaces InputStream
+    fun bodyAsText(): String          // convenience: body().readUtf8()
+    fun bodyAsBytes(): ByteArray      // convenience: body().readByteArray()
     fun close()
 }
 ```
 
-For streaming, use Ktor's `ByteReadChannel` or return `Sequence<String>` for line-by-line SSE:
+**Okio usage throughout the codebase:**
+- `HttpRequestBodies.json()`: write JSON to `Buffer()` then wrap as body
+- `StreamHandler.kt`: `response.body().buffered()` → Okio `BufferedSource.readUtf8Line()`
+- `StringHandler.kt`: `response.body().readUtf8()`
+- `MultipartBody`: write parts to `BufferedSink` instead of `OutputStream`
+- File uploads (`MultipartField<InputStream>` → `MultipartField<Source>`): use `FileSystem.SYSTEM.source(path)` for file reads
+- File downloads: `response.body()` is already a `BufferedSource`, write to `FileSystem.SYSTEM.sink(path)`
+- Tests: `FakeFileSystem` for isolated file operations
+
+**Okio FileSystem for platform file operations:**
 ```kotlin
-interface HttpResponse {
-    // ... above methods
-    suspend fun bodyLines(): Sequence<String>  // for SSE streaming
+// Common code - works on all platforms
+val fs = FileSystem.SYSTEM
+val source = fs.source(path)
+val sink = fs.sink(path)
+
+// Tests - isolated fake filesystem
+val fakeFs = FakeFileSystem()
+fakeFs.write("test.json".toPath()) { writeUtf8(jsonContent) }
+```
+
+For SSE streaming, use Okio line-by-line reading:
+```kotlin
+fun BufferedSource.lines(): Sequence<String> = sequence {
+    while (!exhausted()) {
+        readUtf8Line()?.let { yield(it) }
+    }
 }
 ```
 
@@ -1185,4 +1761,294 @@ interface MessageServiceAsync {
 | `services/**/*.kt` (~44 files) | CompletableFuture → suspend, Optional → nullable |
 | `client/*.kt` (4 files) | Remove JVM-specific code |
 | `backends/*.kt` (2 files) | System.getProperty → expect/actual |
+
+---
+
+## Detailed Implementation Todo
+
+### Step 1: Toolchain & Build System
+- [ ] 1.1 Install SDKMAN! tools: `sdk install java 25-graal && sdk install kotlin 2.3.20 && sdk install gradle 9.4.1 && sdk install jbang`
+- [ ] 1.2 Update `gradle/wrapper/gradle-wrapper.properties` → gradle 9.4.1
+- [ ] 1.3 Run `./gradlew wrapper --gradle-version=9.4.1`
+- [ ] 1.4 Update `buildSrc/build.gradle.kts`: Kotlin `"2.3.20"`, add `kotlin("plugin.serialization")`
+- [ ] 1.5 Update `buildSrc/src/main/kotlin/anthropic.kotlin.gradle.kts`: JDK 25, remove Kotlin 1.8 constraints
+- [ ] 1.6 Update `buildSrc/src/main/kotlin/anthropic.java.gradle.kts`: JDK 25
+- [ ] 1.7 Rewrite `anthropic-java-core/build.gradle.kts` with `kotlin("multiplatform")` + all targets
+- [ ] 1.8 Update `settings.gradle.kts` to include `anthropic-kotlin-*` modules
+- [ ] 1.9 Add `gradle.properties` entries for KMP
+- [ ] 1.10 Verify: `./gradlew :anthropic-java-core:compileKotlinJvm` succeeds (empty common source)
+
+### Step 2: Create Directory Structure
+- [ ] 2.1 Create `src/commonMain/kotlin/com/anthropic/` tree
+- [ ] 2.2 Create `src/commonTest/kotlin/com/anthropic/` tree
+- [ ] 2.3 Create `src/jvmMain/kotlin/com/anthropic/core/` tree
+- [ ] 2.4 Create `src/jsMain/kotlin/com/anthropic/core/` tree
+- [ ] 2.5 Create `src/nativeMain/kotlin/com/anthropic/core/` tree
+- [ ] 2.6 Copy existing `src/test/kotlin/` → `src/jvmTest/kotlin/` (keep as-is)
+- [ ] 2.7 Verify: `./gradlew :anthropic-java-core:compileKotlinJvm` still works
+
+### Step 3: Core Infrastructure → commonMain
+- [ ] 3.1 Create `src/commonMain/.../core/annotations/Annotations.kt` (MustBeClosed, ExcludeMissing, etc.)
+- [ ] 3.2 Create `src/commonMain/.../core/Platform.kt` (expect declarations)
+- [ ] 3.3 Create `src/jvmMain/.../core/Platform.jvm.kt` (actual JVM)
+- [ ] 3.4 Create `src/nativeMain/.../core/Platform.native.kt` (actual native)
+- [ ] 3.5 Create `src/jsMain/.../core/Platform.js.kt` (actual JS)
+- [ ] 3.6 Move+convert `core/Utils.kt` → commonMain (remove `java.util.Collections`, `java.util.concurrent`)
+- [ ] 3.7 Move+convert `core/Check.kt` → commonMain (remove Jackson version check)
+- [ ] 3.8 Move+convert `core/Timeout.kt` → commonMain (`java.time.Duration` → `kotlin.time.Duration`)
+- [ ] 3.9 Move+convert `core/Sleeper.kt` → commonMain (suspend-based, remove CompletableFuture)
+- [ ] 3.10 Move+convert `core/DefaultSleeper.kt` → commonMain (coroutine `delay()`)
+- [ ] 3.11 Move+convert `core/RequestOptions.kt` → commonMain (kotlin.time)
+- [ ] 3.12 Move+convert `core/Params.kt` → commonMain (already pure)
+- [ ] 3.13 Move+convert `core/Page.kt` → commonMain (already pure)
+- [ ] 3.14 Move+convert `core/PageAsync.kt` → commonMain (suspend fun nextPage)
+- [ ] 3.15 Move `core/PhantomReachable.kt` → jvmMain (expect/actual)
+- [ ] 3.16 Verify: `./gradlew :anthropic-java-core:compileKotlinMetadata` succeeds
+
+### Step 4: JSON Value System → commonMain
+- [ ] 4.1 Create `src/commonMain/.../core/JsonConfiguration.kt` (kotlinx.serialization Json config)
+- [ ] 4.2 Move+convert `core/Values.kt` → commonMain (remove all Jackson, add @Serializable + KSerializer for JsonValue/JsonField)
+- [ ] 4.3 Delete `core/ObjectMappers.kt` from main source (keep in jvmMain for structured outputs)
+- [ ] 4.4 Delete `core/BaseSerializer.kt` and `core/BaseDeserializer.kt`
+- [ ] 4.5 Verify: JsonField, JsonValue, JsonMissing, JsonNull compile in common
+
+### Step 5: HTTP Abstractions → commonMain (Okio-based)
+- [ ] 5.1 Move+convert `core/http/HttpMethod.kt` → commonMain (already pure enum)
+- [ ] 5.2 Move+convert `core/http/Headers.kt` → commonMain (TreeMap → sortedMapOf)
+- [ ] 5.3 Move+convert `core/http/QueryParams.kt` → commonMain (pure)
+- [ ] 5.4 Move+convert `core/http/HttpRequest.kt` → commonMain (pure)
+- [ ] 5.5 Move+convert `core/http/HttpRequestBody.kt` → commonMain (OutputStream → Okio BufferedSink)
+- [ ] 5.6 Move+convert `core/http/HttpResponse.kt` → commonMain (InputStream → Okio BufferedSource)
+- [ ] 5.7 Move+convert `core/http/HttpResponseFor.kt` → commonMain
+- [ ] 5.8 Move+convert `core/http/HttpClient.kt` → commonMain (suspend only, remove CF)
+- [ ] 5.9 Move+convert `core/http/StreamResponse.kt` → commonMain (Flow<T>)
+- [ ] 5.10 Move+convert `core/http/AsyncStreamResponse.kt` → commonMain (Flow<T>)
+- [ ] 5.11 Move+convert `core/http/SseMessage.kt` → commonMain (kotlinx.serialization)
+- [ ] 5.12 Move+convert `core/http/HttpRequestBodies.kt` → commonMain (kotlinx.serialization + Okio)
+- [ ] 5.13 Move+convert `core/http/RetryingHttpClient.kt` → commonMain (suspend + delay)
+- [ ] 5.14 Move PhantomReachableClosing* → jvmMain
+- [ ] 5.15 Verify: `./gradlew :anthropic-java-core:compileKotlinMetadata` succeeds
+
+### Step 6: Ktor CIO Client Implementation
+- [ ] 6.1 Create `src/commonMain/.../core/http/KtorHttpClient.kt`
+- [ ] 6.2 Create `src/commonMain/.../core/http/KtorHttpResponse.kt`
+- [ ] 6.3 Create MessagePack content negotiation support
+- [ ] 6.4 Update ClientOptions to use Ktor client by default
+- [ ] 6.5 Verify: HTTP client compiles on all targets
+
+### Step 7: Handlers → commonMain
+- [ ] 7.1 Move+convert `core/handlers/StringHandler.kt` → commonMain (Okio readUtf8)
+- [ ] 7.2 Move+convert `core/handlers/JsonHandler.kt` → commonMain (kotlinx.serialization)
+- [ ] 7.3 Move+convert `core/handlers/ErrorHandler.kt` → commonMain
+- [ ] 7.4 Move+convert `core/handlers/SseHandler.kt` → commonMain (kotlinx.serialization)
+- [ ] 7.5 Move+convert `core/handlers/StreamHandler.kt` → commonMain (Okio lines, Sequence)
+
+### Step 8: Error Classes → commonMain
+- [ ] 8.1 Move all 14 error classes → commonMain (remove @JvmOverloads)
+
+### Step 9: Model Files → commonMain (batch, ~485 files)
+- [ ] 9.1 Write batch transform script (sed/perl) for regular models: remove Jackson annotations, add @Serializable/@SerialName
+- [ ] 9.2 Write batch transform for enum-like classes: add custom KSerializer
+- [ ] 9.3 Write batch transform for union types: convert Deserializer/Serializer inner classes → KSerializer
+- [ ] 9.4 Remove @JvmStatic, @JvmSynthetic, @JvmField, @JvmName from all models
+- [ ] 9.5 Replace `java.util.Optional` → nullable returns in all model accessors
+- [ ] 9.6 Replace `java.util.Collections.unmodifiableMap` → `.toMap()` in all models
+- [ ] 9.7 Replace `java.util.Objects.hash` → manual hashCode or `hashOf()` helper
+- [ ] 9.8 Move all converted models → `src/commonMain/kotlin/com/anthropic/models/`
+- [ ] 9.9 Verify: `./gradlew :anthropic-java-core:compileKotlinMetadata` succeeds
+
+### Step 10: Services → commonMain
+- [ ] 10.1 Convert blocking service interfaces (suspend-only, remove Optional)
+- [ ] 10.2 Convert async service interfaces (suspend-only, Flow for streaming)
+- [ ] 10.3 Convert service implementations (suspend, kotlinx.serialization handlers)
+- [ ] 10.4 Move all converted services → commonMain
+- [ ] 10.5 Verify: services compile in common
+
+### Step 11: Client & Backend → commonMain
+- [ ] 11.1 Move+convert client interfaces and impls → commonMain
+- [ ] 11.2 Move+convert Backend interface and AnthropicBackend → commonMain (expect/actual for env)
+- [ ] 11.3 Move+convert helpers (MessageAccumulator, etc.) → commonMain
+- [ ] 11.4 Move+convert AutoPager (Sequence), AutoPagerAsync (Flow) → commonMain
+- [ ] 11.5 Move PrepareRequest → commonMain (suspend version)
+
+### Step 12: StructuredOutputs (jvmMain only)
+- [ ] 12.1 Create expect `extractSchema` in commonMain
+- [ ] 12.2 Keep victools-based actual in jvmMain
+- [ ] 12.3 Move JsonSchemaValidator → commonMain (convert JsonNode → JsonElement)
+
+### Step 13: Test Infrastructure
+- [ ] 13.1 Create `src/commonTest/.../TestServer.kt` (Ktor CIO + API key auth)
+- [ ] 13.2 Create test stub helpers (mock responses for each endpoint)
+- [ ] 13.3 Create `src/commonTest/.../TestHelpers.kt` (assertion helpers)
+
+### Step 14: Port Tests → commonTest
+- [ ] 14.1 Port core tests (Values, Utils, Check, Headers, QueryParams, Timeout, HttpRequest)
+- [ ] 14.2 Port handler tests (JsonHandler, SseHandler, StreamHandler)
+- [ ] 14.3 Port model tests (~400 files, batch transform: JUnit→kotlin.test, AssertJ→assertEquals)
+- [ ] 14.4 Port service tests (WireMock stubs → Ktor server stubs)
+- [ ] 14.5 Port helper tests (MessageAccumulator, BetaToolRunner)
+- [ ] 14.6 Port backend tests
+
+### Step 15: Convert Examples → commonTest
+- [ ] 15.1 Convert Messages examples (sync, async, conversation, image) → test
+- [ ] 15.2 Convert Streaming examples (sync, async, cancellation) → test
+- [ ] 15.3 Convert CountTokens examples → test
+- [ ] 15.4 Convert ModelList examples → test
+- [ ] 15.5 Convert Batch examples → test
+- [ ] 15.6 Convert StructuredOutputs examples → test
+- [ ] 15.7 Convert Tool use examples → test
+- [ ] 15.8 Convert Thinking examples → test
+- [ ] 15.9 Skip platform-specific examples (Bedrock, Vertex, Foundry)
+
+### Step 16: Integration Modules
+- [ ] 16.1 Create `anthropic-java-langchain4j/` module + build.gradle.kts
+- [ ] 16.2 Implement AnthropicChatModel, AnthropicStreamingChatModel, AnthropicTokenizer
+- [ ] 16.3 Create LangChain4j integration tests
+- [ ] 16.4 Create `anthropic-java-camel/` module + build.gradle.kts
+- [ ] 16.5 Implement AnthropicComponent, AnthropicEndpoint, AnthropicProducer
+- [ ] 16.6 Create Camel integration tests
+- [ ] 16.7 Create `anthropic-kotlin-mcp/` module + build.gradle.kts
+- [ ] 16.8 Implement AnthropicMcpToolProvider, AnthropicMcpClient
+- [ ] 16.9 Create MCP integration tests
+- [ ] 16.10 Create `anthropic-kotlin-proto/` module + build.gradle.kts + proto definitions
+- [ ] 16.11 Implement AnthropicGrpcClient + proto ↔ SDK model mappers
+- [ ] 16.12 Create gRPC integration tests
+
+### Step 17: Verify Other Modules
+- [ ] 17.1 `./gradlew :anthropic-java-client-okhttp:build`
+- [ ] 17.2 `./gradlew :anthropic-java:build`
+- [ ] 17.3 `./gradlew :anthropic-java-example:compileJava`
+- [ ] 17.4 `./gradlew :anthropic-java-bedrock:build`
+- [ ] 17.5 `./gradlew :anthropic-java-vertex:build`
+- [ ] 17.6 `./gradlew :anthropic-java-foundry:build`
+- [ ] 17.7 `./gradlew :anthropic-java-aws:build`
+
+### Step 18: Final Verification
+- [ ] 18.1 `./gradlew :anthropic-java-core:allTests`
+- [ ] 18.2 `./gradlew :anthropic-java-core:jvmTest`
+- [ ] 18.3 `./gradlew :anthropic-java-core:jsTest`
+- [ ] 18.4 `./gradlew :anthropic-java-core:linkDebugTestLinuxX64` (native tests)
+- [ ] 18.5 `./gradlew build` (full project)
+- [ ] 18.6 Commit and push
+
+---
+
+## Test Plan
+
+### T1: Build System Tests
+| # | Test | Command | Pass Criteria |
+|---|---|---|---|
+| T1.1 | Gradle wrapper upgrade | `./gradlew --version` | Shows 9.4.1 |
+| T1.2 | Kotlin version | `./gradlew :anthropic-java-core:dependencies` | Shows 2.3.20 |
+| T1.3 | JDK toolchain | `./gradlew :anthropic-java-core:jvmToolchainInfo` | Shows GraalVM 25 |
+| T1.4 | KMP metadata compile | `./gradlew :anthropic-java-core:compileKotlinMetadata` | Success |
+| T1.5 | JVM compile | `./gradlew :anthropic-java-core:compileKotlinJvm` | Success |
+| T1.6 | JS compile | `./gradlew :anthropic-java-core:compileKotlinJs` | Success |
+| T1.7 | Native compile | `./gradlew :anthropic-java-core:compileKotlinLinuxX64` | Success |
+
+### T2: Core Infrastructure Tests (commonTest)
+| # | Test | Validates |
+|---|---|---|
+| T2.1 | `PlatformTest` | expect/actual getSystemProperty, getEnvironmentVariable work on each target |
+| T2.2 | `TimeoutTest` | kotlin.time.Duration-based Timeout construction, defaults, assign() |
+| T2.3 | `SleeperTest` | suspend sleep() completes after specified delay |
+| T2.4 | `UtilsTest` | toImmutable(), allMaxBy(), contentEquals(), contentHash() |
+| T2.5 | `CheckTest` | checkRequired(), checkKnown(), checkLength() throw correctly |
+| T2.6 | `RequestOptionsTest` | applyDefaults(), timeout calculation from maxTokens |
+
+### T3: JSON Value System Tests (commonTest)
+| # | Test | Validates |
+|---|---|---|
+| T3.1 | `JsonValueSerializationTest` | JsonNull, JsonBoolean, JsonNumber, JsonString, JsonArray, JsonObject round-trip |
+| T3.2 | `JsonFieldTest` | JsonField.of(), KnownValue, JsonMissing serialization exclusion |
+| T3.3 | `JsonValueFromTest` | JsonValue.from(null/true/42/"s"/List/Map) produces correct types |
+| T3.4 | `JsonValueVisitorTest` | Visitor pattern visits correct type |
+| T3.5 | `JsonMissingFilterTest` | IsMissing filter excludes missing fields during serialization |
+| T3.6 | `JsonValueToJsonElementTest` | Bridge: JsonValue ↔ kotlinx.serialization.json.JsonElement |
+
+### T4: HTTP Abstraction Tests (commonTest)
+| # | Test | Validates |
+|---|---|---|
+| T4.1 | `HeadersTest` | Case-insensitive, multi-value, builder, toImmutable |
+| T4.2 | `QueryParamsTest` | Key-value, JSON value flattening, bracket notation |
+| T4.3 | `HttpRequestTest` | URL construction, path segments encoding, builder |
+| T4.4 | `HttpMethodTest` | All enum values |
+| T4.5 | `HttpRequestBodyTest` | JSON body via Okio BufferedSink, contentType, contentLength |
+| T4.6 | `MultipartBodyTest` | Multipart form-data construction, boundary, parts |
+| T4.7 | `SseMessageTest` | SSE line parsing, event/data/id/retry fields |
+| T4.8 | `RetryingHttpClientTest` | Retry on 429/5xx, exponential backoff, max retries, jitter |
+
+### T5: Ktor Client Tests (commonTest)
+| # | Test | Validates |
+|---|---|---|
+| T5.1 | `KtorHttpClientTest` | Execute request against Ktor test server, verify response |
+| T5.2 | `KtorStreamingTest` | SSE streaming via Ktor client, collect Flow events |
+| T5.3 | `KtorRetryTest` | Retry logic with Ktor test server returning 429 then 200 |
+| T5.4 | `KtorTimeoutTest` | Request timeout triggers correctly |
+| T5.5 | `KtorAuthTest` | API key sent in X-Api-Key header, 401 on missing key |
+
+### T6: Model Tests (commonTest, ~400 tests)
+| # | Test | Validates |
+|---|---|---|
+| T6.1 | `RateLimitErrorTest` | Serialize/deserialize, builder, validate(), additionalProperties |
+| T6.2 | `ModelEnumTest` | Model.of(), known/unknown values, serialization |
+| T6.3 | `ContentBlockSourceContentTest` | Union deserialization by "type" discriminator |
+| T6.4 | `MessageCreateParamsTest` | Builder pattern, all fields, body serialization |
+| T6.5 | `MessageTest` | Full response deserialization, content blocks, usage |
+| T6.6 | ... (~395 more) | Each model file has corresponding test |
+
+### T7: Service Tests (commonTest, Ktor server stubs)
+| # | Test | Validates |
+|---|---|---|
+| T7.1 | `MessageServiceTest` | create(), createStreaming(), countTokens() against mock server |
+| T7.2 | `ModelServiceTest` | list() with pagination against mock server |
+| T7.3 | `CompletionServiceTest` | Legacy completion endpoint |
+| T7.4 | `BatchServiceTest` | Batch create, list, get against mock server |
+| T7.5 | `BetaMessageServiceTest` | Beta endpoints with beta headers |
+| T7.6 | `BetaFileServiceTest` | File upload/download with multipart |
+| T7.7 | `ErrorHandlingTest` | 400/401/403/404/422/429/5xx → correct exception types |
+| T7.8 | `ServiceParamsTest` | Headers, query params, body params pass through correctly |
+
+### T8: Example Conversion Tests (commonTest)
+| # | Test | Validates |
+|---|---|---|
+| T8.1 | `MessagesExampleTest` | Basic message create, response parsing |
+| T8.2 | `MessagesStreamingExampleTest` | Streaming Flow collection |
+| T8.3 | `MessagesConversationExampleTest` | Multi-turn conversation |
+| T8.4 | `CountTokensExampleTest` | Token counting endpoint |
+| T8.5 | `ModelListExampleTest` | Model listing with autopager |
+| T8.6 | `BatchExampleTest` | Batch operations |
+| T8.7 | `StructuredOutputsExampleTest` | JSON output format |
+| T8.8 | `ToolUseExampleTest` | Tool definition, invocation, result |
+| T8.9 | `ThinkingExampleTest` | Extended thinking params |
+
+### T9: Integration Module Tests
+| # | Test | Validates |
+|---|---|---|
+| T9.1 | `AnthropicChatModelTest` | LangChain4j chat() maps correctly to Anthropic create() |
+| T9.2 | `AnthropicStreamingChatModelTest` | LangChain4j streaming maps to createStreaming() |
+| T9.3 | `AnthropicTokenizerTest` | LangChain4j tokenizer maps to countTokens() |
+| T9.4 | `AnthropicComponentTest` | Camel component creates endpoint correctly |
+| T9.5 | `AnthropicProducerTest` | Camel producer sends message, parses response |
+| T9.6 | `AnthropicMcpToolProviderTest` | MCP tools convert to Anthropic BetaTool |
+| T9.7 | `AnthropicMcpClientTest` | Full MCP tool use loop: create → tool_use → callTool → result |
+| T9.8 | `AnthropicGrpcClientTest` | Proto request/response mapping, gRPC streaming |
+| T9.9 | `MessagePackNegotiationTest` | MessagePack serialization/deserialization round-trip |
+
+### T10: JVM Backward Compatibility Tests (jvmTest, existing)
+| # | Test | Validates |
+|---|---|---|
+| T10.1 | All existing tests in `src/jvmTest/` | Pass unchanged with WireMock, AssertJ, JUnit5 |
+| T10.2 | `OkHttpClientTest` | OkHttp module still works against JVM target |
+| T10.3 | `ProGuardCompatibilityTest` | ProGuard/R8 rules still work |
+| T10.4 | Java example compilation | `./gradlew :anthropic-java-example:compileJava` succeeds |
+
+### T11: Cross-Platform Tests
+| # | Test | Command | Validates |
+|---|---|---|---|
+| T11.1 | JVM tests | `./gradlew :anthropic-java-core:jvmTest` | All common+jvm tests pass |
+| T11.2 | JS tests | `./gradlew :anthropic-java-core:jsTest` | All common tests pass on Node.js |
+| T11.3 | Linux native tests | `./gradlew :anthropic-java-core:linuxX64Test` | All common tests pass on Linux native |
+| T11.4 | macOS native tests | `./gradlew :anthropic-java-core:macosArm64Test` | All common tests pass on macOS native |
+| T11.5 | Full build | `./gradlew build` | Entire project builds successfully |
 | `errors/*.kt` (14 files) | Remove @JvmOverloads |
