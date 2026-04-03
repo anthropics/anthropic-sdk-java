@@ -9,6 +9,5 @@ package com.anthropic.errors
  * @param message A descriptive error message
  * @param cause The underlying cause of this exception, if any
  */
-class AnthropicRetryableException
-@JvmOverloads
-constructor(message: String? = null, cause: Throwable? = null) : AnthropicException(message, cause)
+class AnthropicRetryableException(message: String? = null, cause: Throwable? = null) :
+    AnthropicException(message, cause)
