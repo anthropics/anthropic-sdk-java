@@ -9,7 +9,6 @@ import com.anthropic.core.http.SseMessage
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.SseException
 import java.io.InputStream
-import java.util.stream.Collectors.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.Test
@@ -139,7 +138,7 @@ internal class SseHandlerTest {
 
         try {
             messages =
-                sseHandler(jsonMapper()).handle(response).use { it.stream().collect(toList()) }
+                sseHandler(jsonMapper()).handle(response).use { it.stream().toList() }
         } catch (e: Exception) {
             exception = e
         }
@@ -160,8 +159,8 @@ internal class SseHandlerTest {
 
         val throwable =
             streamResponse.use {
-                it.stream().collect(toList())
-                catchThrowable { it.stream().collect(toList()) }
+                it.stream().toList()
+                catchThrowable { it.stream().toList() }
             }
 
         assertThat(throwable).isInstanceOf(IllegalStateException::class.java)

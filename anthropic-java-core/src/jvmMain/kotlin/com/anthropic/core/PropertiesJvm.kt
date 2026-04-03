@@ -4,7 +4,7 @@ package com.anthropic.core
 
 import com.anthropic.client.AnthropicClient
 
-fun getOsArch(): String {
+actual fun getOsArch(): String {
     val osArch = System.getProperty("os.arch")
 
     return when (osArch) {
@@ -20,7 +20,7 @@ fun getOsArch(): String {
     }
 }
 
-fun getOsName(): String {
+actual fun getOsName(): String {
     val osName = System.getProperty("os.name")
     val vendorUrl = System.getProperty("java.vendor.url")
 
@@ -34,9 +34,9 @@ fun getOsName(): String {
     }
 }
 
-fun getOsVersion(): String = System.getProperty("os.version", "unknown") ?: "unknown"
+actual fun getOsVersion(): String = System.getProperty("os.version", "unknown") ?: "unknown"
 
-fun getPackageVersion(): String =
+actual fun getPackageVersion(): String =
     AnthropicClient::class.java.`package`?.implementationVersion ?: "unknown"
 
-fun getJavaVersion(): String = System.getProperty("java.version", "unknown") ?: "unknown"
+actual fun getJavaVersion(): String = System.getProperty("java.version", "unknown") ?: "unknown"

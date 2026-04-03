@@ -2,9 +2,6 @@
 
 package com.anthropic.core
 
-import java.util.stream.Stream
-import java.util.stream.StreamSupport
-
 class AutoPager<T> private constructor(private val firstPage: Page<T>) : Iterable<T> {
 
     companion object {
@@ -17,5 +14,5 @@ class AutoPager<T> private constructor(private val firstPage: Page<T>) : Iterabl
             .flatMap { it.items() }
             .iterator()
 
-    fun stream(): Stream<T> = StreamSupport.stream(spliterator(), false)
+    fun asSequence(): Sequence<T> = Sequence { iterator() }
 }

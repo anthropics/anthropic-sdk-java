@@ -8,8 +8,6 @@ import com.anthropic.core.http.PhantomReachableClosingStreamResponse
 import com.anthropic.core.http.StreamResponse
 import com.anthropic.errors.AnthropicIoException
 import java.io.IOException
-import java.util.stream.Stream
-import kotlin.streams.asStream
 
 @JvmSynthetic
 internal fun <T> streamHandler(
@@ -40,7 +38,7 @@ internal fun <T> streamHandler(
             return PhantomReachableClosingStreamResponse(
                 object : StreamResponse<T> {
 
-                    override fun stream(): Stream<T> = sequence.asStream()
+                    override fun stream(): Sequence<T> = sequence
 
                     override fun close() {
                         sequence.close()

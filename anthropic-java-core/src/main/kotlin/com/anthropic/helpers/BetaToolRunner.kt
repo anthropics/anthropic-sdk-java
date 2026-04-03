@@ -10,7 +10,6 @@ import com.anthropic.services.blocking.beta.MessageService
 import java.util.Optional
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.function.Supplier
-import java.util.stream.Stream
 import kotlin.jvm.optionals.asSequence
 import kotlin.jvm.optionals.getOrNull
 
@@ -80,8 +79,8 @@ internal constructor(
                                 private val delegate =
                                     messageService.createStreaming(currentParams, requestOptions)
 
-                                override fun stream(): Stream<BetaRawMessageStreamEvent> =
-                                    delegate.stream().peek(accumulator::accumulate)
+                                override fun stream(): Sequence<BetaRawMessageStreamEvent> =
+                                    delegate.stream().onEach { accumulator.accumulate(it) }
 
                                 override fun close() = delegate.close()
                             }

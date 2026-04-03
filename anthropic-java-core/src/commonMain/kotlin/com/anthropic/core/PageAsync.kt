@@ -2,7 +2,7 @@
 
 package com.anthropic.core
 
-import java.util.concurrent.CompletableFuture
+import com.anthropic.core.PlatformFuture
 
 /**
  * An interface representing a single page, with items of type [T], from a paginated endpoint
@@ -28,7 +28,7 @@ interface PageAsync<T> {
      * @throws IllegalStateException if it's impossible to get the next page. This exception is
      *   avoidable by calling [hasNextPage] first.
      */
-    fun nextPage(): CompletableFuture<out PageAsync<T>>
+    fun nextPage(): PlatformFuture<out PageAsync<T>>
 
     /** Returns the items in this page. */
     fun items(): List<T>

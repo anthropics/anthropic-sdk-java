@@ -1,7 +1,6 @@
 package com.anthropic.core.http
 
 import com.anthropic.core.closeWhenPhantomReachable
-import java.util.stream.Stream
 
 /**
  * A delegating wrapper around a `StreamResponse` that closes it once it's only phantom reachable.
@@ -15,7 +14,7 @@ internal class PhantomReachableClosingStreamResponse<T>(
         closeWhenPhantomReachable(this, streamResponse)
     }
 
-    override fun stream(): Stream<T> = streamResponse.stream()
+    override fun stream(): Sequence<T> = streamResponse.stream()
 
     override fun close() = streamResponse.close()
 }

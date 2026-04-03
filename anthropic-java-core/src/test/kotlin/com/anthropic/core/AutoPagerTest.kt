@@ -36,6 +36,7 @@ internal class AutoPagerTest {
 
         val autoPager = AutoPager.from(firstPage)
 
-        assertThat(autoPager.stream()).containsExactly("chunk1", "chunk2", "chunk3", "chunk4")
+        assertThat(autoPager.asSequence().toList())
+            .containsExactly("chunk1", "chunk2", "chunk3", "chunk4")
     }
 }
