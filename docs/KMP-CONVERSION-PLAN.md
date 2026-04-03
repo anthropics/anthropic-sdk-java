@@ -44,9 +44,14 @@ The Anthropic Java SDK is a JVM-only Kotlin project using Jackson for JSON, OkHt
 
 ## Phase 1: Build System & Toolchain Upgrade
 
+### 1.0 Create .sdkmanrc for reproducible toolchain
+Create `.sdkmanrc` at project root so `sdk env` auto-selects correct versions.
+
 ### 1.1 Install toolchain via SDKMAN!
 ```bash
-# Install/upgrade all tools via sdkman
+# Install/upgrade all tools via sdkman (reads .sdkmanrc)
+sdk env install
+# Or manually:
 sdk install java 25-graal       # GraalVM JDK 25
 sdk install kotlin 2.3.20       # Kotlin 2.3.20
 sdk install gradle 9.4.1        # Gradle 9.4.1
@@ -594,18 +599,113 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 
 ---
 
-## Implementation Order
+## Current Progress (as of latest commit)
 
-1. **Phase 1**: Build system changes (Kotlin upgrade, KMP plugin, source set restructure)
-2. **Phase 2**: Core infrastructure first (Values.kt, JsonConfiguration, Utils.kt, Check.kt)
-3. **Phase 3**: HTTP abstractions (HttpClient, HttpRequest, HttpResponse, HttpRequestBody)
-4. **Phase 4**: Ktor CIO client implementation
-5. **Phase 2 cont.**: Handlers (JsonHandler, SseHandler, StreamHandler)
-6. **Phase 3 cont.**: Replace async (CompletableFuture → coroutines) in services
-7. **Phase 2 cont.**: Model files (batch transform ~485 files)
-8. **Phase 3 cont.**: Client/Backend classes
-9. **Phase 5**: Test infrastructure (Ktor CIO server) then port tests
-10. **Phase 6**: Verify other modules still compile against JVM target
+**Done:**
+- Phase 1 complete: Gradle 9.4.1, Kotlin 2.3.20, KMP multiplatform plugin
+- Phase 2 partial: Values.kt, Utils.kt moved to commonMain (nullable API)
+- Headers.kt, QueryParams.kt, Params.kt, HttpRequest.kt moved to commonMain
+- HttpMethod.kt, Page.kt, errors, JsonSchemaLocalValidation.kt in commonMain
+- Platform.kt expect/actual for urlEncode
+- 452 files batch-transformed (Optional→nullable)
+- 2678/2682 JVM tests pass
+
+**commonMain: 15 files** | **jvmMain explicit: 2 files** | **jvmMain mapped (src/main): 586 files**
+
+---
+
+## Next Phase: Typealias-Based Migration Strategy
+
+### Core Idea: Use `typealias` in commonMain to Bridge JVM Types
+
+Instead of creating complex expect/actual or rewriting interfaces, use Kotlin `typealias` 
+in commonMain to reference common abstractions, with platform-specific typealiases pointing
+to the actual platform types. This keeps existing code working with minimal changes.
+
+### Step A: Create commonMain type bridges (Compat.kt)
+
+**File: `src/commonMain/kotlin/com/anthropic/core/Compat.kt`**
+```kotlin
+package com.anthropic.core
+
+// Time
+expect class PlatformDuration
+expect fun durationOfMillis(millis: Long): PlatformDuration
+expect fun PlatformDuration.toMillis(): Long
+expect val zeroDuration: PlatformDuration
+
+// Async  
+expect class PlatformFuture<T>
+expect fun <T> PlatformFuture<T>.await(): T
+
+// I/O
+expect abstract class PlatformInputStream
+expect abstract class PlatformOutputStream
+expect interface PlatformCloseable
+```
+
+**File: `src/jvmMain/kotlin/com/anthropic/core/CompatJvm.kt`**
+```kotlin
+package com.anthropic.core
+
+actual typealias PlatformDuration = java.time.Duration
+actual fun durationOfMillis(millis: Long): PlatformDuration = java.time.Duration.ofMillis(millis)
+actual fun PlatformDuration.toMillis(): Long = this.toMillis()
+actual val zeroDuration: PlatformDuration = java.time.Duration.ZERO
+
+actual typealias PlatformFuture<T> = java.util.concurrent.CompletableFuture<T>
+actual fun <T> PlatformFuture<T>.await(): T = this.get()
+
+actual typealias PlatformInputStream = java.io.InputStream
+actual typealias PlatformOutputStream = java.io.OutputStream
+actual typealias PlatformCloseable = java.lang.AutoCloseable
+```
+
+### Step B: Migrate files using typealias bridges
+
+| File | Change | Typealias Used |
+|---|---|---|
+| Timeout.kt → commonMain | `java.time.Duration` → `kotlin.time.Duration` | Direct stdlib (no typealias needed) |
+| RequestOptions.kt → commonMain | `java.time.Duration` → `kotlin.time.Duration` | Direct stdlib |
+| HttpRequestBody.kt → commonMain | `OutputStream` → `PlatformOutputStream` | PlatformOutputStream |
+| HttpResponse.kt → commonMain | `InputStream` → `PlatformInputStream`, `Optional` → nullable | PlatformInputStream |
+| HttpResponseFor.kt → commonMain | Remove `@JvmSynthetic`, `InputStream` → `PlatformInputStream` | PlatformInputStream |
+| HttpClient.kt → commonMain | `CompletableFuture` → `PlatformFuture`, `AutoCloseable` → `PlatformCloseable` | PlatformFuture, PlatformCloseable |
+| StreamResponse.kt → commonMain | `Stream<T>` → `Sequence<T>` | Direct stdlib |
+| Sleeper.kt → commonMain | `Duration` → `kotlin.time.Duration`, `CompletableFuture` → `PlatformFuture` | PlatformFuture |
+| PageAsync.kt → commonMain | `CompletableFuture` → `PlatformFuture` | PlatformFuture |
+| AutoPager.kt → commonMain | `Stream` → `Sequence` | Direct stdlib |
+| Properties.kt → commonMain | `System.getProperty` → expect fun | Platform.kt |
+
+### Step C: Migrate remaining error classes
+
+The HTTP error classes (BadRequestException, etc.) depend on Headers + JsonValue + Optional.
+Headers and JsonValue are now in commonMain. Replace `Optional<T>` returns with `T?`.
+
+### Step D: Fix 4 BetaToolRunner test failures
+
+Root cause: Jackson deserializer not properly populating KnownValue in test mocks.
+The JsonFieldDeserializer registered in ObjectMappers module may not be getting contextual
+type info correctly for parameterized JsonField<T> types.
+
+### Step E: Commit and push
+
+---
+
+## Implementation Order (Updated)
+
+1. ✅ **Phase 1**: Build system (Gradle 9.4.1, Kotlin 2.3.20, KMP plugin)
+2. ✅ **Phase 2a**: Values.kt, Utils.kt → commonMain (nullable API)
+3. ✅ **Phase 2b**: Headers.kt, QueryParams.kt, Params.kt, HttpRequest.kt → commonMain
+4. **Phase 3a**: Create Compat.kt typealias bridges + Platform.kt expect/actual
+5. **Phase 3b**: Timeout.kt, RequestOptions.kt → commonMain (kotlin.time.Duration)
+6. **Phase 3c**: HttpRequestBody, HttpResponse, HttpResponseFor → commonMain (PlatformInputStream/OutputStream)
+7. **Phase 3d**: HttpClient, Sleeper, PageAsync → commonMain (PlatformFuture, PlatformCloseable)
+8. **Phase 3e**: StreamResponse, AutoPager → commonMain (Sequence replaces Stream)
+9. **Phase 3f**: Properties.kt → commonMain (expect getSystemProperty)
+10. **Phase 3g**: Error classes → commonMain (Optional→nullable)
+11. **Phase 4**: Fix BetaToolRunner test failures
+12. **Phase 5**: Verify full build + tests, commit and push
 
 ---
 
@@ -1767,7 +1867,8 @@ interface MessageServiceAsync {
 ## Detailed Implementation Todo
 
 ### Step 1: Toolchain & Build System
-- [ ] 1.1 Install SDKMAN! tools: `sdk install java 25-graal && sdk install kotlin 2.3.20 && sdk install gradle 9.4.1 && sdk install jbang`
+- [ ] 1.0 Create `.sdkmanrc` at project root (java=25-graal, kotlin=2.3.20, gradle=9.4.1, jbang=latest)
+- [ ] 1.1 Install SDKMAN! tools: `sdk env install` (reads .sdkmanrc)
 - [ ] 1.2 Update `gradle/wrapper/gradle-wrapper.properties` → gradle 9.4.1
 - [ ] 1.3 Run `./gradlew wrapper --gradle-version=9.4.1`
 - [ ] 1.4 Update `buildSrc/build.gradle.kts`: Kotlin `"2.3.20"`, add `kotlin("plugin.serialization")`
