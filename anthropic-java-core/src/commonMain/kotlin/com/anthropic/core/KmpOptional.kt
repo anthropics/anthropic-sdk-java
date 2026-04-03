@@ -1,4 +1,5 @@
 @file:JvmName("KmpOptionals")
+@file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 package com.anthropic.core
 
 import kotlinx.coroutines.flow.Flow
@@ -7,203 +8,166 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.mapNotNull
 
 /**
- * KMP Optional — type-safe Optional<T> that mirrors the java.util.Optional API.
+ * KMP Optional<T> — type-safe optional value container for all targets.
  *
- * On JVM: typealias to java.util.Optional<T> — zero overhead, full Java interop.
- * On non-JVM (JS/Wasm/Native): will be a pure Kotlin class with the same API.
+ * On JVM: actual typealias to java.util.Optional<T> — zero overhead, full Java interop.
+ * On JS/Wasm/Native: pure Kotlin implementation with the same API.
  *
- * Optional provides type safety across all targets, including JS where the type
- * system is weak. It bridges gracefully into Kotlin collections (List, Set, Map,
- * Sequence, Flow) giving a uniform API for presence/absence semantics.
- *
- * The Optional pattern is a well-known design pattern (Java, Swift, Rust, Scala)
- * that complements Kotlin's nullable types by providing an explicit container
- * with rich transformation methods.
+ * The Optional pattern is well-known (Java, Swift, Rust, Scala) and provides
+ * type safety on all targets including JS where the type system is weak.
+ * Bridges gracefully into Kotlin collections (List, Set, Map, Sequence, Flow).
  */
-typealias KmpOptional<T> = java.util.Optional<T>
+expect class Optional<T : Any> {
+    /** Returns true if a value is present. */
+    fun isPresent(): Boolean
+    /** Returns the value if present, throws NoSuchElementException if empty. */
+    fun get(): T
+    /** Returns the value if present, otherwise returns [other]. */
+    fun orElse(other: T?): T
+}
+
+// Kotlin property alias for isPresent()
+inline val <T : Any> Optional<T>.isPresent: Boolean get() = isPresent()
 
 // ============================================================================
-// Factory functions — portable across all targets
+// Factory functions — expect/actual per target
 // ============================================================================
 
-/** Create an Optional wrapping a non-null value. */
-fun <T : Any> optionalOf(value: T): KmpOptional<T> = KmpOptional.of(value)
+expect fun <T : Any> optionalOf(value: T): Optional<T>
+expect fun <T : Any> optionalOfNullable(value: T?): Optional<T>
+expect fun <T : Any> emptyOptional(): Optional<T>
 
-/** Create an Optional from a nullable value. */
-fun <T : Any> optionalOfNullable(value: T?): KmpOptional<T> = KmpOptional.ofNullable(value)
+// ============================================================================
+// Core API — expect/actual extension functions (match java.util.Optional API)
+// SAM types (Function, Supplier, Consumer, Predicate) can't be in expect class,
+// so these are top-level expect functions with Kotlin lambda signatures.
+// ============================================================================
 
-/** Create an empty Optional. */
-fun <T : Any> emptyOptional(): KmpOptional<T> = KmpOptional.empty<T>()
+/** Transform value if present. Mirrors java.util.Optional.map(). */
+expect fun <T : Any, U : Any> Optional<T>.mapOptional(mapper: (T) -> U?): Optional<U>
+
+/** Transform and flatten. Mirrors java.util.Optional.flatMap(). */
+expect fun <T : Any, U : Any> Optional<T>.flatMapOptional(mapper: (T) -> Optional<U>): Optional<U>
+
+/** Keep value if predicate matches. Mirrors java.util.Optional.filter(). */
+expect fun <T : Any> Optional<T>.filterOptional(predicate: (T) -> Boolean): Optional<T>
+
+/** Execute action if present. Mirrors java.util.Optional.ifPresent(). */
+expect fun <T : Any> Optional<T>.ifPresentOptional(action: (T) -> Unit)
+
+/** Get value or compute from supplier. Mirrors java.util.Optional.orElseGet(). */
+expect fun <T : Any> Optional<T>.orElseGet(supplier: () -> T): T
+
+/** Get value or throw supplied exception. Mirrors java.util.Optional.orElseThrow(). */
+expect fun <T : Any, X : Throwable> Optional<T>.orElseThrow(exceptionSupplier: () -> X): T
 
 // ============================================================================
 // Core conversions — Optional ↔ nullable
 // ============================================================================
 
-/** Convert Optional to nullable. */
-fun <T> KmpOptional<T>.orNull(): T? = orElse(null)
-
-/** Convert nullable to Optional. */
-fun <T : Any> T?.toOptional(): KmpOptional<T> = KmpOptional.ofNullable(this)
-
-/** Destructuring: `val (value) = optional` — returns null if empty. */
-operator fun <T> KmpOptional<T>.component1(): T? = orElse(null)
+fun <T : Any> Optional<T>.orNull(): T? = if (isPresent()) get() else null
+fun <T : Any> T?.toOptional(): Optional<T> = optionalOfNullable(this)
+operator fun <T : Any> Optional<T>.component1(): T? = orNull()
+fun <T : Any> Optional<T>.getOrNull(): T? = orNull()
 
 // ============================================================================
 // Presence/absence checks
 // ============================================================================
 
-/** Property-style emptiness check. */
-inline val <T> KmpOptional<T>.isEmpty: Boolean get() = !isPresent
-
-/** Property-style presence check. */
-inline val <T> KmpOptional<T>.isNotEmpty: Boolean get() = isPresent
+inline val <T : Any> Optional<T>.isEmpty: Boolean get() = !isPresent()
+inline val <T : Any> Optional<T>.isNotEmpty: Boolean get() = isPresent()
 
 // ============================================================================
-// Functional transformations — mirrors java.util.Optional API
+// Functional transformations
 // ============================================================================
 
-/** Fold: exhaustively handle both present and empty cases. */
-inline fun <T, R> KmpOptional<T>.fold(ifEmpty: () -> R, ifPresent: (T) -> R): R =
-    if (isPresent) ifPresent(get()) else ifEmpty()
+inline fun <T : Any, R> Optional<T>.fold(ifEmpty: () -> R, ifPresent: (T) -> R): R =
+    if (isPresent()) ifPresent(get()) else ifEmpty()
 
-/** Elvis-style with lazy default. */
-inline fun <T> KmpOptional<T>.getOrElse(default: () -> T): T =
-    if (isPresent) get() else default()
+inline fun <T : Any> Optional<T>.getOrElse(default: () -> T): T =
+    if (isPresent()) get() else default()
 
-/** Require value or throw with message. */
-inline fun <T> KmpOptional<T>.require(message: String): T =
+inline fun <T : Any> Optional<T>.require(message: String): T =
     orElseThrow { IllegalStateException(message) }
 
 // ============================================================================
 // Chaining callbacks
 // ============================================================================
 
-/** Execute block if present, return the Optional for chaining. */
-inline fun <T> KmpOptional<T>.onPresent(block: (T) -> Unit): KmpOptional<T> = apply {
-    if (isPresent) block(get())
+inline fun <T : Any> Optional<T>.onPresent(block: (T) -> Unit): Optional<T> = apply {
+    if (isPresent()) block(get())
 }
 
-/** Execute block if empty, return the Optional for chaining. */
-inline fun <T> KmpOptional<T>.onEmpty(block: () -> Unit): KmpOptional<T> = apply {
-    if (!isPresent) block()
+inline fun <T : Any> Optional<T>.onEmpty(block: () -> Unit): Optional<T> = apply {
+    if (!isPresent()) block()
 }
 
 // ============================================================================
 // Collection bridge — Optional ↔ List, Set, Map, Sequence, Flow
 // ============================================================================
 
-/** Convert to List (0 or 1 elements). Type-safe on all targets including JS. */
-fun <T> KmpOptional<T>.toList(): List<T> =
-    if (isPresent) listOf(get()) else emptyList()
+fun <T : Any> Optional<T>.toList(): List<T> =
+    if (isPresent()) listOf(get()) else emptyList()
 
-/** Convert to Set (0 or 1 elements). */
-fun <T> KmpOptional<T>.toSet(): Set<T> =
-    if (isPresent) setOf(get()) else emptySet()
+fun <T : Any> Optional<T>.toSet(): Set<T> =
+    if (isPresent()) setOf(get()) else emptySet()
 
-/** Convert to Sequence (0 or 1 elements). Lazy evaluation. */
-fun <T> KmpOptional<T>.asSequence(): Sequence<T> =
-    if (isPresent) sequenceOf(get()) else emptySequence()
+fun <T : Any> Optional<T>.asSequence(): Sequence<T> =
+    if (isPresent()) sequenceOf(get()) else emptySequence()
 
-/** Convert to Flow (0 or 1 elements). Replaces java.util.Optional.stream(). */
-fun <T> KmpOptional<T>.asFlow(): Flow<T> =
-    if (isPresent) flowOf(get()) else emptyFlow()
+fun <T : Any> Optional<T>.asFlow(): Flow<T> =
+    if (isPresent()) flowOf(get()) else emptyFlow()
 
-/**
- * Returns a Flow of 0 or 1 elements — the KMP equivalent of java.util.Optional.stream().
- *
- * Flow mirrors the Java Stream API with the same operations:
- * `.stream().map { }.filter { }.toList()` works identically in both.
- *
- * Flow additionally supports: backpressure, cancellation, coroutine context,
- * and works across all KMP targets (JVM, JS, Wasm, Native).
- */
-fun <T> KmpOptional<T>.stream(): Flow<T> = asFlow()
+/** Flow-based stream — KMP equivalent of java.util.Optional.stream(). */
+fun <T : Any> Optional<T>.stream(): Flow<T> = asFlow()
 
-/** Zip two Optionals — returns empty if either is empty. */
-inline fun <T, U, R : Any> KmpOptional<T>.zip(
-    other: KmpOptional<U>, transform: (T, U) -> R
-): KmpOptional<R> =
-    if (isPresent && other.isPresent) optionalOf(transform(get(), other.get()))
+inline fun <T : Any, U : Any, R : Any> Optional<T>.zip(
+    other: Optional<U>, transform: (T, U) -> R
+): Optional<R> =
+    if (isPresent() && other.isPresent()) optionalOf(transform(get(), other.get()))
     else emptyOptional()
 
 // ============================================================================
-// Collection → Optional — extract from collections type-safely
+// Collection → Optional
 // ============================================================================
 
-/** Get map value as Optional — type-safe alternative to map[key] which returns nullable. */
-fun <K, V : Any> Map<K, V>.getOptional(key: K): KmpOptional<V> =
+fun <K, V : Any> Map<K, V>.getOptional(key: K): Optional<V> =
     optionalOfNullable(get(key))
 
-/** First element as Optional — empty if collection is empty. */
-fun <T : Any> Iterable<T>.firstOptional(): KmpOptional<T> =
+fun <T : Any> Iterable<T>.firstOptional(): Optional<T> =
     optionalOfNullable(firstOrNull())
 
-/** First matching element as Optional. */
-inline fun <T : Any> Iterable<T>.firstOptional(predicate: (T) -> Boolean): KmpOptional<T> =
+inline fun <T : Any> Iterable<T>.firstOptional(predicate: (T) -> Boolean): Optional<T> =
     optionalOfNullable(firstOrNull(predicate))
 
-/** Last element as Optional. */
-fun <T : Any> List<T>.lastOptional(): KmpOptional<T> =
+fun <T : Any> List<T>.lastOptional(): Optional<T> =
     optionalOfNullable(lastOrNull())
 
-/** Single element as Optional — empty if 0 or 2+ elements. */
-fun <T : Any> Iterable<T>.singleOptional(): KmpOptional<T> =
+fun <T : Any> Iterable<T>.singleOptional(): Optional<T> =
     optionalOfNullable(singleOrNull())
 
 // ============================================================================
-// Optional collections — work with List<Optional<T>> / Flow<Optional<T>>
+// Optional collections
 // ============================================================================
 
-/** Filter a list of Optionals to only present values. Type-safe unwrap. */
-fun <T : Any> Iterable<KmpOptional<T>>.filterPresent(): List<T> =
+fun <T : Any> Iterable<Optional<T>>.filterPresent(): List<T> =
     mapNotNull { it.orNull() }
 
-/** Filter a sequence of Optionals to only present values. */
-fun <T : Any> Sequence<KmpOptional<T>>.filterPresent(): Sequence<T> =
+fun <T : Any> Sequence<Optional<T>>.filterPresent(): Sequence<T> =
     mapNotNull { it.orNull() }
 
-/** Filter a flow of Optionals to only present values. */
-fun <T : Any> Flow<KmpOptional<T>>.filterPresent(): Flow<T> =
+fun <T : Any> Flow<Optional<T>>.filterPresent(): Flow<T> =
     mapNotNull { it.orNull() }
 
-/** Convert a List of Optionals to a Map (key → value), discarding empties. */
-fun <K, V : Any> Iterable<Pair<K, KmpOptional<V>>>.toOptionalMap(): Map<K, V> =
+fun <K, V : Any> Iterable<Pair<K, Optional<V>>>.toOptionalMap(): Map<K, V> =
     mapNotNull { (k, v) -> v.orNull()?.let { k to it } }.toMap()
 
 // ============================================================================
-// Multimap support — Optional with collection values
+// Multimap support
 // ============================================================================
 
-/** Get all values for a key, returning empty list if absent. */
 fun <K, V> Map<K, List<V>>.getAll(key: K): List<V> =
     getOrDefault(key, emptyList())
 
-/** Get first value for a key as Optional. Common multimap pattern. */
-fun <K, V : Any> Map<K, List<V>>.getFirst(key: K): KmpOptional<V> =
+fun <K, V : Any> Map<K, List<V>>.getFirst(key: K): Optional<V> =
     optionalOfNullable(get(key)?.firstOrNull())
-
-// ============================================================================
-// JVM API surface documentation (for non-JVM implementation reference)
-// ============================================================================
-//
-// These methods are available via the java.util.Optional typealias on JVM.
-// When adding non-JVM targets, implement these in the pure Kotlin Optional class:
-//
-// Instance methods (from java.util.Optional):
-//   .isPresent: Boolean
-//   .get(): T
-//   .orElse(other: T?): T
-//   .orElseGet(supplier: () -> T): T
-//   .orElseThrow(): T
-//   .orElseThrow(supplier: () -> Throwable): T
-//   .map(fn: (T) -> U?): Optional<U>
-//   .flatMap(fn: (T) -> Optional<U>): Optional<U>
-//   .filter(predicate: (T) -> Boolean): Optional<T>
-//   .ifPresent(consumer: (T) -> Unit)
-//   .ifPresentOrElse(consumer: (T) -> Unit, emptyAction: () -> Unit)
-//   .or(supplier: () -> Optional<T>): Optional<T>
-//
-// KMP equivalents for Stream:
-//   .stream()       → use .asFlow() or .asSequence()
-//   .toList()       → already provided above
-//   .toSet()        → already provided above

@@ -9,7 +9,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.test.assertFailsWith
 
-class KmpOptionalTest {
+class OptionalTest {
 
     // ========================================================================
     // Factory functions
@@ -64,7 +64,7 @@ class KmpOptionalTest {
 
     @Test
     fun toOptional_withNull_isEmpty() {
-        val opt: KmpOptional<String> = (null as String?).toOptional()
+        val opt: Optional<String> = (null as String?).toOptional()
         assertFalse(opt.isPresent)
     }
 
