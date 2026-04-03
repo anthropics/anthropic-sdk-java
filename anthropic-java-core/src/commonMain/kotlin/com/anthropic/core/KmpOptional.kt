@@ -108,6 +108,17 @@ fun <T> KmpOptional<T>.asSequence(): Sequence<T> =
 fun <T> KmpOptional<T>.asFlow(): Flow<T> =
     if (isPresent) flowOf(get()) else emptyFlow()
 
+/**
+ * Returns a Flow of 0 or 1 elements — the KMP equivalent of java.util.Optional.stream().
+ *
+ * Flow mirrors the Java Stream API with the same operations:
+ * `.stream().map { }.filter { }.toList()` works identically in both.
+ *
+ * Flow additionally supports: backpressure, cancellation, coroutine context,
+ * and works across all KMP targets (JVM, JS, Wasm, Native).
+ */
+fun <T> KmpOptional<T>.stream(): Flow<T> = asFlow()
+
 /** Zip two Optionals — returns empty if either is empty. */
 inline fun <T, U, R : Any> KmpOptional<T>.zip(
     other: KmpOptional<U>, transform: (T, U) -> R
