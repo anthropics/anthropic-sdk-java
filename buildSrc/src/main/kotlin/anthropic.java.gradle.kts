@@ -13,13 +13,13 @@ java {
         languageVersion.set(JavaLanguageVersion.of(21))
     }
 
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.add("-Werror")
-    options.release.set(8)
+    options.release.set(21)
 }
 
 tasks.named<Jar>("jar") {
