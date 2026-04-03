@@ -175,7 +175,7 @@ private fun httpResponse(body: String): HttpResponse =
 
         override fun headers(): Headers = Headers.builder().build()
 
-        override fun body(): InputStream = body.toByteArray().inputStream()
+        override fun body(): okio.BufferedSource = okio.Buffer().write(body.toByteArray())
 
         override fun close() {}
     }

@@ -6,7 +6,6 @@ import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.PhantomReachableClosingStreamResponse
 import com.anthropic.core.http.StreamResponse
 import com.anthropic.errors.AnthropicIoException
-import java.io.IOException
 
 internal fun <T> streamHandler(
     block: suspend SequenceScope<T>.(response: HttpResponse, lines: Sequence<String>) -> Unit
@@ -14,23 +13,24 @@ internal fun <T> streamHandler(
     object : Handler<StreamResponse<T>> {
 
         override fun handle(response: HttpResponse): StreamResponse<T> {
-            val reader = response.body().bufferedReader()
+            val source = response.body()
+            val lines = sequence {
+                try {
+                    while (true) {
+                        val line = source.readUtf8Line() ?: break
+                        yield(line)
+                    }
+                } catch (e: Exception) {
+                    if (e is java.io.IOException) {
+                        throw AnthropicIoException("Stream failed", e)
+                    }
+                    throw e
+                }
+            }
+
             val sequence =
-                // Wrap in a `CloseableSequence` to avoid performing a read on the `reader`
-                // after it has been closed, which would throw an `IOException`.
                 CloseableSequence(
-                    sequence {
-                            reader.useLines { lines ->
-                                block(
-                                    response,
-                                    // We wrap the `lines` instead of the top-level sequence because
-                                    // we only want to catch `IOException` from the reader; not from
-                                    // the user's own code.
-                                    IOExceptionWrappingSequence(lines),
-                                )
-                            }
-                        }
-                        .constrainOnce()
+                    sequence { block(response, lines) }.constrainOnce()
                 )
 
             return PhantomReachableClosingStreamResponse(
@@ -40,37 +40,13 @@ internal fun <T> streamHandler(
 
                     override fun close() {
                         sequence.close()
-                        reader.close()
+                        source.close()
                         response.close()
                     }
                 }
             )
         }
     }
-
-/** A sequence that catches, wraps, and rethrows [IOException] as [AnthropicIoException]. */
-private class IOExceptionWrappingSequence<T>(private val sequence: Sequence<T>) : Sequence<T> {
-
-    override fun iterator(): Iterator<T> {
-        val iterator = sequence.iterator()
-        return object : Iterator<T> {
-
-            override fun next(): T =
-                try {
-                    iterator.next()
-                } catch (e: IOException) {
-                    throw AnthropicIoException("Stream failed", e)
-                }
-
-            override fun hasNext(): Boolean =
-                try {
-                    iterator.hasNext()
-                } catch (e: IOException) {
-                    throw AnthropicIoException("Stream failed", e)
-                }
-        }
-    }
-}
 
 /**
  * A sequence that can be closed.

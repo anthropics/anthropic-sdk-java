@@ -11,7 +11,7 @@ internal inline fun <reified T> jsonHandler(jsonMapper: JsonMapper): Handler<T> 
     object : Handler<T> {
         override fun handle(response: HttpResponse): T =
             try {
-                jsonMapper.readValue(response.body(), jacksonTypeRef())
+                jsonMapper.readValue(response.body().inputStream(), jacksonTypeRef())
             } catch (e: Exception) {
                 throw AnthropicInvalidDataException("Error reading response", e)
             }

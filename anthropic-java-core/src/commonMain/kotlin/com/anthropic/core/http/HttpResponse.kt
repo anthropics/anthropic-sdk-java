@@ -1,12 +1,12 @@
 package com.anthropic.core.http
 
-import java.io.InputStream
+import okio.BufferedSource
 
 interface HttpResponse : AutoCloseable {
     fun statusCode(): Int
     fun headers(): Headers
     fun requestId(): String? = headers().values("request-id").firstOrNull()
-    fun body(): java.io.InputStream
+    fun body(): BufferedSource
     override fun close()
 
     interface Handler<T> {

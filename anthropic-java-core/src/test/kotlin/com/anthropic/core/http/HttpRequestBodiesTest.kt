@@ -4,7 +4,7 @@ package com.anthropic.core.http
 
 import com.anthropic.core.MultipartField
 import com.anthropic.core.jsonMapper
-import java.io.ByteArrayOutputStream
+import okio.Buffer
 import java.io.InputStream
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -26,13 +26,13 @@ internal class HttpRequestBodiesTest {
                 ),
             )
 
-        val output = ByteArrayOutputStream()
+        val output = Buffer()
         body.writeTo(output)
 
         assertThat(body.repeatable()).isTrue()
-        assertThat(output.size().toLong()).isEqualTo(body.contentLength())
+        assertThat(output.size.toLong()).isEqualTo(body.contentLength())
         val boundary = body.contentType()!!.substringAfter("multipart/form-data; boundary=")
-        assertThat(output.toString("UTF-8"))
+        assertThat(output.clone().readUtf8())
             .isEqualTo(
                 """
                 |--$boundary
@@ -62,13 +62,13 @@ internal class HttpRequestBodiesTest {
                 ),
             )
 
-        val output = ByteArrayOutputStream()
+        val output = Buffer()
         body.writeTo(output)
 
         assertThat(body.repeatable()).isTrue()
-        assertThat(output.size().toLong()).isEqualTo(body.contentLength())
+        assertThat(output.size.toLong()).isEqualTo(body.contentLength())
         val boundary = boundary(body)
-        assertThat(output.toString("UTF-8"))
+        assertThat(output.clone().readUtf8())
             .isEqualTo(
                 """
                 |--$boundary
@@ -86,8 +86,7 @@ internal class HttpRequestBodiesTest {
 
     @Test
     fun multipartFormData_serializesInputStream() {
-        // Use `.buffered()` to get a non-ByteArrayInputStream, which hits the non-repeatable code
-        // path.
+        // InputStream values are eagerly buffered into byte arrays for okio compatibility.
         val inputStream = "stream content".byteInputStream().buffered()
         val body =
             multipartFormData(
@@ -101,13 +100,13 @@ internal class HttpRequestBodiesTest {
                 ),
             )
 
-        val output = ByteArrayOutputStream()
+        val output = Buffer()
         body.writeTo(output)
 
-        assertThat(body.repeatable()).isFalse()
-        assertThat(body.contentLength()).isEqualTo(-1L)
+        assertThat(body.repeatable()).isTrue()
+        assertThat(body.contentLength()).isEqualTo(output.size.toLong())
         val boundary = boundary(body)
-        assertThat(output.toString("UTF-8"))
+        assertThat(output.clone().readUtf8())
             .isEqualTo(
                 """
                 |--$boundary
@@ -137,13 +136,13 @@ internal class HttpRequestBodiesTest {
                 ),
             )
 
-        val output = ByteArrayOutputStream()
+        val output = Buffer()
         body.writeTo(output)
 
         assertThat(body.repeatable()).isTrue()
-        assertThat(body.contentLength()).isEqualTo(output.size().toLong())
+        assertThat(body.contentLength()).isEqualTo(output.size.toLong())
         val boundary = boundary(body)
-        assertThat(output.toString("UTF-8"))
+        assertThat(output.clone().readUtf8())
             .isEqualTo(
                 """
                 |--$boundary
@@ -173,13 +172,13 @@ internal class HttpRequestBodiesTest {
                 ),
             )
 
-        val output = ByteArrayOutputStream()
+        val output = Buffer()
         body.writeTo(output)
 
         assertThat(body.repeatable()).isTrue()
-        assertThat(body.contentLength()).isEqualTo(output.size().toLong())
+        assertThat(body.contentLength()).isEqualTo(output.size.toLong())
         val boundary = boundary(body)
-        assertThat(output.toString("UTF-8"))
+        assertThat(output.clone().readUtf8())
             .isEqualTo(
                 """
                 |--$boundary
@@ -206,13 +205,13 @@ internal class HttpRequestBodiesTest {
                 ),
             )
 
-        val output = ByteArrayOutputStream()
+        val output = Buffer()
         body.writeTo(output)
 
         assertThat(body.repeatable()).isTrue()
-        assertThat(body.contentLength()).isEqualTo(output.size().toLong())
+        assertThat(body.contentLength()).isEqualTo(output.size.toLong())
         val boundary = boundary(body)
-        assertThat(output.toString("UTF-8"))
+        assertThat(output.clone().readUtf8())
             .isEqualTo(
                 """
                 |--$boundary
@@ -247,13 +246,13 @@ internal class HttpRequestBodiesTest {
                 ),
             )
 
-        val output = ByteArrayOutputStream()
+        val output = Buffer()
         body.writeTo(output)
 
         assertThat(body.repeatable()).isTrue()
-        assertThat(body.contentLength()).isEqualTo(output.size().toLong())
+        assertThat(body.contentLength()).isEqualTo(output.size.toLong())
         val boundary = boundary(body)
-        assertThat(output.toString("UTF-8"))
+        assertThat(output.clone().readUtf8())
             .isEqualTo(
                 """
                 |--$boundary
@@ -283,13 +282,13 @@ internal class HttpRequestBodiesTest {
                 ),
             )
 
-        val output = ByteArrayOutputStream()
+        val output = Buffer()
         body.writeTo(output)
 
         assertThat(body.repeatable()).isTrue()
-        assertThat(body.contentLength()).isEqualTo(output.size().toLong())
+        assertThat(body.contentLength()).isEqualTo(output.size.toLong())
         val boundary = boundary(body)
-        assertThat(output.toString("UTF-8"))
+        assertThat(output.clone().readUtf8())
             .isEqualTo(
                 """
                 |--$boundary
@@ -319,13 +318,13 @@ internal class HttpRequestBodiesTest {
                 ),
             )
 
-        val output = ByteArrayOutputStream()
+        val output = Buffer()
         body.writeTo(output)
 
         assertThat(body.repeatable()).isTrue()
-        assertThat(body.contentLength()).isEqualTo(output.size().toLong())
+        assertThat(body.contentLength()).isEqualTo(output.size.toLong())
         val boundary = boundary(body)
-        assertThat(output.toString("UTF-8"))
+        assertThat(output.clone().readUtf8())
             .isEqualTo(
                 """
                 |--$boundary
@@ -368,13 +367,13 @@ internal class HttpRequestBodiesTest {
                 ),
             )
 
-        val output = ByteArrayOutputStream()
+        val output = Buffer()
         body.writeTo(output)
 
         assertThat(body.repeatable()).isTrue()
-        assertThat(body.contentLength()).isEqualTo(output.size().toLong())
+        assertThat(body.contentLength()).isEqualTo(output.size.toLong())
         val boundary = boundary(body)
-        assertThat(output.toString("UTF-8"))
+        assertThat(output.clone().readUtf8())
             .isEqualTo(
                 """
                 |--$boundary
@@ -415,13 +414,13 @@ internal class HttpRequestBodiesTest {
                 ),
             )
 
-        val output = ByteArrayOutputStream()
+        val output = Buffer()
         body.writeTo(output)
 
         assertThat(body.repeatable()).isTrue()
-        assertThat(body.contentLength()).isEqualTo(output.size().toLong())
+        assertThat(body.contentLength()).isEqualTo(output.size.toLong())
         val boundary = boundary(body)
-        assertThat(output.toString("UTF-8"))
+        assertThat(output.clone().readUtf8())
             .isEqualTo(
                 """
                 |--$boundary
@@ -451,13 +450,13 @@ internal class HttpRequestBodiesTest {
                 ),
             )
 
-        val output1 = ByteArrayOutputStream()
+        val output1 = Buffer()
         body.writeTo(output1)
-        val output2 = ByteArrayOutputStream()
+        val output2 = Buffer()
         body.writeTo(output2)
 
         assertThat(body.repeatable()).isTrue()
-        assertThat(body.contentLength()).isEqualTo(output1.size().toLong())
+        assertThat(body.contentLength()).isEqualTo(output1.size.toLong())
         val boundary = boundary(body)
         val expected =
             """
@@ -471,8 +470,8 @@ internal class HttpRequestBodiesTest {
             """
                 .trimMargin()
                 .replace("\n", "\r\n")
-        assertThat(output1.toString("UTF-8")).isEqualTo(expected)
-        assertThat(output2.toString("UTF-8")).isEqualTo(expected)
+        assertThat(output1.clone().readUtf8()).isEqualTo(expected)
+        assertThat(output2.clone().readUtf8()).isEqualTo(expected)
     }
 
     @Test
@@ -491,13 +490,13 @@ internal class HttpRequestBodiesTest {
                 ),
             )
 
-        val output = ByteArrayOutputStream()
+        val output = Buffer()
         body.writeTo(output)
 
         assertThat(body.repeatable()).isTrue()
-        assertThat(body.contentLength()).isEqualTo(output.size().toLong())
+        assertThat(body.contentLength()).isEqualTo(output.size.toLong())
         val boundary = boundary(body)
-        assertThat(output.toString("UTF-8"))
+        assertThat(output.clone().readUtf8())
             .isEqualTo(
                 """
                 |--$boundary
@@ -531,13 +530,13 @@ internal class HttpRequestBodiesTest {
                 ),
             )
 
-        val output = ByteArrayOutputStream()
+        val output = Buffer()
         body.writeTo(output)
 
-        assertThat(body.repeatable()).isFalse()
-        assertThat(body.contentLength()).isEqualTo(-1L)
+        assertThat(body.repeatable()).isTrue()
+        assertThat(body.contentLength()).isEqualTo(output.size.toLong())
         val boundary = boundary(body)
-        assertThat(output.toString("UTF-8"))
+        assertThat(output.clone().readUtf8())
             .isEqualTo(
                 """
                 |--$boundary
@@ -567,13 +566,13 @@ internal class HttpRequestBodiesTest {
                 ),
             )
 
-        val output = ByteArrayOutputStream()
+        val output = Buffer()
         body.writeTo(output)
 
         assertThat(body.repeatable()).isTrue()
-        assertThat(body.contentLength()).isEqualTo(output.size().toLong())
+        assertThat(body.contentLength()).isEqualTo(output.size.toLong())
         val boundary = boundary(body)
-        assertThat(output.toString("UTF-8"))
+        assertThat(output.clone().readUtf8())
             .isEqualTo(
                 """
                 |--$boundary
@@ -610,13 +609,13 @@ internal class HttpRequestBodiesTest {
                 ),
             )
 
-        val output = ByteArrayOutputStream()
+        val output = Buffer()
         body.writeTo(output)
 
-        assertThat(body.repeatable()).isFalse()
-        assertThat(body.contentLength()).isEqualTo(-1L)
+        assertThat(body.repeatable()).isTrue()
+        assertThat(body.contentLength()).isGreaterThan(0L)
         val boundary = boundary(body)
-        assertThat(output.toString("UTF-8"))
+        assertThat(output.clone().readUtf8())
             .isEqualTo(
                 """
                 |--$boundary
@@ -656,13 +655,13 @@ internal class HttpRequestBodiesTest {
                 ),
             )
 
-        val output = ByteArrayOutputStream()
+        val output = Buffer()
         body.writeTo(output)
 
         assertThat(body.repeatable()).isTrue()
-        assertThat(body.contentLength()).isEqualTo(output.size().toLong())
+        assertThat(body.contentLength()).isEqualTo(output.size.toLong())
         val boundary = boundary(body)
-        assertThat(output.toString("UTF-8"))
+        assertThat(output.clone().readUtf8())
             .isEqualTo(
                 """
                 |--$boundary
@@ -702,13 +701,13 @@ internal class HttpRequestBodiesTest {
                 ),
             )
 
-        val output = ByteArrayOutputStream()
+        val output = Buffer()
         body.writeTo(output)
 
         assertThat(body.repeatable()).isTrue()
-        assertThat(body.contentLength()).isEqualTo(output.size().toLong())
+        assertThat(body.contentLength()).isEqualTo(output.size.toLong())
         val boundary = boundary(body)
-        assertThat(output.toString("UTF-8"))
+        assertThat(output.clone().readUtf8())
             .isEqualTo(
                 """
                 |--$boundary

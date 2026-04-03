@@ -193,21 +193,25 @@ internal constructor(
 
             override fun isOneShot(): Boolean = !repeatable()
 
-            override fun writeTo(sink: BufferedSink) = writeTo(sink.outputStream())
+            override fun writeTo(sink: BufferedSink) = this@toRequestBody.writeTo(sink)
         }
     }
 
     private fun Response.toResponse(): HttpResponse {
         val headers = headers.toHeaders()
+        val statusCode = code
+        // Eagerly buffer the body so it can be read multiple times (e.g. error handler + test assertion)
+        val bodyBytes = body?.bytes() ?: byteArrayOf()
+        body?.close()
 
         return object : HttpResponse {
-            override fun statusCode(): Int = code
+            override fun statusCode(): Int = statusCode
 
             override fun headers(): Headers = headers
 
-            override fun body(): InputStream = body!!.byteStream()
+            override fun body(): okio.BufferedSource = okio.Buffer().write(bodyBytes)
 
-            override fun close() = body!!.close()
+            override fun close() {}
         }
     }
 

@@ -80,7 +80,7 @@ internal class FileServiceAsyncTest {
             )
 
         val response = responseFuture.get()
-        assertThat(response.body()).hasContent("abc")
+        assertThat(response.body().readUtf8()).isEqualTo("abc")
     }
 
     @Test

@@ -8,5 +8,5 @@ import com.anthropic.core.http.HttpResponse.Handler
 
 private object StringHandlerInternal : Handler<String> {
     override fun handle(response: HttpResponse): String =
-        response.body().readBytes().toString(Charsets.UTF_8)
+        response.body().readUtf8()
 }

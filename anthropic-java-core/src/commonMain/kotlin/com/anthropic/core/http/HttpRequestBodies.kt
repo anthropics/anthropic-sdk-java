@@ -12,10 +12,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.node.JsonNodeType
 import com.fasterxml.jackson.databind.node.ObjectNode
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
-import java.io.OutputStream
+import okio.Buffer
+import okio.BufferedSink
+import okio.Source
+import okio.buffer
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -33,7 +33,7 @@ inline fun <reified T> json(jsonMapper: JsonMapper, value: T): HttpRequestBody =
     object : HttpRequestBody {
         private val bytes: ByteArray by lazy { jsonMapper.writeValueAsBytes(value) }
 
-        override fun writeTo(outputStream: OutputStream) = outputStream.write(bytes)
+        override fun writeTo(sink: BufferedSink) { sink.write(bytes) }
 
         override fun contentType(): String = "application/json"
 
@@ -51,11 +51,10 @@ inline fun <reified T> json(jsonMapper: JsonMapper, value: T): HttpRequestBody =
  * method may change or be removed without any prior notice.
  */
 fun bodyToJson(jsonMapper: ObjectMapper, body: HttpRequestBody?): ObjectNode? {
-    val jsonData = ByteArrayOutputStream()
-
-    body?.writeTo(jsonData)
-    if (jsonData.size() > 0) {
-        return jsonMapper.readValue(jsonData.toByteArray(), ObjectNode::class.java)
+    val buf = Buffer()
+    body?.writeTo(buf)
+    if (buf.size > 0) {
+        return jsonMapper.readValue(buf.readByteArray(), ObjectNode::class.java)
     }
     return null
 }
@@ -69,10 +68,26 @@ internal fun multipartFormData(
             fields.forEach { (name, field) ->
                 val knownValue = field.value.asKnown()
                 val parts =
-                    if (knownValue is InputStream) {
-                        // Read directly from the `InputStream` instead of reading it all
+                    if (knownValue is Source || knownValue is java.io.InputStream) {
+                        // Read directly from the stream/source instead of reading it all
                         // into memory due to the `jsonMapper` serialization below.
-                        sequenceOf(name to knownValue)
+                        @Suppress("DEPRECATION")
+                        val source: Source = if (knownValue is Source) knownValue
+                            else (knownValue as java.io.InputStream).let { stream ->
+                                // Bridge InputStream to okio Source on JVM
+                                object : Source {
+                                    override fun read(sink: okio.Buffer, byteCount: Long): Long {
+                                        val bytes = ByteArray(byteCount.toInt().coerceAtMost(8192))
+                                        val n = stream.read(bytes)
+                                        if (n == -1) return -1
+                                        sink.write(bytes, 0, n)
+                                        return n.toLong()
+                                    }
+                                    override fun timeout() = okio.Timeout.NONE
+                                    override fun close() = stream.close()
+                                }
+                            }
+                        sequenceOf(name to source)
                     } else {
                         // Serialize the inner value directly to avoid Jackson key serializer
                         // issues with KnownValue wrapper on older Jackson versions.
@@ -81,41 +96,15 @@ internal fun multipartFormData(
                         serializePart(name, node)
                     }
 
-                parts.forEach { (name, bytes) ->
-                    val partBody =
-                        if (bytes is ByteArrayInputStream) {
-                            val byteArray = bytes.readBytes()
-
-                            object : HttpRequestBody {
-
-                                override fun writeTo(outputStream: OutputStream) {
-                                    outputStream.write(byteArray)
-                                }
-
-                                override fun contentType(): String = field.contentType
-
-                                override fun contentLength(): Long = byteArray.size.toLong()
-
-                                override fun repeatable(): Boolean = true
-
-                                override fun close() {}
-                            }
-                        } else {
-                            object : HttpRequestBody {
-
-                                override fun writeTo(outputStream: OutputStream) {
-                                    bytes.copyTo(outputStream)
-                                }
-
-                                override fun contentType(): String = field.contentType
-
-                                override fun contentLength(): Long = -1L
-
-                                override fun repeatable(): Boolean = false
-
-                                override fun close() = bytes.close()
-                            }
-                        }
+                parts.forEach { (name, source) ->
+                    val byteArray = source.buffer().readByteArray()
+                    val partBody = object : HttpRequestBody {
+                        override fun writeTo(sink: BufferedSink) { sink.write(byteArray) }
+                        override fun contentType(): String = field.contentType
+                        override fun contentLength(): Long = byteArray.size.toLong()
+                        override fun repeatable(): Boolean = true
+                        override fun close() {}
+                    }
 
                     addPart(
                         MultipartBody.Part.create(
@@ -130,39 +119,40 @@ internal fun multipartFormData(
         }
         .build()
 
-private fun serializePart(name: String, node: JsonNode): Sequence<Pair<String, InputStream>> =
+private fun serializePart(name: String, node: JsonNode): Sequence<Pair<String, Source>> =
     when (node.nodeType) {
         JsonNodeType.MISSING,
         JsonNodeType.NULL -> emptySequence()
-        JsonNodeType.BINARY -> sequenceOf(name to node.binaryValue().inputStream())
-        JsonNodeType.STRING -> sequenceOf(name to node.textValue().byteInputStream())
-        JsonNodeType.BOOLEAN -> sequenceOf(name to node.booleanValue().toString().byteInputStream())
-        JsonNodeType.NUMBER -> sequenceOf(name to node.numberValue().toString().byteInputStream())
+        JsonNodeType.BINARY -> sequenceOf(name to Buffer().write(node.binaryValue()))
+        JsonNodeType.STRING -> sequenceOf(name to Buffer().writeUtf8(node.textValue()))
+        JsonNodeType.BOOLEAN -> sequenceOf(name to Buffer().writeUtf8(node.booleanValue().toString()))
+        JsonNodeType.NUMBER -> sequenceOf(name to Buffer().writeUtf8(node.numberValue().toString()))
         JsonNodeType.ARRAY ->
             sequenceOf(
                 name to
-                    node
-                        .elements()
-                        .asSequence()
-                        .mapNotNull { element ->
-                            when (element.nodeType) {
-                                JsonNodeType.MISSING,
-                                JsonNodeType.NULL -> null
-                                JsonNodeType.STRING -> element.textValue()
-                                JsonNodeType.BOOLEAN -> element.booleanValue().toString()
-                                JsonNodeType.NUMBER -> element.numberValue().toString()
-                                null,
-                                JsonNodeType.BINARY,
-                                JsonNodeType.ARRAY,
-                                JsonNodeType.OBJECT,
-                                JsonNodeType.POJO ->
-                                    throw AnthropicInvalidDataException(
-                                        "Unexpected JsonNode type in array: ${element.nodeType}"
-                                    )
+                    Buffer().writeUtf8(
+                        node
+                            .elements()
+                            .asSequence()
+                            .mapNotNull { element ->
+                                when (element.nodeType) {
+                                    JsonNodeType.MISSING,
+                                    JsonNodeType.NULL -> null
+                                    JsonNodeType.STRING -> element.textValue()
+                                    JsonNodeType.BOOLEAN -> element.booleanValue().toString()
+                                    JsonNodeType.NUMBER -> element.numberValue().toString()
+                                    null,
+                                    JsonNodeType.BINARY,
+                                    JsonNodeType.ARRAY,
+                                    JsonNodeType.OBJECT,
+                                    JsonNodeType.POJO ->
+                                        throw AnthropicInvalidDataException(
+                                            "Unexpected JsonNode type in array: ${element.nodeType}"
+                                        )
+                                }
                             }
-                        }
-                        .joinToString(",")
-                        .byteInputStream()
+                            .joinToString(",")
+                    )
             )
         JsonNodeType.OBJECT ->
             node.fields().asSequence().flatMap { (key, value) ->
@@ -178,29 +168,29 @@ private constructor(private val boundary: String, private val parts: List<Part>)
     private val contentType = "multipart/form-data; boundary=$boundary"
 
     // This must remain in sync with `contentLength`.
-    override fun writeTo(outputStream: OutputStream) {
+    override fun writeTo(sink: BufferedSink) {
         parts.forEach { part ->
-            outputStream.write(DASHDASH)
-            outputStream.write(boundaryBytes)
-            outputStream.write(CRLF)
+            sink.write(DASHDASH)
+            sink.write(boundaryBytes)
+            sink.write(CRLF)
 
-            outputStream.write(CONTENT_DISPOSITION)
-            outputStream.write(part.contentDisposition.toByteArray())
-            outputStream.write(CRLF)
+            sink.write(CONTENT_DISPOSITION)
+            sink.write(part.contentDisposition.toByteArray())
+            sink.write(CRLF)
 
-            outputStream.write(CONTENT_TYPE)
-            outputStream.write(part.contentType.toByteArray())
-            outputStream.write(CRLF)
+            sink.write(CONTENT_TYPE)
+            sink.write(part.contentType.toByteArray())
+            sink.write(CRLF)
 
-            outputStream.write(CRLF)
-            part.body.writeTo(outputStream)
-            outputStream.write(CRLF)
+            sink.write(CRLF)
+            part.body.writeTo(sink)
+            sink.write(CRLF)
         }
 
-        outputStream.write(DASHDASH)
-        outputStream.write(boundaryBytes)
-        outputStream.write(DASHDASH)
-        outputStream.write(CRLF)
+        sink.write(DASHDASH)
+        sink.write(boundaryBytes)
+        sink.write(DASHDASH)
+        sink.write(CRLF)
     }
 
     override fun contentType(): String = contentType

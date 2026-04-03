@@ -95,7 +95,7 @@ internal class RetryingHttpClientTest {
 
                         override fun headers(): Headers = response.headers()
 
-                        override fun body(): InputStream = response.body()
+                        override fun body(): okio.BufferedSource = response.body()
 
                         override fun close() {
                             response.close()

@@ -1,10 +1,10 @@
 package com.anthropic.core.http
 
-import java.io.OutputStream
+import okio.BufferedSink
 
 interface HttpRequestBody : AutoCloseable {
 
-    fun writeTo(outputStream: java.io.OutputStream)
+    fun writeTo(sink: BufferedSink)
 
     fun contentType(): String?
 

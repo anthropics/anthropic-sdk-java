@@ -8,8 +8,7 @@ import io.ktor.client.statement.readRawBytes
 import io.ktor.http.*
 import io.ktor.http.content.ByteArrayContent
 import kotlinx.coroutines.*
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
+import okio.Buffer
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -55,8 +54,9 @@ class KtorHttpClient(
                 }
             }
             request.body?.let { body ->
-                val bytes = ByteArrayOutputStream().also { body.writeTo(it) }.toByteArray()
-                setBody(ByteArrayContent(bytes, body.contentType()?.let {
+                val buf = Buffer()
+                body.writeTo(buf)
+                setBody(ByteArrayContent(buf.readByteArray(), body.contentType()?.let {
                     ContentType.parse(it)
                 } ?: ContentType.Application.Json))
             }
@@ -76,7 +76,7 @@ class KtorHttpClient(
                 response.headers.forEach { name, values -> values.forEach { b.put(name, it) } }
                 return b.build()
             }
-            override fun body() = ByteArrayInputStream(body)
+            override fun body() = Buffer().write(body)
             override fun close() {}
         }
     }

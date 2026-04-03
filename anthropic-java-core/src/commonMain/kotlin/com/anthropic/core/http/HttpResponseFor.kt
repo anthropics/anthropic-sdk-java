@@ -1,6 +1,6 @@
 package com.anthropic.core.http
 
-import java.io.InputStream
+import okio.BufferedSource
 
 interface HttpResponseFor<T> : HttpResponse {
     fun parse(): T
@@ -12,6 +12,6 @@ internal fun <T> HttpResponse.parseable(parse: () -> T): HttpResponseFor<T> =
         override fun parse(): T = parsed
         override fun statusCode(): Int = this@parseable.statusCode()
         override fun headers(): Headers = this@parseable.headers()
-        override fun body(): java.io.InputStream = this@parseable.body()
+        override fun body(): BufferedSource = this@parseable.body()
         override fun close() = this@parseable.close()
     }

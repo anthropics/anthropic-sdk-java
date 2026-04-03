@@ -14,7 +14,7 @@ import kotlinx.serialization.json.JsonElement
 internal fun kotlinxJsonObjectHandler(): Handler<JsonObject> =
     object : Handler<JsonObject> {
         override fun handle(response: HttpResponse): JsonObject {
-            val body = response.body().readBytes().toString(Charsets.UTF_8)
+            val body = response.body().readUtf8()
             return anthropicJson.parseToJsonElement(body) as JsonObject
         }
     }
@@ -22,7 +22,7 @@ internal fun kotlinxJsonObjectHandler(): Handler<JsonObject> =
 internal fun kotlinxJsonElementHandler(): Handler<JsonElement> =
     object : Handler<JsonElement> {
         override fun handle(response: HttpResponse): JsonElement {
-            val body = response.body().readBytes().toString(Charsets.UTF_8)
+            val body = response.body().readUtf8()
             return anthropicJson.parseToJsonElement(body)
         }
     }
@@ -34,7 +34,7 @@ internal fun kotlinxJsonElementHandler(): Handler<JsonElement> =
 internal inline fun <reified T> kotlinxJsonHandler(): Handler<T> =
     object : Handler<T> {
         override fun handle(response: HttpResponse): T {
-            val body = response.body().readBytes().toString(Charsets.UTF_8)
+            val body = response.body().readUtf8()
             return anthropicJson.decodeFromString<T>(body)
         }
     }

@@ -77,7 +77,7 @@ internal class FileServiceTest {
                     .build()
             )
 
-        assertThat(response.body()).hasContent("abc")
+        assertThat(response.body().readUtf8()).isEqualTo("abc")
     }
 
     @Test
