@@ -5,6 +5,7 @@ package com.anthropic.services.async.beta
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.JsonValue
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.from
 import com.anthropic.core.handlers.errorBodyHandler
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler

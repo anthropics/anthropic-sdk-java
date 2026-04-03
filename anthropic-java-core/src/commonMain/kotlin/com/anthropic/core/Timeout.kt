@@ -2,10 +2,7 @@
 
 package com.anthropic.core
 
-import java.time.Duration
-import java.util.Objects
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import com.anthropic.core.PlatformDuration as Duration
 
 /** A class containing timeouts for various processing phases of a request. */
 class Timeout
@@ -21,9 +18,9 @@ private constructor(
      *
      * A value of [Duration.ZERO] means there's no timeout.
      *
-     * Defaults to `Duration.ofMinutes(1)`.
+     * Defaults to `durationOfMinutes(1)`.
      */
-    fun connect(): Duration = connect ?: Duration.ofMinutes(1)
+    fun connect(): Duration = connect ?: durationOfMinutes(1)
 
     /**
      * The maximum time allowed between two data packets when waiting for the server’s response.
@@ -51,18 +48,18 @@ private constructor(
      *
      * A value of [Duration.ZERO] means there's no timeout.
      *
-     * Defaults to `Duration.ofMinutes(10)`.
+     * Defaults to `durationOfMinutes(10)`.
      */
-    fun request(): Duration = request ?: Duration.ofMinutes(10)
+    fun request(): Duration = request ?: durationOfMinutes(10)
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
-        @JvmStatic fun default() = builder().build()
+        fun default() = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [Timeout]. */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [Timeout]. */
@@ -73,7 +70,6 @@ private constructor(
         private var write: Duration? = null
         private var request: Duration? = null
 
-        @JvmSynthetic
         internal fun from(timeout: Timeout) = apply {
             connect = timeout.connect
             read = timeout.read
@@ -86,12 +82,10 @@ private constructor(
          *
          * A value of [Duration.ZERO] means there's no timeout.
          *
-         * Defaults to `Duration.ofMinutes(1)`.
+         * Defaults to `durationOfMinutes(1)`.
          */
         fun connect(connect: Duration?) = apply { this.connect = connect }
 
-        /** Alias for calling [Builder.connect] with `connect.orElse(null)`. */
-        fun connect(connect: Optional<Duration>) = connect(connect.getOrNull())
 
         /**
          * The maximum time allowed between two data packets when waiting for the server’s response.
@@ -102,8 +96,6 @@ private constructor(
          */
         fun read(read: Duration?) = apply { this.read = read }
 
-        /** Alias for calling [Builder.read] with `read.orElse(null)`. */
-        fun read(read: Optional<Duration>) = read(read.getOrNull())
 
         /**
          * The maximum time allowed between two data packets when sending the request to the server.
@@ -114,8 +106,6 @@ private constructor(
          */
         fun write(write: Duration?) = apply { this.write = write }
 
-        /** Alias for calling [Builder.write] with `write.orElse(null)`. */
-        fun write(write: Optional<Duration>) = write(write.getOrNull())
 
         /**
          * The maximum time allowed for a complete HTTP call, not including retries.
@@ -125,12 +115,10 @@ private constructor(
          *
          * A value of [Duration.ZERO] means there's no timeout.
          *
-         * Defaults to `Duration.ofMinutes(10)`.
+         * Defaults to `durationOfMinutes(10)`.
          */
         fun request(request: Duration?) = apply { this.request = request }
 
-        /** Alias for calling [Builder.request] with `request.orElse(null)`. */
-        fun request(request: Optional<Duration>) = request(request.getOrNull())
 
         /**
          * Returns an immutable instance of [Timeout].
@@ -140,7 +128,6 @@ private constructor(
         fun build(): Timeout = Timeout(connect, read, write, request)
     }
 
-    @JvmSynthetic
     internal fun assign(target: Timeout): Timeout =
         target
             .toBuilder()
@@ -164,7 +151,7 @@ private constructor(
             request == other.request
     }
 
-    override fun hashCode(): Int = Objects.hash(connect, read, write, request)
+    override fun hashCode(): Int = contentHash(connect, read, write, request)
 
     override fun toString() =
         "Timeout{connect=$connect, read=$read, write=$write, request=$request}"

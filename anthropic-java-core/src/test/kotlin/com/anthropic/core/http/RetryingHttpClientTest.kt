@@ -504,7 +504,7 @@ internal class RetryingHttpClientTest {
     ) = RetryingHttpClient.builder().httpClient(httpClient).sleeper(sleeper).clock(clock)
 
     private fun HttpClient.execute(request: HttpRequest, async: Boolean): HttpResponse =
-        if (async) executeAsync(request).get() else execute(request)
+        if (async) executeAsync(request, RequestOptions.none()).get() else execute(request, RequestOptions.none())
 
     // When retrying, all failed responses should be closed. Only the final returned response should
     // be open.
