@@ -7,8 +7,8 @@ import com.anthropic.models.messages.Model
 import com.anthropic.services.blocking.beta.MessageService
 import com.fasterxml.jackson.annotation.JsonClassDescription
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
-import java.time.Duration
 import java.util.function.Supplier
+import kotlin.time.Duration.Companion.seconds
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -31,7 +31,7 @@ internal class BetaToolRunnerTest {
             .addTool(GetWeather::class.java)
             .addTool(BrokenGetWeather::class.java)
             .build()
-    private val requestOptions = RequestOptions.builder().timeout(Duration.ofSeconds(42)).build()
+    private val requestOptions = RequestOptions.builder().timeout(42.seconds).build()
 
     private val toolRunner =
         BetaToolRunner(

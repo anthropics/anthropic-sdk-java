@@ -14,7 +14,6 @@ import com.anthropic.errors.AnthropicIoException
 import java.io.IOException
 import java.io.InputStream
 import java.net.Proxy
-import java.time.Duration
 import java.util.concurrent.CancellationException
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutorService
@@ -22,6 +21,7 @@ import java.util.concurrent.TimeUnit
 import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509TrustManager
+import kotlin.time.Duration
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.ConnectionPool
@@ -120,10 +120,10 @@ internal constructor(
 
         requestOptions.timeout?.let {
             clientBuilder
-                .connectTimeout(it.connect())
-                .readTimeout(it.read())
-                .writeTimeout(it.write())
-                .callTimeout(it.request())
+                .connectTimeout(it.connect().inWholeMilliseconds, TimeUnit.MILLISECONDS)
+                .readTimeout(it.read().inWholeMilliseconds, TimeUnit.MILLISECONDS)
+                .writeTimeout(it.write().inWholeMilliseconds, TimeUnit.MILLISECONDS)
+                .callTimeout(it.request().inWholeMilliseconds, TimeUnit.MILLISECONDS)
         }
 
         val client = clientBuilder.build()
@@ -145,13 +145,13 @@ internal constructor(
         ) {
             builder.addHeader(
                 "X-Stainless-Read-Timeout",
-                Duration.ofMillis(client.readTimeoutMillis.toLong()).seconds.toString(),
+                (client.readTimeoutMillis.toLong() / 1000).toString(),
             )
         }
         if (!headers.names().contains("X-Stainless-Timeout") && client.callTimeoutMillis != 0) {
             builder.addHeader(
                 "X-Stainless-Timeout",
-                Duration.ofMillis(client.callTimeoutMillis.toLong()).seconds.toString(),
+                (client.callTimeoutMillis.toLong() / 1000).toString(),
             )
         }
 
@@ -284,11 +284,11 @@ internal constructor(
                 okhttp3.OkHttpClient.Builder()
                     // `RetryingHttpClient` handles retries if the user enabled them.
                     .retryOnConnectionFailure(false)
-                    .pingInterval(Duration.ofMinutes(1))
-                    .connectTimeout(timeout.connect())
-                    .readTimeout(timeout.read())
-                    .writeTimeout(timeout.write())
-                    .callTimeout(timeout.request())
+                    .pingInterval(1, TimeUnit.MINUTES)
+                    .connectTimeout(timeout.connect().inWholeMilliseconds, TimeUnit.MILLISECONDS)
+                    .readTimeout(timeout.read().inWholeMilliseconds, TimeUnit.MILLISECONDS)
+                    .writeTimeout(timeout.write().inWholeMilliseconds, TimeUnit.MILLISECONDS)
+                    .callTimeout(timeout.request().inWholeMilliseconds, TimeUnit.MILLISECONDS)
                     .proxy(proxy)
                     .apply {
                         dispatcherExecutorService?.let { dispatcher(Dispatcher(it)) }
@@ -299,7 +299,7 @@ internal constructor(
                             connectionPool(
                                 ConnectionPool(
                                     maxIdleConnections,
-                                    keepAliveDuration.toNanos(),
+                                    keepAliveDuration.inWholeNanoseconds,
                                     TimeUnit.NANOSECONDS,
                                 )
                             )

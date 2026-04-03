@@ -1,7 +1,7 @@
 package com.anthropic.core
 
-import java.time.Duration
 import java.util.concurrent.CompletableFuture
+import kotlin.time.Duration
 
 /**
  * A delegating wrapper around a [Sleeper] that closes it once it's only phantom reachable.

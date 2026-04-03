@@ -22,8 +22,10 @@ import com.github.tomakehurst.wiremock.junit5.WireMockTest
 import com.github.tomakehurst.wiremock.stubbing.Scenario
 import java.io.InputStream
 import java.time.Clock
-import java.time.Duration
 import java.time.OffsetDateTime
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.CompletableFuture
@@ -214,7 +216,7 @@ internal class RetryingHttpClientTest {
                 .withHeader("x-stainless-retry-count", equalTo("2")),
         )
         assertThat(sleeper.durations)
-            .containsExactly(Duration.ofSeconds(5), Duration.ofMillis(1234))
+            .containsExactly(5.seconds, 1234.milliseconds)
         assertNoResponseLeaks()
     }
 
@@ -258,7 +260,7 @@ internal class RetryingHttpClientTest {
             postRequestedFor(urlPathEqualTo("/something"))
                 .withHeader("x-stainless-retry-count", equalTo("42")),
         )
-        assertThat(sleeper.durations).containsExactly(Duration.ofSeconds(5))
+        assertThat(sleeper.durations).containsExactly(5.seconds)
         assertNoResponseLeaks()
     }
 
@@ -290,7 +292,7 @@ internal class RetryingHttpClientTest {
 
         assertThat(response.statusCode()).isEqualTo(200)
         verify(2, postRequestedFor(urlPathEqualTo("/something")))
-        assertThat(sleeper.durations).containsExactly(Duration.ofMillis(10))
+        assertThat(sleeper.durations).containsExactly(10.milliseconds)
         assertNoResponseLeaks()
     }
 
@@ -358,7 +360,7 @@ internal class RetryingHttpClientTest {
         )
         // Exponential backoff with jitter: 0.5s * jitter where jitter is in [0.75, 1.0].
         assertThat(sleeper.durations).hasSize(1)
-        assertThat(sleeper.durations[0]).isBetween(Duration.ofMillis(375), Duration.ofMillis(500))
+        assertThat(sleeper.durations[0]).isBetween(375.milliseconds, 500.milliseconds)
         assertNoResponseLeaks()
     }
 
@@ -386,11 +388,11 @@ internal class RetryingHttpClientTest {
         // jitter is in [0.75, 1.0].
         assertThat(sleeper.durations).hasSize(3)
         // retries=1: 0.5s * [0.75, 1.0]
-        assertThat(sleeper.durations[0]).isBetween(Duration.ofMillis(375), Duration.ofMillis(500))
+        assertThat(sleeper.durations[0]).isBetween(375.milliseconds, 500.milliseconds)
         // retries=2: 1s * [0.75, 1.0]
-        assertThat(sleeper.durations[1]).isBetween(Duration.ofMillis(750), Duration.ofMillis(1000))
+        assertThat(sleeper.durations[1]).isBetween(750.milliseconds, 1000.milliseconds)
         // retries=3: 2s * [0.75, 1.0]
-        assertThat(sleeper.durations[2]).isBetween(Duration.ofMillis(1500), Duration.ofMillis(2000))
+        assertThat(sleeper.durations[2]).isBetween(1500.milliseconds, 2000.milliseconds)
         assertNoResponseLeaks()
     }
 
@@ -415,9 +417,9 @@ internal class RetryingHttpClientTest {
         verify(7, postRequestedFor(urlPathEqualTo("/something")))
         assertThat(sleeper.durations).hasSize(6)
         // retries=5: backoff hits the 8s cap * [0.75, 1.0]
-        assertThat(sleeper.durations[4]).isBetween(Duration.ofMillis(6000), Duration.ofMillis(8000))
+        assertThat(sleeper.durations[4]).isBetween(6000.milliseconds, 8000.milliseconds)
         // retries=6: still capped at 8s * [0.75, 1.0]
-        assertThat(sleeper.durations[5]).isBetween(Duration.ofMillis(6000), Duration.ofMillis(8000))
+        assertThat(sleeper.durations[5]).isBetween(6000.milliseconds, 8000.milliseconds)
         assertNoResponseLeaks()
     }
 
@@ -457,7 +459,7 @@ internal class RetryingHttpClientTest {
 
         assertThat(response.statusCode()).isEqualTo(200)
         // Retry-After-Ms (50ms) takes priority over Retry-After (2s).
-        assertThat(sleeper.durations).containsExactly(Duration.ofMillis(50))
+        assertThat(sleeper.durations).containsExactly(50.milliseconds)
         assertNoResponseLeaks()
     }
 
@@ -494,7 +496,7 @@ internal class RetryingHttpClientTest {
         assertThat(response.statusCode()).isEqualTo(200)
         // Unparseable Retry-After falls through to exponential backoff.
         assertThat(sleeper.durations).hasSize(1)
-        assertThat(sleeper.durations[0]).isBetween(Duration.ofMillis(375), Duration.ofMillis(500))
+        assertThat(sleeper.durations[0]).isBetween(375.milliseconds, 500.milliseconds)
         assertNoResponseLeaks()
     }
 

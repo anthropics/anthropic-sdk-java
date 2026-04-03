@@ -1,8 +1,7 @@
 package com.anthropic.core
 
-import java.lang.AutoCloseable
-import java.time.Duration
 import java.util.concurrent.CompletableFuture
+import kotlin.time.Duration
 
 /**
  * An interface for delaying execution for a specified amount of time.

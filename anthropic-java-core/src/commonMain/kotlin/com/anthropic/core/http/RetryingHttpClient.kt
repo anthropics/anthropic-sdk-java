@@ -10,8 +10,9 @@ import com.anthropic.errors.AnthropicIoException
 import com.anthropic.errors.AnthropicRetryableException
 import java.io.IOException
 import java.time.Clock
-import java.time.Duration
 import java.time.OffsetDateTime
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.nanoseconds
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoUnit
@@ -215,7 +216,7 @@ private constructor(
             }
             ?.let { retryAfterNanos ->
                 // If the API asks us to wait a certain amount of time, do what it says.
-                return Duration.ofNanos(retryAfterNanos.toLong())
+                return retryAfterNanos.toLong().nanoseconds
             }
 
         // Apply exponential backoff, but not more than the max.
@@ -224,7 +225,7 @@ private constructor(
         // Apply some jitter
         val jitter = 1.0 - 0.25 * ThreadLocalRandom.current().nextDouble()
 
-        return Duration.ofNanos((TimeUnit.SECONDS.toNanos(1) * backoffSeconds * jitter).toLong())
+        return (TimeUnit.SECONDS.toNanos(1) * backoffSeconds * jitter).toLong().nanoseconds
     }
 
     companion object {

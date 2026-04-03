@@ -17,8 +17,8 @@ import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.net.Proxy
 import java.time.Clock
-import java.time.Duration
 import java.util.Optional
+import kotlin.time.Duration
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import javax.net.ssl.HostnameVerifier

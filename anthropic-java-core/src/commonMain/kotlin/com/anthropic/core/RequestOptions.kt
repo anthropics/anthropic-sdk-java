@@ -1,6 +1,8 @@
 package com.anthropic.core
 
-import java.time.Duration
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 class RequestOptions private constructor(val responseValidation: Boolean?, val timeout: Timeout?) {
 
@@ -47,7 +49,7 @@ class RequestOptions private constructor(val responseValidation: Boolean?, val t
 
         require(
             isStreaming ||
-                !(exceedsModelLimit || requestOptions.timeout!!.request() > Duration.ofMinutes(10))
+                !(exceedsModelLimit || requestOptions.timeout!!.request() > 10.minutes)
         ) {
             "Streaming is required for operations that may take longer than 10 minutes.\n\nSee https://github.com/anthropics/anthropic-sdk-java#streaming for more details."
         }
@@ -71,12 +73,12 @@ class RequestOptions private constructor(val responseValidation: Boolean?, val t
         fun timeout(timeout: Duration) = timeout(Timeout.builder().request(timeout).build())
 
         internal fun timeoutFromMaxTokensStreaming(maxTokens: Long) = apply {
-            val t = Duration.ofSeconds(minOf(60 * 60, maxOf(10 * 60, 60 * 60 * maxTokens / 128_000)))
+            val t = minOf(60 * 60, maxOf(10 * 60, 60 * 60 * maxTokens / 128_000)).seconds
             timeout(Timeout.builder().read(t).request(t).build())
         }
 
         internal fun timeoutFromMaxTokensNonStreaming(maxTokens: Long) = apply {
-            val t = Duration.ofSeconds(minOf(10 * 60, maxOf(30, 30 * maxTokens / 1_000)))
+            val t = minOf(10 * 60, maxOf(30, 30 * maxTokens / 1_000)).seconds
             timeout(Timeout.builder().read(t).request(t).build())
         }
 

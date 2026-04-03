@@ -2,7 +2,8 @@
 
 package com.anthropic.core
 
-import java.time.Duration
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 
 /** A class containing timeouts for various processing phases of a request. */
 class Timeout
@@ -18,9 +19,9 @@ private constructor(
      *
      * A value of [Duration.ZERO] means there's no timeout.
      *
-     * Defaults to `Duration.ofMinutes(1)`.
+     * Defaults to `1.minutes`.
      */
-    fun connect(): Duration = connect ?: Duration.ofMinutes(1)
+    fun connect(): Duration = connect ?: 1.minutes
 
     /**
      * The maximum time allowed between two data packets when waiting for the server’s response.
@@ -48,9 +49,9 @@ private constructor(
      *
      * A value of [Duration.ZERO] means there's no timeout.
      *
-     * Defaults to `Duration.ofMinutes(10)`.
+     * Defaults to `10.minutes`.
      */
-    fun request(): Duration = request ?: Duration.ofMinutes(10)
+    fun request(): Duration = request ?: 10.minutes
 
     fun toBuilder() = Builder().from(this)
 
@@ -82,7 +83,7 @@ private constructor(
          *
          * A value of [Duration.ZERO] means there's no timeout.
          *
-         * Defaults to `Duration.ofMinutes(1)`.
+         * Defaults to `1.minutes`.
          */
         fun connect(connect: Duration?) = apply { this.connect = connect }
 
@@ -115,7 +116,7 @@ private constructor(
          *
          * A value of [Duration.ZERO] means there's no timeout.
          *
-         * Defaults to `Duration.ofMinutes(10)`.
+         * Defaults to `10.minutes`.
          */
         fun request(request: Duration?) = apply { this.request = request }
 
