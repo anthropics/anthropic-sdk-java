@@ -48,9 +48,6 @@ kotlin {
             }
         }
         val jvmMain by getting {
-            // Include existing src/main/kotlin as part of jvmMain until code is migrated
-            kotlin.srcDir("src/main/kotlin")
-            resources.srcDir("src/main/resources")
             dependencies {
                 // Jackson kept in jvmMain for structured outputs / backward compat
                 api("com.fasterxml.jackson.core:jackson-core:2.18.2")
