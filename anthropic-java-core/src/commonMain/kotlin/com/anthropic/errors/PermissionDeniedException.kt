@@ -5,8 +5,6 @@ package com.anthropic.errors
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
 class PermissionDeniedException
 private constructor(private val headers: Headers, private val body: JsonValue, cause: Throwable?) :
@@ -31,7 +29,7 @@ private constructor(private val headers: Headers, private val body: JsonValue, c
          * .body()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [PermissionDeniedException]. */
@@ -41,7 +39,6 @@ private constructor(private val headers: Headers, private val body: JsonValue, c
         private var body: JsonValue? = null
         private var cause: Throwable? = null
 
-        @JvmSynthetic
         internal fun from(permissionDeniedException: PermissionDeniedException) = apply {
             headers = permissionDeniedException.headers
             body = permissionDeniedException.body
@@ -53,9 +50,6 @@ private constructor(private val headers: Headers, private val body: JsonValue, c
         fun body(body: JsonValue) = apply { this.body = body }
 
         fun cause(cause: Throwable?) = apply { this.cause = cause }
-
-        /** Alias for calling [Builder.cause] with `cause.orElse(null)`. */
-        fun cause(cause: Optional<Throwable>) = cause(cause.getOrNull())
 
         /**
          * Returns an immutable instance of [PermissionDeniedException].

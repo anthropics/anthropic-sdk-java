@@ -5,14 +5,12 @@ package com.anthropic.errors
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
-class RateLimitException
+class UnprocessableEntityException
 private constructor(private val headers: Headers, private val body: JsonValue, cause: Throwable?) :
-    AnthropicServiceException("429: $body", cause) {
+    AnthropicServiceException("422: $body", cause) {
 
-    override fun statusCode(): Int = 429
+    override fun statusCode(): Int = 422
 
     override fun headers(): Headers = headers
 
@@ -23,7 +21,7 @@ private constructor(private val headers: Headers, private val body: JsonValue, c
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [RateLimitException].
+         * Returns a mutable builder for constructing an instance of [UnprocessableEntityException].
          *
          * The following fields are required:
          * ```java
@@ -31,21 +29,20 @@ private constructor(private val headers: Headers, private val body: JsonValue, c
          * .body()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
-    /** A builder for [RateLimitException]. */
+    /** A builder for [UnprocessableEntityException]. */
     class Builder internal constructor() {
 
         private var headers: Headers? = null
         private var body: JsonValue? = null
         private var cause: Throwable? = null
 
-        @JvmSynthetic
-        internal fun from(rateLimitException: RateLimitException) = apply {
-            headers = rateLimitException.headers
-            body = rateLimitException.body
-            cause = rateLimitException.cause
+        internal fun from(unprocessableEntityException: UnprocessableEntityException) = apply {
+            headers = unprocessableEntityException.headers
+            body = unprocessableEntityException.body
+            cause = unprocessableEntityException.cause
         }
 
         fun headers(headers: Headers) = apply { this.headers = headers }
@@ -54,11 +51,8 @@ private constructor(private val headers: Headers, private val body: JsonValue, c
 
         fun cause(cause: Throwable?) = apply { this.cause = cause }
 
-        /** Alias for calling [Builder.cause] with `cause.orElse(null)`. */
-        fun cause(cause: Optional<Throwable>) = cause(cause.getOrNull())
-
         /**
-         * Returns an immutable instance of [RateLimitException].
+         * Returns an immutable instance of [UnprocessableEntityException].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -70,8 +64,8 @@ private constructor(private val headers: Headers, private val body: JsonValue, c
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): RateLimitException =
-            RateLimitException(
+        fun build(): UnprocessableEntityException =
+            UnprocessableEntityException(
                 checkRequired("headers", headers),
                 checkRequired("body", body),
                 cause,

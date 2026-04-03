@@ -5,14 +5,16 @@ package com.anthropic.errors
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
-class UnprocessableEntityException
-private constructor(private val headers: Headers, private val body: JsonValue, cause: Throwable?) :
-    AnthropicServiceException("422: $body", cause) {
+class SseException
+private constructor(
+    private val statusCode: Int,
+    private val headers: Headers,
+    private val body: JsonValue,
+    cause: Throwable?,
+) : AnthropicServiceException("$statusCode: $body", cause) {
 
-    override fun statusCode(): Int = 422
+    override fun statusCode(): Int = statusCode
 
     override fun headers(): Headers = headers
 
@@ -23,30 +25,34 @@ private constructor(private val headers: Headers, private val body: JsonValue, c
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [UnprocessableEntityException].
+         * Returns a mutable builder for constructing an instance of [SseException].
          *
          * The following fields are required:
          * ```java
+         * .statusCode()
          * .headers()
          * .body()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
-    /** A builder for [UnprocessableEntityException]. */
+    /** A builder for [SseException]. */
     class Builder internal constructor() {
 
+        private var statusCode: Int? = null
         private var headers: Headers? = null
         private var body: JsonValue? = null
         private var cause: Throwable? = null
 
-        @JvmSynthetic
-        internal fun from(unprocessableEntityException: UnprocessableEntityException) = apply {
-            headers = unprocessableEntityException.headers
-            body = unprocessableEntityException.body
-            cause = unprocessableEntityException.cause
+        internal fun from(sseException: SseException) = apply {
+            statusCode = sseException.statusCode
+            headers = sseException.headers
+            body = sseException.body
+            cause = sseException.cause
         }
+
+        fun statusCode(statusCode: Int) = apply { this.statusCode = statusCode }
 
         fun headers(headers: Headers) = apply { this.headers = headers }
 
@@ -54,24 +60,23 @@ private constructor(private val headers: Headers, private val body: JsonValue, c
 
         fun cause(cause: Throwable?) = apply { this.cause = cause }
 
-        /** Alias for calling [Builder.cause] with `cause.orElse(null)`. */
-        fun cause(cause: Optional<Throwable>) = cause(cause.getOrNull())
-
         /**
-         * Returns an immutable instance of [UnprocessableEntityException].
+         * Returns an immutable instance of [SseException].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
          * ```java
+         * .statusCode()
          * .headers()
          * .body()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): UnprocessableEntityException =
-            UnprocessableEntityException(
+        fun build(): SseException =
+            SseException(
+                checkRequired("statusCode", statusCode),
                 checkRequired("headers", headers),
                 checkRequired("body", body),
                 cause,

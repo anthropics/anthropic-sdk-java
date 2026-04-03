@@ -9,6 +9,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicException
 import com.anthropic.errors.BadRequestException
+import com.anthropic.errors.errorType
 import com.anthropic.errors.InternalServerException
 import com.anthropic.errors.NotFoundException
 import com.anthropic.errors.PermissionDeniedException
@@ -2167,7 +2168,7 @@ internal class ErrorHandlingTest {
             }
 
         assertThat(e.statusCode()).isEqualTo(400)
-        assertThat(e.errorType()).contains(ErrorType.INVALID_REQUEST_ERROR)
+        assertThat(e.errorType()).isEqualTo(ErrorType.INVALID_REQUEST_ERROR)
     }
 
     @Test
@@ -2204,7 +2205,7 @@ internal class ErrorHandlingTest {
             }
 
         assertThat(e.statusCode()).isEqualTo(200)
-        assertThat(e.errorType()).contains(ErrorType.OVERLOADED_ERROR)
+        assertThat(e.errorType()).isEqualTo(ErrorType.OVERLOADED_ERROR)
     }
 
     @Test
@@ -2231,7 +2232,7 @@ internal class ErrorHandlingTest {
                     )
             }
 
-        assertThat(e.errorType()).isEmpty
+        assertThat(e.errorType()).isNull()
     }
 
     @Test
@@ -2256,7 +2257,7 @@ internal class ErrorHandlingTest {
                     )
             }
 
-        assertThat(e.errorType()).isEmpty
+        assertThat(e.errorType()).isNull()
     }
 
     private fun Headers.toMap(): Map<String, List<String>> =

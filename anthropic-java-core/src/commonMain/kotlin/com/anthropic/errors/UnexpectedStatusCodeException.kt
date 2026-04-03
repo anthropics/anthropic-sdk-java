@@ -5,8 +5,6 @@ package com.anthropic.errors
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
 class UnexpectedStatusCodeException
 private constructor(
@@ -37,7 +35,7 @@ private constructor(
          * .body()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        fun builder() = Builder()
     }
 
     /** A builder for [UnexpectedStatusCodeException]. */
@@ -48,7 +46,6 @@ private constructor(
         private var body: JsonValue? = null
         private var cause: Throwable? = null
 
-        @JvmSynthetic
         internal fun from(unexpectedStatusCodeException: UnexpectedStatusCodeException) = apply {
             statusCode = unexpectedStatusCodeException.statusCode
             headers = unexpectedStatusCodeException.headers
@@ -63,9 +60,6 @@ private constructor(
         fun body(body: JsonValue) = apply { this.body = body }
 
         fun cause(cause: Throwable?) = apply { this.cause = cause }
-
-        /** Alias for calling [Builder.cause] with `cause.orElse(null)`. */
-        fun cause(cause: Optional<Throwable>) = cause(cause.getOrNull())
 
         /**
          * Returns an immutable instance of [UnexpectedStatusCodeException].
