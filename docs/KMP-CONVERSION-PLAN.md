@@ -854,6 +854,141 @@ commonMain/kotlin/ (pure KMP — all targets)
 it already solves the `oneOf` → `sealed interface` mapping with Jackson and
 kotlinx.serialization support.
 
+### Custom openapi-generator Template: `kotlin-kmp-wire`
+
+Merges OpenAPI (REST) + AsyncAPI (events) into unified suspend + Flow API.
+Uses Fabrikt's sealed class logic + openapi-generator's KMP template + Wire adapters.
+
+#### Input specs → Output code
+
+```
+openapi.yaml (REST endpoints)     ──┐
+                                    ├──→ openapi-generator (custom template)
+asyncapi.yaml (SSE/WebSocket)     ──┘           │
+                                                 ▼
+                                    commonMain/kotlin/ (pure KMP)
+```
+
+#### OpenAPI paths → suspend service functions
+
+```yaml
+# openapi.yaml
+paths:
+  /v1/messages:
+    post:
+      operationId: createMessage
+      requestBody: { $ref: '#/components/schemas/MessageCreateParams' }
+      responses:
+        200: { $ref: '#/components/schemas/Message' }
+```
+Generates:
+```kotlin
+// commonMain — compiles on JVM, JS, Native, Wasm
+interface MessageService {
+    suspend fun create(params: MessageCreateParams): Message
+    suspend fun create(params: MessageCreateParams, requestOptions: RequestOptions): Message
+}
+```
+
+#### AsyncAPI channels → Flow streaming functions
+
+```yaml
+# asyncapi.yaml
+channels:
+  /v1/messages:
+    subscribe:
+      message: { $ref: '#/components/schemas/RawMessageStreamEvent' }
+```
+Generates:
+```kotlin
+interface MessageService {
+    // ... suspend functions from OpenAPI above ...
+    suspend fun createStreaming(params: MessageCreateParams): Flow<RawMessageStreamEvent>
+}
+```
+
+#### OpenAPI schemas + oneOf → @Serializable sealed class
+
+```yaml
+# openapi.yaml
+components:
+  schemas:
+    ContentBlock:
+      oneOf:
+        - $ref: '#/components/schemas/TextBlock'
+        - $ref: '#/components/schemas/ToolUseBlock'
+        - $ref: '#/components/schemas/ToolResultBlock'
+        - $ref: '#/components/schemas/ImageBlock'
+      discriminator:
+        propertyName: type
+        mapping:
+          text: '#/components/schemas/TextBlock'
+          tool_use: '#/components/schemas/ToolUseBlock'
+```
+Generates (porting Fabrikt's `SEALED_INTERFACES_FOR_ONE_OF` logic):
+```kotlin
+@Serializable
+sealed class ContentBlock {
+    abstract val type: String
+
+    @Serializable @SerialName("text")
+    data class Text(val text: String) : ContentBlock() { override val type = "text" }
+
+    @Serializable @SerialName("tool_use")
+    data class ToolUse(val id: String, val name: String, val input: JsonObject) : ContentBlock() { override val type = "tool_use" }
+
+    @Serializable @SerialName("tool_result")
+    data class ToolResult(val toolUseId: String, val content: String) : ContentBlock() { override val type = "tool_result" }
+
+    @Serializable @SerialName("image")
+    data class Image(val source: ImageSource) : ContentBlock() { override val type = "image" }
+}
+```
+
+#### OpenAPI security → ktor Auth plugin config
+
+```yaml
+# openapi.yaml
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: x-api-key
+```
+Generates:
+```kotlin
+fun createClient(apiKey: String): HttpClient = HttpClient(CIO) {
+    install(Auth) { bearer { loadTokens { BearerTokens(apiKey, "") } } }
+    defaultRequest { header("x-api-key", apiKey) }
+    install(HttpRequestRetry) { retryOnServerErrors(maxRetries = 2); exponentialDelay() }
+    install(ContentNegotiation) { json(anthropicJson) }
+    install(SSE)
+}
+```
+
+#### Template implementation plan
+
+The custom template is a Mustache template set for openapi-generator:
+
+```
+templates/kotlin-kmp-wire/
+    model.mustache         — @Serializable data class + sealed class (from Fabrikt logic)
+    api.mustache           — suspend fun interface + ktor client impl
+    apiClient.mustache     — HttpClient factory with Auth/Retry/SSE plugins
+    build.gradle.mustache  — KMP build with Wire + ktor + kotlinx.serialization
+    asyncapi.mustache      — Flow<T> streaming from AsyncAPI channels
+```
+
+Run with:
+```bash
+openapi-generator generate \
+    -g kotlin \
+    -t templates/kotlin-kmp-wire/ \
+    -i openapi.yaml \
+    --additional-properties=library=ktor,serializationLibrary=kotlinx_serialization,multiplatform=true
+```
+
 ### 🔲 PLANNED — Additional Non-JVM Targets
 - Native: macOS (x64/arm64), iOS (arm64/sim), Linux (x64/arm64)
 - Wasm: wasmJs, wasmWasi
