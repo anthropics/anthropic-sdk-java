@@ -1062,13 +1062,62 @@ commonMain/kotlin/com/anthropic/
     client/         — ktor HttpClient factory (from securitySchemes)
 ```
 
-**Why parsers + KotlinPoet instead of Mustache templates:**
-- Type-safe code generation (compiler checks the generator itself)
-- Full access to schema metadata (discriminator mappings, required fields, descriptions)
-- Programmatic control over sealed class hierarchy
-- KotlinPoet handles imports, formatting, package structure automatically
-- Can merge OpenAPI + AsyncAPI in the same generator program
-- Easy to test — unit test each generation function
+**The generator is itself KMP Kotlin** — not a JVM-only build tool.
+
+Runs on any target: JVM (Gradle task), Native (CLI), JS (Node script), Wasm.
+Uses the same KMP libs the generated code uses:
+
+| Generator dependency | KMP? | Purpose |
+|---|---|---|
+| **kotlinx.serialization** | ✅ | Parse YAML/JSON specs |
+| **okio** | ✅ | Read/write files |
+| **KotlinPoet** | ✅ (JVM+) | Emit Kotlin source code |
+| **ktor-client** | ✅ | Fetch remote specs (optional) |
+
+The generator eats its own dog food — same libs, same patterns, same targets.
+No JVM-only swagger-parser dependency needed if we parse the YAML ourselves
+with kotlinx.serialization (OpenAPI/AsyncAPI specs are just JSON/YAML).
+
+```kotlin
+// The generator — a KMP Kotlin program
+// Parses OpenAPI YAML with kotlinx.serialization
+// Writes Kotlin source with KotlinPoet
+// Runs as: Gradle task, CLI tool, or CI script
+
+@Serializable
+data class OpenApiSpec(
+    val openapi: String,
+    val paths: Map<String, PathItem>,
+    val components: Components,
+)
+
+@Serializable
+data class AsyncApiSpec(
+    val asyncapi: String,
+    val channels: Map<String, ChannelItem>,
+)
+
+// Parse specs with kotlinx.serialization (KMP-native, no swagger-parser needed)
+val openApi: OpenApiSpec = Yaml.decodeFromString(openApiYaml)
+val asyncApi: AsyncApiSpec = Yaml.decodeFromString(asyncApiYaml)
+
+// Generate code with KotlinPoet
+openApi.components.schemas.forEach { (name, schema) ->
+    val file = when {
+        schema.oneOf != null -> generateSealedClass(name, schema)
+        schema.enum != null -> generateEnum(name, schema)
+        else -> generateDataClass(name, schema)
+    }
+    file.writeTo(outputDir)  // → commonMain/kotlin/
+}
+```
+
+**Why KMP generator matters:**
+- Runs in CI on any platform (Linux, macOS, Windows — native binary)
+- No JVM required for code generation
+- Same kotlinx.serialization that parses the spec also serializes the output models
+- Generator tests run in commonTest — same test infrastructure as the SDK
+- The spec types (`OpenApiSpec`, `AsyncApiSpec`) are themselves `@Serializable` — dogfooding
 
 ### 🔲 PLANNED — Additional Non-JVM Targets
 - Native: macOS (x64/arm64), iOS (arm64/sim), Linux (x64/arm64)
