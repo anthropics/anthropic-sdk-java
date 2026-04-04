@@ -702,17 +702,30 @@ Each method carries `value: String` for wire conversion, `protocol: Protocol`, `
 - KtorHttpClient — delegates to existing suspend `executeKtor()`
 - Services, models, tests — **untouched**
 
-### 🔲 IN PROGRESS — JS Target + Non-JVM Stubs (`62e0363`)
-- JS(IR) target added: `js(IR) { browser(); nodejs() }`
-- jsMain stubs being created for java.*/Jackson/kotlin.jvm (compile-only)
-- Approach: stubs provide type signatures for commonMain compilation on JS
-- Zero commonMain changes — all existing code stays as-is
-- 20,985 JS compilation errors being resolved via stubs
+### 🔲 JS Target — Partially Working (`62e0363`→`421716a`)
+
+**JS(IR) target added**: `js(IR) { browser(); nodejs() }`
+
+**What works (17k of 20k errors resolved):**
+- Jackson JARs as jsMain `implementation()` deps → annotations + databind types resolve
+- jsMain stubs for `java.*` (Optional, CompletableFuture, InputStream, time, etc.)
+- jsMain `actual` impls for expect/actual (Platform, Properties, PhantomReachable, Optional, Async)
+
+**What's blocked (3k errors remain):**
+- `kotlin.jvm` annotations (`@JvmStatic` ×1085, `@JvmSynthetic` ×599, `@JvmName` ×34) — JVM-only, `kotlin.*` package reserved by compiler, can't be stubbed
+- `kotlin.jvm.optionals` extensions (275) — JVM-only stdlib module
+- Minor: `Class`, `System`, `Void`, `javaClass`, `inputStream()` (100)
+
+**Fix required:**
+- Stainless code generator must output `@JvmStatic`/`@JvmSynthetic`/`@JvmName` in **jvmMain only**
+- Or: use `@OptionalExpectation` expect annotations in commonMain (Kotlin 2.x feature)
+- Or: conditional `@file:Suppress("UNRESOLVED_REFERENCE")` per file
 
 ### 🔲 PLANNED — Additional Non-JVM Targets
 - Native: macOS (x64/arm64), iOS (arm64/sim), Linux (x64/arm64)
 - Wasm: wasmJs, wasmWasi
-- Same stub approach for each target
+- Same jsMain stub approach + native actual impls
+- Same `kotlin.jvm` blocker applies to all non-JVM targets
 
 ---
 
