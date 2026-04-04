@@ -45,6 +45,22 @@ kotlin {
                 implementation("com.squareup:kotlinpoet:2.2.0")
             }
         }
+        val jvmTest by getting {
+            kotlin.srcDir("src/test/kotlin")
+            resources.srcDir("src/test/resources")
+            dependencies {
+                implementation("io.ktor:ktor-client-cio:3.4.2")
+                implementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
+                implementation("org.junit.jupiter:junit-jupiter-params:5.9.3")
+                implementation("com.github.tomakehurst:wiremock-jre8:2.35.2")
+            }
+        }
+    }
+
+    jvm {
+        testRuns["test"].executionTask.configure {
+            useJUnitPlatform()
+        }
     }
 }
 

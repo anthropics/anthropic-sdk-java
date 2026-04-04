@@ -149,7 +149,7 @@ object OpenApiParser {
     private fun resolveType(schema: Schema<*>): String {
         schema.`$ref`?.let { return it.substringAfterLast("/") }
         return when (schema.type) {
-            "string" -> if (schema.format == "date-time") "OffsetDateTime" else "String"
+            "string" -> if (schema.format == "date-time") "String" else "String"
             "integer" -> if (schema.format == "int64") "Long" else "Int"
             "number" -> "Double"
             "boolean" -> "Boolean"
