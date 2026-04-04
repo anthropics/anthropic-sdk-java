@@ -21,7 +21,10 @@ import java.util.concurrent.TimeUnit
 import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509TrustManager
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.time.Duration
+import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.ConnectionPool
@@ -83,6 +86,34 @@ internal constructor(
         }
 
         return future
+    }
+
+    override suspend fun executeSuspend(
+        request: HttpRequest,
+        requestOptions: RequestOptions,
+    ): HttpResponse {
+        val preparedRequest = prepareRequest(request)
+        val call = newCall(preparedRequest, requestOptions)
+
+        return suspendCancellableCoroutine { continuation ->
+            continuation.invokeOnCancellation {
+                call.cancel()
+                preparedRequest.body?.close()
+            }
+            call.enqueue(
+                object : Callback {
+                    override fun onResponse(call: Call, response: Response) {
+                        preparedRequest.body?.close()
+                        continuation.resume(backend.prepareResponse(response.toResponse()))
+                    }
+
+                    override fun onFailure(call: Call, e: IOException) {
+                        preparedRequest.body?.close()
+                        continuation.resumeWithException(AnthropicIoException("Request failed", e))
+                    }
+                }
+            )
+        }
     }
 
     override fun close() {

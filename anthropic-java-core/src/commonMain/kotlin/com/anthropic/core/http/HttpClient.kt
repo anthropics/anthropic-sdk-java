@@ -14,11 +14,11 @@ interface HttpClient : AutoCloseable {
         requestOptions: RequestOptions,
     ): java.util.concurrent.CompletableFuture<HttpResponse>
 
-    /** Suspend-native async execution — use from coroutines. */
+    /** Suspend-native async execution. Defaults to blocking execute(). */
     suspend fun executeSuspend(
         request: HttpRequest,
         requestOptions: RequestOptions,
-    ): HttpResponse
+    ): HttpResponse = execute(request, requestOptions)
 
     override fun close()
 }
