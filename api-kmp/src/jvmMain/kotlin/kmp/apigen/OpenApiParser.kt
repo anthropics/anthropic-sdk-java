@@ -60,6 +60,7 @@ data class ParsedPath(
     val streaming: Boolean,
     val description: String?,
     val tags: List<String>,
+    val customSql: String? = null,
 )
 
 data class ParsedSecurity(
@@ -181,6 +182,7 @@ object OpenApiParser {
                     streaming = streaming,
                     description = op.description ?: op.summary,
                     tags = op.tags ?: emptyList(),
+                    customSql = op.extensions?.get("x-sql") as? String,
                 )
             }
         }.toMap()

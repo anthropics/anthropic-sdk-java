@@ -127,6 +127,15 @@ class DatabaseEmitter : ProtocolEmitter {
                 appendLine()
                 appendLine("count:")
                 appendLine("SELECT COUNT(*) FROM $tableName;")
+
+                // Custom SQL from x-sql extensions in paths
+                spec.paths.values
+                    .filter { it.customSql != null }
+                    .forEach { path ->
+                        appendLine()
+                        appendLine("${path.operationId}:")
+                        appendLine("${path.customSql};")
+                    }
             }
             File(sqDir, "$tableName.sq").writeText(sql)
         }
