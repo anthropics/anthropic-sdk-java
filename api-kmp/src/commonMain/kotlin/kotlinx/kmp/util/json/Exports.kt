@@ -1,9 +1,24 @@
 /**
  * kotlinx.kmp.util.json — Wire-style field/value containers.
- * Typealiases to com.anthropic.core for gradual package migration.
+ *
+ * Kmp* names are the canonical KMP types (format-agnostic, not JSON-specific).
+ * Json* typealiases provided for backward compat.
  */
 package kotlinx.kmp.util.json
 
+// Canonical Kmp* names — format-agnostic (JSON, MsgPack, Protobuf, CBOR)
+typealias KmpField<T> = com.anthropic.core.JsonField<T>
+typealias KmpValue = com.anthropic.core.JsonValue
+typealias KmpKnownValue<T> = com.anthropic.core.KnownValue<T>
+typealias KmpMissing = com.anthropic.core.JsonMissing
+typealias KmpNull = com.anthropic.core.JsonNull
+typealias KmpBoolean = com.anthropic.core.JsonBoolean
+typealias KmpNumber = com.anthropic.core.JsonNumber
+typealias KmpString = com.anthropic.core.JsonString
+typealias KmpArray = com.anthropic.core.JsonArray
+typealias KmpObject = com.anthropic.core.JsonObject
+
+// Backward compat Json* names
 typealias JsonField<T> = com.anthropic.core.JsonField<T>
 typealias JsonValue = com.anthropic.core.JsonValue
 typealias KnownValue<T> = com.anthropic.core.KnownValue<T>
