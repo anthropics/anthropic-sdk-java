@@ -17,7 +17,7 @@ import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.json
 import com.anthropic.core.http.multipartFormData
 import com.anthropic.core.http.parseable
-import com.anthropic.core.prepareAsync
+import com.anthropic.core.prepareSuspend
 import com.anthropic.models.beta.skills.SkillCreateParams
 import com.anthropic.models.beta.skills.SkillCreateResponse
 import com.anthropic.models.beta.skills.SkillDeleteParams
@@ -29,7 +29,6 @@ import com.anthropic.models.beta.skills.SkillRetrieveParams
 import com.anthropic.models.beta.skills.SkillRetrieveResponse
 import com.anthropic.services.async.beta.skills.VersionServiceAsync
 import com.anthropic.services.async.beta.skills.VersionServiceAsyncImpl
-import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -55,33 +54,33 @@ class SkillServiceAsyncImpl internal constructor(private val clientOptions: Clie
 
     override fun versions(): VersionServiceAsync = versions
 
-    override fun create(
+    override suspend fun create(
         params: SkillCreateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<SkillCreateResponse> =
+    ): SkillCreateResponse =
         // post /v1/skills?beta=true
-        withRawResponse().create(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().create(params, requestOptions).parse()
 
-    override fun retrieve(
+    override suspend fun retrieve(
         params: SkillRetrieveParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<SkillRetrieveResponse> =
+    ): SkillRetrieveResponse =
         // get /v1/skills/{skill_id}?beta=true
-        withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().retrieve(params, requestOptions).parse()
 
-    override fun list(
+    override suspend fun list(
         params: SkillListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<SkillListPageAsync> =
+    ): SkillListPageAsync =
         // get /v1/skills?beta=true
-        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().list(params, requestOptions).parse()
 
-    override fun delete(
+    override suspend fun delete(
         params: SkillDeleteParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<SkillDeleteResponse> =
+    ): SkillDeleteResponse =
         // delete /v1/skills/{skill_id}?beta=true
-        withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().delete(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         SkillServiceAsync.WithRawResponse {
@@ -105,10 +104,10 @@ class SkillServiceAsyncImpl internal constructor(private val clientOptions: Clie
         private val createHandler: Handler<SkillCreateResponse> =
             jsonHandler<SkillCreateResponse>(clientOptions.jsonMapper)
 
-        override fun create(
+        override suspend fun create(
             params: SkillCreateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<SkillCreateResponse>> {
+        ): HttpResponseFor<SkillCreateResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -118,12 +117,10 @@ class SkillServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(multipartFormData(clientOptions.jsonMapper, params._body()))
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { createHandler.handle(it) }
                             .also {
@@ -132,16 +129,15 @@ class SkillServiceAsyncImpl internal constructor(private val clientOptions: Clie
                                 }
                             }
                     }
-                }
         }
 
         private val retrieveHandler: Handler<SkillRetrieveResponse> =
             jsonHandler<SkillRetrieveResponse>(clientOptions.jsonMapper)
 
-        override fun retrieve(
+        override suspend fun retrieve(
             params: SkillRetrieveParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<SkillRetrieveResponse>> {
+        ): HttpResponseFor<SkillRetrieveResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("skillId", params.skillId().getOrNull())
@@ -153,12 +149,10 @@ class SkillServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { retrieveHandler.handle(it) }
                             .also {
@@ -167,16 +161,15 @@ class SkillServiceAsyncImpl internal constructor(private val clientOptions: Clie
                                 }
                             }
                     }
-                }
         }
 
         private val listHandler: Handler<SkillListPageResponse> =
             jsonHandler<SkillListPageResponse>(clientOptions.jsonMapper)
 
-        override fun list(
+        override suspend fun list(
             params: SkillListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<SkillListPageAsync>> {
+        ): HttpResponseFor<SkillListPageAsync> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -185,12 +178,10 @@ class SkillServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { listHandler.handle(it) }
                             .also {
@@ -207,16 +198,15 @@ class SkillServiceAsyncImpl internal constructor(private val clientOptions: Clie
                                     .build()
                             }
                     }
-                }
         }
 
         private val deleteHandler: Handler<SkillDeleteResponse> =
             jsonHandler<SkillDeleteResponse>(clientOptions.jsonMapper)
 
-        override fun delete(
+        override suspend fun delete(
             params: SkillDeleteParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<SkillDeleteResponse>> {
+        ): HttpResponseFor<SkillDeleteResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("skillId", params.skillId().getOrNull())
@@ -229,12 +219,10 @@ class SkillServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { deleteHandler.handle(it) }
                             .also {
@@ -243,7 +231,6 @@ class SkillServiceAsyncImpl internal constructor(private val clientOptions: Clie
                                 }
                             }
                     }
-                }
         }
     }
 }

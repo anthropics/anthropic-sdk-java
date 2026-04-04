@@ -10,7 +10,6 @@ import com.anthropic.core.http.StreamResponse
 import com.anthropic.models.completions.Completion
 import com.anthropic.models.completions.CompletionCreateParams
 import com.google.errorprone.annotations.MustBeClosed
-import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
 interface CompletionServiceAsync {
@@ -37,14 +36,14 @@ interface CompletionServiceAsync {
      * [migration guide](https://docs.claude.com/en/api/migrating-from-text-completions-to-messages)
      * for guidance in migrating from Text Completions to Messages.
      */
-    fun create(params: CompletionCreateParams): CompletableFuture<Completion> =
+    suspend fun create(params: CompletionCreateParams): Completion =
         create(params, RequestOptions.none())
 
     /** @see create */
-    fun create(
+    suspend fun create(
         params: CompletionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Completion>
+    ): Completion
 
     /**
      * [Legacy] Create a Text Completion.
@@ -56,11 +55,11 @@ interface CompletionServiceAsync {
      * [migration guide](https://docs.claude.com/en/api/migrating-from-text-completions-to-messages)
      * for guidance in migrating from Text Completions to Messages.
      */
-    fun createStreaming(params: CompletionCreateParams): AsyncStreamResponse<Completion> =
+    suspend fun createStreaming(params: CompletionCreateParams): AsyncStreamResponse<Completion> =
         createStreaming(params, RequestOptions.none())
 
     /** @see createStreaming */
-    fun createStreaming(
+    suspend fun createStreaming(
         params: CompletionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AsyncStreamResponse<Completion>
@@ -84,30 +83,30 @@ interface CompletionServiceAsync {
          * Returns a raw HTTP response for `post /v1/complete`, but is otherwise the same as
          * [CompletionServiceAsync.create].
          */
-        fun create(params: CompletionCreateParams): CompletableFuture<HttpResponseFor<Completion>> =
+        suspend fun create(params: CompletionCreateParams): HttpResponseFor<Completion> =
             create(params, RequestOptions.none())
 
         /** @see create */
-        fun create(
+        suspend fun create(
             params: CompletionCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Completion>>
+        ): HttpResponseFor<Completion>
 
         /**
          * Returns a raw HTTP response for `post /v1/complete`, but is otherwise the same as
          * [CompletionServiceAsync.createStreaming].
          */
         @MustBeClosed
-        fun createStreaming(
+        suspend fun createStreaming(
             params: CompletionCreateParams
-        ): CompletableFuture<HttpResponseFor<StreamResponse<Completion>>> =
+        ): HttpResponseFor<StreamResponse<Completion>> =
             createStreaming(params, RequestOptions.none())
 
         /** @see createStreaming */
         @MustBeClosed
-        fun createStreaming(
+        suspend fun createStreaming(
             params: CompletionCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<StreamResponse<Completion>>>
+        ): HttpResponseFor<StreamResponse<Completion>>
     }
 }

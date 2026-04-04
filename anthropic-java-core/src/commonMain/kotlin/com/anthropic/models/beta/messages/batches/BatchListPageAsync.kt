@@ -9,7 +9,6 @@ import com.anthropic.core.checkRequired
 import com.anthropic.services.async.beta.messages.BatchServiceAsync
 import com.anthropic.core.contentHash
 import java.util.Optional
-import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrNull
 
@@ -61,7 +60,7 @@ private constructor(
         return params.toBuilder().afterId(nextCursor).build()
     }
 
-    override fun nextPage(): CompletableFuture<BatchListPageAsync> = service.list(nextPageParams())
+    override suspend fun nextPage(): BatchListPageAsync = service.list(nextPageParams())
 
     fun autoPager(): AutoPagerAsync<BetaMessageBatch> =
         AutoPagerAsync.from(this, streamHandlerExecutor)

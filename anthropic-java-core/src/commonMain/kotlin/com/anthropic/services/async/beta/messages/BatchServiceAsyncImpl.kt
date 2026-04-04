@@ -21,7 +21,7 @@ import com.anthropic.core.http.json
 import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
 import com.anthropic.core.http.toAsync
-import com.anthropic.core.prepareAsync
+import com.anthropic.core.prepareSuspend
 import com.anthropic.models.beta.messages.batches.BatchCancelParams
 import com.anthropic.models.beta.messages.batches.BatchCreateParams
 import com.anthropic.models.beta.messages.batches.BatchDeleteParams
@@ -33,7 +33,6 @@ import com.anthropic.models.beta.messages.batches.BatchRetrieveParams
 import com.anthropic.models.beta.messages.batches.BetaDeletedMessageBatch
 import com.anthropic.models.beta.messages.batches.BetaMessageBatch
 import com.anthropic.models.beta.messages.batches.BetaMessageBatchIndividualResponse
-import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -55,49 +54,47 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BatchServiceAsync =
         BatchServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun create(
+    override suspend fun create(
         params: BatchCreateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<BetaMessageBatch> =
+    ): BetaMessageBatch =
         // post /v1/messages/batches?beta=true
-        withRawResponse().create(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().create(params, requestOptions).parse()
 
-    override fun retrieve(
+    override suspend fun retrieve(
         params: BatchRetrieveParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<BetaMessageBatch> =
+    ): BetaMessageBatch =
         // get /v1/messages/batches/{message_batch_id}?beta=true
-        withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().retrieve(params, requestOptions).parse()
 
-    override fun list(
+    override suspend fun list(
         params: BatchListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<BatchListPageAsync> =
+    ): BatchListPageAsync =
         // get /v1/messages/batches?beta=true
-        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().list(params, requestOptions).parse()
 
-    override fun delete(
+    override suspend fun delete(
         params: BatchDeleteParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<BetaDeletedMessageBatch> =
+    ): BetaDeletedMessageBatch =
         // delete /v1/messages/batches/{message_batch_id}?beta=true
-        withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().delete(params, requestOptions).parse()
 
-    override fun cancel(
+    override suspend fun cancel(
         params: BatchCancelParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<BetaMessageBatch> =
+    ): BetaMessageBatch =
         // post /v1/messages/batches/{message_batch_id}/cancel?beta=true
-        withRawResponse().cancel(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().cancel(params, requestOptions).parse()
 
-    override fun resultsStreaming(
+    override suspend fun resultsStreaming(
         params: BatchResultsParams,
         requestOptions: RequestOptions,
     ): AsyncStreamResponse<BetaMessageBatchIndividualResponse> =
         // get /v1/messages/batches/{message_batch_id}/results?beta=true
-        withRawResponse()
-            .resultsStreaming(params, requestOptions)
-            .thenApply { it.parse() }
+        withRawResponse().resultsStreaming(params, requestOptions).parse()
             .toAsync(clientOptions.streamHandlerExecutor)
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -116,10 +113,10 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
         private val createHandler: Handler<BetaMessageBatch> =
             jsonHandler<BetaMessageBatch>(clientOptions.jsonMapper)
 
-        override fun create(
+        override suspend fun create(
             params: BatchCreateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<BetaMessageBatch>> {
+        ): HttpResponseFor<BetaMessageBatch> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -129,12 +126,10 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { createHandler.handle(it) }
                             .also {
@@ -143,16 +138,15 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                                 }
                             }
                     }
-                }
         }
 
         private val retrieveHandler: Handler<BetaMessageBatch> =
             jsonHandler<BetaMessageBatch>(clientOptions.jsonMapper)
 
-        override fun retrieve(
+        override suspend fun retrieve(
             params: BatchRetrieveParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<BetaMessageBatch>> {
+        ): HttpResponseFor<BetaMessageBatch> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("messageBatchId", params.messageBatchId().getOrNull())
@@ -164,12 +158,10 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { retrieveHandler.handle(it) }
                             .also {
@@ -178,16 +170,15 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                                 }
                             }
                     }
-                }
         }
 
         private val listHandler: Handler<BatchListPageResponse> =
             jsonHandler<BatchListPageResponse>(clientOptions.jsonMapper)
 
-        override fun list(
+        override suspend fun list(
             params: BatchListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<BatchListPageAsync>> {
+        ): HttpResponseFor<BatchListPageAsync> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -196,12 +187,10 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { listHandler.handle(it) }
                             .also {
@@ -218,16 +207,15 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                                     .build()
                             }
                     }
-                }
         }
 
         private val deleteHandler: Handler<BetaDeletedMessageBatch> =
             jsonHandler<BetaDeletedMessageBatch>(clientOptions.jsonMapper)
 
-        override fun delete(
+        override suspend fun delete(
             params: BatchDeleteParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<BetaDeletedMessageBatch>> {
+        ): HttpResponseFor<BetaDeletedMessageBatch> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("messageBatchId", params.messageBatchId().getOrNull())
@@ -240,12 +228,10 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { deleteHandler.handle(it) }
                             .also {
@@ -254,16 +240,15 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                                 }
                             }
                     }
-                }
         }
 
         private val cancelHandler: Handler<BetaMessageBatch> =
             jsonHandler<BetaMessageBatch>(clientOptions.jsonMapper)
 
-        override fun cancel(
+        override suspend fun cancel(
             params: BatchCancelParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<BetaMessageBatch>> {
+        ): HttpResponseFor<BetaMessageBatch> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("messageBatchId", params.messageBatchId().getOrNull())
@@ -276,12 +261,10 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { cancelHandler.handle(it) }
                             .also {
@@ -290,17 +273,16 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                                 }
                             }
                     }
-                }
         }
 
         private val resultsStreamingHandler:
             Handler<StreamResponse<BetaMessageBatchIndividualResponse>> =
             jsonlHandler<BetaMessageBatchIndividualResponse>(clientOptions.jsonMapper)
 
-        override fun resultsStreaming(
+        override suspend fun resultsStreaming(
             params: BatchResultsParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<StreamResponse<BetaMessageBatchIndividualResponse>>> {
+        ): HttpResponseFor<StreamResponse<BetaMessageBatchIndividualResponse>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("messageBatchId", params.messageBatchId().getOrNull())
@@ -313,12 +295,10 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .putAllHeaders(DEFAULT_HEADERS)
                     .putHeader("Accept", "application/x-jsonl")
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .let { resultsStreamingHandler.handle(it) }
                             .let { streamResponse ->
@@ -329,7 +309,6 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                                 }
                             }
                     }
-                }
         }
     }
 }

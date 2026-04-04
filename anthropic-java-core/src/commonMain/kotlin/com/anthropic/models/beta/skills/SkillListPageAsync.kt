@@ -9,7 +9,6 @@ import com.anthropic.core.checkRequired
 import com.anthropic.services.async.beta.SkillServiceAsync
 import com.anthropic.core.contentHash
 import java.util.Optional
-import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrNull
 
@@ -55,7 +54,7 @@ private constructor(
         return params.toBuilder().page(nextCursor).build()
     }
 
-    override fun nextPage(): CompletableFuture<SkillListPageAsync> = service.list(nextPageParams())
+    override suspend fun nextPage(): SkillListPageAsync = service.list(nextPageParams())
 
     fun autoPager(): AutoPagerAsync<SkillListResponse> =
         AutoPagerAsync.from(this, streamHandlerExecutor)

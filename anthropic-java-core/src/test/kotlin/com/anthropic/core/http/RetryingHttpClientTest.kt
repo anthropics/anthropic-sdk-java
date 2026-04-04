@@ -83,6 +83,11 @@ internal class RetryingHttpClientTest {
                 ): CompletableFuture<HttpResponse> =
                     okHttpClient.executeAsync(request, requestOptions).thenApply { trackClose(it) }
 
+                override suspend fun executeSuspend(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): HttpResponse = trackClose(okHttpClient.executeSuspend(request, requestOptions))
+
                 override fun close() = okHttpClient.close()
 
                 private fun trackClose(response: HttpResponse): HttpResponse {
@@ -328,6 +333,17 @@ internal class RetryingHttpClientTest {
                         return future
                     }
                     return httpClient.executeAsync(request, requestOptions)
+                }
+
+                override suspend fun executeSuspend(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): HttpResponse {
+                    callCount++
+                    if (callCount == 1) {
+                        throw AnthropicRetryableException("Simulated retryable failure")
+                    }
+                    return httpClient.executeSuspend(request, requestOptions)
                 }
 
                 override fun close() = httpClient.close()

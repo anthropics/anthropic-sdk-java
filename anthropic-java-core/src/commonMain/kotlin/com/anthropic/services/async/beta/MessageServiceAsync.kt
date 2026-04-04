@@ -16,7 +16,6 @@ import com.anthropic.models.beta.messages.StructuredMessage
 import com.anthropic.models.beta.messages.StructuredMessageCreateParams
 import com.anthropic.services.async.beta.messages.BatchServiceAsync
 import com.google.errorprone.annotations.MustBeClosed
-import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
 interface MessageServiceAsync {
@@ -44,14 +43,14 @@ interface MessageServiceAsync {
      * Learn more about the Messages API in our
      * [user guide](https://docs.claude.com/en/docs/initial-setup)
      */
-    fun create(params: MessageCreateParams): CompletableFuture<BetaMessage> =
+    suspend fun create(params: MessageCreateParams): BetaMessage =
         create(params, RequestOptions.none())
 
     /** @see create */
-    fun create(
+    suspend fun create(
         params: MessageCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BetaMessage>
+    ): BetaMessage
 
     /**
      * Creates a model response for the given message. The model's structured output in JSON form
@@ -60,9 +59,9 @@ interface MessageServiceAsync {
      *
      * @see create
      */
-    fun <T : Any> create(
+    suspend fun <T : Any> create(
         params: StructuredMessageCreateParams<T>
-    ): CompletableFuture<StructuredMessage<T>> = create(params, RequestOptions.none())
+    ): StructuredMessage<T> = create(params, RequestOptions.none())
 
     /**
      * Creates a model response for the given message. The model's structured output in JSON form
@@ -71,13 +70,11 @@ interface MessageServiceAsync {
      *
      * @see create
      */
-    fun <T : Any> create(
+    suspend fun <T : Any> create(
         params: StructuredMessageCreateParams<T>,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<StructuredMessage<T>> =
-        create(params.rawParams, requestOptions).thenApply {
-            StructuredMessage(params.outputType, it)
-        }
+    ): StructuredMessage<T> =
+        StructuredMessage(params.outputType, create(params.rawParams, requestOptions))
 
     /**
      * Send a structured list of input messages with text and/or image content, and the model will
@@ -88,13 +85,13 @@ interface MessageServiceAsync {
      * Learn more about the Messages API in our
      * [user guide](https://docs.claude.com/en/docs/initial-setup)
      */
-    fun createStreaming(
+    suspend fun createStreaming(
         params: MessageCreateParams
     ): AsyncStreamResponse<BetaRawMessageStreamEvent> =
         createStreaming(params, RequestOptions.none())
 
     /** @see createStreaming */
-    fun createStreaming(
+    suspend fun createStreaming(
         params: MessageCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AsyncStreamResponse<BetaRawMessageStreamEvent>
@@ -109,13 +106,13 @@ interface MessageServiceAsync {
      * [SDK documentation](https://github.com/anthropics/anthropic-sdk-java/#usage-with-streaming)
      * for full details.
      */
-    fun createStreaming(
+    suspend fun createStreaming(
         params: StructuredMessageCreateParams<*>
     ): AsyncStreamResponse<BetaRawMessageStreamEvent> =
         createStreaming(params, RequestOptions.none())
 
     /** @see [createStreaming] */
-    fun createStreaming(
+    suspend fun createStreaming(
         params: StructuredMessageCreateParams<*>,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AsyncStreamResponse<BetaRawMessageStreamEvent> =
@@ -130,14 +127,14 @@ interface MessageServiceAsync {
      * Learn more about token counting in our
      * [user guide](https://docs.claude.com/en/docs/build-with-claude/token-counting)
      */
-    fun countTokens(params: MessageCountTokensParams): CompletableFuture<BetaMessageTokensCount> =
+    suspend fun countTokens(params: MessageCountTokensParams): BetaMessageTokensCount =
         countTokens(params, RequestOptions.none())
 
     /** @see countTokens */
-    fun countTokens(
+    suspend fun countTokens(
         params: MessageCountTokensParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BetaMessageTokensCount>
+    ): BetaMessageTokensCount
 
     /**
      * A view of [MessageServiceAsync] that provides access to raw HTTP responses for each method.
@@ -159,45 +156,45 @@ interface MessageServiceAsync {
          * Returns a raw HTTP response for `post /v1/messages?beta=true`, but is otherwise the same
          * as [MessageServiceAsync.create].
          */
-        fun create(params: MessageCreateParams): CompletableFuture<HttpResponseFor<BetaMessage>> =
+        suspend fun create(params: MessageCreateParams): HttpResponseFor<BetaMessage> =
             create(params, RequestOptions.none())
 
         /** @see create */
-        fun create(
+        suspend fun create(
             params: MessageCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BetaMessage>>
+        ): HttpResponseFor<BetaMessage>
 
         /**
          * Returns a raw HTTP response for `post /v1/messages?beta=true`, but is otherwise the same
          * as [MessageServiceAsync.createStreaming].
          */
         @MustBeClosed
-        fun createStreaming(
+        suspend fun createStreaming(
             params: MessageCreateParams
-        ): CompletableFuture<HttpResponseFor<StreamResponse<BetaRawMessageStreamEvent>>> =
+        ): HttpResponseFor<StreamResponse<BetaRawMessageStreamEvent>> =
             createStreaming(params, RequestOptions.none())
 
         /** @see createStreaming */
         @MustBeClosed
-        fun createStreaming(
+        suspend fun createStreaming(
             params: MessageCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<StreamResponse<BetaRawMessageStreamEvent>>>
+        ): HttpResponseFor<StreamResponse<BetaRawMessageStreamEvent>>
 
         /**
          * Returns a raw HTTP response for `post /v1/messages/count_tokens?beta=true`, but is
          * otherwise the same as [MessageServiceAsync.countTokens].
          */
-        fun countTokens(
+        suspend fun countTokens(
             params: MessageCountTokensParams
-        ): CompletableFuture<HttpResponseFor<BetaMessageTokensCount>> =
+        ): HttpResponseFor<BetaMessageTokensCount> =
             countTokens(params, RequestOptions.none())
 
         /** @see countTokens */
-        fun countTokens(
+        suspend fun countTokens(
             params: MessageCountTokensParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BetaMessageTokensCount>>
+        ): HttpResponseFor<BetaMessageTokensCount>
     }
 }

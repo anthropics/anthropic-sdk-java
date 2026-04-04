@@ -8,43 +8,46 @@ import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.models.ModelRetrieveParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import kotlinx.coroutines.runBlocking
 
 @ExtendWith(TestServerExtension::class)
 internal class ModelServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val modelServiceAsync = client.models()
-
-        val modelInfoFuture =
-            modelServiceAsync.retrieve(
-                ModelRetrieveParams.builder()
-                    .modelId("model_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
                     .build()
-            )
+            val modelServiceAsync = client.models()
 
-        val modelInfo = modelInfoFuture.get()
-        modelInfo.validate()
+            val modelInfo =
+                modelServiceAsync.retrieve(
+                    ModelRetrieveParams.builder()
+                        .modelId("model_id")
+                        .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                        .build()
+                )
+
+            modelInfo.validate()
+        }
     }
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val modelServiceAsync = client.models()
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
+                    .build()
+            val modelServiceAsync = client.models()
 
-        val pageFuture = modelServiceAsync.list()
+            val page = modelServiceAsync.list()
 
-        val page = pageFuture.get()
-        page.response().validate()
+            page.response().validate()
+        }
     }
 }

@@ -21,10 +21,9 @@ import com.anthropic.core.http.json
 import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
 import com.anthropic.core.http.toAsync
-import com.anthropic.core.prepareAsync
+import com.anthropic.core.prepareSuspend
 import com.anthropic.models.completions.Completion
 import com.anthropic.models.completions.CompletionCreateParams
-import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
 class CompletionServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -39,21 +38,19 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CompletionServiceAsync =
         CompletionServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun create(
+    override suspend fun create(
         params: CompletionCreateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<Completion> =
+    ): Completion =
         // post /v1/complete
-        withRawResponse().create(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().create(params, requestOptions).parse()
 
-    override fun createStreaming(
+    override suspend fun createStreaming(
         params: CompletionCreateParams,
         requestOptions: RequestOptions,
     ): AsyncStreamResponse<Completion> =
         // post /v1/complete
-        withRawResponse()
-            .createStreaming(params, requestOptions)
-            .thenApply { it.parse() }
+        withRawResponse().createStreaming(params, requestOptions).parse()
             .toAsync(clientOptions.streamHandlerExecutor)
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -72,10 +69,10 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
         private val createHandler: Handler<Completion> =
             jsonHandler<Completion>(clientOptions.jsonMapper)
 
-        override fun create(
+        override suspend fun create(
             params: CompletionCreateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<Completion>> {
+        ): HttpResponseFor<Completion> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -83,7 +80,7 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
                     .addPathSegments("v1", "complete")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions =
                 requestOptions
                     .applyDefaults(RequestOptions.from(clientOptions))
@@ -92,10 +89,8 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
                         isStreaming = false,
                         model = params.model().toString(),
                     )
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { createHandler.handle(it) }
                             .also {
@@ -104,16 +99,15 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
                                 }
                             }
                     }
-                }
         }
 
         private val createStreamingHandler: Handler<StreamResponse<Completion>> =
             sseHandler(clientOptions.jsonMapper).mapJson<Completion>()
 
-        override fun createStreaming(
+        override suspend fun createStreaming(
             params: CompletionCreateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<StreamResponse<Completion>>> {
+        ): HttpResponseFor<StreamResponse<Completion>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -131,7 +125,7 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
                         )
                     )
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions =
                 requestOptions
                     .applyDefaults(RequestOptions.from(clientOptions))
@@ -140,10 +134,8 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
                         isStreaming = true,
                         model = params.model().toString(),
                     )
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .let { createStreamingHandler.handle(it) }
                             .let { streamResponse ->
@@ -154,7 +146,6 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
                                 }
                             }
                     }
-                }
         }
     }
 }

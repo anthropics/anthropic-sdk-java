@@ -19,6 +19,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.parallel.ResourceLock
+import kotlinx.coroutines.runBlocking
 
 @ExtendWith(TestServerExtension::class)
 @WireMockTest
@@ -27,101 +28,106 @@ internal class FileServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val fileServiceAsync = client.beta().files()
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
+                    .build()
+            val fileServiceAsync = client.beta().files()
 
-        val pageFuture = fileServiceAsync.list()
+            val page = fileServiceAsync.list()
 
-        val page = pageFuture.get()
-        page.response().validate()
+            page.response().validate()
+        }
     }
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val fileServiceAsync = client.beta().files()
-
-        val deletedFileFuture =
-            fileServiceAsync.delete(
-                FileDeleteParams.builder()
-                    .fileId("file_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
                     .build()
-            )
+            val fileServiceAsync = client.beta().files()
 
-        val deletedFile = deletedFileFuture.get()
-        deletedFile.validate()
+            val deletedFile =
+                fileServiceAsync.delete(
+                    FileDeleteParams.builder()
+                        .fileId("file_id")
+                        .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                        .build()
+                )
+
+            deletedFile.validate()
+        }
     }
 
     @Test
     fun download(wmRuntimeInfo: WireMockRuntimeInfo) {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(wmRuntimeInfo.httpBaseUrl)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val fileServiceAsync = client.beta().files()
-        stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
-
-        val responseFuture =
-            fileServiceAsync.download(
-                FileDownloadParams.builder()
-                    .fileId("file_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(wmRuntimeInfo.httpBaseUrl)
+                    .apiKey("my-anthropic-api-key")
                     .build()
-            )
+            val fileServiceAsync = client.beta().files()
+            stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
 
-        val response = responseFuture.get()
-        assertThat(response.body().readUtf8()).isEqualTo("abc")
+            val response =
+                fileServiceAsync.download(
+                    FileDownloadParams.builder()
+                        .fileId("file_id")
+                        .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                        .build()
+                )
+
+            assertThat(response.body().readUtf8()).isEqualTo("abc")
+        }
     }
 
     @Test
     fun retrieveMetadata() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val fileServiceAsync = client.beta().files()
-
-        val fileMetadataFuture =
-            fileServiceAsync.retrieveMetadata(
-                FileRetrieveMetadataParams.builder()
-                    .fileId("file_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
                     .build()
-            )
+            val fileServiceAsync = client.beta().files()
 
-        val fileMetadata = fileMetadataFuture.get()
-        fileMetadata.validate()
+            val fileMetadata =
+                fileServiceAsync.retrieveMetadata(
+                    FileRetrieveMetadataParams.builder()
+                        .fileId("file_id")
+                        .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                        .build()
+                )
+
+            fileMetadata.validate()
+        }
     }
 
     @Test
     fun upload() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val fileServiceAsync = client.beta().files()
-
-        val fileMetadataFuture =
-            fileServiceAsync.upload(
-                FileUploadParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                    .file("Example data".byteInputStream())
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
                     .build()
-            )
+            val fileServiceAsync = client.beta().files()
 
-        val fileMetadata = fileMetadataFuture.get()
-        fileMetadata.validate()
+            val fileMetadata =
+                fileServiceAsync.upload(
+                    FileUploadParams.builder()
+                        .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                        .file("Example data".byteInputStream())
+                        .build()
+                )
+
+            fileMetadata.validate()
+        }
     }
 }

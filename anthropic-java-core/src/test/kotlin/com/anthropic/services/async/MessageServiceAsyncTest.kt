@@ -19,336 +19,341 @@ import com.anthropic.models.messages.Tool
 import com.anthropic.models.messages.ToolChoiceAuto
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import kotlinx.coroutines.runBlocking
 
 @ExtendWith(TestServerExtension::class)
 internal class MessageServiceAsyncTest {
 
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val messageServiceAsync = client.messages()
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
+                    .build()
+            val messageServiceAsync = client.messages()
 
-        val messageFuture =
-            messageServiceAsync.create(
-                MessageCreateParams.builder()
-                    .maxTokens(1024L)
-                    .addUserMessage("Hello, world")
-                    .model(Model.CLAUDE_OPUS_4_6)
-                    .cacheControl(
-                        CacheControlEphemeral.builder()
-                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
-                            .build()
-                    )
-                    .container("container")
-                    .inferenceGeo("inference_geo")
-                    .metadata(
-                        Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
-                    )
-                    .outputConfig(
-                        OutputConfig.builder()
-                            .effort(OutputConfig.Effort.LOW)
-                            .format(
-                                JsonOutputFormat.builder()
-                                    .schema(
-                                        JsonOutputFormat.Schema.builder()
-                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+            val message =
+                messageServiceAsync.create(
+                    MessageCreateParams.builder()
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_4_6)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container("container")
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.builder()
+                                        .schema(
+                                            JsonOutputFormat.Schema.builder()
+                                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                                .build()
+                                        )
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("cited_text")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
                                             .build()
                                     )
                                     .build()
                             )
-                            .build()
-                    )
-                    .serviceTier(MessageCreateParams.ServiceTier.AUTO)
-                    .addStopSequence("string")
-                    .systemOfTextBlockParams(
-                        listOf(
-                            TextBlockParam.builder()
-                                .text("Today's date is 2024-06-01.")
+                        )
+                        .temperature(1.0)
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty("unit", JsonValue.from("bar"))
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
                                 .cacheControl(
                                     CacheControlEphemeral.builder()
                                         .ttl(CacheControlEphemeral.Ttl.TTL_5M)
                                         .build()
                                 )
-                                .addCitation(
-                                    CitationCharLocationParam.builder()
-                                        .citedText("cited_text")
-                                        .documentIndex(0L)
-                                        .documentTitle("x")
-                                        .endCharIndex(0L)
-                                        .startCharIndex(0L)
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
                                         .build()
                                 )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                    )
-                    .temperature(1.0)
-                    .thinking(
-                        ThinkingConfigAdaptive.builder()
-                            .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
-                            .build()
-                    )
-                    .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
-                    .addTool(
-                        Tool.builder()
-                            .inputSchema(
-                                Tool.InputSchema.builder()
-                                    .properties(
-                                        Tool.InputSchema.Properties.builder()
-                                            .putAdditionalProperty(
-                                                "location",
-                                                JsonValue.from("bar"),
-                                            )
-                                            .putAdditionalProperty("unit", JsonValue.from("bar"))
-                                            .build()
-                                    )
-                                    .addRequired("location")
-                                    .build()
-                            )
-                            .name("name")
-                            .addAllowedCaller(Tool.AllowedCaller.DIRECT)
-                            .cacheControl(
-                                CacheControlEphemeral.builder()
-                                    .ttl(CacheControlEphemeral.Ttl.TTL_5M)
-                                    .build()
-                            )
-                            .deferLoading(true)
-                            .description("Get the current weather in a given location")
-                            .eagerInputStreaming(true)
-                            .addInputExample(
-                                Tool.InputExample.builder()
-                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                    .build()
-                            )
-                            .strict(true)
-                            .type(Tool.Type.CUSTOM)
-                            .build()
-                    )
-                    .topK(5L)
-                    .topP(0.7)
-                    .build()
-            )
+                        .topK(5L)
+                        .topP(0.7)
+                        .build()
+                )
 
-        val message = messageFuture.get()
-        message.validate()
+            message.validate()
+        }
     }
 
     @Test
     fun createStreaming() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val messageServiceAsync = client.messages()
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
+                    .build()
+            val messageServiceAsync = client.messages()
 
-        val messageStreamResponse =
-            messageServiceAsync.createStreaming(
-                MessageCreateParams.builder()
-                    .maxTokens(1024L)
-                    .addUserMessage("Hello, world")
-                    .model(Model.CLAUDE_OPUS_4_6)
-                    .cacheControl(
-                        CacheControlEphemeral.builder()
-                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
-                            .build()
-                    )
-                    .container("container")
-                    .inferenceGeo("inference_geo")
-                    .metadata(
-                        Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
-                    )
-                    .outputConfig(
-                        OutputConfig.builder()
-                            .effort(OutputConfig.Effort.LOW)
-                            .format(
-                                JsonOutputFormat.builder()
-                                    .schema(
-                                        JsonOutputFormat.Schema.builder()
-                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+            val messageStreamResponse =
+                messageServiceAsync.createStreaming(
+                    MessageCreateParams.builder()
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_4_6)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container("container")
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.builder()
+                                        .schema(
+                                            JsonOutputFormat.Schema.builder()
+                                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                                .build()
+                                        )
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("cited_text")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
                                             .build()
                                     )
                                     .build()
                             )
-                            .build()
-                    )
-                    .serviceTier(MessageCreateParams.ServiceTier.AUTO)
-                    .addStopSequence("string")
-                    .systemOfTextBlockParams(
-                        listOf(
-                            TextBlockParam.builder()
-                                .text("Today's date is 2024-06-01.")
+                        )
+                        .temperature(1.0)
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty("unit", JsonValue.from("bar"))
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
                                 .cacheControl(
                                     CacheControlEphemeral.builder()
                                         .ttl(CacheControlEphemeral.Ttl.TTL_5M)
                                         .build()
                                 )
-                                .addCitation(
-                                    CitationCharLocationParam.builder()
-                                        .citedText("cited_text")
-                                        .documentIndex(0L)
-                                        .documentTitle("x")
-                                        .endCharIndex(0L)
-                                        .startCharIndex(0L)
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
                                         .build()
                                 )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                    )
-                    .temperature(1.0)
-                    .thinking(
-                        ThinkingConfigAdaptive.builder()
-                            .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
-                            .build()
-                    )
-                    .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
-                    .addTool(
-                        Tool.builder()
-                            .inputSchema(
-                                Tool.InputSchema.builder()
-                                    .properties(
-                                        Tool.InputSchema.Properties.builder()
-                                            .putAdditionalProperty(
-                                                "location",
-                                                JsonValue.from("bar"),
-                                            )
-                                            .putAdditionalProperty("unit", JsonValue.from("bar"))
-                                            .build()
-                                    )
-                                    .addRequired("location")
-                                    .build()
-                            )
-                            .name("name")
-                            .addAllowedCaller(Tool.AllowedCaller.DIRECT)
-                            .cacheControl(
-                                CacheControlEphemeral.builder()
-                                    .ttl(CacheControlEphemeral.Ttl.TTL_5M)
-                                    .build()
-                            )
-                            .deferLoading(true)
-                            .description("Get the current weather in a given location")
-                            .eagerInputStreaming(true)
-                            .addInputExample(
-                                Tool.InputExample.builder()
-                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                    .build()
-                            )
-                            .strict(true)
-                            .type(Tool.Type.CUSTOM)
-                            .build()
-                    )
-                    .topK(5L)
-                    .topP(0.7)
-                    .build()
-            )
+                        .topK(5L)
+                        .topP(0.7)
+                        .build()
+                )
 
-        val onCompleteFuture =
-            messageStreamResponse.subscribe { message -> message.validate() }.onCompleteFuture()
-        onCompleteFuture.get()
+            val onCompleteFuture =
+                messageStreamResponse.subscribe { message -> message.validate() }.onCompleteFuture()
+            onCompleteFuture.get()
+        }
     }
 
     @Test
     fun countTokens() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val messageServiceAsync = client.messages()
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
+                    .build()
+            val messageServiceAsync = client.messages()
 
-        val messageTokensCountFuture =
-            messageServiceAsync.countTokens(
-                MessageCountTokensParams.builder()
-                    .addUserMessage("Hello, world")
-                    .model(Model.CLAUDE_OPUS_4_6)
-                    .cacheControl(
-                        CacheControlEphemeral.builder()
-                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
-                            .build()
-                    )
-                    .outputConfig(
-                        OutputConfig.builder()
-                            .effort(OutputConfig.Effort.LOW)
-                            .format(
-                                JsonOutputFormat.builder()
-                                    .schema(
-                                        JsonOutputFormat.Schema.builder()
-                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+            val messageTokensCount =
+                messageServiceAsync.countTokens(
+                    MessageCountTokensParams.builder()
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_4_6)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.builder()
+                                        .schema(
+                                            JsonOutputFormat.Schema.builder()
+                                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                                .build()
+                                        )
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("cited_text")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
                                             .build()
                                     )
                                     .build()
                             )
-                            .build()
-                    )
-                    .systemOfTextBlockParams(
-                        listOf(
-                            TextBlockParam.builder()
-                                .text("Today's date is 2024-06-01.")
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty("unit", JsonValue.from("bar"))
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
                                 .cacheControl(
                                     CacheControlEphemeral.builder()
                                         .ttl(CacheControlEphemeral.Ttl.TTL_5M)
                                         .build()
                                 )
-                                .addCitation(
-                                    CitationCharLocationParam.builder()
-                                        .citedText("cited_text")
-                                        .documentIndex(0L)
-                                        .documentTitle("x")
-                                        .endCharIndex(0L)
-                                        .startCharIndex(0L)
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
                                         .build()
                                 )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                    )
-                    .thinking(
-                        ThinkingConfigAdaptive.builder()
-                            .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
-                            .build()
-                    )
-                    .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
-                    .addTool(
-                        Tool.builder()
-                            .inputSchema(
-                                Tool.InputSchema.builder()
-                                    .properties(
-                                        Tool.InputSchema.Properties.builder()
-                                            .putAdditionalProperty(
-                                                "location",
-                                                JsonValue.from("bar"),
-                                            )
-                                            .putAdditionalProperty("unit", JsonValue.from("bar"))
-                                            .build()
-                                    )
-                                    .addRequired("location")
-                                    .build()
-                            )
-                            .name("name")
-                            .addAllowedCaller(Tool.AllowedCaller.DIRECT)
-                            .cacheControl(
-                                CacheControlEphemeral.builder()
-                                    .ttl(CacheControlEphemeral.Ttl.TTL_5M)
-                                    .build()
-                            )
-                            .deferLoading(true)
-                            .description("Get the current weather in a given location")
-                            .eagerInputStreaming(true)
-                            .addInputExample(
-                                Tool.InputExample.builder()
-                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                    .build()
-                            )
-                            .strict(true)
-                            .type(Tool.Type.CUSTOM)
-                            .build()
-                    )
-                    .build()
-            )
+                        .build()
+                )
 
-        val messageTokensCount = messageTokensCountFuture.get()
-        messageTokensCount.validate()
+            messageTokensCount.validate()
+        }
     }
 }

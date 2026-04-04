@@ -4,11 +4,10 @@ package com.anthropic.core
 
 import com.anthropic.core.http.AsyncStreamResponse
 
-
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.CompletionException
 import java.util.concurrent.Executor
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.coroutines.runBlocking
 
 class AutoPagerAsync<T>
 private constructor(private val firstPage: PageAsync<T>, private val defaultExecutor: Executor) :
@@ -30,38 +29,38 @@ private constructor(private val firstPage: PageAsync<T>, private val defaultExec
         handler: AsyncStreamResponse.Handler<T>,
         executor: Executor,
     ): AsyncStreamResponse<T> = apply {
-        // TODO(JDK): Use `compareAndExchange` once targeting JDK 9.
         check(state.compareAndSet(State.NEW, State.SUBSCRIBED)) {
             if (state.get() == State.SUBSCRIBED) "Cannot subscribe more than once"
             else "Cannot subscribe after the response is closed"
         }
 
-        fun PageAsync<T>.handle(): CompletableFuture<Void?> {
-            if (state.get() == State.CLOSED) {
-                return CompletableFuture.completedFuture(null)
+        executor.execute {
+            var error: Throwable? = null
+            try {
+                runBlocking {
+                    var page: PageAsync<T> = firstPage
+                    while (true) {
+                        if (state.get() == State.CLOSED) break
+                        page.items().forEach { handler.onNext(it) }
+                        if (!page.hasNextPage()) break
+                        page = page.nextPage()
+                    }
+                }
+            } catch (e: Throwable) {
+                error = e
             }
 
-            items().forEach { handler.onNext(it) }
-            return if (hasNextPage()) nextPage().thenCompose { it.handle() }
-            else CompletableFuture.completedFuture(null)
-        }
-
-        executor.execute {
-            firstPage.handle().whenComplete { _, error ->
-                val actualError =
-                    if (error is CompletionException && error.cause != null) error.cause else error
+            try {
+                handler.onComplete(error)
+            } finally {
                 try {
-                    handler.onComplete(actualError)
-                } finally {
-                    try {
-                        if (actualError == null) {
-                            onCompleteFuture.complete(null)
-                        } else {
-                            onCompleteFuture.completeExceptionally(actualError)
-                        }
-                    } finally {
-                        close()
+                    if (error == null) {
+                        onCompleteFuture.complete(null)
+                    } else {
+                        onCompleteFuture.completeExceptionally(error)
                     }
+                } finally {
+                    close()
                 }
             }
         }
@@ -75,9 +74,6 @@ private constructor(private val firstPage: PageAsync<T>, private val defaultExec
             return
         }
 
-        // When the stream is closed, we should always consider it closed. If it closed due
-        // to an error, then we will have already completed the future earlier, and this
-        // will be a no-op.
         onCompleteFuture.complete(null)
     }
 }

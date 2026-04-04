@@ -28,481 +28,486 @@ import com.anthropic.models.beta.messages.MessageCreateParams
 import com.anthropic.models.messages.Model
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import kotlinx.coroutines.runBlocking
 
 @ExtendWith(TestServerExtension::class)
 internal class MessageServiceAsyncTest {
 
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val messageServiceAsync = client.beta().messages()
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
+                    .build()
+            val messageServiceAsync = client.beta().messages()
 
-        val betaMessageFuture =
-            messageServiceAsync.create(
-                MessageCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                    .maxTokens(1024L)
-                    .addUserMessage("Hello, world")
-                    .model(Model.CLAUDE_OPUS_4_6)
-                    .cacheControl(
-                        BetaCacheControlEphemeral.builder()
-                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
-                            .build()
-                    )
-                    .container(
-                        BetaContainerParams.builder()
-                            .id("id")
-                            .addSkill(
-                                BetaSkillParams.builder()
-                                    .skillId("pdf")
-                                    .type(BetaSkillParams.Type.ANTHROPIC)
-                                    .version("latest")
-                                    .build()
-                            )
-                            .build()
-                    )
-                    .contextManagement(
-                        BetaContextManagementConfig.builder()
-                            .addEdit(
-                                BetaClearToolUses20250919Edit.builder()
-                                    .clearAtLeast(
-                                        BetaInputTokensClearAtLeast.builder().value(0L).build()
+            val betaMessage =
+                messageServiceAsync.create(
+                    MessageCreateParams.builder()
+                        .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_4_6)
+                        .cacheControl(
+                            BetaCacheControlEphemeral.builder()
+                                .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            BetaContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    BetaSkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(BetaSkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .contextManagement(
+                            BetaContextManagementConfig.builder()
+                                .addEdit(
+                                    BetaClearToolUses20250919Edit.builder()
+                                        .clearAtLeast(
+                                            BetaInputTokensClearAtLeast.builder().value(0L).build()
+                                        )
+                                        .clearToolInputs(true)
+                                        .addExcludeTool("string")
+                                        .keep(BetaToolUsesKeep.builder().value(0L).build())
+                                        .inputTokensTrigger(1L)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .addMcpServer(
+                            BetaRequestMcpServerUrlDefinition.builder()
+                                .name("name")
+                                .url("url")
+                                .authorizationToken("authorization_token")
+                                .toolConfiguration(
+                                    BetaRequestMcpServerToolConfiguration.builder()
+                                        .addAllowedTool("string")
+                                        .enabled(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .metadata(
+                            BetaMetadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            BetaOutputConfig.builder()
+                                .effort(BetaOutputConfig.Effort.LOW)
+                                .format(
+                                    BetaJsonOutputFormat.builder()
+                                        .schema(
+                                            BetaJsonOutputFormat.Schema.builder()
+                                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                                .build()
+                                        )
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .outputFormat(
+                            BetaJsonOutputFormat.builder()
+                                .schema(
+                                    BetaJsonOutputFormat.Schema.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfBetaTextBlockParams(
+                            listOf(
+                                BetaTextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        BetaCacheControlEphemeral.builder()
+                                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
                                     )
-                                    .clearToolInputs(true)
-                                    .addExcludeTool("string")
-                                    .keep(BetaToolUsesKeep.builder().value(0L).build())
-                                    .inputTokensTrigger(1L)
-                                    .build()
-                            )
-                            .build()
-                    )
-                    .inferenceGeo("inference_geo")
-                    .addMcpServer(
-                        BetaRequestMcpServerUrlDefinition.builder()
-                            .name("name")
-                            .url("url")
-                            .authorizationToken("authorization_token")
-                            .toolConfiguration(
-                                BetaRequestMcpServerToolConfiguration.builder()
-                                    .addAllowedTool("string")
-                                    .enabled(true)
-                                    .build()
-                            )
-                            .build()
-                    )
-                    .metadata(
-                        BetaMetadata.builder()
-                            .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
-                            .build()
-                    )
-                    .outputConfig(
-                        BetaOutputConfig.builder()
-                            .effort(BetaOutputConfig.Effort.LOW)
-                            .format(
-                                BetaJsonOutputFormat.builder()
-                                    .schema(
-                                        BetaJsonOutputFormat.Schema.builder()
-                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .addCitation(
+                                        BetaCitationCharLocationParam.builder()
+                                            .citedText("cited_text")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
                                             .build()
                                     )
                                     .build()
                             )
-                            .build()
-                    )
-                    .outputFormat(
-                        BetaJsonOutputFormat.builder()
-                            .schema(
-                                BetaJsonOutputFormat.Schema.builder()
-                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                    .build()
-                            )
-                            .build()
-                    )
-                    .serviceTier(MessageCreateParams.ServiceTier.AUTO)
-                    .speed(MessageCreateParams.Speed.STANDARD)
-                    .addStopSequence("string")
-                    .systemOfBetaTextBlockParams(
-                        listOf(
-                            BetaTextBlockParam.builder()
-                                .text("Today's date is 2024-06-01.")
+                        )
+                        .temperature(1.0)
+                        .thinking(
+                            BetaThinkingConfigAdaptive.builder()
+                                .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(BetaToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            BetaTool.builder()
+                                .inputSchema(
+                                    BetaTool.InputSchema.builder()
+                                        .properties(
+                                            BetaTool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty("unit", JsonValue.from("bar"))
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(BetaTool.AllowedCaller.DIRECT)
                                 .cacheControl(
                                     BetaCacheControlEphemeral.builder()
                                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                                         .build()
                                 )
-                                .addCitation(
-                                    BetaCitationCharLocationParam.builder()
-                                        .citedText("cited_text")
-                                        .documentIndex(0L)
-                                        .documentTitle("x")
-                                        .endCharIndex(0L)
-                                        .startCharIndex(0L)
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    BetaTool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
                                         .build()
                                 )
+                                .strict(true)
+                                .type(BetaTool.Type.CUSTOM)
                                 .build()
                         )
-                    )
-                    .temperature(1.0)
-                    .thinking(
-                        BetaThinkingConfigAdaptive.builder()
-                            .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
-                            .build()
-                    )
-                    .toolChoice(BetaToolChoiceAuto.builder().disableParallelToolUse(true).build())
-                    .addTool(
-                        BetaTool.builder()
-                            .inputSchema(
-                                BetaTool.InputSchema.builder()
-                                    .properties(
-                                        BetaTool.InputSchema.Properties.builder()
-                                            .putAdditionalProperty(
-                                                "location",
-                                                JsonValue.from("bar"),
-                                            )
-                                            .putAdditionalProperty("unit", JsonValue.from("bar"))
-                                            .build()
-                                    )
-                                    .addRequired("location")
-                                    .build()
-                            )
-                            .name("name")
-                            .addAllowedCaller(BetaTool.AllowedCaller.DIRECT)
-                            .cacheControl(
-                                BetaCacheControlEphemeral.builder()
-                                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
-                                    .build()
-                            )
-                            .deferLoading(true)
-                            .description("Get the current weather in a given location")
-                            .eagerInputStreaming(true)
-                            .addInputExample(
-                                BetaTool.InputExample.builder()
-                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                    .build()
-                            )
-                            .strict(true)
-                            .type(BetaTool.Type.CUSTOM)
-                            .build()
-                    )
-                    .topK(5L)
-                    .topP(0.7)
-                    .build()
-            )
+                        .topK(5L)
+                        .topP(0.7)
+                        .build()
+                )
 
-        val betaMessage = betaMessageFuture.get()
-        betaMessage.validate()
+            betaMessage.validate()
+        }
     }
 
     @Test
     fun createStreaming() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val messageServiceAsync = client.beta().messages()
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
+                    .build()
+            val messageServiceAsync = client.beta().messages()
 
-        val betaMessageStreamResponse =
-            messageServiceAsync.createStreaming(
-                MessageCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                    .maxTokens(1024L)
-                    .addUserMessage("Hello, world")
-                    .model(Model.CLAUDE_OPUS_4_6)
-                    .cacheControl(
-                        BetaCacheControlEphemeral.builder()
-                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
-                            .build()
-                    )
-                    .container(
-                        BetaContainerParams.builder()
-                            .id("id")
-                            .addSkill(
-                                BetaSkillParams.builder()
-                                    .skillId("pdf")
-                                    .type(BetaSkillParams.Type.ANTHROPIC)
-                                    .version("latest")
-                                    .build()
-                            )
-                            .build()
-                    )
-                    .contextManagement(
-                        BetaContextManagementConfig.builder()
-                            .addEdit(
-                                BetaClearToolUses20250919Edit.builder()
-                                    .clearAtLeast(
-                                        BetaInputTokensClearAtLeast.builder().value(0L).build()
+            val betaMessageStreamResponse =
+                messageServiceAsync.createStreaming(
+                    MessageCreateParams.builder()
+                        .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_4_6)
+                        .cacheControl(
+                            BetaCacheControlEphemeral.builder()
+                                .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            BetaContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    BetaSkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(BetaSkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .contextManagement(
+                            BetaContextManagementConfig.builder()
+                                .addEdit(
+                                    BetaClearToolUses20250919Edit.builder()
+                                        .clearAtLeast(
+                                            BetaInputTokensClearAtLeast.builder().value(0L).build()
+                                        )
+                                        .clearToolInputs(true)
+                                        .addExcludeTool("string")
+                                        .keep(BetaToolUsesKeep.builder().value(0L).build())
+                                        .inputTokensTrigger(1L)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .addMcpServer(
+                            BetaRequestMcpServerUrlDefinition.builder()
+                                .name("name")
+                                .url("url")
+                                .authorizationToken("authorization_token")
+                                .toolConfiguration(
+                                    BetaRequestMcpServerToolConfiguration.builder()
+                                        .addAllowedTool("string")
+                                        .enabled(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .metadata(
+                            BetaMetadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            BetaOutputConfig.builder()
+                                .effort(BetaOutputConfig.Effort.LOW)
+                                .format(
+                                    BetaJsonOutputFormat.builder()
+                                        .schema(
+                                            BetaJsonOutputFormat.Schema.builder()
+                                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                                .build()
+                                        )
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .outputFormat(
+                            BetaJsonOutputFormat.builder()
+                                .schema(
+                                    BetaJsonOutputFormat.Schema.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfBetaTextBlockParams(
+                            listOf(
+                                BetaTextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        BetaCacheControlEphemeral.builder()
+                                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
                                     )
-                                    .clearToolInputs(true)
-                                    .addExcludeTool("string")
-                                    .keep(BetaToolUsesKeep.builder().value(0L).build())
-                                    .inputTokensTrigger(1L)
-                                    .build()
-                            )
-                            .build()
-                    )
-                    .inferenceGeo("inference_geo")
-                    .addMcpServer(
-                        BetaRequestMcpServerUrlDefinition.builder()
-                            .name("name")
-                            .url("url")
-                            .authorizationToken("authorization_token")
-                            .toolConfiguration(
-                                BetaRequestMcpServerToolConfiguration.builder()
-                                    .addAllowedTool("string")
-                                    .enabled(true)
-                                    .build()
-                            )
-                            .build()
-                    )
-                    .metadata(
-                        BetaMetadata.builder()
-                            .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
-                            .build()
-                    )
-                    .outputConfig(
-                        BetaOutputConfig.builder()
-                            .effort(BetaOutputConfig.Effort.LOW)
-                            .format(
-                                BetaJsonOutputFormat.builder()
-                                    .schema(
-                                        BetaJsonOutputFormat.Schema.builder()
-                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .addCitation(
+                                        BetaCitationCharLocationParam.builder()
+                                            .citedText("cited_text")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
                                             .build()
                                     )
                                     .build()
                             )
-                            .build()
-                    )
-                    .outputFormat(
-                        BetaJsonOutputFormat.builder()
-                            .schema(
-                                BetaJsonOutputFormat.Schema.builder()
-                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                    .build()
-                            )
-                            .build()
-                    )
-                    .serviceTier(MessageCreateParams.ServiceTier.AUTO)
-                    .speed(MessageCreateParams.Speed.STANDARD)
-                    .addStopSequence("string")
-                    .systemOfBetaTextBlockParams(
-                        listOf(
-                            BetaTextBlockParam.builder()
-                                .text("Today's date is 2024-06-01.")
+                        )
+                        .temperature(1.0)
+                        .thinking(
+                            BetaThinkingConfigAdaptive.builder()
+                                .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(BetaToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            BetaTool.builder()
+                                .inputSchema(
+                                    BetaTool.InputSchema.builder()
+                                        .properties(
+                                            BetaTool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty("unit", JsonValue.from("bar"))
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(BetaTool.AllowedCaller.DIRECT)
                                 .cacheControl(
                                     BetaCacheControlEphemeral.builder()
                                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                                         .build()
                                 )
-                                .addCitation(
-                                    BetaCitationCharLocationParam.builder()
-                                        .citedText("cited_text")
-                                        .documentIndex(0L)
-                                        .documentTitle("x")
-                                        .endCharIndex(0L)
-                                        .startCharIndex(0L)
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    BetaTool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
                                         .build()
                                 )
+                                .strict(true)
+                                .type(BetaTool.Type.CUSTOM)
                                 .build()
                         )
-                    )
-                    .temperature(1.0)
-                    .thinking(
-                        BetaThinkingConfigAdaptive.builder()
-                            .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
-                            .build()
-                    )
-                    .toolChoice(BetaToolChoiceAuto.builder().disableParallelToolUse(true).build())
-                    .addTool(
-                        BetaTool.builder()
-                            .inputSchema(
-                                BetaTool.InputSchema.builder()
-                                    .properties(
-                                        BetaTool.InputSchema.Properties.builder()
-                                            .putAdditionalProperty(
-                                                "location",
-                                                JsonValue.from("bar"),
-                                            )
-                                            .putAdditionalProperty("unit", JsonValue.from("bar"))
-                                            .build()
-                                    )
-                                    .addRequired("location")
-                                    .build()
-                            )
-                            .name("name")
-                            .addAllowedCaller(BetaTool.AllowedCaller.DIRECT)
-                            .cacheControl(
-                                BetaCacheControlEphemeral.builder()
-                                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
-                                    .build()
-                            )
-                            .deferLoading(true)
-                            .description("Get the current weather in a given location")
-                            .eagerInputStreaming(true)
-                            .addInputExample(
-                                BetaTool.InputExample.builder()
-                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                    .build()
-                            )
-                            .strict(true)
-                            .type(BetaTool.Type.CUSTOM)
-                            .build()
-                    )
-                    .topK(5L)
-                    .topP(0.7)
-                    .build()
-            )
+                        .topK(5L)
+                        .topP(0.7)
+                        .build()
+                )
 
-        val onCompleteFuture =
-            betaMessageStreamResponse
-                .subscribe { betaMessage -> betaMessage.validate() }
-                .onCompleteFuture()
-        onCompleteFuture.get()
+            val onCompleteFuture =
+                betaMessageStreamResponse
+                    .subscribe { betaMessage -> betaMessage.validate() }
+                    .onCompleteFuture()
+            onCompleteFuture.get()
+        }
     }
 
     @Test
     fun countTokens() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val messageServiceAsync = client.beta().messages()
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
+                    .build()
+            val messageServiceAsync = client.beta().messages()
 
-        val betaMessageTokensCountFuture =
-            messageServiceAsync.countTokens(
-                MessageCountTokensParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                    .addUserMessage("Hello, world")
-                    .model(Model.CLAUDE_OPUS_4_6)
-                    .cacheControl(
-                        BetaCacheControlEphemeral.builder()
-                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
-                            .build()
-                    )
-                    .contextManagement(
-                        BetaContextManagementConfig.builder()
-                            .addEdit(
-                                BetaClearToolUses20250919Edit.builder()
-                                    .clearAtLeast(
-                                        BetaInputTokensClearAtLeast.builder().value(0L).build()
+            val betaMessageTokensCount =
+                messageServiceAsync.countTokens(
+                    MessageCountTokensParams.builder()
+                        .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_4_6)
+                        .cacheControl(
+                            BetaCacheControlEphemeral.builder()
+                                .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .contextManagement(
+                            BetaContextManagementConfig.builder()
+                                .addEdit(
+                                    BetaClearToolUses20250919Edit.builder()
+                                        .clearAtLeast(
+                                            BetaInputTokensClearAtLeast.builder().value(0L).build()
+                                        )
+                                        .clearToolInputs(true)
+                                        .addExcludeTool("string")
+                                        .keep(BetaToolUsesKeep.builder().value(0L).build())
+                                        .inputTokensTrigger(1L)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .addMcpServer(
+                            BetaRequestMcpServerUrlDefinition.builder()
+                                .name("name")
+                                .url("url")
+                                .authorizationToken("authorization_token")
+                                .toolConfiguration(
+                                    BetaRequestMcpServerToolConfiguration.builder()
+                                        .addAllowedTool("string")
+                                        .enabled(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .outputConfig(
+                            BetaOutputConfig.builder()
+                                .effort(BetaOutputConfig.Effort.LOW)
+                                .format(
+                                    BetaJsonOutputFormat.builder()
+                                        .schema(
+                                            BetaJsonOutputFormat.Schema.builder()
+                                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                                .build()
+                                        )
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .outputFormat(
+                            BetaJsonOutputFormat.builder()
+                                .schema(
+                                    BetaJsonOutputFormat.Schema.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .speed(MessageCountTokensParams.Speed.STANDARD)
+                        .systemOfBetaTextBlockParams(
+                            listOf(
+                                BetaTextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        BetaCacheControlEphemeral.builder()
+                                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
                                     )
-                                    .clearToolInputs(true)
-                                    .addExcludeTool("string")
-                                    .keep(BetaToolUsesKeep.builder().value(0L).build())
-                                    .inputTokensTrigger(1L)
-                                    .build()
-                            )
-                            .build()
-                    )
-                    .addMcpServer(
-                        BetaRequestMcpServerUrlDefinition.builder()
-                            .name("name")
-                            .url("url")
-                            .authorizationToken("authorization_token")
-                            .toolConfiguration(
-                                BetaRequestMcpServerToolConfiguration.builder()
-                                    .addAllowedTool("string")
-                                    .enabled(true)
-                                    .build()
-                            )
-                            .build()
-                    )
-                    .outputConfig(
-                        BetaOutputConfig.builder()
-                            .effort(BetaOutputConfig.Effort.LOW)
-                            .format(
-                                BetaJsonOutputFormat.builder()
-                                    .schema(
-                                        BetaJsonOutputFormat.Schema.builder()
-                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .addCitation(
+                                        BetaCitationCharLocationParam.builder()
+                                            .citedText("cited_text")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
                                             .build()
                                     )
                                     .build()
                             )
-                            .build()
-                    )
-                    .outputFormat(
-                        BetaJsonOutputFormat.builder()
-                            .schema(
-                                BetaJsonOutputFormat.Schema.builder()
-                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                    .build()
-                            )
-                            .build()
-                    )
-                    .speed(MessageCountTokensParams.Speed.STANDARD)
-                    .systemOfBetaTextBlockParams(
-                        listOf(
-                            BetaTextBlockParam.builder()
-                                .text("Today's date is 2024-06-01.")
+                        )
+                        .thinking(
+                            BetaThinkingConfigAdaptive.builder()
+                                .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(BetaToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            BetaTool.builder()
+                                .inputSchema(
+                                    BetaTool.InputSchema.builder()
+                                        .properties(
+                                            BetaTool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty("unit", JsonValue.from("bar"))
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(BetaTool.AllowedCaller.DIRECT)
                                 .cacheControl(
                                     BetaCacheControlEphemeral.builder()
                                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                                         .build()
                                 )
-                                .addCitation(
-                                    BetaCitationCharLocationParam.builder()
-                                        .citedText("cited_text")
-                                        .documentIndex(0L)
-                                        .documentTitle("x")
-                                        .endCharIndex(0L)
-                                        .startCharIndex(0L)
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    BetaTool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
                                         .build()
                                 )
+                                .strict(true)
+                                .type(BetaTool.Type.CUSTOM)
                                 .build()
                         )
-                    )
-                    .thinking(
-                        BetaThinkingConfigAdaptive.builder()
-                            .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
-                            .build()
-                    )
-                    .toolChoice(BetaToolChoiceAuto.builder().disableParallelToolUse(true).build())
-                    .addTool(
-                        BetaTool.builder()
-                            .inputSchema(
-                                BetaTool.InputSchema.builder()
-                                    .properties(
-                                        BetaTool.InputSchema.Properties.builder()
-                                            .putAdditionalProperty(
-                                                "location",
-                                                JsonValue.from("bar"),
-                                            )
-                                            .putAdditionalProperty("unit", JsonValue.from("bar"))
-                                            .build()
-                                    )
-                                    .addRequired("location")
-                                    .build()
-                            )
-                            .name("name")
-                            .addAllowedCaller(BetaTool.AllowedCaller.DIRECT)
-                            .cacheControl(
-                                BetaCacheControlEphemeral.builder()
-                                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
-                                    .build()
-                            )
-                            .deferLoading(true)
-                            .description("Get the current weather in a given location")
-                            .eagerInputStreaming(true)
-                            .addInputExample(
-                                BetaTool.InputExample.builder()
-                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                    .build()
-                            )
-                            .strict(true)
-                            .type(BetaTool.Type.CUSTOM)
-                            .build()
-                    )
-                    .build()
-            )
+                        .build()
+                )
 
-        val betaMessageTokensCount = betaMessageTokensCountFuture.get()
-        betaMessageTokensCount.validate()
+            betaMessageTokensCount.validate()
+        }
     }
 }

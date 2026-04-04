@@ -14,7 +14,6 @@ import com.anthropic.models.beta.skills.SkillListParams
 import com.anthropic.models.beta.skills.SkillRetrieveParams
 import com.anthropic.models.beta.skills.SkillRetrieveResponse
 import com.anthropic.services.async.beta.skills.VersionServiceAsync
-import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
 interface SkillServiceAsync {
@@ -34,109 +33,109 @@ interface SkillServiceAsync {
     fun versions(): VersionServiceAsync
 
     /** Create Skill */
-    fun create(): CompletableFuture<SkillCreateResponse> = create(SkillCreateParams.none())
+    suspend fun create(): SkillCreateResponse = create(SkillCreateParams.none())
 
     /** @see create */
-    fun create(
+    suspend fun create(
         params: SkillCreateParams = SkillCreateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<SkillCreateResponse>
+    ): SkillCreateResponse
 
     /** @see create */
-    fun create(
+    suspend fun create(
         params: SkillCreateParams = SkillCreateParams.none()
-    ): CompletableFuture<SkillCreateResponse> = create(params, RequestOptions.none())
+    ): SkillCreateResponse = create(params, RequestOptions.none())
 
     /** @see create */
-    fun create(requestOptions: RequestOptions): CompletableFuture<SkillCreateResponse> =
+    suspend fun create(requestOptions: RequestOptions): SkillCreateResponse =
         create(SkillCreateParams.none(), requestOptions)
 
     /** Get Skill */
-    fun retrieve(skillId: String): CompletableFuture<SkillRetrieveResponse> =
+    suspend fun retrieve(skillId: String): SkillRetrieveResponse =
         retrieve(skillId, SkillRetrieveParams.none())
 
     /** @see retrieve */
-    fun retrieve(
+    suspend fun retrieve(
         skillId: String,
         params: SkillRetrieveParams = SkillRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<SkillRetrieveResponse> =
+    ): SkillRetrieveResponse =
         retrieve(params.toBuilder().skillId(skillId).build(), requestOptions)
 
     /** @see retrieve */
-    fun retrieve(
+    suspend fun retrieve(
         skillId: String,
         params: SkillRetrieveParams = SkillRetrieveParams.none(),
-    ): CompletableFuture<SkillRetrieveResponse> = retrieve(skillId, params, RequestOptions.none())
+    ): SkillRetrieveResponse = retrieve(skillId, params, RequestOptions.none())
 
     /** @see retrieve */
-    fun retrieve(
+    suspend fun retrieve(
         params: SkillRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<SkillRetrieveResponse>
+    ): SkillRetrieveResponse
 
     /** @see retrieve */
-    fun retrieve(params: SkillRetrieveParams): CompletableFuture<SkillRetrieveResponse> =
+    suspend fun retrieve(params: SkillRetrieveParams): SkillRetrieveResponse =
         retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
-    fun retrieve(
+    suspend fun retrieve(
         skillId: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<SkillRetrieveResponse> =
+    ): SkillRetrieveResponse =
         retrieve(skillId, SkillRetrieveParams.none(), requestOptions)
 
     /** List Skills */
-    fun list(): CompletableFuture<SkillListPageAsync> = list(SkillListParams.none())
+    suspend fun list(): SkillListPageAsync = list(SkillListParams.none())
 
     /** @see list */
-    fun list(
+    suspend fun list(
         params: SkillListParams = SkillListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<SkillListPageAsync>
+    ): SkillListPageAsync
 
     /** @see list */
-    fun list(
+    suspend fun list(
         params: SkillListParams = SkillListParams.none()
-    ): CompletableFuture<SkillListPageAsync> = list(params, RequestOptions.none())
+    ): SkillListPageAsync = list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(requestOptions: RequestOptions): CompletableFuture<SkillListPageAsync> =
+    suspend fun list(requestOptions: RequestOptions): SkillListPageAsync =
         list(SkillListParams.none(), requestOptions)
 
     /** Delete Skill */
-    fun delete(skillId: String): CompletableFuture<SkillDeleteResponse> =
+    suspend fun delete(skillId: String): SkillDeleteResponse =
         delete(skillId, SkillDeleteParams.none())
 
     /** @see delete */
-    fun delete(
+    suspend fun delete(
         skillId: String,
         params: SkillDeleteParams = SkillDeleteParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<SkillDeleteResponse> =
+    ): SkillDeleteResponse =
         delete(params.toBuilder().skillId(skillId).build(), requestOptions)
 
     /** @see delete */
-    fun delete(
+    suspend fun delete(
         skillId: String,
         params: SkillDeleteParams = SkillDeleteParams.none(),
-    ): CompletableFuture<SkillDeleteResponse> = delete(skillId, params, RequestOptions.none())
+    ): SkillDeleteResponse = delete(skillId, params, RequestOptions.none())
 
     /** @see delete */
-    fun delete(
+    suspend fun delete(
         params: SkillDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<SkillDeleteResponse>
+    ): SkillDeleteResponse
 
     /** @see delete */
-    fun delete(params: SkillDeleteParams): CompletableFuture<SkillDeleteResponse> =
+    suspend fun delete(params: SkillDeleteParams): SkillDeleteResponse =
         delete(params, RequestOptions.none())
 
     /** @see delete */
-    fun delete(
+    suspend fun delete(
         skillId: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<SkillDeleteResponse> =
+    ): SkillDeleteResponse =
         delete(skillId, SkillDeleteParams.none(), requestOptions)
 
     /** A view of [SkillServiceAsync] that provides access to raw HTTP responses for each method. */
@@ -157,132 +156,132 @@ interface SkillServiceAsync {
          * Returns a raw HTTP response for `post /v1/skills?beta=true`, but is otherwise the same as
          * [SkillServiceAsync.create].
          */
-        fun create(): CompletableFuture<HttpResponseFor<SkillCreateResponse>> =
+        suspend fun create(): HttpResponseFor<SkillCreateResponse> =
             create(SkillCreateParams.none())
 
         /** @see create */
-        fun create(
+        suspend fun create(
             params: SkillCreateParams = SkillCreateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SkillCreateResponse>>
+        ): HttpResponseFor<SkillCreateResponse>
 
         /** @see create */
-        fun create(
+        suspend fun create(
             params: SkillCreateParams = SkillCreateParams.none()
-        ): CompletableFuture<HttpResponseFor<SkillCreateResponse>> =
+        ): HttpResponseFor<SkillCreateResponse> =
             create(params, RequestOptions.none())
 
         /** @see create */
-        fun create(
+        suspend fun create(
             requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<SkillCreateResponse>> =
+        ): HttpResponseFor<SkillCreateResponse> =
             create(SkillCreateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /v1/skills/{skill_id}?beta=true`, but is otherwise
          * the same as [SkillServiceAsync.retrieve].
          */
-        fun retrieve(skillId: String): CompletableFuture<HttpResponseFor<SkillRetrieveResponse>> =
+        suspend fun retrieve(skillId: String): HttpResponseFor<SkillRetrieveResponse> =
             retrieve(skillId, SkillRetrieveParams.none())
 
         /** @see retrieve */
-        fun retrieve(
+        suspend fun retrieve(
             skillId: String,
             params: SkillRetrieveParams = SkillRetrieveParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SkillRetrieveResponse>> =
+        ): HttpResponseFor<SkillRetrieveResponse> =
             retrieve(params.toBuilder().skillId(skillId).build(), requestOptions)
 
         /** @see retrieve */
-        fun retrieve(
+        suspend fun retrieve(
             skillId: String,
             params: SkillRetrieveParams = SkillRetrieveParams.none(),
-        ): CompletableFuture<HttpResponseFor<SkillRetrieveResponse>> =
+        ): HttpResponseFor<SkillRetrieveResponse> =
             retrieve(skillId, params, RequestOptions.none())
 
         /** @see retrieve */
-        fun retrieve(
+        suspend fun retrieve(
             params: SkillRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SkillRetrieveResponse>>
+        ): HttpResponseFor<SkillRetrieveResponse>
 
         /** @see retrieve */
-        fun retrieve(
+        suspend fun retrieve(
             params: SkillRetrieveParams
-        ): CompletableFuture<HttpResponseFor<SkillRetrieveResponse>> =
+        ): HttpResponseFor<SkillRetrieveResponse> =
             retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
-        fun retrieve(
+        suspend fun retrieve(
             skillId: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<SkillRetrieveResponse>> =
+        ): HttpResponseFor<SkillRetrieveResponse> =
             retrieve(skillId, SkillRetrieveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /v1/skills?beta=true`, but is otherwise the same as
          * [SkillServiceAsync.list].
          */
-        fun list(): CompletableFuture<HttpResponseFor<SkillListPageAsync>> =
+        suspend fun list(): HttpResponseFor<SkillListPageAsync> =
             list(SkillListParams.none())
 
         /** @see list */
-        fun list(
+        suspend fun list(
             params: SkillListParams = SkillListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SkillListPageAsync>>
+        ): HttpResponseFor<SkillListPageAsync>
 
         /** @see list */
-        fun list(
+        suspend fun list(
             params: SkillListParams = SkillListParams.none()
-        ): CompletableFuture<HttpResponseFor<SkillListPageAsync>> =
+        ): HttpResponseFor<SkillListPageAsync> =
             list(params, RequestOptions.none())
 
         /** @see list */
-        fun list(
+        suspend fun list(
             requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<SkillListPageAsync>> =
+        ): HttpResponseFor<SkillListPageAsync> =
             list(SkillListParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `delete /v1/skills/{skill_id}?beta=true`, but is
          * otherwise the same as [SkillServiceAsync.delete].
          */
-        fun delete(skillId: String): CompletableFuture<HttpResponseFor<SkillDeleteResponse>> =
+        suspend fun delete(skillId: String): HttpResponseFor<SkillDeleteResponse> =
             delete(skillId, SkillDeleteParams.none())
 
         /** @see delete */
-        fun delete(
+        suspend fun delete(
             skillId: String,
             params: SkillDeleteParams = SkillDeleteParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SkillDeleteResponse>> =
+        ): HttpResponseFor<SkillDeleteResponse> =
             delete(params.toBuilder().skillId(skillId).build(), requestOptions)
 
         /** @see delete */
-        fun delete(
+        suspend fun delete(
             skillId: String,
             params: SkillDeleteParams = SkillDeleteParams.none(),
-        ): CompletableFuture<HttpResponseFor<SkillDeleteResponse>> =
+        ): HttpResponseFor<SkillDeleteResponse> =
             delete(skillId, params, RequestOptions.none())
 
         /** @see delete */
-        fun delete(
+        suspend fun delete(
             params: SkillDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SkillDeleteResponse>>
+        ): HttpResponseFor<SkillDeleteResponse>
 
         /** @see delete */
-        fun delete(
+        suspend fun delete(
             params: SkillDeleteParams
-        ): CompletableFuture<HttpResponseFor<SkillDeleteResponse>> =
+        ): HttpResponseFor<SkillDeleteResponse> =
             delete(params, RequestOptions.none())
 
         /** @see delete */
-        fun delete(
+        suspend fun delete(
             skillId: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<SkillDeleteResponse>> =
+        ): HttpResponseFor<SkillDeleteResponse> =
             delete(skillId, SkillDeleteParams.none(), requestOptions)
     }
 }

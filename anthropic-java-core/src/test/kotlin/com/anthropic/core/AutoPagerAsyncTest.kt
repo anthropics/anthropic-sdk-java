@@ -3,8 +3,6 @@
 package com.anthropic.core
 
 import com.anthropic.core.http.AsyncStreamResponse
-import java.util.Optional
-import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
@@ -35,11 +33,11 @@ internal class AutoPagerAsyncTest {
         private val hasNext: Boolean = true,
     ) : PageAsync<String> {
 
-        val nextPageFuture: CompletableFuture<PageAsync<String>> = CompletableFuture()
+        val nextPageDeferred: kotlinx.coroutines.CompletableDeferred<PageAsync<String>> = kotlinx.coroutines.CompletableDeferred()
 
         override fun hasNextPage(): Boolean = hasNext
 
-        override fun nextPage(): CompletableFuture<PageAsync<String>> = nextPageFuture
+        override suspend fun nextPage(): PageAsync<String> = nextPageDeferred.await()
 
         override fun items(): List<String> = items
     }
@@ -100,7 +98,7 @@ internal class AutoPagerAsyncTest {
         autoPagerAsync.subscribe(handler)
         autoPagerAsync.close()
 
-        page.nextPageFuture.complete(PageAsyncImpl(listOf("page2")))
+        page.nextPageDeferred.complete(PageAsyncImpl(listOf("page2")))
 
         verify(handler, times(1)).onNext("page1")
         verify(handler, never()).onNext("page2")
@@ -114,7 +112,7 @@ internal class AutoPagerAsyncTest {
         val autoPagerAsync = AutoPagerAsync.from(page, executor)
         autoPagerAsync.subscribe(handler)
 
-        page.nextPageFuture.completeExceptionally(ERROR)
+        page.nextPageDeferred.completeExceptionally(ERROR)
 
         verify(executor, times(1)).execute(any())
         verify(handler, never()).onNext(any())
@@ -136,7 +134,7 @@ internal class AutoPagerAsyncTest {
         }
         clearInvocations(executor, handler)
 
-        page.nextPageFuture.complete(PageAsyncImpl(listOf("chunk3", "chunk4"), hasNext = false))
+        page.nextPageDeferred.complete(PageAsyncImpl(listOf("chunk3", "chunk4"), hasNext = false))
 
         verify(executor, never()).execute(any())
         inOrder(handler) {
@@ -162,7 +160,7 @@ internal class AutoPagerAsyncTest {
         val page = PageAsyncImpl(listOf("chunk1", "chunk2"))
         val autoPagerAsync = AutoPagerAsync.from(page, executor)
         autoPagerAsync.subscribe {}
-        page.nextPageFuture.completeExceptionally(ERROR)
+        page.nextPageDeferred.completeExceptionally(ERROR)
 
         val onCompletableFuture = autoPagerAsync.onCompleteFuture()
 

@@ -13,7 +13,6 @@ import com.anthropic.models.beta.skills.versions.VersionListPageAsync
 import com.anthropic.models.beta.skills.versions.VersionListParams
 import com.anthropic.models.beta.skills.versions.VersionRetrieveParams
 import com.anthropic.models.beta.skills.versions.VersionRetrieveResponse
-import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
 interface VersionServiceAsync {
@@ -31,122 +30,122 @@ interface VersionServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): VersionServiceAsync
 
     /** Create Skill Version */
-    fun create(skillId: String): CompletableFuture<VersionCreateResponse> =
+    suspend fun create(skillId: String): VersionCreateResponse =
         create(skillId, VersionCreateParams.none())
 
     /** @see create */
-    fun create(
+    suspend fun create(
         skillId: String,
         params: VersionCreateParams = VersionCreateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionCreateResponse> =
+    ): VersionCreateResponse =
         create(params.toBuilder().skillId(skillId).build(), requestOptions)
 
     /** @see create */
-    fun create(
+    suspend fun create(
         skillId: String,
         params: VersionCreateParams = VersionCreateParams.none(),
-    ): CompletableFuture<VersionCreateResponse> = create(skillId, params, RequestOptions.none())
+    ): VersionCreateResponse = create(skillId, params, RequestOptions.none())
 
     /** @see create */
-    fun create(
+    suspend fun create(
         params: VersionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionCreateResponse>
+    ): VersionCreateResponse
 
     /** @see create */
-    fun create(params: VersionCreateParams): CompletableFuture<VersionCreateResponse> =
+    suspend fun create(params: VersionCreateParams): VersionCreateResponse =
         create(params, RequestOptions.none())
 
     /** @see create */
-    fun create(
+    suspend fun create(
         skillId: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<VersionCreateResponse> =
+    ): VersionCreateResponse =
         create(skillId, VersionCreateParams.none(), requestOptions)
 
     /** Get Skill Version */
-    fun retrieve(
+    suspend fun retrieve(
         version: String,
         params: VersionRetrieveParams,
-    ): CompletableFuture<VersionRetrieveResponse> = retrieve(version, params, RequestOptions.none())
+    ): VersionRetrieveResponse = retrieve(version, params, RequestOptions.none())
 
     /** @see retrieve */
-    fun retrieve(
+    suspend fun retrieve(
         version: String,
         params: VersionRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionRetrieveResponse> =
+    ): VersionRetrieveResponse =
         retrieve(params.toBuilder().version(version).build(), requestOptions)
 
     /** @see retrieve */
-    fun retrieve(params: VersionRetrieveParams): CompletableFuture<VersionRetrieveResponse> =
+    suspend fun retrieve(params: VersionRetrieveParams): VersionRetrieveResponse =
         retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
-    fun retrieve(
+    suspend fun retrieve(
         params: VersionRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionRetrieveResponse>
+    ): VersionRetrieveResponse
 
     /** List Skill Versions */
-    fun list(skillId: String): CompletableFuture<VersionListPageAsync> =
+    suspend fun list(skillId: String): VersionListPageAsync =
         list(skillId, VersionListParams.none())
 
     /** @see list */
-    fun list(
+    suspend fun list(
         skillId: String,
         params: VersionListParams = VersionListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionListPageAsync> =
+    ): VersionListPageAsync =
         list(params.toBuilder().skillId(skillId).build(), requestOptions)
 
     /** @see list */
-    fun list(
+    suspend fun list(
         skillId: String,
         params: VersionListParams = VersionListParams.none(),
-    ): CompletableFuture<VersionListPageAsync> = list(skillId, params, RequestOptions.none())
+    ): VersionListPageAsync = list(skillId, params, RequestOptions.none())
 
     /** @see list */
-    fun list(
+    suspend fun list(
         params: VersionListParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionListPageAsync>
+    ): VersionListPageAsync
 
     /** @see list */
-    fun list(params: VersionListParams): CompletableFuture<VersionListPageAsync> =
+    suspend fun list(params: VersionListParams): VersionListPageAsync =
         list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(
+    suspend fun list(
         skillId: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<VersionListPageAsync> =
+    ): VersionListPageAsync =
         list(skillId, VersionListParams.none(), requestOptions)
 
     /** Delete Skill Version */
-    fun delete(
+    suspend fun delete(
         version: String,
         params: VersionDeleteParams,
-    ): CompletableFuture<VersionDeleteResponse> = delete(version, params, RequestOptions.none())
+    ): VersionDeleteResponse = delete(version, params, RequestOptions.none())
 
     /** @see delete */
-    fun delete(
+    suspend fun delete(
         version: String,
         params: VersionDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionDeleteResponse> =
+    ): VersionDeleteResponse =
         delete(params.toBuilder().version(version).build(), requestOptions)
 
     /** @see delete */
-    fun delete(params: VersionDeleteParams): CompletableFuture<VersionDeleteResponse> =
+    suspend fun delete(params: VersionDeleteParams): VersionDeleteResponse =
         delete(params, RequestOptions.none())
 
     /** @see delete */
-    fun delete(
+    suspend fun delete(
         params: VersionDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionDeleteResponse>
+    ): VersionDeleteResponse
 
     /**
      * A view of [VersionServiceAsync] that provides access to raw HTTP responses for each method.
@@ -166,112 +165,112 @@ interface VersionServiceAsync {
          * Returns a raw HTTP response for `post /v1/skills/{skill_id}/versions?beta=true`, but is
          * otherwise the same as [VersionServiceAsync.create].
          */
-        fun create(skillId: String): CompletableFuture<HttpResponseFor<VersionCreateResponse>> =
+        suspend fun create(skillId: String): HttpResponseFor<VersionCreateResponse> =
             create(skillId, VersionCreateParams.none())
 
         /** @see create */
-        fun create(
+        suspend fun create(
             skillId: String,
             params: VersionCreateParams = VersionCreateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionCreateResponse>> =
+        ): HttpResponseFor<VersionCreateResponse> =
             create(params.toBuilder().skillId(skillId).build(), requestOptions)
 
         /** @see create */
-        fun create(
+        suspend fun create(
             skillId: String,
             params: VersionCreateParams = VersionCreateParams.none(),
-        ): CompletableFuture<HttpResponseFor<VersionCreateResponse>> =
+        ): HttpResponseFor<VersionCreateResponse> =
             create(skillId, params, RequestOptions.none())
 
         /** @see create */
-        fun create(
+        suspend fun create(
             params: VersionCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionCreateResponse>>
+        ): HttpResponseFor<VersionCreateResponse>
 
         /** @see create */
-        fun create(
+        suspend fun create(
             params: VersionCreateParams
-        ): CompletableFuture<HttpResponseFor<VersionCreateResponse>> =
+        ): HttpResponseFor<VersionCreateResponse> =
             create(params, RequestOptions.none())
 
         /** @see create */
-        fun create(
+        suspend fun create(
             skillId: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<VersionCreateResponse>> =
+        ): HttpResponseFor<VersionCreateResponse> =
             create(skillId, VersionCreateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /v1/skills/{skill_id}/versions/{version}?beta=true`,
          * but is otherwise the same as [VersionServiceAsync.retrieve].
          */
-        fun retrieve(
+        suspend fun retrieve(
             version: String,
             params: VersionRetrieveParams,
-        ): CompletableFuture<HttpResponseFor<VersionRetrieveResponse>> =
+        ): HttpResponseFor<VersionRetrieveResponse> =
             retrieve(version, params, RequestOptions.none())
 
         /** @see retrieve */
-        fun retrieve(
+        suspend fun retrieve(
             version: String,
             params: VersionRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionRetrieveResponse>> =
+        ): HttpResponseFor<VersionRetrieveResponse> =
             retrieve(params.toBuilder().version(version).build(), requestOptions)
 
         /** @see retrieve */
-        fun retrieve(
+        suspend fun retrieve(
             params: VersionRetrieveParams
-        ): CompletableFuture<HttpResponseFor<VersionRetrieveResponse>> =
+        ): HttpResponseFor<VersionRetrieveResponse> =
             retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
-        fun retrieve(
+        suspend fun retrieve(
             params: VersionRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionRetrieveResponse>>
+        ): HttpResponseFor<VersionRetrieveResponse>
 
         /**
          * Returns a raw HTTP response for `get /v1/skills/{skill_id}/versions?beta=true`, but is
          * otherwise the same as [VersionServiceAsync.list].
          */
-        fun list(skillId: String): CompletableFuture<HttpResponseFor<VersionListPageAsync>> =
+        suspend fun list(skillId: String): HttpResponseFor<VersionListPageAsync> =
             list(skillId, VersionListParams.none())
 
         /** @see list */
-        fun list(
+        suspend fun list(
             skillId: String,
             params: VersionListParams = VersionListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionListPageAsync>> =
+        ): HttpResponseFor<VersionListPageAsync> =
             list(params.toBuilder().skillId(skillId).build(), requestOptions)
 
         /** @see list */
-        fun list(
+        suspend fun list(
             skillId: String,
             params: VersionListParams = VersionListParams.none(),
-        ): CompletableFuture<HttpResponseFor<VersionListPageAsync>> =
+        ): HttpResponseFor<VersionListPageAsync> =
             list(skillId, params, RequestOptions.none())
 
         /** @see list */
-        fun list(
+        suspend fun list(
             params: VersionListParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionListPageAsync>>
+        ): HttpResponseFor<VersionListPageAsync>
 
         /** @see list */
-        fun list(
+        suspend fun list(
             params: VersionListParams
-        ): CompletableFuture<HttpResponseFor<VersionListPageAsync>> =
+        ): HttpResponseFor<VersionListPageAsync> =
             list(params, RequestOptions.none())
 
         /** @see list */
-        fun list(
+        suspend fun list(
             skillId: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<VersionListPageAsync>> =
+        ): HttpResponseFor<VersionListPageAsync> =
             list(skillId, VersionListParams.none(), requestOptions)
 
         /**
@@ -279,30 +278,30 @@ interface VersionServiceAsync {
          * /v1/skills/{skill_id}/versions/{version}?beta=true`, but is otherwise the same as
          * [VersionServiceAsync.delete].
          */
-        fun delete(
+        suspend fun delete(
             version: String,
             params: VersionDeleteParams,
-        ): CompletableFuture<HttpResponseFor<VersionDeleteResponse>> =
+        ): HttpResponseFor<VersionDeleteResponse> =
             delete(version, params, RequestOptions.none())
 
         /** @see delete */
-        fun delete(
+        suspend fun delete(
             version: String,
             params: VersionDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionDeleteResponse>> =
+        ): HttpResponseFor<VersionDeleteResponse> =
             delete(params.toBuilder().version(version).build(), requestOptions)
 
         /** @see delete */
-        fun delete(
+        suspend fun delete(
             params: VersionDeleteParams
-        ): CompletableFuture<HttpResponseFor<VersionDeleteResponse>> =
+        ): HttpResponseFor<VersionDeleteResponse> =
             delete(params, RequestOptions.none())
 
         /** @see delete */
-        fun delete(
+        suspend fun delete(
             params: VersionDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionDeleteResponse>>
+        ): HttpResponseFor<VersionDeleteResponse>
     }
 }

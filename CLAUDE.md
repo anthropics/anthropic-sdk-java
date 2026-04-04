@@ -9,15 +9,17 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 
 - **Migration Plan + Low-Level Design**: [`docs/KMP-CONVERSION-PLAN.md`](docs/KMP-CONVERSION-PLAN.md)
 - **Branch**: `claude/convert-to-kmp-I9zBV`
-- **64 commits** on branch, all pushed
+- **71 commits** on branch, all pushed
 
 ## Current Status
 
 | Metric | Value |
 |---|---|
-| Files in commonMain | 614 (608 com.anthropic + 6 kotlinx.kmp.util) |
-| Files in jvmMain | 7 (PlatformJvm, PlatformTimeJvm, PropertiesJvm, PhantomReachableJvm, ServiceExceptionExtensions, OptionalJvm, FunctionalJvm) |
-| java.* imports remaining in core | 42 (all CompletableFuture/Executor/Clock — blocked on suspend conversion) |
+| Files in commonMain | 615 (608 com.anthropic + 7 kotlinx.kmp.util) |
+| Files in jvmMain | 9 (Platform, PlatformTime, Properties, PhantomReachable, ServiceExceptions, Optional, Functional, AsyncJvm) |
+| Files in jsMain | In progress — stubs for java.*/Jackson/kotlin.jvm |
+| KMP targets | JVM ✅, JS (IR) 🔲 compiling stubs |
+| java.* imports in core | 42 (standard Java patterns — kept as-is, stubs for non-JVM) |
 | JVM tests | 2,682 pass |
 | commonTest tests | 66 (KmpOptional) |
 
@@ -101,8 +103,9 @@ by the stable lib that implements the spec (ktor, Wire, wasmtime).
 5. **Don't duplicate stable libs** — use ktor/Wire/okio/kotlinx directly
 6. **`kotlinx.kmp.util.*`** — generic KMP utilities (Optional, functional interfaces)
 7. **JsonField/JsonValue = Wire field semantics** — format-agnostic, not JSON-specific
-8. **expect/actual typealias** works for Optional, Function, Supplier — NOT for CompletableFuture (Java SAM mismatch → use suspend instead)
+8. **Additive suspend, not replace** — `executeSuspend()` added with default impl alongside existing `CompletableFuture` methods. Zero breaking changes. Services/models stay as-is.
 9. **Flow replaces Stream** — `stream()` returns `Flow<T>` on all platforms
+10. **JS/Native stubs** — non-JVM targets get compile-only stubs for java.*/Jackson/kotlin.jvm in `jsMain`. Zero commonMain changes.
 
 ### What stays, what gets typealiased, what's NOT migrated
 
@@ -113,8 +116,9 @@ by the stable lib that implements the spec (ktor, Wire, wasmtime).
 | `java.util.Optional<T>` | **typealias** → `expect class Optional` in commonMain | None — same API |
 | `java.util.function.*` | **typealias** → `expect fun interface` in commonMain | None — same API |
 | Jackson core (`JsonMapper`, serializers) | **Keep in commonMain** — jar is a dependency | None |
-| `java.util.concurrent.CompletableFuture` | **suspend** (future phase) | Services only |
+| `java.util.concurrent.CompletableFuture` | **Keep** — additive `executeSuspend()` alongside, stubs for non-JVM | None |
 | `java.io.InputStream/OutputStream` | **okio** `BufferedSource/BufferedSink` | ✅ Done (core interfaces) |
+| `java.time.*`, `java.io.*`, `java.nio.*` | **Keep** — stubs for non-JVM compilation | None |
 | Wire `@WireRpc`, `@WireField` | **Use directly** — standard proto lib | None |
 
 ### How any service becomes a secure tool

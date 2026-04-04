@@ -11,6 +11,7 @@ import com.anthropic.models.beta.skills.SkillRetrieveParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import kotlinx.coroutines.runBlocking
 
 @ExtendWith(TestServerExtension::class)
 internal class SkillServiceAsyncTest {
@@ -20,80 +21,84 @@ internal class SkillServiceAsyncTest {
     )
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val skillServiceAsync = client.beta().skills()
-
-        val skillFuture =
-            skillServiceAsync.create(
-                SkillCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                    .displayTitle("display_title")
-                    .addFile("Example data".byteInputStream())
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
                     .build()
-            )
+            val skillServiceAsync = client.beta().skills()
 
-        val skill = skillFuture.get()
-        skill.validate()
+            val skill =
+                skillServiceAsync.create(
+                    SkillCreateParams.builder()
+                        .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                        .displayTitle("display_title")
+                        .addFile("Example data".byteInputStream())
+                        .build()
+                )
+
+            skill.validate()
+        }
     }
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val skillServiceAsync = client.beta().skills()
-
-        val skillFuture =
-            skillServiceAsync.retrieve(
-                SkillRetrieveParams.builder()
-                    .skillId("skill_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
                     .build()
-            )
+            val skillServiceAsync = client.beta().skills()
 
-        val skill = skillFuture.get()
-        skill.validate()
+            val skill =
+                skillServiceAsync.retrieve(
+                    SkillRetrieveParams.builder()
+                        .skillId("skill_id")
+                        .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                        .build()
+                )
+
+            skill.validate()
+        }
     }
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val skillServiceAsync = client.beta().skills()
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
+                    .build()
+            val skillServiceAsync = client.beta().skills()
 
-        val pageFuture = skillServiceAsync.list()
+            val page = skillServiceAsync.list()
 
-        val page = pageFuture.get()
-        page.response().validate()
+            page.response().validate()
+        }
     }
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val skillServiceAsync = client.beta().skills()
-
-        val skillFuture =
-            skillServiceAsync.delete(
-                SkillDeleteParams.builder()
-                    .skillId("skill_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
                     .build()
-            )
+            val skillServiceAsync = client.beta().skills()
 
-        val skill = skillFuture.get()
-        skill.validate()
+            val skill =
+                skillServiceAsync.delete(
+                    SkillDeleteParams.builder()
+                        .skillId("skill_id")
+                        .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                        .build()
+                )
+
+            skill.validate()
+        }
     }
 }

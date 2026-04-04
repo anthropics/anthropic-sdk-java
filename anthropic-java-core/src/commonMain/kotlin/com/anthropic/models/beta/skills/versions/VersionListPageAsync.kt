@@ -9,7 +9,6 @@ import com.anthropic.core.checkRequired
 import com.anthropic.services.async.beta.skills.VersionServiceAsync
 import com.anthropic.core.contentHash
 import java.util.Optional
-import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrNull
 
@@ -55,8 +54,7 @@ private constructor(
         return params.toBuilder().page(nextCursor).build()
     }
 
-    override fun nextPage(): CompletableFuture<VersionListPageAsync> =
-        service.list(nextPageParams())
+    override suspend fun nextPage(): VersionListPageAsync = service.list(nextPageParams())
 
     fun autoPager(): AutoPagerAsync<VersionListResponse> =
         AutoPagerAsync.from(this, streamHandlerExecutor)

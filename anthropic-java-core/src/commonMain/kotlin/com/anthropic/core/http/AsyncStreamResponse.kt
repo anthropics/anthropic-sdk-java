@@ -64,6 +64,9 @@ interface AsyncStreamResponse<T> {
     }
 }
 
+internal fun <T> StreamResponse<T>.toAsync(streamHandlerExecutor: Executor) =
+    CompletableFuture.completedFuture(this).toAsync(streamHandlerExecutor)
+
 internal fun <T> CompletableFuture<StreamResponse<T>>.toAsync(streamHandlerExecutor: Executor) =
     PhantomReachableClosingAsyncStreamResponse(
         object : AsyncStreamResponse<T> {

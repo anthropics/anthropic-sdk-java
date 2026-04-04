@@ -9,7 +9,6 @@ import com.anthropic.models.beta.models.BetaModelInfo
 import com.anthropic.models.beta.models.ModelListPageAsync
 import com.anthropic.models.beta.models.ModelListParams
 import com.anthropic.models.beta.models.ModelRetrieveParams
-import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
 interface ModelServiceAsync {
@@ -32,38 +31,38 @@ interface ModelServiceAsync {
      * The Models API response can be used to determine information about a specific model or
      * resolve a model alias to a model ID.
      */
-    fun retrieve(modelId: String): CompletableFuture<BetaModelInfo> =
+    suspend fun retrieve(modelId: String): BetaModelInfo =
         retrieve(modelId, ModelRetrieveParams.none())
 
     /** @see retrieve */
-    fun retrieve(
+    suspend fun retrieve(
         modelId: String,
         params: ModelRetrieveParams = ModelRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BetaModelInfo> =
+    ): BetaModelInfo =
         retrieve(params.toBuilder().modelId(modelId).build(), requestOptions)
 
     /** @see retrieve */
-    fun retrieve(
+    suspend fun retrieve(
         modelId: String,
         params: ModelRetrieveParams = ModelRetrieveParams.none(),
-    ): CompletableFuture<BetaModelInfo> = retrieve(modelId, params, RequestOptions.none())
+    ): BetaModelInfo = retrieve(modelId, params, RequestOptions.none())
 
     /** @see retrieve */
-    fun retrieve(
+    suspend fun retrieve(
         params: ModelRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BetaModelInfo>
+    ): BetaModelInfo
 
     /** @see retrieve */
-    fun retrieve(params: ModelRetrieveParams): CompletableFuture<BetaModelInfo> =
+    suspend fun retrieve(params: ModelRetrieveParams): BetaModelInfo =
         retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
-    fun retrieve(
+    suspend fun retrieve(
         modelId: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<BetaModelInfo> =
+    ): BetaModelInfo =
         retrieve(modelId, ModelRetrieveParams.none(), requestOptions)
 
     /**
@@ -72,21 +71,21 @@ interface ModelServiceAsync {
      * The Models API response can be used to determine which models are available for use in the
      * API. More recently released models are listed first.
      */
-    fun list(): CompletableFuture<ModelListPageAsync> = list(ModelListParams.none())
+    suspend fun list(): ModelListPageAsync = list(ModelListParams.none())
 
     /** @see list */
-    fun list(
+    suspend fun list(
         params: ModelListParams = ModelListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<ModelListPageAsync>
+    ): ModelListPageAsync
 
     /** @see list */
-    fun list(
+    suspend fun list(
         params: ModelListParams = ModelListParams.none()
-    ): CompletableFuture<ModelListPageAsync> = list(params, RequestOptions.none())
+    ): ModelListPageAsync = list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(requestOptions: RequestOptions): CompletableFuture<ModelListPageAsync> =
+    suspend fun list(requestOptions: RequestOptions): ModelListPageAsync =
         list(ModelListParams.none(), requestOptions)
 
     /** A view of [ModelServiceAsync] that provides access to raw HTTP responses for each method. */
@@ -105,66 +104,66 @@ interface ModelServiceAsync {
          * Returns a raw HTTP response for `get /v1/models/{model_id}?beta=true`, but is otherwise
          * the same as [ModelServiceAsync.retrieve].
          */
-        fun retrieve(modelId: String): CompletableFuture<HttpResponseFor<BetaModelInfo>> =
+        suspend fun retrieve(modelId: String): HttpResponseFor<BetaModelInfo> =
             retrieve(modelId, ModelRetrieveParams.none())
 
         /** @see retrieve */
-        fun retrieve(
+        suspend fun retrieve(
             modelId: String,
             params: ModelRetrieveParams = ModelRetrieveParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BetaModelInfo>> =
+        ): HttpResponseFor<BetaModelInfo> =
             retrieve(params.toBuilder().modelId(modelId).build(), requestOptions)
 
         /** @see retrieve */
-        fun retrieve(
+        suspend fun retrieve(
             modelId: String,
             params: ModelRetrieveParams = ModelRetrieveParams.none(),
-        ): CompletableFuture<HttpResponseFor<BetaModelInfo>> =
+        ): HttpResponseFor<BetaModelInfo> =
             retrieve(modelId, params, RequestOptions.none())
 
         /** @see retrieve */
-        fun retrieve(
+        suspend fun retrieve(
             params: ModelRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BetaModelInfo>>
+        ): HttpResponseFor<BetaModelInfo>
 
         /** @see retrieve */
-        fun retrieve(
+        suspend fun retrieve(
             params: ModelRetrieveParams
-        ): CompletableFuture<HttpResponseFor<BetaModelInfo>> =
+        ): HttpResponseFor<BetaModelInfo> =
             retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
-        fun retrieve(
+        suspend fun retrieve(
             modelId: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<BetaModelInfo>> =
+        ): HttpResponseFor<BetaModelInfo> =
             retrieve(modelId, ModelRetrieveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /v1/models?beta=true`, but is otherwise the same as
          * [ModelServiceAsync.list].
          */
-        fun list(): CompletableFuture<HttpResponseFor<ModelListPageAsync>> =
+        suspend fun list(): HttpResponseFor<ModelListPageAsync> =
             list(ModelListParams.none())
 
         /** @see list */
-        fun list(
+        suspend fun list(
             params: ModelListParams = ModelListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<ModelListPageAsync>>
+        ): HttpResponseFor<ModelListPageAsync>
 
         /** @see list */
-        fun list(
+        suspend fun list(
             params: ModelListParams = ModelListParams.none()
-        ): CompletableFuture<HttpResponseFor<ModelListPageAsync>> =
+        ): HttpResponseFor<ModelListPageAsync> =
             list(params, RequestOptions.none())
 
         /** @see list */
-        fun list(
+        suspend fun list(
             requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<ModelListPageAsync>> =
+        ): HttpResponseFor<ModelListPageAsync> =
             list(ModelListParams.none(), requestOptions)
     }
 }

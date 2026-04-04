@@ -9,7 +9,6 @@ import com.anthropic.core.checkRequired
 import com.anthropic.services.async.beta.FileServiceAsync
 import com.anthropic.core.contentHash
 import java.util.Optional
-import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrNull
 
@@ -60,7 +59,7 @@ private constructor(
         return params.toBuilder().afterId(nextCursor).build()
     }
 
-    override fun nextPage(): CompletableFuture<FileListPageAsync> = service.list(nextPageParams())
+    override suspend fun nextPage(): FileListPageAsync = service.list(nextPageParams())
 
     fun autoPager(): AutoPagerAsync<FileMetadata> = AutoPagerAsync.from(this, streamHandlerExecutor)
 

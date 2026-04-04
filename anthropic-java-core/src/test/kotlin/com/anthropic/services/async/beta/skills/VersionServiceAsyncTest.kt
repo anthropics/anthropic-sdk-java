@@ -11,6 +11,7 @@ import com.anthropic.models.beta.skills.versions.VersionRetrieveParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import kotlinx.coroutines.runBlocking
 
 @ExtendWith(TestServerExtension::class)
 internal class VersionServiceAsyncTest {
@@ -20,82 +21,86 @@ internal class VersionServiceAsyncTest {
     )
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val versionServiceAsync = client.beta().skills().versions()
-
-        val versionFuture =
-            versionServiceAsync.create(
-                VersionCreateParams.builder()
-                    .skillId("skill_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                    .addFile("Example data".byteInputStream())
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
                     .build()
-            )
+            val versionServiceAsync = client.beta().skills().versions()
 
-        val version = versionFuture.get()
-        version.validate()
+            val version =
+                versionServiceAsync.create(
+                    VersionCreateParams.builder()
+                        .skillId("skill_id")
+                        .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                        .addFile("Example data".byteInputStream())
+                        .build()
+                )
+
+            version.validate()
+        }
     }
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val versionServiceAsync = client.beta().skills().versions()
-
-        val versionFuture =
-            versionServiceAsync.retrieve(
-                VersionRetrieveParams.builder()
-                    .skillId("skill_id")
-                    .version("version")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
                     .build()
-            )
+            val versionServiceAsync = client.beta().skills().versions()
 
-        val version = versionFuture.get()
-        version.validate()
+            val version =
+                versionServiceAsync.retrieve(
+                    VersionRetrieveParams.builder()
+                        .skillId("skill_id")
+                        .version("version")
+                        .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                        .build()
+                )
+
+            version.validate()
+        }
     }
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val versionServiceAsync = client.beta().skills().versions()
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
+                    .build()
+            val versionServiceAsync = client.beta().skills().versions()
 
-        val pageFuture = versionServiceAsync.list("skill_id")
+            val page = versionServiceAsync.list("skill_id")
 
-        val page = pageFuture.get()
-        page.response().validate()
+            page.response().validate()
+        }
     }
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val versionServiceAsync = client.beta().skills().versions()
-
-        val versionFuture =
-            versionServiceAsync.delete(
-                VersionDeleteParams.builder()
-                    .skillId("skill_id")
-                    .version("version")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+        runBlocking {
+            val client =
+                AnthropicOkHttpClientAsync.builder()
+                    .baseUrl(TestServerExtension.BASE_URL)
+                    .apiKey("my-anthropic-api-key")
                     .build()
-            )
+            val versionServiceAsync = client.beta().skills().versions()
 
-        val version = versionFuture.get()
-        version.validate()
+            val version =
+                versionServiceAsync.delete(
+                    VersionDeleteParams.builder()
+                        .skillId("skill_id")
+                        .version("version")
+                        .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                        .build()
+                )
+
+            version.validate()
+        }
     }
 }

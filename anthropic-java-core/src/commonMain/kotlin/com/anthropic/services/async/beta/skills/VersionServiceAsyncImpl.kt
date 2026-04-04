@@ -17,7 +17,7 @@ import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.json
 import com.anthropic.core.http.multipartFormData
 import com.anthropic.core.http.parseable
-import com.anthropic.core.prepareAsync
+import com.anthropic.core.prepareSuspend
 import com.anthropic.models.beta.skills.versions.VersionCreateParams
 import com.anthropic.models.beta.skills.versions.VersionCreateResponse
 import com.anthropic.models.beta.skills.versions.VersionDeleteParams
@@ -27,7 +27,6 @@ import com.anthropic.models.beta.skills.versions.VersionListPageResponse
 import com.anthropic.models.beta.skills.versions.VersionListParams
 import com.anthropic.models.beta.skills.versions.VersionRetrieveParams
 import com.anthropic.models.beta.skills.versions.VersionRetrieveResponse
-import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -49,33 +48,33 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): VersionServiceAsync =
         VersionServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun create(
+    override suspend fun create(
         params: VersionCreateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<VersionCreateResponse> =
+    ): VersionCreateResponse =
         // post /v1/skills/{skill_id}/versions?beta=true
-        withRawResponse().create(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().create(params, requestOptions).parse()
 
-    override fun retrieve(
+    override suspend fun retrieve(
         params: VersionRetrieveParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<VersionRetrieveResponse> =
+    ): VersionRetrieveResponse =
         // get /v1/skills/{skill_id}/versions/{version}?beta=true
-        withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().retrieve(params, requestOptions).parse()
 
-    override fun list(
+    override suspend fun list(
         params: VersionListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<VersionListPageAsync> =
+    ): VersionListPageAsync =
         // get /v1/skills/{skill_id}/versions?beta=true
-        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().list(params, requestOptions).parse()
 
-    override fun delete(
+    override suspend fun delete(
         params: VersionDeleteParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<VersionDeleteResponse> =
+    ): VersionDeleteResponse =
         // delete /v1/skills/{skill_id}/versions/{version}?beta=true
-        withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().delete(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         VersionServiceAsync.WithRawResponse {
@@ -93,10 +92,10 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
         private val createHandler: Handler<VersionCreateResponse> =
             jsonHandler<VersionCreateResponse>(clientOptions.jsonMapper)
 
-        override fun create(
+        override suspend fun create(
             params: VersionCreateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<VersionCreateResponse>> {
+        ): HttpResponseFor<VersionCreateResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("skillId", params.skillId().getOrNull())
@@ -109,12 +108,10 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(multipartFormData(clientOptions.jsonMapper, params._body()))
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { createHandler.handle(it) }
                             .also {
@@ -123,16 +120,15 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                                 }
                             }
                     }
-                }
         }
 
         private val retrieveHandler: Handler<VersionRetrieveResponse> =
             jsonHandler<VersionRetrieveResponse>(clientOptions.jsonMapper)
 
-        override fun retrieve(
+        override suspend fun retrieve(
             params: VersionRetrieveParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<VersionRetrieveResponse>> {
+        ): HttpResponseFor<VersionRetrieveResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("version", params.version().getOrNull())
@@ -150,12 +146,10 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { retrieveHandler.handle(it) }
                             .also {
@@ -164,16 +158,15 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                                 }
                             }
                     }
-                }
         }
 
         private val listHandler: Handler<VersionListPageResponse> =
             jsonHandler<VersionListPageResponse>(clientOptions.jsonMapper)
 
-        override fun list(
+        override suspend fun list(
             params: VersionListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<VersionListPageAsync>> {
+        ): HttpResponseFor<VersionListPageAsync> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("skillId", params.skillId().getOrNull())
@@ -185,12 +178,10 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { listHandler.handle(it) }
                             .also {
@@ -207,16 +198,15 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                                     .build()
                             }
                     }
-                }
         }
 
         private val deleteHandler: Handler<VersionDeleteResponse> =
             jsonHandler<VersionDeleteResponse>(clientOptions.jsonMapper)
 
-        override fun delete(
+        override suspend fun delete(
             params: VersionDeleteParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<VersionDeleteResponse>> {
+        ): HttpResponseFor<VersionDeleteResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("version", params.version().getOrNull())
@@ -235,12 +225,10 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { deleteHandler.handle(it) }
                             .also {
@@ -249,7 +237,6 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                                 }
                             }
                     }
-                }
         }
     }
 }

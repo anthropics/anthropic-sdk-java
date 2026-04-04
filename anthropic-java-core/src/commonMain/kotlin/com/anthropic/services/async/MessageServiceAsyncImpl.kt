@@ -21,7 +21,7 @@ import com.anthropic.core.http.json
 import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
 import com.anthropic.core.http.toAsync
-import com.anthropic.core.prepareAsync
+import com.anthropic.core.prepareSuspend
 import com.anthropic.helpers.warnIfThinkingEnabled
 import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.MessageCountTokensParams
@@ -30,7 +30,6 @@ import com.anthropic.models.messages.MessageTokensCount
 import com.anthropic.models.messages.RawMessageStreamEvent
 import com.anthropic.services.async.messages.BatchServiceAsync
 import com.anthropic.services.async.messages.BatchServiceAsyncImpl
-import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
 class MessageServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -49,29 +48,27 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
 
     override fun batches(): BatchServiceAsync = batches
 
-    override fun create(
+    override suspend fun create(
         params: MessageCreateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<Message> =
+    ): Message =
         // post /v1/messages
-        withRawResponse().create(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().create(params, requestOptions).parse()
 
-    override fun createStreaming(
+    override suspend fun createStreaming(
         params: MessageCreateParams,
         requestOptions: RequestOptions,
     ): AsyncStreamResponse<RawMessageStreamEvent> =
         // post /v1/messages
-        withRawResponse()
-            .createStreaming(params, requestOptions)
-            .thenApply { it.parse() }
+        withRawResponse().createStreaming(params, requestOptions).parse()
             .toAsync(clientOptions.streamHandlerExecutor)
 
-    override fun countTokens(
+    override suspend fun countTokens(
         params: MessageCountTokensParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<MessageTokensCount> =
+    ): MessageTokensCount =
         // post /v1/messages/count_tokens
-        withRawResponse().countTokens(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().countTokens(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         MessageServiceAsync.WithRawResponse {
@@ -94,10 +91,10 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
 
         private val createHandler: Handler<Message> = jsonHandler<Message>(clientOptions.jsonMapper)
 
-        override fun create(
+        override suspend fun create(
             params: MessageCreateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<Message>> {
+        ): HttpResponseFor<Message> {
             warnIfThinkingEnabled(params.model().toString(), params.thinking().orElse(null))
 
             val request =
@@ -107,7 +104,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .addPathSegments("v1", "messages")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions =
                 requestOptions
                     .applyDefaults(RequestOptions.from(clientOptions))
@@ -116,10 +113,8 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                         isStreaming = false,
                         model = params.model().toString(),
                     )
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { createHandler.handle(it) }
                             .also {
@@ -128,16 +123,15 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                                 }
                             }
                     }
-                }
         }
 
         private val createStreamingHandler: Handler<StreamResponse<RawMessageStreamEvent>> =
             sseHandler(clientOptions.jsonMapper).mapJson<RawMessageStreamEvent>()
 
-        override fun createStreaming(
+        override suspend fun createStreaming(
             params: MessageCreateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<StreamResponse<RawMessageStreamEvent>>> {
+        ): HttpResponseFor<StreamResponse<RawMessageStreamEvent>> {
             warnIfThinkingEnabled(params.model().toString(), params.thinking().orElse(null))
 
             val request =
@@ -157,7 +151,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                         )
                     )
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions =
                 requestOptions
                     .applyDefaults(RequestOptions.from(clientOptions))
@@ -166,10 +160,8 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                         isStreaming = true,
                         model = params.model().toString(),
                     )
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .let { createStreamingHandler.handle(it) }
                             .let { streamResponse ->
@@ -180,16 +172,15 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                                 }
                             }
                     }
-                }
         }
 
         private val countTokensHandler: Handler<MessageTokensCount> =
             jsonHandler<MessageTokensCount>(clientOptions.jsonMapper)
 
-        override fun countTokens(
+        override suspend fun countTokens(
             params: MessageCountTokensParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<MessageTokensCount>> {
+        ): HttpResponseFor<MessageTokensCount> {
             warnIfThinkingEnabled(params.model().toString(), params.thinking().orElse(null))
 
             val request =
@@ -199,12 +190,10 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .addPathSegments("v1", "messages", "count_tokens")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { countTokensHandler.handle(it) }
                             .also {
@@ -213,7 +202,6 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                                 }
                             }
                     }
-                }
         }
     }
 }

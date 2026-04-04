@@ -17,7 +17,7 @@ import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.json
 import com.anthropic.core.http.multipartFormData
 import com.anthropic.core.http.parseable
-import com.anthropic.core.prepareAsync
+import com.anthropic.core.prepareSuspend
 import com.anthropic.models.beta.files.DeletedFile
 import com.anthropic.models.beta.files.FileDeleteParams
 import com.anthropic.models.beta.files.FileDownloadParams
@@ -27,7 +27,6 @@ import com.anthropic.models.beta.files.FileListParams
 import com.anthropic.models.beta.files.FileMetadata
 import com.anthropic.models.beta.files.FileRetrieveMetadataParams
 import com.anthropic.models.beta.files.FileUploadParams
-import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -49,40 +48,40 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): FileServiceAsync =
         FileServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun list(
+    override suspend fun list(
         params: FileListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<FileListPageAsync> =
+    ): FileListPageAsync =
         // get /v1/files?beta=true
-        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().list(params, requestOptions).parse()
 
-    override fun delete(
+    override suspend fun delete(
         params: FileDeleteParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<DeletedFile> =
+    ): DeletedFile =
         // delete /v1/files/{file_id}?beta=true
-        withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().delete(params, requestOptions).parse()
 
-    override fun download(
+    override suspend fun download(
         params: FileDownloadParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<HttpResponse> =
+    ): HttpResponse =
         // get /v1/files/{file_id}/content?beta=true
         withRawResponse().download(params, requestOptions)
 
-    override fun retrieveMetadata(
+    override suspend fun retrieveMetadata(
         params: FileRetrieveMetadataParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<FileMetadata> =
+    ): FileMetadata =
         // get /v1/files/{file_id}?beta=true
-        withRawResponse().retrieveMetadata(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().retrieveMetadata(params, requestOptions).parse()
 
-    override fun upload(
+    override suspend fun upload(
         params: FileUploadParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<FileMetadata> =
+    ): FileMetadata =
         // post /v1/files?beta=true
-        withRawResponse().upload(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().upload(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         FileServiceAsync.WithRawResponse {
@@ -100,10 +99,10 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
         private val listHandler: Handler<FileListPageResponse> =
             jsonHandler<FileListPageResponse>(clientOptions.jsonMapper)
 
-        override fun list(
+        override suspend fun list(
             params: FileListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FileListPageAsync>> {
+        ): HttpResponseFor<FileListPageAsync> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -112,12 +111,10 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { listHandler.handle(it) }
                             .also {
@@ -134,16 +131,15 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                                     .build()
                             }
                     }
-                }
         }
 
         private val deleteHandler: Handler<DeletedFile> =
             jsonHandler<DeletedFile>(clientOptions.jsonMapper)
 
-        override fun delete(
+        override suspend fun delete(
             params: FileDeleteParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<DeletedFile>> {
+        ): HttpResponseFor<DeletedFile> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("fileId", params.fileId().getOrNull())
@@ -156,12 +152,10 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { deleteHandler.handle(it) }
                             .also {
@@ -170,13 +164,12 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                                 }
                             }
                     }
-                }
         }
 
-        override fun download(
+        override suspend fun download(
             params: FileDownloadParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponse> {
+        ): HttpResponse {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("fileId", params.fileId().getOrNull())
@@ -189,20 +182,19 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .putAllHeaders(DEFAULT_HEADERS)
                     .putHeader("Accept", "application/binary")
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response -> errorHandler.handle(response) }
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response)
         }
 
         private val retrieveMetadataHandler: Handler<FileMetadata> =
             jsonHandler<FileMetadata>(clientOptions.jsonMapper)
 
-        override fun retrieveMetadata(
+        override suspend fun retrieveMetadata(
             params: FileRetrieveMetadataParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FileMetadata>> {
+        ): HttpResponseFor<FileMetadata> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("fileId", params.fileId().getOrNull())
@@ -214,12 +206,10 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { retrieveMetadataHandler.handle(it) }
                             .also {
@@ -228,16 +218,15 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                                 }
                             }
                     }
-                }
         }
 
         private val uploadHandler: Handler<FileMetadata> =
             jsonHandler<FileMetadata>(clientOptions.jsonMapper)
 
-        override fun upload(
+        override suspend fun upload(
             params: FileUploadParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FileMetadata>> {
+        ): HttpResponseFor<FileMetadata> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -247,12 +236,10 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(multipartFormData(clientOptions.jsonMapper, params._body()))
                     .build()
-                    .prepareAsync(clientOptions, params)
+                    .prepareSuspend(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
+            val response = clientOptions.httpClient.executeSuspend(request, requestOptions)
+            return errorHandler.handle(response).parseable {
                         response
                             .use { uploadHandler.handle(it) }
                             .also {
@@ -261,7 +248,6 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                                 }
                             }
                     }
-                }
         }
     }
 }
