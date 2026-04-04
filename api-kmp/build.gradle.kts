@@ -54,7 +54,7 @@ configurations.all {
 
 // Task to run the code generator
 tasks.register<JavaExec>("generate") {
-    mainClass.set("com.anthropic.apikmp.MainKt")
+    mainClass.set("kmp.apigen.MainKt")
     classpath = kotlin.jvm().compilations["main"].runtimeDependencyFiles +
         kotlin.jvm().compilations["main"].output.allOutputs
     workingDir = rootDir

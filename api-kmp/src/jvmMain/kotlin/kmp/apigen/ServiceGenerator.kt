@@ -1,4 +1,4 @@
-package com.anthropic.apikmp
+package kmp.apigen
 
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy

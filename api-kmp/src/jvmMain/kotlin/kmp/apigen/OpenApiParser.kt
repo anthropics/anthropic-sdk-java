@@ -1,4 +1,4 @@
-package com.anthropic.apikmp
+package kmp.apigen
 
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.media.Schema

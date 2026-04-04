@@ -1,4 +1,4 @@
-package com.anthropic.apikmp
+package kmp.apigen
 
 import java.io.File
 
