@@ -1,0 +1,230 @@
+openapi: "3.0.3"
+info:
+  title: CalDAV/CardDAV API
+  description: Calendar and contacts via WebDAV (RFC 4791/6352)
+  version: "1.0"
+paths:
+  /calendars:
+    get:
+      operationId: listCalendars
+      tags: [Calendars]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Calendar'
+  /calendars/{calendarId}:
+    get:
+      operationId: getCalendar
+      tags: [Calendars]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Calendar'
+  /calendars/{calendarId}/events:
+    get:
+      operationId: listEvents
+      tags: [Events]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+    post:
+      operationId: createEvent
+      tags: [Events]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+  /calendars/{calendarId}/events/{eventId}:
+    get:
+      operationId: getEvent
+      tags: [Events]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+    put:
+      operationId: updateEvent
+      tags: [Events]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+    delete:
+      operationId: deleteEvent
+      tags: [Events]
+      responses:
+        '204': {}
+  /addressbooks:
+    get:
+      operationId: listAddressBooks
+      tags: [Contacts]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AddressBook'
+  /addressbooks/{bookId}/contacts:
+    get:
+      operationId: listContacts
+      tags: [Contacts]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Contact'
+    post:
+      operationId: createContact
+      tags: [Contacts]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+components:
+  schemas:
+    Calendar:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        timezone:
+          type: string
+        color:
+          type: string
+        owner:
+          type: string
+    Event:
+      type: object
+      required: [id, summary, start, end]
+      properties:
+        id:
+          type: string
+        summary:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        recurrence:
+          type: string
+        attendees:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attendee'
+        organizer:
+          $ref: '#/components/schemas/Attendee'
+        status:
+          type: string
+          enum: [confirmed, tentative, cancelled]
+        calendar:
+          $ref: '#/components/schemas/Calendar'
+        uri:
+          type: string
+          format: uri
+    Attendee:
+      type: object
+      required: [email]
+      properties:
+        email:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+          enum: [accepted, declined, tentative, needsAction]
+    AddressBook:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+    Contact:
+      type: object
+      required: [id, fullName]
+      properties:
+        id:
+          type: string
+        fullName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        organization:
+          type: string
+        photo:
+          type: string
+          format: uri
+        address:
+          type: string
+        birthday:
+          type: string
+          format: date-time
+        notes:
+          type: string
+        addressBook:
+          $ref: '#/components/schemas/AddressBook'
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://accounts.google.com/o/oauth2/auth
+          tokenUrl: https://oauth2.googleapis.com/token
+          scopes:
+            calendar: Calendar access
+            contacts: Contacts access
