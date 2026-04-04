@@ -1073,6 +1073,197 @@ sealed class SecurityScheme {
 }
 ```
 
+### Low-Level Design: Tool Roles + Security — OpenAPI / AsyncAPI / CLI / POSIX
+
+Tools (MCP, OpenAPI operations, CLI commands) need **role-based access control**
+matching standard security models. This is generic infrastructure — every MCP service
+needs it, not just Anthropic.
+
+#### Unified Role Model — maps across all API specs
+
+| Concept | OpenAPI | AsyncAPI | MCP SDK | CLI (POSIX) | ktor |
+|---|---|---|---|---|---|
+| **Operation** | `paths./endpoint.post` | `channels.topic.subscribe` | `Tool` (name, inputSchema) | command + args | `routing { post("/endpoint") {} }` |
+| **Auth** | `securitySchemes` | `securitySchemes` | Transport-level auth | login/sudo/capabilities | `install(Auth)` |
+| **Role** | `security[].scopes` | `security[].scopes` | Tool annotations | POSIX user/group/other | Custom plugin |
+| **Permission** | OAuth2 scopes | OAuth2 scopes | `allowedCallers` | rwx / ACL / capabilities | `authorize { hasRole() }` |
+| **Rate limit** | `x-ratelimit-*` headers | backpressure/QoS | Transport-level | ulimit / cgroup | `install(RateLimit)` |
+| **Concurrency** | N/A | consumer groups | N/A | process/thread limits | Mutex / Semaphore |
+
+#### SecurityContext — unified across all API types
+
+```kotlin
+/**
+ * Unified security context for any API tool/operation.
+ * Maps OpenAPI securitySchemes, AsyncAPI security, MCP auth, POSIX permissions.
+ */
+data class SecurityContext(
+    /** Authentication — who is the caller */
+    val identity: Identity,
+    /** Authorization — what can the caller do */
+    val roles: Set<Role>,
+    /** Rate limiting — how fast can the caller go */
+    val rateLimit: RateLimitConfig?,
+    /** Concurrency control — how many parallel calls */
+    val concurrency: ConcurrencyConfig?,
+)
+
+/** Identity from any auth scheme */
+sealed class Identity {
+    data class ApiKey(val key: String, val headerName: String = "x-api-key") : Identity()
+    data class Bearer(val token: String, val scopes: Set<String> = emptySet()) : Identity()
+    data class OAuth2(val accessToken: String, val refreshToken: String, val scopes: Set<String>) : Identity()
+    data class OIDC(val idToken: String, val claims: Map<String, String>) : Identity()
+    data class Basic(val username: String, val password: String) : Identity()
+    data class MutualTLS(val clientCertSubject: String) : Identity()
+    data class Posix(val uid: Int, val gid: Int, val groups: Set<Int>) : Identity()
+    object Anonymous : Identity()
+}
+
+/** Role matching OpenAPI scopes / POSIX groups / MCP tool annotations */
+data class Role(
+    val name: String,
+    /** OpenAPI/AsyncAPI OAuth2 scopes this role grants */
+    val scopes: Set<String> = emptySet(),
+    /** POSIX-style permission bits: read=4, write=2, execute=1 */
+    val posixMode: Int = 0b111,  // rwx default
+)
+
+/** Standard roles */
+object Roles {
+    val ADMIN = Role("admin", scopes = setOf("*"), posixMode = 0b111)
+    val USER = Role("user", scopes = setOf("read", "write"), posixMode = 0b110)
+    val READER = Role("reader", scopes = setOf("read"), posixMode = 0b100)
+    val SERVICE = Role("service", scopes = setOf("tools:call", "resources:read"), posixMode = 0b111)
+    val ANONYMOUS = Role("anonymous", scopes = emptySet(), posixMode = 0b100)
+}
+```
+
+#### Rate Limiting — ktor server + client
+
+```kotlin
+/** Rate limit config matching OpenAPI x-ratelimit-* headers */
+data class RateLimitConfig(
+    /** Max requests per window */
+    val limit: Int,
+    /** Window duration */
+    val window: kotlin.time.Duration,
+    /** Remaining requests in current window (from response headers) */
+    val remaining: Int? = null,
+    /** When current window resets (from response headers) */
+    val resetAt: kotlinx.datetime.Instant? = null,
+)
+
+// ktor server — rate limiting plugin
+install(RateLimit) {
+    register(RateLimitName("api")) {
+        rateLimiter(limit = 1000, refillPeriod = 1.minutes)
+        requestKey { call -> call.request.header("x-api-key") ?: "anonymous" }
+    }
+}
+
+// ktor client — respect rate limit headers from server
+install(HttpRequestRetry) {
+    retryOnServerErrors(maxRetries = 3)
+    retryIf { _, response -> response.status.value == 429 }
+    delayMillis { retry ->
+        // Respect Retry-After header
+        response?.headers?.get("Retry-After")?.toLongOrNull()?.times(1000)
+            ?: (2000L * (1 shl retry))  // exponential backoff fallback
+    }
+}
+```
+
+#### Concurrency Control — Mutex + Semaphore (kotlinx.coroutines)
+
+```kotlin
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.sync.withPermit
+
+/** Concurrency config for tool execution */
+data class ConcurrencyConfig(
+    /** Max parallel executions of this tool (Semaphore) */
+    val maxParallel: Int = Int.MAX_VALUE,
+    /** Exclusive access — only one caller at a time (Mutex) */
+    val exclusive: Boolean = false,
+)
+
+/** Tool executor with concurrency control */
+class ToolExecutor(private val config: ConcurrencyConfig) {
+    private val semaphore = Semaphore(config.maxParallel)
+    private val mutex = Mutex()
+
+    suspend fun <T> execute(block: suspend () -> T): T =
+        if (config.exclusive) {
+            mutex.withLock { block() }
+        } else {
+            semaphore.withPermit { block() }
+        }
+}
+
+// Usage with MCP tools:
+val codeExecutor = ToolExecutor(ConcurrencyConfig(maxParallel = 1, exclusive = true))
+val searchExecutor = ToolExecutor(ConcurrencyConfig(maxParallel = 10))
+
+// Tool call with concurrency control
+suspend fun callTool(name: String, args: Map<String, Any>): CallToolResult {
+    val executor = toolExecutors[name] ?: defaultExecutor
+    return executor.execute {
+        mcpClient.callTool(name, args)
+    }
+}
+```
+
+#### Tool Annotation with Role + Rate Limit + Concurrency
+
+```kotlin
+/**
+ * Annotate MCP tools with security metadata.
+ * Maps to OpenAPI operation.security, AsyncAPI channel.security,
+ * POSIX file permissions, CLI command capabilities.
+ */
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class ToolSecurity(
+    /** Required roles (OpenAPI scopes / POSIX groups) */
+    val roles: Array<String> = ["user"],
+    /** Rate limit: max calls per minute (0 = unlimited) */
+    val rateLimit: Int = 0,
+    /** Max parallel executions (0 = unlimited, 1 = exclusive/mutex) */
+    val maxParallel: Int = 0,
+    /** POSIX-style permission mode (e.g. 0b110 = rw-) */
+    val posixMode: Int = 0b111,
+)
+
+// Example: MCP tool with security annotations
+@WireRpc(path = "/tools/code_execute")
+@ToolSecurity(roles = ["admin", "service"], rateLimit = 10, maxParallel = 1)
+suspend fun executeCode(request: CodeExecuteRequest): CodeExecuteResult
+
+@WireRpc(path = "/tools/web_search")
+@ToolSecurity(roles = ["user", "service"], rateLimit = 100, maxParallel = 10)
+suspend fun webSearch(request: WebSearchRequest): WebSearchResult
+
+@WireRpc(path = "/tools/file_read")
+@ToolSecurity(roles = ["reader"], posixMode = 0b100)  // read-only
+suspend fun fileRead(request: FileReadRequest): FileReadResult
+```
+
+#### How this maps to existing stable libs
+
+| Pattern | Stable Lib | No Custom Code Needed |
+|---|---|---|
+| Auth (all schemes) | ktor `install(Auth)` | ✅ bearer, basic, OAuth2, OIDC |
+| Rate limiting (server) | ktor `install(RateLimit)` | ✅ per-key, per-route |
+| Rate limiting (client) | ktor `HttpRequestRetry` + Retry-After | ✅ 429 handling |
+| Mutex | `kotlinx.coroutines.sync.Mutex` | ✅ exclusive tool access |
+| Semaphore | `kotlinx.coroutines.sync.Semaphore` | ✅ parallel limit |
+| Role-based access | ktor `install(Authorization)` | ✅ route-level RBAC |
+| Tool metadata | Wire `@WireRpc` + custom `@ToolSecurity` | ✅ Wire for RPC, annotation for security |
+| POSIX permissions | `okio.FileSystem` permissions | ✅ file-level access control |
+
 ### 🔲 GAPS — Remaining java.* in Core (22 files, NOT models/services)
 
 **Phase 0: expect/actual infrastructure (new files, no existing changes)**
