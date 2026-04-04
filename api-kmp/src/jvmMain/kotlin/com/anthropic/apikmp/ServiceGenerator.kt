@@ -36,7 +36,7 @@ class ServiceGenerator(
         val serviceInterface = TypeSpec.interfaceBuilder(name)
 
         operations.forEach { op ->
-            val funName = op.operationId.toCamelCase()
+            val funName = op.operationId.replaceFirstChar { it.lowercase() }
             val funBuilder = FunSpec.builder(funName)
                 .addModifiers(KModifier.ABSTRACT, KModifier.SUSPEND)
 

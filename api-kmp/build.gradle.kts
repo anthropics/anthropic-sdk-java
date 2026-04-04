@@ -51,3 +51,11 @@ kotlin {
 configurations.all {
     resolutionStrategy { force("com.fasterxml.jackson.core:jackson-databind:2.14.0") }
 }
+
+// Task to run the code generator
+tasks.register<JavaExec>("generate") {
+    mainClass.set("com.anthropic.apikmp.MainKt")
+    classpath = kotlin.jvm().compilations["main"].runtimeDependencyFiles +
+        kotlin.jvm().compilations["main"].output.allOutputs
+    workingDir = rootDir
+}

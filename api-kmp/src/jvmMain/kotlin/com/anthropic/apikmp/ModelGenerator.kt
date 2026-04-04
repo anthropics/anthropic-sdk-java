@@ -65,11 +65,11 @@ class ModelGenerator(
                 )
                 .primaryConstructor(
                     FunSpec.constructorBuilder()
-                        .addParameter("value", ClassName(modelsPackage, variantName + "Value"))
+                        .addParameter("value", ClassName(modelsPackage, variantName))
                         .build()
                 )
                 .addProperty(
-                    PropertySpec.builder("value", ClassName(modelsPackage, variantName + "Value"))
+                    PropertySpec.builder("value", ClassName(modelsPackage, variantName))
                         .initializer("value")
                         .build()
                 )

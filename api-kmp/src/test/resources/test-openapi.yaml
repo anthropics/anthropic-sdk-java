@@ -1,0 +1,121 @@
+openapi: "3.0.3"
+info:
+  title: Test API
+  version: "1.0"
+paths:
+  /v1/messages:
+    post:
+      operationId: createMessage
+      tags: [Messages]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageCreateParams'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+  /v1/models:
+    get:
+      operationId: listModels
+      tags: [Models]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelList'
+components:
+  schemas:
+    MessageCreateParams:
+      type: object
+      required: [model, max_tokens, messages]
+      properties:
+        model:
+          type: string
+        max_tokens:
+          type: integer
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageParam'
+        system:
+          type: string
+    MessageParam:
+      type: object
+      required: [role, content]
+      properties:
+        role:
+          type: string
+          enum: [user, assistant]
+        content:
+          type: string
+    Message:
+      type: object
+      required: [id, type, role, content, model]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        role:
+          type: string
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContentBlock'
+        model:
+          type: string
+        stop_reason:
+          type: string
+    ContentBlock:
+      oneOf:
+        - $ref: '#/components/schemas/TextBlock'
+        - $ref: '#/components/schemas/ToolUseBlock'
+      discriminator:
+        propertyName: type
+        mapping:
+          text: '#/components/schemas/TextBlock'
+          tool_use: '#/components/schemas/ToolUseBlock'
+    TextBlock:
+      type: object
+      required: [type, text]
+      properties:
+        type:
+          type: string
+        text:
+          type: string
+    ToolUseBlock:
+      type: object
+      required: [type, id, name, input]
+      properties:
+        type:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        input:
+          type: object
+    ModelList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Model'
+    Model:
+      type: object
+      properties:
+        id:
+          type: string
+        display_name:
+          type: string
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: x-api-key
