@@ -43,6 +43,8 @@ fun main(args: Array<String>) {
     println("  generated GraphQL")
     TestEmitter().emit(openApi, pkg, outputDir)
     println("  generated tests")
+    GrpcEmitter().emit(openApi, pkg, outputDir)
+    println("  generated proto")
     ComponentEmitter().emit(openApi, pkg, outputDir)
     println("  generated services → $output")
 

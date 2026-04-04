@@ -1372,24 +1372,52 @@ api-gen generates from one OpenAPI spec:
 - **MCP**: tool JSON definitions
 - **SSE/WebSocket**: `Flow<T>` streams from AsyncAPI channels
 
-### 🔲 NEXT — ktor CIO Server Tests
-- Test all serializers: JSON, XML, MsgPack, Protobuf
-- Test all protocols: HTTPS, WSS, SSE, WebDAV, GraphQL
-- ktor CIO embedded server (not WireMock) for full protocol coverage
+### ✅ DONE — ktor CIO Server Tests (`6e7c02b`)
+- 4 REST tests: GET by ID, GET by status, POST+GET round-trip, store inventory
+- ktor testApplication with generated @Serializable models
 
-### 🔲 NEXT — Compose KMP UI Generation
-- api-gen emitter: schemas → Form/List/Detail `@Composable`
-- Schema properties → TextField/Checkbox/Dropdown components
+### ✅ DONE — Compose KMP UI Generation (`a64bd20`, `9fdff65`)
+- ComposeEmitter: Form/List/Detail/MasterDetail from schemas
+- FK navigation: $ref → onCategoryClick callback
+- Smart display: name > title > id for list headline
 
-### 🔲 NEXT — Database Generation
-- api-gen emitter: schemas → Exposed tables (JVM) / SQLDelight .sq (KMP)
-- Schema properties → columns, refs → foreign keys
+### ✅ DONE — Compose HTML Web Generation (`a325380`)
+- HtmlEmitter: Table/Form/Detail/MasterDetail for Kotlin/JS web
+- FK links: <A href="#/category"> in table + detail
 
-### 🔲 PLANNED — Additional Non-JVM Targets
-- Native: macOS (x64/arm64), iOS (arm64/sim), Linux (x64/arm64)
-- Wasm: wasmJs, wasmWasi
-- Same jsMain stub approach + native actual impls
-- JS blocked on `kotlin.jvm` annotations → fix via Wire .proto code gen
+### ✅ DONE — Database Generation (`b18f436`, `86dc654`)
+- Exposed Tables.kt + SQLDelight .sq from schemas
+- findByName, findByStatus, selectPaged, count
+- Named SQL parameters (:id, :name) — prevent injection
+- x-sql OpenAPI extension for custom queries
+
+### ✅ DONE — GraphQL Generation (`145828c`)
+- schema.graphql + open QueryResolver + open MutationResolver
+- Mutations return PatchEvent<T>
+
+### ✅ DONE — Test Generation (`d7ebac8`)
+- TestEmitter: 5 tests per schema (GET, add, replace, remove, SSE)
+
+### ✅ DONE — Component Architecture + PatchEvent (`0beb25d`→`a7d2f58`)
+- PatchEvent<T>: universal mutation event (add/replace/remove/patch)
+- Component<T> interface: CRUD + changes() Flow
+- SSE + WS broadcast same PatchEvent
+- All HTTP methods = patch operations
+
+### 🔲 NEXT — Wire .proto drives models (no mappers)
+- GrpcEmitter generates .proto from OpenAPI schemas
+- Wire Gradle plugin compiles .proto → KMP data classes
+- All emitters use Wire-generated types directly (no DTO/mapper)
+- Petstore .proto end-to-end test
+
+### 🔲 NEXT — MCP SDK integration
+- Add io.modelcontextprotocol:kotlin-sdk:0.11.0 dependency
+- Components implement McpToolProvider
+- Schema Registry exposes all components as MCP tools
+
+### 🔲 NEXT — Multi-format serialization
+- MsgPack, Protobuf, CBOR via ktor ContentNegotiation
+- Same Wire classes, different wire format per Accept header
 
 ---
 

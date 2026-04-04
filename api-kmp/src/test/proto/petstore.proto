@@ -1,0 +1,70 @@
+syntax = "proto3";
+package io_petstore;
+import "google/protobuf/empty.proto";
+
+message Order {
+  int64 id = 1;
+  int64 petId = 2;
+  int32 quantity = 3;
+  string shipDate = 4;
+  string status = 5;
+  bool complete = 6;
+}
+
+message Category {
+  int64 id = 1;
+  string name = 2;
+}
+
+message User {
+  int64 id = 1;
+  string username = 2;
+  string firstName = 3;
+  string lastName = 4;
+  string email = 5;
+  string password = 6;
+  string phone = 7;
+  int32 userStatus = 8;
+}
+
+message Tag {
+  int64 id = 1;
+  string name = 2;
+}
+
+message Pet {
+  int64 id = 1;
+  string name = 2;
+  Category category = 3;
+  repeated string photoUrls = 4;
+  repeated Tag tags = 5;
+  string status = 6;
+}
+
+message ApiResponse {
+  int32 code = 1;
+  string type = 2;
+  string message = 3;
+}
+
+service PetstoreService {
+  rpc UpdatePet(Pet) returns (Pet);
+  rpc AddPet(Pet) returns (Pet);
+  rpc FindPetsByStatus(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc FindPetsByTags(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc GetPetById(google.protobuf.Empty) returns (Pet);
+  rpc UpdatePetWithForm(google.protobuf.Empty) returns (Pet);
+  rpc DeletePet(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc UploadFile(google.protobuf.Empty) returns (ApiResponse);
+  rpc GetInventory(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc PlaceOrder(Order) returns (Order);
+  rpc GetOrderById(google.protobuf.Empty) returns (Order);
+  rpc DeleteOrder(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc CreateUser(User) returns (User);
+  rpc CreateUsersWithListInput(google.protobuf.Empty) returns (User);
+  rpc LoginUser(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc LogoutUser(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc GetUserByName(google.protobuf.Empty) returns (User);
+  rpc UpdateUser(User) returns (google.protobuf.Empty);
+  rpc DeleteUser(google.protobuf.Empty) returns (google.protobuf.Empty);
+}
