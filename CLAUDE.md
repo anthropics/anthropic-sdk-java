@@ -9,14 +9,14 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 
 - **Migration Plan + Low-Level Design**: [`docs/KMP-CONVERSION-PLAN.md`](docs/KMP-CONVERSION-PLAN.md)
 - **Branch**: `claude/convert-to-kmp-I9zBV`
-- **107 commits** on branch, all pushed
+- **58 commits** on branch, all pushed
 
 ## Current Status
 
 | Metric | Value |
 |---|---|
-| Files in commonMain | 602 |
-| Files in jvmMain | 3 (PlatformJvm, PropertiesJvm, ServiceExceptionExtensions) |
+| Files in commonMain | 614 (608 com.anthropic + 6 kotlinx.kmp.util) |
+| Files in jvmMain | 7 (PlatformJvm, PlatformTimeJvm, PropertiesJvm, PhantomReachableJvm, ServiceExceptionExtensions, OptionalJvm, FunctionalJvm) |
 | java.* imports remaining in core | 42 (all CompletableFuture/Executor/Clock — blocked on suspend conversion) |
 | JVM tests | 2,682 pass |
 | commonTest tests | 66 (KmpOptional) |
@@ -37,15 +37,15 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | Section | Line | What |
 |---|---|---|
 | GAPS — 22 core files | L1267 | Phase 0-4 tables with ✅/🔲 per file |
-| GAPS — 730 lines custom code | L1248 | RetryingHttpClient, MultipartBody, SseHandler to delete |
-| GAPS — MCP SDK Integration | L1262 | Not yet added |
+| GAPS — 730 lines custom code | L1567 | RetryingHttpClient, MultipartBody, SseHandler to delete |
+| GAPS — MCP SDK Integration | L1333 | Not yet added |
 
 ### Low-Level Designs
 | Section | Line | What |
 |---|---|---|
 | **Stable Libs Strategy** | L691 | Core principle: libs replace all boilerplate |
 | **Serialization Formats** | L710 | JSON + MsgPack + Protobuf + CBOR via ktor ContentNegotiation |
-| **Custom Code → Lib Map** | L724 | 730 lines to delete, mapped to stable lib replacements |
+| **Custom Code → Lib Map** | L736 | 730 lines to delete, mapped to stable lib replacements |
 | **JsonField/Value = Wire** | L752 | Field presence semantics: KnownValue/Missing/Null = Wire @WireField |
 | **Deep Classification** | L780 | Nothing in com.anthropic.core is Claude-specific |
 | **ClientOptions → ktor** | L833 | Field-by-field mapping to ktor CIO plugins + OkHttp |
@@ -57,7 +57,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | **MCP SDK Integration** | L2113 | KMP, McpClient + Transport + Tool bridge |
 | **Protobuf/gRPC (Wire)** | L2227 | KMP, Wire plugin + proto codegen + GrpcClient |
 | **MessagePack** | L2352 | ktor ContentNegotiation + kotlinx-serialization-msgpack |
-| **Annotations Inventory** | L2510 | All annotations: Jackson, Kotlin, Wire, custom — migration status |
+| **Annotations Inventory** | L2510 | All annotations: Jackson, Kotlin, Wire, custom — migration status (section A) |
 | **Folder Structure** | L2581 | Actual current state of commonMain/jvmMain/commonTest |
 | **kotlinx.serialization Patterns** | L2735 | Model class patterns for @Serializable migration |
 
@@ -89,6 +89,85 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 7. **Flow replaces Stream** — `stream()` returns `Flow<T>` on all platforms
 8. **All OpenAPI security schemes** via ktor Auth plugin (apiKey, bearer, OAuth2, OIDC, basic, mTLS)
 9. **Tool security** — Mutex/Semaphore for concurrency, @ToolSecurity for role-based access
+
+## Source Reference — Key Classes & Methods
+
+All paths relative to `anthropic-java-core/src/`.
+
+### Core Types (Wire-style field containers)
+| Class | Location |
+|---|---|
+| `sealed class JsonField<T>` | `commonMain/.../core/Values.kt:5` |
+| `sealed class JsonValue` | `commonMain/.../core/Values.kt:86` |
+| `class KnownValue<T>` | `commonMain/.../core/Values.kt:119` |
+| `class JsonMissing` | `commonMain/.../core/Values.kt:127` |
+| `class JsonNull` | `commonMain/.../core/Values.kt:132` |
+
+### HTTP Interfaces (okio-based)
+| Interface | Location | Key Method |
+|---|---|---|
+| `interface HttpClient` | `commonMain/.../core/http/HttpClient.kt:6` | `execute()`, `executeAsync()` |
+| `interface HttpResponse` | `commonMain/.../core/http/HttpResponse.kt:5` | `body(): BufferedSource` |
+| `interface HttpRequestBody` | `commonMain/.../core/http/HttpRequestBody.kt:5` | `writeTo(sink: BufferedSink)` |
+| `interface StreamResponse<T>` | `commonMain/.../core/http/StreamResponse.kt:6` | `stream(): Flow<T>` |
+| `interface HttpResponseFor<T>` | `commonMain/.../core/http/HttpResponseFor.kt:5` | `parse(): T` |
+
+### Optional (expect/actual — kotlinx.kmp.util.optional)
+| Declaration | Location |
+|---|---|
+| `expect class Optional<T>` | `commonMain/.../kotlinx/kmp/util/optional/KmpOptional.kt:24` |
+| `actual typealias Optional = java.util.Optional` | `jvmMain/.../kotlinx/kmp/util/optional/OptionalJvm.kt` |
+| `expect fun optionalOf(value)` | `commonMain/.../kotlinx/kmp/util/optional/KmpOptional.kt:68` |
+| `fun Optional<T>.orNull(): T?` | `commonMain/.../kotlinx/kmp/util/optional/KmpOptional.kt:81` |
+| `fun Optional<T>.getOrNull(): T?` | `commonMain/.../kotlinx/kmp/util/optional/KmpOptional.kt:90` |
+
+### Functional Interfaces (expect/actual — kotlinx.kmp.util.optional)
+| Declaration | Location |
+|---|---|
+| `expect fun interface Function<T,R>` | `commonMain/.../kotlinx/kmp/util/optional/KmpFunctional.kt:23` |
+| `expect fun interface Supplier<T>` | `commonMain/.../kotlinx/kmp/util/optional/KmpFunctional.kt:35` |
+| `expect fun interface Consumer<T>` | `commonMain/.../kotlinx/kmp/util/optional/KmpFunctional.kt:47` |
+| `expect fun interface Predicate<T>` | `commonMain/.../kotlinx/kmp/util/optional/KmpFunctional.kt:59` |
+| `expect fun interface BiFunction<T,U,R>` | `commonMain/.../kotlinx/kmp/util/optional/KmpFunctional.kt:71` |
+
+### HttpMethod (multi-protocol enum)
+| Declaration | Location |
+|---|---|
+| `enum class HttpMethod(value, protocol, streamMode)` | `commonMain/.../core/http/HttpMethod.kt:15` |
+| `enum class Protocol { HTTP, WEBDAV, GRPC, RSOCKET, MCP }` | `commonMain/.../core/http/HttpMethod.kt:60` |
+| `enum class StreamMode { UNARY, SERVER, CLIENT, BIDI }` | `commonMain/.../core/http/HttpMethod.kt:65` |
+
+### ClientOptions & Config
+| Declaration | Location |
+|---|---|
+| `class ClientOptions` | `commonMain/.../core/ClientOptions.kt:22` |
+| `class ClientOptions.Builder` | `commonMain/.../core/ClientOptions.kt:140` |
+| `fun Builder.build(): ClientOptions` | `commonMain/.../core/ClientOptions.kt:381` |
+| `class Timeout` | `commonMain/.../core/Timeout.kt` |
+| `class RequestOptions` | `commonMain/.../core/RequestOptions.kt` |
+
+### Ktor Bridge
+| Function | Location |
+|---|---|
+| `fun HttpMethod.toKtor()` | `commonMain/.../core/KtorBridge.kt:14` |
+| `fun Headers.toKtor()` | `commonMain/.../core/KtorBridge.kt:17` |
+| `fun io.ktor.http.Headers.toSdk()` | `commonMain/.../core/KtorBridge.kt:25` |
+| `fun QueryParams.toKtor()` | `commonMain/.../core/KtorBridge.kt:32` |
+| `class KtorHttpClient` | `commonMain/.../core/http/KtorHttpClient.kt:18` |
+
+### Platform expect/actual
+| Declaration | Location | JVM Actual |
+|---|---|---|
+| `expect fun urlEncode(value)` | `commonMain/.../core/Platform.kt:4` | `PlatformJvm.kt` → URLEncoder |
+| `expect fun currentTimeNanos()` | `commonMain/.../core/PlatformTime.kt:9` | `PlatformTimeJvm.kt` → System.nanoTime |
+| `expect fun parseRetryAfterToDelayNanos()` | `commonMain/.../core/PlatformTime.kt:16` | `PlatformTimeJvm.kt` → OffsetDateTime |
+| `expect fun getOsArch/Name/Version()` | `commonMain/.../core/Properties.kt:3-11` | `PropertiesJvm.kt` → System.getProperty |
+| `expect fun closeWhenPhantomReachable()` | `commonMain/.../core/PhantomReachable.kt:22` | `PhantomReachableJvm.kt` → java.lang.ref.Cleaner |
+
+### Test
+| Test | Location | Count |
+|---|---|---|
+| `OptionalTest` | `commonTest/.../kotlinx/kmp/util/optional/OptionalTest.kt` | 66 tests |
 
 ## Build & Test
 
