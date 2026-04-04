@@ -319,4 +319,135 @@ class OptionalTest {
         val multimap = mapOf("a" to listOf(1))
         assertTrue(multimap.getFirst("z").isEmpty)
     }
+
+    // ========================================================================
+    // java.util.Optional API — map, flatMap, filter, ifPresent, orElseGet, orElseThrow
+    // ========================================================================
+
+    @Test
+    fun map_withValue_transforms() {
+        val opt = optionalOf(42).map { it.toString() }
+        assertEquals("42", opt.get())
+    }
+
+    @Test
+    fun map_withEmpty_staysEmpty() {
+        val opt = emptyOptional<Int>().map { it.toString() }
+        assertTrue(opt.isEmpty)
+    }
+
+    @Test
+    fun map_returningNull_becomesEmpty() {
+        val opt = optionalOf("hello").map { null }
+        assertTrue(opt.isEmpty)
+    }
+
+    @Test
+    fun flatMap_withValue_transforms() {
+        val opt = optionalOf(42).flatMap { optionalOf(it.toString()) }
+        assertEquals("42", opt.get())
+    }
+
+    @Test
+    fun flatMap_withValue_toEmpty() {
+        val opt = optionalOf(42).flatMap { emptyOptional<String>() }
+        assertTrue(opt.isEmpty)
+    }
+
+    @Test
+    fun flatMap_withEmpty_staysEmpty() {
+        val opt = emptyOptional<Int>().flatMap { optionalOf(it.toString()) }
+        assertTrue(opt.isEmpty)
+    }
+
+    @Test
+    fun filter_matching_keepsValue() {
+        val opt = optionalOf(42).filter { it > 10 }
+        assertEquals(42, opt.get())
+    }
+
+    @Test
+    fun filter_notMatching_becomesEmpty() {
+        val opt = optionalOf(42).filter { it > 100 }
+        assertTrue(opt.isEmpty)
+    }
+
+    @Test
+    fun filter_empty_staysEmpty() {
+        val opt = emptyOptional<Int>().filter { it > 0 }
+        assertTrue(opt.isEmpty)
+    }
+
+    @Test
+    fun ifPresent_withValue_executesAction() {
+        var captured: String? = null
+        optionalOf("hello").ifPresent { captured = it }
+        assertEquals("hello", captured)
+    }
+
+    @Test
+    fun ifPresent_withEmpty_doesNothing() {
+        var called = false
+        emptyOptional<String>().ifPresent { called = true }
+        assertFalse(called)
+    }
+
+    @Test
+    fun orElseGet_withValue_returnsValue() {
+        assertEquals(42, optionalOf(42).orElseGet { 0 })
+    }
+
+    @Test
+    fun orElseGet_withEmpty_callsSupplier() {
+        assertEquals(99, emptyOptional<Int>().orElseGet { 99 })
+    }
+
+    @Test
+    fun orElseThrow_withValue_returnsValue() {
+        assertEquals("ok", optionalOf("ok").orElseThrow { RuntimeException("no") })
+    }
+
+    @Test
+    fun orElseThrow_withEmpty_throws() {
+        assertFailsWith<IllegalStateException> {
+            emptyOptional<String>().orElseThrow { IllegalStateException("missing!") }
+        }
+    }
+
+    // ========================================================================
+    // Functional interface tests
+    // ========================================================================
+
+    @Test
+    fun function_toFunction_works() {
+        val fn = toFunction<Int, String> { it.toString() }
+        assertEquals("42", fn.apply(42))
+    }
+
+    @Test
+    fun supplier_toSupplier_works() {
+        val s = toSupplier { 42 }
+        assertEquals(42, s.get())
+    }
+
+    @Test
+    fun consumer_toConsumer_works() {
+        var captured = 0
+        val c = toConsumer<Int> { captured = it }
+        c.accept(99)
+        assertEquals(99, captured)
+    }
+
+    @Test
+    fun predicate_toPredicate_works() {
+        val p = toPredicate<Int> { it > 10 }
+        assertTrue(p.test(20))
+        assertFalse(p.test(5))
+    }
+
+    @Test
+    fun biFunction_toBiFunction_works() {
+        val bf = toBiFunction<Int, String, String> { n, s -> "$n-$s" }
+        assertEquals("1-hello", bf.apply(1, "hello"))
+    }
 }
