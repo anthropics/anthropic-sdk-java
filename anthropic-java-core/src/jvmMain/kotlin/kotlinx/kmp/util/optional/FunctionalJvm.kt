@@ -1,5 +1,5 @@
 @file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
-package com.anthropic.core
+package kotlinx.kmp.util.optional
 
 /**
  * JVM actuals: typealias to java.util.function interfaces.

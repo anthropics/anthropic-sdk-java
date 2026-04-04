@@ -1,6 +1,6 @@
 @file:JvmName("OptionalJvm")
 @file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
-package com.anthropic.core
+package kotlinx.kmp.util.optional
 
 /**
  * JVM actual: typealias to java.util.Optional.
