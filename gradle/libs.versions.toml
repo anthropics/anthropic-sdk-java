@@ -23,6 +23,7 @@ httpcomponents-client = "5.3.1"
 commons-validator = "1.9.0"
 libphonenumber = "8.13.50"
 ezvcard = "0.12.1"
+ical4j = "4.0.7"
 icu4j = "76.1"
 
 [libraries]
@@ -65,6 +66,7 @@ jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-dat
 commons-validator = { module = "commons-validator:commons-validator", version.ref = "commons-validator" }
 libphonenumber = { module = "com.googlecode.libphonenumber:libphonenumber", version.ref = "libphonenumber" }
 ezvcard = { module = "com.googlecode.ez-vcard:ez-vcard", version.ref = "ezvcard" }
+ical4j = { module = "org.mnode.ical4j:ical4j", version.ref = "ical4j" }
 icu4j = { module = "com.ibm.icu:icu4j", version.ref = "icu4j" }
 
 # Schema

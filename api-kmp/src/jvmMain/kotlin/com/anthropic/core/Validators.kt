@@ -118,7 +118,6 @@ object Validators {
 
     fun validateEAN13(value: String): Boolean =
         org.apache.commons.validator.routines.checkdigit.EAN13CheckDigit.EAN13_CHECK_DIGIT.isValid(value)
-}
 
     // === vCard / iCalendar conversion ===
 
@@ -146,25 +145,24 @@ object Validators {
         return ezvcard.Ezvcard.write(vcard).go()
     }
 
-    /** Parse iCalendar (.ics) string → Event-like maps. */
+    /** Parse iCalendar (.ics) string → Event-like maps via ical4j. */
     fun parseICal(ics: String): List<Map<String, String>> {
+        val calendar = net.fortuna.ical4j.data.CalendarBuilder().build(ics.byteInputStream())
         val events = mutableListOf<Map<String, String>>()
-        var current: MutableMap<String, String>? = null
-        ics.lines().forEach { line ->
-            when {
-                line.startsWith("BEGIN:VEVENT") -> current = mutableMapOf()
-                line.startsWith("END:VEVENT") -> { current?.let { events.add(it) }; current = null }
-                current != null && ":" in line -> {
-                    val key = line.substringBefore(":").substringBefore(";").lowercase()
-                    val value = line.substringAfter(":")
-                    current!![key] = value
-                }
-            }
+        calendar.getComponents<net.fortuna.ical4j.model.component.VEvent>(net.fortuna.ical4j.model.component.VEvent.VEVENT).forEach { component ->
+            val map = mutableMapOf<String, String>()
+            component.summary.ifPresent { map["summary"] = it.value }
+            component.description.ifPresent { map["description"] = it.value }
+            component.location.ifPresent { map["location"] = it.value }
+            component.uid.ifPresent { map["id"] = it.value }
+            
+            
+            events.add(map)
         }
         return events
     }
 
-    /** Convert Event fields → iCalendar (.ics) string. */
+    /** Convert Event fields → iCalendar (.ics) via ical4j. */
     fun toICal(events: List<Map<String, String>>): String {
         val sb = StringBuilder()
         sb.appendLine("BEGIN:VCALENDAR")
@@ -172,12 +170,11 @@ object Validators {
         sb.appendLine("VERSION:2.0")
         events.forEach { fields ->
             sb.appendLine("BEGIN:VEVENT")
-            fields["summary"]?.let { sb.appendLine("SUMMARY:$it") }
-            fields["description"]?.let { sb.appendLine("DESCRIPTION:$it") }
-            fields["location"]?.let { sb.appendLine("LOCATION:$it") }
-            fields["id"]?.let { sb.appendLine("UID:$it") }
+            fields.forEach { (k, v) -> sb.appendLine("${k.uppercase()}:$v") }
             sb.appendLine("END:VEVENT")
         }
         sb.appendLine("END:VCALENDAR")
         return sb.toString()
     }
+}
+
