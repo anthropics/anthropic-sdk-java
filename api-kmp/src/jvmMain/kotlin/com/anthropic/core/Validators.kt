@@ -230,3 +230,88 @@ object Validators {
         // ICU4J 76+ has PersonNameFormatter
         return name.full // fallback — ICU PersonNameFormatter is new API
     }
+
+    // === ICU CLDR: Timezone → City → Calendar → DateTime per country ===
+
+    /** Timezone → exemplar city (ICU CLDR). "America/New_York" → "New York" */
+    fun timezoneToCity(tz: Timezone): String =
+        com.ibm.icu.util.TimeZone.getTimeZone(tz.value)
+            .getDisplayName(false, com.ibm.icu.util.TimeZone.LONG, com.ibm.icu.util.ULocale.ENGLISH)
+
+    /** Country → preferred calendar type (ICU CLDR). JP → "japanese", SA → "islamic", etc. */
+    fun countryToCalendarType(country: Country): String {
+        val locale = com.ibm.icu.util.ULocale("@calendar=", country.value)
+        val cal = com.ibm.icu.util.Calendar.getInstance(locale)
+        return cal.type ?: "gregorian"
+    }
+
+    /** Country → ICU Calendar instance (gregorian, japanese, islamic, etc.) */
+    fun countryToCalendar(country: Country): com.ibm.icu.util.Calendar {
+        val locale = countryToLocale(country)
+        return com.ibm.icu.util.Calendar.getInstance(locale)
+    }
+
+    /** Country → date format pattern (ICU CLDR). US → "M/d/yy", DE → "dd.MM.yy", JP → "yy/MM/dd" */
+    fun countryToDateFormat(country: Country, style: Int = com.ibm.icu.text.DateFormat.SHORT): String {
+        val locale = countryToLocale(country)
+        val fmt = com.ibm.icu.text.DateFormat.getDateInstance(style, locale)
+        return if (fmt is com.ibm.icu.text.SimpleDateFormat) fmt.toPattern() else "yyyy-MM-dd"
+    }
+
+    /** Country → time format pattern. US → "h:mm a", DE → "HH:mm", JP → "H:mm" */
+    fun countryToTimeFormat(country: Country, style: Int = com.ibm.icu.text.DateFormat.SHORT): String {
+        val locale = countryToLocale(country)
+        val fmt = com.ibm.icu.text.DateFormat.getTimeInstance(style, locale)
+        return if (fmt is com.ibm.icu.text.SimpleDateFormat) fmt.toPattern() else "HH:mm:ss"
+    }
+
+    /** Country → first day of week. US → SUNDAY, DE → MONDAY, SA → SATURDAY */
+    fun countryToFirstDayOfWeek(country: Country): Int =
+        countryToCalendar(country).firstDayOfWeek
+
+    /** Country → weekend days. US → [SAT,SUN], SA → [FRI,SAT] */
+    fun countryToWeekend(country: Country): Pair<Int, Int> {
+        val cal = countryToCalendar(country)
+        return cal.weekData.weekendOnset to cal.weekData.weekendCease
+    }
+
+    /** Country → number format. US → "1,234.56", DE → "1.234,56", FR → "1 234,56" */
+    fun countryToNumberFormat(country: Country): String {
+        val locale = countryToLocale(country)
+        val fmt = com.ibm.icu.text.NumberFormat.getInstance(locale)
+        return fmt.format(1234.56)
+    }
+
+    /** Country → currency format. US → "$1,234.56", JP → "¥1,235", DE → "1.234,56 €" */
+    fun countryToCurrencyFormat(country: Country, amount: Double = 1234.56): String {
+        val locale = countryToLocale(country)
+        val fmt = com.ibm.icu.text.NumberFormat.getCurrencyInstance(locale)
+        return fmt.format(amount)
+    }
+
+    /** Country → measurement system. US → "US", GB → "UK", most → "SI" */
+    fun countryToMeasurementSystem(country: Country): String {
+        val ms = com.ibm.icu.util.LocaleData.getMeasurementSystem(countryToLocale(country))
+        return when (ms) {
+            com.ibm.icu.util.LocaleData.MeasurementSystem.US -> "US"
+            com.ibm.icu.util.LocaleData.MeasurementSystem.UK -> "UK"
+            else -> "SI"
+        }
+    }
+
+    /** GeoIp → fully localized context: calendar, date format, number format, currency format */
+    fun geoIpToLocalContext(geoIp: GeoIp): Map<String, String> = buildMap {
+        put("country", geoIp.country.value)
+        put("city", geoIp.city)
+        put("timezone", geoIp.timezone.value)
+        put("locale", geoIp.locale.value)
+        put("currency", geoIp.currency.value)
+        put("phoneCode", geoIp.phoneCode)
+        put("calendarType", countryToCalendarType(geoIp.country))
+        put("dateFormat", countryToDateFormat(geoIp.country))
+        put("timeFormat", countryToTimeFormat(geoIp.country))
+        put("numberFormat", countryToNumberFormat(geoIp.country))
+        put("currencyFormat", countryToCurrencyFormat(geoIp.country))
+        put("measurementSystem", countryToMeasurementSystem(geoIp.country))
+        put("firstDayOfWeek", countryToFirstDayOfWeek(geoIp.country).toString())
+    }
