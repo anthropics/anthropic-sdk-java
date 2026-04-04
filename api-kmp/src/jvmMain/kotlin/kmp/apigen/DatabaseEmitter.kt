@@ -102,28 +102,28 @@ class DatabaseEmitter : ProtocolEmitter {
                 appendLine("SELECT * FROM $tableName;")
                 appendLine()
                 appendLine("findById:")
-                appendLine("SELECT * FROM $tableName WHERE id = ?;")
+                appendLine("SELECT * FROM $tableName WHERE id = :id;")
                 appendLine()
                 appendLine("insert:")
                 val insertCols = schema.properties.keys.joinToString(", ") { it.lowercase() }
-                val insertParams = schema.properties.keys.joinToString(", ") { "?" }
+                val insertParams = schema.properties.keys.joinToString(", ") { ":" + it.lowercase() }
                 appendLine("INSERT INTO $tableName ($insertCols) VALUES ($insertParams);")
                 appendLine()
                 appendLine("deleteById:")
-                appendLine("DELETE FROM $tableName WHERE id = ?;")
+                appendLine("DELETE FROM $tableName WHERE id = :id;")
                 appendLine()
 
                 // Search by each property
                 schema.properties.filter { it.value.type in listOf("String", "Int", "Long") }.forEach { (propName, _) ->
                     val colName = propName.lowercase()
                     appendLine("findBy${propName.replaceFirstChar { it.uppercase() }}:")
-                    appendLine("SELECT * FROM $tableName WHERE $colName = ?;")
+                    appendLine("SELECT * FROM $tableName WHERE $colName = :$colName;")
                     appendLine()
                 }
 
                 // Paged query
                 appendLine("selectPaged:")
-                appendLine("SELECT * FROM $tableName LIMIT ? OFFSET ?;")
+                appendLine("SELECT * FROM $tableName LIMIT :limit OFFSET :offset;")
                 appendLine()
                 appendLine("count:")
                 appendLine("SELECT COUNT(*) FROM $tableName;")
