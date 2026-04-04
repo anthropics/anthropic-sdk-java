@@ -1076,13 +1076,49 @@ Uses the same KMP libs the generated code uses:
 | **ktor-client** | ✅ | Fetch remote specs (optional) |
 
 The generator eats its own dog food — same libs, same patterns, same targets.
-Uses stable parser libs — same principle as the SDK: don't duplicate what stable libs provide.
-swagger-parser is the standard OpenAPI parser (used by openapi-generator, Fabrikt, etc.).
-JAsyncAPI is the official AsyncAPI JVM parser (maintained by AsyncAPI Initiative).
+**The generator is a Gradle module in the same build — reuses common code.**
 
-The generator JVM target uses these parsers. The generator's OUTPUT is KMP Kotlin
-that compiles on all targets. The generator itself runs on JVM (Gradle task, JBang)
-or as native CLI (Clikt) for the code emission part.
+Not a separate project. A module that depends on `anthropic-java-core` commonMain
+types and generates more of them. Same build, same libs, same patterns.
+
+```
+anthropic-sdk/
+    anthropic-java-core/        ← SDK (commonMain KMP code)
+    anthropic-codegen/          ← Generator module (JVM — parsers are JVM)
+        build.gradle.kts
+        src/main/kotlin/        ← Generator code
+```
+
+```kotlin
+// anthropic-codegen/build.gradle.kts
+plugins { kotlin("jvm") }
+dependencies {
+    // Stable parser libs
+    implementation("io.swagger.parser.v3:swagger-parser:2.1.39")  // OpenAPI
+    implementation("com.asyncapi:jasyncapi-core:1.0.0")           // AsyncAPI
+    implementation("com.squareup:kotlinpoet:2.2.0")               // Code emission
+
+    // Reuse SDK's own common types for generation logic
+    implementation(project(":anthropic-java-core"))
+}
+
+// Register as Gradle task
+tasks.register<JavaExec>("generateKmpModels") {
+    mainClass.set("com.anthropic.codegen.MainKt")
+    classpath = sourceSets.main.get().runtimeClasspath
+    args("--openapi", "openapi.yaml", "--output", "../anthropic-java-core/src/commonMain/kotlin")
+}
+```
+
+Runs as:
+```bash
+./gradlew :anthropic-codegen:generateKmpModels   # Gradle task in same build
+jbang anthropic-codegen/src/main/kotlin/Main.kt   # JBang for quick iteration
+```
+
+The generator reuses common SDK types — `JsonValue`, `HttpMethod`, `Optional`,
+`RequestOptions` — because it depends on the same module it generates into.
+Round-trip: generated code uses common types, generator reads specs that define those types.
 
 // Parse specs with stable parser libs — don't write custom parsers
 val openApi = OpenAPIV3Parser().read("openapi.yaml")  // swagger-parser (standard)
