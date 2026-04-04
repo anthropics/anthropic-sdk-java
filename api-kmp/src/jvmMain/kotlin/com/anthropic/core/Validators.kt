@@ -178,3 +178,55 @@ object Validators {
     }
 }
 
+
+    // === GeoIP + Country → ICU/CLDR linking ===
+
+    /** Country → ICU ULocale (default locale for that country). */
+    fun countryToLocale(country: Country): com.ibm.icu.util.ULocale =
+        com.ibm.icu.util.ULocale("", country.value)
+
+    /** Country → currency (ISO 4217 from ICU). */
+    fun countryToCurrency(country: Country): Currency =
+        Currency(com.ibm.icu.util.Currency.getInstance(countryToLocale(country)).currencyCode)
+
+    /** Country → phone code (from libphonenumber). */
+    fun countryToPhoneCode(country: Country): String {
+        val util = com.google.i18n.phonenumbers.PhoneNumberUtil.getInstance()
+        return "+${util.getCountryCodeForRegion(country.value)}"
+    }
+
+    /** Country → timezone (primary from ICU). */
+    fun countryToTimezone(country: Country): Timezone {
+        val tzId = com.ibm.icu.util.TimeZone.getAvailableIDs(country.value)?.firstOrNull()
+            ?: "UTC"
+        return Timezone(tzId)
+    }
+
+    /** Country → display name (localized via ICU). */
+    fun countryDisplayName(country: Country, inLocale: Locale = Locale.EN): String =
+        countryToLocale(country).getDisplayCountry(com.ibm.icu.util.ULocale(inLocale.value))
+
+    /** Country → language (primary from ICU). */
+    fun countryToLanguage(country: Country): Language =
+        Language(countryToLocale(country).language.ifEmpty { "en" })
+
+    /** IP → GeoIp (lookup via external service — stub, needs MaxMind/ip-api). */
+    fun geoIpLookup(ip: IpAddress): GeoIp {
+        // Stub — real impl uses MaxMind GeoIP2 or ip-api.com
+        // Returns linked chain: country → phone code → currency → timezone → locale
+        val country = Country("US") // placeholder
+        return GeoIp(
+            ip = ip,
+            country = country,
+            phoneCode = countryToPhoneCode(country).removePrefix("+"),
+            currency = countryToCurrency(country),
+            timezone = countryToTimezone(country),
+            locale = Locale("${countryToLanguage(country).value}-${country.value}"),
+        )
+    }
+
+    /** PersonName → formatted via ICU PersonNameFormatter. */
+    fun formatPersonName(name: PersonName, locale: Locale = Locale.EN): String {
+        // ICU4J 76+ has PersonNameFormatter
+        return name.full // fallback — ICU PersonNameFormatter is new API
+    }

@@ -188,3 +188,32 @@ data class PersonName(
         .filter { it.isNotBlank() }.joinToString(" ")
     override fun toString(): String = full
 }
+
+/**
+ * GeoIP — IP geolocation result.
+ * Links: IP → city, country, timezone, phone code, currency, locale.
+ */
+@Serializable
+data class GeoIp(
+    val ip: IpAddress,
+    val country: Country,
+    val city: String = "",
+    val region: String = "",
+    val postalCode: String = "",
+    val timezone: Timezone = Timezone.UTC,
+    val locale: Locale = Locale.EN,
+    val currency: Currency = Currency.USD,
+    val phoneCode: String = "",        // +1, +44, +81
+    val location: GeoPoint? = null,    // lat/lon
+) {
+    /** Phone with country code prepended. */
+    fun formatPhone(localNumber: String): Phone = Phone("+$phoneCode$localNumber")
+
+    /** Full address from geo data. */
+    fun toAddress(): PostalAddress = PostalAddress(
+        city = city,
+        state = region,
+        postalCode = postalCode,
+        country = country.value,
+    )
+}
