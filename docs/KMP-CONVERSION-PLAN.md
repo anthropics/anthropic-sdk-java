@@ -2,13 +2,15 @@
 
 ## Context
 
-The Anthropic Java SDK is a JVM-only Kotlin project using Jackson for JSON, OkHttp for HTTP, and CompletableFuture for async. The goal is to convert `anthropic-java-core` to Kotlin Multiplatform (KMP), moving all code to `commonMain`/`commonTest` with pure Kotlin (no JVM APIs), while keeping Java examples and JVM tests unchanged. Ktor CIO client replaces OkHttp in common, and Ktor CIO server replaces WireMock for testing.
+The Anthropic Java SDK is a JVM-only Kotlin project using Jackson for JSON, OkHttp for HTTP, and CompletableFuture for async. The goal is to convert `anthropic-java-core` to Kotlin Multiplatform (KMP), moving all code to `commonMain`/`commonTest` with pure Kotlin (no JVM APIs), while keeping Java examples and JVM tests unchanged. Ktor CIO client replaces OkHttp in common, Ktor CIO server replaces WireMock for testing, and Square Wire replaces custom proto/gRPC annotations with native KMP support.
 
 ## Key Design Decisions (Confirmed)
 
 1. **Sync API**: Suspend-only in commonMain. JVM blocking wrappers via `runBlocking` in jvmMain for backward compat.
 2. **Serializers**: Plugin-generated `@Serializable` on each model class. Standard KMP approach.
 3. **Implementation order**: Build system first, then code changes.
+4. **Don't duplicate stable libs**: Use Wire (@WireRpc, gRPC), ktor (HTTP, retry, SSE, multipart), okio (I/O), kotlinx (serialization, coroutines) directly instead of custom wrappers.
+5. **Multi-format serialization**: JSON (default) + MsgPack + Protobuf + CBOR via ktor ContentNegotiation — same `@Serializable` models, zero code duplication.
 
 ## Summary of Changes
 
@@ -16,6 +18,9 @@ The Anthropic Java SDK is a JVM-only Kotlin project using Jackson for JSON, OkHt
 - **JSON**: Replace Jackson with kotlinx.serialization plugin-generated `@Serializable` (~485 model files, core infrastructure)
 - **HTTP**: Replace OkHttp with Ktor CIO client in common; keep OkHttp module for JVM
 - **Async**: Suspend-only API. Replace CompletableFuture with coroutines (suspend functions, Flow). JVM blocking bridge in jvmMain.
+- **I/O**: Replace java.io.InputStream/OutputStream with okio BufferedSource/BufferedSink ✅ DONE (`7606ae7`)
+- **Proto/gRPC**: Use Square Wire for @WireRpc, @WireField, GrpcClient, proto codegen — replaces custom annotations ✅ DONE (`b02f3c6`)
+- **Serialization formats**: Add MsgPack, Protobuf, CBOR via ktor ContentNegotiation alongside JSON
 - **Tests**: Ktor CIO test server with API key auth replaces WireMock; port tests to commonTest; keep JVM tests as-is in jvmTest
 - **JVM APIs**: Replace Optional, Duration, Stream, InputStream, Collections, System.getProperty with Kotlin equivalents
 
@@ -37,7 +42,7 @@ The Anthropic Java SDK is a JVM-only Kotlin project using Jackson for JSON, OkHt
 | LangChain4j | N/A | **1.12.2** (JVM-only integration) |
 | Apache Camel | N/A | **4.12.0** (JVM-only integration) |
 | Kotlin MCP SDK | N/A | **0.11.0** (KMP integration) |
-| Wire (protobuf/gRPC) | N/A | **6.2.0** (KMP proto + gRPC) |
+| Wire (protobuf/gRPC) | N/A | **5.3.1** ✅ ADDED (`b02f3c6`) — @WireRpc, @WireField, GrpcClient, proto codegen |
 | kotlinx-io | N/A | **0.9.0** (KMP I/O supplement) |
 
 ---
@@ -609,6 +614,16 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 | `emptyOptional()` | `java.util.Optional.empty()` | Factory function | ✅ `828313e` |
 | `parseRetryAfterToDelayNanos()` | `PlatformTimeJvm` (java.time) | Retry-After header | ✅ `43f530e` |
 
+### Stable Libs Used Directly (no expect/actual needed — KMP-native)
+
+| Lib | Provides | Replaces | Status |
+|---|---|---|---|
+| **Wire** 5.3.1 | `@WireRpc`, `@WireField`, `GrpcClient`, `GrpcCall`, `GrpcStreamingCall`, proto codegen | Custom `ProtoAnnotations.kt` (@Rpc, @ProtoService, @Streaming, @ProtoField) | ✅ `b02f3c6` — dependency added, custom annotations deleted |
+| **okio** 3.17.0 | `BufferedSource`, `BufferedSink`, `Buffer`, `Source`, `FileSystem` | `java.io.InputStream`, `OutputStream`, `ByteArrayI/O` | ✅ `7606ae7` — core HTTP interfaces migrated |
+| **ktor-client** 3.4.2 | `HttpClient`, `HttpRequestRetry`, SSE, `ContentNegotiation`, `MultiPartFormDataContent` | `RetryingHttpClient`, `SseHandler`, `MultipartBody`, custom `HttpClient` wrapper | 🔲 Phase 9 |
+| **kotlinx.serialization** 1.10.0 | `Json`, `@Serializable`, MsgPack, Protobuf, CBOR | Jackson `ObjectMapper`, `BaseSerializer/Deserializer` | 🔲 Phase 9 |
+| **kotlinx.coroutines** 1.10.2 | `suspend`, `Flow`, `Deferred`, `CoroutineDispatcher`, `delay()` | `CompletableFuture`, `Executor`, `Timer/TimerTask` | Partial ✅ (delay `23ec675`, Flow for Stream), 🔲 suspend conversion |
+
 ---
 
 ## Current Progress (synced with branch claude/convert-to-kmp-I9zBV)
@@ -770,6 +785,7 @@ grpcClient.AnthropicService.CreateMessage(request)
 | `RetryingHttpClient.kt` | Clock, OffsetDateTime, ThreadLocalRandom, etc | PlatformTime + `kotlin.random.Random` | Partial ✅ `43f530e` (ThreadLocalRandom, TimeUnit, Function.identity removed), 🔲 Clock/OffsetDateTime remain |
 | `ValuesJvm.kt` | Optional, SortedMap, Lock | Move JVM-specific utils to jvmMain | Partial ✅ `43f530e` (Optional removed), 🔲 SortedMap/Lock remain |
 | `ObjectMappers.kt` | OffsetDateTime, InputStream, etc | → `expect fun jsonMapper()`, JVM actual with time/InputStream | 🔲 |
+| `annotations/ProtoAnnotations.kt` | custom @Rpc, @ProtoService, @Streaming, @ProtoField | → **DELETED** — Wire provides @WireRpc, @WireField natively | ✅ `b02f3c6` (deleted), `ace7cbd` (created then replaced) |
 
 **Phase 2: Core interfaces — 6 files**
 | File | java.* Import | Replacement | Status |
