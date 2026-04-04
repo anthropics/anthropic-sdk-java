@@ -33,6 +33,8 @@ fun main(args: Array<String>) {
     val serviceGen = ServiceGenerator(pkg, outputDir)
     serviceGen.generate(openApi.paths, openApi.securitySchemes)
     println("  generated components")
+    ComposeEmitter().emit(openApi, pkg, outputDir)
+    println("  generated UI")
     ComponentEmitter().emit(openApi, pkg, outputDir)
     println("  generated services → $output")
 
