@@ -717,9 +717,10 @@ Each method carries `value: String` for wire conversion, `protocol: Protocol`, `
 - Minor: `Class`, `System`, `Void`, `javaClass`, `inputStream()` (100)
 
 **Fix required:**
-- Stainless code generator must output `@JvmStatic`/`@JvmSynthetic`/`@JvmName` in **jvmMain only**
-- Or: use `@OptionalExpectation` expect annotations in commonMain (Kotlin 2.x feature)
-- Or: conditional `@file:Suppress("UNRESOLVED_REFERENCE")` per file
+- **Wire + .proto files** — define API in `.proto`, Wire Gradle plugin generates pure KMP Kotlin for all targets. No `@JvmStatic`, no Jackson, no `java.*`. The generated code uses `@Serializable`, Wire adapters, pure Kotlin.
+- Existing Stainless-generated Jackson models stay in **jvmMain** for JVM backward compat
+- New Wire-generated models in **commonMain** work on JVM, JS, Native, Wasm
+- Or: Stainless code generator updated to output annotations in jvmMain only
 
 ### 🔲 PLANNED — Additional Non-JVM Targets
 - Native: macOS (x64/arm64), iOS (arm64/sim), Linux (x64/arm64)
