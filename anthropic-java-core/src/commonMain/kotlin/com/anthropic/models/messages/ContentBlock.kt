@@ -400,49 +400,40 @@ private constructor(
 
     companion object {
 
-        fun ofText(text: TextBlock) = ContentBlock(text = text)
+        @JvmStatic fun ofText(text: TextBlock) = ContentBlock(text = text)
 
-        fun ofThinking(thinking: ThinkingBlock) = ContentBlock(thinking = thinking)
+        @JvmStatic fun ofThinking(thinking: ThinkingBlock) = ContentBlock(thinking = thinking)
 
-        @JvmStatic
-        fun ofRedactedThinking(redactedThinking: RedactedThinkingBlock) =
+        @JvmStatic fun ofRedactedThinking(redactedThinking: RedactedThinkingBlock) =
             ContentBlock(redactedThinking = redactedThinking)
 
-        fun ofToolUse(toolUse: ToolUseBlock) = ContentBlock(toolUse = toolUse)
+        @JvmStatic fun ofToolUse(toolUse: ToolUseBlock) = ContentBlock(toolUse = toolUse)
 
-        @JvmStatic
-        fun ofServerToolUse(serverToolUse: ServerToolUseBlock) =
+        @JvmStatic fun ofServerToolUse(serverToolUse: ServerToolUseBlock) =
             ContentBlock(serverToolUse = serverToolUse)
 
-        @JvmStatic
-        fun ofWebSearchToolResult(webSearchToolResult: WebSearchToolResultBlock) =
+        @JvmStatic fun ofWebSearchToolResult(webSearchToolResult: WebSearchToolResultBlock) =
             ContentBlock(webSearchToolResult = webSearchToolResult)
 
-        @JvmStatic
-        fun ofWebFetchToolResult(webFetchToolResult: WebFetchToolResultBlock) =
+        @JvmStatic fun ofWebFetchToolResult(webFetchToolResult: WebFetchToolResultBlock) =
             ContentBlock(webFetchToolResult = webFetchToolResult)
 
-        @JvmStatic
-        fun ofCodeExecutionToolResult(codeExecutionToolResult: CodeExecutionToolResultBlock) =
+        @JvmStatic fun ofCodeExecutionToolResult(codeExecutionToolResult: CodeExecutionToolResultBlock) =
             ContentBlock(codeExecutionToolResult = codeExecutionToolResult)
 
-        @JvmStatic
-        fun ofBashCodeExecutionToolResult(
+        @JvmStatic fun ofBashCodeExecutionToolResult(
             bashCodeExecutionToolResult: BashCodeExecutionToolResultBlock
         ) = ContentBlock(bashCodeExecutionToolResult = bashCodeExecutionToolResult)
 
-        @JvmStatic
-        fun ofTextEditorCodeExecutionToolResult(
+        @JvmStatic fun ofTextEditorCodeExecutionToolResult(
             textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlock
         ) = ContentBlock(textEditorCodeExecutionToolResult = textEditorCodeExecutionToolResult)
 
-        @JvmStatic
-        fun ofToolSearchToolResult(toolSearchToolResult: ToolSearchToolResultBlock) =
+        @JvmStatic fun ofToolSearchToolResult(toolSearchToolResult: ToolSearchToolResultBlock) =
             ContentBlock(toolSearchToolResult = toolSearchToolResult)
 
         /** Response model for a file uploaded to the container. */
-        @JvmStatic
-        fun ofContainerUpload(containerUpload: ContainerUploadBlock) =
+        @JvmStatic fun ofContainerUpload(containerUpload: ContainerUploadBlock) =
             ContentBlock(containerUpload = containerUpload)
     }
 

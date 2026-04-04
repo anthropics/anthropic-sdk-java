@@ -93,7 +93,7 @@ private constructor(
          * .ephemeral5mInputTokens()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [CacheCreation]. */
@@ -103,7 +103,7 @@ private constructor(
         private var ephemeral5mInputTokens: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(cacheCreation: CacheCreation) = apply {
+        @JvmSynthetic internal fun from(cacheCreation: CacheCreation) = apply {
             ephemeral1hInputTokens = cacheCreation.ephemeral1hInputTokens
             ephemeral5mInputTokens = cacheCreation.ephemeral5mInputTokens
             additionalProperties = cacheCreation.additionalProperties.toMutableMap()

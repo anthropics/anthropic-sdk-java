@@ -74,7 +74,7 @@ private constructor(
          * .toolId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ServerToolCaller20260120]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("code_execution_20260120")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(serverToolCaller20260120: ServerToolCaller20260120) = apply {
+        @JvmSynthetic internal fun from(serverToolCaller20260120: ServerToolCaller20260120) = apply {
             toolId = serverToolCaller20260120.toolId
             type = serverToolCaller20260120.type
             additionalProperties = serverToolCaller20260120.additionalProperties.toMutableMap()

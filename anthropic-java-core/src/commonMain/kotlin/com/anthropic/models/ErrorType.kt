@@ -38,7 +38,7 @@ class ErrorType @JsonCreator private constructor(private val value: JsonField<St
 
         val BILLING_ERROR = of("billing_error")
 
-        fun of(value: String) = ErrorType(JsonField.of(value))
+        @JvmStatic fun of(value: String) = ErrorType(JsonField.of(value))
     }
 
     /** An enum containing [ErrorType]'s known values. */

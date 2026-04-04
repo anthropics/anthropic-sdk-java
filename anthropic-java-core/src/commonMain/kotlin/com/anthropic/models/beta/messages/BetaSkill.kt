@@ -101,7 +101,7 @@ private constructor(
          * .version()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaSkill]. */
@@ -112,7 +112,7 @@ private constructor(
         private var version: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaSkill: BetaSkill) = apply {
+        @JvmSynthetic internal fun from(betaSkill: BetaSkill) = apply {
             skillId = betaSkill.skillId
             type = betaSkill.type
             version = betaSkill.version
@@ -244,7 +244,7 @@ private constructor(
 
             val CUSTOM = of("custom")
 
-            fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }
 
         /** An enum containing [Type]'s known values. */

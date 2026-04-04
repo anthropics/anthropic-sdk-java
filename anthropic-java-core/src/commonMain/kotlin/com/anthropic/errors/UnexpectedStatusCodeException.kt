@@ -35,7 +35,7 @@ private constructor(
          * .body()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [UnexpectedStatusCodeException]. */
@@ -46,7 +46,7 @@ private constructor(
         private var body: JsonValue? = null
         private var cause: Throwable? = null
 
-        internal fun from(unexpectedStatusCodeException: UnexpectedStatusCodeException) = apply {
+        @JvmSynthetic internal fun from(unexpectedStatusCodeException: UnexpectedStatusCodeException) = apply {
             statusCode = unexpectedStatusCodeException.statusCode
             headers = unexpectedStatusCodeException.headers
             body = unexpectedStatusCodeException.body

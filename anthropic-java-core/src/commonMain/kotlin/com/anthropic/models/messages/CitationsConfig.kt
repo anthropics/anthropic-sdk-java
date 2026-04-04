@@ -61,7 +61,7 @@ private constructor(
          * .enabled()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [CitationsConfig]. */
@@ -70,7 +70,7 @@ private constructor(
         private var enabled: JsonField<Boolean>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(citationsConfig: CitationsConfig) = apply {
+        @JvmSynthetic internal fun from(citationsConfig: CitationsConfig) = apply {
             enabled = citationsConfig.enabled
             additionalProperties = citationsConfig.additionalProperties.toMutableMap()
         }

@@ -77,7 +77,7 @@ private constructor(
          * .toolName()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ToolReferenceBlock]. */
@@ -87,7 +87,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("tool_reference")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(toolReferenceBlock: ToolReferenceBlock) = apply {
+        @JvmSynthetic internal fun from(toolReferenceBlock: ToolReferenceBlock) = apply {
             toolName = toolReferenceBlock.toolName
             type = toolReferenceBlock.type
             additionalProperties = toolReferenceBlock.additionalProperties.toMutableMap()

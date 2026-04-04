@@ -74,7 +74,7 @@ private constructor(
          * .message()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [GatewayTimeoutError]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("timeout_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(gatewayTimeoutError: GatewayTimeoutError) = apply {
+        @JvmSynthetic internal fun from(gatewayTimeoutError: GatewayTimeoutError) = apply {
             message = gatewayTimeoutError.message
             type = gatewayTimeoutError.type
             additionalProperties = gatewayTimeoutError.additionalProperties.toMutableMap()

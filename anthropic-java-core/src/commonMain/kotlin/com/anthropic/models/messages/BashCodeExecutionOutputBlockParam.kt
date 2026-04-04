@@ -75,7 +75,7 @@ private constructor(
          * .fileId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BashCodeExecutionOutputBlockParam]. */
@@ -85,7 +85,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("bash_code_execution_output")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(bashCodeExecutionOutputBlockParam: BashCodeExecutionOutputBlockParam) =
+        @JvmSynthetic internal fun from(bashCodeExecutionOutputBlockParam: BashCodeExecutionOutputBlockParam) =
             apply {
                 fileId = bashCodeExecutionOutputBlockParam.fileId
                 type = bashCodeExecutionOutputBlockParam.type

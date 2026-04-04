@@ -194,7 +194,7 @@ private constructor(
          * .updatedAt()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [SkillListResponse]. */
@@ -209,7 +209,7 @@ private constructor(
         private var updatedAt: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(skillListResponse: SkillListResponse) = apply {
+        @JvmSynthetic internal fun from(skillListResponse: SkillListResponse) = apply {
             id = skillListResponse.id
             createdAt = skillListResponse.createdAt
             displayTitle = skillListResponse.displayTitle

@@ -100,7 +100,7 @@ private constructor(
          * .toolName()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaToolReferenceBlockParam]. */
@@ -111,7 +111,7 @@ private constructor(
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaToolReferenceBlockParam: BetaToolReferenceBlockParam) = apply {
+        @JvmSynthetic internal fun from(betaToolReferenceBlockParam: BetaToolReferenceBlockParam) = apply {
             toolName = betaToolReferenceBlockParam.toolName
             type = betaToolReferenceBlockParam.type
             cacheControl = betaToolReferenceBlockParam.cacheControl

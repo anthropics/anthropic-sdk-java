@@ -34,7 +34,7 @@ private constructor(
          * .body()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [SseException]. */
@@ -45,7 +45,7 @@ private constructor(
         private var body: JsonValue? = null
         private var cause: Throwable? = null
 
-        internal fun from(sseException: SseException) = apply {
+        @JvmSynthetic internal fun from(sseException: SseException) = apply {
             statusCode = sseException.statusCode
             headers = sseException.headers
             body = sseException.body

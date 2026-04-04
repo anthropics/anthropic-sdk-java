@@ -78,7 +78,7 @@ private constructor(
          * .content()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaCompactionContentBlockDelta]. */
@@ -88,7 +88,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("compaction_delta")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaCompactionContentBlockDelta: BetaCompactionContentBlockDelta) =
+        @JvmSynthetic internal fun from(betaCompactionContentBlockDelta: BetaCompactionContentBlockDelta) =
             apply {
                 content = betaCompactionContentBlockDelta.content
                 type = betaCompactionContentBlockDelta.type

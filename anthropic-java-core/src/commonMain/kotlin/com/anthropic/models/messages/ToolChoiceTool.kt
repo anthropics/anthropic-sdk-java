@@ -104,7 +104,7 @@ private constructor(
          * .name()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ToolChoiceTool]. */
@@ -115,7 +115,7 @@ private constructor(
         private var disableParallelToolUse: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(toolChoiceTool: ToolChoiceTool) = apply {
+        @JvmSynthetic internal fun from(toolChoiceTool: ToolChoiceTool) = apply {
             name = toolChoiceTool.name
             type = toolChoiceTool.type
             disableParallelToolUse = toolChoiceTool.disableParallelToolUse

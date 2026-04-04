@@ -136,12 +136,10 @@ private constructor(
 
     companion object {
 
-        @JvmStatic
-        fun ofError(error: WebSearchToolResultError) =
+        @JvmStatic fun ofError(error: WebSearchToolResultError) =
             WebSearchToolResultBlockContent(error = error)
 
-        @JvmStatic
-        fun ofResultBlocks(resultBlocks: List<WebSearchResultBlock>) =
+        @JvmStatic fun ofResultBlocks(resultBlocks: List<WebSearchResultBlock>) =
             WebSearchToolResultBlockContent(resultBlocks = resultBlocks.toImmutable())
     }
 

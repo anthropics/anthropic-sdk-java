@@ -74,7 +74,7 @@ private constructor(
         /**
          * Returns a mutable builder for constructing an instance of [BetaContextManagementConfig].
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaContextManagementConfig]. */
@@ -83,7 +83,7 @@ private constructor(
         private var edits: JsonField<MutableList<Edit>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaContextManagementConfig: BetaContextManagementConfig) = apply {
+        @JvmSynthetic internal fun from(betaContextManagementConfig: BetaContextManagementConfig) = apply {
             edits = betaContextManagementConfig.edits.map { it.toMutableList() }
             additionalProperties = betaContextManagementConfig.additionalProperties.toMutableMap()
         }
@@ -323,19 +323,16 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofClearToolUses20250919(clearToolUses20250919: BetaClearToolUses20250919Edit) =
+            @JvmStatic fun ofClearToolUses20250919(clearToolUses20250919: BetaClearToolUses20250919Edit) =
                 Edit(clearToolUses20250919 = clearToolUses20250919)
 
-            @JvmStatic
-            fun ofClearThinking20251015(clearThinking20251015: BetaClearThinking20251015Edit) =
+            @JvmStatic fun ofClearThinking20251015(clearThinking20251015: BetaClearThinking20251015Edit) =
                 Edit(clearThinking20251015 = clearThinking20251015)
 
             /**
              * Automatically compact older context when reaching the configured trigger threshold.
              */
-            @JvmStatic
-            fun ofCompact20260112(compact20260112: BetaCompact20260112Edit) =
+            @JvmStatic fun ofCompact20260112(compact20260112: BetaCompact20260112Edit) =
                 Edit(compact20260112 = compact20260112)
         }
 

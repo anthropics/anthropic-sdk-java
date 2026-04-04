@@ -160,7 +160,7 @@ private constructor(
          * .source()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaRequestDocumentBlock]. */
@@ -174,7 +174,7 @@ private constructor(
         private var title: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaRequestDocumentBlock: BetaRequestDocumentBlock) = apply {
+        @JvmSynthetic internal fun from(betaRequestDocumentBlock: BetaRequestDocumentBlock) = apply {
             source = betaRequestDocumentBlock.source
             type = betaRequestDocumentBlock.type
             cacheControl = betaRequestDocumentBlock.cacheControl
@@ -585,15 +585,15 @@ private constructor(
 
         companion object {
 
-            fun ofBase64(base64: BetaBase64PdfSource) = Source(base64 = base64)
+            @JvmStatic fun ofBase64(base64: BetaBase64PdfSource) = Source(base64 = base64)
 
-            fun ofText(text: BetaPlainTextSource) = Source(text = text)
+            @JvmStatic fun ofText(text: BetaPlainTextSource) = Source(text = text)
 
-            fun ofContent(content: BetaContentBlockSource) = Source(content = content)
+            @JvmStatic fun ofContent(content: BetaContentBlockSource) = Source(content = content)
 
-            fun ofUrl(url: BetaUrlPdfSource) = Source(url = url)
+            @JvmStatic fun ofUrl(url: BetaUrlPdfSource) = Source(url = url)
 
-            fun ofFile(file: BetaFileDocumentSource) = Source(file = file)
+            @JvmStatic fun ofFile(file: BetaFileDocumentSource) = Source(file = file)
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */

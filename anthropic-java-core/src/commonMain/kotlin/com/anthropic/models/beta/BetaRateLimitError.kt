@@ -74,7 +74,7 @@ private constructor(
          * .message()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaRateLimitError]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("rate_limit_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaRateLimitError: BetaRateLimitError) = apply {
+        @JvmSynthetic internal fun from(betaRateLimitError: BetaRateLimitError) = apply {
             message = betaRateLimitError.message
             type = betaRateLimitError.type
             additionalProperties = betaRateLimitError.additionalProperties.toMutableMap()

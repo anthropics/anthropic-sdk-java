@@ -247,7 +247,7 @@ private constructor(private val boundary: String, private val parts: List<Part>)
         val body: HttpRequestBody,
     ) {
         companion object {
-            fun create(
+            @JvmStatic fun create(
                 name: String,
                 filename: String?,
                 contentType: String,

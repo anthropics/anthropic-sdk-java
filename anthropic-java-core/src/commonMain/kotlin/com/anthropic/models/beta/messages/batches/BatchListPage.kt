@@ -82,7 +82,7 @@ private constructor(
          * .response()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BatchListPage]. */
@@ -92,7 +92,7 @@ private constructor(
         private var params: BatchListParams? = null
         private var response: BatchListPageResponse? = null
 
-        internal fun from(batchListPage: BatchListPage) = apply {
+        @JvmSynthetic internal fun from(batchListPage: BatchListPage) = apply {
             service = batchListPage.service
             params = batchListPage.params
             response = batchListPage.response

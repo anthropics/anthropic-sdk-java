@@ -191,7 +191,7 @@ private constructor(
          * .startPageNumber()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [CitationPageLocation]. */
@@ -206,7 +206,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("page_location")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(citationPageLocation: CitationPageLocation) = apply {
+        @JvmSynthetic internal fun from(citationPageLocation: CitationPageLocation) = apply {
             citedText = citationPageLocation.citedText
             documentIndex = citationPageLocation.documentIndex
             documentTitle = citationPageLocation.documentTitle

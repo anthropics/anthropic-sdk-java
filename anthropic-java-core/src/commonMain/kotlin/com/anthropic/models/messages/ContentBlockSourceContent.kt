@@ -115,9 +115,9 @@ private constructor(
 
     companion object {
 
-        fun ofText(text: TextBlockParam) = ContentBlockSourceContent(text = text)
+        @JvmStatic fun ofText(text: TextBlockParam) = ContentBlockSourceContent(text = text)
 
-        fun ofImage(image: ImageBlockParam) = ContentBlockSourceContent(image = image)
+        @JvmStatic fun ofImage(image: ImageBlockParam) = ContentBlockSourceContent(image = image)
     }
 
     /**

@@ -115,7 +115,7 @@ private constructor(
          * .path()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaMemoryTool20250818StrReplaceCommand]. */
@@ -127,7 +127,7 @@ private constructor(
         private var path: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             betaMemoryTool20250818StrReplaceCommand: BetaMemoryTool20250818StrReplaceCommand
         ) = apply {
             command = betaMemoryTool20250818StrReplaceCommand.command

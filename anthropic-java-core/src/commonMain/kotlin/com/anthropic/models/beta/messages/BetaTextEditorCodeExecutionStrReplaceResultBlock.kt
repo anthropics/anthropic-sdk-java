@@ -153,7 +153,7 @@ private constructor(
          * .oldStart()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaTextEditorCodeExecutionStrReplaceResultBlock]. */
@@ -168,7 +168,7 @@ private constructor(
             JsonValue.from("text_editor_code_execution_str_replace_result")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             betaTextEditorCodeExecutionStrReplaceResultBlock:
                 BetaTextEditorCodeExecutionStrReplaceResultBlock
         ) = apply {

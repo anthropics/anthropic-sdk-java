@@ -41,10 +41,10 @@ private constructor(
 
     companion object {
 
-        fun none(): SkillRetrieveParams = builder().build()
+        @JvmStatic fun none(): SkillRetrieveParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [SkillRetrieveParams]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [SkillRetrieveParams]. */
@@ -55,7 +55,7 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(skillRetrieveParams: SkillRetrieveParams) = apply {
+        @JvmSynthetic internal fun from(skillRetrieveParams: SkillRetrieveParams) = apply {
             skillId = skillRetrieveParams.skillId
             betas = skillRetrieveParams.betas?.toMutableList()
             additionalHeaders = skillRetrieveParams.additionalHeaders.toBuilder()

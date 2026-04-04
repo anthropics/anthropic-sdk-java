@@ -106,7 +106,7 @@ private constructor(
          * .clearedToolUses()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaClearToolUses20250919EditResponse]. */
@@ -117,7 +117,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("clear_tool_uses_20250919")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             betaClearToolUses20250919EditResponse: BetaClearToolUses20250919EditResponse
         ) = apply {
             clearedInputTokens = betaClearToolUses20250919EditResponse.clearedInputTokens

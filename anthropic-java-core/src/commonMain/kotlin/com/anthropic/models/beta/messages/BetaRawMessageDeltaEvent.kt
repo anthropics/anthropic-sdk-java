@@ -134,7 +134,7 @@ private constructor(
          * .usage()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaRawMessageDeltaEvent]. */
@@ -146,7 +146,7 @@ private constructor(
         private var usage: JsonField<BetaMessageDeltaUsage>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaRawMessageDeltaEvent: BetaRawMessageDeltaEvent) = apply {
+        @JvmSynthetic internal fun from(betaRawMessageDeltaEvent: BetaRawMessageDeltaEvent) = apply {
             contextManagement = betaRawMessageDeltaEvent.contextManagement
             delta = betaRawMessageDeltaEvent.delta
             type = betaRawMessageDeltaEvent.type
@@ -422,7 +422,7 @@ private constructor(
              * .stopSequence()
              * ```
              */
-            fun builder() = Builder()
+            @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Delta]. */
@@ -434,7 +434,7 @@ private constructor(
             private var stopSequence: JsonField<String>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            internal fun from(delta: Delta) = apply {
+            @JvmSynthetic internal fun from(delta: Delta) = apply {
                 container = delta.container
                 stopDetails = delta.stopDetails
                 stopReason = delta.stopReason

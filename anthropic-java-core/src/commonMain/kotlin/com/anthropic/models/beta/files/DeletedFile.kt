@@ -85,7 +85,7 @@ private constructor(
          * .id()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [DeletedFile]. */
@@ -95,7 +95,7 @@ private constructor(
         private var type: JsonField<Type> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(deletedFile: DeletedFile) = apply {
+        @JvmSynthetic internal fun from(deletedFile: DeletedFile) = apply {
             id = deletedFile.id
             type = deletedFile.type
             additionalProperties = deletedFile.additionalProperties.toMutableMap()
@@ -211,7 +211,7 @@ private constructor(
 
             val FILE_DELETED = of("file_deleted")
 
-            fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }
 
         /** An enum containing [Type]'s known values. */

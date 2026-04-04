@@ -50,7 +50,7 @@ private constructor(
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [BetaRawMessageStopEvent]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaRawMessageStopEvent]. */
@@ -59,7 +59,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("message_stop")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaRawMessageStopEvent: BetaRawMessageStopEvent) = apply {
+        @JvmSynthetic internal fun from(betaRawMessageStopEvent: BetaRawMessageStopEvent) = apply {
             type = betaRawMessageStopEvent.type
             additionalProperties = betaRawMessageStopEvent.additionalProperties.toMutableMap()
         }

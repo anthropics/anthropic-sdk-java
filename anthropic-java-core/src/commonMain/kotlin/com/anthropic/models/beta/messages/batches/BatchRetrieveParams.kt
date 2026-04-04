@@ -43,10 +43,10 @@ private constructor(
 
     companion object {
 
-        fun none(): BatchRetrieveParams = builder().build()
+        @JvmStatic fun none(): BatchRetrieveParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [BatchRetrieveParams]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BatchRetrieveParams]. */
@@ -57,7 +57,7 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(batchRetrieveParams: BatchRetrieveParams) = apply {
+        @JvmSynthetic internal fun from(batchRetrieveParams: BatchRetrieveParams) = apply {
             messageBatchId = batchRetrieveParams.messageBatchId
             betas = batchRetrieveParams.betas?.toMutableList()
             additionalHeaders = batchRetrieveParams.additionalHeaders.toBuilder()

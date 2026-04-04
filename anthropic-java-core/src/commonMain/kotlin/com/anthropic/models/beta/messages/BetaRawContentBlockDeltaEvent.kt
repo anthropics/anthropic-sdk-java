@@ -95,7 +95,7 @@ private constructor(
          * .index()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaRawContentBlockDeltaEvent]. */
@@ -106,7 +106,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("content_block_delta")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaRawContentBlockDeltaEvent: BetaRawContentBlockDeltaEvent) = apply {
+        @JvmSynthetic internal fun from(betaRawContentBlockDeltaEvent: BetaRawContentBlockDeltaEvent) = apply {
             delta = betaRawContentBlockDeltaEvent.delta
             index = betaRawContentBlockDeltaEvent.index
             type = betaRawContentBlockDeltaEvent.type

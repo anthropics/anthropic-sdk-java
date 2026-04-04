@@ -111,7 +111,7 @@ private constructor(
          * .source()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaImageBlockParam]. */
@@ -122,7 +122,7 @@ private constructor(
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaImageBlockParam: BetaImageBlockParam) = apply {
+        @JvmSynthetic internal fun from(betaImageBlockParam: BetaImageBlockParam) = apply {
             source = betaImageBlockParam.source
             type = betaImageBlockParam.type
             cacheControl = betaImageBlockParam.cacheControl
@@ -391,11 +391,11 @@ private constructor(
 
         companion object {
 
-            fun ofBase64(base64: BetaBase64ImageSource) = Source(base64 = base64)
+            @JvmStatic fun ofBase64(base64: BetaBase64ImageSource) = Source(base64 = base64)
 
-            fun ofUrl(url: BetaUrlImageSource) = Source(url = url)
+            @JvmStatic fun ofUrl(url: BetaUrlImageSource) = Source(url = url)
 
-            fun ofFile(file: BetaFileImageSource) = Source(file = file)
+            @JvmStatic fun ofFile(file: BetaFileImageSource) = Source(file = file)
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */

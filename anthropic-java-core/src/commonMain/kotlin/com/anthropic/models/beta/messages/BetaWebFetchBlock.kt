@@ -161,7 +161,7 @@ private constructor(
          * .url()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaWebFetchBlock]. */
@@ -173,7 +173,7 @@ private constructor(
         private var url: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaWebFetchBlock: BetaWebFetchBlock) = apply {
+        @JvmSynthetic internal fun from(betaWebFetchBlock: BetaWebFetchBlock) = apply {
             content = betaWebFetchBlock.content
             retrievedAt = betaWebFetchBlock.retrievedAt
             type = betaWebFetchBlock.type

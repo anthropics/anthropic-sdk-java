@@ -136,7 +136,7 @@ private constructor(
          * .url()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaRequestMcpServerUrlDefinition]. */
@@ -150,7 +150,7 @@ private constructor(
             JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaRequestMcpServerUrlDefinition: BetaRequestMcpServerUrlDefinition) =
+        @JvmSynthetic internal fun from(betaRequestMcpServerUrlDefinition: BetaRequestMcpServerUrlDefinition) =
             apply {
                 name = betaRequestMcpServerUrlDefinition.name
                 type = betaRequestMcpServerUrlDefinition.type

@@ -29,7 +29,7 @@ private constructor(private val headers: Headers, private val body: JsonValue, c
          * .body()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [PermissionDeniedException]. */
@@ -39,7 +39,7 @@ private constructor(private val headers: Headers, private val body: JsonValue, c
         private var body: JsonValue? = null
         private var cause: Throwable? = null
 
-        internal fun from(permissionDeniedException: PermissionDeniedException) = apply {
+        @JvmSynthetic internal fun from(permissionDeniedException: PermissionDeniedException) = apply {
             headers = permissionDeniedException.headers
             body = permissionDeniedException.body
             cause = permissionDeniedException.cause

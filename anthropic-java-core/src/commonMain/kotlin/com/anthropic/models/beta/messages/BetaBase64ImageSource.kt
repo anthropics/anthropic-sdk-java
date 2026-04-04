@@ -93,7 +93,7 @@ private constructor(
          * .mediaType()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaBase64ImageSource]. */
@@ -104,7 +104,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("base64")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaBase64ImageSource: BetaBase64ImageSource) = apply {
+        @JvmSynthetic internal fun from(betaBase64ImageSource: BetaBase64ImageSource) = apply {
             data = betaBase64ImageSource.data
             mediaType = betaBase64ImageSource.mediaType
             type = betaBase64ImageSource.type
@@ -244,7 +244,7 @@ private constructor(
 
             val IMAGE_WEBP = of("image/webp")
 
-            fun of(value: String) = MediaType(JsonField.of(value))
+            @JvmStatic fun of(value: String) = MediaType(JsonField.of(value))
         }
 
         /** An enum containing [MediaType]'s known values. */

@@ -122,7 +122,7 @@ private constructor(
          * .lastId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ModelListPageResponse]. */
@@ -134,7 +134,7 @@ private constructor(
         private var lastId: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(modelListPageResponse: ModelListPageResponse) = apply {
+        @JvmSynthetic internal fun from(modelListPageResponse: ModelListPageResponse) = apply {
             data = modelListPageResponse.data.map { it.toMutableList() }
             firstId = modelListPageResponse.firstId
             hasMore = modelListPageResponse.hasMore

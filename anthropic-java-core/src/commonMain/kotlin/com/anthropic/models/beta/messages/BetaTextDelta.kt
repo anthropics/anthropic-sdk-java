@@ -74,7 +74,7 @@ private constructor(
          * .text()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaTextDelta]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("text_delta")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaTextDelta: BetaTextDelta) = apply {
+        @JvmSynthetic internal fun from(betaTextDelta: BetaTextDelta) = apply {
             text = betaTextDelta.text
             type = betaTextDelta.type
             additionalProperties = betaTextDelta.additionalProperties.toMutableMap()

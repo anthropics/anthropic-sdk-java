@@ -109,7 +109,7 @@ private constructor(
          * .errorMessage()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [TextEditorCodeExecutionToolResultError]. */
@@ -120,7 +120,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("text_editor_code_execution_tool_result_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             textEditorCodeExecutionToolResultError: TextEditorCodeExecutionToolResultError
         ) = apply {
             errorCode = textEditorCodeExecutionToolResultError.errorCode

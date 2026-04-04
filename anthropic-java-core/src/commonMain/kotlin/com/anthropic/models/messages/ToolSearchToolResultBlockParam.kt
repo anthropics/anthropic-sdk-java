@@ -130,7 +130,7 @@ private constructor(
          * .toolUseId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ToolSearchToolResultBlockParam]. */
@@ -142,7 +142,7 @@ private constructor(
         private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(toolSearchToolResultBlockParam: ToolSearchToolResultBlockParam) = apply {
+        @JvmSynthetic internal fun from(toolSearchToolResultBlockParam: ToolSearchToolResultBlockParam) = apply {
             content = toolSearchToolResultBlockParam.content
             toolUseId = toolSearchToolResultBlockParam.toolUseId
             type = toolSearchToolResultBlockParam.type
@@ -427,13 +427,11 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofToolSearchToolResultErrorParam(
+            @JvmStatic fun ofToolSearchToolResultErrorParam(
                 toolSearchToolResultErrorParam: ToolSearchToolResultErrorParam
             ) = Content(toolSearchToolResultErrorParam = toolSearchToolResultErrorParam)
 
-            @JvmStatic
-            fun ofToolSearchToolSearchResultBlockParam(
+            @JvmStatic fun ofToolSearchToolSearchResultBlockParam(
                 toolSearchToolSearchResultBlockParam: ToolSearchToolSearchResultBlockParam
             ) = Content(toolSearchToolSearchResultBlockParam = toolSearchToolSearchResultBlockParam)
         }

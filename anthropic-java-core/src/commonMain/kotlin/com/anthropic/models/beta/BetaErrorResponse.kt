@@ -93,7 +93,7 @@ private constructor(
          * .requestId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaErrorResponse]. */
@@ -104,7 +104,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaErrorResponse: BetaErrorResponse) = apply {
+        @JvmSynthetic internal fun from(betaErrorResponse: BetaErrorResponse) = apply {
             error = betaErrorResponse.error
             requestId = betaErrorResponse.requestId
             type = betaErrorResponse.type

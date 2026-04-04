@@ -111,7 +111,7 @@ private constructor(
          * .index()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaRawContentBlockStartEvent]. */
@@ -122,7 +122,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("content_block_start")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaRawContentBlockStartEvent: BetaRawContentBlockStartEvent) = apply {
+        @JvmSynthetic internal fun from(betaRawContentBlockStartEvent: BetaRawContentBlockStartEvent) = apply {
             contentBlock = betaRawContentBlockStartEvent.contentBlock
             index = betaRawContentBlockStartEvent.index
             type = betaRawContentBlockStartEvent.type
@@ -770,59 +770,47 @@ private constructor(
 
         companion object {
 
-            fun ofText(text: BetaTextBlock) = ContentBlock(text = text)
+            @JvmStatic fun ofText(text: BetaTextBlock) = ContentBlock(text = text)
 
-            @JvmStatic
-            fun ofThinking(thinking: BetaThinkingBlock) = ContentBlock(thinking = thinking)
+            @JvmStatic fun ofThinking(thinking: BetaThinkingBlock) = ContentBlock(thinking = thinking)
 
-            @JvmStatic
-            fun ofRedactedThinking(redactedThinking: BetaRedactedThinkingBlock) =
+            @JvmStatic fun ofRedactedThinking(redactedThinking: BetaRedactedThinkingBlock) =
                 ContentBlock(redactedThinking = redactedThinking)
 
-            fun ofToolUse(toolUse: BetaToolUseBlock) = ContentBlock(toolUse = toolUse)
+            @JvmStatic fun ofToolUse(toolUse: BetaToolUseBlock) = ContentBlock(toolUse = toolUse)
 
-            @JvmStatic
-            fun ofServerToolUse(serverToolUse: BetaServerToolUseBlock) =
+            @JvmStatic fun ofServerToolUse(serverToolUse: BetaServerToolUseBlock) =
                 ContentBlock(serverToolUse = serverToolUse)
 
-            @JvmStatic
-            fun ofWebSearchToolResult(webSearchToolResult: BetaWebSearchToolResultBlock) =
+            @JvmStatic fun ofWebSearchToolResult(webSearchToolResult: BetaWebSearchToolResultBlock) =
                 ContentBlock(webSearchToolResult = webSearchToolResult)
 
-            @JvmStatic
-            fun ofWebFetchToolResult(webFetchToolResult: BetaWebFetchToolResultBlock) =
+            @JvmStatic fun ofWebFetchToolResult(webFetchToolResult: BetaWebFetchToolResultBlock) =
                 ContentBlock(webFetchToolResult = webFetchToolResult)
 
-            @JvmStatic
-            fun ofCodeExecutionToolResult(
+            @JvmStatic fun ofCodeExecutionToolResult(
                 codeExecutionToolResult: BetaCodeExecutionToolResultBlock
             ) = ContentBlock(codeExecutionToolResult = codeExecutionToolResult)
 
-            @JvmStatic
-            fun ofBashCodeExecutionToolResult(
+            @JvmStatic fun ofBashCodeExecutionToolResult(
                 bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlock
             ) = ContentBlock(bashCodeExecutionToolResult = bashCodeExecutionToolResult)
 
-            @JvmStatic
-            fun ofTextEditorCodeExecutionToolResult(
+            @JvmStatic fun ofTextEditorCodeExecutionToolResult(
                 textEditorCodeExecutionToolResult: BetaTextEditorCodeExecutionToolResultBlock
             ) = ContentBlock(textEditorCodeExecutionToolResult = textEditorCodeExecutionToolResult)
 
-            @JvmStatic
-            fun ofToolSearchToolResult(toolSearchToolResult: BetaToolSearchToolResultBlock) =
+            @JvmStatic fun ofToolSearchToolResult(toolSearchToolResult: BetaToolSearchToolResultBlock) =
                 ContentBlock(toolSearchToolResult = toolSearchToolResult)
 
-            @JvmStatic
-            fun ofMcpToolUse(mcpToolUse: BetaMcpToolUseBlock) =
+            @JvmStatic fun ofMcpToolUse(mcpToolUse: BetaMcpToolUseBlock) =
                 ContentBlock(mcpToolUse = mcpToolUse)
 
-            @JvmStatic
-            fun ofMcpToolResult(mcpToolResult: BetaMcpToolResultBlock) =
+            @JvmStatic fun ofMcpToolResult(mcpToolResult: BetaMcpToolResultBlock) =
                 ContentBlock(mcpToolResult = mcpToolResult)
 
             /** Response model for a file uploaded to the container. */
-            @JvmStatic
-            fun ofContainerUpload(containerUpload: BetaContainerUploadBlock) =
+            @JvmStatic fun ofContainerUpload(containerUpload: BetaContainerUploadBlock) =
                 ContentBlock(containerUpload = containerUpload)
 
             /**
@@ -832,8 +820,7 @@ private constructor(
              * (e.g., malformed output from the model). Clients may round-trip compaction blocks
              * with null content; the server treats them as no-ops.
              */
-            @JvmStatic
-            fun ofCompaction(compaction: BetaCompactionBlock) =
+            @JvmStatic fun ofCompaction(compaction: BetaCompactionBlock) =
                 ContentBlock(compaction = compaction)
         }
 

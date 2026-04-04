@@ -87,7 +87,7 @@ private constructor(
          * .data()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaBase64PdfSource]. */
@@ -98,7 +98,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("base64")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaBase64PdfSource: BetaBase64PdfSource) = apply {
+        @JvmSynthetic internal fun from(betaBase64PdfSource: BetaBase64PdfSource) = apply {
             data = betaBase64PdfSource.data
             mediaType = betaBase64PdfSource.mediaType
             type = betaBase64PdfSource.type

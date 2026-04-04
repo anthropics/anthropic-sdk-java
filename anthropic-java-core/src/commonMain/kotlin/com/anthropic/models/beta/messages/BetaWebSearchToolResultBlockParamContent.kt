@@ -123,12 +123,10 @@ private constructor(
 
     companion object {
 
-        @JvmStatic
-        fun ofResultBlock(resultBlock: List<BetaWebSearchResultBlockParam>) =
+        @JvmStatic fun ofResultBlock(resultBlock: List<BetaWebSearchResultBlockParam>) =
             BetaWebSearchToolResultBlockParamContent(resultBlock = resultBlock.toImmutable())
 
-        @JvmStatic
-        fun ofRequestError(requestError: BetaWebSearchToolRequestError) =
+        @JvmStatic fun ofRequestError(requestError: BetaWebSearchToolRequestError) =
             BetaWebSearchToolResultBlockParamContent(requestError = requestError)
     }
 

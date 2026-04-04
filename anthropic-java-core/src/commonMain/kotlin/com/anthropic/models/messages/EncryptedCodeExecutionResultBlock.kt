@@ -142,7 +142,7 @@ private constructor(
          * .stderr()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [EncryptedCodeExecutionResultBlock]. */
@@ -155,7 +155,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("encrypted_code_execution_result")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(encryptedCodeExecutionResultBlock: EncryptedCodeExecutionResultBlock) =
+        @JvmSynthetic internal fun from(encryptedCodeExecutionResultBlock: EncryptedCodeExecutionResultBlock) =
             apply {
                 content = encryptedCodeExecutionResultBlock.content.map { it.toMutableList() }
                 encryptedStdout = encryptedCodeExecutionResultBlock.encryptedStdout

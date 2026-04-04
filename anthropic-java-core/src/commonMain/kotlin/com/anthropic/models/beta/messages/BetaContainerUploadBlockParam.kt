@@ -104,7 +104,7 @@ private constructor(
          * .fileId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaContainerUploadBlockParam]. */
@@ -115,7 +115,7 @@ private constructor(
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaContainerUploadBlockParam: BetaContainerUploadBlockParam) = apply {
+        @JvmSynthetic internal fun from(betaContainerUploadBlockParam: BetaContainerUploadBlockParam) = apply {
             fileId = betaContainerUploadBlockParam.fileId
             type = betaContainerUploadBlockParam.type
             cacheControl = betaContainerUploadBlockParam.cacheControl

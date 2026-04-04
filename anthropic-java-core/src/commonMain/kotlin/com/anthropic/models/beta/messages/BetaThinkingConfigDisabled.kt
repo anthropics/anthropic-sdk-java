@@ -52,7 +52,7 @@ private constructor(
         /**
          * Returns a mutable builder for constructing an instance of [BetaThinkingConfigDisabled].
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaThinkingConfigDisabled]. */
@@ -61,7 +61,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("disabled")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaThinkingConfigDisabled: BetaThinkingConfigDisabled) = apply {
+        @JvmSynthetic internal fun from(betaThinkingConfigDisabled: BetaThinkingConfigDisabled) = apply {
             type = betaThinkingConfigDisabled.type
             additionalProperties = betaThinkingConfigDisabled.additionalProperties.toMutableMap()
         }

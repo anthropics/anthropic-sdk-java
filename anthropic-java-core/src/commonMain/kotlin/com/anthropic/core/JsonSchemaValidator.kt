@@ -118,7 +118,7 @@ internal class JsonSchemaValidator private constructor() {
          * instance can be used only once to validate a schema; to validate another schema, create
          * another validator.
          */
-        fun create() = JsonSchemaValidator()
+        @JvmStatic fun create() = JsonSchemaValidator()
     }
 
     /**

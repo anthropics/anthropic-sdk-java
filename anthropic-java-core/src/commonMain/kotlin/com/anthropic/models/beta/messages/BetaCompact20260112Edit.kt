@@ -120,7 +120,7 @@ private constructor(
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [BetaCompact20260112Edit]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaCompact20260112Edit]. */
@@ -132,7 +132,7 @@ private constructor(
         private var trigger: JsonField<BetaInputTokensTrigger> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaCompact20260112Edit: BetaCompact20260112Edit) = apply {
+        @JvmSynthetic internal fun from(betaCompact20260112Edit: BetaCompact20260112Edit) = apply {
             type = betaCompact20260112Edit.type
             instructions = betaCompact20260112Edit.instructions
             pauseAfterCompaction = betaCompact20260112Edit.pauseAfterCompaction

@@ -93,7 +93,7 @@ private constructor(
          * .inputTokens()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaMessageTokensCount]. */
@@ -103,7 +103,7 @@ private constructor(
         private var inputTokens: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaMessageTokensCount: BetaMessageTokensCount) = apply {
+        @JvmSynthetic internal fun from(betaMessageTokensCount: BetaMessageTokensCount) = apply {
             contextManagement = betaMessageTokensCount.contextManagement
             inputTokens = betaMessageTokensCount.inputTokens
             additionalProperties = betaMessageTokensCount.additionalProperties.toMutableMap()

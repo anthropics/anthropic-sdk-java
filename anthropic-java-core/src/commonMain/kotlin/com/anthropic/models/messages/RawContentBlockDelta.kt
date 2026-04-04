@@ -165,19 +165,15 @@ private constructor(
 
     companion object {
 
-        fun ofText(text: TextDelta) = RawContentBlockDelta(text = text)
+        @JvmStatic fun ofText(text: TextDelta) = RawContentBlockDelta(text = text)
 
-        @JvmStatic
-        fun ofInputJson(inputJson: InputJsonDelta) = RawContentBlockDelta(inputJson = inputJson)
+        @JvmStatic fun ofInputJson(inputJson: InputJsonDelta) = RawContentBlockDelta(inputJson = inputJson)
 
-        @JvmStatic
-        fun ofCitations(citations: CitationsDelta) = RawContentBlockDelta(citations = citations)
+        @JvmStatic fun ofCitations(citations: CitationsDelta) = RawContentBlockDelta(citations = citations)
 
-        @JvmStatic
-        fun ofThinking(thinking: ThinkingDelta) = RawContentBlockDelta(thinking = thinking)
+        @JvmStatic fun ofThinking(thinking: ThinkingDelta) = RawContentBlockDelta(thinking = thinking)
 
-        @JvmStatic
-        fun ofSignature(signature: SignatureDelta) = RawContentBlockDelta(signature = signature)
+        @JvmStatic fun ofSignature(signature: SignatureDelta) = RawContentBlockDelta(signature = signature)
     }
 
     /**

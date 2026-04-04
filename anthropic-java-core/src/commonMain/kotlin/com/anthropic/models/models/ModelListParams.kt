@@ -60,10 +60,10 @@ private constructor(
 
     companion object {
 
-        fun none(): ModelListParams = builder().build()
+        @JvmStatic fun none(): ModelListParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [ModelListParams]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ModelListParams]. */
@@ -76,7 +76,7 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(modelListParams: ModelListParams) = apply {
+        @JvmSynthetic internal fun from(modelListParams: ModelListParams) = apply {
             afterId = modelListParams.afterId
             beforeId = modelListParams.beforeId
             limit = modelListParams.limit

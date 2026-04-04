@@ -130,7 +130,7 @@ private constructor(
          * .toolUseId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [TextEditorCodeExecutionToolResultBlockParam]. */
@@ -142,7 +142,7 @@ private constructor(
         private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             textEditorCodeExecutionToolResultBlockParam: TextEditorCodeExecutionToolResultBlockParam
         ) = apply {
             content = textEditorCodeExecutionToolResultBlockParam.content
@@ -589,8 +589,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofTextEditorCodeExecutionToolResultErrorParam(
+            @JvmStatic fun ofTextEditorCodeExecutionToolResultErrorParam(
                 textEditorCodeExecutionToolResultErrorParam:
                     TextEditorCodeExecutionToolResultErrorParam
             ) =
@@ -599,8 +598,7 @@ private constructor(
                         textEditorCodeExecutionToolResultErrorParam
                 )
 
-            @JvmStatic
-            fun ofTextEditorCodeExecutionViewResultBlockParam(
+            @JvmStatic fun ofTextEditorCodeExecutionViewResultBlockParam(
                 textEditorCodeExecutionViewResultBlockParam:
                     TextEditorCodeExecutionViewResultBlockParam
             ) =
@@ -609,8 +607,7 @@ private constructor(
                         textEditorCodeExecutionViewResultBlockParam
                 )
 
-            @JvmStatic
-            fun ofTextEditorCodeExecutionCreateResultBlockParam(
+            @JvmStatic fun ofTextEditorCodeExecutionCreateResultBlockParam(
                 textEditorCodeExecutionCreateResultBlockParam:
                     TextEditorCodeExecutionCreateResultBlockParam
             ) =
@@ -619,8 +616,7 @@ private constructor(
                         textEditorCodeExecutionCreateResultBlockParam
                 )
 
-            @JvmStatic
-            fun ofTextEditorCodeExecutionStrReplaceResultBlockParam(
+            @JvmStatic fun ofTextEditorCodeExecutionStrReplaceResultBlockParam(
                 textEditorCodeExecutionStrReplaceResultBlockParam:
                     TextEditorCodeExecutionStrReplaceResultBlockParam
             ) =

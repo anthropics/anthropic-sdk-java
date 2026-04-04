@@ -144,7 +144,7 @@ private constructor(
          * .supported()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ContextManagementCapability]. */
@@ -156,7 +156,7 @@ private constructor(
         private var supported: JsonField<Boolean>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(contextManagementCapability: ContextManagementCapability) = apply {
+        @JvmSynthetic internal fun from(contextManagementCapability: ContextManagementCapability) = apply {
             clearThinking20251015 = contextManagementCapability.clearThinking20251015
             clearToolUses20250919 = contextManagementCapability.clearToolUses20250919
             compact20260112 = contextManagementCapability.compact20260112

@@ -73,7 +73,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         @JvmField
         val CLAUDE_3_HAIKU_20240307 = of("claude-3-haiku-20240307")
 
-        fun of(value: String) = Model(JsonField.of(value))
+        @JvmStatic fun of(value: String) = Model(JsonField.of(value))
     }
 
     /** An enum containing [Model]'s known values. */

@@ -162,16 +162,16 @@ private constructor(
     companion object {
 
         /** The model will automatically decide whether to use tools. */
-        fun ofAuto(auto: BetaToolChoiceAuto) = BetaToolChoice(auto = auto)
+        @JvmStatic fun ofAuto(auto: BetaToolChoiceAuto) = BetaToolChoice(auto = auto)
 
         /** The model will use any available tools. */
-        fun ofAny(any: BetaToolChoiceAny) = BetaToolChoice(any = any)
+        @JvmStatic fun ofAny(any: BetaToolChoiceAny) = BetaToolChoice(any = any)
 
         /** The model will use the specified tool with `tool_choice.name`. */
-        fun ofTool(tool: BetaToolChoiceTool) = BetaToolChoice(tool = tool)
+        @JvmStatic fun ofTool(tool: BetaToolChoiceTool) = BetaToolChoice(tool = tool)
 
         /** The model will not be allowed to use tools. */
-        fun ofNone(none: BetaToolChoiceNone) = BetaToolChoice(none = none)
+        @JvmStatic fun ofNone(none: BetaToolChoiceNone) = BetaToolChoice(none = none)
     }
 
     /**

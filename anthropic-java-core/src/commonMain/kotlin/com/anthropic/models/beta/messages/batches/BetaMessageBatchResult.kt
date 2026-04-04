@@ -159,20 +159,16 @@ private constructor(
 
     companion object {
 
-        @JvmStatic
-        fun ofSucceeded(succeeded: BetaMessageBatchSucceededResult) =
+        @JvmStatic fun ofSucceeded(succeeded: BetaMessageBatchSucceededResult) =
             BetaMessageBatchResult(succeeded = succeeded)
 
-        @JvmStatic
-        fun ofErrored(errored: BetaMessageBatchErroredResult) =
+        @JvmStatic fun ofErrored(errored: BetaMessageBatchErroredResult) =
             BetaMessageBatchResult(errored = errored)
 
-        @JvmStatic
-        fun ofCanceled(canceled: BetaMessageBatchCanceledResult) =
+        @JvmStatic fun ofCanceled(canceled: BetaMessageBatchCanceledResult) =
             BetaMessageBatchResult(canceled = canceled)
 
-        @JvmStatic
-        fun ofExpired(expired: BetaMessageBatchExpiredResult) =
+        @JvmStatic fun ofExpired(expired: BetaMessageBatchExpiredResult) =
             BetaMessageBatchResult(expired = expired)
     }
 

@@ -34,7 +34,7 @@ private constructor(private val value: JsonField<String>) : Enum {
 
         val REQUEST_TOO_LARGE = of("request_too_large")
 
-        fun of(value: String) = BetaWebSearchToolResultErrorCode(JsonField.of(value))
+        @JvmStatic fun of(value: String) = BetaWebSearchToolResultErrorCode(JsonField.of(value))
     }
 
     /** An enum containing [BetaWebSearchToolResultErrorCode]'s known values. */

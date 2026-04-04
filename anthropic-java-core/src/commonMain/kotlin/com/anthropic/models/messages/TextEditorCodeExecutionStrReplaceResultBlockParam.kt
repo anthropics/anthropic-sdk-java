@@ -134,7 +134,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of
          * [TextEditorCodeExecutionStrReplaceResultBlockParam].
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [TextEditorCodeExecutionStrReplaceResultBlockParam]. */
@@ -149,7 +149,7 @@ private constructor(
         private var oldStart: JsonField<Long> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             textEditorCodeExecutionStrReplaceResultBlockParam:
                 TextEditorCodeExecutionStrReplaceResultBlockParam
         ) = apply {

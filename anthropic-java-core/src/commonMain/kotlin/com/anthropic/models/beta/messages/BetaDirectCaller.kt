@@ -51,7 +51,7 @@ private constructor(
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [BetaDirectCaller]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaDirectCaller]. */
@@ -60,7 +60,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("direct")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaDirectCaller: BetaDirectCaller) = apply {
+        @JvmSynthetic internal fun from(betaDirectCaller: BetaDirectCaller) = apply {
             type = betaDirectCaller.type
             additionalProperties = betaDirectCaller.additionalProperties.toMutableMap()
         }

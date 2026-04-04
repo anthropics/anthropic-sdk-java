@@ -106,7 +106,7 @@ private constructor(
          * .explanation()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [RefusalStopDetails]. */
@@ -117,7 +117,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("refusal")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(refusalStopDetails: RefusalStopDetails) = apply {
+        @JvmSynthetic internal fun from(refusalStopDetails: RefusalStopDetails) = apply {
             category = refusalStopDetails.category
             explanation = refusalStopDetails.explanation
             type = refusalStopDetails.type
@@ -276,7 +276,7 @@ private constructor(
 
             val BIO = of("bio")
 
-            fun of(value: String) = Category(JsonField.of(value))
+            @JvmStatic fun of(value: String) = Category(JsonField.of(value))
         }
 
         /** An enum containing [Category]'s known values. */

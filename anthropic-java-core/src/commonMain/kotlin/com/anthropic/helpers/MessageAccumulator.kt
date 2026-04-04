@@ -94,7 +94,7 @@ class MessageAccumulator private constructor() {
     companion object {
         private val JSON_MAPPER = jsonMapper()
 
-        fun create() = MessageAccumulator()
+        @JvmStatic fun create() = MessageAccumulator()
 
         internal fun mergeMessageUsage(usage: Usage, deltaUsage: MessageDeltaUsage): Usage {
             val builder = usage.toBuilder()

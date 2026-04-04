@@ -147,17 +147,14 @@ private constructor(
 
     companion object {
 
-        @JvmStatic
-        fun ofError(error: BetaCodeExecutionToolResultError) =
+        @JvmStatic fun ofError(error: BetaCodeExecutionToolResultError) =
             BetaCodeExecutionToolResultBlockContent(error = error)
 
-        @JvmStatic
-        fun ofResultBlock(resultBlock: BetaCodeExecutionResultBlock) =
+        @JvmStatic fun ofResultBlock(resultBlock: BetaCodeExecutionResultBlock) =
             BetaCodeExecutionToolResultBlockContent(resultBlock = resultBlock)
 
         /** Code execution result with encrypted stdout for PFC + web_search results. */
-        @JvmStatic
-        fun ofEncryptedCodeExecutionResultBlock(
+        @JvmStatic fun ofEncryptedCodeExecutionResultBlock(
             encryptedCodeExecutionResultBlock: BetaEncryptedCodeExecutionResultBlock
         ) =
             BetaCodeExecutionToolResultBlockContent(

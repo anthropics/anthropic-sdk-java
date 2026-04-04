@@ -129,7 +129,7 @@ private constructor(
          * .title()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [DocumentBlock]. */
@@ -141,7 +141,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("document")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(documentBlock: DocumentBlock) = apply {
+        @JvmSynthetic internal fun from(documentBlock: DocumentBlock) = apply {
             citations = documentBlock.citations
             source = documentBlock.source
             title = documentBlock.title
@@ -404,9 +404,9 @@ private constructor(
 
         companion object {
 
-            fun ofBase64(base64: Base64PdfSource) = Source(base64 = base64)
+            @JvmStatic fun ofBase64(base64: Base64PdfSource) = Source(base64 = base64)
 
-            fun ofText(text: PlainTextSource) = Source(text = text)
+            @JvmStatic fun ofText(text: PlainTextSource) = Source(text = text)
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */

@@ -84,7 +84,7 @@ private constructor(
          * .types()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaThinkingCapability]. */
@@ -94,7 +94,7 @@ private constructor(
         private var types: JsonField<BetaThinkingTypes>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaThinkingCapability: BetaThinkingCapability) = apply {
+        @JvmSynthetic internal fun from(betaThinkingCapability: BetaThinkingCapability) = apply {
             supported = betaThinkingCapability.supported
             types = betaThinkingCapability.types
             additionalProperties = betaThinkingCapability.additionalProperties.toMutableMap()

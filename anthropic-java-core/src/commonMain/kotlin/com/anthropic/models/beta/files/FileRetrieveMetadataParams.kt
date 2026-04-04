@@ -37,12 +37,12 @@ private constructor(
 
     companion object {
 
-        fun none(): FileRetrieveMetadataParams = builder().build()
+        @JvmStatic fun none(): FileRetrieveMetadataParams = builder().build()
 
         /**
          * Returns a mutable builder for constructing an instance of [FileRetrieveMetadataParams].
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [FileRetrieveMetadataParams]. */
@@ -53,7 +53,7 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(fileRetrieveMetadataParams: FileRetrieveMetadataParams) = apply {
+        @JvmSynthetic internal fun from(fileRetrieveMetadataParams: FileRetrieveMetadataParams) = apply {
             fileId = fileRetrieveMetadataParams.fileId
             betas = fileRetrieveMetadataParams.betas?.toMutableList()
             additionalHeaders = fileRetrieveMetadataParams.additionalHeaders.toBuilder()

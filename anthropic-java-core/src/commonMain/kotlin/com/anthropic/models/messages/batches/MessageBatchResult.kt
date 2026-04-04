@@ -157,19 +157,15 @@ private constructor(
 
     companion object {
 
-        @JvmStatic
-        fun ofSucceeded(succeeded: MessageBatchSucceededResult) =
+        @JvmStatic fun ofSucceeded(succeeded: MessageBatchSucceededResult) =
             MessageBatchResult(succeeded = succeeded)
 
-        @JvmStatic
-        fun ofErrored(errored: MessageBatchErroredResult) = MessageBatchResult(errored = errored)
+        @JvmStatic fun ofErrored(errored: MessageBatchErroredResult) = MessageBatchResult(errored = errored)
 
-        @JvmStatic
-        fun ofCanceled(canceled: MessageBatchCanceledResult) =
+        @JvmStatic fun ofCanceled(canceled: MessageBatchCanceledResult) =
             MessageBatchResult(canceled = canceled)
 
-        @JvmStatic
-        fun ofExpired(expired: MessageBatchExpiredResult) = MessageBatchResult(expired = expired)
+        @JvmStatic fun ofExpired(expired: MessageBatchExpiredResult) = MessageBatchResult(expired = expired)
     }
 
     /**

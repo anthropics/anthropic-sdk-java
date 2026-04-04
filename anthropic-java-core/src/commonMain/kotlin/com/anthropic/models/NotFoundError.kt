@@ -74,7 +74,7 @@ private constructor(
          * .message()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [NotFoundError]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("not_found_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(notFoundError: NotFoundError) = apply {
+        @JvmSynthetic internal fun from(notFoundError: NotFoundError) = apply {
             message = notFoundError.message
             type = notFoundError.type
             additionalProperties = notFoundError.additionalProperties.toMutableMap()

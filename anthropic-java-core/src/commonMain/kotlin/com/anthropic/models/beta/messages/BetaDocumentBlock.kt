@@ -129,7 +129,7 @@ private constructor(
          * .title()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaDocumentBlock]. */
@@ -141,7 +141,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("document")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaDocumentBlock: BetaDocumentBlock) = apply {
+        @JvmSynthetic internal fun from(betaDocumentBlock: BetaDocumentBlock) = apply {
             citations = betaDocumentBlock.citations
             source = betaDocumentBlock.source
             title = betaDocumentBlock.title
@@ -406,9 +406,9 @@ private constructor(
 
         companion object {
 
-            fun ofBase64(base64: BetaBase64PdfSource) = Source(base64 = base64)
+            @JvmStatic fun ofBase64(base64: BetaBase64PdfSource) = Source(base64 = base64)
 
-            fun ofText(text: BetaPlainTextSource) = Source(text = text)
+            @JvmStatic fun ofText(text: BetaPlainTextSource) = Source(text = text)
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */

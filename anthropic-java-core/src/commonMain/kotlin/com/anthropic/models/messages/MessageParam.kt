@@ -93,7 +93,7 @@ private constructor(
          * .role()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [MessageParam]. */
@@ -103,7 +103,7 @@ private constructor(
         private var role: JsonField<Role>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(messageParam: MessageParam) = apply {
+        @JvmSynthetic internal fun from(messageParam: MessageParam) = apply {
             content = messageParam.content
             role = messageParam.role
             additionalProperties = messageParam.additionalProperties.toMutableMap()
@@ -300,10 +300,9 @@ private constructor(
 
         companion object {
 
-            fun ofString(string: String) = Content(string = string)
+            @JvmStatic fun ofString(string: String) = Content(string = string)
 
-            @JvmStatic
-            fun ofBlockParams(blockParams: List<ContentBlockParam>) =
+            @JvmStatic fun ofBlockParams(blockParams: List<ContentBlockParam>) =
                 Content(blockParams = blockParams.toImmutable())
         }
 
@@ -396,7 +395,7 @@ private constructor(
 
             val ASSISTANT = of("assistant")
 
-            fun of(value: String) = Role(JsonField.of(value))
+            @JvmStatic fun of(value: String) = Role(JsonField.of(value))
         }
 
         /** An enum containing [Role]'s known values. */

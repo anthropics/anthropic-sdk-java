@@ -121,7 +121,7 @@ private constructor(
          * .data()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [FileListPageResponse]. */
@@ -133,7 +133,7 @@ private constructor(
         private var lastId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(fileListPageResponse: FileListPageResponse) = apply {
+        @JvmSynthetic internal fun from(fileListPageResponse: FileListPageResponse) = apply {
             data = fileListPageResponse.data.map { it.toMutableList() }
             firstId = fileListPageResponse.firstId
             hasMore = fileListPageResponse.hasMore

@@ -146,7 +146,7 @@ private constructor(
          * .toolUseId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaToolResultBlockParam]. */
@@ -159,7 +159,7 @@ private constructor(
         private var isError: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaToolResultBlockParam: BetaToolResultBlockParam) = apply {
+        @JvmSynthetic internal fun from(betaToolResultBlockParam: BetaToolResultBlockParam) = apply {
             toolUseId = betaToolResultBlockParam.toolUseId
             type = betaToolResultBlockParam.type
             cacheControl = betaToolResultBlockParam.cacheControl
@@ -422,9 +422,9 @@ private constructor(
 
         companion object {
 
-            fun ofString(string: String) = Content(string = string)
+            @JvmStatic fun ofString(string: String) = Content(string = string)
 
-            fun ofBlocks(blocks: List<Block>) = Content(blocks = blocks.toImmutable())
+            @JvmStatic fun ofBlocks(blocks: List<Block>) = Content(blocks = blocks.toImmutable())
         }
 
         /**
@@ -657,20 +657,17 @@ private constructor(
 
             companion object {
 
-                fun ofText(text: BetaTextBlockParam) = Block(text = text)
+                @JvmStatic fun ofText(text: BetaTextBlockParam) = Block(text = text)
 
-                fun ofImage(image: BetaImageBlockParam) = Block(image = image)
+                @JvmStatic fun ofImage(image: BetaImageBlockParam) = Block(image = image)
 
-                @JvmStatic
-                fun ofSearchResult(searchResult: BetaSearchResultBlockParam) =
+                @JvmStatic fun ofSearchResult(searchResult: BetaSearchResultBlockParam) =
                     Block(searchResult = searchResult)
 
-                @JvmStatic
-                fun ofDocument(document: BetaRequestDocumentBlock) = Block(document = document)
+                @JvmStatic fun ofDocument(document: BetaRequestDocumentBlock) = Block(document = document)
 
                 /** Tool reference block that can be included in tool_result content. */
-                @JvmStatic
-                fun ofToolReference(toolReference: BetaToolReferenceBlockParam) =
+                @JvmStatic fun ofToolReference(toolReference: BetaToolReferenceBlockParam) =
                     Block(toolReference = toolReference)
             }
 

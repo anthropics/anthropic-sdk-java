@@ -120,7 +120,7 @@ private constructor(
          * .text()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaTextBlockParam]. */
@@ -132,7 +132,7 @@ private constructor(
         private var citations: JsonField<MutableList<BetaTextCitationParam>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaTextBlockParam: BetaTextBlockParam) = apply {
+        @JvmSynthetic internal fun from(betaTextBlockParam: BetaTextBlockParam) = apply {
             text = betaTextBlockParam.text
             type = betaTextBlockParam.type
             cacheControl = betaTextBlockParam.cacheControl

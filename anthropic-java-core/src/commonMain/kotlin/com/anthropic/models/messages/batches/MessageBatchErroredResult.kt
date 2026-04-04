@@ -75,7 +75,7 @@ private constructor(
          * .error()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [MessageBatchErroredResult]. */
@@ -85,7 +85,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("errored")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(messageBatchErroredResult: MessageBatchErroredResult) = apply {
+        @JvmSynthetic internal fun from(messageBatchErroredResult: MessageBatchErroredResult) = apply {
             error = messageBatchErroredResult.error
             type = messageBatchErroredResult.type
             additionalProperties = messageBatchErroredResult.additionalProperties.toMutableMap()

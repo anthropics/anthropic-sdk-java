@@ -74,7 +74,7 @@ private constructor(
          * .signature()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaSignatureDelta]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("signature_delta")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaSignatureDelta: BetaSignatureDelta) = apply {
+        @JvmSynthetic internal fun from(betaSignatureDelta: BetaSignatureDelta) = apply {
             signature = betaSignatureDelta.signature
             type = betaSignatureDelta.type
             additionalProperties = betaSignatureDelta.additionalProperties.toMutableMap()

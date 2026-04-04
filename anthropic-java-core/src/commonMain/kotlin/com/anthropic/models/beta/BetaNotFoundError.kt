@@ -74,7 +74,7 @@ private constructor(
          * .message()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaNotFoundError]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("not_found_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaNotFoundError: BetaNotFoundError) = apply {
+        @JvmSynthetic internal fun from(betaNotFoundError: BetaNotFoundError) = apply {
             message = betaNotFoundError.message
             type = betaNotFoundError.type
             additionalProperties = betaNotFoundError.additionalProperties.toMutableMap()

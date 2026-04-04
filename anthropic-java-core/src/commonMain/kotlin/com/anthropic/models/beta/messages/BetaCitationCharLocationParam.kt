@@ -166,7 +166,7 @@ private constructor(
          * .startCharIndex()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaCitationCharLocationParam]. */
@@ -180,7 +180,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("char_location")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaCitationCharLocationParam: BetaCitationCharLocationParam) = apply {
+        @JvmSynthetic internal fun from(betaCitationCharLocationParam: BetaCitationCharLocationParam) = apply {
             citedText = betaCitationCharLocationParam.citedText
             documentIndex = betaCitationCharLocationParam.documentIndex
             documentTitle = betaCitationCharLocationParam.documentTitle

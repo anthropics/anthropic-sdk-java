@@ -100,7 +100,7 @@ private constructor(
          * .errorCode()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaTextEditorCodeExecutionToolResultErrorParam]. */
@@ -111,7 +111,7 @@ private constructor(
         private var errorMessage: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             betaTextEditorCodeExecutionToolResultErrorParam:
                 BetaTextEditorCodeExecutionToolResultErrorParam
         ) = apply {
@@ -264,7 +264,7 @@ private constructor(
 
             val FILE_NOT_FOUND = of("file_not_found")
 
-            fun of(value: String) = ErrorCode(JsonField.of(value))
+            @JvmStatic fun of(value: String) = ErrorCode(JsonField.of(value))
         }
 
         /** An enum containing [ErrorCode]'s known values. */

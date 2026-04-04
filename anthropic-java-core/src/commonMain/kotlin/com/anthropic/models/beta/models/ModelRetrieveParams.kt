@@ -42,10 +42,10 @@ private constructor(
 
     companion object {
 
-        fun none(): ModelRetrieveParams = builder().build()
+        @JvmStatic fun none(): ModelRetrieveParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [ModelRetrieveParams]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ModelRetrieveParams]. */
@@ -56,7 +56,7 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(modelRetrieveParams: ModelRetrieveParams) = apply {
+        @JvmSynthetic internal fun from(modelRetrieveParams: ModelRetrieveParams) = apply {
             modelId = modelRetrieveParams.modelId
             betas = modelRetrieveParams.betas?.toMutableList()
             additionalHeaders = modelRetrieveParams.additionalHeaders.toBuilder()

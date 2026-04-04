@@ -115,10 +115,9 @@ private constructor(
 
     companion object {
 
-        fun ofText(text: BetaTextBlockParam) = BetaContentBlockSourceContent(text = text)
+        @JvmStatic fun ofText(text: BetaTextBlockParam) = BetaContentBlockSourceContent(text = text)
 
-        @JvmStatic
-        fun ofImage(image: BetaImageBlockParam) = BetaContentBlockSourceContent(image = image)
+        @JvmStatic fun ofImage(image: BetaImageBlockParam) = BetaContentBlockSourceContent(image = image)
     }
 
     /**

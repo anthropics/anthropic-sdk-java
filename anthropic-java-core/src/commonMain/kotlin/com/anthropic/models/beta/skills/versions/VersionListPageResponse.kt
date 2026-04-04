@@ -106,7 +106,7 @@ private constructor(
          * .nextPage()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [VersionListPageResponse]. */
@@ -117,7 +117,7 @@ private constructor(
         private var nextPage: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(versionListPageResponse: VersionListPageResponse) = apply {
+        @JvmSynthetic internal fun from(versionListPageResponse: VersionListPageResponse) = apply {
             data = versionListPageResponse.data.map { it.toMutableList() }
             hasMore = versionListPageResponse.hasMore
             nextPage = versionListPageResponse.nextPage

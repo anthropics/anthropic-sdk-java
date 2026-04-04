@@ -82,7 +82,7 @@ private constructor(
          * .response()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [VersionListPageAsync]. */
@@ -93,7 +93,7 @@ private constructor(
         private var params: VersionListParams? = null
         private var response: VersionListPageResponse? = null
 
-        internal fun from(versionListPageAsync: VersionListPageAsync) = apply {
+        @JvmSynthetic internal fun from(versionListPageAsync: VersionListPageAsync) = apply {
             service = versionListPageAsync.service
             streamHandlerExecutor = versionListPageAsync.streamHandlerExecutor
             params = versionListPageAsync.params

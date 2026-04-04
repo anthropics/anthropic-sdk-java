@@ -74,7 +74,7 @@ private constructor(
          * .message()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaBillingError]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("billing_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaBillingError: BetaBillingError) = apply {
+        @JvmSynthetic internal fun from(betaBillingError: BetaBillingError) = apply {
             message = betaBillingError.message
             type = betaBillingError.type
             additionalProperties = betaBillingError.additionalProperties.toMutableMap()

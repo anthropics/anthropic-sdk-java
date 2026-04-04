@@ -93,7 +93,7 @@ private constructor(
          * .role()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaMessageParam]. */
@@ -103,7 +103,7 @@ private constructor(
         private var role: JsonField<Role>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaMessageParam: BetaMessageParam) = apply {
+        @JvmSynthetic internal fun from(betaMessageParam: BetaMessageParam) = apply {
             content = betaMessageParam.content
             role = betaMessageParam.role
             additionalProperties = betaMessageParam.additionalProperties.toMutableMap()
@@ -312,10 +312,9 @@ private constructor(
 
         companion object {
 
-            fun ofString(string: String) = Content(string = string)
+            @JvmStatic fun ofString(string: String) = Content(string = string)
 
-            @JvmStatic
-            fun ofBetaContentBlockParams(betaContentBlockParams: List<BetaContentBlockParam>) =
+            @JvmStatic fun ofBetaContentBlockParams(betaContentBlockParams: List<BetaContentBlockParam>) =
                 Content(betaContentBlockParams = betaContentBlockParams.toImmutable())
         }
 
@@ -408,7 +407,7 @@ private constructor(
 
             val ASSISTANT = of("assistant")
 
-            fun of(value: String) = Role(JsonField.of(value))
+            @JvmStatic fun of(value: String) = Role(JsonField.of(value))
         }
 
         /** An enum containing [Role]'s known values. */

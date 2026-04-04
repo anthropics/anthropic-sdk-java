@@ -137,7 +137,7 @@ private constructor(
          * .toolUseId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ToolSearchToolResultBlock]. */
@@ -148,7 +148,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("tool_search_tool_result")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(toolSearchToolResultBlock: ToolSearchToolResultBlock) = apply {
+        @JvmSynthetic internal fun from(toolSearchToolResultBlock: ToolSearchToolResultBlock) = apply {
             content = toolSearchToolResultBlock.content
             toolUseId = toolSearchToolResultBlock.toolUseId
             type = toolSearchToolResultBlock.type
@@ -395,12 +395,10 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofToolSearchToolResultError(toolSearchToolResultError: ToolSearchToolResultError) =
+            @JvmStatic fun ofToolSearchToolResultError(toolSearchToolResultError: ToolSearchToolResultError) =
                 Content(toolSearchToolResultError = toolSearchToolResultError)
 
-            @JvmStatic
-            fun ofToolSearchToolSearchResultBlock(
+            @JvmStatic fun ofToolSearchToolSearchResultBlock(
                 toolSearchToolSearchResultBlock: ToolSearchToolSearchResultBlock
             ) = Content(toolSearchToolSearchResultBlock = toolSearchToolSearchResultBlock)
         }

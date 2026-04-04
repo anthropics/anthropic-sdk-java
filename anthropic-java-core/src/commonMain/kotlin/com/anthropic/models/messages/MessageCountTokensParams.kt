@@ -326,7 +326,7 @@ private constructor(
          * .model()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [MessageCountTokensParams]. */
@@ -336,7 +336,7 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(messageCountTokensParams: MessageCountTokensParams) = apply {
+        @JvmSynthetic internal fun from(messageCountTokensParams: MessageCountTokensParams) = apply {
             body = messageCountTokensParams.body.toBuilder()
             additionalHeaders = messageCountTokensParams.additionalHeaders.toBuilder()
             additionalQueryParams = messageCountTokensParams.additionalQueryParams.toBuilder()
@@ -1343,7 +1343,7 @@ private constructor(
              * .model()
              * ```
              */
-            fun builder() = Builder()
+            @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -1359,7 +1359,7 @@ private constructor(
             private var tools: JsonField<MutableList<MessageCountTokensTool>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            internal fun from(body: Body) = apply {
+            @JvmSynthetic internal fun from(body: Body) = apply {
                 messages = body.messages.map { it.toMutableList() }
                 model = body.model
                 cacheControl = body.cacheControl
@@ -2134,10 +2134,9 @@ private constructor(
 
         companion object {
 
-            fun ofString(string: String) = System(string = string)
+            @JvmStatic fun ofString(string: String) = System(string = string)
 
-            @JvmStatic
-            fun ofTextBlockParams(textBlockParams: List<TextBlockParam>) =
+            @JvmStatic fun ofTextBlockParams(textBlockParams: List<TextBlockParam>) =
                 System(textBlockParams = textBlockParams.toImmutable())
         }
 

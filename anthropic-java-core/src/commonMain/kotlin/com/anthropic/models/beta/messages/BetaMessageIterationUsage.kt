@@ -183,7 +183,7 @@ private constructor(
          * .outputTokens()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaMessageIterationUsage]. */
@@ -197,7 +197,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("message")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaMessageIterationUsage: BetaMessageIterationUsage) = apply {
+        @JvmSynthetic internal fun from(betaMessageIterationUsage: BetaMessageIterationUsage) = apply {
             cacheCreation = betaMessageIterationUsage.cacheCreation
             cacheCreationInputTokens = betaMessageIterationUsage.cacheCreationInputTokens
             cacheReadInputTokens = betaMessageIterationUsage.cacheReadInputTokens

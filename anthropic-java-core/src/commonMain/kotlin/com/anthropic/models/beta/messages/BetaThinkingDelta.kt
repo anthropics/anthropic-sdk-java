@@ -74,7 +74,7 @@ private constructor(
          * .thinking()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaThinkingDelta]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("thinking_delta")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaThinkingDelta: BetaThinkingDelta) = apply {
+        @JvmSynthetic internal fun from(betaThinkingDelta: BetaThinkingDelta) = apply {
             thinking = betaThinkingDelta.thinking
             type = betaThinkingDelta.type
             additionalProperties = betaThinkingDelta.additionalProperties.toMutableMap()

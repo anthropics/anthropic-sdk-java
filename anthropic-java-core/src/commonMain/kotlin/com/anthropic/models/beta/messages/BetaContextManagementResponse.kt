@@ -84,7 +84,7 @@ private constructor(
          * .appliedEdits()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaContextManagementResponse]. */
@@ -93,7 +93,7 @@ private constructor(
         private var appliedEdits: JsonField<MutableList<AppliedEdit>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaContextManagementResponse: BetaContextManagementResponse) = apply {
+        @JvmSynthetic internal fun from(betaContextManagementResponse: BetaContextManagementResponse) = apply {
             appliedEdits = betaContextManagementResponse.appliedEdits.map { it.toMutableList() }
             additionalProperties = betaContextManagementResponse.additionalProperties.toMutableMap()
         }
@@ -317,13 +317,11 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofClearToolUses20250919(
+            @JvmStatic fun ofClearToolUses20250919(
                 clearToolUses20250919: BetaClearToolUses20250919EditResponse
             ) = AppliedEdit(clearToolUses20250919 = clearToolUses20250919)
 
-            @JvmStatic
-            fun ofClearThinking20251015(
+            @JvmStatic fun ofClearThinking20251015(
                 clearThinking20251015: BetaClearThinking20251015EditResponse
             ) = AppliedEdit(clearThinking20251015 = clearThinking20251015)
         }

@@ -157,17 +157,14 @@ private constructor(
 
     companion object {
 
-        @JvmStatic
-        fun ofErrorParam(errorParam: CodeExecutionToolResultErrorParam) =
+        @JvmStatic fun ofErrorParam(errorParam: CodeExecutionToolResultErrorParam) =
             CodeExecutionToolResultBlockParamContent(errorParam = errorParam)
 
-        @JvmStatic
-        fun ofResultBlockParam(resultBlockParam: CodeExecutionResultBlockParam) =
+        @JvmStatic fun ofResultBlockParam(resultBlockParam: CodeExecutionResultBlockParam) =
             CodeExecutionToolResultBlockParamContent(resultBlockParam = resultBlockParam)
 
         /** Code execution result with encrypted stdout for PFC + web_search results. */
-        @JvmStatic
-        fun ofEncryptedCodeExecutionResultBlockParam(
+        @JvmStatic fun ofEncryptedCodeExecutionResultBlockParam(
             encryptedCodeExecutionResultBlockParam: EncryptedCodeExecutionResultBlockParam
         ) =
             CodeExecutionToolResultBlockParamContent(

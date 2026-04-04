@@ -81,7 +81,7 @@ private constructor(
          * .response()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ModelListPage]. */
@@ -91,7 +91,7 @@ private constructor(
         private var params: ModelListParams? = null
         private var response: ModelListPageResponse? = null
 
-        internal fun from(modelListPage: ModelListPage) = apply {
+        @JvmSynthetic internal fun from(modelListPage: ModelListPage) = apply {
             service = modelListPage.service
             params = modelListPage.params
             response = modelListPage.response

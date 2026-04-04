@@ -74,7 +74,7 @@ private constructor(
          * .message()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaInvalidRequestError]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("invalid_request_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaInvalidRequestError: BetaInvalidRequestError) = apply {
+        @JvmSynthetic internal fun from(betaInvalidRequestError: BetaInvalidRequestError) = apply {
             message = betaInvalidRequestError.message
             type = betaInvalidRequestError.type
             additionalProperties = betaInvalidRequestError.additionalProperties.toMutableMap()

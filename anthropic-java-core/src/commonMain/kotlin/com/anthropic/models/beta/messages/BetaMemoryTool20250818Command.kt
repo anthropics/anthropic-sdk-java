@@ -188,28 +188,22 @@ private constructor(
 
     companion object {
 
-        @JvmStatic
-        fun ofView(view: BetaMemoryTool20250818ViewCommand) =
+        @JvmStatic fun ofView(view: BetaMemoryTool20250818ViewCommand) =
             BetaMemoryTool20250818Command(view = view)
 
-        @JvmStatic
-        fun ofCreate(create: BetaMemoryTool20250818CreateCommand) =
+        @JvmStatic fun ofCreate(create: BetaMemoryTool20250818CreateCommand) =
             BetaMemoryTool20250818Command(create = create)
 
-        @JvmStatic
-        fun ofStrReplace(strReplace: BetaMemoryTool20250818StrReplaceCommand) =
+        @JvmStatic fun ofStrReplace(strReplace: BetaMemoryTool20250818StrReplaceCommand) =
             BetaMemoryTool20250818Command(strReplace = strReplace)
 
-        @JvmStatic
-        fun ofInsert(insert: BetaMemoryTool20250818InsertCommand) =
+        @JvmStatic fun ofInsert(insert: BetaMemoryTool20250818InsertCommand) =
             BetaMemoryTool20250818Command(insert = insert)
 
-        @JvmStatic
-        fun ofDelete(delete: BetaMemoryTool20250818DeleteCommand) =
+        @JvmStatic fun ofDelete(delete: BetaMemoryTool20250818DeleteCommand) =
             BetaMemoryTool20250818Command(delete = delete)
 
-        @JvmStatic
-        fun ofRename(rename: BetaMemoryTool20250818RenameCommand) =
+        @JvmStatic fun ofRename(rename: BetaMemoryTool20250818RenameCommand) =
             BetaMemoryTool20250818Command(rename = rename)
     }
 

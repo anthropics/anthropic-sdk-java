@@ -74,7 +74,7 @@ private constructor(
          * .message()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [PermissionError]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("permission_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(permissionError: PermissionError) = apply {
+        @JvmSynthetic internal fun from(permissionError: PermissionError) = apply {
             message = permissionError.message
             type = permissionError.type
             additionalProperties = permissionError.additionalProperties.toMutableMap()

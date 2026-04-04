@@ -89,7 +89,7 @@ private constructor(
          * .content()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ContentBlockSource]. */
@@ -99,7 +99,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("content")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(contentBlockSource: ContentBlockSource) = apply {
+        @JvmSynthetic internal fun from(contentBlockSource: ContentBlockSource) = apply {
             content = contentBlockSource.content
             type = contentBlockSource.type
             additionalProperties = contentBlockSource.additionalProperties.toMutableMap()
@@ -304,10 +304,9 @@ private constructor(
 
         companion object {
 
-            fun ofString(string: String) = Content(string = string)
+            @JvmStatic fun ofString(string: String) = Content(string = string)
 
-            @JvmStatic
-            fun ofBlockSource(blockSource: List<ContentBlockSourceContent>) =
+            @JvmStatic fun ofBlockSource(blockSource: List<ContentBlockSourceContent>) =
                 Content(blockSource = blockSource.toImmutable())
         }
 

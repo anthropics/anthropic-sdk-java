@@ -74,7 +74,7 @@ private constructor(
          * .url()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [UrlPdfSource]. */
@@ -84,7 +84,7 @@ private constructor(
         private var url: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(urlPdfSource: UrlPdfSource) = apply {
+        @JvmSynthetic internal fun from(urlPdfSource: UrlPdfSource) = apply {
             type = urlPdfSource.type
             url = urlPdfSource.url
             additionalProperties = urlPdfSource.additionalProperties.toMutableMap()

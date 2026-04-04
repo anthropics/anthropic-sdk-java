@@ -74,7 +74,7 @@ private constructor(
          * .message()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [RawMessageStartEvent]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("message_start")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(rawMessageStartEvent: RawMessageStartEvent) = apply {
+        @JvmSynthetic internal fun from(rawMessageStartEvent: RawMessageStartEvent) = apply {
             message = rawMessageStartEvent.message
             type = rawMessageStartEvent.type
             additionalProperties = rawMessageStartEvent.additionalProperties.toMutableMap()

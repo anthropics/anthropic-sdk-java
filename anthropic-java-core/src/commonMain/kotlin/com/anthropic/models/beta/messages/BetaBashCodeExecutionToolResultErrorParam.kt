@@ -78,7 +78,7 @@ private constructor(
          * .errorCode()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaBashCodeExecutionToolResultErrorParam]. */
@@ -88,7 +88,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("bash_code_execution_tool_result_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             betaBashCodeExecutionToolResultErrorParam: BetaBashCodeExecutionToolResultErrorParam
         ) = apply {
             errorCode = betaBashCodeExecutionToolResultErrorParam.errorCode
@@ -218,7 +218,7 @@ private constructor(
 
             val OUTPUT_FILE_TOO_LARGE = of("output_file_too_large")
 
-            fun of(value: String) = ErrorCode(JsonField.of(value))
+            @JvmStatic fun of(value: String) = ErrorCode(JsonField.of(value))
         }
 
         /** An enum containing [ErrorCode]'s known values. */

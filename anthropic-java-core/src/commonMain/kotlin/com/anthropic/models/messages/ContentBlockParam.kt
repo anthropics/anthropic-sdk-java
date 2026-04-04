@@ -446,76 +446,63 @@ private constructor(
     companion object {
 
         /** Regular text content. */
-        fun ofText(text: TextBlockParam) = ContentBlockParam(text = text)
+        @JvmStatic fun ofText(text: TextBlockParam) = ContentBlockParam(text = text)
 
         /** Image content specified directly as base64 data or as a reference via a URL. */
-        fun ofImage(image: ImageBlockParam) = ContentBlockParam(image = image)
+        @JvmStatic fun ofImage(image: ImageBlockParam) = ContentBlockParam(image = image)
 
         /**
          * Document content, either specified directly as base64 data, as text, or as a reference
          * via a URL.
          */
-        @JvmStatic
-        fun ofDocument(document: DocumentBlockParam) = ContentBlockParam(document = document)
+        @JvmStatic fun ofDocument(document: DocumentBlockParam) = ContentBlockParam(document = document)
 
         /** A search result block containing source, title, and content from search operations. */
-        @JvmStatic
-        fun ofSearchResult(searchResult: SearchResultBlockParam) =
+        @JvmStatic fun ofSearchResult(searchResult: SearchResultBlockParam) =
             ContentBlockParam(searchResult = searchResult)
 
         /** A block specifying internal thinking by the model. */
-        @JvmStatic
-        fun ofThinking(thinking: ThinkingBlockParam) = ContentBlockParam(thinking = thinking)
+        @JvmStatic fun ofThinking(thinking: ThinkingBlockParam) = ContentBlockParam(thinking = thinking)
 
         /** A block specifying internal, redacted thinking by the model. */
-        @JvmStatic
-        fun ofRedactedThinking(redactedThinking: RedactedThinkingBlockParam) =
+        @JvmStatic fun ofRedactedThinking(redactedThinking: RedactedThinkingBlockParam) =
             ContentBlockParam(redactedThinking = redactedThinking)
 
         /** A block indicating a tool use by the model. */
-        fun ofToolUse(toolUse: ToolUseBlockParam) = ContentBlockParam(toolUse = toolUse)
+        @JvmStatic fun ofToolUse(toolUse: ToolUseBlockParam) = ContentBlockParam(toolUse = toolUse)
 
         /** A block specifying the results of a tool use by the model. */
-        @JvmStatic
-        fun ofToolResult(toolResult: ToolResultBlockParam) =
+        @JvmStatic fun ofToolResult(toolResult: ToolResultBlockParam) =
             ContentBlockParam(toolResult = toolResult)
 
-        @JvmStatic
-        fun ofServerToolUse(serverToolUse: ServerToolUseBlockParam) =
+        @JvmStatic fun ofServerToolUse(serverToolUse: ServerToolUseBlockParam) =
             ContentBlockParam(serverToolUse = serverToolUse)
 
-        @JvmStatic
-        fun ofWebSearchToolResult(webSearchToolResult: WebSearchToolResultBlockParam) =
+        @JvmStatic fun ofWebSearchToolResult(webSearchToolResult: WebSearchToolResultBlockParam) =
             ContentBlockParam(webSearchToolResult = webSearchToolResult)
 
-        @JvmStatic
-        fun ofWebFetchToolResult(webFetchToolResult: WebFetchToolResultBlockParam) =
+        @JvmStatic fun ofWebFetchToolResult(webFetchToolResult: WebFetchToolResultBlockParam) =
             ContentBlockParam(webFetchToolResult = webFetchToolResult)
 
-        @JvmStatic
-        fun ofCodeExecutionToolResult(codeExecutionToolResult: CodeExecutionToolResultBlockParam) =
+        @JvmStatic fun ofCodeExecutionToolResult(codeExecutionToolResult: CodeExecutionToolResultBlockParam) =
             ContentBlockParam(codeExecutionToolResult = codeExecutionToolResult)
 
-        @JvmStatic
-        fun ofBashCodeExecutionToolResult(
+        @JvmStatic fun ofBashCodeExecutionToolResult(
             bashCodeExecutionToolResult: BashCodeExecutionToolResultBlockParam
         ) = ContentBlockParam(bashCodeExecutionToolResult = bashCodeExecutionToolResult)
 
-        @JvmStatic
-        fun ofTextEditorCodeExecutionToolResult(
+        @JvmStatic fun ofTextEditorCodeExecutionToolResult(
             textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlockParam
         ) = ContentBlockParam(textEditorCodeExecutionToolResult = textEditorCodeExecutionToolResult)
 
-        @JvmStatic
-        fun ofToolSearchToolResult(toolSearchToolResult: ToolSearchToolResultBlockParam) =
+        @JvmStatic fun ofToolSearchToolResult(toolSearchToolResult: ToolSearchToolResultBlockParam) =
             ContentBlockParam(toolSearchToolResult = toolSearchToolResult)
 
         /**
          * A content block that represents a file to be uploaded to the container Files uploaded via
          * this block will be available in the container's input directory.
          */
-        @JvmStatic
-        fun ofContainerUpload(containerUpload: ContainerUploadBlockParam) =
+        @JvmStatic fun ofContainerUpload(containerUpload: ContainerUploadBlockParam) =
             ContentBlockParam(containerUpload = containerUpload)
     }
 

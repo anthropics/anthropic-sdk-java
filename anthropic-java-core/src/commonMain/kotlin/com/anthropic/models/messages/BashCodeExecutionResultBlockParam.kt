@@ -129,7 +129,7 @@ private constructor(
          * .stdout()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BashCodeExecutionResultBlockParam]. */
@@ -142,7 +142,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("bash_code_execution_result")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(bashCodeExecutionResultBlockParam: BashCodeExecutionResultBlockParam) =
+        @JvmSynthetic internal fun from(bashCodeExecutionResultBlockParam: BashCodeExecutionResultBlockParam) =
             apply {
                 content = bashCodeExecutionResultBlockParam.content.map { it.toMutableList() }
                 returnCode = bashCodeExecutionResultBlockParam.returnCode

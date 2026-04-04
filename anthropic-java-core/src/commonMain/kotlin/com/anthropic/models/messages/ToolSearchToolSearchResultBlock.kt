@@ -86,7 +86,7 @@ private constructor(
          * .toolReferences()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ToolSearchToolSearchResultBlock]. */
@@ -96,7 +96,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("tool_search_tool_search_result")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(toolSearchToolSearchResultBlock: ToolSearchToolSearchResultBlock) =
+        @JvmSynthetic internal fun from(toolSearchToolSearchResultBlock: ToolSearchToolSearchResultBlock) =
             apply {
                 toolReferences =
                     toolSearchToolSearchResultBlock.toolReferences.map { it.toMutableList() }

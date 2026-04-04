@@ -138,7 +138,7 @@ private constructor(
          * .supported()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [EffortCapability]. */
@@ -151,7 +151,7 @@ private constructor(
         private var supported: JsonField<Boolean>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(effortCapability: EffortCapability) = apply {
+        @JvmSynthetic internal fun from(effortCapability: EffortCapability) = apply {
             high = effortCapability.high
             low = effortCapability.low
             max = effortCapability.max

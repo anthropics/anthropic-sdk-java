@@ -183,7 +183,7 @@ private constructor(
          * .outputTokens()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaCompactionIterationUsage]. */
@@ -197,7 +197,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("compaction")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaCompactionIterationUsage: BetaCompactionIterationUsage) = apply {
+        @JvmSynthetic internal fun from(betaCompactionIterationUsage: BetaCompactionIterationUsage) = apply {
             cacheCreation = betaCompactionIterationUsage.cacheCreation
             cacheCreationInputTokens = betaCompactionIterationUsage.cacheCreationInputTokens
             cacheReadInputTokens = betaCompactionIterationUsage.cacheReadInputTokens

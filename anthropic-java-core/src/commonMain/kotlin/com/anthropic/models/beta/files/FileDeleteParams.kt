@@ -42,10 +42,10 @@ private constructor(
 
     companion object {
 
-        fun none(): FileDeleteParams = builder().build()
+        @JvmStatic fun none(): FileDeleteParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [FileDeleteParams]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [FileDeleteParams]. */
@@ -57,7 +57,7 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(fileDeleteParams: FileDeleteParams) = apply {
+        @JvmSynthetic internal fun from(fileDeleteParams: FileDeleteParams) = apply {
             fileId = fileDeleteParams.fileId
             betas = fileDeleteParams.betas?.toMutableList()
             additionalHeaders = fileDeleteParams.additionalHeaders.toBuilder()

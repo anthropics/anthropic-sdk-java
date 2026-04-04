@@ -527,91 +527,75 @@ private constructor(
     companion object {
 
         /** Regular text content. */
-        fun ofText(text: BetaTextBlockParam) = BetaContentBlockParam(text = text)
+        @JvmStatic fun ofText(text: BetaTextBlockParam) = BetaContentBlockParam(text = text)
 
         /** Image content specified directly as base64 data or as a reference via a URL. */
-        fun ofImage(image: BetaImageBlockParam) = BetaContentBlockParam(image = image)
+        @JvmStatic fun ofImage(image: BetaImageBlockParam) = BetaContentBlockParam(image = image)
 
         /**
          * Document content, either specified directly as base64 data, as text, or as a reference
          * via a URL.
          */
-        @JvmStatic
-        fun ofDocument(document: BetaRequestDocumentBlock) =
+        @JvmStatic fun ofDocument(document: BetaRequestDocumentBlock) =
             BetaContentBlockParam(document = document)
 
         /** A search result block containing source, title, and content from search operations. */
-        @JvmStatic
-        fun ofSearchResult(searchResult: BetaSearchResultBlockParam) =
+        @JvmStatic fun ofSearchResult(searchResult: BetaSearchResultBlockParam) =
             BetaContentBlockParam(searchResult = searchResult)
 
         /** A block specifying internal thinking by the model. */
-        @JvmStatic
-        fun ofThinking(thinking: BetaThinkingBlockParam) =
+        @JvmStatic fun ofThinking(thinking: BetaThinkingBlockParam) =
             BetaContentBlockParam(thinking = thinking)
 
         /** A block specifying internal, redacted thinking by the model. */
-        @JvmStatic
-        fun ofRedactedThinking(redactedThinking: BetaRedactedThinkingBlockParam) =
+        @JvmStatic fun ofRedactedThinking(redactedThinking: BetaRedactedThinkingBlockParam) =
             BetaContentBlockParam(redactedThinking = redactedThinking)
 
         /** A block indicating a tool use by the model. */
-        @JvmStatic
-        fun ofToolUse(toolUse: BetaToolUseBlockParam) = BetaContentBlockParam(toolUse = toolUse)
+        @JvmStatic fun ofToolUse(toolUse: BetaToolUseBlockParam) = BetaContentBlockParam(toolUse = toolUse)
 
         /** A block specifying the results of a tool use by the model. */
-        @JvmStatic
-        fun ofToolResult(toolResult: BetaToolResultBlockParam) =
+        @JvmStatic fun ofToolResult(toolResult: BetaToolResultBlockParam) =
             BetaContentBlockParam(toolResult = toolResult)
 
-        @JvmStatic
-        fun ofServerToolUse(serverToolUse: BetaServerToolUseBlockParam) =
+        @JvmStatic fun ofServerToolUse(serverToolUse: BetaServerToolUseBlockParam) =
             BetaContentBlockParam(serverToolUse = serverToolUse)
 
-        @JvmStatic
-        fun ofWebSearchToolResult(webSearchToolResult: BetaWebSearchToolResultBlockParam) =
+        @JvmStatic fun ofWebSearchToolResult(webSearchToolResult: BetaWebSearchToolResultBlockParam) =
             BetaContentBlockParam(webSearchToolResult = webSearchToolResult)
 
-        @JvmStatic
-        fun ofWebFetchToolResult(webFetchToolResult: BetaWebFetchToolResultBlockParam) =
+        @JvmStatic fun ofWebFetchToolResult(webFetchToolResult: BetaWebFetchToolResultBlockParam) =
             BetaContentBlockParam(webFetchToolResult = webFetchToolResult)
 
-        @JvmStatic
-        fun ofCodeExecutionToolResult(
+        @JvmStatic fun ofCodeExecutionToolResult(
             codeExecutionToolResult: BetaCodeExecutionToolResultBlockParam
         ) = BetaContentBlockParam(codeExecutionToolResult = codeExecutionToolResult)
 
-        @JvmStatic
-        fun ofBashCodeExecutionToolResult(
+        @JvmStatic fun ofBashCodeExecutionToolResult(
             bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlockParam
         ) = BetaContentBlockParam(bashCodeExecutionToolResult = bashCodeExecutionToolResult)
 
-        @JvmStatic
-        fun ofTextEditorCodeExecutionToolResult(
+        @JvmStatic fun ofTextEditorCodeExecutionToolResult(
             textEditorCodeExecutionToolResult: BetaTextEditorCodeExecutionToolResultBlockParam
         ) =
             BetaContentBlockParam(
                 textEditorCodeExecutionToolResult = textEditorCodeExecutionToolResult
             )
 
-        @JvmStatic
-        fun ofToolSearchToolResult(toolSearchToolResult: BetaToolSearchToolResultBlockParam) =
+        @JvmStatic fun ofToolSearchToolResult(toolSearchToolResult: BetaToolSearchToolResultBlockParam) =
             BetaContentBlockParam(toolSearchToolResult = toolSearchToolResult)
 
-        @JvmStatic
-        fun ofMcpToolUse(mcpToolUse: BetaMcpToolUseBlockParam) =
+        @JvmStatic fun ofMcpToolUse(mcpToolUse: BetaMcpToolUseBlockParam) =
             BetaContentBlockParam(mcpToolUse = mcpToolUse)
 
-        @JvmStatic
-        fun ofMcpToolResult(mcpToolResult: BetaRequestMcpToolResultBlockParam) =
+        @JvmStatic fun ofMcpToolResult(mcpToolResult: BetaRequestMcpToolResultBlockParam) =
             BetaContentBlockParam(mcpToolResult = mcpToolResult)
 
         /**
          * A content block that represents a file to be uploaded to the container Files uploaded via
          * this block will be available in the container's input directory.
          */
-        @JvmStatic
-        fun ofContainerUpload(containerUpload: BetaContainerUploadBlockParam) =
+        @JvmStatic fun ofContainerUpload(containerUpload: BetaContainerUploadBlockParam) =
             BetaContentBlockParam(containerUpload = containerUpload)
 
         /**
@@ -623,8 +607,7 @@ private constructor(
          * When content is None, the block represents a failed compaction. The server treats these
          * as no-ops. Empty string content is not allowed.
          */
-        @JvmStatic
-        fun ofCompaction(compaction: BetaCompactionBlockParam) =
+        @JvmStatic fun ofCompaction(compaction: BetaCompactionBlockParam) =
             BetaContentBlockParam(compaction = compaction)
     }
 

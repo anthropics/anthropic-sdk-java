@@ -78,7 +78,7 @@ private constructor(
          * .fileId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ContainerUploadBlock]. */
@@ -88,7 +88,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("container_upload")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(containerUploadBlock: ContainerUploadBlock) = apply {
+        @JvmSynthetic internal fun from(containerUploadBlock: ContainerUploadBlock) = apply {
             fileId = containerUploadBlock.fileId
             type = containerUploadBlock.type
             additionalProperties = containerUploadBlock.additionalProperties.toMutableMap()

@@ -166,7 +166,7 @@ private constructor(
          * .startPageNumber()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaCitationPageLocationParam]. */
@@ -180,7 +180,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("page_location")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaCitationPageLocationParam: BetaCitationPageLocationParam) = apply {
+        @JvmSynthetic internal fun from(betaCitationPageLocationParam: BetaCitationPageLocationParam) = apply {
             citedText = betaCitationPageLocationParam.citedText
             documentIndex = betaCitationPageLocationParam.documentIndex
             documentTitle = betaCitationPageLocationParam.documentTitle

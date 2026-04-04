@@ -53,7 +53,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of
          * [BetaMessageBatchCanceledResult].
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaMessageBatchCanceledResult]. */
@@ -62,7 +62,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("canceled")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaMessageBatchCanceledResult: BetaMessageBatchCanceledResult) = apply {
+        @JvmSynthetic internal fun from(betaMessageBatchCanceledResult: BetaMessageBatchCanceledResult) = apply {
             type = betaMessageBatchCanceledResult.type
             additionalProperties =
                 betaMessageBatchCanceledResult.additionalProperties.toMutableMap()

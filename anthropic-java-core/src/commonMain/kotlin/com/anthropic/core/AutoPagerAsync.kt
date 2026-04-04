@@ -16,7 +16,7 @@ private constructor(private val firstPage: PageAsync<T>, private val defaultExec
 
     companion object {
 
-        fun <T> from(firstPage: PageAsync<T>, defaultExecutor: Executor): AutoPagerAsync<T> =
+        @JvmStatic fun <T> from(firstPage: PageAsync<T>, defaultExecutor: Executor): AutoPagerAsync<T> =
             AutoPagerAsync(firstPage, defaultExecutor)
     }
 

@@ -244,29 +244,25 @@ private constructor(
 
     companion object {
 
-        @JvmStatic
-        fun ofInvalidRequest(invalidRequest: BetaInvalidRequestError) =
+        @JvmStatic fun ofInvalidRequest(invalidRequest: BetaInvalidRequestError) =
             BetaError(invalidRequest = invalidRequest)
 
-        @JvmStatic
-        fun ofAuthentication(authentication: BetaAuthenticationError) =
+        @JvmStatic fun ofAuthentication(authentication: BetaAuthenticationError) =
             BetaError(authentication = authentication)
 
-        fun ofBilling(billing: BetaBillingError) = BetaError(billing = billing)
+        @JvmStatic fun ofBilling(billing: BetaBillingError) = BetaError(billing = billing)
 
-        @JvmStatic
-        fun ofPermission(permission: BetaPermissionError) = BetaError(permission = permission)
+        @JvmStatic fun ofPermission(permission: BetaPermissionError) = BetaError(permission = permission)
 
-        fun ofNotFound(notFound: BetaNotFoundError) = BetaError(notFound = notFound)
+        @JvmStatic fun ofNotFound(notFound: BetaNotFoundError) = BetaError(notFound = notFound)
 
-        fun ofRateLimit(rateLimit: BetaRateLimitError) = BetaError(rateLimit = rateLimit)
+        @JvmStatic fun ofRateLimit(rateLimit: BetaRateLimitError) = BetaError(rateLimit = rateLimit)
 
-        fun ofTimeout(timeout: BetaGatewayTimeoutError) = BetaError(timeout = timeout)
+        @JvmStatic fun ofTimeout(timeout: BetaGatewayTimeoutError) = BetaError(timeout = timeout)
 
-        fun ofApi(api: BetaApiError) = BetaError(api = api)
+        @JvmStatic fun ofApi(api: BetaApiError) = BetaError(api = api)
 
-        @JvmStatic
-        fun ofOverloaded(overloaded: BetaOverloadedError) = BetaError(overloaded = overloaded)
+        @JvmStatic fun ofOverloaded(overloaded: BetaOverloadedError) = BetaError(overloaded = overloaded)
     }
 
     /** An interface that defines how to map each variant of [BetaError] to a value of type [T]. */

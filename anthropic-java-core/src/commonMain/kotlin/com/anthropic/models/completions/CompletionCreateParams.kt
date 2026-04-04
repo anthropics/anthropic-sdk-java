@@ -225,7 +225,7 @@ private constructor(
          * .prompt()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [CompletionCreateParams]. */
@@ -236,7 +236,7 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(completionCreateParams: CompletionCreateParams) = apply {
+        @JvmSynthetic internal fun from(completionCreateParams: CompletionCreateParams) = apply {
             betas = completionCreateParams.betas?.toMutableList()
             body = completionCreateParams.body.toBuilder()
             additionalHeaders = completionCreateParams.additionalHeaders.toBuilder()
@@ -826,7 +826,7 @@ private constructor(
              * .prompt()
              * ```
              */
-            fun builder() = Builder()
+            @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -842,7 +842,7 @@ private constructor(
             private var topP: JsonField<Double> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            internal fun from(body: Body) = apply {
+            @JvmSynthetic internal fun from(body: Body) = apply {
                 maxTokensToSample = body.maxTokensToSample
                 model = body.model
                 prompt = body.prompt

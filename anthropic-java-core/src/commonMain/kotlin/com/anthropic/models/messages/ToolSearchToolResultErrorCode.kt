@@ -30,7 +30,7 @@ private constructor(private val value: JsonField<String>) : Enum {
 
         val EXECUTION_TIME_EXCEEDED = of("execution_time_exceeded")
 
-        fun of(value: String) = ToolSearchToolResultErrorCode(JsonField.of(value))
+        @JvmStatic fun of(value: String) = ToolSearchToolResultErrorCode(JsonField.of(value))
     }
 
     /** An enum containing [ToolSearchToolResultErrorCode]'s known values. */

@@ -79,7 +79,7 @@ private constructor(
          * .isFileUpdate()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [TextEditorCodeExecutionCreateResultBlockParam]. */
@@ -89,7 +89,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("text_editor_code_execution_create_result")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             textEditorCodeExecutionCreateResultBlockParam:
                 TextEditorCodeExecutionCreateResultBlockParam
         ) = apply {

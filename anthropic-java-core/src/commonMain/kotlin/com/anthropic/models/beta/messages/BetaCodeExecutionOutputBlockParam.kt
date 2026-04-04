@@ -75,7 +75,7 @@ private constructor(
          * .fileId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaCodeExecutionOutputBlockParam]. */
@@ -85,7 +85,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("code_execution_output")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaCodeExecutionOutputBlockParam: BetaCodeExecutionOutputBlockParam) =
+        @JvmSynthetic internal fun from(betaCodeExecutionOutputBlockParam: BetaCodeExecutionOutputBlockParam) =
             apply {
                 fileId = betaCodeExecutionOutputBlockParam.fileId
                 type = betaCodeExecutionOutputBlockParam.type

@@ -251,37 +251,29 @@ private constructor(
 
     companion object {
 
-        @JvmStatic
-        fun ofInvalidRequestError(invalidRequestError: InvalidRequestError) =
+        @JvmStatic fun ofInvalidRequestError(invalidRequestError: InvalidRequestError) =
             ErrorObject(invalidRequestError = invalidRequestError)
 
-        @JvmStatic
-        fun ofAuthenticationError(authenticationError: AuthenticationError) =
+        @JvmStatic fun ofAuthenticationError(authenticationError: AuthenticationError) =
             ErrorObject(authenticationError = authenticationError)
 
-        @JvmStatic
-        fun ofBillingError(billingError: BillingError) = ErrorObject(billingError = billingError)
+        @JvmStatic fun ofBillingError(billingError: BillingError) = ErrorObject(billingError = billingError)
 
-        @JvmStatic
-        fun ofPermissionError(permissionError: PermissionError) =
+        @JvmStatic fun ofPermissionError(permissionError: PermissionError) =
             ErrorObject(permissionError = permissionError)
 
-        @JvmStatic
-        fun ofNotFoundError(notFoundError: NotFoundError) =
+        @JvmStatic fun ofNotFoundError(notFoundError: NotFoundError) =
             ErrorObject(notFoundError = notFoundError)
 
-        @JvmStatic
-        fun ofRateLimitError(rateLimitError: RateLimitError) =
+        @JvmStatic fun ofRateLimitError(rateLimitError: RateLimitError) =
             ErrorObject(rateLimitError = rateLimitError)
 
-        @JvmStatic
-        fun ofTimeoutError(timeoutError: GatewayTimeoutError) =
+        @JvmStatic fun ofTimeoutError(timeoutError: GatewayTimeoutError) =
             ErrorObject(timeoutError = timeoutError)
 
-        fun ofApiError(apiError: ApiErrorObject) = ErrorObject(apiError = apiError)
+        @JvmStatic fun ofApiError(apiError: ApiErrorObject) = ErrorObject(apiError = apiError)
 
-        @JvmStatic
-        fun ofOverloadedError(overloadedError: OverloadedError) =
+        @JvmStatic fun ofOverloadedError(overloadedError: OverloadedError) =
             ErrorObject(overloadedError = overloadedError)
     }
 

@@ -133,7 +133,7 @@ private constructor(
          * .httpClient()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ClientOptions]. */
@@ -152,7 +152,7 @@ private constructor(
         private var timeout: Timeout = Timeout.default()
         private var maxRetries: Int = 2
 
-        internal fun from(clientOptions: ClientOptions) = apply {
+        @JvmSynthetic internal fun from(clientOptions: ClientOptions) = apply {
             httpClient = clientOptions.originalHttpClient
             checkJacksonVersionCompatibility = clientOptions.checkJacksonVersionCompatibility
             jsonMapper = clientOptions.jsonMapper

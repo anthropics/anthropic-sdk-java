@@ -32,7 +32,7 @@ private constructor(private val value: JsonField<String>) : Enum {
 
         val OUTPUT_FILE_TOO_LARGE = of("output_file_too_large")
 
-        fun of(value: String) = BashCodeExecutionToolResultErrorCode(JsonField.of(value))
+        @JvmStatic fun of(value: String) = BashCodeExecutionToolResultErrorCode(JsonField.of(value))
     }
 
     /** An enum containing [BashCodeExecutionToolResultErrorCode]'s known values. */

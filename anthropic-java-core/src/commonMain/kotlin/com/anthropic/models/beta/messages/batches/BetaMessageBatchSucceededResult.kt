@@ -76,7 +76,7 @@ private constructor(
          * .message()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaMessageBatchSucceededResult]. */
@@ -86,7 +86,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("succeeded")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaMessageBatchSucceededResult: BetaMessageBatchSucceededResult) =
+        @JvmSynthetic internal fun from(betaMessageBatchSucceededResult: BetaMessageBatchSucceededResult) =
             apply {
                 message = betaMessageBatchSucceededResult.message
                 type = betaMessageBatchSucceededResult.type

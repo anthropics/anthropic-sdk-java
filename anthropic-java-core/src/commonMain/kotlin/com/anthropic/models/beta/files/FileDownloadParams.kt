@@ -37,10 +37,10 @@ private constructor(
 
     companion object {
 
-        fun none(): FileDownloadParams = builder().build()
+        @JvmStatic fun none(): FileDownloadParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [FileDownloadParams]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [FileDownloadParams]. */
@@ -51,7 +51,7 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(fileDownloadParams: FileDownloadParams) = apply {
+        @JvmSynthetic internal fun from(fileDownloadParams: FileDownloadParams) = apply {
             fileId = fileDownloadParams.fileId
             betas = fileDownloadParams.betas?.toMutableList()
             additionalHeaders = fileDownloadParams.additionalHeaders.toBuilder()

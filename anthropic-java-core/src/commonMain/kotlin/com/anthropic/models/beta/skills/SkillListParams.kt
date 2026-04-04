@@ -59,10 +59,10 @@ private constructor(
 
     companion object {
 
-        fun none(): SkillListParams = builder().build()
+        @JvmStatic fun none(): SkillListParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [SkillListParams]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [SkillListParams]. */
@@ -75,7 +75,7 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(skillListParams: SkillListParams) = apply {
+        @JvmSynthetic internal fun from(skillListParams: SkillListParams) = apply {
             limit = skillListParams.limit
             page = skillListParams.page
             source = skillListParams.source

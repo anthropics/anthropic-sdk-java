@@ -42,7 +42,7 @@ internal constructor(
          * .model()
          * ```
          */
-        fun <T : Any> builder() = Builder<T>()
+        @JvmStatic fun <T : Any> builder() = Builder<T>()
     }
 
     /** A builder for [StructuredMessageCreateParams]. */

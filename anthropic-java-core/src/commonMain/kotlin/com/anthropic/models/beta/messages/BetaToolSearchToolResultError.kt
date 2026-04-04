@@ -108,7 +108,7 @@ private constructor(
          * .errorMessage()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaToolSearchToolResultError]. */
@@ -119,7 +119,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("tool_search_tool_result_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaToolSearchToolResultError: BetaToolSearchToolResultError) = apply {
+        @JvmSynthetic internal fun from(betaToolSearchToolResultError: BetaToolSearchToolResultError) = apply {
             errorCode = betaToolSearchToolResultError.errorCode
             errorMessage = betaToolSearchToolResultError.errorMessage
             type = betaToolSearchToolResultError.type
@@ -265,7 +265,7 @@ private constructor(
 
             val EXECUTION_TIME_EXCEEDED = of("execution_time_exceeded")
 
-            fun of(value: String) = ErrorCode(JsonField.of(value))
+            @JvmStatic fun of(value: String) = ErrorCode(JsonField.of(value))
         }
 
         /** An enum containing [ErrorCode]'s known values. */

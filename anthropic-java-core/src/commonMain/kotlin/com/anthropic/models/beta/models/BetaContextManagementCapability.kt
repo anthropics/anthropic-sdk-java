@@ -145,7 +145,7 @@ private constructor(
          * .supported()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaContextManagementCapability]. */
@@ -157,7 +157,7 @@ private constructor(
         private var supported: JsonField<Boolean>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaContextManagementCapability: BetaContextManagementCapability) =
+        @JvmSynthetic internal fun from(betaContextManagementCapability: BetaContextManagementCapability) =
             apply {
                 clearThinking20251015 = betaContextManagementCapability.clearThinking20251015
                 clearToolUses20250919 = betaContextManagementCapability.clearToolUses20250919

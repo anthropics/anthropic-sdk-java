@@ -196,25 +196,20 @@ private constructor(
 
     companion object {
 
-        @JvmStatic
-        fun ofCharLocation(charLocation: CitationCharLocationParam) =
+        @JvmStatic fun ofCharLocation(charLocation: CitationCharLocationParam) =
             TextCitationParam(charLocation = charLocation)
 
-        @JvmStatic
-        fun ofPageLocation(pageLocation: CitationPageLocationParam) =
+        @JvmStatic fun ofPageLocation(pageLocation: CitationPageLocationParam) =
             TextCitationParam(pageLocation = pageLocation)
 
-        @JvmStatic
-        fun ofContentBlockLocation(contentBlockLocation: CitationContentBlockLocationParam) =
+        @JvmStatic fun ofContentBlockLocation(contentBlockLocation: CitationContentBlockLocationParam) =
             TextCitationParam(contentBlockLocation = contentBlockLocation)
 
-        @JvmStatic
-        fun ofWebSearchResultLocation(
+        @JvmStatic fun ofWebSearchResultLocation(
             webSearchResultLocation: CitationWebSearchResultLocationParam
         ) = TextCitationParam(webSearchResultLocation = webSearchResultLocation)
 
-        @JvmStatic
-        fun ofSearchResultLocation(searchResultLocation: CitationSearchResultLocationParam) =
+        @JvmStatic fun ofSearchResultLocation(searchResultLocation: CitationSearchResultLocationParam) =
             TextCitationParam(searchResultLocation = searchResultLocation)
     }
 

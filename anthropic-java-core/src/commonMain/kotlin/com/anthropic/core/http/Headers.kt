@@ -28,7 +28,7 @@ private constructor(
     fun toBuilder(): Builder = Builder().putAll(map)
 
     companion object {
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     class Builder internal constructor() {

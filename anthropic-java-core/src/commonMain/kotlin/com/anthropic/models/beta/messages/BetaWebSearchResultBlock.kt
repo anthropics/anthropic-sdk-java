@@ -138,7 +138,7 @@ private constructor(
          * .url()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaWebSearchResultBlock]. */
@@ -151,7 +151,7 @@ private constructor(
         private var url: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaWebSearchResultBlock: BetaWebSearchResultBlock) = apply {
+        @JvmSynthetic internal fun from(betaWebSearchResultBlock: BetaWebSearchResultBlock) = apply {
             encryptedContent = betaWebSearchResultBlock.encryptedContent
             pageAge = betaWebSearchResultBlock.pageAge
             title = betaWebSearchResultBlock.title

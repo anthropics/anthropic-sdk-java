@@ -87,7 +87,7 @@ private constructor(
          * .data()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaPlainTextSource]. */
@@ -98,7 +98,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("text")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaPlainTextSource: BetaPlainTextSource) = apply {
+        @JvmSynthetic internal fun from(betaPlainTextSource: BetaPlainTextSource) = apply {
             data = betaPlainTextSource.data
             mediaType = betaPlainTextSource.mediaType
             type = betaPlainTextSource.type

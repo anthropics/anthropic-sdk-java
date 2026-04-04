@@ -80,7 +80,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of
          * [BetaRequestMcpServerToolConfiguration].
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaRequestMcpServerToolConfiguration]. */
@@ -90,7 +90,7 @@ private constructor(
         private var enabled: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             betaRequestMcpServerToolConfiguration: BetaRequestMcpServerToolConfiguration
         ) = apply {
             allowedTools =

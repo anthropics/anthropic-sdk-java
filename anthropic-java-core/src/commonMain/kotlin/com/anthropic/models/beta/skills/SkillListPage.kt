@@ -76,7 +76,7 @@ private constructor(
          * .response()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [SkillListPage]. */
@@ -86,7 +86,7 @@ private constructor(
         private var params: SkillListParams? = null
         private var response: SkillListPageResponse? = null
 
-        internal fun from(skillListPage: SkillListPage) = apply {
+        @JvmSynthetic internal fun from(skillListPage: SkillListPage) = apply {
             service = skillListPage.service
             params = skillListPage.params
             response = skillListPage.response

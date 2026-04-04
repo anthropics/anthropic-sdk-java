@@ -145,7 +145,7 @@ private constructor(
          * .toolUseId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ToolResultBlockParam]. */
@@ -158,7 +158,7 @@ private constructor(
         private var isError: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(toolResultBlockParam: ToolResultBlockParam) = apply {
+        @JvmSynthetic internal fun from(toolResultBlockParam: ToolResultBlockParam) = apply {
             toolUseId = toolResultBlockParam.toolUseId
             type = toolResultBlockParam.type
             cacheControl = toolResultBlockParam.cacheControl
@@ -421,9 +421,9 @@ private constructor(
 
         companion object {
 
-            fun ofString(string: String) = Content(string = string)
+            @JvmStatic fun ofString(string: String) = Content(string = string)
 
-            fun ofBlocks(blocks: List<Block>) = Content(blocks = blocks.toImmutable())
+            @JvmStatic fun ofBlocks(blocks: List<Block>) = Content(blocks = blocks.toImmutable())
         }
 
         /**
@@ -651,19 +651,17 @@ private constructor(
 
             companion object {
 
-                fun ofText(text: TextBlockParam) = Block(text = text)
+                @JvmStatic fun ofText(text: TextBlockParam) = Block(text = text)
 
-                fun ofImage(image: ImageBlockParam) = Block(image = image)
+                @JvmStatic fun ofImage(image: ImageBlockParam) = Block(image = image)
 
-                @JvmStatic
-                fun ofSearchResult(searchResult: SearchResultBlockParam) =
+                @JvmStatic fun ofSearchResult(searchResult: SearchResultBlockParam) =
                     Block(searchResult = searchResult)
 
-                fun ofDocument(document: DocumentBlockParam) = Block(document = document)
+                @JvmStatic fun ofDocument(document: DocumentBlockParam) = Block(document = document)
 
                 /** Tool reference block that can be included in tool_result content. */
-                @JvmStatic
-                fun ofToolReference(toolReference: ToolReferenceBlockParam) =
+                @JvmStatic fun ofToolReference(toolReference: ToolReferenceBlockParam) =
                     Block(toolReference = toolReference)
             }
 

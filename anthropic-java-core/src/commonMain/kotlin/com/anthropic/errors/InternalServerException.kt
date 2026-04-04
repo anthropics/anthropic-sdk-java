@@ -34,7 +34,7 @@ private constructor(
          * .body()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [InternalServerException]. */
@@ -45,7 +45,7 @@ private constructor(
         private var body: JsonValue? = null
         private var cause: Throwable? = null
 
-        internal fun from(internalServerException: InternalServerException) = apply {
+        @JvmSynthetic internal fun from(internalServerException: InternalServerException) = apply {
             statusCode = internalServerException.statusCode
             headers = internalServerException.headers
             body = internalServerException.body

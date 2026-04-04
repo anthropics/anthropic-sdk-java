@@ -118,7 +118,7 @@ private constructor(
          * .url()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [WebFetchBlockParam]. */
@@ -130,7 +130,7 @@ private constructor(
         private var retrievedAt: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(webFetchBlockParam: WebFetchBlockParam) = apply {
+        @JvmSynthetic internal fun from(webFetchBlockParam: WebFetchBlockParam) = apply {
             content = webFetchBlockParam.content
             type = webFetchBlockParam.type
             url = webFetchBlockParam.url

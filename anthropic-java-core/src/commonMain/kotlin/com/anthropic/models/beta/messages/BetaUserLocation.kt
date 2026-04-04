@@ -123,7 +123,7 @@ private constructor(
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [BetaUserLocation]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaUserLocation]. */
@@ -136,7 +136,7 @@ private constructor(
         private var timezone: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaUserLocation: BetaUserLocation) = apply {
+        @JvmSynthetic internal fun from(betaUserLocation: BetaUserLocation) = apply {
             type = betaUserLocation.type
             city = betaUserLocation.city
             country = betaUserLocation.country

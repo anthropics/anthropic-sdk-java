@@ -55,10 +55,10 @@ private constructor(
 
     companion object {
 
-        fun none(): FileListParams = builder().build()
+        @JvmStatic fun none(): FileListParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [FileListParams]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [FileListParams]. */
@@ -71,7 +71,7 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(fileListParams: FileListParams) = apply {
+        @JvmSynthetic internal fun from(fileListParams: FileListParams) = apply {
             afterId = fileListParams.afterId
             beforeId = fileListParams.beforeId
             limit = fileListParams.limit

@@ -74,7 +74,7 @@ private constructor(
          * .message()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [AuthenticationError]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("authentication_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(authenticationError: AuthenticationError) = apply {
+        @JvmSynthetic internal fun from(authenticationError: AuthenticationError) = apply {
             message = authenticationError.message
             type = authenticationError.type
             additionalProperties = authenticationError.additionalProperties.toMutableMap()

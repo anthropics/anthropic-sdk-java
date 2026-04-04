@@ -31,9 +31,9 @@ private constructor(
         private const val HEADER_AUTHORIZATION = "Authorization"
         private const val HEADER_VERSION = "anthropic-version"
 
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
 
-        fun fromEnv(): AnthropicBackend = builder().fromEnv().build()
+        @JvmStatic fun fromEnv(): AnthropicBackend = builder().fromEnv().build()
     }
 
     override fun baseUrl(): String = baseUrl

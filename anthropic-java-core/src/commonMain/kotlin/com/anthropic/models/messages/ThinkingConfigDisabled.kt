@@ -50,7 +50,7 @@ private constructor(
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [ThinkingConfigDisabled]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ThinkingConfigDisabled]. */
@@ -59,7 +59,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("disabled")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(thinkingConfigDisabled: ThinkingConfigDisabled) = apply {
+        @JvmSynthetic internal fun from(thinkingConfigDisabled: ThinkingConfigDisabled) = apply {
             type = thinkingConfigDisabled.type
             additionalProperties = thinkingConfigDisabled.additionalProperties.toMutableMap()
         }

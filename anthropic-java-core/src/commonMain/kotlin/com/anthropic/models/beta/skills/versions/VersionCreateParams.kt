@@ -75,10 +75,10 @@ private constructor(
 
     companion object {
 
-        fun none(): VersionCreateParams = builder().build()
+        @JvmStatic fun none(): VersionCreateParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [VersionCreateParams]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [VersionCreateParams]. */
@@ -90,7 +90,7 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(versionCreateParams: VersionCreateParams) = apply {
+        @JvmSynthetic internal fun from(versionCreateParams: VersionCreateParams) = apply {
             skillId = versionCreateParams.skillId
             betas = versionCreateParams.betas?.toMutableList()
             body = versionCreateParams.body.toBuilder()
@@ -378,7 +378,7 @@ private constructor(
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Body]. */
-            fun builder() = Builder()
+            @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -387,7 +387,7 @@ private constructor(
             private var files: MultipartField<MutableList<InputStream>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            internal fun from(body: Body) = apply {
+            @JvmSynthetic internal fun from(body: Body) = apply {
                 files = body.files.map { it.toMutableList() }
                 additionalProperties = body.additionalProperties.toMutableMap()
             }

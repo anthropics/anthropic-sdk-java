@@ -131,7 +131,7 @@ private constructor(
          * .toolUseId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaTextEditorCodeExecutionToolResultBlockParam]. */
@@ -143,7 +143,7 @@ private constructor(
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             betaTextEditorCodeExecutionToolResultBlockParam:
                 BetaTextEditorCodeExecutionToolResultBlockParam
         ) = apply {
@@ -598,8 +598,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofBetaTextEditorCodeExecutionToolResultErrorParam(
+            @JvmStatic fun ofBetaTextEditorCodeExecutionToolResultErrorParam(
                 betaTextEditorCodeExecutionToolResultErrorParam:
                     BetaTextEditorCodeExecutionToolResultErrorParam
             ) =
@@ -608,8 +607,7 @@ private constructor(
                         betaTextEditorCodeExecutionToolResultErrorParam
                 )
 
-            @JvmStatic
-            fun ofBetaTextEditorCodeExecutionViewResultBlockParam(
+            @JvmStatic fun ofBetaTextEditorCodeExecutionViewResultBlockParam(
                 betaTextEditorCodeExecutionViewResultBlockParam:
                     BetaTextEditorCodeExecutionViewResultBlockParam
             ) =
@@ -618,8 +616,7 @@ private constructor(
                         betaTextEditorCodeExecutionViewResultBlockParam
                 )
 
-            @JvmStatic
-            fun ofBetaTextEditorCodeExecutionCreateResultBlockParam(
+            @JvmStatic fun ofBetaTextEditorCodeExecutionCreateResultBlockParam(
                 betaTextEditorCodeExecutionCreateResultBlockParam:
                     BetaTextEditorCodeExecutionCreateResultBlockParam
             ) =
@@ -628,8 +625,7 @@ private constructor(
                         betaTextEditorCodeExecutionCreateResultBlockParam
                 )
 
-            @JvmStatic
-            fun ofBetaTextEditorCodeExecutionStrReplaceResultBlockParam(
+            @JvmStatic fun ofBetaTextEditorCodeExecutionStrReplaceResultBlockParam(
                 betaTextEditorCodeExecutionStrReplaceResultBlockParam:
                     BetaTextEditorCodeExecutionStrReplaceResultBlockParam
             ) =

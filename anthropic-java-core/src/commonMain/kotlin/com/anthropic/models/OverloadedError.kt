@@ -74,7 +74,7 @@ private constructor(
          * .message()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [OverloadedError]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("overloaded_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(overloadedError: OverloadedError) = apply {
+        @JvmSynthetic internal fun from(overloadedError: OverloadedError) = apply {
             message = overloadedError.message
             type = overloadedError.type
             additionalProperties = overloadedError.additionalProperties.toMutableMap()

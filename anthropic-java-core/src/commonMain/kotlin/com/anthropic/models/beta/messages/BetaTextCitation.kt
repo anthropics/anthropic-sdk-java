@@ -228,25 +228,20 @@ private constructor(
 
     companion object {
 
-        @JvmStatic
-        fun ofCharLocation(charLocation: BetaCitationCharLocation) =
+        @JvmStatic fun ofCharLocation(charLocation: BetaCitationCharLocation) =
             BetaTextCitation(charLocation = charLocation)
 
-        @JvmStatic
-        fun ofPageLocation(pageLocation: BetaCitationPageLocation) =
+        @JvmStatic fun ofPageLocation(pageLocation: BetaCitationPageLocation) =
             BetaTextCitation(pageLocation = pageLocation)
 
-        @JvmStatic
-        fun ofContentBlockLocation(contentBlockLocation: BetaCitationContentBlockLocation) =
+        @JvmStatic fun ofContentBlockLocation(contentBlockLocation: BetaCitationContentBlockLocation) =
             BetaTextCitation(contentBlockLocation = contentBlockLocation)
 
-        @JvmStatic
-        fun ofWebSearchResultLocation(
+        @JvmStatic fun ofWebSearchResultLocation(
             webSearchResultLocation: BetaCitationsWebSearchResultLocation
         ) = BetaTextCitation(webSearchResultLocation = webSearchResultLocation)
 
-        @JvmStatic
-        fun ofSearchResultLocation(searchResultLocation: BetaCitationSearchResultLocation) =
+        @JvmStatic fun ofSearchResultLocation(searchResultLocation: BetaCitationSearchResultLocation) =
             BetaTextCitation(searchResultLocation = searchResultLocation)
     }
 

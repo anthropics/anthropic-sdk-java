@@ -82,7 +82,7 @@ private constructor(
          * .errorCode()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaCodeExecutionToolResultError]. */
@@ -92,7 +92,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("code_execution_tool_result_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaCodeExecutionToolResultError: BetaCodeExecutionToolResultError) =
+        @JvmSynthetic internal fun from(betaCodeExecutionToolResultError: BetaCodeExecutionToolResultError) =
             apply {
                 errorCode = betaCodeExecutionToolResultError.errorCode
                 type = betaCodeExecutionToolResultError.type

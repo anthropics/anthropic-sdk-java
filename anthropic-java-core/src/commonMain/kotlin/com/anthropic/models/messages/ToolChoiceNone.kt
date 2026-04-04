@@ -51,7 +51,7 @@ private constructor(
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [ToolChoiceNone]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ToolChoiceNone]. */
@@ -60,7 +60,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("none")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(toolChoiceNone: ToolChoiceNone) = apply {
+        @JvmSynthetic internal fun from(toolChoiceNone: ToolChoiceNone) = apply {
             type = toolChoiceNone.type
             additionalProperties = toolChoiceNone.additionalProperties.toMutableMap()
         }

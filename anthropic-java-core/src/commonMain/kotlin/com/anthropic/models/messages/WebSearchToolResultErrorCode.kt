@@ -34,7 +34,7 @@ private constructor(private val value: JsonField<String>) : Enum {
 
         val REQUEST_TOO_LARGE = of("request_too_large")
 
-        fun of(value: String) = WebSearchToolResultErrorCode(JsonField.of(value))
+        @JvmStatic fun of(value: String) = WebSearchToolResultErrorCode(JsonField.of(value))
     }
 
     /** An enum containing [WebSearchToolResultErrorCode]'s known values. */

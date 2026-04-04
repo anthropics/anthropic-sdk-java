@@ -119,7 +119,7 @@ private constructor(
          * .text()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [TextBlockParam]. */
@@ -131,7 +131,7 @@ private constructor(
         private var citations: JsonField<MutableList<TextCitationParam>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(textBlockParam: TextBlockParam) = apply {
+        @JvmSynthetic internal fun from(textBlockParam: TextBlockParam) = apply {
             text = textBlockParam.text
             type = textBlockParam.type
             cacheControl = textBlockParam.cacheControl

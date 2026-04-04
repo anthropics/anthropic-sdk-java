@@ -151,7 +151,7 @@ private constructor(
          * .stopReason()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [Completion]. */
@@ -164,7 +164,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("completion")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(completion: Completion) = apply {
+        @JvmSynthetic internal fun from(completion: Completion) = apply {
             id = completion.id
             this.completion = completion.completion
             model = completion.model

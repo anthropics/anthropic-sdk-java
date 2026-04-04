@@ -145,16 +145,13 @@ private constructor(
 
     companion object {
 
-        @JvmStatic
-        fun ofEnabled(enabled: BetaThinkingConfigEnabled) =
+        @JvmStatic fun ofEnabled(enabled: BetaThinkingConfigEnabled) =
             BetaThinkingConfigParam(enabled = enabled)
 
-        @JvmStatic
-        fun ofDisabled(disabled: BetaThinkingConfigDisabled) =
+        @JvmStatic fun ofDisabled(disabled: BetaThinkingConfigDisabled) =
             BetaThinkingConfigParam(disabled = disabled)
 
-        @JvmStatic
-        fun ofAdaptive(adaptive: BetaThinkingConfigAdaptive) =
+        @JvmStatic fun ofAdaptive(adaptive: BetaThinkingConfigAdaptive) =
             BetaThinkingConfigParam(adaptive = adaptive)
     }
 

@@ -61,7 +61,7 @@ class BetaMessageAccumulator private constructor() {
     companion object {
         private val JSON_MAPPER = jsonMapper()
 
-        fun create() = BetaMessageAccumulator()
+        @JvmStatic fun create() = BetaMessageAccumulator()
 
         internal fun mergeMessageUsage(
             usage: BetaUsage,

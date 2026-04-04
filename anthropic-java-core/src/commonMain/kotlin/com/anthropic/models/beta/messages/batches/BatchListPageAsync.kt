@@ -87,7 +87,7 @@ private constructor(
          * .response()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BatchListPageAsync]. */
@@ -98,7 +98,7 @@ private constructor(
         private var params: BatchListParams? = null
         private var response: BatchListPageResponse? = null
 
-        internal fun from(batchListPageAsync: BatchListPageAsync) = apply {
+        @JvmSynthetic internal fun from(batchListPageAsync: BatchListPageAsync) = apply {
             service = batchListPageAsync.service
             streamHandlerExecutor = batchListPageAsync.streamHandlerExecutor
             params = batchListPageAsync.params

@@ -10,15 +10,15 @@ class RequestOptions private constructor(val responseValidation: Boolean?, val t
 
         private val NONE = builder().build()
 
-        fun none() = NONE
+        @JvmStatic fun none() = NONE
 
-        internal fun from(clientOptions: ClientOptions): RequestOptions =
+        @JvmSynthetic internal fun from(clientOptions: ClientOptions): RequestOptions =
             builder()
                 .responseValidation(clientOptions.responseValidation)
                 .timeout(clientOptions.timeout)
                 .build()
 
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
 
         private val MODEL_NONSTREAMING_TOKENS =
             mapOf(

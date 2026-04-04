@@ -581,7 +581,7 @@ private constructor(
          * .model()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [MessageCreateParams]. */
@@ -593,7 +593,7 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(messageCreateParams: MessageCreateParams) = apply {
+        @JvmSynthetic internal fun from(messageCreateParams: MessageCreateParams) = apply {
             toolParametersTypes = messageCreateParams.toolParametersTypes.toMutableList()
             betas = messageCreateParams.betas?.toMutableList()
             body = messageCreateParams.body.toBuilder()
@@ -2359,7 +2359,7 @@ private constructor(
              * .model()
              * ```
              */
-            fun builder() = Builder()
+            @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -2389,7 +2389,7 @@ private constructor(
             private var topP: JsonField<Double> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            internal fun from(body: Body) = apply {
+            @JvmSynthetic internal fun from(body: Body) = apply {
                 maxTokens = body.maxTokens
                 messages = body.messages.map { it.toMutableList() }
                 model = body.model
@@ -3578,11 +3578,10 @@ private constructor(
         companion object {
 
             /** Container parameters with skills to be loaded. */
-            @JvmStatic
-            fun ofBetaContainerParams(betaContainerParams: BetaContainerParams) =
+            @JvmStatic fun ofBetaContainerParams(betaContainerParams: BetaContainerParams) =
                 Container(betaContainerParams = betaContainerParams)
 
-            fun ofString(string: String) = Container(string = string)
+            @JvmStatic fun ofString(string: String) = Container(string = string)
         }
 
         /**
@@ -3684,7 +3683,7 @@ private constructor(
 
             val STANDARD_ONLY = of("standard_only")
 
-            fun of(value: String) = ServiceTier(JsonField.of(value))
+            @JvmStatic fun of(value: String) = ServiceTier(JsonField.of(value))
         }
 
         /** An enum containing [ServiceTier]'s known values. */
@@ -3815,7 +3814,7 @@ private constructor(
 
             val FAST = of("fast")
 
-            fun of(value: String) = Speed(JsonField.of(value))
+            @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
         }
 
         /** An enum containing [Speed]'s known values. */
@@ -4031,10 +4030,9 @@ private constructor(
 
         companion object {
 
-            fun ofString(string: String) = System(string = string)
+            @JvmStatic fun ofString(string: String) = System(string = string)
 
-            @JvmStatic
-            fun ofBetaTextBlockParams(betaTextBlockParams: List<BetaTextBlockParam>) =
+            @JvmStatic fun ofBetaTextBlockParams(betaTextBlockParams: List<BetaTextBlockParam>) =
                 System(betaTextBlockParams = betaTextBlockParams.toImmutable())
         }
 

@@ -63,7 +63,7 @@ private constructor(
          * .skillId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [VersionDeleteParams]. */
@@ -76,7 +76,7 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(versionDeleteParams: VersionDeleteParams) = apply {
+        @JvmSynthetic internal fun from(versionDeleteParams: VersionDeleteParams) = apply {
             skillId = versionDeleteParams.skillId
             version = versionDeleteParams.version
             betas = versionDeleteParams.betas?.toMutableList()

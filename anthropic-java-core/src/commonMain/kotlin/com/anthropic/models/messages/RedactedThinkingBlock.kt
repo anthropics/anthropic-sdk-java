@@ -77,7 +77,7 @@ private constructor(
          * .data()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [RedactedThinkingBlock]. */
@@ -87,7 +87,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("redacted_thinking")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(redactedThinkingBlock: RedactedThinkingBlock) = apply {
+        @JvmSynthetic internal fun from(redactedThinkingBlock: RedactedThinkingBlock) = apply {
             data = redactedThinkingBlock.data
             type = redactedThinkingBlock.type
             additionalProperties = redactedThinkingBlock.additionalProperties.toMutableMap()

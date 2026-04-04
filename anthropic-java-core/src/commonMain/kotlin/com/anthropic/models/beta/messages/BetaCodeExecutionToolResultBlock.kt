@@ -137,7 +137,7 @@ private constructor(
          * .toolUseId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaCodeExecutionToolResultBlock]. */
@@ -148,7 +148,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("code_execution_tool_result")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaCodeExecutionToolResultBlock: BetaCodeExecutionToolResultBlock) =
+        @JvmSynthetic internal fun from(betaCodeExecutionToolResultBlock: BetaCodeExecutionToolResultBlock) =
             apply {
                 content = betaCodeExecutionToolResultBlock.content
                 toolUseId = betaCodeExecutionToolResultBlock.toolUseId

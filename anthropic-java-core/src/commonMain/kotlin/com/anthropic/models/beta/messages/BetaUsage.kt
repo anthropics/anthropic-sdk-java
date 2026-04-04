@@ -301,7 +301,7 @@ private constructor(
          * .speed()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaUsage]. */
@@ -319,7 +319,7 @@ private constructor(
         private var speed: JsonField<Speed>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaUsage: BetaUsage) = apply {
+        @JvmSynthetic internal fun from(betaUsage: BetaUsage) = apply {
             cacheCreation = betaUsage.cacheCreation
             cacheCreationInputTokens = betaUsage.cacheCreationInputTokens
             cacheReadInputTokens = betaUsage.cacheReadInputTokens
@@ -760,13 +760,11 @@ private constructor(
         companion object {
 
             /** Token usage for a sampling iteration. */
-            @JvmStatic
-            fun ofMessage(message: BetaMessageIterationUsage) =
+            @JvmStatic fun ofMessage(message: BetaMessageIterationUsage) =
                 BetaIterationsUsageItems(message = message)
 
             /** Token usage for a compaction iteration. */
-            @JvmStatic
-            fun ofCompaction(compaction: BetaCompactionIterationUsage) =
+            @JvmStatic fun ofCompaction(compaction: BetaCompactionIterationUsage) =
                 BetaIterationsUsageItems(compaction = compaction)
         }
 
@@ -861,7 +859,7 @@ private constructor(
 
             val BATCH = of("batch")
 
-            fun of(value: String) = ServiceTier(JsonField.of(value))
+            @JvmStatic fun of(value: String) = ServiceTier(JsonField.of(value))
         }
 
         /** An enum containing [ServiceTier]'s known values. */
@@ -993,7 +991,7 @@ private constructor(
 
             val FAST = of("fast")
 
-            fun of(value: String) = Speed(JsonField.of(value))
+            @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
         }
 
         /** An enum containing [Speed]'s known values. */

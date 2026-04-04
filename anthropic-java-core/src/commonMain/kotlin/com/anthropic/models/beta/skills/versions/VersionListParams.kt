@@ -53,10 +53,10 @@ private constructor(
 
     companion object {
 
-        fun none(): VersionListParams = builder().build()
+        @JvmStatic fun none(): VersionListParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [VersionListParams]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [VersionListParams]. */
@@ -69,7 +69,7 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(versionListParams: VersionListParams) = apply {
+        @JvmSynthetic internal fun from(versionListParams: VersionListParams) = apply {
             skillId = versionListParams.skillId
             limit = versionListParams.limit
             page = versionListParams.page

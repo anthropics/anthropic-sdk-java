@@ -93,7 +93,7 @@ private constructor(
          * .thinking()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ThinkingBlock]. */
@@ -104,7 +104,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("thinking")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(thinkingBlock: ThinkingBlock) = apply {
+        @JvmSynthetic internal fun from(thinkingBlock: ThinkingBlock) = apply {
             signature = thinkingBlock.signature
             thinking = thinkingBlock.thinking
             type = thinkingBlock.type

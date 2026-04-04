@@ -183,25 +183,20 @@ private constructor(
 
     companion object {
 
-        fun ofText(text: BetaTextDelta) = BetaRawContentBlockDelta(text = text)
+        @JvmStatic fun ofText(text: BetaTextDelta) = BetaRawContentBlockDelta(text = text)
 
-        @JvmStatic
-        fun ofInputJson(inputJson: BetaInputJsonDelta) =
+        @JvmStatic fun ofInputJson(inputJson: BetaInputJsonDelta) =
             BetaRawContentBlockDelta(inputJson = inputJson)
 
-        @JvmStatic
-        fun ofCitations(citations: BetaCitationsDelta) =
+        @JvmStatic fun ofCitations(citations: BetaCitationsDelta) =
             BetaRawContentBlockDelta(citations = citations)
 
-        @JvmStatic
-        fun ofThinking(thinking: BetaThinkingDelta) = BetaRawContentBlockDelta(thinking = thinking)
+        @JvmStatic fun ofThinking(thinking: BetaThinkingDelta) = BetaRawContentBlockDelta(thinking = thinking)
 
-        @JvmStatic
-        fun ofSignature(signature: BetaSignatureDelta) =
+        @JvmStatic fun ofSignature(signature: BetaSignatureDelta) =
             BetaRawContentBlockDelta(signature = signature)
 
-        @JvmStatic
-        fun ofCompaction(compaction: BetaCompactionContentBlockDelta) =
+        @JvmStatic fun ofCompaction(compaction: BetaCompactionContentBlockDelta) =
             BetaRawContentBlockDelta(compaction = compaction)
     }
 

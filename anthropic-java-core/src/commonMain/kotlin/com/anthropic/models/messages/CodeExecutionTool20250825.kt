@@ -156,7 +156,7 @@ private constructor(
         /**
          * Returns a mutable builder for constructing an instance of [CodeExecutionTool20250825].
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [CodeExecutionTool20250825]. */
@@ -170,7 +170,7 @@ private constructor(
         private var strict: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(codeExecutionTool20250825: CodeExecutionTool20250825) = apply {
+        @JvmSynthetic internal fun from(codeExecutionTool20250825: CodeExecutionTool20250825) = apply {
             name = codeExecutionTool20250825.name
             type = codeExecutionTool20250825.type
             allowedCallers = codeExecutionTool20250825.allowedCallers.map { it.toMutableList() }
@@ -390,7 +390,7 @@ private constructor(
 
             val CODE_EXECUTION_20260120 = of("code_execution_20260120")
 
-            fun of(value: String) = AllowedCaller(JsonField.of(value))
+            @JvmStatic fun of(value: String) = AllowedCaller(JsonField.of(value))
         }
 
         /** An enum containing [AllowedCaller]'s known values. */

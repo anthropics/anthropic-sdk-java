@@ -123,7 +123,7 @@ private constructor(
          * .toolUseId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [CodeExecutionToolResultBlockParam]. */
@@ -135,7 +135,7 @@ private constructor(
         private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(codeExecutionToolResultBlockParam: CodeExecutionToolResultBlockParam) =
+        @JvmSynthetic internal fun from(codeExecutionToolResultBlockParam: CodeExecutionToolResultBlockParam) =
             apply {
                 content = codeExecutionToolResultBlockParam.content
                 toolUseId = codeExecutionToolResultBlockParam.toolUseId

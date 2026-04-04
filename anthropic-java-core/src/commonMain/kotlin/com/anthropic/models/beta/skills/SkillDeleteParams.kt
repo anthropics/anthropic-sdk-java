@@ -46,10 +46,10 @@ private constructor(
 
     companion object {
 
-        fun none(): SkillDeleteParams = builder().build()
+        @JvmStatic fun none(): SkillDeleteParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [SkillDeleteParams]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [SkillDeleteParams]. */
@@ -61,7 +61,7 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(skillDeleteParams: SkillDeleteParams) = apply {
+        @JvmSynthetic internal fun from(skillDeleteParams: SkillDeleteParams) = apply {
             skillId = skillDeleteParams.skillId
             betas = skillDeleteParams.betas?.toMutableList()
             additionalHeaders = skillDeleteParams.additionalHeaders.toBuilder()

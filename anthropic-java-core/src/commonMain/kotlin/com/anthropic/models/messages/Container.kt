@@ -87,7 +87,7 @@ private constructor(
          * .expiresAt()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [Container]. */
@@ -97,7 +97,7 @@ private constructor(
         private var expiresAt: JsonField<OffsetDateTime>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(container: Container) = apply {
+        @JvmSynthetic internal fun from(container: Container) = apply {
             id = container.id
             expiresAt = container.expiresAt
             additionalProperties = container.additionalProperties.toMutableMap()

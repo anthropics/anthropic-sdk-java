@@ -64,7 +64,7 @@ private constructor(
          * .supported()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaCapabilitySupport]. */
@@ -73,7 +73,7 @@ private constructor(
         private var supported: JsonField<Boolean>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaCapabilitySupport: BetaCapabilitySupport) = apply {
+        @JvmSynthetic internal fun from(betaCapabilitySupport: BetaCapabilitySupport) = apply {
             supported = betaCapabilitySupport.supported
             additionalProperties = betaCapabilitySupport.additionalProperties.toMutableMap()
         }

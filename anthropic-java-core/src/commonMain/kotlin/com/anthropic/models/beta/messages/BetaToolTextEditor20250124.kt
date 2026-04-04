@@ -185,7 +185,7 @@ private constructor(
         /**
          * Returns a mutable builder for constructing an instance of [BetaToolTextEditor20250124].
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaToolTextEditor20250124]. */
@@ -200,7 +200,7 @@ private constructor(
         private var strict: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaToolTextEditor20250124: BetaToolTextEditor20250124) = apply {
+        @JvmSynthetic internal fun from(betaToolTextEditor20250124: BetaToolTextEditor20250124) = apply {
             name = betaToolTextEditor20250124.name
             type = betaToolTextEditor20250124.type
             allowedCallers = betaToolTextEditor20250124.allowedCallers.map { it.toMutableList() }
@@ -450,7 +450,7 @@ private constructor(
 
             val CODE_EXECUTION_20260120 = of("code_execution_20260120")
 
-            fun of(value: String) = AllowedCaller(JsonField.of(value))
+            @JvmStatic fun of(value: String) = AllowedCaller(JsonField.of(value))
         }
 
         /** An enum containing [AllowedCaller]'s known values. */
@@ -580,7 +580,7 @@ private constructor(
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [InputExample]. */
-            fun builder() = Builder()
+            @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [InputExample]. */
@@ -588,7 +588,7 @@ private constructor(
 
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            internal fun from(inputExample: InputExample) = apply {
+            @JvmSynthetic internal fun from(inputExample: InputExample) = apply {
                 additionalProperties = inputExample.additionalProperties.toMutableMap()
             }
 

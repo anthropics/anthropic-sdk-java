@@ -30,7 +30,7 @@ private constructor(private val value: JsonField<String>) : Enum {
 
         val EXECUTION_TIME_EXCEEDED = of("execution_time_exceeded")
 
-        fun of(value: String) = BetaCodeExecutionToolResultErrorCode(JsonField.of(value))
+        @JvmStatic fun of(value: String) = BetaCodeExecutionToolResultErrorCode(JsonField.of(value))
     }
 
     /** An enum containing [BetaCodeExecutionToolResultErrorCode]'s known values. */

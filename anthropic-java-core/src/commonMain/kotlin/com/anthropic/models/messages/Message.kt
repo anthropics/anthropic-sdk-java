@@ -316,7 +316,7 @@ private constructor(
          * .usage()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [Message]. */
@@ -334,7 +334,7 @@ private constructor(
         private var usage: JsonField<Usage>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(message: Message) = apply {
+        @JvmSynthetic internal fun from(message: Message) = apply {
             id = message.id
             container = message.container
             content = message.content.map { it.toMutableList() }

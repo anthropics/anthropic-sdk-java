@@ -77,7 +77,7 @@ private constructor(
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [CacheControlEphemeral]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [CacheControlEphemeral]. */
@@ -87,7 +87,7 @@ private constructor(
         private var ttl: JsonField<Ttl> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(cacheControlEphemeral: CacheControlEphemeral) = apply {
+        @JvmSynthetic internal fun from(cacheControlEphemeral: CacheControlEphemeral) = apply {
             type = cacheControlEphemeral.type
             ttl = cacheControlEphemeral.ttl
             additionalProperties = cacheControlEphemeral.additionalProperties.toMutableMap()
@@ -214,7 +214,7 @@ private constructor(
 
             val TTL_1H = of("1h")
 
-            fun of(value: String) = Ttl(JsonField.of(value))
+            @JvmStatic fun of(value: String) = Ttl(JsonField.of(value))
         }
 
         /** An enum containing [Ttl]'s known values. */

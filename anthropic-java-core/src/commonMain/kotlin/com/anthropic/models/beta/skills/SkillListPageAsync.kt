@@ -81,7 +81,7 @@ private constructor(
          * .response()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [SkillListPageAsync]. */
@@ -92,7 +92,7 @@ private constructor(
         private var params: SkillListParams? = null
         private var response: SkillListPageResponse? = null
 
-        internal fun from(skillListPageAsync: SkillListPageAsync) = apply {
+        @JvmSynthetic internal fun from(skillListPageAsync: SkillListPageAsync) = apply {
             service = skillListPageAsync.service
             streamHandlerExecutor = skillListPageAsync.streamHandlerExecutor
             params = skillListPageAsync.params

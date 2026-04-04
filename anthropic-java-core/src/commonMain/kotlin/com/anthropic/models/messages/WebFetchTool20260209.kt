@@ -270,7 +270,7 @@ private constructor(
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [WebFetchTool20260209]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [WebFetchTool20260209]. */
@@ -289,7 +289,7 @@ private constructor(
         private var strict: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(webFetchTool20260209: WebFetchTool20260209) = apply {
+        @JvmSynthetic internal fun from(webFetchTool20260209: WebFetchTool20260209) = apply {
             name = webFetchTool20260209.name
             type = webFetchTool20260209.type
             allowedCallers = webFetchTool20260209.allowedCallers.map { it.toMutableList() }
@@ -658,7 +658,7 @@ private constructor(
 
             val CODE_EXECUTION_20260120 = of("code_execution_20260120")
 
-            fun of(value: String) = AllowedCaller(JsonField.of(value))
+            @JvmStatic fun of(value: String) = AllowedCaller(JsonField.of(value))
         }
 
         /** An enum containing [AllowedCaller]'s known values. */

@@ -32,8 +32,7 @@ private constructor(private val value: JsonField<String>) : Enum {
 
         val FILE_NOT_FOUND = of("file_not_found")
 
-        @JvmStatic
-        fun of(value: String) = TextEditorCodeExecutionToolResultErrorCode(JsonField.of(value))
+        @JvmStatic fun of(value: String) = TextEditorCodeExecutionToolResultErrorCode(JsonField.of(value))
     }
 
     /** An enum containing [TextEditorCodeExecutionToolResultErrorCode]'s known values. */

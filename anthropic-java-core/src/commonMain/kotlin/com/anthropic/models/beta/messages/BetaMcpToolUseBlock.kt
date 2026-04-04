@@ -125,7 +125,7 @@ private constructor(
          * .serverName()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaMcpToolUseBlock]. */
@@ -138,7 +138,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("mcp_tool_use")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaMcpToolUseBlock: BetaMcpToolUseBlock) = apply {
+        @JvmSynthetic internal fun from(betaMcpToolUseBlock: BetaMcpToolUseBlock) = apply {
             id = betaMcpToolUseBlock.id
             input = betaMcpToolUseBlock.input
             name = betaMcpToolUseBlock.name

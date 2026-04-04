@@ -53,7 +53,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of
          * [BetaMessageBatchExpiredResult].
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaMessageBatchExpiredResult]. */
@@ -62,7 +62,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("expired")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaMessageBatchExpiredResult: BetaMessageBatchExpiredResult) = apply {
+        @JvmSynthetic internal fun from(betaMessageBatchExpiredResult: BetaMessageBatchExpiredResult) = apply {
             type = betaMessageBatchExpiredResult.type
             additionalProperties = betaMessageBatchExpiredResult.additionalProperties.toMutableMap()
         }

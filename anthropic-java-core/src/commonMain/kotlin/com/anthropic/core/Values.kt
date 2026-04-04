@@ -77,8 +77,8 @@ sealed class JsonField<out T : Any> {
     }
 
     companion object {
-        fun <T : Any> of(value: T): JsonField<T> = KnownValue.of(value)
-        fun <T : Any> ofNullable(value: T?): JsonField<T> =
+        @JvmStatic fun <T : Any> of(value: T): JsonField<T> = KnownValue.of(value)
+        @JvmStatic fun <T : Any> ofNullable(value: T?): JsonField<T> =
             if (value == null) JsonNull.of() else KnownValue.of(value)
     }
 }
@@ -102,7 +102,7 @@ sealed class JsonValue : JsonField<Nothing>() {
     }
 
     companion object {
-        fun from(value: Any?): JsonValue = when (value) {
+        @JvmStatic fun from(value: Any?): JsonValue = when (value) {
             null -> JsonNull.of(); is JsonValue -> value; is Boolean -> JsonBoolean.of(value)
             is Number -> JsonNumber.of(value); is String -> JsonString.of(value)
             is List<*> -> JsonArray.of(value.map { from(it) })
@@ -198,9 +198,9 @@ class MultipartField<T : Any> private constructor(
     override fun toString() = "MultipartField{value=$value, contentType=$contentType, filename=$filename}"
 
     companion object {
-        fun <T : Any> of(value: T?) = builder<T>().value(value).build()
-        fun <T : Any> of(value: JsonField<T>) = builder<T>().value(value).build()
-        fun <T : Any> builder() = Builder<T>()
+        @JvmStatic fun <T : Any> of(value: T?) = builder<T>().value(value).build()
+        @JvmStatic fun <T : Any> of(value: JsonField<T>) = builder<T>().value(value).build()
+        @JvmStatic fun <T : Any> builder() = Builder<T>()
     }
 }
 

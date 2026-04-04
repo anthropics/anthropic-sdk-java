@@ -57,10 +57,10 @@ private constructor(
 
     companion object {
 
-        fun default() = builder().build()
+        @JvmStatic fun default() = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [Timeout]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [Timeout]. */
@@ -71,7 +71,7 @@ private constructor(
         private var write: Duration? = null
         private var request: Duration? = null
 
-        internal fun from(timeout: Timeout) = apply {
+        @JvmSynthetic internal fun from(timeout: Timeout) = apply {
             connect = timeout.connect
             read = timeout.read
             write = timeout.write

@@ -404,7 +404,7 @@ private constructor(
          * .model()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [MessageCountTokensParams]. */
@@ -415,7 +415,7 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(messageCountTokensParams: MessageCountTokensParams) = apply {
+        @JvmSynthetic internal fun from(messageCountTokensParams: MessageCountTokensParams) = apply {
             betas = messageCountTokensParams.betas?.toMutableList()
             body = messageCountTokensParams.body.toBuilder()
             additionalHeaders = messageCountTokensParams.additionalHeaders.toBuilder()
@@ -1693,7 +1693,7 @@ private constructor(
              * .model()
              * ```
              */
-            fun builder() = Builder()
+            @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -1714,7 +1714,7 @@ private constructor(
             private var tools: JsonField<MutableList<Tool>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            internal fun from(body: Body) = apply {
+            @JvmSynthetic internal fun from(body: Body) = apply {
                 messages = body.messages.map { it.toMutableList() }
                 model = body.model
                 cacheControl = body.cacheControl
@@ -2570,7 +2570,7 @@ private constructor(
 
             val FAST = of("fast")
 
-            fun of(value: String) = Speed(JsonField.of(value))
+            @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
         }
 
         /** An enum containing [Speed]'s known values. */
@@ -2786,10 +2786,9 @@ private constructor(
 
         companion object {
 
-            fun ofString(string: String) = System(string = string)
+            @JvmStatic fun ofString(string: String) = System(string = string)
 
-            @JvmStatic
-            fun ofBetaTextBlockParams(betaTextBlockParams: List<BetaTextBlockParam>) =
+            @JvmStatic fun ofBetaTextBlockParams(betaTextBlockParams: List<BetaTextBlockParam>) =
                 System(betaTextBlockParams = betaTextBlockParams.toImmutable())
         }
 
@@ -3481,101 +3480,81 @@ private constructor(
 
         companion object {
 
-            fun ofBeta(beta: BetaTool) = Tool(beta = beta)
+            @JvmStatic fun ofBeta(beta: BetaTool) = Tool(beta = beta)
 
-            @JvmStatic
-            fun ofBetaToolBash20241022(betaToolBash20241022: BetaToolBash20241022) =
+            @JvmStatic fun ofBetaToolBash20241022(betaToolBash20241022: BetaToolBash20241022) =
                 Tool(betaToolBash20241022 = betaToolBash20241022)
 
-            @JvmStatic
-            fun ofBetaToolBash20250124(betaToolBash20250124: BetaToolBash20250124) =
+            @JvmStatic fun ofBetaToolBash20250124(betaToolBash20250124: BetaToolBash20250124) =
                 Tool(betaToolBash20250124 = betaToolBash20250124)
 
-            @JvmStatic
-            fun ofBetaCodeExecutionTool20250522(
+            @JvmStatic fun ofBetaCodeExecutionTool20250522(
                 betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
             ) = Tool(betaCodeExecutionTool20250522 = betaCodeExecutionTool20250522)
 
-            @JvmStatic
-            fun ofBetaCodeExecutionTool20250825(
+            @JvmStatic fun ofBetaCodeExecutionTool20250825(
                 betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
             ) = Tool(betaCodeExecutionTool20250825 = betaCodeExecutionTool20250825)
 
             /**
              * Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint).
              */
-            @JvmStatic
-            fun ofBetaCodeExecutionTool20260120(
+            @JvmStatic fun ofBetaCodeExecutionTool20260120(
                 betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
             ) = Tool(betaCodeExecutionTool20260120 = betaCodeExecutionTool20260120)
 
-            @JvmStatic
-            fun ofBetaToolComputerUse20241022(
+            @JvmStatic fun ofBetaToolComputerUse20241022(
                 betaToolComputerUse20241022: BetaToolComputerUse20241022
             ) = Tool(betaToolComputerUse20241022 = betaToolComputerUse20241022)
 
-            @JvmStatic
-            fun ofBetaMemoryTool20250818(betaMemoryTool20250818: BetaMemoryTool20250818) =
+            @JvmStatic fun ofBetaMemoryTool20250818(betaMemoryTool20250818: BetaMemoryTool20250818) =
                 Tool(betaMemoryTool20250818 = betaMemoryTool20250818)
 
-            @JvmStatic
-            fun ofBetaToolComputerUse20250124(
+            @JvmStatic fun ofBetaToolComputerUse20250124(
                 betaToolComputerUse20250124: BetaToolComputerUse20250124
             ) = Tool(betaToolComputerUse20250124 = betaToolComputerUse20250124)
 
-            @JvmStatic
-            fun ofBetaToolTextEditor20241022(
+            @JvmStatic fun ofBetaToolTextEditor20241022(
                 betaToolTextEditor20241022: BetaToolTextEditor20241022
             ) = Tool(betaToolTextEditor20241022 = betaToolTextEditor20241022)
 
-            @JvmStatic
-            fun ofBetaToolComputerUse20251124(
+            @JvmStatic fun ofBetaToolComputerUse20251124(
                 betaToolComputerUse20251124: BetaToolComputerUse20251124
             ) = Tool(betaToolComputerUse20251124 = betaToolComputerUse20251124)
 
-            @JvmStatic
-            fun ofBetaToolTextEditor20250124(
+            @JvmStatic fun ofBetaToolTextEditor20250124(
                 betaToolTextEditor20250124: BetaToolTextEditor20250124
             ) = Tool(betaToolTextEditor20250124 = betaToolTextEditor20250124)
 
-            @JvmStatic
-            fun ofBetaToolTextEditor20250429(
+            @JvmStatic fun ofBetaToolTextEditor20250429(
                 betaToolTextEditor20250429: BetaToolTextEditor20250429
             ) = Tool(betaToolTextEditor20250429 = betaToolTextEditor20250429)
 
-            @JvmStatic
-            fun ofBetaToolTextEditor20250728(
+            @JvmStatic fun ofBetaToolTextEditor20250728(
                 betaToolTextEditor20250728: BetaToolTextEditor20250728
             ) = Tool(betaToolTextEditor20250728 = betaToolTextEditor20250728)
 
-            @JvmStatic
-            fun ofBetaWebSearchTool20250305(betaWebSearchTool20250305: BetaWebSearchTool20250305) =
+            @JvmStatic fun ofBetaWebSearchTool20250305(betaWebSearchTool20250305: BetaWebSearchTool20250305) =
                 Tool(betaWebSearchTool20250305 = betaWebSearchTool20250305)
 
-            @JvmStatic
-            fun ofBetaWebFetchTool20250910(betaWebFetchTool20250910: BetaWebFetchTool20250910) =
+            @JvmStatic fun ofBetaWebFetchTool20250910(betaWebFetchTool20250910: BetaWebFetchTool20250910) =
                 Tool(betaWebFetchTool20250910 = betaWebFetchTool20250910)
 
-            @JvmStatic
-            fun ofBetaWebSearchTool20260209(betaWebSearchTool20260209: BetaWebSearchTool20260209) =
+            @JvmStatic fun ofBetaWebSearchTool20260209(betaWebSearchTool20260209: BetaWebSearchTool20260209) =
                 Tool(betaWebSearchTool20260209 = betaWebSearchTool20260209)
 
-            @JvmStatic
-            fun ofBetaWebFetchTool20260209(betaWebFetchTool20260209: BetaWebFetchTool20260209) =
+            @JvmStatic fun ofBetaWebFetchTool20260209(betaWebFetchTool20260209: BetaWebFetchTool20260209) =
                 Tool(betaWebFetchTool20260209 = betaWebFetchTool20260209)
 
             /** Web fetch tool with use_cache parameter for bypassing cached content. */
-            @JvmStatic
-            fun ofBetaWebFetchTool20260309(betaWebFetchTool20260309: BetaWebFetchTool20260309) =
+            @JvmStatic fun ofBetaWebFetchTool20260309(betaWebFetchTool20260309: BetaWebFetchTool20260309) =
                 Tool(betaWebFetchTool20260309 = betaWebFetchTool20260309)
 
-            @JvmStatic
-            fun ofBetaToolSearchToolBm25_20251119(
+            @JvmStatic fun ofBetaToolSearchToolBm25_20251119(
                 betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
             ) = Tool(betaToolSearchToolBm25_20251119 = betaToolSearchToolBm25_20251119)
 
-            @JvmStatic
-            fun ofBetaToolSearchToolRegex20251119(
+            @JvmStatic fun ofBetaToolSearchToolRegex20251119(
                 betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
             ) = Tool(betaToolSearchToolRegex20251119 = betaToolSearchToolRegex20251119)
 
@@ -3585,8 +3564,7 @@ private constructor(
              * Allows configuring enabled status and defer_loading for all tools from an MCP server,
              * with optional per-tool overrides.
              */
-            @JvmStatic
-            fun ofBetaMcpToolset(betaMcpToolset: BetaMcpToolset) =
+            @JvmStatic fun ofBetaMcpToolset(betaMcpToolset: BetaMcpToolset) =
                 Tool(betaMcpToolset = betaMcpToolset)
         }
 

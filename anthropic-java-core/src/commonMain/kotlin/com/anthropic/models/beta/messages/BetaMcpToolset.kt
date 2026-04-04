@@ -151,7 +151,7 @@ private constructor(
          * .mcpServerName()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaMcpToolset]. */
@@ -164,7 +164,7 @@ private constructor(
         private var defaultConfig: JsonField<BetaMcpToolDefaultConfig> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaMcpToolset: BetaMcpToolset) = apply {
+        @JvmSynthetic internal fun from(betaMcpToolset: BetaMcpToolset) = apply {
             mcpServerName = betaMcpToolset.mcpServerName
             type = betaMcpToolset.type
             cacheControl = betaMcpToolset.cacheControl
@@ -347,7 +347,7 @@ private constructor(
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Configs]. */
-            fun builder() = Builder()
+            @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Configs]. */
@@ -355,7 +355,7 @@ private constructor(
 
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            internal fun from(configs: Configs) = apply {
+            @JvmSynthetic internal fun from(configs: Configs) = apply {
                 additionalProperties = configs.additionalProperties.toMutableMap()
             }
 

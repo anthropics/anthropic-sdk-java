@@ -96,7 +96,7 @@ private constructor(
          * .result()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [MessageBatchIndividualResponse]. */
@@ -106,7 +106,7 @@ private constructor(
         private var result: JsonField<MessageBatchResult>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(messageBatchIndividualResponse: MessageBatchIndividualResponse) = apply {
+        @JvmSynthetic internal fun from(messageBatchIndividualResponse: MessageBatchIndividualResponse) = apply {
             customId = messageBatchIndividualResponse.customId
             result = messageBatchIndividualResponse.result
             additionalProperties =

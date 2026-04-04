@@ -74,7 +74,7 @@ private constructor(
          * .value()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaToolUsesTrigger]. */
@@ -84,7 +84,7 @@ private constructor(
         private var value: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaToolUsesTrigger: BetaToolUsesTrigger) = apply {
+        @JvmSynthetic internal fun from(betaToolUsesTrigger: BetaToolUsesTrigger) = apply {
             type = betaToolUsesTrigger.type
             value = betaToolUsesTrigger.value
             additionalProperties = betaToolUsesTrigger.additionalProperties.toMutableMap()

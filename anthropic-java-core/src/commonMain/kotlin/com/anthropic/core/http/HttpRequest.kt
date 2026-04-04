@@ -49,7 +49,7 @@ private constructor(
         "HttpRequest{method=$method, baseUrl=$baseUrl, pathSegments=$pathSegments, headers=$headers, queryParams=$queryParams, body=$body}"
 
     companion object {
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     class Builder internal constructor() {
@@ -61,7 +61,7 @@ private constructor(
         private var queryParams: QueryParams.Builder = QueryParams.builder()
         private var body: HttpRequestBody? = null
 
-        internal fun from(request: HttpRequest) = apply {
+        @JvmSynthetic internal fun from(request: HttpRequest) = apply {
             method = request.method
             baseUrl = request.baseUrl
             pathSegments = request.pathSegments.toMutableList()

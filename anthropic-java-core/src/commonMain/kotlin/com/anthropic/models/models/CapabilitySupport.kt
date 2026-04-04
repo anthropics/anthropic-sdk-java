@@ -64,7 +64,7 @@ private constructor(
          * .supported()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [CapabilitySupport]. */
@@ -73,7 +73,7 @@ private constructor(
         private var supported: JsonField<Boolean>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(capabilitySupport: CapabilitySupport) = apply {
+        @JvmSynthetic internal fun from(capabilitySupport: CapabilitySupport) = apply {
             supported = capabilitySupport.supported
             additionalProperties = capabilitySupport.additionalProperties.toMutableMap()
         }

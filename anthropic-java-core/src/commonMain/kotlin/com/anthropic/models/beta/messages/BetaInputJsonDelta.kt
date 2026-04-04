@@ -78,7 +78,7 @@ private constructor(
          * .partialJson()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaInputJsonDelta]. */
@@ -88,7 +88,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("input_json_delta")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaInputJsonDelta: BetaInputJsonDelta) = apply {
+        @JvmSynthetic internal fun from(betaInputJsonDelta: BetaInputJsonDelta) = apply {
             partialJson = betaInputJsonDelta.partialJson
             type = betaInputJsonDelta.type
             additionalProperties = betaInputJsonDelta.additionalProperties.toMutableMap()

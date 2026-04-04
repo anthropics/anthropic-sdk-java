@@ -159,7 +159,7 @@ private constructor(
          * .source()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [DocumentBlockParam]. */
@@ -173,7 +173,7 @@ private constructor(
         private var title: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(documentBlockParam: DocumentBlockParam) = apply {
+        @JvmSynthetic internal fun from(documentBlockParam: DocumentBlockParam) = apply {
             source = documentBlockParam.source
             type = documentBlockParam.type
             cacheControl = documentBlockParam.cacheControl
@@ -546,13 +546,13 @@ private constructor(
 
         companion object {
 
-            fun ofBase64(base64: Base64PdfSource) = Source(base64 = base64)
+            @JvmStatic fun ofBase64(base64: Base64PdfSource) = Source(base64 = base64)
 
-            fun ofText(text: PlainTextSource) = Source(text = text)
+            @JvmStatic fun ofText(text: PlainTextSource) = Source(text = text)
 
-            fun ofContent(content: ContentBlockSource) = Source(content = content)
+            @JvmStatic fun ofContent(content: ContentBlockSource) = Source(content = content)
 
-            fun ofUrl(url: UrlPdfSource) = Source(url = url)
+            @JvmStatic fun ofUrl(url: UrlPdfSource) = Source(url = url)
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */

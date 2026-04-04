@@ -36,7 +36,7 @@ class BetaStopReason @JsonCreator private constructor(private val value: JsonFie
 
         val MODEL_CONTEXT_WINDOW_EXCEEDED = of("model_context_window_exceeded")
 
-        fun of(value: String) = BetaStopReason(JsonField.of(value))
+        @JvmStatic fun of(value: String) = BetaStopReason(JsonField.of(value))
     }
 
     /** An enum containing [BetaStopReason]'s known values. */

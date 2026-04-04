@@ -190,7 +190,7 @@ private constructor(
          * .title()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaCitationSearchResultLocation]. */
@@ -205,7 +205,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("search_result_location")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaCitationSearchResultLocation: BetaCitationSearchResultLocation) =
+        @JvmSynthetic internal fun from(betaCitationSearchResultLocation: BetaCitationSearchResultLocation) =
             apply {
                 citedText = betaCitationSearchResultLocation.citedText
                 endBlockIndex = betaCitationSearchResultLocation.endBlockIndex

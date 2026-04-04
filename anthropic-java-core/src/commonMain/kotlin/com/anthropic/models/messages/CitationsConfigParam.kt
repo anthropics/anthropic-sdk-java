@@ -55,7 +55,7 @@ private constructor(
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [CitationsConfigParam]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [CitationsConfigParam]. */
@@ -64,7 +64,7 @@ private constructor(
         private var enabled: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(citationsConfigParam: CitationsConfigParam) = apply {
+        @JvmSynthetic internal fun from(citationsConfigParam: CitationsConfigParam) = apply {
             enabled = citationsConfigParam.enabled
             additionalProperties = citationsConfigParam.additionalProperties.toMutableMap()
         }

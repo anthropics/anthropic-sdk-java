@@ -152,7 +152,7 @@ private constructor(
          * .serverName()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaMcpToolUseBlockParam]. */
@@ -166,7 +166,7 @@ private constructor(
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaMcpToolUseBlockParam: BetaMcpToolUseBlockParam) = apply {
+        @JvmSynthetic internal fun from(betaMcpToolUseBlockParam: BetaMcpToolUseBlockParam) = apply {
             id = betaMcpToolUseBlockParam.id
             input = betaMcpToolUseBlockParam.input
             name = betaMcpToolUseBlockParam.name
@@ -354,7 +354,7 @@ private constructor(
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Input]. */
-            fun builder() = Builder()
+            @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Input]. */
@@ -362,7 +362,7 @@ private constructor(
 
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            internal fun from(input: Input) = apply {
+            @JvmSynthetic internal fun from(input: Input) = apply {
                 additionalProperties = input.additionalProperties.toMutableMap()
             }
 

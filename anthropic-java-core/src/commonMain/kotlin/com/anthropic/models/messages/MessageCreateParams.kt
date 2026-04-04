@@ -500,7 +500,7 @@ private constructor(
          * .model()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [MessageCreateParams]. */
@@ -510,7 +510,7 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(messageCreateParams: MessageCreateParams) = apply {
+        @JvmSynthetic internal fun from(messageCreateParams: MessageCreateParams) = apply {
             body = messageCreateParams.body.toBuilder()
             additionalHeaders = messageCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = messageCreateParams.additionalQueryParams.toBuilder()
@@ -1929,7 +1929,7 @@ private constructor(
              * .model()
              * ```
              */
-            fun builder() = Builder()
+            @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -1954,7 +1954,7 @@ private constructor(
             private var topP: JsonField<Double> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            internal fun from(body: Body) = apply {
+            @JvmSynthetic internal fun from(body: Body) = apply {
                 maxTokens = body.maxTokens
                 messages = body.messages.map { it.toMutableList() }
                 model = body.model
@@ -2876,7 +2876,7 @@ private constructor(
 
             val STANDARD_ONLY = of("standard_only")
 
-            fun of(value: String) = ServiceTier(JsonField.of(value))
+            @JvmStatic fun of(value: String) = ServiceTier(JsonField.of(value))
         }
 
         /** An enum containing [ServiceTier]'s known values. */
@@ -3090,10 +3090,9 @@ private constructor(
 
         companion object {
 
-            fun ofString(string: String) = System(string = string)
+            @JvmStatic fun ofString(string: String) = System(string = string)
 
-            @JvmStatic
-            fun ofTextBlockParams(textBlockParams: List<TextBlockParam>) =
+            @JvmStatic fun ofTextBlockParams(textBlockParams: List<TextBlockParam>) =
                 System(textBlockParams = textBlockParams.toImmutable())
         }
 

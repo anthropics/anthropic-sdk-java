@@ -88,7 +88,7 @@ private constructor(
          * .citation()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [CitationsDelta]. */
@@ -98,7 +98,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("citations_delta")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(citationsDelta: CitationsDelta) = apply {
+        @JvmSynthetic internal fun from(citationsDelta: CitationsDelta) = apply {
             citation = citationsDelta.citation
             type = citationsDelta.type
             additionalProperties = citationsDelta.additionalProperties.toMutableMap()
@@ -409,25 +409,20 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofCharLocation(charLocation: CitationCharLocation) =
+            @JvmStatic fun ofCharLocation(charLocation: CitationCharLocation) =
                 Citation(charLocation = charLocation)
 
-            @JvmStatic
-            fun ofPageLocation(pageLocation: CitationPageLocation) =
+            @JvmStatic fun ofPageLocation(pageLocation: CitationPageLocation) =
                 Citation(pageLocation = pageLocation)
 
-            @JvmStatic
-            fun ofContentBlockLocation(contentBlockLocation: CitationContentBlockLocation) =
+            @JvmStatic fun ofContentBlockLocation(contentBlockLocation: CitationContentBlockLocation) =
                 Citation(contentBlockLocation = contentBlockLocation)
 
-            @JvmStatic
-            fun ofWebSearchResultLocation(
+            @JvmStatic fun ofWebSearchResultLocation(
                 webSearchResultLocation: CitationsWebSearchResultLocation
             ) = Citation(webSearchResultLocation = webSearchResultLocation)
 
-            @JvmStatic
-            fun ofSearchResultLocation(searchResultLocation: CitationsSearchResultLocation) =
+            @JvmStatic fun ofSearchResultLocation(searchResultLocation: CitationsSearchResultLocation) =
                 Citation(searchResultLocation = searchResultLocation)
         }
 

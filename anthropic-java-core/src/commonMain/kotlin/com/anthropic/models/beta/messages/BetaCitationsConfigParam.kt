@@ -55,7 +55,7 @@ private constructor(
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [BetaCitationsConfigParam]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaCitationsConfigParam]. */
@@ -64,7 +64,7 @@ private constructor(
         private var enabled: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaCitationsConfigParam: BetaCitationsConfigParam) = apply {
+        @JvmSynthetic internal fun from(betaCitationsConfigParam: BetaCitationsConfigParam) = apply {
             enabled = betaCitationsConfigParam.enabled
             additionalProperties = betaCitationsConfigParam.additionalProperties.toMutableMap()
         }

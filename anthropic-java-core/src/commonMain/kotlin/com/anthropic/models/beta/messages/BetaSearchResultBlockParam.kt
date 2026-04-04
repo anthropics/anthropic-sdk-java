@@ -156,7 +156,7 @@ private constructor(
          * .title()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaSearchResultBlockParam]. */
@@ -170,7 +170,7 @@ private constructor(
         private var citations: JsonField<BetaCitationsConfigParam> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaSearchResultBlockParam: BetaSearchResultBlockParam) = apply {
+        @JvmSynthetic internal fun from(betaSearchResultBlockParam: BetaSearchResultBlockParam) = apply {
             content = betaSearchResultBlockParam.content.map { it.toMutableList() }
             source = betaSearchResultBlockParam.source
             title = betaSearchResultBlockParam.title

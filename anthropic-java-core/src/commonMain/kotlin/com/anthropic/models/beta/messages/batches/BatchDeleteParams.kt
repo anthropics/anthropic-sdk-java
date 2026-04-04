@@ -50,10 +50,10 @@ private constructor(
 
     companion object {
 
-        fun none(): BatchDeleteParams = builder().build()
+        @JvmStatic fun none(): BatchDeleteParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [BatchDeleteParams]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BatchDeleteParams]. */
@@ -65,7 +65,7 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(batchDeleteParams: BatchDeleteParams) = apply {
+        @JvmSynthetic internal fun from(batchDeleteParams: BatchDeleteParams) = apply {
             messageBatchId = batchDeleteParams.messageBatchId
             betas = batchDeleteParams.betas?.toMutableList()
             additionalHeaders = batchDeleteParams.additionalHeaders.toBuilder()

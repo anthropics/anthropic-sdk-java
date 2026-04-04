@@ -146,7 +146,7 @@ private constructor(
          * .toolUseId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaRequestMcpToolResultBlockParam]. */
@@ -159,7 +159,7 @@ private constructor(
         private var isError: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaRequestMcpToolResultBlockParam: BetaRequestMcpToolResultBlockParam) =
+        @JvmSynthetic internal fun from(betaRequestMcpToolResultBlockParam: BetaRequestMcpToolResultBlockParam) =
             apply {
                 toolUseId = betaRequestMcpToolResultBlockParam.toolUseId
                 type = betaRequestMcpToolResultBlockParam.type
@@ -430,10 +430,9 @@ private constructor(
 
         companion object {
 
-            fun ofString(string: String) = Content(string = string)
+            @JvmStatic fun ofString(string: String) = Content(string = string)
 
-            @JvmStatic
-            fun ofBetaMcpToolResultBlockParam(
+            @JvmStatic fun ofBetaMcpToolResultBlockParam(
                 betaMcpToolResultBlockParam: List<BetaTextBlockParam>
             ) = Content(betaMcpToolResultBlockParam = betaMcpToolResultBlockParam.toImmutable())
         }

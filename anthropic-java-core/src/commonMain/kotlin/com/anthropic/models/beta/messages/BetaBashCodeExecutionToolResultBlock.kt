@@ -139,7 +139,7 @@ private constructor(
          * .toolUseId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaBashCodeExecutionToolResultBlock]. */
@@ -150,7 +150,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("bash_code_execution_tool_result")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             betaBashCodeExecutionToolResultBlock: BetaBashCodeExecutionToolResultBlock
         ) = apply {
             content = betaBashCodeExecutionToolResultBlock.content
@@ -407,13 +407,11 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofBetaBashCodeExecutionToolResultError(
+            @JvmStatic fun ofBetaBashCodeExecutionToolResultError(
                 betaBashCodeExecutionToolResultError: BetaBashCodeExecutionToolResultError
             ) = Content(betaBashCodeExecutionToolResultError = betaBashCodeExecutionToolResultError)
 
-            @JvmStatic
-            fun ofBetaBashCodeExecutionResultBlock(
+            @JvmStatic fun ofBetaBashCodeExecutionResultBlock(
                 betaBashCodeExecutionResultBlock: BetaBashCodeExecutionResultBlock
             ) = Content(betaBashCodeExecutionResultBlock = betaBashCodeExecutionResultBlock)
         }

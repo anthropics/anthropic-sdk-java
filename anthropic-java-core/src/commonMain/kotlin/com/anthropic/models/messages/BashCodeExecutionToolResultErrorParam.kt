@@ -79,7 +79,7 @@ private constructor(
          * .errorCode()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BashCodeExecutionToolResultErrorParam]. */
@@ -89,7 +89,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("bash_code_execution_tool_result_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             bashCodeExecutionToolResultErrorParam: BashCodeExecutionToolResultErrorParam
         ) = apply {
             errorCode = bashCodeExecutionToolResultErrorParam.errorCode

@@ -79,7 +79,7 @@ private constructor(
          * .errorCode()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [WebFetchToolResultErrorBlockParam]. */
@@ -89,7 +89,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("web_fetch_tool_result_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(webFetchToolResultErrorBlockParam: WebFetchToolResultErrorBlockParam) =
+        @JvmSynthetic internal fun from(webFetchToolResultErrorBlockParam: WebFetchToolResultErrorBlockParam) =
             apply {
                 errorCode = webFetchToolResultErrorBlockParam.errorCode
                 type = webFetchToolResultErrorBlockParam.type

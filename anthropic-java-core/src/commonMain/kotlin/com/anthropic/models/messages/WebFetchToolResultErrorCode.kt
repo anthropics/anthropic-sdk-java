@@ -38,7 +38,7 @@ private constructor(private val value: JsonField<String>) : Enum {
 
         val UNAVAILABLE = of("unavailable")
 
-        fun of(value: String) = WebFetchToolResultErrorCode(JsonField.of(value))
+        @JvmStatic fun of(value: String) = WebFetchToolResultErrorCode(JsonField.of(value))
     }
 
     /** An enum containing [WebFetchToolResultErrorCode]'s known values. */

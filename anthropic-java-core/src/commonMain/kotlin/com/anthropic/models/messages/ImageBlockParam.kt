@@ -110,7 +110,7 @@ private constructor(
          * .source()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ImageBlockParam]. */
@@ -121,7 +121,7 @@ private constructor(
         private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(imageBlockParam: ImageBlockParam) = apply {
+        @JvmSynthetic internal fun from(imageBlockParam: ImageBlockParam) = apply {
             source = imageBlockParam.source
             type = imageBlockParam.type
             cacheControl = imageBlockParam.cacheControl
@@ -358,9 +358,9 @@ private constructor(
 
         companion object {
 
-            fun ofBase64(base64: Base64ImageSource) = Source(base64 = base64)
+            @JvmStatic fun ofBase64(base64: Base64ImageSource) = Source(base64 = base64)
 
-            fun ofUrl(url: UrlImageSource) = Source(url = url)
+            @JvmStatic fun ofUrl(url: UrlImageSource) = Source(url = url)
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */

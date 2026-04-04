@@ -17,7 +17,7 @@ private constructor(
 ) {
 
     companion object {
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     class Builder internal constructor() {

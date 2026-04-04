@@ -602,88 +602,68 @@ private constructor(
 
     companion object {
 
-        fun ofBetaTool(betaTool: BetaTool) = BetaToolUnion(betaTool = betaTool)
+        @JvmStatic fun ofBetaTool(betaTool: BetaTool) = BetaToolUnion(betaTool = betaTool)
 
-        @JvmStatic
-        fun ofBash20241022(bash20241022: BetaToolBash20241022) =
+        @JvmStatic fun ofBash20241022(bash20241022: BetaToolBash20241022) =
             BetaToolUnion(bash20241022 = bash20241022)
 
-        @JvmStatic
-        fun ofBash20250124(bash20250124: BetaToolBash20250124) =
+        @JvmStatic fun ofBash20250124(bash20250124: BetaToolBash20250124) =
             BetaToolUnion(bash20250124 = bash20250124)
 
-        @JvmStatic
-        fun ofCodeExecutionTool20250522(codeExecutionTool20250522: BetaCodeExecutionTool20250522) =
+        @JvmStatic fun ofCodeExecutionTool20250522(codeExecutionTool20250522: BetaCodeExecutionTool20250522) =
             BetaToolUnion(codeExecutionTool20250522 = codeExecutionTool20250522)
 
-        @JvmStatic
-        fun ofCodeExecutionTool20250825(codeExecutionTool20250825: BetaCodeExecutionTool20250825) =
+        @JvmStatic fun ofCodeExecutionTool20250825(codeExecutionTool20250825: BetaCodeExecutionTool20250825) =
             BetaToolUnion(codeExecutionTool20250825 = codeExecutionTool20250825)
 
         /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
-        @JvmStatic
-        fun ofCodeExecutionTool20260120(codeExecutionTool20260120: BetaCodeExecutionTool20260120) =
+        @JvmStatic fun ofCodeExecutionTool20260120(codeExecutionTool20260120: BetaCodeExecutionTool20260120) =
             BetaToolUnion(codeExecutionTool20260120 = codeExecutionTool20260120)
 
-        @JvmStatic
-        fun ofComputerUse20241022(computerUse20241022: BetaToolComputerUse20241022) =
+        @JvmStatic fun ofComputerUse20241022(computerUse20241022: BetaToolComputerUse20241022) =
             BetaToolUnion(computerUse20241022 = computerUse20241022)
 
-        @JvmStatic
-        fun ofMemoryTool20250818(memoryTool20250818: BetaMemoryTool20250818) =
+        @JvmStatic fun ofMemoryTool20250818(memoryTool20250818: BetaMemoryTool20250818) =
             BetaToolUnion(memoryTool20250818 = memoryTool20250818)
 
-        @JvmStatic
-        fun ofComputerUse20250124(computerUse20250124: BetaToolComputerUse20250124) =
+        @JvmStatic fun ofComputerUse20250124(computerUse20250124: BetaToolComputerUse20250124) =
             BetaToolUnion(computerUse20250124 = computerUse20250124)
 
-        @JvmStatic
-        fun ofTextEditor20241022(textEditor20241022: BetaToolTextEditor20241022) =
+        @JvmStatic fun ofTextEditor20241022(textEditor20241022: BetaToolTextEditor20241022) =
             BetaToolUnion(textEditor20241022 = textEditor20241022)
 
-        @JvmStatic
-        fun ofComputerUse20251124(computerUse20251124: BetaToolComputerUse20251124) =
+        @JvmStatic fun ofComputerUse20251124(computerUse20251124: BetaToolComputerUse20251124) =
             BetaToolUnion(computerUse20251124 = computerUse20251124)
 
-        @JvmStatic
-        fun ofTextEditor20250124(textEditor20250124: BetaToolTextEditor20250124) =
+        @JvmStatic fun ofTextEditor20250124(textEditor20250124: BetaToolTextEditor20250124) =
             BetaToolUnion(textEditor20250124 = textEditor20250124)
 
-        @JvmStatic
-        fun ofTextEditor20250429(textEditor20250429: BetaToolTextEditor20250429) =
+        @JvmStatic fun ofTextEditor20250429(textEditor20250429: BetaToolTextEditor20250429) =
             BetaToolUnion(textEditor20250429 = textEditor20250429)
 
-        @JvmStatic
-        fun ofTextEditor20250728(textEditor20250728: BetaToolTextEditor20250728) =
+        @JvmStatic fun ofTextEditor20250728(textEditor20250728: BetaToolTextEditor20250728) =
             BetaToolUnion(textEditor20250728 = textEditor20250728)
 
-        @JvmStatic
-        fun ofWebSearchTool20250305(webSearchTool20250305: BetaWebSearchTool20250305) =
+        @JvmStatic fun ofWebSearchTool20250305(webSearchTool20250305: BetaWebSearchTool20250305) =
             BetaToolUnion(webSearchTool20250305 = webSearchTool20250305)
 
-        @JvmStatic
-        fun ofWebFetchTool20250910(webFetchTool20250910: BetaWebFetchTool20250910) =
+        @JvmStatic fun ofWebFetchTool20250910(webFetchTool20250910: BetaWebFetchTool20250910) =
             BetaToolUnion(webFetchTool20250910 = webFetchTool20250910)
 
-        @JvmStatic
-        fun ofWebSearchTool20260209(webSearchTool20260209: BetaWebSearchTool20260209) =
+        @JvmStatic fun ofWebSearchTool20260209(webSearchTool20260209: BetaWebSearchTool20260209) =
             BetaToolUnion(webSearchTool20260209 = webSearchTool20260209)
 
-        @JvmStatic
-        fun ofWebFetchTool20260209(webFetchTool20260209: BetaWebFetchTool20260209) =
+        @JvmStatic fun ofWebFetchTool20260209(webFetchTool20260209: BetaWebFetchTool20260209) =
             BetaToolUnion(webFetchTool20260209 = webFetchTool20260209)
 
         /** Web fetch tool with use_cache parameter for bypassing cached content. */
-        @JvmStatic
-        fun ofWebFetchTool20260309(webFetchTool20260309: BetaWebFetchTool20260309) =
+        @JvmStatic fun ofWebFetchTool20260309(webFetchTool20260309: BetaWebFetchTool20260309) =
             BetaToolUnion(webFetchTool20260309 = webFetchTool20260309)
 
-        @JvmStatic
-        fun ofSearchToolBm25_20251119(searchToolBm25_20251119: BetaToolSearchToolBm25_20251119) =
+        @JvmStatic fun ofSearchToolBm25_20251119(searchToolBm25_20251119: BetaToolSearchToolBm25_20251119) =
             BetaToolUnion(searchToolBm25_20251119 = searchToolBm25_20251119)
 
-        @JvmStatic
-        fun ofSearchToolRegex20251119(searchToolRegex20251119: BetaToolSearchToolRegex20251119) =
+        @JvmStatic fun ofSearchToolRegex20251119(searchToolRegex20251119: BetaToolSearchToolRegex20251119) =
             BetaToolUnion(searchToolRegex20251119 = searchToolRegex20251119)
 
         /**
@@ -692,8 +672,7 @@ private constructor(
          * Allows configuring enabled status and defer_loading for all tools from an MCP server,
          * with optional per-tool overrides.
          */
-        @JvmStatic
-        fun ofMcpToolset(mcpToolset: BetaMcpToolset) = BetaToolUnion(mcpToolset = mcpToolset)
+        @JvmStatic fun ofMcpToolset(mcpToolset: BetaMcpToolset) = BetaToolUnion(mcpToolset = mcpToolset)
     }
 
     /**

@@ -143,14 +143,11 @@ private constructor(
 
     companion object {
 
-        @JvmStatic
-        fun ofEnabled(enabled: ThinkingConfigEnabled) = ThinkingConfigParam(enabled = enabled)
+        @JvmStatic fun ofEnabled(enabled: ThinkingConfigEnabled) = ThinkingConfigParam(enabled = enabled)
 
-        @JvmStatic
-        fun ofDisabled(disabled: ThinkingConfigDisabled) = ThinkingConfigParam(disabled = disabled)
+        @JvmStatic fun ofDisabled(disabled: ThinkingConfigDisabled) = ThinkingConfigParam(disabled = disabled)
 
-        @JvmStatic
-        fun ofAdaptive(adaptive: ThinkingConfigAdaptive) = ThinkingConfigParam(adaptive = adaptive)
+        @JvmStatic fun ofAdaptive(adaptive: ThinkingConfigAdaptive) = ThinkingConfigParam(adaptive = adaptive)
     }
 
     /**

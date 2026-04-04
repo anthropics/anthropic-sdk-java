@@ -74,7 +74,7 @@ private constructor(
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [ThinkingConfigAdaptive]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ThinkingConfigAdaptive]. */
@@ -84,7 +84,7 @@ private constructor(
         private var display: JsonField<Display> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(thinkingConfigAdaptive: ThinkingConfigAdaptive) = apply {
+        @JvmSynthetic internal fun from(thinkingConfigAdaptive: ThinkingConfigAdaptive) = apply {
             type = thinkingConfigAdaptive.type
             display = thinkingConfigAdaptive.display
             additionalProperties = thinkingConfigAdaptive.additionalProperties.toMutableMap()
@@ -206,7 +206,7 @@ private constructor(
 
             val OMITTED = of("omitted")
 
-            fun of(value: String) = Display(JsonField.of(value))
+            @JvmStatic fun of(value: String) = Display(JsonField.of(value))
         }
 
         /** An enum containing [Display]'s known values. */

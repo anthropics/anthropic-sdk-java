@@ -88,7 +88,7 @@ private constructor(
          * .citation()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaCitationsDelta]. */
@@ -98,7 +98,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("citations_delta")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaCitationsDelta: BetaCitationsDelta) = apply {
+        @JvmSynthetic internal fun from(betaCitationsDelta: BetaCitationsDelta) = apply {
             citation = betaCitationsDelta.citation
             type = betaCitationsDelta.type
             additionalProperties = betaCitationsDelta.additionalProperties.toMutableMap()
@@ -409,25 +409,20 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofCharLocation(charLocation: BetaCitationCharLocation) =
+            @JvmStatic fun ofCharLocation(charLocation: BetaCitationCharLocation) =
                 Citation(charLocation = charLocation)
 
-            @JvmStatic
-            fun ofPageLocation(pageLocation: BetaCitationPageLocation) =
+            @JvmStatic fun ofPageLocation(pageLocation: BetaCitationPageLocation) =
                 Citation(pageLocation = pageLocation)
 
-            @JvmStatic
-            fun ofContentBlockLocation(contentBlockLocation: BetaCitationContentBlockLocation) =
+            @JvmStatic fun ofContentBlockLocation(contentBlockLocation: BetaCitationContentBlockLocation) =
                 Citation(contentBlockLocation = contentBlockLocation)
 
-            @JvmStatic
-            fun ofWebSearchResultLocation(
+            @JvmStatic fun ofWebSearchResultLocation(
                 webSearchResultLocation: BetaCitationsWebSearchResultLocation
             ) = Citation(webSearchResultLocation = webSearchResultLocation)
 
-            @JvmStatic
-            fun ofSearchResultLocation(searchResultLocation: BetaCitationSearchResultLocation) =
+            @JvmStatic fun ofSearchResultLocation(searchResultLocation: BetaCitationSearchResultLocation) =
                 Citation(searchResultLocation = searchResultLocation)
         }
 

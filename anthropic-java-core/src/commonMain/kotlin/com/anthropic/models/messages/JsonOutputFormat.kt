@@ -77,7 +77,7 @@ private constructor(
          * .schema()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [JsonOutputFormat]. */
@@ -87,7 +87,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("json_schema")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(jsonOutputFormat: JsonOutputFormat) = apply {
+        @JvmSynthetic internal fun from(jsonOutputFormat: JsonOutputFormat) = apply {
             schema = jsonOutputFormat.schema
             type = jsonOutputFormat.type
             additionalProperties = jsonOutputFormat.additionalProperties.toMutableMap()
@@ -207,7 +207,7 @@ private constructor(
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Schema]. */
-            fun builder() = Builder()
+            @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Schema]. */
@@ -215,7 +215,7 @@ private constructor(
 
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            internal fun from(schema: Schema) = apply {
+            @JvmSynthetic internal fun from(schema: Schema) = apply {
                 additionalProperties = schema.additionalProperties.toMutableMap()
             }
 

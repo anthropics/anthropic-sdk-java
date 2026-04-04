@@ -107,7 +107,7 @@ private constructor(
          * .clearedThinkingTurns()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaClearThinking20251015EditResponse]. */
@@ -118,7 +118,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("clear_thinking_20251015")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             betaClearThinking20251015EditResponse: BetaClearThinking20251015EditResponse
         ) = apply {
             clearedInputTokens = betaClearThinking20251015EditResponse.clearedInputTokens

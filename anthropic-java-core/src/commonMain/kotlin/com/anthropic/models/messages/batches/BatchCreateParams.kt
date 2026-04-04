@@ -122,7 +122,7 @@ private constructor(
          * .requests()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BatchCreateParams]. */
@@ -132,7 +132,7 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(batchCreateParams: BatchCreateParams) = apply {
+        @JvmSynthetic internal fun from(batchCreateParams: BatchCreateParams) = apply {
             body = batchCreateParams.body.toBuilder()
             additionalHeaders = batchCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = batchCreateParams.additionalQueryParams.toBuilder()
@@ -366,7 +366,7 @@ private constructor(
              * .requests()
              * ```
              */
-            fun builder() = Builder()
+            @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -375,7 +375,7 @@ private constructor(
             private var requests: JsonField<MutableList<Request>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            internal fun from(body: Body) = apply {
+            @JvmSynthetic internal fun from(body: Body) = apply {
                 requests = body.requests.map { it.toMutableList() }
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
@@ -568,7 +568,7 @@ private constructor(
              * .params()
              * ```
              */
-            fun builder() = Builder()
+            @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Request]. */
@@ -578,7 +578,7 @@ private constructor(
             private var params: JsonField<Params>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            internal fun from(request: Request) = apply {
+            @JvmSynthetic internal fun from(request: Request) = apply {
                 customId = request.customId
                 params = request.params
                 additionalProperties = request.additionalProperties.toMutableMap()
@@ -1304,7 +1304,7 @@ private constructor(
                  * .model()
                  * ```
                  */
-                fun builder() = Builder()
+                @JvmStatic fun builder() = Builder()
             }
 
             /** A builder for [Params]. */
@@ -1330,7 +1330,7 @@ private constructor(
                 private var topP: JsonField<Double> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-                internal fun from(params: Params) = apply {
+                @JvmSynthetic internal fun from(params: Params) = apply {
                     maxTokens = params.maxTokens
                     messages = params.messages.map { it.toMutableList() }
                     model = params.model
@@ -2229,7 +2229,7 @@ private constructor(
 
                     val STANDARD_ONLY = of("standard_only")
 
-                    fun of(value: String) = ServiceTier(JsonField.of(value))
+                    @JvmStatic fun of(value: String) = ServiceTier(JsonField.of(value))
                 }
 
                 /** An enum containing [ServiceTier]'s known values. */
@@ -2448,10 +2448,9 @@ private constructor(
 
                 companion object {
 
-                    fun ofString(string: String) = System(string = string)
+                    @JvmStatic fun ofString(string: String) = System(string = string)
 
-                    @JvmStatic
-                    fun ofTextBlockParams(textBlockParams: List<TextBlockParam>) =
+                    @JvmStatic fun ofTextBlockParams(textBlockParams: List<TextBlockParam>) =
                         System(textBlockParams = textBlockParams.toImmutable())
                 }
 

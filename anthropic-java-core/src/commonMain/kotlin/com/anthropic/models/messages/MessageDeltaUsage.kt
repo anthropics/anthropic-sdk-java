@@ -167,7 +167,7 @@ private constructor(
          * .serverToolUse()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [MessageDeltaUsage]. */
@@ -180,7 +180,7 @@ private constructor(
         private var serverToolUse: JsonField<ServerToolUsage>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(messageDeltaUsage: MessageDeltaUsage) = apply {
+        @JvmSynthetic internal fun from(messageDeltaUsage: MessageDeltaUsage) = apply {
             cacheCreationInputTokens = messageDeltaUsage.cacheCreationInputTokens
             cacheReadInputTokens = messageDeltaUsage.cacheReadInputTokens
             inputTokens = messageDeltaUsage.inputTokens

@@ -162,16 +162,16 @@ private constructor(
     companion object {
 
         /** The model will automatically decide whether to use tools. */
-        fun ofAuto(auto: ToolChoiceAuto) = ToolChoice(auto = auto)
+        @JvmStatic fun ofAuto(auto: ToolChoiceAuto) = ToolChoice(auto = auto)
 
         /** The model will use any available tools. */
-        fun ofAny(any: ToolChoiceAny) = ToolChoice(any = any)
+        @JvmStatic fun ofAny(any: ToolChoiceAny) = ToolChoice(any = any)
 
         /** The model will use the specified tool with `tool_choice.name`. */
-        fun ofTool(tool: ToolChoiceTool) = ToolChoice(tool = tool)
+        @JvmStatic fun ofTool(tool: ToolChoiceTool) = ToolChoice(tool = tool)
 
         /** The model will not be allowed to use tools. */
-        fun ofNone(none: ToolChoiceNone) = ToolChoice(none = none)
+        @JvmStatic fun ofNone(none: ToolChoiceNone) = ToolChoice(none = none)
     }
 
     /** An interface that defines how to map each variant of [ToolChoice] to a value of type [T]. */

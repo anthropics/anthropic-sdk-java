@@ -203,7 +203,7 @@ private constructor(
          * .version()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [VersionListResponse]. */
@@ -219,7 +219,7 @@ private constructor(
         private var version: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(versionListResponse: VersionListResponse) = apply {
+        @JvmSynthetic internal fun from(versionListResponse: VersionListResponse) = apply {
             id = versionListResponse.id
             createdAt = versionListResponse.createdAt
             description = versionListResponse.description

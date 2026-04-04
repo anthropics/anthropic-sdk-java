@@ -491,58 +491,46 @@ private constructor(
 
     companion object {
 
-        fun ofText(text: BetaTextBlock) = BetaContentBlock(text = text)
+        @JvmStatic fun ofText(text: BetaTextBlock) = BetaContentBlock(text = text)
 
-        @JvmStatic
-        fun ofThinking(thinking: BetaThinkingBlock) = BetaContentBlock(thinking = thinking)
+        @JvmStatic fun ofThinking(thinking: BetaThinkingBlock) = BetaContentBlock(thinking = thinking)
 
-        @JvmStatic
-        fun ofRedactedThinking(redactedThinking: BetaRedactedThinkingBlock) =
+        @JvmStatic fun ofRedactedThinking(redactedThinking: BetaRedactedThinkingBlock) =
             BetaContentBlock(redactedThinking = redactedThinking)
 
-        fun ofToolUse(toolUse: BetaToolUseBlock) = BetaContentBlock(toolUse = toolUse)
+        @JvmStatic fun ofToolUse(toolUse: BetaToolUseBlock) = BetaContentBlock(toolUse = toolUse)
 
-        @JvmStatic
-        fun ofServerToolUse(serverToolUse: BetaServerToolUseBlock) =
+        @JvmStatic fun ofServerToolUse(serverToolUse: BetaServerToolUseBlock) =
             BetaContentBlock(serverToolUse = serverToolUse)
 
-        @JvmStatic
-        fun ofWebSearchToolResult(webSearchToolResult: BetaWebSearchToolResultBlock) =
+        @JvmStatic fun ofWebSearchToolResult(webSearchToolResult: BetaWebSearchToolResultBlock) =
             BetaContentBlock(webSearchToolResult = webSearchToolResult)
 
-        @JvmStatic
-        fun ofWebFetchToolResult(webFetchToolResult: BetaWebFetchToolResultBlock) =
+        @JvmStatic fun ofWebFetchToolResult(webFetchToolResult: BetaWebFetchToolResultBlock) =
             BetaContentBlock(webFetchToolResult = webFetchToolResult)
 
-        @JvmStatic
-        fun ofCodeExecutionToolResult(codeExecutionToolResult: BetaCodeExecutionToolResultBlock) =
+        @JvmStatic fun ofCodeExecutionToolResult(codeExecutionToolResult: BetaCodeExecutionToolResultBlock) =
             BetaContentBlock(codeExecutionToolResult = codeExecutionToolResult)
 
-        @JvmStatic
-        fun ofBashCodeExecutionToolResult(
+        @JvmStatic fun ofBashCodeExecutionToolResult(
             bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlock
         ) = BetaContentBlock(bashCodeExecutionToolResult = bashCodeExecutionToolResult)
 
-        @JvmStatic
-        fun ofTextEditorCodeExecutionToolResult(
+        @JvmStatic fun ofTextEditorCodeExecutionToolResult(
             textEditorCodeExecutionToolResult: BetaTextEditorCodeExecutionToolResultBlock
         ) = BetaContentBlock(textEditorCodeExecutionToolResult = textEditorCodeExecutionToolResult)
 
-        @JvmStatic
-        fun ofToolSearchToolResult(toolSearchToolResult: BetaToolSearchToolResultBlock) =
+        @JvmStatic fun ofToolSearchToolResult(toolSearchToolResult: BetaToolSearchToolResultBlock) =
             BetaContentBlock(toolSearchToolResult = toolSearchToolResult)
 
-        @JvmStatic
-        fun ofMcpToolUse(mcpToolUse: BetaMcpToolUseBlock) =
+        @JvmStatic fun ofMcpToolUse(mcpToolUse: BetaMcpToolUseBlock) =
             BetaContentBlock(mcpToolUse = mcpToolUse)
 
-        @JvmStatic
-        fun ofMcpToolResult(mcpToolResult: BetaMcpToolResultBlock) =
+        @JvmStatic fun ofMcpToolResult(mcpToolResult: BetaMcpToolResultBlock) =
             BetaContentBlock(mcpToolResult = mcpToolResult)
 
         /** Response model for a file uploaded to the container. */
-        @JvmStatic
-        fun ofContainerUpload(containerUpload: BetaContainerUploadBlock) =
+        @JvmStatic fun ofContainerUpload(containerUpload: BetaContainerUploadBlock) =
             BetaContentBlock(containerUpload = containerUpload)
 
         /**
@@ -552,8 +540,7 @@ private constructor(
          * (e.g., malformed output from the model). Clients may round-trip compaction blocks with
          * null content; the server treats them as no-ops.
          */
-        @JvmStatic
-        fun ofCompaction(compaction: BetaCompactionBlock) =
+        @JvmStatic fun ofCompaction(compaction: BetaCompactionBlock) =
             BetaContentBlock(compaction = compaction)
     }
 

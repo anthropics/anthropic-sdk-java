@@ -64,7 +64,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
 
         val OUTPUT_300K_2026_03_24 = of("output-300k-2026-03-24")
 
-        fun of(value: String) = AnthropicBeta(JsonField.of(value))
+        @JvmStatic fun of(value: String) = AnthropicBeta(JsonField.of(value))
     }
 
     /** An enum containing [AnthropicBeta]'s known values. */

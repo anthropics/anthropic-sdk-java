@@ -129,7 +129,7 @@ private constructor(
          * .url()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [WebSearchResultBlockParam]. */
@@ -142,7 +142,7 @@ private constructor(
         private var pageAge: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(webSearchResultBlockParam: WebSearchResultBlockParam) = apply {
+        @JvmSynthetic internal fun from(webSearchResultBlockParam: WebSearchResultBlockParam) = apply {
             encryptedContent = webSearchResultBlockParam.encryptedContent
             title = webSearchResultBlockParam.title
             type = webSearchResultBlockParam.type

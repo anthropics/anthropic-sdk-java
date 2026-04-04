@@ -75,7 +75,7 @@ private constructor(
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [BetaMcpToolConfig]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaMcpToolConfig]. */
@@ -85,7 +85,7 @@ private constructor(
         private var enabled: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaMcpToolConfig: BetaMcpToolConfig) = apply {
+        @JvmSynthetic internal fun from(betaMcpToolConfig: BetaMcpToolConfig) = apply {
             deferLoading = betaMcpToolConfig.deferLoading
             enabled = betaMcpToolConfig.enabled
             additionalProperties = betaMcpToolConfig.additionalProperties.toMutableMap()

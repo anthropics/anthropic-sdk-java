@@ -102,7 +102,7 @@ private constructor(
          * .errorCode()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [TextEditorCodeExecutionToolResultErrorParam]. */
@@ -113,7 +113,7 @@ private constructor(
         private var errorMessage: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             textEditorCodeExecutionToolResultErrorParam: TextEditorCodeExecutionToolResultErrorParam
         ) = apply {
             errorCode = textEditorCodeExecutionToolResultErrorParam.errorCode

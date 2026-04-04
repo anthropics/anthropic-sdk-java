@@ -79,7 +79,7 @@ private constructor(
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [BetaToolChoiceAny]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaToolChoiceAny]. */
@@ -89,7 +89,7 @@ private constructor(
         private var disableParallelToolUse: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaToolChoiceAny: BetaToolChoiceAny) = apply {
+        @JvmSynthetic internal fun from(betaToolChoiceAny: BetaToolChoiceAny) = apply {
             type = betaToolChoiceAny.type
             disableParallelToolUse = betaToolChoiceAny.disableParallelToolUse
             additionalProperties = betaToolChoiceAny.additionalProperties.toMutableMap()

@@ -112,7 +112,7 @@ private constructor(
          * .skills()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaContainer]. */
@@ -123,7 +123,7 @@ private constructor(
         private var skills: JsonField<MutableList<BetaSkill>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaContainer: BetaContainer) = apply {
+        @JvmSynthetic internal fun from(betaContainer: BetaContainer) = apply {
             id = betaContainer.id
             expiresAt = betaContainer.expiresAt
             skills = betaContainer.skills.map { it.toMutableList() }

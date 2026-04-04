@@ -99,7 +99,7 @@ private constructor(
          * .toolName()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ToolReferenceBlockParam]. */
@@ -110,7 +110,7 @@ private constructor(
         private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(toolReferenceBlockParam: ToolReferenceBlockParam) = apply {
+        @JvmSynthetic internal fun from(toolReferenceBlockParam: ToolReferenceBlockParam) = apply {
             toolName = toolReferenceBlockParam.toolName
             type = toolReferenceBlockParam.type
             cacheControl = toolReferenceBlockParam.cacheControl

@@ -85,10 +85,10 @@ private constructor(
 
     companion object {
 
-        fun none(): SkillCreateParams = builder().build()
+        @JvmStatic fun none(): SkillCreateParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [SkillCreateParams]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [SkillCreateParams]. */
@@ -99,7 +99,7 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(skillCreateParams: SkillCreateParams) = apply {
+        @JvmSynthetic internal fun from(skillCreateParams: SkillCreateParams) = apply {
             betas = skillCreateParams.betas?.toMutableList()
             body = skillCreateParams.body.toBuilder()
             additionalHeaders = skillCreateParams.additionalHeaders.toBuilder()
@@ -412,7 +412,7 @@ private constructor(
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Body]. */
-            fun builder() = Builder()
+            @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -422,7 +422,7 @@ private constructor(
             private var files: MultipartField<MutableList<InputStream>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            internal fun from(body: Body) = apply {
+            @JvmSynthetic internal fun from(body: Body) = apply {
                 displayTitle = body.displayTitle
                 files = body.files.map { it.toMutableList() }
                 additionalProperties = body.additionalProperties.toMutableMap()

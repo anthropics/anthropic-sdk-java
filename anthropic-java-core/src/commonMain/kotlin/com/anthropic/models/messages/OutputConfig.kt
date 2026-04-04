@@ -79,7 +79,7 @@ private constructor(
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [OutputConfig]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [OutputConfig]. */
@@ -89,7 +89,7 @@ private constructor(
         private var format: JsonField<JsonOutputFormat> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(outputConfig: OutputConfig) = apply {
+        @JvmSynthetic internal fun from(outputConfig: OutputConfig) = apply {
             effort = outputConfig.effort
             format = outputConfig.format
             additionalProperties = outputConfig.additionalProperties.toMutableMap()
@@ -207,7 +207,7 @@ private constructor(
 
             val MAX = of("max")
 
-            fun of(value: String) = Effort(JsonField.of(value))
+            @JvmStatic fun of(value: String) = Effort(JsonField.of(value))
         }
 
         /** An enum containing [Effort]'s known values. */

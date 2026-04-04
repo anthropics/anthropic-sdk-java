@@ -237,7 +237,7 @@ private constructor(
          * .serviceTier()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [Usage]. */
@@ -253,7 +253,7 @@ private constructor(
         private var serviceTier: JsonField<ServiceTier>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(usage: Usage) = apply {
+        @JvmSynthetic internal fun from(usage: Usage) = apply {
             cacheCreation = usage.cacheCreation
             cacheCreationInputTokens = usage.cacheCreationInputTokens
             cacheReadInputTokens = usage.cacheReadInputTokens
@@ -536,7 +536,7 @@ private constructor(
 
             val BATCH = of("batch")
 
-            fun of(value: String) = ServiceTier(JsonField.of(value))
+            @JvmStatic fun of(value: String) = ServiceTier(JsonField.of(value))
         }
 
         /** An enum containing [ServiceTier]'s known values. */

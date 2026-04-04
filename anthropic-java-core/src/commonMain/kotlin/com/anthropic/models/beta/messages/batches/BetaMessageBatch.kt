@@ -289,7 +289,7 @@ private constructor(
          * .resultsUrl()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaMessageBatch]. */
@@ -307,7 +307,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("message_batch")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaMessageBatch: BetaMessageBatch) = apply {
+        @JvmSynthetic internal fun from(betaMessageBatch: BetaMessageBatch) = apply {
             id = betaMessageBatch.id
             archivedAt = betaMessageBatch.archivedAt
             cancelInitiatedAt = betaMessageBatch.cancelInitiatedAt
@@ -625,7 +625,7 @@ private constructor(
 
             val ENDED = of("ended")
 
-            fun of(value: String) = ProcessingStatus(JsonField.of(value))
+            @JvmStatic fun of(value: String) = ProcessingStatus(JsonField.of(value))
         }
 
         /** An enum containing [ProcessingStatus]'s known values. */

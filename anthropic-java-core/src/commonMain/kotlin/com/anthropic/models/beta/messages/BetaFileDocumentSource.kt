@@ -74,7 +74,7 @@ private constructor(
          * .fileId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaFileDocumentSource]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("file")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaFileDocumentSource: BetaFileDocumentSource) = apply {
+        @JvmSynthetic internal fun from(betaFileDocumentSource: BetaFileDocumentSource) = apply {
             fileId = betaFileDocumentSource.fileId
             type = betaFileDocumentSource.type
             additionalProperties = betaFileDocumentSource.additionalProperties.toMutableMap()

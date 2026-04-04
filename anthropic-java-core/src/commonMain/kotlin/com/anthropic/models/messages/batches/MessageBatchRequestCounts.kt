@@ -143,7 +143,7 @@ private constructor(
          * .succeeded()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [MessageBatchRequestCounts]. */
@@ -156,7 +156,7 @@ private constructor(
         private var succeeded: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(messageBatchRequestCounts: MessageBatchRequestCounts) = apply {
+        @JvmSynthetic internal fun from(messageBatchRequestCounts: MessageBatchRequestCounts) = apply {
             canceled = messageBatchRequestCounts.canceled
             errored = messageBatchRequestCounts.errored
             expired = messageBatchRequestCounts.expired

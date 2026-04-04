@@ -74,7 +74,7 @@ private constructor(
          * .message()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaAuthenticationError]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("authentication_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaAuthenticationError: BetaAuthenticationError) = apply {
+        @JvmSynthetic internal fun from(betaAuthenticationError: BetaAuthenticationError) = apply {
             message = betaAuthenticationError.message
             type = betaAuthenticationError.type
             additionalProperties = betaAuthenticationError.additionalProperties.toMutableMap()

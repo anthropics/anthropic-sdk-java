@@ -76,7 +76,7 @@ private constructor(
          * .response()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [VersionListPage]. */
@@ -86,7 +86,7 @@ private constructor(
         private var params: VersionListParams? = null
         private var response: VersionListPageResponse? = null
 
-        internal fun from(versionListPage: VersionListPage) = apply {
+        @JvmSynthetic internal fun from(versionListPage: VersionListPage) = apply {
             service = versionListPage.service
             params = versionListPage.params
             response = versionListPage.response

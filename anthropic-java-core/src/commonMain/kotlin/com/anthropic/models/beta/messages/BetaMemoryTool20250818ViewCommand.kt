@@ -102,7 +102,7 @@ private constructor(
          * .path()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaMemoryTool20250818ViewCommand]. */
@@ -113,7 +113,7 @@ private constructor(
         private var viewRange: JsonField<MutableList<Long>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaMemoryTool20250818ViewCommand: BetaMemoryTool20250818ViewCommand) =
+        @JvmSynthetic internal fun from(betaMemoryTool20250818ViewCommand: BetaMemoryTool20250818ViewCommand) =
             apply {
                 command = betaMemoryTool20250818ViewCommand.command
                 path = betaMemoryTool20250818ViewCommand.path

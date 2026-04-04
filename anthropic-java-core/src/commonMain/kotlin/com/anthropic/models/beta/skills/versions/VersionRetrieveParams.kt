@@ -58,7 +58,7 @@ private constructor(
          * .skillId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [VersionRetrieveParams]. */
@@ -70,7 +70,7 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(versionRetrieveParams: VersionRetrieveParams) = apply {
+        @JvmSynthetic internal fun from(versionRetrieveParams: VersionRetrieveParams) = apply {
             skillId = versionRetrieveParams.skillId
             version = versionRetrieveParams.version
             betas = versionRetrieveParams.betas?.toMutableList()

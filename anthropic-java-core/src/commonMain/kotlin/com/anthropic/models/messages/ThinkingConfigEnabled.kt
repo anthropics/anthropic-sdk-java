@@ -109,7 +109,7 @@ private constructor(
          * .budgetTokens()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ThinkingConfigEnabled]. */
@@ -120,7 +120,7 @@ private constructor(
         private var display: JsonField<Display> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(thinkingConfigEnabled: ThinkingConfigEnabled) = apply {
+        @JvmSynthetic internal fun from(thinkingConfigEnabled: ThinkingConfigEnabled) = apply {
             budgetTokens = thinkingConfigEnabled.budgetTokens
             type = thinkingConfigEnabled.type
             display = thinkingConfigEnabled.display
@@ -279,7 +279,7 @@ private constructor(
 
             val OMITTED = of("omitted")
 
-            fun of(value: String) = Display(JsonField.of(value))
+            @JvmStatic fun of(value: String) = Display(JsonField.of(value))
         }
 
         /** An enum containing [Display]'s known values. */

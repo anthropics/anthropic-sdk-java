@@ -104,7 +104,7 @@ private constructor(
          * .errorMessage()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ToolSearchToolResultError]. */
@@ -115,7 +115,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("tool_search_tool_result_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(toolSearchToolResultError: ToolSearchToolResultError) = apply {
+        @JvmSynthetic internal fun from(toolSearchToolResultError: ToolSearchToolResultError) = apply {
             errorCode = toolSearchToolResultError.errorCode
             errorMessage = toolSearchToolResultError.errorMessage
             type = toolSearchToolResultError.type

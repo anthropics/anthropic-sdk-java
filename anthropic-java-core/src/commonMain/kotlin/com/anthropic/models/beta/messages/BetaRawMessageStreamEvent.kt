@@ -210,28 +210,22 @@ private constructor(
 
     companion object {
 
-        @JvmStatic
-        fun ofMessageStart(messageStart: BetaRawMessageStartEvent) =
+        @JvmStatic fun ofMessageStart(messageStart: BetaRawMessageStartEvent) =
             BetaRawMessageStreamEvent(messageStart = messageStart)
 
-        @JvmStatic
-        fun ofMessageDelta(messageDelta: BetaRawMessageDeltaEvent) =
+        @JvmStatic fun ofMessageDelta(messageDelta: BetaRawMessageDeltaEvent) =
             BetaRawMessageStreamEvent(messageDelta = messageDelta)
 
-        @JvmStatic
-        fun ofMessageStop(messageStop: BetaRawMessageStopEvent) =
+        @JvmStatic fun ofMessageStop(messageStop: BetaRawMessageStopEvent) =
             BetaRawMessageStreamEvent(messageStop = messageStop)
 
-        @JvmStatic
-        fun ofContentBlockStart(contentBlockStart: BetaRawContentBlockStartEvent) =
+        @JvmStatic fun ofContentBlockStart(contentBlockStart: BetaRawContentBlockStartEvent) =
             BetaRawMessageStreamEvent(contentBlockStart = contentBlockStart)
 
-        @JvmStatic
-        fun ofContentBlockDelta(contentBlockDelta: BetaRawContentBlockDeltaEvent) =
+        @JvmStatic fun ofContentBlockDelta(contentBlockDelta: BetaRawContentBlockDeltaEvent) =
             BetaRawMessageStreamEvent(contentBlockDelta = contentBlockDelta)
 
-        @JvmStatic
-        fun ofContentBlockStop(contentBlockStop: BetaRawContentBlockStopEvent) =
+        @JvmStatic fun ofContentBlockStop(contentBlockStop: BetaRawContentBlockStopEvent) =
             BetaRawMessageStreamEvent(contentBlockStop = contentBlockStop)
     }
 

@@ -80,7 +80,7 @@ private constructor(
          * .id()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [DeletedMessageBatch]. */
@@ -90,7 +90,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("message_batch_deleted")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(deletedMessageBatch: DeletedMessageBatch) = apply {
+        @JvmSynthetic internal fun from(deletedMessageBatch: DeletedMessageBatch) = apply {
             id = deletedMessageBatch.id
             type = deletedMessageBatch.type
             additionalProperties = deletedMessageBatch.additionalProperties.toMutableMap()

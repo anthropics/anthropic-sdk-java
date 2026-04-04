@@ -6,7 +6,7 @@ class AutoPager<T> private constructor(private val firstPage: Page<T>) : Iterabl
 
     companion object {
 
-        fun <T> from(firstPage: Page<T>): AutoPager<T> = AutoPager(firstPage)
+        @JvmStatic fun <T> from(firstPage: Page<T>): AutoPager<T> = AutoPager(firstPage)
     }
 
     override fun iterator(): Iterator<T> =

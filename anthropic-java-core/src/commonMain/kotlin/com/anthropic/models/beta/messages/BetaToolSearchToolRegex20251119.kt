@@ -166,7 +166,7 @@ private constructor(
          * .type()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaToolSearchToolRegex20251119]. */
@@ -180,7 +180,7 @@ private constructor(
         private var strict: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119) =
+        @JvmSynthetic internal fun from(betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119) =
             apply {
                 name = betaToolSearchToolRegex20251119.name
                 type = betaToolSearchToolRegex20251119.type
@@ -392,7 +392,7 @@ private constructor(
 
             val TOOL_SEARCH_TOOL_REGEX = of("tool_search_tool_regex")
 
-            fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }
 
         /** An enum containing [Type]'s known values. */
@@ -527,7 +527,7 @@ private constructor(
 
             val CODE_EXECUTION_20260120 = of("code_execution_20260120")
 
-            fun of(value: String) = AllowedCaller(JsonField.of(value))
+            @JvmStatic fun of(value: String) = AllowedCaller(JsonField.of(value))
         }
 
         /** An enum containing [AllowedCaller]'s known values. */

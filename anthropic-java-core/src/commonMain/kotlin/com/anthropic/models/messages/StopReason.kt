@@ -32,7 +32,7 @@ class StopReason @JsonCreator private constructor(private val value: JsonField<S
 
         val REFUSAL = of("refusal")
 
-        fun of(value: String) = StopReason(JsonField.of(value))
+        @JvmStatic fun of(value: String) = StopReason(JsonField.of(value))
     }
 
     /** An enum containing [StopReason]'s known values. */

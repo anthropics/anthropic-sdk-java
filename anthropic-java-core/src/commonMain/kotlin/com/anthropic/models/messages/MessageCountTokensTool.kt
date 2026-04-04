@@ -460,69 +460,54 @@ private constructor(
 
     companion object {
 
-        fun ofTool(tool: Tool) = MessageCountTokensTool(tool = tool)
+        @JvmStatic fun ofTool(tool: Tool) = MessageCountTokensTool(tool = tool)
 
-        @JvmStatic
-        fun ofToolBash20250124(toolBash20250124: ToolBash20250124) =
+        @JvmStatic fun ofToolBash20250124(toolBash20250124: ToolBash20250124) =
             MessageCountTokensTool(toolBash20250124 = toolBash20250124)
 
-        @JvmStatic
-        fun ofCodeExecutionTool20250522(codeExecutionTool20250522: CodeExecutionTool20250522) =
+        @JvmStatic fun ofCodeExecutionTool20250522(codeExecutionTool20250522: CodeExecutionTool20250522) =
             MessageCountTokensTool(codeExecutionTool20250522 = codeExecutionTool20250522)
 
-        @JvmStatic
-        fun ofCodeExecutionTool20250825(codeExecutionTool20250825: CodeExecutionTool20250825) =
+        @JvmStatic fun ofCodeExecutionTool20250825(codeExecutionTool20250825: CodeExecutionTool20250825) =
             MessageCountTokensTool(codeExecutionTool20250825 = codeExecutionTool20250825)
 
         /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
-        @JvmStatic
-        fun ofCodeExecutionTool20260120(codeExecutionTool20260120: CodeExecutionTool20260120) =
+        @JvmStatic fun ofCodeExecutionTool20260120(codeExecutionTool20260120: CodeExecutionTool20260120) =
             MessageCountTokensTool(codeExecutionTool20260120 = codeExecutionTool20260120)
 
-        @JvmStatic
-        fun ofMemoryTool20250818(memoryTool20250818: MemoryTool20250818) =
+        @JvmStatic fun ofMemoryTool20250818(memoryTool20250818: MemoryTool20250818) =
             MessageCountTokensTool(memoryTool20250818 = memoryTool20250818)
 
-        @JvmStatic
-        fun ofToolTextEditor20250124(toolTextEditor20250124: ToolTextEditor20250124) =
+        @JvmStatic fun ofToolTextEditor20250124(toolTextEditor20250124: ToolTextEditor20250124) =
             MessageCountTokensTool(toolTextEditor20250124 = toolTextEditor20250124)
 
-        @JvmStatic
-        fun ofToolTextEditor20250429(toolTextEditor20250429: ToolTextEditor20250429) =
+        @JvmStatic fun ofToolTextEditor20250429(toolTextEditor20250429: ToolTextEditor20250429) =
             MessageCountTokensTool(toolTextEditor20250429 = toolTextEditor20250429)
 
-        @JvmStatic
-        fun ofToolTextEditor20250728(toolTextEditor20250728: ToolTextEditor20250728) =
+        @JvmStatic fun ofToolTextEditor20250728(toolTextEditor20250728: ToolTextEditor20250728) =
             MessageCountTokensTool(toolTextEditor20250728 = toolTextEditor20250728)
 
-        @JvmStatic
-        fun ofWebSearchTool20250305(webSearchTool20250305: WebSearchTool20250305) =
+        @JvmStatic fun ofWebSearchTool20250305(webSearchTool20250305: WebSearchTool20250305) =
             MessageCountTokensTool(webSearchTool20250305 = webSearchTool20250305)
 
-        @JvmStatic
-        fun ofWebFetchTool20250910(webFetchTool20250910: WebFetchTool20250910) =
+        @JvmStatic fun ofWebFetchTool20250910(webFetchTool20250910: WebFetchTool20250910) =
             MessageCountTokensTool(webFetchTool20250910 = webFetchTool20250910)
 
-        @JvmStatic
-        fun ofWebSearchTool20260209(webSearchTool20260209: WebSearchTool20260209) =
+        @JvmStatic fun ofWebSearchTool20260209(webSearchTool20260209: WebSearchTool20260209) =
             MessageCountTokensTool(webSearchTool20260209 = webSearchTool20260209)
 
-        @JvmStatic
-        fun ofWebFetchTool20260209(webFetchTool20260209: WebFetchTool20260209) =
+        @JvmStatic fun ofWebFetchTool20260209(webFetchTool20260209: WebFetchTool20260209) =
             MessageCountTokensTool(webFetchTool20260209 = webFetchTool20260209)
 
         /** Web fetch tool with use_cache parameter for bypassing cached content. */
-        @JvmStatic
-        fun ofWebFetchTool20260309(webFetchTool20260309: WebFetchTool20260309) =
+        @JvmStatic fun ofWebFetchTool20260309(webFetchTool20260309: WebFetchTool20260309) =
             MessageCountTokensTool(webFetchTool20260309 = webFetchTool20260309)
 
-        @JvmStatic
-        fun ofToolSearchToolBm25_20251119(
+        @JvmStatic fun ofToolSearchToolBm25_20251119(
             toolSearchToolBm25_20251119: ToolSearchToolBm25_20251119
         ) = MessageCountTokensTool(toolSearchToolBm25_20251119 = toolSearchToolBm25_20251119)
 
-        @JvmStatic
-        fun ofToolSearchToolRegex20251119(
+        @JvmStatic fun ofToolSearchToolRegex20251119(
             toolSearchToolRegex20251119: ToolSearchToolRegex20251119
         ) = MessageCountTokensTool(toolSearchToolRegex20251119 = toolSearchToolRegex20251119)
     }

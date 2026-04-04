@@ -158,7 +158,7 @@ private constructor(
          * .toolUseId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [TextEditorCodeExecutionToolResultBlock]. */
@@ -169,7 +169,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("text_editor_code_execution_tool_result")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             textEditorCodeExecutionToolResultBlock: TextEditorCodeExecutionToolResultBlock
         ) = apply {
             content = textEditorCodeExecutionToolResultBlock.content
@@ -558,24 +558,21 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofTextEditorCodeExecutionToolResultError(
+            @JvmStatic fun ofTextEditorCodeExecutionToolResultError(
                 textEditorCodeExecutionToolResultError: TextEditorCodeExecutionToolResultError
             ) =
                 Content(
                     textEditorCodeExecutionToolResultError = textEditorCodeExecutionToolResultError
                 )
 
-            @JvmStatic
-            fun ofTextEditorCodeExecutionViewResultBlock(
+            @JvmStatic fun ofTextEditorCodeExecutionViewResultBlock(
                 textEditorCodeExecutionViewResultBlock: TextEditorCodeExecutionViewResultBlock
             ) =
                 Content(
                     textEditorCodeExecutionViewResultBlock = textEditorCodeExecutionViewResultBlock
                 )
 
-            @JvmStatic
-            fun ofTextEditorCodeExecutionCreateResultBlock(
+            @JvmStatic fun ofTextEditorCodeExecutionCreateResultBlock(
                 textEditorCodeExecutionCreateResultBlock: TextEditorCodeExecutionCreateResultBlock
             ) =
                 Content(
@@ -583,8 +580,7 @@ private constructor(
                         textEditorCodeExecutionCreateResultBlock
                 )
 
-            @JvmStatic
-            fun ofTextEditorCodeExecutionStrReplaceResultBlock(
+            @JvmStatic fun ofTextEditorCodeExecutionStrReplaceResultBlock(
                 textEditorCodeExecutionStrReplaceResultBlock:
                     TextEditorCodeExecutionStrReplaceResultBlock
             ) =

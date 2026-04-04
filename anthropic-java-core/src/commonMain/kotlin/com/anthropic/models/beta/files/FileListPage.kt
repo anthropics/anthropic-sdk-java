@@ -81,7 +81,7 @@ private constructor(
          * .response()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [FileListPage]. */
@@ -91,7 +91,7 @@ private constructor(
         private var params: FileListParams? = null
         private var response: FileListPageResponse? = null
 
-        internal fun from(fileListPage: FileListPage) = apply {
+        @JvmSynthetic internal fun from(fileListPage: FileListPage) = apply {
             service = fileListPage.service
             params = fileListPage.params
             response = fileListPage.response

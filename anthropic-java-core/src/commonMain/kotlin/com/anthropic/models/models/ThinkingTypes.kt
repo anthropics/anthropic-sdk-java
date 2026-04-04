@@ -88,7 +88,7 @@ private constructor(
          * .enabled()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ThinkingTypes]. */
@@ -98,7 +98,7 @@ private constructor(
         private var enabled: JsonField<CapabilitySupport>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(thinkingTypes: ThinkingTypes) = apply {
+        @JvmSynthetic internal fun from(thinkingTypes: ThinkingTypes) = apply {
             adaptive = thinkingTypes.adaptive
             enabled = thinkingTypes.enabled
             additionalProperties = thinkingTypes.additionalProperties.toMutableMap()

@@ -79,7 +79,7 @@ private constructor(
         /**
          * Returns a mutable builder for constructing an instance of [BetaCacheControlEphemeral].
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaCacheControlEphemeral]. */
@@ -89,7 +89,7 @@ private constructor(
         private var ttl: JsonField<Ttl> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaCacheControlEphemeral: BetaCacheControlEphemeral) = apply {
+        @JvmSynthetic internal fun from(betaCacheControlEphemeral: BetaCacheControlEphemeral) = apply {
             type = betaCacheControlEphemeral.type
             ttl = betaCacheControlEphemeral.ttl
             additionalProperties = betaCacheControlEphemeral.additionalProperties.toMutableMap()
@@ -216,7 +216,7 @@ private constructor(
 
             val TTL_1H = of("1h")
 
-            fun of(value: String) = Ttl(JsonField.of(value))
+            @JvmStatic fun of(value: String) = Ttl(JsonField.of(value))
         }
 
         /** An enum containing [Ttl]'s known values. */

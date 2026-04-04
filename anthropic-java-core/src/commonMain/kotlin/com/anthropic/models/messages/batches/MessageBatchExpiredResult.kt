@@ -52,7 +52,7 @@ private constructor(
         /**
          * Returns a mutable builder for constructing an instance of [MessageBatchExpiredResult].
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [MessageBatchExpiredResult]. */
@@ -61,7 +61,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("expired")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(messageBatchExpiredResult: MessageBatchExpiredResult) = apply {
+        @JvmSynthetic internal fun from(messageBatchExpiredResult: MessageBatchExpiredResult) = apply {
             type = messageBatchExpiredResult.type
             additionalProperties = messageBatchExpiredResult.additionalProperties.toMutableMap()
         }

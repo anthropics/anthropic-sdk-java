@@ -182,7 +182,7 @@ private constructor(
          * .sizeBytes()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [FileMetadata]. */
@@ -197,7 +197,7 @@ private constructor(
         private var downloadable: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(fileMetadata: FileMetadata) = apply {
+        @JvmSynthetic internal fun from(fileMetadata: FileMetadata) = apply {
             id = fileMetadata.id
             createdAt = fileMetadata.createdAt
             filename = fileMetadata.filename

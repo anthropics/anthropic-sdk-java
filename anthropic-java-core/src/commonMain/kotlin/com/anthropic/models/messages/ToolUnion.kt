@@ -441,67 +441,52 @@ private constructor(
 
     companion object {
 
-        fun ofTool(tool: Tool) = ToolUnion(tool = tool)
+        @JvmStatic fun ofTool(tool: Tool) = ToolUnion(tool = tool)
 
-        @JvmStatic
-        fun ofBash20250124(bash20250124: ToolBash20250124) = ToolUnion(bash20250124 = bash20250124)
+        @JvmStatic fun ofBash20250124(bash20250124: ToolBash20250124) = ToolUnion(bash20250124 = bash20250124)
 
-        @JvmStatic
-        fun ofCodeExecutionTool20250522(codeExecutionTool20250522: CodeExecutionTool20250522) =
+        @JvmStatic fun ofCodeExecutionTool20250522(codeExecutionTool20250522: CodeExecutionTool20250522) =
             ToolUnion(codeExecutionTool20250522 = codeExecutionTool20250522)
 
-        @JvmStatic
-        fun ofCodeExecutionTool20250825(codeExecutionTool20250825: CodeExecutionTool20250825) =
+        @JvmStatic fun ofCodeExecutionTool20250825(codeExecutionTool20250825: CodeExecutionTool20250825) =
             ToolUnion(codeExecutionTool20250825 = codeExecutionTool20250825)
 
         /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
-        @JvmStatic
-        fun ofCodeExecutionTool20260120(codeExecutionTool20260120: CodeExecutionTool20260120) =
+        @JvmStatic fun ofCodeExecutionTool20260120(codeExecutionTool20260120: CodeExecutionTool20260120) =
             ToolUnion(codeExecutionTool20260120 = codeExecutionTool20260120)
 
-        @JvmStatic
-        fun ofMemoryTool20250818(memoryTool20250818: MemoryTool20250818) =
+        @JvmStatic fun ofMemoryTool20250818(memoryTool20250818: MemoryTool20250818) =
             ToolUnion(memoryTool20250818 = memoryTool20250818)
 
-        @JvmStatic
-        fun ofTextEditor20250124(textEditor20250124: ToolTextEditor20250124) =
+        @JvmStatic fun ofTextEditor20250124(textEditor20250124: ToolTextEditor20250124) =
             ToolUnion(textEditor20250124 = textEditor20250124)
 
-        @JvmStatic
-        fun ofTextEditor20250429(textEditor20250429: ToolTextEditor20250429) =
+        @JvmStatic fun ofTextEditor20250429(textEditor20250429: ToolTextEditor20250429) =
             ToolUnion(textEditor20250429 = textEditor20250429)
 
-        @JvmStatic
-        fun ofTextEditor20250728(textEditor20250728: ToolTextEditor20250728) =
+        @JvmStatic fun ofTextEditor20250728(textEditor20250728: ToolTextEditor20250728) =
             ToolUnion(textEditor20250728 = textEditor20250728)
 
-        @JvmStatic
-        fun ofWebSearchTool20250305(webSearchTool20250305: WebSearchTool20250305) =
+        @JvmStatic fun ofWebSearchTool20250305(webSearchTool20250305: WebSearchTool20250305) =
             ToolUnion(webSearchTool20250305 = webSearchTool20250305)
 
-        @JvmStatic
-        fun ofWebFetchTool20250910(webFetchTool20250910: WebFetchTool20250910) =
+        @JvmStatic fun ofWebFetchTool20250910(webFetchTool20250910: WebFetchTool20250910) =
             ToolUnion(webFetchTool20250910 = webFetchTool20250910)
 
-        @JvmStatic
-        fun ofWebSearchTool20260209(webSearchTool20260209: WebSearchTool20260209) =
+        @JvmStatic fun ofWebSearchTool20260209(webSearchTool20260209: WebSearchTool20260209) =
             ToolUnion(webSearchTool20260209 = webSearchTool20260209)
 
-        @JvmStatic
-        fun ofWebFetchTool20260209(webFetchTool20260209: WebFetchTool20260209) =
+        @JvmStatic fun ofWebFetchTool20260209(webFetchTool20260209: WebFetchTool20260209) =
             ToolUnion(webFetchTool20260209 = webFetchTool20260209)
 
         /** Web fetch tool with use_cache parameter for bypassing cached content. */
-        @JvmStatic
-        fun ofWebFetchTool20260309(webFetchTool20260309: WebFetchTool20260309) =
+        @JvmStatic fun ofWebFetchTool20260309(webFetchTool20260309: WebFetchTool20260309) =
             ToolUnion(webFetchTool20260309 = webFetchTool20260309)
 
-        @JvmStatic
-        fun ofSearchToolBm25_20251119(searchToolBm25_20251119: ToolSearchToolBm25_20251119) =
+        @JvmStatic fun ofSearchToolBm25_20251119(searchToolBm25_20251119: ToolSearchToolBm25_20251119) =
             ToolUnion(searchToolBm25_20251119 = searchToolBm25_20251119)
 
-        @JvmStatic
-        fun ofSearchToolRegex20251119(searchToolRegex20251119: ToolSearchToolRegex20251119) =
+        @JvmStatic fun ofSearchToolRegex20251119(searchToolRegex20251119: ToolSearchToolRegex20251119) =
             ToolUnion(searchToolRegex20251119 = searchToolRegex20251119)
     }
 

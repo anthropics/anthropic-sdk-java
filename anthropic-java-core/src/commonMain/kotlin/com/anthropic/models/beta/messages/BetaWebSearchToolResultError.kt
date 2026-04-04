@@ -78,7 +78,7 @@ private constructor(
          * .errorCode()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaWebSearchToolResultError]. */
@@ -88,7 +88,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("web_search_tool_result_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaWebSearchToolResultError: BetaWebSearchToolResultError) = apply {
+        @JvmSynthetic internal fun from(betaWebSearchToolResultError: BetaWebSearchToolResultError) = apply {
             errorCode = betaWebSearchToolResultError.errorCode
             type = betaWebSearchToolResultError.type
             additionalProperties = betaWebSearchToolResultError.additionalProperties.toMutableMap()

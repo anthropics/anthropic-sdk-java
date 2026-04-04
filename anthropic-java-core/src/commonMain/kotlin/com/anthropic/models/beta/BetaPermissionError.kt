@@ -74,7 +74,7 @@ private constructor(
          * .message()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaPermissionError]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("permission_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaPermissionError: BetaPermissionError) = apply {
+        @JvmSynthetic internal fun from(betaPermissionError: BetaPermissionError) = apply {
             message = betaPermissionError.message
             type = betaPermissionError.type
             additionalProperties = betaPermissionError.additionalProperties.toMutableMap()

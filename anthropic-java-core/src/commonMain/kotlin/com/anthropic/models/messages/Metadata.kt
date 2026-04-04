@@ -62,7 +62,7 @@ private constructor(
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [Metadata]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [Metadata]. */
@@ -71,7 +71,7 @@ private constructor(
         private var userId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(metadata: Metadata) = apply {
+        @JvmSynthetic internal fun from(metadata: Metadata) = apply {
             userId = metadata.userId
             additionalProperties = metadata.additionalProperties.toMutableMap()
         }

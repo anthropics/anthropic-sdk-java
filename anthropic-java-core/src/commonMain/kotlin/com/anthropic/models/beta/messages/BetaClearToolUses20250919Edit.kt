@@ -172,7 +172,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of
          * [BetaClearToolUses20250919Edit].
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaClearToolUses20250919Edit]. */
@@ -186,7 +186,7 @@ private constructor(
         private var trigger: JsonField<Trigger> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaClearToolUses20250919Edit: BetaClearToolUses20250919Edit) = apply {
+        @JvmSynthetic internal fun from(betaClearToolUses20250919Edit: BetaClearToolUses20250919Edit) = apply {
             type = betaClearToolUses20250919Edit.type
             clearAtLeast = betaClearToolUses20250919Edit.clearAtLeast
             clearToolInputs = betaClearToolUses20250919Edit.clearToolInputs
@@ -521,10 +521,9 @@ private constructor(
 
         companion object {
 
-            fun ofBool(bool: Boolean) = ClearToolInputs(bool = bool)
+            @JvmStatic fun ofBool(bool: Boolean) = ClearToolInputs(bool = bool)
 
-            @JvmStatic
-            fun ofStrings(strings: List<String>) = ClearToolInputs(strings = strings.toImmutable())
+            @JvmStatic fun ofStrings(strings: List<String>) = ClearToolInputs(strings = strings.toImmutable())
         }
 
         /**
@@ -699,11 +698,10 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofInputTokens(inputTokens: BetaInputTokensTrigger) =
+            @JvmStatic fun ofInputTokens(inputTokens: BetaInputTokensTrigger) =
                 Trigger(inputTokens = inputTokens)
 
-            fun ofToolUses(toolUses: BetaToolUsesTrigger) = Trigger(toolUses = toolUses)
+            @JvmStatic fun ofToolUses(toolUses: BetaToolUsesTrigger) = Trigger(toolUses = toolUses)
         }
 
         /**

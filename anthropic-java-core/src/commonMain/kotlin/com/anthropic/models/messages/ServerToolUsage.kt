@@ -91,7 +91,7 @@ private constructor(
          * .webSearchRequests()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ServerToolUsage]. */
@@ -101,7 +101,7 @@ private constructor(
         private var webSearchRequests: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(serverToolUsage: ServerToolUsage) = apply {
+        @JvmSynthetic internal fun from(serverToolUsage: ServerToolUsage) = apply {
             webFetchRequests = serverToolUsage.webFetchRequests
             webSearchRequests = serverToolUsage.webSearchRequests
             additionalProperties = serverToolUsage.additionalProperties.toMutableMap()

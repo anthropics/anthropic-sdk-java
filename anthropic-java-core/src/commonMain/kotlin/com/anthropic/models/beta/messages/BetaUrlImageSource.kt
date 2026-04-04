@@ -74,7 +74,7 @@ private constructor(
          * .url()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaUrlImageSource]. */
@@ -84,7 +84,7 @@ private constructor(
         private var url: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaUrlImageSource: BetaUrlImageSource) = apply {
+        @JvmSynthetic internal fun from(betaUrlImageSource: BetaUrlImageSource) = apply {
             type = betaUrlImageSource.type
             url = betaUrlImageSource.url
             additionalProperties = betaUrlImageSource.additionalProperties.toMutableMap()

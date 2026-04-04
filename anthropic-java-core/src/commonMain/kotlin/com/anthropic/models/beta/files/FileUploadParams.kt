@@ -71,7 +71,7 @@ private constructor(
          * .file()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [FileUploadParams]. */
@@ -82,7 +82,7 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(fileUploadParams: FileUploadParams) = apply {
+        @JvmSynthetic internal fun from(fileUploadParams: FileUploadParams) = apply {
             betas = fileUploadParams.betas?.toMutableList()
             body = fileUploadParams.body.toBuilder()
             additionalHeaders = fileUploadParams.additionalHeaders.toBuilder()
@@ -336,7 +336,7 @@ private constructor(
              * .file()
              * ```
              */
-            fun builder() = Builder()
+            @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -345,7 +345,7 @@ private constructor(
             private var file: MultipartField<InputStream>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            internal fun from(body: Body) = apply {
+            @JvmSynthetic internal fun from(body: Body) = apply {
                 file = body.file
                 additionalProperties = body.additionalProperties.toMutableMap()
             }

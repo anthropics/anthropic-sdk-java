@@ -155,7 +155,7 @@ private constructor(
          * .title()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [SearchResultBlockParam]. */
@@ -169,7 +169,7 @@ private constructor(
         private var citations: JsonField<CitationsConfigParam> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(searchResultBlockParam: SearchResultBlockParam) = apply {
+        @JvmSynthetic internal fun from(searchResultBlockParam: SearchResultBlockParam) = apply {
             content = searchResultBlockParam.content.map { it.toMutableList() }
             source = searchResultBlockParam.source
             title = searchResultBlockParam.title

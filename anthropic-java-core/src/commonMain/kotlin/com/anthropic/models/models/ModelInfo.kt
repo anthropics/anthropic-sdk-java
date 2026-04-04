@@ -200,7 +200,7 @@ private constructor(
          * .maxTokens()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ModelInfo]. */
@@ -215,7 +215,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("model")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(modelInfo: ModelInfo) = apply {
+        @JvmSynthetic internal fun from(modelInfo: ModelInfo) = apply {
             id = modelInfo.id
             capabilities = modelInfo.capabilities
             createdAt = modelInfo.createdAt

@@ -29,7 +29,7 @@ private constructor(private val headers: Headers, private val body: JsonValue, c
          * .body()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BadRequestException]. */
@@ -39,7 +39,7 @@ private constructor(private val headers: Headers, private val body: JsonValue, c
         private var body: JsonValue? = null
         private var cause: Throwable? = null
 
-        internal fun from(badRequestException: BadRequestException) = apply {
+        @JvmSynthetic internal fun from(badRequestException: BadRequestException) = apply {
             headers = badRequestException.headers
             body = badRequestException.body
             cause = badRequestException.cause

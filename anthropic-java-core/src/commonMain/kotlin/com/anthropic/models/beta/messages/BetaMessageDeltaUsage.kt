@@ -212,7 +212,7 @@ private constructor(
          * .serverToolUse()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaMessageDeltaUsage]. */
@@ -226,7 +226,7 @@ private constructor(
         private var serverToolUse: JsonField<BetaServerToolUsage>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaMessageDeltaUsage: BetaMessageDeltaUsage) = apply {
+        @JvmSynthetic internal fun from(betaMessageDeltaUsage: BetaMessageDeltaUsage) = apply {
             cacheCreationInputTokens = betaMessageDeltaUsage.cacheCreationInputTokens
             cacheReadInputTokens = betaMessageDeltaUsage.cacheReadInputTokens
             inputTokens = betaMessageDeltaUsage.inputTokens
@@ -590,13 +590,11 @@ private constructor(
         companion object {
 
             /** Token usage for a sampling iteration. */
-            @JvmStatic
-            fun ofMessage(message: BetaMessageIterationUsage) =
+            @JvmStatic fun ofMessage(message: BetaMessageIterationUsage) =
                 BetaIterationsUsageItems(message = message)
 
             /** Token usage for a compaction iteration. */
-            @JvmStatic
-            fun ofCompaction(compaction: BetaCompactionIterationUsage) =
+            @JvmStatic fun ofCompaction(compaction: BetaCompactionIterationUsage) =
                 BetaIterationsUsageItems(compaction = compaction)
         }
 

@@ -81,7 +81,7 @@ private constructor(
          * .errorCode()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [CodeExecutionToolResultError]. */
@@ -91,7 +91,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("code_execution_tool_result_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(codeExecutionToolResultError: CodeExecutionToolResultError) = apply {
+        @JvmSynthetic internal fun from(codeExecutionToolResultError: CodeExecutionToolResultError) = apply {
             errorCode = codeExecutionToolResultError.errorCode
             type = codeExecutionToolResultError.type
             additionalProperties = codeExecutionToolResultError.additionalProperties.toMutableMap()

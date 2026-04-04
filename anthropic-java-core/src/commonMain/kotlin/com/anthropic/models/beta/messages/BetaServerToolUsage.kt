@@ -91,7 +91,7 @@ private constructor(
          * .webSearchRequests()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaServerToolUsage]. */
@@ -101,7 +101,7 @@ private constructor(
         private var webSearchRequests: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaServerToolUsage: BetaServerToolUsage) = apply {
+        @JvmSynthetic internal fun from(betaServerToolUsage: BetaServerToolUsage) = apply {
             webFetchRequests = betaServerToolUsage.webFetchRequests
             webSearchRequests = betaServerToolUsage.webSearchRequests
             additionalProperties = betaServerToolUsage.additionalProperties.toMutableMap()

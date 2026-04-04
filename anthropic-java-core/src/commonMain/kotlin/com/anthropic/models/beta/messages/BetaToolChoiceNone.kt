@@ -51,7 +51,7 @@ private constructor(
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [BetaToolChoiceNone]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaToolChoiceNone]. */
@@ -60,7 +60,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("none")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaToolChoiceNone: BetaToolChoiceNone) = apply {
+        @JvmSynthetic internal fun from(betaToolChoiceNone: BetaToolChoiceNone) = apply {
             type = betaToolChoiceNone.type
             additionalProperties = betaToolChoiceNone.additionalProperties.toMutableMap()
         }

@@ -124,7 +124,7 @@ private constructor(
          * .toolUseId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaCodeExecutionToolResultBlockParam]. */
@@ -136,7 +136,7 @@ private constructor(
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             betaCodeExecutionToolResultBlockParam: BetaCodeExecutionToolResultBlockParam
         ) = apply {
             content = betaCodeExecutionToolResultBlockParam.content

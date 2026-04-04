@@ -74,7 +74,7 @@ private constructor(
          * .message()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [InvalidRequestError]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("invalid_request_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(invalidRequestError: InvalidRequestError) = apply {
+        @JvmSynthetic internal fun from(invalidRequestError: InvalidRequestError) = apply {
             message = invalidRequestError.message
             type = invalidRequestError.type
             additionalProperties = invalidRequestError.additionalProperties.toMutableMap()

@@ -87,7 +87,7 @@ private constructor(
          * .data()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [PlainTextSource]. */
@@ -98,7 +98,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("text")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(plainTextSource: PlainTextSource) = apply {
+        @JvmSynthetic internal fun from(plainTextSource: PlainTextSource) = apply {
             data = plainTextSource.data
             mediaType = plainTextSource.mediaType
             type = plainTextSource.type

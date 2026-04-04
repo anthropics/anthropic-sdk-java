@@ -61,7 +61,7 @@ private constructor(
          * .enabled()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaCitationConfig]. */
@@ -70,7 +70,7 @@ private constructor(
         private var enabled: JsonField<Boolean>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaCitationConfig: BetaCitationConfig) = apply {
+        @JvmSynthetic internal fun from(betaCitationConfig: BetaCitationConfig) = apply {
             enabled = betaCitationConfig.enabled
             additionalProperties = betaCitationConfig.additionalProperties.toMutableMap()
         }

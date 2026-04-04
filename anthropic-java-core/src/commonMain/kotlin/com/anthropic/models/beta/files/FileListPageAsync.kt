@@ -85,7 +85,7 @@ private constructor(
          * .response()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [FileListPageAsync]. */
@@ -96,7 +96,7 @@ private constructor(
         private var params: FileListParams? = null
         private var response: FileListPageResponse? = null
 
-        internal fun from(fileListPageAsync: FileListPageAsync) = apply {
+        @JvmSynthetic internal fun from(fileListPageAsync: FileListPageAsync) = apply {
             service = fileListPageAsync.service
             streamHandlerExecutor = fileListPageAsync.streamHandlerExecutor
             params = fileListPageAsync.params

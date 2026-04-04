@@ -87,7 +87,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of
          * [BetaClearThinking20251015Edit].
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaClearThinking20251015Edit]. */
@@ -97,7 +97,7 @@ private constructor(
         private var keep: JsonField<Keep> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaClearThinking20251015Edit: BetaClearThinking20251015Edit) = apply {
+        @JvmSynthetic internal fun from(betaClearThinking20251015Edit: BetaClearThinking20251015Edit) = apply {
             type = betaClearThinking20251015Edit.type
             keep = betaClearThinking20251015Edit.keep
             additionalProperties = betaClearThinking20251015Edit.additionalProperties.toMutableMap()
@@ -338,15 +338,13 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofBetaThinkingTurns(betaThinkingTurns: BetaThinkingTurns) =
+            @JvmStatic fun ofBetaThinkingTurns(betaThinkingTurns: BetaThinkingTurns) =
                 Keep(betaThinkingTurns = betaThinkingTurns)
 
-            @JvmStatic
-            fun ofBetaAllThinkingTurns(betaAllThinkingTurns: BetaAllThinkingTurns) =
+            @JvmStatic fun ofBetaAllThinkingTurns(betaAllThinkingTurns: BetaAllThinkingTurns) =
                 Keep(betaAllThinkingTurns = betaAllThinkingTurns)
 
-            fun ofAll() = Keep(all = JsonValue.from("all"))
+            @JvmStatic fun ofAll() = Keep(all = JsonValue.from("all"))
         }
 
         /** An interface that defines how to map each variant of [Keep] to a value of type [T]. */

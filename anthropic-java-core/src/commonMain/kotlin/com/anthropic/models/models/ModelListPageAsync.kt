@@ -85,7 +85,7 @@ private constructor(
          * .response()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ModelListPageAsync]. */
@@ -96,7 +96,7 @@ private constructor(
         private var params: ModelListParams? = null
         private var response: ModelListPageResponse? = null
 
-        internal fun from(modelListPageAsync: ModelListPageAsync) = apply {
+        @JvmSynthetic internal fun from(modelListPageAsync: ModelListPageAsync) = apply {
             service = modelListPageAsync.service
             streamHandlerExecutor = modelListPageAsync.streamHandlerExecutor
             params = modelListPageAsync.params

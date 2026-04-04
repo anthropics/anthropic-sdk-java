@@ -192,7 +192,7 @@ private constructor(
          * .startBlockIndex()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaCitationContentBlockLocation]. */
@@ -207,7 +207,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("content_block_location")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaCitationContentBlockLocation: BetaCitationContentBlockLocation) =
+        @JvmSynthetic internal fun from(betaCitationContentBlockLocation: BetaCitationContentBlockLocation) =
             apply {
                 citedText = betaCitationContentBlockLocation.citedText
                 documentIndex = betaCitationContentBlockLocation.documentIndex

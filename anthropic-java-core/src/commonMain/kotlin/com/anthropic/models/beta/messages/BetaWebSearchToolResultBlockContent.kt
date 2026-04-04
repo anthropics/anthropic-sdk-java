@@ -141,12 +141,10 @@ private constructor(
 
     companion object {
 
-        @JvmStatic
-        fun ofError(error: BetaWebSearchToolResultError) =
+        @JvmStatic fun ofError(error: BetaWebSearchToolResultError) =
             BetaWebSearchToolResultBlockContent(error = error)
 
-        @JvmStatic
-        fun ofResultBlocks(resultBlocks: List<BetaWebSearchResultBlock>) =
+        @JvmStatic fun ofResultBlocks(resultBlocks: List<BetaWebSearchResultBlock>) =
             BetaWebSearchToolResultBlockContent(resultBlocks = resultBlocks.toImmutable())
     }
 

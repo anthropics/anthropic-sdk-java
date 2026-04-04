@@ -254,7 +254,7 @@ private constructor(
          * .thinking()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ModelCapabilities]. */
@@ -271,7 +271,7 @@ private constructor(
         private var thinking: JsonField<ThinkingCapability>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(modelCapabilities: ModelCapabilities) = apply {
+        @JvmSynthetic internal fun from(modelCapabilities: ModelCapabilities) = apply {
             batch = modelCapabilities.batch
             citations = modelCapabilities.citations
             codeExecution = modelCapabilities.codeExecution

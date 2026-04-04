@@ -29,7 +29,7 @@ private constructor(private val headers: Headers, private val body: JsonValue, c
          * .body()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [UnprocessableEntityException]. */
@@ -39,7 +39,7 @@ private constructor(private val headers: Headers, private val body: JsonValue, c
         private var body: JsonValue? = null
         private var cause: Throwable? = null
 
-        internal fun from(unprocessableEntityException: UnprocessableEntityException) = apply {
+        @JvmSynthetic internal fun from(unprocessableEntityException: UnprocessableEntityException) = apply {
             headers = unprocessableEntityException.headers
             body = unprocessableEntityException.body
             cause = unprocessableEntityException.cause

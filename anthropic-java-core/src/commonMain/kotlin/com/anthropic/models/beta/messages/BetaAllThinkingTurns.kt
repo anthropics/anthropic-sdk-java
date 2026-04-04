@@ -50,7 +50,7 @@ private constructor(
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [BetaAllThinkingTurns]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaAllThinkingTurns]. */
@@ -59,7 +59,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("all")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaAllThinkingTurns: BetaAllThinkingTurns) = apply {
+        @JvmSynthetic internal fun from(betaAllThinkingTurns: BetaAllThinkingTurns) = apply {
             type = betaAllThinkingTurns.type
             additionalProperties = betaAllThinkingTurns.additionalProperties.toMutableMap()
         }

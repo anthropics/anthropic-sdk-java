@@ -111,7 +111,7 @@ private constructor(
          * .text()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaTextBlock]. */
@@ -122,7 +122,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("text")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaTextBlock: BetaTextBlock) = apply {
+        @JvmSynthetic internal fun from(betaTextBlock: BetaTextBlock) = apply {
             citations = betaTextBlock.citations.map { it.toMutableList() }
             text = betaTextBlock.text
             type = betaTextBlock.type

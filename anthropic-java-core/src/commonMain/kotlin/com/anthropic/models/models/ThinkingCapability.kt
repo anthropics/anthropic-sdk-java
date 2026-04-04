@@ -82,7 +82,7 @@ private constructor(
          * .types()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [ThinkingCapability]. */
@@ -92,7 +92,7 @@ private constructor(
         private var types: JsonField<ThinkingTypes>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(thinkingCapability: ThinkingCapability) = apply {
+        @JvmSynthetic internal fun from(thinkingCapability: ThinkingCapability) = apply {
             supported = thinkingCapability.supported
             types = thinkingCapability.types
             additionalProperties = thinkingCapability.additionalProperties.toMutableMap()

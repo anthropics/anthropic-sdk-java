@@ -74,7 +74,7 @@ private constructor(
          * .message()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaApiError]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("api_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaApiError: BetaApiError) = apply {
+        @JvmSynthetic internal fun from(betaApiError: BetaApiError) = apply {
             message = betaApiError.message
             type = betaApiError.type
             additionalProperties = betaApiError.additionalProperties.toMutableMap()

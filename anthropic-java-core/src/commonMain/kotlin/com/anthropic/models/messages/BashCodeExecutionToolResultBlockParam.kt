@@ -130,7 +130,7 @@ private constructor(
          * .toolUseId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BashCodeExecutionToolResultBlockParam]. */
@@ -142,7 +142,7 @@ private constructor(
         private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             bashCodeExecutionToolResultBlockParam: BashCodeExecutionToolResultBlockParam
         ) = apply {
             content = bashCodeExecutionToolResultBlockParam.content
@@ -438,16 +438,14 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofBashCodeExecutionToolResultErrorParam(
+            @JvmStatic fun ofBashCodeExecutionToolResultErrorParam(
                 bashCodeExecutionToolResultErrorParam: BashCodeExecutionToolResultErrorParam
             ) =
                 Content(
                     bashCodeExecutionToolResultErrorParam = bashCodeExecutionToolResultErrorParam
                 )
 
-            @JvmStatic
-            fun ofBashCodeExecutionResultBlockParam(
+            @JvmStatic fun ofBashCodeExecutionResultBlockParam(
                 bashCodeExecutionResultBlockParam: BashCodeExecutionResultBlockParam
             ) = Content(bashCodeExecutionResultBlockParam = bashCodeExecutionResultBlockParam)
         }

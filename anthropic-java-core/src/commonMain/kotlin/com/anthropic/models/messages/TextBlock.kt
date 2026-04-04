@@ -150,7 +150,7 @@ private constructor(
          * .text()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [TextBlock]. */
@@ -161,7 +161,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("text")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(textBlock: TextBlock) = apply {
+        @JvmSynthetic internal fun from(textBlock: TextBlock) = apply {
             citations = textBlock.citations.map { it.toMutableList() }
             text = textBlock.text
             type = textBlock.type

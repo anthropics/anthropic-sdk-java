@@ -85,7 +85,7 @@ private constructor(
          * .type()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [SkillDeleteResponse]. */
@@ -95,7 +95,7 @@ private constructor(
         private var type: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(skillDeleteResponse: SkillDeleteResponse) = apply {
+        @JvmSynthetic internal fun from(skillDeleteResponse: SkillDeleteResponse) = apply {
             id = skillDeleteResponse.id
             type = skillDeleteResponse.type
             additionalProperties = skillDeleteResponse.additionalProperties.toMutableMap()

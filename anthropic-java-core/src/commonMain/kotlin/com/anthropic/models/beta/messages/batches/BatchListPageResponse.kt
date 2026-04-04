@@ -122,7 +122,7 @@ private constructor(
          * .lastId()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BatchListPageResponse]. */
@@ -134,7 +134,7 @@ private constructor(
         private var lastId: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(batchListPageResponse: BatchListPageResponse) = apply {
+        @JvmSynthetic internal fun from(batchListPageResponse: BatchListPageResponse) = apply {
             data = batchListPageResponse.data.map { it.toMutableList() }
             firstId = batchListPageResponse.firstId
             hasMore = batchListPageResponse.hasMore

@@ -80,7 +80,7 @@ private constructor(
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [BetaContainerParams]. */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaContainerParams]. */
@@ -90,7 +90,7 @@ private constructor(
         private var skills: JsonField<MutableList<BetaSkillParams>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaContainerParams: BetaContainerParams) = apply {
+        @JvmSynthetic internal fun from(betaContainerParams: BetaContainerParams) = apply {
             id = betaContainerParams.id
             skills = betaContainerParams.skills.map { it.toMutableList() }
             additionalProperties = betaContainerParams.additionalProperties.toMutableMap()

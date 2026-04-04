@@ -110,7 +110,7 @@ private constructor(
          * .content()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaCompactionBlockParam]. */
@@ -121,7 +121,7 @@ private constructor(
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaCompactionBlockParam: BetaCompactionBlockParam) = apply {
+        @JvmSynthetic internal fun from(betaCompactionBlockParam: BetaCompactionBlockParam) = apply {
             content = betaCompactionBlockParam.content
             type = betaCompactionBlockParam.type
             cacheControl = betaCompactionBlockParam.cacheControl

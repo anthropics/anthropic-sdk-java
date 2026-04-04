@@ -74,7 +74,7 @@ private constructor(
          * .index()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [RawContentBlockStopEvent]. */
@@ -84,7 +84,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("content_block_stop")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(rawContentBlockStopEvent: RawContentBlockStopEvent) = apply {
+        @JvmSynthetic internal fun from(rawContentBlockStopEvent: RawContentBlockStopEvent) = apply {
             index = rawContentBlockStopEvent.index
             type = rawContentBlockStopEvent.type
             additionalProperties = rawContentBlockStopEvent.additionalProperties.toMutableMap()

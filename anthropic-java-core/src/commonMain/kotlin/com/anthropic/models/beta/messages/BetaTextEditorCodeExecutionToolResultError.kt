@@ -111,7 +111,7 @@ private constructor(
          * .errorMessage()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaTextEditorCodeExecutionToolResultError]. */
@@ -122,7 +122,7 @@ private constructor(
         private var type: JsonValue = JsonValue.from("text_editor_code_execution_tool_result_error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             betaTextEditorCodeExecutionToolResultError: BetaTextEditorCodeExecutionToolResultError
         ) = apply {
             errorCode = betaTextEditorCodeExecutionToolResultError.errorCode
@@ -275,7 +275,7 @@ private constructor(
 
             val FILE_NOT_FOUND = of("file_not_found")
 
-            fun of(value: String) = ErrorCode(JsonField.of(value))
+            @JvmStatic fun of(value: String) = ErrorCode(JsonField.of(value))
         }
 
         /** An enum containing [ErrorCode]'s known values. */

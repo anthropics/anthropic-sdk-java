@@ -138,7 +138,7 @@ private constructor(
          * .url()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [CitationsWebSearchResultLocation]. */
@@ -151,7 +151,7 @@ private constructor(
         private var url: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(citationsWebSearchResultLocation: CitationsWebSearchResultLocation) =
+        @JvmSynthetic internal fun from(citationsWebSearchResultLocation: CitationsWebSearchResultLocation) =
             apply {
                 citedText = citationsWebSearchResultLocation.citedText
                 encryptedIndex = citationsWebSearchResultLocation.encryptedIndex

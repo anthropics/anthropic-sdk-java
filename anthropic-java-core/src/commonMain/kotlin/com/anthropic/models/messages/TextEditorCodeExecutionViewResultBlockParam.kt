@@ -140,7 +140,7 @@ private constructor(
          * .fileType()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [TextEditorCodeExecutionViewResultBlockParam]. */
@@ -154,7 +154,7 @@ private constructor(
         private var totalLines: JsonField<Long> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(
+        @JvmSynthetic internal fun from(
             textEditorCodeExecutionViewResultBlockParam: TextEditorCodeExecutionViewResultBlockParam
         ) = apply {
             content = textEditorCodeExecutionViewResultBlockParam.content
@@ -369,7 +369,7 @@ private constructor(
 
             val PDF = of("pdf")
 
-            fun of(value: String) = FileType(JsonField.of(value))
+            @JvmStatic fun of(value: String) = FileType(JsonField.of(value))
         }
 
         /** An enum containing [FileType]'s known values. */

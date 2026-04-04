@@ -120,7 +120,7 @@ private constructor(
          * .url()
          * ```
          */
-        fun builder() = Builder()
+        @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaWebFetchBlockParam]. */
@@ -132,7 +132,7 @@ private constructor(
         private var retrievedAt: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(betaWebFetchBlockParam: BetaWebFetchBlockParam) = apply {
+        @JvmSynthetic internal fun from(betaWebFetchBlockParam: BetaWebFetchBlockParam) = apply {
             content = betaWebFetchBlockParam.content
             type = betaWebFetchBlockParam.type
             url = betaWebFetchBlockParam.url
