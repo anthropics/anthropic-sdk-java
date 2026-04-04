@@ -3989,9 +3989,9 @@ class PetComponent(private val client: HttpClient) {
 
     // REST — standard CRUD
     suspend fun get(id: Long): Pet = client.get("/pet/$id").body()
-    suspend fun create(pet: Pet): Pet = client.post("/pet") { setBody(pet) }.body()
-    suspend fun update(id: Long, pet: Pet): Pet = client.put("/pet/$id") { setBody(pet) }.body()
-    suspend fun delete(id: Long) = client.delete("/pet/$id")
+    suspend fun create(pet: Pet): AuditEvent<Pet> = client.post("/pet") { setBody(pet) }.body()
+    suspend fun update(id: Long, pet: Pet): AuditEvent<Pet> = client.put("/pet/$id") { setBody(pet) }.body()
+    suspend fun delete(id: Long): AuditEvent<Pet> = client.delete("/pet/$id")
     suspend fun list(status: String? = null): List<Pet> = client.get("/pet/findByStatus") {
         status?.let { parameter("status", it) }
     }.body()
@@ -4010,7 +4010,7 @@ class PetComponent(private val client: HttpClient) {
         client.webSocket("/pet/ws", block)
 
     // JSON Patch — partial update (RFC 6902)
-    suspend fun patch(id: Long, operations: List<PatchOperation>): Pet =
+    suspend fun patch(id: Long, operations: List<PatchOperation>): AuditEvent<Pet> =
         client.patch("/pet/$id") {
             contentType(ContentType("application", "json-patch+json"))
             setBody(operations)
