@@ -4308,3 +4308,130 @@ fun Route.petComponent(repo: PetRepository) {
 ```
 
 **One event model. Two transports. All mutations are patches.**
+
+### WebDAV adds DB locking + JSON Schema validation
+
+WebDAV methods extend the component with database-level locking and schema enforcement:
+
+| WebDAV Method | Maps To | DB Effect |
+|---|---|---|
+| `LOCK /pet/1` | Acquire exclusive lock | `SELECT ... FOR UPDATE` / Mutex |
+| `UNLOCK /pet/1` | Release lock | Release row lock / Mutex |
+| `PROPFIND /pet/1` | Read properties + schema | Returns JSON Schema + current values |
+| `PROPPATCH /pet/1` | Validated patch | JSON Schema validation before apply |
+| `MKCOL /pets` | Create collection/table | `CREATE TABLE` / ensure schema |
+| `COPY /pet/1` | Clone entity | `INSERT ... SELECT` |
+| `MOVE /pet/1` | Move entity (re-parent) | Update foreign key + delete old |
+
+```kotlin
+class PetComponent(private val client: HttpClient) {
+
+    // ... existing CRUD, SSE, WS ...
+
+    // LOCK — acquire exclusive lock before mutation (prevents concurrent edits)
+    suspend fun lock(id: Long, timeout: Duration = 30.seconds): LockToken =
+        client.request("/pet/$id") { method = HttpMethod("LOCK"); header("Timeout", "Second-${timeout.inWholeSeconds}") }.body()
+
+    // UNLOCK — release lock after mutation
+    suspend fun unlock(id: Long, token: LockToken) =
+        client.request("/pet/$id") { method = HttpMethod("UNLOCK"); header("Lock-Token", token.token) }
+
+    // PROPFIND — get JSON Schema + current property values
+    suspend fun schema(id: Long? = null): EntitySchema<Pet> =
+        client.request(if (id != null) "/pet/$id" else "/pet") { method = HttpMethod("PROPFIND") }.body()
+
+    // PROPPATCH — validated partial update (JSON Schema enforced)
+    suspend fun validatedPatch(id: Long, ops: List<PatchOperation>): AuditEvent<Pet> =
+        client.request("/pet/$id") { method = HttpMethod("PROPPATCH"); setBody(ops) }.body()
+
+    // MKCOL — create collection (ensure table/schema exists)
+    suspend fun ensureCollection() =
+        client.request("/pets") { method = HttpMethod("MKCOL") }
+
+    // COPY — clone entity
+    suspend fun copy(id: Long, destinationId: Long): AuditEvent<Pet> =
+        client.request("/pet/$id") { method = HttpMethod("COPY"); header("Destination", "/pet/$destinationId") }.body()
+
+    // MOVE — move entity (re-parent)
+    suspend fun move(id: Long, destinationId: Long): AuditEvent<Pet> =
+        client.request("/pet/$id") { method = HttpMethod("MOVE"); header("Destination", "/pet/$destinationId") }.body()
+}
+
+// Lock token — returned by LOCK, required by UNLOCK
+@Serializable
+data class LockToken(val token: String, val owner: String, val expiresAt: String)
+
+// Entity schema — returned by PROPFIND
+@Serializable
+data class EntitySchema<T>(
+    val jsonSchema: kotlinx.serialization.json.JsonObject,  // JSON Schema for validation
+    val properties: T?,                                      // Current values (if entity exists)
+    val lockStatus: LockToken? = null,                       // Current lock (if locked)
+)
+```
+
+```kotlin
+// Server side — WebDAV with DB locking + JSON Schema validation
+fun Route.petComponent(repo: PetRepository) {
+    // ... existing REST + SSE + WS ...
+
+    // LOCK — database row lock
+    method(HttpMethod("LOCK")) {
+        handle {
+            val id = call.parameters["id"]!!.toLong()
+            val timeout = call.request.header("Timeout")?.removePrefix("Second-")?.toLongOrNull() ?: 30
+            val token = repo.lock(id, timeout.seconds)
+            call.respond(token)
+        }
+    }
+
+    // UNLOCK — release database lock
+    method(HttpMethod("UNLOCK")) {
+        handle {
+            val id = call.parameters["id"]!!.toLong()
+            val token = call.request.header("Lock-Token")!!
+            repo.unlock(id, token)
+            call.respond(HttpStatusCode.NoContent)
+        }
+    }
+
+    // PROPFIND — return JSON Schema + current values
+    method(HttpMethod("PROPFIND")) {
+        handle {
+            val id = call.parameters["id"]?.toLongOrNull()
+            val schema = repo.getSchema()        // JSON Schema from OpenAPI spec
+            val entity = id?.let { repo.findById(it) }
+            val lock = id?.let { repo.getLock(it) }
+            call.respond(EntitySchema(jsonSchema = schema, properties = entity, lockStatus = lock))
+        }
+    }
+
+    // PROPPATCH — validate against JSON Schema, then apply
+    method(HttpMethod("PROPPATCH")) {
+        handle {
+            val id = call.parameters["id"]!!.toLong()
+            val ops = call.receive<List<PatchOperation>>()
+            val schema = repo.getSchema()
+            val current = repo.findById(id)
+            val patched = applyPatch(current, ops)
+            validateAgainstSchema(patched, schema)  // Throws if invalid
+            val event = repo.applyMutation(id, "patch", null, ops)
+            call.respond(event)
+        }
+    }
+}
+```
+
+**Lock → Validate → Patch → Audit → Broadcast:**
+```
+Client A: pet.lock(1)                          → LockToken
+Client A: pet.validatedPatch(1, [ops])         → JSON Schema check → AuditEvent → SSE/WS broadcast
+Client A: pet.unlock(1)                        → release
+Client B: pet.lock(1)                          → waits until A unlocks (Mutex/row lock)
+```
+
+**JSON Schema from OpenAPI spec is the validation source:**
+- PROPFIND returns it so clients can validate locally before sending
+- PROPPATCH enforces it server-side before applying
+- Same schema drives Compose UI form validation
+- Same schema drives DB column constraints
