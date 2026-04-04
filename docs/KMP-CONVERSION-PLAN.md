@@ -4199,3 +4199,112 @@ fun Route.petComponent(repo: PetRepository) {
 - Subscribers get `Flow<AuditEvent<T>>` — apply JSON Patch locally
 - No polling, no refetch — real-time sync via SSE
 - Audit log is a side effect of the same event stream
+
+### All HTTP methods = JSON Patch operations
+
+Every mutation is a patch operation. HTTP methods map to patch ops:
+
+| HTTP Method | JSON Patch Op | AuditEvent.action |
+|---|---|---|
+| `POST /pet` | `add` (add new entity to collection) | `"add"` |
+| `PUT /pet/1` | `replace` (replace entire entity) | `"replace"` |
+| `PATCH /pet/1` | `replace`/`add`/`remove` (partial update) | `"patch"` |
+| `DELETE /pet/1` | `remove` (remove entity) | `"remove"` |
+| `GET /pet/1` | (read — no patch, no audit) | — |
+
+```kotlin
+// Unified: every mutation is a patch operation
+class PetComponent(private val client: HttpClient) {
+
+    // GET — read only, no audit
+    suspend fun get(id: Long): Pet = client.get("/pet/$id").body()
+    suspend fun list(status: String? = null): List<Pet> = client.get("/pet/findByStatus") {
+        status?.let { parameter("status", it) }
+    }.body()
+
+    // All mutations → AuditEvent (which IS a JSON Patch message)
+    suspend fun add(pet: Pet): AuditEvent<Pet> =
+        client.post("/pet") { setBody(pet) }.body()
+
+    suspend fun replace(id: Long, pet: Pet): AuditEvent<Pet> =
+        client.put("/pet/$id") { setBody(pet) }.body()
+
+    suspend fun patch(id: Long, ops: List<PatchOperation>): AuditEvent<Pet> =
+        client.patch("/pet/$id") { setBody(ops) }.body()
+
+    suspend fun remove(id: Long): AuditEvent<Pet> =
+        client.delete("/pet/$id").body()
+
+    // SSE — receive all audit events as Flow
+    fun changes(): Flow<AuditEvent<Pet>> = flow {
+        client.sse("/pet/changes") {
+            incoming.collect { event ->
+                event.data?.let { emit(json.decodeFromString<AuditEvent<Pet>>(it)) }
+            }
+        }
+    }
+}
+```
+
+### WebSocket receives same AuditEvent as SSE
+
+SSE and WebSocket are interchangeable transports for the same event stream.
+Client chooses transport — server broadcasts to both.
+
+```kotlin
+// SSE transport (unidirectional — server → client)
+petComponent.changes()  // Flow<AuditEvent<Pet>> via SSE
+
+// WebSocket transport (bidirectional — same events + client can send mutations)
+petComponent.changesWs()  // Flow<AuditEvent<Pet>> via WebSocket
+
+// Both receive the SAME AuditEvent when any client mutates:
+// Client A: petComponent.patch(1, [replace /status "sold"])
+//   → Server broadcasts AuditEvent to:
+//     - All SSE subscribers (Flow via /pet/changes)
+//     - All WebSocket subscribers (Frame via /pet/ws)
+//   → Same JSON payload, different transport
+```
+
+```kotlin
+// Server: broadcast to both SSE and WebSocket from same SharedFlow
+class PetRepository(private val broadcast: MutableSharedFlow<AuditEvent<Pet>>) {
+
+    suspend fun applyMutation(id: Long, op: String, entity: Pet?, patch: List<PatchOperation>?): AuditEvent<Pet> {
+        val before = db.findById(id)
+        val after = when (op) {
+            "add" -> db.create(entity!!)
+            "replace" -> db.update(id, entity!!)
+            "patch" -> db.applyPatch(id, patch!!)
+            "remove" -> { db.delete(id); null }
+            else -> error("Unknown op: $op")
+        }
+        val event = AuditEvent(action = op, entityId = id.toString(), before = before, after = after, patch = patch)
+        broadcast.emit(event)  // → SSE subscribers AND WebSocket subscribers
+        return event
+    }
+}
+
+fun Route.petComponent(repo: PetRepository) {
+    // SSE transport
+    sse("/pet/changes") { repo.broadcast.collect { send(ServerSentEvent(data = json.encodeToString(it))) } }
+
+    // WebSocket transport — same events + bidirectional
+    webSocket("/pet/ws") {
+        // Send existing events to new subscriber
+        val sub = repo.broadcast.onEach { send(Frame.Text(json.encodeToString(it))) }.launchIn(this)
+
+        // Receive mutations from WebSocket client
+        for (frame in incoming) {
+            if (frame is Frame.Text) {
+                val mutation = json.decodeFromString<MutationRequest<Pet>>(frame.readText())
+                repo.applyMutation(mutation.id, mutation.op, mutation.entity, mutation.patch)
+                // AuditEvent auto-broadcast to all subscribers (including this WS client)
+            }
+        }
+        sub.cancel()
+    }
+}
+```
+
+**One event model. Two transports. All mutations are patches.**
