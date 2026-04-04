@@ -17,28 +17,11 @@ kotlin {
     }
 
     // JS target
-    js(IR) {
-        browser()
-        nodejs()
-    }
 
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-                api("com.squareup.okio:okio:3.17.0")
-                // Jackson in commonMain — enables model files to use Jackson annotations
-                // and serializers in commonMain. On JVM these work with Jackson runtime.
-                // On non-JVM platforms these are compile-time only (no Jackson runtime).
-                api("com.fasterxml.jackson.core:jackson-annotations:2.18.2")
-                api("com.fasterxml.jackson.core:jackson-core:2.18.2")
-                api("com.fasterxml.jackson.core:jackson-databind:2.18.2")
-                api("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
-                implementation("io.ktor:ktor-client-core:3.4.2")
-                implementation("io.ktor:ktor-client-content-negotiation:3.4.2")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:3.4.2")
-                api("com.squareup.wire:wire-runtime:5.3.1")
+                api(project(":api-kmp"))
             }
         }
         val commonTest by getting {
@@ -71,26 +54,6 @@ kotlin {
                 implementation("org.apache.httpcomponents.core5:httpcore5:5.2.4")
                 implementation("org.apache.httpcomponents.client5:httpclient5:5.3.1")
                 implementation("io.ktor:ktor-client-cio:3.4.2")
-            }
-        }
-        val jsMain by getting {
-            dependencies {
-                // JVM JARs as compile-only stubs — provide type signatures for commonMain
-                // code compilation on JS target. These are NOT used at JS runtime.
-                implementation("com.fasterxml.jackson.core:jackson-annotations:2.18.2")
-                implementation("com.fasterxml.jackson.core:jackson-core:2.18.2")
-                implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
-                implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
-                implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.18.2")
-                implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2")
-                implementation("com.google.errorprone:error_prone_annotations:2.33.0")
-                implementation("com.github.victools:jsonschema-generator:4.38.0")
-                implementation("com.github.victools:jsonschema-module-jackson:4.38.0")
-                implementation("com.github.victools:jsonschema-module-swagger-2:4.38.0")
-                implementation("io.swagger.core.v3:swagger-annotations:2.2.31")
-                // JVM kotlin-stdlib provides kotlin.jvm annotations (JvmStatic, JvmName, etc.)
-                // and kotlin.jvm.optionals (getOrNull, asSequence) for JS compilation
-                implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.3.20")
             }
         }
         val jvmTest by getting {
