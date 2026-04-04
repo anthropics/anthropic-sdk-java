@@ -238,7 +238,7 @@ SKIP_MOCK_TESTS=true ./gradlew :anthropic-java-core:jvmTest --no-configuration-c
 
 ## Next Steps (Priority Order)
 
-1. ~~Suspend conversion~~ **DONE** — `executeSuspend()` + `prepareSuspend()` added with default impls. Zero breaking changes.
+1. ~~Suspend conversion~~ **DONE** — `executeSuspend()` + `prepareSuspend()` added with default impls. Zero breaking changes. Services/models stay as-is.
 2. ~~`api-gen` common lib~~ **DONE** — generates KMP Kotlin from OpenAPI. Tested: Petstore (5 WireMock tests pass), Amazon SP-API (69 models).
 3. **ktor CIO server tests** 🔲 — test all serializers (JSON, XML, MsgPack, Protobuf) + all protocols (HTTPS, WSS, SSE, WebDAV, GraphQL)
 4. **Compose KMP UI generation** 🔲 — Form/List/Detail @Composable from OpenAPI schemas
