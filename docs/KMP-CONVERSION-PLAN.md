@@ -808,6 +808,52 @@ sealed class ContentBlock {
 
 **Existing Stainless models stay in jvmMain** — zero risk, backward compat for Java callers
 
+### OpenAPI → KMP Code Gen Tools (research 2024-2025)
+
+| Tool | oneOf → sealed | KMP | @Serializable | Status |
+|---|---|---|---|---|
+| **Fabrikt** (fabrikt-io) | ✅ `SEALED_INTERFACES_FOR_ONE_OF` | ❌ JVM only | ✅ | Active, best sealed class support |
+| **openapi-generator** kotlin-multiplatform | ❌ incomplete | ✅ KMP + ktor | ✅ | Active, issue #17751 for KMM |
+| **openapi2proto** → Wire | ❌ → `Any` | ✅ via Wire | ✅ via Wire | Stable |
+| **gnostic** → Wire | ❌ parse-only | ✅ via Wire | ✅ via Wire | Google, active |
+| **kotlin-openapi-generator** (jakobkmar) | ❌ | ✅ KMP-first | ✅ | Community |
+| **Stainless** | ✅ custom | ❌ JVM only | ❌ Jackson | Production (Anthropic uses) |
+| **Custom template** | ✅ buildable | ✅ buildable | ✅ buildable | Needs development |
+
+**No single tool solves: oneOf → sealed class + KMP + @Serializable**
+
+**Recommended approach: custom openapi-generator template**
+
+openapi-generator supports [custom Mustache templates](https://openapi-generator.tech/docs/templating/).
+A custom `kotlin-kmp-wire` template would:
+
+1. Read same OpenAPI YAML that Stainless uses
+2. Map `oneOf` + `discriminator` → Kotlin `sealed class` (like Fabrikt)
+3. Output `@Serializable` annotations (like openapi-generator kotlin)
+4. Target commonMain (KMP — JVM, JS, Native, Wasm)
+5. Use Wire adapters for proto/gRPC transport
+6. Use ktor client for HTTP transport
+
+```
+openapi.yaml
+    │
+    ▼
+openapi-generator (custom kotlin-kmp-wire template)
+    │  oneOf + discriminator → sealed class
+    │  schemas → @Serializable data class
+    │  paths → suspend fun (ktor client)
+    │  security → ktor Auth plugin config
+    ▼
+commonMain/kotlin/ (pure KMP — all targets)
+    ├── models/ — @Serializable sealed classes + data classes
+    ├── services/ — suspend fun with ktor HttpClient
+    └── client/ — configured ktor client (auth, retry, SSE)
+```
+
+**Fabrikt's sealed interface logic** can be ported to the custom template —
+it already solves the `oneOf` → `sealed interface` mapping with Jackson and
+kotlinx.serialization support.
+
 ### 🔲 PLANNED — Additional Non-JVM Targets
 - Native: macOS (x64/arm64), iOS (arm64/sim), Linux (x64/arm64)
 - Wasm: wasmJs, wasmWasi
