@@ -32,6 +32,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:3.4.2")
                 implementation("io.ktor:ktor-client-content-negotiation:3.4.2")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:3.4.2")
+                api("com.squareup.wire:wire-runtime:5.3.1")
             }
         }
         val commonTest by getting {
