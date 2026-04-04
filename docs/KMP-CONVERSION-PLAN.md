@@ -1337,11 +1337,59 @@ kotlin {
 - Clikt: type-safe CLI args, help text, shell completion — all KMP native
 - Same generator runs in Gradle (JVM), CI (native), dev laptop (JBang/native)
 
+### ✅ DONE — api-kmp Module Extraction (`8f27fa0`)
+- Extracted 71 commonMain + 12 jvmMain files from `anthropic-java-core` → `api-kmp/`
+- Same `com.anthropic.core` packages — zero import changes in 541 remaining files
+- `anthropic-java-core` depends on `api-kmp` via `api(project(":api-kmp"))`
+- All `internal` → public (API is OpenAPI-defined, nothing is internal)
+- Ktor extensions added: `HeadersBuilder.put(KmpValue)`, `ParametersBuilder.put(KmpValue)` (`f764ab4`)
+- Typealias Exports.kt removed — client SDK, no indirection needed (`38e12c3`)
+
+### ✅ DONE — api-gen Code Generator (`99738d9`→`ab266c1`)
+- `kmp.apigen` package in `api-kmp/src/jvmMain/` — code generator + runtime in one module
+- **OpenApiParser.kt** — swagger-parser 2.1.39 reads spec → `ParsedSpec` (schemas, paths, security)
+- **ModelGenerator.kt** — KotlinPoet emits `@Serializable` data class + sealed class + enum
+- **ServiceGenerator.kt** — KotlinPoet emits `suspend` service interfaces + ktor client factory
+- **Emitters.kt** — multi-protocol: REST, gRPC (.proto), GraphQL (.graphql), MCP (tool JSON)
+- `oneOf` + `discriminator` → `sealed class` with `@SerialName` variants (fixed: `resolveFully=false`)
+- Tested: Petstore (6 models, 3 services), Amazon SP-API Orders (69 models, 2 services)
+- Run: `./gradlew :api-kmp:generate --args="--spec openapi.yaml --output src/commonMain/kotlin --package com.example"`
+
+### ✅ DONE — Petstore WireMock Tests (`dccb8de`)
+- 5 tests, 0 failures against WireMock stubs
+- Generated models deserialize correctly: `Pet`, `Category`, `Tag`, `List<Pet>`, `Map<String, Int>`
+- POST create + GET read round-trip verified
+- Tests in `api-kmp/src/test/kotlin/io/swagger/petstore/`
+
+### ✅ DONE — Full-Stack Generation Design (`a10cbe1`)
+api-gen generates from one OpenAPI spec:
+- **Client SDK**: models + suspend services + ktor HttpClient
+- **Server**: ktor routing + request handlers
+- **Compose UI**: Form/List/Detail `@Composable` from schemas
+- **Database**: Exposed tables (JVM) / SQLDelight .sq (KMP) from schemas
+- **Proto/gRPC**: .proto messages + rpc services via Wire
+- **GraphQL**: .graphql schema + Query/Mutation
+- **MCP**: tool JSON definitions
+- **SSE/WebSocket**: `Flow<T>` streams from AsyncAPI channels
+
+### 🔲 NEXT — ktor CIO Server Tests
+- Test all serializers: JSON, XML, MsgPack, Protobuf
+- Test all protocols: HTTPS, WSS, SSE, WebDAV, GraphQL
+- ktor CIO embedded server (not WireMock) for full protocol coverage
+
+### 🔲 NEXT — Compose KMP UI Generation
+- api-gen emitter: schemas → Form/List/Detail `@Composable`
+- Schema properties → TextField/Checkbox/Dropdown components
+
+### 🔲 NEXT — Database Generation
+- api-gen emitter: schemas → Exposed tables (JVM) / SQLDelight .sq (KMP)
+- Schema properties → columns, refs → foreign keys
+
 ### 🔲 PLANNED — Additional Non-JVM Targets
 - Native: macOS (x64/arm64), iOS (arm64/sim), Linux (x64/arm64)
 - Wasm: wasmJs, wasmWasi
 - Same jsMain stub approach + native actual impls
-- Same `kotlin.jvm` blocker applies to all non-JVM targets
+- JS blocked on `kotlin.jvm` annotations → fix via Wire .proto code gen
 
 ---
 
