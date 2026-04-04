@@ -212,6 +212,7 @@ class McpEmitter : ProtocolEmitter {
 val ALL_EMITTERS = listOf(
     ComponentEmitter(),
     ComposeEmitter(),
+    DatabaseEmitter(),
     RestEmitter(),
     GrpcEmitter(),
     GraphqlEmitter(),
