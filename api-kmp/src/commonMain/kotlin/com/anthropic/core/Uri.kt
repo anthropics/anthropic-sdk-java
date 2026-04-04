@@ -40,3 +40,35 @@ value class Uri(val value: String) {
             Uri("${if (secure) "wss" else "ws"}://$host/$path")
     }
 }
+
+/** Email address — validated format. */
+@Serializable
+@JvmInline
+value class Email(val value: String) {
+    val local: String get() = value.substringBefore("@")
+    val domain: String get() = value.substringAfter("@")
+    override fun toString(): String = value
+}
+
+/** Password — toString() redacted for security. */
+@Serializable
+@JvmInline
+value class Password(val value: String) {
+    override fun toString(): String = "****"
+}
+
+/** IP address (v4 or v6). */
+@Serializable
+@JvmInline
+value class IpAddress(val value: String) {
+    val isV4: Boolean get() = "." in value && ":" !in value
+    val isV6: Boolean get() = ":" in value
+    override fun toString(): String = value
+}
+
+/** Hostname. */
+@Serializable
+@JvmInline
+value class Hostname(val value: String) {
+    override fun toString(): String = value
+}

@@ -175,7 +175,19 @@ class ModelGenerator(
             "Boolean" -> BOOLEAN
             "Any" -> ANY
             "Url" -> ClassName("com.anthropic.core", "Uri")
+            "Uri" -> ClassName("com.anthropic.core", "Uri")
             "Instant" -> ClassName("kotlinx.datetime", "Instant")
+            "LocalDate" -> ClassName("kotlinx.datetime", "LocalDate")
+            "LocalTime" -> ClassName("kotlinx.datetime", "LocalTime")
+            "Duration" -> ClassName("kotlin.time", "Duration")
+            "Uuid" -> ClassName("kotlin.uuid", "Uuid")
+            "Float" -> FLOAT
+            "Email" -> ClassName("com.anthropic.core", "Email")
+            "IpAddress" -> ClassName("com.anthropic.core", "IpAddress")
+            "Hostname" -> ClassName("com.anthropic.core", "Hostname")
+            "Base64" -> ClassName("kotlin", "ByteArray")
+            "Binary" -> ClassName("okio", "ByteString")
+            "Password" -> ClassName("com.anthropic.core", "Password")
             "JsonObject" -> ClassName("kotlinx.serialization.json", "JsonObject")
             else -> {
                 if (type.startsWith("List<")) {

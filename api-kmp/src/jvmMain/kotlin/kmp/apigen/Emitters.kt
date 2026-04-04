@@ -102,8 +102,14 @@ class GrpcEmitter : ProtocolEmitter {
         "Long" -> "int64"
         "Double" -> "double"
         "Boolean" -> "bool"
-            "Url" -> "string"
-            "Instant" -> "string"
+            "Url", "Uri" -> "string"
+            "Instant", "LocalDate", "LocalTime" -> "string"
+            "Duration" -> "string"
+            "Uuid" -> "string"
+            "Email", "IpAddress", "Hostname", "Password" -> "string"
+            "Float" -> "float"
+            "Base64" -> "bytes"
+            "Binary" -> "bytes"
         else -> if (type.startsWith("List<")) "repeated ${protoType(type.removePrefix("List<").removeSuffix(">"))}"
                 else type
     }

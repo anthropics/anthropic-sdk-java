@@ -150,9 +150,23 @@ object OpenApiParser {
     private fun resolveType(schema: Schema<*>): String {
         schema.`$ref`?.let { return it.substringAfterLast("/") }
         return when (schema.type) {
-            "string" -> when (schema.format) { "date-time" -> "Instant"; "uri", "url" -> "Url"; else -> "String" }
+            "string" -> when (schema.format) {
+                "date-time" -> "Instant"
+                "date" -> "LocalDate"
+                "time" -> "LocalTime"
+                "duration" -> "Duration"
+                "uri", "url" -> "Uri"
+                "email" -> "Email"
+                "uuid" -> "Uuid"
+                "ipv4", "ipv6" -> "IpAddress"
+                "hostname" -> "Hostname"
+                "byte" -> "Base64"
+                "binary" -> "Binary"
+                "password" -> "Password"
+                else -> "String"
+            }
             "integer" -> if (schema.format == "int64") "Long" else "Int"
-            "number" -> "Double"
+            "number" -> if (schema.format == "float") "Float" else "Double"
             "boolean" -> "Boolean"
             "array" -> "List<${resolveType(schema.items ?: return "Any")}>"
             "object" -> if (schema.additionalProperties is Schema<*>) {
