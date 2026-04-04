@@ -1,5 +1,8 @@
 package kmp.apigen
 
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 import java.io.File
 
 /**
@@ -216,8 +219,23 @@ class McpEmitter : ProtocolEmitter {
     }
 }
 
-/** Registry of all protocol emitters */
-val ALL_EMITTERS = listOf(
+/** Koin module — all protocol emitters registered for DI */
+val emittersModule = module {
+    singleOf(::ComponentEmitter) bind ProtocolEmitter::class
+    singleOf(::ComposeEmitter) bind ProtocolEmitter::class
+    singleOf(::DatabaseEmitter) bind ProtocolEmitter::class
+    singleOf(::HtmlEmitter) bind ProtocolEmitter::class
+    singleOf(::TestEmitter) bind ProtocolEmitter::class
+    singleOf(::RestEmitter) bind ProtocolEmitter::class
+    singleOf(::GrpcEmitter) bind ProtocolEmitter::class
+    singleOf(::GraphqlFullEmitter) bind ProtocolEmitter::class
+    singleOf(::McpEmitter) bind ProtocolEmitter::class
+    singleOf(::FabriktEmitter) bind ProtocolEmitter::class
+    singleOf(::FakerTestDataEmitter) bind ProtocolEmitter::class
+}
+
+/** Convenience: all emitters (for backward compat / non-Koin usage) */
+val ALL_EMITTERS: List<ProtocolEmitter> get() = listOf(
     ComponentEmitter(),
     ComposeEmitter(),
     DatabaseEmitter(),
@@ -227,4 +245,6 @@ val ALL_EMITTERS = listOf(
     GrpcEmitter(),
     GraphqlFullEmitter(),
     McpEmitter(),
+    FabriktEmitter(),
+    FakerTestDataEmitter(),
 )

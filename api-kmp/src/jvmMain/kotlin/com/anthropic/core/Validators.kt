@@ -176,8 +176,6 @@ object Validators {
         sb.appendLine("END:VCALENDAR")
         return sb.toString()
     }
-}
-
 
     // === GeoIP + Country → ICU/CLDR linking ===
 
@@ -315,3 +313,79 @@ object Validators {
         put("measurementSystem", countryToMeasurementSystem(geoIp.country))
         put("firstDayOfWeek", countryToFirstDayOfWeek(geoIp.country).toString())
     }
+
+    // === Language → ICU Script/Run Detection ===
+
+    /** Language → primary script (ICU UScript). "ja" → "Jpan", "ar" → "Arab", "zh" → "Hans" */
+    fun languageToScript(language: Language): String {
+        val locale = com.ibm.icu.util.ULocale(language.value)
+        val scripts = com.ibm.icu.lang.UScript.getCode(locale)
+        return if (scripts != null && scripts.isNotEmpty()) {
+            com.ibm.icu.lang.UScript.getShortName(scripts[0])
+        } else "Latn"
+    }
+
+    /** Language → writing direction. "ar" → RTL, "en" → LTR */
+    fun languageToDirection(language: Language): String {
+        val script = languageToScript(language)
+        val rtlScripts = setOf("Arab", "Hebr", "Syrc", "Thaa", "Mand", "Nkoo", "Adlm", "Rohg", "Yezi")
+        return if (script in rtlScripts) "RTL" else "LTR"
+    }
+
+    /** Detect scripts in text (ICU script run detection). Returns list of (script, startIndex, endIndex). */
+    fun detectScriptRuns(text: String): List<Triple<String, Int, Int>> {
+        val runs = mutableListOf<Triple<String, Int, Int>>()
+        if (text.isEmpty()) return runs
+        var currentScript = com.ibm.icu.lang.UScript.COMMON
+        var runStart = 0
+        for (i in text.indices) {
+            val cp = text.codePointAt(i)
+            val script = com.ibm.icu.lang.UScript.getScript(cp)
+            if (script != com.ibm.icu.lang.UScript.COMMON &&
+                script != com.ibm.icu.lang.UScript.INHERITED &&
+                script != currentScript) {
+                if (currentScript != com.ibm.icu.lang.UScript.COMMON) {
+                    runs.add(Triple(com.ibm.icu.lang.UScript.getShortName(currentScript), runStart, i))
+                }
+                currentScript = script
+                runStart = i
+            }
+        }
+        if (currentScript != com.ibm.icu.lang.UScript.COMMON) {
+            runs.add(Triple(com.ibm.icu.lang.UScript.getShortName(currentScript), runStart, text.length))
+        }
+        return runs
+    }
+
+    /** Detect dominant script in text. "Hello世界" → "Hani" (CJK has more weight). */
+    fun detectDominantScript(text: String): String {
+        val runs = detectScriptRuns(text)
+        if (runs.isEmpty()) return "Latn"
+        return runs.maxByOrNull { it.third - it.second }?.first ?: "Latn"
+    }
+
+    /** Language → exemplar characters (ICU CLDR). "ja" → hiragana+katakana+kanji exemplars */
+    fun languageToExemplarChars(language: Language): String {
+        val locale = com.ibm.icu.util.ULocale(language.value)
+        val ld = com.ibm.icu.util.LocaleData.getInstance(locale)
+        return ld.getExemplarSet(0, com.ibm.icu.util.LocaleData.ES_STANDARD).toPattern(false)
+    }
+
+    /** Country → script (via primary language). "JP" → "Jpan", "SA" → "Arab" */
+    fun countryToScript(country: Country): String =
+        languageToScript(countryToLanguage(country))
+
+    /** Country → text direction. "SA" → RTL, "US" → LTR, "IL" → RTL */
+    fun countryToDirection(country: Country): String =
+        languageToDirection(countryToLanguage(country))
+
+    /** Full locale context including script + direction. */
+    fun geoIpToFullContext(geoIp: GeoIp): Map<String, String> = buildMap {
+        putAll(geoIpToLocalContext(geoIp))
+        val lang = countryToLanguage(geoIp.country)
+        put("language", lang.value)
+        put("script", languageToScript(lang))
+        put("direction", languageToDirection(lang))
+        put("exemplarChars", languageToExemplarChars(lang))
+    }
+}

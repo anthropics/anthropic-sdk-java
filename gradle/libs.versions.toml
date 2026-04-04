@@ -25,6 +25,9 @@ libphonenumber = "8.13.50"
 ezvcard = "0.12.1"
 ical4j = "4.0.7"
 icu4j = "76.1"
+fabrikt = "26.1.0"
+kotlin-faker = "1.16.0"
+koin = "4.0.4"
 
 [libraries]
 # Kotlin
@@ -75,6 +78,10 @@ victools-jackson = { module = "com.github.victools:jsonschema-module-jackson", v
 victools-swagger = { module = "com.github.victools:jsonschema-module-swagger-2", version.ref = "victools" }
 swagger-annotations = { module = "io.swagger.core.v3:swagger-annotations", version.ref = "swagger-annotations" }
 swagger-parser = { module = "io.swagger.parser.v3:swagger-parser", version.ref = "swagger-parser" }
+fabrikt = { module = "com.cjbooms:fabrikt", version.ref = "fabrikt" }
+kotlin-faker = { module = "io.github.serpro69:kotlin-faker", version.ref = "kotlin-faker" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-ktor = { module = "io.insert-koin:koin-ktor", version.ref = "koin" }
 errorprone = { module = "com.google.errorprone:error_prone_annotations", version.ref = "errorprone" }
 
 # Test

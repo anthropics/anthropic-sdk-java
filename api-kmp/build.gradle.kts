@@ -61,6 +61,9 @@ kotlin {
                 implementation("org.mnode.ical4j:ical4j:4.0.7")  // iCalendar (.ics)
                 implementation("io.swagger.parser.v3:swagger-parser:2.1.39")
                 implementation("com.squareup:kotlinpoet:2.2.0")
+                implementation("com.cjbooms:fabrikt:26.1.0")
+                implementation("io.github.serpro69:kotlin-faker:1.16.0")
+                implementation("io.insert-koin:koin-core:4.0.4")
             }
         }
         val jvmTest by getting {

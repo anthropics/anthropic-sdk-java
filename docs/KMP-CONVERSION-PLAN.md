@@ -4877,3 +4877,237 @@ val ics = Validators.toICal(eventFields)  // → .ics string
 | `Uuid` | uuid | string | TEXT |
 | `ByteArray` | byte | bytes | BLOB |
 | `ByteString` | binary | bytes | BLOB |
+
+### Linked Type Chain — PlantUML
+
+```plantuml
+@startuml linked-type-chain
+skinparam linetype ortho
+skinparam packageStyle rectangle
+
+package "Value Types" {
+  class IpAddress { value: String }
+  class Country { value: String }
+  class Language { value: String }
+  class Locale { value: String }
+  class Currency { value: String }
+  class Timezone { value: String }
+  class Phone { value: String }
+  class GeoPoint { lon: Double\nlat: Double }
+  class PostalAddress { street, city,\nstate, postalCode,\ncountry }
+  class PersonName { given, family,\nprefix, suffix }
+}
+
+package "GeoIP (links all)" {
+  class GeoIp {
+    ip: IpAddress
+    country: Country
+    city: String
+    timezone: Timezone
+    locale: Locale
+    currency: Currency
+    phoneCode: String
+    location: GeoPoint
+  }
+}
+
+package "ICU CLDR (per Country)" {
+  class "ULocale" as UL
+  class "Calendar" as Cal
+  class "Script" as Scr
+  class "Direction" as Dir
+  class "DateFormat" as DF
+  class "TimeFormat" as TF
+  class "NumberFormat" as NF
+  class "CurrencyFormat" as CF
+  class "MeasurementSystem" as MS
+  class "FirstDayOfWeek" as FDW
+  class "Weekend" as WE
+  class "ExemplarChars" as EC
+}
+
+package "Validators (JVM)" {
+  class "apache\ncommons-validator" as ACV {
+    email, url, ip,\ndomain, creditcard,\nISBN, ISSN, ISIN,\nLuhn, regex, date
+  }
+  class "google\nlibphonenumber" as GLP {
+    validate, format E.164,\ncountryCode
+  }
+  class "ICU4J" as ICU {
+    ULocale, Calendar,\nUScript, Bidi,\nDateFormat, NumberFormat
+  }
+  class "ez-vcard" as EZV {
+    parse .vcf → map\nmap → .vcf string
+  }
+  class "ical4j" as IC4 {
+    parse .ics → events\nevents → .ics string
+  }
+}
+
+' Links
+IpAddress --> GeoIp : geoIpLookup
+GeoIp --> Country
+GeoIp --> Timezone
+GeoIp --> Currency
+GeoIp --> Locale
+GeoIp --> GeoPoint
+Country --> UL : countryToLocale
+Country --> Language : countryToLanguage
+Country --> Phone : countryToPhoneCode
+Country --> Currency : countryToCurrency
+Country --> Timezone : countryToTimezone
+Country --> Cal : countryToCalendar
+Country --> Scr : countryToScript
+Country --> Dir : countryToDirection
+Language --> Scr : languageToScript
+Language --> Dir : languageToDirection
+Language --> EC : languageToExemplarChars
+UL --> DF : countryToDateFormat
+UL --> TF : countryToTimeFormat
+UL --> NF : countryToNumberFormat
+UL --> CF : countryToCurrencyFormat
+UL --> MS : countryToMeasurementSystem
+Cal --> FDW : firstDayOfWeek
+Cal --> WE : weekendOnset/Cease
+
+' Validator links
+Email ..> ACV : validateEmail
+Phone ..> GLP : validatePhone
+IpAddress ..> ACV : validateIp
+Country ..> ICU : ULocale
+PersonName ..> EZV : vCard
+PersonName ..> IC4 : iCal attendee
+@enduml
+```
+
+### Component Architecture — PlantUML
+
+```plantuml
+@startuml component-architecture
+skinparam linetype ortho
+
+package "OpenAPI Spec" {
+  [openapi.yaml] as SPEC
+}
+
+package "api-gen Emitters" {
+  [ModelGenerator] as MG
+  [ServiceGenerator] as SG
+  [ComponentEmitter] as CE
+  [ComposeEmitter] as CU
+  [HtmlEmitter] as HE
+  [DatabaseEmitter] as DE
+  [GraphqlFullEmitter] as GE
+  [GrpcEmitter] as GR
+  [McpEmitter] as MC
+  [TestEmitter] as TE
+}
+
+package "Generated Output" {
+  [Models\n@Serializable] as MOD
+  [Services\nopen suspend] as SVC
+  [Component<T>\nCRUD + Flow] as COMP
+  [Compose UI\nForm/List/Detail] as COMPUI
+  [HTML UI\nTable/Form/Detail] as HTML
+  [Database\nExposed + .sq] as DB
+  [GraphQL\nschema + resolvers] as GQL
+  [Proto\n.proto + Wire] as PROTO
+  [MCP\ntool JSON] as MCP
+  [Tests\nktor testApp] as TST
+}
+
+package "Runtime" {
+  [ktor CIO\nHttpClient] as KTOR
+  [Wire\ngRPC + Proto] as WIRE
+  [okio\nFile I/O] as OKIO
+  [kotlinx.serialization\nJSON/MsgPack/Proto/CBOR] as KS
+  [PatchEvent<T>\nSSE + WebSocket] as PE
+}
+
+SPEC --> MG
+SPEC --> SG
+SPEC --> CE
+SPEC --> CU
+SPEC --> HE
+SPEC --> DE
+SPEC --> GE
+SPEC --> GR
+SPEC --> MC
+SPEC --> TE
+
+MG --> MOD
+SG --> SVC
+CE --> COMP
+CU --> COMPUI
+HE --> HTML
+DE --> DB
+GE --> GQL
+GR --> PROTO
+MC --> MCP
+TE --> TST
+
+COMP --> PE
+COMP --> KTOR
+COMP --> KS
+SVC --> KTOR
+PROTO --> WIRE
+DB ..> OKIO
+@enduml
+```
+
+### Script/Run Detection — Language → ICU
+
+The `Language` type is linked to ICU CLDR script detection:
+
+```
+Language("ja") → Script("Jpan") → Direction("LTR") → ExemplarChars([ぁ-ん...])
+Language("ar") → Script("Arab") → Direction("RTL") → ExemplarChars([ا-ي...])
+Language("ko") → Script("Kore") → Direction("LTR") → ExemplarChars([가-힣...])
+Language("zh") → Script("Hans") → Direction("LTR") → ExemplarChars([一-龥...])
+Language("he") → Script("Hebr") → Direction("RTL") → ExemplarChars([א-ת...])
+Language("th") → Script("Thai") → Direction("LTR") → ExemplarChars([ก-ฮ...])
+```
+
+**Script run detection** identifies mixed-script text segments:
+- `"Hello世界مرحبا"` → `[("Latn",0,5), ("Hani",5,7), ("Arab",7,12)]`
+- Used for: bidirectional text layout, font selection, input validation, search tokenization
+
+**Validators.kt functions:**
+- `languageToScript(Language)` → ISO 15924 script code
+- `languageToDirection(Language)` → "LTR" or "RTL"
+- `detectScriptRuns(text)` → list of (script, start, end)
+- `detectDominantScript(text)` → primary script code
+- `languageToExemplarChars(Language)` → CLDR exemplar set
+- `countryToScript(Country)` → via primary language
+- `countryToDirection(Country)` → via primary language
+- `geoIpToFullContext(GeoIp)` → all locale context + script + direction
+
+### Fabrikt Integration
+
+Fabrikt (`com.cjbooms:fabrikt:26.1.0`) is integrated as a `FabriktEmitter` in api-gen.
+
+**What Fabrikt provides (JVM):**
+- `oneOf` → `sealed interface` with discriminator (`SEALED_INTERFACES_FOR_ONE_OF`)
+- Jackson + kotlinx.serialization annotations on models
+- Validation annotations (jakarta.validation)
+- Spring controller stubs
+- OkHttp client stubs
+
+**How it complements api-gen (KMP):**
+```
+openapi.yaml ──→ FabriktEmitter  → sealed interfaces + OkHttp client (JVM)
+             ──→ RestEmitter     → ktor suspend + @Serializable models (KMP)
+             ──→ ComponentEmitter → Component<T> CRUD + Flow (KMP)
+             ──→ ComposeEmitter  → Form/List/Detail @Composable (KMP)
+             ──→ DatabaseEmitter → Exposed + SQLDelight (KMP)
+             ──→ GrpcEmitter    → Wire .proto (KMP)
+             ──→ GraphqlEmitter → schema + resolvers (KMP)
+             ──→ McpEmitter     → tool JSON (KMP)
+             ──→ TestEmitter    → ktor testApp (KMP)
+```
+
+**Files:**
+- `api-kmp/src/jvmMain/kotlin/kmp/apigen/FabriktEmitter.kt` — wraps Fabrikt programmatically
+- Uses reflection to invoke Fabrikt CLI/CodeGenerator (graceful fallback if not on classpath)
+- `FabriktEmitter.isAvailable()` — runtime check
+- `FabriktEmitter.generateModels()` — standalone model generation

@@ -13,6 +13,7 @@ data class ParsedSpec(
     val schemas: Map<String, ParsedSchema>,
     val paths: Map<String, ParsedPath>,
     val securitySchemes: Map<String, ParsedSecurity>,
+    val sourceFile: java.io.File? = null,
 )
 
 sealed class ParsedSchema {
@@ -84,6 +85,7 @@ object OpenApiParser {
             schemas = parseSchemas(openApi),
             paths = parsePaths(openApi),
             securitySchemes = parseSecurity(openApi),
+            sourceFile = file,
         )
     }
 
