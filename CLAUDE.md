@@ -49,25 +49,31 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | GAPS — MCP SDK Integration | L1333 | Not yet added |
 
 ### Low-Level Designs
-| Section | Line | What |
-|---|---|---|
-| **Stable Libs Strategy** | L691 | Core principle: libs replace all boilerplate |
-| **Serialization Formats** | L710 | JSON + MsgPack + Protobuf + CBOR via ktor ContentNegotiation |
-| **Custom Code → Lib Map** | L736 | 730 lines to delete, mapped to stable lib replacements |
-| **JsonField/Value = Wire** | L752 | Field presence semantics: KnownValue/Missing/Null = Wire @WireField |
-| **Deep Classification** | L780 | Nothing in com.anthropic.core is Claude-specific |
-| **ClientOptions → ktor** | L833 | Field-by-field mapping to ktor CIO plugins + OkHttp |
-| **OpenAPI Security Schemes** | L948 | OIDC/OAuth2/Bearer/Basic/MutualTLS via ktor Auth |
-| **Tool Roles + Security** | L1076 | OpenAPI/AsyncAPI/CLI/POSIX unified role model |
-| **Concurrency Control** | L1076 | Mutex + Semaphore (kotlinx.coroutines.sync) |
-| **LangChain4j Integration** | L1953 | JVM-only, ChatLanguageModel + Tokenizer |
-| **Apache Camel Integration** | L2031 | JVM-only, Component + Endpoint + Producer |
-| **MCP SDK Integration** | L2113 | KMP, McpClient + Transport + Tool bridge |
-| **Protobuf/gRPC (Wire)** | L2227 | KMP, Wire plugin + proto codegen + GrpcClient |
-| **MessagePack** | L2352 | ktor ContentNegotiation + kotlinx-serialization-msgpack |
-| **Annotations Inventory** | L2510 | All annotations: Jackson, Kotlin, Wire, custom — migration status (section A) |
-| **Folder Structure** | L2581 | Actual current state of commonMain/jvmMain/commonTest |
-| **kotlinx.serialization Patterns** | L2735 | Model class patterns for @Serializable migration |
+| Section | Line | Commit | What |
+|---|---|---|---|
+| **Stable Libs Strategy** | L1396 | `50cc231` | Core principle: libs replace all boilerplate |
+| **Serialization Formats** | L1415 | `50cc231` | JSON + MsgPack + Protobuf + CBOR via ktor ContentNegotiation |
+| **Custom Code → Lib Map** | L1441 | `50cc231` | 730 lines to delete, mapped to stable lib replacements |
+| **JsonField/Value = Wire** | L1457 | `6720d54` | Field presence semantics: KnownValue/Missing/Null = Wire @WireField |
+| **Deep Classification** | L1485 | `5b3038d` | Nothing in com.anthropic.core is Claude-specific |
+| **ClientOptions → ktor** | L1538 | `b72f11e` | Field-by-field mapping to ktor CIO plugins + OkHttp |
+| **OpenAPI Security Schemes** | L1653 | `b72f11e` | OIDC/OAuth2/Bearer/Basic/MutualTLS via ktor Auth |
+| **Tool Roles + Security** | L1784 | `4ed5d43` | OpenAPI/AsyncAPI/gRPC/WASM — specs define security |
+| **LangChain4j Integration** | L2640 | prior | JVM-only, ChatLanguageModel + Tokenizer |
+| **Apache Camel Integration** | L2718 | prior | JVM-only, Component + Endpoint + Producer |
+| **MCP SDK Integration** | L2800 | prior | KMP, McpClient + Transport + Tool bridge |
+| **Protobuf/gRPC (Wire)** | L2914 | prior | KMP, Wire plugin + proto codegen + GrpcClient |
+| **MessagePack** | L3039 | prior | ktor ContentNegotiation + kotlinx-serialization-msgpack |
+| **Annotations Inventory** | L3192 | `aaa23ea` | All annotations: Jackson, Kotlin, Wire — migration status |
+| **Folder Structure** | L3263 | `aaa23ea` | Actual current state of commonMain/jvmMain/commonTest |
+| **kotlinx.serialization Patterns** | L3417 | prior | Model class patterns for @Serializable migration |
+| **Component Architecture** | L3963 | `f81381f` | Schema = Component = All Protocols |
+| **PatchEvent SSE Sync** | L4114 | `f4072b2` | PatchEvent = SSE message for all Flow subscribers |
+| **HTTP Methods = Patch Ops** | L4203 | `0d93d41` | POST=add, PUT=replace, DELETE=remove, PATCH=ops |
+| **WebSocket = Same PatchEvent** | L4249 | `0d93d41` | SSE + WS receive same event, different transport |
+| **WebDAV Locking + Schema** | L4312 | `d686664` | LOCK/UNLOCK, PROPFIND schema, PROPPATCH validated |
+| **MCP Exposes Components** | L4439 | `83493eb` | Component operations = MCP tools for AI agents |
+| **Schema Registry** | L4525 | `041e3b1` | External $ref + cross-API JSON Patch |
 
 ### Implementation Todo + Test Plan
 | Section | Line | What |
