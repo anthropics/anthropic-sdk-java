@@ -830,6 +830,249 @@ that stable libs handle.
 | `Values.kt` | 130 | Wire field semantics — keep as `kotlinx.kmp.util.json.Field<T>` |
 | **Total** | **~1155** | **~50 lines** of Anthropic config + ktor plugin setup |
 
+### Low-Level Design: ClientOptions → ktor HttpClient CIO / OkHttp Config
+
+Every `ClientOptions` field maps to a ktor plugin or OkHttp interceptor.
+This is the standard pattern for any API-key MCP service, not Anthropic-specific.
+
+#### Field-by-field mapping
+
+| ClientOptions Field | Type | → ktor CIO Plugin | → OkHttp Equivalent |
+|---|---|---|---|
+| `httpClient` | `HttpClient` | Built-in — `HttpClient(CIO)` IS the client | `OkHttpClient.Builder()` |
+| `baseUrl` | `String?` | `defaultRequest { url(baseUrl) }` | `HttpUrl.parse(baseUrl)` |
+| `headers` | `Headers` | `defaultRequest { headers { append(name, value) } }` | `addInterceptor { chain -> chain.request().newBuilder().addHeader() }` |
+| `queryParams` | `QueryParams` | `defaultRequest { url { parameters.append(key, value) } }` | `HttpUrl.Builder.addQueryParameter()` |
+| `timeout` | `Timeout` | `install(HttpTimeout) { requestTimeoutMillis; connectTimeoutMillis; socketTimeoutMillis }` | `OkHttpClient.Builder().connectTimeout().readTimeout().callTimeout()` |
+| `maxRetries` | `Int` | `install(HttpRequestRetry) { retryOnServerErrors(maxRetries); exponentialDelay() }` | `addInterceptor(RetryInterceptor(maxRetries))` |
+| `jsonMapper` | `JsonMapper` | `install(ContentNegotiation) { json(anthropicJson) }` | N/A — uses converter factory |
+| `sleeper` | `Sleeper` | `delay()` in coroutine — no separate sleeper needed | Custom — only for tests |
+| `clock` | `Clock` | `kotlinx.datetime.Clock.System` — or test clock via DI | `Clock.fixed()` for tests |
+| `streamHandlerExecutor` | `Executor` | `CoroutineDispatcher` — `Dispatchers.IO` or custom | `Executor` for callback threads |
+| `responseValidation` | `Boolean` | `HttpResponseValidator { validateResponse {} }` | Response interceptor |
+| `checkJacksonVersionCompatibility` | `Boolean` | N/A — removed with kotlinx.serialization | N/A |
+
+#### ktor CIO equivalent of entire ClientOptions.build()
+
+```kotlin
+// What ClientOptions.build() does today (400 lines):
+// → ktor equivalent (~30 lines):
+
+fun createAnthropicClient(
+    apiKey: String,
+    baseUrl: String = "https://api.anthropic.com",
+    maxRetries: Int = 2,
+    timeout: Timeout = Timeout.default(),
+): io.ktor.client.HttpClient = HttpClient(CIO) {
+
+    // Auth — maps to ClientOptions.headers + PrepareRequest
+    install(Auth) {
+        bearer { loadTokens { BearerTokens(apiKey, "") } }
+    }
+
+    // Retry — maps to ClientOptions.maxRetries + RetryingHttpClient.kt (120 lines)
+    install(HttpRequestRetry) {
+        retryOnServerErrors(maxRetries = maxRetries)
+        retryOnException(maxRetries = maxRetries, retryOnTimeout = true)
+        retryIf { _, response -> response.status.value in listOf(408, 409, 429) }
+        exponentialDelay()
+    }
+
+    // Timeout — maps to ClientOptions.timeout + Timeout.kt
+    install(HttpTimeout) {
+        requestTimeoutMillis = timeout.request().inWholeMilliseconds
+        connectTimeoutMillis = timeout.connect().inWholeMilliseconds
+        socketTimeoutMillis = timeout.read().inWholeMilliseconds
+    }
+
+    // Content negotiation — maps to ClientOptions.jsonMapper + ObjectMappers.kt (162 lines)
+    install(ContentNegotiation) {
+        json(anthropicJson)          // JSON default
+        // msgpack()                 // MsgPack opt-in
+        // protobuf()               // Protobuf opt-in
+    }
+
+    // Error handling — maps to ErrorHandler.kt (80 lines)
+    HttpResponseValidator {
+        handleResponseExceptionWithRequest { cause, _ -> throw cause }
+        validateResponse { response ->
+            if (!response.status.isSuccess()) {
+                val body = response.bodyAsText()
+                throw when (response.status.value) {
+                    400 -> BadRequestException.builder().body(parseErrorBody(body)).build()
+                    401 -> UnauthorizedException.builder().body(parseErrorBody(body)).build()
+                    403 -> PermissionDeniedException.builder().body(parseErrorBody(body)).build()
+                    404 -> NotFoundException.builder().body(parseErrorBody(body)).build()
+                    422 -> UnprocessableEntityException.builder().body(parseErrorBody(body)).build()
+                    429 -> RateLimitException.builder().body(parseErrorBody(body)).build()
+                    in 500..599 -> InternalServerException.builder().body(parseErrorBody(body)).build()
+                    else -> UnexpectedStatusCodeException.builder().body(parseErrorBody(body)).build()
+                }
+            }
+        }
+    }
+
+    // Default headers — maps to PrepareRequest.kt (30 lines)
+    defaultRequest {
+        url(baseUrl)
+        header("anthropic-version", "2023-06-01")
+        header("X-Stainless-Lang", "kotlin")
+        header("X-Stainless-Arch", getOsArch())
+        header("X-Stainless-OS", getOsName())
+    }
+
+    // SSE — maps to SseHandler.kt (70 lines)
+    install(SSE)
+}
+```
+
+#### OkHttp equivalent (JVM-only, existing module)
+
+```kotlin
+// OkHttp config maps the same fields via interceptors:
+fun createOkHttpClient(
+    apiKey: String,
+    baseUrl: String = "https://api.anthropic.com",
+    maxRetries: Int = 2,
+    timeout: Timeout = Timeout.default(),
+): OkHttpClient = OkHttpClient.Builder()
+    .connectTimeout(timeout.connect().toJavaDuration())
+    .readTimeout(timeout.read().toJavaDuration())
+    .callTimeout(timeout.request().toJavaDuration())
+    .addInterceptor(AuthInterceptor(apiKey))        // x-api-key header
+    .addInterceptor(RetryInterceptor(maxRetries))   // retry with backoff
+    .addInterceptor(HeaderInterceptor(defaultHeaders)) // version, stainless
+    .build()
+```
+
+### OpenAPI Security Schemes — OIDC / OAuth / API Key / Basic
+
+The current SDK only supports API key auth (`x-api-key` header). OpenAPI defines
+multiple security schemes that any MCP service might use. ktor's Auth plugin
+supports all of them natively:
+
+| OpenAPI Security Scheme | ktor Plugin | Config |
+|---|---|---|
+| **apiKey** (header) | `install(Auth) { bearer { } }` or `defaultRequest { header("x-api-key", key) }` | Current Anthropic auth |
+| **apiKey** (query) | `defaultRequest { url { parameters.append("api_key", key) } }` | Some APIs use query param |
+| **http/bearer** (OAuth2 Bearer) | `install(Auth) { bearer { loadTokens { BearerTokens(accessToken, refreshToken) } } }` | Standard OAuth2 |
+| **http/basic** | `install(Auth) { basic { credentials { BasicCredentials(username, password) } } }` | Basic auth |
+| **oauth2** (authorization code) | `install(Auth) { bearer { refreshTokens { refreshOAuth2Token(tokenUrl, clientId, clientSecret) } } }` | Full OAuth2 flow with refresh |
+| **openIdConnect** (OIDC) | `install(Auth) { bearer { loadTokens { discoverOIDC(issuerUrl).getToken() } } }` | OIDC discovery + token |
+| **mutualTLS** | `HttpClient(CIO) { engine { https { keyStore = ...; trustStore = ... } } }` | Client certificate auth |
+
+#### ktor Auth plugin — covers all security schemes
+
+```kotlin
+// API Key (current Anthropic pattern)
+install(Auth) {
+    bearer {
+        loadTokens { BearerTokens(apiKey, "") }
+        sendWithoutRequest { true }  // always send, don't wait for 401
+    }
+}
+
+// OAuth2 with refresh token
+install(Auth) {
+    bearer {
+        loadTokens {
+            BearerTokens(accessToken, refreshToken)
+        }
+        refreshTokens {
+            // Automatic token refresh on 401
+            val response = client.post(tokenUrl) {
+                setBody(FormDataContent(Parameters.build {
+                    append("grant_type", "refresh_token")
+                    append("refresh_token", oldTokens?.refreshToken ?: "")
+                    append("client_id", clientId)
+                    append("client_secret", clientSecret)
+                }))
+            }
+            val token: OAuthToken = response.body()
+            BearerTokens(token.accessToken, token.refreshToken)
+        }
+    }
+}
+
+// OIDC (OpenID Connect discovery)
+install(Auth) {
+    bearer {
+        loadTokens {
+            // Discover OIDC endpoints from issuer
+            val config: OpenIDConfiguration = client.get("$issuerUrl/.well-known/openid-configuration").body()
+            val token: OAuthToken = client.post(config.tokenEndpoint) {
+                setBody(FormDataContent(Parameters.build {
+                    append("grant_type", "client_credentials")
+                    append("client_id", clientId)
+                    append("client_secret", clientSecret)
+                    append("scope", "openid")
+                }))
+            }.body()
+            BearerTokens(token.accessToken, token.refreshToken ?: "")
+        }
+    }
+}
+
+// Basic Auth
+install(Auth) {
+    basic {
+        credentials { BasicCredentials(username, password) }
+        sendWithoutRequest { true }
+    }
+}
+
+// Mutual TLS (client certificate)
+HttpClient(CIO) {
+    engine {
+        https {
+            keyStore = loadKeyStore("client.p12", "password")
+            trustStore = loadTrustStore("ca.pem")
+        }
+    }
+}
+```
+
+#### OpenAPI security scheme configuration DSL
+
+```kotlin
+// Generic MCP service client factory — works for any API with OpenAPI spec
+fun createMcpClient(
+    baseUrl: String,
+    security: SecurityScheme,
+    maxRetries: Int = 2,
+    timeout: Timeout = Timeout.default(),
+): io.ktor.client.HttpClient = HttpClient(CIO) {
+    install(HttpRequestRetry) { retryOnServerErrors(maxRetries); exponentialDelay() }
+    install(HttpTimeout) { requestTimeoutMillis = timeout.request().inWholeMilliseconds }
+    install(ContentNegotiation) { json(anthropicJson) }
+    install(SSE)
+    defaultRequest { url(baseUrl) }
+
+    // Apply security scheme from OpenAPI spec
+    when (security) {
+        is SecurityScheme.ApiKey -> defaultRequest { header(security.headerName, security.key) }
+        is SecurityScheme.Bearer -> install(Auth) { bearer { loadTokens { BearerTokens(security.token, "") } } }
+        is SecurityScheme.OAuth2 -> install(Auth) { bearer {
+            loadTokens { BearerTokens(security.accessToken, security.refreshToken) }
+            refreshTokens { refreshOAuth2(security.tokenUrl, security.clientId, security.clientSecret) }
+        }}
+        is SecurityScheme.OIDC -> install(Auth) { bearer { loadTokens { discoverAndAuth(security.issuerUrl, security.clientId) } } }
+        is SecurityScheme.Basic -> install(Auth) { basic { credentials { BasicCredentials(security.username, security.password) } } }
+        is SecurityScheme.MutualTLS -> { /* configured at engine level */ }
+    }
+}
+
+/** OpenAPI security scheme types */
+sealed class SecurityScheme {
+    data class ApiKey(val key: String, val headerName: String = "x-api-key") : SecurityScheme()
+    data class Bearer(val token: String) : SecurityScheme()
+    data class OAuth2(val accessToken: String, val refreshToken: String, val tokenUrl: String, val clientId: String, val clientSecret: String) : SecurityScheme()
+    data class OIDC(val issuerUrl: String, val clientId: String, val clientSecret: String = "") : SecurityScheme()
+    data class Basic(val username: String, val password: String) : SecurityScheme()
+    data class MutualTLS(val keyStorePath: String, val trustStorePath: String) : SecurityScheme()
+}
+```
+
 ### 🔲 GAPS — Remaining java.* in Core (22 files, NOT models/services)
 
 **Phase 0: expect/actual infrastructure (new files, no existing changes)**
