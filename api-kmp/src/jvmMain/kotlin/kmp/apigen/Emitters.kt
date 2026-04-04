@@ -1,5 +1,6 @@
 package kmp.apigen
 
+import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -234,17 +235,9 @@ val emittersModule = module {
     singleOf(::FakerTestDataEmitter) bind ProtocolEmitter::class
 }
 
-/** Convenience: all emitters (for backward compat / non-Koin usage) */
-val ALL_EMITTERS: List<ProtocolEmitter> get() = listOf(
-    ComponentEmitter(),
-    ComposeEmitter(),
-    DatabaseEmitter(),
-    HtmlEmitter(),
-    TestEmitter(),
-    RestEmitter(),
-    GrpcEmitter(),
-    GraphqlFullEmitter(),
-    McpEmitter(),
-    FabriktEmitter(),
-    FakerTestDataEmitter(),
-)
+/** Get all emitters from Koin — use in tests or non-CLI contexts */
+fun allEmitters(): List<ProtocolEmitter> {
+    val koin = org.koin.core.context.GlobalContext.getOrNull()
+        ?: startKoin { modules(emittersModule) }.koin
+    return koin.getAll()
+}

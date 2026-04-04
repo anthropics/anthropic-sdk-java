@@ -119,6 +119,112 @@ object Validators {
     fun validateEAN13(value: String): Boolean =
         org.apache.commons.validator.routines.checkdigit.EAN13CheckDigit.EAN13_CHECK_DIGIT.isValid(value)
 
+    // === OpenAPI Format → Validator Registry ===
+
+    /**
+     * Validate a string value by its OpenAPI `format` field.
+     *
+     * Maps standard + extended formats to the appropriate validator:
+     * - email → EmailValidator
+     * - phone → libphonenumber
+     * - uri/url → UrlValidator
+     * - hostname → DomainValidator
+     * - ipv4/ipv6/ip → InetAddressValidator
+     * - uuid → UUID.fromString
+     * - date → DateValidator (yyyy-MM-dd)
+     * - date-time → ISO 8601 parse
+     * - time → TimeValidator (HH:mm:ss)
+     * - duration → ISO 8601 duration (PT...)
+     * - isbn → ISBNValidator
+     * - issn → ISSNValidator
+     * - isin → ISINValidator
+     * - credit-card → CreditCardValidator
+     * - ean13 → EAN13CheckDigit
+     * - luhn → LuhnCheckDigit
+     * - currency → ISO 4217 (3-letter)
+     * - country → ISO 3166-1 alpha-2
+     * - language → ISO 639-1
+     * - regex → pattern match
+     *
+     * Returns true if valid, false if invalid.
+     * Returns true for unknown formats (no validation available).
+     */
+    fun validateByFormat(value: String, format: String, pattern: String? = null): Boolean = when (format) {
+        // Contact
+        "email" -> EmailValidator.getInstance().isValid(value)
+        "phone" -> try {
+            val util = com.google.i18n.phonenumbers.PhoneNumberUtil.getInstance()
+            util.isValidNumber(util.parse(value, "US"))
+        } catch (_: Exception) { false }
+
+        // Network
+        "uri", "url" -> UrlValidator.getInstance().isValid(value)
+        "hostname" -> DomainValidator.getInstance().isValid(value)
+        "ipv4" -> InetAddressValidator.getInstance().isValidInet4Address(value)
+        "ipv6" -> InetAddressValidator.getInstance().isValidInet6Address(value)
+        "ip" -> InetAddressValidator.getInstance().isValid(value)
+
+        // Identifiers
+        "uuid" -> try { java.util.UUID.fromString(value); true } catch (_: Exception) { false }
+
+        // Date/Time (RFC 3339 / ISO 8601)
+        "date" -> DateValidator.getInstance().validate(value, "yyyy-MM-dd") != null
+        "date-time" -> try { java.time.OffsetDateTime.parse(value); true }
+            catch (_: Exception) { try { java.time.Instant.parse(value); true } catch (_: Exception) { false } }
+        "time" -> TimeValidator.getInstance().validate(value, "HH:mm:ss") != null
+        "duration" -> try { java.time.Duration.parse(value); true } catch (_: Exception) { false }
+
+        // Financial / Codes
+        "isbn" -> ISBNValidator.getInstance().isValid(value)
+        "isbn10" -> ISBNValidator.getInstance().isValidISBN10(value)
+        "isbn13" -> ISBNValidator.getInstance().isValidISBN13(value)
+        "issn" -> ISSNValidator.getInstance().isValid(value)
+        "isin" -> ISINValidator.getInstance(true).isValid(value)
+        "credit-card" -> CreditCardValidator(
+            CreditCardValidator.VISA + CreditCardValidator.MASTERCARD +
+            CreditCardValidator.AMEX + CreditCardValidator.DISCOVER
+        ).isValid(value)
+        "ean13" -> org.apache.commons.validator.routines.checkdigit.EAN13CheckDigit.EAN13_CHECK_DIGIT.isValid(value)
+        "luhn" -> org.apache.commons.validator.routines.checkdigit.LuhnCheckDigit.LUHN_CHECK_DIGIT.isValid(value)
+
+        // Locale/Geo
+        "currency" -> value.length == 3 && value.all { it.isUpperCase() }
+        "country" -> value.length == 2 && value.all { it.isUpperCase() }
+        "language" -> value.length in 2..3 && value.all { it.isLowerCase() }
+        "locale" -> value.matches(Regex("[a-z]{2,3}(-[A-Z]{2})?"))
+        "timezone" -> try { java.util.TimeZone.getTimeZone(value).id == value } catch (_: Exception) { false }
+
+        // Binary
+        "byte", "base64" -> try { java.util.Base64.getDecoder().decode(value); true } catch (_: Exception) { false }
+
+        // Password — always valid (no format constraint)
+        "password" -> true
+
+        // Pattern match (x-pattern or explicit regex format)
+        "regex" -> pattern?.let { RegexValidator(it).isValid(value) } ?: true
+
+        // Integer/Number formats
+        "int32" -> value.toIntOrNull() != null
+        "int64" -> value.toLongOrNull() != null
+        "float" -> value.toFloatOrNull() != null
+        "double" -> value.toDoubleOrNull() != null
+
+        // Unknown format → pass through (no validation)
+        else -> true
+    }
+
+    /** All supported OpenAPI format names */
+    val supportedFormats: Set<String> = setOf(
+        "email", "phone", "uri", "url", "hostname",
+        "ipv4", "ipv6", "ip", "uuid",
+        "date", "date-time", "time", "duration",
+        "isbn", "isbn10", "isbn13", "issn", "isin",
+        "credit-card", "ean13", "luhn",
+        "currency", "country", "language", "locale", "timezone",
+        "byte", "base64", "password", "regex",
+        "int32", "int64", "float", "double",
+    )
+
     // === vCard / iCalendar conversion ===
 
     /** Parse vCard (.vcf) string → Contact-like map. */
