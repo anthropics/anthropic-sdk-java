@@ -94,15 +94,28 @@ by the stable lib that implements the spec (ktor, Wire, wasmtime).
 
 ### Decisions
 
-1. **Standard specs for config** — OpenAPI, AsyncAPI, gRPC, WASM define what tools exist and how to call them securely. No proprietary config format.
-2. **Only stable libs are secured** — ktor (HTTP auth, TLS, rate limit), Wire (gRPC TLS channels), okio (file permissions), kotlinx.coroutines (Mutex/Semaphore). Custom code is a security liability.
-3. **Don't duplicate stable libs** — use ktor/Wire/okio/kotlinx directly
-4. **`kotlinx.kmp.util.*`** — generic KMP utilities (Optional, functional interfaces)
-5. **`com.anthropic.core`** — config constants only (~50 lines truly Anthropic-specific)
-6. **JsonField/JsonValue = Wire field semantics** — format-agnostic, not JSON-specific
-7. **expect/actual typealias** works for Optional, Function, Supplier — NOT for CompletableFuture (Java SAM mismatch)
-8. **suspend replaces CompletableFuture** — JVM backward compat via `runBlocking` wrappers in jvmMain
+1. **Keep standard annotations** — Jackson (`@JsonProperty`, `@JsonCreator`, etc.) and kotlin.jvm (`@JvmStatic`, `@JvmName`, etc.) are standard Java best practices. They work on JVM, are ignored on non-JVM. **No code migration needed.**
+2. **Native typealiases, not code migration** — `expect/actual typealias` for types that need KMP compat (Optional → java.util.Optional on JVM, Function → java.util.function.Function on JVM). **Zero model file changes.**
+3. **Standard specs for config** — OpenAPI, AsyncAPI, gRPC, WASM define tools + security. No proprietary config format, no custom annotations.
+4. **Only stable libs are secured** — ktor, Wire, okio, kotlinx.coroutines. Custom wrappers are security liabilities.
+5. **Don't duplicate stable libs** — use ktor/Wire/okio/kotlinx directly
+6. **`kotlinx.kmp.util.*`** — generic KMP utilities (Optional, functional interfaces)
+7. **JsonField/JsonValue = Wire field semantics** — format-agnostic, not JSON-specific
+8. **expect/actual typealias** works for Optional, Function, Supplier — NOT for CompletableFuture (Java SAM mismatch → use suspend instead)
 9. **Flow replaces Stream** — `stream()` returns `Flow<T>` on all platforms
+
+### What stays, what gets typealiased, what's NOT migrated
+
+| Category | Approach | Code Migration? |
+|---|---|---|
+| Jackson annotations (`@JsonProperty` etc.) | **Keep** — standard, JVM runtime, ignored on non-JVM | None |
+| kotlin.jvm annotations (`@JvmStatic` etc.) | **Keep** — standard, JVM bytecode, ignored on non-JVM | None |
+| `java.util.Optional<T>` | **typealias** → `expect class Optional` in commonMain | None — same API |
+| `java.util.function.*` | **typealias** → `expect fun interface` in commonMain | None — same API |
+| Jackson core (`JsonMapper`, serializers) | **Keep in commonMain** — jar is a dependency | None |
+| `java.util.concurrent.CompletableFuture` | **suspend** (future phase) | Services only |
+| `java.io.InputStream/OutputStream` | **okio** `BufferedSource/BufferedSink` | ✅ Done (core interfaces) |
+| Wire `@WireRpc`, `@WireField` | **Use directly** — standard proto lib | None |
 
 ### How any service becomes a secure tool
 

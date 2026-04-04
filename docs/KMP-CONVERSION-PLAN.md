@@ -400,9 +400,17 @@ actual fun getEnvironmentVariable(key: String): String? = System.getenv(key)
 ### 3.10 AutoCloseable ✅ DONE (prior commits)
 - Using `kotlin.AutoCloseable` (available since Kotlin 2.0+) ✅
 
-### 3.11 Remove JVM annotations from common code
-- Remove all `@JvmStatic`, `@JvmSynthetic`, `@JvmName`, `@JvmOverloads`, `@file:JvmName`
-- For JVM backward compatibility, add `@JvmStatic` etc. only in jvmMain extensions
+### 3.11 ~~Remove JVM annotations from common code~~ → **KEEP standard annotations**
+
+> **REVISED**: Standard Java/Kotlin annotations should NOT be removed.
+> They are best practices that work on JVM and are ignored on non-JVM targets.
+> Removing them was wrong — it changed 503 files unnecessarily.
+
+- **KEEP** `@JvmStatic`, `@JvmSynthetic`, `@JvmName`, `@JvmOverloads`, `@file:JvmName` — standard kotlin.jvm annotations, BINARY retention, no runtime effect on non-JVM
+- **KEEP** `@JsonProperty`, `@JsonCreator`, `@JsonAnyGetter` etc. — standard Jackson annotations, jackson-annotations jar in commonMain deps
+- **KEEP** `@WireRpc`, `@WireField` — standard Wire proto annotations
+- **DO NOT create custom annotations** to replace standard ones (lesson from deleted ProtoAnnotations.kt)
+- **Use typealias** for types that need KMP compat (Optional, Function) — zero code migration
 
 ---
 
@@ -647,7 +655,7 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 | `java.lang.AutoCloseable` | `kotlin.AutoCloseable` | 5 interfaces |
 | `Objects.hash()` | `contentHash()` | all models |
 | `Collections.unmodifiableMap()` | `.toMap()` | all models |
-| `@JvmStatic/@JvmSynthetic/etc` | Removed | 503 files |
+| `@JvmStatic/@JvmSynthetic/etc` | **KEEP** — standard kotlin.jvm annotations, ignored on non-JVM targets | 503 files (removal was wrong — should be restored) |
 | `InputStream/OutputStream` | `okio.BufferedSource/BufferedSink` | HttpResponse, HttpRequestBody, handlers, KtorHttpClient |
 | `PhantomReachable` reflect | expect/actual (JVM Cleaner in jvmMain) | PhantomReachable.kt |
 | `Optional<Throwable>` in handlers | `Throwable?` nullable | AsyncStreamResponse, AutoPagerAsync |
