@@ -142,6 +142,10 @@ class ComponentEmitter : ProtocolEmitter {
             )
 
             FileSpec.builder(componentPackage, "${name}Component")
+                .addImport("io.ktor.client.call", "body")
+                .addImport("io.ktor.client.request", "get", "post", "put", "delete", "patch", "parameter", "setBody")
+                .addImport("io.ktor.client.plugins.sse", "sse")
+                .addImport("io.ktor.http", "contentType")
                 .addType(classBuilder.build())
                 .build()
                 .writeTo(outputDir)

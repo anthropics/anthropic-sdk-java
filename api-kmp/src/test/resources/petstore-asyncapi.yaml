@@ -1,0 +1,71 @@
+asyncapi: "2.6.0"
+info:
+  title: Petstore Events
+  version: "1.0"
+channels:
+  pet/changes:
+    subscribe:
+      summary: Stream of pet mutation events (PatchEvent)
+      message:
+        $ref: '#/components/messages/PatchEvent'
+  pet/ws:
+    subscribe:
+      summary: WebSocket bidirectional pet events
+      message:
+        $ref: '#/components/messages/PatchEvent'
+    publish:
+      summary: Send mutations via WebSocket
+      message:
+        $ref: '#/components/messages/MutationRequest'
+  order/changes:
+    subscribe:
+      summary: Stream of order mutation events
+      message:
+        $ref: '#/components/messages/PatchEvent'
+components:
+  messages:
+    PatchEvent:
+      payload:
+        type: object
+        properties:
+          op:
+            type: string
+            enum: [add, replace, remove, patch]
+          entityId:
+            type: string
+          before:
+            type: object
+          after:
+            type: object
+          patch:
+            type: array
+            items:
+              $ref: '#/components/schemas/PatchOperation'
+          timestamp:
+            type: string
+    MutationRequest:
+      payload:
+        type: object
+        properties:
+          op:
+            type: string
+          id:
+            type: string
+          entity:
+            type: object
+          patch:
+            type: array
+            items:
+              $ref: '#/components/schemas/PatchOperation'
+  schemas:
+    PatchOperation:
+      type: object
+      properties:
+        op:
+          type: string
+          enum: [add, remove, replace, move, copy, test]
+        path:
+          type: string
+        value: {}
+        from:
+          type: string
