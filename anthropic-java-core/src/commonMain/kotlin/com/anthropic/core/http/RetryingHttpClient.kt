@@ -132,6 +132,11 @@ private constructor(
         return executeWithRetries(modifiedRequest, requestOptions)
     }
 
+    override suspend fun executeSuspend(
+        request: HttpRequest,
+        requestOptions: RequestOptions,
+    ): HttpResponse = httpClient.executeSuspend(request, requestOptions)
+
     override fun close() {
         httpClient.close()
         sleeper.close()

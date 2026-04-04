@@ -19,3 +19,6 @@ internal fun HttpRequest.prepareAsync(
     // This async version exists to make it easier to add async specific preparation logic in the
     // future.
     CompletableFuture.completedFuture(prepare(clientOptions, params))
+
+internal suspend fun HttpRequest.prepareSuspend(clientOptions: ClientOptions, params: Params): HttpRequest =
+    prepare(clientOptions, params)

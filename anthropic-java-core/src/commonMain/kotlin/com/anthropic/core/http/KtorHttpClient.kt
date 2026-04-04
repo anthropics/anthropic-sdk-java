@@ -11,10 +11,6 @@ import kotlinx.coroutines.*
 import okio.Buffer
 import java.util.concurrent.CompletableFuture
 
-/**
- * Ktor-based HTTP client implementation.
- * Uses Ktor client directly — replaces custom retry/multipart/SSE infrastructure.
- */
 class KtorHttpClient(
     private val ktorClient: io.ktor.client.HttpClient = io.ktor.client.HttpClient {
         install(HttpTimeout)
@@ -40,13 +36,18 @@ class KtorHttpClient(
         return future
     }
 
+    override suspend fun executeSuspend(
+        request: HttpRequest,
+        requestOptions: RequestOptions
+    ): HttpResponse = executeKtor(request, requestOptions)
+
     private suspend fun executeKtor(
         request: HttpRequest,
         requestOptions: RequestOptions
     ): HttpResponse {
         val sdkTimeout = requestOptions.timeout
         val response: KtorResponse = ktorClient.request {
-            this.method = io.ktor.http.HttpMethod(request.method.value)  // enum.value → ktor method
+            this.method = io.ktor.http.HttpMethod(request.method.value)
             url(request.url())
             request.headers.names().forEach { name ->
                 request.headers.values(name).forEach { value ->
@@ -83,5 +84,3 @@ class KtorHttpClient(
 
     override fun close() = ktorClient.close()
 }
-
-// HttpMethod conversion removed — now uses io.ktor.http.HttpMethod directly.
