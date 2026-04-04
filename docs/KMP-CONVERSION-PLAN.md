@@ -3975,7 +3975,7 @@ Component: PetComponent
     ├── SSE:       Flow<PetEvent> /pet/stream
     ├── WebSocket: bidirectional /pet/ws
     ├── JSON Patch: PATCH /pet/{id} (RFC 6902)
-    ├── Audit:     Flow<AuditEvent> — every mutation logged
+    ├── Audit:     Flow<PatchEvent> — every mutation logged
     ├── GraphQL:   type Pet, Query.pet, Mutation.createPet
     ├── gRPC:      rpc GetPet, rpc CreatePet, rpc StreamPets
     └── MCP:       tool "get_pet", tool "create_pet"
@@ -3989,9 +3989,9 @@ class PetComponent(private val client: HttpClient) {
 
     // REST — standard CRUD
     suspend fun get(id: Long): Pet = client.get("/pet/$id").body()
-    suspend fun create(pet: Pet): AuditEvent<Pet> = client.post("/pet") { setBody(pet) }.body()
-    suspend fun update(id: Long, pet: Pet): AuditEvent<Pet> = client.put("/pet/$id") { setBody(pet) }.body()
-    suspend fun delete(id: Long): AuditEvent<Pet> = client.delete("/pet/$id")
+    suspend fun create(pet: Pet): PatchEvent<Pet> = client.post("/pet") { setBody(pet) }.body()
+    suspend fun update(id: Long, pet: Pet): PatchEvent<Pet> = client.put("/pet/$id") { setBody(pet) }.body()
+    suspend fun delete(id: Long): PatchEvent<Pet> = client.delete("/pet/$id")
     suspend fun list(status: String? = null): List<Pet> = client.get("/pet/findByStatus") {
         status?.let { parameter("status", it) }
     }.body()
@@ -4010,17 +4010,17 @@ class PetComponent(private val client: HttpClient) {
         client.webSocket("/pet/ws", block)
 
     // JSON Patch — partial update (RFC 6902)
-    suspend fun patch(id: Long, operations: List<PatchOperation>): AuditEvent<Pet> =
+    suspend fun patch(id: Long, operations: List<PatchOperation>): PatchEvent<Pet> =
         client.patch("/pet/$id") {
             contentType(ContentType("application", "json-patch+json"))
             setBody(operations)
         }.body()
 
     // Audit — every mutation logged as event
-    fun audit(): Flow<AuditEvent<Pet>> = flow {
+    fun audit(): Flow<PatchEvent<Pet>> = flow {
         client.sse("/pet/audit") {
             incoming.collect { event ->
-                event.data?.let { emit(json.decodeFromString<AuditEvent<Pet>>(it)) }
+                event.data?.let { emit(json.decodeFromString<PatchEvent<Pet>>(it)) }
             }
         }
     }
@@ -4028,7 +4028,7 @@ class PetComponent(private val client: HttpClient) {
 
 // Generic audit event — works for any component
 @Serializable
-data class AuditEvent<T>(
+data class PatchEvent<T>(
     val timestamp: String,
     val action: String,    // "create", "update", "delete", "patch"
     val entityId: String,
@@ -4084,7 +4084,7 @@ fun Route.petComponent(db: PetRepository) {
 | Manual SSE handler | `stream(): Flow<Pet>` built-in |
 | Manual WebSocket | `ws()` built-in |
 | No JSON Patch | `patch()` built-in |
-| No audit | `audit(): Flow<AuditEvent<Pet>>` built-in |
+| No audit | `audit(): Flow<PatchEvent<Pet>>` built-in |
 
 ### From OpenAPI spec → Component
 
@@ -4111,9 +4111,9 @@ api-gen reads this schema and generates `PetComponent` with:
 
 **One schema → one component → all protocols.**
 
-### AuditEvent = SSE sync message for all subscribers
+### PatchEvent = SSE sync message for all subscribers
 
-Every mutation produces an `AuditEvent` that is:
+Every mutation produces an `PatchEvent` that is:
 1. **Returned** to the caller as the response
 2. **Broadcast** via SSE to all `Flow` subscribers
 3. **Contains JSON Patch** operations so subscribers apply changes locally (no refetch)
@@ -4122,13 +4122,13 @@ Every mutation produces an `AuditEvent` that is:
 Client A: pet.patch(1, [replace /status "sold"])
     │
     ▼
-Server: apply patch → AuditEvent(action="patch", patch=[{op:"replace", path:"/status", value:"sold"}])
+Server: apply patch → PatchEvent(action="patch", patch=[{op:"replace", path:"/status", value:"sold"}])
     │
-    ├── Response to Client A: AuditEvent<Pet>
+    ├── Response to Client A: PatchEvent<Pet>
     │
     └── SSE broadcast to all subscribers:
-        ├── Client B (Flow<AuditEvent<Pet>>): receives patch, applies locally
-        ├── Client C (Flow<AuditEvent<Pet>>): receives patch, applies locally
+        ├── Client B (Flow<PatchEvent<Pet>>): receives patch, applies locally
+        ├── Client C (Flow<PatchEvent<Pet>>): receives patch, applies locally
         └── Audit log: persisted for compliance
 ```
 
@@ -4137,7 +4137,7 @@ Server: apply patch → AuditEvent(action="patch", patch=[{op:"replace", path:"/
 val petComponent = PetComponent(client)
 
 // Subscribe: Flow of audit events (SSE under the hood)
-petComponent.changes().collect { event: AuditEvent<Pet> ->
+petComponent.changes().collect { event: PatchEvent<Pet> ->
     when (event.action) {
         "create" -> localCache.add(event.after!!)
         "update" -> localCache.replace(event.entityId, event.after!!)
@@ -4163,13 +4163,13 @@ val audit = petComponent.patch(1, listOf(
 
 ```kotlin
 // Server side — broadcast audit events to SSE subscribers
-class PetRepository(private val db: Database, private val broadcast: MutableSharedFlow<AuditEvent<Pet>>) {
+class PetRepository(private val db: Database, private val broadcast: MutableSharedFlow<PatchEvent<Pet>>) {
 
-    suspend fun patch(id: Long, ops: List<PatchOperation>): AuditEvent<Pet> {
+    suspend fun patch(id: Long, ops: List<PatchOperation>): PatchEvent<Pet> {
         val before = db.findById(id)
         val after = applyPatch(before, ops)
         db.update(id, after)
-        val event = AuditEvent(
+        val event = PatchEvent(
             timestamp = Clock.System.now().toString(),
             action = "patch",
             entityId = id.toString(),
@@ -4195,8 +4195,8 @@ fun Route.petComponent(repo: PetRepository) {
 ```
 
 **The pattern:**
-- Mutation → `AuditEvent` → response + SSE broadcast
-- Subscribers get `Flow<AuditEvent<T>>` — apply JSON Patch locally
+- Mutation → `PatchEvent` → response + SSE broadcast
+- Subscribers get `Flow<PatchEvent<T>>` — apply JSON Patch locally
 - No polling, no refetch — real-time sync via SSE
 - Audit log is a side effect of the same event stream
 
@@ -4204,7 +4204,7 @@ fun Route.petComponent(repo: PetRepository) {
 
 Every mutation is a patch operation. HTTP methods map to patch ops:
 
-| HTTP Method | JSON Patch Op | AuditEvent.action |
+| HTTP Method | JSON Patch Op | PatchEvent.action |
 |---|---|---|
 | `POST /pet` | `add` (add new entity to collection) | `"add"` |
 | `PUT /pet/1` | `replace` (replace entire entity) | `"replace"` |
@@ -4222,45 +4222,45 @@ class PetComponent(private val client: HttpClient) {
         status?.let { parameter("status", it) }
     }.body()
 
-    // All mutations → AuditEvent (which IS a JSON Patch message)
-    suspend fun add(pet: Pet): AuditEvent<Pet> =
+    // All mutations → PatchEvent (which IS a JSON Patch message)
+    suspend fun add(pet: Pet): PatchEvent<Pet> =
         client.post("/pet") { setBody(pet) }.body()
 
-    suspend fun replace(id: Long, pet: Pet): AuditEvent<Pet> =
+    suspend fun replace(id: Long, pet: Pet): PatchEvent<Pet> =
         client.put("/pet/$id") { setBody(pet) }.body()
 
-    suspend fun patch(id: Long, ops: List<PatchOperation>): AuditEvent<Pet> =
+    suspend fun patch(id: Long, ops: List<PatchOperation>): PatchEvent<Pet> =
         client.patch("/pet/$id") { setBody(ops) }.body()
 
-    suspend fun remove(id: Long): AuditEvent<Pet> =
+    suspend fun remove(id: Long): PatchEvent<Pet> =
         client.delete("/pet/$id").body()
 
     // SSE — receive all audit events as Flow
-    fun changes(): Flow<AuditEvent<Pet>> = flow {
+    fun changes(): Flow<PatchEvent<Pet>> = flow {
         client.sse("/pet/changes") {
             incoming.collect { event ->
-                event.data?.let { emit(json.decodeFromString<AuditEvent<Pet>>(it)) }
+                event.data?.let { emit(json.decodeFromString<PatchEvent<Pet>>(it)) }
             }
         }
     }
 }
 ```
 
-### WebSocket receives same AuditEvent as SSE
+### WebSocket receives same PatchEvent as SSE
 
 SSE and WebSocket are interchangeable transports for the same event stream.
 Client chooses transport — server broadcasts to both.
 
 ```kotlin
 // SSE transport (unidirectional — server → client)
-petComponent.changes()  // Flow<AuditEvent<Pet>> via SSE
+petComponent.changes()  // Flow<PatchEvent<Pet>> via SSE
 
 // WebSocket transport (bidirectional — same events + client can send mutations)
-petComponent.changesWs()  // Flow<AuditEvent<Pet>> via WebSocket
+petComponent.changesWs()  // Flow<PatchEvent<Pet>> via WebSocket
 
-// Both receive the SAME AuditEvent when any client mutates:
+// Both receive the SAME PatchEvent when any client mutates:
 // Client A: petComponent.patch(1, [replace /status "sold"])
-//   → Server broadcasts AuditEvent to:
+//   → Server broadcasts PatchEvent to:
 //     - All SSE subscribers (Flow via /pet/changes)
 //     - All WebSocket subscribers (Frame via /pet/ws)
 //   → Same JSON payload, different transport
@@ -4268,9 +4268,9 @@ petComponent.changesWs()  // Flow<AuditEvent<Pet>> via WebSocket
 
 ```kotlin
 // Server: broadcast to both SSE and WebSocket from same SharedFlow
-class PetRepository(private val broadcast: MutableSharedFlow<AuditEvent<Pet>>) {
+class PetRepository(private val broadcast: MutableSharedFlow<PatchEvent<Pet>>) {
 
-    suspend fun applyMutation(id: Long, op: String, entity: Pet?, patch: List<PatchOperation>?): AuditEvent<Pet> {
+    suspend fun applyMutation(id: Long, op: String, entity: Pet?, patch: List<PatchOperation>?): PatchEvent<Pet> {
         val before = db.findById(id)
         val after = when (op) {
             "add" -> db.create(entity!!)
@@ -4279,7 +4279,7 @@ class PetRepository(private val broadcast: MutableSharedFlow<AuditEvent<Pet>>) {
             "remove" -> { db.delete(id); null }
             else -> error("Unknown op: $op")
         }
-        val event = AuditEvent(action = op, entityId = id.toString(), before = before, after = after, patch = patch)
+        val event = PatchEvent(action = op, entityId = id.toString(), before = before, after = after, patch = patch)
         broadcast.emit(event)  // → SSE subscribers AND WebSocket subscribers
         return event
     }
@@ -4299,7 +4299,7 @@ fun Route.petComponent(repo: PetRepository) {
             if (frame is Frame.Text) {
                 val mutation = json.decodeFromString<MutationRequest<Pet>>(frame.readText())
                 repo.applyMutation(mutation.id, mutation.op, mutation.entity, mutation.patch)
-                // AuditEvent auto-broadcast to all subscribers (including this WS client)
+                // PatchEvent auto-broadcast to all subscribers (including this WS client)
             }
         }
         sub.cancel()
@@ -4341,7 +4341,7 @@ class PetComponent(private val client: HttpClient) {
         client.request(if (id != null) "/pet/$id" else "/pet") { method = HttpMethod("PROPFIND") }.body()
 
     // PROPPATCH — validated partial update (JSON Schema enforced)
-    suspend fun validatedPatch(id: Long, ops: List<PatchOperation>): AuditEvent<Pet> =
+    suspend fun validatedPatch(id: Long, ops: List<PatchOperation>): PatchEvent<Pet> =
         client.request("/pet/$id") { method = HttpMethod("PROPPATCH"); setBody(ops) }.body()
 
     // MKCOL — create collection (ensure table/schema exists)
@@ -4349,11 +4349,11 @@ class PetComponent(private val client: HttpClient) {
         client.request("/pets") { method = HttpMethod("MKCOL") }
 
     // COPY — clone entity
-    suspend fun copy(id: Long, destinationId: Long): AuditEvent<Pet> =
+    suspend fun copy(id: Long, destinationId: Long): PatchEvent<Pet> =
         client.request("/pet/$id") { method = HttpMethod("COPY"); header("Destination", "/pet/$destinationId") }.body()
 
     // MOVE — move entity (re-parent)
-    suspend fun move(id: Long, destinationId: Long): AuditEvent<Pet> =
+    suspend fun move(id: Long, destinationId: Long): PatchEvent<Pet> =
         client.request("/pet/$id") { method = HttpMethod("MOVE"); header("Destination", "/pet/$destinationId") }.body()
 }
 
@@ -4425,7 +4425,7 @@ fun Route.petComponent(repo: PetRepository) {
 **Lock → Validate → Patch → Audit → Broadcast:**
 ```
 Client A: pet.lock(1)                          → LockToken
-Client A: pet.validatedPatch(1, [ops])         → JSON Schema check → AuditEvent → SSE/WS broadcast
+Client A: pet.validatedPatch(1, [ops])         → JSON Schema check → PatchEvent → SSE/WS broadcast
 Client A: pet.unlock(1)                        → release
 Client B: pet.lock(1)                          → waits until A unlocks (Mutex/row lock)
 ```
@@ -4482,9 +4482,9 @@ class PetComponent(...) : McpToolProvider {
 ```
 Claude sees these tools:
   pet_get(id: 1)                          → Pet JSON
-  pet_add(pet: {name: "Rex", ...})        → AuditEvent JSON
+  pet_add(pet: {name: "Rex", ...})        → PatchEvent JSON
   pet_patch(id: 1, ops: [{op: "replace", path: "/status", value: "sold"}])
-                                          → AuditEvent JSON (broadcast to SSE/WS subscribers)
+                                          → PatchEvent JSON (broadcast to SSE/WS subscribers)
   pet_list(status: "available")           → [Pet, Pet, ...] JSON
   pet_schema()                            → JSON Schema for validation
   pet_lock(id: 1)                         → LockToken JSON
@@ -4512,8 +4512,8 @@ openapi.yaml
     ↓ api-gen
 PetComponent
     ├── REST:    suspend fun get/add/replace/patch/remove
-    ├── SSE:     fun changes(): Flow<AuditEvent<Pet>>
-    ├── WS:      same AuditEvent stream, bidirectional
+    ├── SSE:     fun changes(): Flow<PatchEvent<Pet>>
+    ├── WS:      same PatchEvent stream, bidirectional
     ├── WebDAV:  lock/unlock/schema/validatedPatch
     ├── MCP:     listTools() + callTool() — AI agents use this
     ├── GraphQL: type Pet, Query.pet, Mutation.patchPet
@@ -4609,7 +4609,7 @@ val audit = petComponent.patch(petId, listOf(
     PatchOperation(op = "replace", path = "/supplier", value = json.encodeToJsonElement(supplier)),
     PatchOperation(op = "replace", path = "/supplier_id", value = JsonPrimitive(supplierId)),
 ))
-// AuditEvent broadcast to all Pet subscribers
+// PatchEvent broadcast to all Pet subscribers
 // Supplier schema validated via registry $ref
 
 // Patch pet's listing from eBay data
@@ -4617,7 +4617,7 @@ val listing = ebayComponent.get(listingId)  // Get from eBay API
 val audit2 = petComponent.patch(petId, listOf(
     PatchOperation(op = "replace", path = "/listing", value = json.encodeToJsonElement(listing)),
 ))
-// Cross-API data flows through same AuditEvent + JSON Patch mechanism
+// Cross-API data flows through same PatchEvent + JSON Patch mechanism
 ```
 
 **MCP tools see all APIs through one registry:**
@@ -4671,6 +4671,6 @@ Schema Registry
 Cross-API JSON Patch:
     pet.patch(1, [{op:"replace", path:"/supplier", value: <AliExpress data>}])
     → validates Pet.supplier against $ref to AliExpress Supplier schema
-    → AuditEvent broadcast to Pet subscribers
+    → PatchEvent broadcast to Pet subscribers
     → audit log records cross-API data flow
 ```
