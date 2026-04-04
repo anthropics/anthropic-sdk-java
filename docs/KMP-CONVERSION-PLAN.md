@@ -4687,7 +4687,7 @@ openapi.yaml schemas → api-gen → .proto messages (canonical)
                                      ↓
                               KMP Kotlin data classes (Wire-generated)
                                      ↓
-                    All other emitters reference Wire types:
+                    Wire classes used DIRECTLY — no mappers, no DTOs, no adapters:
                     ├── Components (Component<WirePet>)
                     ├── Services (suspend fun → WirePet)
                     ├── UI (PetForm(initial: WirePet))
@@ -4714,3 +4714,52 @@ openapi.yaml schemas → api-gen → .proto messages (canonical)
 5. `@Serializable` added via Wire's kotlinx.serialization support
 
 **The proto IS the model. Everything else is a view of it.**
+
+### No mappers — Wire classes used directly everywhere
+
+```kotlin
+// Wire generates from .proto:
+data class Pet(
+    val id: Long,
+    val name: String,
+    val category: Category?,
+    val photo_urls: List<String>,
+    val status: Status?,
+) : Message<Pet, Nothing>
+
+// The SAME class is:
+//   - HTTP request/response body (ktor serializes it)
+//   - Database row (Exposed reads/writes it)
+//   - Form state (Compose binds to it)
+//   - PatchEvent payload (SSE/WS carries it)
+//   - GraphQL type (resolvers return it)
+//   - MCP tool result (JSON serialized)
+//   - gRPC message (proto serialized)
+
+// Component uses Wire class directly:
+class PetComponent : Component<Pet> {
+    override suspend fun get(id: String): Pet = client.get("/pet/$id").body()
+    override suspend fun add(entity: Pet): PatchEvent<Pet> = ...
+}
+
+// UI uses Wire class directly:
+@Composable
+fun PetForm(initial: Pet? = null, onSubmit: (Pet) -> Unit) { ... }
+
+// DB uses Wire class directly:
+fun insertPet(pet: Pet) = db.insert(Pets) {
+    it[id] = pet.id
+    it[name] = pet.name
+    it[status] = pet.status?.name
+}
+
+// GraphQL resolver uses Wire class directly:
+open class QueryResolver {
+    open suspend fun getPetById(id: String?): Pet? = ...
+}
+
+// Test uses Wire class directly:
+val sample: Pet = Pet(id = 1, name = "Fido", photo_urls = emptyList())
+```
+
+**Zero mapping code. The Wire class goes everywhere unchanged.**
