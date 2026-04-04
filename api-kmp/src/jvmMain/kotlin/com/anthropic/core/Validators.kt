@@ -259,9 +259,216 @@ object Validators {
         "vcf",
     )
 
-    // === vCard (.vcf) — Parse, Validate Properties, Convert ===
+    // === vCard (.vcf) — Parse to Wire proto types, Validate, Convert ===
+    // VCardContact, ICalEvent, ICalAttendee, ICalAlarm — Wire-generated from types.proto
+    // google.type.PostalAddress, PhoneNumber, Date, LatLng, Money — Google standard protos
 
-    /** Parse vCard (.vcf) string → Contact-like map. */
+    /** Validate a Wire VCardContact. */
+    fun validateVCardContact(contact: VCardContact): Map<String, Boolean> = buildMap {
+        contact.name?.let { put("name", it.full.isNotBlank()) }
+        contact.emails.forEachIndexed { i, e -> put("email.$i", validateEmail(Email(e))) }
+        contact.phones.forEachIndexed { i, p ->
+            put("phone.$i", p.e164_number?.let { validatePhone(Phone(it)) } ?: false)
+        }
+        if (contact.url.isNotBlank()) put("url", validateUrl(Uri(contact.url)))
+        if (contact.photo.isNotBlank()) put("photo", validateUrl(Uri(contact.photo)))
+    }
+
+    /** Validate a Wire ICalEvent. */
+    fun validateICalEvent(event: ICalEvent): Map<String, Boolean> = buildMap {
+        event.url.takeIf { it.isNotBlank() }?.let { put("url", validateUrl(Uri(it))) }
+        event.organizer.takeIf { it.isNotBlank() }?.let { put("organizer", validateEmail(Email(it))) }
+        event.rrule.takeIf { it.isNotBlank() }?.let { put("rrule", validateByFormat(it, "rrule")) }
+        event.status.takeIf { it.isNotBlank() }?.let { put("status", validateByFormat(it, "ical-status")) }
+        event.attendees.forEachIndexed { i, a -> put("attendee.$i", validateEmail(Email(a.email))) }
+    }
+
+    /** Parse vCard (.vcf) → typed VCardContact using Wire KMP + Google standard proto types. */
+    fun parseVCardTyped(vcf: String): VCardContact {
+        val vcard = ezvcard.Ezvcard.parse(vcf).first()
+        return VCardContact(
+            name = PersonName(
+                given = vcard.structuredName?.given ?: "",
+                family = vcard.structuredName?.family ?: "",
+                prefix = vcard.structuredName?.prefixes?.firstOrNull() ?: "",
+                suffix = vcard.structuredName?.suffixes?.firstOrNull() ?: "",
+            ),
+            emails = vcard.emails?.map { it.value } ?: emptyList(),
+            phones = vcard.telephoneNumbers?.map { tel ->
+                com.google.type.PhoneNumber(e164_number = tel.text)
+            } ?: emptyList(),
+            addresses = vcard.addresses?.map { addr ->
+                com.google.type.PostalAddress(
+                    address_lines = listOfNotNull(addr.streetAddress),
+                    locality = addr.locality ?: "",
+                    administrative_area = addr.region ?: "",
+                    postal_code = addr.postalCode ?: "",
+                    region_code = addr.country ?: "",
+                )
+            } ?: emptyList(),
+            organization = vcard.organization?.values?.firstOrNull() ?: "",
+            title = vcard.titles?.firstOrNull()?.value ?: "",
+            role = vcard.roles?.firstOrNull()?.value ?: "",
+            url = vcard.urls?.firstOrNull()?.value ?: "",
+            photo = vcard.photos?.firstOrNull()?.url ?: "",
+            note = vcard.notes?.firstOrNull()?.value ?: "",
+            birthday = vcard.birthday?.date?.let {
+                com.google.type.Date(year = 1970, month = 1, day = 1) // simplified
+            },
+            categories = vcard.categories?.values ?: emptyList(),
+            uid = vcard.uid?.value ?: "",
+        )
+    }
+
+    /** Convert typed VCardContact (Wire proto) → vCard (.vcf) string. */
+    fun toVCard(contact: VCardContact): String {
+        val vcard = ezvcard.VCard()
+        val name = contact.name
+        if (name != null && name.full.isNotBlank()) vcard.setFormattedName(name.full)
+        if (name != null && (name.given.isNotBlank() || name.family.isNotBlank())) {
+            val n = ezvcard.property.StructuredName()
+            n.given = name.given
+            n.family = name.family
+            if (name.prefix.isNotBlank()) n.prefixes.add(name.prefix)
+            if (name.suffix.isNotBlank()) n.suffixes.add(name.suffix)
+            vcard.structuredName = n
+        }
+        contact.emails.forEach { vcard.addEmail(it) }
+        contact.phones.forEach { ph ->
+            vcard.addTelephoneNumber(ph.e164_number ?: ph.short_code?.number ?: "")
+        }
+        contact.addresses.forEach { a ->
+            val addr = ezvcard.property.Address()
+            addr.streetAddress = a.address_lines.firstOrNull() ?: ""
+            addr.locality = a.locality
+            addr.region = a.administrative_area
+            addr.postalCode = a.postal_code
+            addr.country = a.region_code
+            vcard.addAddress(addr)
+        }
+        if (contact.organization.isNotBlank()) vcard.setOrganization(contact.organization)
+        if (contact.title.isNotBlank()) vcard.addTitle(contact.title)
+        if (contact.role.isNotBlank()) vcard.addRole(contact.role)
+        if (contact.url.isNotBlank()) vcard.addUrl(contact.url)
+        if (contact.note.isNotBlank()) vcard.addNote(contact.note)
+        if (contact.uid.isNotBlank()) vcard.uid = ezvcard.property.Uid(contact.uid)
+        if (contact.categories.isNotEmpty()) {
+            val c = ezvcard.property.Categories()
+            contact.categories.forEach { c.values.add(it) }
+            vcard.addCategories(c)
+        }
+        return ezvcard.Ezvcard.write(vcard).go()
+    }
+
+    // ICalEvent, ICalAttendee, ICalAlarm — Wire-generated from types.proto
+
+    /** Parse iCal date string → java.time.Instant (for google.protobuf.Timestamp mapping). */
+    private fun parseInstant(value: String): java.time.Instant? = try {
+        java.time.Instant.parse(value)
+    } catch (_: Exception) {
+        try { java.time.OffsetDateTime.parse(value).toInstant() }
+        catch (_: Exception) { null }
+    }
+
+    /** Parse iCal duration string → java.time.Duration (for google.protobuf.Duration mapping). */
+    private fun parseDuration(value: String): java.time.Duration? = try {
+        java.time.Duration.parse(value)
+    } catch (_: Exception) { null }
+
+    /** Parse iCal (.ics) → typed ICalEvent list using Wire proto types. */
+    fun parseICalTyped(ics: String): List<ICalEvent> {
+        val raw = parseICal(ics)
+        return raw.map { map ->
+            ICalEvent(
+                uid = map["UID"] ?: "",
+                summary = map["SUMMARY"] ?: "",
+                description = map["DESCRIPTION"] ?: "",
+                location = map["LOCATION"] ?: "",
+                dt_start = map["DTSTART"]?.let { parseInstant(it) },
+                dt_end = map["DTEND"]?.let { parseInstant(it) },
+                duration = map["DURATION"]?.let { parseDuration(it) },
+                rrule = map["RRULE"] ?: "",
+                status = map["STATUS"] ?: "",
+                priority = map["PRIORITY"]?.toIntOrNull() ?: 0,
+                url = map["URL"] ?: "",
+                geo = map["GEO"]?.let { g ->
+                    val parts = g.split(";")
+                    if (parts.size == 2) com.google.type.LatLng(
+                        latitude = parts[0].toDoubleOrNull() ?: 0.0,
+                        longitude = parts[1].toDoubleOrNull() ?: 0.0,
+                    ) else null
+                },
+                categories = map["CATEGORIES"]?.split(",")?.map { it.trim() } ?: emptyList(),
+                organizer = map["ORGANIZER"] ?: "",
+                attendees = map.keys
+                    .filter { it.matches(Regex("ATTENDEE\\.\\d+")) }
+                    .mapIndexed { i, _ ->
+                        ICalAttendee(
+                            email = map["ATTENDEE.$i"] ?: "",
+                            name = map["ATTENDEE.$i.CN"] ?: "",
+                            part_stat = map["ATTENDEE.$i.PARTSTAT"] ?: "",
+                            role = map["ATTENDEE.$i.ROLE"] ?: "",
+                        )
+                    },
+                alarms = map.keys
+                    .filter { it.matches(Regex("VALARM\\.\\d+\\.ACTION")) }
+                    .mapIndexed { i, _ ->
+                        ICalAlarm(
+                            action = map["VALARM.$i.ACTION"] ?: "DISPLAY",
+                            trigger = map["VALARM.$i.TRIGGER"] ?: "-PT15M",
+                        )
+                    },
+                created = map["CREATED"]?.let { parseInstant(it) },
+                last_modified = map["LAST-MODIFIED"]?.let { parseInstant(it) },
+            )
+        }
+    }
+
+    /** Convert typed ICalEvent → iCal (.ics) string. */
+    /** Convert typed Wire ICalEvent list → iCal (.ics) string. */
+    fun toICal(events: List<ICalEvent>): String {
+        val sb = StringBuilder()
+        sb.appendLine("BEGIN:VCALENDAR")
+        sb.appendLine("PRODID:-//api-kmp//EN")
+        sb.appendLine("VERSION:2.0")
+        events.forEach { e ->
+            sb.appendLine("BEGIN:VEVENT")
+            if (e.uid.isNotBlank()) sb.appendLine("UID:${e.uid}")
+            if (e.summary.isNotBlank()) sb.appendLine("SUMMARY:${e.summary}")
+            if (e.description.isNotBlank()) sb.appendLine("DESCRIPTION:${e.description}")
+            if (e.location.isNotBlank()) sb.appendLine("LOCATION:${e.location}")
+            e.dt_start?.let { sb.appendLine("DTSTART:$it") }
+            e.dt_end?.let { sb.appendLine("DTEND:$it") }
+            e.duration?.let { sb.appendLine("DURATION:$it") }
+            if (e.rrule.isNotBlank()) sb.appendLine("RRULE:${e.rrule}")
+            if (e.status.isNotBlank()) sb.appendLine("STATUS:${e.status}")
+            if (e.priority != 0) sb.appendLine("PRIORITY:${e.priority}")
+            if (e.url.isNotBlank()) sb.appendLine("URL:${e.url}")
+            e.geo?.let { sb.appendLine("GEO:${it.latitude};${it.longitude}") }
+            if (e.categories.isNotEmpty()) sb.appendLine("CATEGORIES:${e.categories.joinToString(",")}")
+            if (e.organizer.isNotBlank()) sb.appendLine("ORGANIZER:mailto:${e.organizer}")
+            e.attendees.forEach { a ->
+                val params = buildList {
+                    if (a.name.isNotBlank()) add("CN=${a.name}")
+                    if (a.part_stat.isNotBlank()) add("PARTSTAT=${a.part_stat}")
+                    if (a.role.isNotBlank()) add("ROLE=${a.role}")
+                }
+                val paramStr = if (params.isNotEmpty()) ";${params.joinToString(";")}" else ""
+                sb.appendLine("ATTENDEE${paramStr}:mailto:${a.email}")
+            }
+            e.alarms.forEach { alarm ->
+                sb.appendLine("BEGIN:VALARM")
+                sb.appendLine("ACTION:${alarm.action}")
+                sb.appendLine("TRIGGER:${alarm.trigger}")
+                sb.appendLine("END:VALARM")
+            }
+            sb.appendLine("END:VEVENT")
+        }
+        sb.appendLine("END:VCALENDAR")
+        return sb.toString()
+    }
+
+    /** Parse vCard (.vcf) string → raw property map (string-based). */
     fun parseVCard(vcf: String): Map<String, String> {
         val vcard = ezvcard.Ezvcard.parse(vcf).first()
         return buildMap {
@@ -340,8 +547,8 @@ object Validators {
     fun validateVCardProperty(property: String, value: String): Boolean =
         validateByFormat(value, vcardPropertyToFormat(property))
 
-    /** Convert Contact fields → vCard (.vcf) string via ez-vcard. */
-    fun toVCard(fields: Map<String, String>): String {
+    /** Convert raw Contact field map → vCard (.vcf) string via ez-vcard. */
+    fun toVCardRaw(fields: Map<String, String>): String {
         val vcard = ezvcard.VCard()
         fields["FN"]?.let { vcard.setFormattedName(it) }
         (fields["N.given"] ?: fields["N.family"])?.let {
@@ -509,8 +716,8 @@ object Validators {
         }
     }
 
-    /** Convert Event fields → iCalendar (.ics) via ical4j. */
-    fun toICal(events: List<Map<String, String>>): String {
+    /** Convert raw Event field maps → iCalendar (.ics) string. */
+    fun toICalRaw(events: List<Map<String, String>>): String {
         val sb = StringBuilder()
         sb.appendLine("BEGIN:VCALENDAR")
         sb.appendLine("PRODID:-//api-kmp//EN")
@@ -568,12 +775,12 @@ object Validators {
         // Returns linked chain: country → phone code → currency → timezone → locale
         val country = Country("US") // placeholder
         return GeoIp(
-            ip = ip,
-            country = country,
-            phoneCode = countryToPhoneCode(country).removePrefix("+"),
-            currency = countryToCurrency(country),
-            timezone = countryToTimezone(country),
-            locale = Locale("${countryToLanguage(country).value}-${country.value}"),
+            ip = ip.value,
+            country = country.value,
+            phone_code = countryToPhoneCode(country).removePrefix("+"),
+            currency_code = countryToCurrency(country).value,
+            timezone = countryToTimezone(country).value,
+            locale = "${countryToLanguage(country).value}-${country.value}",
         )
     }
 
@@ -652,20 +859,23 @@ object Validators {
     }
 
     /** GeoIp → fully localized context: calendar, date format, number format, currency format */
-    fun geoIpToLocalContext(geoIp: GeoIp): Map<String, String> = buildMap {
-        put("country", geoIp.country.value)
-        put("city", geoIp.city)
-        put("timezone", geoIp.timezone.value)
-        put("locale", geoIp.locale.value)
-        put("currency", geoIp.currency.value)
-        put("phoneCode", geoIp.phoneCode)
-        put("calendarType", countryToCalendarType(geoIp.country))
-        put("dateFormat", countryToDateFormat(geoIp.country))
-        put("timeFormat", countryToTimeFormat(geoIp.country))
-        put("numberFormat", countryToNumberFormat(geoIp.country))
-        put("currencyFormat", countryToCurrencyFormat(geoIp.country))
-        put("measurementSystem", countryToMeasurementSystem(geoIp.country))
-        put("firstDayOfWeek", countryToFirstDayOfWeek(geoIp.country).toString())
+    fun geoIpToLocalContext(geoIp: GeoIp): Map<String, String> {
+        val c = Country(geoIp.country)
+        return buildMap {
+            put("country", geoIp.country)
+            put("city", geoIp.city)
+            put("timezone", geoIp.timezone)
+            put("locale", geoIp.locale)
+            put("currency", geoIp.currency_code)
+            put("phoneCode", geoIp.phone_code)
+            put("calendarType", countryToCalendarType(c))
+            put("dateFormat", countryToDateFormat(c))
+            put("timeFormat", countryToTimeFormat(c))
+            put("numberFormat", countryToNumberFormat(c))
+            put("currencyFormat", countryToCurrencyFormat(c))
+            put("measurementSystem", countryToMeasurementSystem(c))
+            put("firstDayOfWeek", countryToFirstDayOfWeek(c).toString())
+        }
     }
 
     // === Language → ICU Script/Run Detection ===
@@ -736,7 +946,7 @@ object Validators {
     /** Full locale context including script + direction. */
     fun geoIpToFullContext(geoIp: GeoIp): Map<String, String> = buildMap {
         putAll(geoIpToLocalContext(geoIp))
-        val lang = countryToLanguage(geoIp.country)
+        val lang = countryToLanguage(Country(geoIp.country))
         put("language", lang.value)
         put("script", languageToScript(lang))
         put("direction", languageToDirection(lang))

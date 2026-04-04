@@ -11,6 +11,7 @@ wire {
         out = "src/commonMain/kotlin"
     }
     sourcePath {
+        srcDir("src/main/proto")
         srcDir("src/test/proto")
     }
 }

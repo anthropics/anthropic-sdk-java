@@ -92,21 +92,7 @@ value class Hostname(val value: String) {
     override fun toString(): String = value
 }
 
-/** GeoJSON Point — longitude, latitude. */
-@Serializable
-data class GeoPoint(
-    val longitude: Double,
-    val latitude: Double,
-    val altitude: Double? = null,
-) {
-    override fun toString(): String = "$latitude,$longitude${altitude?.let { ",$it" } ?: ""}"
-    companion object {
-        fun parse(value: String): GeoPoint {
-            val parts = value.split(",").map { it.trim().toDouble() }
-            return GeoPoint(longitude = parts[1], latitude = parts[0], altitude = parts.getOrNull(2))
-        }
-    }
-}
+// GeoPoint, PersonName, PostalAddress, GeoIp, Measure — Wire-generated from types.proto
 
 /** Locale — BCP 47 / CLDR locale tag. */
 @Serializable
@@ -166,54 +152,11 @@ value class Language(val value: String) {
     override fun toString(): String = value
 }
 
-/** MeasureUnit — value + unit (e.g. "5.2 kg", "100 km"). */
-@Serializable
-data class Measure(
-    val value: Double,
-    val unit: String,
-) {
-    override fun toString(): String = "$value $unit"
-}
+// === Extension functions for Wire-generated types ===
 
-/** PersonName — structured name (given, family, prefix, suffix). */
-@Serializable
-data class PersonName(
-    val given: String = "",
-    val family: String = "",
-    val prefix: String? = null,
-    val suffix: String? = null,
-    val middle: String? = null,
-) {
-    val full: String get() = listOfNotNull(prefix, given, middle, family, suffix)
-        .filter { it.isNotBlank() }.joinToString(" ")
-    override fun toString(): String = full
-}
+/** PersonName.full — formatted full name. */
+val PersonName.full: String get() = listOfNotNull(prefix, given, middle, family, suffix)
+    .filter { it.isNotBlank() }.joinToString(" ")
 
-/**
- * GeoIP — IP geolocation result.
- * Links: IP → city, country, timezone, phone code, currency, locale.
- */
-@Serializable
-data class GeoIp(
-    val ip: IpAddress,
-    val country: Country,
-    val city: String = "",
-    val region: String = "",
-    val postalCode: String = "",
-    val timezone: Timezone = Timezone.UTC,
-    val locale: Locale = Locale.EN,
-    val currency: Currency = Currency.USD,
-    val phoneCode: String = "",        // +1, +44, +81
-    val location: GeoPoint? = null,    // lat/lon
-) {
-    /** Phone with country code prepended. */
-    fun formatPhone(localNumber: String): Phone = Phone("+$phoneCode$localNumber")
-
-    /** Full address from geo data. */
-    fun toAddress(): PostalAddress = PostalAddress(
-        city = city,
-        state = region,
-        postalCode = postalCode,
-        country = country.value,
-    )
-}
+/** GeoIp.formatPhone — phone with country code prepended. */
+fun GeoIp.formatPhone(localNumber: String): Phone = Phone("+$phone_code$localNumber")

@@ -1,0 +1,124 @@
+syntax = "proto3";
+package com.anthropic.core;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "google/type/latlng.proto";
+import "google/type/postal_address.proto";
+import "google/type/money.proto";
+import "google/type/date.proto";
+import "google/type/datetime.proto";
+import "google/type/timeofday.proto";
+import "google/type/phone_number.proto";
+import "google/type/color.proto";
+
+// === Value Types — Wire KMP data classes using Google standard protos ===
+
+// Structured person name (ICU PersonName, Google People API compatible)
+message PersonName {
+    string given = 1;
+    string family = 2;
+    string prefix = 3;
+    string suffix = 4;
+    string middle = 5;
+}
+
+// RFC 6350 vCard Contact — uses google.type where available
+message VCardContact {
+    PersonName name = 1;
+    repeated string emails = 2;                      // RFC 5321 email
+    repeated google.type.PhoneNumber phones = 3;     // google.type.PhoneNumber
+    repeated google.type.PostalAddress addresses = 4;// google.type.PostalAddress (CLDR)
+    string organization = 5;
+    string title = 6;
+    string role = 7;
+    string url = 8;
+    string photo = 9;
+    google.type.Date birthday = 10;                  // google.type.Date
+    string note = 11;
+    repeated string categories = 12;
+    string uid = 13;
+}
+
+// RFC 5545 iCalendar Event — google.protobuf.Timestamp for dates
+message ICalEvent {
+    string uid = 1;
+    string summary = 2;
+    string description = 3;
+    string location = 4;
+    google.protobuf.Timestamp dt_start = 5;
+    google.protobuf.Timestamp dt_end = 6;
+    google.protobuf.Duration duration = 7;
+    string rrule = 8;                                 // RFC 5545 RRULE
+    string status = 9;                                // TENTATIVE/CONFIRMED/CANCELLED
+    int32 priority = 10;
+    string url = 11;
+    google.type.LatLng geo = 12;                      // google.type.LatLng
+    repeated string categories = 13;
+    string organizer = 14;                            // email (mailto:)
+    repeated ICalAttendee attendees = 15;
+    repeated ICalAlarm alarms = 16;
+    google.protobuf.Timestamp created = 17;
+    google.protobuf.Timestamp last_modified = 18;
+}
+
+// iCal ATTENDEE with parameters (RFC 5545)
+message ICalAttendee {
+    string email = 1;
+    string name = 2;                                  // CN parameter
+    string part_stat = 3;                             // NEEDS-ACTION/ACCEPTED/DECLINED/TENTATIVE
+    string role = 4;                                  // CHAIR/REQ-PARTICIPANT/OPT-PARTICIPANT
+}
+
+// iCal VALARM (RFC 5545)
+message ICalAlarm {
+    string action = 1;                                // AUDIO/DISPLAY/EMAIL
+    google.protobuf.Duration trigger_duration = 2;    // structured trigger
+    string trigger = 3;                               // raw RFC 5545 (-PT15M)
+}
+
+// GeoJSON Point (google.type.LatLng + altitude)
+message GeoPoint {
+    double longitude = 1;
+    double latitude = 2;
+    double altitude = 3;
+}
+
+// GeoIP — links IP → country → all localized formats
+message GeoIp {
+    string ip = 1;                                    // IpAddress (v4/v6)
+    string country = 2;                               // ISO 3166-1 alpha-2
+    string city = 3;
+    string region = 4;
+    string postal_code = 5;
+    string timezone = 6;                              // IANA timezone ID
+    string locale = 7;                                // BCP 47 locale tag
+    google.type.Money currency_sample = 8;            // google.type.Money
+    string currency_code = 9;                         // ISO 4217
+    string phone_code = 10;                           // +1, +44, +81
+    google.type.LatLng location = 11;                 // google.type.LatLng
+}
+
+// Measure — value + unit (UCUM/CLDR compatible)
+message Measure {
+    double value = 1;
+    string unit = 2;
+}
+
+// PatchEvent — universal mutation event (SSE + WebSocket sync)
+message PatchEvent {
+    string op = 1;                                    // add/replace/remove/patch
+    string entity_id = 2;
+    bytes before = 3;                                 // serialized entity
+    bytes after = 4;
+    repeated PatchOperation patch = 5;
+    google.protobuf.Timestamp timestamp = 6;
+}
+
+// JSON Patch operation (RFC 6902)
+message PatchOperation {
+    string op = 1;                                    // add/remove/replace/move/copy/test
+    string path = 2;                                  // JSON Pointer (RFC 6901)
+    string value = 3;
+    string from = 4;                                  // for move/copy
+}
