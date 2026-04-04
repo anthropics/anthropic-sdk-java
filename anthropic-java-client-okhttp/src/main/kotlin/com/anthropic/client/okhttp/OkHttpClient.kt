@@ -135,7 +135,7 @@ internal constructor(
         if (body == null && requiresBody(method)) {
             body = "".toRequestBody()
         }
-        val builder = Request.Builder().url(baseUrl ?: "").method(method.name, body)
+        val builder = Request.Builder().url(baseUrl ?: "").method(method.value, body)  // .value matches enum(value) and Spring pattern
         headers.names().forEach { name ->
             headers.values(name).forEach { builder.addHeader(name, it) }
         }

@@ -46,7 +46,7 @@ class KtorHttpClient(
     ): HttpResponse {
         val sdkTimeout = requestOptions.timeout
         val response: KtorResponse = ktorClient.request {
-            this.method = request.method.toKtorMethod()
+            this.method = io.ktor.http.HttpMethod(request.method.value)  // enum.value → ktor method
             url(request.url())
             request.headers.names().forEach { name ->
                 request.headers.values(name).forEach { value ->
@@ -84,14 +84,4 @@ class KtorHttpClient(
     override fun close() = ktorClient.close()
 }
 
-private fun HttpMethod.toKtorMethod(): io.ktor.http.HttpMethod = when (this) {
-    HttpMethod.GET -> io.ktor.http.HttpMethod.Get
-    HttpMethod.POST -> io.ktor.http.HttpMethod.Post
-    HttpMethod.PUT -> io.ktor.http.HttpMethod.Put
-    HttpMethod.DELETE -> io.ktor.http.HttpMethod.Delete
-    HttpMethod.PATCH -> io.ktor.http.HttpMethod.Patch
-    HttpMethod.HEAD -> io.ktor.http.HttpMethod.Head
-    HttpMethod.OPTIONS -> io.ktor.http.HttpMethod.Options
-    HttpMethod.CONNECT -> io.ktor.http.HttpMethod("CONNECT")
-    HttpMethod.TRACE -> io.ktor.http.HttpMethod("TRACE")
-}
+// HttpMethod conversion removed — now uses io.ktor.http.HttpMethod directly.
