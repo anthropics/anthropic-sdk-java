@@ -5,8 +5,10 @@ import com.anthropic.core.RequestOptions
 
 interface HttpClient : AutoCloseable {
 
+    /** Blocking execution. */
     fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse
 
+    /** Async execution returning CompletableFuture (JVM standard). */
     fun executeAsync(
         request: HttpRequest,
         requestOptions: RequestOptions,
