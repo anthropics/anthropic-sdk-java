@@ -1069,37 +1069,24 @@ Uses the same KMP libs the generated code uses:
 
 | Generator dependency | KMP? | Purpose |
 |---|---|---|
-| **kotlinx.serialization** | ✅ | Parse YAML/JSON specs |
+| **swagger-parser** 2.1.39 | JVM | Parse OpenAPI specs (standard, battle-tested) |
+| **JAsyncAPI** | JVM | Parse AsyncAPI specs (official AsyncAPI project) |
 | **okio** | ✅ | Read/write files |
 | **KotlinPoet** | ✅ (JVM+) | Emit Kotlin source code |
 | **ktor-client** | ✅ | Fetch remote specs (optional) |
 
 The generator eats its own dog food — same libs, same patterns, same targets.
-No JVM-only swagger-parser dependency needed if we parse the YAML ourselves
-with kotlinx.serialization (OpenAPI/AsyncAPI specs are just JSON/YAML).
+Uses stable parser libs — same principle as the SDK: don't duplicate what stable libs provide.
+swagger-parser is the standard OpenAPI parser (used by openapi-generator, Fabrikt, etc.).
+JAsyncAPI is the official AsyncAPI JVM parser (maintained by AsyncAPI Initiative).
 
-```kotlin
-// The generator — a KMP Kotlin program
-// Parses OpenAPI YAML with kotlinx.serialization
-// Writes Kotlin source with KotlinPoet
-// Runs as: Gradle task, CLI tool, or CI script
+The generator JVM target uses these parsers. The generator's OUTPUT is KMP Kotlin
+that compiles on all targets. The generator itself runs on JVM (Gradle task, JBang)
+or as native CLI (Clikt) for the code emission part.
 
-@Serializable
-data class OpenApiSpec(
-    val openapi: String,
-    val paths: Map<String, PathItem>,
-    val components: Components,
-)
-
-@Serializable
-data class AsyncApiSpec(
-    val asyncapi: String,
-    val channels: Map<String, ChannelItem>,
-)
-
-// Parse specs with kotlinx.serialization (KMP-native, no swagger-parser needed)
-val openApi: OpenApiSpec = Yaml.decodeFromString(openApiYaml)
-val asyncApi: AsyncApiSpec = Yaml.decodeFromString(asyncApiYaml)
+// Parse specs with stable parser libs — don't write custom parsers
+val openApi = OpenAPIV3Parser().read("openapi.yaml")  // swagger-parser (standard)
+val asyncApi = JAsyncAPI.parse("asyncapi.yaml")         // jasyncapi (official)
 
 // Generate code with KotlinPoet
 openApi.components.schemas.forEach { (name, schema) ->
@@ -1151,7 +1138,8 @@ jbang anthropic-codegen.kt --openapi openapi.yaml --output src/commonMain/kotlin
 | Tool | Purpose | KMP? |
 |---|---|---|
 | **Clikt** (ajalt) | CLI argument parsing | ✅ KMP native |
-| **kotlinx.serialization** | Parse YAML/JSON specs | ✅ KMP |
+| **swagger-parser** 2.1.39 | Parse OpenAPI specs (standard) | JVM |
+| **JAsyncAPI** | Parse AsyncAPI specs (official) | JVM |
 | **KotlinPoet** | Emit Kotlin source code | ✅ (JVM for codegen, output is KMP) |
 | **okio** | File I/O | ✅ KMP native |
 | **JBang** | Single-file script runner | JVM (no compile step) |
