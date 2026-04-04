@@ -777,19 +777,58 @@ And to kotlinx.serialization's field handling:
 `JsonMissing` → `Missing`, etc. — to reflect format-agnostic nature. The "Json" prefix
 can remain as typealiases for backward compat.
 
-### What Stays in com.anthropic.core (Claude AI-Specific)
+### Deep Classification: com.anthropic.core files — Stable Lib Coverage
 
-| File | Why It's SDK-Specific |
-|---|---|
-| `ClientOptions.kt` | API key, base URL, auth headers — Anthropic-specific |
-| `PrepareRequest.kt` | Adds Anthropic headers (x-api-key, anthropic-version) |
-| `RequestOptions.kt` | Per-request overrides (timeout, idempotency key) |
-| `StructuredOutputs.kt` | JSON schema extraction for tool use — Anthropic feature |
-| `Values.kt` / `Field<T>` + `Value` | Wire-style field presence container (KnownValue, Missing, Null) — generic, used by all formats |
-| `ErrorHandler.kt` | Maps HTTP status codes to Anthropic exception types |
-| `Headers.kt` | Has Value integration (.put(name, Value)) |
-| `QueryParams.kt` | Has Value integration |
-| `HttpMethod.kt` | Multi-protocol enum (HTTP/WebDAV/gRPC/RSocket/MCP) |
+**None of these are truly "Claude AI-Specific".** Every file implements generic patterns
+that stable KMP libs (ktor, Wire, MCP SDK, kotlinx) already provide. The only
+Anthropic-specific content is configuration values (default URL, header names).
+
+| File | Generic Pattern | Stable Lib Replacement | Anthropic-Only Content |
+|---|---|---|---|
+| `ClientOptions.kt` | API key, base URL, HTTP client config, timeout, retry | **ktor** `HttpClient { install(Auth) { bearer {} }; install(HttpRequestRetry) {} }` | Default URL `api.anthropic.com`, thread naming |
+| `PrepareRequest.kt` | Add auth/version/user-agent headers to requests | **ktor** `HttpClient { defaultRequest { header("Authorization", "Bearer $key") } }` | Header names: `x-api-key`, `anthropic-version`, `anthropic-beta` |
+| `RequestOptions.kt` | Per-request timeout, idempotency key, extra headers | **ktor** `HttpRequestBuilder { timeout {} }` + request-level headers | None (package name only) |
+| `ErrorHandler.kt` | HTTP status → exception mapping (400/401/403/404/422/429/5xx) | **ktor** `HttpResponseValidator { handleResponseExceptionWithRequest {} }` | Exception class names (BadRequestException, etc.) |
+| `Values.kt` / `Field<T>` | Wire-style field presence container (Known/Missing/Null) | **Wire** `@WireField(label=OPTIONAL)` field presence semantics | None — fully generic |
+| `Headers.kt` | Case-insensitive header map with Value integration | **ktor** `io.ktor.http.Headers` + Value bridge | None — Value integration is generic |
+| `QueryParams.kt` | Query parameter builder with Value integration | **ktor** `io.ktor.http.Parameters` + Value bridge | None |
+| `HttpMethod.kt` | Multi-protocol enum (HTTP/WebDAV/gRPC/RSocket/MCP) | **ktor** `io.ktor.http.HttpMethod` + extensions | None — fully generic |
+| `StructuredOutputs.kt` | JSON schema extraction from Kotlin classes for tool use | **MCP SDK** `Tool.inputSchema: JsonObject` (schema user-provided) | Anthropic schema restrictions (`additionalProperties: false`, all properties required) |
+
+### What's TRULY Anthropic-Only (after replacing with stable libs)
+
+After replacing all generic infrastructure with ktor/Wire/MCP SDK, the only
+Anthropic-specific code is **configuration constants**:
+
+```kotlin
+// This is ALL that's truly Anthropic-specific:
+object AnthropicDefaults {
+    const val BASE_URL = "https://api.anthropic.com"
+    const val API_KEY_HEADER = "x-api-key"
+    const val VERSION_HEADER = "anthropic-version"
+    const val BETA_HEADER = "anthropic-beta"
+    const val API_VERSION = "2023-06-01"
+}
+```
+
+Everything else — HTTP client config, auth, retry, error handling, field presence,
+request options, headers, query params, JSON schema — is generic MCP/API infrastructure
+that stable libs handle.
+
+### Migration Path: com.anthropic.core → ktor + MCP SDK
+
+| Current Custom Code | Lines | → Ktor/MCP SDK Direct Usage |
+|---|---|---|
+| `ClientOptions.kt` | 400 | `HttpClient(CIO) { install(Auth); install(HttpRequestRetry); defaultRequest { } }` |
+| `PrepareRequest.kt` | 30 | `defaultRequest { header("x-api-key", apiKey) }` — 3 lines |
+| `RequestOptions.kt` | 80 | `HttpRequestBuilder { timeout { requestTimeoutMillis = ... } }` |
+| `ErrorHandler.kt` | 80 | `HttpResponseValidator { handleResponseExceptionWithRequest { response, _ -> when(response.status.value) { 400 -> throw BadRequest(...) } } }` |
+| `Headers.kt` | 110 | `io.ktor.http.Headers` + extension `fun Headers.put(name: String, value: Value)` |
+| `QueryParams.kt` | 90 | `io.ktor.http.Parameters` + extension |
+| `HttpMethod.kt` | 85 | `io.ktor.http.HttpMethod` + WebDAV/gRPC/RSocket constants |
+| `StructuredOutputs.kt` | 150 | MCP SDK `Tool.inputSchema` + Anthropic validation function |
+| `Values.kt` | 130 | Wire field semantics — keep as `kotlinx.kmp.util.json.Field<T>` |
+| **Total** | **~1155** | **~50 lines** of Anthropic config + ktor plugin setup |
 
 ### 🔲 GAPS — Remaining java.* in Core (22 files, NOT models/services)
 
