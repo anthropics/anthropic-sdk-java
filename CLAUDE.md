@@ -9,7 +9,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 
 - **Migration Plan + Low-Level Design**: [`docs/KMP-CONVERSION-PLAN.md`](docs/KMP-CONVERSION-PLAN.md)
 - **Branch**: `claude/convert-to-kmp-I9zBV`
-- **71 commits** on branch, all pushed
+- **103 commits** on branch, all pushed
 
 ## Current Status
 
@@ -17,11 +17,13 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 |---|---|
 | Files in commonMain | 615 (608 com.anthropic + 7 kotlinx.kmp.util) |
 | Files in jvmMain | 9 (Platform, PlatformTime, Properties, PhantomReachable, ServiceExceptions, Optional, Functional, AsyncJvm) |
-| Files in jsMain | In progress — stubs for java.*/Jackson/kotlin.jvm |
 | KMP targets | JVM ✅, JS (IR) 🔲 compiling stubs |
 | java.* imports in core | 42 (standard Java patterns — kept as-is, stubs for non-JVM) |
 | JVM tests | 2,682 pass |
 | commonTest tests | 66 (KmpOptional) |
+| api-kmp module | 71 commonMain + 12 jvmMain + 7 test files |
+| api-gen | ✅ Generates KMP Kotlin from OpenAPI — tested with Petstore + Amazon SP-API |
+| Petstore tests | 5 WireMock tests, 0 failures — generated models verified end-to-end |
 
 ## Plan Structure — Where to Find What
 
@@ -34,6 +36,10 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | KMP Utility Packages | L662 | `kotlinx.kmp.util.optional` (66 tests) |
 | HttpMethod Multi-Protocol | L670 | HTTP/WebDAV/gRPC/RSocket/MCP enum |
 | KMP-Native Files | L674 | KtorHttpClient, KotlinxJsonHandler, JsonConfiguration, KmpOptional |
+| api-kmp extraction | L700 | Runtime + codegen in separate module |
+| api-gen end-to-end | — | OpenAPI → @Serializable + suspend + ktor (Petstore, Amazon) |
+| Petstore WireMock tests | — | 5 tests pass: GET/POST Pet, List, Inventory, Category |
+| Ktor extensions | — | HeadersBuilder/ParametersBuilder + KmpValue support |
 
 ### 🔲 Remaining Work
 | Section | Line | What |
@@ -232,11 +238,11 @@ SKIP_MOCK_TESTS=true ./gradlew :anthropic-java-core:jvmTest --no-configuration-c
 
 ## Next Steps (Priority Order)
 
-1. ~~Suspend conversion~~ **DONE** — `executeSuspend()` + `prepareSuspend()` added with default impls. Zero breaking changes. Services/models stay as-is.
-2. **`api-gen` common lib** 🔲 — reusable KMP code generator: OpenAPI/AsyncAPI spec → `@Serializable` sealed classes + suspend services + ktor client. Uses swagger-parser + JAsyncAPI + KotlinPoet. Any service's spec in, KMP SDK out.
-3. **JS/Native targets** — generated models compile on all targets. jsMain stubs for java.* types already created.
-4. **MCP SDK integration** — add dependency, create tool bridge
-5. **MsgPack + Protobuf** — add ktor ContentNegotiation formats
-6. **Delete RetryingHttpClient** — use ktor HttpRequestRetry (120 lines)
-7. **Delete MultipartBody** — use ktor MultiPartFormDataContent (130 lines)
-8. **Delete SseHandler** — use ktor SSE plugin (70 lines)
+1. ~~Suspend conversion~~ **DONE** — `executeSuspend()` + `prepareSuspend()` added with default impls. Zero breaking changes.
+2. ~~`api-gen` common lib~~ **DONE** — generates KMP Kotlin from OpenAPI. Tested: Petstore (5 WireMock tests pass), Amazon SP-API (69 models).
+3. **ktor CIO server tests** 🔲 — test all serializers (JSON, XML, MsgPack, Protobuf) + all protocols (HTTPS, WSS, SSE, WebDAV, GraphQL)
+4. **Compose KMP UI generation** 🔲 — Form/List/Detail @Composable from OpenAPI schemas
+5. **Database generation** 🔲 — Exposed tables (JVM) / SQLDelight .sq (KMP) from schemas
+6. **JS/Native targets** — Wire .proto generates KMP-native models for all targets
+7. **MCP SDK integration** — add dependency, create tool bridge
+8. **MsgPack + Protobuf** — add ktor ContentNegotiation formats
