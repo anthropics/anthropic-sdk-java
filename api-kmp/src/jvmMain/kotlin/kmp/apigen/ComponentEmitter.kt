@@ -137,7 +137,7 @@ class ComponentEmitter : ProtocolEmitter {
                         |        }
                         |    }
                         |}
-                    """.trimMargin())
+                    """.trimIndent())
                     .build()
             )
 

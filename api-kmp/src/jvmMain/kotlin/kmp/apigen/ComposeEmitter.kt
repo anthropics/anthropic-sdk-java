@@ -227,7 +227,7 @@ class ComposeEmitter : ProtocolEmitter {
                 |            ?: androidx.compose.material3.Text("Select a $name")
                 |    }
                 |}
-            """.trimMargin(), remember, mutableStateOf)
+            """.trimIndent(), remember, mutableStateOf)
             .build()
     }
 }

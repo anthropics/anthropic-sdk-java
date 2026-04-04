@@ -106,7 +106,7 @@ class ServiceGenerator(
             |    defaultRequest {
             |        url(baseUrl)
             |    }
-            |""".trimMargin()
+    """.trimIndent()
         )
 
         // Add auth from security schemes
@@ -117,7 +117,7 @@ class ServiceGenerator(
                     |    defaultRequest {
                     |        header(%S, apiKey)
                     |    }
-                    |""".trimMargin(), scheme.name ?: "x-api-key"
+    """.trimIndent(), scheme.name ?: "x-api-key"
                 )
             }
         }

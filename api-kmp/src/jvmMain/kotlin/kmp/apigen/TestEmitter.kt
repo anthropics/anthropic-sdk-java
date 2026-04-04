@@ -151,7 +151,7 @@ class TestEmitter : ProtocolEmitter {
                     |        }
                     |    }
                     |}
-                """.trimMargin())
+                """.trimIndent())
                 .build()
         )
 
@@ -166,7 +166,7 @@ class TestEmitter : ProtocolEmitter {
                     |    val entity: $name = client.get("/$lowerName/1").body()
                     |    assertNotNull(entity)
                     |}
-                """.trimMargin())
+                """.trimIndent())
                 .build()
         )
 
@@ -186,7 +186,7 @@ class TestEmitter : ProtocolEmitter {
                     |    assertNotNull(event.after)
                     |    assertNull(event.before)
                     |}
-                """.trimMargin())
+                """.trimIndent())
                 .build()
         )
 
@@ -206,7 +206,7 @@ class TestEmitter : ProtocolEmitter {
                     |    assertNotNull(event.before)
                     |    assertNotNull(event.after)
                     |}
-                """.trimMargin())
+                """.trimIndent())
                 .build()
         )
 
@@ -223,7 +223,7 @@ class TestEmitter : ProtocolEmitter {
                     |    assertNotNull(event.before)
                     |    assertNull(event.after)
                     |}
-                """.trimMargin())
+                """.trimIndent())
                 .build()
         )
 
@@ -251,7 +251,7 @@ class TestEmitter : ProtocolEmitter {
                     |    job.cancel()
                     |    assertTrue(received.isNotEmpty())
                     |}
-                """.trimMargin())
+                """.trimIndent())
                 .build()
         )
 
