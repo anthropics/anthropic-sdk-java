@@ -102,6 +102,7 @@ class GrpcEmitter : ProtocolEmitter {
         "Long" -> "int64"
         "Double" -> "double"
         "Boolean" -> "bool"
+            "Url" -> "string"
         else -> if (type.startsWith("List<")) "repeated ${protoType(type.removePrefix("List<").removeSuffix(">"))}"
                 else type
     }

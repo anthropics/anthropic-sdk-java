@@ -83,6 +83,7 @@ class DatabaseEmitter : ProtocolEmitter {
                         "Int", "Long" -> "INTEGER"
                         "Double" -> "REAL"
                         "Boolean" -> "INTEGER"
+                        "Url" -> "TEXT"
                         else -> if (prop.ref != null) "INTEGER" else "TEXT"
                     }
                     val notNull = if (!prop.nullable && propName in schema.required) " NOT NULL" else ""

@@ -174,6 +174,7 @@ class ModelGenerator(
             "Double" -> DOUBLE
             "Boolean" -> BOOLEAN
             "Any" -> ANY
+            "Url" -> ClassName("com.anthropic.core", "Uri")
             "JsonObject" -> ClassName("kotlinx.serialization.json", "JsonObject")
             else -> {
                 if (type.startsWith("List<")) {
