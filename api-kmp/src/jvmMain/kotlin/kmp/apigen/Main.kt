@@ -39,6 +39,8 @@ fun main(args: Array<String>) {
     println("  generated DB")
     GraphqlFullEmitter().emit(openApi, pkg, outputDir)
     println("  generated GraphQL")
+    TestEmitter().emit(openApi, pkg, outputDir)
+    println("  generated tests")
     ComponentEmitter().emit(openApi, pkg, outputDir)
     println("  generated services → $output")
 
