@@ -330,11 +330,16 @@ For each model:
 - `StreamResponse.stream(): Stream<T>` → `fun asSequence(): Sequence<T>` or `fun asFlow(): Flow<T>`
 - Keep `stream()` as JVM-only extension for backward compatibility in jvmMain
 
-### 3.4 InputStream/OutputStream → ByteArray / kotlinx-io
-**Files: `HttpRequestBody.kt`, `HttpResponse.kt`, `HttpRequestBodies.kt`, `StreamHandler.kt`**
-- `HttpRequestBody.writeTo(outputStream: OutputStream)` → `fun writeTo(sink: ByteArrayOutput)` or use `ByteArray`
-- `HttpResponse.body(): InputStream` → `fun body(): ByteArray` or `fun bodyAsChannel(): ByteReadChannel`
-- Consider using Ktor's `ByteReadChannel` for streaming
+### 3.4 InputStream/OutputStream → okio BufferedSource/BufferedSink ✅ DONE (`7606ae7`)
+**Files: `HttpRequestBody.kt`, `HttpResponse.kt`, `HttpRequestBodies.kt`, `StreamHandler.kt`, `KtorHttpClient.kt`, `OkHttpClient.kt`**
+- `HttpRequestBody.writeTo(outputStream: OutputStream)` → `fun writeTo(sink: okio.BufferedSink)` ✅
+- `HttpResponse.body(): InputStream` → `fun body(): okio.BufferedSource` ✅
+- `HttpRequestBodies.kt`: ByteArrayOutputStream → okio.Buffer, InputStream → Source bridge ✅
+- `StreamHandler.kt`: bufferedReader().useLines() → readUtf8Line() loop ✅
+- `StringHandler.kt`: readBytes().toString() → readUtf8() ✅
+- `JsonHandler.kt`: readValue(body()) → readValue(body().inputStream()) ✅
+- `KtorHttpClient.kt`: ByteArrayI/O → okio.Buffer ✅
+- `OkHttpClient.kt`: body!!.source().buffer() → eagerly buffer to okio.Buffer ✅
 
 ### 3.5 CompletableFuture → Coroutines (Suspend-Only)
 **Files: All services, HttpClient, RetryingHttpClient, Sleeper, AsyncStreamResponse**
@@ -378,20 +383,17 @@ actual fun getSystemProperty(key: String): String? = System.getProperty(key)
 actual fun getEnvironmentVariable(key: String): String? = System.getenv(key)
 ```
 
-### 3.8 PhantomReachable.kt
-- Move to jvmMain (Java Cleaner is JVM-only)
-- commonMain: `expect fun closeWhenPhantomReachable(observed: Any, close: () -> Unit)`
-- jvmMain: actual using `java.lang.ref.Cleaner` (existing code)
-- Other targets: no-op actual
+### 3.8 PhantomReachable.kt ✅ DONE (`4e1ec31`)
+- commonMain: `expect fun closeWhenPhantomReachable(observed: Any, close: () -> Unit)` + convenience overload taking AutoCloseable ✅
+- jvmMain: `PhantomReachableJvm.kt` — actual using `java.lang.ref.Cleaner` via reflection ✅
+- Other targets: no-op actual (to be added when targets are added)
 
-### 3.9 Thread/Timer (DefaultSleeper.kt)
-- Replace `Thread.sleep()` → `delay()` (coroutine)
-- Replace `Timer`/`TimerTask` → coroutine-based scheduling
-- `DefaultSleeper` becomes coroutine-based
+### 3.9 Thread/Timer (DefaultSleeper.kt) ✅ DONE (prior commit `23ec675`)
+- Timer/TimerTask → `kotlinx.coroutines.delay()` ✅
+- DefaultSleeper now uses coroutine-based scheduling ✅
 
-### 3.10 AutoCloseable
-- Kotlin common has no `AutoCloseable` in older versions, but Kotlin 2.0+ has `kotlin.AutoCloseable`
-- Use `kotlin.AutoCloseable` or define `Closeable` interface in common
+### 3.10 AutoCloseable ✅ DONE (prior commits)
+- Using `kotlin.AutoCloseable` (available since Kotlin 2.0+) ✅
 
 ### 3.11 Remove JVM annotations from common code
 - Remove all `@JvmStatic`, `@JvmSynthetic`, `@JvmName`, `@JvmOverloads`, `@file:JvmName`
@@ -587,15 +589,25 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 
 ## Phase 7: expect/actual Declarations Summary
 
-| Common (expect) | JVM (actual) | Purpose |
-|---|---|---|
-| `getSystemProperty(key)` | `System.getProperty(key)` | Config/env |
-| `getEnvironmentVariable(key)` | `System.getenv(key)` | Config/env |
-| `closeWhenPhantomReachable()` | Java Cleaner reflection | Resource cleanup |
-| `getPackageVersion()` | JAR manifest lookup | User-Agent header |
-| `getOsArch()`, `getOsName()`, `getOsVersion()` | System.getProperty | Platform info |
-| `extractSchema(KClass<*>)` | victools jsonschema-generator | Structured outputs |
-| `randomUuid()` | `UUID.randomUUID()` or `kotlin.uuid.Uuid` | Multipart boundary |
+| Common (expect) | JVM (actual) | Purpose | Status |
+|---|---|---|---|
+| `getSystemProperty(key)` | `System.getProperty(key)` | Config/env | ✅ prior |
+| `getEnvironmentVariable(key)` | `System.getenv(key)` | Config/env | ✅ prior |
+| `closeWhenPhantomReachable()` | Java Cleaner reflection | Resource cleanup | ✅ `4e1ec31` |
+| `getPackageVersion()` | JAR manifest lookup | User-Agent header | ✅ prior |
+| `getOsArch()`, `getOsName()`, `getOsVersion()` | System.getProperty | Platform info | ✅ prior |
+| `urlEncode(value)` | `java.net.URLEncoder` | URL encoding | ✅ prior |
+| `extractSchema(KClass<*>)` | victools jsonschema-generator | Structured outputs | ✅ prior |
+| `class Optional<T>` | `typealias = java.util.Optional<T>` | KMP Optional | ✅ `828313e` |
+| `class Function<T,R>` | `typealias = java.util.function.Function` | KMP functional interface | ✅ `9614114` |
+| `class Supplier<T>` | `typealias = java.util.function.Supplier` | KMP functional interface | ✅ `9614114` |
+| `class Consumer<T>` | `typealias = java.util.function.Consumer` | KMP functional interface | ✅ `9614114` |
+| `class Predicate<T>` | `typealias = java.util.function.Predicate` | KMP functional interface | ✅ `9614114` |
+| `class BiFunction<T,U,R>` | `typealias = java.util.function.BiFunction` | KMP functional interface | ✅ `9614114` |
+| `optionalOf(value)` | `java.util.Optional.of(value)` | Factory function | ✅ `828313e` |
+| `optionalOfNullable(value)` | `java.util.Optional.ofNullable(value)` | Factory function | ✅ `828313e` |
+| `emptyOptional()` | `java.util.Optional.empty()` | Factory function | ✅ `828313e` |
+| `parseRetryAfterToDelayNanos()` | `PlatformTimeJvm` (java.time) | Retry-After header | ✅ `43f530e` |
 
 ---
 
@@ -957,43 +969,44 @@ Everything else is handled by stable libs: ktor (HTTP, retry, SSE, multipart, co
 | `ObjectMappers.kt` | OffsetDateTime, InputStream, etc | → `expect fun jsonMapper()`, JVM actual with time/InputStream |
 
 **Phase 2: Core interfaces — 6 files**
-| File | java.* Import | Replacement |
-|---|---|---|
-| `http/HttpRequestBody.kt` | `java.io.OutputStream` | `okio.BufferedSink` |
-| `http/HttpResponse.kt` | `java.io.InputStream` | `okio.BufferedSource` |
-| `http/HttpResponseFor.kt` | `java.io.InputStream` | follows HttpResponse |
-| `http/HttpClient.kt` | `CompletableFuture` | import from `core/Async.kt` |
-| `http/AsyncStreamResponse.kt` | CompletableFuture, Optional, Executor, AtomicReference | Async/Concurrency + nullable |
-| `Sleeper.kt` | CompletableFuture, AutoCloseable | Async + kotlin.AutoCloseable |
+| File | java.* Import | Replacement | Status |
+|---|---|---|---|
+| `http/HttpRequestBody.kt` | `java.io.OutputStream` | `okio.BufferedSink` | ✅ `7606ae7` |
+| `http/HttpResponse.kt` | `java.io.InputStream` | `okio.BufferedSource` | ✅ `7606ae7` |
+| `http/HttpResponseFor.kt` | `java.io.InputStream` | follows HttpResponse | ✅ `7606ae7` |
+| `http/HttpClient.kt` | `CompletableFuture` | `suspend` + `Flow` | 🔲 Phase 1 |
+| `http/AsyncStreamResponse.kt` | CompletableFuture, Optional, Executor, AtomicReference | `suspend` + nullable | 🔲 Phase 1 (Optional→Throwable? ✅ `0860877`) |
+| `Sleeper.kt` | CompletableFuture, AutoCloseable | `suspend fun sleep()` | 🔲 Phase 1 |
 
 **Phase 3: Implementations — 6 files**
-| File | java.* Import | Replacement |
-|---|---|---|
-| `http/HttpRequestBodies.kt` | ByteArrayInputStream/OutputStream | `okio.Buffer` |
-| `http/KtorHttpClient.kt` | ByteArrayInputStream/OutputStream, CompletableFuture | okio.Buffer + Async |
-| `DefaultSleeper.kt` | CompletableFuture | Async |
-| `PhantomReachableSleeper.kt` | CompletableFuture | Async |
-| `PhantomReachableClosingHttpClient.kt` | CompletableFuture | Async |
-| `PhantomReachableClosingAsyncStreamResponse.kt` | CompletableFuture, Optional, Executor | Async/Concurrency + nullable |
+| File | java.* Import | Replacement | Status |
+|---|---|---|---|
+| `http/HttpRequestBodies.kt` | ByteArrayInputStream/OutputStream | `okio.Buffer` | ✅ `7606ae7` |
+| `http/KtorHttpClient.kt` | ByteArrayInputStream/OutputStream, CompletableFuture | okio.Buffer + `suspend` | ✅ okio `7606ae7`, 🔲 CF→suspend Phase 1 |
+| `DefaultSleeper.kt` | Timer/TimerTask | `kotlinx.coroutines.delay()` | ✅ `23ec675` |
+| `PhantomReachableSleeper.kt` | CompletableFuture | `suspend` | 🔲 Phase 1 |
+| `PhantomReachableClosingHttpClient.kt` | CompletableFuture | `suspend` | 🔲 Phase 1 |
+| `PhantomReachableClosingAsyncStreamResponse.kt` | CompletableFuture, Optional, Executor | `suspend` + nullable | 🔲 Phase 1 (Optional ✅ `0860877`) |
 
 **Phase 4: Consumers — 3 files**
-| File | java.* Import | Replacement |
-|---|---|---|
-| `AutoPagerAsync.kt` | CompletableFuture, Optional, Executor, AtomicReference | Async/Concurrency + nullable |
-| `PageAsync.kt` | CompletableFuture | Async |
-| `ClientOptions.kt` | Clock, Optional, Executor, ExecutorService, ThreadFactory, AtomicLong | PlatformTime, Concurrency, nullable |
+| File | java.* Import | Replacement | Status |
+|---|---|---|---|
+| `AutoPagerAsync.kt` | CompletableFuture, Optional, Executor, AtomicReference | Flow-based pagination | 🔲 Phase 1 (Optional ✅ `0860877`) |
+| `PageAsync.kt` | CompletableFuture | `suspend fun getNextPage()` | 🔲 Phase 1 |
+| `ClientOptions.kt` | Clock, Optional, Executor, ExecutorService, ThreadFactory, AtomicLong | CoroutineDispatcher, kotlinx.datetime, nullable | 🔲 Phase 1 |
 
 ### 🔲 GAPS — Custom Code Duplicating Ktor/MCP SDK (~730 lines)
-| Custom Code | Lines | Ktor/MCP SDK Replacement |
-|---|---|---|
-| `RetryingHttpClient.kt` | 120 | Ktor `HttpRequestRetry` plugin |
-| `HttpRequestBodies.kt` MultipartBody | 130 | Ktor `MultiPartFormDataContent` |
-| `SseHandler.kt` SSE parser | 70 | Ktor SSE plugin |
-| `StreamHandler.kt` wrappers | 45 | `kotlinx.coroutines.flow.Flow` |
-| `AsyncStreamResponse.kt` | 70 | `kotlinx.coroutines.flow.Flow` |
-| `AutoPagerAsync.kt` | 60 | `kotlinx.coroutines.flow.Flow` |
-| `ObjectMappers.kt` Jackson config | 162 | `kotlinx.serialization.Json` (MCP SDK uses `McpJson`) |
-| `BaseSerializer/Deserializer` | 40 | `kotlinx.serialization.KSerializer` |
+| Custom Code | Lines | Ktor/MCP SDK Replacement | Status |
+|---|---|---|---|
+| `RetryingHttpClient.kt` | 120 | Ktor `HttpRequestRetry` plugin | 🔲 (ThreadLocalRandom/TimeUnit removed ✅ `43f530e`) |
+| `HttpRequestBodies.kt` MultipartBody | 130 | Ktor `MultiPartFormDataContent` | 🔲 (okio migration ✅ `7606ae7`) |
+| `SseHandler.kt` SSE parser | 70 | Ktor SSE plugin | 🔲 |
+| `StreamHandler.kt` wrappers | 45 | `kotlinx.coroutines.flow.Flow` | 🔲 (okio readUtf8Line ✅ `7606ae7`) |
+| `AsyncStreamResponse.kt` | 70 | `kotlinx.coroutines.flow.Flow` | 🔲 (Optional→nullable ✅ `0860877`) |
+| `AutoPagerAsync.kt` | 60 | `kotlinx.coroutines.flow.Flow` | 🔲 (Optional→nullable ✅ `0860877`) |
+| `ObjectMappers.kt` Jackson config | 162 | `kotlinx.serialization.Json` (MCP SDK uses `McpJson`) | 🔲 (`anthropicJson` created ✅ prior) |
+| `BaseSerializer/Deserializer` | 40 | `kotlinx.serialization.KSerializer` | 🔲 |
+| Custom `ProtoAnnotations.kt` | 98 | Wire `@WireRpc`, `@WireField` | ✅ deleted `b02f3c6` |
 
 ### 🔲 GAPS — MCP SDK Integration
 | Item | Status |
@@ -1005,7 +1018,9 @@ Everything else is handled by stable libs: ktor (HTTP, retry, SSE, multipart, co
 
 ---
 
-## Phase 9: Remove java.* from Core + Use MCP SDK/Ktor Directly
+## Phase 9 (Original): Remove java.* from Core + Use MCP SDK/Ktor Directly
+
+> **Note:** This is the original Phase 9 plan. See "Phase 9: Stable Libs Migration" above for the updated version that incorporates lessons learned (expect class limitations, suspend-first approach).
 
 ### MCP SDK Research Summary
 
@@ -1035,13 +1050,14 @@ Everything else is handled by stable libs: ktor (HTTP, retry, SSE, multipart, co
 
 ### 9.1 Phase 0: Create expect/actual Infrastructure (New Files Only)
 
-**No existing files modified.** Create platform abstractions used by subsequent phases.
+**Status:** PlatformTime ✅ `43f530e`, PhantomReachable ✅ `4e1ec31`, Optional ✅ `828313e`, Functional ✅ `9614114`
+**Remaining:** CompletableFuture→suspend, Executor→CoroutineDispatcher, AtomicReference→atomicfu (Phase 1 work)
 
-| New File (commonMain) | Content |
-|---|---|
-| `core/Async.kt` | `expect class CompletableFuture<T>` with thenApply, thenCompose, thenComposeAsync, handleAsync, whenComplete, whenCompleteAsync, complete, completeExceptionally, get; `expect fun <T> completedFuture(value: T)` |
-| `core/Concurrency.kt` | `expect interface Executor { fun execute(command: Runnable) }`; `expect class AtomicReference<T>(initial: T) { fun get/set/getAndSet/compareAndSet }` |
-| `core/PlatformTime.kt` | `expect fun systemClock(): PlatformClock`; `expect fun parseHttpDate(value: String): PlatformInstant?`; `expect fun nanosUntil(from, to): Long` |
+| New File (commonMain) | Content | Status |
+|---|---|---|
+| `core/Async.kt` | `expect class CompletableFuture<T>` — **REVISED**: use `suspend` instead of expect/actual (expect class can't declare methods matching java.util.function signatures) | 🔲 Phase 1: convert to suspend |
+| `core/Concurrency.kt` | `expect interface Executor` — **REVISED**: use `CoroutineDispatcher` instead | 🔲 Phase 1 |
+| `core/PlatformTime.kt` | `expect fun parseRetryAfterToDelayNanos()` | ✅ `43f530e` |
 
 | New File (jvmMain) | Content |
 |---|---|
@@ -1146,7 +1162,9 @@ SKIP_MOCK_TESTS=true ./gradlew :anthropic-java-core:jvmTest --no-configuration-c
 
 ---
 
-## Next Phase: Typealias-Based Migration Strategy
+## Next Phase (Superseded): Typealias-Based Migration Strategy
+
+> **Note:** This approach was partially superseded. `expect/actual typealias` works for Optional and functional interfaces (`828313e`, `9614114`) but NOT for CompletableFuture (expect class can't declare methods matching Java SAM signatures). The suspend-first approach in "Phase 9: Stable Libs Migration" above is the current strategy.
 
 ### Core Idea: Use `typealias` in commonMain to Bridge JVM Types
 
