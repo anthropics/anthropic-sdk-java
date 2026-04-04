@@ -74,7 +74,7 @@ object OpenApiParser {
     fun parse(file: File): ParsedSpec {
         val options = ParseOptions().apply {
             isResolve = true
-            isResolveFully = true
+            isResolveFully = false  // Keep $ref intact for oneOf variant resolution
         }
         val openApi: OpenAPI = OpenAPIV3Parser().read(file.absolutePath, null, options)
             ?: error("Failed to parse OpenAPI spec: ${file.name}")
@@ -99,11 +99,21 @@ object OpenApiParser {
         if (!schema.oneOf.isNullOrEmpty()) {
             val discriminator = schema.discriminator?.propertyName
             val mapping = schema.discriminator?.mapping ?: emptyMap()
-            val variants = schema.oneOf.map { variant ->
-                val ref = variant.`$ref` ?: return@map null
-                val variantName = ref.substringAfterLast("/")
-                VariantInfo(variantName, ref)
-            }.filterNotNull()
+            // After resolveFully, $ref is null — use discriminator mapping or schema title
+            val variants = schema.oneOf.mapIndexed { i, variant ->
+                val variantName = variant.`$ref`?.substringAfterLast("/")
+                    ?: mapping.values.elementAtOrNull(i)?.substringAfterLast("/")
+                    ?: variant.title
+                    ?: variant.properties?.keys?.let { props ->
+                        // Infer name from unique properties
+                        mapping.entries.find { (_, ref) ->
+                            val refName = ref.substringAfterLast("/")
+                            schema.oneOf.any { v -> v.title == refName || v.properties?.containsKey(discriminator) == true }
+                        }?.value?.substringAfterLast("/")
+                    }
+                    ?: "Variant$i"
+                VariantInfo(variantName, variant.`$ref` ?: variantName)
+            }
             return ParsedSchema.Sealed(variants, discriminator, mapping, schema.description)
         }
 
