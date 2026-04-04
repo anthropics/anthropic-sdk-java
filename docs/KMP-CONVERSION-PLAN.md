@@ -4521,3 +4521,156 @@ PetComponent
 ```
 
 **Every protocol is the same component. MCP is just another interface to it.**
+
+### Schema Registry — external $ref + cross-API JSON Patch
+
+Components share schemas via a registry. External `$ref` links schemas across APIs.
+JSON Patch operations work across API boundaries — patch a Pet with data from an Order.
+
+```kotlin
+// Schema Registry — single source of truth for all component schemas
+class SchemaRegistry {
+    private val schemas = mutableMapOf<String, JsonObject>()  // uri → JSON Schema
+    private val components = mutableMapOf<String, McpToolProvider>()  // uri → component
+
+    // Register component + its schema
+    fun register(uri: String, schema: JsonObject, component: McpToolProvider) {
+        schemas[uri] = schema
+        components[uri] = component
+    }
+
+    // Resolve $ref across APIs
+    fun resolve(ref: String): JsonObject = schemas[ref]
+        ?: error("Schema not found: $ref")
+
+    // Find component by schema URI
+    fun component(ref: String): McpToolProvider = components[ref]
+        ?: error("Component not found: $ref")
+
+    // All registered schemas (for PROPFIND on root)
+    fun allSchemas(): Map<String, JsonObject> = schemas.toMap()
+
+    // All tools across all components
+    fun allTools(): List<Tool> = components.values.flatMap { it.listTools() }
+}
+```
+
+**External $ref links schemas across APIs:**
+
+```yaml
+# petstore-openapi.yaml
+components:
+  schemas:
+    Pet:
+      properties:
+        supplier:
+          $ref: 'https://api.aliexpress.com/schemas/Supplier'  # external ref
+        listing:
+          $ref: 'https://api.ebay.com/schemas/Listing'          # external ref
+
+# The registry resolves these at runtime:
+# petstore → aliexpress supplier schema → ebay listing schema
+```
+
+```kotlin
+// Register schemas from multiple APIs
+val registry = SchemaRegistry()
+
+// Petstore API
+val petstoreSpec = OpenApiParser.parse("petstore-openapi.yaml")
+petstoreSpec.schemas.forEach { (name, schema) ->
+    registry.register("https://petstore.io/schemas/$name", schema.toJsonSchema(), PetComponent(client))
+}
+
+// eBay API
+val ebaySpec = OpenApiParser.parse("ebay-openapi.yaml")
+ebaySpec.schemas.forEach { (name, schema) ->
+    registry.register("https://api.ebay.com/schemas/$name", schema.toJsonSchema(), EbayListingComponent(ebayClient))
+}
+
+// AliExpress API
+val aliSpec = OpenApiParser.parse("aliexpress-openapi.yaml")
+aliSpec.schemas.forEach { (name, schema) ->
+    registry.register("https://api.aliexpress.com/schemas/$name", schema.toJsonSchema(), AliSupplierComponent(aliClient))
+}
+
+// Now $ref resolves across APIs
+val petSchema = registry.resolve("https://petstore.io/schemas/Pet")
+val supplierSchema = registry.resolve("https://api.aliexpress.com/schemas/Supplier")
+// Pet.supplier field validates against AliExpress Supplier schema
+```
+
+**Cross-API JSON Patch — patch a Pet with data from another API:**
+
+```kotlin
+// Patch pet's supplier from AliExpress data
+val supplier = aliComponent.get(supplierId)  // Get from AliExpress API
+val audit = petComponent.patch(petId, listOf(
+    PatchOperation(op = "replace", path = "/supplier", value = json.encodeToJsonElement(supplier)),
+    PatchOperation(op = "replace", path = "/supplier_id", value = JsonPrimitive(supplierId)),
+))
+// AuditEvent broadcast to all Pet subscribers
+// Supplier schema validated via registry $ref
+
+// Patch pet's listing from eBay data
+val listing = ebayComponent.get(listingId)  // Get from eBay API
+val audit2 = petComponent.patch(petId, listOf(
+    PatchOperation(op = "replace", path = "/listing", value = json.encodeToJsonElement(listing)),
+))
+// Cross-API data flows through same AuditEvent + JSON Patch mechanism
+```
+
+**MCP tools see all APIs through one registry:**
+
+```kotlin
+// MCP server exposes ALL components from ALL APIs
+val mcpServer = McpServer(transport) {
+    // Register all components from registry
+    registry.components.values.forEach { addToolProvider(it) }
+}
+
+// Claude sees tools from ALL APIs:
+//   pet_get, pet_patch, pet_list          (Petstore)
+//   ebay_listing_get, ebay_listing_search (eBay)
+//   ali_supplier_get, ali_supplier_list   (AliExpress)
+//
+// Claude can: get supplier from AliExpress → patch into Petstore pet
+// The patch validates against both schemas via registry $ref
+```
+
+**Schema Registry is the PROPFIND root:**
+
+```kotlin
+// PROPFIND on root → returns all registered schemas
+fun Route.schemaRegistry(registry: SchemaRegistry) {
+    method(HttpMethod("PROPFIND")) {
+        handle {
+            val path = call.request.path()
+            if (path == "/") {
+                // Root: list all schemas
+                call.respond(registry.allSchemas())
+            } else {
+                // Specific schema
+                val schema = registry.resolve(path)
+                call.respond(schema)
+            }
+        }
+    }
+}
+```
+
+**The full picture:**
+```
+Schema Registry
+    ├── petstore.io/schemas/Pet           → PetComponent        → MCP: pet_*
+    ├── petstore.io/schemas/Category      → CategoryComponent   → MCP: category_*
+    ├── api.ebay.com/schemas/Listing      → EbayListingComponent → MCP: ebay_listing_*
+    ├── api.aliexpress.com/schemas/Supplier → AliSupplierComponent → MCP: ali_supplier_*
+    └── api.anthropic.com/schemas/Message → MessageComponent    → MCP: message_*
+
+Cross-API JSON Patch:
+    pet.patch(1, [{op:"replace", path:"/supplier", value: <AliExpress data>}])
+    → validates Pet.supplier against $ref to AliExpress Supplier schema
+    → AuditEvent broadcast to Pet subscribers
+    → audit log records cross-API data flow
+```
