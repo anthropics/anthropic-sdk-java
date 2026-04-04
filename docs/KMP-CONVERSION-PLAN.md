@@ -1109,7 +1109,42 @@ Any service with an OpenAPI/AsyncAPI spec can use it to generate a KMP SDK:
 
 # Any MCP service
 ./gradlew :api-gen:generate -Pspec=my-service.yaml -Ppkg=com.myservice
+
+# gRPC service (from .proto)
+./gradlew :api-gen:generate -Pspec=service.proto -Ppkg=com.mygrpc
+
+# WebDAV file service (from OpenAPI with WebDAV methods)
+./gradlew :api-gen:generate -Pspec=webdav-openapi.yaml -Ppkg=com.files
 ```
+
+**`api-gen` handles ALL spec types → unified KMP output:**
+
+```
+Input Spec                  Parser              Stable Lib Runtime      KMP Output
+──────────────────────────────────────────────────────────────────────────────────
+openapi.yaml (REST)     →  swagger-parser   →  ktor HttpClient      →  suspend fun
+asyncapi.yaml (events)  →  JAsyncAPI        →  ktor SSE/WebSocket   →  Flow<T>
+service.proto (gRPC)    →  Wire compiler    →  Wire GrpcClient      →  suspend fun + streaming
+mcp.json (MCP tools)    →  MCP SDK parser   →  MCP SDK Client       →  suspend fun callTool()
+webdav-openapi.yaml     →  swagger-parser   →  ktor + okio FileSystem → suspend fun + Flow<Line>
+```
+
+Each spec type maps to the right stable lib at runtime:
+
+| Spec | Transport | Serialization | Auth | Streaming |
+|---|---|---|---|---|
+| **OpenAPI** | ktor HttpClient | kotlinx.serialization JSON/MsgPack/CBOR | ktor Auth | SSE via ktor |
+| **AsyncAPI** | ktor WebSocket/SSE | kotlinx.serialization | ktor Auth | Flow<T> native |
+| **gRPC (.proto)** | Wire GrpcClient | Protobuf (Wire) | TLS channels | GrpcStreamingCall |
+| **MCP** | MCP SDK Transport | kotlinx.serialization JSON | Transport auth | Flow<T> via SSE |
+| **WebDAV** | ktor HttpClient | okio BufferedSource/Sink | ktor Auth | Flow<Line> for file streaming |
+
+**The generated code uses the same `kotlinx.kmp.util` primitives regardless of spec type:**
+- `Optional<T>` — field presence (OpenAPI optional, proto optional, MCP nullable)
+- `Flow<T>` — streaming (SSE events, gRPC server stream, WebSocket messages, file lines)
+- `suspend fun` — async (HTTP request, gRPC call, MCP tool call, WebDAV operation)
+- `sealed class` — unions (OpenAPI oneOf, proto oneof, MCP content types)
+- `HttpMethod` — protocol enum (HTTP, WebDAV, gRPC, RSocket, MCP)
 
 ```kotlin
 // anthropic-codegen/build.gradle.kts
