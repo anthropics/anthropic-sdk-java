@@ -1383,7 +1383,7 @@ Anthropic-specific content is configuration values (default URL, header names).
 | `ClientOptions.kt` | API key, base URL, HTTP client config, timeout, retry | **ktor** `HttpClient { install(Auth) { bearer {} }; install(HttpRequestRetry) {} }` | Default URL `api.anthropic.com`, thread naming |
 | `PrepareRequest.kt` | Add auth/version/user-agent headers to requests | **ktor** `HttpClient { defaultRequest { header("Authorization", "Bearer $key") } }` | Header names: `x-api-key`, `anthropic-version`, `anthropic-beta` |
 | `RequestOptions.kt` | Per-request timeout, idempotency key, extra headers | **ktor** `HttpRequestBuilder { timeout {} }` + request-level headers | None (package name only) |
-| `ErrorHandler.kt` | HTTP status → exception mapping (400/401/403/404/422/429/5xx) | **ktor** `HttpResponseValidator { handleResponseExceptionWithRequest {} }` | Exception class names (BadRequestException, etc.) |
+| `ErrorHandler.kt` | HTTP status → exception mapping (400/401/403/404/422/429/5xx) | **ktor** `HttpResponseValidator` | **None** — ktor handles HTTP status natively. Custom exception classes are framework boilerplate. The per-endpoint error MESSAGE from response body is what's API-specific — generated from OpenAPI error schemas by `api-gen`. |
 | `Values.kt` / `Field<T>` | Wire-style field presence container (Known/Missing/Null) | **Wire** `@WireField(label=OPTIONAL)` field presence semantics | None — fully generic |
 | `Headers.kt` | Case-insensitive header map with Value integration | **ktor** `io.ktor.http.Headers` + Value bridge | None — Value integration is generic |
 | `QueryParams.kt` | Query parameter builder with Value integration | **ktor** `io.ktor.http.Parameters` + Value bridge | None |
