@@ -56,7 +56,7 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                // Jackson kept in jvmMain for structured outputs / backward compat
+                // Jackson — JVM-only runtime. Types are available to commonMain via jvmMain deps.
                 api("com.fasterxml.jackson.core:jackson-core:2.18.2")
                 api("com.fasterxml.jackson.core:jackson-databind:2.18.2")
                 api("com.fasterxml.jackson.core:jackson-annotations:2.18.2")
@@ -71,6 +71,26 @@ kotlin {
                 implementation("org.apache.httpcomponents.core5:httpcore5:5.2.4")
                 implementation("org.apache.httpcomponents.client5:httpclient5:5.3.1")
                 implementation("io.ktor:ktor-client-cio:3.4.2")
+            }
+        }
+        val jsMain by getting {
+            dependencies {
+                // JVM JARs as compile-only stubs — provide type signatures for commonMain
+                // code compilation on JS target. These are NOT used at JS runtime.
+                implementation("com.fasterxml.jackson.core:jackson-annotations:2.18.2")
+                implementation("com.fasterxml.jackson.core:jackson-core:2.18.2")
+                implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
+                implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
+                implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.18.2")
+                implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2")
+                implementation("com.google.errorprone:error_prone_annotations:2.33.0")
+                implementation("com.github.victools:jsonschema-generator:4.38.0")
+                implementation("com.github.victools:jsonschema-module-jackson:4.38.0")
+                implementation("com.github.victools:jsonschema-module-swagger-2:4.38.0")
+                implementation("io.swagger.core.v3:swagger-annotations:2.2.31")
+                // JVM kotlin-stdlib provides kotlin.jvm annotations (JvmStatic, JvmName, etc.)
+                // and kotlin.jvm.optionals (getOrNull, asSequence) for JS compilation
+                implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.3.20")
             }
         }
         val jvmTest by getting {

@@ -1,0 +1,13 @@
+@file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+
+package kotlinx.kmp.util.optional
+
+actual typealias Function<T, R> = java.util.function.Function<T, R>
+
+actual typealias Supplier<T> = java.util.function.Supplier<T>
+
+actual typealias Consumer<T> = java.util.function.Consumer<T>
+
+actual typealias Predicate<T> = java.util.function.Predicate<T>
+
+actual typealias BiFunction<T, U, R> = java.util.function.BiFunction<T, U, R>
