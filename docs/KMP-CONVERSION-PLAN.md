@@ -728,12 +728,45 @@ KMP-native models automatically — no manual conversion of 485 files.
 | `openapi.yaml` → JSON Schema → KMP | **Wire** reads JSON Schema directly (since Wire 5.x) | Wire-generated KMP data classes |
 | `openapi.yaml` → Stainless KMP mode | **Stainless** updated to output KMP instead of Jackson | Same SDK structure, KMP-native annotations |
 
-**Recommended: `openapi-generator` with `kotlin-multiplatform` template**
-- Already generates `@Serializable`, ktor client, `suspend` functions
-- Zero manual conversion — reads same OpenAPI YAML that Stainless uses
-- Produces models for all KMP targets (JVM, JS, Native, Wasm)
-- Existing Stainless-generated Jackson models stay in **jvmMain** for backward compat
-- Wire `.proto` path also works — `openapi2proto` converts YAML → proto, Wire generates KMP
+**Pipeline: `openapi.yaml` → `openapi2proto` → `.proto` → Wire → KMP Kotlin**
+
+```
+openapi.yaml                    (Anthropic API spec — source of truth)
+    │
+    ▼
+openapi2proto                   (NYTimes/openapi2proto v0.2.2)
+    │  Maps: schemas→messages, paths→rpc, enums→proto enums
+    │  Limitation: oneOf/anyOf → google.protobuf.Any (loses type safety)
+    │  Alternative: Google gnostic (bidirectional, more flexible)
+    ▼
+.proto files                    (standard protobuf definitions)
+    │
+    ▼
+Wire Gradle plugin (5.3.1)     (com.squareup.wire)
+    │  wire { kotlin { out = "src/commonMain/kotlin" } }
+    │  Generates: data classes, adapters, @Serializable
+    │  KMP: JVM + JS + Native + Wasm
+    ▼
+Pure KMP Kotlin models          (zero java.*, zero @JvmStatic, zero Jackson)
+    ├── commonMain: all targets
+    └── jvmMain: Stainless-generated Jackson models (backward compat)
+```
+
+**openapi2proto details:**
+- Repo: [NYTimes/openapi2proto](https://github.com/nytimes/openapi2proto) (Go tool)
+- Objects → `message`, arrays → `repeated`, enums → `enum`
+- Paths → `rpc` methods with `google.api.http` annotations
+- ⚠️ `oneOf`/`anyOf` → `google.protobuf.Any` (type safety lost)
+- Alternative: [Google gnostic](https://github.com/google/gnostic) — bidirectional, better union support
+
+**Wire KMP output:**
+- Immutable data classes with builders
+- Wire adapters for proto serialization
+- `@Serializable` for kotlinx.serialization (JSON, MsgPack, CBOR)
+- `GrpcClient` + `GrpcCall` for gRPC transport
+- Compiles on all KMP targets
+
+**Existing Stainless models stay in jvmMain** — zero risk, backward compat for Java callers
 
 ### 🔲 PLANNED — Additional Non-JVM Targets
 - Native: macOS (x64/arm64), iOS (arm64/sim), Linux (x64/arm64)
