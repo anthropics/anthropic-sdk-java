@@ -190,6 +190,14 @@ class ModelGenerator(
             "Password" -> ClassName("com.anthropic.core", "Password")
             "Phone" -> ClassName("com.anthropic.core", "Phone")
             "PostalAddress" -> ClassName("com.anthropic.core", "PostalAddress")
+            "GeoPoint" -> ClassName("com.anthropic.core", "GeoPoint")
+            "Locale" -> ClassName("com.anthropic.core", "Locale")
+            "Currency" -> ClassName("com.anthropic.core", "Currency")
+            "Timezone" -> ClassName("com.anthropic.core", "Timezone")
+            "Country" -> ClassName("com.anthropic.core", "Country")
+            "Language" -> ClassName("com.anthropic.core", "Language")
+            "Measure" -> ClassName("com.anthropic.core", "Measure")
+            "PersonName" -> ClassName("com.anthropic.core", "PersonName")
             "JsonObject" -> ClassName("kotlinx.serialization.json", "JsonObject")
             else -> {
                 if (type.startsWith("List<")) {

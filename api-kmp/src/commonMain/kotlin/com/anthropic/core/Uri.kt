@@ -91,3 +91,100 @@ value class IpAddress(val value: String) {
 value class Hostname(val value: String) {
     override fun toString(): String = value
 }
+
+/** GeoJSON Point — longitude, latitude. */
+@Serializable
+data class GeoPoint(
+    val longitude: Double,
+    val latitude: Double,
+    val altitude: Double? = null,
+) {
+    override fun toString(): String = "$latitude,$longitude${altitude?.let { ",$it" } ?: ""}"
+    companion object {
+        fun parse(value: String): GeoPoint {
+            val parts = value.split(",").map { it.trim().toDouble() }
+            return GeoPoint(longitude = parts[1], latitude = parts[0], altitude = parts.getOrNull(2))
+        }
+    }
+}
+
+/** Locale — BCP 47 / CLDR locale tag. */
+@Serializable
+@JvmInline
+value class Locale(val value: String) {
+    val language: String get() = value.substringBefore("-")
+    val region: String? get() = value.substringAfter("-", "").ifEmpty { null }
+    override fun toString(): String = value
+    companion object {
+        val EN = Locale("en")
+        val EN_US = Locale("en-US")
+        val FR = Locale("fr")
+        val DE = Locale("de")
+        val JA = Locale("ja")
+        val ZH = Locale("zh")
+    }
+}
+
+/** Currency — ISO 4217 code. */
+@Serializable
+@JvmInline
+value class Currency(val value: String) {
+    override fun toString(): String = value
+    companion object {
+        val USD = Currency("USD")
+        val EUR = Currency("EUR")
+        val GBP = Currency("GBP")
+        val JPY = Currency("JPY")
+    }
+}
+
+/** Timezone — IANA timezone ID. */
+@Serializable
+@JvmInline
+value class Timezone(val value: String) {
+    override fun toString(): String = value
+    companion object {
+        val UTC = Timezone("UTC")
+        val US_EASTERN = Timezone("America/New_York")
+        val US_PACIFIC = Timezone("America/Los_Angeles")
+        val EUROPE_LONDON = Timezone("Europe/London")
+        val ASIA_TOKYO = Timezone("Asia/Tokyo")
+    }
+}
+
+/** Country — ISO 3166-1 alpha-2 code. */
+@Serializable
+@JvmInline
+value class Country(val value: String) {
+    override fun toString(): String = value
+}
+
+/** Language — ISO 639-1 code. */
+@Serializable
+@JvmInline
+value class Language(val value: String) {
+    override fun toString(): String = value
+}
+
+/** MeasureUnit — value + unit (e.g. "5.2 kg", "100 km"). */
+@Serializable
+data class Measure(
+    val value: Double,
+    val unit: String,
+) {
+    override fun toString(): String = "$value $unit"
+}
+
+/** PersonName — structured name (given, family, prefix, suffix). */
+@Serializable
+data class PersonName(
+    val given: String = "",
+    val family: String = "",
+    val prefix: String? = null,
+    val suffix: String? = null,
+    val middle: String? = null,
+) {
+    val full: String get() = listOfNotNull(prefix, given, middle, family, suffix)
+        .filter { it.isNotBlank() }.joinToString(" ")
+    override fun toString(): String = full
+}

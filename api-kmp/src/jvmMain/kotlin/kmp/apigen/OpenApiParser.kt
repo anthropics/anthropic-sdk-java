@@ -166,6 +166,14 @@ object OpenApiParser {
                 
                 "phone" -> "Phone"
                 "address" -> "PostalAddress"
+                "geo", "geojson", "geopoint" -> "GeoPoint"
+                "locale", "bcp47" -> "Locale"
+                "currency", "iso4217" -> "Currency"
+                "timezone", "tz", "iana-tz" -> "Timezone"
+                "country", "iso3166" -> "Country"
+                "language", "iso639" -> "Language"
+                "measure", "unit" -> "Measure"
+                "person-name", "name" -> "PersonName"
                 else -> "String"
             }
             "integer" -> if (schema.format == "int64") "Long" else "Int"
