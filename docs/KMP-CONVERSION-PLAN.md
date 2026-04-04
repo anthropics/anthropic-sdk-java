@@ -1083,10 +1083,32 @@ types and generates more of them. Same build, same libs, same patterns.
 
 ```
 anthropic-sdk/
-    anthropic-java-core/        ← SDK (commonMain KMP code)
-    anthropic-codegen/          ← Generator module (JVM — parsers are JVM)
-        build.gradle.kts
-        src/main/kotlin/        ← Generator code
+    api-gen/                    ← COMMON LIB: reusable API code generator
+    │   ├── openapi parser      (swagger-parser)
+    │   ├── asyncapi parser     (JAsyncAPI)
+    │   ├── code emitter        (KotlinPoet)
+    │   └── templates           (model, service, client patterns)
+    │
+    anthropic-java-core/        ← SDK: generated + hand-written KMP code
+    │   ├── commonMain/         (generated models, services, client)
+    │   ├── jvmMain/            (Jackson compat, platform impls)
+    │   └── jsMain/             (JS platform impls)
+    │
+    kotlinx.kmp.util/           ← COMMON LIB: Optional, Function, async primitives
+```
+
+**`api-gen` is the reusable common lib** — not Anthropic-specific.
+Any service with an OpenAPI/AsyncAPI spec can use it to generate a KMP SDK:
+
+```bash
+# Anthropic SDK
+./gradlew :api-gen:generate -Pspec=anthropic-openapi.yaml -Ppkg=com.anthropic
+
+# OpenAI SDK (same generator, different spec)
+./gradlew :api-gen:generate -Pspec=openai-openapi.yaml -Ppkg=com.openai
+
+# Any MCP service
+./gradlew :api-gen:generate -Pspec=my-service.yaml -Ppkg=com.myservice
 ```
 
 ```kotlin
