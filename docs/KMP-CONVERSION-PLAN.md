@@ -4110,3 +4110,92 @@ api-gen reads this schema and generates `PetComponent` with:
 - Compose UI (Form/List/Detail)
 
 **One schema → one component → all protocols.**
+
+### AuditEvent = SSE sync message for all subscribers
+
+Every mutation produces an `AuditEvent` that is:
+1. **Returned** to the caller as the response
+2. **Broadcast** via SSE to all `Flow` subscribers
+3. **Contains JSON Patch** operations so subscribers apply changes locally (no refetch)
+
+```
+Client A: pet.patch(1, [replace /status "sold"])
+    │
+    ▼
+Server: apply patch → AuditEvent(action="patch", patch=[{op:"replace", path:"/status", value:"sold"}])
+    │
+    ├── Response to Client A: AuditEvent<Pet>
+    │
+    └── SSE broadcast to all subscribers:
+        ├── Client B (Flow<AuditEvent<Pet>>): receives patch, applies locally
+        ├── Client C (Flow<AuditEvent<Pet>>): receives patch, applies locally
+        └── Audit log: persisted for compliance
+```
+
+```kotlin
+// Client subscribes to component changes — receives ALL mutations as Flow
+val petComponent = PetComponent(client)
+
+// Subscribe: Flow of audit events (SSE under the hood)
+petComponent.changes().collect { event: AuditEvent<Pet> ->
+    when (event.action) {
+        "create" -> localCache.add(event.after!!)
+        "update" -> localCache.replace(event.entityId, event.after!!)
+        "delete" -> localCache.remove(event.entityId)
+        "patch"  -> {
+            // Apply JSON Patch locally — no refetch needed
+            val current = localCache.get(event.entityId)
+            val patched = applyPatch(current, event.patch!!)
+            localCache.replace(event.entityId, patched)
+        }
+    }
+}
+
+// Mutate: response IS the audit event, ALSO broadcast to other subscribers
+val audit = petComponent.patch(1, listOf(
+    PatchOperation(op = "replace", path = "/status", value = JsonPrimitive("sold"))
+))
+// audit.before = Pet(status="available")
+// audit.after = Pet(status="sold")
+// audit.patch = [{op:"replace", path:"/status", value:"sold"}]
+// All other subscribers received this same event via SSE
+```
+
+```kotlin
+// Server side — broadcast audit events to SSE subscribers
+class PetRepository(private val db: Database, private val broadcast: MutableSharedFlow<AuditEvent<Pet>>) {
+
+    suspend fun patch(id: Long, ops: List<PatchOperation>): AuditEvent<Pet> {
+        val before = db.findById(id)
+        val after = applyPatch(before, ops)
+        db.update(id, after)
+        val event = AuditEvent(
+            timestamp = Clock.System.now().toString(),
+            action = "patch",
+            entityId = id.toString(),
+            before = before,
+            after = after,
+            patch = ops,
+        )
+        broadcast.emit(event)  // All SSE subscribers receive this
+        return event
+    }
+}
+
+// SSE endpoint — streams audit events to all connected clients
+fun Route.petComponent(repo: PetRepository) {
+    // ... CRUD endpoints ...
+
+    sse("/pet/changes") {
+        repo.broadcast.collect { event ->
+            send(ServerSentEvent(data = json.encodeToString(event)))
+        }
+    }
+}
+```
+
+**The pattern:**
+- Mutation → `AuditEvent` → response + SSE broadcast
+- Subscribers get `Flow<AuditEvent<T>>` — apply JSON Patch locally
+- No polling, no refetch — real-time sync via SSE
+- Audit log is a side effect of the same event stream
