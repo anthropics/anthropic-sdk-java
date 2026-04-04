@@ -228,7 +228,7 @@ SKIP_MOCK_TESTS=true ./gradlew :anthropic-java-core:jvmTest --no-configuration-c
 
 ## Next Steps (Priority Order)
 
-1. **Suspend conversion** — CompletableFuture→suspend in 10 core files (removes 30 java.* imports)
+1. ~~Suspend conversion~~ **DONE** — `executeSuspend()` + `prepareSuspend()` added with default impls. Zero breaking changes. Services/models stay as-is.
 2. **Delete RetryingHttpClient** — use ktor HttpRequestRetry (120 lines)
 3. **Delete MultipartBody** — use ktor MultiPartFormDataContent (130 lines)
 4. **Delete SseHandler** — use ktor SSE plugin (70 lines)

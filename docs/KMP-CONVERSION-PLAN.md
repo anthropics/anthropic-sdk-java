@@ -17,7 +17,7 @@ The Anthropic Java SDK is a JVM-only Kotlin project using Jackson for JSON, OkHt
 - **Build system**: Upgrade Kotlin 2.3.20, Gradle 9.4.1, GraalVM JDK 25, add KMP + serialization plugins, restructure source sets
 - **JSON**: Replace Jackson with kotlinx.serialization plugin-generated `@Serializable` (~485 model files, core infrastructure)
 - **HTTP**: Replace OkHttp with Ktor CIO client in common; keep OkHttp module for JVM
-- **Async**: Suspend-only API. Replace CompletableFuture with coroutines (suspend functions, Flow). JVM blocking bridge in jvmMain.
+- **Async**: Additive suspend API alongside existing CompletableFuture. `executeSuspend()` added with default impl — zero breaking changes. Services/models stay as-is.
 - **I/O**: Replace java.io.InputStream/OutputStream with okio BufferedSource/BufferedSink ✅ DONE (`7606ae7`)
 - **Proto/gRPC**: Use Square Wire for @WireRpc, @WireField, GrpcClient, proto codegen — replaces custom annotations ✅ DONE (`b02f3c6`)
 - **Serialization formats**: Add MsgPack, Protobuf, CBOR via ktor ContentNegotiation alongside JSON
@@ -1270,7 +1270,7 @@ suspend fun callToolThrottled(name: String, args: Map<String, Any>) =
 | File | java.* Import | Replacement | Status |
 |---|---|---|---|
 | `handlers/StreamHandler.kt` | `java.io.IOException` | `kotlin.io.IOException` | 🔲 |
-| `PrepareRequest.kt` | `CompletableFuture` | `suspend` (was: import from `core/Async.kt`) | 🔲 |
+| `PrepareRequest.kt` | `CompletableFuture` | `prepareSuspend()` added alongside `prepareAsync()` — both kept | ✅ `7cec366` |
 | `PhantomReachable.kt` | `reflect.InvocationTargetException` | → expect/actual, JVM impl in jvmMain | ✅ `4e1ec31` |
 | `PhantomReachableExecutorService.kt` | `ExecutorService`, `Callable`, etc | → move entire file to jvmMain | 🔲 |
 | `RetryingHttpClient.kt` | Clock, OffsetDateTime, ThreadLocalRandom, etc | PlatformTime + `kotlin.random.Random` | Partial ✅ `43f530e` (ThreadLocalRandom, TimeUnit, Function.identity removed), 🔲 Clock/OffsetDateTime remain |
@@ -1284,7 +1284,7 @@ suspend fun callToolThrottled(name: String, args: Map<String, Any>) =
 | `http/HttpRequestBody.kt` | `java.io.OutputStream` | `okio.BufferedSink` | ✅ `7606ae7` |
 | `http/HttpResponse.kt` | `java.io.InputStream` | `okio.BufferedSource` | ✅ `7606ae7` |
 | `http/HttpResponseFor.kt` | `java.io.InputStream` | follows HttpResponse | ✅ `7606ae7` |
-| `http/HttpClient.kt` | `CompletableFuture` | `suspend fun execute()` (was: import from Async.kt) | 🔲 Phase 1 |
+| `http/HttpClient.kt` | `CompletableFuture` | `suspend fun executeSuspend()` added with default impl — CF methods kept | ✅ `d20f767` |
 | `http/AsyncStreamResponse.kt` | CompletableFuture, Optional, Executor, AtomicReference | `suspend` + `Flow` + nullable | 🔲 Phase 1 (Optional→Throwable? ✅ `0860877`) |
 | `Sleeper.kt` | CompletableFuture, AutoCloseable | `suspend fun sleep()` + kotlin.AutoCloseable | 🔲 Phase 1 |
 
@@ -1292,7 +1292,7 @@ suspend fun callToolThrottled(name: String, args: Map<String, Any>) =
 | File | java.* Import | Replacement | Status |
 |---|---|---|---|
 | `http/HttpRequestBodies.kt` | ByteArrayInputStream/OutputStream | `okio.Buffer` | ✅ `7606ae7` |
-| `http/KtorHttpClient.kt` | ByteArrayInputStream/OutputStream, CompletableFuture | okio.Buffer + `suspend` | ✅ okio `7606ae7`, 🔲 CF→suspend Phase 1 |
+| `http/KtorHttpClient.kt` | ByteArrayInputStream/OutputStream, CompletableFuture | okio.Buffer + `executeSuspend()` | ✅ okio `7606ae7`, ✅ suspend `d20f767` |
 | `DefaultSleeper.kt` | Timer/TimerTask | `kotlinx.coroutines.delay()` | ✅ `23ec675` |
 | `PhantomReachableSleeper.kt` | CompletableFuture | `suspend` | 🔲 Phase 1 |
 | `PhantomReachableClosingHttpClient.kt` | CompletableFuture | `suspend` | 🔲 Phase 1 |
@@ -1541,7 +1541,7 @@ Everything else is handled by stable libs: ktor (HTTP, retry, SSE, multipart, co
 | File | java.* Import | Replacement | Status |
 |---|---|---|---|
 | `http/HttpRequestBodies.kt` | ByteArrayInputStream/OutputStream | `okio.Buffer` | ✅ `7606ae7` |
-| `http/KtorHttpClient.kt` | ByteArrayInputStream/OutputStream, CompletableFuture | okio.Buffer + `suspend` | ✅ okio `7606ae7`, 🔲 CF→suspend Phase 1 |
+| `http/KtorHttpClient.kt` | ByteArrayInputStream/OutputStream, CompletableFuture | okio.Buffer + `executeSuspend()` | ✅ okio `7606ae7`, ✅ suspend `d20f767` |
 | `DefaultSleeper.kt` | Timer/TimerTask | `kotlinx.coroutines.delay()` | ✅ `23ec675` |
 | `PhantomReachableSleeper.kt` | CompletableFuture | `suspend` | 🔲 Phase 1 |
 | `PhantomReachableClosingHttpClient.kt` | CompletableFuture | `suspend` | 🔲 Phase 1 |
