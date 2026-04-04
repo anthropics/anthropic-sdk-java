@@ -621,32 +621,334 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 | `Objects.hash()` | `contentHash()` | all models |
 | `Collections.unmodifiableMap()` | `.toMap()` | all models |
 | `@JvmStatic/@JvmSynthetic/etc` | Removed | 503 files |
+| `InputStream/OutputStream` | `okio.BufferedSource/BufferedSink` | HttpResponse, HttpRequestBody, handlers, KtorHttpClient |
+| `PhantomReachable` reflect | expect/actual (JVM Cleaner in jvmMain) | PhantomReachable.kt |
+| `Optional<Throwable>` in handlers | `Throwable?` nullable | AsyncStreamResponse, AutoPagerAsync |
 
-### ✅ DONE — New KMP-Native Files
+### ✅ DONE — Stable Library Integration
+| Lib | Version | What It Replaces |
+|---|---|---|
+| **okio** | 3.17.0 | java.io.InputStream/OutputStream in all core HTTP interfaces |
+| **Wire** | 5.3.1 | Custom ProtoAnnotations.kt — provides @WireRpc, @WireField, gRPC client natively |
+| **ktor** | 3.4.2 | Custom HTTP client wrapper (KtorHttpClient bridges to ktor directly) |
+
+### ✅ DONE — KMP Utility Packages (kotlinx.kmp.util.*)
+| Package | Contents | Status |
+|---|---|---|
+| `kotlinx.kmp.util.optional` | **Canonical**: expect/actual `Optional<T>`, `Function`, `Supplier`, `Consumer`, `Predicate`, `BiFunction` | Complete, 66 tests |
+| `kotlinx.kmp.util.http` | Re-export typealiases → `com.anthropic.core.http.*` | Stub |
+| `kotlinx.kmp.util.json` | Re-export typealiases → `com.anthropic.core.JsonValue/Field/*` | Stub |
+| `kotlinx.kmp.util.pagination` | Re-export typealiases → `com.anthropic.core.Page/AutoPager` | Stub |
+
+### ✅ DONE — HttpMethod Multi-Protocol Enum
+HttpMethod enum covers HTTP, WebDAV, gRPC, RSocket, MCP with Protocol + StreamMode metadata.
+Each method carries `value: String` for wire conversion, `protocol: Protocol`, `streamMode: StreamMode`.
+
+### ✅ DONE — KMP-Native Files
 | File | Uses |
 |---|---|
 | `KtorHttpClient.kt` | io.ktor.client.HttpClient — alternative to OkHttp |
 | `KotlinxJsonHandler.kt` | kotlinx.serialization.Json — alternative to Jackson handler |
 | `JsonConfiguration.kt` | `anthropicJson` config + JsonValue↔JsonElement bridge |
-| `KtorBridge.kt` | HttpMethod/Headers/QueryParams ↔ Ktor types |
-| `KmpOptional.kt` | typealias to java.util.Optional + Kotlin extensions |
+| `KtorBridge.kt` | Headers/QueryParams ↔ Ktor types (HttpMethod uses .value directly) |
+| `KmpOptional.kt` | Re-exports from kotlinx.kmp.util.optional |
+| `kotlinx.kmp.util.optional/KmpOptional.kt` | expect/actual Optional<T> matching java.util.Optional API |
+| `kotlinx.kmp.util.optional/KmpFunctional.kt` | expect/actual Function/Supplier/Consumer/Predicate/BiFunction |
+| `OptionalJvm.kt` | actual typealias Optional = java.util.Optional |
+| `FunctionalJvm.kt` | actual typealias Function = java.util.function.Function, etc. |
+| `PhantomReachableJvm.kt` | actual JVM Cleaner via reflection |
+| `PlatformTimeJvm.kt` | actual PlatformTime using kotlinx.datetime |
 
-### 🔲 GAPS — Remaining java.* in Core (22 files, NOT models/services)
+---
 
-**Phase 0: expect/actual infrastructure (new files, no existing changes)**
-| New File | Purpose |
+## Stable Libs Strategy: Replace All Custom Boilerplate
+
+### Core Principle
+**Don't duplicate stable KMP libraries.** Most of `com.anthropic.core` is generic HTTP/JSON/pagination/streaming infrastructure that duplicates what ktor, okio, Wire, and kotlinx already provide. The SDK should use these libs directly, keeping only Claude AI-specific code.
+
+### Stable Lib Stack
+
+| Lib | KMP? | Provides | Replaces in SDK |
+|---|---|---|---|
+| **okio** 3.17.0 | ✅ | BufferedSource/Sink, FileSystem, Buffer | java.io.InputStream/OutputStream, ByteArrayI/O |
+| **ktor-client** 3.4.2 | ✅ | HttpClient, HttpRequestRetry, SSE, ContentNegotiation, MultipartFormData | HttpClient interface, RetryingHttpClient, SseHandler, MultipartBody, KtorHttpClient wrapper |
+| **ktor-serialization** 3.4.2 | ✅ | JSON + MsgPack + Protobuf content negotiation | ObjectMappers, BaseSerializer/Deserializer |
+| **Wire** 5.3.1+ | ✅ | @WireRpc, @WireField, proto codegen, GrpcClient, GrpcCall | Custom ProtoAnnotations (deleted) |
+| **kotlinx.serialization** 1.10.0 | ✅ | JSON, MsgPack, Protobuf, CBOR serializers | Jackson (commonMain), custom JSON handlers |
+| **kotlinx.coroutines** 1.10.2 | ✅ | suspend, Flow, Deferred, structured concurrency | CompletableFuture, Executor, AsyncStreamResponse, AutoPagerAsync |
+| **kotlinx.datetime** (via PlatformTime) | ✅ | Clock, Instant, DateTimePeriod | java.time.Clock, OffsetDateTime, DateTimeFormatter |
+| **kotlinx.atomicfu** | ✅ | atomic(), AtomicRef, AtomicLong | java.util.concurrent.atomic.AtomicReference/AtomicLong |
+| **MCP SDK** 0.11.0 | ✅ | Transport, McpClient, Tool, CallToolResult | Custom MCP integration code |
+
+### Serialization Format Support
+
+The JSON-centered API gains alternative formats through ktor ContentNegotiation — **reducing risk** (fallback formats) and **adding functionality** (binary efficiency):
+
+| Format | Lib | Content-Type | Use Case |
+|---|---|---|---|
+| **JSON** | kotlinx.serialization-json | application/json | Default, human-readable, all endpoints |
+| **MsgPack** | kotlinx.serialization-msgpack | application/msgpack | Binary efficiency, 30-50% smaller payloads |
+| **Protobuf** | kotlinx.serialization-protobuf / Wire | application/protobuf | gRPC integration, schema-enforced, smallest payloads |
+| **CBOR** | kotlinx.serialization-cbor | application/cbor | IoT/embedded, binary JSON alternative |
+
+All formats share the same `@Serializable` model classes — **zero code duplication**. Format selection via Accept header:
+
+```kotlin
+// JSON (default)
+client.messages.create(params)
+
+// MsgPack (opt-in, same model classes)
+client.messages.create(params.toBuilder()
+    .putAdditionalHeader("Accept", "application/msgpack")
+    .build())
+
+// Protobuf (via Wire-generated stubs, gRPC transport)
+grpcClient.AnthropicService.CreateMessage(request)
+```
+
+### Custom Code → Stable Lib Replacement Map
+
+| Custom Code (delete) | Lines | Stable Lib Replacement | Risk Reduction |
+|---|---|---|---|
+| `RetryingHttpClient.kt` | 120 | `ktor HttpRequestRetry` plugin | Proven retry logic, exponential backoff, jitter built-in |
+| `HttpRequestBodies.kt` MultipartBody | 130 | `ktor MultiPartFormDataContent` | Handles encoding, chunking, streaming natively |
+| `SseHandler.kt` SSE parser | 70 | `ktor SSE` plugin / MCP Transport | Battle-tested SSE parsing, reconnection |
+| `AsyncStreamResponse.kt` | 70 | `kotlinx.coroutines.flow.Flow` | Structured concurrency, backpressure, cancellation |
+| `StreamHandler.kt` wrappers | 45 | `Flow` + okio `readUtf8Line()` | Already migrated to okio, Flow replaces Sequence |
+| `AutoPagerAsync.kt` | 60 | `Flow`-based pagination | No CompletableFuture, no Executor |
+| `ObjectMappers.kt` Jackson | 162 | `kotlinx.serialization.Json` (`anthropicJson`) | KMP-native, no reflection, AOT-friendly |
+| `BaseSerializer/Deserializer` | 40 | `kotlinx.serialization.KSerializer` | Plugin-generated, compile-time safe |
+| `HttpClient` interface | 17 | Use `io.ktor.client.HttpClient` directly | No abstraction layer to maintain |
+| `HttpResponse` interface | 16 | Use `io.ktor.client.statement.HttpResponse` | Direct okio body access via ktor |
+| **Total custom code eliminated** | **~730** | | |
+
+### What Stays in com.anthropic.core (Claude AI-Specific)
+
+| File | Why It's SDK-Specific |
 |---|---|
-| `core/Async.kt` (commonMain) | `expect class CompletableFuture<T>` with thenApply/thenCompose/etc |
-| `core/AsyncJvm.kt` (jvmMain) | `actual typealias CompletableFuture<T> = j.u.c.CompletableFuture<T>` |
-| `core/Concurrency.kt` (commonMain) | `expect` for Executor, AtomicReference |
-| `core/ConcurrencyJvm.kt` (jvmMain) | `actual typealias` to java.util.concurrent types |
-| `core/PlatformTime.kt` (commonMain) | `expect` for Clock, parseHttpDate, nanosUntil |
-| `core/PlatformTimeJvm.kt` (jvmMain) | `actual` using java.time.Clock, OffsetDateTime, DateTimeFormatter |
+| `ClientOptions.kt` | API key, base URL, auth headers — Anthropic-specific |
+| `PrepareRequest.kt` | Adds Anthropic headers (x-api-key, anthropic-version) |
+| `RequestOptions.kt` | Per-request overrides (timeout, idempotency key) |
+| `StructuredOutputs.kt` | JSON schema extraction for tool use — Anthropic feature |
+| `Values.kt` / `JsonValue` | SDK's JSON value type system (JsonField, KnownValue) |
+| `ErrorHandler.kt` | Maps HTTP status codes to Anthropic exception types |
+| `Headers.kt` | Has JsonValue integration (.put(name, JsonValue)) |
+| `QueryParams.kt` | Has JsonValue integration |
+| `HttpMethod.kt` | Multi-protocol enum (HTTP/WebDAV/gRPC/RSocket/MCP) |
 
-**Phase 1: Leaf files (no dependents) — 7 files**
-| File | java.* Import | Replacement |
+### 🔲 GAPS — Remaining java.* in Core (15 files, 42 imports)
+
+After okio migration + Optional removal + PhantomReachable expect/actual:
+
+| java.* Category | Count | Replacement | Blocked By |
+|---|---|---|---|
+| `CompletableFuture` | 12 imports, 6 files | `suspend` + `Flow` | Phase 1: suspend conversion |
+| `Executor/ExecutorService` | 6 imports, 4 files | `CoroutineDispatcher` | Phase 1 |
+| `AtomicReference/AtomicLong` | 3 imports, 2 files | `kotlinx.atomicfu` | Phase 1 |
+| `java.time.*` (Clock, OffsetDateTime, etc.) | 12 imports, 2 files | `kotlinx.datetime` + PlatformTime expect/actual | Already partially done |
+| `java.io.InputStream` | 1 import, 1 file | okio Source (in ObjectMappers InputStreamSerializer) | Model type change |
+| `java.io.IOException` | 1 import, 1 file | Already `kotlin.io.IOException` alias on JVM | Non-issue |
+
+### 🔲 GAPS — MCP SDK Integration
+| Item | Status |
+|---|---|
+| Dependency `io.modelcontextprotocol:kotlin-sdk:0.11.0` | NOT ADDED |
+| `AnthropicMcpToolProvider` (listTools→BetaTool bridge) | NOT CREATED |
+| `AnthropicMcpClient` (tool loop: callTool→BetaToolResultBlockParam) | NOT CREATED |
+| MCP Transport integration (Ktor-based, same engine) | NOT CREATED |
+
+---
+
+## Phase 9: Stable Libs Migration — Replace Custom Code
+
+### Strategy: Use Libs Directly, Don't Wrap
+
+The old approach wrapped stable libs in custom interfaces (HttpClient wraps ktor, RetryingHttpClient reimplements retry, MultipartBody reimplements multipart). The new approach: **use the libs directly** and only add SDK-specific behavior.
+
+### 9.0 Dependencies (already added)
+
+```kotlin
+// commonMain
+api("com.squareup.okio:okio:3.17.0")           // I/O
+api("com.squareup.wire:wire-runtime:5.3.1")     // Proto/gRPC annotations
+implementation("io.ktor:ktor-client-core:3.4.2") // HTTP client
+// Future additions:
+// api("org.jetbrains.kotlinx:kotlinx-serialization-msgpack:0.7.0")  // MsgPack
+// api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.10.0") // Protobuf
+// api("org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.10.0")    // CBOR
+```
+
+### 9.1 Replace RetryingHttpClient with Ktor HttpRequestRetry
+
+**Delete**: `RetryingHttpClient.kt` (120 lines)
+**Use**: Ktor's built-in retry plugin
+
+```kotlin
+// Before (custom):
+val client = RetryingHttpClient.builder()
+    .httpClient(ktorClient)
+    .maxRetries(2)
+    .idempotencyHeader("idempotency-key")
+    .build()
+
+// After (ktor native):
+val client = HttpClient(CIO) {
+    install(HttpRequestRetry) {
+        retryOnServerErrors(maxRetries = 2)
+        retryOnException(maxRetries = 2, retryOnTimeout = true)
+        exponentialDelay()
+    }
+}
+```
+
+### 9.2 Replace MultipartBody with Ktor MultiPartFormDataContent
+
+**Delete**: MultipartBody class in `HttpRequestBodies.kt` (130 lines)
+**Use**: Ktor's `MultiPartFormDataContent`
+
+```kotlin
+// Before (custom MultipartBody):
+MultipartBody.Builder()
+    .addPart(Part.create(name, filename, contentType, body))
+    .build()
+
+// After (ktor native):
+MultiPartFormDataContent(formData {
+    append(name, bytes, Headers.build {
+        append(HttpHeaders.ContentDisposition, "filename=$filename")
+        append(HttpHeaders.ContentType, contentType)
+    })
+})
+```
+
+### 9.3 Replace SseHandler with Ktor SSE Plugin
+
+**Delete**: `SseHandler.kt` (70 lines), `SseMessage.kt`
+**Use**: Ktor SSE plugin
+
+```kotlin
+// Before (custom SSE parser):
+val handler = sseHandler { event -> process(event) }
+handler.handle(response)
+
+// After (ktor native):
+client.sse("/v1/messages") {
+    incoming.collect { event ->
+        process(SseEvent(event.data, event.event, event.id))
+    }
+}
+```
+
+### 9.4 Replace CompletableFuture with suspend + Flow
+
+**This is the biggest change — 12 imports across 6 files.**
+
+```kotlin
+// Before:
+interface HttpClient {
+    fun execute(request: HttpRequest, options: RequestOptions): HttpResponse
+    fun executeAsync(request: HttpRequest, options: RequestOptions): CompletableFuture<HttpResponse>
+}
+
+// After:
+interface HttpClient {
+    suspend fun execute(request: HttpRequest, options: RequestOptions): HttpResponse
+}
+// JVM blocking wrapper in jvmMain:
+fun HttpClient.executeBlocking(...) = runBlocking { execute(...) }
+```
+
+### 9.5 MsgPack + Protobuf Content Negotiation
+
+**Zero model code changes** — uses ktor ContentNegotiation with kotlinx.serialization:
+
+```kotlin
+val client = HttpClient(CIO) {
+    install(ContentNegotiation) {
+        json(anthropicJson)                    // JSON (default)
+        msgpack()                              // MsgPack (opt-in via Accept header)
+        protobuf()                             // Protobuf (opt-in via Accept header)
+        cbor()                                 // CBOR (opt-in via Accept header)
+    }
+}
+```
+
+Benefits:
+- **Reduced bandwidth**: MsgPack is 30-50% smaller than JSON
+- **Schema enforcement**: Protobuf catches type mismatches at compile time
+- **Fallback safety**: If server doesn't support format, falls back to JSON
+- **Same models**: `@Serializable` classes work with all formats
+
+### 9.6 Wire gRPC Integration
+
+Wire provides the complete gRPC stack for KMP — no custom code needed:
+
+```kotlin
+// Proto definition generates Kotlin code via Wire plugin:
+// service AnthropicService {
+//   rpc CreateMessage (CreateMessageRequest) returns (CreateMessageResponse);
+//   rpc CreateMessageStream (CreateMessageRequest) returns (stream MessageStreamEvent);
+// }
+
+// Wire-generated client interface:
+interface AnthropicServiceClient : Service {
+    @WireRpc(
+        path = "/anthropic.v1.AnthropicService/CreateMessage",
+        requestAdapter = "CreateMessageRequest.ADAPTER",
+        responseAdapter = "CreateMessageResponse.ADAPTER"
+    )
+    suspend fun CreateMessage(request: CreateMessageRequest): CreateMessageResponse
+
+    @WireRpc(
+        path = "/anthropic.v1.AnthropicService/CreateMessageStream",
+        requestAdapter = "CreateMessageRequest.ADAPTER",
+        responseAdapter = "MessageStreamEvent.ADAPTER"
+    )
+    fun CreateMessageStream(request: CreateMessageRequest): GrpcStreamingCall<CreateMessageRequest, MessageStreamEvent>
+}
+
+// Usage:
+val grpcClient = GrpcClient.Builder()
+    .client(okHttpClient)  // or ktor
+    .baseUrl("https://api.anthropic.com")
+    .build()
+
+val service = grpcClient.create<AnthropicServiceClient>()
+val response = service.CreateMessage(request)
+```
+
+### 9.7 Implementation Order
+
+| Step | What | Stable Lib | Lines Deleted | Risk |
+|---|---|---|---|---|
+| 1 | suspend conversion (HttpClient, services) | kotlinx.coroutines | ~200 | Medium — changes call sites |
+| 2 | Delete RetryingHttpClient | ktor HttpRequestRetry | 120 | Low — plugin drop-in |
+| 3 | Delete MultipartBody | ktor MultiPartFormDataContent | 130 | Low — same semantics |
+| 4 | Delete SseHandler | ktor SSE plugin | 70 | Low — proven parser |
+| 5 | Delete AsyncStreamResponse | Flow | 70 | Low — already using Flow |
+| 6 | Add MsgPack content negotiation | kotlinx-serialization-msgpack | 0 (new) | Low — additive |
+| 7 | Add Protobuf content negotiation | kotlinx-serialization-protobuf | 0 (new) | Low — additive |
+| 8 | Wire gRPC module | Wire | 0 (new module) | Low — separate module |
+| 9 | MCP SDK integration | kotlin-sdk | 0 (new module) | Low — separate module |
+
+### 9.8 Remaining Custom Code After Full Migration
+
+After all stable lib replacements, `com.anthropic.core` contains **only SDK-specific code**:
+
+| File | Lines | Purpose |
 |---|---|---|
-| `handlers/StreamHandler.kt` | `java.io.IOException` | `kotlin.io.IOException` |
+| `ClientOptions.kt` | 250 | API key, auth, base URL configuration |
+| `PrepareRequest.kt` | 30 | Add Anthropic-specific headers |
+| `RequestOptions.kt` | 80 | Per-request timeout, idempotency |
+| `Values.kt` + `JsonValue` hierarchy | 400 | SDK JSON value system (JsonField, KnownValue) |
+| `Headers.kt` | 110 | Headers with JsonValue integration |
+| `QueryParams.kt` | 90 | QueryParams with JsonValue integration |
+| `HttpMethod.kt` | 85 | Multi-protocol enum with metadata |
+| `ErrorHandler.kt` | 80 | Anthropic HTTP error → exception mapping |
+| `StructuredOutputs.kt` | 150 | JSON schema extraction for tool use |
+| **Total** | **~1275** | **100% SDK-specific, 0% boilerplate** |
+
+Everything else is handled by stable libs: ktor (HTTP, retry, SSE, multipart, content negotiation), okio (I/O), Wire (proto/gRPC), kotlinx (serialization, coroutines, datetime).
 | `PrepareRequest.kt` | `CompletableFuture` | import from `core/Async.kt` |
 | `PhantomReachable.kt` | `reflect.InvocationTargetException` | → expect/actual, JVM impl in jvmMain |
 | `PhantomReachableExecutorService.kt` | `ExecutorService`, `Callable`, etc | → move entire file to jvmMain |
