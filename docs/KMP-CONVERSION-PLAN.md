@@ -1136,165 +1136,96 @@ needs it, not just Anthropic.
 **Each spec column is self-contained** — the spec defines the tool + its security,
 and the stable lib in that column enforces it. No cross-cutting custom code needed.
 
-#### SecurityContext — unified across all API types
+#### Security lives in the spec — not in custom annotations or classes
 
+**Wrong approach (custom annotations — same mistake as deleted ProtoAnnotations.kt):**
 ```kotlin
-/**
- * Unified security context for any API tool/operation.
- * Maps OpenAPI securitySchemes, AsyncAPI security, MCP auth, POSIX permissions.
- */
-data class SecurityContext(
-    /** Authentication — who is the caller */
-    val identity: Identity,
-    /** Authorization — what can the caller do */
-    val roles: Set<Role>,
-    /** Rate limiting — how fast can the caller go */
-    val rateLimit: RateLimitConfig?,
-    /** Concurrency control — how many parallel calls */
-    val concurrency: ConcurrencyConfig?,
-)
-
-/** Identity from any auth scheme */
-sealed class Identity {
-    data class ApiKey(val key: String, val headerName: String = "x-api-key") : Identity()
-    data class Bearer(val token: String, val scopes: Set<String> = emptySet()) : Identity()
-    data class OAuth2(val accessToken: String, val refreshToken: String, val scopes: Set<String>) : Identity()
-    data class OIDC(val idToken: String, val claims: Map<String, String>) : Identity()
-    data class Basic(val username: String, val password: String) : Identity()
-    data class MutualTLS(val clientCertSubject: String) : Identity()
-    data class Posix(val uid: Int, val gid: Int, val groups: Set<Int>) : Identity()
-    object Anonymous : Identity()
-}
-
-/** Role matching OpenAPI scopes / POSIX groups / MCP tool annotations */
-data class Role(
-    val name: String,
-    /** OpenAPI/AsyncAPI OAuth2 scopes this role grants */
-    val scopes: Set<String> = emptySet(),
-    /** POSIX-style permission bits: read=4, write=2, execute=1 */
-    val posixMode: Int = 0b111,  // rwx default
-)
-
-/** Standard roles */
-object Roles {
-    val ADMIN = Role("admin", scopes = setOf("*"), posixMode = 0b111)
-    val USER = Role("user", scopes = setOf("read", "write"), posixMode = 0b110)
-    val READER = Role("reader", scopes = setOf("read"), posixMode = 0b100)
-    val SERVICE = Role("service", scopes = setOf("tools:call", "resources:read"), posixMode = 0b111)
-    val ANONYMOUS = Role("anonymous", scopes = emptySet(), posixMode = 0b100)
-}
-```
-
-#### Rate Limiting — ktor server + client
-
-```kotlin
-/** Rate limit config matching OpenAPI x-ratelimit-* headers */
-data class RateLimitConfig(
-    /** Max requests per window */
-    val limit: Int,
-    /** Window duration */
-    val window: kotlin.time.Duration,
-    /** Remaining requests in current window (from response headers) */
-    val remaining: Int? = null,
-    /** When current window resets (from response headers) */
-    val resetAt: kotlinx.datetime.Instant? = null,
-)
-
-// ktor server — rate limiting plugin
-install(RateLimit) {
-    register(RateLimitName("api")) {
-        rateLimiter(limit = 1000, refillPeriod = 1.minutes)
-        requestKey { call -> call.request.header("x-api-key") ?: "anonymous" }
-    }
-}
-
-// ktor client — respect rate limit headers from server
-install(HttpRequestRetry) {
-    retryOnServerErrors(maxRetries = 3)
-    retryIf { _, response -> response.status.value == 429 }
-    delayMillis { retry ->
-        // Respect Retry-After header
-        response?.headers?.get("Retry-After")?.toLongOrNull()?.times(1000)
-            ?: (2000L * (1 shl retry))  // exponential backoff fallback
-    }
-}
-```
-
-#### Concurrency Control — Mutex + Semaphore (kotlinx.coroutines)
-
-```kotlin
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.Semaphore
-import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.sync.withPermit
-
-/** Concurrency config for tool execution */
-data class ConcurrencyConfig(
-    /** Max parallel executions of this tool (Semaphore) */
-    val maxParallel: Int = Int.MAX_VALUE,
-    /** Exclusive access — only one caller at a time (Mutex) */
-    val exclusive: Boolean = false,
-)
-
-/** Tool executor with concurrency control */
-class ToolExecutor(private val config: ConcurrencyConfig) {
-    private val semaphore = Semaphore(config.maxParallel)
-    private val mutex = Mutex()
-
-    suspend fun <T> execute(block: suspend () -> T): T =
-        if (config.exclusive) {
-            mutex.withLock { block() }
-        } else {
-            semaphore.withPermit { block() }
-        }
-}
-
-// Usage with MCP tools:
-val codeExecutor = ToolExecutor(ConcurrencyConfig(maxParallel = 1, exclusive = true))
-val searchExecutor = ToolExecutor(ConcurrencyConfig(maxParallel = 10))
-
-// Tool call with concurrency control
-suspend fun callTool(name: String, args: Map<String, Any>): CallToolResult {
-    val executor = toolExecutors[name] ?: defaultExecutor
-    return executor.execute {
-        mcpClient.callTool(name, args)
-    }
-}
-```
-
-#### Tool Annotation with Role + Rate Limit + Concurrency
-
-```kotlin
-/**
- * Annotate MCP tools with security metadata.
- * Maps to OpenAPI operation.security, AsyncAPI channel.security,
- * POSIX file permissions, CLI command capabilities.
- */
-@Target(AnnotationTarget.FUNCTION)
-@Retention(AnnotationRetention.RUNTIME)
-annotation class ToolSecurity(
-    /** Required roles (OpenAPI scopes / POSIX groups) */
-    val roles: Array<String> = ["user"],
-    /** Rate limit: max calls per minute (0 = unlimited) */
-    val rateLimit: Int = 0,
-    /** Max parallel executions (0 = unlimited, 1 = exclusive/mutex) */
-    val maxParallel: Int = 0,
-    /** POSIX-style permission mode (e.g. 0b110 = rw-) */
-    val posixMode: Int = 0b111,
-)
-
-// Example: MCP tool with security annotations
-@WireRpc(path = "/tools/code_execute")
-@ToolSecurity(roles = ["admin", "service"], rateLimit = 10, maxParallel = 1)
+// ❌ DON'T — custom annotation duplicates what the spec already defines
+@ToolSecurity(roles = ["admin"], rateLimit = 10, maxParallel = 1)
 suspend fun executeCode(request: CodeExecuteRequest): CodeExecuteResult
+```
 
-@WireRpc(path = "/tools/web_search")
-@ToolSecurity(roles = ["user", "service"], rateLimit = 100, maxParallel = 10)
-suspend fun webSearch(request: WebSearchRequest): WebSearchResult
+**Right approach — security defined in the standard spec, enforced by stable lib:**
 
-@WireRpc(path = "/tools/file_read")
-@ToolSecurity(roles = ["reader"], posixMode = 0b100)  // read-only
-suspend fun fileRead(request: FileReadRequest): FileReadResult
+```yaml
+# OpenAPI spec — security is IN the spec, not in custom annotations
+paths:
+  /tools/code_execute:
+    post:
+      operationId: executeCode
+      security:
+        - bearerAuth: [admin, service]
+      x-ratelimit-limit: 10
+      x-ratelimit-window: 60
+```
+
+```protobuf
+// gRPC proto — service-level auth, Wire enforces TLS
+service ToolService {
+  rpc ExecuteCode (CodeRequest) returns (CodeResult);  // TLS channel handles auth
+  rpc WebSearch (SearchRequest) returns (stream SearchResult);  // streaming + TLS
+}
+```
+
+```wit
+// WASM WIT — capability-based, sandbox enforces isolation
+interface tool {
+  execute-code: func(request: code-request) -> result<code-result, error>;
+  // WASM sandbox: no filesystem, no network unless explicitly granted
+}
+```
+
+```json
+// MCP tool definition — auth at transport level
+{
+  "name": "code_execute",
+  "description": "Execute code in sandbox",
+  "inputSchema": { "type": "object", "properties": { "code": { "type": "string" } } }
+}
+// Security: MCP Transport handles auth (SSE/WebSocket/stdio)
+```
+
+#### How the SDK reads specs and configures stable libs
+
+```kotlin
+// The SDK reads the spec and configures ktor/Wire/wasmtime — NO custom security code
+
+// 1. OpenAPI spec → ktor HttpClient (security from spec's securitySchemes)
+val client = createClientFromOpenApiSpec("openapi.yaml")
+//   internally: reads securitySchemes, calls install(Auth) { bearer/basic/oauth2 }
+//   internally: reads x-ratelimit-*, calls install(HttpRequestRetry) with limits
+
+// 2. gRPC proto → Wire GrpcClient (security from TLS channel)
+val grpcClient = createClientFromProto("service.proto")
+//   internally: Wire codegen produces typed stubs, TLS from channel config
+
+// 3. WASM module → wasmtime sandbox (security from capability grants)
+val wasmTool = loadWasmTool("tool.wasm", capabilities = setOf(Capability.NETWORK))
+//   internally: wasmtime enforces linear memory isolation + capability check
+
+// 4. MCP server → MCP SDK Client (security from transport auth)
+val mcpClient = createMcpClient(transport = SseTransport(url, apiKey))
+//   internally: MCP SDK handles JSON-RPC over authenticated transport
+```
+
+#### Concurrency — use kotlinx.coroutines directly, no wrappers
+
+```kotlin
+// ❌ DON'T write ConcurrencyConfig/ToolExecutor wrappers
+// ✅ DO use kotlinx.coroutines.sync directly where needed
+
+val mutex = Mutex()              // exclusive access
+val semaphore = Semaphore(10)    // max 10 parallel
+
+// In the tool call path:
+suspend fun callToolExclusive(name: String, args: Map<String, Any>) =
+    mutex.withLock { mcpClient.callTool(name, args) }
+
+suspend fun callToolThrottled(name: String, args: Map<String, Any>) =
+    semaphore.withPermit { mcpClient.callTool(name, args) }
+
+// Rate limit: ktor handles it — 429 + Retry-After, exponential backoff
+// install(HttpRequestRetry) { retryIf { _, r -> r.status.value == 429 } }
 ```
 
 #### Secured stable libs — use directly, no wrappers
@@ -2528,15 +2459,10 @@ annotation class MustBeClosed
 @Retention(AnnotationRetention.BINARY)
 annotation class ExcludeMissing
 
-/** Marks a proto/gRPC service definition. */
-@Target(AnnotationTarget.CLASS)
-@Retention(AnnotationRetention.BINARY)
-annotation class ProtoService(val service: String)
-
-/** Marks a field for MessagePack serialization with a specific key. */
-@Target(AnnotationTarget.PROPERTY)
-@Retention(AnnotationRetention.BINARY)
-annotation class MsgPackKey(val key: Int)
+// ❌ REMOVED — use standard annotations from stable libs instead:
+// Proto/gRPC: Wire provides @WireRpc, @WireField — don't create @ProtoService
+// MsgPack: kotlinx-serialization-msgpack uses @Serializable — don't create @MsgPackKey
+// Security: lives in spec files (openapi.yaml, .proto) — don't create @ToolSecurity
 ```
 
 ### 8.10 Update settings.gradle.kts
