@@ -1,22 +1,48 @@
 /**
- * kotlinx.kmp.util.json — generic KMP JSON infrastructure.
+ * kotlinx.kmp.util.json — Wire-style generic field/value containers.
  *
- * Re-exports from com.anthropic.core for JSON serialization types.
- * Any API-key-based service can use these without Anthropic SDK coupling.
+ * These are format-agnostic value types implementing Wire's field presence
+ * semantics (present/absent/null). Despite the "Json" prefix (historical),
+ * they work across all serialization formats: JSON, MsgPack, Protobuf, CBOR.
+ *
+ * | Type          | Wire Equivalent      | Meaning                |
+ * |---------------|----------------------|------------------------|
+ * | KnownValue<T> | field is set         | Typed value present    |
+ * | JsonMissing   | field not in message | Absent / default       |
+ * | JsonNull      | field set to null    | Explicit null          |
+ * | JsonValue     | Any / raw bytes      | Untyped value          |
+ *
+ * Re-exports from com.anthropic.core. Any API-key-based service can
+ * use these without Anthropic SDK coupling.
  */
 package kotlinx.kmp.util.json
 
-// --- JSON value types ---
-typealias JsonValue = com.anthropic.core.JsonValue
-typealias JsonField<T> = com.anthropic.core.JsonField<T>
-typealias JsonMissing = com.anthropic.core.JsonMissing
-typealias JsonNull = com.anthropic.core.JsonNull
-typealias KnownValue<T> = com.anthropic.core.KnownValue<T>
-typealias JsonObject = com.anthropic.core.JsonObject
-typealias JsonString = com.anthropic.core.JsonString
-typealias JsonNumber = com.anthropic.core.JsonNumber
-typealias JsonBoolean = com.anthropic.core.JsonBoolean
+// --- Wire-style field containers (format-agnostic, "Json" prefix is historical) ---
 
-// --- Serialization ---
+/** Field<T> with presence semantics: KnownValue | Missing | Null | untyped Value */
+typealias JsonField<T> = com.anthropic.core.JsonField<T>
+
+/** Untyped value: Boolean | Number | String | Array | Object | Missing | Null */
+typealias JsonValue = com.anthropic.core.JsonValue
+
+/** Field present with typed value T */
+typealias KnownValue<T> = com.anthropic.core.KnownValue<T>
+
+/** Field absent from payload (Wire: field not set / default) */
+typealias JsonMissing = com.anthropic.core.JsonMissing
+
+/** Field explicitly null (Wire: field set to null) */
+typealias JsonNull = com.anthropic.core.JsonNull
+
+// --- Primitive value types ---
+typealias JsonBoolean = com.anthropic.core.JsonBoolean
+typealias JsonNumber = com.anthropic.core.JsonNumber
+typealias JsonString = com.anthropic.core.JsonString
+
+// --- Composite value types ---
+typealias JsonArray = com.anthropic.core.JsonArray
+typealias JsonObject = com.anthropic.core.JsonObject
+
+// --- Serialization (JVM Jackson bridge) ---
 typealias BaseDeserializer<T> = com.anthropic.core.BaseDeserializer<T>
 typealias BaseSerializer<T> = com.anthropic.core.BaseSerializer<T>

@@ -664,7 +664,7 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 |---|---|---|
 | `kotlinx.kmp.util.optional` | **Canonical**: expect/actual `Optional<T>`, `Function`, `Supplier`, `Consumer`, `Predicate`, `BiFunction` | Complete, 66 tests |
 | `kotlinx.kmp.util.http` | Re-export typealiases → `com.anthropic.core.http.*` | Stub |
-| `kotlinx.kmp.util.json` | Re-export typealiases → `com.anthropic.core.JsonValue/Field/*` | Stub |
+| `kotlinx.kmp.util.json` | Re-export typealiases → Wire-style `Field<T>`/`Value` containers (JsonField, JsonValue, KnownValue, JsonMissing) | Stub |
 | `kotlinx.kmp.util.pagination` | Re-export typealiases → `com.anthropic.core.Page/AutoPager` | Stub |
 
 ### ✅ DONE — HttpMethod Multi-Protocol Enum
@@ -749,6 +749,34 @@ grpcClient.AnthropicService.CreateMessage(request)
 | `HttpResponse` interface | 16 | Use `io.ktor.client.statement.HttpResponse` | Direct okio body access via ktor |
 | **Total custom code eliminated** | **~730** | | |
 
+### JsonField / JsonValue are Wire-style generic field containers (NOT JSON-specific)
+
+`JsonField<T>` and `JsonValue` implement Wire's field presence semantics — they are
+**format-agnostic value containers** that work across JSON, MsgPack, Protobuf, CBOR.
+The "Json" prefix is a misnomer from the original JSON-only SDK.
+
+| SDK Type | Wire Equivalent | Meaning | All Formats |
+|---|---|---|---|
+| `KnownValue<T>` | field is set | Typed value present | ✅ JSON, MsgPack, Protobuf, CBOR |
+| `JsonMissing` | field not in message | Absent / default value | ✅ |
+| `JsonNull` | field set to null | Explicit null | ✅ |
+| `JsonBoolean` / `JsonNumber` / `JsonString` | primitive value | Scalar values | ✅ |
+| `JsonArray` / `JsonObject` | repeated / map | Composite values | ✅ |
+
+These map directly to Wire's `@WireField` label semantics:
+- `REQUIRED` → `JsonField.getRequired(name)` throws if missing
+- `OPTIONAL` → `JsonField.getNullable(name)` returns null if missing
+- `REPEATED` → `JsonField.asArray()` returns list
+
+And to kotlinx.serialization's field handling:
+- `@Required` → must be present
+- `= null` default → absent fields get null
+- `@EncodeDefault` → always serialize
+
+**Future rename consideration:** `JsonField<T>` → `Field<T>`, `JsonValue` → `Value`,
+`JsonMissing` → `Missing`, etc. — to reflect format-agnostic nature. The "Json" prefix
+can remain as typealiases for backward compat.
+
 ### What Stays in com.anthropic.core (Claude AI-Specific)
 
 | File | Why It's SDK-Specific |
@@ -757,10 +785,10 @@ grpcClient.AnthropicService.CreateMessage(request)
 | `PrepareRequest.kt` | Adds Anthropic headers (x-api-key, anthropic-version) |
 | `RequestOptions.kt` | Per-request overrides (timeout, idempotency key) |
 | `StructuredOutputs.kt` | JSON schema extraction for tool use — Anthropic feature |
-| `Values.kt` / `JsonValue` | SDK's JSON value type system (JsonField, KnownValue) |
+| `Values.kt` / `Field<T>` + `Value` | Wire-style field presence container (KnownValue, Missing, Null) — generic, used by all formats |
 | `ErrorHandler.kt` | Maps HTTP status codes to Anthropic exception types |
-| `Headers.kt` | Has JsonValue integration (.put(name, JsonValue)) |
-| `QueryParams.kt` | Has JsonValue integration |
+| `Headers.kt` | Has Value integration (.put(name, Value)) |
+| `QueryParams.kt` | Has Value integration |
 | `HttpMethod.kt` | Multi-protocol enum (HTTP/WebDAV/gRPC/RSocket/MCP) |
 
 ### 🔲 GAPS — Remaining java.* in Core (22 files, NOT models/services)
