@@ -233,8 +233,8 @@ SKIP_MOCK_TESTS=true ./gradlew :anthropic-java-core:jvmTest --no-configuration-c
 ## Next Steps (Priority Order)
 
 1. ~~Suspend conversion~~ **DONE** — `executeSuspend()` + `prepareSuspend()` added with default impls. Zero breaking changes. Services/models stay as-is.
-2. **Wire .proto models** 🔲 — define API in `.proto` files, Wire generates pure KMP Kotlin for all targets. No `@JvmStatic`, no Jackson, no `java.*`. Existing Jackson models stay in jvmMain for backward compat.
-3. **JS/Native targets** — Wire-generated models compile on all targets. jsMain stubs for java.* types already created.
+2. **OpenAPI → KMP code gen** 🔲 — `openapi.yaml` → `openapi-generator` (kotlin-multiplatform) or `openapi2proto` → Wire. Generates `@Serializable` + ktor + suspend for all targets automatically. Existing Jackson models stay in jvmMain.
+3. **JS/Native targets** — generated models compile on all targets. jsMain stubs for java.* types already created.
 4. **MCP SDK integration** — add dependency, create tool bridge
 5. **MsgPack + Protobuf** — add ktor ContentNegotiation formats
 6. **Delete RetryingHttpClient** — use ktor HttpRequestRetry (120 lines)

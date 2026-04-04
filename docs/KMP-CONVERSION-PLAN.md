@@ -716,11 +716,24 @@ Each method carries `value: String` for wire conversion, `protocol: Protocol`, `
 - `kotlin.jvm.optionals` extensions (275) — JVM-only stdlib module
 - Minor: `Class`, `System`, `Void`, `javaClass`, `inputStream()` (100)
 
-**Fix required:**
-- **Wire + .proto files** — define API in `.proto`, Wire Gradle plugin generates pure KMP Kotlin for all targets. No `@JvmStatic`, no Jackson, no `java.*`. The generated code uses `@Serializable`, Wire adapters, pure Kotlin.
-- Existing Stainless-generated Jackson models stay in **jvmMain** for JVM backward compat
-- New Wire-generated models in **commonMain** work on JVM, JS, Native, Wasm
-- Or: Stainless code generator updated to output annotations in jvmMain only
+**Fix: automated code generation from OpenAPI spec → KMP Kotlin**
+
+Since the API is defined as an OpenAPI spec (YAML), code generation should produce
+KMP-native models automatically — no manual conversion of 485 files.
+
+| Pipeline | Tools | Output |
+|---|---|---|
+| `openapi.yaml` → `.proto` → KMP | **openapi2proto** (buf.build) → **Wire** Gradle plugin | Pure KMP Kotlin with Wire adapters |
+| `openapi.yaml` → KMP directly | **openapi-generator** `kotlin-multiplatform` template | `@Serializable` + ktor client + kotlinx.coroutines |
+| `openapi.yaml` → JSON Schema → KMP | **Wire** reads JSON Schema directly (since Wire 5.x) | Wire-generated KMP data classes |
+| `openapi.yaml` → Stainless KMP mode | **Stainless** updated to output KMP instead of Jackson | Same SDK structure, KMP-native annotations |
+
+**Recommended: `openapi-generator` with `kotlin-multiplatform` template**
+- Already generates `@Serializable`, ktor client, `suspend` functions
+- Zero manual conversion — reads same OpenAPI YAML that Stainless uses
+- Produces models for all KMP targets (JVM, JS, Native, Wasm)
+- Existing Stainless-generated Jackson models stay in **jvmMain** for backward compat
+- Wire `.proto` path also works — `openapi2proto` converts YAML → proto, Wire generates KMP
 
 ### 🔲 PLANNED — Additional Non-JVM Targets
 - Native: macOS (x64/arm64), iOS (arm64/sim), Linux (x64/arm64)
