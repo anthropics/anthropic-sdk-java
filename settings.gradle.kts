@@ -7,7 +7,7 @@ val projectNames = rootDir.listFiles()
     .orEmpty()
     .filter { file ->
         file.isDirectory &&
-        (file.name.startsWith("anthropic-java") || file.name.startsWith("anthropic-kotlin")) &&
+        (file.name.startsWith("anthropic-java") || file.name.startsWith("anthropic-kotlin") || file.name == "api-gen") &&
         file.name !in excludedProjects &&
         file.listFiles()?.asSequence().orEmpty().any { it.name == "build.gradle.kts" }
     }
