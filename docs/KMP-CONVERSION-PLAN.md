@@ -1054,12 +1054,74 @@ fun generateSealedClass(name: String, schema: Schema<*>) {
 }
 ```
 
-**Output structure (same as current SDK, but KMP-native):**
+**Full-stack output from one spec:**
 ```
-commonMain/kotlin/com/anthropic/
+commonMain/kotlin/com/example/
     models/         — @Serializable data classes + sealed classes (from schemas)
     services/       — suspend fun interfaces (from paths + channels)
     client/         — ktor HttpClient factory (from securitySchemes)
+    server/         — ktor routing + handlers (from paths)
+    ui/             — Compose Multiplatform forms/lists/detail views (from schemas)
+    db/             — Exposed tables (JVM) / SQLDelight schema (KMP) (from schemas)
+    proto/          — .proto messages + services (from schemas + paths)
+    graphql/        — .graphql schema + Query/Mutation (from schemas + paths)
+    mcp/            — MCP tool definitions (from paths)
+```
+
+**Emitters — one ParsedSpec feeds all outputs:**
+
+| Emitter | Output | Lib | From Spec |
+|---|---|---|---|
+| **REST client** | suspend services + ktor HttpClient | ktor-client-cio | paths + securitySchemes |
+| **REST server** | ktor routing + request handlers | ktor-server-cio | paths + schemas |
+| **Compose UI** | Form, List, Detail @Composable | Compose Multiplatform | schemas (properties → fields) |
+| **Database** | Exposed tables / SQLDelight .sq | Exposed / SQLDelight | schemas (properties → columns) |
+| **gRPC** | .proto + Wire stubs | Wire | schemas → messages, paths → rpc |
+| **GraphQL** | .graphql + resolvers | graphql-kotlin | schemas → types, paths → Query/Mutation |
+| **MCP** | tool JSON definitions | MCP SDK | paths → tools |
+| **WebDAV** | okio FileSystem ops | okio | paths with WebDAV methods |
+| **SSE** | Flow<T> event stream | ktor SSE | AsyncAPI channels |
+| **WebSocket** | Flow<T> bidirectional | ktor WebSocket | AsyncAPI channels |
+
+**Compose UI from schema (generated):**
+```kotlin
+// From: Pet { id: Long, name: String, status: String?, category: Category? }
+@Composable
+fun PetForm(pet: Pet = Pet(name = "", photourls = emptyList()), onSubmit: (Pet) -> Unit) {
+    var name by remember { mutableStateOf(pet.name) }
+    var status by remember { mutableStateOf(pet.status ?: "") }
+    Column {
+        TextField(value = name, onValueChange = { name = it }, label = { Text("Name") })
+        TextField(value = status, onValueChange = { status = it }, label = { Text("Status") })
+        Button(onClick = { onSubmit(pet.copy(name = name, status = status)) }) { Text("Save") }
+    }
+}
+
+@Composable
+fun PetList(pets: List<Pet>, onClick: (Pet) -> Unit) {
+    LazyColumn { items(pets) { pet ->
+        ListItem(headlineContent = { Text(pet.name) }, supportingContent = { Text(pet.status ?: "") },
+            modifier = Modifier.clickable { onClick(pet) })
+    }}
+}
+```
+
+**Database from schema (generated):**
+```kotlin
+// Exposed (JVM):
+object Pets : Table("pets") {
+    val id = long("id").autoIncrement()
+    val name = varchar("name", 255)
+    val status = varchar("status", 50).nullable()
+    val categoryId = reference("category_id", Categories).nullable()
+    override val primaryKey = PrimaryKey(id)
+}
+
+// SQLDelight (KMP) — pet.sq:
+CREATE TABLE pet (id INTEGER PRIMARY KEY, name TEXT NOT NULL, status TEXT, category_id INTEGER);
+selectAll: SELECT * FROM pet;
+findById: SELECT * FROM pet WHERE id = ?;
+insert: INSERT INTO pet (name, status, category_id) VALUES (?, ?, ?);
 ```
 
 **The generator is itself KMP Kotlin** — not a JVM-only build tool.
