@@ -56,6 +56,8 @@ kotlin {
                 // Validation libs (JVM)
                 implementation("commons-validator:commons-validator:1.9.0")
                 implementation("com.googlecode.libphonenumber:libphonenumber:8.13.50")
+                implementation("com.googlecode.ez-vcard:ez-vcard:0.12.1")  // vCard (.vcf)
+                implementation("com.ibm.icu:icu4j:76.1")  // ICU CLDR
                 implementation("io.swagger.parser.v3:swagger-parser:2.1.39")
                 implementation("com.squareup:kotlinpoet:2.2.0")
             }
@@ -68,6 +70,8 @@ kotlin {
                 // Validation libs (JVM)
                 implementation("commons-validator:commons-validator:1.9.0")
                 implementation("com.googlecode.libphonenumber:libphonenumber:8.13.50")
+                implementation("com.googlecode.ez-vcard:ez-vcard:0.12.1")  // vCard (.vcf)
+                implementation("com.ibm.icu:icu4j:76.1")  // ICU CLDR
                 implementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
                 implementation("org.junit.jupiter:junit-jupiter-params:5.9.3")
                 implementation("com.github.tomakehurst:wiremock-jre8:2.35.2")

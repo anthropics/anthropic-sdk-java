@@ -119,3 +119,65 @@ object Validators {
     fun validateEAN13(value: String): Boolean =
         org.apache.commons.validator.routines.checkdigit.EAN13CheckDigit.EAN13_CHECK_DIGIT.isValid(value)
 }
+
+    // === vCard / iCalendar conversion ===
+
+    /** Parse vCard (.vcf) string → Contact-like map. */
+    fun parseVCard(vcf: String): Map<String, String> {
+        val vcard = ezvcard.Ezvcard.parse(vcf).first()
+        return buildMap {
+            vcard.formattedName?.value?.let { put("fullName", it) }
+            vcard.emails?.firstOrNull()?.value?.let { put("email", it) }
+            vcard.telephoneNumbers?.firstOrNull()?.text?.let { put("phone", it) }
+            vcard.organization?.values?.firstOrNull()?.let { put("organization", it) }
+            vcard.addresses?.firstOrNull()?.let { addr ->
+                put("address", listOfNotNull(addr.streetAddress, addr.locality, addr.region, addr.postalCode, addr.country).joinToString(", "))
+            }
+        }
+    }
+
+    /** Convert Contact fields → vCard (.vcf) string. */
+    fun toVCard(fields: Map<String, String>): String {
+        val vcard = ezvcard.VCard()
+        fields["fullName"]?.let { vcard.setFormattedName(it) }
+        fields["email"]?.let { vcard.addEmail(it) }
+        fields["phone"]?.let { vcard.addTelephoneNumber(it) }
+        fields["organization"]?.let { vcard.setOrganization(it) }
+        return ezvcard.Ezvcard.write(vcard).go()
+    }
+
+    /** Parse iCalendar (.ics) string → Event-like maps. */
+    fun parseICal(ics: String): List<Map<String, String>> {
+        val events = mutableListOf<Map<String, String>>()
+        var current: MutableMap<String, String>? = null
+        ics.lines().forEach { line ->
+            when {
+                line.startsWith("BEGIN:VEVENT") -> current = mutableMapOf()
+                line.startsWith("END:VEVENT") -> { current?.let { events.add(it) }; current = null }
+                current != null && ":" in line -> {
+                    val key = line.substringBefore(":").substringBefore(";").lowercase()
+                    val value = line.substringAfter(":")
+                    current!![key] = value
+                }
+            }
+        }
+        return events
+    }
+
+    /** Convert Event fields → iCalendar (.ics) string. */
+    fun toICal(events: List<Map<String, String>>): String {
+        val sb = StringBuilder()
+        sb.appendLine("BEGIN:VCALENDAR")
+        sb.appendLine("PRODID:-//api-kmp//EN")
+        sb.appendLine("VERSION:2.0")
+        events.forEach { fields ->
+            sb.appendLine("BEGIN:VEVENT")
+            fields["summary"]?.let { sb.appendLine("SUMMARY:$it") }
+            fields["description"]?.let { sb.appendLine("DESCRIPTION:$it") }
+            fields["location"]?.let { sb.appendLine("LOCATION:$it") }
+            fields["id"]?.let { sb.appendLine("UID:$it") }
+            sb.appendLine("END:VEVENT")
+        }
+        sb.appendLine("END:VCALENDAR")
+        return sb.toString()
+    }
