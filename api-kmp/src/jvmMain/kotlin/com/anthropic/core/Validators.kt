@@ -209,63 +209,304 @@ object Validators {
         "float" -> value.toFloatOrNull() != null
         "double" -> value.toDoubleOrNull() != null
 
+        // Person/Address
+        "person-name" -> value.isNotBlank()
+        "address" -> value.isNotBlank()
+
+        // Geo (iCal GEO: "lat;lon", GeoJSON: "lat,lon")
+        "geo" -> try {
+            val parts = value.split(Regex("[;,]"))
+            parts.size == 2 && parts[0].trim().toDouble() in -90.0..90.0 && parts[1].trim().toDouble() in -180.0..180.0
+        } catch (_: Exception) { false }
+
+        // iCal-specific formats
+        "rrule" -> value.startsWith("FREQ=") &&
+            value.contains(Regex("FREQ=(SECONDLY|MINUTELY|HOURLY|DAILY|WEEKLY|MONTHLY|YEARLY)"))
+        "ical-status" -> value.uppercase() in setOf("TENTATIVE", "CONFIRMED", "CANCELLED")
+        "ical-partstat" -> value.uppercase() in setOf(
+            "NEEDS-ACTION", "ACCEPTED", "DECLINED", "TENTATIVE", "DELEGATED"
+        )
+        "ical-role" -> value.uppercase() in setOf(
+            "CHAIR", "REQ-PARTICIPANT", "OPT-PARTICIPANT", "NON-PARTICIPANT"
+        )
+        "ical-action" -> value.uppercase() in setOf("AUDIO", "DISPLAY", "EMAIL")
+
+        // vCard-specific
+        "vcf" -> try { ezvcard.Ezvcard.parse(value).first() != null } catch (_: Exception) { false }
+        "ics" -> try { net.fortuna.ical4j.data.CalendarBuilder().build(value.byteInputStream()) != null } catch (_: Exception) { false }
+
         // Unknown format → pass through (no validation)
         else -> true
     }
 
     /** All supported OpenAPI format names */
     val supportedFormats: Set<String> = setOf(
+        // Standard OpenAPI
         "email", "phone", "uri", "url", "hostname",
         "ipv4", "ipv6", "ip", "uuid",
         "date", "date-time", "time", "duration",
+        "int32", "int64", "float", "double",
+        "byte", "base64", "password", "regex",
+        // Extended: financial
         "isbn", "isbn10", "isbn13", "issn", "isin",
         "credit-card", "ean13", "luhn",
+        // Extended: locale/geo
         "currency", "country", "language", "locale", "timezone",
-        "byte", "base64", "password", "regex",
-        "int32", "int64", "float", "double",
+        "person-name", "address", "geo",
+        // iCal (RFC 5545)
+        "rrule", "ical-status", "ical-partstat", "ical-role", "ical-action", "ics",
+        // vCard (RFC 6350)
+        "vcf",
     )
 
-    // === vCard / iCalendar conversion ===
+    // === vCard (.vcf) — Parse, Validate Properties, Convert ===
 
     /** Parse vCard (.vcf) string → Contact-like map. */
     fun parseVCard(vcf: String): Map<String, String> {
         val vcard = ezvcard.Ezvcard.parse(vcf).first()
         return buildMap {
-            vcard.formattedName?.value?.let { put("fullName", it) }
-            vcard.emails?.firstOrNull()?.value?.let { put("email", it) }
-            vcard.telephoneNumbers?.firstOrNull()?.text?.let { put("phone", it) }
-            vcard.organization?.values?.firstOrNull()?.let { put("organization", it) }
-            vcard.addresses?.firstOrNull()?.let { addr ->
-                put("address", listOfNotNull(addr.streetAddress, addr.locality, addr.region, addr.postalCode, addr.country).joinToString(", "))
+            vcard.formattedName?.value?.let { put("FN", it) }
+            vcard.structuredName?.let { n ->
+                n.given?.let { put("N.given", it) }
+                n.family?.let { put("N.family", it) }
+                n.prefixes?.firstOrNull()?.let { put("N.prefix", it) }
+                n.suffixes?.firstOrNull()?.let { put("N.suffix", it) }
+            }
+            vcard.emails?.forEach { e -> put("EMAIL${if (vcard.emails.size > 1) ".${e.types}" else ""}", e.value) }
+            vcard.telephoneNumbers?.forEach { t -> put("TEL${if (vcard.telephoneNumbers.size > 1) ".${t.types}" else ""}", t.text) }
+            vcard.organization?.values?.firstOrNull()?.let { put("ORG", it) }
+            vcard.titles?.firstOrNull()?.value?.let { put("TITLE", it) }
+            vcard.roles?.firstOrNull()?.value?.let { put("ROLE", it) }
+            vcard.urls?.firstOrNull()?.value?.let { put("URL", it) }
+            vcard.notes?.firstOrNull()?.value?.let { put("NOTE", it) }
+            vcard.birthday?.date?.let { put("BDAY", it.toString()) }
+            vcard.photos?.firstOrNull()?.url?.let { put("PHOTO", it) }
+            vcard.addresses?.forEachIndexed { i, addr ->
+                val prefix = if (vcard.addresses.size > 1) "ADR.$i" else "ADR"
+                addr.streetAddress?.let { put("$prefix.street", it) }
+                addr.locality?.let { put("$prefix.city", it) }
+                addr.region?.let { put("$prefix.state", it) }
+                addr.postalCode?.let { put("$prefix.postalCode", it) }
+                addr.country?.let { put("$prefix.country", it) }
+            }
+            vcard.categories?.values?.let { put("CATEGORIES", it.joinToString(",")) }
+            vcard.revision?.value?.let { put("REV", it.toString()) }
+            vcard.uid?.value?.let { put("UID", it) }
+        }
+    }
+
+    /**
+     * Validate all properties in a parsed vCard using the appropriate validators.
+     *
+     * vCard property → OpenAPI format → Validator:
+     * - EMAIL → email → EmailValidator
+     * - TEL → phone → libphonenumber
+     * - URL → uri → UrlValidator
+     * - ADR.country → country → ISO 3166
+     * - ADR.postalCode → regex → postal code pattern per country
+     * - BDAY → date → DateValidator
+     * - REV → date-time → ISO 8601
+     * - UID → uuid → UUID parse
+     * - FN, N.* → person-name → non-blank
+     * - ORG, TITLE, ROLE → string → non-blank
+     *
+     * Returns map of property → validation result (true/false).
+     */
+    fun validateVCardProperties(vcf: String): Map<String, Boolean> {
+        val props = parseVCard(vcf)
+        return buildMap {
+            props.forEach { (prop, value) ->
+                val format = vcardPropertyToFormat(prop)
+                put(prop, validateByFormat(value, format))
             }
         }
     }
 
-    /** Convert Contact fields → vCard (.vcf) string. */
+    /** Map vCard property name → OpenAPI format for validation. */
+    fun vcardPropertyToFormat(property: String): String = when {
+        property.startsWith("EMAIL") -> "email"
+        property.startsWith("TEL") -> "phone"
+        property == "URL" || property == "PHOTO" -> "uri"
+        property == "BDAY" -> "date"
+        property == "REV" -> "date-time"
+        property == "UID" -> "uuid"
+        property.endsWith(".country") -> "country"
+        property.endsWith(".postalCode") -> "regex"
+        property == "FN" || property.startsWith("N.") -> "person-name"
+        else -> "string"
+    }
+
+    /** Validate a single vCard property value. */
+    fun validateVCardProperty(property: String, value: String): Boolean =
+        validateByFormat(value, vcardPropertyToFormat(property))
+
+    /** Convert Contact fields → vCard (.vcf) string via ez-vcard. */
     fun toVCard(fields: Map<String, String>): String {
         val vcard = ezvcard.VCard()
-        fields["fullName"]?.let { vcard.setFormattedName(it) }
-        fields["email"]?.let { vcard.addEmail(it) }
-        fields["phone"]?.let { vcard.addTelephoneNumber(it) }
-        fields["organization"]?.let { vcard.setOrganization(it) }
+        fields["FN"]?.let { vcard.setFormattedName(it) }
+        (fields["N.given"] ?: fields["N.family"])?.let {
+            val n = ezvcard.property.StructuredName()
+            fields["N.given"]?.let { g -> n.given = g }
+            fields["N.family"]?.let { f -> n.family = f }
+            fields["N.prefix"]?.let { p -> n.prefixes.add(p) }
+            fields["N.suffix"]?.let { s -> n.suffixes.add(s) }
+            vcard.structuredName = n
+        }
+        fields.filterKeys { it.startsWith("EMAIL") }.values.forEach { vcard.addEmail(it) }
+        fields.filterKeys { it.startsWith("TEL") }.values.forEach { vcard.addTelephoneNumber(it) }
+        fields["ORG"]?.let { vcard.setOrganization(it) }
+        fields["TITLE"]?.let { vcard.addTitle(it) }
+        fields["ROLE"]?.let { vcard.addRole(it) }
+        fields["URL"]?.let { vcard.addUrl(it) }
+        fields["NOTE"]?.let { vcard.addNote(it) }
+        // ADR
+        val adrKeys = fields.keys.filter { it.startsWith("ADR") }
+        if (adrKeys.isNotEmpty()) {
+            val addr = ezvcard.property.Address()
+            fields["ADR.street"]?.let { addr.streetAddress = it }
+            fields["ADR.city"]?.let { addr.locality = it }
+            fields["ADR.state"]?.let { addr.region = it }
+            fields["ADR.postalCode"]?.let { addr.postalCode = it }
+            fields["ADR.country"]?.let { addr.country = it }
+            vcard.addAddress(addr)
+        }
+        fields["CATEGORIES"]?.let { cats ->
+            val c = ezvcard.property.Categories()
+            cats.split(",").forEach { c.values.add(it.trim()) }
+            vcard.addCategories(c)
+        }
+        fields["UID"]?.let { vcard.uid = ezvcard.property.Uid(it) }
         return ezvcard.Ezvcard.write(vcard).go()
     }
+
+    // === iCalendar (.ics) — Parse, Validate Properties, Convert ===
 
     /** Parse iCalendar (.ics) string → Event-like maps via ical4j. */
     fun parseICal(ics: String): List<Map<String, String>> {
         val calendar = net.fortuna.ical4j.data.CalendarBuilder().build(ics.byteInputStream())
         val events = mutableListOf<Map<String, String>>()
-        calendar.getComponents<net.fortuna.ical4j.model.component.VEvent>(net.fortuna.ical4j.model.component.VEvent.VEVENT).forEach { component ->
+        calendar.getComponents<net.fortuna.ical4j.model.component.VEvent>(
+            net.fortuna.ical4j.model.component.VEvent.VEVENT
+        ).forEach { component ->
             val map = mutableMapOf<String, String>()
-            component.summary.ifPresent { map["summary"] = it.value }
-            component.description.ifPresent { map["description"] = it.value }
-            component.location.ifPresent { map["location"] = it.value }
-            component.uid.ifPresent { map["id"] = it.value }
-            
-            
+            component.uid.ifPresent { map["UID"] = it.value }
+            component.summary.ifPresent { map["SUMMARY"] = it.value }
+            component.description.ifPresent { map["DESCRIPTION"] = it.value }
+            component.location.ifPresent { map["LOCATION"] = it.value }
+
+            // Extract properties by name via ical4j Property access
+            val propNames = listOf(
+                "DTSTART", "DTEND", "DURATION", "RRULE", "STATUS",
+                "PRIORITY", "URL", "GEO", "CATEGORIES", "CREATED", "LAST-MODIFIED"
+            )
+            propNames.forEach { name ->
+                component.getProperty<net.fortuna.ical4j.model.Property>(name)
+                    .ifPresent { map[name] = it.value }
+            }
+            component.getProperty<net.fortuna.ical4j.model.Property>("ORGANIZER")
+                .ifPresent { map["ORGANIZER"] = it.value.removePrefix("mailto:") }
+
+            // Multiple ATTENDEEs — extract email + CN/PARTSTAT/ROLE params
+            val attendees = component.getProperties<net.fortuna.ical4j.model.Property>("ATTENDEE")
+            attendees.forEachIndexed { i, a ->
+                map["ATTENDEE.$i"] = a.value.removePrefix("mailto:")
+                // Parameters are in the raw property string: ;CN=..;PARTSTAT=..
+                val raw = a.toString()
+                Regex("""CN=([^;:\r\n]+)""").find(raw)?.groupValues?.get(1)?.let {
+                    map["ATTENDEE.$i.CN"] = it
+                }
+                Regex("""PARTSTAT=([^;:\r\n]+)""").find(raw)?.groupValues?.get(1)?.let {
+                    map["ATTENDEE.$i.PARTSTAT"] = it
+                }
+                Regex("""ROLE=([^;:\r\n]+)""").find(raw)?.groupValues?.get(1)?.let {
+                    map["ATTENDEE.$i.ROLE"] = it
+                }
+            }
+
+            // VALARM (reminders)
+            component.getAlarms().forEachIndexed { i, alarm ->
+                alarm.getProperty<net.fortuna.ical4j.model.Property>("ACTION")
+                    .ifPresent { map["VALARM.$i.ACTION"] = it.value }
+                alarm.getProperty<net.fortuna.ical4j.model.Property>("TRIGGER")
+                    .ifPresent { map["VALARM.$i.TRIGGER"] = it.value }
+            }
             events.add(map)
         }
         return events
+    }
+
+    /**
+     * Validate all properties in a parsed iCal event using the appropriate validators.
+     *
+     * iCal property → OpenAPI format → Validator:
+     * - DTSTART, DTEND, CREATED, LAST-MODIFIED → date-time → ISO 8601
+     * - DURATION, VALARM.TRIGGER → duration → ISO 8601 duration
+     * - ORGANIZER, ATTENDEE.* (no .CN/.PARTSTAT/.ROLE) → email → EmailValidator
+     * - ATTENDEE.*.CN → person-name → non-blank
+     * - URL → uri → UrlValidator
+     * - GEO → geo → lat;lon parse
+     * - UID → uuid → UUID parse
+     * - PRIORITY → int32 → integer 0-9
+     * - RRULE → rrule → RFC 5545 recurrence
+     * - STATUS → ical-status → CONFIRMED/TENTATIVE/CANCELLED
+     * - SUMMARY, DESCRIPTION, LOCATION, CATEGORIES → string
+     */
+    fun validateICalProperties(ics: String): List<Map<String, Boolean>> =
+        parseICal(ics).map { event ->
+            buildMap {
+                event.forEach { (prop, value) ->
+                    val format = icalPropertyToFormat(prop)
+                    put(prop, validateByFormat(value, format))
+                }
+            }
+        }
+
+    /** Map iCal property name → OpenAPI format for validation. */
+    fun icalPropertyToFormat(property: String): String = when {
+        property in setOf("DTSTART", "DTEND", "CREATED", "LAST-MODIFIED") -> "date-time"
+        property == "DURATION" || property.endsWith(".TRIGGER") -> "duration"
+        property == "ORGANIZER" -> "email"
+        property.startsWith("ATTENDEE.") && !property.contains(".CN") &&
+            !property.contains(".PARTSTAT") && !property.contains(".ROLE") -> "email"
+        property.endsWith(".CN") -> "person-name"
+        property.endsWith(".PARTSTAT") -> "ical-partstat"
+        property.endsWith(".ROLE") -> "ical-role"
+        property == "URL" -> "uri"
+        property == "GEO" -> "geo"
+        property == "UID" -> "uuid"
+        property == "PRIORITY" -> "int32"
+        property == "RRULE" -> "rrule"
+        property == "STATUS" -> "ical-status"
+        property.endsWith(".ACTION") -> "ical-action"
+        else -> "string"
+    }
+
+    /** Validate a single iCal property value. */
+    fun validateICalProperty(property: String, value: String): Boolean {
+        val format = icalPropertyToFormat(property)
+        return when (format) {
+            // iCal-specific formats not in OpenAPI standard
+            "ical-status" -> value.uppercase() in setOf("TENTATIVE", "CONFIRMED", "CANCELLED")
+            "ical-partstat" -> value.uppercase() in setOf(
+                "NEEDS-ACTION", "ACCEPTED", "DECLINED", "TENTATIVE", "DELEGATED"
+            )
+            "ical-role" -> value.uppercase() in setOf(
+                "CHAIR", "REQ-PARTICIPANT", "OPT-PARTICIPANT", "NON-PARTICIPANT"
+            )
+            "ical-action" -> value.uppercase() in setOf("AUDIO", "DISPLAY", "EMAIL")
+            "rrule" -> value.startsWith("FREQ=") && value.contains(
+                Regex("FREQ=(SECONDLY|MINUTELY|HOURLY|DAILY|WEEKLY|MONTHLY|YEARLY)")
+            )
+            "geo" -> try {
+                val parts = value.split(";")
+                parts.size == 2 && parts[0].toDouble() in -90.0..90.0 && parts[1].toDouble() in -180.0..180.0
+                true
+            } catch (_: Exception) { false }
+            "person-name" -> value.isNotBlank()
+            "string" -> true
+            // Delegate to standard format validators
+            else -> validateByFormat(value, format)
+        }
     }
 
     /** Convert Event fields → iCalendar (.ics) via ical4j. */
@@ -276,7 +517,14 @@ object Validators {
         sb.appendLine("VERSION:2.0")
         events.forEach { fields ->
             sb.appendLine("BEGIN:VEVENT")
-            fields.forEach { (k, v) -> sb.appendLine("${k.uppercase()}:$v") }
+            fields.forEach { (k, v) ->
+                when {
+                    k == "ORGANIZER" || (k.startsWith("ATTENDEE.") && !k.contains(".")) ->
+                        sb.appendLine("${k.substringBefore(".")}:mailto:$v")
+                    k.contains(".") -> {} // sub-properties handled by parent
+                    else -> sb.appendLine("${k.uppercase()}:$v")
+                }
+            }
             sb.appendLine("END:VEVENT")
         }
         sb.appendLine("END:VCALENDAR")
