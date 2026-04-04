@@ -4791,3 +4791,89 @@ val sample: Pet = Pet(id = 1, name = "Fido", photo_urls = emptyList())
 ```
 
 **Zero mapping code. The Wire class goes everywhere unchanged.**
+
+### Validators + iCal + vCard — Linked Type Chain
+
+All value types are linked via ICU CLDR + stable validation libs:
+
+```
+IpAddress → GeoIp → Country → ICU ULocale
+                        ↓
+    Calendar (gregorian/japanese/islamic)
+    Date format (M/d/yy vs dd.MM.yy)
+    Time format (h:mm a vs HH:mm)
+    First day of week (Sun/Mon/Sat)
+    Weekend (Sat-Sun vs Fri-Sat)
+    Number format (1,234.56 vs 1.234,56)
+    Currency ($1,234 vs ¥1,235 vs 1.234€)
+    Measurement (US/UK/SI)
+    Phone code (+1/+81/+49)
+    Timezone → exemplar city
+    Language (en/ja/de)
+```
+
+**Validation libs:**
+
+| Type | Validator | Lib |
+|---|---|---|
+| Email | `EmailValidator` | apache commons-validator |
+| URL | `UrlValidator` | apache commons-validator |
+| IP | `InetAddressValidator` | apache commons-validator |
+| Domain | `DomainValidator` | apache commons-validator |
+| CreditCard | `CreditCardValidator` (Luhn) | apache commons-validator |
+| ISBN | `ISBNValidator` (10/13) | apache commons-validator |
+| ISSN | `ISSNValidator` | apache commons-validator |
+| ISIN | `ISINValidator` | apache commons-validator |
+| Phone | `PhoneNumberUtil` | google libphonenumber |
+| Country→all | `ULocale` | ICU4J CLDR |
+| PersonName | `PersonNameFormatter` | ICU4J |
+| vCard | `Ezvcard` parse/write | ez-vcard |
+| iCalendar | `CalendarBuilder` parse | ical4j |
+| Address | `AddressData` | google libaddressinput |
+| GeoIP | MaxMind GeoIP2 | maxmind |
+
+**iCal + vCard integration:**
+
+```kotlin
+// vCard (.vcf) → Contact types
+val vcf = Validators.parseVCard(vcfString)  // → Map (fullName, email, phone, org, address)
+val vcard = Validators.toVCard(contactFields)  // → .vcf string
+
+// iCalendar (.ics) → Event types
+val events = Validators.parseICal(icsString)  // → List<Map> (summary, description, location, uid)
+val ics = Validators.toICal(eventFields)  // → .ics string
+
+// The same person across formats:
+// PersonName → vCard FN
+// Email → vCard EMAIL → iCal ATTENDEE mailto:
+// Phone → vCard TEL (validated by libphonenumber per Country)
+// PostalAddress → vCard ADR (validated by libaddressinput per Country)
+```
+
+**Component types (from Uri.kt):**
+
+| Type | Format | Wire | SQL |
+|---|---|---|---|
+| `Uri` | uri/url | string | TEXT |
+| `Email` | email | string | TEXT |
+| `Phone` | phone | string | TEXT |
+| `Password` | password | string | TEXT |
+| `IpAddress` | ipv4/ipv6 | string | TEXT |
+| `Hostname` | hostname | string | TEXT |
+| `GeoPoint` | geo | string | TEXT |
+| `PostalAddress` | address | message | TEXT |
+| `PersonName` | person-name | message | TEXT |
+| `Locale` | locale | string | TEXT |
+| `Currency` | currency | string | TEXT |
+| `Timezone` | timezone | string | TEXT |
+| `Country` | country | string | TEXT |
+| `Language` | language | string | TEXT |
+| `Measure` | measure | message | TEXT |
+| `GeoIp` | — | message | — |
+| `Instant` | date-time | string | TEXT |
+| `LocalDate` | date | string | TEXT |
+| `LocalTime` | time | string | TEXT |
+| `Duration` | duration | string | TEXT |
+| `Uuid` | uuid | string | TEXT |
+| `ByteArray` | byte | bytes | BLOB |
+| `ByteString` | binary | bytes | BLOB |
