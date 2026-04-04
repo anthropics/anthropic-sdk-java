@@ -947,9 +947,12 @@ fun createOkHttpClient(
 
 ### OpenAPI Security Schemes — OIDC / OAuth / API Key / Basic
 
+> **All security is provided by ktor's Auth plugin — a stable, audited lib.**
+> No custom security code. The SDK configures ktor directly.
+
 The current SDK only supports API key auth (`x-api-key` header). OpenAPI defines
 multiple security schemes that any MCP service might use. ktor's Auth plugin
-supports all of them natively:
+supports all of them natively — **use ktor directly, don't wrap it**:
 
 | OpenAPI Security Scheme | ktor Plugin | Config |
 |---|---|---|
@@ -1074,6 +1077,26 @@ sealed class SecurityScheme {
 ```
 
 ### Low-Level Design: Tool Roles + Security — OpenAPI / AsyncAPI / CLI / POSIX
+
+> **Security principle: only stable lib code is secured.**
+> Custom security classes (SecurityScheme, SecurityContext, Identity, Role, ToolSecurity,
+> RateLimitConfig, ConcurrencyConfig, ToolExecutor) shown below are **design proposals only** —
+> NOT audited, NOT production-ready. The secured path is to use the stable libs directly:
+>
+> | Security Concern | Secured Stable Lib | NOT custom code |
+> |---|---|---|
+> | Auth (all schemes) | **ktor** `install(Auth)` — audited, CVE-tracked | ~~SecurityScheme sealed class~~ |
+> | TLS / mTLS | **ktor CIO** engine `https {}` — JVM/Native TLS | ~~MutualTLS data class~~ |
+> | Rate limiting | **ktor** `install(RateLimit)` — server plugin | ~~RateLimitConfig~~ |
+> | Retry + 429 | **ktor** `install(HttpRequestRetry)` — client plugin | ~~custom retry~~ |
+> | Mutex | **kotlinx.coroutines** `Mutex` — lock-free, tested | ~~ToolExecutor wrapper~~ |
+> | Semaphore | **kotlinx.coroutines** `Semaphore` — tested | ~~ConcurrencyConfig wrapper~~ |
+> | File permissions | **okio** `FileSystem` — POSIX-aware on Native | ~~custom POSIX~~ |
+> | Proto/gRPC auth | **Wire** `GrpcClient` — supports TLS channels | ~~custom annotations~~ |
+> | WebDAV file ops | **okio** `FileSystem` + HTTP methods | ~~custom WebDAV~~ |
+>
+> The custom classes below document the **conceptual mapping** between API specs.
+> Implementation should configure stable libs directly, not wrap them.
 
 Tools (MCP, OpenAPI operations, CLI commands) need **role-based access control**
 matching standard security models. This is generic infrastructure — every MCP service
@@ -1251,18 +1274,23 @@ suspend fun webSearch(request: WebSearchRequest): WebSearchResult
 suspend fun fileRead(request: FileReadRequest): FileReadResult
 ```
 
-#### How this maps to existing stable libs
+#### Secured stable libs — use directly, no wrappers
 
-| Pattern | Stable Lib | No Custom Code Needed |
-|---|---|---|
-| Auth (all schemes) | ktor `install(Auth)` | ✅ bearer, basic, OAuth2, OIDC |
-| Rate limiting (server) | ktor `install(RateLimit)` | ✅ per-key, per-route |
-| Rate limiting (client) | ktor `HttpRequestRetry` + Retry-After | ✅ 429 handling |
-| Mutex | `kotlinx.coroutines.sync.Mutex` | ✅ exclusive tool access |
-| Semaphore | `kotlinx.coroutines.sync.Semaphore` | ✅ parallel limit |
-| Role-based access | ktor `install(Authorization)` | ✅ route-level RBAC |
-| Tool metadata | Wire `@WireRpc` + custom `@ToolSecurity` | ✅ Wire for RPC, annotation for security |
-| POSIX permissions | `okio.FileSystem` permissions | ✅ file-level access control |
+| Security Concern | Stable Lib (SECURED) | Use Directly | Don't Write Custom |
+|---|---|---|---|
+| Auth (all schemes) | **ktor** `install(Auth)` | `bearer {}`, `basic {}`, `oauth2 {}` | ~~SecurityScheme sealed class~~ |
+| TLS / mTLS | **ktor CIO** `engine { https {} }` | keyStore, trustStore config | ~~custom TLS wrapper~~ |
+| Rate limiting (server) | **ktor** `install(RateLimit)` | `rateLimiter(limit, refillPeriod)` | ~~RateLimitConfig~~ |
+| Rate limiting (client) | **ktor** `install(HttpRequestRetry)` | `retryIf { status == 429 }` + Retry-After | ~~custom retry logic~~ |
+| Mutex (exclusive) | **kotlinx.coroutines** `Mutex` | `mutex.withLock { }` | ~~ToolExecutor wrapper~~ |
+| Semaphore (parallel) | **kotlinx.coroutines** `Semaphore` | `semaphore.withPermit { }` | ~~ConcurrencyConfig~~ |
+| RBAC | **ktor** `install(Authorization)` | `authorize("role") { }` | ~~custom Role class~~ |
+| File permissions | **okio** `FileSystem` | POSIX-aware on Native targets | ~~custom POSIX code~~ |
+| WebDAV file ops | **okio** `FileSystem` + **ktor** HTTP | FileSystem.read/write + WebDAV methods | ~~custom WebDAV~~ |
+| Proto/gRPC channels | **Wire** `GrpcClient` | TLS channel config built-in | ~~custom gRPC auth~~ |
+| Tool metadata | **Wire** `@WireRpc` | path, adapter, streaming built-in | ~~custom @ToolSecurity~~ |
+
+> **Rule: if a stable lib provides it, use the stable lib. Custom wrappers are security liabilities.**
 
 ### 🔲 GAPS — Remaining java.* in Core (22 files, NOT models/services)
 

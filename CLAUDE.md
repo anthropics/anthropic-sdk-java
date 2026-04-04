@@ -81,14 +81,14 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 ## Architecture Decisions
 
 1. **Don't duplicate stable libs** — use ktor/Wire/okio/kotlinx directly
-2. **`kotlinx.kmp.util.*`** — generic KMP utilities (Optional, functional interfaces)
-3. **`com.anthropic.core`** — config constants only (~50 lines truly Anthropic-specific)
-4. **JsonField/JsonValue = Wire field semantics** — format-agnostic, not JSON-specific
-5. **expect/actual typealias** works for Optional, Function, Supplier — NOT for CompletableFuture (Java SAM mismatch)
-6. **suspend replaces CompletableFuture** — JVM backward compat via `runBlocking` wrappers in jvmMain
-7. **Flow replaces Stream** — `stream()` returns `Flow<T>` on all platforms
-8. **All OpenAPI security schemes** via ktor Auth plugin (apiKey, bearer, OAuth2, OIDC, basic, mTLS)
-9. **Tool security** — Mutex/Semaphore for concurrency, @ToolSecurity for role-based access
+2. **Only stable libs are secured** — ktor Auth (not custom SecurityScheme), ktor RateLimit (not custom wrappers), kotlinx Mutex/Semaphore (not ToolExecutor), okio FileSystem (not custom POSIX), Wire GrpcClient (not custom gRPC auth)
+3. **`kotlinx.kmp.util.*`** — generic KMP utilities (Optional, functional interfaces)
+4. **`com.anthropic.core`** — config constants only (~50 lines truly Anthropic-specific)
+5. **JsonField/JsonValue = Wire field semantics** — format-agnostic, not JSON-specific
+6. **expect/actual typealias** works for Optional, Function, Supplier — NOT for CompletableFuture (Java SAM mismatch)
+7. **suspend replaces CompletableFuture** — JVM backward compat via `runBlocking` wrappers in jvmMain
+8. **Flow replaces Stream** — `stream()` returns `Flow<T>` on all platforms
+9. **Security via stable libs only** — ktor Auth for all OpenAPI schemes, ktor RateLimit for throttling, kotlinx.coroutines.sync for Mutex/Semaphore, okio for file permissions, Wire for gRPC TLS channels
 
 ## Source Reference — Key Classes & Methods
 
