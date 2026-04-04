@@ -37,6 +37,8 @@ fun main(args: Array<String>) {
     println("  generated UI")
     DatabaseEmitter().emit(openApi, pkg, outputDir)
     println("  generated DB")
+    HtmlEmitter().emit(openApi, pkg, outputDir)
+    println("  generated HTML")
     GraphqlFullEmitter().emit(openApi, pkg, outputDir)
     println("  generated GraphQL")
     TestEmitter().emit(openApi, pkg, outputDir)

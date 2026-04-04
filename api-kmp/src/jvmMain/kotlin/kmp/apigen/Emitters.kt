@@ -213,6 +213,7 @@ val ALL_EMITTERS = listOf(
     ComponentEmitter(),
     ComposeEmitter(),
     DatabaseEmitter(),
+    HtmlEmitter(),
     TestEmitter(),
     RestEmitter(),
     GrpcEmitter(),
