@@ -210,6 +210,7 @@ class McpEmitter : ProtocolEmitter {
 
 /** Registry of all protocol emitters */
 val ALL_EMITTERS = listOf(
+    ComponentEmitter(),
     RestEmitter(),
     GrpcEmitter(),
     GraphqlEmitter(),

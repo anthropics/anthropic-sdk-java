@@ -32,6 +32,8 @@ fun main(args: Array<String>) {
     // Generate services from paths
     val serviceGen = ServiceGenerator(pkg, outputDir)
     serviceGen.generate(openApi.paths, openApi.securitySchemes)
+    println("  generated components")
+    ComponentEmitter().emit(openApi, pkg, outputDir)
     println("  generated services → $output")
 
     println("api-gen: done")
