@@ -1112,12 +1112,87 @@ openApi.components.schemas.forEach { (name, schema) ->
 }
 ```
 
-**Why KMP generator matters:**
-- Runs in CI on any platform (Linux, macOS, Windows — native binary)
-- No JVM required for code generation
-- Same kotlinx.serialization that parses the spec also serializes the output models
-- Generator tests run in commonTest — same test infrastructure as the SDK
-- The spec types (`OpenApiSpec`, `AsyncApiSpec`) are themselves `@Serializable` — dogfooding
+**Distribution: JBang script OR KMP native CLI (Clikt)**
+
+```kotlin
+// KMP native CLI using Clikt — compiles to native binary, no JVM needed
+class GenerateCommand : CliktCommand(name = "anthropic-codegen") {
+    val openapi by option("--openapi").path().required()
+    val asyncapi by option("--asyncapi").path()
+    val output by option("--output", "-o").path().default(Path("src/commonMain/kotlin"))
+    val pkg by option("--package", "-p").default("com.anthropic")
+
+    override fun run() {
+        val openApiSpec: OpenApiSpec = Yaml.decodeFromString(openapi.readText())
+        val asyncApiSpec: AsyncApiSpec? = asyncapi?.let { Yaml.decodeFromString(it.readText()) }
+        generate(openApiSpec, asyncApiSpec, output, pkg)
+    }
+}
+
+fun main(args: Array<String>) = GenerateCommand().main(args)
+```
+
+```bash
+# Option 1: JBang — single-file Kotlin script, downloads deps automatically
+jbang anthropic-codegen.kt --openapi openapi.yaml --output src/commonMain/kotlin
+
+# Option 2: KMP native binary via Clikt — zero dependencies at runtime
+./anthropic-codegen --openapi openapi.yaml --asyncapi asyncapi.yaml -o src/commonMain/kotlin
+
+# Option 3: Gradle task — integrated into build
+./gradlew generateKmpModels -PopenapiSpec=openapi.yaml
+
+# Option 4: CI — native binary in GitHub Actions, no JVM setup needed
+- run: ./anthropic-codegen --openapi openapi.yaml -o src/commonMain/kotlin
+```
+
+**Tool stack:**
+
+| Tool | Purpose | KMP? |
+|---|---|---|
+| **Clikt** (ajalt) | CLI argument parsing | ✅ KMP native |
+| **kotlinx.serialization** | Parse YAML/JSON specs | ✅ KMP |
+| **KotlinPoet** | Emit Kotlin source code | ✅ (JVM for codegen, output is KMP) |
+| **okio** | File I/O | ✅ KMP native |
+| **JBang** | Single-file script runner | JVM (no compile step) |
+
+**JBang for quick iteration:**
+```kotlin
+///usr/bin/env jbang "$0" "$@" ; exit $?
+//DEPS com.squareup:kotlinpoet:2.2.0
+//DEPS org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0
+//DEPS com.squareup.okio:okio:3.17.0
+//KOTLIN 2.3.20
+
+import com.squareup.kotlinpoet.*
+import kotlinx.serialization.*
+import okio.*
+
+// Single-file generator — runs with: jbang anthropic-codegen.kt --openapi spec.yaml
+```
+
+**KMP native for CI/production:**
+```kotlin
+// build.gradle.kts for the generator module
+kotlin {
+    jvm()                    // Gradle task
+    linuxX64 { binaries { executable { entryPoint = "main" } } }   // Linux CI
+    macosArm64 { binaries { executable { entryPoint = "main" } } } // macOS dev
+    mingwX64 { binaries { executable { entryPoint = "main" } } }   // Windows CI
+
+    sourceSets.commonMain.dependencies {
+        implementation("com.github.ajalt.clikt:clikt:5.0.3")
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
+        implementation("com.squareup.okio:okio:3.17.0")
+    }
+}
+```
+
+**Why this matters:**
+- JBang: zero setup, single file, iterate fast during development
+- Native CLI: zero JVM, instant startup, CI-friendly, distributable binary
+- Clikt: type-safe CLI args, help text, shell completion — all KMP native
+- Same generator runs in Gradle (JVM), CI (native), dev laptop (JBang/native)
 
 ### 🔲 PLANNED — Additional Non-JVM Targets
 - Native: macOS (x64/arm64), iOS (arm64/sim), Linux (x64/arm64)
