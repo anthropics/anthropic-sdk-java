@@ -693,6 +693,26 @@ Each method carries `value: String` for wire conversion, `protocol: Protocol`, `
 | `FunctionalJvm.kt` | actual typealias Function = java.util.function.Function, etc. |
 | `PhantomReachableJvm.kt` | actual JVM Cleaner via reflection |
 | `PlatformTimeJvm.kt` | actual PlatformTime using kotlinx.datetime |
+| `AsyncJvm.kt` | actual typealias CompletableFuture/Executor/AtomicReference/AtomicLong = java.util.concurrent |
+
+### ✅ DONE — Additive Suspend API (`d20f767`, `7cec366`)
+- `HttpClient.executeSuspend()` — default impl delegates to `execute()`, zero breaking changes
+- `HttpRequest.prepareSuspend()` — alongside existing `prepareAsync()`
+- OkHttpClient — optimized with `suspendCancellableCoroutine` (truly non-blocking)
+- KtorHttpClient — delegates to existing suspend `executeKtor()`
+- Services, models, tests — **untouched**
+
+### 🔲 IN PROGRESS — JS Target + Non-JVM Stubs (`62e0363`)
+- JS(IR) target added: `js(IR) { browser(); nodejs() }`
+- jsMain stubs being created for java.*/Jackson/kotlin.jvm (compile-only)
+- Approach: stubs provide type signatures for commonMain compilation on JS
+- Zero commonMain changes — all existing code stays as-is
+- 20,985 JS compilation errors being resolved via stubs
+
+### 🔲 PLANNED — Additional Non-JVM Targets
+- Native: macOS (x64/arm64), iOS (arm64/sim), Linux (x64/arm64)
+- Wasm: wasmJs, wasmWasi
+- Same stub approach for each target
 
 ---
 
