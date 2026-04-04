@@ -752,12 +752,52 @@ Pure KMP Kotlin models          (zero java.*, zero @JvmStatic, zero Jackson)
     └── jvmMain: Stainless-generated Jackson models (backward compat)
 ```
 
-**openapi2proto details:**
-- Repo: [NYTimes/openapi2proto](https://github.com/nytimes/openapi2proto) (Go tool)
-- Objects → `message`, arrays → `repeated`, enums → `enum`
-- Paths → `rpc` methods with `google.api.http` annotations
-- ⚠️ `oneOf`/`anyOf` → `google.protobuf.Any` (type safety lost)
-- Alternative: [Google gnostic](https://github.com/google/gnostic) — bidirectional, better union support
+**Tool comparison for OpenAPI → Proto:**
+
+| Tool | oneOf/anyOf | OpenAPI 3.x | gRPC services | Wire compat | Status |
+|---|---|---|---|---|---|
+| **openapi2proto** (NYTimes) | ❌ → `Any` | 3.0 subset | ✅ | ✅ | Stable, inactive (2019) |
+| **gnostic** (Google) | ❌ parse-only | 3.0.0 only | ✅ via plugin | ✅ | Active (2023) |
+| **openapi-generator** protobuf-schema | ❌ pending | 3.0-3.2 | ✅ | ✅ | Active (2026) |
+
+**⚠️ All tools fail on discriminated unions** — Anthropic API uses `oneOf` heavily
+(ContentBlock, ToolResult, Message roles). OpenAPI `oneOf` doesn't map to Protobuf `oneof`.
+
+**Recommended: Proto-first approach**
+```
+.proto files (hand-written, Protobuf oneof for unions)
+    │
+    ├── Wire Gradle plugin → KMP Kotlin (all targets)
+    │   Uses native protobuf `oneof` → Kotlin sealed class
+    │
+    └── protoc-gen-openapi → validate against OpenAPI spec
+        Ensures proto definitions match the API contract
+```
+
+Proto-first solves the union type problem because Protobuf `oneof` maps
+directly to Kotlin `sealed class` via Wire — full type safety preserved.
+
+**Example: ContentBlock with protobuf oneof → Wire sealed class**
+```protobuf
+message ContentBlock {
+  oneof block {
+    TextBlock text = 1;
+    ToolUseBlock tool_use = 2;
+    ToolResultBlock tool_result = 3;
+    ImageBlock image = 4;
+  }
+}
+```
+Wire generates:
+```kotlin
+// Pure KMP — compiles on JVM, JS, Native, Wasm
+sealed class ContentBlock {
+  data class Text(val text: TextBlock) : ContentBlock()
+  data class ToolUse(val tool_use: ToolUseBlock) : ContentBlock()
+  data class ToolResult(val tool_result: ToolResultBlock) : ContentBlock()
+  data class Image(val image: ImageBlock) : ContentBlock()
+}
+```
 
 **Wire KMP output:**
 - Immutable data classes with builders
