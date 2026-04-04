@@ -1076,42 +1076,65 @@ sealed class SecurityScheme {
 }
 ```
 
-### Low-Level Design: Tool Roles + Security — OpenAPI / AsyncAPI / CLI / POSIX
+### Low-Level Design: Tool Roles + Security — OpenAPI / AsyncAPI / gRPC / WASM
 
-> **Security principle: only stable lib code is secured.**
-> Custom security classes (SecurityScheme, SecurityContext, Identity, Role, ToolSecurity,
-> RateLimitConfig, ConcurrencyConfig, ToolExecutor) shown below are **design proposals only** —
-> NOT audited, NOT production-ready. The secured path is to use the stable libs directly:
+> **Principle: standard specs + stable libs = anything is a secure tool.**
 >
-> | Security Concern | Secured Stable Lib | NOT custom code |
+> We use standard cross-platform API specs (OpenAPI, AsyncAPI, gRPC, WASM) for tool
+> configuration. Any service described by these specs can be called as a tool securely
+> because the spec's `securitySchemes` definition IS the security boundary, enforced
+> by the stable lib implementing the spec.
+>
+> ```
+> OpenAPI spec  → ktor HttpClient + Auth    → secure tool call
+> AsyncAPI spec → ktor WebSocket/SSE + Auth → secure tool call
+> gRPC .proto   → Wire GrpcClient + TLS    → secure tool call
+> WASM .wasm    → wasmtime sandbox          → secure tool call (memory-safe)
+> MCP server    → MCP SDK + Transport       → secure tool call
+> ```
+>
+> **Security comes from the spec + stable lib — NOT from custom code.**
+> Custom security classes shown below are **design proposals for the conceptual mapping**.
+> Implementation configures stable libs directly via the spec's security definitions.
+>
+> | Spec | Tool Type | Stable Lib (SECURED) | Security From Spec |
+> |---|---|---|---|
+> | **OpenAPI** | REST HTTP service | **ktor** `HttpClient + Auth` | `securitySchemes.bearerAuth/apiKey/oauth2/oidc` |
+> | **AsyncAPI** | Event-driven service | **ktor** `WebSocket/SSE + Auth` | `security.oauth2/apiKey` |
+> | **gRPC (.proto)** | RPC service | **Wire** `GrpcClient + TLS` | TLS channel, per-RPC credentials |
+> | **WASM (.wasm)** | Sandboxed compute | **wasmtime** runtime | Linear memory isolation, no raw pointers |
+> | **MCP** | AI tool server | **MCP SDK** `Client + Transport` | Transport-level auth |
+> | **CLI/POSIX** | Local command | **okio** `FileSystem` | POSIX rwx, capabilities |
+>
+> | Concurrency | Stable Lib | Use Directly |
 > |---|---|---|
-> | Auth (all schemes) | **ktor** `install(Auth)` — audited, CVE-tracked | ~~SecurityScheme sealed class~~ |
-> | TLS / mTLS | **ktor CIO** engine `https {}` — JVM/Native TLS | ~~MutualTLS data class~~ |
-> | Rate limiting | **ktor** `install(RateLimit)` — server plugin | ~~RateLimitConfig~~ |
-> | Retry + 429 | **ktor** `install(HttpRequestRetry)` — client plugin | ~~custom retry~~ |
-> | Mutex | **kotlinx.coroutines** `Mutex` — lock-free, tested | ~~ToolExecutor wrapper~~ |
-> | Semaphore | **kotlinx.coroutines** `Semaphore` — tested | ~~ConcurrencyConfig wrapper~~ |
-> | File permissions | **okio** `FileSystem` — POSIX-aware on Native | ~~custom POSIX~~ |
-> | Proto/gRPC auth | **Wire** `GrpcClient` — supports TLS channels | ~~custom annotations~~ |
-> | WebDAV file ops | **okio** `FileSystem` + HTTP methods | ~~custom WebDAV~~ |
+> | Exclusive access (mutex) | **kotlinx.coroutines** `Mutex.withLock {}` | Lock-free, tested |
+> | Parallel limit (semaphore) | **kotlinx.coroutines** `Semaphore.withPermit {}` | Tested |
+> | Rate limiting (server) | **ktor** `install(RateLimit)` | Per-key, per-route |
+> | Rate limiting (client) | **ktor** `install(HttpRequestRetry)` | 429 + Retry-After |
 >
 > The custom classes below document the **conceptual mapping** between API specs.
-> Implementation should configure stable libs directly, not wrap them.
+> Implementation reads the spec and configures the stable lib — no custom security code.
 
 Tools (MCP, OpenAPI operations, CLI commands) need **role-based access control**
 matching standard security models. This is generic infrastructure — every MCP service
 needs it, not just Anthropic.
 
-#### Unified Role Model — maps across all API specs
+#### Unified Role Model — standard specs define tools, stable libs enforce security
 
-| Concept | OpenAPI | AsyncAPI | MCP SDK | CLI (POSIX) | ktor |
-|---|---|---|---|---|---|
-| **Operation** | `paths./endpoint.post` | `channels.topic.subscribe` | `Tool` (name, inputSchema) | command + args | `routing { post("/endpoint") {} }` |
-| **Auth** | `securitySchemes` | `securitySchemes` | Transport-level auth | login/sudo/capabilities | `install(Auth)` |
-| **Role** | `security[].scopes` | `security[].scopes` | Tool annotations | POSIX user/group/other | Custom plugin |
-| **Permission** | OAuth2 scopes | OAuth2 scopes | `allowedCallers` | rwx / ACL / capabilities | `authorize { hasRole() }` |
-| **Rate limit** | `x-ratelimit-*` headers | backpressure/QoS | Transport-level | ulimit / cgroup | `install(RateLimit)` |
-| **Concurrency** | N/A | consumer groups | N/A | process/thread limits | Mutex / Semaphore |
+| Concept | OpenAPI | AsyncAPI | gRPC (.proto) | WASM | MCP SDK | CLI (POSIX) |
+|---|---|---|---|---|---|---|
+| **Tool** | `paths.post` | `channels.subscribe` | `rpc Method()` | exported function | `Tool` | command + args |
+| **Auth** | `securitySchemes` | `securitySchemes` | TLS + per-RPC | sandbox (no auth needed) | Transport auth | login/sudo |
+| **Stable Lib** | ktor | ktor | Wire | wasmtime | MCP SDK | okio |
+| **Role** | OAuth2 scopes | OAuth2 scopes | TLS cert identity | WASM capabilities | `allowedCallers` | POSIX uid/gid |
+| **Permission** | `security[].scopes` | `security[].scopes` | service-level | linear memory bounds | tool annotations | rwx / ACL |
+| **Rate limit** | `x-ratelimit-*` | backpressure/QoS | server interceptor | fuel metering | Transport | ulimit/cgroup |
+| **Concurrency** | N/A | consumer groups | stream multiplexing | single-threaded | N/A | process limits |
+| **Config format** | `openapi.yaml` | `asyncapi.yaml` | `.proto` | `.wasm` + `.wit` | JSON-RPC | CLI args/env |
+
+**Each spec column is self-contained** — the spec defines the tool + its security,
+and the stable lib in that column enforces it. No cross-cutting custom code needed.
 
 #### SecurityContext — unified across all API types
 

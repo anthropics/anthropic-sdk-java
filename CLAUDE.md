@@ -80,15 +80,46 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 
 ## Architecture Decisions
 
-1. **Don't duplicate stable libs** — use ktor/Wire/okio/kotlinx directly
-2. **Only stable libs are secured** — ktor Auth (not custom SecurityScheme), ktor RateLimit (not custom wrappers), kotlinx Mutex/Semaphore (not ToolExecutor), okio FileSystem (not custom POSIX), Wire GrpcClient (not custom gRPC auth)
-3. **`kotlinx.kmp.util.*`** — generic KMP utilities (Optional, functional interfaces)
-4. **`com.anthropic.core`** — config constants only (~50 lines truly Anthropic-specific)
-5. **JsonField/JsonValue = Wire field semantics** — format-agnostic, not JSON-specific
-6. **expect/actual typealias** works for Optional, Function, Supplier — NOT for CompletableFuture (Java SAM mismatch)
-7. **suspend replaces CompletableFuture** — JVM backward compat via `runBlocking` wrappers in jvmMain
-8. **Flow replaces Stream** — `stream()` returns `Flow<T>` on all platforms
-9. **Security via stable libs only** — ktor Auth for all OpenAPI schemes, ktor RateLimit for throttling, kotlinx.coroutines.sync for Mutex/Semaphore, okio for file permissions, Wire for gRPC TLS channels
+### Core Principle: Standard Specs + Stable Libs = Anything Is a Secure Tool
+
+We use **standard cross-platform API specs** for configuration:
+- **OpenAPI** — REST HTTP services (JSON/MsgPack/CBOR)
+- **AsyncAPI** — Event-driven services (WebSocket, SSE, MQTT, Kafka)
+- **gRPC/Proto** — RPC services (Protobuf, streaming)
+- **WASM** — Sandboxed compute (portable, memory-safe)
+
+Any service described by these specs can be called as a tool securely.
+The spec's `securitySchemes` definition IS the security boundary — enforced
+by the stable lib that implements the spec (ktor, Wire, wasmtime).
+
+### Decisions
+
+1. **Standard specs for config** — OpenAPI, AsyncAPI, gRPC, WASM define what tools exist and how to call them securely. No proprietary config format.
+2. **Only stable libs are secured** — ktor (HTTP auth, TLS, rate limit), Wire (gRPC TLS channels), okio (file permissions), kotlinx.coroutines (Mutex/Semaphore). Custom code is a security liability.
+3. **Don't duplicate stable libs** — use ktor/Wire/okio/kotlinx directly
+4. **`kotlinx.kmp.util.*`** — generic KMP utilities (Optional, functional interfaces)
+5. **`com.anthropic.core`** — config constants only (~50 lines truly Anthropic-specific)
+6. **JsonField/JsonValue = Wire field semantics** — format-agnostic, not JSON-specific
+7. **expect/actual typealias** works for Optional, Function, Supplier — NOT for CompletableFuture (Java SAM mismatch)
+8. **suspend replaces CompletableFuture** — JVM backward compat via `runBlocking` wrappers in jvmMain
+9. **Flow replaces Stream** — `stream()` returns `Flow<T>` on all platforms
+
+### How any service becomes a secure tool
+
+```
+OpenAPI spec (YAML/JSON)          → ktor HttpClient + Auth plugin    → tool call
+AsyncAPI spec (YAML/JSON)         → ktor WebSocket/SSE + Auth       → tool call
+gRPC .proto service definition    → Wire GrpcClient + TLS channel   → tool call
+WASM module (.wasm)               → wasmtime sandbox (memory-safe)  → tool call
+MCP server (JSON-RPC)             → MCP SDK Client + Transport      → tool call
+```
+
+Security comes from the spec + the stable lib enforcing it:
+- OpenAPI `securitySchemes.bearerAuth` → ktor `install(Auth) { bearer {} }`
+- AsyncAPI `security.oauth2` → ktor `install(Auth) { bearer { refreshTokens {} } }`
+- gRPC TLS → Wire `GrpcClient.Builder().client(tlsClient)`
+- WASM sandbox → wasmtime linear memory isolation (no raw pointers)
+- MCP auth → MCP SDK Transport-level authentication
 
 ## Source Reference — Key Classes & Methods
 
