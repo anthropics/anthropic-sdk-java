@@ -980,14 +980,95 @@ templates/kotlin-kmp-wire/
     asyncapi.mustache      — Flow<T> streaming from AsyncAPI channels
 ```
 
-Run with:
-```bash
-openapi-generator generate \
-    -g kotlin \
-    -t templates/kotlin-kmp-wire/ \
-    -i openapi.yaml \
-    --additional-properties=library=ktor,serializationLibrary=kotlinx_serialization,multiplatform=true
+#### Implementation: Kotlin code generator using spec parsers + KotlinPoet
+
+Instead of Mustache templates, use actual OpenAPI + AsyncAPI parsers with
+KotlinPoet for programmatic code generation. Full type safety, no string templating.
+
+**Parser stack:**
+
+| Spec | Parser | Maven | Kotlin? |
+|---|---|---|---|
+| OpenAPI 3.x | **swagger-parser** v2.1.39 | `io.swagger.parser.v3:swagger-parser:2.1.39` | Java POJOs (Kotlin-friendly) |
+| OpenAPI 3.x | **Lancomsystems** v2.1.1 | `io.github.lancomsystems.openapi.parser:openapi-parser:2.1.1` | Pure Kotlin, immutable data classes |
+| AsyncAPI | **JAsyncAPI** | `com.asyncapi:jasyncapi` | Official JVM bindings |
+| Code output | **KotlinPoet** | `com.squareup:kotlinpoet:2.2.0` | Programmatic Kotlin code gen |
+
+**Generator reads specs → emits KMP Kotlin via KotlinPoet:**
+
+```kotlin
+// The generator itself — a Kotlin program that reads specs and outputs code
+fun main() {
+    // 1. Parse OpenAPI
+    val openApi = OpenAPIV3Parser().read("openapi.yaml")
+
+    // 2. Parse AsyncAPI
+    val asyncApi = JAsyncAPI.parse("asyncapi.yaml")
+
+    // 3. Generate models from OpenAPI schemas
+    openApi.components.schemas.forEach { (name, schema) ->
+        when {
+            schema.oneOf != null -> generateSealedClass(name, schema)  // oneOf → sealed class
+            schema.enum != null -> generateEnum(name, schema)          // enum → enum class
+            else -> generateDataClass(name, schema)                    // object → data class
+        }
+    }
+
+    // 4. Generate suspend services from OpenAPI paths
+    openApi.paths.forEach { (path, pathItem) ->
+        pathItem.readOperationsMap().forEach { (method, operation) ->
+            generateSuspendFunction(path, method, operation)
+        }
+    }
+
+    // 5. Generate Flow streaming from AsyncAPI channels
+    asyncApi.channels.forEach { (channel, channelItem) ->
+        generateFlowFunction(channel, channelItem)
+    }
+
+    // 6. Generate ktor client config from security schemes
+    openApi.components.securitySchemes?.let { generateClientConfig(it) }
+}
+
+// KotlinPoet generates type-safe code:
+fun generateSealedClass(name: String, schema: Schema<*>) {
+    val sealedClass = TypeSpec.classBuilder(name)
+        .addModifiers(KModifier.SEALED)
+        .addAnnotation(Serializable::class)
+
+    schema.oneOf.forEach { variant ->
+        val variantName = variant.`$ref`.substringAfterLast("/")
+        val subclass = TypeSpec.classBuilder(variantName)
+            .addModifiers(KModifier.DATA)
+            .superclass(ClassName("", name))
+            .addAnnotation(AnnotationSpec.builder(SerialName::class)
+                .addMember("%S", schema.discriminator.mapping[variantName] ?: variantName.lowercase())
+                .build())
+        sealedClass.addType(subclass.build())
+    }
+
+    FileSpec.builder("com.anthropic.models", name)
+        .addType(sealedClass.build())
+        .build()
+        .writeTo(Path("src/commonMain/kotlin"))
+}
 ```
+
+**Output structure (same as current SDK, but KMP-native):**
+```
+commonMain/kotlin/com/anthropic/
+    models/         — @Serializable data classes + sealed classes (from schemas)
+    services/       — suspend fun interfaces (from paths + channels)
+    client/         — ktor HttpClient factory (from securitySchemes)
+```
+
+**Why parsers + KotlinPoet instead of Mustache templates:**
+- Type-safe code generation (compiler checks the generator itself)
+- Full access to schema metadata (discriminator mappings, required fields, descriptions)
+- Programmatic control over sealed class hierarchy
+- KotlinPoet handles imports, formatting, package structure automatically
+- Can merge OpenAPI + AsyncAPI in the same generator program
+- Easy to test — unit test each generation function
 
 ### 🔲 PLANNED — Additional Non-JVM Targets
 - Native: macOS (x64/arm64), iOS (arm64/sim), Linux (x64/arm64)
