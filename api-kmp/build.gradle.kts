@@ -1,9 +1,19 @@
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
+    id("com.squareup.wire") version "5.3.1"
 }
 
 repositories { mavenCentral() }
+
+wire {
+    kotlin {
+        out = "src/commonMain/kotlin"
+    }
+    sourcePath {
+        srcDir("src/test/proto")
+    }
+}
 
 kotlin {
     jvm()
@@ -16,6 +26,7 @@ kotlin {
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
                 api("com.squareup.okio:okio:3.17.0")
                 api("com.squareup.wire:wire-runtime:5.3.1")
+                api("com.squareup.wire:wire-grpc-client:5.3.1")
                 api("com.fasterxml.jackson.core:jackson-annotations:2.18.2")
                 api("com.fasterxml.jackson.core:jackson-core:2.18.2")
                 api("com.fasterxml.jackson.core:jackson-databind:2.18.2")
