@@ -163,6 +163,9 @@ object OpenApiParser {
                 "byte" -> "Base64"
                 "binary" -> "Binary"
                 "password" -> "Password"
+                
+                "phone" -> "Phone"
+                "address" -> "PostalAddress"
                 else -> "String"
             }
             "integer" -> if (schema.format == "int64") "Long" else "Int"

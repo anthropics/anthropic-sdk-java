@@ -87,6 +87,8 @@ class DatabaseEmitter : ProtocolEmitter {
                         "Instant", "LocalDate", "LocalTime", "Duration" -> "TEXT"
                         "Uuid", "Email", "IpAddress", "Hostname", "Password" -> "TEXT"
                         "Base64", "Binary" -> "BLOB"
+                        "Phone" -> "TEXT"
+                        "PostalAddress" -> "TEXT"
                         "Float" -> "REAL"
                         else -> if (prop.ref != null) "INTEGER" else "TEXT"
                     }

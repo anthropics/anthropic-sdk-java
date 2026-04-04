@@ -188,6 +188,8 @@ class ModelGenerator(
             "Base64" -> ClassName("kotlin", "ByteArray")
             "Binary" -> ClassName("okio", "ByteString")
             "Password" -> ClassName("com.anthropic.core", "Password")
+            "Phone" -> ClassName("com.anthropic.core", "Phone")
+            "PostalAddress" -> ClassName("com.anthropic.core", "PostalAddress")
             "JsonObject" -> ClassName("kotlinx.serialization.json", "JsonObject")
             else -> {
                 if (type.startsWith("List<")) {

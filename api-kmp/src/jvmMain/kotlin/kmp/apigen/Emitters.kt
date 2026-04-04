@@ -106,7 +106,7 @@ class GrpcEmitter : ProtocolEmitter {
             "Instant", "LocalDate", "LocalTime" -> "string"
             "Duration" -> "string"
             "Uuid" -> "string"
-            "Email", "IpAddress", "Hostname", "Password" -> "string"
+            "Email", "IpAddress", "Hostname", "Password", "Phone" -> "string"
             "Float" -> "float"
             "Base64" -> "bytes"
             "Binary" -> "bytes"
