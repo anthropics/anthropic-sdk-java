@@ -33,12 +33,12 @@ class ServiceGenerator(
     }
 
     private fun generateServiceInterface(name: String, operations: List<ParsedPath>) {
-        val serviceInterface = TypeSpec.interfaceBuilder(name)
+        val serviceInterface = TypeSpec.classBuilder(name).addModifiers(KModifier.OPEN)
 
         operations.forEach { op ->
             val funName = op.operationId.replaceFirstChar { it.lowercase() }
             val funBuilder = FunSpec.builder(funName)
-                .addModifiers(KModifier.ABSTRACT, KModifier.SUSPEND)
+                .addModifiers(KModifier.OPEN, KModifier.SUSPEND)
 
             // Request parameter
             op.requestBodyRef?.let { ref ->

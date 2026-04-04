@@ -215,6 +215,6 @@ val ALL_EMITTERS = listOf(
     DatabaseEmitter(),
     RestEmitter(),
     GrpcEmitter(),
-    GraphqlEmitter(),
+    GraphqlFullEmitter(),
     McpEmitter(),
 )
