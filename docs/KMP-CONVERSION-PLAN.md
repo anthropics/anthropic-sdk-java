@@ -4674,3 +4674,43 @@ Cross-API JSON Patch:
     → PatchEvent broadcast to Pet subscribers
     → audit log records cross-API data flow
 ```
+
+### Proto drives the model — .proto is source of truth
+
+The .proto file is the canonical model definition. Wire compiles it to KMP Kotlin.
+OpenAPI schema maps TO proto messages, not the other way around.
+
+```
+openapi.yaml schemas → api-gen → .proto messages (canonical)
+                                     ↓
+                                Wire Gradle plugin
+                                     ↓
+                              KMP Kotlin data classes (Wire-generated)
+                                     ↓
+                    All other emitters reference Wire types:
+                    ├── Components (Component<WirePet>)
+                    ├── Services (suspend fun → WirePet)
+                    ├── UI (PetForm(initial: WirePet))
+                    ├── DB (columns from proto fields)
+                    ├── GraphQL (types from proto messages)
+                    ├── Tests (PatchEvent<WirePet>)
+                    └── MCP (tool schemas from proto)
+```
+
+**Why proto drives:**
+- Proto has native `oneof` → Wire `sealed class` (no workaround needed)
+- Proto has field numbers → stable binary evolution
+- Proto has `optional` → Wire nullable (proper field presence)
+- Proto has `repeated` → Wire `List<T>`
+- Proto has `map` → Wire `Map<K,V>`
+- Proto is cross-language (Java, Kotlin, Swift, Go, Rust, C++)
+- Wire generates identical KMP code for all targets
+
+**api-gen flow:**
+1. Parse OpenAPI schemas
+2. Generate .proto messages from schemas (GrpcEmitter)
+3. Wire compiles .proto → KMP Kotlin (build plugin)
+4. All other emitters import Wire-generated types
+5. `@Serializable` added via Wire's kotlinx.serialization support
+
+**The proto IS the model. Everything else is a view of it.**
