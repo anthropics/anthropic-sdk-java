@@ -748,7 +748,59 @@ grpcClient.AnthropicService.CreateMessage(request)
 | `QueryParams.kt` | Has JsonValue integration |
 | `HttpMethod.kt` | Multi-protocol enum (HTTP/WebDAV/gRPC/RSocket/MCP) |
 
-### 🔲 GAPS — Remaining java.* in Core (15 files, 42 imports)
+### 🔲 GAPS — Remaining java.* in Core (22 files, NOT models/services)
+
+**Phase 0: expect/actual infrastructure (new files, no existing changes)**
+| New File | Purpose | Status |
+|---|---|---|
+| `core/Async.kt` (commonMain) | `expect class CompletableFuture<T>` with thenApply/thenCompose/etc | 🔲 **Revised**: expect class can't declare methods matching Java SAM signatures → convert to `suspend` instead |
+| `core/AsyncJvm.kt` (jvmMain) | `actual typealias CompletableFuture<T> = j.u.c.CompletableFuture<T>` | 🔲 See above |
+| `core/Concurrency.kt` (commonMain) | `expect` for Executor, AtomicReference | 🔲 **Revised**: Executor → `CoroutineDispatcher`, AtomicReference → `kotlinx.atomicfu` |
+| `core/ConcurrencyJvm.kt` (jvmMain) | `actual typealias` to java.util.concurrent types | 🔲 See above |
+| `core/PlatformTime.kt` (commonMain) | `expect` for Clock, parseHttpDate, nanosUntil | ✅ `43f530e` — `parseRetryAfterToDelayNanos` expect/actual |
+| `core/PlatformTimeJvm.kt` (jvmMain) | `actual` using java.time.Clock, OffsetDateTime, DateTimeFormatter | ✅ `43f530e` |
+
+**Phase 1: Leaf files (no dependents) — 7 files**
+| File | java.* Import | Replacement | Status |
+|---|---|---|---|
+| `handlers/StreamHandler.kt` | `java.io.IOException` | `kotlin.io.IOException` | 🔲 |
+| `PrepareRequest.kt` | `CompletableFuture` | `suspend` (was: import from `core/Async.kt`) | 🔲 |
+| `PhantomReachable.kt` | `reflect.InvocationTargetException` | → expect/actual, JVM impl in jvmMain | ✅ `4e1ec31` |
+| `PhantomReachableExecutorService.kt` | `ExecutorService`, `Callable`, etc | → move entire file to jvmMain | 🔲 |
+| `RetryingHttpClient.kt` | Clock, OffsetDateTime, ThreadLocalRandom, etc | PlatformTime + `kotlin.random.Random` | Partial ✅ `43f530e` (ThreadLocalRandom, TimeUnit, Function.identity removed), 🔲 Clock/OffsetDateTime remain |
+| `ValuesJvm.kt` | Optional, SortedMap, Lock | Move JVM-specific utils to jvmMain | Partial ✅ `43f530e` (Optional removed), 🔲 SortedMap/Lock remain |
+| `ObjectMappers.kt` | OffsetDateTime, InputStream, etc | → `expect fun jsonMapper()`, JVM actual with time/InputStream | 🔲 |
+
+**Phase 2: Core interfaces — 6 files**
+| File | java.* Import | Replacement | Status |
+|---|---|---|---|
+| `http/HttpRequestBody.kt` | `java.io.OutputStream` | `okio.BufferedSink` | ✅ `7606ae7` |
+| `http/HttpResponse.kt` | `java.io.InputStream` | `okio.BufferedSource` | ✅ `7606ae7` |
+| `http/HttpResponseFor.kt` | `java.io.InputStream` | follows HttpResponse | ✅ `7606ae7` |
+| `http/HttpClient.kt` | `CompletableFuture` | `suspend fun execute()` (was: import from Async.kt) | 🔲 Phase 1 |
+| `http/AsyncStreamResponse.kt` | CompletableFuture, Optional, Executor, AtomicReference | `suspend` + `Flow` + nullable | 🔲 Phase 1 (Optional→Throwable? ✅ `0860877`) |
+| `Sleeper.kt` | CompletableFuture, AutoCloseable | `suspend fun sleep()` + kotlin.AutoCloseable | 🔲 Phase 1 |
+
+**Phase 3: Implementations — 6 files**
+| File | java.* Import | Replacement | Status |
+|---|---|---|---|
+| `http/HttpRequestBodies.kt` | ByteArrayInputStream/OutputStream | `okio.Buffer` | ✅ `7606ae7` |
+| `http/KtorHttpClient.kt` | ByteArrayInputStream/OutputStream, CompletableFuture | okio.Buffer + `suspend` | ✅ okio `7606ae7`, 🔲 CF→suspend Phase 1 |
+| `DefaultSleeper.kt` | Timer/TimerTask | `kotlinx.coroutines.delay()` | ✅ `23ec675` |
+| `PhantomReachableSleeper.kt` | CompletableFuture | `suspend` | 🔲 Phase 1 |
+| `PhantomReachableClosingHttpClient.kt` | CompletableFuture | `suspend` | 🔲 Phase 1 |
+| `PhantomReachableClosingAsyncStreamResponse.kt` | CompletableFuture, Optional, Executor | `suspend` + nullable | 🔲 Phase 1 (Optional ✅ `0860877`) |
+
+**Phase 4: Consumers — 3 files**
+| File | java.* Import | Replacement | Status |
+|---|---|---|---|
+| `AutoPagerAsync.kt` | CompletableFuture, Optional, Executor, AtomicReference | Flow-based pagination | 🔲 Phase 1 (Optional ✅ `0860877`) |
+| `PageAsync.kt` | CompletableFuture | `suspend fun getNextPage()` | 🔲 Phase 1 |
+| `ClientOptions.kt` | Clock, Optional, Executor, ExecutorService, ThreadFactory, AtomicLong | CoroutineDispatcher, kotlinx.datetime, nullable | 🔲 Phase 1 |
+
+**Summary: 12/22 files done, 10/22 remaining (all blocked on suspend conversion)**
+
+### 🔲 GAPS — Remaining java.* in Core (current count: 15 files, 42 imports)
 
 After okio migration + Optional removal + PhantomReachable expect/actual:
 
