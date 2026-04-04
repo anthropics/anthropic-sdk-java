@@ -53,6 +53,14 @@ kotlin {
                 implementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
                 implementation("org.junit.jupiter:junit-jupiter-params:5.9.3")
                 implementation("com.github.tomakehurst:wiremock-jre8:2.35.2")
+                implementation("io.ktor:ktor-server-core:3.4.2")
+                implementation("io.ktor:ktor-server-cio:3.4.2")
+                implementation("io.ktor:ktor-server-content-negotiation:3.4.2")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:3.4.2")
+                implementation("io.ktor:ktor-server-sse:3.4.2")
+                implementation("io.ktor:ktor-server-websockets:3.4.2")
+                implementation("io.ktor:ktor-client-websockets:3.4.2")
+                implementation("io.ktor:ktor-server-test-host:3.4.2")
             }
         }
     }
