@@ -13,6 +13,7 @@ kotlin {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
                 api("com.squareup.okio:okio:3.17.0")
                 api("com.squareup.wire:wire-runtime:5.3.1")
                 api("com.fasterxml.jackson.core:jackson-annotations:2.18.2")
