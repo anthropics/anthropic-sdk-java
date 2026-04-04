@@ -16,6 +16,12 @@ kotlin {
         }
     }
 
+    // JS target
+    js(IR) {
+        browser()
+        nodejs()
+    }
+
     sourceSets {
         val commonMain by getting {
             dependencies {
