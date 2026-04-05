@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.21.0 (2026-04-05)
+
+Full Changelog: [v2.20.0...v2.21.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.20.0...v2.21.0)
+
+### Features
+
+* **vertex:** add support for US multi-region endpoint ([8e32b5f](https://github.com/anthropics/anthropic-sdk-java/commit/8e32b5fe85d552c20219624f40514b7f1af2cd42))
+
 ## 2.20.0 (2026-04-01)
 
 Full Changelog: [v2.19.0...v2.20.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.19.0...v2.20.0)
