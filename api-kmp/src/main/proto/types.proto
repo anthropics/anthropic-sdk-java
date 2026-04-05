@@ -47,6 +47,7 @@ message VCardContact {
     repeated string emails = 31;                     // EMAIL (RFC 5321)
     repeated string impp = 32;                       // IMPP — instant messaging URIs (xmpp:, sip:)
     repeated string languages = 33;                  // LANG — preferred communication languages
+    string jabber_id = 34;                           // XMPP JID (XEP-0054 JABBERID, bare JID form)
 
     // §6.5 Geographical Properties
     string timezone = 40;                            // TZ — IANA timezone ID

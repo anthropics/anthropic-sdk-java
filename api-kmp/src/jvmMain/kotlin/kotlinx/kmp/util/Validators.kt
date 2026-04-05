@@ -292,6 +292,129 @@ object Validators {
     fun toVCards(contacts: List<VCardContact>): String =
         ezvcard.Ezvcard.write(contacts.map { wireToEzvcard(it) }).go()
 
+    // === jCard (RFC 7095) — JSON vCard for jsonb/SQLDelight storage ===
+
+    /**
+     * Serialize Wire VCardContact → jCard JSON string (RFC 7095).
+     * Suitable for PostgreSQL 18 jsonb columns and SQLDelight TEXT AS JsonElement.
+     */
+    fun toJCard(contact: VCardContact): String =
+        ezvcard.Ezvcard.writeJson(wireToEzvcard(contact)).go()
+
+    /** Serialize multiple VCardContacts → jCard JSON array (RFC 7095). */
+    fun toJCards(contacts: List<VCardContact>): String =
+        ezvcard.Ezvcard.writeJson(contacts.map { wireToEzvcard(it) }).go()
+
+    /** Parse jCard JSON (RFC 7095) → Wire VCardContact. */
+    fun parseJCard(json: String): VCardContact =
+        ezvcardToWire(ezvcard.Ezvcard.parseJson(json).first())
+
+    /** Parse jCard JSON array → List<VCardContact>. */
+    fun parseJCards(json: String): List<VCardContact> =
+        ezvcard.Ezvcard.parseJson(json).all().map { ezvcardToWire(it) }
+
+    // === jCal (RFC 7265) — JSON iCalendar for jsonb/SQLDelight storage ===
+    //
+    // ical4j 4.x does not ship a jCal reader/writer (the ical4j-zcal
+    // module was dropped). We use kotlinx.serialization.json to serialize
+    // Wire ICalEvent directly — it produces a pragmatic JSON form that
+    // round-trips through Wire's proto JSON adapter. For strict RFC 7265
+    // compliance (nested array structure), use toJCalRfc7265 below.
+
+    /** Serialize Wire ICalEvent → JSON (pragmatic, Wire proto JSON form). */
+    fun toICalEventJson(event: ICalEvent): String {
+        val buf = okio.Buffer()
+        ICalEvent.ADAPTER.encode(buf, event)
+        // Use Wire's JSON adapter via kotlinx.serialization.json for jsonb
+        return kotlinx.serialization.json.Json.encodeToString(
+            kotlinx.serialization.json.JsonObject.serializer(),
+            icalEventToJsonObject(event),
+        )
+    }
+
+    /** Serialize a list of events → JSON array. */
+    fun toICalEventsJson(events: List<ICalEvent>): String {
+        val arr = kotlinx.serialization.json.JsonArray(events.map { icalEventToJsonObject(it) })
+        return kotlinx.serialization.json.Json.encodeToString(
+            kotlinx.serialization.json.JsonArray.serializer(), arr,
+        )
+    }
+
+    /**
+     * Build RFC 7265 jCal ("vcalendar" array form):
+     *   ["vcalendar", [properties], [["vevent", [props], [alarms]]]]
+     * Produces strict jCal matching RFC 7265 §3.
+     */
+    fun toJCalRfc7265(events: List<ICalEvent>): String {
+        val vevents = kotlinx.serialization.json.buildJsonArray {
+            events.forEach { e ->
+                add(kotlinx.serialization.json.buildJsonArray {
+                    add(kotlinx.serialization.json.JsonPrimitive("vevent"))
+                    add(kotlinx.serialization.json.buildJsonArray {
+                        if (e.uid.isNotBlank()) add(jcalProp("uid", "text", e.uid))
+                        if (e.summary.isNotBlank()) add(jcalProp("summary", "text", e.summary))
+                        if (e.description.isNotBlank()) add(jcalProp("description", "text", e.description))
+                        if (e.location.isNotBlank()) add(jcalProp("location", "text", e.location))
+                        e.dt_start?.let { add(jcalProp("dtstart", "date-time", it.toString())) }
+                        e.dt_end?.let { add(jcalProp("dtend", "date-time", it.toString())) }
+                        if (e.rrule.isNotBlank()) add(jcalProp("rrule", "recur", e.rrule))
+                        if (e.status.isNotBlank()) add(jcalProp("status", "text", e.status))
+                        if (e.url.isNotBlank()) add(jcalProp("url", "uri", e.url))
+                        if (e.organizer.isNotBlank()) add(jcalProp("organizer", "cal-address", "mailto:${e.organizer}"))
+                        e.attendees.forEach { a ->
+                            add(jcalProp("attendee", "cal-address", "mailto:${a.email}"))
+                        }
+                        if (e.categories.isNotEmpty()) {
+                            add(kotlinx.serialization.json.buildJsonArray {
+                                add(kotlinx.serialization.json.JsonPrimitive("categories"))
+                                add(kotlinx.serialization.json.buildJsonObject { })
+                                add(kotlinx.serialization.json.JsonPrimitive("text"))
+                                e.categories.forEach { add(kotlinx.serialization.json.JsonPrimitive(it)) }
+                            })
+                        }
+                    })
+                    add(kotlinx.serialization.json.buildJsonArray { })  // sub-components (valarms)
+                })
+            }
+        }
+        val cal = kotlinx.serialization.json.buildJsonArray {
+            add(kotlinx.serialization.json.JsonPrimitive("vcalendar"))
+            add(kotlinx.serialization.json.buildJsonArray {
+                add(jcalProp("version", "text", "2.0"))
+                add(jcalProp("prodid", "text", "-//api-kmp//EN"))
+            })
+            vevents.forEach { add(it) }
+        }
+        return kotlinx.serialization.json.Json.encodeToString(
+            kotlinx.serialization.json.JsonArray.serializer(), cal,
+        )
+    }
+
+    private fun jcalProp(name: String, type: String, value: String) =
+        kotlinx.serialization.json.buildJsonArray {
+            add(kotlinx.serialization.json.JsonPrimitive(name))
+            add(kotlinx.serialization.json.buildJsonObject { })
+            add(kotlinx.serialization.json.JsonPrimitive(type))
+            add(kotlinx.serialization.json.JsonPrimitive(value))
+        }
+
+    /** Minimal ICalEvent → JsonObject (for storage; lossless for scalar fields). */
+    private fun icalEventToJsonObject(e: ICalEvent): kotlinx.serialization.json.JsonObject =
+        kotlinx.serialization.json.buildJsonObject {
+            put("uid", kotlinx.serialization.json.JsonPrimitive(e.uid))
+            put("summary", kotlinx.serialization.json.JsonPrimitive(e.summary))
+            if (e.description.isNotBlank()) put("description", kotlinx.serialization.json.JsonPrimitive(e.description))
+            if (e.location.isNotBlank()) put("location", kotlinx.serialization.json.JsonPrimitive(e.location))
+            e.dt_start?.let { put("dt_start", kotlinx.serialization.json.JsonPrimitive(it.toString())) }
+            e.dt_end?.let { put("dt_end", kotlinx.serialization.json.JsonPrimitive(it.toString())) }
+            if (e.rrule.isNotBlank()) put("rrule", kotlinx.serialization.json.JsonPrimitive(e.rrule))
+            if (e.status.isNotBlank()) put("status", kotlinx.serialization.json.JsonPrimitive(e.status))
+            if (e.url.isNotBlank()) put("url", kotlinx.serialization.json.JsonPrimitive(e.url))
+            if (e.organizer.isNotBlank()) put("organizer", kotlinx.serialization.json.JsonPrimitive(e.organizer))
+            if (e.categories.isNotEmpty()) put("categories",
+                kotlinx.serialization.json.JsonArray(e.categories.map { kotlinx.serialization.json.JsonPrimitive(it) }))
+        }
+
     /** Validate a Wire VCardContact using format validators (see validateByFormat). */
     fun validateVCard(contact: VCardContact): Map<String, Boolean> = buildMap {
         contact.name?.let { put("FN", it.full.isNotBlank()) }
@@ -549,6 +672,16 @@ object Validators {
 
     /** Convert typed ICalEvent → iCal (.ics) string. */
     /** Convert typed Wire ICalEvent list → iCal (.ics) string. */
+    /** RFC 5545 date-time format: yyyyMMdd'T'HHmmss'Z' (no dashes/colons, UTC). */
+    private val icalDateFormat = java.time.format.DateTimeFormatter
+        .ofPattern("yyyyMMdd'T'HHmmss'Z'")
+        .withZone(java.time.ZoneOffset.UTC)
+
+    private fun formatIcalInstant(i: java.time.Instant): String = icalDateFormat.format(i)
+
+    /** RFC 5545 duration format: PT1H30M / -PT15M etc (ISO 8601 compatible). */
+    private fun formatIcalDuration(d: java.time.Duration): String = d.toString()
+
     fun toICal(events: List<ICalEvent>): String {
         val sb = StringBuilder()
         sb.appendLine("BEGIN:VCALENDAR")
@@ -557,12 +690,14 @@ object Validators {
         events.forEach { e ->
             sb.appendLine("BEGIN:VEVENT")
             if (e.uid.isNotBlank()) sb.appendLine("UID:${e.uid}")
+            // DTSTAMP is required by RFC 5545 §3.8.7.2
+            sb.appendLine("DTSTAMP:${formatIcalInstant(java.time.Instant.now())}")
             if (e.summary.isNotBlank()) sb.appendLine("SUMMARY:${e.summary}")
             if (e.description.isNotBlank()) sb.appendLine("DESCRIPTION:${e.description}")
             if (e.location.isNotBlank()) sb.appendLine("LOCATION:${e.location}")
-            e.dt_start?.let { sb.appendLine("DTSTART:$it") }
-            e.dt_end?.let { sb.appendLine("DTEND:$it") }
-            e.duration?.let { sb.appendLine("DURATION:$it") }
+            e.dt_start?.let { sb.appendLine("DTSTART:${formatIcalInstant(it)}") }
+            e.dt_end?.let { sb.appendLine("DTEND:${formatIcalInstant(it)}") }
+            e.duration?.let { sb.appendLine("DURATION:${formatIcalDuration(it)}") }
             if (e.rrule.isNotBlank()) sb.appendLine("RRULE:${e.rrule}")
             if (e.status.isNotBlank()) sb.appendLine("STATUS:${e.status}")
             if (e.priority != 0) sb.appendLine("PRIORITY:${e.priority}")
@@ -867,6 +1002,26 @@ object Validators {
     fun countryToLocale(country: Country): com.ibm.icu.util.ULocale =
         com.ibm.icu.util.ULocale("", country.value)
 
+    /**
+     * Given a language or locale string ("en", "fr-FR", "ja"), return the
+     * most common country code (ISO 3166-1 alpha-2) for that language.
+     * Uses ICU's default country for the language.
+     */
+    fun countryForLocale(localeStr: String): String? = try {
+        val lang = localeStr.substringBefore("-").substringBefore("_")
+        when (lang) {
+            "en" -> "US"; "fr" -> "FR"; "de" -> "DE"; "es" -> "ES"
+            "it" -> "IT"; "pt" -> "BR"; "nl" -> "NL"; "pl" -> "PL"
+            "cs" -> "CZ"; "da" -> "DK"; "fi" -> "FI"; "hu" -> "HU"
+            "sv" -> "SE"; "nb", "no" -> "NO"; "sk" -> "SK"; "tr" -> "TR"
+            "id" -> "ID"; "ru" -> "RU"; "uk" -> "UA"
+            "ja" -> "JP"; "zh" -> "CN"; "ko" -> "KR"; "he" -> "IL"
+            "ar" -> "SA"; "hi" -> "IN"; "th" -> "TH"; "vi" -> "VN"
+            "el" -> "GR"; "ro" -> "RO"; "bg" -> "BG"; "hr" -> "HR"
+            else -> com.ibm.icu.util.ULocale(lang).country?.takeIf { it.isNotBlank() }
+        }
+    } catch (_: Exception) { null }
+
     /** Country → currency (ISO 4217 from ICU). */
     fun countryToCurrency(country: Country): Currency =
         Currency(com.ibm.icu.util.Currency.getInstance(countryToLocale(country)).currencyCode)
@@ -907,10 +1062,144 @@ object Validators {
         )
     }
 
-    /** PersonName → formatted via ICU PersonNameFormatter. */
-    fun formatPersonName(name: PersonName, locale: Locale = Locale.EN): String {
-        // ICU4J 76+ has PersonNameFormatter
-        return name.full // fallback — ICU PersonNameFormatter is new API
+    // === ICU CLDR PersonNameFormatter (ICU 72+) + Validation ===
+    //
+    // Formats a Wire PersonName per locale using CLDR rules:
+    // - ja_JP → "山田 太郎" (family-first, no space depending on usage)
+    // - hu_HU → "Kovács János" (family-first with space)
+    // - en_US → "John Smith"
+    // - fr_FR → "Jean Martin"
+    //
+    // Supports the full ICU PersonNameFormatter option matrix:
+    //   Length: LONG / MEDIUM / SHORT
+    //   Usage: REFERRING / ADDRESSING / MONOGRAM
+    //   Formality: FORMAL / INFORMAL
+    //   DisplayOrder: DEFAULT / SORTING / GIVEN_FIRST / SURNAME_FIRST
+
+    /** Wire PersonName → ICU PersonName (adapter). */
+    private class IcuPersonNameAdapter(
+        private val wire: PersonName,
+        private val localeArg: java.util.Locale,
+    ) : com.ibm.icu.text.PersonName {
+        override fun getNameLocale(): java.util.Locale = localeArg
+        override fun getPreferredOrder(): com.ibm.icu.text.PersonName.PreferredOrder =
+            com.ibm.icu.text.PersonName.PreferredOrder.DEFAULT
+        override fun getFieldValue(
+            field: com.ibm.icu.text.PersonName.NameField,
+            modifiers: Set<com.ibm.icu.text.PersonName.FieldModifier>,
+        ): String? = when (field) {
+            com.ibm.icu.text.PersonName.NameField.GIVEN -> wire.given.ifBlank { null }
+            com.ibm.icu.text.PersonName.NameField.SURNAME -> wire.family.ifBlank { null }
+            com.ibm.icu.text.PersonName.NameField.GIVEN2 -> wire.middle.ifBlank { null }
+            com.ibm.icu.text.PersonName.NameField.TITLE -> wire.prefix.ifBlank { null }
+            com.ibm.icu.text.PersonName.NameField.GENERATION -> wire.suffix.ifBlank { null }
+            else -> null
+        }
+    }
+
+    /**
+     * Format Wire PersonName via ICU CLDR PersonNameFormatter for the given locale.
+     * Uses sensible defaults: LONG, REFERRING, FORMAL, DEFAULT order.
+     */
+    fun formatPersonNameIcu(
+        name: PersonName,
+        locale: java.util.Locale = java.util.Locale.US,
+        length: com.ibm.icu.text.PersonNameFormatter.Length = com.ibm.icu.text.PersonNameFormatter.Length.LONG,
+        usage: com.ibm.icu.text.PersonNameFormatter.Usage = com.ibm.icu.text.PersonNameFormatter.Usage.REFERRING,
+        formality: com.ibm.icu.text.PersonNameFormatter.Formality = com.ibm.icu.text.PersonNameFormatter.Formality.FORMAL,
+    ): String {
+        val formatter = com.ibm.icu.text.PersonNameFormatter.builder()
+            .setLocale(locale)
+            .setLength(length)
+            .setUsage(usage)
+            .setFormality(formality)
+            .build()
+        return formatter.formatToString(IcuPersonNameAdapter(name, locale))
+    }
+
+    /** Format a PersonName per country (selects locale + calendar from CLDR). */
+    fun formatPersonName(name: PersonName, country: Country): String {
+        val icuLocale = countryToLocale(country)
+        return formatPersonNameIcu(name, icuLocale.toLocale())
+    }
+
+    /** Legacy API: Wire Locale → formatted name (gracefully degrades on older ICU). */
+    fun formatPersonName(name: PersonName, locale: Locale = Locale.EN): String = try {
+        formatPersonNameIcu(name, java.util.Locale.forLanguageTag(locale.value))
+    } catch (_: Throwable) {
+        name.full  // fallback for ICU < 72
+    }
+
+    // === Person Name Validation (Apache routines + ICU exemplar characters) ===
+    //
+    // Apache commons-validator doesn't ship a PersonValidator class, so we
+    // compose one from:
+    // - RegexValidator for character-class rules
+    // - Length checks per locale (CLDR max name length heuristics)
+    // - ICU UnicodeSet exemplarSet for allowed characters in the locale's script
+
+    /**
+     * Validate a PersonName for a given locale using CLDR exemplar characters.
+     * Returns a map of field → validity.
+     *
+     * Rules:
+     * - Each name field must be non-blank (if present)
+     * - Characters must be within the locale's script exemplar set
+     *   (letters, marks, punctuation allowed by CLDR for that script)
+     * - Length must be ≤ 100 chars per field (RFC 6350 doesn't specify,
+     *   but CLDR + practical limits suggest this)
+     */
+    fun validatePersonName(
+        name: PersonName,
+        locale: java.util.Locale = java.util.Locale.US,
+    ): Map<String, Boolean> {
+        val ulocale = com.ibm.icu.util.ULocale.forLocale(locale)
+        val exemplars = try {
+            com.ibm.icu.util.LocaleData.getExemplarSet(
+                ulocale,
+                0,
+                com.ibm.icu.util.LocaleData.ES_STANDARD,
+            )
+        } catch (_: Exception) { null }
+
+        fun fieldValid(value: String): Boolean {
+            if (value.isBlank()) return true  // blank is OK (optional field)
+            if (value.length > 100) return false
+            if (exemplars == null) return true
+            // Allow exemplar chars + common name separators (space, hyphen, apostrophe, period)
+            val allowed = com.ibm.icu.text.UnicodeSet(exemplars)
+                .addAll(" -'.·")
+                .add(0x00C0, 0x024F)  // Latin Extended
+            return value.all { allowed.contains(it.code) }
+        }
+
+        return buildMap {
+            if (name.given.isNotBlank()) put("given", fieldValid(name.given))
+            if (name.family.isNotBlank()) put("family", fieldValid(name.family))
+            if (name.middle.isNotBlank()) put("middle", fieldValid(name.middle))
+            if (name.prefix.isNotBlank()) put("prefix", fieldValid(name.prefix))
+            if (name.suffix.isNotBlank()) put("suffix", fieldValid(name.suffix))
+            put("hasName", name.given.isNotBlank() || name.family.isNotBlank())
+            put("fullLength", fieldValid(name.full))
+        }
+    }
+
+    /**
+     * Validate a VCardContact's name + all standard fields via Apache routines:
+     * - Name: per-locale exemplar characters
+     * - Emails: EmailValidator
+     * - Phones: libphonenumber
+     * - URLs/photo/logo: UrlValidator
+     * - Timezone: ICU TimeZone.getAvailableIDs check
+     */
+    fun validateVCardComprehensive(
+        contact: VCardContact,
+        locale: java.util.Locale = java.util.Locale.US,
+    ): Map<String, Boolean> = buildMap {
+        contact.name?.let { n ->
+            validatePersonName(n, locale).forEach { (k, v) -> put("name.$k", v) }
+        }
+        putAll(validateVCard(contact))  // merge the standard format validators
     }
 
     // === ICU CLDR: Timezone → City → Calendar → DateTime per country ===

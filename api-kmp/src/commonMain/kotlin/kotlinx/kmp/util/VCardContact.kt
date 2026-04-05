@@ -132,6 +132,17 @@ public class VCardContact(
   impp: List<String> = emptyList(),
   languages: List<String> = emptyList(),
   /**
+   * XMPP JID (XEP-0054 JABBERID, bare JID form)
+   */
+  @field:WireField(
+    tag = 34,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    jsonName = "jabberId",
+    schemaIndex = 14,
+  )
+  public val jabber_id: String = "",
+  /**
    * §6.5 Geographical Properties
    * TZ — IANA timezone ID
    */
@@ -139,7 +150,7 @@ public class VCardContact(
     tag = 40,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 14,
+    schemaIndex = 15,
   )
   public val timezone: String = "",
   /**
@@ -149,7 +160,7 @@ public class VCardContact(
     tag = 41,
     adapter = "com.google.type.LatLng#ADAPTER",
     label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 15,
+    schemaIndex = 16,
   )
   public val geo: LatLng? = null,
   /**
@@ -160,7 +171,7 @@ public class VCardContact(
     tag = 50,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 16,
+    schemaIndex = 17,
   )
   public val title: String = "",
   /**
@@ -170,7 +181,7 @@ public class VCardContact(
     tag = 51,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 17,
+    schemaIndex = 18,
   )
   public val role: String = "",
   /**
@@ -180,7 +191,7 @@ public class VCardContact(
     tag = 52,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 18,
+    schemaIndex = 19,
   )
   public val logo: String = "",
   /**
@@ -190,7 +201,7 @@ public class VCardContact(
     tag = 53,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 19,
+    schemaIndex = 20,
   )
   public val organization: String = "",
   org_units: List<String> = emptyList(),
@@ -205,7 +216,7 @@ public class VCardContact(
     tag = 61,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 25,
+    schemaIndex = 26,
   )
   public val note: String = "",
   /**
@@ -215,7 +226,7 @@ public class VCardContact(
     tag = 62,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 26,
+    schemaIndex = 27,
   )
   public val prodid: String = "",
   /**
@@ -225,7 +236,7 @@ public class VCardContact(
     tag = 63,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 27,
+    schemaIndex = 28,
   )
   public val rev: String = "",
   /**
@@ -235,7 +246,7 @@ public class VCardContact(
     tag = 64,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 28,
+    schemaIndex = 29,
   )
   public val sound: String = "",
   /**
@@ -245,7 +256,7 @@ public class VCardContact(
     tag = 65,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 29,
+    schemaIndex = 30,
   )
   public val uid: String = "",
   client_pid_maps: List<VCardClientPidMap> = emptyList(),
@@ -257,7 +268,7 @@ public class VCardContact(
     tag = 70,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 31,
+    schemaIndex = 32,
   )
   public val key: String = "",
   /**
@@ -268,7 +279,7 @@ public class VCardContact(
     tag = 80,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 32,
+    schemaIndex = 33,
   )
   public val fburl: String = "",
   /**
@@ -279,7 +290,7 @@ public class VCardContact(
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.OMIT_IDENTITY,
     jsonName = "calAdrUri",
-    schemaIndex = 33,
+    schemaIndex = 34,
   )
   public val cal_adr_uri: String = "",
   /**
@@ -290,7 +301,7 @@ public class VCardContact(
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.OMIT_IDENTITY,
     jsonName = "calUri",
-    schemaIndex = 34,
+    schemaIndex = 35,
   )
   public val cal_uri: String = "",
   /**
@@ -302,7 +313,7 @@ public class VCardContact(
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.OMIT_IDENTITY,
     jsonName = "birthPlace",
-    schemaIndex = 35,
+    schemaIndex = 36,
   )
   public val birth_place: String = "",
   /**
@@ -313,7 +324,7 @@ public class VCardContact(
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.OMIT_IDENTITY,
     jsonName = "deathPlace",
-    schemaIndex = 36,
+    schemaIndex = 37,
   )
   public val death_place: String = "",
   /**
@@ -324,7 +335,7 @@ public class VCardContact(
     adapter = "com.google.type.Date#ADAPTER",
     label = WireField.Label.OMIT_IDENTITY,
     jsonName = "deathDate",
-    schemaIndex = 37,
+    schemaIndex = 38,
   )
   public val death_date: Date? = null,
   expertise: List<String> = emptyList(),
@@ -410,7 +421,7 @@ public class VCardContact(
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.REPEATED,
     jsonName = "orgUnits",
-    schemaIndex = 20,
+    schemaIndex = 21,
   )
   public val org_units: List<String> = immutableCopyOf("org_units", org_units)
 
@@ -421,7 +432,7 @@ public class VCardContact(
     tag = 55,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.REPEATED,
-    schemaIndex = 21,
+    schemaIndex = 22,
   )
   public val members: List<String> = immutableCopyOf("members", members)
 
@@ -432,7 +443,7 @@ public class VCardContact(
     tag = 56,
     adapter = "kotlinx.kmp.util.VCardRelated#ADAPTER",
     label = WireField.Label.REPEATED,
-    schemaIndex = 22,
+    schemaIndex = 23,
   )
   public val related: List<VCardRelated> = immutableCopyOf("related", related)
 
@@ -444,7 +455,7 @@ public class VCardContact(
     tag = 59,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.REPEATED,
-    schemaIndex = 23,
+    schemaIndex = 24,
   )
   public val urls: List<String> = immutableCopyOf("urls", urls)
 
@@ -455,7 +466,7 @@ public class VCardContact(
     tag = 60,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.REPEATED,
-    schemaIndex = 24,
+    schemaIndex = 25,
   )
   public val categories: List<String> = immutableCopyOf("categories", categories)
 
@@ -467,7 +478,7 @@ public class VCardContact(
     adapter = "kotlinx.kmp.util.VCardClientPidMap#ADAPTER",
     label = WireField.Label.REPEATED,
     jsonName = "clientPidMaps",
-    schemaIndex = 30,
+    schemaIndex = 31,
   )
   public val client_pid_maps: List<VCardClientPidMap> =
       immutableCopyOf("client_pid_maps", client_pid_maps)
@@ -480,7 +491,7 @@ public class VCardContact(
     tag = 100,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.REPEATED,
-    schemaIndex = 38,
+    schemaIndex = 39,
   )
   public val expertise: List<String> = immutableCopyOf("expertise", expertise)
 
@@ -491,7 +502,7 @@ public class VCardContact(
     tag = 101,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.REPEATED,
-    schemaIndex = 39,
+    schemaIndex = 40,
   )
   public val hobbies: List<String> = immutableCopyOf("hobbies", hobbies)
 
@@ -502,7 +513,7 @@ public class VCardContact(
     tag = 102,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.REPEATED,
-    schemaIndex = 40,
+    schemaIndex = 41,
   )
   public val interests: List<String> = immutableCopyOf("interests", interests)
 
@@ -514,7 +525,7 @@ public class VCardContact(
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.REPEATED,
     jsonName = "orgDirectories",
-    schemaIndex = 41,
+    schemaIndex = 42,
   )
   public val org_directories: List<String> = immutableCopyOf("org_directories", org_directories)
 
@@ -526,7 +537,7 @@ public class VCardContact(
     tag = 200,
     keyAdapter = "com.squareup.wire.ProtoAdapter#STRING",
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
-    schemaIndex = 42,
+    schemaIndex = 43,
   )
   public val extensions: Map<String, String> = immutableCopyOf("extensions", extensions)
 
@@ -554,6 +565,7 @@ public class VCardContact(
     if (emails != other.emails) return false
     if (impp != other.impp) return false
     if (languages != other.languages) return false
+    if (jabber_id != other.jabber_id) return false
     if (timezone != other.timezone) return false
     if (geo != other.geo) return false
     if (title != other.title) return false
@@ -604,6 +616,7 @@ public class VCardContact(
       result = result * 37 + emails.hashCode()
       result = result * 37 + impp.hashCode()
       result = result * 37 + languages.hashCode()
+      result = result * 37 + jabber_id.hashCode()
       result = result * 37 + timezone.hashCode()
       result = result * 37 + (geo?.hashCode() ?: 0)
       result = result * 37 + title.hashCode()
@@ -654,6 +667,7 @@ public class VCardContact(
     if (emails.isNotEmpty()) result += """emails=${sanitize(emails)}"""
     if (impp.isNotEmpty()) result += """impp=${sanitize(impp)}"""
     if (languages.isNotEmpty()) result += """languages=${sanitize(languages)}"""
+    result += """jabber_id=${sanitize(jabber_id)}"""
     result += """timezone=${sanitize(timezone)}"""
     if (geo != null) result += """geo=$geo"""
     result += """title=${sanitize(title)}"""
@@ -701,6 +715,7 @@ public class VCardContact(
     emails: List<String> = this.emails,
     impp: List<String> = this.impp,
     languages: List<String> = this.languages,
+    jabber_id: String = this.jabber_id,
     timezone: String = this.timezone,
     geo: LatLng? = this.geo,
     title: String = this.title,
@@ -731,7 +746,7 @@ public class VCardContact(
     org_directories: List<String> = this.org_directories,
     extensions: Map<String, String> = this.extensions,
     unknownFields: ByteString = this.unknownFields,
-  ): VCardContact = VCardContact(source, kind, xml, name, nicknames, photo, birthday, anniversary, gender, addresses, phones, emails, impp, languages, timezone, geo, title, role, logo, organization, org_units, members, related, urls, categories, note, prodid, rev, sound, uid, client_pid_maps, key, fburl, cal_adr_uri, cal_uri, birth_place, death_place, death_date, expertise, hobbies, interests, org_directories, extensions, unknownFields)
+  ): VCardContact = VCardContact(source, kind, xml, name, nicknames, photo, birthday, anniversary, gender, addresses, phones, emails, impp, languages, jabber_id, timezone, geo, title, role, logo, organization, org_units, members, related, urls, categories, note, prodid, rev, sound, uid, client_pid_maps, key, fburl, cal_adr_uri, cal_uri, birth_place, death_place, death_date, expertise, hobbies, interests, org_directories, extensions, unknownFields)
 
   public companion object {
     @JvmField
@@ -778,6 +793,9 @@ public class VCardContact(
         size += ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(31, value.emails)
         size += ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(32, value.impp)
         size += ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(33, value.languages)
+        if (value.jabber_id != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(34, value.jabber_id)
+        }
         if (value.timezone != "") {
           size += ProtoAdapter.STRING.encodedSizeWithTag(40, value.timezone)
         }
@@ -877,6 +895,9 @@ public class VCardContact(
         ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 31, value.emails)
         ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 32, value.impp)
         ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 33, value.languages)
+        if (value.jabber_id != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 34, value.jabber_id)
+        }
         if (value.timezone != "") {
           ProtoAdapter.STRING.encodeWithTag(writer, 40, value.timezone)
         }
@@ -1012,6 +1033,9 @@ public class VCardContact(
         if (value.timezone != "") {
           ProtoAdapter.STRING.encodeWithTag(writer, 40, value.timezone)
         }
+        if (value.jabber_id != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 34, value.jabber_id)
+        }
         ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 33, value.languages)
         ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 32, value.impp)
         ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 31, value.emails)
@@ -1059,6 +1083,7 @@ public class VCardContact(
         val emails = mutableListOf<String>()
         val impp = mutableListOf<String>()
         val languages = mutableListOf<String>()
+        var jabber_id: String = ""
         var timezone: String = ""
         var geo: LatLng? = null
         var title: String = ""
@@ -1104,6 +1129,7 @@ public class VCardContact(
             31 -> emails.add(ProtoAdapter.STRING.decode(reader))
             32 -> impp.add(ProtoAdapter.STRING.decode(reader))
             33 -> languages.add(ProtoAdapter.STRING.decode(reader))
+            34 -> jabber_id = ProtoAdapter.STRING.decode(reader)
             40 -> timezone = ProtoAdapter.STRING.decode(reader)
             41 -> geo = LatLng.ADAPTER.decode(reader)
             50 -> title = ProtoAdapter.STRING.decode(reader)
@@ -1151,6 +1177,7 @@ public class VCardContact(
           emails = emails,
           impp = impp,
           languages = languages,
+          jabber_id = jabber_id,
           timezone = timezone,
           geo = geo,
           title = title,
