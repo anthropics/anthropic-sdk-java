@@ -20,6 +20,14 @@ class ServiceGenerator(
     private val flow = ClassName("kotlinx.coroutines.flow", "Flow")
 
     fun generate(paths: Map<String, ParsedPath>, security: Map<String, ParsedSecurity>) {
+        generate(paths, security, emptyList())
+    }
+
+    fun generate(
+        paths: Map<String, ParsedPath>,
+        security: Map<String, ParsedSecurity>,
+        servers: List<ParsedServer>,
+    ) {
         // Group paths by tag → one service interface per tag
         val byTag = paths.values.groupBy { it.tags.firstOrNull() ?: "Default" }
 
@@ -28,8 +36,8 @@ class ServiceGenerator(
             generateServiceInterface(serviceName, ops)
         }
 
-        // Generate client factory from security schemes
-        generateClientFactory(security)
+        // Generate client factory from security schemes + OpenAPI servers list
+        generateClientFactory(security, servers)
     }
 
     private fun generateServiceInterface(name: String, operations: List<ParsedPath>) {
@@ -65,7 +73,10 @@ class ServiceGenerator(
             .writeTo(outputDir)
     }
 
-    private fun generateClientFactory(security: Map<String, ParsedSecurity>) {
+    private fun generateClientFactory(
+        security: Map<String, ParsedSecurity>,
+        servers: List<ParsedServer> = emptyList(),
+    ) {
         val clientFactory = FunSpec.builder("createClient")
             .returns(ClassName("io.ktor.client", "HttpClient"))
 
@@ -87,10 +98,12 @@ class ServiceGenerator(
             }
         }
 
-        // Build ktor client config
+        // Base URL comes from OpenAPI `servers:` list (first entry), not a hardcoded value.
+        // Falls back to an empty string only if the spec provides no servers section at all.
+        val defaultBaseUrl = servers.firstOrNull()?.url ?: ""
         clientFactory.addParameter(
             ParameterSpec.builder("baseUrl", String::class)
-                .defaultValue("%S", "https://api.anthropic.com")
+                .defaultValue("%S", defaultBaseUrl)
                 .build()
         )
 

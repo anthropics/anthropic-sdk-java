@@ -69,6 +69,18 @@ kotlin {
                 compileOnly("org.igniterealtime.smack:smack-tcp:4.4.8")         // XMPP TCP client
                 compileOnly("org.igniterealtime.smack:smack-java8:4.4.8")       // Java 8 stream features
                 compileOnly("org.bedework:bw-ical4j-vcard:1.0.11")              // CardDAV vCard
+                // LLM provider bridges — all compileOnly so api-kmp has zero forced transitive deps.
+                // Consumers pull in only the backends they actually use.
+                compileOnly("dev.langchain4j:langchain4j-core:0.36.2")           // wraps ~20 vendors
+                compileOnly("dev.langchain4j:langchain4j:0.36.2")
+                compileOnly("io.modelcontextprotocol:kotlin-sdk:0.5.0")          // MCP SDK (Tool/Server/Client)
+                compileOnly("ai.djl:api:0.30.0")                                 // Deep Java Library core
+                compileOnly("ai.djl.huggingface:tokenizers:0.30.0")              // HF tokenizers via DJL
+                compileOnly("com.github.tjake:jlama-core:0.8.4")                 // Pure-Java GGUF/llama.cpp
+                // Apache Camel — route generation + generic LlmComponent
+                compileOnly("org.apache.camel:camel-core:4.12.0")
+                compileOnly("org.apache.camel:camel-support:4.12.0")
+                compileOnly("org.apache.camel:camel-rest:4.12.0")
                 implementation("io.swagger.parser.v3:swagger-parser:2.1.39")
                 implementation("com.squareup:kotlinpoet:2.2.0")
                 implementation("com.cjbooms:fabrikt:26.1.0")

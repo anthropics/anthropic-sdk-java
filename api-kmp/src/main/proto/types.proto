@@ -321,3 +321,140 @@ message PatchOperation {
     string value = 3;
     string from = 4;                                  // for move/copy
 }
+
+// === Generic LLM types — vendor-agnostic across Anthropic/OpenAI/Gemini/etc. ===
+//
+// These cover the shape common to all chat-completion APIs. Concrete vendor
+// adapters (LangChain4j, direct ktor) translate these to/from their native
+// request types. Proto is the single source of truth so every KMP target —
+// JVM, JS, Native, Wasm — has identical structures via Wire generation.
+
+// A single message in a chat conversation. Mirrors Anthropic Messages + OpenAI
+// Chat Completion + Gemini Content. `role` is one of: system, user, assistant,
+// tool. `content` is a list of mixed-type blocks (text, image, tool call, etc.).
+message ChatMessage {
+    string role = 1;                                  // system|user|assistant|tool
+    repeated ContentBlock content = 2;
+    string name = 3;                                  // optional author/tool name (OpenAI)
+    string tool_call_id = 4;                          // when role=tool, the id we're responding to
+}
+
+// A content block inside a ChatMessage — oneof the supported types.
+// Follows Anthropic's content-block model which supersets OpenAI/Gemini.
+message ContentBlock {
+    oneof block {
+        TextBlock text = 1;
+        ImageBlock image = 2;
+        ToolUseBlock tool_use = 3;
+        ToolResultBlock tool_result = 4;
+        DocumentBlock document = 5;                   // PDF, text file, etc.
+        ThinkingBlock thinking = 6;                   // Extended thinking (Claude 4+)
+    }
+}
+
+message TextBlock {
+    string text = 1;
+}
+
+message ImageBlock {
+    // Either inline base64 or a URL reference
+    string media_type = 1;                            // image/jpeg|image/png|image/gif|image/webp
+    bytes data = 2;                                   // raw bytes or base64-decoded
+    string url = 3;                                   // alternative to data
+}
+
+message ToolUseBlock {
+    string id = 1;                                    // unique per message
+    string name = 2;                                  // tool name
+    bytes input = 3;                                  // JSON-encoded tool input
+}
+
+message ToolResultBlock {
+    string tool_use_id = 1;                           // matches ToolUseBlock.id
+    repeated ContentBlock content = 2;                // result (text or structured)
+    bool is_error = 3;
+}
+
+message DocumentBlock {
+    string media_type = 1;                            // application/pdf|text/plain|...
+    bytes data = 2;
+    string url = 3;
+    string title = 4;
+}
+
+message ThinkingBlock {
+    string thinking = 1;
+    string signature = 2;                             // for verification (Claude)
+}
+
+// LLM request envelope — provider-agnostic.
+message LlmRequest {
+    string model = 1;                                 // claude-sonnet-4-6|gemini-2.0-flash|gpt-4o|...
+    repeated ChatMessage messages = 2;
+    string system = 3;                                // system prompt (optional)
+    int32 max_tokens = 4;
+    double temperature = 5;
+    double top_p = 6;
+    int32 top_k = 7;
+    repeated string stop_sequences = 8;
+    repeated Tool tools = 9;                          // available tools
+    ToolChoice tool_choice = 10;
+    bool stream = 11;                                 // SSE streaming
+    map<string, string> metadata = 12;                // provider-specific extras (user_id, etc.)
+}
+
+// Tool definition (OpenAI function, Anthropic tool, Gemini function).
+// Identical shape across all three; MCP Tool also maps here.
+message Tool {
+    string name = 1;
+    string description = 2;
+    bytes input_schema = 3;                           // JSON Schema (draft-07) as JSON bytes
+}
+
+message ToolChoice {
+    // any|auto|none|tool (with specific name)
+    string type = 1;
+    string name = 2;                                  // when type=tool
+    bool disable_parallel_tool_use = 3;
+}
+
+// LLM response envelope — provider-agnostic.
+message LlmResponse {
+    string id = 1;                                    // message/response id
+    string model = 2;                                 // actual model that served the request
+    repeated ContentBlock content = 3;
+    string stop_reason = 4;                           // end_turn|max_tokens|stop_sequence|tool_use
+    string stop_sequence = 5;                         // if stopped by sequence
+    Usage usage = 6;
+    google.protobuf.Timestamp created = 7;
+}
+
+// Token usage — all vendors report input/output counts, some report cache hits.
+message Usage {
+    int32 input_tokens = 1;
+    int32 output_tokens = 2;
+    int32 cache_creation_input_tokens = 3;            // Anthropic cache
+    int32 cache_read_input_tokens = 4;                // Anthropic cache
+    int32 reasoning_tokens = 5;                       // OpenAI o1 reasoning
+}
+
+// Streaming delta event — used for SSE/WS streaming responses.
+message LlmStreamEvent {
+    oneof event {
+        MessageStart message_start = 1;
+        ContentBlockStart content_block_start = 2;
+        ContentBlockDelta content_block_delta = 3;
+        ContentBlockStop content_block_stop = 4;
+        MessageDelta message_delta = 5;
+        MessageStop message_stop = 6;
+        PingEvent ping = 7;
+    }
+}
+
+message MessageStart { LlmResponse message = 1; }
+message ContentBlockStart { int32 index = 1; ContentBlock content_block = 2; }
+message ContentBlockDelta { int32 index = 1; string text = 2; bytes partial_json = 3; }
+message ContentBlockStop { int32 index = 1; }
+message MessageDelta { string stop_reason = 1; Usage usage = 2; }
+message MessageStop {}
+message PingEvent {}

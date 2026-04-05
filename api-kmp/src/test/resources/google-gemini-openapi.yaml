@@ -1,0 +1,111 @@
+openapi: 3.0.3
+info:
+  title: Google Gemini GenerateContent API
+  version: v1beta
+  description: |
+    Minimal OpenAPI subset of the Google Generative Language API for
+    Gemini. Used by MultiProviderGenTest to verify api-gen produces a
+    working client with the Google servers[0] URL instead of Anthropic's.
+servers:
+  - url: https://generativelanguage.googleapis.com/v1beta
+    description: Google Gemini production API
+paths:
+  /models/{model}:generateContent:
+    post:
+      operationId: generateContent
+      tags: [models]
+      summary: Generate a response from a Gemini model
+      parameters:
+        - name: model
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateContentRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateContentResponse'
+  /models/{model}:streamGenerateContent:
+    post:
+      operationId: streamGenerateContent
+      tags: [models]
+      summary: Stream a response from a Gemini model
+      parameters:
+        - name: model
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateContentRequest'
+      responses:
+        '200':
+          description: SSE stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+components:
+  schemas:
+    GenerateContentRequest:
+      type: object
+      required: [contents]
+      properties:
+        contents:
+          type: array
+          items:
+            $ref: '#/components/schemas/Content'
+        systemInstruction:
+          $ref: '#/components/schemas/Content'
+        generationConfig:
+          type: object
+    Content:
+      type: object
+      properties:
+        role:
+          type: string
+        parts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Part'
+    Part:
+      type: object
+      properties:
+        text:
+          type: string
+    GenerateContentResponse:
+      type: object
+      properties:
+        candidates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Candidate'
+        usageMetadata:
+          type: object
+    Candidate:
+      type: object
+      properties:
+        content:
+          $ref: '#/components/schemas/Content'
+        finishReason:
+          type: string
+  securitySchemes:
+    googleApiKey:
+      type: apiKey
+      in: header
+      name: x-goog-api-key
+security:
+  - googleApiKey: []

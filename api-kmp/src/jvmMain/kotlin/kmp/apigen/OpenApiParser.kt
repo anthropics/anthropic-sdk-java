@@ -14,6 +14,27 @@ data class ParsedSpec(
     val paths: Map<String, ParsedPath>,
     val securitySchemes: Map<String, ParsedSecurity>,
     val sourceFile: java.io.File? = null,
+    /** OpenAPI `servers:` array — base URLs for the API. First entry is the default. */
+    val servers: List<ParsedServer> = emptyList(),
+    /** OpenAPI `info:` block — title, version, description. Used for naming the generated SDK. */
+    val info: ParsedInfo? = null,
+)
+
+/**
+ * OpenAPI `servers:` entry (§4.8.5). Holds a base URL and optional variable substitutions.
+ * First server becomes the generated client's default baseUrl instead of a hardcoded URL.
+ */
+data class ParsedServer(
+    val url: String,
+    val description: String = "",
+    val variables: Map<String, String> = emptyMap(),  // server variable name → default value
+)
+
+/** OpenAPI `info:` block (§4.8.2). Drives SDK name + version in generated code. */
+data class ParsedInfo(
+    val title: String,
+    val version: String = "",
+    val description: String = "",
 )
 
 sealed class ParsedSchema {
@@ -86,6 +107,33 @@ object OpenApiParser {
             paths = parsePaths(openApi),
             securitySchemes = parseSecurity(openApi),
             sourceFile = file,
+            servers = parseServers(openApi),
+            info = parseInfo(openApi),
+        )
+    }
+
+    private fun parseServers(openApi: OpenAPI): List<ParsedServer> {
+        val servers = openApi.servers ?: return emptyList()
+        return servers.map { s ->
+            val vars = s.variables?.mapValues { (_, v) -> v.default ?: "" } ?: emptyMap()
+            // Substitute {var} placeholders with defaults so the URL is usable as-is
+            val resolvedUrl = vars.entries.fold(s.url ?: "") { acc, (k, v) ->
+                acc.replace("{$k}", v)
+            }
+            ParsedServer(
+                url = resolvedUrl,
+                description = s.description ?: "",
+                variables = vars,
+            )
+        }
+    }
+
+    private fun parseInfo(openApi: OpenAPI): ParsedInfo? {
+        val info = openApi.info ?: return null
+        return ParsedInfo(
+            title = info.title ?: "Api",
+            version = info.version ?: "",
+            description = info.description ?: "",
         )
     }
 

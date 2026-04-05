@@ -5305,3 +5305,142 @@ T = transport only (CardDAV carries RFC 6350 verbatim over WebDAV)
 - `wireToEzvcard(VCardContact): ezvcard.VCard` — full round-trip
 - `inferVCard(phone, geoIp): ezvcard.VCard` — JVM-native with RFC 6350 TEL/ADR/TZ/GEO/LANG/NOTE/CATEGORIES/UID
 - `inferVCardContact(phone, geoIp): VCardContact` — KMP bridge via `ezvcardToWire`
+
+## Phase 11 — api-kmp as vendor-agnostic LLM runtime
+
+**Architectural rule:** `api-kmp` is a **vendor-agnostic KMP generator library**. It turns any OpenAPI/AsyncAPI/gRPC/WASM spec into KMP client + server + UI + DB + tests + MCP tools + Camel routes. It is **NOT** an Anthropic SDK. Anthropic-specific code lives in `anthropic-java-core` (moved there in commit `6de60e3`). Google Gemini, OpenAI-compatible local servers, ComfyUI, LangChain4j, DJL, and Jlama are all peer providers behind a single `LlmProvider` sealed interface.
+
+### Before → After (this phase)
+
+| Concern | Before | After |
+|---|---|---|
+| Default base URL | hardcoded `"https://api.anthropic.com"` at `ServiceGenerator.kt:93` | OpenAPI `servers[0].url` from `ParsedSpec.servers` |
+| Providers | implicit Anthropic | 10 explicit providers in `LlmProvider` sealed interface |
+| Generic LLM types | scattered/missing | `types.proto` — `LlmRequest`, `LlmResponse`, `ChatMessage`, `ContentBlock`, `Tool`, `ToolCall`, `ToolResult`, `Usage`, `LlmStreamEvent` (Wire-generated KMP) |
+| ktor server routing | test-only in `TestEmitter` | production `ServerRouteEmitter` generates `routing { }` per tag |
+| Apache Camel routes | LLD only (§8.2/§8.5, Anthropic-specific) | `CamelRouteEmitter` + vendor-agnostic `LlmComponent`/`LlmEndpoint`/`LlmProducer` |
+| MCP emission | static `tools.json` | + runnable `Generated<Name>McpServer.kt` + `Generated<Name>McpClient.kt` |
+| Emitter count | 11 | 13 (adds `ServerRouteEmitter` + `CamelRouteEmitter`) |
+
+### LlmProvider (vendor-agnostic)
+
+**File:** `api-kmp/src/commonMain/kotlin/kotlinx/kmp/util/LlmProvider.kt`
+
+Sealed interface with 10 concrete implementations:
+
+| Provider | Kind | Base URL / Runtime |
+|---|---|---|
+| `Anthropic` | Cloud API | `https://api.anthropic.com/v1` (x-api-key) |
+| `Google` | Cloud API | `https://generativelanguage.googleapis.com/v1beta` (x-goog-api-key) |
+| `OpenAi` | Cloud API | `https://api.openai.com/v1` (Bearer) |
+| `LmStudio` | Local HTTP | `http://localhost:1234/v1` (OpenAI-compatible — covers llama.cpp, Ollama, vLLM, text-generation-webui) |
+| `ComfyUi` | Local HTTP | `http://localhost:8188` (workflow graph API) |
+| `LangChain4j(vendor)` | JVM in-process | Any of ~20 LangChain4j-supported vendors (OpenAI, Anthropic, Gemini, Bedrock, Azure, Ollama, Mistral, Cohere, HuggingFace, Vertex, Watsonx, Zhipu…) |
+| `Djl(modelPath)` | JVM in-process | Deep Java Library + HuggingFace tokenizers |
+| `Jlama(modelPath)` | JVM in-process | Pure-Java GGUF/SafeTensors inference |
+| `Mcp(baseUrl, transport)` | MCP server | stdio or SSE transport |
+| `None` | — | placeholder for install-time selection |
+
+### Reuse (do NOT reimplement)
+
+| Capability | Upstream lib | api-kmp role |
+|---|---|---|
+| Chat / streaming / tools / RAG / memory / tokenization | **LangChain4j** | `LangChain4jBridge` converts `LlmRequest` ↔ `ChatMessage`, delegates |
+| Tool schema / transport / server / client | **MCP SDK (Kotlin)** | `McpBridge` converts Wire `Tool` ↔ `io.modelcontextprotocol.kotlin.sdk.Tool` via reflection |
+| EIP primitives (routes, error handling, choice, splitter, aggregator) | **Apache Camel** | `LlmComponent`/`LlmEndpoint`/`LlmProducer` — provider-agnostic `llm:` URI scheme |
+| HTTP client / SSE / WebSockets | **ktor** | Already in deps; bridges reuse the shared `HttpClient` |
+| HuggingFace tokenizers / small model inference | **DJL** | `DjlBridge` — stub, fully reuses `ai.djl.repository.zoo` |
+| Llama.cpp-style local inference | **Jlama** | `JlamaBridge` — stub, fully reuses `com.github.tjake.jlama` |
+
+All are **`compileOnly`** — api-kmp pulls none of them transitively.
+
+### Any API → MCP tool pack (by generation)
+
+`McpEmitter` now emits three artifacts per spec:
+
+1. `mcp/tools.json` — static manifest (previous behavior)
+2. `<pkg>/mcp/Generated<Name>McpServer.kt` — runnable `io.modelcontextprotocol.kotlin.sdk.server.Server` that registers every POST/PUT/PATCH operation as an MCP `Tool`. Handlers delegate to an injected `LlmProviderClient`, so the same server works against any provider.
+3. `<pkg>/mcp/Generated<Name>McpClient.kt` — MCP `Client` for consuming a remote server's tools.
+
+Result: `api-gen --protocols mcp --spec any.yaml` turns **any OpenAPI** into a working MCP tool pack with zero vendor-specific code. Mapping is mechanical: `operationId` → tool name, `requestBody.schema` → MCP `inputSchema`, `responses[200]` → `CallToolResult`.
+
+### Generated ktor server routes
+
+`ServerRouteEmitter` produces production routing from OpenAPI paths. One `RoutesFile.kt` per tag + a `GeneratedApplication.kt` top-level `Application.generatedModule(provider)` extension. All handlers take `LlmProviderClient` as a parameter — select the backend at install time:
+
+```kotlin
+embeddedServer(CIO, port = 8080) {
+    generatedModule(LlmProviderClients.forProvider(LlmProvider.Anthropic, apiKey))
+}.start(wait = true)
+```
+
+Or switch to Google without touching the generated code:
+
+```kotlin
+generatedModule(LlmProviderClients.forProvider(LlmProvider.Google, apiKey))
+```
+
+### Generated Apache Camel routes
+
+`CamelRouteEmitter` emits a `RouteBuilder` per tag + a `llm-providers.properties` file. Routes use the vendor-agnostic `llm:` scheme — provider selection is URI-driven:
+
+```kotlin
+rest("/v1")
+    .post("/messages")
+        .to("llm:createMessage?provider={{llm.provider}}&model={{llm.model}}")
+```
+
+Switch providers at runtime by editing one property:
+
+```properties
+llm.provider=anthropic                   # or: google, lmstudio, comfyui, djl, jlama, langchain4j:<vendor>
+llm.model=claude-sonnet-4-6
+```
+
+The Camel `LlmComponent` (in `kotlinx.kmp.util.LlmCamelComponent`) dispatches to the right `LlmProviderClient` automatically.
+
+### Files added / changed this phase
+
+| File | Change |
+|---|---|
+| `api-kmp/src/main/proto/types.proto` | +9 LLM messages (LlmRequest/Response/Tool/ChatMessage/ContentBlock/ToolUseBlock/…) |
+| `api-kmp/src/commonMain/kotlin/kotlinx/kmp/util/LlmProvider.kt` | **NEW** — sealed interface + 10 providers + `LlmProviderClient` contract |
+| `api-kmp/src/jvmMain/kotlin/kotlinx/kmp/util/LlmBridges.kt` | **NEW** — thin bridges to LangChain4j + MCP SDK + DJL + Jlama + LM Studio + ComfyUI |
+| `api-kmp/src/jvmMain/kotlin/kotlinx/kmp/util/LlmCamelComponent.kt` | **NEW** — vendor-agnostic `LlmComponent`/`LlmEndpoint`/`LlmProducer` |
+| `api-kmp/src/jvmMain/kotlin/kmp/apigen/OpenApiParser.kt` | +`ParsedServer`, +`ParsedInfo`, parse `servers:` + `info:` |
+| `api-kmp/src/jvmMain/kotlin/kmp/apigen/ServiceGenerator.kt` | `generate(paths, security, servers)` overload; uses `servers[0].url` |
+| `api-kmp/src/jvmMain/kotlin/kmp/apigen/ServerRouteEmitter.kt` | **NEW** — ktor routing DSL from paths |
+| `api-kmp/src/jvmMain/kotlin/kmp/apigen/CamelRouteEmitter.kt` | **NEW** — Camel RouteBuilder + properties |
+| `api-kmp/src/jvmMain/kotlin/kmp/apigen/Emitters.kt` | Extended `McpEmitter` to emit runnable Server/Client; registered 2 new emitters in Koin module |
+| `api-kmp/build.gradle.kts` | +`compileOnly`: langchain4j, mcp-sdk, djl, jlama, camel-core/support/rest |
+| `api-kmp/src/test/resources/anthropic-messages-openapi.yaml` | **NEW** — Anthropic test spec |
+| `api-kmp/src/test/resources/google-gemini-openapi.yaml` | **NEW** — Google Gemini test spec |
+| `api-kmp/src/test/kotlin/kmp/apigen/MultiProviderGenTest.kt` | **NEW** — 10 tests verifying multi-provider generation |
+
+### Test coverage (Phase 11)
+
+- `MultiProviderGenTest` — **10 tests**, all passing:
+  1. `OpenApiParser` captures `servers:` from Anthropic spec
+  2. `OpenApiParser` captures `servers:` from Google Gemini spec
+  3. `RestEmitter` uses spec `servers[0]` as default baseUrl for Anthropic
+  4. `RestEmitter` uses spec `servers[0]` as default baseUrl for Google Gemini (and does NOT leak Anthropic URL)
+  5. `ServerRouteEmitter` emits ktor routing for Anthropic spec
+  6. `ServerRouteEmitter` emits ktor routing for Google Gemini spec
+  7. `CamelRouteEmitter` emits vendor-agnostic `RouteBuilder` for Anthropic (uses `llm:` scheme, not `anthropic:`)
+  8. `CamelRouteEmitter` emits `RouteBuilder` for Google Gemini with same `llm:` component
+  9. `McpEmitter` emits runnable Kotlin `McpServer` + `McpClient` alongside `tools.json`
+ 10. All emitters run together end-to-end for both specs; provider-specific URLs appear in correct outputs only
+
+**api-kmp JVM test total: 146 tests, 0 failures** (adds the 10 above to the 136 from prior phases).
+
+### Git commit references (this phase)
+
+All in a single commit on branch `claude/convert-to-kmp-I9zBV`. Reuses patterns from:
+- `200e8dd` Koin DI — for registering new emitters
+- `d7ebac8` TestEmitter routing DSL — ServerRouteEmitter's pattern source
+- `145828c` GraphQL emitter — CamelRouteEmitter's one-file-per-tag pattern
+- `2560402` Google Calendar API tested with api-gen — proved multi-provider api-gen works
+- `83493eb` MCP LLD — extended McpEmitter's Server/Client emission
+- `91e9e57` Predefined proto types — format-based type mapping pattern
+- `6e7c02b` ktor CIO server tests — testing the generated server output
+- `fdbe69a` compileOnly deps pattern — for all 7 optional backend libs

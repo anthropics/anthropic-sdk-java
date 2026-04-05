@@ -1,0 +1,99 @@
+openapi: 3.0.3
+info:
+  title: Anthropic Messages API
+  version: "2023-06-01"
+  description: |
+    Minimal OpenAPI subset of the Anthropic Messages API used by
+    MultiProviderGenTest to verify servers[] parsing + client/server/camel
+    emission. The full spec is fetched from the Stainless URL in .stats.yml.
+servers:
+  - url: https://api.anthropic.com/v1
+    description: Anthropic production API
+paths:
+  /messages:
+    post:
+      operationId: createMessage
+      tags: [messages]
+      summary: Create a message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageCreateParams'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+  /messages/stream:
+    post:
+      operationId: createMessageStreaming
+      tags: [messages]
+      summary: Create a message (SSE stream)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageCreateParams'
+      responses:
+        '200':
+          description: Server-sent events
+          content:
+            text/event-stream:
+              schema:
+                type: string
+components:
+  schemas:
+    MessageCreateParams:
+      type: object
+      required: [model, max_tokens, messages]
+      properties:
+        model:
+          type: string
+        max_tokens:
+          type: integer
+          format: int32
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/InputMessage'
+        system:
+          type: string
+        stream:
+          type: boolean
+          default: false
+    InputMessage:
+      type: object
+      required: [role, content]
+      properties:
+        role:
+          type: string
+          enum: [user, assistant]
+        content:
+          type: string
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+        model:
+          type: string
+        role:
+          type: string
+        content:
+          type: array
+          items:
+            type: object
+        stop_reason:
+          type: string
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: x-api-key
+security:
+  - apiKey: []
