@@ -9,7 +9,7 @@ import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkRequired
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -34,7 +34,7 @@ private constructor(
     /**
      * ID of the deleted file.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun id(): String = id.getRequired("id")
@@ -44,7 +44,7 @@ private constructor(
      *
      * For file deletion, this is always `"file_deleted"`.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun type(): Optional<Type> = type.getOptional("type")
@@ -178,7 +178,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 
@@ -253,13 +253,13 @@ private constructor(
          * Use the [value] method instead if you're uncertain the value is always known and don't
          * want to throw for the unknown case.
          *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         * @throws ApiInvalidDataException if this class instance's value is a not a known
          *   member.
          */
         fun known(): Known =
             when (this) {
                 FILE_DELETED -> Known.FILE_DELETED
-                else -> throw AnthropicInvalidDataException("Unknown Type: $value")
+                else -> throw ApiInvalidDataException("Unknown Type: $value")
             }
 
         /**
@@ -268,11 +268,11 @@ private constructor(
          * This differs from the [toString] method because that method is primarily for debugging
          * and generally doesn't throw.
          *
-         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         * @throws ApiInvalidDataException if this class instance's value does not have the
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
+            _value().asString() ?: throw ApiInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 
@@ -289,7 +289,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 

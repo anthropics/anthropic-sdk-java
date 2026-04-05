@@ -3,7 +3,7 @@ package com.anthropic.helpers
 import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonObject
 import kotlinx.kmp.util.core.jsonMapper
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.anthropic.models.messages.BashCodeExecutionToolResultBlock
 import com.anthropic.models.messages.CitationCharLocation
 import com.anthropic.models.messages.CitationContentBlockLocation
@@ -238,20 +238,20 @@ class MessageAccumulator private constructor() {
      * [message].
      *
      * @return The given [event] for convenience, such as when chaining method calls.
-     * @throws AnthropicInvalidDataException If [accumulate] is called again after the final
+     * @throws ApiInvalidDataException If [accumulate] is called again after the final
      *   `message_stop` event has been accumulated. A [MessageAccumulator] can only be used to
      *   accumulate a single [Message].
      */
     fun accumulate(event: RawMessageStreamEvent): RawMessageStreamEvent {
         if (message != null) {
-            throw AnthropicInvalidDataException("'message_stop' event already received.")
+            throw ApiInvalidDataException("'message_stop' event already received.")
         }
 
         event.accept(
             object : RawMessageStreamEvent.Visitor<Unit> {
                 override fun visitMessageStart(start: RawMessageStartEvent) {
                     if (messageBuilder != null) {
-                        throw AnthropicInvalidDataException(
+                        throw ApiInvalidDataException(
                             "'message_start' event already received."
                         )
                     }
@@ -311,7 +311,7 @@ class MessageAccumulator private constructor() {
                     val index = contentBlockStart.index()
 
                     if (messageContent[index] != null) {
-                        throw AnthropicInvalidDataException(
+                        throw ApiInvalidDataException(
                             "Content block already started for index $index."
                         )
                     }
@@ -392,7 +392,7 @@ class MessageAccumulator private constructor() {
                     val index = contentBlockDelta.index()
                     val oldContentBlock =
                         messageContent[index]
-                            ?: throw AnthropicInvalidDataException(
+                            ?: throw ApiInvalidDataException(
                                 "Content block not started for index $index."
                             )
 
@@ -436,7 +436,7 @@ class MessageAccumulator private constructor() {
                     // type is always just `content_block_stop`.
                     val oldContentBlock =
                         messageContent[index]
-                            ?: throw AnthropicInvalidDataException(
+                            ?: throw ApiInvalidDataException(
                                 "Content block not started for index $index."
                             )
 
@@ -450,7 +450,7 @@ class MessageAccumulator private constructor() {
                         // Check that there was at least one delta, so a potentially-valid `input`
                         // JSON string was accumulated.
                         inputJson
-                            ?: throw AnthropicInvalidDataException(
+                            ?: throw ApiInvalidDataException(
                                 "Missing input JSON for index $index."
                             )
 
@@ -495,8 +495,8 @@ class MessageAccumulator private constructor() {
     }
 
     private fun requireMessageBuilder() =
-        messageBuilder ?: throw AnthropicInvalidDataException("'message_start' event not received.")
+        messageBuilder ?: throw ApiInvalidDataException("'message_start' event not received.")
 
     private fun requireMessageUsage() =
-        messageUsage ?: throw AnthropicInvalidDataException("'message_start' event not received.")
+        messageUsage ?: throw ApiInvalidDataException("'message_start' event not received.")
 }

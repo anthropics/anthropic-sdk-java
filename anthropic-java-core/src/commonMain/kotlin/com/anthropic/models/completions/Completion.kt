@@ -8,7 +8,7 @@ import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkRequired
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -47,7 +47,7 @@ private constructor(
      *
      * The format and length of IDs may change over time.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun id(): String = id.getRequired("id")
@@ -55,7 +55,7 @@ private constructor(
     /**
      * The resulting completion up to and excluding the stop sequences.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun completion(): String = completion.getRequired("completion")
@@ -65,7 +65,7 @@ private constructor(
      * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
      * options.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun model(): Model = model.getRequired("model")
@@ -78,7 +78,7 @@ private constructor(
      *   `stop_sequences` parameter, or a stop sequence built into the model
      * * `"max_tokens"`: we exceeded `max_tokens_to_sample` or the model's maximum
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun stopReason(): Optional<String> = stopReason.getOptional("stop_reason")
@@ -317,7 +317,7 @@ private constructor(
         stopReason()
         _type().let {
             if (it != JsonValue.from("completion")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+                throw ApiInvalidDataException("'type' is invalid, received $it")
             }
         }
         validated = true
@@ -327,7 +327,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 

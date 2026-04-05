@@ -9,7 +9,7 @@ import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkRequired
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -82,7 +82,7 @@ private constructor(
      *
      * The format and length of IDs may change over time.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun id(): String = id.getRequired("id")
@@ -91,7 +91,7 @@ private constructor(
      * RFC 3339 datetime string representing the time at which the Message Batch was archived and
      * its results became unavailable.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun archivedAt(): Optional<OffsetDateTime> = archivedAt.getOptional("archived_at")
@@ -100,7 +100,7 @@ private constructor(
      * RFC 3339 datetime string representing the time at which cancellation was initiated for the
      * Message Batch. Specified only if cancellation was initiated.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun cancelInitiatedAt(): Optional<OffsetDateTime> =
@@ -109,7 +109,7 @@ private constructor(
     /**
      * RFC 3339 datetime string representing the time at which the Message Batch was created.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
@@ -121,7 +121,7 @@ private constructor(
      * Processing ends when every request in a Message Batch has either succeeded, errored,
      * canceled, or expired.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun endedAt(): Optional<OffsetDateTime> = endedAt.getOptional("ended_at")
@@ -130,7 +130,7 @@ private constructor(
      * RFC 3339 datetime string representing the time at which the Message Batch will expire and end
      * processing, which is 24 hours after creation.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun expiresAt(): OffsetDateTime = expiresAt.getRequired("expires_at")
@@ -138,7 +138,7 @@ private constructor(
     /**
      * Processing status of the Message Batch.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun processingStatus(): ProcessingStatus = processingStatus.getRequired("processing_status")
@@ -150,7 +150,7 @@ private constructor(
      * the entire batch ends. The sum of all values always matches the total number of requests in
      * the batch.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun requestCounts(): MessageBatchRequestCounts = requestCounts.getRequired("request_counts")
@@ -162,7 +162,7 @@ private constructor(
      * Results in the file are not guaranteed to be in the same order as requests. Use the
      * `custom_id` field to match results to requests.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun resultsUrl(): Optional<String> = resultsUrl.getOptional("results_url")
@@ -572,7 +572,7 @@ private constructor(
         resultsUrl()
         _type().let {
             if (it != JsonValue.from("message_batch")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+                throw ApiInvalidDataException("'type' is invalid, received $it")
             }
         }
         validated = true
@@ -582,7 +582,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 
@@ -676,7 +676,7 @@ private constructor(
          * Use the [value] method instead if you're uncertain the value is always known and don't
          * want to throw for the unknown case.
          *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         * @throws ApiInvalidDataException if this class instance's value is a not a known
          *   member.
          */
         fun known(): Known =
@@ -684,7 +684,7 @@ private constructor(
                 IN_PROGRESS -> Known.IN_PROGRESS
                 CANCELING -> Known.CANCELING
                 ENDED -> Known.ENDED
-                else -> throw AnthropicInvalidDataException("Unknown ProcessingStatus: $value")
+                else -> throw ApiInvalidDataException("Unknown ProcessingStatus: $value")
             }
 
         /**
@@ -693,11 +693,11 @@ private constructor(
          * This differs from the [toString] method because that method is primarily for debugging
          * and generally doesn't throw.
          *
-         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         * @throws ApiInvalidDataException if this class instance's value does not have the
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
+            _value().asString() ?: throw ApiInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 
@@ -714,7 +714,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 

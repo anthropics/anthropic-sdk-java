@@ -6,7 +6,7 @@ package kotlinx.kmp.util.core.http
 
 import kotlinx.kmp.util.core.MultipartField
 import kotlinx.kmp.util.core.toImmutable
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.json.JsonMapper
@@ -146,7 +146,7 @@ private fun serializePart(name: String, node: JsonNode): Sequence<Pair<String, S
                                     JsonNodeType.ARRAY,
                                     JsonNodeType.OBJECT,
                                     JsonNodeType.POJO ->
-                                        throw AnthropicInvalidDataException(
+                                        throw ApiInvalidDataException(
                                             "Unexpected JsonNode type in array: ${element.nodeType}"
                                         )
                                 }
@@ -159,7 +159,7 @@ private fun serializePart(name: String, node: JsonNode): Sequence<Pair<String, S
                 serializePart("$name[$key]", value)
             }
         JsonNodeType.POJO,
-        null -> throw AnthropicInvalidDataException("Unexpected JsonNode type: ${node.nodeType}")
+        null -> throw ApiInvalidDataException("Unexpected JsonNode type: ${node.nodeType}")
     }
 
 private class MultipartBody

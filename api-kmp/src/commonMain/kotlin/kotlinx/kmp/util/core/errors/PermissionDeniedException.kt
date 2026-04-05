@@ -8,7 +8,7 @@ import kotlinx.kmp.util.core.http.Headers
 
 class PermissionDeniedException
 private constructor(private val headers: Headers, private val body: JsonValue, cause: Throwable?) :
-    AnthropicServiceException("403: $body", cause) {
+    ApiServiceException("403: $body", cause) {
 
     override fun statusCode(): Int = 403
 

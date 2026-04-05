@@ -2,7 +2,7 @@ package com.anthropic.models.beta.messages
 
 import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.JsonValue
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.anthropic.models.messages.Model
 import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
@@ -100,7 +100,7 @@ internal constructor(
         try {
             validate()
             true
-        } catch (_: AnthropicInvalidDataException) {
+        } catch (_: ApiInvalidDataException) {
             false
         }
 

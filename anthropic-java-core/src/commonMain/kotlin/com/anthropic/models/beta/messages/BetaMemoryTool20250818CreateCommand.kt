@@ -7,7 +7,7 @@ import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkRequired
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -46,7 +46,7 @@ private constructor(
     /**
      * Content to write to the file
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun fileText(): String = fileText.getRequired("file_text")
@@ -54,7 +54,7 @@ private constructor(
     /**
      * Path where the file should be created
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun path(): String = path.getRequired("path")
@@ -204,7 +204,7 @@ private constructor(
 
         _command().let {
             if (it != JsonValue.from("create")) {
-                throw AnthropicInvalidDataException("'command' is invalid, received $it")
+                throw ApiInvalidDataException("'command' is invalid, received $it")
             }
         }
         fileText()
@@ -216,7 +216,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 

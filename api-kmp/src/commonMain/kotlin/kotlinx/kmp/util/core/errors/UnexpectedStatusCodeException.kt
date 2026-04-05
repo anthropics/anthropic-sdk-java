@@ -12,7 +12,7 @@ private constructor(
     private val headers: Headers,
     private val body: JsonValue,
     cause: Throwable?,
-) : AnthropicServiceException("$statusCode: $body", cause) {
+) : ApiServiceException("$statusCode: $body", cause) {
 
     override fun statusCode(): Int = statusCode
 

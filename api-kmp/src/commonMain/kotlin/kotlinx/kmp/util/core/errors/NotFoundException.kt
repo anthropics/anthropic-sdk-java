@@ -8,7 +8,7 @@ import kotlinx.kmp.util.core.http.Headers
 
 class NotFoundException
 private constructor(private val headers: Headers, private val body: JsonValue, cause: Throwable?) :
-    AnthropicServiceException("404: $body", cause) {
+    ApiServiceException("404: $body", cause) {
 
     override fun statusCode(): Int = 404
 

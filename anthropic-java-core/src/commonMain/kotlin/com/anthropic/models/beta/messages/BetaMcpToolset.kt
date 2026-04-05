@@ -9,7 +9,7 @@ import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.toImmutable
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -53,7 +53,7 @@ private constructor(
     /**
      * Name of the MCP server to configure tools for
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun mcpServerName(): String = mcpServerName.getRequired("mcp_server_name")
@@ -72,7 +72,7 @@ private constructor(
     /**
      * Create a cache control breakpoint at this content block.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
@@ -81,7 +81,7 @@ private constructor(
     /**
      * Configuration overrides for specific tools, keyed by tool name
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun configs(): Optional<Configs> = configs.getOptional("configs")
@@ -89,7 +89,7 @@ private constructor(
     /**
      * Default configuration applied to all tools from this server
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun defaultConfig(): Optional<BetaMcpToolDefaultConfig> =
@@ -301,7 +301,7 @@ private constructor(
         mcpServerName()
         _type().let {
             if (it != JsonValue.from("mcp_toolset")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+                throw ApiInvalidDataException("'type' is invalid, received $it")
             }
         }
         cacheControl().ifPresent { it.validate() }
@@ -314,7 +314,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 
@@ -400,7 +400,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 

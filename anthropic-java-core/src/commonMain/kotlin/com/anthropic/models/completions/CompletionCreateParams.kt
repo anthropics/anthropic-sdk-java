@@ -13,7 +13,7 @@ import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.http.Headers
 import kotlinx.kmp.util.core.http.QueryParams
 import kotlinx.kmp.util.core.toImmutable
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.messages.Metadata
 import com.anthropic.models.messages.Model
@@ -53,7 +53,7 @@ private constructor(
      * Note that our models may stop _before_ reaching this maximum. This parameter only specifies
      * the absolute maximum number of tokens to generate.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun maxTokensToSample(): Long = body.maxTokensToSample()
@@ -63,7 +63,7 @@ private constructor(
      * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
      * options.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun model(): Model = body.model()
@@ -80,7 +80,7 @@ private constructor(
      * See [prompt validation](https://docs.claude.com/en/api/prompt-validation) and our guide to
      * [prompt design](https://docs.claude.com/en/docs/intro-to-prompting) for more details.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun prompt(): String = body.prompt()
@@ -88,7 +88,7 @@ private constructor(
     /**
      * An object describing metadata about the request.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun metadata(): Optional<Metadata> = body.metadata()
@@ -100,7 +100,7 @@ private constructor(
      * future. By providing the stop_sequences parameter, you may include additional strings that
      * will cause the model to stop generating.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun stopSequences(): Optional<List<String>> = body.stopSequences()
@@ -113,7 +113,7 @@ private constructor(
      *
      * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun temperature(): Optional<Double> = body.temperature()
@@ -126,7 +126,7 @@ private constructor(
      *
      * Recommended for advanced use cases only. You usually only need to use `temperature`.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun topK(): Optional<Long> = body.topK()
@@ -141,7 +141,7 @@ private constructor(
      *
      * Recommended for advanced use cases only. You usually only need to use `temperature`.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun topP(): Optional<Double> = body.topP()
@@ -645,7 +645,7 @@ private constructor(
          * Note that our models may stop _before_ reaching this maximum. This parameter only
          * specifies the absolute maximum number of tokens to generate.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun maxTokensToSample(): Long = maxTokensToSample.getRequired("max_tokens_to_sample")
@@ -655,7 +655,7 @@ private constructor(
          * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
          * options.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun model(): Model = model.getRequired("model")
@@ -672,7 +672,7 @@ private constructor(
          * See [prompt validation](https://docs.claude.com/en/api/prompt-validation) and our guide
          * to [prompt design](https://docs.claude.com/en/docs/intro-to-prompting) for more details.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun prompt(): String = prompt.getRequired("prompt")
@@ -680,7 +680,7 @@ private constructor(
         /**
          * An object describing metadata about the request.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
@@ -692,7 +692,7 @@ private constructor(
          * the future. By providing the stop_sequences parameter, you may include additional strings
          * that will cause the model to stop generating.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun stopSequences(): Optional<List<String>> = stopSequences.getOptional("stop_sequences")
@@ -705,7 +705,7 @@ private constructor(
          *
          * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun temperature(): Optional<Double> = temperature.getOptional("temperature")
@@ -718,7 +718,7 @@ private constructor(
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun topK(): Optional<Long> = topK.getOptional("top_k")
@@ -733,7 +733,7 @@ private constructor(
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun topP(): Optional<Double> = topP.getOptional("top_p")
@@ -1099,7 +1099,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 

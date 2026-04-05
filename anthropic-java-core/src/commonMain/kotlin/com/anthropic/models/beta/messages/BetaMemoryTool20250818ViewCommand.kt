@@ -10,7 +10,7 @@ import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkKnown
 import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.toImmutable
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -52,7 +52,7 @@ private constructor(
     /**
      * Path to directory or file to view
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun path(): String = path.getRequired("path")
@@ -60,7 +60,7 @@ private constructor(
     /**
      * Optional line range for viewing specific lines
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun viewRange(): Optional<List<Long>> = viewRange.getOptional("view_range")
@@ -222,7 +222,7 @@ private constructor(
 
         _command().let {
             if (it != JsonValue.from("view")) {
-                throw AnthropicInvalidDataException("'command' is invalid, received $it")
+                throw ApiInvalidDataException("'command' is invalid, received $it")
             }
         }
         path()
@@ -234,7 +234,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 

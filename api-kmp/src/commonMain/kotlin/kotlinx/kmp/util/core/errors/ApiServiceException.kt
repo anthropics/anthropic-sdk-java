@@ -5,9 +5,9 @@ package kotlinx.kmp.util.core.errors
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.http.Headers
 
-abstract class AnthropicServiceException
+abstract class ApiServiceException
 protected constructor(message: String, cause: Throwable? = null) :
-    AnthropicException(message, cause) {
+    ApiException(message, cause) {
 
     abstract fun statusCode(): Int
 

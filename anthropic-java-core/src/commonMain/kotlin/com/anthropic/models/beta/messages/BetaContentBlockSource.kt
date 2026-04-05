@@ -13,7 +13,7 @@ import kotlinx.kmp.util.core.allMaxBy
 import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.getOrThrow
 import kotlinx.kmp.util.core.toImmutable
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -44,7 +44,7 @@ private constructor(
     ) : this(content, type, mutableMapOf())
 
     /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun content(): Content = content.getRequired("content")
@@ -189,7 +189,7 @@ private constructor(
         content().validate()
         _type().let {
             if (it != JsonValue.from("content")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+                throw ApiInvalidDataException("'type' is invalid, received $it")
             }
         }
         validated = true
@@ -199,7 +199,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 
@@ -270,7 +270,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 
@@ -342,10 +342,10 @@ private constructor(
              * version than the API, then the API may respond with new variants that the SDK is
              * unaware of.
              *
-             * @throws AnthropicInvalidDataException in the default implementation.
+             * @throws ApiInvalidDataException in the default implementation.
              */
             fun unknown(json: JsonValue?): T {
-                throw AnthropicInvalidDataException("Unknown Content: $json")
+                throw ApiInvalidDataException("Unknown Content: $json")
             }
         }
 

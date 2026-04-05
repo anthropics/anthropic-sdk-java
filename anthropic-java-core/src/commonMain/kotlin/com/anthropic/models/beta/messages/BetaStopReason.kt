@@ -4,7 +4,7 @@ package com.anthropic.models.beta.messages
 
 import kotlinx.kmp.util.core.Enum
 import kotlinx.kmp.util.core.JsonField
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 
 class BetaStopReason @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -101,7 +101,7 @@ class BetaStopReason @JsonCreator private constructor(private val value: JsonFie
      * Use the [value] method instead if you're uncertain the value is always known and don't want
      * to throw for the unknown case.
      *
-     * @throws AnthropicInvalidDataException if this class instance's value is a not a known member.
+     * @throws ApiInvalidDataException if this class instance's value is a not a known member.
      */
     fun known(): Known =
         when (this) {
@@ -113,7 +113,7 @@ class BetaStopReason @JsonCreator private constructor(private val value: JsonFie
             COMPACTION -> Known.COMPACTION
             REFUSAL -> Known.REFUSAL
             MODEL_CONTEXT_WINDOW_EXCEEDED -> Known.MODEL_CONTEXT_WINDOW_EXCEEDED
-            else -> throw AnthropicInvalidDataException("Unknown BetaStopReason: $value")
+            else -> throw ApiInvalidDataException("Unknown BetaStopReason: $value")
         }
 
     /**
@@ -122,11 +122,11 @@ class BetaStopReason @JsonCreator private constructor(private val value: JsonFie
      * This differs from the [toString] method because that method is primarily for debugging and
      * generally doesn't throw.
      *
-     * @throws AnthropicInvalidDataException if this class instance's value does not have the
+     * @throws ApiInvalidDataException if this class instance's value does not have the
      *   expected primitive type.
      */
     fun asString(): String =
-        _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
+        _value().asString() ?: throw ApiInvalidDataException("Value is not a String")
 
     private var validated: Boolean = false
 
@@ -143,7 +143,7 @@ class BetaStopReason @JsonCreator private constructor(private val value: JsonFie
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 

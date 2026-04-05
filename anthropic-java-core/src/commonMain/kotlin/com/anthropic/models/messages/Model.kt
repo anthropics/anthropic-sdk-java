@@ -4,7 +4,7 @@ package com.anthropic.models.messages
 
 import kotlinx.kmp.util.core.Enum
 import kotlinx.kmp.util.core.JsonField
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 
 /**
@@ -193,7 +193,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      * Use the [value] method instead if you're uncertain the value is always known and don't want
      * to throw for the unknown case.
      *
-     * @throws AnthropicInvalidDataException if this class instance's value is a not a known member.
+     * @throws ApiInvalidDataException if this class instance's value is a not a known member.
      */
     fun known(): Known =
         when (this) {
@@ -212,7 +212,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
             CLAUDE_SONNET_4_0 -> Known.CLAUDE_SONNET_4_0
             CLAUDE_SONNET_4_20250514 -> Known.CLAUDE_SONNET_4_20250514
             CLAUDE_3_HAIKU_20240307 -> Known.CLAUDE_3_HAIKU_20240307
-            else -> throw AnthropicInvalidDataException("Unknown Model: $value")
+            else -> throw ApiInvalidDataException("Unknown Model: $value")
         }
 
     /**
@@ -221,11 +221,11 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      * This differs from the [toString] method because that method is primarily for debugging and
      * generally doesn't throw.
      *
-     * @throws AnthropicInvalidDataException if this class instance's value does not have the
+     * @throws ApiInvalidDataException if this class instance's value does not have the
      *   expected primitive type.
      */
     fun asString(): String =
-        _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
+        _value().asString() ?: throw ApiInvalidDataException("Value is not a String")
 
     private var validated: Boolean = false
 
@@ -242,7 +242,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 

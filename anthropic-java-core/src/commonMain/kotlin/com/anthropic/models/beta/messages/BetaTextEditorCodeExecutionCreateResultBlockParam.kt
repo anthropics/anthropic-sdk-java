@@ -7,7 +7,7 @@ import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkRequired
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -31,7 +31,7 @@ private constructor(
     ) : this(isFileUpdate, type, mutableMapOf())
 
     /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun isFileUpdate(): Boolean = isFileUpdate.getRequired("is_file_update")
@@ -176,7 +176,7 @@ private constructor(
         isFileUpdate()
         _type().let {
             if (it != JsonValue.from("text_editor_code_execution_create_result")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+                throw ApiInvalidDataException("'type' is invalid, received $it")
             }
         }
         validated = true
@@ -186,7 +186,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 

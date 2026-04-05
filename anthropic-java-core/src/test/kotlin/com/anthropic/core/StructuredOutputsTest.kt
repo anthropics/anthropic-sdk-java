@@ -3,7 +3,7 @@ package kotlinx.kmp.util.core
 import kotlinx.kmp.util.core.*
 
 import kotlinx.kmp.util.core.JsonSchemaValidator
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonClassDescription
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -1293,7 +1293,7 @@ internal class StructuredOutputsTest {
 
         // Well-formed JSON, but it does not match the schema of class `X`.
         assertThatThrownBy { outputTypeFromJson("{\"wrong\" : \"hello\"}", X::class.java) }
-            .isExactlyInstanceOf(AnthropicInvalidDataException::class.java)
+            .isExactlyInstanceOf(ApiInvalidDataException::class.java)
             .hasMessage("Error parsing JSON: {\"wrong\" : \"hello\"}")
     }
 
@@ -1303,7 +1303,7 @@ internal class StructuredOutputsTest {
 
         // Malformed JSON.
         assertThatThrownBy { outputTypeFromJson("{\"truncated", X::class.java) }
-            .isExactlyInstanceOf(AnthropicInvalidDataException::class.java)
+            .isExactlyInstanceOf(ApiInvalidDataException::class.java)
             .hasMessage("Error parsing JSON: {\"truncated")
     }
 
@@ -1414,7 +1414,7 @@ internal class StructuredOutputsTest {
         // was set to a schema. This is OK, as the serialization will still work. Just confirm the
         // expected failure, so if the conditions change, they will be noticed.
         assertThatThrownBy { tool.inputSchema() }
-            .isExactlyInstanceOf(AnthropicInvalidDataException::class.java)
+            .isExactlyInstanceOf(ApiInvalidDataException::class.java)
 
         // Use the `_inputSchema()` accessor instead. Check that the value is not null or missing.
         assertThat(tool._inputSchema())

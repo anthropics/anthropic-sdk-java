@@ -10,7 +10,7 @@ import kotlinx.kmp.util.core.http.HttpMethod
 import kotlinx.kmp.util.core.http.HttpRequest
 import kotlinx.kmp.util.core.http.HttpRequestBody
 import kotlinx.kmp.util.core.http.HttpResponse
-import kotlinx.kmp.util.core.errors.AnthropicIoException
+import kotlinx.kmp.util.core.errors.ApiIoException
 import java.io.IOException
 import java.io.InputStream
 import java.net.Proxy
@@ -52,7 +52,7 @@ internal constructor(
         return try {
             backend.prepareResponse(call.execute().toResponse())
         } catch (e: IOException) {
-            throw AnthropicIoException("Request failed", e)
+            throw ApiIoException("Request failed", e)
         } finally {
             preparedRequest.body?.close()
         }
@@ -73,7 +73,7 @@ internal constructor(
                 }
 
                 override fun onFailure(call: Call, e: IOException) {
-                    future.completeExceptionally(AnthropicIoException("Request failed", e))
+                    future.completeExceptionally(ApiIoException("Request failed", e))
                 }
             }
         )
@@ -109,7 +109,7 @@ internal constructor(
 
                     override fun onFailure(call: Call, e: IOException) {
                         preparedRequest.body?.close()
-                        continuation.resumeWithException(AnthropicIoException("Request failed", e))
+                        continuation.resumeWithException(ApiIoException("Request failed", e))
                     }
                 }
             )

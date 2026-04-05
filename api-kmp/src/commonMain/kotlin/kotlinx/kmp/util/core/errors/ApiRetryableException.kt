@@ -11,5 +11,5 @@ import kotlinx.kmp.util.core.http.Retryable
  * @param message A descriptive error message
  * @param cause The underlying cause of this exception, if any
  */
-class AnthropicRetryableException(message: String? = null, cause: Throwable? = null) :
-    AnthropicException(message, cause), Retryable
+class ApiRetryableException(message: String? = null, cause: Throwable? = null) :
+    ApiException(message, cause), Retryable

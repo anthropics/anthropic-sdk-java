@@ -10,7 +10,7 @@ import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkKnown
 import kotlinx.kmp.util.core.toImmutable
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -87,7 +87,7 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun allowedCallers(): Optional<List<AllowedCaller>> =
@@ -96,7 +96,7 @@ private constructor(
     /**
      * Create a cache control breakpoint at this content block.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
@@ -106,13 +106,13 @@ private constructor(
      * If true, tool will not be included in initial system prompt. Only loaded when returned via
      * tool_reference from tool search.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun deferLoading(): Optional<Boolean> = deferLoading.getOptional("defer_loading")
 
     /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun inputExamples(): Optional<List<InputExample>> = inputExamples.getOptional("input_examples")
@@ -120,7 +120,7 @@ private constructor(
     /**
      * When true, guarantees schema validation on tool names and inputs
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun strict(): Optional<Boolean> = strict.getOptional("strict")
@@ -382,12 +382,12 @@ private constructor(
 
         _name().let {
             if (it != JsonValue.from("bash")) {
-                throw AnthropicInvalidDataException("'name' is invalid, received $it")
+                throw ApiInvalidDataException("'name' is invalid, received $it")
             }
         }
         _type().let {
             if (it != JsonValue.from("bash_20250124")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+                throw ApiInvalidDataException("'type' is invalid, received $it")
             }
         }
         allowedCallers().ifPresent { it.forEach { it.validate() } }
@@ -402,7 +402,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 
@@ -499,7 +499,7 @@ private constructor(
          * Use the [value] method instead if you're uncertain the value is always known and don't
          * want to throw for the unknown case.
          *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         * @throws ApiInvalidDataException if this class instance's value is a not a known
          *   member.
          */
         fun known(): Known =
@@ -507,7 +507,7 @@ private constructor(
                 DIRECT -> Known.DIRECT
                 CODE_EXECUTION_20250825 -> Known.CODE_EXECUTION_20250825
                 CODE_EXECUTION_20260120 -> Known.CODE_EXECUTION_20260120
-                else -> throw AnthropicInvalidDataException("Unknown AllowedCaller: $value")
+                else -> throw ApiInvalidDataException("Unknown AllowedCaller: $value")
             }
 
         /**
@@ -516,11 +516,11 @@ private constructor(
          * This differs from the [toString] method because that method is primarily for debugging
          * and generally doesn't throw.
          *
-         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         * @throws ApiInvalidDataException if this class instance's value does not have the
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
+            _value().asString() ?: throw ApiInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 
@@ -537,7 +537,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 
@@ -631,7 +631,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 

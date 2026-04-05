@@ -7,7 +7,7 @@ import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkRequired
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -75,7 +75,7 @@ private constructor(
     /**
      * Whether the model supports the Batch API.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun batch(): CapabilitySupport = batch.getRequired("batch")
@@ -83,7 +83,7 @@ private constructor(
     /**
      * Whether the model supports citation generation.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun citations(): CapabilitySupport = citations.getRequired("citations")
@@ -91,7 +91,7 @@ private constructor(
     /**
      * Whether the model supports code execution tools.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun codeExecution(): CapabilitySupport = codeExecution.getRequired("code_execution")
@@ -99,7 +99,7 @@ private constructor(
     /**
      * Context management support and available strategies.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun contextManagement(): ContextManagementCapability =
@@ -108,7 +108,7 @@ private constructor(
     /**
      * Effort (reasoning_effort) support and available levels.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun effort(): EffortCapability = effort.getRequired("effort")
@@ -116,7 +116,7 @@ private constructor(
     /**
      * Whether the model accepts image content blocks.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun imageInput(): CapabilitySupport = imageInput.getRequired("image_input")
@@ -124,7 +124,7 @@ private constructor(
     /**
      * Whether the model accepts PDF content blocks.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun pdfInput(): CapabilitySupport = pdfInput.getRequired("pdf_input")
@@ -132,7 +132,7 @@ private constructor(
     /**
      * Whether the model supports structured output / JSON mode / strict tool schemas.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun structuredOutputs(): CapabilitySupport = structuredOutputs.getRequired("structured_outputs")
@@ -140,7 +140,7 @@ private constructor(
     /**
      * Thinking capability and supported type configurations.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun thinking(): ThinkingCapability = thinking.getRequired("thinking")
@@ -482,7 +482,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 

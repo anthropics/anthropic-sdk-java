@@ -15,7 +15,7 @@ import kotlinx.kmp.util.core.checkKnown
 import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.getOrThrow
 import kotlinx.kmp.util.core.toImmutable
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -95,7 +95,7 @@ private constructor(
     /**
      * Breakdown of cached tokens by TTL
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun cacheCreation(): Optional<BetaCacheCreation> = cacheCreation.getOptional("cache_creation")
@@ -103,7 +103,7 @@ private constructor(
     /**
      * The number of input tokens used to create the cache entry.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun cacheCreationInputTokens(): Optional<Long> =
@@ -112,7 +112,7 @@ private constructor(
     /**
      * The number of input tokens read from the cache.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun cacheReadInputTokens(): Optional<Long> =
@@ -121,7 +121,7 @@ private constructor(
     /**
      * The geographic region where inference was performed for this request.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun inferenceGeo(): Optional<String> = inferenceGeo.getOptional("inference_geo")
@@ -129,7 +129,7 @@ private constructor(
     /**
      * The number of input tokens which were used.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun inputTokens(): Long = inputTokens.getRequired("input_tokens")
@@ -143,7 +143,7 @@ private constructor(
      * - Calculate the true context window size from the last iteration
      * - Understand token accumulation across server-side tool use loops
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun iterations(): Optional<List<BetaIterationsUsageItems>> =
@@ -152,7 +152,7 @@ private constructor(
     /**
      * The number of output tokens which were used.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun outputTokens(): Long = outputTokens.getRequired("output_tokens")
@@ -160,7 +160,7 @@ private constructor(
     /**
      * The number of server tool requests.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun serverToolUse(): Optional<BetaServerToolUsage> =
@@ -169,7 +169,7 @@ private constructor(
     /**
      * If the request used the priority, standard, or batch tier.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun serviceTier(): Optional<ServiceTier> = serviceTier.getOptional("service_tier")
@@ -177,7 +177,7 @@ private constructor(
     /**
      * The inference speed mode used for this request.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun speed(): Optional<Speed> = speed.getOptional("speed")
@@ -633,7 +633,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 
@@ -714,7 +714,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 
@@ -788,10 +788,10 @@ private constructor(
              * is on an older version than the API, then the API may respond with new variants that
              * the SDK is unaware of.
              *
-             * @throws AnthropicInvalidDataException in the default implementation.
+             * @throws ApiInvalidDataException in the default implementation.
              */
             fun unknown(json: JsonValue?): T {
-                throw AnthropicInvalidDataException("Unknown BetaIterationsUsageItems: $json")
+                throw ApiInvalidDataException("Unknown BetaIterationsUsageItems: $json")
             }
         }
 
@@ -909,7 +909,7 @@ private constructor(
          * Use the [value] method instead if you're uncertain the value is always known and don't
          * want to throw for the unknown case.
          *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         * @throws ApiInvalidDataException if this class instance's value is a not a known
          *   member.
          */
         fun known(): Known =
@@ -917,7 +917,7 @@ private constructor(
                 STANDARD -> Known.STANDARD
                 PRIORITY -> Known.PRIORITY
                 BATCH -> Known.BATCH
-                else -> throw AnthropicInvalidDataException("Unknown ServiceTier: $value")
+                else -> throw ApiInvalidDataException("Unknown ServiceTier: $value")
             }
 
         /**
@@ -926,11 +926,11 @@ private constructor(
          * This differs from the [toString] method because that method is primarily for debugging
          * and generally doesn't throw.
          *
-         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         * @throws ApiInvalidDataException if this class instance's value does not have the
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
+            _value().asString() ?: throw ApiInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 
@@ -947,7 +947,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 
@@ -1036,14 +1036,14 @@ private constructor(
          * Use the [value] method instead if you're uncertain the value is always known and don't
          * want to throw for the unknown case.
          *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         * @throws ApiInvalidDataException if this class instance's value is a not a known
          *   member.
          */
         fun known(): Known =
             when (this) {
                 STANDARD -> Known.STANDARD
                 FAST -> Known.FAST
-                else -> throw AnthropicInvalidDataException("Unknown Speed: $value")
+                else -> throw ApiInvalidDataException("Unknown Speed: $value")
             }
 
         /**
@@ -1052,11 +1052,11 @@ private constructor(
          * This differs from the [toString] method because that method is primarily for debugging
          * and generally doesn't throw.
          *
-         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         * @throws ApiInvalidDataException if this class instance's value does not have the
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
+            _value().asString() ?: throw ApiInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 
@@ -1073,7 +1073,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 

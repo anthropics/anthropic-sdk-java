@@ -20,7 +20,7 @@ import kotlinx.kmp.util.core.getOrThrow
 import kotlinx.kmp.util.core.http.Headers
 import kotlinx.kmp.util.core.http.QueryParams
 import kotlinx.kmp.util.core.toImmutable
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -62,7 +62,7 @@ private constructor(
      * Different models have different maximum values for this parameter. See
      * [models](https://docs.claude.com/en/docs/models-overview) for details.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun maxTokens(): Long = body.maxTokens()
@@ -122,7 +122,7 @@ private constructor(
      *
      * There is a limit of 100,000 messages in a single request.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun messages(): List<MessageParam> = body.messages()
@@ -132,7 +132,7 @@ private constructor(
      * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
      * options.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun model(): Model = body.model()
@@ -141,7 +141,7 @@ private constructor(
      * Top-level cache control automatically applies a cache_control marker to the last cacheable
      * block in the request.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun cacheControl(): Optional<CacheControlEphemeral> = body.cacheControl()
@@ -149,7 +149,7 @@ private constructor(
     /**
      * Container identifier for reuse across requests.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun container(): Optional<String> = body.container()
@@ -158,7 +158,7 @@ private constructor(
      * Specifies the geographic region for inference processing. If not specified, the workspace's
      * `default_inference_geo` is used.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun inferenceGeo(): Optional<String> = body.inferenceGeo()
@@ -166,7 +166,7 @@ private constructor(
     /**
      * An object describing metadata about the request.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun metadata(): Optional<Metadata> = body.metadata()
@@ -174,7 +174,7 @@ private constructor(
     /**
      * Configuration options for the model's output, such as the output format.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun outputConfig(): Optional<OutputConfig> = body.outputConfig()
@@ -186,7 +186,7 @@ private constructor(
      * Anthropic offers different levels of service for your API requests. See
      * [service-tiers](https://docs.claude.com/en/api/service-tiers) for details.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun serviceTier(): Optional<ServiceTier> = body.serviceTier()
@@ -202,7 +202,7 @@ private constructor(
      * response `stop_reason` value will be `"stop_sequence"` and the response `stop_sequence` value
      * will contain the matched stop sequence.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun stopSequences(): Optional<List<String>> = body.stopSequences()
@@ -214,7 +214,7 @@ private constructor(
      * a particular goal or role. See our
      * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun system(): Optional<System> = body.system()
@@ -227,7 +227,7 @@ private constructor(
      *
      * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun temperature(): Optional<Double> = body.temperature()
@@ -242,7 +242,7 @@ private constructor(
      * See [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
      * for details.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun thinking(): Optional<ThinkingConfigParam> = body.thinking()
@@ -251,7 +251,7 @@ private constructor(
      * How the model should use the provided tools. The model can use a specific tool, any available
      * tool, decide by itself, or not use tools at all.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun toolChoice(): Optional<ToolChoice> = body.toolChoice()
@@ -326,7 +326,7 @@ private constructor(
      *
      * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun tools(): Optional<List<ToolUnion>> = body.tools()
@@ -339,7 +339,7 @@ private constructor(
      *
      * Recommended for advanced use cases only. You usually only need to use `temperature`.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun topK(): Optional<Long> = body.topK()
@@ -354,7 +354,7 @@ private constructor(
      *
      * Recommended for advanced use cases only. You usually only need to use `temperature`.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun topP(): Optional<Double> = body.topP()
@@ -1461,7 +1461,7 @@ private constructor(
          * Different models have different maximum values for this parameter. See
          * [models](https://docs.claude.com/en/docs/models-overview) for details.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun maxTokens(): Long = maxTokens.getRequired("max_tokens")
@@ -1524,7 +1524,7 @@ private constructor(
          *
          * There is a limit of 100,000 messages in a single request.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun messages(): List<MessageParam> = messages.getRequired("messages")
@@ -1534,7 +1534,7 @@ private constructor(
          * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
          * options.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun model(): Model = model.getRequired("model")
@@ -1543,7 +1543,7 @@ private constructor(
          * Top-level cache control automatically applies a cache_control marker to the last
          * cacheable block in the request.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun cacheControl(): Optional<CacheControlEphemeral> =
@@ -1552,7 +1552,7 @@ private constructor(
         /**
          * Container identifier for reuse across requests.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun container(): Optional<String> = container.getOptional("container")
@@ -1561,7 +1561,7 @@ private constructor(
          * Specifies the geographic region for inference processing. If not specified, the
          * workspace's `default_inference_geo` is used.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun inferenceGeo(): Optional<String> = inferenceGeo.getOptional("inference_geo")
@@ -1569,7 +1569,7 @@ private constructor(
         /**
          * An object describing metadata about the request.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
@@ -1577,7 +1577,7 @@ private constructor(
         /**
          * Configuration options for the model's output, such as the output format.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun outputConfig(): Optional<OutputConfig> = outputConfig.getOptional("output_config")
@@ -1589,7 +1589,7 @@ private constructor(
          * Anthropic offers different levels of service for your API requests. See
          * [service-tiers](https://docs.claude.com/en/api/service-tiers) for details.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun serviceTier(): Optional<ServiceTier> = serviceTier.getOptional("service_tier")
@@ -1605,7 +1605,7 @@ private constructor(
          * sequences, the response `stop_reason` value will be `"stop_sequence"` and the response
          * `stop_sequence` value will contain the matched stop sequence.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun stopSequences(): Optional<List<String>> = stopSequences.getOptional("stop_sequences")
@@ -1617,7 +1617,7 @@ private constructor(
          * specifying a particular goal or role. See our
          * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun system(): Optional<System> = system.getOptional("system")
@@ -1630,7 +1630,7 @@ private constructor(
          *
          * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun temperature(): Optional<Double> = temperature.getOptional("temperature")
@@ -1646,7 +1646,7 @@ private constructor(
          * [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
          * for details.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun thinking(): Optional<ThinkingConfigParam> = thinking.getOptional("thinking")
@@ -1655,7 +1655,7 @@ private constructor(
          * How the model should use the provided tools. The model can use a specific tool, any
          * available tool, decide by itself, or not use tools at all.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun toolChoice(): Optional<ToolChoice> = toolChoice.getOptional("tool_choice")
@@ -1731,7 +1731,7 @@ private constructor(
          *
          * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun tools(): Optional<List<ToolUnion>> = tools.getOptional("tools")
@@ -1744,7 +1744,7 @@ private constructor(
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun topK(): Optional<Long> = topK.getOptional("top_k")
@@ -1759,7 +1759,7 @@ private constructor(
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun topP(): Optional<Double> = topP.getOptional("top_p")
@@ -2766,7 +2766,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 
@@ -2923,14 +2923,14 @@ private constructor(
          * Use the [value] method instead if you're uncertain the value is always known and don't
          * want to throw for the unknown case.
          *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         * @throws ApiInvalidDataException if this class instance's value is a not a known
          *   member.
          */
         fun known(): Known =
             when (this) {
                 AUTO -> Known.AUTO
                 STANDARD_ONLY -> Known.STANDARD_ONLY
-                else -> throw AnthropicInvalidDataException("Unknown ServiceTier: $value")
+                else -> throw ApiInvalidDataException("Unknown ServiceTier: $value")
             }
 
         /**
@@ -2939,11 +2939,11 @@ private constructor(
          * This differs from the [toString] method because that method is primarily for debugging
          * and generally doesn't throw.
          *
-         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         * @throws ApiInvalidDataException if this class instance's value does not have the
          *   expected primitive type.
          */
         fun asString(): String =
-            _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
+            _value().asString() ?: throw ApiInvalidDataException("Value is not a String")
 
         private var validated: Boolean = false
 
@@ -2960,7 +2960,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 
@@ -3046,7 +3046,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 
@@ -3111,10 +3111,10 @@ private constructor(
              * version than the API, then the API may respond with new variants that the SDK is
              * unaware of.
              *
-             * @throws AnthropicInvalidDataException in the default implementation.
+             * @throws ApiInvalidDataException in the default implementation.
              */
             fun unknown(json: JsonValue?): T {
-                throw AnthropicInvalidDataException("Unknown System: $json")
+                throw ApiInvalidDataException("Unknown System: $json")
             }
         }
 

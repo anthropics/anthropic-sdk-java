@@ -7,7 +7,7 @@ import kotlinx.kmp.util.core.ExcludeMissing
 import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonValue
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -55,7 +55,7 @@ private constructor(
     /**
      * Additional instructions for summarization.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun instructions(): Optional<String> = instructions.getOptional("instructions")
@@ -63,7 +63,7 @@ private constructor(
     /**
      * Whether to pause after compaction and return the compaction block to the user.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun pauseAfterCompaction(): Optional<Boolean> =
@@ -72,7 +72,7 @@ private constructor(
     /**
      * When to trigger compaction. Defaults to 150000 input tokens.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun trigger(): Optional<BetaInputTokensTrigger> = trigger.getOptional("trigger")
@@ -244,7 +244,7 @@ private constructor(
 
         _type().let {
             if (it != JsonValue.from("compact_20260112")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+                throw ApiInvalidDataException("'type' is invalid, received $it")
             }
         }
         instructions()
@@ -257,7 +257,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 

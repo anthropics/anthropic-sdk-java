@@ -1,6 +1,6 @@
 package kotlinx.kmp.util.core
 
-import kotlinx.kmp.util.core.errors.AnthropicException
+import kotlinx.kmp.util.core.errors.ApiException
 import java.lang.reflect.InvocationTargetException
 
 /**
@@ -28,7 +28,7 @@ private val closeWhenPhantomReachableImpl: ((Any, () -> Unit) -> Unit)? by lazy 
                         is Error -> throw cause
                     }
                 }
-                throw AnthropicException("Unexpected reflective invocation failure", e)
+                throw ApiException("Unexpected reflective invocation failure", e)
             }
         }
     } catch (e: ReflectiveOperationException) {

@@ -10,7 +10,7 @@ import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkKnown
 import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.toImmutable
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -40,7 +40,7 @@ private constructor(
     /**
      * List of skills.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun data(): List<SkillListResponse> = data.getRequired("data")
@@ -50,7 +50,7 @@ private constructor(
      *
      * If `true`, there are additional results that can be fetched using the `next_page` token.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun hasMore(): Boolean = hasMore.getRequired("has_more")
@@ -61,7 +61,7 @@ private constructor(
      * If `null`, there are no more results available. Pass this value to the `page_token` parameter
      * in the next request to get the next page.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun nextPage(): Optional<String> = nextPage.getOptional("next_page")
@@ -248,7 +248,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 

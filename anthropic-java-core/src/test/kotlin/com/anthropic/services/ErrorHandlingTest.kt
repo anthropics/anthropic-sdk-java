@@ -7,7 +7,7 @@ import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.http.Headers
 import kotlinx.kmp.util.core.jsonMapper
-import kotlinx.kmp.util.core.errors.AnthropicException
+import kotlinx.kmp.util.core.errors.ApiException
 import kotlinx.kmp.util.core.errors.BadRequestException
 import kotlinx.kmp.util.core.errors.errorType
 import kotlinx.kmp.util.core.errors.InternalServerException
@@ -2032,7 +2032,7 @@ internal class ErrorHandlingTest {
         )
 
         val e =
-            assertThrows<AnthropicException> {
+            assertThrows<ApiException> {
                 messageService.create(
                     MessageCreateParams.builder()
                         .maxTokens(1024L)

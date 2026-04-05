@@ -8,7 +8,7 @@ import kotlinx.kmp.util.core.http.Headers
 
 class UnauthorizedException
 private constructor(private val headers: Headers, private val body: JsonValue, cause: Throwable?) :
-    AnthropicServiceException("401: $body", cause) {
+    ApiServiceException("401: $body", cause) {
 
     override fun statusCode(): Int = 401
 

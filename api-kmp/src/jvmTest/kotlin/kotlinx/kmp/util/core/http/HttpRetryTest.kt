@@ -4,7 +4,7 @@ package kotlinx.kmp.util.core.http
 
 import kotlinx.kmp.util.core.RequestOptions
 import kotlinx.kmp.util.core.Sleeper
-import kotlinx.kmp.util.core.errors.AnthropicRetryableException
+import kotlinx.kmp.util.core.errors.ApiRetryableException
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.client.WireMock.matching
 import com.github.tomakehurst.wiremock.client.WireMock.ok
@@ -307,7 +307,7 @@ internal class HttpRetryTest {
                 ): HttpResponse {
                     callCount++
                     if (callCount == 1) {
-                        throw AnthropicRetryableException("Simulated retryable failure")
+                        throw ApiRetryableException("Simulated retryable failure")
                     }
                     return httpClient.execute(request, requestOptions)
                 }
@@ -320,7 +320,7 @@ internal class HttpRetryTest {
                     if (callCount == 1) {
                         val future = CompletableFuture<HttpResponse>()
                         future.completeExceptionally(
-                            AnthropicRetryableException("Simulated retryable failure")
+                            ApiRetryableException("Simulated retryable failure")
                         )
                         return future
                     }
@@ -333,7 +333,7 @@ internal class HttpRetryTest {
                 ): HttpResponse {
                     callCount++
                     if (callCount == 1) {
-                        throw AnthropicRetryableException("Simulated retryable failure")
+                        throw ApiRetryableException("Simulated retryable failure")
                     }
                     return httpClient.executeSuspend(request, requestOptions)
                 }

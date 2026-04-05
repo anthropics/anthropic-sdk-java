@@ -8,7 +8,7 @@ import kotlinx.kmp.util.core.http.Headers
 
 class BadRequestException
 private constructor(private val headers: Headers, private val body: JsonValue, cause: Throwable?) :
-    AnthropicServiceException("400: $body", cause) {
+    ApiServiceException("400: $body", cause) {
 
     override fun statusCode(): Int = 400
 

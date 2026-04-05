@@ -10,7 +10,7 @@ import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.http.Headers
 import kotlinx.kmp.util.core.http.QueryParams
 import kotlinx.kmp.util.core.toImmutable
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -39,7 +39,7 @@ private constructor(
     /**
      * The file to upload
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun file(): InputStream = body.file()
@@ -302,7 +302,7 @@ private constructor(
         /**
          * The file to upload
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun file(): InputStream = file.value.getRequired("file")
@@ -424,7 +424,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 

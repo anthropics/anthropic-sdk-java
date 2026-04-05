@@ -4,7 +4,7 @@ package com.anthropic.models.beta.messages.batches
 
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.jsonMapper
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.anthropic.models.beta.BetaErrorResponse
 import com.anthropic.models.beta.messages.BetaCacheCreation
 import com.anthropic.models.beta.messages.BetaCitationCharLocation
@@ -352,7 +352,7 @@ internal class BetaMessageBatchResultTest {
         val betaMessageBatchResult =
             jsonMapper().convertValue(testCase.value, jacksonTypeRef<BetaMessageBatchResult>())
 
-        val e = assertThrows<AnthropicInvalidDataException> { betaMessageBatchResult.validate() }
+        val e = assertThrows<ApiInvalidDataException> { betaMessageBatchResult.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
 }

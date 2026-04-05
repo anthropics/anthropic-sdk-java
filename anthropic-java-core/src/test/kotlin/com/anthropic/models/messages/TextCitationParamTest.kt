@@ -4,7 +4,7 @@ package com.anthropic.models.messages
 
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.jsonMapper
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -243,7 +243,7 @@ internal class TextCitationParamTest {
         val textCitationParam =
             jsonMapper().convertValue(testCase.value, jacksonTypeRef<TextCitationParam>())
 
-        val e = assertThrows<AnthropicInvalidDataException> { textCitationParam.validate() }
+        val e = assertThrows<ApiInvalidDataException> { textCitationParam.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
 }

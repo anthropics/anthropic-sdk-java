@@ -12,7 +12,7 @@ import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.getOrThrow
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -56,7 +56,7 @@ private constructor(
     ) : this(source, type, cacheControl, citations, context, title, mutableMapOf())
 
     /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun source(): Source = source.getRequired("source")
@@ -75,25 +75,25 @@ private constructor(
     /**
      * Create a cache control breakpoint at this content block.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun cacheControl(): Optional<CacheControlEphemeral> = cacheControl.getOptional("cache_control")
 
     /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun citations(): Optional<CitationsConfigParam> = citations.getOptional("citations")
 
     /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun context(): Optional<String> = context.getOptional("context")
 
     /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun title(): Optional<String> = title.getOptional("title")
@@ -385,7 +385,7 @@ private constructor(
         source().validate()
         _type().let {
             if (it != JsonValue.from("document")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+                throw ApiInvalidDataException("'type' is invalid, received $it")
             }
         }
         cacheControl().ifPresent { it.validate() }
@@ -399,7 +399,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 
@@ -495,7 +495,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 
@@ -574,10 +574,10 @@ private constructor(
              * version than the API, then the API may respond with new variants that the SDK is
              * unaware of.
              *
-             * @throws AnthropicInvalidDataException in the default implementation.
+             * @throws ApiInvalidDataException in the default implementation.
              */
             fun unknown(json: JsonValue?): T {
-                throw AnthropicInvalidDataException("Unknown Source: $json")
+                throw ApiInvalidDataException("Unknown Source: $json")
             }
         }
 

@@ -7,7 +7,7 @@ import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkRequired
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.anthropic.models.beta.BetaErrorResponse
 import com.anthropic.models.beta.messages.BetaMessage
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -42,7 +42,7 @@ private constructor(
      *
      * Must be unique for each request within the Message Batch.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun customId(): String = customId.getRequired("custom_id")
@@ -53,7 +53,7 @@ private constructor(
      * Contains a Message output if processing was successful, an error response if processing
      * failed, or the reason why processing was not attempted, such as cancellation or expiration.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun result(): BetaMessageBatchResult = result.getRequired("result")
@@ -244,7 +244,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 

@@ -11,7 +11,7 @@ import kotlinx.kmp.util.core.X
 import kotlinx.kmp.util.core.checkAllDelegation
 import kotlinx.kmp.util.core.checkAllDelegatorReadFunctionsAreTested
 import kotlinx.kmp.util.core.checkOneDelegationRead
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -174,7 +174,7 @@ internal class StructuredMessageTest {
         // this by making `validate()` on the delegate throw an exception.
         val input = JsonField.of(listOf(CONTENT))
         `when`(mockDelegate._content()).thenReturn(input)
-        `when`(mockDelegate.validate()).thenThrow(AnthropicInvalidDataException("test"))
+        `when`(mockDelegate.validate()).thenThrow(ApiInvalidDataException("test"))
         val output = delegator.isValid()
 
         // `isValid()` calls `validate()`, which has side effects explained in its test function.

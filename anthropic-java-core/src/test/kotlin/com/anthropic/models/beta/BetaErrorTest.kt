@@ -4,7 +4,7 @@ package com.anthropic.models.beta
 
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.jsonMapper
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -312,7 +312,7 @@ internal class BetaErrorTest {
     fun incompatibleJsonShapeDeserializesToUnknown(testCase: IncompatibleJsonShapeTestCase) {
         val betaError = jsonMapper().convertValue(testCase.value, jacksonTypeRef<BetaError>())
 
-        val e = assertThrows<AnthropicInvalidDataException> { betaError.validate() }
+        val e = assertThrows<ApiInvalidDataException> { betaError.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
 }

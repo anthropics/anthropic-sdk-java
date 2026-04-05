@@ -4,7 +4,7 @@ package com.anthropic.models.beta.messages
 
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.jsonMapper
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -266,7 +266,7 @@ internal class BetaMemoryTool20250818CommandTest {
                 .convertValue(testCase.value, jacksonTypeRef<BetaMemoryTool20250818Command>())
 
         val e =
-            assertThrows<AnthropicInvalidDataException> { betaMemoryTool20250818Command.validate() }
+            assertThrows<ApiInvalidDataException> { betaMemoryTool20250818Command.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
 }

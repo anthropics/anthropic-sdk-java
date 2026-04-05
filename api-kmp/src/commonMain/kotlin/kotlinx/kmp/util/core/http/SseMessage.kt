@@ -2,7 +2,7 @@
 
 package kotlinx.kmp.util.core.http
 
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotlinx.kmp.util.core.contentHash
@@ -45,14 +45,14 @@ private constructor(
         try {
             jsonMapper.readerFor(jacksonTypeRef<T>()).readValue(jsonNode)
         } catch (e: Exception) {
-            throw AnthropicInvalidDataException("Error reading response", e)
+            throw ApiInvalidDataException("Error reading response", e)
         }
 
     @PublishedApi internal val jsonNode by lazy {
         try {
             jsonMapper.readTree(data)
         } catch (e: Exception) {
-            throw AnthropicInvalidDataException("Error reading response", e)
+            throw ApiInvalidDataException("Error reading response", e)
         }
     }
 

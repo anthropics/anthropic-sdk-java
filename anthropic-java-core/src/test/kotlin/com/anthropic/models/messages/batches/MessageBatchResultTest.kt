@@ -4,7 +4,7 @@ package com.anthropic.models.messages.batches
 
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.jsonMapper
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.anthropic.models.ErrorResponse
 import com.anthropic.models.messages.CacheCreation
 import com.anthropic.models.messages.CitationCharLocation
@@ -284,7 +284,7 @@ internal class MessageBatchResultTest {
         val messageBatchResult =
             jsonMapper().convertValue(testCase.value, jacksonTypeRef<MessageBatchResult>())
 
-        val e = assertThrows<AnthropicInvalidDataException> { messageBatchResult.validate() }
+        val e = assertThrows<ApiInvalidDataException> { messageBatchResult.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
 }

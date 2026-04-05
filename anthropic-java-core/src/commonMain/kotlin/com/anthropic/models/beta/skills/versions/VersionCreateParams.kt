@@ -11,7 +11,7 @@ import kotlinx.kmp.util.core.checkKnown
 import kotlinx.kmp.util.core.http.Headers
 import kotlinx.kmp.util.core.http.QueryParams
 import kotlinx.kmp.util.core.toImmutable
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -51,7 +51,7 @@ private constructor(
      * All files must be in the same top-level directory and must include a SKILL.md file at the
      * root of that directory.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun files(): Optional<List<InputStream>> = body.files()
@@ -349,7 +349,7 @@ private constructor(
          * All files must be in the same top-level directory and must include a SKILL.md file at the
          * root of that directory.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun files(): Optional<List<InputStream>> = files.value.getOptional("files")
@@ -497,7 +497,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 

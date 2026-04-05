@@ -8,7 +8,7 @@ import kotlinx.kmp.util.core.http.Headers
 
 class RateLimitException
 private constructor(private val headers: Headers, private val body: JsonValue, cause: Throwable?) :
-    AnthropicServiceException("429: $body", cause) {
+    ApiServiceException("429: $body", cause) {
 
     override fun statusCode(): Int = 429
 

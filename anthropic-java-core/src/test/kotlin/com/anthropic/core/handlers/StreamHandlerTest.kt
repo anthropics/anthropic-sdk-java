@@ -2,7 +2,7 @@ package kotlinx.kmp.util.core.handlers
 
 import kotlinx.kmp.util.core.http.Headers
 import kotlinx.kmp.util.core.http.HttpResponse
-import kotlinx.kmp.util.core.errors.AnthropicIoException
+import kotlinx.kmp.util.core.errors.ApiIoException
 import java.io.IOException
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
@@ -52,7 +52,7 @@ internal class StreamHandlerTest {
         val handler = streamHandler<String> { _, lines -> lines.forEach {} }
         val streamResponse = handler.handle(httpResponseThrowing("a\nb\nc\n"))
 
-        val e = assertThrows<AnthropicIoException> { runBlocking { streamResponse.stream().collect {} } }
+        val e = assertThrows<ApiIoException> { runBlocking { streamResponse.stream().collect {} } }
         assertThat(e).hasMessage("Stream failed")
         assertThat(e).hasCauseInstanceOf(IOException::class.java)
     }

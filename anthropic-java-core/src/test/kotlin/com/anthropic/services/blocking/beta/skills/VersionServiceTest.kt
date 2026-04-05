@@ -16,7 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 internal class VersionServiceTest {
 
     @Disabled(
-        "multipartFormData does not handle List<InputStream>: AnthropicInvalidDataException: Unexpected JsonNode type in array: BINARY"
+        "multipartFormData does not handle List<InputStream>: ApiInvalidDataException: Unexpected JsonNode type in array: BINARY"
     )
     @Test
     fun create() {

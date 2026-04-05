@@ -2,7 +2,7 @@
 
 package com.anthropic.errors
 
-import kotlinx.kmp.util.core.errors.AnthropicServiceException
+import kotlinx.kmp.util.core.errors.ApiServiceException
 import kotlinx.kmp.util.core.errors.ErrorType
 
 /**
@@ -12,7 +12,7 @@ import kotlinx.kmp.util.core.errors.ErrorType
  * Extracted from `body.error.type`. Returns `null` if the body doesn't contain a structured error
  * with a type field.
  */
-fun AnthropicServiceException.errorType(): ErrorType? {
+fun ApiServiceException.errorType(): ErrorType? {
     val error = body().asObject()?.get("error") ?: return null
     val type = error.asObject()?.get("type") ?: return null
     return type.asString()?.let { ErrorType.of(it) }

@@ -3,7 +3,7 @@ package com.anthropic.helpers
 import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonObject
 import kotlinx.kmp.util.core.jsonMapper
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.anthropic.models.beta.messages.*
 import kotlin.jvm.optionals.getOrNull
 
@@ -101,7 +101,7 @@ class BetaMessageAccumulator private constructor() {
                                 BetaUsage.BetaIterationsUsageItems.ofCompaction(
                                     deltaIteration.asCompaction()
                                 )
-                            else -> throw AnthropicInvalidDataException("Unknown iteration type")
+                            else -> throw ApiInvalidDataException("Unknown iteration type")
                         }
                     }
                 )
@@ -232,7 +232,7 @@ class BetaMessageAccumulator private constructor() {
      *   output JSON conforming to that schema can be converted automatically back to an instance of
      *   that Java class by the [StructuredTextBlock].
      * @throws IllegalStateException If called before the last event has been accumulated.
-     * @throws AnthropicInvalidDataException If the JSON data cannot be parsed to an instance of the
+     * @throws ApiInvalidDataException If the JSON data cannot be parsed to an instance of the
      *   [outputType] class.
      */
     fun <T : Any> message(outputType: Class<T>) = StructuredMessage(outputType, message())
@@ -243,20 +243,20 @@ class BetaMessageAccumulator private constructor() {
      * calling [message].
      *
      * @return The given [event] for convenience, such as when chaining method calls.
-     * @throws AnthropicInvalidDataException If [accumulate] is called again after the final
+     * @throws ApiInvalidDataException If [accumulate] is called again after the final
      *   `message_stop` event has been accumulated. A [BetaMessageAccumulator] can only be used to
      *   accumulate a single [BetaMessage].
      */
     fun accumulate(event: BetaRawMessageStreamEvent): BetaRawMessageStreamEvent {
         if (message != null) {
-            throw AnthropicInvalidDataException("'message_stop' event already received.")
+            throw ApiInvalidDataException("'message_stop' event already received.")
         }
 
         event.accept(
             object : BetaRawMessageStreamEvent.Visitor<Unit> {
                 override fun visitMessageStart(messageStart: BetaRawMessageStartEvent) {
                     if (messageBuilder != null) {
-                        throw AnthropicInvalidDataException(
+                        throw ApiInvalidDataException(
                             "'message_start' event already received."
                         )
                     }
@@ -326,7 +326,7 @@ class BetaMessageAccumulator private constructor() {
                     val index = contentBlockStart.index()
 
                     if (messageContent[index] != null) {
-                        throw AnthropicInvalidDataException(
+                        throw ApiInvalidDataException(
                             "Content block already started for index $index."
                         )
                     }
@@ -426,7 +426,7 @@ class BetaMessageAccumulator private constructor() {
                     val index = contentBlockDelta.index()
                     val oldContentBlock =
                         messageContent[index]
-                            ?: throw AnthropicInvalidDataException(
+                            ?: throw ApiInvalidDataException(
                                 "Content block not started for index $index."
                             )
 
@@ -475,7 +475,7 @@ class BetaMessageAccumulator private constructor() {
                     // type is always just `content_block_stop`.
                     val oldContentBlock =
                         messageContent[index]
-                            ?: throw AnthropicInvalidDataException(
+                            ?: throw ApiInvalidDataException(
                                 "Content block not started for index $index."
                             )
 
@@ -489,7 +489,7 @@ class BetaMessageAccumulator private constructor() {
                         // Check that there was at least one delta, so a potentially-valid `input`
                         // JSON string was accumulated.
                         inputJson
-                            ?: throw AnthropicInvalidDataException(
+                            ?: throw ApiInvalidDataException(
                                 "Missing input JSON for index $index."
                             )
 
@@ -503,7 +503,7 @@ class BetaMessageAccumulator private constructor() {
                                 try {
                                     JSON_MAPPER.readValue(inputJson, JsonObject::class.java)
                                 } catch (e: Exception) {
-                                    throw AnthropicInvalidDataException(
+                                    throw ApiInvalidDataException(
                                         "Unable to parse tool parameter JSON from model. Please retry your request or adjust your prompt. Error: ${e}. JSON: $inputJson"
                                     )
                                 }
@@ -546,8 +546,8 @@ class BetaMessageAccumulator private constructor() {
     }
 
     private fun requireMessageBuilder() =
-        messageBuilder ?: throw AnthropicInvalidDataException("'message_start' event not received.")
+        messageBuilder ?: throw ApiInvalidDataException("'message_start' event not received.")
 
     private fun requireMessageUsage() =
-        messageUsage ?: throw AnthropicInvalidDataException("'message_start' event not received.")
+        messageUsage ?: throw ApiInvalidDataException("'message_start' event not received.")
 }

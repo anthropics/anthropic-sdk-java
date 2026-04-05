@@ -10,7 +10,7 @@ import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkKnown
 import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.toImmutable
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -40,7 +40,7 @@ private constructor(
     ) : this(data, firstId, hasMore, lastId, mutableMapOf())
 
     /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun data(): List<BetaModelInfo> = data.getRequired("data")
@@ -48,7 +48,7 @@ private constructor(
     /**
      * First ID in the `data` list. Can be used as the `before_id` for the previous page.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun firstId(): Optional<String> = firstId.getOptional("first_id")
@@ -56,7 +56,7 @@ private constructor(
     /**
      * Indicates if there are more results in the requested page direction.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun hasMore(): Boolean = hasMore.getRequired("has_more")
@@ -64,7 +64,7 @@ private constructor(
     /**
      * Last ID in the `data` list. Can be used as the `after_id` for the next page.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun lastId(): Optional<String> = lastId.getOptional("last_id")
@@ -268,7 +268,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 

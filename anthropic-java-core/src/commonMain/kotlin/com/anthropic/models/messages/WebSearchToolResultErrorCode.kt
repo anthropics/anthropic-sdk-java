@@ -4,7 +4,7 @@ package com.anthropic.models.messages
 
 import kotlinx.kmp.util.core.Enum
 import kotlinx.kmp.util.core.JsonField
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 
 class WebSearchToolResultErrorCode
@@ -96,7 +96,7 @@ private constructor(private val value: JsonField<String>) : Enum {
      * Use the [value] method instead if you're uncertain the value is always known and don't want
      * to throw for the unknown case.
      *
-     * @throws AnthropicInvalidDataException if this class instance's value is a not a known member.
+     * @throws ApiInvalidDataException if this class instance's value is a not a known member.
      */
     fun known(): Known =
         when (this) {
@@ -107,7 +107,7 @@ private constructor(private val value: JsonField<String>) : Enum {
             QUERY_TOO_LONG -> Known.QUERY_TOO_LONG
             REQUEST_TOO_LARGE -> Known.REQUEST_TOO_LARGE
             else ->
-                throw AnthropicInvalidDataException("Unknown WebSearchToolResultErrorCode: $value")
+                throw ApiInvalidDataException("Unknown WebSearchToolResultErrorCode: $value")
         }
 
     /**
@@ -116,11 +116,11 @@ private constructor(private val value: JsonField<String>) : Enum {
      * This differs from the [toString] method because that method is primarily for debugging and
      * generally doesn't throw.
      *
-     * @throws AnthropicInvalidDataException if this class instance's value does not have the
+     * @throws ApiInvalidDataException if this class instance's value does not have the
      *   expected primitive type.
      */
     fun asString(): String =
-        _value().asString() ?: throw AnthropicInvalidDataException("Value is not a String")
+        _value().asString() ?: throw ApiInvalidDataException("Value is not a String")
 
     private var validated: Boolean = false
 
@@ -137,7 +137,7 @@ private constructor(private val value: JsonField<String>) : Enum {
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 

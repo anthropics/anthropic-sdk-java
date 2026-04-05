@@ -4,7 +4,7 @@ package com.anthropic.models.beta.messages
 
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.jsonMapper
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -122,7 +122,7 @@ internal class BetaThinkingConfigParamTest {
         val betaThinkingConfigParam =
             jsonMapper().convertValue(testCase.value, jacksonTypeRef<BetaThinkingConfigParam>())
 
-        val e = assertThrows<AnthropicInvalidDataException> { betaThinkingConfigParam.validate() }
+        val e = assertThrows<ApiInvalidDataException> { betaThinkingConfigParam.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
 }

@@ -4,7 +4,7 @@ package com.anthropic.models.messages
 
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.jsonMapper
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -136,7 +136,7 @@ internal class ToolChoiceTest {
     fun incompatibleJsonShapeDeserializesToUnknown(testCase: IncompatibleJsonShapeTestCase) {
         val toolChoice = jsonMapper().convertValue(testCase.value, jacksonTypeRef<ToolChoice>())
 
-        val e = assertThrows<AnthropicInvalidDataException> { toolChoice.validate() }
+        val e = assertThrows<ApiInvalidDataException> { toolChoice.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
 }

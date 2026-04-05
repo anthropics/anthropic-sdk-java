@@ -8,7 +8,7 @@ import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkRequired
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -42,14 +42,14 @@ private constructor(
     /**
      * Information about context management strategies applied during the request
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun contextManagement(): Optional<BetaContextManagementResponse> =
         contextManagement.getOptional("context_management")
 
     /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun delta(): Delta = delta.getRequired("delta")
@@ -81,7 +81,7 @@ private constructor(
      * Total input tokens in a request is the summation of `input_tokens`,
      * `cache_creation_input_tokens`, and `cache_read_input_tokens`.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun usage(): BetaMessageDeltaUsage = usage.getRequired("usage")
@@ -279,7 +279,7 @@ private constructor(
         delta().validate()
         _type().let {
             if (it != JsonValue.from("message_delta")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+                throw ApiInvalidDataException("'type' is invalid, received $it")
             }
         }
         usage().validate()
@@ -290,7 +290,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 
@@ -334,7 +334,7 @@ private constructor(
         /**
          * Information about the container used in the request (for the code execution tool)
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun container(): Optional<BetaContainer> = container.getOptional("container")
@@ -342,20 +342,20 @@ private constructor(
         /**
          * Structured information about a refusal.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun stopDetails(): Optional<BetaRefusalStopDetails> =
             stopDetails.getOptional("stop_details")
 
         /**
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun stopReason(): Optional<BetaStopReason> = stopReason.getOptional("stop_reason")
 
         /**
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun stopSequence(): Optional<String> = stopSequence.getOptional("stop_sequence")
@@ -576,7 +576,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 

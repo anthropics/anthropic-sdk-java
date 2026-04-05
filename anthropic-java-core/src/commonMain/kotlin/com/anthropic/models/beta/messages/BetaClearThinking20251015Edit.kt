@@ -12,7 +12,7 @@ import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.allMaxBy
 import kotlinx.kmp.util.core.getOrThrow
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -57,7 +57,7 @@ private constructor(
      * Number of most recent assistant turns to keep thinking blocks for. Older turns will have
      * their thinking blocks removed.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun keep(): Optional<Keep> = keep.getOptional("keep")
@@ -179,7 +179,7 @@ private constructor(
 
         _type().let {
             if (it != JsonValue.from("clear_thinking_20251015")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+                throw ApiInvalidDataException("'type' is invalid, received $it")
             }
         }
         keep().ifPresent { it.validate() }
@@ -190,7 +190,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 
@@ -272,7 +272,7 @@ private constructor(
                     override fun visitAll(all: JsonValue) {
                         all.let {
                             if (it != JsonValue.from("all")) {
-                                throw AnthropicInvalidDataException(
+                                throw ApiInvalidDataException(
                                     "'all' is invalid, received $it"
                                 )
                             }
@@ -287,7 +287,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 
@@ -363,10 +363,10 @@ private constructor(
              * that doesn't match any known variant. For example, if the SDK is on an older version
              * than the API, then the API may respond with new variants that the SDK is unaware of.
              *
-             * @throws AnthropicInvalidDataException in the default implementation.
+             * @throws ApiInvalidDataException in the default implementation.
              */
             fun unknown(json: JsonValue?): T {
-                throw AnthropicInvalidDataException("Unknown Keep: $json")
+                throw ApiInvalidDataException("Unknown Keep: $json")
             }
         }
 

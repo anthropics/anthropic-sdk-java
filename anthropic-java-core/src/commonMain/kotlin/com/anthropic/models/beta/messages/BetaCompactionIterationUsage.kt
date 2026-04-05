@@ -8,7 +8,7 @@ import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkRequired
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -61,7 +61,7 @@ private constructor(
     /**
      * Breakdown of cached tokens by TTL
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun cacheCreation(): Optional<BetaCacheCreation> = cacheCreation.getOptional("cache_creation")
@@ -69,7 +69,7 @@ private constructor(
     /**
      * The number of input tokens used to create the cache entry.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun cacheCreationInputTokens(): Long =
@@ -78,7 +78,7 @@ private constructor(
     /**
      * The number of input tokens read from the cache.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun cacheReadInputTokens(): Long = cacheReadInputTokens.getRequired("cache_read_input_tokens")
@@ -86,7 +86,7 @@ private constructor(
     /**
      * The number of input tokens which were used.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun inputTokens(): Long = inputTokens.getRequired("input_tokens")
@@ -94,7 +94,7 @@ private constructor(
     /**
      * The number of output tokens which were used.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun outputTokens(): Long = outputTokens.getRequired("output_tokens")
@@ -355,7 +355,7 @@ private constructor(
         outputTokens()
         _type().let {
             if (it != JsonValue.from("compaction")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+                throw ApiInvalidDataException("'type' is invalid, received $it")
             }
         }
         validated = true
@@ -365,7 +365,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 

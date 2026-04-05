@@ -5,7 +5,7 @@ import kotlinx.kmp.util.core.http.HttpResponse
 import kotlinx.kmp.util.core.http.HttpResponse.Handler
 import kotlinx.kmp.util.core.http.PhantomReachableClosingStreamResponse
 import kotlinx.kmp.util.core.http.StreamResponse
-import kotlinx.kmp.util.core.errors.AnthropicIoException
+import kotlinx.kmp.util.core.errors.ApiIoException
 
 fun <T> streamHandler(
     block: suspend SequenceScope<T>.(response: HttpResponse, lines: Sequence<String>) -> Unit
@@ -22,7 +22,7 @@ fun <T> streamHandler(
                     }
                 } catch (e: Exception) {
                     if (e is java.io.IOException) {
-                        throw AnthropicIoException("Stream failed", e)
+                        throw ApiIoException("Stream failed", e)
                     }
                     throw e
                 }

@@ -8,7 +8,7 @@ import kotlinx.kmp.util.core.BaseSerializer
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.allMaxBy
 import kotlinx.kmp.util.core.getOrThrow
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
 import com.fasterxml.jackson.databind.JsonNode
@@ -95,7 +95,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 
@@ -184,10 +184,10 @@ private constructor(
          * is on an older version than the API, then the API may respond with new variants that the
          * SDK is unaware of.
          *
-         * @throws AnthropicInvalidDataException in the default implementation.
+         * @throws ApiInvalidDataException in the default implementation.
          */
         fun unknown(json: JsonValue?): T {
-            throw AnthropicInvalidDataException(
+            throw ApiInvalidDataException(
                 "Unknown CodeExecutionToolResultBlockContent: $json"
             )
         }

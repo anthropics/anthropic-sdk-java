@@ -14,7 +14,7 @@ import kotlinx.kmp.util.core.allMaxBy
 import kotlinx.kmp.util.core.checkKnown
 import kotlinx.kmp.util.core.getOrThrow
 import kotlinx.kmp.util.core.toImmutable
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -74,7 +74,7 @@ private constructor(
      * Minimum number of tokens that must be cleared when triggered. Context will only be modified
      * if at least this many tokens can be removed.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun clearAtLeast(): Optional<BetaInputTokensClearAtLeast> =
@@ -83,7 +83,7 @@ private constructor(
     /**
      * Whether to clear all tool inputs (bool) or specific tool inputs to clear (list)
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun clearToolInputs(): Optional<ClearToolInputs> =
@@ -92,7 +92,7 @@ private constructor(
     /**
      * Tool names whose uses are preserved from clearing
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun excludeTools(): Optional<List<String>> = excludeTools.getOptional("exclude_tools")
@@ -100,7 +100,7 @@ private constructor(
     /**
      * Number of tool uses to retain in the conversation
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun keep(): Optional<BetaToolUsesKeep> = keep.getOptional("keep")
@@ -108,7 +108,7 @@ private constructor(
     /**
      * Condition that triggers the context management strategy
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     * @throws ApiInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun trigger(): Optional<Trigger> = trigger.getOptional("trigger")
@@ -396,7 +396,7 @@ private constructor(
 
         _type().let {
             if (it != JsonValue.from("clear_tool_uses_20250919")) {
-                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+                throw ApiInvalidDataException("'type' is invalid, received $it")
             }
         }
         clearAtLeast().ifPresent { it.validate() }
@@ -411,7 +411,7 @@ private constructor(
         try {
             validate()
             true
-        } catch (e: AnthropicInvalidDataException) {
+        } catch (e: ApiInvalidDataException) {
             false
         }
 
@@ -480,7 +480,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 
@@ -544,10 +544,10 @@ private constructor(
              * is on an older version than the API, then the API may respond with new variants that
              * the SDK is unaware of.
              *
-             * @throws AnthropicInvalidDataException in the default implementation.
+             * @throws ApiInvalidDataException in the default implementation.
              */
             fun unknown(json: JsonValue?): T {
-                throw AnthropicInvalidDataException("Unknown ClearToolInputs: $json")
+                throw ApiInvalidDataException("Unknown ClearToolInputs: $json")
             }
         }
 
@@ -654,7 +654,7 @@ private constructor(
             try {
                 validate()
                 true
-            } catch (e: AnthropicInvalidDataException) {
+            } catch (e: ApiInvalidDataException) {
                 false
             }
 
@@ -721,10 +721,10 @@ private constructor(
              * version than the API, then the API may respond with new variants that the SDK is
              * unaware of.
              *
-             * @throws AnthropicInvalidDataException in the default implementation.
+             * @throws ApiInvalidDataException in the default implementation.
              */
             fun unknown(json: JsonValue?): T {
-                throw AnthropicInvalidDataException("Unknown Trigger: $json")
+                throw ApiInvalidDataException("Unknown Trigger: $json")
             }
         }
 

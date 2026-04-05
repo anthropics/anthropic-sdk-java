@@ -4,7 +4,7 @@ import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonNull
 import kotlinx.kmp.util.core.JsonString
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.anthropic.models.beta.messages.*
 import com.anthropic.models.beta.messages.BetaRawContentBlockStartEvent.ContentBlock
 import com.anthropic.models.messages.Model
@@ -286,7 +286,7 @@ internal class BetaMessageAccumulatorTest {
         val accumulator = BetaMessageAccumulator.create()
 
         assertThatThrownBy { accumulator.accumulate(messageStopEvent()) }
-            .isExactlyInstanceOf(AnthropicInvalidDataException::class.java)
+            .isExactlyInstanceOf(ApiInvalidDataException::class.java)
             .hasMessage("'message_start' event not received.")
     }
 
@@ -295,7 +295,7 @@ internal class BetaMessageAccumulatorTest {
         val accumulator = BetaMessageAccumulator.create()
 
         assertThatThrownBy { accumulator.accumulate(messageDeltaEvent()) }
-            .isExactlyInstanceOf(AnthropicInvalidDataException::class.java)
+            .isExactlyInstanceOf(ApiInvalidDataException::class.java)
             .hasMessage("'message_start' event not received.")
     }
 
@@ -306,7 +306,7 @@ internal class BetaMessageAccumulatorTest {
         accumulator.accumulate(messageStartEvent())
 
         assertThatThrownBy { accumulator.accumulate(messageStartEvent()) }
-            .isExactlyInstanceOf(AnthropicInvalidDataException::class.java)
+            .isExactlyInstanceOf(ApiInvalidDataException::class.java)
             .hasMessage("'message_start' event already received.")
     }
 
@@ -318,7 +318,7 @@ internal class BetaMessageAccumulatorTest {
         accumulator.accumulate(messageStopEvent())
 
         assertThatThrownBy { accumulator.accumulate(messageStopEvent()) }
-            .isExactlyInstanceOf(AnthropicInvalidDataException::class.java)
+            .isExactlyInstanceOf(ApiInvalidDataException::class.java)
             .hasMessage("'message_stop' event already received.")
     }
 
@@ -330,7 +330,7 @@ internal class BetaMessageAccumulatorTest {
         accumulator.accumulate(messageStopEvent())
 
         assertThatThrownBy { accumulator.accumulate(messageStartEvent()) }
-            .isExactlyInstanceOf(AnthropicInvalidDataException::class.java)
+            .isExactlyInstanceOf(ApiInvalidDataException::class.java)
             .hasMessage("'message_stop' event already received.")
     }
 
@@ -342,7 +342,7 @@ internal class BetaMessageAccumulatorTest {
         accumulator.accumulate(messageStopEvent())
 
         assertThatThrownBy { accumulator.accumulate(messageDeltaEvent()) }
-            .isExactlyInstanceOf(AnthropicInvalidDataException::class.java)
+            .isExactlyInstanceOf(ApiInvalidDataException::class.java)
             .hasMessage("'message_stop' event already received.")
     }
 
@@ -537,7 +537,7 @@ internal class BetaMessageAccumulatorTest {
         accumulator.accumulate(textContentBlockDeltaEvent(0L, "0-TWO."))
 
         assertThatThrownBy { accumulator.accumulate(textContentBlockStartEvent(0L, "0-ONE.")) }
-            .isInstanceOf(AnthropicInvalidDataException::class.java)
+            .isInstanceOf(ApiInvalidDataException::class.java)
             .hasMessage("Content block already started for index 0.")
     }
 
@@ -549,7 +549,7 @@ internal class BetaMessageAccumulatorTest {
         accumulator.accumulate(textContentBlockStartEvent(0L, "0-ONE."))
 
         assertThatThrownBy { accumulator.accumulate(contentBlockStopEvent(1L)) }
-            .isInstanceOf(AnthropicInvalidDataException::class.java)
+            .isInstanceOf(ApiInvalidDataException::class.java)
             .hasMessage("Content block not started for index 1.")
     }
 
@@ -561,7 +561,7 @@ internal class BetaMessageAccumulatorTest {
         accumulator.accumulate(textContentBlockStartEvent(0L, "0-ONE."))
 
         assertThatThrownBy { accumulator.accumulate(textContentBlockDeltaEvent(1L, "1-TWO.")) }
-            .isInstanceOf(AnthropicInvalidDataException::class.java)
+            .isInstanceOf(ApiInvalidDataException::class.java)
             .hasMessage("Content block not started for index 1.")
     }
 
@@ -627,7 +627,7 @@ internal class BetaMessageAccumulatorTest {
         // There must be at least one `content_block_delta` event before the end of the block to
         // define the input JSON string.
         assertThatThrownBy { accumulator.accumulate(contentBlockStopEvent(1L)) }
-            .isInstanceOf(AnthropicInvalidDataException::class.java)
+            .isInstanceOf(ApiInvalidDataException::class.java)
             .hasMessage("Missing input JSON for index 1.")
     }
 
@@ -757,9 +757,9 @@ internal class BetaMessageAccumulatorTest {
         accumulator.accumulate(toolUseContentBlockDeltaEvent(1L, "{invalid\""))
         accumulator.accumulate(toolUseContentBlockDeltaEvent(1L, "json}"))
 
-        // Should throw AnthropicInvalidDataException when trying to parse invalid JSON
+        // Should throw ApiInvalidDataException when trying to parse invalid JSON
         assertThatThrownBy { accumulator.accumulate(contentBlockStopEvent(1L)) }
-            .isInstanceOf(AnthropicInvalidDataException::class.java)
+            .isInstanceOf(ApiInvalidDataException::class.java)
             .hasMessageContaining("Unable to parse tool parameter JSON from model")
             .hasMessageContaining("JSON: {invalid\"json}")
     }

@@ -16,7 +16,7 @@ import kotlinx.kmp.util.core.JsonSchemaLocalValidation
 import kotlinx.kmp.util.core.apiJson
 import kotlinx.kmp.util.core.fromJsonNode
 
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.anthropic.models.beta.messages.BetaJsonOutputFormat
 import com.anthropic.models.beta.messages.BetaTool
 import com.anthropic.models.messages.JsonOutputFormat
@@ -225,7 +225,7 @@ internal fun extractSchema(type: Class<*>): ObjectNode {
  * Creates an instance of a Java class using data from a JSON string. The JSON data should conform
  * to the JSON schema previously extracted from the Java class.
  *
- * @throws AnthropicInvalidDataException If the JSON data cannot be parsed to an instance of the
+ * @throws ApiInvalidDataException If the JSON data cannot be parsed to an instance of the
  *   [outputType] class.
  */
 internal fun <T> outputTypeFromJson(json: String, outputType: Class<T>): T =
@@ -235,7 +235,7 @@ internal fun <T> outputTypeFromJson(json: String, outputType: Class<T>): T =
         // The JSON document is included in the exception message to aid diagnosis of the problem.
         // It is the responsibility of the SDK user to ensure that exceptions that may contain
         // sensitive data are not exposed in logs.
-        throw AnthropicInvalidDataException("Error parsing JSON: $json", e)
+        throw ApiInvalidDataException("Error parsing JSON: $json", e)
     }
 
 /**

@@ -4,7 +4,7 @@ package com.anthropic.models.messages
 
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.jsonMapper
-import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -433,7 +433,7 @@ internal class RawMessageStreamEventTest {
         val rawMessageStreamEvent =
             jsonMapper().convertValue(testCase.value, jacksonTypeRef<RawMessageStreamEvent>())
 
-        val e = assertThrows<AnthropicInvalidDataException> { rawMessageStreamEvent.validate() }
+        val e = assertThrows<ApiInvalidDataException> { rawMessageStreamEvent.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
 }
