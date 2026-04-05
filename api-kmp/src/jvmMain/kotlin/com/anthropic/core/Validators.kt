@@ -952,4 +952,163 @@ object Validators {
         put("direction", languageToDirection(lang))
         put("exemplarChars", languageToExemplarChars(lang))
     }
+
+    // === Measure — ICU CLDR + PostGIS + GeoJSON Interop ===
+
+    /** Wire Measure → ICU com.ibm.icu.util.Measure via MeasureUnit.forIdentifier(). */
+    fun toIcuMeasure(m: Measure): com.ibm.icu.util.Measure {
+        val unit = com.ibm.icu.util.MeasureUnit.forIdentifier(m.unit)
+            ?: com.ibm.icu.util.MeasureUnit.forIdentifier("length-meter")
+        return com.ibm.icu.util.Measure(m.value_, unit)
+    }
+
+    /** ICU com.ibm.icu.util.Measure → Wire Measure. */
+    fun fromIcuMeasure(icu: com.ibm.icu.util.Measure): Measure = Measure(
+        value_ = icu.number.toDouble(),
+        unit = icu.unit.identifier,
+    )
+
+    /** Format Measure for display via ICU MeasureFormat (locale-aware). */
+    fun formatMeasure(
+        m: Measure,
+        locale: com.ibm.icu.util.ULocale = com.ibm.icu.util.ULocale.getDefault(),
+        width: com.ibm.icu.text.MeasureFormat.FormatWidth = com.ibm.icu.text.MeasureFormat.FormatWidth.SHORT,
+    ): String {
+        val fmt = com.ibm.icu.text.MeasureFormat.getInstance(locale, width)
+        return fmt.format(toIcuMeasure(m))
+    }
+
+    /** Parse CLDR unit identifier → validate. "length-meter" OK, "foo-bar" false. */
+    fun validateMeasureUnit(identifier: String): Boolean = try {
+        com.ibm.icu.util.MeasureUnit.forIdentifier(identifier) != null
+    } catch (_: Exception) { false }
+
+    /** All CLDR measurement systems (metric, ussystem, uksystem). */
+    fun measureUnitSystem(m: Measure): String = when {
+        m.system.isNotBlank() -> m.system
+        m.unit.startsWith("length-") && m.unit.contains(Regex("foot|inch|mile|yard")) -> "ussystem"
+        m.unit.startsWith("mass-") && m.unit.contains(Regex("pound|ounce|stone")) -> "ussystem"
+        else -> "metric"
+    }
+
+    /**
+     * Convert Measure to another CLDR unit.
+     * Stub: full conversion needs ICU UnitsConverter (ICU 72+ internal API).
+     * Callers should use formatMeasure() for locale-aware display.
+     */
+    fun convertMeasure(m: Measure, toUnit: String): Measure {
+        com.ibm.icu.util.MeasureUnit.forIdentifier(m.unit) ?: return m
+        com.ibm.icu.util.MeasureUnit.forIdentifier(toUnit) ?: return m
+        return Measure(value_ = m.value_, unit = toUnit)
+    }
+
+    // === Geo encoding — unified dispatcher for PostGIS, GeoJSON, WKT, WKB ===
+
+    /** Geo output formats. */
+    enum class GeoFormat { POSTGIS_WKT, GEOJSON, WKT, WKB_HEX, LAT_LON, GEO_URI }
+
+    /**
+     * Encode a LatLng (+optional altitude + measure) to any geo format.
+     *
+     * - POSTGIS_WKT: "POINT M (lon lat m)" or "POINT ZM (lon lat alt m)"
+     * - GEOJSON: `{"type":"Point","coordinates":[lon,lat,alt,m]}`
+     * - WKT: "POINT (lon lat)"
+     * - LAT_LON: "lat,lon"
+     * - GEO_URI: RFC 5870 "geo:lat,lon,alt;u=measure"
+     */
+    fun toGeo(
+        point: com.google.type.LatLng,
+        format: GeoFormat = GeoFormat.GEOJSON,
+        altitude: Double? = null,
+        measure: Measure? = null,
+    ): String {
+        val lon = point.longitude
+        val lat = point.latitude
+        return when (format) {
+            GeoFormat.POSTGIS_WKT -> when {
+                altitude != null && measure != null -> "POINT ZM ($lon $lat $altitude ${measure.value_})"
+                measure != null -> "POINT M ($lon $lat ${measure.value_})"
+                altitude != null -> "POINT Z ($lon $lat $altitude)"
+                else -> "POINT ($lon $lat)"
+            }
+            GeoFormat.GEOJSON -> {
+                val coords = buildList {
+                    add(lon); add(lat)
+                    altitude?.let { add(it) }
+                    measure?.let { add(it.value_) }
+                }
+                "{\"type\":\"Point\",\"coordinates\":[${coords.joinToString(",")}]}"
+            }
+            GeoFormat.WKT -> "POINT ($lon $lat)"
+            GeoFormat.WKB_HEX -> "01010000${java.lang.Double.doubleToLongBits(lon).toString(16)}${java.lang.Double.doubleToLongBits(lat).toString(16)}"
+            GeoFormat.LAT_LON -> "$lat,$lon"
+            GeoFormat.GEO_URI -> buildString {
+                append("geo:$lat,$lon")
+                altitude?.let { append(",$it") }
+                measure?.let { append(";u=${it.value_}") }
+            }
+        }
+    }
+
+    /**
+     * Decode a geo string to LatLng + optional altitude + optional Measure.
+     * Auto-detects format from input (WKT, GeoJSON, "lat,lon", "geo:" URI).
+     * Returns Triple(LatLng, altitude?, Measure?).
+     */
+    fun fromGeo(
+        encoded: String,
+        unit: String = "length-meter",
+    ): Triple<com.google.type.LatLng, Double?, Measure?>? {
+        val trimmed = encoded.trim()
+        return when {
+            // PostGIS/WKT
+            trimmed.startsWith("POINT", ignoreCase = true) -> {
+                val nums = Regex("""[-+]?\d+\.?\d*""").findAll(trimmed).map { it.value.toDouble() }.toList()
+                if (nums.size < 2) return null
+                val hasM = trimmed.contains(" M", ignoreCase = true) || trimmed.contains("ZM", ignoreCase = true)
+                val hasZ = trimmed.contains(" Z", ignoreCase = true) || trimmed.contains("ZM", ignoreCase = true)
+                val ll = com.google.type.LatLng(longitude = nums[0], latitude = nums[1])
+                val alt = if (hasZ && nums.size >= 3) nums[2] else null
+                val measureVal = when {
+                    hasZ && hasM && nums.size >= 4 -> nums[3]
+                    hasM && !hasZ && nums.size >= 3 -> nums[2]
+                    else -> null
+                }
+                Triple(ll, alt, measureVal?.let { Measure(value_ = it, unit = unit) })
+            }
+            // GeoJSON
+            trimmed.startsWith("{") && trimmed.contains("\"coordinates\"") -> {
+                val coords = Regex("""\[([-+\d.,\s]+)\]""").find(trimmed)?.groupValues?.get(1)
+                    ?.split(",")?.mapNotNull { it.trim().toDoubleOrNull() } ?: return null
+                if (coords.size < 2) return null
+                val ll = com.google.type.LatLng(longitude = coords[0], latitude = coords[1])
+                val alt = coords.getOrNull(2)
+                val measureVal = coords.getOrNull(3)
+                Triple(ll, alt, measureVal?.let { Measure(value_ = it, unit = unit) })
+            }
+            // RFC 5870 geo: URI
+            trimmed.startsWith("geo:", ignoreCase = true) -> {
+                val body = trimmed.removePrefix("geo:").removePrefix("GEO:")
+                val (coordStr, paramStr) = body.split(";", limit = 2).let { it[0] to it.getOrNull(1) }
+                val parts = coordStr.split(",").mapNotNull { it.trim().toDoubleOrNull() }
+                if (parts.size < 2) return null
+                val ll = com.google.type.LatLng(latitude = parts[0], longitude = parts[1])
+                val alt = parts.getOrNull(2)
+                val measureVal = paramStr?.let { p ->
+                    Regex("""u=([\d.]+)""").find(p)?.groupValues?.get(1)?.toDoubleOrNull()
+                }
+                Triple(ll, alt, measureVal?.let { Measure(value_ = it, unit = unit) })
+            }
+            // Plain "lat,lon" or "lat;lon"
+            else -> {
+                val parts = trimmed.split(Regex("[,;]")).mapNotNull { it.trim().toDoubleOrNull() }
+                if (parts.size < 2) return null
+                Triple(
+                    com.google.type.LatLng(latitude = parts[0], longitude = parts[1]),
+                    parts.getOrNull(2),
+                    null,
+                )
+            }
+        }
+    }
 }

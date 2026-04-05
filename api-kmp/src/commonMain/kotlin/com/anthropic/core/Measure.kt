@@ -31,9 +31,22 @@ import kotlin.Suppress
 import okio.ByteString
 
 /**
- * Measure — value + unit (UCUM/CLDR compatible)
+ * Measure — ICU CLDR + PostGIS + GeoJSON compatible quantity.
+ *
+ * Unit follows CLDR unit identifier format: "length-meter", "mass-kilogram",
+ * "speed-kilometer-per-hour", "digital-megabyte", "duration-second".
+ * See: https://unicode.org/reports/tr35/tr35-general.html#Unit_Identifiers
+ *
+ * Interop:
+ * - ICU: com.ibm.icu.util.Measure(Number, MeasureUnit) via MeasureUnit.forIdentifier()
+ * - PostGIS: M-coordinate in geometry (ST_MakePointM, ST_M)
+ * - GeoJSON: position array \[lon, lat, alt, m\] — the 4th element
+ * - UCUM: parseable via ucum-java for medical/scientific units
  */
 public class Measure(
+  /**
+   * numeric value
+   */
   @field:WireField(
     tag = 1,
     adapter = "com.squareup.wire.ProtoAdapter#DOUBLE",
@@ -42,6 +55,9 @@ public class Measure(
     schemaIndex = 0,
   )
   public val value_: Double = 0.0,
+  /**
+   * CLDR unit identifier: "length-meter"
+   */
   @field:WireField(
     tag = 2,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
@@ -49,6 +65,37 @@ public class Measure(
     schemaIndex = 1,
   )
   public val unit: String = "",
+  /**
+   * "metric" | "ussystem" | "uksystem" | "ucum"
+   */
+  @field:WireField(
+    tag = 3,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 2,
+  )
+  public val system: String = "",
+  /**
+   * localized name (optional, e.g., "kilometers")
+   */
+  @field:WireField(
+    tag = 4,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    jsonName = "displayName",
+    schemaIndex = 3,
+  )
+  public val display_name: String = "",
+  /**
+   * ± range (for scientific measurements)
+   */
+  @field:WireField(
+    tag = 5,
+    adapter = "com.squareup.wire.ProtoAdapter#DOUBLE",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 4,
+  )
+  public val uncertainty: Double = 0.0,
   unknownFields: ByteString = ByteString.EMPTY,
 ) : Message<Measure, Nothing>(ADAPTER, unknownFields) {
   @Deprecated(
@@ -63,6 +110,9 @@ public class Measure(
     if (unknownFields != other.unknownFields) return false
     if (value_ != other.value_) return false
     if (unit != other.unit) return false
+    if (system != other.system) return false
+    if (display_name != other.display_name) return false
+    if (uncertainty != other.uncertainty) return false
     return true
   }
 
@@ -72,6 +122,9 @@ public class Measure(
       result = unknownFields.hashCode()
       result = result * 37 + value_.hashCode()
       result = result * 37 + unit.hashCode()
+      result = result * 37 + system.hashCode()
+      result = result * 37 + display_name.hashCode()
+      result = result * 37 + uncertainty.hashCode()
       super.hashCode = result
     }
     return result
@@ -81,14 +134,20 @@ public class Measure(
     val result = mutableListOf<String>()
     result += """value_=$value_"""
     result += """unit=${sanitize(unit)}"""
+    result += """system=${sanitize(system)}"""
+    result += """display_name=${sanitize(display_name)}"""
+    result += """uncertainty=$uncertainty"""
     return result.joinToString(prefix = "Measure{", separator = ", ", postfix = "}")
   }
 
   public fun copy(
     value_: Double = this.value_,
     unit: String = this.unit,
+    system: String = this.system,
+    display_name: String = this.display_name,
+    uncertainty: Double = this.uncertainty,
     unknownFields: ByteString = this.unknownFields,
-  ): Measure = Measure(value_, unit, unknownFields)
+  ): Measure = Measure(value_, unit, system, display_name, uncertainty, unknownFields)
 
   public companion object {
     @JvmField
@@ -108,6 +167,15 @@ public class Measure(
         if (value.unit != "") {
           size += ProtoAdapter.STRING.encodedSizeWithTag(2, value.unit)
         }
+        if (value.system != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(3, value.system)
+        }
+        if (value.display_name != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(4, value.display_name)
+        }
+        if (!value.uncertainty.equals(0.0)) {
+          size += ProtoAdapter.DOUBLE.encodedSizeWithTag(5, value.uncertainty)
+        }
         return size
       }
 
@@ -118,11 +186,29 @@ public class Measure(
         if (value.unit != "") {
           ProtoAdapter.STRING.encodeWithTag(writer, 2, value.unit)
         }
+        if (value.system != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 3, value.system)
+        }
+        if (value.display_name != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 4, value.display_name)
+        }
+        if (!value.uncertainty.equals(0.0)) {
+          ProtoAdapter.DOUBLE.encodeWithTag(writer, 5, value.uncertainty)
+        }
         writer.writeBytes(value.unknownFields)
       }
 
       override fun encode(writer: ReverseProtoWriter, `value`: Measure) {
         writer.writeBytes(value.unknownFields)
+        if (!value.uncertainty.equals(0.0)) {
+          ProtoAdapter.DOUBLE.encodeWithTag(writer, 5, value.uncertainty)
+        }
+        if (value.display_name != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 4, value.display_name)
+        }
+        if (value.system != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 3, value.system)
+        }
         if (value.unit != "") {
           ProtoAdapter.STRING.encodeWithTag(writer, 2, value.unit)
         }
@@ -134,16 +220,25 @@ public class Measure(
       override fun decode(reader: ProtoReader): Measure {
         var value_: Double = 0.0
         var unit: String = ""
+        var system: String = ""
+        var display_name: String = ""
+        var uncertainty: Double = 0.0
         val unknownFields = reader.forEachTag { tag ->
           when (tag) {
             1 -> value_ = ProtoAdapter.DOUBLE.decode(reader)
             2 -> unit = ProtoAdapter.STRING.decode(reader)
+            3 -> system = ProtoAdapter.STRING.decode(reader)
+            4 -> display_name = ProtoAdapter.STRING.decode(reader)
+            5 -> uncertainty = ProtoAdapter.DOUBLE.decode(reader)
             else -> reader.readUnknownField(tag)
           }
         }
         return Measure(
           value_ = value_,
           unit = unit,
+          system = system,
+          display_name = display_name,
+          uncertainty = uncertainty,
           unknownFields = unknownFields
         )
       }

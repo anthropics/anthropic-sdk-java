@@ -99,10 +99,23 @@ message GeoIp {
     google.type.LatLng location = 11;                 // google.type.LatLng
 }
 
-// Measure — value + unit (UCUM/CLDR compatible)
+// Measure — ICU CLDR + PostGIS + GeoJSON compatible quantity.
+//
+// Unit follows CLDR unit identifier format: "length-meter", "mass-kilogram",
+// "speed-kilometer-per-hour", "digital-megabyte", "duration-second".
+// See: https://unicode.org/reports/tr35/tr35-general.html#Unit_Identifiers
+//
+// Interop:
+// - ICU: com.ibm.icu.util.Measure(Number, MeasureUnit) via MeasureUnit.forIdentifier()
+// - PostGIS: M-coordinate in geometry (ST_MakePointM, ST_M)
+// - GeoJSON: position array [lon, lat, alt, m] — the 4th element
+// - UCUM: parseable via ucum-java for medical/scientific units
 message Measure {
-    double value = 1;
-    string unit = 2;
+    double value = 1;                   // numeric value
+    string unit = 2;                    // CLDR unit identifier: "length-meter"
+    string system = 3;                  // "metric" | "ussystem" | "uksystem" | "ucum"
+    string display_name = 4;            // localized name (optional, e.g., "kilometers")
+    double uncertainty = 5;             // ± range (for scientific measurements)
 }
 
 // PatchEvent — universal mutation event (SSE + WebSocket sync)
