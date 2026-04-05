@@ -127,7 +127,7 @@ private class RetryClient(
     private fun setRetryCountHeader(request: HttpRequest, retries: Int): HttpRequest =
         request.toBuilder().replaceHeaders("X-Stainless-Retry-Count", retries.toString()).build()
 
-    private fun idempotencyKey(): String = "stainless-retry-${Uuid.random()}"
+    private fun idempotencyKey(): String = "stainless-java-retry-${Uuid.random()}"
 
     private fun maybeAddIdempotencyHeader(request: HttpRequest): HttpRequest {
         if (idempotencyHeader == null || request.headers.names().contains(idempotencyHeader)) return request

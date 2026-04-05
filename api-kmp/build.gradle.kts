@@ -110,6 +110,7 @@ kotlin {
                 implementation("io.github.serpro69:kotlin-faker:1.16.0")  // multi-locale test fixtures
                 implementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
                 implementation("org.junit.jupiter:junit-jupiter-params:5.9.3")
+                implementation("org.assertj:assertj-core:3.26.3")
                 implementation("com.github.tomakehurst:wiremock-jre8:2.35.2")
                 implementation("io.ktor:ktor-server-core:3.4.2")
                 implementation("io.ktor:ktor-server-cio:3.4.2")
