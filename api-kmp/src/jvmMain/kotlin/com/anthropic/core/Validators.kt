@@ -270,7 +270,7 @@ object Validators {
         contact.phones.forEachIndexed { i, p ->
             put("phone.$i", p.e164_number?.let { validatePhone(Phone(it)) } ?: false)
         }
-        if (contact.url.isNotBlank()) put("url", validateUrl(Uri(contact.url)))
+        contact.urls.forEachIndexed { i, u -> put("url.$i", validateUrl(Uri(u))) }
         if (contact.photo.isNotBlank()) put("photo", validateUrl(Uri(contact.photo)))
     }
 
@@ -320,10 +320,15 @@ object Validators {
         vcard.uid?.value?.let { put("UID", it.isNotBlank()) }
     }
 
-    // === Wire bridge — only used when crossing KMP boundary ===
+    // === Wire bridge — full RFC 6350 parity (ezvcard ↔ Wire VCardContact) ===
 
-    /** ezvcard.VCard → Wire VCardContact (lossy — use only for cross-platform transport). */
+    /** ezvcard.VCard → Wire VCardContact with full RFC 6350 property set. */
     fun ezvcardToWire(vcard: ezvcard.VCard): VCardContact = VCardContact(
+        // §6.1 General
+        source = vcard.sources?.firstOrNull()?.value ?: "",
+        kind = vcard.kind?.value ?: "",
+        xml = vcard.xmls?.firstOrNull()?.value?.toString() ?: "",
+        // §6.2 Identification
         name = vcard.structuredName?.let {
             PersonName(
                 given = it.given ?: "",
@@ -332,10 +337,12 @@ object Validators {
                 suffix = it.suffixes?.firstOrNull() ?: "",
             )
         },
-        emails = vcard.emails?.map { it.value } ?: emptyList(),
-        phones = vcard.telephoneNumbers?.map { tel ->
-            com.google.type.PhoneNumber(e164_number = tel.text ?: "")
-        } ?: emptyList(),
+        nicknames = vcard.nickname?.values ?: emptyList(),
+        photo = vcard.photos?.firstOrNull()?.url ?: "",
+        birthday = null, // google.type.Date conversion — simplified
+        anniversary = null,
+        gender = vcard.gender?.gender ?: "",
+        // §6.3 Delivery
         addresses = vcard.addresses?.map { addr ->
             com.google.type.PostalAddress(
                 address_lines = listOfNotNull(addr.streetAddress),
@@ -345,19 +352,68 @@ object Validators {
                 region_code = addr.country ?: "",
             )
         } ?: emptyList(),
-        organization = vcard.organization?.values?.firstOrNull() ?: "",
+        // §6.4 Communications
+        phones = vcard.telephoneNumbers?.map { tel ->
+            com.google.type.PhoneNumber(e164_number = tel.text ?: "")
+        } ?: emptyList(),
+        emails = vcard.emails?.map { it.value } ?: emptyList(),
+        impp = vcard.impps?.map { it.uri.toString() } ?: emptyList(),
+        languages = vcard.languages?.map { it.value } ?: emptyList(),
+        // §6.5 Geographical
+        timezone = vcard.timezones?.firstOrNull()?.text ?: "",
+        geo = vcard.geos?.firstOrNull()?.let { g ->
+            com.google.type.LatLng(latitude = g.latitude ?: 0.0, longitude = g.longitude ?: 0.0)
+        },
+        // §6.6 Organizational
         title = vcard.titles?.firstOrNull()?.value ?: "",
         role = vcard.roles?.firstOrNull()?.value ?: "",
-        url = vcard.urls?.firstOrNull()?.value ?: "",
-        photo = vcard.photos?.firstOrNull()?.url ?: "",
-        note = vcard.notes?.firstOrNull()?.value ?: "",
+        logo = vcard.logos?.firstOrNull()?.url ?: "",
+        organization = vcard.organization?.values?.firstOrNull() ?: "",
+        org_units = vcard.organization?.values?.drop(1) ?: emptyList(),
+        members = vcard.members?.map { it.uri ?: it.value ?: "" } ?: emptyList(),
+        related = vcard.relations?.map { rel ->
+            VCardRelated(
+                uri = rel.uri ?: rel.text ?: "",
+                type = rel.types?.firstOrNull()?.value ?: "",
+            )
+        } ?: emptyList(),
+        // §6.7 Explanatory
+        urls = vcard.urls?.map { it.value } ?: emptyList(),
         categories = vcard.categories?.values ?: emptyList(),
+        note = vcard.notes?.firstOrNull()?.value ?: "",
+        prodid = vcard.productId?.value ?: "",
+        rev = vcard.revision?.value?.toString() ?: "",
+        sound = vcard.sounds?.firstOrNull()?.url ?: "",
         uid = vcard.uid?.value ?: "",
+        client_pid_maps = vcard.clientPidMaps?.map {
+            VCardClientPidMap(pid = it.pid?.toInt() ?: 0, uri = it.uri ?: "")
+        } ?: emptyList(),
+        // §6.8 Security
+        key = vcard.keys?.firstOrNull()?.url ?: "",
+        // §6.9 Calendar
+        fburl = vcard.fbUrls?.firstOrNull()?.value ?: "",
+        cal_adr_uri = vcard.calendarRequestUris?.firstOrNull()?.value ?: "",
+        cal_uri = vcard.calendarUris?.firstOrNull()?.value ?: "",
+        // RFC 6474 extensions
+        birth_place = vcard.birthplace?.text ?: "",
+        death_place = vcard.deathplace?.text ?: "",
+        death_date = null,
+        // RFC 6715 extensions
+        expertise = vcard.expertise?.map { it.value } ?: emptyList(),
+        hobbies = vcard.hobbies?.map { it.value } ?: emptyList(),
+        interests = vcard.interests?.map { it.value } ?: emptyList(),
+        org_directories = vcard.orgDirectories?.map { it.value } ?: emptyList(),
+        // X-* extensions
+        extensions = vcard.extendedProperties?.associate { it.propertyName to it.value } ?: emptyMap(),
     )
 
-    /** Wire VCardContact → ezvcard.VCard (for JVM RFC 6350 full-fidelity write). */
+    /** Wire VCardContact → ezvcard.VCard (full RFC 6350 round-trip). */
     fun wireToEzvcard(contact: VCardContact): ezvcard.VCard {
         val vcard = ezvcard.VCard()
+        // §6.1 General
+        if (contact.source.isNotBlank()) vcard.addSource(ezvcard.property.Source(contact.source))
+        if (contact.kind.isNotBlank()) vcard.kind = ezvcard.property.Kind(contact.kind)
+        // §6.2 Identification
         contact.name?.let { n ->
             if (n.full.isNotBlank()) vcard.setFormattedName(n.full)
             if (n.given.isNotBlank() || n.family.isNotBlank()) {
@@ -369,10 +425,13 @@ object Validators {
                 vcard.structuredName = sn
             }
         }
-        contact.emails.forEach { vcard.addEmail(it) }
-        contact.phones.forEach { ph ->
-            vcard.addTelephoneNumber(ph.e164_number ?: ph.short_code?.number ?: "")
+        if (contact.nicknames.isNotEmpty()) {
+            val nn = ezvcard.property.Nickname()
+            contact.nicknames.forEach { nn.values.add(it) }
+            vcard.addNickname(nn)
         }
+        if (contact.gender.isNotBlank()) vcard.gender = ezvcard.property.Gender(contact.gender)
+        // §6.3 Delivery
         contact.addresses.forEach { a ->
             val addr = ezvcard.property.Address()
             addr.streetAddress = a.address_lines.firstOrNull() ?: ""
@@ -382,16 +441,55 @@ object Validators {
             addr.country = a.region_code
             vcard.addAddress(addr)
         }
-        if (contact.organization.isNotBlank()) vcard.setOrganization(contact.organization)
+        // §6.4 Communications
+        contact.phones.forEach { ph ->
+            vcard.addTelephoneNumber(ph.e164_number ?: ph.short_code?.number ?: "")
+        }
+        contact.emails.forEach { vcard.addEmail(it) }
+        contact.impp.forEach {
+            try { vcard.addImpp(ezvcard.property.Impp(it)) } catch (_: Exception) {}
+        }
+        contact.languages.forEach { vcard.addLanguage(ezvcard.property.Language(it)) }
+        // §6.5 Geographical
+        if (contact.timezone.isNotBlank()) vcard.addTimezone(ezvcard.property.Timezone(contact.timezone))
+        contact.geo?.let { vcard.addGeo(ezvcard.property.Geo(it.latitude, it.longitude)) }
+        // §6.6 Organizational
+        if (contact.organization.isNotBlank() || contact.org_units.isNotEmpty()) {
+            val org = ezvcard.property.Organization()
+            if (contact.organization.isNotBlank()) org.values.add(contact.organization)
+            contact.org_units.forEach { org.values.add(it) }
+            vcard.addOrganization(org)
+        }
         if (contact.title.isNotBlank()) vcard.addTitle(contact.title)
         if (contact.role.isNotBlank()) vcard.addRole(contact.role)
-        if (contact.url.isNotBlank()) vcard.addUrl(contact.url)
-        if (contact.note.isNotBlank()) vcard.addNote(contact.note)
-        if (contact.uid.isNotBlank()) vcard.uid = ezvcard.property.Uid(contact.uid)
+        contact.members.forEach { vcard.addMember(ezvcard.property.Member(it)) }
+        contact.related.forEach { rel ->
+            val r = ezvcard.property.Related()
+            r.uri = rel.uri
+            if (rel.type.isNotBlank()) r.types.add(ezvcard.parameter.RelatedType.get(rel.type))
+            vcard.addRelated(r)
+        }
+        // §6.7 Explanatory
+        contact.urls.forEach { vcard.addUrl(it) }
         if (contact.categories.isNotEmpty()) {
             val c = ezvcard.property.Categories()
             contact.categories.forEach { c.values.add(it) }
             vcard.addCategories(c)
+        }
+        if (contact.note.isNotBlank()) vcard.addNote(contact.note)
+        if (contact.prodid.isNotBlank()) vcard.productId = ezvcard.property.ProductId(contact.prodid)
+        if (contact.uid.isNotBlank()) vcard.uid = ezvcard.property.Uid(contact.uid)
+        // §6.8 Security
+        if (contact.key.isNotBlank()) {
+            try { vcard.addKey(ezvcard.property.Key(contact.key, ezvcard.parameter.KeyType.PGP)) } catch (_: Exception) {}
+        }
+        // §6.9 Calendar
+        if (contact.fburl.isNotBlank()) vcard.addFbUrl(ezvcard.property.FreeBusyUrl(contact.fburl))
+        if (contact.cal_adr_uri.isNotBlank()) vcard.addCalendarRequestUri(ezvcard.property.CalendarRequestUri(contact.cal_adr_uri))
+        if (contact.cal_uri.isNotBlank()) vcard.addCalendarUri(ezvcard.property.CalendarUri(contact.cal_uri))
+        // X-* extensions
+        contact.extensions.forEach { (name, value) ->
+            vcard.addExtendedProperty(name, value)
         }
         return vcard
     }

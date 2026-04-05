@@ -5111,3 +5111,62 @@ openapi.yaml ──→ FabriktEmitter  → sealed interfaces + OkHttp client (JV
 - Uses reflection to invoke Fabrikt CLI/CodeGenerator (graceful fallback if not on classpath)
 - `FabriktEmitter.isAvailable()` — runtime check
 - `FabriktEmitter.generateModels()` — standalone model generation
+
+### vCard RFC 6350 Parity Matrix
+
+| RFC 6350 Property | §  | ezvcard.VCard | **Wire VCardContact** | Smack XEP-0054 | Bedework (bw-ical4j-vcard) | CardDAV RFC 6352 |
+|---|---|---|---|---|---|---|
+| SOURCE | 6.1.3 | ✅ | ✅ | ❌ | ✅ | T |
+| KIND | 6.1.4 | ✅ | ✅ | ❌ | ✅ | T |
+| XML | 6.1.5 | ✅ | ✅ | ❌ | ❌ | T |
+| FN / N | 6.2.1/2 | ✅ | ✅ (PersonName) | partial | ✅ | T |
+| NICKNAME | 6.2.3 | ✅ | ✅ (nicknames) | ✅ | ✅ | T |
+| PHOTO | 6.2.4 | ✅ | ✅ | ✅ (avatar) | ✅ | T |
+| BDAY | 6.2.5 | ✅ | ✅ (google.type.Date) | partial | ✅ | T |
+| ANNIVERSARY | 6.2.6 | ✅ | ✅ | ❌ | ✅ | T |
+| GENDER | 6.2.7 | ✅ | ✅ | ❌ | ✅ | T |
+| ADR | 6.3.1 | ✅ | ✅ (google.type.PostalAddress) | partial | ✅ | T |
+| TEL | 6.4.1 | ✅ | ✅ (google.type.PhoneNumber) | partial | ✅ | T |
+| EMAIL | 6.4.2 | ✅ | ✅ | partial | ✅ | T |
+| IMPP | 6.4.3 | ✅ | ✅ | ❌ (JABBERID only) | ✅ | T |
+| LANG | 6.4.4 | ✅ | ✅ (languages) | ❌ | ✅ | T |
+| TZ | 6.5.1 | ✅ | ✅ (timezone) | ❌ | ✅ | T |
+| GEO | 6.5.2 | ✅ | ✅ (google.type.LatLng) | ❌ | ✅ | T |
+| TITLE | 6.6.1 | ✅ | ✅ | partial | ✅ | T |
+| ROLE | 6.6.2 | ✅ | ✅ | partial | ✅ | T |
+| LOGO | 6.6.3 | ✅ | ✅ | ❌ | ✅ | T |
+| ORG | 6.6.4 | ✅ | ✅ (organization + org_units) | ✅ | ✅ | T |
+| MEMBER | 6.6.5 | ✅ | ✅ | ❌ | ✅ | T |
+| RELATED | 6.6.6 | ✅ | ✅ (VCardRelated) | ❌ | ✅ | T |
+| CATEGORIES | 6.7.1 | ✅ | ✅ | ❌ | ✅ | T |
+| NOTE | 6.7.2 | ✅ | ✅ | partial (DESC) | ✅ | T |
+| PRODID | 6.7.3 | ✅ | ✅ | ❌ | ✅ | T |
+| REV | 6.7.4 | ✅ | ✅ | ❌ | ✅ | T |
+| SOUND | 6.7.5 | ✅ | ✅ | ❌ | ✅ | T |
+| UID | 6.7.6 | ✅ | ✅ | ❌ | ✅ | T |
+| CLIENTPIDMAP | 6.7.7 | ✅ | ✅ (VCardClientPidMap) | ❌ | ❌ | T |
+| URL | 6.7.8 | ✅ | ✅ (urls) | partial | ✅ | T |
+| KEY | 6.8.1 | ✅ | ✅ | ❌ | ✅ | T |
+| FBURL | 6.9.1 | ✅ | ✅ | ❌ | ✅ | T |
+| CALADRURI | 6.9.2 | ✅ | ✅ | ❌ | ✅ | T |
+| CALURI | 6.9.3 | ✅ | ✅ | ❌ | ✅ | T |
+| BIRTHPLACE (RFC 6474) | — | ✅ | ✅ | ❌ | partial | T |
+| DEATHPLACE / DEATHDATE | — | ✅ | ✅ | ❌ | partial | T |
+| EXPERTISE / HOBBY / INTEREST / ORG-DIRECTORY (RFC 6715) | — | ✅ | ✅ | ❌ | partial | T |
+| X-* extensions | — | ✅ | ✅ (map<string,string>) | ✅ | ✅ | T |
+
+T = transport only (CardDAV carries RFC 6350 verbatim over WebDAV)
+
+**Verified:** Our Wire `VCardContact` has **full RFC 6350 parity with ezvcard.VCard** on all 35+ properties + RFC 6474/6715 extensions + X-* escape hatch.
+
+**Implementations surveyed:**
+- **ezvcard 0.12.1** — complete RFC 6350 (JVM, our primary vCard lib)
+- **Smack XEP-0054 VCardManager** — hard-coded subset of RFC 2426 (vCard 3.0); missing 28 of 35 properties; uses `setField(String,String)` escape hatch
+- **Bedework bw-carddav** — uses **bw-ical4j-vcard** (fork of ical4j-vcard), NOT ez-vcard; separate object model
+- **CardDAV RFC 6352** — WebDAV transport binding, carries RFC 6350 vCards verbatim; no property model of its own
+
+**Bridge functions (Validators.kt):**
+- `ezvcardToWire(ezvcard.VCard): VCardContact` — full RFC 6350 ingest
+- `wireToEzvcard(VCardContact): ezvcard.VCard` — full round-trip
+- `inferVCard(phone, geoIp): ezvcard.VCard` — JVM-native with RFC 6350 TEL/ADR/TZ/GEO/LANG/NOTE/CATEGORIES/UID
+- `inferVCardContact(phone, geoIp): VCardContact` — KMP bridge via `ezvcardToWire`

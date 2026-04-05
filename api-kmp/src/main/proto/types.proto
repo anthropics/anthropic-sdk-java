@@ -23,21 +23,90 @@ message PersonName {
     string middle = 5;
 }
 
-// RFC 6350 vCard Contact — uses google.type where available
+// RFC 6350 vCard Contact — full property set parity with ezvcard.VCard.
+// Uses google.type where available (PostalAddress, PhoneNumber, Date, LatLng).
 message VCardContact {
-    PersonName name = 1;
-    repeated string emails = 2;                      // RFC 5321 email
-    repeated google.type.PhoneNumber phones = 3;     // google.type.PhoneNumber
-    repeated google.type.PostalAddress addresses = 4;// google.type.PostalAddress (CLDR)
-    string organization = 5;
-    string title = 6;
-    string role = 7;
-    string url = 8;
-    string photo = 9;
-    google.type.Date birthday = 10;                  // google.type.Date
-    string note = 11;
-    repeated string categories = 12;
-    string uid = 13;
+    // §6.1 General Properties
+    string source = 1;                               // SOURCE — vCard origin URI
+    string kind = 2;                                 // KIND — individual/group/org/location
+    string xml = 3;                                  // XML — extension XML element
+
+    // §6.2 Identification Properties
+    PersonName name = 10;                            // FN + N (formatted + structured)
+    repeated string nicknames = 11;                  // NICKNAME
+    string photo = 12;                               // PHOTO — URI or data URL
+    google.type.Date birthday = 13;                  // BDAY
+    google.type.Date anniversary = 14;               // ANNIVERSARY
+    string gender = 15;                              // GENDER — M/F/O/N/U + identity
+
+    // §6.3 Delivery Addressing Properties
+    repeated google.type.PostalAddress addresses = 20; // ADR
+
+    // §6.4 Communications Properties
+    repeated google.type.PhoneNumber phones = 30;    // TEL
+    repeated string emails = 31;                     // EMAIL (RFC 5321)
+    repeated string impp = 32;                       // IMPP — instant messaging URIs (xmpp:, sip:)
+    repeated string languages = 33;                  // LANG — preferred communication languages
+
+    // §6.5 Geographical Properties
+    string timezone = 40;                            // TZ — IANA timezone ID
+    google.type.LatLng geo = 41;                     // GEO — lat/lng coordinates
+
+    // §6.6 Organizational Properties
+    string title = 50;                               // TITLE — job title
+    string role = 51;                                // ROLE — function/role
+    string logo = 52;                                // LOGO — org logo URI
+    string organization = 53;                        // ORG — organization name
+    repeated string org_units = 54;                  // ORG sub-units
+    repeated string members = 55;                    // MEMBER — for KIND=group, vCard UIDs
+    repeated VCardRelated related = 56;              // RELATED — relationship to other vCards
+
+    // §6.7 Explanatory Properties
+    repeated string urls = 59;                       // URL — RFC 6350 §6.7.8
+    repeated string categories = 60;                 // CATEGORIES — tags
+    string note = 61;                                // NOTE — freeform
+    string prodid = 62;                              // PRODID — creating software ID
+    string rev = 63;                                 // REV — last revision (ISO 8601)
+    string sound = 64;                               // SOUND — pronunciation audio URI
+    string uid = 65;                                 // UID — unique identifier (urn:uuid:...)
+    repeated VCardClientPidMap client_pid_maps = 66; // CLIENTPIDMAP
+
+    // §6.8 Security Properties
+    string key = 70;                                 // KEY — public key URI or data
+
+    // §6.9 Calendar Properties
+    string fburl = 80;                               // FBURL — free/busy URL
+    string cal_adr_uri = 81;                         // CALADRURI — calendar address (mailto:)
+    string cal_uri = 82;                             // CALURI — calendar URI (caldav)
+
+    // RFC 6474 extensions (place of birth/death)
+    string birth_place = 90;                         // BIRTHPLACE
+    string death_place = 91;                         // DEATHPLACE
+    google.type.Date death_date = 92;                // DEATHDATE
+
+    // RFC 6715 extensions (professional)
+    repeated string expertise = 100;                 // EXPERTISE
+    repeated string hobbies = 101;                   // HOBBY
+    repeated string interests = 102;                 // INTEREST
+    repeated string org_directories = 103;           // ORG-DIRECTORY
+
+    // Escape hatch for non-standard (X-*) extensions
+    map<string, string> extensions = 200;            // X-* properties
+}
+
+// RFC 6350 §6.6.6 RELATED property
+message VCardRelated {
+    string uri = 1;                                  // URI or text (other vCard UID)
+    string type = 2;                                 // contact/acquaintance/friend/met/
+                                                     // co-worker/colleague/co-resident/neighbor/
+                                                     // child/parent/sibling/spouse/kin/muse/
+                                                     // crush/date/sweetheart/me/agent/emergency
+}
+
+// RFC 6350 §6.7.7 CLIENTPIDMAP property
+message VCardClientPidMap {
+    int32 pid = 1;                                   // source identifier
+    string uri = 2;                                  // globally unique URI
 }
 
 // RFC 5545 iCalendar Event — google.protobuf.Timestamp for dates

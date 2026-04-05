@@ -8,6 +8,7 @@
 package com.anthropic.core
 
 import com.google.type.Date
+import com.google.type.LatLng
 import com.google.type.PhoneNumber
 import com.google.type.PostalAddress
 import com.squareup.wire.FieldEncoding
@@ -33,124 +34,501 @@ import kotlin.Nothing
 import kotlin.String
 import kotlin.Suppress
 import kotlin.collections.List
+import kotlin.collections.Map
+import kotlin.lazy
 import okio.ByteString
 
 /**
- * RFC 6350 vCard Contact — uses google.type where available
+ * RFC 6350 vCard Contact — full property set parity with ezvcard.VCard.
+ * Uses google.type where available (PostalAddress, PhoneNumber, Date, LatLng).
  */
 public class VCardContact(
+  /**
+   * §6.1 General Properties
+   * SOURCE — vCard origin URI
+   */
   @field:WireField(
     tag = 1,
-    adapter = "com.anthropic.core.PersonName#ADAPTER",
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.OMIT_IDENTITY,
     schemaIndex = 0,
   )
-  public val name: PersonName? = null,
-  emails: List<String> = emptyList(),
-  phones: List<PhoneNumber> = emptyList(),
-  addresses: List<PostalAddress> = emptyList(),
-  @field:WireField(
-    tag = 5,
-    adapter = "com.squareup.wire.ProtoAdapter#STRING",
-    label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 4,
-  )
-  public val organization: String = "",
-  @field:WireField(
-    tag = 6,
-    adapter = "com.squareup.wire.ProtoAdapter#STRING",
-    label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 5,
-  )
-  public val title: String = "",
-  @field:WireField(
-    tag = 7,
-    adapter = "com.squareup.wire.ProtoAdapter#STRING",
-    label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 6,
-  )
-  public val role: String = "",
-  @field:WireField(
-    tag = 8,
-    adapter = "com.squareup.wire.ProtoAdapter#STRING",
-    label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 7,
-  )
-  public val url: String = "",
-  @field:WireField(
-    tag = 9,
-    adapter = "com.squareup.wire.ProtoAdapter#STRING",
-    label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 8,
-  )
-  public val photo: String = "",
+  public val source: String = "",
   /**
-   * google.type.Date
-   */
-  @field:WireField(
-    tag = 10,
-    adapter = "com.google.type.Date#ADAPTER",
-    label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 9,
-  )
-  public val birthday: Date? = null,
-  @field:WireField(
-    tag = 11,
-    adapter = "com.squareup.wire.ProtoAdapter#STRING",
-    label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 10,
-  )
-  public val note: String = "",
-  categories: List<String> = emptyList(),
-  @field:WireField(
-    tag = 13,
-    adapter = "com.squareup.wire.ProtoAdapter#STRING",
-    label = WireField.Label.OMIT_IDENTITY,
-    schemaIndex = 12,
-  )
-  public val uid: String = "",
-  unknownFields: ByteString = ByteString.EMPTY,
-) : Message<VCardContact, Nothing>(ADAPTER, unknownFields) {
-  /**
-   * RFC 5321 email
+   * KIND — individual/group/org/location
    */
   @field:WireField(
     tag = 2,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
-    label = WireField.Label.REPEATED,
+    label = WireField.Label.OMIT_IDENTITY,
     schemaIndex = 1,
   )
-  public val emails: List<String> = immutableCopyOf("emails", emails)
-
+  public val kind: String = "",
   /**
-   * google.type.PhoneNumber
+   * XML — extension XML element
    */
   @field:WireField(
     tag = 3,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 2,
+  )
+  public val xml: String = "",
+  /**
+   * §6.2 Identification Properties
+   * FN + N (formatted + structured)
+   */
+  @field:WireField(
+    tag = 10,
+    adapter = "com.anthropic.core.PersonName#ADAPTER",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 3,
+  )
+  public val name: PersonName? = null,
+  nicknames: List<String> = emptyList(),
+  /**
+   * PHOTO — URI or data URL
+   */
+  @field:WireField(
+    tag = 12,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 5,
+  )
+  public val photo: String = "",
+  /**
+   * BDAY
+   */
+  @field:WireField(
+    tag = 13,
+    adapter = "com.google.type.Date#ADAPTER",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 6,
+  )
+  public val birthday: Date? = null,
+  /**
+   * ANNIVERSARY
+   */
+  @field:WireField(
+    tag = 14,
+    adapter = "com.google.type.Date#ADAPTER",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 7,
+  )
+  public val anniversary: Date? = null,
+  /**
+   * GENDER — M/F/O/N/U + identity
+   */
+  @field:WireField(
+    tag = 15,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 8,
+  )
+  public val gender: String = "",
+  addresses: List<PostalAddress> = emptyList(),
+  phones: List<PhoneNumber> = emptyList(),
+  emails: List<String> = emptyList(),
+  impp: List<String> = emptyList(),
+  languages: List<String> = emptyList(),
+  /**
+   * §6.5 Geographical Properties
+   * TZ — IANA timezone ID
+   */
+  @field:WireField(
+    tag = 40,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 14,
+  )
+  public val timezone: String = "",
+  /**
+   * GEO — lat/lng coordinates
+   */
+  @field:WireField(
+    tag = 41,
+    adapter = "com.google.type.LatLng#ADAPTER",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 15,
+  )
+  public val geo: LatLng? = null,
+  /**
+   * §6.6 Organizational Properties
+   * TITLE — job title
+   */
+  @field:WireField(
+    tag = 50,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 16,
+  )
+  public val title: String = "",
+  /**
+   * ROLE — function/role
+   */
+  @field:WireField(
+    tag = 51,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 17,
+  )
+  public val role: String = "",
+  /**
+   * LOGO — org logo URI
+   */
+  @field:WireField(
+    tag = 52,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 18,
+  )
+  public val logo: String = "",
+  /**
+   * ORG — organization name
+   */
+  @field:WireField(
+    tag = 53,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 19,
+  )
+  public val organization: String = "",
+  org_units: List<String> = emptyList(),
+  members: List<String> = emptyList(),
+  related: List<VCardRelated> = emptyList(),
+  urls: List<String> = emptyList(),
+  categories: List<String> = emptyList(),
+  /**
+   * NOTE — freeform
+   */
+  @field:WireField(
+    tag = 61,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 25,
+  )
+  public val note: String = "",
+  /**
+   * PRODID — creating software ID
+   */
+  @field:WireField(
+    tag = 62,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 26,
+  )
+  public val prodid: String = "",
+  /**
+   * REV — last revision (ISO 8601)
+   */
+  @field:WireField(
+    tag = 63,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 27,
+  )
+  public val rev: String = "",
+  /**
+   * SOUND — pronunciation audio URI
+   */
+  @field:WireField(
+    tag = 64,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 28,
+  )
+  public val sound: String = "",
+  /**
+   * UID — unique identifier (urn:uuid:...)
+   */
+  @field:WireField(
+    tag = 65,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 29,
+  )
+  public val uid: String = "",
+  client_pid_maps: List<VCardClientPidMap> = emptyList(),
+  /**
+   * §6.8 Security Properties
+   * KEY — public key URI or data
+   */
+  @field:WireField(
+    tag = 70,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 31,
+  )
+  public val key: String = "",
+  /**
+   * §6.9 Calendar Properties
+   * FBURL — free/busy URL
+   */
+  @field:WireField(
+    tag = 80,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 32,
+  )
+  public val fburl: String = "",
+  /**
+   * CALADRURI — calendar address (mailto:)
+   */
+  @field:WireField(
+    tag = 81,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    jsonName = "calAdrUri",
+    schemaIndex = 33,
+  )
+  public val cal_adr_uri: String = "",
+  /**
+   * CALURI — calendar URI (caldav)
+   */
+  @field:WireField(
+    tag = 82,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    jsonName = "calUri",
+    schemaIndex = 34,
+  )
+  public val cal_uri: String = "",
+  /**
+   * RFC 6474 extensions (place of birth/death)
+   * BIRTHPLACE
+   */
+  @field:WireField(
+    tag = 90,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    jsonName = "birthPlace",
+    schemaIndex = 35,
+  )
+  public val birth_place: String = "",
+  /**
+   * DEATHPLACE
+   */
+  @field:WireField(
+    tag = 91,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    jsonName = "deathPlace",
+    schemaIndex = 36,
+  )
+  public val death_place: String = "",
+  /**
+   * DEATHDATE
+   */
+  @field:WireField(
+    tag = 92,
+    adapter = "com.google.type.Date#ADAPTER",
+    label = WireField.Label.OMIT_IDENTITY,
+    jsonName = "deathDate",
+    schemaIndex = 37,
+  )
+  public val death_date: Date? = null,
+  expertise: List<String> = emptyList(),
+  hobbies: List<String> = emptyList(),
+  interests: List<String> = emptyList(),
+  org_directories: List<String> = emptyList(),
+  extensions: Map<String, String> = emptyMap(),
+  unknownFields: ByteString = ByteString.EMPTY,
+) : Message<VCardContact, Nothing>(ADAPTER, unknownFields) {
+  /**
+   * NICKNAME
+   */
+  @field:WireField(
+    tag = 11,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.REPEATED,
+    schemaIndex = 4,
+  )
+  public val nicknames: List<String> = immutableCopyOf("nicknames", nicknames)
+
+  /**
+   * §6.3 Delivery Addressing Properties
+   * ADR
+   */
+  @field:WireField(
+    tag = 20,
+    adapter = "com.google.type.PostalAddress#ADAPTER",
+    label = WireField.Label.REPEATED,
+    schemaIndex = 9,
+  )
+  public val addresses: List<PostalAddress> = immutableCopyOf("addresses", addresses)
+
+  /**
+   * §6.4 Communications Properties
+   * TEL
+   */
+  @field:WireField(
+    tag = 30,
     adapter = "com.google.type.PhoneNumber#ADAPTER",
     label = WireField.Label.REPEATED,
-    schemaIndex = 2,
+    schemaIndex = 10,
   )
   public val phones: List<PhoneNumber> = immutableCopyOf("phones", phones)
 
   /**
-   * google.type.PostalAddress (CLDR)
+   * EMAIL (RFC 5321)
    */
   @field:WireField(
-    tag = 4,
-    adapter = "com.google.type.PostalAddress#ADAPTER",
-    label = WireField.Label.REPEATED,
-    schemaIndex = 3,
-  )
-  public val addresses: List<PostalAddress> = immutableCopyOf("addresses", addresses)
-
-  @field:WireField(
-    tag = 12,
+    tag = 31,
     adapter = "com.squareup.wire.ProtoAdapter#STRING",
     label = WireField.Label.REPEATED,
     schemaIndex = 11,
   )
+  public val emails: List<String> = immutableCopyOf("emails", emails)
+
+  /**
+   * IMPP — instant messaging URIs (xmpp:, sip:)
+   */
+  @field:WireField(
+    tag = 32,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.REPEATED,
+    schemaIndex = 12,
+  )
+  public val impp: List<String> = immutableCopyOf("impp", impp)
+
+  /**
+   * LANG — preferred communication languages
+   */
+  @field:WireField(
+    tag = 33,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.REPEATED,
+    schemaIndex = 13,
+  )
+  public val languages: List<String> = immutableCopyOf("languages", languages)
+
+  /**
+   * ORG sub-units
+   */
+  @field:WireField(
+    tag = 54,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.REPEATED,
+    jsonName = "orgUnits",
+    schemaIndex = 20,
+  )
+  public val org_units: List<String> = immutableCopyOf("org_units", org_units)
+
+  /**
+   * MEMBER — for KIND=group, vCard UIDs
+   */
+  @field:WireField(
+    tag = 55,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.REPEATED,
+    schemaIndex = 21,
+  )
+  public val members: List<String> = immutableCopyOf("members", members)
+
+  /**
+   * RELATED — relationship to other vCards
+   */
+  @field:WireField(
+    tag = 56,
+    adapter = "com.anthropic.core.VCardRelated#ADAPTER",
+    label = WireField.Label.REPEATED,
+    schemaIndex = 22,
+  )
+  public val related: List<VCardRelated> = immutableCopyOf("related", related)
+
+  /**
+   * §6.7 Explanatory Properties
+   * URL — RFC 6350 §6.7.8
+   */
+  @field:WireField(
+    tag = 59,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.REPEATED,
+    schemaIndex = 23,
+  )
+  public val urls: List<String> = immutableCopyOf("urls", urls)
+
+  /**
+   * CATEGORIES — tags
+   */
+  @field:WireField(
+    tag = 60,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.REPEATED,
+    schemaIndex = 24,
+  )
   public val categories: List<String> = immutableCopyOf("categories", categories)
+
+  /**
+   * CLIENTPIDMAP
+   */
+  @field:WireField(
+    tag = 66,
+    adapter = "com.anthropic.core.VCardClientPidMap#ADAPTER",
+    label = WireField.Label.REPEATED,
+    jsonName = "clientPidMaps",
+    schemaIndex = 30,
+  )
+  public val client_pid_maps: List<VCardClientPidMap> =
+      immutableCopyOf("client_pid_maps", client_pid_maps)
+
+  /**
+   * RFC 6715 extensions (professional)
+   * EXPERTISE
+   */
+  @field:WireField(
+    tag = 100,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.REPEATED,
+    schemaIndex = 38,
+  )
+  public val expertise: List<String> = immutableCopyOf("expertise", expertise)
+
+  /**
+   * HOBBY
+   */
+  @field:WireField(
+    tag = 101,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.REPEATED,
+    schemaIndex = 39,
+  )
+  public val hobbies: List<String> = immutableCopyOf("hobbies", hobbies)
+
+  /**
+   * INTEREST
+   */
+  @field:WireField(
+    tag = 102,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.REPEATED,
+    schemaIndex = 40,
+  )
+  public val interests: List<String> = immutableCopyOf("interests", interests)
+
+  /**
+   * ORG-DIRECTORY
+   */
+  @field:WireField(
+    tag = 103,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.REPEATED,
+    jsonName = "orgDirectories",
+    schemaIndex = 41,
+  )
+  public val org_directories: List<String> = immutableCopyOf("org_directories", org_directories)
+
+  /**
+   * Escape hatch for non-standard (X-*) extensions
+   * X-* properties
+   */
+  @field:WireField(
+    tag = 200,
+    keyAdapter = "com.squareup.wire.ProtoAdapter#STRING",
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    schemaIndex = 42,
+  )
+  public val extensions: Map<String, String> = immutableCopyOf("extensions", extensions)
 
   @Deprecated(
     message = "Shouldn't be used in Kotlin",
@@ -162,19 +540,49 @@ public class VCardContact(
     if (other === this) return true
     if (other !is VCardContact) return false
     if (unknownFields != other.unknownFields) return false
+    if (source != other.source) return false
+    if (kind != other.kind) return false
+    if (xml != other.xml) return false
     if (name != other.name) return false
-    if (emails != other.emails) return false
-    if (phones != other.phones) return false
-    if (addresses != other.addresses) return false
-    if (organization != other.organization) return false
-    if (title != other.title) return false
-    if (role != other.role) return false
-    if (url != other.url) return false
+    if (nicknames != other.nicknames) return false
     if (photo != other.photo) return false
     if (birthday != other.birthday) return false
-    if (note != other.note) return false
+    if (anniversary != other.anniversary) return false
+    if (gender != other.gender) return false
+    if (addresses != other.addresses) return false
+    if (phones != other.phones) return false
+    if (emails != other.emails) return false
+    if (impp != other.impp) return false
+    if (languages != other.languages) return false
+    if (timezone != other.timezone) return false
+    if (geo != other.geo) return false
+    if (title != other.title) return false
+    if (role != other.role) return false
+    if (logo != other.logo) return false
+    if (organization != other.organization) return false
+    if (org_units != other.org_units) return false
+    if (members != other.members) return false
+    if (related != other.related) return false
+    if (urls != other.urls) return false
     if (categories != other.categories) return false
+    if (note != other.note) return false
+    if (prodid != other.prodid) return false
+    if (rev != other.rev) return false
+    if (sound != other.sound) return false
     if (uid != other.uid) return false
+    if (client_pid_maps != other.client_pid_maps) return false
+    if (key != other.key) return false
+    if (fburl != other.fburl) return false
+    if (cal_adr_uri != other.cal_adr_uri) return false
+    if (cal_uri != other.cal_uri) return false
+    if (birth_place != other.birth_place) return false
+    if (death_place != other.death_place) return false
+    if (death_date != other.death_date) return false
+    if (expertise != other.expertise) return false
+    if (hobbies != other.hobbies) return false
+    if (interests != other.interests) return false
+    if (org_directories != other.org_directories) return false
+    if (extensions != other.extensions) return false
     return true
   }
 
@@ -182,19 +590,49 @@ public class VCardContact(
     var result = super.hashCode
     if (result == 0) {
       result = unknownFields.hashCode()
+      result = result * 37 + source.hashCode()
+      result = result * 37 + kind.hashCode()
+      result = result * 37 + xml.hashCode()
       result = result * 37 + (name?.hashCode() ?: 0)
-      result = result * 37 + emails.hashCode()
-      result = result * 37 + phones.hashCode()
-      result = result * 37 + addresses.hashCode()
-      result = result * 37 + organization.hashCode()
-      result = result * 37 + title.hashCode()
-      result = result * 37 + role.hashCode()
-      result = result * 37 + url.hashCode()
+      result = result * 37 + nicknames.hashCode()
       result = result * 37 + photo.hashCode()
       result = result * 37 + (birthday?.hashCode() ?: 0)
-      result = result * 37 + note.hashCode()
+      result = result * 37 + (anniversary?.hashCode() ?: 0)
+      result = result * 37 + gender.hashCode()
+      result = result * 37 + addresses.hashCode()
+      result = result * 37 + phones.hashCode()
+      result = result * 37 + emails.hashCode()
+      result = result * 37 + impp.hashCode()
+      result = result * 37 + languages.hashCode()
+      result = result * 37 + timezone.hashCode()
+      result = result * 37 + (geo?.hashCode() ?: 0)
+      result = result * 37 + title.hashCode()
+      result = result * 37 + role.hashCode()
+      result = result * 37 + logo.hashCode()
+      result = result * 37 + organization.hashCode()
+      result = result * 37 + org_units.hashCode()
+      result = result * 37 + members.hashCode()
+      result = result * 37 + related.hashCode()
+      result = result * 37 + urls.hashCode()
       result = result * 37 + categories.hashCode()
+      result = result * 37 + note.hashCode()
+      result = result * 37 + prodid.hashCode()
+      result = result * 37 + rev.hashCode()
+      result = result * 37 + sound.hashCode()
       result = result * 37 + uid.hashCode()
+      result = result * 37 + client_pid_maps.hashCode()
+      result = result * 37 + key.hashCode()
+      result = result * 37 + fburl.hashCode()
+      result = result * 37 + cal_adr_uri.hashCode()
+      result = result * 37 + cal_uri.hashCode()
+      result = result * 37 + birth_place.hashCode()
+      result = result * 37 + death_place.hashCode()
+      result = result * 37 + (death_date?.hashCode() ?: 0)
+      result = result * 37 + expertise.hashCode()
+      result = result * 37 + hobbies.hashCode()
+      result = result * 37 + interests.hashCode()
+      result = result * 37 + org_directories.hashCode()
+      result = result * 37 + extensions.hashCode()
       super.hashCode = result
     }
     return result
@@ -202,38 +640,98 @@ public class VCardContact(
 
   override fun toString(): String {
     val result = mutableListOf<String>()
+    result += """source=${sanitize(source)}"""
+    result += """kind=${sanitize(kind)}"""
+    result += """xml=${sanitize(xml)}"""
     if (name != null) result += """name=$name"""
-    if (emails.isNotEmpty()) result += """emails=${sanitize(emails)}"""
-    if (phones.isNotEmpty()) result += """phones=$phones"""
-    if (addresses.isNotEmpty()) result += """addresses=$addresses"""
-    result += """organization=${sanitize(organization)}"""
-    result += """title=${sanitize(title)}"""
-    result += """role=${sanitize(role)}"""
-    result += """url=${sanitize(url)}"""
+    if (nicknames.isNotEmpty()) result += """nicknames=${sanitize(nicknames)}"""
     result += """photo=${sanitize(photo)}"""
     if (birthday != null) result += """birthday=$birthday"""
-    result += """note=${sanitize(note)}"""
+    if (anniversary != null) result += """anniversary=$anniversary"""
+    result += """gender=${sanitize(gender)}"""
+    if (addresses.isNotEmpty()) result += """addresses=$addresses"""
+    if (phones.isNotEmpty()) result += """phones=$phones"""
+    if (emails.isNotEmpty()) result += """emails=${sanitize(emails)}"""
+    if (impp.isNotEmpty()) result += """impp=${sanitize(impp)}"""
+    if (languages.isNotEmpty()) result += """languages=${sanitize(languages)}"""
+    result += """timezone=${sanitize(timezone)}"""
+    if (geo != null) result += """geo=$geo"""
+    result += """title=${sanitize(title)}"""
+    result += """role=${sanitize(role)}"""
+    result += """logo=${sanitize(logo)}"""
+    result += """organization=${sanitize(organization)}"""
+    if (org_units.isNotEmpty()) result += """org_units=${sanitize(org_units)}"""
+    if (members.isNotEmpty()) result += """members=${sanitize(members)}"""
+    if (related.isNotEmpty()) result += """related=$related"""
+    if (urls.isNotEmpty()) result += """urls=${sanitize(urls)}"""
     if (categories.isNotEmpty()) result += """categories=${sanitize(categories)}"""
+    result += """note=${sanitize(note)}"""
+    result += """prodid=${sanitize(prodid)}"""
+    result += """rev=${sanitize(rev)}"""
+    result += """sound=${sanitize(sound)}"""
     result += """uid=${sanitize(uid)}"""
+    if (client_pid_maps.isNotEmpty()) result += """client_pid_maps=$client_pid_maps"""
+    result += """key=${sanitize(key)}"""
+    result += """fburl=${sanitize(fburl)}"""
+    result += """cal_adr_uri=${sanitize(cal_adr_uri)}"""
+    result += """cal_uri=${sanitize(cal_uri)}"""
+    result += """birth_place=${sanitize(birth_place)}"""
+    result += """death_place=${sanitize(death_place)}"""
+    if (death_date != null) result += """death_date=$death_date"""
+    if (expertise.isNotEmpty()) result += """expertise=${sanitize(expertise)}"""
+    if (hobbies.isNotEmpty()) result += """hobbies=${sanitize(hobbies)}"""
+    if (interests.isNotEmpty()) result += """interests=${sanitize(interests)}"""
+    if (org_directories.isNotEmpty()) result += """org_directories=${sanitize(org_directories)}"""
+    if (extensions.isNotEmpty()) result += """extensions=$extensions"""
     return result.joinToString(prefix = "VCardContact{", separator = ", ", postfix = "}")
   }
 
   public fun copy(
+    source: String = this.source,
+    kind: String = this.kind,
+    xml: String = this.xml,
     name: PersonName? = this.name,
-    emails: List<String> = this.emails,
-    phones: List<PhoneNumber> = this.phones,
-    addresses: List<PostalAddress> = this.addresses,
-    organization: String = this.organization,
-    title: String = this.title,
-    role: String = this.role,
-    url: String = this.url,
+    nicknames: List<String> = this.nicknames,
     photo: String = this.photo,
     birthday: Date? = this.birthday,
-    note: String = this.note,
+    anniversary: Date? = this.anniversary,
+    gender: String = this.gender,
+    addresses: List<PostalAddress> = this.addresses,
+    phones: List<PhoneNumber> = this.phones,
+    emails: List<String> = this.emails,
+    impp: List<String> = this.impp,
+    languages: List<String> = this.languages,
+    timezone: String = this.timezone,
+    geo: LatLng? = this.geo,
+    title: String = this.title,
+    role: String = this.role,
+    logo: String = this.logo,
+    organization: String = this.organization,
+    org_units: List<String> = this.org_units,
+    members: List<String> = this.members,
+    related: List<VCardRelated> = this.related,
+    urls: List<String> = this.urls,
     categories: List<String> = this.categories,
+    note: String = this.note,
+    prodid: String = this.prodid,
+    rev: String = this.rev,
+    sound: String = this.sound,
     uid: String = this.uid,
+    client_pid_maps: List<VCardClientPidMap> = this.client_pid_maps,
+    key: String = this.key,
+    fburl: String = this.fburl,
+    cal_adr_uri: String = this.cal_adr_uri,
+    cal_uri: String = this.cal_uri,
+    birth_place: String = this.birth_place,
+    death_place: String = this.death_place,
+    death_date: Date? = this.death_date,
+    expertise: List<String> = this.expertise,
+    hobbies: List<String> = this.hobbies,
+    interests: List<String> = this.interests,
+    org_directories: List<String> = this.org_directories,
+    extensions: Map<String, String> = this.extensions,
     unknownFields: ByteString = this.unknownFields,
-  ): VCardContact = VCardContact(name, emails, phones, addresses, organization, title, role, url, photo, birthday, note, categories, uid, unknownFields)
+  ): VCardContact = VCardContact(source, kind, xml, name, nicknames, photo, birthday, anniversary, gender, addresses, phones, emails, impp, languages, timezone, geo, title, role, logo, organization, org_units, members, related, urls, categories, note, prodid, rev, sound, uid, client_pid_maps, key, fburl, cal_adr_uri, cal_uri, birth_place, death_place, death_date, expertise, hobbies, interests, org_directories, extensions, unknownFields)
 
   public companion object {
     @JvmField
@@ -245,167 +743,457 @@ public class VCardContact(
       null, 
       "types.proto"
     ) {
+      private val extensionsAdapter: ProtoAdapter<Map<String, String>> by
+          lazy { ProtoAdapter.newMapAdapter(ProtoAdapter.STRING, ProtoAdapter.STRING) }
+
       override fun encodedSize(`value`: VCardContact): Int {
         var size = value.unknownFields.size
+        if (value.source != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(1, value.source)
+        }
+        if (value.kind != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(2, value.kind)
+        }
+        if (value.xml != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(3, value.xml)
+        }
         if (value.name != null) {
-          size += PersonName.ADAPTER.encodedSizeWithTag(1, value.name)
+          size += PersonName.ADAPTER.encodedSizeWithTag(10, value.name)
         }
-        size += ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(2, value.emails)
-        size += PhoneNumber.ADAPTER.asRepeated().encodedSizeWithTag(3, value.phones)
-        size += PostalAddress.ADAPTER.asRepeated().encodedSizeWithTag(4, value.addresses)
-        if (value.organization != "") {
-          size += ProtoAdapter.STRING.encodedSizeWithTag(5, value.organization)
-        }
-        if (value.title != "") {
-          size += ProtoAdapter.STRING.encodedSizeWithTag(6, value.title)
-        }
-        if (value.role != "") {
-          size += ProtoAdapter.STRING.encodedSizeWithTag(7, value.role)
-        }
-        if (value.url != "") {
-          size += ProtoAdapter.STRING.encodedSizeWithTag(8, value.url)
-        }
+        size += ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(11, value.nicknames)
         if (value.photo != "") {
-          size += ProtoAdapter.STRING.encodedSizeWithTag(9, value.photo)
+          size += ProtoAdapter.STRING.encodedSizeWithTag(12, value.photo)
         }
         if (value.birthday != null) {
-          size += Date.ADAPTER.encodedSizeWithTag(10, value.birthday)
+          size += Date.ADAPTER.encodedSizeWithTag(13, value.birthday)
         }
+        if (value.anniversary != null) {
+          size += Date.ADAPTER.encodedSizeWithTag(14, value.anniversary)
+        }
+        if (value.gender != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(15, value.gender)
+        }
+        size += PostalAddress.ADAPTER.asRepeated().encodedSizeWithTag(20, value.addresses)
+        size += PhoneNumber.ADAPTER.asRepeated().encodedSizeWithTag(30, value.phones)
+        size += ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(31, value.emails)
+        size += ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(32, value.impp)
+        size += ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(33, value.languages)
+        if (value.timezone != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(40, value.timezone)
+        }
+        if (value.geo != null) {
+          size += LatLng.ADAPTER.encodedSizeWithTag(41, value.geo)
+        }
+        if (value.title != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(50, value.title)
+        }
+        if (value.role != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(51, value.role)
+        }
+        if (value.logo != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(52, value.logo)
+        }
+        if (value.organization != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(53, value.organization)
+        }
+        size += ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(54, value.org_units)
+        size += ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(55, value.members)
+        size += VCardRelated.ADAPTER.asRepeated().encodedSizeWithTag(56, value.related)
+        size += ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(59, value.urls)
+        size += ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(60, value.categories)
         if (value.note != "") {
-          size += ProtoAdapter.STRING.encodedSizeWithTag(11, value.note)
+          size += ProtoAdapter.STRING.encodedSizeWithTag(61, value.note)
         }
-        size += ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(12, value.categories)
+        if (value.prodid != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(62, value.prodid)
+        }
+        if (value.rev != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(63, value.rev)
+        }
+        if (value.sound != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(64, value.sound)
+        }
         if (value.uid != "") {
-          size += ProtoAdapter.STRING.encodedSizeWithTag(13, value.uid)
+          size += ProtoAdapter.STRING.encodedSizeWithTag(65, value.uid)
         }
+        size += VCardClientPidMap.ADAPTER.asRepeated().encodedSizeWithTag(66, value.client_pid_maps)
+        if (value.key != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(70, value.key)
+        }
+        if (value.fburl != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(80, value.fburl)
+        }
+        if (value.cal_adr_uri != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(81, value.cal_adr_uri)
+        }
+        if (value.cal_uri != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(82, value.cal_uri)
+        }
+        if (value.birth_place != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(90, value.birth_place)
+        }
+        if (value.death_place != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(91, value.death_place)
+        }
+        if (value.death_date != null) {
+          size += Date.ADAPTER.encodedSizeWithTag(92, value.death_date)
+        }
+        size += ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(100, value.expertise)
+        size += ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(101, value.hobbies)
+        size += ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(102, value.interests)
+        size += ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(103, value.org_directories)
+        size += extensionsAdapter.encodedSizeWithTag(200, value.extensions)
         return size
       }
 
       override fun encode(writer: ProtoWriter, `value`: VCardContact) {
+        if (value.source != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 1, value.source)
+        }
+        if (value.kind != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 2, value.kind)
+        }
+        if (value.xml != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 3, value.xml)
+        }
         if (value.name != null) {
-          PersonName.ADAPTER.encodeWithTag(writer, 1, value.name)
+          PersonName.ADAPTER.encodeWithTag(writer, 10, value.name)
         }
-        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 2, value.emails)
-        PhoneNumber.ADAPTER.asRepeated().encodeWithTag(writer, 3, value.phones)
-        PostalAddress.ADAPTER.asRepeated().encodeWithTag(writer, 4, value.addresses)
-        if (value.organization != "") {
-          ProtoAdapter.STRING.encodeWithTag(writer, 5, value.organization)
-        }
-        if (value.title != "") {
-          ProtoAdapter.STRING.encodeWithTag(writer, 6, value.title)
-        }
-        if (value.role != "") {
-          ProtoAdapter.STRING.encodeWithTag(writer, 7, value.role)
-        }
-        if (value.url != "") {
-          ProtoAdapter.STRING.encodeWithTag(writer, 8, value.url)
-        }
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 11, value.nicknames)
         if (value.photo != "") {
-          ProtoAdapter.STRING.encodeWithTag(writer, 9, value.photo)
+          ProtoAdapter.STRING.encodeWithTag(writer, 12, value.photo)
         }
         if (value.birthday != null) {
-          Date.ADAPTER.encodeWithTag(writer, 10, value.birthday)
+          Date.ADAPTER.encodeWithTag(writer, 13, value.birthday)
         }
+        if (value.anniversary != null) {
+          Date.ADAPTER.encodeWithTag(writer, 14, value.anniversary)
+        }
+        if (value.gender != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 15, value.gender)
+        }
+        PostalAddress.ADAPTER.asRepeated().encodeWithTag(writer, 20, value.addresses)
+        PhoneNumber.ADAPTER.asRepeated().encodeWithTag(writer, 30, value.phones)
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 31, value.emails)
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 32, value.impp)
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 33, value.languages)
+        if (value.timezone != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 40, value.timezone)
+        }
+        if (value.geo != null) {
+          LatLng.ADAPTER.encodeWithTag(writer, 41, value.geo)
+        }
+        if (value.title != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 50, value.title)
+        }
+        if (value.role != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 51, value.role)
+        }
+        if (value.logo != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 52, value.logo)
+        }
+        if (value.organization != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 53, value.organization)
+        }
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 54, value.org_units)
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 55, value.members)
+        VCardRelated.ADAPTER.asRepeated().encodeWithTag(writer, 56, value.related)
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 59, value.urls)
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 60, value.categories)
         if (value.note != "") {
-          ProtoAdapter.STRING.encodeWithTag(writer, 11, value.note)
+          ProtoAdapter.STRING.encodeWithTag(writer, 61, value.note)
         }
-        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 12, value.categories)
+        if (value.prodid != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 62, value.prodid)
+        }
+        if (value.rev != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 63, value.rev)
+        }
+        if (value.sound != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 64, value.sound)
+        }
         if (value.uid != "") {
-          ProtoAdapter.STRING.encodeWithTag(writer, 13, value.uid)
+          ProtoAdapter.STRING.encodeWithTag(writer, 65, value.uid)
         }
+        VCardClientPidMap.ADAPTER.asRepeated().encodeWithTag(writer, 66, value.client_pid_maps)
+        if (value.key != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 70, value.key)
+        }
+        if (value.fburl != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 80, value.fburl)
+        }
+        if (value.cal_adr_uri != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 81, value.cal_adr_uri)
+        }
+        if (value.cal_uri != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 82, value.cal_uri)
+        }
+        if (value.birth_place != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 90, value.birth_place)
+        }
+        if (value.death_place != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 91, value.death_place)
+        }
+        if (value.death_date != null) {
+          Date.ADAPTER.encodeWithTag(writer, 92, value.death_date)
+        }
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 100, value.expertise)
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 101, value.hobbies)
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 102, value.interests)
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 103, value.org_directories)
+        extensionsAdapter.encodeWithTag(writer, 200, value.extensions)
         writer.writeBytes(value.unknownFields)
       }
 
       override fun encode(writer: ReverseProtoWriter, `value`: VCardContact) {
         writer.writeBytes(value.unknownFields)
+        extensionsAdapter.encodeWithTag(writer, 200, value.extensions)
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 103, value.org_directories)
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 102, value.interests)
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 101, value.hobbies)
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 100, value.expertise)
+        if (value.death_date != null) {
+          Date.ADAPTER.encodeWithTag(writer, 92, value.death_date)
+        }
+        if (value.death_place != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 91, value.death_place)
+        }
+        if (value.birth_place != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 90, value.birth_place)
+        }
+        if (value.cal_uri != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 82, value.cal_uri)
+        }
+        if (value.cal_adr_uri != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 81, value.cal_adr_uri)
+        }
+        if (value.fburl != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 80, value.fburl)
+        }
+        if (value.key != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 70, value.key)
+        }
+        VCardClientPidMap.ADAPTER.asRepeated().encodeWithTag(writer, 66, value.client_pid_maps)
         if (value.uid != "") {
-          ProtoAdapter.STRING.encodeWithTag(writer, 13, value.uid)
+          ProtoAdapter.STRING.encodeWithTag(writer, 65, value.uid)
         }
-        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 12, value.categories)
+        if (value.sound != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 64, value.sound)
+        }
+        if (value.rev != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 63, value.rev)
+        }
+        if (value.prodid != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 62, value.prodid)
+        }
         if (value.note != "") {
-          ProtoAdapter.STRING.encodeWithTag(writer, 11, value.note)
+          ProtoAdapter.STRING.encodeWithTag(writer, 61, value.note)
         }
-        if (value.birthday != null) {
-          Date.ADAPTER.encodeWithTag(writer, 10, value.birthday)
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 60, value.categories)
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 59, value.urls)
+        VCardRelated.ADAPTER.asRepeated().encodeWithTag(writer, 56, value.related)
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 55, value.members)
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 54, value.org_units)
+        if (value.organization != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 53, value.organization)
         }
-        if (value.photo != "") {
-          ProtoAdapter.STRING.encodeWithTag(writer, 9, value.photo)
-        }
-        if (value.url != "") {
-          ProtoAdapter.STRING.encodeWithTag(writer, 8, value.url)
+        if (value.logo != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 52, value.logo)
         }
         if (value.role != "") {
-          ProtoAdapter.STRING.encodeWithTag(writer, 7, value.role)
+          ProtoAdapter.STRING.encodeWithTag(writer, 51, value.role)
         }
         if (value.title != "") {
-          ProtoAdapter.STRING.encodeWithTag(writer, 6, value.title)
+          ProtoAdapter.STRING.encodeWithTag(writer, 50, value.title)
         }
-        if (value.organization != "") {
-          ProtoAdapter.STRING.encodeWithTag(writer, 5, value.organization)
+        if (value.geo != null) {
+          LatLng.ADAPTER.encodeWithTag(writer, 41, value.geo)
         }
-        PostalAddress.ADAPTER.asRepeated().encodeWithTag(writer, 4, value.addresses)
-        PhoneNumber.ADAPTER.asRepeated().encodeWithTag(writer, 3, value.phones)
-        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 2, value.emails)
+        if (value.timezone != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 40, value.timezone)
+        }
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 33, value.languages)
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 32, value.impp)
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 31, value.emails)
+        PhoneNumber.ADAPTER.asRepeated().encodeWithTag(writer, 30, value.phones)
+        PostalAddress.ADAPTER.asRepeated().encodeWithTag(writer, 20, value.addresses)
+        if (value.gender != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 15, value.gender)
+        }
+        if (value.anniversary != null) {
+          Date.ADAPTER.encodeWithTag(writer, 14, value.anniversary)
+        }
+        if (value.birthday != null) {
+          Date.ADAPTER.encodeWithTag(writer, 13, value.birthday)
+        }
+        if (value.photo != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 12, value.photo)
+        }
+        ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 11, value.nicknames)
         if (value.name != null) {
-          PersonName.ADAPTER.encodeWithTag(writer, 1, value.name)
+          PersonName.ADAPTER.encodeWithTag(writer, 10, value.name)
+        }
+        if (value.xml != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 3, value.xml)
+        }
+        if (value.kind != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 2, value.kind)
+        }
+        if (value.source != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 1, value.source)
         }
       }
 
       override fun decode(reader: ProtoReader): VCardContact {
+        var source: String = ""
+        var kind: String = ""
+        var xml: String = ""
         var name: PersonName? = null
-        val emails = mutableListOf<String>()
-        val phones = mutableListOf<PhoneNumber>()
-        val addresses = mutableListOf<PostalAddress>()
-        var organization: String = ""
-        var title: String = ""
-        var role: String = ""
-        var url: String = ""
+        val nicknames = mutableListOf<String>()
         var photo: String = ""
         var birthday: Date? = null
-        var note: String = ""
+        var anniversary: Date? = null
+        var gender: String = ""
+        val addresses = mutableListOf<PostalAddress>()
+        val phones = mutableListOf<PhoneNumber>()
+        val emails = mutableListOf<String>()
+        val impp = mutableListOf<String>()
+        val languages = mutableListOf<String>()
+        var timezone: String = ""
+        var geo: LatLng? = null
+        var title: String = ""
+        var role: String = ""
+        var logo: String = ""
+        var organization: String = ""
+        val org_units = mutableListOf<String>()
+        val members = mutableListOf<String>()
+        val related = mutableListOf<VCardRelated>()
+        val urls = mutableListOf<String>()
         val categories = mutableListOf<String>()
+        var note: String = ""
+        var prodid: String = ""
+        var rev: String = ""
+        var sound: String = ""
         var uid: String = ""
+        val client_pid_maps = mutableListOf<VCardClientPidMap>()
+        var key: String = ""
+        var fburl: String = ""
+        var cal_adr_uri: String = ""
+        var cal_uri: String = ""
+        var birth_place: String = ""
+        var death_place: String = ""
+        var death_date: Date? = null
+        val expertise = mutableListOf<String>()
+        val hobbies = mutableListOf<String>()
+        val interests = mutableListOf<String>()
+        val org_directories = mutableListOf<String>()
+        val extensions = mutableMapOf<String, String>()
         val unknownFields = reader.forEachTag { tag ->
           when (tag) {
-            1 -> name = PersonName.ADAPTER.decode(reader)
-            2 -> emails.add(ProtoAdapter.STRING.decode(reader))
-            3 -> phones.add(PhoneNumber.ADAPTER.decode(reader))
-            4 -> addresses.add(PostalAddress.ADAPTER.decode(reader))
-            5 -> organization = ProtoAdapter.STRING.decode(reader)
-            6 -> title = ProtoAdapter.STRING.decode(reader)
-            7 -> role = ProtoAdapter.STRING.decode(reader)
-            8 -> url = ProtoAdapter.STRING.decode(reader)
-            9 -> photo = ProtoAdapter.STRING.decode(reader)
-            10 -> birthday = Date.ADAPTER.decode(reader)
-            11 -> note = ProtoAdapter.STRING.decode(reader)
-            12 -> categories.add(ProtoAdapter.STRING.decode(reader))
-            13 -> uid = ProtoAdapter.STRING.decode(reader)
+            1 -> source = ProtoAdapter.STRING.decode(reader)
+            2 -> kind = ProtoAdapter.STRING.decode(reader)
+            3 -> xml = ProtoAdapter.STRING.decode(reader)
+            10 -> name = PersonName.ADAPTER.decode(reader)
+            11 -> nicknames.add(ProtoAdapter.STRING.decode(reader))
+            12 -> photo = ProtoAdapter.STRING.decode(reader)
+            13 -> birthday = Date.ADAPTER.decode(reader)
+            14 -> anniversary = Date.ADAPTER.decode(reader)
+            15 -> gender = ProtoAdapter.STRING.decode(reader)
+            20 -> addresses.add(PostalAddress.ADAPTER.decode(reader))
+            30 -> phones.add(PhoneNumber.ADAPTER.decode(reader))
+            31 -> emails.add(ProtoAdapter.STRING.decode(reader))
+            32 -> impp.add(ProtoAdapter.STRING.decode(reader))
+            33 -> languages.add(ProtoAdapter.STRING.decode(reader))
+            40 -> timezone = ProtoAdapter.STRING.decode(reader)
+            41 -> geo = LatLng.ADAPTER.decode(reader)
+            50 -> title = ProtoAdapter.STRING.decode(reader)
+            51 -> role = ProtoAdapter.STRING.decode(reader)
+            52 -> logo = ProtoAdapter.STRING.decode(reader)
+            53 -> organization = ProtoAdapter.STRING.decode(reader)
+            54 -> org_units.add(ProtoAdapter.STRING.decode(reader))
+            55 -> members.add(ProtoAdapter.STRING.decode(reader))
+            56 -> related.add(VCardRelated.ADAPTER.decode(reader))
+            59 -> urls.add(ProtoAdapter.STRING.decode(reader))
+            60 -> categories.add(ProtoAdapter.STRING.decode(reader))
+            61 -> note = ProtoAdapter.STRING.decode(reader)
+            62 -> prodid = ProtoAdapter.STRING.decode(reader)
+            63 -> rev = ProtoAdapter.STRING.decode(reader)
+            64 -> sound = ProtoAdapter.STRING.decode(reader)
+            65 -> uid = ProtoAdapter.STRING.decode(reader)
+            66 -> client_pid_maps.add(VCardClientPidMap.ADAPTER.decode(reader))
+            70 -> key = ProtoAdapter.STRING.decode(reader)
+            80 -> fburl = ProtoAdapter.STRING.decode(reader)
+            81 -> cal_adr_uri = ProtoAdapter.STRING.decode(reader)
+            82 -> cal_uri = ProtoAdapter.STRING.decode(reader)
+            90 -> birth_place = ProtoAdapter.STRING.decode(reader)
+            91 -> death_place = ProtoAdapter.STRING.decode(reader)
+            92 -> death_date = Date.ADAPTER.decode(reader)
+            100 -> expertise.add(ProtoAdapter.STRING.decode(reader))
+            101 -> hobbies.add(ProtoAdapter.STRING.decode(reader))
+            102 -> interests.add(ProtoAdapter.STRING.decode(reader))
+            103 -> org_directories.add(ProtoAdapter.STRING.decode(reader))
+            200 -> extensions.putAll(extensionsAdapter.decode(reader))
             else -> reader.readUnknownField(tag)
           }
         }
         return VCardContact(
+          source = source,
+          kind = kind,
+          xml = xml,
           name = name,
-          emails = emails,
-          phones = phones,
-          addresses = addresses,
-          organization = organization,
-          title = title,
-          role = role,
-          url = url,
+          nicknames = nicknames,
           photo = photo,
           birthday = birthday,
-          note = note,
+          anniversary = anniversary,
+          gender = gender,
+          addresses = addresses,
+          phones = phones,
+          emails = emails,
+          impp = impp,
+          languages = languages,
+          timezone = timezone,
+          geo = geo,
+          title = title,
+          role = role,
+          logo = logo,
+          organization = organization,
+          org_units = org_units,
+          members = members,
+          related = related,
+          urls = urls,
           categories = categories,
+          note = note,
+          prodid = prodid,
+          rev = rev,
+          sound = sound,
           uid = uid,
+          client_pid_maps = client_pid_maps,
+          key = key,
+          fburl = fburl,
+          cal_adr_uri = cal_adr_uri,
+          cal_uri = cal_uri,
+          birth_place = birth_place,
+          death_place = death_place,
+          death_date = death_date,
+          expertise = expertise,
+          hobbies = hobbies,
+          interests = interests,
+          org_directories = org_directories,
+          extensions = extensions,
           unknownFields = unknownFields
         )
       }
 
       override fun redact(`value`: VCardContact): VCardContact = value.copy(
         name = value.name?.let(PersonName.ADAPTER::redact),
-        phones = value.phones.redactElements(PhoneNumber.ADAPTER),
-        addresses = value.addresses.redactElements(PostalAddress.ADAPTER),
         birthday = value.birthday?.let(Date.ADAPTER::redact),
+        anniversary = value.anniversary?.let(Date.ADAPTER::redact),
+        addresses = value.addresses.redactElements(PostalAddress.ADAPTER),
+        phones = value.phones.redactElements(PhoneNumber.ADAPTER),
+        geo = value.geo?.let(LatLng.ADAPTER::redact),
+        related = value.related.redactElements(VCardRelated.ADAPTER),
+        client_pid_maps = value.client_pid_maps.redactElements(VCardClientPidMap.ADAPTER),
+        death_date = value.death_date?.let(Date.ADAPTER::redact),
         unknownFields = ByteString.EMPTY
       )
     }
