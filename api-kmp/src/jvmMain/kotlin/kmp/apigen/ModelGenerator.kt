@@ -167,6 +167,7 @@ class ModelGenerator(
     }
 
     private fun resolveTypeName(type: String, nullable: Boolean): TypeName {
+        val kmpUtil = "kotlinx.kmp.util"
         val base = when (type) {
             "String" -> STRING
             "Int" -> INT
@@ -174,30 +175,34 @@ class ModelGenerator(
             "Double" -> DOUBLE
             "Boolean" -> BOOLEAN
             "Any" -> ANY
-            "Url" -> ClassName("com.anthropic.core", "Uri")
-            "Uri" -> ClassName("com.anthropic.core", "Uri")
+            "Url" -> ClassName(kmpUtil, "Uri")
+            "Uri" -> ClassName(kmpUtil, "Uri")
             "Instant" -> ClassName("kotlinx.datetime", "Instant")
             "LocalDate" -> ClassName("kotlinx.datetime", "LocalDate")
             "LocalTime" -> ClassName("kotlinx.datetime", "LocalTime")
             "Duration" -> ClassName("kotlin.time", "Duration")
             "Uuid" -> ClassName("kotlin.uuid", "Uuid")
             "Float" -> FLOAT
-            "Email" -> ClassName("com.anthropic.core", "Email")
-            "IpAddress" -> ClassName("com.anthropic.core", "IpAddress")
-            "Hostname" -> ClassName("com.anthropic.core", "Hostname")
+            "Email" -> ClassName(kmpUtil, "Email")
+            "IpAddress" -> ClassName(kmpUtil, "IpAddress")
+            "Hostname" -> ClassName(kmpUtil, "Hostname")
             "Base64" -> ClassName("kotlin", "ByteArray")
             "Binary" -> ClassName("okio", "ByteString")
-            "Password" -> ClassName("com.anthropic.core", "Password")
-            "Phone" -> ClassName("com.anthropic.core", "Phone")
-            "PostalAddress" -> ClassName("com.anthropic.core", "PostalAddress")
-            "GeoPoint" -> ClassName("com.anthropic.core", "GeoPoint")
-            "Locale" -> ClassName("com.anthropic.core", "Locale")
-            "Currency" -> ClassName("com.anthropic.core", "Currency")
-            "Timezone" -> ClassName("com.anthropic.core", "Timezone")
-            "Country" -> ClassName("com.anthropic.core", "Country")
-            "Language" -> ClassName("com.anthropic.core", "Language")
-            "Measure" -> ClassName("com.anthropic.core", "Measure")
-            "PersonName" -> ClassName("com.anthropic.core", "PersonName")
+            "Password" -> ClassName(kmpUtil, "Password")
+            "Phone" -> ClassName(kmpUtil, "Phone")
+            // PostalAddress → google.type.PostalAddress (Wire-generated CLDR standard)
+            "PostalAddress" -> ClassName("com.google.type", "PostalAddress")
+            "GeoPoint" -> ClassName(kmpUtil, "GeoPoint")
+            "Locale" -> ClassName(kmpUtil, "Locale")
+            "Currency" -> ClassName(kmpUtil, "Currency")
+            "Timezone" -> ClassName(kmpUtil, "Timezone")
+            "Country" -> ClassName(kmpUtil, "Country")
+            "Language" -> ClassName(kmpUtil, "Language")
+            "Measure" -> ClassName(kmpUtil, "Measure")
+            "PersonName" -> ClassName(kmpUtil, "PersonName")
+            // RFC 6350 / RFC 5545 proto types — predefined, reused across all generated APIs
+            "VCardContact" -> ClassName(kmpUtil, "VCardContact")
+            "ICalEvent" -> ClassName(kmpUtil, "ICalEvent")
             "JsonObject" -> ClassName("kotlinx.serialization.json", "JsonObject")
             else -> {
                 if (type.startsWith("List<")) {

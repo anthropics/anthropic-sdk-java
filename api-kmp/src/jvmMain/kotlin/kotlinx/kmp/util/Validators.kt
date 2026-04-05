@@ -434,7 +434,7 @@ object Validators {
 
     // === Wire bridge — full RFC 6350 parity (ezvcard ↔ Wire VCardContact) ===
 
-    /** ezvcard.VCard → Wire VCardContact with full RFC 6350 property set. */
+    /** ezvcard.VCard → Wire VCardContact with full RFC 6350 property set (deduplicated). */
     fun ezvcardToWire(vcard: ezvcard.VCard): VCardContact = VCardContact(
         // §6.1 General
         source = vcard.sources?.firstOrNull()?.value ?: "",
@@ -517,7 +517,7 @@ object Validators {
         org_directories = vcard.orgDirectories?.map { it.value } ?: emptyList(),
         // X-* extensions
         extensions = vcard.extendedProperties?.associate { it.propertyName to it.value } ?: emptyMap(),
-    )
+    ).dedup()
 
     /** Wire VCardContact → ezvcard.VCard (full RFC 6350 round-trip). */
     fun wireToEzvcard(contact: VCardContact): ezvcard.VCard {
@@ -1484,7 +1484,7 @@ object Validators {
             note = note,
             categories = categories,
             uid = "tel:$e164",
-        )
+        ).dedup()
     }
 
     /**

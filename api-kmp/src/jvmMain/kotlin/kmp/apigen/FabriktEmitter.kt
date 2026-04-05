@@ -36,17 +36,17 @@ class FabriktEmitter : ProtocolEmitter {
             // Fabrikt not available at runtime → write stub note
             File(fabriktDir, "README.txt").writeText(
                 """
-                |Fabrikt generation skipped: ${e.message}
-                |
-                |To generate Fabrikt models manually:
-                |  fabrikt --api-file ${specFile.absolutePath} \
-                |    --output-directory ${fabriktDir.absolutePath} \
-                |    --base-package $pkg \
-                |    --targets KOTLIN_SERIALIZATION \
-                |    --targets HTTP_MODELS \
-                |    --targets CLIENT \
-                |    --generation-type SEALED_INTERFACES_FOR_ONE_OF
-                """.trimMargin()
+                    Fabrikt generation skipped: ${e.message}
+
+                    To generate Fabrikt models manually:
+                      fabrikt --api-file ${specFile.absolutePath} \
+                        --output-directory ${fabriktDir.absolutePath} \
+                        --base-package $pkg \
+                        --targets KOTLIN_SERIALIZATION \
+                        --targets HTTP_MODELS \
+                        --targets CLIENT \
+                        --generation-type SEALED_INTERFACES_FOR_ONE_OF
+                """.trimIndent()
             )
         }
     }

@@ -160,3 +160,88 @@ val PersonName.full: String get() = listOfNotNull(prefix, given, middle, family,
 
 /** GeoIp.formatPhone — phone with country code prepended. */
 fun GeoIp.formatPhone(localNumber: String): Phone = Phone("+$phone_code$localNumber")
+
+// === Set views on VCardContact for deduplication + O(1) contains() ===
+//
+// Wire proto3 repeated fields generate as Kotlin List<T>. For fields that
+// must be unique (emails, phones, categories, etc.) we expose Set<T> views
+// and a dedup() helper that returns a normalized VCardContact.
+
+/** Unique emails as a Set (O(1) contains). */
+val VCardContact.emailSet: Set<String> get() = emails.toSet()
+
+/** Unique E.164 phone numbers as a Set. */
+val VCardContact.phoneSet: Set<String> get() =
+    phones.mapNotNull { it.e164_number?.takeIf { n -> n.isNotBlank() } }.toSet()
+
+/** Unique IMPP URIs as a Set. */
+val VCardContact.imppSet: Set<String> get() = impp.toSet()
+
+/** Unique language tags as a Set. */
+val VCardContact.languageSet: Set<String> get() = languages.toSet()
+
+/** Unique URLs as a Set. */
+val VCardContact.urlSet: Set<String> get() = urls.toSet()
+
+/** Unique nicknames as a Set. */
+val VCardContact.nicknameSet: Set<String> get() = nicknames.toSet()
+
+/** Unique categories as a Set. */
+val VCardContact.categorySet: Set<String> get() = categories.toSet()
+
+/** Unique member UIDs as a Set (for KIND=group vcards). */
+val VCardContact.memberSet: Set<String> get() = members.toSet()
+
+/** Fast contains() — uses Set view. */
+fun VCardContact.hasEmail(email: String): Boolean = email in emailSet
+fun VCardContact.hasPhone(phoneE164: String): Boolean = phoneE164 in phoneSet
+fun VCardContact.hasCategory(category: String): Boolean = category in categorySet
+fun VCardContact.hasLanguage(lang: String): Boolean = lang in languageSet
+
+/**
+ * Return a VCardContact with all repeated fields deduplicated.
+ * Preserves order of first occurrence (via LinkedHashSet).
+ */
+fun VCardContact.dedup(): VCardContact = copy(
+    emails = emails.distinct(),
+    phones = phones.distinctBy { it.e164_number.orEmpty() + "|" + it.extension },
+    addresses = addresses.distinct(),
+    impp = impp.distinct(),
+    languages = languages.distinct(),
+    urls = urls.distinct(),
+    nicknames = nicknames.distinct(),
+    categories = categories.distinct(),
+    members = members.distinct(),
+    related = related.distinctBy { it.uri + "|" + it.type },
+    org_units = org_units.distinct(),
+    expertise = expertise.distinct(),
+    hobbies = hobbies.distinct(),
+    interests = interests.distinct(),
+    org_directories = org_directories.distinct(),
+)
+
+/** Merge two VCardContacts — union of all repeated fields (deduplicated). */
+operator fun VCardContact.plus(other: VCardContact): VCardContact = copy(
+    emails = (emails + other.emails).distinct(),
+    phones = (phones + other.phones).distinctBy { it.e164_number.orEmpty() + "|" + it.extension },
+    addresses = (addresses + other.addresses).distinct(),
+    impp = (impp + other.impp).distinct(),
+    languages = (languages + other.languages).distinct(),
+    urls = (urls + other.urls).distinct(),
+    nicknames = (nicknames + other.nicknames).distinct(),
+    categories = (categories + other.categories).distinct(),
+    members = (members + other.members).distinct(),
+    related = (related + other.related).distinctBy { it.uri + "|" + it.type },
+    // Scalar fields — prefer other's value if this is blank
+    name = other.name ?: name,
+    organization = organization.ifBlank { other.organization },
+    title = title.ifBlank { other.title },
+    role = role.ifBlank { other.role },
+    note = note.ifBlank { other.note },
+    uid = uid.ifBlank { other.uid },
+    photo = photo.ifBlank { other.photo },
+    logo = logo.ifBlank { other.logo },
+    timezone = timezone.ifBlank { other.timezone },
+    geo = geo ?: other.geo,
+    jabber_id = jabber_id.ifBlank { other.jabber_id },
+)

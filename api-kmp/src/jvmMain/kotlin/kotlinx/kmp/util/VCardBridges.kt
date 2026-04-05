@@ -439,7 +439,7 @@ object VCardBridges {
             expertise = expertise, hobbies = hobbies, interests = interests,
             org_directories = orgDirectories,
             extensions = extensions,
-        )
+        ).dedup()
     }
 
     /**

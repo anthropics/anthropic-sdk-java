@@ -165,7 +165,7 @@ object OpenApiParser {
                 "byte" -> "Base64"
                 "binary" -> "Binary"
                 "password" -> "Password"
-                
+
                 "phone" -> "Phone"
                 "address" -> "PostalAddress"
                 "geo", "geojson", "geopoint" -> "GeoPoint"
@@ -176,6 +176,21 @@ object OpenApiParser {
                 "language", "iso639" -> "Language"
                 "measure", "unit" -> "Measure"
                 "person-name", "name" -> "PersonName"
+
+                // RFC 6350 vCard (.vcf) + RFC 7095 jCard JSON
+                // String field with format: vcard|vcf|jcard → proto VCardContact
+                "vcard", "vcf", "jcard" -> "VCardContact"
+
+                // RFC 5545 iCalendar (.ics) + RFC 7265 jCal JSON
+                // String field with format: icalendar|ical|ics|jcal → proto ICalEvent
+                "icalendar", "ical", "ics", "jcal" -> "ICalEvent"
+
+                // RFC 4791 CalDAV calendar collection
+                "caldav", "calendar-data" -> "ICalEvent"
+
+                // RFC 6352 CardDAV address book entry
+                "carddav", "address-data" -> "VCardContact"
+
                 else -> "String"
             }
             "integer" -> if (schema.format == "int64") "Long" else "Int"

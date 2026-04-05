@@ -157,6 +157,85 @@ class VCardRoundTripTest {
     }
 
     @Test
+    fun `dedup removes duplicate emails phones categories`() {
+        val withDupes = VCardContact(
+            name = PersonName(given = "Ada", family = "Lovelace"),
+            emails = listOf("ada@x.org", "ada@x.org", "ada2@x.org"),
+            phones = listOf(
+                com.google.type.PhoneNumber(e164_number = "+14155551212"),
+                com.google.type.PhoneNumber(e164_number = "+14155551212"),  // dupe
+                com.google.type.PhoneNumber(e164_number = "+14155551213"),
+            ),
+            categories = listOf("user", "admin", "user"),  // dupe
+            languages = listOf("en", "en", "fr"),
+            urls = listOf("https://x.org", "https://x.org"),
+        )
+        val deduped = withDupes.dedup()
+        assertEquals(2, deduped.emails.size)
+        assertEquals(2, deduped.phones.size)
+        assertEquals(2, deduped.categories.size)
+        assertEquals(2, deduped.languages.size)
+        assertEquals(1, deduped.urls.size)
+    }
+
+    @Test
+    fun `set views give O(1) contains lookups`() {
+        val contact = sampleContact()
+
+        // Set views
+        assertTrue("ada@analytical-engine.org" in contact.emailSet)
+        assertTrue("+442079460000" in contact.phoneSet)
+        assertTrue("mathematician" in contact.categorySet)
+        assertTrue("en" in contact.languageSet)
+
+        // Convenience contains helpers
+        assertTrue(contact.hasEmail("ada@analytical-engine.org"))
+        assertTrue(contact.hasPhone("+442079460000"))
+        assertTrue(contact.hasCategory("mathematician"))
+        assertTrue(contact.hasLanguage("en"))
+
+        // Negative lookups
+        assertTrue(!contact.hasEmail("nobody@example.com"))
+        assertTrue(!contact.hasPhone("+100000000"))
+    }
+
+    @Test
+    fun `plus operator merges two contacts without duplicates`() {
+        val a = VCardContact(
+            name = PersonName(given = "Ada"),
+            emails = listOf("a@x.org"),
+            categories = listOf("mathematician"),
+        )
+        val b = VCardContact(
+            name = PersonName(family = "Lovelace"),
+            emails = listOf("a@x.org", "b@x.org"),
+            categories = listOf("writer"),
+        )
+        val merged = a + b
+        assertEquals(2, merged.emails.size, "emails deduplicated on merge")
+        assertEquals(2, merged.categories.size)
+        assertTrue("a@x.org" in merged.emailSet)
+        assertTrue("b@x.org" in merged.emailSet)
+        assertTrue("mathematician" in merged.categorySet)
+        assertTrue("writer" in merged.categorySet)
+    }
+
+    @Test
+    fun `ingress paths produce deduplicated VCardContact`() {
+        // Build a vCard with duplicate EMAIL entries via ezvcard
+        val ez = ezvcard.VCard()
+        ez.setFormattedName("Test User")
+        ez.addEmail("same@x.org")
+        ez.addEmail("same@x.org")  // duplicate
+        ez.addEmail("other@x.org")
+
+        val wire = Validators.ezvcardToWire(ez)
+        // ezvcardToWire calls .dedup() → duplicates removed
+        assertEquals(2, wire.emails.size)
+        assertTrue("same@x.org" in wire.emailSet)
+    }
+
+    @Test
     fun `JSON round trip is idempotent`() {
         val original = sampleContact()
         val json1 = Validators.toJCard(original)
