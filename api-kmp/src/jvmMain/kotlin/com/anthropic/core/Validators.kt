@@ -792,10 +792,92 @@ object Validators {
 
     // === ICU CLDR: Timezone → City → Calendar → DateTime per country ===
 
-    /** Timezone → exemplar city (ICU CLDR). "America/New_York" → "New York" */
-    fun timezoneToCity(tz: Timezone): String =
-        com.ibm.icu.util.TimeZone.getTimeZone(tz.value)
-            .getDisplayName(false, com.ibm.icu.util.TimeZone.LONG, com.ibm.icu.util.ULocale.ENGLISH)
+    /**
+     * Timezone → exemplar city via ICU CLDR TimeZoneNames.
+     * "America/New_York" → "New York"
+     * "Asia/Tokyo" → "Tokyo"
+     * "Europe/Paris" (locale=fr) → "Paris"
+     */
+    fun timezoneToCity(
+        tz: Timezone,
+        locale: com.ibm.icu.util.ULocale = com.ibm.icu.util.ULocale.ENGLISH,
+    ): String {
+        val names = com.ibm.icu.text.TimeZoneNames.getInstance(locale)
+        return names.getExemplarLocationName(tz.value)
+            ?: tz.value.substringAfterLast("/").replace("_", " ")
+    }
+
+    /**
+     * City → IANA timezone via ICU CLDR reverse lookup.
+     * Iterates all timezones for the given country, matches the exemplar
+     * location name (localized) against the input city name.
+     *
+     * Examples:
+     *   cityToTimezone("New York", US) → "America/New_York"
+     *   cityToTimezone("Los Angeles", US) → "America/Los_Angeles"
+     *   cityToTimezone("São Paulo", BR) → "America/Sao_Paulo"
+     *   cityToTimezone("東京", JP, JA) → "Asia/Tokyo"
+     */
+    fun cityToTimezone(
+        city: String,
+        country: Country,
+        language: Language? = null,
+    ): Timezone? {
+        val locale = language?.let { com.ibm.icu.util.ULocale(it.value) }
+            ?: com.ibm.icu.util.ULocale.ENGLISH
+        val names = com.ibm.icu.text.TimeZoneNames.getInstance(locale)
+        val normalizedCity = city.trim().lowercase()
+
+        // Get all IANA timezones for the country
+        val zonesForCountry = com.ibm.icu.util.TimeZone.getAvailableIDs(country.value)
+            .toList()
+            .ifEmpty { com.ibm.icu.util.TimeZone.getAvailableIDs().toList() }
+
+        // 1. Exact exemplar location match
+        zonesForCountry.forEach { zoneId ->
+            val exemplar = names.getExemplarLocationName(zoneId)
+            if (exemplar != null && exemplar.lowercase() == normalizedCity) {
+                return Timezone(zoneId)
+            }
+        }
+
+        // 2. Match against IANA ID suffix (fallback): "new_york" == "New_York" in "America/New_York"
+        val ianaStyle = normalizedCity.replace(" ", "_")
+        zonesForCountry.forEach { zoneId ->
+            val suffix = zoneId.substringAfterLast("/").lowercase()
+            if (suffix == ianaStyle) return Timezone(zoneId)
+        }
+
+        // 3. Partial match — city contained in exemplar or vice versa
+        zonesForCountry.forEach { zoneId ->
+            val exemplar = names.getExemplarLocationName(zoneId)?.lowercase()
+            if (exemplar != null && (exemplar.contains(normalizedCity) || normalizedCity.contains(exemplar))) {
+                return Timezone(zoneId)
+            }
+        }
+
+        // 4. Fallback: country's default primary timezone
+        return countryToTimezone(country).takeIf { it.value.isNotBlank() }
+    }
+
+    /**
+     * GeoIp → IANA timezone (preferring the city-specific zone).
+     * Uses GeoIp.city + country to resolve the exact CLDR timezone,
+     * falling back to country default if city lookup fails.
+     */
+    fun geoIpToTimezone(geoIp: GeoIp): Timezone {
+        // If GeoIp already has a populated timezone, trust it
+        if (geoIp.timezone.isNotBlank()) return Timezone(geoIp.timezone)
+        if (geoIp.city.isNotBlank() && geoIp.country.isNotBlank()) {
+            cityToTimezone(
+                city = geoIp.city,
+                country = Country(geoIp.country),
+                language = countryToLanguage(Country(geoIp.country)),
+            )?.let { return it }
+        }
+        return if (geoIp.country.isNotBlank()) countryToTimezone(Country(geoIp.country))
+        else Timezone("UTC")
+    }
 
     /** Country → preferred calendar type (ICU CLDR). JP → "japanese", SA → "islamic", etc. */
     fun countryToCalendarType(country: Country): String {
@@ -861,10 +943,12 @@ object Validators {
     /** GeoIp → fully localized context: calendar, date format, number format, currency format */
     fun geoIpToLocalContext(geoIp: GeoIp): Map<String, String> {
         val c = Country(geoIp.country)
+        val tz = geoIpToTimezone(geoIp)
         return buildMap {
             put("country", geoIp.country)
             put("city", geoIp.city)
-            put("timezone", geoIp.timezone)
+            put("timezone", tz.value)
+            put("timezoneCity", timezoneToCity(tz))
             put("locale", geoIp.locale)
             put("currency", geoIp.currency_code)
             put("phoneCode", geoIp.phone_code)
