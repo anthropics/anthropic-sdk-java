@@ -1,0 +1,126 @@
+// File generated from our OpenAPI spec by Stainless.
+
+
+package kotlinx.kmp.util.core.handlers
+
+import kotlinx.kmp.util.core.JsonMissing
+import kotlinx.kmp.util.core.http.HttpResponse
+import kotlinx.kmp.util.core.http.HttpResponse.Handler
+import kotlinx.kmp.util.core.http.SseMessage
+import kotlinx.kmp.util.core.http.StreamResponse
+import kotlinx.kmp.util.core.http.map
+import kotlinx.kmp.util.core.errors.SseException
+import com.fasterxml.jackson.databind.json.JsonMapper
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+
+fun sseHandler(jsonMapper: JsonMapper): Handler<StreamResponse<SseMessage>> =
+    streamHandler { response, lines ->
+        val state = SseState(jsonMapper)
+        for (line in lines) {
+            val message = state.decode(line) ?: continue
+
+            when (message.event) {
+                "completion",
+                "message_start",
+                "message_delta",
+                "message_stop",
+                "content_block_start",
+                "content_block_delta",
+                "content_block_stop" -> yield(message)
+                "ping" -> continue
+                "error" -> {
+                    throw SseException.builder()
+                        .statusCode(response.statusCode())
+                        .headers(response.headers())
+                        .body(
+                            try {
+                                jsonMapper.readValue(message.data, jacksonTypeRef())
+                            } catch (e: Exception) {
+                                JsonMissing.of()
+                            }
+                        )
+                        .build()
+                }
+            }
+        }
+    }
+
+private class SseState(
+    val jsonMapper: JsonMapper,
+    var event: String? = null,
+    val data: MutableList<String> = mutableListOf(),
+    var lastId: String? = null,
+    var retry: Int? = null,
+) {
+    // https://html.spec.whatwg.org/multipage/server-sent-events.html#event-stream-interpretation
+    fun decode(line: String): SseMessage? {
+        if (line.isEmpty()) {
+            return flush()
+        }
+
+        if (line.startsWith(':')) {
+            return null
+        }
+
+        val fieldName: String
+        var value: String
+
+        val colonIndex = line.indexOf(':')
+        if (colonIndex == -1) {
+            fieldName = line
+            value = ""
+        } else {
+            fieldName = line.substring(0, colonIndex)
+            value = line.substring(colonIndex + 1)
+        }
+
+        if (value.startsWith(' ')) {
+            value = value.substring(1)
+        }
+
+        when (fieldName) {
+            "event" -> event = value
+            "data" -> data.add(value)
+            "id" -> {
+                if (!value.contains('\u0000')) {
+                    lastId = value
+                }
+            }
+            "retry" -> value.toIntOrNull()?.let { retry = it }
+        }
+
+        return null
+    }
+
+    private fun flush(): SseMessage? {
+        if (isEmpty()) {
+            return null
+        }
+
+        val message =
+            SseMessage.builder()
+                .jsonMapper(jsonMapper)
+                .event(event)
+                .data(data.joinToString("\n"))
+                .id(lastId)
+                .retry(retry)
+                .build()
+
+        // NOTE: Per the SSE spec, do not reset lastId.
+        event = null
+        data.clear()
+        retry = null
+
+        return message
+    }
+
+    private fun isEmpty(): Boolean =
+        event.isNullOrEmpty() && data.isEmpty() && lastId.isNullOrEmpty() && retry == null
+}
+
+inline fun <reified T> Handler<StreamResponse<SseMessage>>.mapJson():
+    Handler<StreamResponse<T>> =
+    object : Handler<StreamResponse<T>> {
+        override fun handle(response: HttpResponse): StreamResponse<T> =
+            this@mapJson.handle(response).map { it.json<T>() }
+    }

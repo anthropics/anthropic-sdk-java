@@ -1,4 +1,4 @@
-package com.anthropic.core.http
+package kotlinx.kmp.util.core.http
 
 import java.util.*
 import java.util.concurrent.CompletableFuture

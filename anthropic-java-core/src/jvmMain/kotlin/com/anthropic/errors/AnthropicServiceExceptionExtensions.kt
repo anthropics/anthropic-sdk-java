@@ -2,7 +2,8 @@
 
 package com.anthropic.errors
 
-import com.anthropic.models.ErrorType
+import kotlinx.kmp.util.core.errors.AnthropicServiceException
+import kotlinx.kmp.util.core.errors.ErrorType
 
 /**
  * The error type from the API response body (e.g., [ErrorType.RATE_LIMIT_ERROR],

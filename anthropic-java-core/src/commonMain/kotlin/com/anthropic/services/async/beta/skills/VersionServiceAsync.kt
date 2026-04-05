@@ -2,9 +2,9 @@
 
 package com.anthropic.services.async.beta.skills
 
-import com.anthropic.core.ClientOptions
-import com.anthropic.core.RequestOptions
-import com.anthropic.core.http.HttpResponseFor
+import kotlinx.kmp.util.core.ClientOptions
+import kotlinx.kmp.util.core.RequestOptions
+import kotlinx.kmp.util.core.http.HttpResponseFor
 import com.anthropic.models.beta.skills.versions.VersionCreateParams
 import com.anthropic.models.beta.skills.versions.VersionCreateResponse
 import com.anthropic.models.beta.skills.versions.VersionDeleteParams

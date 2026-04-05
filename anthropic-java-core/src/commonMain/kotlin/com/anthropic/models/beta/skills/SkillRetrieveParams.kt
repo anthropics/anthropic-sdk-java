@@ -2,9 +2,9 @@
 
 package com.anthropic.models.beta.skills
 
-import com.anthropic.core.Params
-import com.anthropic.core.http.Headers
-import com.anthropic.core.http.QueryParams
+import kotlinx.kmp.util.core.Params
+import kotlinx.kmp.util.core.http.Headers
+import kotlinx.kmp.util.core.http.QueryParams
 import kotlinx.kmp.util.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
 import kotlinx.kmp.util.core.contentHash

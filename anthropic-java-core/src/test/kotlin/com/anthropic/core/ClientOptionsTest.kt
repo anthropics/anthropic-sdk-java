@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.core
+package kotlinx.kmp.util.core
 
-import com.anthropic.core.http.HttpClient
+import kotlinx.kmp.util.core.http.HttpClient
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

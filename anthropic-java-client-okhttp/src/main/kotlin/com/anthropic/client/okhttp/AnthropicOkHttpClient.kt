@@ -6,13 +6,13 @@ import com.anthropic.backends.AnthropicBackend
 import com.anthropic.backends.Backend
 import com.anthropic.client.AnthropicClient
 import com.anthropic.client.AnthropicClientImpl
-import com.anthropic.core.ClientOptions
-import com.anthropic.core.Sleeper
-import com.anthropic.core.Timeout
-import com.anthropic.core.http.AsyncStreamResponse
-import com.anthropic.core.http.Headers
-import com.anthropic.core.http.HttpClient
-import com.anthropic.core.http.QueryParams
+import kotlinx.kmp.util.core.ClientOptions
+import kotlinx.kmp.util.core.Sleeper
+import kotlinx.kmp.util.core.Timeout
+import kotlinx.kmp.util.core.http.AsyncStreamResponse
+import kotlinx.kmp.util.core.http.Headers
+import kotlinx.kmp.util.core.http.HttpClient
+import kotlinx.kmp.util.core.http.QueryParams
 import kotlinx.kmp.util.core.jsonMapper
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.net.Proxy
@@ -185,7 +185,7 @@ class AnthropicOkHttpClient private constructor() {
         /**
          * The Jackson JSON mapper to use for serializing and deserializing JSON.
          *
-         * Defaults to [com.anthropic.core.jsonMapper]. The default is usually sufficient and rarely
+         * Defaults to [kotlinx.kmp.util.core.jsonMapper]. The default is usually sufficient and rarely
          * needs to be overridden.
          */
         fun jsonMapper(jsonMapper: JsonMapper) = apply { clientOptions.jsonMapper(jsonMapper) }

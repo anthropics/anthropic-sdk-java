@@ -7,7 +7,7 @@ import kotlinx.kmp.util.core.BaseDeserializer
 import kotlinx.kmp.util.core.BaseSerializer
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.getOrThrow
-import com.anthropic.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
 import com.fasterxml.jackson.databind.JsonNode

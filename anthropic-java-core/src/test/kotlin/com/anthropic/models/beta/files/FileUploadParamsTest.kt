@@ -3,7 +3,7 @@
 package com.anthropic.models.beta.files
 
 import kotlinx.kmp.util.core.MultipartField
-import com.anthropic.core.http.Headers
+import kotlinx.kmp.util.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
 import java.io.InputStream
 import org.assertj.core.api.Assertions.assertThat

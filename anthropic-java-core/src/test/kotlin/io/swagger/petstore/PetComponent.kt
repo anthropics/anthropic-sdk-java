@@ -1,6 +1,6 @@
 package io.swagger.petstore
 
-import com.anthropic.core.component.*
+import kotlinx.kmp.util.core.component.*
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.sse.*

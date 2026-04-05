@@ -1,4 +1,4 @@
-package com.anthropic.core.http
+package kotlinx.kmp.util.core.http
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.params.ParameterizedTest

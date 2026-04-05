@@ -2,10 +2,10 @@
 
 package com.anthropic.services.blocking
 
-import com.anthropic.core.ClientOptions
-import com.anthropic.core.RequestOptions
-import com.anthropic.core.http.HttpResponseFor
-import com.anthropic.core.http.StreamResponse
+import kotlinx.kmp.util.core.ClientOptions
+import kotlinx.kmp.util.core.RequestOptions
+import kotlinx.kmp.util.core.http.HttpResponseFor
+import kotlinx.kmp.util.core.http.StreamResponse
 import com.anthropic.models.completions.Completion
 import com.anthropic.models.completions.CompletionCreateParams
 import com.google.errorprone.annotations.MustBeClosed

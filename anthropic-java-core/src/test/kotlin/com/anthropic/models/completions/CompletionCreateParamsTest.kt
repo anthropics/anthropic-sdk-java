@@ -2,7 +2,7 @@
 
 package com.anthropic.models.completions
 
-import com.anthropic.core.http.Headers
+import kotlinx.kmp.util.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.messages.Metadata
 import com.anthropic.models.messages.Model

@@ -1,7 +1,7 @@
 package com.anthropic.backends
 
-import com.anthropic.core.http.HttpMethod
-import com.anthropic.core.http.HttpRequest
+import kotlinx.kmp.util.core.http.HttpMethod
+import kotlinx.kmp.util.core.http.HttpRequest
 import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatNoException

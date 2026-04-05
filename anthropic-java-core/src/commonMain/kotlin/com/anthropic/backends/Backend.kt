@@ -1,7 +1,7 @@
 package com.anthropic.backends
 
-import com.anthropic.core.http.HttpRequest
-import com.anthropic.core.http.HttpResponse
+import kotlinx.kmp.util.core.http.HttpRequest
+import kotlinx.kmp.util.core.http.HttpResponse
 
 /**
  * An interface that represents adaptations required to support different backend AI services.

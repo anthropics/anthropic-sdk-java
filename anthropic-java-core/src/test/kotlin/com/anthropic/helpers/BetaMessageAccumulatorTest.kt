@@ -4,7 +4,7 @@ import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonNull
 import kotlinx.kmp.util.core.JsonString
-import com.anthropic.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.messages.*
 import com.anthropic.models.beta.messages.BetaRawContentBlockStartEvent.ContentBlock
 import com.anthropic.models.messages.Model

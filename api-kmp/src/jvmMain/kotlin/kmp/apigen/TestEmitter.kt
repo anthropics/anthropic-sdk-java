@@ -40,7 +40,7 @@ class TestEmitter : ProtocolEmitter {
         testPackage: String,
         modelsPackage: String,
     ): FileSpec {
-        val patchEvent = ClassName("com.anthropic.core.component", "PatchEvent")
+        val patchEvent = ClassName("kotlinx.kmp.util.core.component", "PatchEvent")
         val patchEventType = patchEvent.parameterizedBy(entityType)
 
         // Build sample entity constructor args
@@ -60,7 +60,7 @@ class TestEmitter : ProtocolEmitter {
         val file = FileSpec.builder(testPackage, "${name}ComponentTest")
 
         // Imports
-        file.addImport("com.anthropic.core.component", "PatchEvent")
+        file.addImport("kotlinx.kmp.util.core.component", "PatchEvent")
         file.addImport("io.ktor.client.call", "body")
         file.addImport("io.ktor.client.plugins.contentnegotiation", "ContentNegotiation")
         file.addImport("io.ktor.client.plugins.sse", "SSE")

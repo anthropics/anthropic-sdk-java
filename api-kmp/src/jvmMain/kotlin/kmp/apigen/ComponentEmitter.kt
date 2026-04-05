@@ -15,9 +15,9 @@ import java.io.File
 class ComponentEmitter : ProtocolEmitter {
     override val protocol = "component"
 
-    private val componentInterface = ClassName("com.anthropic.core.component", "Component")
-    private val patchEvent = ClassName("com.anthropic.core.component", "PatchEvent")
-    private val patchOperation = ClassName("com.anthropic.core.component", "PatchOperation")
+    private val componentInterface = ClassName("kotlinx.kmp.util.core.component", "Component")
+    private val patchEvent = ClassName("kotlinx.kmp.util.core.component", "PatchEvent")
+    private val patchOperation = ClassName("kotlinx.kmp.util.core.component", "PatchOperation")
     private val flow = ClassName("kotlinx.coroutines.flow", "Flow")
     private val httpClient = ClassName("io.ktor.client", "HttpClient")
     private val contentType = ClassName("io.ktor.http", "ContentType")

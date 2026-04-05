@@ -2,9 +2,9 @@
 
 package com.anthropic.models.messages.batches
 
-import com.anthropic.core.Params
-import com.anthropic.core.http.Headers
-import com.anthropic.core.http.QueryParams
+import kotlinx.kmp.util.core.Params
+import kotlinx.kmp.util.core.http.Headers
+import kotlinx.kmp.util.core.http.QueryParams
 import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
 

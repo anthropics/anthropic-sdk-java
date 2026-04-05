@@ -3,7 +3,7 @@ package com.anthropic.helpers
 import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonObject
 import kotlinx.kmp.util.core.jsonMapper
-import com.anthropic.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.messages.*
 import kotlin.jvm.optionals.getOrNull
 

@@ -6,12 +6,12 @@ import kotlinx.kmp.util.core.getOptional
 import kotlinx.kmp.util.core.ExcludeMissing
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.MultipartField
-import com.anthropic.core.Params
+import kotlinx.kmp.util.core.Params
 import kotlinx.kmp.util.core.checkKnown
-import com.anthropic.core.http.Headers
-import com.anthropic.core.http.QueryParams
+import kotlinx.kmp.util.core.http.Headers
+import kotlinx.kmp.util.core.http.QueryParams
 import kotlinx.kmp.util.core.toImmutable
-import com.anthropic.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter

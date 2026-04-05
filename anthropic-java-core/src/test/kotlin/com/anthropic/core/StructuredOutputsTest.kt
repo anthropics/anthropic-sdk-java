@@ -1,9 +1,9 @@
-package com.anthropic.core
+package kotlinx.kmp.util.core
 
 import kotlinx.kmp.util.core.*
 
 import kotlinx.kmp.util.core.JsonSchemaValidator
-import com.anthropic.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonClassDescription
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty

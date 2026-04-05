@@ -2,7 +2,7 @@
 
 package com.anthropic.services.async
 
-import com.anthropic.core.ClientOptions
+import kotlinx.kmp.util.core.ClientOptions
 import com.anthropic.services.async.beta.FileServiceAsync
 import com.anthropic.services.async.beta.MessageServiceAsync
 import com.anthropic.services.async.beta.ModelServiceAsync

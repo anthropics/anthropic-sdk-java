@@ -1,8 +1,8 @@
-package com.anthropic.core.handlers
+package kotlinx.kmp.util.core.handlers
 
-import com.anthropic.core.http.Headers
-import com.anthropic.core.http.HttpResponse
-import com.anthropic.errors.AnthropicIoException
+import kotlinx.kmp.util.core.http.Headers
+import kotlinx.kmp.util.core.http.HttpResponse
+import kotlinx.kmp.util.core.errors.AnthropicIoException
 import java.io.IOException
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList

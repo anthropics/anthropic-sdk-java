@@ -4,8 +4,8 @@ import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.JsonSchemaLocalValidation
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkRequired
-import com.anthropic.core.http.Headers
-import com.anthropic.core.http.QueryParams
+import kotlinx.kmp.util.core.http.Headers
+import kotlinx.kmp.util.core.http.QueryParams
 import com.anthropic.core.outputFormatFromClass
 import kotlinx.kmp.util.core.contentHash
 import java.util.Optional

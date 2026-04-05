@@ -2,25 +2,25 @@
 
 package com.anthropic.services.blocking
 
-import com.anthropic.core.ClientOptions
+import kotlinx.kmp.util.core.ClientOptions
 import kotlinx.kmp.util.core.JsonValue
-import com.anthropic.core.RequestOptions
+import kotlinx.kmp.util.core.RequestOptions
 
-import com.anthropic.core.handlers.errorBodyHandler
-import com.anthropic.core.handlers.errorHandler
-import com.anthropic.core.handlers.jsonHandler
-import com.anthropic.core.handlers.mapJson
-import com.anthropic.core.handlers.sseHandler
-import com.anthropic.core.http.HttpMethod
-import com.anthropic.core.http.HttpRequest
-import com.anthropic.core.http.HttpResponse
-import com.anthropic.core.http.HttpResponse.Handler
-import com.anthropic.core.http.HttpResponseFor
-import com.anthropic.core.http.StreamResponse
-import com.anthropic.core.http.json
-import com.anthropic.core.http.map
-import com.anthropic.core.http.parseable
-import com.anthropic.core.prepare
+import kotlinx.kmp.util.core.handlers.errorBodyHandler
+import kotlinx.kmp.util.core.handlers.errorHandler
+import kotlinx.kmp.util.core.handlers.jsonHandler
+import kotlinx.kmp.util.core.handlers.mapJson
+import kotlinx.kmp.util.core.handlers.sseHandler
+import kotlinx.kmp.util.core.http.HttpMethod
+import kotlinx.kmp.util.core.http.HttpRequest
+import kotlinx.kmp.util.core.http.HttpResponse
+import kotlinx.kmp.util.core.http.HttpResponse.Handler
+import kotlinx.kmp.util.core.http.HttpResponseFor
+import kotlinx.kmp.util.core.http.StreamResponse
+import kotlinx.kmp.util.core.http.json
+import kotlinx.kmp.util.core.http.map
+import kotlinx.kmp.util.core.http.parseable
+import kotlinx.kmp.util.core.prepare
 import com.anthropic.models.completions.Completion
 import com.anthropic.models.completions.CompletionCreateParams
 import java.util.function.Consumer

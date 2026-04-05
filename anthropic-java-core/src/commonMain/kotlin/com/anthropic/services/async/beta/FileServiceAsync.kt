@@ -2,10 +2,10 @@
 
 package com.anthropic.services.async.beta
 
-import com.anthropic.core.ClientOptions
-import com.anthropic.core.RequestOptions
-import com.anthropic.core.http.HttpResponse
-import com.anthropic.core.http.HttpResponseFor
+import kotlinx.kmp.util.core.ClientOptions
+import kotlinx.kmp.util.core.RequestOptions
+import kotlinx.kmp.util.core.http.HttpResponse
+import kotlinx.kmp.util.core.http.HttpResponseFor
 import com.anthropic.models.beta.files.DeletedFile
 import com.anthropic.models.beta.files.FileDeleteParams
 import com.anthropic.models.beta.files.FileDownloadParams

@@ -16,7 +16,7 @@ import kotlinx.kmp.util.core.JsonSchemaLocalValidation
 import kotlinx.kmp.util.core.apiJson
 import kotlinx.kmp.util.core.fromJsonNode
 
-import com.anthropic.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.messages.BetaJsonOutputFormat
 import com.anthropic.models.beta.messages.BetaTool
 import com.anthropic.models.messages.JsonOutputFormat

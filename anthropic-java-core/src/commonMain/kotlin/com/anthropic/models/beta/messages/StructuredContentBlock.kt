@@ -1,7 +1,7 @@
 package com.anthropic.models.beta.messages
 
 import kotlinx.kmp.util.core.JsonValue
-import com.anthropic.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
 import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrElse
@@ -122,7 +122,7 @@ internal constructor(
     /** @see BetaContentBlock.asText */
     fun asText(): StructuredTextBlock<T> =
         text.getOrElse {
-            // Same behavior as `com.anthropic.core.getOrThrow` used by the delegate class.
+            // Same behavior as `kotlinx.kmp.util.core.getOrThrow` used by the delegate class.
             throw AnthropicInvalidDataException("`text` is not present")
         }
 

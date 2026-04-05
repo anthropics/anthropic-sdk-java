@@ -1,12 +1,12 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.core.http
+package kotlinx.kmp.util.core.http
 
 import com.anthropic.backends.Backend
 import com.anthropic.client.okhttp.OkHttpClient
-import com.anthropic.core.RequestOptions
-import com.anthropic.core.Sleeper
-import com.anthropic.errors.AnthropicRetryableException
+import kotlinx.kmp.util.core.RequestOptions
+import kotlinx.kmp.util.core.Sleeper
+import kotlinx.kmp.util.core.errors.AnthropicRetryableException
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.client.WireMock.matching
 import com.github.tomakehurst.wiremock.client.WireMock.ok

@@ -2,11 +2,11 @@
 
 package com.anthropic.services.async
 
-import com.anthropic.core.ClientOptions
-import com.anthropic.core.RequestOptions
-import com.anthropic.core.http.AsyncStreamResponse
-import com.anthropic.core.http.HttpResponseFor
-import com.anthropic.core.http.StreamResponse
+import kotlinx.kmp.util.core.ClientOptions
+import kotlinx.kmp.util.core.RequestOptions
+import kotlinx.kmp.util.core.http.AsyncStreamResponse
+import kotlinx.kmp.util.core.http.HttpResponseFor
+import kotlinx.kmp.util.core.http.StreamResponse
 import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.MessageCountTokensParams
 import com.anthropic.models.messages.MessageCreateParams

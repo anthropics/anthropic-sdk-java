@@ -14,7 +14,7 @@ import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.getOrThrow
 import com.anthropic.core.outputTypeFromJson
 import com.anthropic.core.toJsonString
-import com.anthropic.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator

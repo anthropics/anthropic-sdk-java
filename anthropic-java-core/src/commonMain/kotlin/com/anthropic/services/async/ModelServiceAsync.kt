@@ -2,9 +2,9 @@
 
 package com.anthropic.services.async
 
-import com.anthropic.core.ClientOptions
-import com.anthropic.core.RequestOptions
-import com.anthropic.core.http.HttpResponseFor
+import kotlinx.kmp.util.core.ClientOptions
+import kotlinx.kmp.util.core.RequestOptions
+import kotlinx.kmp.util.core.http.HttpResponseFor
 import com.anthropic.models.models.ModelInfo
 import com.anthropic.models.models.ModelListPageAsync
 import com.anthropic.models.models.ModelListParams

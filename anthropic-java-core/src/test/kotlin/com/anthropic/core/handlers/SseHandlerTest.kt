@@ -1,13 +1,13 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.core.handlers
+package kotlinx.kmp.util.core.handlers
 
 import kotlinx.kmp.util.core.JsonValue
-import com.anthropic.core.http.Headers
-import com.anthropic.core.http.HttpResponse
-import com.anthropic.core.http.SseMessage
+import kotlinx.kmp.util.core.http.Headers
+import kotlinx.kmp.util.core.http.HttpResponse
+import kotlinx.kmp.util.core.http.SseMessage
 import kotlinx.kmp.util.core.jsonMapper
-import com.anthropic.errors.SseException
+import kotlinx.kmp.util.core.errors.SseException
 import java.io.InputStream
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking

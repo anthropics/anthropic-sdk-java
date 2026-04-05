@@ -1,7 +1,7 @@
 package com.anthropic.backends
 
 import com.anthropic.backends.AnthropicBackend.Builder
-import com.anthropic.core.http.HttpRequest
+import kotlinx.kmp.util.core.http.HttpRequest
 import java.util.Optional
 
 /**

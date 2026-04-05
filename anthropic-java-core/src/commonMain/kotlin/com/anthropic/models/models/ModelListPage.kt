@@ -3,8 +3,8 @@
 package com.anthropic.models.models
 import kotlinx.kmp.util.core.getOptional
 
-import com.anthropic.core.AutoPager
-import com.anthropic.core.Page
+import kotlinx.kmp.util.core.AutoPager
+import kotlinx.kmp.util.core.Page
 import kotlinx.kmp.util.core.checkRequired
 import com.anthropic.services.blocking.ModelService
 import kotlinx.kmp.util.core.contentHash

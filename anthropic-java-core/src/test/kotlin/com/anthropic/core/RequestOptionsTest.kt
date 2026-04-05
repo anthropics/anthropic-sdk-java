@@ -1,4 +1,4 @@
-package com.anthropic.core
+package kotlinx.kmp.util.core
 
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds

@@ -3,8 +3,8 @@
 package com.anthropic.models.beta.files
 import kotlinx.kmp.util.core.getOptional
 
-import com.anthropic.core.AutoPagerAsync
-import com.anthropic.core.PageAsync
+import kotlinx.kmp.util.core.AutoPagerAsync
+import kotlinx.kmp.util.core.PageAsync
 import kotlinx.kmp.util.core.checkRequired
 import com.anthropic.services.async.beta.FileServiceAsync
 import kotlinx.kmp.util.core.contentHash

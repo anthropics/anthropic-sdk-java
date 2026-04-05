@@ -1,4 +1,4 @@
-package com.anthropic.core
+package kotlinx.kmp.util.core
 
 import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.ExcludeMissing

@@ -2,8 +2,8 @@
 
 package com.anthropic.models.beta.messages.batches
 
-import com.anthropic.core.http.Headers
-import com.anthropic.core.http.QueryParams
+import kotlinx.kmp.util.core.http.Headers
+import kotlinx.kmp.util.core.http.QueryParams
 import com.anthropic.models.beta.AnthropicBeta
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

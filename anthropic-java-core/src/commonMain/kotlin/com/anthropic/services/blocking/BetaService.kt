@@ -2,7 +2,7 @@
 
 package com.anthropic.services.blocking
 
-import com.anthropic.core.ClientOptions
+import kotlinx.kmp.util.core.ClientOptions
 import com.anthropic.services.blocking.beta.FileService
 import com.anthropic.services.blocking.beta.MessageService
 import com.anthropic.services.blocking.beta.ModelService

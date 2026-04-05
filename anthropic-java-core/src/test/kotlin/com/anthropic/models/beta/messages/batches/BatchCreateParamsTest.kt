@@ -3,7 +3,7 @@
 package com.anthropic.models.beta.messages.batches
 
 import kotlinx.kmp.util.core.JsonValue
-import com.anthropic.core.http.Headers
+import kotlinx.kmp.util.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.messages.BetaCacheControlEphemeral
 import com.anthropic.models.beta.messages.BetaCitationCharLocationParam

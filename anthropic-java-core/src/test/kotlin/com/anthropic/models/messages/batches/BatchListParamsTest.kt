@@ -2,7 +2,7 @@
 
 package com.anthropic.models.messages.batches
 
-import com.anthropic.core.http.QueryParams
+import kotlinx.kmp.util.core.http.QueryParams
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

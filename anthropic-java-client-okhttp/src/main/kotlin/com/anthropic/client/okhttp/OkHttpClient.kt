@@ -1,16 +1,16 @@
 package com.anthropic.client.okhttp
 
 import com.anthropic.backends.Backend
-import com.anthropic.core.RequestOptions
-import com.anthropic.core.Timeout
+import kotlinx.kmp.util.core.RequestOptions
+import kotlinx.kmp.util.core.Timeout
 import kotlinx.kmp.util.core.checkRequired
-import com.anthropic.core.http.Headers
-import com.anthropic.core.http.HttpClient
-import com.anthropic.core.http.HttpMethod
-import com.anthropic.core.http.HttpRequest
-import com.anthropic.core.http.HttpRequestBody
-import com.anthropic.core.http.HttpResponse
-import com.anthropic.errors.AnthropicIoException
+import kotlinx.kmp.util.core.http.Headers
+import kotlinx.kmp.util.core.http.HttpClient
+import kotlinx.kmp.util.core.http.HttpMethod
+import kotlinx.kmp.util.core.http.HttpRequest
+import kotlinx.kmp.util.core.http.HttpRequestBody
+import kotlinx.kmp.util.core.http.HttpResponse
+import kotlinx.kmp.util.core.errors.AnthropicIoException
 import java.io.IOException
 import java.io.InputStream
 import java.net.Proxy

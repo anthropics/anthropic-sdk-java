@@ -2,9 +2,9 @@
 
 package com.anthropic.services.blocking.beta
 
-import com.anthropic.core.ClientOptions
-import com.anthropic.core.RequestOptions
-import com.anthropic.core.http.HttpResponseFor
+import kotlinx.kmp.util.core.ClientOptions
+import kotlinx.kmp.util.core.RequestOptions
+import kotlinx.kmp.util.core.http.HttpResponseFor
 import com.anthropic.models.beta.skills.SkillCreateParams
 import com.anthropic.models.beta.skills.SkillCreateResponse
 import com.anthropic.models.beta.skills.SkillDeleteParams

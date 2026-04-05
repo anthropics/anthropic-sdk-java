@@ -2,10 +2,10 @@
 
 package com.anthropic.services.blocking.messages
 
-import com.anthropic.core.ClientOptions
-import com.anthropic.core.RequestOptions
-import com.anthropic.core.http.HttpResponseFor
-import com.anthropic.core.http.StreamResponse
+import kotlinx.kmp.util.core.ClientOptions
+import kotlinx.kmp.util.core.RequestOptions
+import kotlinx.kmp.util.core.http.HttpResponseFor
+import kotlinx.kmp.util.core.http.StreamResponse
 import com.anthropic.models.messages.batches.BatchCancelParams
 import com.anthropic.models.messages.batches.BatchCreateParams
 import com.anthropic.models.messages.batches.BatchDeleteParams

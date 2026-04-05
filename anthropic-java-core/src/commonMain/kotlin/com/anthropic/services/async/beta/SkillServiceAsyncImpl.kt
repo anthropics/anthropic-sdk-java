@@ -2,22 +2,22 @@
 
 package com.anthropic.services.async.beta
 
-import com.anthropic.core.ClientOptions
-import com.anthropic.core.RequestOptions
+import kotlinx.kmp.util.core.ClientOptions
+import kotlinx.kmp.util.core.RequestOptions
 import kotlinx.kmp.util.core.checkRequired
-import com.anthropic.core.handlers.errorBodyHandler
-import com.anthropic.core.handlers.errorHandler
-import com.anthropic.core.handlers.jsonHandler
-import com.anthropic.core.http.Headers
-import com.anthropic.core.http.HttpMethod
-import com.anthropic.core.http.HttpRequest
-import com.anthropic.core.http.HttpResponse
-import com.anthropic.core.http.HttpResponse.Handler
-import com.anthropic.core.http.HttpResponseFor
-import com.anthropic.core.http.json
-import com.anthropic.core.http.multipartFormData
-import com.anthropic.core.http.parseable
-import com.anthropic.core.prepareSuspend
+import kotlinx.kmp.util.core.handlers.errorBodyHandler
+import kotlinx.kmp.util.core.handlers.errorHandler
+import kotlinx.kmp.util.core.handlers.jsonHandler
+import kotlinx.kmp.util.core.http.Headers
+import kotlinx.kmp.util.core.http.HttpMethod
+import kotlinx.kmp.util.core.http.HttpRequest
+import kotlinx.kmp.util.core.http.HttpResponse
+import kotlinx.kmp.util.core.http.HttpResponse.Handler
+import kotlinx.kmp.util.core.http.HttpResponseFor
+import kotlinx.kmp.util.core.http.json
+import kotlinx.kmp.util.core.http.multipartFormData
+import kotlinx.kmp.util.core.http.parseable
+import kotlinx.kmp.util.core.prepareSuspend
 import com.anthropic.models.beta.skills.SkillCreateParams
 import com.anthropic.models.beta.skills.SkillCreateResponse
 import com.anthropic.models.beta.skills.SkillDeleteParams

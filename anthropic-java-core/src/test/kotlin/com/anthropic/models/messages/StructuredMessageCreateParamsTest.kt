@@ -1,15 +1,15 @@
 package com.anthropic.models.messages
 
-import com.anthropic.core.DelegationWriteTestCase
+import kotlinx.kmp.util.core.DelegationWriteTestCase
 import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.JsonValue
-import com.anthropic.core.X
-import com.anthropic.core.checkAllDelegation
-import com.anthropic.core.checkAllDelegatorWriteFunctionsAreTested
-import com.anthropic.core.checkOneDelegationWrite
-import com.anthropic.core.findDelegationMethod
-import com.anthropic.core.http.Headers
-import com.anthropic.core.http.QueryParams
+import kotlinx.kmp.util.core.X
+import kotlinx.kmp.util.core.checkAllDelegation
+import kotlinx.kmp.util.core.checkAllDelegatorWriteFunctionsAreTested
+import kotlinx.kmp.util.core.checkOneDelegationWrite
+import kotlinx.kmp.util.core.findDelegationMethod
+import kotlinx.kmp.util.core.http.Headers
+import kotlinx.kmp.util.core.http.QueryParams
 import com.anthropic.core.outputFormatFromClass
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

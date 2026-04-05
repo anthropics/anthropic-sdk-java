@@ -1,4 +1,4 @@
-package com.anthropic.core
+package kotlinx.kmp.util.core
 
 internal actual fun currentTimeNanos(): Long =
     (kotlin.js.Date.now() * 1_000_000).toLong()

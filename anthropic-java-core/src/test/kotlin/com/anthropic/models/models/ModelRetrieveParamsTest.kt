@@ -2,7 +2,7 @@
 
 package com.anthropic.models.models
 
-import com.anthropic.core.http.Headers
+import kotlinx.kmp.util.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

@@ -2,11 +2,11 @@
 
 package com.anthropic.services.async.beta.messages
 
-import com.anthropic.core.ClientOptions
-import com.anthropic.core.RequestOptions
-import com.anthropic.core.http.AsyncStreamResponse
-import com.anthropic.core.http.HttpResponseFor
-import com.anthropic.core.http.StreamResponse
+import kotlinx.kmp.util.core.ClientOptions
+import kotlinx.kmp.util.core.RequestOptions
+import kotlinx.kmp.util.core.http.AsyncStreamResponse
+import kotlinx.kmp.util.core.http.HttpResponseFor
+import kotlinx.kmp.util.core.http.StreamResponse
 import com.anthropic.models.beta.messages.batches.BatchCancelParams
 import com.anthropic.models.beta.messages.batches.BatchCreateParams
 import com.anthropic.models.beta.messages.batches.BatchDeleteParams

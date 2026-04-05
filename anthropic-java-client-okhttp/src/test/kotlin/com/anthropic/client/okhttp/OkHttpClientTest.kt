@@ -1,8 +1,8 @@
 package com.anthropic.client.okhttp
 
 import com.anthropic.backends.Backend
-import com.anthropic.core.http.HttpMethod
-import com.anthropic.core.http.HttpRequest
+import kotlinx.kmp.util.core.http.HttpMethod
+import kotlinx.kmp.util.core.http.HttpRequest
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo
 import com.github.tomakehurst.wiremock.junit5.WireMockTest

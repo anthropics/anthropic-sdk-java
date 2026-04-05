@@ -1,0 +1,86 @@
+// File generated from our OpenAPI spec by Stainless.
+
+package kotlinx.kmp.util.core.errors
+
+import kotlinx.kmp.util.core.JsonValue
+import kotlinx.kmp.util.core.checkRequired
+import kotlinx.kmp.util.core.http.Headers
+
+class UnexpectedStatusCodeException
+private constructor(
+    private val statusCode: Int,
+    private val headers: Headers,
+    private val body: JsonValue,
+    cause: Throwable?,
+) : AnthropicServiceException("$statusCode: $body", cause) {
+
+    override fun statusCode(): Int = statusCode
+
+    override fun headers(): Headers = headers
+
+    override fun body(): JsonValue = body
+
+    fun toBuilder() = Builder().from(this)
+
+    companion object {
+
+        /**
+         * Returns a mutable builder for constructing an instance of
+         * [UnexpectedStatusCodeException].
+         *
+         * The following fields are required:
+         * ```java
+         * .statusCode()
+         * .headers()
+         * .body()
+         * ```
+         */
+        @JvmStatic fun builder() = Builder()
+    }
+
+    /** A builder for [UnexpectedStatusCodeException]. */
+    class Builder internal constructor() {
+
+        private var statusCode: Int? = null
+        private var headers: Headers? = null
+        private var body: JsonValue? = null
+        private var cause: Throwable? = null
+
+        @JvmSynthetic fun from(unexpectedStatusCodeException: UnexpectedStatusCodeException) = apply {
+            statusCode = unexpectedStatusCodeException.statusCode
+            headers = unexpectedStatusCodeException.headers
+            body = unexpectedStatusCodeException.body
+            cause = unexpectedStatusCodeException.cause
+        }
+
+        fun statusCode(statusCode: Int) = apply { this.statusCode = statusCode }
+
+        fun headers(headers: Headers) = apply { this.headers = headers }
+
+        fun body(body: JsonValue) = apply { this.body = body }
+
+        fun cause(cause: Throwable?) = apply { this.cause = cause }
+
+        /**
+         * Returns an immutable instance of [UnexpectedStatusCodeException].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .statusCode()
+         * .headers()
+         * .body()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
+        fun build(): UnexpectedStatusCodeException =
+            UnexpectedStatusCodeException(
+                checkRequired("statusCode", statusCode),
+                checkRequired("headers", headers),
+                checkRequired("body", body),
+                cause,
+            )
+    }
+}

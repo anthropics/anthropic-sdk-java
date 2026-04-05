@@ -1,8 +1,8 @@
 package io.petstore.components
 
-import com.anthropic.core.component.Component
-import com.anthropic.core.component.PatchEvent
-import com.anthropic.core.component.PatchOperation
+import kotlinx.kmp.util.core.component.Component
+import kotlinx.kmp.util.core.component.PatchEvent
+import kotlinx.kmp.util.core.component.PatchOperation
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.sse.sse

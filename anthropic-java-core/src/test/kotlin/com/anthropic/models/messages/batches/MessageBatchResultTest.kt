@@ -4,7 +4,7 @@ package com.anthropic.models.messages.batches
 
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.jsonMapper
-import com.anthropic.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
 import com.anthropic.models.ErrorResponse
 import com.anthropic.models.messages.CacheCreation
 import com.anthropic.models.messages.CitationCharLocation

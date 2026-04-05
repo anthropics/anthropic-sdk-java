@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.core.http
+package kotlinx.kmp.util.core.http
 
 import kotlinx.kmp.util.core.MultipartField
 import kotlinx.kmp.util.core.jsonMapper

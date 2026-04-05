@@ -4,7 +4,7 @@ package com.anthropic.models.messages
 
 import kotlinx.kmp.util.core.Enum
 import kotlinx.kmp.util.core.JsonField
-import com.anthropic.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 
 class TextEditorCodeExecutionToolResultErrorCode

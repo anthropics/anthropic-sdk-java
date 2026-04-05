@@ -2,7 +2,7 @@
 
 package com.anthropic.client
 
-import com.anthropic.core.ClientOptions
+import kotlinx.kmp.util.core.ClientOptions
 import com.anthropic.services.blocking.BetaService
 import com.anthropic.services.blocking.CompletionService
 import com.anthropic.services.blocking.MessageService

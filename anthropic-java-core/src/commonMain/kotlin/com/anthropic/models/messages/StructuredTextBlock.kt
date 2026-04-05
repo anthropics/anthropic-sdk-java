@@ -3,7 +3,7 @@ package com.anthropic.models.messages
 import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.JsonValue
 import com.anthropic.core.outputTypeFromJson
-import com.anthropic.errors.AnthropicInvalidDataException
+import kotlinx.kmp.util.core.errors.AnthropicInvalidDataException
 import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
 

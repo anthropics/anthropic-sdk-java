@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.core
+package kotlinx.kmp.util.core
 
-import com.anthropic.core.http.AsyncStreamResponse
+import kotlinx.kmp.util.core.http.AsyncStreamResponse
 import java.util.concurrent.Executor
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable

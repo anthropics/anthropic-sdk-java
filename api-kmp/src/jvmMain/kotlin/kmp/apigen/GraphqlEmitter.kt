@@ -86,7 +86,7 @@ class GraphqlFullEmitter : ProtocolEmitter {
         // 2. Generate Kotlin resolver classes (open — add logic by overriding)
         val modelsPackage = "$pkg.models"
         val resolverPackage = "$pkg.graphql"
-        val patchEvent = ClassName("com.anthropic.core.component", "PatchEvent")
+        val patchEvent = ClassName("kotlinx.kmp.util.core.component", "PatchEvent")
 
         val queries = spec.paths.filter { it.value.method == "GET" }
         val mutations = spec.paths.filter { it.value.method != "GET" }
