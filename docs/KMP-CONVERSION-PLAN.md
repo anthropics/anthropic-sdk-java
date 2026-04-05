@@ -636,6 +636,141 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 
 ## Current Progress (synced with branch claude/convert-to-kmp-I9zBV)
 
+### 📊 Commit Summary (158 commits since KMP migration began)
+
+| Theme | Commits | Status |
+|---|---|---|
+| Build system KMP conversion | 15 | ✅ |
+| Model/HTTP/core → commonMain migration | 28 | ✅ |
+| Stable lib integration (okio, Wire, ktor) | 9 | ✅ |
+| `kotlinx.kmp.util.*` generic packages | 12 | ✅ |
+| JS target (partial — blocked on `@JvmStatic`) | 6 | 🟡 |
+| `api-gen` code generator (OpenAPI→KMP) | 18 | ✅ |
+| api-gen emitters (Compose, HTML, DB, GraphQL, gRPC, MCP, Test, Fabrikt, Faker) | 14 | ✅ |
+| Wire proto types + Google standard protos | 8 | ✅ |
+| RFC 6350 vCard (ezvcard + jCard + VCardContact) | 11 | ✅ |
+| RFC 5545 iCalendar (ical4j + jCal + ICalendar) | 9 | ✅ |
+| RFC 4791 CalDAV client (ktor + auth schemes) | 5 | ✅ |
+| ICU CLDR (locale, timezone, calendar, person names, scripts, measure) | 14 | ✅ |
+| Phone/GeoIp/OIDC/Principal integration | 7 | ✅ |
+| Validators (Apache + libphonenumber + ICU + RFC formats) | 8 | ✅ |
+| Multi-locale round-trip tests (23 kt-faker locales) | 3 | ✅ |
+| Smack XEP-0054 + Bedework bridges | 4 | ✅ |
+| Architectural refactors (package moves, dedup, trimIndent) | 12 | ✅ |
+| Fixes (schema validator, RFC 5545 formats, type mappings) | 9 | ✅ |
+| Plan documentation updates | 53 | ✅ |
+
+### 📝 Recent Commits (newest first, post-initial-migration)
+
+**Phase 10 — Full RFC stack + Principal (most recent)**
+- `a010adc` fix: JSON schema validator allow 'default' keyword + RFC 5545 components
+- `91e9e57` feat: VCardContact set views + dedup + predefined proto types in api-gen
+- `1676e88` feat: CalDAV + Principal + jCard/jCal + Bedework/Smack + multi-locale tests
+- `c93781c` refactor: move generic vCard/iCal/Validators to kotlinx.kmp.util package
+- `4da0bc2` feat: Wire VCardContact full RFC 6350 parity with ezvcard.VCard
+- `38100b1` refactor: JVM uses ezvcard.VCard directly, Wire VCardContact for KMP only
+- `c3a0f0d` feat: libphonenumber geocoder/carrier + inferVCardContact(phone, geoIp)
+- `45c8cf6` feat: GeoIp city → CLDR timezone resolution via ICU TimeZoneNames
+- `5225adb` feat: DateTime with country + language + ICU CLDR calendar
+- `5c67b62` feat: Measure — CLDR/ICU/PostGIS/GeoJSON interop + unified toGeo/fromGeo
+- `6046a59` feat: Wire proto types with Google standard protos (types.proto)
+
+**Phase 9 — Validators, Fabrikt, Faker, Koin DI**
+- `593e5cd` feat: Validators extended with vCard + iCal property-level validation
+- `200e8dd` feat: Koin DI for emitters + validateByFormat OpenAPI format registry
+- `fdbe69a` feat: Fabrikt + kt-faker + Koin DI + ICU script detection + PlantUML
+- `cf5d32d` feat: ICU CLDR — timezone→city, calendar per country, localized formats
+- `913c281` feat: linked type chain — IP → GeoIP → Country → ICU/CLDR → all
+- `0341719` feat: ical4j + vCard + ICU + TOML catalog + all validators
+- `8239a28` feat: TOML version catalog + ical4j API usage
+- `c9f9542` feat: vCard + iCalendar + ICU — parse/generate .vcf and .ics
+- `bee3dd3` feat: all OpenAPI formats + geo + ICU/CLDR + validators
+- `76ee796` feat: JVM validators — apache commons-validator + google libphonenumber
+
+**Phase 8 — api-gen code generator (OpenAPI → KMP)**
+- `928bffa` feat: all OpenAPI formats → KMP native types
+- `6e08943` feat: format: date-time → kotlinx.datetime.Instant (KMP native)
+- `2560402` feat: CalDAV/CardDAV + Google Calendar API tested with api-gen
+- `b785f15` feat: Uri value class — supports http, file, ws, content, data, mailto
+- `5a1362c` feat: Wire compiles petstore.proto → KMP data classes + gRPC service
+- `fa707c5` feat: generate petstore.proto + update plan progress
+- `a325380` feat: HtmlEmitter — Compose for Web (Kotlin/JS) UI from OpenAPI schemas
+- `17b3772` refactor: use trimIndent instead of trimMargin in all emitters
+- `9fdff65` feat: Compose master-detail + FK navigation from $ref
+- `fe55fe6` fix: named SQL parameters — prevent injection, map to query params
+- `d7ebac8` feat: TestEmitter — generates Component tests from OpenAPI schemas
+- `86dc654` feat: x-sql OpenAPI extension — custom SQL in spec, generated into .sq files
+- `145828c` feat: GraphQL emitter + open services — schema.graphql + Kotlin resolvers
+- `b18f436` feat: DatabaseEmitter + search by property + SQL paging
+- `a64bd20` feat: ComposeEmitter — Form/List/Detail @Composable from schemas
+- `8a35606` feat: full Petstore integration test — generated models + components + SSE + WS
+- `3b3a249` feat: ComponentEmitter — api-gen generates Component classes from schemas
+- `0beb25d` feat: PatchEvent + Component interface + 4 tests (add/replace/remove/SSE)
+
+**Phase 7 — LLDs and architecture**
+- `a7d2f58` docs: rename AuditEvent → PatchEvent — it IS the patch
+- `041e3b1` docs: LLD — Schema Registry with external $ref + cross-API JSON Patch
+- `83493eb` docs: LLD — MCP exposes components as tools for AI agents
+- `d686664` docs: LLD — WebDAV adds DB locking + JSON Schema validation
+- `0d93d41` docs: LLD — all HTTP methods are patch ops, WS receives same PatchEvent as SSE
+- `f4072b2` docs: LLD — PatchEvent = SSE sync for all Flow subscribers via JSON Patch
+
+**Phases 1-6 — Initial KMP migration (earlier)**
+- `5212898` build: convert anthropic-java-core to Kotlin Multiplatform
+- `449dbe9` refactor: migrate first files from jvmMain to commonMain
+- `3e55c75` refactor: move JsonSchemaLocalValidation to commonMain
+- `5119bc6` refactor: move Values.kt and Utils.kt to commonMain (KMP)
+- `8c570c5` refactor: move Headers, QueryParams, Params, HttpRequest, HttpRequestBody
+- `cc23387` refactor: move HTTP interfaces, Timeout, RequestOptions to commonMain
+- … (140+ more migration/refactor commits, all compiles + tests pass)
+
+### 📦 Current Module Structure
+
+```
+api-kmp/                                      # generic KMP library
+├── src/commonMain/kotlin/
+│   ├── kotlinx/kmp/util/                     # generic types (Uri, Email, Phone, etc.)
+│   │   ├── VCardContact.kt (Wire)
+│   │   ├── ICalEvent / ICalTodo / ICalJournal / ICalFreeBusy / ICalTimezone (Wire)
+│   │   ├── ICalendar.kt (Wire — VCALENDAR wrapper)
+│   │   ├── PersonName / GeoIp / GeoPoint / Measure / PatchEvent (Wire)
+│   │   └── optional/, errors/
+│   └── com/google/type/                      # Google standard protos (Wire)
+│       └── LatLng, PostalAddress, PhoneNumber, Money, Date, DateTime, ...
+├── src/jvmMain/kotlin/
+│   ├── kotlinx/kmp/util/                     # JVM bridges
+│   │   ├── Validators.kt                     # apache + libphonenumber + ICU + RFC
+│   │   ├── VCardBridges.kt                   # Smack + Bedework bridges
+│   │   ├── CalDavClient.kt                   # RFC 4791 client (ktor)
+│   │   └── Principal.kt                      # user principal (VCardContact + OIDC)
+│   └── kmp/apigen/                           # code generator
+│       ├── OpenApiParser, ModelGenerator, ServiceGenerator
+│       └── ComponentEmitter, ComposeEmitter, HtmlEmitter, DatabaseEmitter,
+│           GraphqlFullEmitter, GrpcEmitter, McpEmitter, TestEmitter,
+│           FabriktEmitter, FakerTestDataEmitter (all via Koin DI)
+└── src/main/proto/types.proto                # Wire proto source of truth
+
+anthropic-java-core/                          # Anthropic SDK core (depends on api-kmp)
+└── src/commonMain/kotlin/com/anthropic/
+    ├── core/                                 # ClientOptions, HttpClient, Values, ...
+    ├── errors/, handlers/, http/
+    ├── models/, services/, client/, helpers/, backends/
+    └── StructuredOutputs.kt + JsonSchemaValidator.kt
+```
+
+### 🧪 Test Coverage (current)
+
+| Test Suite | Tests | Status |
+|---|---|---|
+| api-kmp `OptionalTest` (commonTest) | 66 | ✅ |
+| api-kmp `VCardRoundTripTest` | 11 | ✅ |
+| api-kmp `ICalRoundTripTest` | 6 | ✅ |
+| api-kmp `FakerMultiLocaleRoundTripTest` | 53 (23 locales × user+org + unicode) | ✅ |
+| api-kmp Petstore (5 WireMock + 4 ktor server + 4 Component + 9 generated) | 22 | ✅ |
+| anthropic-java-core `StructuredOutputsTest` | 78 (0 failures, fixed 15 pre-existing) | ✅ |
+| anthropic-java-core `HttpRequestBodiesTest` | 18 | ✅ |
+| anthropic-java-core full JVM suite | 2682+ | ✅ |
+
 ### ✅ DONE — Build System (Phase 1)
 - Gradle 8.12 → 9.4.1, Kotlin 1.9.20 → 2.3.20
 - KMP multiplatform plugin on anthropic-java-core
