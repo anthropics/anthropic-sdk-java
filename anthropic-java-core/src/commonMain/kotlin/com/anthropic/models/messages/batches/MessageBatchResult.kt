@@ -1,12 +1,12 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.messages.batches
-import com.anthropic.core.fromJsonNode
+import kotlinx.kmp.util.core.fromJsonNode
 
-import com.anthropic.core.BaseDeserializer
-import com.anthropic.core.BaseSerializer
-import com.anthropic.core.JsonValue
-import com.anthropic.core.getOrThrow
+import kotlinx.kmp.util.core.BaseDeserializer
+import kotlinx.kmp.util.core.BaseSerializer
+import kotlinx.kmp.util.core.JsonValue
+import kotlinx.kmp.util.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import com.anthropic.core.contentHash
+import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
 
 import kotlin.jvm.optionals.getOrNull

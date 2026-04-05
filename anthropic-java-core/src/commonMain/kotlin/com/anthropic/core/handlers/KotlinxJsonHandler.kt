@@ -1,6 +1,6 @@
 package com.anthropic.core.handlers
 
-import com.anthropic.core.anthropicJson
+import kotlinx.kmp.util.core.apiJson
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
 import kotlinx.serialization.json.JsonObject
@@ -15,7 +15,7 @@ fun kotlinxJsonObjectHandler(): Handler<JsonObject> =
     object : Handler<JsonObject> {
         override fun handle(response: HttpResponse): JsonObject {
             val body = response.body().readUtf8()
-            return anthropicJson.parseToJsonElement(body) as JsonObject
+            return apiJson.parseToJsonElement(body) as JsonObject
         }
     }
 
@@ -23,7 +23,7 @@ fun kotlinxJsonElementHandler(): Handler<JsonElement> =
     object : Handler<JsonElement> {
         override fun handle(response: HttpResponse): JsonElement {
             val body = response.body().readUtf8()
-            return anthropicJson.parseToJsonElement(body)
+            return apiJson.parseToJsonElement(body)
         }
     }
 
@@ -35,6 +35,6 @@ inline fun <reified T> kotlinxJsonHandler(): Handler<T> =
     object : Handler<T> {
         override fun handle(response: HttpResponse): T {
             val body = response.body().readUtf8()
-            return anthropicJson.decodeFromString<T>(body)
+            return apiJson.decodeFromString<T>(body)
         }
     }

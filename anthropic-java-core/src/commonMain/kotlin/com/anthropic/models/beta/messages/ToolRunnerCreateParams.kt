@@ -1,6 +1,6 @@
 package com.anthropic.models.beta.messages
 
-import com.anthropic.core.checkRequired
+import kotlinx.kmp.util.core.checkRequired
 import com.anthropic.helpers.BetaMemoryToolHandler
 import com.anthropic.services.blocking.beta.MessageService
 import java.util.Optional

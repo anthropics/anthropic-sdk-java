@@ -1,4 +1,4 @@
-package com.anthropic.core
+package kotlinx.kmp.util.core
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -26,7 +26,7 @@ import kotlinx.serialization.json.longOrNull
  * or as a replacement for Jackson. On JVM, Jackson is still used for 
  * model serialization (via annotations); this is for new KMP-native code.
  */
-val anthropicJson: Json = Json {
+val apiJson: Json = Json {
     ignoreUnknownKeys = true
     isLenient = false
     encodeDefaults = false
@@ -40,7 +40,7 @@ val anthropicJson: Json = Json {
 
 /** Convert SDK JsonValue to kotlinx.serialization JsonElement */
 fun JsonValue.toJsonElement(): JsonElement = when (this) {
-    is com.anthropic.core.JsonNull -> kotlinx.serialization.json.JsonNull
+    is kotlinx.kmp.util.core.JsonNull -> kotlinx.serialization.json.JsonNull
     is JsonMissing -> kotlinx.serialization.json.JsonNull
     is JsonBoolean -> JsonPrimitive(value)
     is JsonNumber -> JsonPrimitive(value)
@@ -51,7 +51,7 @@ fun JsonValue.toJsonElement(): JsonElement = when (this) {
 
 /** Convert kotlinx.serialization JsonElement to SDK JsonValue */
 fun JsonValue.Companion.fromJsonElement(element: JsonElement): JsonValue = when (element) {
-    is kotlinx.serialization.json.JsonNull -> com.anthropic.core.JsonNull.of()
+    is kotlinx.serialization.json.JsonNull -> kotlinx.kmp.util.core.JsonNull.of()
     is JsonPrimitive -> when {
         element.booleanOrNull != null -> JsonBoolean.of(element.boolean)
         element.intOrNull != null -> JsonNumber.of(element.int)
@@ -65,14 +65,14 @@ fun JsonValue.Companion.fromJsonElement(element: JsonElement): JsonValue = when 
 }
 
 /** Encode SDK JsonValue to JSON string using kotlinx.serialization */
-fun JsonValue.toJsonString(): String = anthropicJson.encodeToString(
+fun JsonValue.toJsonString(): String = apiJson.encodeToString(
     kotlinx.serialization.json.JsonElement.serializer(), 
     toJsonElement()
 )
 
 /** Decode JSON string to SDK JsonValue using kotlinx.serialization */
 fun JsonValue.Companion.fromJsonString(json: String): JsonValue =
-    fromJsonElement(anthropicJson.parseToJsonElement(json))
+    fromJsonElement(apiJson.parseToJsonElement(json))
 
 // --- JsonField<T> ↔ kotlinx.serialization bridge ---
 // JsonField<T> is conceptually equivalent to a nullable JsonElement:

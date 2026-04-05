@@ -1,4 +1,4 @@
-package com.anthropic.core
+package kotlinx.kmp.util.core
 
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import kotlin.reflect.KClass

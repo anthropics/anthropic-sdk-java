@@ -3,7 +3,7 @@
 package com.anthropic.services.blocking
 
 import com.anthropic.core.ClientOptions
-import com.anthropic.core.JsonValue
+import kotlinx.kmp.util.core.JsonValue
 import com.anthropic.core.RequestOptions
 
 import com.anthropic.core.handlers.errorBodyHandler

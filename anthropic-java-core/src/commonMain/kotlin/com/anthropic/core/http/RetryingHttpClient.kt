@@ -6,7 +6,7 @@ package com.anthropic.core.http
 import com.anthropic.core.DefaultSleeper
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.Sleeper
-import com.anthropic.core.checkRequired
+import kotlinx.kmp.util.core.checkRequired
 import com.anthropic.errors.AnthropicIoException
 import com.anthropic.errors.AnthropicRetryableException
 import java.io.IOException

@@ -2,15 +2,15 @@
 
 package com.anthropic.core.http
 
-import com.anthropic.core.JsonArray
-import com.anthropic.core.JsonBoolean
-import com.anthropic.core.JsonMissing
-import com.anthropic.core.JsonNull
-import com.anthropic.core.JsonNumber
-import com.anthropic.core.JsonObject
-import com.anthropic.core.JsonString
-import com.anthropic.core.JsonValue
-import com.anthropic.core.toImmutable
+import kotlinx.kmp.util.core.JsonArray
+import kotlinx.kmp.util.core.JsonBoolean
+import kotlinx.kmp.util.core.JsonMissing
+import kotlinx.kmp.util.core.JsonNull
+import kotlinx.kmp.util.core.JsonNumber
+import kotlinx.kmp.util.core.JsonObject
+import kotlinx.kmp.util.core.JsonString
+import kotlinx.kmp.util.core.JsonValue
+import kotlinx.kmp.util.core.toImmutable
 
 class QueryParams
 private constructor(

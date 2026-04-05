@@ -1,13 +1,13 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.skills.versions
-import com.anthropic.core.getOptional
+import kotlinx.kmp.util.core.getOptional
 
 import com.anthropic.core.AutoPager
 import com.anthropic.core.Page
-import com.anthropic.core.checkRequired
+import kotlinx.kmp.util.core.checkRequired
 import com.anthropic.services.blocking.beta.skills.VersionService
-import com.anthropic.core.contentHash
+import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 

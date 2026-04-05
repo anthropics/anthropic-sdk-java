@@ -5,7 +5,7 @@ import com.anthropic.core.DOUBLE
 import com.anthropic.core.DelegationWriteTestCase
 import com.anthropic.core.JSON_FIELD
 import com.anthropic.core.JSON_VALUE
-import com.anthropic.core.JsonSchemaLocalValidation
+import kotlinx.kmp.util.core.JsonSchemaLocalValidation
 import com.anthropic.core.LIST
 import com.anthropic.core.LONG
 import com.anthropic.core.MAP

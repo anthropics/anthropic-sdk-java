@@ -4,7 +4,7 @@ package com.anthropic.services.blocking
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
-import com.anthropic.core.JsonValue
+import kotlinx.kmp.util.core.JsonValue
 import com.anthropic.models.messages.CacheControlEphemeral
 import com.anthropic.models.messages.CitationCharLocationParam
 import com.anthropic.models.messages.JsonOutputFormat

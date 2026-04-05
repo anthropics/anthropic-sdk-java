@@ -1,18 +1,18 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages
-import com.anthropic.core.fromJsonNode
+import kotlinx.kmp.util.core.fromJsonNode
 
-import com.anthropic.core.BaseDeserializer
-import com.anthropic.core.BaseSerializer
-import com.anthropic.core.ExcludeMissing
-import com.anthropic.core.JsonField
-import com.anthropic.core.JsonMissing
-import com.anthropic.core.JsonValue
-import com.anthropic.core.checkKnown
-import com.anthropic.core.checkRequired
-import com.anthropic.core.getOrThrow
-import com.anthropic.core.toImmutable
+import kotlinx.kmp.util.core.BaseDeserializer
+import kotlinx.kmp.util.core.BaseSerializer
+import kotlinx.kmp.util.core.ExcludeMissing
+import kotlinx.kmp.util.core.JsonField
+import kotlinx.kmp.util.core.JsonMissing
+import kotlinx.kmp.util.core.JsonValue
+import kotlinx.kmp.util.core.checkKnown
+import kotlinx.kmp.util.core.checkRequired
+import kotlinx.kmp.util.core.getOrThrow
+import kotlinx.kmp.util.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -25,7 +25,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import com.anthropic.core.contentHash
+import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
 
 import kotlin.jvm.optionals.getOrNull

@@ -1,7 +1,7 @@
 package com.anthropic.core.http
 
-import com.anthropic.core.checkRequired
-import com.anthropic.core.toImmutable
+import kotlinx.kmp.util.core.checkRequired
+import kotlinx.kmp.util.core.toImmutable
 import com.anthropic.core.urlEncode
 
 class HttpRequest

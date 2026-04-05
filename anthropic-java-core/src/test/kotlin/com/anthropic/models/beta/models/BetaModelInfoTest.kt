@@ -2,7 +2,7 @@
 
 package com.anthropic.models.beta.models
 
-import com.anthropic.core.jsonMapper
+import kotlinx.kmp.util.core.jsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat

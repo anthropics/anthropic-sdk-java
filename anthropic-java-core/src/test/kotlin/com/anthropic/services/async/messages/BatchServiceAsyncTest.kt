@@ -4,7 +4,7 @@ package com.anthropic.services.async.messages
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
-import com.anthropic.core.JsonValue
+import kotlinx.kmp.util.core.JsonValue
 import com.anthropic.models.messages.CacheControlEphemeral
 import com.anthropic.models.messages.CitationCharLocationParam
 import com.anthropic.models.messages.JsonOutputFormat

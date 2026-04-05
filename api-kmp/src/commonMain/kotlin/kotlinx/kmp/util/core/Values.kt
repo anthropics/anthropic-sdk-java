@@ -1,6 +1,5 @@
-package com.anthropic.core
+package kotlinx.kmp.util.core
 
-import com.anthropic.errors.AnthropicInvalidDataException
 
 sealed class JsonField<out T : Any> {
 
@@ -23,7 +22,7 @@ sealed class JsonField<out T : Any> {
     }
 
     fun asStringOrThrow(): String =
-        asString() ?: throw AnthropicInvalidDataException("Value is not a string")
+        asString() ?: throw IllegalStateException("Value is not a string")
 
     fun asArray(): List<JsonValue>? = when (this) {
         is JsonArray -> values
@@ -45,15 +44,15 @@ sealed class JsonField<out T : Any> {
 
     fun getRequired(name: String): T = when (this) {
         is KnownValue -> value
-        is JsonMissing -> throw AnthropicInvalidDataException("`$name` is not set")
-        is JsonNull -> throw AnthropicInvalidDataException("`$name` is null")
-        else -> throw AnthropicInvalidDataException("`$name` is invalid, received $this")
+        is JsonMissing -> throw IllegalStateException("`$name` is not set")
+        is JsonNull -> throw IllegalStateException("`$name` is null")
+        else -> throw IllegalStateException("`$name` is invalid, received $this")
     }
 
     fun getNullable(name: String): @UnsafeVariance T? = when (this) {
         is KnownValue -> value
         is JsonMissing, is JsonNull -> null
-        else -> throw AnthropicInvalidDataException("`$name` is invalid, received $this")
+        else -> throw IllegalStateException("`$name` is invalid, received $this")
     }
 
     fun <R : Any> map(transform: (T) -> R): JsonField<R> = when (this) {
@@ -115,7 +114,6 @@ sealed class JsonValue : JsonField<Nothing>() {
     }
 }
 
-@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = com.anthropic.core.KnownValueSerializer::class)
 class KnownValue<T : Any> private constructor(@get:com.fasterxml.jackson.annotation.JsonValue val value: T) : JsonField<T>() {
     override fun equals(other: Any?): Boolean =
         this === other || (other is KnownValue<*> && value contentEquals other.value)
@@ -152,14 +150,12 @@ class JsonString private constructor(@get:com.fasterxml.jackson.annotation.JsonV
     companion object { @com.fasterxml.jackson.annotation.JsonCreator fun of(value: String) = JsonString(value) }
 }
 
-@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = com.anthropic.core.JsonArraySerializer::class)
 class JsonArray private constructor(val values: List<JsonValue>) : JsonValue() {
     override fun equals(other: Any?) = this === other || (other is JsonArray && values == other.values)
     override fun hashCode() = values.hashCode(); override fun toString() = values.toString()
     companion object { @com.fasterxml.jackson.annotation.JsonCreator fun of(values: List<JsonValue>) = JsonArray(values.toList()) }
 }
 
-@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = com.anthropic.core.JsonObjectSerializer::class)
 class JsonObject private constructor(val values: Map<String, JsonValue>) : JsonValue() {
     override fun equals(other: Any?) = this === other || (other is JsonObject && values == other.values)
     override fun hashCode() = values.hashCode(); override fun toString() = values.toString()
@@ -204,15 +200,4 @@ class MultipartField<T : Any> private constructor(
     }
 }
 
-// Jackson bridge - fromJsonNode
-fun JsonValue.Companion.fromJsonNode(node: com.fasterxml.jackson.databind.JsonNode): JsonValue =
-    when (node.nodeType) {
-        com.fasterxml.jackson.databind.node.JsonNodeType.MISSING -> JsonMissing.of()
-        com.fasterxml.jackson.databind.node.JsonNodeType.NULL -> JsonNull.of()
-        com.fasterxml.jackson.databind.node.JsonNodeType.BOOLEAN -> JsonBoolean.of(node.booleanValue())
-        com.fasterxml.jackson.databind.node.JsonNodeType.NUMBER -> JsonNumber.of(node.numberValue())
-        com.fasterxml.jackson.databind.node.JsonNodeType.STRING -> JsonString.of(node.textValue())
-        com.fasterxml.jackson.databind.node.JsonNodeType.ARRAY -> JsonArray.of(node.elements().asSequence().map { fromJsonNode(it) }.toList())
-        com.fasterxml.jackson.databind.node.JsonNodeType.OBJECT -> JsonObject.of(node.fields().asSequence().map { it.key to fromJsonNode(it.value) }.toMap())
-        com.fasterxml.jackson.databind.node.JsonNodeType.BINARY, com.fasterxml.jackson.databind.node.JsonNodeType.POJO, null -> throw IllegalStateException("Unexpected JsonNode type: ${node.nodeType}")
-    }
+// Jackson bridge fromJsonNode extension moved to jvmMain/kotlinx/kmp/util/core/ValuesJvm.kt

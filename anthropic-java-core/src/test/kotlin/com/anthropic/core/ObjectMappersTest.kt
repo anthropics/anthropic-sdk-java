@@ -1,5 +1,7 @@
 package com.anthropic.core
 
+import kotlinx.kmp.util.core.JsonField
+import kotlinx.kmp.util.core.ExcludeMissing
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.module.kotlin.readValue

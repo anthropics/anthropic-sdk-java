@@ -2,7 +2,7 @@
 
 package com.anthropic.models.messages.batches
 
-import com.anthropic.core.jsonMapper
+import kotlinx.kmp.util.core.jsonMapper
 import com.anthropic.models.ErrorResponse
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat

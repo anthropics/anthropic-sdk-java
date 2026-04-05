@@ -1,8 +1,8 @@
 package com.anthropic.helpers
 
-import com.anthropic.core.JsonMissing
-import com.anthropic.core.JsonObject
-import com.anthropic.core.jsonMapper
+import kotlinx.kmp.util.core.JsonMissing
+import kotlinx.kmp.util.core.JsonObject
+import kotlinx.kmp.util.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.messages.BashCodeExecutionToolResultBlock
 import com.anthropic.models.messages.CitationCharLocation

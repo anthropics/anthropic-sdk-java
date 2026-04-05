@@ -2,13 +2,13 @@
 
 package com.anthropic.models.beta.skills
 
-import com.anthropic.core.JsonValue
+import kotlinx.kmp.util.core.JsonValue
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
-import com.anthropic.core.toImmutable
+import kotlinx.kmp.util.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
-import com.anthropic.core.contentHash
+import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
 
 import kotlin.jvm.optionals.getOrNull

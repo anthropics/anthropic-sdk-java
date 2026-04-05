@@ -1,13 +1,13 @@
 package com.anthropic.models.messages
 
-import com.anthropic.core.JsonField
-import com.anthropic.core.JsonSchemaLocalValidation
-import com.anthropic.core.JsonValue
-import com.anthropic.core.checkRequired
+import kotlinx.kmp.util.core.JsonField
+import kotlinx.kmp.util.core.JsonSchemaLocalValidation
+import kotlinx.kmp.util.core.JsonValue
+import kotlinx.kmp.util.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.outputFormatFromClass
-import com.anthropic.core.contentHash
+import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
 
 /**

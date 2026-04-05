@@ -2,6 +2,8 @@
 
 package com.anthropic.core
 
+import kotlinx.kmp.util.core.checkRequired
+import kotlinx.kmp.util.core.jsonMapper
 import com.anthropic.core.http.AsyncStreamResponse
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpClient
@@ -110,7 +112,7 @@ private constructor(
 
     init {
         if (checkJacksonVersionCompatibility) {
-            checkJacksonVersionCompatibility()
+            kotlinx.kmp.util.core.checkJacksonVersionCompatibility()
         }
     }
 
@@ -141,7 +143,7 @@ private constructor(
 
         private var httpClient: HttpClient? = null
         private var checkJacksonVersionCompatibility: Boolean = true
-        private var jsonMapper: JsonMapper = jsonMapper()
+        private var jsonMapper: JsonMapper = kotlinx.kmp.util.core.jsonMapper()
         private var streamHandlerExecutor: Executor? = null
         private var sleeper: Sleeper? = null
         private var clock: Clock = Clock.systemUTC()

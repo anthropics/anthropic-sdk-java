@@ -2,11 +2,11 @@
 
 package com.anthropic.core.handlers
 
-import com.anthropic.core.JsonValue
+import kotlinx.kmp.util.core.JsonValue
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.SseMessage
-import com.anthropic.core.jsonMapper
+import kotlinx.kmp.util.core.jsonMapper
 import com.anthropic.errors.SseException
 import java.io.InputStream
 import kotlinx.coroutines.flow.toList

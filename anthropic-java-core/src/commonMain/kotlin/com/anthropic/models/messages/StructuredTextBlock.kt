@@ -1,10 +1,10 @@
 package com.anthropic.models.messages
 
-import com.anthropic.core.JsonField
-import com.anthropic.core.JsonValue
+import kotlinx.kmp.util.core.JsonField
+import kotlinx.kmp.util.core.JsonValue
 import com.anthropic.core.outputTypeFromJson
 import com.anthropic.errors.AnthropicInvalidDataException
-import com.anthropic.core.contentHash
+import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
 
 /**

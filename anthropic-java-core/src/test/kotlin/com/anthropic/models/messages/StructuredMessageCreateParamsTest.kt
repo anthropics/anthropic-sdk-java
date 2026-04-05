@@ -1,8 +1,8 @@
 package com.anthropic.models.messages
 
 import com.anthropic.core.DelegationWriteTestCase
-import com.anthropic.core.JsonField
-import com.anthropic.core.JsonValue
+import kotlinx.kmp.util.core.JsonField
+import kotlinx.kmp.util.core.JsonValue
 import com.anthropic.core.X
 import com.anthropic.core.checkAllDelegation
 import com.anthropic.core.checkAllDelegatorWriteFunctionsAreTested

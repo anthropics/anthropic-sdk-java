@@ -2,7 +2,7 @@
 
 package com.anthropic.models.messages
 
-import com.anthropic.core.jsonMapper
+import kotlinx.kmp.util.core.jsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat

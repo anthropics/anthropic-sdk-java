@@ -3,8 +3,8 @@
 
 package com.anthropic.core.handlers
 
-import com.anthropic.core.JsonMissing
-import com.anthropic.core.JsonValue
+import kotlinx.kmp.util.core.JsonMissing
+import kotlinx.kmp.util.core.JsonValue
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.errors.BadRequestException

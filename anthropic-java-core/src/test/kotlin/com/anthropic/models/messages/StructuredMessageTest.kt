@@ -3,7 +3,7 @@ package com.anthropic.models.messages
 import com.anthropic.core.DelegationReadTestCase
 import com.anthropic.core.JSON_FIELD
 import com.anthropic.core.JSON_VALUE
-import com.anthropic.core.JsonField
+import kotlinx.kmp.util.core.JsonField
 import com.anthropic.core.LONG
 import com.anthropic.core.OPTIONAL
 import com.anthropic.core.STRING

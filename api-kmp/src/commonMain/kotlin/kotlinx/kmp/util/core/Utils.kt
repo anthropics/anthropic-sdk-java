@@ -1,9 +1,7 @@
-package com.anthropic.core
-
-import com.anthropic.errors.AnthropicInvalidDataException
+package kotlinx.kmp.util.core
 
 fun <T : Any> T?.getOrThrow(name: String): T =
-    this ?: throw AnthropicInvalidDataException("`${name}` is not present")
+    this ?: throw IllegalStateException("`${name}` is not present")
 
 // These helpers defensively copy collections. The empty check is an optimization to return
 // singleton empty instances instead of allocating, though toList()/toMap() handle empty inputs

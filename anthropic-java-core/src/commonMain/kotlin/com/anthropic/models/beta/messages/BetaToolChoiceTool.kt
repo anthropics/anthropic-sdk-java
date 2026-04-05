@@ -1,19 +1,19 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.messages
-import com.anthropic.core.getOptional
+import kotlinx.kmp.util.core.getOptional
 
-import com.anthropic.core.ExcludeMissing
-import com.anthropic.core.JsonField
-import com.anthropic.core.JsonMissing
-import com.anthropic.core.JsonValue
-import com.anthropic.core.checkRequired
+import kotlinx.kmp.util.core.ExcludeMissing
+import kotlinx.kmp.util.core.JsonField
+import kotlinx.kmp.util.core.JsonMissing
+import kotlinx.kmp.util.core.JsonValue
+import kotlinx.kmp.util.core.checkRequired
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.anthropic.core.contentHash
+import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
 
 /** The model will use the specified tool with `tool_choice.name`. */

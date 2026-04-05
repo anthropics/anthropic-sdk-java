@@ -1,4 +1,4 @@
-package com.anthropic.core
+package kotlinx.kmp.util.core
 
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.ObjectCodec

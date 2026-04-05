@@ -5,7 +5,7 @@ package com.anthropic.core.http
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import com.anthropic.core.contentHash
+import kotlinx.kmp.util.core.contentHash
 
 class SseMessage
 private constructor(

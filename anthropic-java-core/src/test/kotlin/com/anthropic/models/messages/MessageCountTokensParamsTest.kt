@@ -2,7 +2,7 @@
 
 package com.anthropic.models.messages
 
-import com.anthropic.core.JsonValue
+import kotlinx.kmp.util.core.JsonValue
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

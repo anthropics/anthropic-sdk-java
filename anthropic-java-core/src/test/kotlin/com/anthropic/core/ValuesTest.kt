@@ -1,5 +1,7 @@
 package com.anthropic.core
 
+import kotlinx.kmp.util.core.*
+
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource

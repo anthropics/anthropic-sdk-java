@@ -4,7 +4,7 @@ package com.anthropic.services.async.beta
 
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
-import com.anthropic.core.checkRequired
+import kotlinx.kmp.util.core.checkRequired
 import com.anthropic.core.handlers.errorBodyHandler
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler

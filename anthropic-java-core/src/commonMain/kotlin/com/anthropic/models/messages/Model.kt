@@ -2,8 +2,8 @@
 
 package com.anthropic.models.messages
 
-import com.anthropic.core.Enum
-import com.anthropic.core.JsonField
+import kotlinx.kmp.util.core.Enum
+import kotlinx.kmp.util.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 

@@ -2,6 +2,7 @@
 
 package com.anthropic.core
 
+import kotlinx.kmp.util.core.contentHash
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 

@@ -2,7 +2,7 @@
 
 package com.anthropic.models.beta.messages
 
-import com.anthropic.core.JsonValue
+import kotlinx.kmp.util.core.JsonValue
 import com.anthropic.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.messages.Model

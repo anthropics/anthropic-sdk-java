@@ -1,6 +1,6 @@
 package com.anthropic.helpers
 
-import com.anthropic.core.JsonValue
+import kotlinx.kmp.util.core.JsonValue
 import com.anthropic.core.RequestOptions
 import com.anthropic.models.beta.messages.*
 import com.anthropic.models.messages.Model

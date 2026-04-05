@@ -5,7 +5,7 @@ package com.anthropic.models.messages.batches
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
-import com.anthropic.core.contentHash
+import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
 
 import kotlin.jvm.optionals.getOrNull

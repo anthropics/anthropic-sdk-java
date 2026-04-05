@@ -2,18 +2,18 @@
 
 package com.anthropic.models.beta.messages
 
-import com.anthropic.core.ExcludeMissing
-import com.anthropic.core.JsonField
-import com.anthropic.core.JsonMissing
-import com.anthropic.core.JsonValue
-import com.anthropic.core.checkRequired
-import com.anthropic.core.toImmutable
+import kotlinx.kmp.util.core.ExcludeMissing
+import kotlinx.kmp.util.core.JsonField
+import kotlinx.kmp.util.core.JsonMissing
+import kotlinx.kmp.util.core.JsonValue
+import kotlinx.kmp.util.core.checkRequired
+import kotlinx.kmp.util.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.anthropic.core.contentHash
+import kotlinx.kmp.util.core.contentHash
 
 class BetaJsonOutputFormat
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)

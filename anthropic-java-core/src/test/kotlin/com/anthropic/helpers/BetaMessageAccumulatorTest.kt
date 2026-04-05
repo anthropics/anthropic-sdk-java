@@ -1,9 +1,9 @@
 package com.anthropic.helpers
 
-import com.anthropic.core.JsonField
-import com.anthropic.core.JsonMissing
-import com.anthropic.core.JsonNull
-import com.anthropic.core.JsonString
+import kotlinx.kmp.util.core.JsonField
+import kotlinx.kmp.util.core.JsonMissing
+import kotlinx.kmp.util.core.JsonNull
+import kotlinx.kmp.util.core.JsonString
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.messages.*
 import com.anthropic.models.beta.messages.BetaRawContentBlockStartEvent.ContentBlock

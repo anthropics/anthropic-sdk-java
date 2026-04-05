@@ -2,7 +2,7 @@
 
 package com.anthropic.errors
 
-import com.anthropic.core.JsonValue
+import kotlinx.kmp.util.core.JsonValue
 import com.anthropic.core.http.Headers
 
 abstract class AnthropicServiceException

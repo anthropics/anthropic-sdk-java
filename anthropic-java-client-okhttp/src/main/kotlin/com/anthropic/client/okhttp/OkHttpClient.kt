@@ -3,7 +3,7 @@ package com.anthropic.client.okhttp
 import com.anthropic.backends.Backend
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.Timeout
-import com.anthropic.core.checkRequired
+import kotlinx.kmp.util.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpClient
 import com.anthropic.core.http.HttpMethod

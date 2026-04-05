@@ -3,7 +3,7 @@
 
 package com.anthropic.core.handlers
 
-import com.anthropic.core.JsonMissing
+import kotlinx.kmp.util.core.JsonMissing
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.SseMessage

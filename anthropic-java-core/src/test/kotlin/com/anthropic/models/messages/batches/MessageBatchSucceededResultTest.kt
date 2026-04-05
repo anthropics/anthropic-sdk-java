@@ -2,7 +2,7 @@
 
 package com.anthropic.models.messages.batches
 
-import com.anthropic.core.jsonMapper
+import kotlinx.kmp.util.core.jsonMapper
 import com.anthropic.models.messages.CacheCreation
 import com.anthropic.models.messages.CitationCharLocation
 import com.anthropic.models.messages.Container

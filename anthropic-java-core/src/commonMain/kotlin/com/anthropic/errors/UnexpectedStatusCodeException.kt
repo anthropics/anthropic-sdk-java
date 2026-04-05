@@ -2,8 +2,8 @@
 
 package com.anthropic.errors
 
-import com.anthropic.core.JsonValue
-import com.anthropic.core.checkRequired
+import kotlinx.kmp.util.core.JsonValue
+import kotlinx.kmp.util.core.checkRequired
 import com.anthropic.core.http.Headers
 
 class UnexpectedStatusCodeException

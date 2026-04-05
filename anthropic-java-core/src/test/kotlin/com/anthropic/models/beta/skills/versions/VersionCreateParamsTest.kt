@@ -2,7 +2,7 @@
 
 package com.anthropic.models.beta.skills.versions
 
-import com.anthropic.core.MultipartField
+import kotlinx.kmp.util.core.MultipartField
 import com.anthropic.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
 import java.io.InputStream

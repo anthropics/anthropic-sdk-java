@@ -1,4 +1,4 @@
-package com.anthropic.core
+package kotlinx.kmp.util.core
 
 /**
  * Options for local validation of JSON schemas derived from arbitrary classes before a request is

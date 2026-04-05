@@ -1,4 +1,4 @@
-package com.anthropic.core.annotations
+package kotlinx.kmp.util.core.annotations
 
 /** Marks a resource that must be closed after use. Replaces errorprone @MustBeClosed. */
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)

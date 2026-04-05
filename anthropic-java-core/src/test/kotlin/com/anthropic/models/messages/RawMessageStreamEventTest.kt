@@ -2,8 +2,8 @@
 
 package com.anthropic.models.messages
 
-import com.anthropic.core.JsonValue
-import com.anthropic.core.jsonMapper
+import kotlinx.kmp.util.core.JsonValue
+import kotlinx.kmp.util.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime

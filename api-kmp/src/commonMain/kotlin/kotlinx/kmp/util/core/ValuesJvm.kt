@@ -1,6 +1,6 @@
 @file:JvmName("ValuesJvm")
 
-package com.anthropic.core
+package kotlinx.kmp.util.core
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
@@ -11,15 +11,25 @@ import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.SerializerProvider
-// --- Jackson fromJsonNode ---
-
 
 private val JSON_MAPPER by lazy { jsonMapper() }
 
 fun <R : Any> JsonValue.convert(type: TypeReference<R>): R? = JSON_MAPPER.convertValue(this, type)
 fun <R : Any> JsonValue.convert(type: Class<R>): R? = JSON_MAPPER.convertValue(this, type)
 
-// getOptional and checkKnown moved to commonMain Utils.kt
+// --- Jackson bridge: JsonValue.fromJsonNode ---
+
+fun JsonValue.Companion.fromJsonNode(node: JsonNode): JsonValue =
+    when (node.nodeType) {
+        com.fasterxml.jackson.databind.node.JsonNodeType.MISSING -> JsonMissing.of()
+        com.fasterxml.jackson.databind.node.JsonNodeType.NULL -> JsonNull.of()
+        com.fasterxml.jackson.databind.node.JsonNodeType.BOOLEAN -> JsonBoolean.of(node.booleanValue())
+        com.fasterxml.jackson.databind.node.JsonNodeType.NUMBER -> JsonNumber.of(node.numberValue())
+        com.fasterxml.jackson.databind.node.JsonNodeType.STRING -> JsonString.of(node.textValue())
+        com.fasterxml.jackson.databind.node.JsonNodeType.ARRAY -> JsonArray.of(node.elements().asSequence().map { fromJsonNode(it) }.toList())
+        com.fasterxml.jackson.databind.node.JsonNodeType.OBJECT -> JsonObject.of(node.fields().asSequence().map { it.key to fromJsonNode(it.value) }.toMap())
+        com.fasterxml.jackson.databind.node.JsonNodeType.BINARY, com.fasterxml.jackson.databind.node.JsonNodeType.POJO, null -> throw IllegalStateException("Unexpected JsonNode type: ${node.nodeType}")
+    }
 
 // --- Jackson Deserializers ---
 
@@ -106,8 +116,6 @@ private val RUNTIME_JACKSON_VERSIONS = listOf(
     com.fasterxml.jackson.datatype.jsr310.PackageVersion.VERSION,
     com.fasterxml.jackson.module.kotlin.PackageVersion.VERSION,
 )
-
-// checkKnown moved to commonMain Utils.kt
 
 // --- JVM Utils ---
 

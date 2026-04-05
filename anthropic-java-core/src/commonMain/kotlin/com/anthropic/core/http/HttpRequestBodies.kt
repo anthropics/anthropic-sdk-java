@@ -4,8 +4,8 @@
 
 package com.anthropic.core.http
 
-import com.anthropic.core.MultipartField
-import com.anthropic.core.toImmutable
+import kotlinx.kmp.util.core.MultipartField
+import kotlinx.kmp.util.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper

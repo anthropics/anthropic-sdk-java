@@ -4,9 +4,9 @@ package com.anthropic.services
 
 import com.anthropic.client.AnthropicClient
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
-import com.anthropic.core.JsonValue
+import kotlinx.kmp.util.core.JsonValue
 import com.anthropic.core.http.Headers
-import com.anthropic.core.jsonMapper
+import kotlinx.kmp.util.core.jsonMapper
 import com.anthropic.errors.AnthropicException
 import com.anthropic.errors.BadRequestException
 import com.anthropic.errors.errorType

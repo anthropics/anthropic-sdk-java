@@ -2,7 +2,7 @@
 
 package com.anthropic.models.beta.messages.batches
 
-import com.anthropic.core.jsonMapper
+import kotlinx.kmp.util.core.jsonMapper
 import com.anthropic.models.beta.messages.BetaCacheCreation
 import com.anthropic.models.beta.messages.BetaCitationCharLocation
 import com.anthropic.models.beta.messages.BetaClearToolUses20250919EditResponse

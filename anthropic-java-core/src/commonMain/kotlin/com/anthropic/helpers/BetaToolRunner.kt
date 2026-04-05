@@ -2,6 +2,8 @@ package com.anthropic.helpers
 import kotlinx.coroutines.flow.onEach
 
 import com.anthropic.core.*
+import kotlinx.kmp.util.core.JsonValue
+import kotlinx.kmp.util.core.JsonField
 import com.anthropic.core.http.StreamResponse
 import com.anthropic.core.outputTypeFromJson
 import com.anthropic.core.toJsonString

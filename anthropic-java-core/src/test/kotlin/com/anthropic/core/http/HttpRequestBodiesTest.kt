@@ -2,8 +2,8 @@
 
 package com.anthropic.core.http
 
-import com.anthropic.core.MultipartField
-import com.anthropic.core.jsonMapper
+import kotlinx.kmp.util.core.MultipartField
+import kotlinx.kmp.util.core.jsonMapper
 import okio.Buffer
 import java.io.InputStream
 import org.assertj.core.api.Assertions.assertThat

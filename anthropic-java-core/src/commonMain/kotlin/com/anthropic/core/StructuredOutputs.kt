@@ -1,4 +1,20 @@
 package com.anthropic.core
+import kotlinx.kmp.util.core.JsonField
+import kotlinx.kmp.util.core.JsonValue
+import kotlinx.kmp.util.core.KnownValue
+import kotlinx.kmp.util.core.JsonMissing
+import kotlinx.kmp.util.core.JsonNull
+import kotlinx.kmp.util.core.JsonString
+import kotlinx.kmp.util.core.JsonBoolean
+import kotlinx.kmp.util.core.JsonNumber
+import kotlinx.kmp.util.core.JsonArray
+import kotlinx.kmp.util.core.JsonObject
+import kotlinx.kmp.util.core.ExcludeMissing
+import kotlinx.kmp.util.core.MultipartField
+import kotlinx.kmp.util.core.JsonSchemaValidator
+import kotlinx.kmp.util.core.JsonSchemaLocalValidation
+import kotlinx.kmp.util.core.apiJson
+import kotlinx.kmp.util.core.fromJsonNode
 
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.messages.BetaJsonOutputFormat

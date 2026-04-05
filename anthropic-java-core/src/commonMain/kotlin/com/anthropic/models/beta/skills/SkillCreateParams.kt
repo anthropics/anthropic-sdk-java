@@ -1,16 +1,16 @@
 // File generated from our OpenAPI spec by Stainless.
 
 package com.anthropic.models.beta.skills
-import com.anthropic.core.getOptional
+import kotlinx.kmp.util.core.getOptional
 
-import com.anthropic.core.ExcludeMissing
-import com.anthropic.core.JsonValue
-import com.anthropic.core.MultipartField
+import kotlinx.kmp.util.core.ExcludeMissing
+import kotlinx.kmp.util.core.JsonValue
+import kotlinx.kmp.util.core.MultipartField
 import com.anthropic.core.Params
-import com.anthropic.core.checkKnown
+import kotlinx.kmp.util.core.checkKnown
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
-import com.anthropic.core.toImmutable
+import kotlinx.kmp.util.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.io.InputStream
 import java.nio.file.Path
-import com.anthropic.core.contentHash
+import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
 
 import kotlin.io.path.inputStream
