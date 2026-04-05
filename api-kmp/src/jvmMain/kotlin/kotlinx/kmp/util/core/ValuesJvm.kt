@@ -94,7 +94,7 @@ class JsonNullSerializer : BaseSerializer<JsonNull>(JsonNull::class) {
 
 // --- JVM Check functions ---
 
-fun checkJacksonVersionCompatibility() {
+actual fun checkJsonVersionCompatibility() {
     val bad = RUNTIME_JACKSON_VERSIONS.mapNotNull {
         val r = BAD_JACKSON_VERSIONS[it.toString()]
         when {

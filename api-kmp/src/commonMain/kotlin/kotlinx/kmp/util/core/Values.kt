@@ -114,12 +114,12 @@ sealed class JsonValue : JsonField<Nothing>() {
     }
 }
 
-class KnownValue<T : Any> private constructor(@get:com.fasterxml.jackson.annotation.JsonValue val value: T) : JsonField<T>() {
+class KnownValue<T : Any> private constructor(val value: T) : JsonField<T>() {
     override fun equals(other: Any?): Boolean =
         this === other || (other is KnownValue<*> && value contentEquals other.value)
     override fun hashCode() = contentHash(value)
     override fun toString() = value.contentToString()
-    companion object { @com.fasterxml.jackson.annotation.JsonCreator fun <T : Any> of(value: T) = KnownValue(value) }
+    companion object { fun <T : Any> of(value: T) = KnownValue(value) }
 }
 
 class JsonMissing : JsonValue() {
@@ -129,37 +129,37 @@ class JsonMissing : JsonValue() {
 
 class JsonNull : JsonValue() {
     override fun toString() = "null"
-    companion object { private val INSTANCE = JsonNull(); @com.fasterxml.jackson.annotation.JsonCreator fun of() = INSTANCE }
+    companion object { private val INSTANCE = JsonNull(); fun of() = INSTANCE }
 }
 
-class JsonBoolean private constructor(@get:com.fasterxml.jackson.annotation.JsonValue val value: Boolean) : JsonValue() {
+class JsonBoolean private constructor(val value: Boolean) : JsonValue() {
     override fun equals(other: Any?) = this === other || (other is JsonBoolean && value == other.value)
     override fun hashCode() = value.hashCode(); override fun toString() = value.toString()
-    companion object { @com.fasterxml.jackson.annotation.JsonCreator fun of(value: Boolean) = JsonBoolean(value) }
+    companion object { fun of(value: Boolean) = JsonBoolean(value) }
 }
 
-class JsonNumber private constructor(@get:com.fasterxml.jackson.annotation.JsonValue val value: Number) : JsonValue() {
+class JsonNumber private constructor(val value: Number) : JsonValue() {
     override fun equals(other: Any?) = this === other || (other is JsonNumber && value == other.value)
     override fun hashCode() = value.hashCode(); override fun toString() = value.toString()
-    companion object { @com.fasterxml.jackson.annotation.JsonCreator fun of(value: Number) = JsonNumber(value) }
+    companion object { fun of(value: Number) = JsonNumber(value) }
 }
 
-class JsonString private constructor(@get:com.fasterxml.jackson.annotation.JsonValue val value: String) : JsonValue() {
+class JsonString private constructor(val value: String) : JsonValue() {
     override fun equals(other: Any?) = this === other || (other is JsonString && value == other.value)
     override fun hashCode() = value.hashCode(); override fun toString() = value
-    companion object { @com.fasterxml.jackson.annotation.JsonCreator fun of(value: String) = JsonString(value) }
+    companion object { fun of(value: String) = JsonString(value) }
 }
 
 class JsonArray private constructor(val values: List<JsonValue>) : JsonValue() {
     override fun equals(other: Any?) = this === other || (other is JsonArray && values == other.values)
     override fun hashCode() = values.hashCode(); override fun toString() = values.toString()
-    companion object { @com.fasterxml.jackson.annotation.JsonCreator fun of(values: List<JsonValue>) = JsonArray(values.toList()) }
+    companion object { fun of(values: List<JsonValue>) = JsonArray(values.toList()) }
 }
 
 class JsonObject private constructor(val values: Map<String, JsonValue>) : JsonValue() {
     override fun equals(other: Any?) = this === other || (other is JsonObject && values == other.values)
     override fun hashCode() = values.hashCode(); override fun toString() = values.toString()
-    companion object { @com.fasterxml.jackson.annotation.JsonCreator fun of(values: Map<String, JsonValue>) = JsonObject(values.toMap()) }
+    companion object { fun of(values: Map<String, JsonValue>) = JsonObject(values.toMap()) }
 }
 
 annotation class ExcludeMissing

@@ -10,7 +10,7 @@ import kotlinx.kmp.util.core.http.HttpClient
 import kotlinx.kmp.util.core.http.PhantomReachableClosingHttpClient
 import kotlinx.kmp.util.core.http.QueryParams
 import kotlinx.kmp.util.core.http.withRetry
-import com.fasterxml.jackson.databind.json.JsonMapper
+
 import java.time.Clock
 
 import kotlin.time.Duration
@@ -39,14 +39,14 @@ private constructor(
      * Defaults to true. Use extreme caution when disabling this option. There is no guarantee that
      * the SDK will work correctly when using an incompatible Jackson version.
      */
-    @get:JvmName("checkJacksonVersionCompatibility") val checkJacksonVersionCompatibility: Boolean,
+    @get:JvmName("checkJsonVersionCompatibility") val checkJsonVersionCompatibility: Boolean,
     /**
      * The Jackson JSON mapper to use for serializing and deserializing JSON.
      *
      * Defaults to [kotlinx.kmp.util.core.jsonMapper]. The default is usually sufficient and rarely
      * needs to be overridden.
      */
-    @get:JvmName("jsonMapper") val jsonMapper: JsonMapper,
+    @get:JvmName("jsonMapper") val jsonMapper: JsonMapperType,
     /**
      * The executor to use for running [AsyncStreamResponse.Handler] callbacks.
      *
@@ -113,8 +113,8 @@ private constructor(
 ) {
 
     init {
-        if (checkJacksonVersionCompatibility) {
-            kotlinx.kmp.util.core.checkJacksonVersionCompatibility()
+        if (checkJsonVersionCompatibility) {
+            kotlinx.kmp.util.core.checkJsonVersionCompatibility()
         }
     }
 
@@ -144,8 +144,8 @@ private constructor(
     class Builder internal constructor() {
 
         private var httpClient: HttpClient? = null
-        private var checkJacksonVersionCompatibility: Boolean = true
-        private var jsonMapper: JsonMapper = kotlinx.kmp.util.core.jsonMapper()
+        private var checkJsonVersionCompatibility: Boolean = true
+        private var jsonMapper: JsonMapperType = kotlinx.kmp.util.core.jsonMapper()
         private var streamHandlerExecutor: Executor? = null
         private var sleeper: Sleeper? = null
         private var clock: Clock = Clock.systemUTC()
@@ -159,7 +159,7 @@ private constructor(
 
         @JvmSynthetic fun from(clientOptions: ClientOptions) = apply {
             httpClient = clientOptions.originalHttpClient
-            checkJacksonVersionCompatibility = clientOptions.checkJacksonVersionCompatibility
+            checkJsonVersionCompatibility = clientOptions.checkJsonVersionCompatibility
             jsonMapper = clientOptions.jsonMapper
             streamHandlerExecutor = clientOptions.streamHandlerExecutor
             sleeper = clientOptions.sleeper
@@ -191,8 +191,8 @@ private constructor(
          * Defaults to true. Use extreme caution when disabling this option. There is no guarantee
          * that the SDK will work correctly when using an incompatible Jackson version.
          */
-        fun checkJacksonVersionCompatibility(checkJacksonVersionCompatibility: Boolean) = apply {
-            this.checkJacksonVersionCompatibility = checkJacksonVersionCompatibility
+        fun checkJsonVersionCompatibility(checkJsonVersionCompatibility: Boolean) = apply {
+            this.checkJsonVersionCompatibility = checkJsonVersionCompatibility
         }
 
         /**
@@ -201,7 +201,7 @@ private constructor(
          * Defaults to [kotlinx.kmp.util.core.jsonMapper]. The default is usually sufficient and rarely
          * needs to be overridden.
          */
-        fun jsonMapper(jsonMapper: JsonMapper) = apply { this.jsonMapper = jsonMapper }
+        fun jsonMapper(jsonMapper: JsonMapperType) = apply { this.jsonMapper = jsonMapper }
 
         /**
          * The executor to use for running [AsyncStreamResponse.Handler] callbacks.
@@ -432,7 +432,7 @@ private constructor(
             return ClientOptions(
                 httpClient,
                 httpClient.withRetry(maxRetries, sleeper, clock, idempotencyHeader),
-                checkJacksonVersionCompatibility,
+                checkJsonVersionCompatibility,
                 jsonMapper,
                 streamHandlerExecutor,
                 sleeper,

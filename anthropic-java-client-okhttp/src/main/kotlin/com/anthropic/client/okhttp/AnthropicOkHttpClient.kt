@@ -178,8 +178,8 @@ class AnthropicOkHttpClient private constructor() {
          * Defaults to true. Use extreme caution when disabling this option. There is no guarantee
          * that the SDK will work correctly when using an incompatible Jackson version.
          */
-        fun checkJacksonVersionCompatibility(checkJacksonVersionCompatibility: Boolean) = apply {
-            clientOptions.checkJacksonVersionCompatibility(checkJacksonVersionCompatibility)
+        fun checkJsonVersionCompatibility(checkJsonVersionCompatibility: Boolean) = apply {
+            clientOptions.checkJsonVersionCompatibility(checkJsonVersionCompatibility)
         }
 
         /**

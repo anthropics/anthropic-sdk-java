@@ -1,190 +1,74 @@
 package kotlinx.kmp.util.core
 
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.core.JsonParseException
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.MapperFeature
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.databind.SerializerProvider
-import com.fasterxml.jackson.databind.cfg.CoercionAction
-import com.fasterxml.jackson.databind.cfg.CoercionInputShape
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer
-import com.fasterxml.jackson.databind.json.JsonMapper
-import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.databind.type.LogicalType
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.kotlinModule
-import java.io.InputStream
-import java.time.DateTimeException
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoField
+/**
+ * Common JSON mapping utility.
+ *
+ * This file hosts the provider-agnostic contract for JSON (de)serialization.
+ * The actual backend is chosen per platform:
+ *
+ *   JVM     -> Jackson (default), via [JsonMapperType] = `com.fasterxml.jackson.databind.json.JsonMapper`
+ *   JS      -> kotlinx.serialization `Json`
+ *   Native  -> kotlinx.serialization `Json` or Moshi (future)
+ *
+ * Any commonMain code that needs JSON should go through [jsonMapper] and the
+ * open functions on [ApiJsonBackend], never through Jackson or kotlinx APIs
+ * directly. Platform actuals override [ApiJsonBackend]'s open fun members to
+ * supply concrete encoders/decoders.
+ *
+ * Usage (commonMain):
+ * ```
+ * val json: String = apiJsonBackend().encodeToString(myModel)
+ * val model: MyModel = apiJsonBackend().decodeFromString(json)
+ * ```
+ *
+ * On JVM, the default [ApiJsonBackend] delegates to the configured Jackson
+ * [jsonMapper]. Other targets plug in their own backend.
+ */
+open class ApiJsonBackend {
+    /**
+     * Encode [value] to a JSON string.
+     *
+     * Default implementation throws; platforms override with a real encoder.
+     */
+    open fun encodeToString(value: Any?): String =
+        throw NotImplementedError("ApiJsonBackend: encodeToString not implemented for this platform")
 
-fun jsonMapper(): JsonMapper =
-    JsonMapper.builder()
-        .addModule(kotlinModule())
-        .addModule(Jdk8Module())
-        .addModule(JavaTimeModule())
-        .addModule(
-            SimpleModule()
-                .addSerializer(InputStreamSerializer)
-                .addSerializer(JsonMissingSerializer())
-                .addSerializer(JsonNullSerializer())
-                .addSerializer(KnownValueSerializer())
-                .addSerializer(JsonBooleanSerializer())
-                .addSerializer(JsonNumberSerializer())
-                .addSerializer(JsonStringSerializer())
-                .addSerializer(JsonArraySerializer())
-                .addSerializer(JsonObjectSerializer())
-                .addDeserializer(JsonField::class.java, JsonFieldDeserializer())
-                .addDeserializer(JsonValue::class.java, JsonValueDeserializer())
-                .addDeserializer(OffsetDateTime::class.java, LenientOffsetDateTimeDeserializer())
-        )
-        .withCoercionConfig(LogicalType.Boolean) {
-            it.setCoercion(CoercionInputShape.Integer, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Array, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Object, CoercionAction.Fail)
-        }
-        .withCoercionConfig(LogicalType.Integer) {
-            it.setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Array, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Object, CoercionAction.Fail)
-        }
-        .withCoercionConfig(LogicalType.Float) {
-            it.setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Array, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Object, CoercionAction.Fail)
-        }
-        .withCoercionConfig(LogicalType.Textual) {
-            it.setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Integer, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Array, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Object, CoercionAction.Fail)
-        }
-        .withCoercionConfig(LogicalType.DateTime) {
-            it.setCoercion(CoercionInputShape.Integer, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Array, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Object, CoercionAction.Fail)
-        }
-        .withCoercionConfig(LogicalType.Array) {
-            it.setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Integer, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Object, CoercionAction.Fail)
-        }
-        .withCoercionConfig(LogicalType.Collection) {
-            it.setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Integer, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Object, CoercionAction.Fail)
-        }
-        .withCoercionConfig(LogicalType.Map) {
-            it.setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Integer, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Object, CoercionAction.Fail)
-        }
-        .withCoercionConfig(LogicalType.POJO) {
-            it.setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Integer, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
-                .setCoercion(CoercionInputShape.Array, CoercionAction.Fail)
-        }
-        .serializationInclusion(JsonInclude.Include.NON_ABSENT)
-        .defaultPropertyInclusion(
-            JsonInclude.Value.construct(JsonInclude.Include.CUSTOM, JsonInclude.Include.ALWAYS)
-                .withValueFilter(JsonField.IsMissing::class.java)
-        )
-        .disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE)
-        .disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE)
-        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-        .disable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
-        .disable(MapperFeature.ALLOW_COERCION_OF_SCALARS)
-        .disable(MapperFeature.AUTO_DETECT_CREATORS)
-        .disable(MapperFeature.AUTO_DETECT_FIELDS)
-        .disable(MapperFeature.AUTO_DETECT_GETTERS)
-        .disable(MapperFeature.AUTO_DETECT_IS_GETTERS)
-        .disable(MapperFeature.AUTO_DETECT_SETTERS)
-        .build()
+    /**
+     * Decode a JSON string into a value of the given runtime type descriptor.
+     *
+     * The [typeDescriptor] is an opaque handle understood by the platform
+     * backend (a `Class<T>` or `TypeReference<T>` on JVM, a `KSerializer<T>`
+     * on kotlinx.serialization targets, a Moshi `Type` on Moshi targets).
+     *
+     * Default implementation throws; platforms override.
+     */
+    open fun <T> decodeFromString(json: String, typeDescriptor: Any): T =
+        throw NotImplementedError("ApiJsonBackend: decodeFromString not implemented for this platform")
 
-/** A serializer that serializes [InputStream] to bytes. */
-private object InputStreamSerializer : BaseSerializer<InputStream>(InputStream::class) {
-
-    private fun readResolve(): Any = InputStreamSerializer
-
-    override fun serialize(
-        value: InputStream?,
-        gen: JsonGenerator?,
-        serializers: SerializerProvider?,
-    ) {
-        if (value == null) {
-            gen?.writeNull()
-        } else {
-            value.use { gen?.writeBinary(it.readBytes()) }
-        }
-    }
+    /** Pretty-print a value. Default delegates to [encodeToString]. */
+    open fun encodePretty(value: Any?): String = encodeToString(value)
 }
+
+/** Default [ApiJsonBackend] for the current platform. JVM actual returns a Jackson-backed backend. */
+expect fun apiJsonBackend(): ApiJsonBackend
 
 /**
- * A deserializer that can deserialize [OffsetDateTime] from datetimes, dates, and zoned datetimes.
+ * Opaque platform mapper type exposed for legacy code that still passes
+ * mappers around as a concrete parameter.
+ *
+ * On JVM this resolves to `com.fasterxml.jackson.databind.json.JsonMapper`.
+ * Other platforms resolve to a kotlinx.serialization `Json` or Moshi `Moshi`.
+ *
+ * New code should prefer [ApiJsonBackend] over touching [JsonMapperType]
+ * directly so the commonMain code path stays provider-neutral.
  */
-private class LenientOffsetDateTimeDeserializer :
-    StdDeserializer<OffsetDateTime>(OffsetDateTime::class.java) {
+expect class JsonMapperType
 
-    companion object {
+/** Legacy factory — returns the platform [JsonMapperType] configured with SDK defaults. */
+expect fun jsonMapper(): JsonMapperType
 
-        private val DATE_TIME_FORMATTERS =
-            listOf(
-                DateTimeFormatter.ISO_LOCAL_DATE_TIME,
-                DateTimeFormatter.ISO_LOCAL_DATE,
-                DateTimeFormatter.ISO_ZONED_DATE_TIME,
-            )
-    }
-
-    override fun logicalType(): LogicalType = LogicalType.DateTime
-
-    override fun deserialize(p: JsonParser, context: DeserializationContext): OffsetDateTime {
-        val exceptions = mutableListOf<Exception>()
-
-        for (formatter in DATE_TIME_FORMATTERS) {
-            try {
-                val temporal = formatter.parse(p.text)
-
-                return when {
-                    !temporal.isSupported(ChronoField.HOUR_OF_DAY) ->
-                        LocalDate.from(temporal)
-                            .atStartOfDay()
-                            .atZone(ZoneId.of("UTC"))
-                            .toOffsetDateTime()
-                    !temporal.isSupported(ChronoField.OFFSET_SECONDS) ->
-                        LocalDateTime.from(temporal).atZone(ZoneId.of("UTC")).toOffsetDateTime()
-                    else -> OffsetDateTime.from(temporal)
-                }
-            } catch (e: DateTimeException) {
-                exceptions.add(e)
-            }
-        }
-
-        throw JsonParseException(p, "Cannot parse `OffsetDateTime` from value: ${p.text}").apply {
-            exceptions.forEach { addSuppressed(it) }
-        }
-    }
-}
+/**
+ * Platform hook for verifying that the runtime JSON library is at a supported
+ * version. JVM checks Jackson; other targets are a no-op.
+ */
+expect fun checkJsonVersionCompatibility()

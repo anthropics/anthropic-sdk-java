@@ -1,0 +1,216 @@
+package kotlinx.kmp.util.core
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.core.JsonParseException
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.DeserializationContext
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.MapperFeature
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.databind.cfg.CoercionAction
+import com.fasterxml.jackson.databind.cfg.CoercionInputShape
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer
+import com.fasterxml.jackson.databind.json.JsonMapper
+import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.databind.type.LogicalType
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.kotlinModule
+import java.io.InputStream
+import java.time.DateTimeException
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoField
+
+actual typealias JsonMapperType = JsonMapper
+
+/** JVM [ApiJsonBackend] implementation backed by a configured Jackson [JsonMapper]. */
+class JacksonApiJsonBackend(private val mapper: JsonMapper = jsonMapper()) : ApiJsonBackend() {
+    override fun encodeToString(value: Any?): String = mapper.writeValueAsString(value)
+
+    override fun <T> decodeFromString(json: String, typeDescriptor: Any): T {
+        @Suppress("UNCHECKED_CAST")
+        return when (typeDescriptor) {
+            is Class<*> -> mapper.readValue(json, typeDescriptor) as T
+            is com.fasterxml.jackson.core.type.TypeReference<*> -> mapper.readValue(json, typeDescriptor) as T
+            else -> throw IllegalArgumentException(
+                "JacksonApiJsonBackend requires Class<T> or TypeReference<T>, got ${typeDescriptor::class.java.name}"
+            )
+        }
+    }
+
+    override fun encodePretty(value: Any?): String =
+        mapper.writerWithDefaultPrettyPrinter().writeValueAsString(value)
+}
+
+/** Singleton default backend; cheap to share because the underlying [JsonMapper] is thread-safe. */
+private val DEFAULT_BACKEND: ApiJsonBackend by lazy { JacksonApiJsonBackend() }
+
+actual fun apiJsonBackend(): ApiJsonBackend = DEFAULT_BACKEND
+
+actual fun jsonMapper(): JsonMapperType =
+    JsonMapper.builder()
+        .addModule(kotlinModule())
+        .addModule(Jdk8Module())
+        .addModule(JavaTimeModule())
+        .addModule(
+            SimpleModule()
+                .addSerializer(InputStreamSerializer)
+                .addSerializer(JsonMissingSerializer())
+                .addSerializer(JsonNullSerializer())
+                .addSerializer(KnownValueSerializer())
+                .addSerializer(JsonBooleanSerializer())
+                .addSerializer(JsonNumberSerializer())
+                .addSerializer(JsonStringSerializer())
+                .addSerializer(JsonArraySerializer())
+                .addSerializer(JsonObjectSerializer())
+                .addDeserializer(JsonField::class.java, JsonFieldDeserializer())
+                .addDeserializer(JsonValue::class.java, JsonValueDeserializer())
+                .addDeserializer(OffsetDateTime::class.java, LenientOffsetDateTimeDeserializer())
+        )
+        .withCoercionConfig(LogicalType.Boolean) {
+            it.setCoercion(CoercionInputShape.Integer, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Array, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Object, CoercionAction.Fail)
+        }
+        .withCoercionConfig(LogicalType.Integer) {
+            it.setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Array, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Object, CoercionAction.Fail)
+        }
+        .withCoercionConfig(LogicalType.Float) {
+            it.setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Array, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Object, CoercionAction.Fail)
+        }
+        .withCoercionConfig(LogicalType.Textual) {
+            it.setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Integer, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Array, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Object, CoercionAction.Fail)
+        }
+        .withCoercionConfig(LogicalType.DateTime) {
+            it.setCoercion(CoercionInputShape.Integer, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Array, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Object, CoercionAction.Fail)
+        }
+        .withCoercionConfig(LogicalType.Array) {
+            it.setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Integer, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Object, CoercionAction.Fail)
+        }
+        .withCoercionConfig(LogicalType.Collection) {
+            it.setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Integer, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Object, CoercionAction.Fail)
+        }
+        .withCoercionConfig(LogicalType.Map) {
+            it.setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Integer, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Object, CoercionAction.Fail)
+        }
+        .withCoercionConfig(LogicalType.POJO) {
+            it.setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Integer, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Array, CoercionAction.Fail)
+        }
+        .serializationInclusion(JsonInclude.Include.NON_ABSENT)
+        .defaultPropertyInclusion(
+            JsonInclude.Value.construct(JsonInclude.Include.CUSTOM, JsonInclude.Include.ALWAYS)
+                .withValueFilter(JsonField.IsMissing::class.java)
+        )
+        .disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE)
+        .disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE)
+        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+        .disable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
+        .disable(MapperFeature.ALLOW_COERCION_OF_SCALARS)
+        .disable(MapperFeature.AUTO_DETECT_CREATORS)
+        .disable(MapperFeature.AUTO_DETECT_FIELDS)
+        .disable(MapperFeature.AUTO_DETECT_GETTERS)
+        .disable(MapperFeature.AUTO_DETECT_IS_GETTERS)
+        .disable(MapperFeature.AUTO_DETECT_SETTERS)
+        .build()
+
+/** A serializer that serializes [InputStream] to bytes. */
+private object InputStreamSerializer : BaseSerializer<InputStream>(InputStream::class) {
+
+    private fun readResolve(): Any = InputStreamSerializer
+
+    override fun serialize(
+        value: InputStream?,
+        gen: JsonGenerator?,
+        serializers: SerializerProvider?,
+    ) {
+        if (value == null) {
+            gen?.writeNull()
+        } else {
+            value.use { gen?.writeBinary(it.readBytes()) }
+        }
+    }
+}
+
+/**
+ * A deserializer that can deserialize [OffsetDateTime] from datetimes, dates, and zoned datetimes.
+ */
+private class LenientOffsetDateTimeDeserializer :
+    StdDeserializer<OffsetDateTime>(OffsetDateTime::class.java) {
+
+    companion object {
+
+        private val DATE_TIME_FORMATTERS =
+            listOf(
+                DateTimeFormatter.ISO_LOCAL_DATE_TIME,
+                DateTimeFormatter.ISO_LOCAL_DATE,
+                DateTimeFormatter.ISO_ZONED_DATE_TIME,
+            )
+    }
+
+    override fun logicalType(): LogicalType = LogicalType.DateTime
+
+    override fun deserialize(p: JsonParser, context: DeserializationContext): OffsetDateTime {
+        val exceptions = mutableListOf<Exception>()
+
+        for (formatter in DATE_TIME_FORMATTERS) {
+            try {
+                val temporal = formatter.parse(p.text)
+
+                return when {
+                    !temporal.isSupported(ChronoField.HOUR_OF_DAY) ->
+                        LocalDate.from(temporal)
+                            .atStartOfDay()
+                            .atZone(ZoneId.of("UTC"))
+                            .toOffsetDateTime()
+                    !temporal.isSupported(ChronoField.OFFSET_SECONDS) ->
+                        LocalDateTime.from(temporal).atZone(ZoneId.of("UTC")).toOffsetDateTime()
+                    else -> OffsetDateTime.from(temporal)
+                }
+            } catch (e: DateTimeException) {
+                exceptions.add(e)
+            }
+        }
+
+        throw JsonParseException(p, "Cannot parse `OffsetDateTime` from value: ${p.text}").apply {
+            exceptions.forEach { addSuppressed(it) }
+        }
+    }
+}
