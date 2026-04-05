@@ -140,11 +140,127 @@ message ICalAttendee {
     string role = 4;                                  // CHAIR/REQ-PARTICIPANT/OPT-PARTICIPANT
 }
 
-// iCal VALARM (RFC 5545)
+// iCal VALARM (RFC 5545 §3.6.6) — can appear in VEVENT or VTODO.
 message ICalAlarm {
-    string action = 1;                                // AUDIO/DISPLAY/EMAIL
-    google.protobuf.Duration trigger_duration = 2;    // structured trigger
-    string trigger = 3;                               // raw RFC 5545 (-PT15M)
+    string action = 1;                                // AUDIO/DISPLAY/EMAIL/PROCEDURE
+    google.protobuf.Duration trigger_duration = 2;    // structured trigger (relative)
+    string trigger = 3;                               // raw RFC 5545 (-PT15M or absolute)
+    google.protobuf.Duration repeat_duration = 4;     // repeat interval
+    int32 repeat_count = 5;
+    string description = 6;                           // for DISPLAY/EMAIL action
+    string summary = 7;                               // for EMAIL action
+    repeated ICalAttendee attendees = 8;              // for EMAIL action
+    string attach = 9;                                // for AUDIO action (URI)
+}
+
+// RFC 5545 §3.6.2 VTODO — task / to-do item.
+message ICalTodo {
+    string uid = 1;
+    string summary = 2;
+    string description = 3;
+    string location = 4;
+    google.protobuf.Timestamp dt_start = 5;
+    google.protobuf.Timestamp due = 6;
+    google.protobuf.Timestamp completed = 7;
+    google.protobuf.Duration duration = 8;
+    string rrule = 9;
+    string status = 10;                               // NEEDS-ACTION/COMPLETED/IN-PROCESS/CANCELLED
+    int32 priority = 11;
+    int32 percent_complete = 12;
+    string url = 13;
+    google.type.LatLng geo = 14;
+    repeated string categories = 15;
+    string organizer = 16;
+    repeated ICalAttendee attendees = 17;
+    repeated ICalAlarm alarms = 18;
+    string class_ = 19;                               // PUBLIC/PRIVATE/CONFIDENTIAL
+    google.protobuf.Timestamp created = 20;
+    google.protobuf.Timestamp last_modified = 21;
+    int32 sequence = 22;
+    repeated string resources = 23;
+    repeated string related_to = 24;
+}
+
+// RFC 5545 §3.6.3 VJOURNAL — journal entry / note.
+message ICalJournal {
+    string uid = 1;
+    string summary = 2;
+    repeated string description = 3;
+    google.protobuf.Timestamp dt_start = 4;
+    string status = 5;                                // DRAFT/FINAL/CANCELLED
+    string url = 6;
+    repeated string categories = 7;
+    string organizer = 8;
+    repeated ICalAttendee attendees = 9;
+    repeated string related_to = 10;
+    string class_ = 11;
+    google.protobuf.Timestamp created = 12;
+    google.protobuf.Timestamp last_modified = 13;
+    int32 sequence = 14;
+    string rrule = 15;
+    repeated string contact = 16;
+    repeated string attach = 17;
+}
+
+// RFC 5545 §3.6.4 VFREEBUSY — free/busy time info.
+message ICalFreeBusy {
+    string uid = 1;
+    google.protobuf.Timestamp dt_start = 2;
+    google.protobuf.Timestamp dt_end = 3;
+    string organizer = 4;
+    repeated ICalAttendee attendees = 5;
+    repeated ICalFreeBusyPeriod free_busy = 6;
+    string url = 7;
+    google.protobuf.Timestamp dtstamp = 8;
+    string comment = 9;
+}
+
+// RFC 5545 §3.8.2.6 FREEBUSY property entry.
+message ICalFreeBusyPeriod {
+    google.protobuf.Timestamp start = 1;
+    google.protobuf.Duration duration = 2;
+    string fb_type = 3;                               // FREE/BUSY/BUSY-UNAVAILABLE/BUSY-TENTATIVE
+}
+
+// RFC 5545 §3.6.5 VTIMEZONE — timezone definition with STANDARD/DAYLIGHT.
+message ICalTimezone {
+    string tzid = 1;
+    string tzurl = 2;
+    google.protobuf.Timestamp last_modified = 3;
+    repeated ICalTimezoneObservance standard = 4;
+    repeated ICalTimezoneObservance daylight = 5;
+}
+
+// RFC 5545 §3.6.5 STANDARD / DAYLIGHT observance.
+message ICalTimezoneObservance {
+    google.protobuf.Timestamp dt_start = 1;
+    string tz_offset_from = 2;
+    string tz_offset_to = 3;
+    string tz_name = 4;
+    string rrule = 5;
+    repeated google.protobuf.Timestamp rdate = 6;
+    string comment = 7;
+}
+
+// RFC 5545 §3.4 VCALENDAR — top-level wrapper (equivalent to a .ics file).
+message ICalendar {
+    string prodid = 1;
+    string version = 2;
+    string calscale = 3;                              // GREGORIAN
+    string method = 4;                                // PUBLISH/REQUEST/REPLY/CANCEL/...
+    repeated ICalEvent events = 5;
+    repeated ICalTodo todos = 6;
+    repeated ICalJournal journals = 7;
+    repeated ICalFreeBusy free_busy = 8;
+    repeated ICalTimezone timezones = 9;
+    string name = 10;                                 // NAME (RFC 7986)
+    string description = 11;                          // DESCRIPTION (RFC 7986)
+    string url = 12;
+    string color = 13;
+    string image = 14;
+    string refresh_interval = 15;
+    string source = 16;
+    repeated string categories = 17;
 }
 
 // GeoJSON Point (google.type.LatLng + altitude)

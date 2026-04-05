@@ -38,6 +38,7 @@ class JsonSchemaValidator private constructor() {
 
         private const val FORMAT = "format"
         private const val MIN_ITEMS = "minItems"
+        private const val DEFAULT = "default"
 
         // The names of the supported schema data types.
         //
@@ -76,32 +77,35 @@ class JsonSchemaValidator private constructor() {
          * `"object"`.
          */
         private val ALLOWED_KEYWORDS_OBJECT_SUB_SCHEMA =
-            setOf(TYPE, REQUIRED, ADDITIONAL_PROPS, TITLE, DESC, PROPS)
+            setOf(TYPE, REQUIRED, ADDITIONAL_PROPS, TITLE, DESC, PROPS, DEFAULT)
 
         /**
          * The set of allowed keywords when defining sub-schemas when the `"type"` field is set to
          * `"array"`.
          */
-        private val ALLOWED_KEYWORDS_ARRAY_SUB_SCHEMA = setOf(TYPE, TITLE, DESC, ITEMS, MIN_ITEMS)
+        private val ALLOWED_KEYWORDS_ARRAY_SUB_SCHEMA =
+            setOf(TYPE, TITLE, DESC, ITEMS, MIN_ITEMS, DEFAULT)
 
         /**
          * The set of allowed keywords when defining sub-schemas when the `"type"` field is set to
          * `"boolean"`, or any other simple type not handled separately.
          */
-        private val ALLOWED_KEYWORDS_SIMPLE_SUB_SCHEMA = setOf(TYPE, TITLE, DESC, ENUM, CONST)
+        private val ALLOWED_KEYWORDS_SIMPLE_SUB_SCHEMA =
+            setOf(TYPE, TITLE, DESC, ENUM, CONST, DEFAULT)
 
         /**
          * The set of allowed keywords when defining sub-schemas when the `"type"` field is set to
          * `"string"`.
          */
         private val ALLOWED_KEYWORDS_STRING_SUB_SCHEMA =
-            setOf(TYPE, TITLE, DESC, ENUM, CONST, FORMAT)
+            setOf(TYPE, TITLE, DESC, ENUM, CONST, FORMAT, DEFAULT)
 
         /**
          * The set of allowed keywords when defining sub-schemas when the `"type"` field is set to
          * `"integer"` or `"number"`.
          */
-        private val ALLOWED_KEYWORDS_NUMBER_SUB_SCHEMA = setOf(TYPE, TITLE, DESC, ENUM, CONST)
+        private val ALLOWED_KEYWORDS_NUMBER_SUB_SCHEMA =
+            setOf(TYPE, TITLE, DESC, ENUM, CONST, DEFAULT)
 
         /** The depth value that corresponds to the root level of the schema. */
         private const val ROOT_DEPTH = 0

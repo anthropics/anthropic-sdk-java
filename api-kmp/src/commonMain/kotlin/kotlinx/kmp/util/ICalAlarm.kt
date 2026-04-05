@@ -17,6 +17,8 @@ import com.squareup.wire.ReverseProtoWriter
 import com.squareup.wire.Syntax.PROTO_3
 import com.squareup.wire.WireField
 import com.squareup.wire.`internal`.JvmField
+import com.squareup.wire.`internal`.immutableCopyOf
+import com.squareup.wire.`internal`.redactElements
 import com.squareup.wire.`internal`.sanitize
 import kotlin.Any
 import kotlin.AssertionError
@@ -28,14 +30,15 @@ import kotlin.Long
 import kotlin.Nothing
 import kotlin.String
 import kotlin.Suppress
+import kotlin.collections.List
 import okio.ByteString
 
 /**
- * iCal VALARM (RFC 5545)
+ * iCal VALARM (RFC 5545 §3.6.6) — can appear in VEVENT or VTODO.
  */
 public class ICalAlarm(
   /**
-   * AUDIO/DISPLAY/EMAIL
+   * AUDIO/DISPLAY/EMAIL/PROCEDURE
    */
   @field:WireField(
     tag = 1,
@@ -45,7 +48,7 @@ public class ICalAlarm(
   )
   public val action: String = "",
   /**
-   * structured trigger
+   * structured trigger (relative)
    */
   @field:WireField(
     tag = 2,
@@ -56,7 +59,7 @@ public class ICalAlarm(
   )
   public val trigger_duration: Duration? = null,
   /**
-   * raw RFC 5545 (-PT15M)
+   * raw RFC 5545 (-PT15M or absolute)
    */
   @field:WireField(
     tag = 3,
@@ -65,8 +68,69 @@ public class ICalAlarm(
     schemaIndex = 2,
   )
   public val trigger: String = "",
+  /**
+   * repeat interval
+   */
+  @field:WireField(
+    tag = 4,
+    adapter = "com.squareup.wire.ProtoAdapter#DURATION",
+    label = WireField.Label.OMIT_IDENTITY,
+    jsonName = "repeatDuration",
+    schemaIndex = 3,
+  )
+  public val repeat_duration: Duration? = null,
+  @field:WireField(
+    tag = 5,
+    adapter = "com.squareup.wire.ProtoAdapter#INT32",
+    label = WireField.Label.OMIT_IDENTITY,
+    jsonName = "repeatCount",
+    schemaIndex = 4,
+  )
+  public val repeat_count: Int = 0,
+  /**
+   * for DISPLAY/EMAIL action
+   */
+  @field:WireField(
+    tag = 6,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 5,
+  )
+  public val description: String = "",
+  /**
+   * for EMAIL action
+   */
+  @field:WireField(
+    tag = 7,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 6,
+  )
+  public val summary: String = "",
+  attendees: List<ICalAttendee> = emptyList(),
+  /**
+   * for AUDIO action (URI)
+   */
+  @field:WireField(
+    tag = 9,
+    adapter = "com.squareup.wire.ProtoAdapter#STRING",
+    label = WireField.Label.OMIT_IDENTITY,
+    schemaIndex = 8,
+  )
+  public val attach: String = "",
   unknownFields: ByteString = ByteString.EMPTY,
 ) : Message<ICalAlarm, Nothing>(ADAPTER, unknownFields) {
+  /**
+   * for EMAIL action
+   */
+  @field:WireField(
+    tag = 8,
+    adapter = "kotlinx.kmp.util.ICalAttendee#ADAPTER",
+    label = WireField.Label.REPEATED,
+    schemaIndex = 7,
+  )
+  public val attendees: List<ICalAttendee> = immutableCopyOf("attendees", attendees)
+
   @Deprecated(
     message = "Shouldn't be used in Kotlin",
     level = DeprecationLevel.HIDDEN,
@@ -80,6 +144,12 @@ public class ICalAlarm(
     if (action != other.action) return false
     if (trigger_duration != other.trigger_duration) return false
     if (trigger != other.trigger) return false
+    if (repeat_duration != other.repeat_duration) return false
+    if (repeat_count != other.repeat_count) return false
+    if (description != other.description) return false
+    if (summary != other.summary) return false
+    if (attendees != other.attendees) return false
+    if (attach != other.attach) return false
     return true
   }
 
@@ -90,6 +160,12 @@ public class ICalAlarm(
       result = result * 37 + action.hashCode()
       result = result * 37 + (trigger_duration?.hashCode() ?: 0)
       result = result * 37 + trigger.hashCode()
+      result = result * 37 + (repeat_duration?.hashCode() ?: 0)
+      result = result * 37 + repeat_count.hashCode()
+      result = result * 37 + description.hashCode()
+      result = result * 37 + summary.hashCode()
+      result = result * 37 + attendees.hashCode()
+      result = result * 37 + attach.hashCode()
       super.hashCode = result
     }
     return result
@@ -100,6 +176,12 @@ public class ICalAlarm(
     result += """action=${sanitize(action)}"""
     if (trigger_duration != null) result += """trigger_duration=$trigger_duration"""
     result += """trigger=${sanitize(trigger)}"""
+    if (repeat_duration != null) result += """repeat_duration=$repeat_duration"""
+    result += """repeat_count=$repeat_count"""
+    result += """description=${sanitize(description)}"""
+    result += """summary=${sanitize(summary)}"""
+    if (attendees.isNotEmpty()) result += """attendees=$attendees"""
+    result += """attach=${sanitize(attach)}"""
     return result.joinToString(prefix = "ICalAlarm{", separator = ", ", postfix = "}")
   }
 
@@ -107,8 +189,14 @@ public class ICalAlarm(
     action: String = this.action,
     trigger_duration: Duration? = this.trigger_duration,
     trigger: String = this.trigger,
+    repeat_duration: Duration? = this.repeat_duration,
+    repeat_count: Int = this.repeat_count,
+    description: String = this.description,
+    summary: String = this.summary,
+    attendees: List<ICalAttendee> = this.attendees,
+    attach: String = this.attach,
     unknownFields: ByteString = this.unknownFields,
-  ): ICalAlarm = ICalAlarm(action, trigger_duration, trigger, unknownFields)
+  ): ICalAlarm = ICalAlarm(action, trigger_duration, trigger, repeat_duration, repeat_count, description, summary, attendees, attach, unknownFields)
 
   public companion object {
     @JvmField
@@ -131,6 +219,22 @@ public class ICalAlarm(
         if (value.trigger != "") {
           size += ProtoAdapter.STRING.encodedSizeWithTag(3, value.trigger)
         }
+        if (value.repeat_duration != null) {
+          size += ProtoAdapter.DURATION.encodedSizeWithTag(4, value.repeat_duration)
+        }
+        if (value.repeat_count != 0) {
+          size += ProtoAdapter.INT32.encodedSizeWithTag(5, value.repeat_count)
+        }
+        if (value.description != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(6, value.description)
+        }
+        if (value.summary != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(7, value.summary)
+        }
+        size += ICalAttendee.ADAPTER.asRepeated().encodedSizeWithTag(8, value.attendees)
+        if (value.attach != "") {
+          size += ProtoAdapter.STRING.encodedSizeWithTag(9, value.attach)
+        }
         return size
       }
 
@@ -144,11 +248,43 @@ public class ICalAlarm(
         if (value.trigger != "") {
           ProtoAdapter.STRING.encodeWithTag(writer, 3, value.trigger)
         }
+        if (value.repeat_duration != null) {
+          ProtoAdapter.DURATION.encodeWithTag(writer, 4, value.repeat_duration)
+        }
+        if (value.repeat_count != 0) {
+          ProtoAdapter.INT32.encodeWithTag(writer, 5, value.repeat_count)
+        }
+        if (value.description != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 6, value.description)
+        }
+        if (value.summary != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 7, value.summary)
+        }
+        ICalAttendee.ADAPTER.asRepeated().encodeWithTag(writer, 8, value.attendees)
+        if (value.attach != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 9, value.attach)
+        }
         writer.writeBytes(value.unknownFields)
       }
 
       override fun encode(writer: ReverseProtoWriter, `value`: ICalAlarm) {
         writer.writeBytes(value.unknownFields)
+        if (value.attach != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 9, value.attach)
+        }
+        ICalAttendee.ADAPTER.asRepeated().encodeWithTag(writer, 8, value.attendees)
+        if (value.summary != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 7, value.summary)
+        }
+        if (value.description != "") {
+          ProtoAdapter.STRING.encodeWithTag(writer, 6, value.description)
+        }
+        if (value.repeat_count != 0) {
+          ProtoAdapter.INT32.encodeWithTag(writer, 5, value.repeat_count)
+        }
+        if (value.repeat_duration != null) {
+          ProtoAdapter.DURATION.encodeWithTag(writer, 4, value.repeat_duration)
+        }
         if (value.trigger != "") {
           ProtoAdapter.STRING.encodeWithTag(writer, 3, value.trigger)
         }
@@ -164,11 +300,23 @@ public class ICalAlarm(
         var action: String = ""
         var trigger_duration: Duration? = null
         var trigger: String = ""
+        var repeat_duration: Duration? = null
+        var repeat_count: Int = 0
+        var description: String = ""
+        var summary: String = ""
+        val attendees = mutableListOf<ICalAttendee>()
+        var attach: String = ""
         val unknownFields = reader.forEachTag { tag ->
           when (tag) {
             1 -> action = ProtoAdapter.STRING.decode(reader)
             2 -> trigger_duration = ProtoAdapter.DURATION.decode(reader)
             3 -> trigger = ProtoAdapter.STRING.decode(reader)
+            4 -> repeat_duration = ProtoAdapter.DURATION.decode(reader)
+            5 -> repeat_count = ProtoAdapter.INT32.decode(reader)
+            6 -> description = ProtoAdapter.STRING.decode(reader)
+            7 -> summary = ProtoAdapter.STRING.decode(reader)
+            8 -> attendees.add(ICalAttendee.ADAPTER.decode(reader))
+            9 -> attach = ProtoAdapter.STRING.decode(reader)
             else -> reader.readUnknownField(tag)
           }
         }
@@ -176,12 +324,20 @@ public class ICalAlarm(
           action = action,
           trigger_duration = trigger_duration,
           trigger = trigger,
+          repeat_duration = repeat_duration,
+          repeat_count = repeat_count,
+          description = description,
+          summary = summary,
+          attendees = attendees,
+          attach = attach,
           unknownFields = unknownFields
         )
       }
 
       override fun redact(`value`: ICalAlarm): ICalAlarm = value.copy(
         trigger_duration = value.trigger_duration?.let(ProtoAdapter.DURATION::redact),
+        repeat_duration = value.repeat_duration?.let(ProtoAdapter.DURATION::redact),
+        attendees = value.attendees.redactElements(ICalAttendee.ADAPTER),
         unknownFields = ByteString.EMPTY
       )
     }
