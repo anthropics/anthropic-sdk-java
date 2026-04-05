@@ -57,6 +57,9 @@ kotlin {
                 // Validation libs (JVM)
                 implementation("commons-validator:commons-validator:1.9.0")
                 implementation("com.googlecode.libphonenumber:libphonenumber:8.13.50")
+                implementation("com.googlecode.libphonenumber:geocoder:2.231")
+                implementation("com.googlecode.libphonenumber:prefixmapper:2.231")
+                implementation("com.googlecode.libphonenumber:carrier:1.221")
                 implementation("com.googlecode.ez-vcard:ez-vcard:0.12.1")  // vCard (.vcf)
                 implementation("com.ibm.icu:icu4j:76.1")  // ICU CLDR
                 implementation("org.mnode.ical4j:ical4j:4.0.7")  // iCalendar (.ics)
@@ -75,6 +78,9 @@ kotlin {
                 // Validation libs (JVM)
                 implementation("commons-validator:commons-validator:1.9.0")
                 implementation("com.googlecode.libphonenumber:libphonenumber:8.13.50")
+                implementation("com.googlecode.libphonenumber:geocoder:2.231")
+                implementation("com.googlecode.libphonenumber:prefixmapper:2.231")
+                implementation("com.googlecode.libphonenumber:carrier:1.221")
                 implementation("com.googlecode.ez-vcard:ez-vcard:0.12.1")  // vCard (.vcf)
                 implementation("com.ibm.icu:icu4j:76.1")  // ICU CLDR
                 implementation("org.mnode.ical4j:ical4j:4.0.7")  // iCalendar (.ics)

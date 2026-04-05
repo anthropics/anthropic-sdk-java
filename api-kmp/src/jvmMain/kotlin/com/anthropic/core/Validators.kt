@@ -879,6 +879,241 @@ object Validators {
         else Timezone("UTC")
     }
 
+    // === GeoIp + libphonenumber (geocoder, prefixmapper, carrier) ===
+
+    /**
+     * Parse a phone number using GeoIp as the default region context.
+     * Local numbers like "212-555-1234" are resolved to the GeoIp.country's
+     * region code (e.g., US → +1, DE → +49).
+     */
+    fun parsePhoneByGeoIp(
+        number: String,
+        geoIp: GeoIp,
+    ): com.google.i18n.phonenumbers.Phonenumber.PhoneNumber? = try {
+        val util = com.google.i18n.phonenumbers.PhoneNumberUtil.getInstance()
+        val region = geoIp.country.ifBlank { "US" }
+        util.parse(number, region)
+    } catch (_: Exception) { null }
+
+    /**
+     * Format a phone number using GeoIp context:
+     * - If phone's country == geoip country → NATIONAL format (local)
+     * - Otherwise → INTERNATIONAL format (+country code)
+     */
+    fun formatPhoneByGeoIp(number: String, geoIp: GeoIp): String? {
+        val util = com.google.i18n.phonenumbers.PhoneNumberUtil.getInstance()
+        val parsed = parsePhoneByGeoIp(number, geoIp) ?: return null
+        val phoneRegion = util.getRegionCodeForNumber(parsed)
+        val format = if (phoneRegion == geoIp.country)
+            com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat.NATIONAL
+        else
+            com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL
+        return util.format(parsed, format)
+    }
+
+    /**
+     * Reverse geocode a phone number to its geographic area description.
+     * Uses libphonenumber PhoneNumberOfflineGeocoder with the GeoIp locale.
+     *
+     * Examples:
+     *   "+12125551234" + US/EN → "New York, NY"
+     *   "+442079460000" + GB/EN → "London"
+     *   "+81312345678" + JP/JA → "東京"
+     */
+    fun phoneDescriptionByGeoIp(number: String, geoIp: GeoIp): String? {
+        val parsed = parsePhoneByGeoIp(number, geoIp) ?: return null
+        val geocoder = com.google.i18n.phonenumbers.geocoding.PhoneNumberOfflineGeocoder.getInstance()
+        val locale = geoIp.locale.ifBlank { "en" }.let { java.util.Locale.forLanguageTag(it) }
+        return geocoder.getDescriptionForNumber(parsed, locale).ifBlank { null }
+    }
+
+    /**
+     * Get the timezones a phone number belongs to (via libphonenumber).
+     * Useful for correlating with GeoIp timezone — a number from NYC should
+     * map to America/New_York, cross-checking the GeoIp city lookup.
+     */
+    fun phoneToTimezones(number: String, geoIp: GeoIp): List<Timezone> {
+        val parsed = parsePhoneByGeoIp(number, geoIp) ?: return emptyList()
+        val mapper = com.google.i18n.phonenumbers.PhoneNumberToTimeZonesMapper.getInstance()
+        return mapper.getTimeZonesForNumber(parsed).map { Timezone(it) }
+    }
+
+    /**
+     * Get the carrier name for a mobile number (via libphonenumber).
+     * Returns localized name per GeoIp language.
+     *
+     * Examples:
+     *   "+12125551234" → "" (landline, no carrier)
+     *   "+14155551234" + US/EN → "Verizon" (if mobile)
+     */
+    fun phoneCarrierByGeoIp(number: String, geoIp: GeoIp): String? {
+        val parsed = parsePhoneByGeoIp(number, geoIp) ?: return null
+        val mapper = com.google.i18n.phonenumbers.PhoneNumberToCarrierMapper.getInstance()
+        val locale = geoIp.locale.ifBlank { "en" }.let { java.util.Locale.forLanguageTag(it) }
+        return mapper.getNameForNumber(parsed, locale).ifBlank { null }
+    }
+
+    /**
+     * Validate that a phone number's geographic origin is consistent with GeoIp.
+     * Returns true if:
+     * - Phone's region matches geoip.country, OR
+     * - Phone's timezones include the geoip city's timezone
+     */
+    fun phoneMatchesGeoIp(number: String, geoIp: GeoIp): Boolean {
+        val util = com.google.i18n.phonenumbers.PhoneNumberUtil.getInstance()
+        val parsed = parsePhoneByGeoIp(number, geoIp) ?: return false
+        val phoneRegion = util.getRegionCodeForNumber(parsed) ?: return false
+        if (phoneRegion == geoIp.country) return true
+        val phoneTzs = phoneToTimezones(number, geoIp).map { it.value }
+        val geoipTz = geoIpToTimezone(geoIp).value
+        return geoipTz in phoneTzs
+    }
+
+    /**
+     * Infer a full VCardContact from a user's phone number + GeoIp.
+     *
+     * From just (phone, geoip) we derive the entire vCard — every linked
+     * property via: libphonenumber → ICU CLDR → country → language →
+     * locale → timezone → calendar → script → currency → address.
+     *
+     * Inferred fields:
+     *   phones[0]     ← parsed + formatted (E.164) from phone
+     *   addresses[0]  ← google.type.PostalAddress with:
+     *                    locality = geoIp.city (or phone geocoder description)
+     *                    administrative_area = geoIp.region
+     *                    postal_code = geoIp.postal_code
+     *                    region_code = country (from phone or geoip)
+     *                    language_code = language from country
+     *   note          ← "Carrier: X | Timezone: Y | Region: Z"
+     *   categories    ← ["phone:<type>", "country:<cc>", "lang:<ll>",
+     *                    "tz:<tz>", "calendar:<cal>", "script:<scr>",
+     *                    "currency:<cur>", "direction:<ltr|rtl>"]
+     *   uid           ← "tel:<e164>" (RFC 3966)
+     */
+    fun inferVCardContact(
+        phone: String,
+        geoIp: GeoIp,
+        givenName: String = "",
+        familyName: String = "",
+    ): VCardContact {
+        val util = com.google.i18n.phonenumbers.PhoneNumberUtil.getInstance()
+        val parsed = parsePhoneByGeoIp(phone, geoIp)
+        val e164 = parsed?.let { util.format(it, com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat.E164) }
+            ?: phone
+
+        // Region: prefer phone's region, fall back to geoIp
+        val phoneRegion = parsed?.let { util.getRegionCodeForNumber(it) }
+        val effectiveCountry = Country(phoneRegion ?: geoIp.country.ifBlank { "US" })
+
+        // Language from country (ICU)
+        val language = countryToLanguage(effectiveCountry)
+
+        // City: prefer geoIp, else phone geocoder description
+        val city = geoIp.city.ifBlank {
+            phoneDescriptionByGeoIp(phone, geoIp) ?: ""
+        }
+
+        // Timezone: geoip city → CLDR timezone, cross-checked against phone
+        val timezone = geoIpToTimezone(geoIp).value
+        val phoneTimezones = phoneToTimezones(phone, geoIp).map { it.value }
+
+        // CLDR linked chain
+        val calendar = defaultCalendarFor(effectiveCountry)
+        val script = countryToScript(effectiveCountry)
+        val direction = countryToDirection(effectiveCountry)
+        val currency = if (geoIp.currency_code.isNotBlank()) geoIp.currency_code
+                       else countryToCurrency(effectiveCountry).value
+        val locale = "${language.value}_${effectiveCountry.value}"
+
+        // Carrier + phone type
+        val carrier = phoneCarrierByGeoIp(phone, geoIp) ?: ""
+        val phoneType = parsed?.let { util.getNumberType(it).name } ?: "UNKNOWN"
+        val description = phoneDescriptionByGeoIp(phone, geoIp) ?: ""
+
+        // Address from GeoIp (google.type.PostalAddress — CLDR standard)
+        val address = com.google.type.PostalAddress(
+            region_code = effectiveCountry.value,
+            language_code = language.value,
+            postal_code = geoIp.postal_code,
+            administrative_area = geoIp.region,
+            locality = city,
+            address_lines = emptyList(),
+        )
+
+        // Build note with inferred context
+        val note = buildList {
+            if (carrier.isNotBlank()) add("Carrier: $carrier")
+            if (phoneType != "UNKNOWN") add("Type: $phoneType")
+            if (timezone.isNotBlank()) add("Timezone: $timezone")
+            if (description.isNotBlank()) add("Region: $description")
+            if (calendar != "gregorian") add("Calendar: $calendar")
+        }.joinToString(" | ")
+
+        // Categories encode the full linked chain for downstream filtering
+        val categories = buildList {
+            if (phoneType != "UNKNOWN") add("phone:$phoneType")
+            add("country:${effectiveCountry.value}")
+            add("lang:${language.value}")
+            add("locale:$locale")
+            add("tz:$timezone")
+            if (phoneTimezones.isNotEmpty() && phoneTimezones.toSet() != setOf(timezone)) {
+                add("phoneTz:${phoneTimezones.joinToString(";")}")
+            }
+            add("calendar:$calendar")
+            add("script:$script")
+            add("direction:$direction")
+            add("currency:$currency")
+            if (carrier.isNotBlank()) add("carrier:$carrier")
+        }
+
+        return VCardContact(
+            name = PersonName(given = givenName, family = familyName),
+            emails = emptyList(),
+            phones = listOf(
+                com.google.type.PhoneNumber(
+                    e164_number = e164,
+                    extension = parsed?.extension ?: "",
+                )
+            ),
+            addresses = listOf(address),
+            organization = "",
+            title = "",
+            role = "",
+            url = "",
+            photo = "",
+            birthday = null,
+            note = note,
+            categories = categories,
+            uid = "tel:$e164",
+        )
+    }
+
+    /**
+     * Full phone-number context derived from GeoIp:
+     * parsed number, description, carrier, timezones, formatting (national + international).
+     */
+    fun phoneContextByGeoIp(number: String, geoIp: GeoIp): Map<String, String> {
+        val util = com.google.i18n.phonenumbers.PhoneNumberUtil.getInstance()
+        val parsed = parsePhoneByGeoIp(number, geoIp) ?: return emptyMap()
+        return buildMap {
+            put("e164", util.format(parsed, com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat.E164))
+            put("international", util.format(parsed, com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL))
+            put("national", util.format(parsed, com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat.NATIONAL))
+            put("rfc3966", util.format(parsed, com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat.RFC3966))
+            put("countryCode", parsed.countryCode.toString())
+            put("nationalNumber", parsed.nationalNumber.toString())
+            put("region", util.getRegionCodeForNumber(parsed) ?: "")
+            put("type", util.getNumberType(parsed).name)
+            put("isValid", util.isValidNumber(parsed).toString())
+            put("isMobile", (util.getNumberType(parsed) == com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberType.MOBILE).toString())
+            phoneDescriptionByGeoIp(number, geoIp)?.let { put("description", it) }
+            phoneCarrierByGeoIp(number, geoIp)?.let { put("carrier", it) }
+            val tzs = phoneToTimezones(number, geoIp).map { it.value }
+            if (tzs.isNotEmpty()) put("timezones", tzs.joinToString(","))
+            put("matchesGeoIp", phoneMatchesGeoIp(number, geoIp).toString())
+        }
+    }
+
     /** Country → preferred calendar type (ICU CLDR). JP → "japanese", SA → "islamic", etc. */
     fun countryToCalendarType(country: Country): String {
         val locale = com.ibm.icu.util.ULocale("@calendar=", country.value)
