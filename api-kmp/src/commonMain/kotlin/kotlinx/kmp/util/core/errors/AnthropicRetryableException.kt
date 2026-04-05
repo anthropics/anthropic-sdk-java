@@ -1,5 +1,7 @@
 package kotlinx.kmp.util.core.errors
 
+import kotlinx.kmp.util.core.http.Retryable
+
 /**
  * Exception that indicates a transient error that can be retried.
  *
@@ -10,4 +12,4 @@ package kotlinx.kmp.util.core.errors
  * @param cause The underlying cause of this exception, if any
  */
 class AnthropicRetryableException(message: String? = null, cause: Throwable? = null) :
-    AnthropicException(message, cause)
+    AnthropicException(message, cause), Retryable

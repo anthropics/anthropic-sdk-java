@@ -9,7 +9,7 @@ import kotlinx.kmp.util.core.http.Headers
 import kotlinx.kmp.util.core.http.HttpClient
 import kotlinx.kmp.util.core.http.PhantomReachableClosingHttpClient
 import kotlinx.kmp.util.core.http.QueryParams
-import kotlinx.kmp.util.core.http.RetryingHttpClient
+import kotlinx.kmp.util.core.http.withRetry
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.time.Clock
 
@@ -418,12 +418,7 @@ private constructor(
 
             return ClientOptions(
                 httpClient,
-                RetryingHttpClient.builder()
-                    .httpClient(httpClient)
-                    .sleeper(sleeper)
-                    .clock(clock)
-                    .maxRetries(maxRetries)
-                    .build(),
+                httpClient.withRetry(maxRetries, sleeper, clock),
                 checkJacksonVersionCompatibility,
                 jsonMapper,
                 streamHandlerExecutor,
