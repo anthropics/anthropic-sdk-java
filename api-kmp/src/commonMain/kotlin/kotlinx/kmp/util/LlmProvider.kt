@@ -143,11 +143,30 @@ sealed interface LlmProvider {
     // === Local HTTP servers (OpenAI-compatible by default) ===
 
     /**
-     * LM Studio — OpenAI-compatible server (default `http://localhost:1234/v1`).
-     * Works with any model loaded in LM Studio; the model name is set in the UI
-     * and passed through [defaultModel]. Same protocol shape as llama.cpp server
-     * (`--api-server`), Ollama (`/v1/...` endpoints), vLLM, and text-generation-
-     * webui — so this one class covers all local OpenAI-compat backends.
+     * LM Studio — OpenAI-compatible local server (default `http://localhost:1234/v1`).
+     * Also covers **llama.cpp server, Ollama, vLLM, text-generation-webui** — any
+     * local backend exposing the OpenAI-compatible endpoint set.
+     *
+     * **Supported beyond `/v1/chat/completions`:**
+     * - `/v1/models`            — list loaded models
+     * - `/v1/completions`       — legacy text completion
+     * - `/v1/embeddings`        — embedding models (e.g. Google EmbeddingGemma)
+     * - `/v1/responses`         — stateful multi-turn via `previous_response_id`
+     * - **Vision** — image content blocks in chat messages (requires a vision-
+     *                capable model loaded, e.g. LLaVA, Qwen2-VL, Llama 3.2 Vision)
+     * - **Tool / function calling** — full OpenAI-compatible `tools` + `tool_choice`
+     *                                  (requires a tool-trained model, e.g. Llama 3.1,
+     *                                  Qwen 2.5, Mistral Nemo)
+     * - **Structured outputs** — `response_format = { type: "json_schema", ... }`
+     * - **Reasoning blocks** — `openai/gpt-oss-20b` + similar models emit thinking
+     *                           content that maps to Wire [ThinkingBlock]
+     *
+     * Each capability depends on the specific model loaded in LM Studio — the
+     * server relays whatever the model supports. api-kmp's Wire [LlmRequest]
+     * envelope carries all four feature dimensions (images via `ImageBlock`,
+     * tools via `Tool`, structured output via `response_format` metadata,
+     * reasoning via `ThinkingBlock`) so the same client works against any
+     * LM Studio model without code changes.
      */
     data class LmStudio(
         override val baseUrl: String = "http://localhost:1234/v1",
@@ -156,6 +175,16 @@ sealed interface LlmProvider {
         override val id = "lmstudio"
         override val requestFormat = RequestFormat.OPENAI_CHAT
         override val auth = AuthScheme.NONE
+        companion object {
+            /** Supported endpoints beyond chat/completions. */
+            val ENDPOINTS = listOf(
+                "/v1/models",
+                "/v1/chat/completions",
+                "/v1/completions",
+                "/v1/embeddings",
+                "/v1/responses",
+            )
+        }
     }
 
     /**

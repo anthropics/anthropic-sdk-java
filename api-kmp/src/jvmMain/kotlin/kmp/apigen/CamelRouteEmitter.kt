@@ -34,24 +34,26 @@ import java.io.File
  * This mirrors the existing LLDs at KMP-CONVERSION-PLAN.md §8.2 + §8.5 but
  * rewrites them from Anthropic-specific to provider-generic.
  */
-class CamelRouteEmitter : ProtocolEmitter {
+class CamelRouteEmitter : TagGroupedEmitter() {
     override val protocol = "camel"
+    override val subPackageName = "camel"
 
-    override fun emit(spec: ParsedSpec, pkg: String, outputDir: File) {
-        val camelPackage = "$pkg.camel"
-        val dir = File(outputDir, camelPackage.replace(".", "/"))
-        dir.mkdirs()
+    override fun fileNameFor(tag: String): String =
+        "${tag.replaceFirstChar { it.uppercase() }}RouteBuilder.kt"
 
-        val byTag = spec.paths.values.groupBy { it.tags.firstOrNull() ?: "Default" }
-        byTag.forEach { (tag, ops) ->
-            val className = "${tag.replaceFirstChar { it.uppercase() }}RouteBuilder"
-            File(dir, "$className.kt").writeText(
-                buildRouteBuilder(camelPackage, className, tag, ops, spec)
-            )
-        }
+    override fun buildTagFile(
+        fullPkg: String,
+        tag: String,
+        operations: List<ParsedPath>,
+        spec: ParsedSpec,
+    ): String {
+        val className = "${tag.replaceFirstChar { it.uppercase() }}RouteBuilder"
+        return buildRouteBuilder(fullPkg, className, tag, operations, spec)
+    }
 
-        // Emit a properties file with one entry per provider so the routes are
-        // runtime-reconfigurable without code changes.
+    override fun afterTagFiles(tags: Set<String>, fullPkg: String, dir: File, spec: ParsedSpec) {
+        // Emit a properties file with one entry per provider so the routes
+        // are runtime-reconfigurable without code changes.
         File(dir, "llm-providers.properties").writeText(providersProperties(spec))
     }
 

@@ -35,24 +35,23 @@ import java.io.File
  * [TestEmitter.generateTestClass] (lines 121-150) but emits production routes
  * in a separate file per tag, not test scaffolding.
  */
-class ServerRouteEmitter : ProtocolEmitter {
+class ServerRouteEmitter : TagGroupedEmitter() {
     override val protocol = "ktor-server"
+    override val subPackageName = "server"
 
-    override fun emit(spec: ParsedSpec, pkg: String, outputDir: File) {
-        val routesPackage = "$pkg.server"
-        val dir = File(outputDir, routesPackage.replace(".", "/"))
-        dir.mkdirs()
+    override fun fileNameFor(tag: String): String =
+        "${tag.replaceFirstChar { it.uppercase() }}Routes.kt"
 
-        // Group paths by first tag → one routes file per tag
-        val byTag = spec.paths.values.groupBy { it.tags.firstOrNull() ?: "Default" }
+    override fun buildTagFile(
+        fullPkg: String,
+        tag: String,
+        operations: List<ParsedPath>,
+        spec: ParsedSpec,
+    ): String = buildRoutesFile(fullPkg, tag, operations, spec)
 
-        byTag.forEach { (tag, ops) ->
-            val fileName = "${tag.replaceFirstChar { it.uppercase() }}Routes.kt"
-            File(dir, fileName).writeText(buildRoutesFile(routesPackage, tag, ops, spec))
-        }
-
+    override fun afterTagFiles(tags: Set<String>, fullPkg: String, dir: File, spec: ParsedSpec) {
         // Generate a top-level Application extension that installs everything
-        File(dir, "GeneratedApplication.kt").writeText(buildApplicationFile(routesPackage, byTag.keys, spec))
+        File(dir, "GeneratedApplication.kt").writeText(buildApplicationFile(fullPkg, tags, spec))
     }
 
     private fun buildRoutesFile(
