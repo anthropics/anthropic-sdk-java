@@ -4,21 +4,23 @@ package kotlinx.kmp.util.core
 
 import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.jsonMapper
-import kotlinx.kmp.util.core.http.AsyncStreamResponse
 import kotlinx.kmp.util.core.http.Headers
 import kotlinx.kmp.util.core.http.HttpClient
-import kotlinx.kmp.util.core.http.PhantomReachableClosingHttpClient
 import kotlinx.kmp.util.core.http.QueryParams
 import kotlinx.kmp.util.core.http.withRetry
-
-import java.time.Clock
-
 import kotlin.time.Duration
-import java.util.concurrent.Executor
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import java.util.concurrent.ThreadFactory
-import java.util.concurrent.atomic.AtomicLong
+
+/** Create a default stream handler executor. JVM: cached thread pool. Other: no-op/null. */
+expect fun createDefaultStreamExecutor(): Any?
+
+/** Create a default wrapped sleeper. JVM: PhantomReachableSleeper(DefaultSleeper()). */
+expect fun createDefaultSleeper(): Sleeper
+
+/** Shut down the stream handler executor if it supports lifecycle management. */
+expect fun shutdownStreamExecutor(executor: Any?)
+
+/** Wrap an HttpClient for phantom-reachable closing. JVM: PhantomReachableClosingHttpClient. */
+expect fun wrapHttpClient(client: HttpClient): HttpClient
 
 /** A class representing the SDK client configuration. */
 class ClientOptions
@@ -54,7 +56,7 @@ private constructor(
      *
      * This class takes ownership of the executor and shuts it down, if possible, when closed.
      */
-    @get:JvmName("streamHandlerExecutor") val streamHandlerExecutor: Executor,
+    @get:JvmName("streamHandlerExecutor") val streamHandlerExecutor: Any?,
     /**
      * The interface to use for delaying execution, like during retries.
      *
@@ -65,14 +67,8 @@ private constructor(
      * This class takes ownership of the sleeper and closes it when closed.
      */
     @get:JvmName("sleeper") val sleeper: Sleeper,
-    /**
-     * The clock to use for operations that require timing, like retries.
-     *
-     * This is primarily useful for using a fake clock in tests.
-     *
-     * Defaults to [Clock.systemUTC].
-     */
-    @get:JvmName("clock") val clock: Clock,
+    /** The time provider to use for operations that require timing, like retries. */
+    @get:JvmName("nowMillisProvider") val nowMillisProvider: () -> Long,
     val baseUrl: String?,
     /** Headers to send with the request. */
     @get:JvmName("headers") val headers: Headers,
@@ -146,9 +142,9 @@ private constructor(
         private var httpClient: HttpClient? = null
         private var checkJsonVersionCompatibility: Boolean = true
         private var jsonMapper: JsonMapperType = kotlinx.kmp.util.core.jsonMapper()
-        private var streamHandlerExecutor: Executor? = null
+        private var streamHandlerExecutor: Any? = null
         private var sleeper: Sleeper? = null
-        private var clock: Clock = Clock.systemUTC()
+        private var nowMillisProvider: () -> Long = ::currentTimeMillis
         private var baseUrl: String? = null
         private var headers: Headers.Builder = Headers.builder()
         private var queryParams: QueryParams.Builder = QueryParams.builder()
@@ -163,7 +159,7 @@ private constructor(
             jsonMapper = clientOptions.jsonMapper
             streamHandlerExecutor = clientOptions.streamHandlerExecutor
             sleeper = clientOptions.sleeper
-            clock = clientOptions.clock
+            nowMillisProvider = clientOptions.nowMillisProvider
             baseUrl = clientOptions.baseUrl
             headers = clientOptions.headers.toBuilder()
             queryParams = clientOptions.queryParams.toBuilder()
@@ -181,7 +177,7 @@ private constructor(
          * This class takes ownership of the client and closes it when closed.
          */
         fun httpClient(httpClient: HttpClient) = apply {
-            this.httpClient = PhantomReachableClosingHttpClient(httpClient)
+            this.httpClient = wrapHttpClient(httpClient)
         }
 
         /**
@@ -210,12 +206,7 @@ private constructor(
          *
          * This class takes ownership of the executor and shuts it down, if possible, when closed.
          */
-        fun streamHandlerExecutor(streamHandlerExecutor: Executor) = apply {
-            this.streamHandlerExecutor =
-                if (streamHandlerExecutor is ExecutorService)
-                    PhantomReachableExecutorService(streamHandlerExecutor)
-                else streamHandlerExecutor
-        }
+        fun streamHandlerExecutor(streamHandlerExecutor: Any?) = apply { this.streamHandlerExecutor = streamHandlerExecutor }
 
         /**
          * The interface to use for delaying execution, like during retries.
@@ -226,16 +217,10 @@ private constructor(
          *
          * This class takes ownership of the sleeper and closes it when closed.
          */
-        fun sleeper(sleeper: Sleeper) = apply { this.sleeper = PhantomReachableSleeper(sleeper) }
+        fun sleeper(sleeper: Sleeper) = apply { this.sleeper = sleeper }
 
-        /**
-         * The clock to use for operations that require timing, like retries.
-         *
-         * This is primarily useful for using a fake clock in tests.
-         *
-         * Defaults to [Clock.systemUTC].
-         */
-        fun clock(clock: Clock) = apply { this.clock = clock }
+        /** The time provider to use for operations that require timing, like retries. */
+        fun nowMillisProvider(nowMillisProvider: () -> Long) = apply { this.nowMillisProvider = nowMillisProvider }
 
         /**
          * The base URL to use for every request.
@@ -395,25 +380,8 @@ private constructor(
          */
         fun build(): ClientOptions {
             val httpClient = checkRequired("httpClient", httpClient)
-            val streamHandlerExecutor =
-                streamHandlerExecutor
-                    ?: PhantomReachableExecutorService(
-                        Executors.newCachedThreadPool(
-                            object : ThreadFactory {
-
-                                private val threadFactory: ThreadFactory =
-                                    Executors.defaultThreadFactory()
-                                private val count = AtomicLong(0)
-
-                                override fun newThread(runnable: Runnable): Thread =
-                                    threadFactory.newThread(runnable).also {
-                                        it.name =
-                                            "anthropic-stream-handler-thread-${count.getAndIncrement()}"
-                                    }
-                            }
-                        )
-                    )
-            val sleeper = sleeper ?: PhantomReachableSleeper(DefaultSleeper())
+            val streamHandlerExecutor = streamHandlerExecutor ?: createDefaultStreamExecutor()
+            val sleeper = sleeper ?: createDefaultSleeper()
 
             val headers = Headers.builder()
             val queryParams = QueryParams.builder()
@@ -431,12 +399,12 @@ private constructor(
 
             return ClientOptions(
                 httpClient,
-                httpClient.withRetry(maxRetries, sleeper, clock, idempotencyHeader),
+                httpClient.withRetry(maxRetries, sleeper, idempotencyHeader, nowMillisProvider),
                 checkJsonVersionCompatibility,
                 jsonMapper,
                 streamHandlerExecutor,
                 sleeper,
-                clock,
+                nowMillisProvider,
                 baseUrl,
                 headers.build(),
                 queryParams.build(),
@@ -460,7 +428,7 @@ private constructor(
      */
     fun close() {
         httpClient.close()
-        (streamHandlerExecutor as? ExecutorService)?.shutdown()
+        shutdownStreamExecutor(streamHandlerExecutor)
         sleeper.close()
     }
 }

@@ -2,6 +2,7 @@
 
 package com.anthropic.services.async.beta.skills
 
+import kotlinx.kmp.util.core.streamExecutor
 import kotlinx.kmp.util.core.ClientOptions
 import kotlinx.kmp.util.core.RequestOptions
 import kotlinx.kmp.util.core.checkRequired
@@ -192,7 +193,7 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                             .let {
                                 VersionListPageAsync.builder()
                                     .service(VersionServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                    .streamHandlerExecutor(clientOptions.streamExecutor())
                                     .params(params)
                                     .response(it)
                                     .build()

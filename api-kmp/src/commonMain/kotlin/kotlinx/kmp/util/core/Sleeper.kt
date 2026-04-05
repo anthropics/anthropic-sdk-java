@@ -1,10 +1,9 @@
 package kotlinx.kmp.util.core
 
-import java.util.concurrent.CompletableFuture
 import kotlin.time.Duration
 
-interface Sleeper : java.lang.AutoCloseable {
+interface Sleeper : AutoCloseable {
     fun sleep(duration: Duration)
-    fun sleepAsync(duration: Duration): java.util.concurrent.CompletableFuture<Void>
+    suspend fun sleepSuspend(duration: Duration) = sleep(duration)
     override fun close()
 }

@@ -2,6 +2,7 @@
 
 package com.anthropic.services.async
 
+import kotlinx.kmp.util.core.streamExecutor
 import kotlinx.kmp.util.core.ClientOptions
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.RequestOptions
@@ -51,7 +52,7 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
     ): AsyncStreamResponse<Completion> =
         // post /v1/complete
         withRawResponse().createStreaming(params, requestOptions).parse()
-            .toAsync(clientOptions.streamHandlerExecutor)
+            .toAsync(clientOptions.streamExecutor())
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         CompletionServiceAsync.WithRawResponse {

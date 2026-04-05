@@ -2,7 +2,6 @@ package kotlinx.kmp.util.core.http
 
 import kotlinx.kmp.util.core.RequestOptions
 import kotlinx.kmp.util.core.closeWhenPhantomReachable
-import java.util.concurrent.CompletableFuture
 
 /**
  * A delegating wrapper around an `HttpClient` that closes it once it's only phantom reachable.
@@ -16,11 +15,6 @@ class PhantomReachableClosingHttpClient(private val httpClient: HttpClient) : Ht
 
     override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse =
         httpClient.execute(request, requestOptions)
-
-    override fun executeAsync(
-        request: HttpRequest,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<HttpResponse> = httpClient.executeAsync(request, requestOptions)
 
     override suspend fun executeSuspend(
         request: HttpRequest,

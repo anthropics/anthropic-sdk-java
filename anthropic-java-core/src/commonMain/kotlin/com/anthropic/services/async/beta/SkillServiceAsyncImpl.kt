@@ -2,6 +2,7 @@
 
 package com.anthropic.services.async.beta
 
+import kotlinx.kmp.util.core.streamExecutor
 import kotlinx.kmp.util.core.ClientOptions
 import kotlinx.kmp.util.core.RequestOptions
 import kotlinx.kmp.util.core.checkRequired
@@ -192,7 +193,7 @@ class SkillServiceAsyncImpl internal constructor(private val clientOptions: Clie
                             .let {
                                 SkillListPageAsync.builder()
                                     .service(SkillServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                    .streamHandlerExecutor(clientOptions.streamExecutor())
                                     .params(params)
                                     .response(it)
                                     .build()

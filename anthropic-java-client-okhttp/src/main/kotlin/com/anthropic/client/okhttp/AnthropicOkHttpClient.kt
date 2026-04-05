@@ -219,7 +219,7 @@ class AnthropicOkHttpClient private constructor() {
          *
          * Defaults to [Clock.systemUTC].
          */
-        fun clock(clock: Clock) = apply { clientOptions.clock(clock) }
+        fun clock(clock: java.time.Clock) = apply { clientOptions.nowMillisProvider { clock.millis() } }
 
         /**
          * The base URL to use for every request.

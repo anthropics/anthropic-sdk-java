@@ -2,6 +2,7 @@
 
 package com.anthropic.services.async.beta
 
+import kotlinx.kmp.util.core.streamExecutor
 import kotlinx.kmp.util.core.ClientOptions
 import kotlinx.kmp.util.core.RequestOptions
 import kotlinx.kmp.util.core.checkRequired
@@ -125,7 +126,7 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                             .let {
                                 FileListPageAsync.builder()
                                     .service(FileServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                    .streamHandlerExecutor(clientOptions.streamExecutor())
                                     .params(params)
                                     .response(it)
                                     .build()

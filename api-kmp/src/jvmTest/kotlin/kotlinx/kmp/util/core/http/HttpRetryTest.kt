@@ -49,7 +49,7 @@ internal class HttpRetryTest {
             durations.add(duration)
         }
 
-        override fun sleepAsync(duration: Duration): CompletableFuture<Void> {
+        fun sleepAsync(duration: Duration): CompletableFuture<Void> {
             durations.add(duration)
             return CompletableFuture.completedFuture(null)
         }
@@ -69,7 +69,7 @@ internal class HttpRetryTest {
                     requestOptions: RequestOptions,
                 ): HttpResponse = trackClose(backing.execute(withBaseUrl(request), requestOptions))
 
-                override fun executeAsync(
+                fun executeAsync(
                     request: HttpRequest,
                     requestOptions: RequestOptions,
                 ): CompletableFuture<HttpResponse> =
@@ -313,7 +313,7 @@ internal class HttpRetryTest {
                     return httpClient.execute(request, requestOptions)
                 }
 
-                override fun executeAsync(
+                fun executeAsync(
                     request: HttpRequest,
                     requestOptions: RequestOptions,
                 ): CompletableFuture<HttpResponse> {
@@ -526,7 +526,7 @@ internal class HttpRetryTest {
         val builder = ClientOptions.builder()
             .httpClient(rawClient)
             .sleeper(sleeper)
-            .clock(clock)
+            .nowMillisProvider { clock.millis() }
             .maxRetries(maxRetries)
             .idempotencyHeader(idempotencyHeader)
             .baseUrl(baseUrl)

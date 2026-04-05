@@ -1,6 +1,5 @@
 package kotlinx.kmp.util.core
 
-import java.util.concurrent.CompletableFuture
 import kotlin.time.Duration
 
 /**
@@ -16,8 +15,7 @@ class PhantomReachableSleeper(private val sleeper: Sleeper) : Sleeper {
 
     override fun sleep(duration: Duration) = sleeper.sleep(duration)
 
-    override fun sleepAsync(duration: Duration): CompletableFuture<Void> =
-        sleeper.sleepAsync(duration)
+    override suspend fun sleepSuspend(duration: Duration) = sleeper.sleepSuspend(duration)
 
     override fun close() = sleeper.close()
 }

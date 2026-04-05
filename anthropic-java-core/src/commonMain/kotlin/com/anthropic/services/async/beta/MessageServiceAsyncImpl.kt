@@ -2,6 +2,7 @@
 
 package com.anthropic.services.async.beta
 
+import kotlinx.kmp.util.core.streamExecutor
 import kotlinx.kmp.util.core.ClientOptions
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.RequestOptions
@@ -61,7 +62,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
     ): AsyncStreamResponse<BetaRawMessageStreamEvent> =
         // post /v1/messages?beta=true
         withRawResponse().createStreaming(params, requestOptions).parse()
-            .toAsync(clientOptions.streamHandlerExecutor)
+            .toAsync(clientOptions.streamExecutor())
 
     override suspend fun countTokens(
         params: MessageCountTokensParams,

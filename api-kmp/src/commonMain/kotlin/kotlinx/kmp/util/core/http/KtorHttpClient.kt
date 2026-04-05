@@ -9,7 +9,6 @@ import io.ktor.http.*
 import io.ktor.http.content.ByteArrayContent
 import kotlinx.coroutines.*
 import okio.Buffer
-import java.util.concurrent.CompletableFuture
 
 class KtorHttpClient(
     private val ktorClient: io.ktor.client.HttpClient = io.ktor.client.HttpClient {
@@ -20,21 +19,6 @@ class KtorHttpClient(
 
     override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse =
         runBlocking { executeKtor(request, requestOptions) }
-
-    override fun executeAsync(
-        request: HttpRequest,
-        requestOptions: RequestOptions
-    ): CompletableFuture<HttpResponse> {
-        val future = CompletableFuture<HttpResponse>()
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                future.complete(executeKtor(request, requestOptions))
-            } catch (e: Exception) {
-                future.completeExceptionally(e)
-            }
-        }
-        return future
-    }
 
     override suspend fun executeSuspend(
         request: HttpRequest,

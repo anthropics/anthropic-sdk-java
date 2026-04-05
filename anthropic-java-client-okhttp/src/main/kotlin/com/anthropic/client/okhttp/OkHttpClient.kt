@@ -58,7 +58,7 @@ internal constructor(
         }
     }
 
-    override fun executeAsync(
+    fun executeAsync(
         request: HttpRequest,
         requestOptions: RequestOptions,
     ): CompletableFuture<HttpResponse> {

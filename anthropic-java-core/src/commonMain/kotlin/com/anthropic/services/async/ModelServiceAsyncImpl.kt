@@ -2,6 +2,7 @@
 
 package com.anthropic.services.async
 
+import kotlinx.kmp.util.core.streamExecutor
 import kotlinx.kmp.util.core.ClientOptions
 import kotlinx.kmp.util.core.RequestOptions
 import kotlinx.kmp.util.core.checkRequired
@@ -119,7 +120,7 @@ class ModelServiceAsyncImpl internal constructor(private val clientOptions: Clie
                             .let {
                                 ModelListPageAsync.builder()
                                     .service(ModelServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                    .streamHandlerExecutor(clientOptions.streamExecutor())
                                     .params(params)
                                     .response(it)
                                     .build()

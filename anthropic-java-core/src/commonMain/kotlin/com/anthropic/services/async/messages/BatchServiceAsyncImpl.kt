@@ -2,6 +2,7 @@
 
 package com.anthropic.services.async.messages
 
+import kotlinx.kmp.util.core.streamExecutor
 import kotlinx.kmp.util.core.ClientOptions
 import kotlinx.kmp.util.core.RequestOptions
 import kotlinx.kmp.util.core.checkRequired
@@ -88,7 +89,7 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
     ): AsyncStreamResponse<MessageBatchIndividualResponse> =
         // get /v1/messages/batches/{message_batch_id}/results
         withRawResponse().resultsStreaming(params, requestOptions).parse()
-            .toAsync(clientOptions.streamHandlerExecutor)
+            .toAsync(clientOptions.streamExecutor())
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         BatchServiceAsync.WithRawResponse {
@@ -188,7 +189,7 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                             .let {
                                 BatchListPageAsync.builder()
                                     .service(BatchServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                    .streamHandlerExecutor(clientOptions.streamExecutor())
                                     .params(params)
                                     .response(it)
                                     .build()
