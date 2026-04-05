@@ -108,6 +108,8 @@ private constructor(
      * Defaults to 2.
      */
     @get:JvmName("maxRetries") val maxRetries: Int,
+    /** Optional header name for per-request idempotency keys used by the retry wrapper. */
+    @get:JvmName("idempotencyHeader") val idempotencyHeader: String? = null,
 ) {
 
     init {
@@ -153,6 +155,7 @@ private constructor(
         private var responseValidation: Boolean = false
         private var timeout: Timeout = Timeout.default()
         private var maxRetries: Int = 2
+        private var idempotencyHeader: String? = null
 
         @JvmSynthetic fun from(clientOptions: ClientOptions) = apply {
             httpClient = clientOptions.originalHttpClient
@@ -167,6 +170,7 @@ private constructor(
             responseValidation = clientOptions.responseValidation
             timeout = clientOptions.timeout
             maxRetries = clientOptions.maxRetries
+            idempotencyHeader = clientOptions.idempotencyHeader
         }
 
         /**
@@ -285,6 +289,15 @@ private constructor(
          * Defaults to 2.
          */
         fun maxRetries(maxRetries: Int) = apply { this.maxRetries = maxRetries }
+
+        /**
+         * Header name to use for per-request idempotency keys. When set, the retry wrapper
+         * injects a unique stainless-retry-&lt;uuid&gt; value under this header on each outbound
+         * request so the server can deduplicate retries.
+         */
+        fun idempotencyHeader(idempotencyHeader: String?) = apply {
+            this.idempotencyHeader = idempotencyHeader
+        }
 
         fun headers(headers: Headers) = apply {
             this.headers.clear()
@@ -418,7 +431,7 @@ private constructor(
 
             return ClientOptions(
                 httpClient,
-                httpClient.withRetry(maxRetries, sleeper, clock),
+                httpClient.withRetry(maxRetries, sleeper, clock, idempotencyHeader),
                 checkJacksonVersionCompatibility,
                 jsonMapper,
                 streamHandlerExecutor,
@@ -430,6 +443,7 @@ private constructor(
                 responseValidation,
                 timeout,
                 maxRetries,
+                idempotencyHeader,
             )
         }
     }

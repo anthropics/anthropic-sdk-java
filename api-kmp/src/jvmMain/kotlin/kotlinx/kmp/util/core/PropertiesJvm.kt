@@ -36,6 +36,8 @@ actual fun getOsName(): String {
 actual fun getOsVersion(): String = System.getProperty("os.version", "unknown") ?: "unknown"
 
 actual fun getPackageVersion(): String =
-    Class.forName("com.anthropic.client.AnthropicClient").`package`?.implementationVersion ?: "unknown"
+    runCatching {
+        Class.forName("com.anthropic.client.AnthropicClient").`package`?.implementationVersion
+    }.getOrNull() ?: "unknown"
 
 actual fun getJavaVersion(): String = System.getProperty("java.version", "unknown") ?: "unknown"

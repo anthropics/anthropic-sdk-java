@@ -2,6 +2,7 @@
 
 package kotlinx.kmp.util.core.http
 
+import kotlinx.kmp.util.core.ClientOptions
 import kotlinx.kmp.util.core.RequestOptions
 import kotlinx.kmp.util.core.Sleeper
 import kotlinx.kmp.util.core.errors.ApiRetryableException
@@ -116,7 +117,7 @@ internal class HttpRetryTest {
     fun execute(async: Boolean) {
         stubFor(post(urlPathEqualTo("/something")).willReturn(ok()))
         val sleeper = RecordingSleeper()
-        val retryingClient = httpClient.withRetry(maxRetries = 2, sleeper = sleeper, clock = Clock.systemUTC())
+        val retryingClient = retryingClientFrom(httpClient, maxRetries = 2, sleeper = sleeper, clock = Clock.systemUTC())
 
         val response =
             retryingClient.execute(
@@ -135,12 +136,12 @@ internal class HttpRetryTest {
     fun execute_withIdempotencyHeader(async: Boolean) {
         stubFor(
             post(urlPathEqualTo("/something"))
-                .withHeader("X-Some-Header", matching("stainless-java-retry-.+"))
+                .withHeader("X-Some-Header", matching("stainless-retry-.+"))
                 .willReturn(ok())
         )
         val sleeper = RecordingSleeper()
         val retryingClient =
-            httpClient.withRetry(maxRetries = 2, sleeper = sleeper, clock = Clock.systemUTC(), idempotencyHeader = "X-Some-Header")
+            retryingClientFrom(httpClient, maxRetries = 2, sleeper = sleeper, clock = Clock.systemUTC(), idempotencyHeader = "X-Some-Header")
 
         val response =
             retryingClient.execute(
@@ -188,7 +189,7 @@ internal class HttpRetryTest {
             OffsetDateTime.parse(retryAfterDate, DateTimeFormatter.RFC_1123_DATE_TIME)
         val clock = Clock.fixed(retryAfterDateTime.minusSeconds(5).toInstant(), ZoneOffset.UTC)
         val sleeper = RecordingSleeper()
-        val retryingClient = httpClient.withRetry(maxRetries = 2, sleeper = sleeper, clock = clock)
+        val retryingClient = retryingClientFrom(httpClient, maxRetries = 2, sleeper = sleeper, clock = clock)
 
         val response =
             retryingClient.execute(
@@ -239,7 +240,7 @@ internal class HttpRetryTest {
             OffsetDateTime.parse(retryAfterDate, DateTimeFormatter.RFC_1123_DATE_TIME)
         val clock = Clock.fixed(retryAfterDateTime.minusSeconds(5).toInstant(), ZoneOffset.UTC)
         val sleeper = RecordingSleeper()
-        val retryingClient = httpClient.withRetry(maxRetries = 2, sleeper = sleeper, clock = clock)
+        val retryingClient = retryingClientFrom(httpClient, maxRetries = 2, sleeper = sleeper, clock = clock)
 
         val response =
             retryingClient.execute(
@@ -279,7 +280,7 @@ internal class HttpRetryTest {
                 .willSetStateTo("COMPLETED")
         )
         val sleeper = RecordingSleeper()
-        val retryingClient = httpClient.withRetry(maxRetries = 1, sleeper = sleeper, clock = Clock.systemUTC())
+        val retryingClient = retryingClientFrom(httpClient, maxRetries = 1, sleeper = sleeper, clock = Clock.systemUTC())
 
         val response =
             retryingClient.execute(
@@ -343,7 +344,7 @@ internal class HttpRetryTest {
 
         val sleeper = RecordingSleeper()
         val retryingClient =
-            failingHttpClient.withRetry(maxRetries = 2, sleeper = sleeper, clock = Clock.systemUTC())
+            retryingClientFrom(failingHttpClient, maxRetries = 2, sleeper = sleeper, clock = Clock.systemUTC())
 
         val response =
             retryingClient.execute(
@@ -373,7 +374,7 @@ internal class HttpRetryTest {
     fun execute_withExponentialBackoff(async: Boolean) {
         stubFor(post(urlPathEqualTo("/something")).willReturn(serviceUnavailable()))
         val sleeper = RecordingSleeper()
-        val retryingClient = httpClient.withRetry(maxRetries = 3, sleeper = sleeper, clock = Clock.systemUTC())
+        val retryingClient = retryingClientFrom(httpClient, maxRetries = 3, sleeper = sleeper, clock = Clock.systemUTC())
 
         val response =
             retryingClient.execute(
@@ -405,7 +406,7 @@ internal class HttpRetryTest {
     fun execute_withExponentialBackoffCap(async: Boolean) {
         stubFor(post(urlPathEqualTo("/something")).willReturn(serviceUnavailable()))
         val sleeper = RecordingSleeper()
-        val retryingClient = httpClient.withRetry(maxRetries = 6, sleeper = sleeper, clock = Clock.systemUTC())
+        val retryingClient = retryingClientFrom(httpClient, maxRetries = 6, sleeper = sleeper, clock = Clock.systemUTC())
 
         val response =
             retryingClient.execute(
@@ -449,7 +450,7 @@ internal class HttpRetryTest {
                 .willSetStateTo("COMPLETED")
         )
         val sleeper = RecordingSleeper()
-        val retryingClient = httpClient.withRetry(maxRetries = 1, sleeper = sleeper, clock = Clock.systemUTC())
+        val retryingClient = retryingClientFrom(httpClient, maxRetries = 1, sleeper = sleeper, clock = Clock.systemUTC())
 
         val response =
             retryingClient.execute(
@@ -485,7 +486,7 @@ internal class HttpRetryTest {
                 .willSetStateTo("COMPLETED")
         )
         val sleeper = RecordingSleeper()
-        val retryingClient = httpClient.withRetry(maxRetries = 1, sleeper = sleeper, clock = Clock.systemUTC())
+        val retryingClient = retryingClientFrom(httpClient, maxRetries = 1, sleeper = sleeper, clock = Clock.systemUTC())
 
         val response =
             retryingClient.execute(
@@ -510,4 +511,26 @@ internal class HttpRetryTest {
     // When retrying, all failed responses should be closed. Only the final returned response should
     // be open.
     private fun assertNoResponseLeaks() = assertThat(openResponseCount).isEqualTo(1)
+    /**
+     * Build a retry-wrapped HttpClient via ClientOptions, exercising the same
+     * wiring that the production SDK uses (ClientOptions.build() calls
+     * httpClient.withRetry(maxRetries, sleeper, clock) under the hood).
+     */
+    private fun retryingClientFrom(
+        rawClient: HttpClient,
+        maxRetries: Int,
+        sleeper: Sleeper,
+        clock: Clock,
+        idempotencyHeader: String? = null,
+    ): HttpClient {
+        val builder = ClientOptions.builder()
+            .httpClient(rawClient)
+            .sleeper(sleeper)
+            .clock(clock)
+            .maxRetries(maxRetries)
+            .idempotencyHeader(idempotencyHeader)
+            .baseUrl(baseUrl)
+        return builder.build().httpClient
+    }
+
 }
