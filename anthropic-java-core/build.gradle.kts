@@ -34,6 +34,11 @@ kotlin {
                 implementation("io.ktor:ktor-server-auth:3.4.2")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:3.4.2")
                 implementation("io.ktor:ktor-server-test-host:3.4.2")
+                implementation("io.ktor:ktor-server-sse:3.4.2")
+                implementation("io.ktor:ktor-server-websockets:3.4.2")
+                implementation("io.ktor:ktor-client-websockets:3.4.2")
+                implementation("io.ktor:ktor-client-content-negotiation:3.4.2")
+                implementation("io.ktor:ktor-client-core:3.4.2")
                 implementation("com.squareup.okio:okio-fakefilesystem:3.17.0")
             }
         }
