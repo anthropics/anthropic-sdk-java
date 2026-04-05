@@ -1111,4 +1111,235 @@ object Validators {
             }
         }
     }
+
+    // === DateTime — Country + Language + ICU CLDR Calendar ===
+
+    /**
+     * Resolve ICU ULocale from country + language + optional calendar keyword.
+     * Examples:
+     *   localeFor(JP, JA) → ja_JP@calendar=japanese (Reiwa era)
+     *   localeFor(SA, AR) → ar_SA@calendar=islamic-umalqura
+     *   localeFor(TH, TH) → th_TH@calendar=buddhist
+     *   localeFor(IL, HE) → he_IL@calendar=hebrew
+     *   localeFor(IR, FA) → fa_IR@calendar=persian
+     */
+    fun localeFor(
+        country: Country,
+        language: Language? = null,
+        calendar: String? = null,
+    ): com.ibm.icu.util.ULocale {
+        val lang = language?.value ?: countryToLanguage(country).value
+        val cal = calendar ?: defaultCalendarFor(country)
+        val base = "${lang}_${country.value}"
+        return if (cal != "gregorian") {
+            com.ibm.icu.util.ULocale.forLanguageTag("$base-u-ca-$cal")
+        } else {
+            com.ibm.icu.util.ULocale("$base")
+        }
+    }
+
+    /** Country → default CLDR calendar type. JP→japanese, SA→islamic-umalqura, TH→buddhist, etc. */
+    fun defaultCalendarFor(country: Country): String = when (country.value) {
+        "JP" -> "japanese"
+        "SA", "AE", "KW", "BH", "QA", "OM", "YE", "MA" -> "islamic-umalqura"
+        "IR", "AF" -> "persian"
+        "IL" -> "hebrew"
+        "TH" -> "buddhist"
+        "IN", "NP" -> "indian"
+        "TW" -> "roc"
+        "ET" -> "ethiopic"
+        else -> "gregorian"
+    }
+
+    /** All calendars available for a country via ICU. */
+    fun availableCalendarsFor(country: Country): List<String> {
+        val locale = com.ibm.icu.util.ULocale("", country.value)
+        return com.ibm.icu.util.Calendar.getKeywordValuesForLocale("calendar", locale, false).toList()
+    }
+
+    /**
+     * Format an Instant using country + language + calendar per ICU CLDR.
+     *
+     * Examples:
+     *   formatDateTime(now, JP, JA) → "令和7年4月5日 14:30" (Reiwa era)
+     *   formatDateTime(now, SA, AR) → "1 رمضان 1446 هـ، 14:30" (Hijri)
+     *   formatDateTime(now, TH, TH) → "5 เมษายน 2569 14:30" (Buddhist era)
+     *   formatDateTime(now, US, EN) → "Apr 5, 2026, 2:30 PM"
+     */
+    fun formatDateTime(
+        instant: java.time.Instant,
+        country: Country,
+        language: Language? = null,
+        calendar: String? = null,
+        timezone: Timezone? = null,
+        dateStyle: Int = com.ibm.icu.text.DateFormat.MEDIUM,
+        timeStyle: Int = com.ibm.icu.text.DateFormat.SHORT,
+    ): String {
+        val locale = localeFor(country, language, calendar)
+        val tz = timezone?.let { com.ibm.icu.util.TimeZone.getTimeZone(it.value) }
+            ?: com.ibm.icu.util.TimeZone.getTimeZone(countryToTimezone(country).value)
+        val cal = com.ibm.icu.util.Calendar.getInstance(tz, locale)
+        cal.timeInMillis = instant.toEpochMilli()
+        val fmt = com.ibm.icu.text.DateFormat.getDateTimeInstance(cal, dateStyle, timeStyle, locale)
+        return fmt.format(cal)
+    }
+
+    /** Format date only (no time). */
+    fun formatDate(
+        instant: java.time.Instant,
+        country: Country,
+        language: Language? = null,
+        calendar: String? = null,
+        timezone: Timezone? = null,
+        style: Int = com.ibm.icu.text.DateFormat.MEDIUM,
+    ): String {
+        val locale = localeFor(country, language, calendar)
+        val tz = timezone?.let { com.ibm.icu.util.TimeZone.getTimeZone(it.value) }
+            ?: com.ibm.icu.util.TimeZone.getTimeZone(countryToTimezone(country).value)
+        val cal = com.ibm.icu.util.Calendar.getInstance(tz, locale)
+        cal.timeInMillis = instant.toEpochMilli()
+        val fmt = com.ibm.icu.text.DateFormat.getDateInstance(cal, style, locale)
+        return fmt.format(cal)
+    }
+
+    /** Format time only (no date). */
+    fun formatTime(
+        instant: java.time.Instant,
+        country: Country,
+        language: Language? = null,
+        timezone: Timezone? = null,
+        style: Int = com.ibm.icu.text.DateFormat.SHORT,
+    ): String {
+        val locale = localeFor(country, language, null)
+        val tz = timezone?.let { com.ibm.icu.util.TimeZone.getTimeZone(it.value) }
+            ?: com.ibm.icu.util.TimeZone.getTimeZone(countryToTimezone(country).value)
+        val cal = com.ibm.icu.util.Calendar.getInstance(tz, locale)
+        cal.timeInMillis = instant.toEpochMilli()
+        val fmt = com.ibm.icu.text.DateFormat.getTimeInstance(cal, style, locale)
+        return fmt.format(cal)
+    }
+
+    /**
+     * Parse a localized date-time string using country + language + calendar.
+     * Inverse of formatDateTime. Returns Instant in UTC.
+     */
+    fun parseDateTime(
+        text: String,
+        country: Country,
+        language: Language? = null,
+        calendar: String? = null,
+        timezone: Timezone? = null,
+        dateStyle: Int = com.ibm.icu.text.DateFormat.MEDIUM,
+        timeStyle: Int = com.ibm.icu.text.DateFormat.SHORT,
+    ): java.time.Instant? = try {
+        val locale = localeFor(country, language, calendar)
+        val tz = timezone?.let { com.ibm.icu.util.TimeZone.getTimeZone(it.value) }
+            ?: com.ibm.icu.util.TimeZone.getTimeZone(countryToTimezone(country).value)
+        val cal = com.ibm.icu.util.Calendar.getInstance(tz, locale)
+        val fmt = com.ibm.icu.text.DateFormat.getDateTimeInstance(cal, dateStyle, timeStyle, locale)
+        fmt.timeZone = tz
+        val date = fmt.parse(text)
+        java.time.Instant.ofEpochMilli(date.time)
+    } catch (_: Exception) { null }
+
+    /**
+     * Convert an Instant between calendars, returning the era/year/month/day
+     * in the target calendar system.
+     *
+     * Example: convertToCalendar(now, "japanese") →
+     *   {era=Reiwa, year=7, month=4, day=5, hour=14, minute=30}
+     */
+    fun convertToCalendar(
+        instant: java.time.Instant,
+        calendar: String,
+        locale: com.ibm.icu.util.ULocale = com.ibm.icu.util.ULocale.ENGLISH,
+    ): Map<String, Int> {
+        val icuLocale = com.ibm.icu.util.ULocale.forLanguageTag("${locale.toLanguageTag()}-u-ca-$calendar")
+        val cal = com.ibm.icu.util.Calendar.getInstance(icuLocale)
+        cal.timeInMillis = instant.toEpochMilli()
+        return mapOf(
+            "era" to cal.get(com.ibm.icu.util.Calendar.ERA),
+            "year" to cal.get(com.ibm.icu.util.Calendar.YEAR),
+            "month" to cal.get(com.ibm.icu.util.Calendar.MONTH) + 1, // 0-indexed → 1-indexed
+            "day" to cal.get(com.ibm.icu.util.Calendar.DAY_OF_MONTH),
+            "hour" to cal.get(com.ibm.icu.util.Calendar.HOUR_OF_DAY),
+            "minute" to cal.get(com.ibm.icu.util.Calendar.MINUTE),
+            "second" to cal.get(com.ibm.icu.util.Calendar.SECOND),
+            "dayOfWeek" to cal.get(com.ibm.icu.util.Calendar.DAY_OF_WEEK),
+            "weekOfYear" to cal.get(com.ibm.icu.util.Calendar.WEEK_OF_YEAR),
+        )
+    }
+
+    /** Get the era name (e.g., "Reiwa", "AH", "BE") for an Instant in a calendar. */
+    fun eraName(
+        instant: java.time.Instant,
+        calendar: String,
+        locale: com.ibm.icu.util.ULocale = com.ibm.icu.util.ULocale.ENGLISH,
+    ): String {
+        val icuLocale = com.ibm.icu.util.ULocale.forLanguageTag("${locale.toLanguageTag()}-u-ca-$calendar")
+        val cal = com.ibm.icu.util.Calendar.getInstance(icuLocale)
+        cal.timeInMillis = instant.toEpochMilli()
+        val fmt = com.ibm.icu.text.SimpleDateFormat("GGGG", icuLocale)
+        fmt.calendar = cal
+        return fmt.format(cal.time)
+    }
+
+    /**
+     * Relative time format via ICU RelativeDateTimeFormatter.
+     * Example: relativeTime(now+1h, US, EN) → "in 1 hour"
+     *          relativeTime(now-5d, FR, FR) → "il y a 5 jours"
+     */
+    fun relativeTime(
+        instant: java.time.Instant,
+        country: Country,
+        language: Language? = null,
+        reference: java.time.Instant = java.time.Instant.now(),
+    ): String {
+        val locale = localeFor(country, language, null)
+        val fmt = com.ibm.icu.text.RelativeDateTimeFormatter.getInstance(locale)
+        val diffSeconds = (instant.toEpochMilli() - reference.toEpochMilli()) / 1000.0
+        val direction = if (diffSeconds >= 0) com.ibm.icu.text.RelativeDateTimeFormatter.Direction.NEXT
+                        else com.ibm.icu.text.RelativeDateTimeFormatter.Direction.LAST
+        val absSec = kotlin.math.abs(diffSeconds)
+        val (value, unit) = when {
+            absSec < 60 -> absSec to com.ibm.icu.text.RelativeDateTimeFormatter.RelativeUnit.SECONDS
+            absSec < 3600 -> (absSec / 60) to com.ibm.icu.text.RelativeDateTimeFormatter.RelativeUnit.MINUTES
+            absSec < 86400 -> (absSec / 3600) to com.ibm.icu.text.RelativeDateTimeFormatter.RelativeUnit.HOURS
+            absSec < 604800 -> (absSec / 86400) to com.ibm.icu.text.RelativeDateTimeFormatter.RelativeUnit.DAYS
+            absSec < 2592000 -> (absSec / 604800) to com.ibm.icu.text.RelativeDateTimeFormatter.RelativeUnit.WEEKS
+            absSec < 31536000 -> (absSec / 2592000) to com.ibm.icu.text.RelativeDateTimeFormatter.RelativeUnit.MONTHS
+            else -> (absSec / 31536000) to com.ibm.icu.text.RelativeDateTimeFormatter.RelativeUnit.YEARS
+        }
+        return fmt.format(kotlin.math.round(value), direction, unit)
+    }
+
+    /**
+     * Full date-time context for a country — all CLDR info needed to render
+     * a date-time in the local calendar, language, timezone, and week structure.
+     */
+    fun dateTimeContextFor(
+        country: Country,
+        language: Language? = null,
+    ): Map<String, String> {
+        val lang = language ?: countryToLanguage(country)
+        val cal = defaultCalendarFor(country)
+        val tz = countryToTimezone(country)
+        val locale = localeFor(country, lang, cal)
+        return buildMap {
+            put("country", country.value)
+            put("language", lang.value)
+            put("locale", locale.toLanguageTag())
+            put("calendar", cal)
+            put("availableCalendars", availableCalendarsFor(country).joinToString(","))
+            put("timezone", tz.value)
+            put("city", timezoneToCity(tz))
+            put("dateFormat", countryToDateFormat(country))
+            put("timeFormat", countryToTimeFormat(country))
+            put("firstDayOfWeek", countryToFirstDayOfWeek(country).toString())
+            put("weekendOnset", countryToWeekend(country).first.toString())
+            put("weekendCease", countryToWeekend(country).second.toString())
+            put("direction", countryToDirection(country))
+            put("script", countryToScript(country))
+        }
+    }
 }
