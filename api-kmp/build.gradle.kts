@@ -63,6 +63,9 @@ kotlin {
                 implementation("com.googlecode.ez-vcard:ez-vcard:0.12.1")  // vCard (.vcf)
                 implementation("com.ibm.icu:icu4j:76.1")  // ICU CLDR
                 implementation("org.mnode.ical4j:ical4j:4.0.7")  // iCalendar (.ics)
+                // vCard bridges (optional — compileOnly so users opt-in)
+                compileOnly("org.igniterealtime.smack:smack-extensions:4.4.8")  // XEP-0054 VCard
+                compileOnly("org.bedework:bw-ical4j-vcard:1.0.11")              // CardDAV vCard
                 implementation("io.swagger.parser.v3:swagger-parser:2.1.39")
                 implementation("com.squareup:kotlinpoet:2.2.0")
                 implementation("com.cjbooms:fabrikt:26.1.0")

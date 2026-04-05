@@ -1,4 +1,4 @@
-package com.anthropic.core
+package kotlinx.kmp.util
 
 import org.apache.commons.validator.routines.*
 
@@ -263,17 +263,6 @@ object Validators {
     // VCardContact, ICalEvent, ICalAttendee, ICalAlarm — Wire-generated from types.proto
     // google.type.PostalAddress, PhoneNumber, Date, LatLng, Money — Google standard protos
 
-    /** Validate a Wire VCardContact. */
-    fun validateVCardContact(contact: VCardContact): Map<String, Boolean> = buildMap {
-        contact.name?.let { put("name", it.full.isNotBlank()) }
-        contact.emails.forEachIndexed { i, e -> put("email.$i", validateEmail(Email(e))) }
-        contact.phones.forEachIndexed { i, p ->
-            put("phone.$i", p.e164_number?.let { validatePhone(Phone(it)) } ?: false)
-        }
-        contact.urls.forEachIndexed { i, u -> put("url.$i", validateUrl(Uri(u))) }
-        if (contact.photo.isNotBlank()) put("photo", validateUrl(Uri(contact.photo)))
-    }
-
     /** Validate a Wire ICalEvent. */
     fun validateICalEvent(event: ICalEvent): Map<String, Boolean> = buildMap {
         event.url.takeIf { it.isNotBlank() }?.let { put("url", validateUrl(Uri(it))) }
@@ -283,41 +272,41 @@ object Validators {
         event.attendees.forEachIndexed { i, a -> put("attendee.$i", validateEmail(Email(a.email))) }
     }
 
-    // === vCard: use ezvcard.VCard directly on JVM (full RFC 6350 model) ===
-    // Wire VCardContact is only for KMP cross-platform transmission (commonMain).
+    // === vCard — Wire VCardContact is the single source of truth ===
+    // ezvcard is used internally only for RFC 6350 .vcf text I/O.
+    // All public APIs return/accept VCardContact (KMP-compatible).
 
-    /** Parse vCard (.vcf) string → ezvcard.VCard (full RFC 6350 object). */
-    fun parseVCard(vcf: String): ezvcard.VCard = ezvcard.Ezvcard.parse(vcf).first()
+    /** Parse .vcf string → Wire VCardContact (ezvcard reads .vcf, converts to Wire). */
+    fun parseVCard(vcf: String): VCardContact =
+        ezvcardToWire(ezvcard.Ezvcard.parse(vcf).first())
 
-    /** Parse all vCards in a .vcf file/string (vCard allows multiple). */
-    fun parseVCards(vcf: String): List<ezvcard.VCard> = ezvcard.Ezvcard.parse(vcf).all()
+    /** Parse all vCards in a .vcf file (vCard allows multiple per file). */
+    fun parseVCards(vcf: String): List<VCardContact> =
+        ezvcard.Ezvcard.parse(vcf).all().map { ezvcardToWire(it) }
 
-    /** Serialize ezvcard.VCard → .vcf string. */
-    fun toVCard(vcard: ezvcard.VCard): String = ezvcard.Ezvcard.write(vcard).go()
+    /** Serialize Wire VCardContact → .vcf string (ezvcard writes RFC 6350). */
+    fun toVCard(contact: VCardContact): String =
+        ezvcard.Ezvcard.write(wireToEzvcard(contact)).go()
 
-    /** Serialize multiple vCards → .vcf string. */
-    fun toVCards(vcards: List<ezvcard.VCard>): String = ezvcard.Ezvcard.write(vcards).go()
+    /** Serialize multiple VCardContact → .vcf string. */
+    fun toVCards(contacts: List<VCardContact>): String =
+        ezvcard.Ezvcard.write(contacts.map { wireToEzvcard(it) }).go()
 
-    /**
-     * Validate an ezvcard.VCard using our format validators.
-     * Walks every property and validates via validateByFormat.
-     */
-    fun validateVCard(vcard: ezvcard.VCard): Map<String, Boolean> = buildMap {
-        vcard.formattedName?.value?.let { put("FN", it.isNotBlank()) }
-        vcard.emails?.forEachIndexed { i, e ->
-            put("EMAIL.$i", validateByFormat(e.value, "email"))
+    /** Validate a Wire VCardContact using format validators (see validateByFormat). */
+    fun validateVCard(contact: VCardContact): Map<String, Boolean> = buildMap {
+        contact.name?.let { put("FN", it.full.isNotBlank()) }
+        contact.emails.forEachIndexed { i, e -> put("EMAIL.$i", validateByFormat(e, "email")) }
+        contact.phones.forEachIndexed { i, p ->
+            put("TEL.$i", p.e164_number?.let { validateByFormat(it, "phone") } ?: false)
         }
-        vcard.telephoneNumbers?.forEachIndexed { i, t ->
-            put("TEL.$i", t.text?.let { validateByFormat(it, "phone") } ?: false)
-        }
-        vcard.urls?.forEachIndexed { i, u ->
-            put("URL.$i", validateByFormat(u.value, "uri"))
-        }
-        vcard.photos?.forEachIndexed { i, p ->
-            p.url?.let { put("PHOTO.$i", validateByFormat(it, "uri")) }
-        }
-        vcard.birthday?.date?.let { put("BDAY", true) }
-        vcard.uid?.value?.let { put("UID", it.isNotBlank()) }
+        contact.urls.forEachIndexed { i, u -> put("URL.$i", validateByFormat(u, "uri")) }
+        if (contact.photo.isNotBlank()) put("PHOTO", validateByFormat(contact.photo, "uri"))
+        if (contact.logo.isNotBlank()) put("LOGO", validateByFormat(contact.logo, "uri"))
+        if (contact.timezone.isNotBlank()) put("TZ", validateByFormat(contact.timezone, "timezone"))
+        contact.languages.forEachIndexed { i, l -> put("LANG.$i", validateByFormat(l, "language")) }
+        if (contact.uid.isNotBlank()) put("UID", true)
+        if (contact.fburl.isNotBlank()) put("FBURL", validateByFormat(contact.fburl, "uri"))
+        if (contact.cal_uri.isNotBlank()) put("CALURI", validateByFormat(contact.cal_uri, "uri"))
     }
 
     // === Wire bridge — full RFC 6350 parity (ezvcard ↔ Wire VCardContact) ===
@@ -1124,34 +1113,28 @@ object Validators {
      *                    "currency:<cur>", "direction:<ltr|rtl>"]
      *   uid           ← "tel:<e164>" (RFC 3966)
      */
-    fun inferVCard(
+    /**
+     * Infer a Wire VCardContact from user's phone + GeoIp.
+     * Builds Wire VCardContact directly — no intermediate ezvcard.VCard.
+     */
+    fun inferVCardContact(
         phone: String,
         geoIp: GeoIp,
         givenName: String = "",
         familyName: String = "",
-    ): ezvcard.VCard {
+    ): VCardContact {
         val util = com.google.i18n.phonenumbers.PhoneNumberUtil.getInstance()
         val parsed = parsePhoneByGeoIp(phone, geoIp)
         val e164 = parsed?.let { util.format(it, com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat.E164) }
             ?: phone
 
-        // Region: prefer phone's region, fall back to geoIp
         val phoneRegion = parsed?.let { util.getRegionCodeForNumber(it) }
         val effectiveCountry = Country(phoneRegion ?: geoIp.country.ifBlank { "US" })
-
-        // Language from country (ICU)
         val language = countryToLanguage(effectiveCountry)
-
-        // City: prefer geoIp, else phone geocoder description
-        val city = geoIp.city.ifBlank {
-            phoneDescriptionByGeoIp(phone, geoIp) ?: ""
-        }
-
-        // Timezone: geoip city → CLDR timezone, cross-checked against phone
+        val city = geoIp.city.ifBlank { phoneDescriptionByGeoIp(phone, geoIp) ?: "" }
         val timezone = geoIpToTimezone(geoIp).value
         val phoneTimezones = phoneToTimezones(phone, geoIp).map { it.value }
 
-        // CLDR linked chain
         val calendar = defaultCalendarFor(effectiveCountry)
         val script = countryToScript(effectiveCountry)
         val direction = countryToDirection(effectiveCountry)
@@ -1159,62 +1142,9 @@ object Validators {
                        else countryToCurrency(effectiveCountry).value
         val locale = "${language.value}_${effectiveCountry.value}"
 
-        // Carrier + phone type
         val carrier = phoneCarrierByGeoIp(phone, geoIp) ?: ""
         val phoneType = parsed?.let { util.getNumberType(it).name } ?: "UNKNOWN"
         val description = phoneDescriptionByGeoIp(phone, geoIp) ?: ""
-
-        // Build ezvcard.VCard directly — full RFC 6350 object model
-        val vcard = ezvcard.VCard()
-
-        // FN + N
-        if (givenName.isNotBlank() || familyName.isNotBlank()) {
-            vcard.setFormattedName(listOf(givenName, familyName).filter { it.isNotBlank() }.joinToString(" "))
-            val sn = ezvcard.property.StructuredName()
-            sn.given = givenName
-            sn.family = familyName
-            vcard.structuredName = sn
-        }
-
-        // TEL (RFC 6350 §6.4.1) — with TYPE parameter from phone type
-        val tel = ezvcard.property.Telephone(e164)
-        when (phoneType) {
-            "MOBILE" -> tel.types.add(ezvcard.parameter.TelephoneType.CELL)
-            "FIXED_LINE" -> tel.types.add(ezvcard.parameter.TelephoneType.HOME)
-            "FIXED_LINE_OR_MOBILE" -> {
-                tel.types.add(ezvcard.parameter.TelephoneType.HOME)
-                tel.types.add(ezvcard.parameter.TelephoneType.CELL)
-            }
-            "TOLL_FREE" -> tel.types.add(ezvcard.parameter.TelephoneType.WORK)
-            "VOIP" -> tel.types.add(ezvcard.parameter.TelephoneType.VOICE)
-            "PAGER" -> tel.types.add(ezvcard.parameter.TelephoneType.PAGER)
-            "PERSONAL_NUMBER" -> tel.types.add(ezvcard.parameter.TelephoneType.VOICE)
-        }
-        vcard.addTelephoneNumber(tel)
-
-        // ADR (RFC 6350 §6.3.1) — from GeoIp with TYPE=HOME
-        if (city.isNotBlank() || geoIp.region.isNotBlank() || geoIp.postal_code.isNotBlank()) {
-            val addr = ezvcard.property.Address()
-            addr.locality = city
-            addr.region = geoIp.region
-            addr.postalCode = geoIp.postal_code
-            addr.country = effectiveCountry.value
-            addr.types.add(ezvcard.parameter.AddressType.HOME)
-            vcard.addAddress(addr)
-        }
-
-        // TZ (RFC 6350 §6.5.1) — direct IANA timezone
-        if (timezone.isNotBlank()) {
-            vcard.addTimezone(ezvcard.property.Timezone(timezone))
-        }
-
-        // GEO (RFC 6350 §6.5.2) — from GeoIp.location
-        geoIp.location?.let { loc ->
-            vcard.addGeo(ezvcard.property.Geo(loc.latitude, loc.longitude))
-        }
-
-        // LANG (RFC 6350 §6.4.4) — language preference
-        vcard.addLanguage(ezvcard.property.Language(language.value))
 
         // NOTE — inferred context summary
         val note = buildList {
@@ -1226,38 +1156,47 @@ object Validators {
             add("Script: $script ($direction)")
             add("Currency: $currency")
         }.joinToString(" | ")
-        if (note.isNotBlank()) vcard.addNote(note)
 
         // CATEGORIES — encoded linked chain for downstream filtering
-        val cats = ezvcard.property.Categories()
-        if (phoneType != "UNKNOWN") cats.values.add("phone:$phoneType")
-        cats.values.add("country:${effectiveCountry.value}")
-        cats.values.add("lang:${language.value}")
-        cats.values.add("locale:$locale")
-        cats.values.add("tz:$timezone")
-        if (phoneTimezones.isNotEmpty() && phoneTimezones.toSet() != setOf(timezone)) {
-            cats.values.add("phoneTz:${phoneTimezones.joinToString(";")}")
+        val categories = buildList {
+            if (phoneType != "UNKNOWN") add("phone:$phoneType")
+            add("country:${effectiveCountry.value}")
+            add("lang:${language.value}")
+            add("locale:$locale")
+            add("tz:$timezone")
+            if (phoneTimezones.isNotEmpty() && phoneTimezones.toSet() != setOf(timezone)) {
+                add("phoneTz:${phoneTimezones.joinToString(";")}")
+            }
+            add("calendar:$calendar")
+            add("script:$script")
+            add("direction:$direction")
+            add("currency:$currency")
+            if (carrier.isNotBlank()) add("carrier:$carrier")
         }
-        cats.values.add("calendar:$calendar")
-        cats.values.add("script:$script")
-        cats.values.add("direction:$direction")
-        cats.values.add("currency:$currency")
-        if (carrier.isNotBlank()) cats.values.add("carrier:$carrier")
-        vcard.addCategories(cats)
 
-        // UID — tel: URI (RFC 3966)
-        vcard.uid = ezvcard.property.Uid("tel:$e164")
-
-        return vcard
+        return VCardContact(
+            name = PersonName(given = givenName, family = familyName),
+            phones = listOf(com.google.type.PhoneNumber(
+                e164_number = e164,
+                extension = parsed?.extension ?: "",
+            )),
+            addresses = if (city.isNotBlank() || geoIp.region.isNotBlank() || geoIp.postal_code.isNotBlank())
+                listOf(com.google.type.PostalAddress(
+                    region_code = effectiveCountry.value,
+                    language_code = language.value,
+                    postal_code = geoIp.postal_code,
+                    administrative_area = geoIp.region,
+                    locality = city,
+                    address_lines = emptyList(),
+                )) else emptyList(),
+            timezone = timezone,
+            geo = geoIp.location,
+            languages = listOf(language.value),
+            note = note,
+            categories = categories,
+            uid = "tel:$e164",
+        )
     }
-
-    /** KMP bridge: infer + convert to Wire VCardContact. */
-    fun inferVCardContact(
-        phone: String,
-        geoIp: GeoIp,
-        givenName: String = "",
-        familyName: String = "",
-    ): VCardContact = ezvcardToWire(inferVCard(phone, geoIp, givenName, familyName))
 
     /**
      * Full phone-number context derived from GeoIp:

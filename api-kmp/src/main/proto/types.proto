@@ -1,5 +1,5 @@
 syntax = "proto3";
-package com.anthropic.core;
+package kotlinx.kmp.util;
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/duration.proto";

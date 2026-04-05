@@ -1,4 +1,4 @@
-package com.anthropic.core
+package kotlinx.kmp.util
 
 import kotlinx.serialization.Serializable
 
