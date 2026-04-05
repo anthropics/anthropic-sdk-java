@@ -48,9 +48,32 @@ class ServiceGenerator(
             val funBuilder = FunSpec.builder(funName)
                 .addModifiers(KModifier.OPEN, KModifier.SUSPEND)
 
-            // Request parameter
-            op.requestBodyRef?.let { ref ->
-                funBuilder.addParameter("params", ClassName(modelsPackage, ref))
+            if (op.multipart) {
+                // Multipart file upload — one parameter per file field + one
+                // per text field. File fields are ByteArray with a `filename`
+                // sibling; text fields are plain String.
+                op.multipartFileFields.forEach { (fieldName, _) ->
+                    funBuilder.addParameter(fieldName, BYTE_ARRAY)
+                    funBuilder.addParameter("${fieldName}Filename", String::class)
+                }
+                op.multipartTextFields.forEach { fieldName ->
+                    funBuilder.addParameter(fieldName, String::class)
+                }
+                // Add a kdoc note referencing the accepted content types
+                val contentTypesNote = op.multipartFileFields.entries.joinToString("; ") { (k, v) ->
+                    "$k: ${v.joinToString("|")}"
+                }
+                if (contentTypesNote.isNotBlank()) {
+                    funBuilder.addKdoc(
+                        "\nMultipart/form-data upload. Accepted content types: %L",
+                        contentTypesNote,
+                    )
+                }
+            } else {
+                // Standard JSON request body parameter
+                op.requestBodyRef?.let { ref ->
+                    funBuilder.addParameter("params", ClassName(modelsPackage, ref))
+                }
             }
 
             // Return type
@@ -71,6 +94,10 @@ class ServiceGenerator(
             .addType(serviceInterface.build())
             .build()
             .writeTo(outputDir)
+    }
+
+    companion object {
+        private val BYTE_ARRAY = ClassName("kotlin", "ByteArray")
     }
 
     private fun generateClientFactory(

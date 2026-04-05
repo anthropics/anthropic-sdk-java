@@ -152,6 +152,22 @@ class LlmProducer(private val endpoint: LlmEndpoint) : DefaultProducer(endpoint)
         "djl" -> LlmProvider.Djl(modelPath = ep.modelPath)
         "jlama" -> LlmProvider.Jlama(modelPath = ep.modelPath)
         "mcp" -> LlmProvider.Mcp(baseUrl = ep.modelPath)
+        "suno" -> LlmProvider.Suno(defaultModel = ep.model.ifBlank { "chirp-v4" })
+        "pixverse" -> LlmProvider.PixVerse(defaultModel = ep.model.ifBlank { "v3.5" })
+        "google-nano-banana", "nano-banana" -> LlmProvider.GoogleNanoBanana
+        "google-veo", "veo" -> LlmProvider.GoogleVeo(defaultModel = ep.model.ifBlank { "veo-3.0-generate-preview" })
+        "google-notebooklm", "notebooklm" -> LlmProvider.GoogleNotebookLm(
+            projectId = ep.modelPath,  // project id carried in modelPath param
+            defaultModel = ep.model,
+        )
+        "azure", "copilot-designer" -> LlmProvider.AzureAi(
+            resourceName = ep.modelPath.ifBlank { "my-resource" },
+            deployment = ep.model.ifBlank { "gpt-4o" },
+        )
+        "adobe-firefly", "firefly" -> LlmProvider.AdobeFirefly(
+            clientId = ep.modelPath,  // Adobe dev client_id carried in modelPath
+            defaultModel = ep.model.ifBlank { "firefly-v3" },
+        )
         else -> {
             // Assume langchain4j:<vendor>
             if (ep.provider.startsWith("langchain4j:")) {

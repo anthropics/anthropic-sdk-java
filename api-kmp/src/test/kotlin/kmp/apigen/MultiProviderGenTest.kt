@@ -247,4 +247,161 @@ class MultiProviderGenTest {
             )
         }
     }
+
+    // === Multipart file upload tests (Suno + PixVerse + ComfyUI + Firefly + NotebookLM) ===
+
+    @Test
+    fun `OpenApiParser detects multipart form-data request bodies`() {
+        val spec = OpenApiParser.parse(loadSpec("media-upload-openapi.yaml"))
+
+        // Suno audio upload
+        val sunoUpload = spec.paths.values.first { it.operationId == "sunoUploadAudio" }
+        assertTrue(sunoUpload.multipart, "sunoUploadAudio must be flagged multipart")
+        assertTrue("audio" in sunoUpload.multipartFileFields, "audio field must be detected")
+        val audioTypes = sunoUpload.multipartFileFields["audio"]!!
+        assertTrue(audioTypes.any { it.contains("audio/") }, "audio field must accept audio/* content types: $audioTypes")
+        assertTrue("prompt" in sunoUpload.multipartTextFields, "prompt must be a text field")
+        assertTrue("model" in sunoUpload.multipartTextFields, "model must be a text field")
+
+        // PixVerse image upload
+        val pxUpload = spec.paths.values.first { it.operationId == "pixverseUploadImage" }
+        assertTrue(pxUpload.multipart)
+        assertTrue("image" in pxUpload.multipartFileFields)
+        assertTrue(pxUpload.multipartFileFields["image"]!!.any { it.contains("image/") })
+
+        // PixVerse image-to-video is JSON, not multipart
+        val pxGen = spec.paths.values.first { it.operationId == "pixverseImageToVideo" }
+        assertFalse(pxGen.multipart, "pixverseImageToVideo uses JSON, not multipart")
+
+        // ComfyUI workflow image upload
+        val comfy = spec.paths.values.first { it.operationId == "comfyuiUploadImage" }
+        assertTrue(comfy.multipart)
+        assertTrue("image" in comfy.multipartFileFields)
+        assertEquals(listOf("subfolder", "type", "overwrite"), comfy.multipartTextFields)
+
+        // Adobe Firefly reference upload
+        val firefly = spec.paths.values.first { it.operationId == "fireflyUploadReference" }
+        assertTrue(firefly.multipart)
+        assertTrue("file" in firefly.multipartFileFields)
+
+        // NotebookLM source upload (PDF)
+        val nb = spec.paths.values.first { it.operationId == "notebooklmUploadSource" }
+        assertTrue(nb.multipart)
+        assertTrue("source" in nb.multipartFileFields)
+        assertTrue(
+            nb.multipartFileFields["source"]!!.any { it.contains("pdf") },
+            "NotebookLM source must accept application/pdf",
+        )
+    }
+
+    @Test
+    fun `ServiceGenerator emits ByteArray params for multipart file upload endpoints`(@TempDir tempDir: Path) {
+        val spec = OpenApiParser.parse(loadSpec("media-upload-openapi.yaml"))
+        val output = tempDir.toFile()
+
+        RestEmitter().emit(spec, "test.media", output)
+
+        // Services are grouped by tag — 5 tags in the spec
+        val servicesDir = File(output, "test/media/services")
+        assertTrue(servicesDir.exists())
+        val serviceFiles = servicesDir.listFiles()?.filter { it.extension == "kt" } ?: emptyList()
+        assertTrue(serviceFiles.size >= 5, "expected one service per tag (suno, pixverse, comfyui, firefly, notebooklm)")
+
+        val allCode = serviceFiles.joinToString("\n") { it.readText() }
+
+        // Each file field becomes a ByteArray parameter + a <name>Filename String parameter
+        assertTrue(
+            allCode.contains("audio: ByteArray") || allCode.contains("audio: kotlin.ByteArray"),
+            "audio param must be ByteArray in generated SunoService",
+        )
+        assertTrue(allCode.contains("audioFilename: String") || allCode.contains("audioFilename: kotlin.String"))
+        assertTrue(
+            allCode.contains("image: ByteArray") || allCode.contains("image: kotlin.ByteArray"),
+            "image param must be ByteArray",
+        )
+        assertTrue(
+            allCode.contains("source: ByteArray") || allCode.contains("source: kotlin.ByteArray"),
+            "NotebookLM source upload must generate ByteArray param",
+        )
+        // 'file' is a Kotlin soft keyword — KotlinPoet escapes it with backticks
+        assertTrue(
+            Regex("""`?file`?:\s+(kotlin\.)?ByteArray""").containsMatchIn(allCode),
+            "Adobe Firefly 'file' field must generate ByteArray param",
+        )
+
+        // Text fields alongside file fields get String params
+        assertTrue(allCode.contains("prompt: String") || allCode.contains("prompt: kotlin.String"))
+        assertTrue(allCode.contains("model: String") || allCode.contains("model: kotlin.String"))
+        assertTrue(allCode.contains("subfolder: String") || allCode.contains("subfolder: kotlin.String"))
+    }
+
+    @Test
+    fun `multipart upload paths do NOT generate a JSON body params parameter`(@TempDir tempDir: Path) {
+        val spec = OpenApiParser.parse(loadSpec("media-upload-openapi.yaml"))
+        val output = tempDir.toFile()
+
+        RestEmitter().emit(spec, "test.media", output)
+
+        // Find the Suno service file
+        val sunoFile = File(output, "test/media/services").walkTopDown()
+            .first { it.name.contains("Suno", ignoreCase = true) }
+        val sunoCode = sunoFile.readText()
+
+        // A JSON-body operation would have `params: <Ref>` parameter.
+        // A multipart operation must NOT have such a `params` parameter for the same op.
+        val sunoUploadFn = Regex("""fun sunoUploadAudio\([^)]*\)""").find(sunoCode)?.value ?: ""
+        assertFalse(
+            sunoUploadFn.contains("params:"),
+            "sunoUploadAudio must not have a `params: Model` parameter (it's multipart): $sunoUploadFn",
+        )
+        assertTrue(
+            sunoUploadFn.contains("audio:") && sunoUploadFn.contains("prompt:"),
+            "sunoUploadAudio must have file + text field params: $sunoUploadFn",
+        )
+    }
+
+    @Test
+    fun `LlmProvider Suno PixVerse ComfyUi NanoBanana Veo NotebookLM Azure Firefly all available`() {
+        // Purely a compile-time + instance check — all providers are reachable from commonMain
+        val providers: List<kotlinx.kmp.util.LlmProvider> = listOf(
+            kotlinx.kmp.util.LlmProvider.Suno(),
+            kotlinx.kmp.util.LlmProvider.PixVerse(),
+            kotlinx.kmp.util.LlmProvider.ComfyUi(workflow = ""),
+            kotlinx.kmp.util.LlmProvider.GoogleNanoBanana,
+            kotlinx.kmp.util.LlmProvider.GoogleVeo(),
+            kotlinx.kmp.util.LlmProvider.GoogleNotebookLm(region = "us-central1", projectId = "test"),
+            kotlinx.kmp.util.LlmProvider.AzureAi(resourceName = "test-resource", deployment = "gpt-4o"),
+            kotlinx.kmp.util.LlmProvider.AdobeFirefly(clientId = "test-client"),
+        )
+        // Each has a unique non-blank id and base URL
+        val ids = providers.map { it.id }.toSet()
+        assertEquals(providers.size, ids.size, "each provider must have a unique id")
+
+        // copilotDesigner() returns an AzureAi — verified separately (same id, different config)
+        val copilot = kotlinx.kmp.util.LlmProvider.AzureAi.copilotDesigner("test-res")
+        assertEquals("azure", copilot.id, "copilotDesigner shares the azure provider id")
+        assertTrue(copilot.deployment.contains("dall-e") || copilot.deployment.contains("gpt-image"))
+        providers.forEach { p ->
+            assertTrue(p.id.isNotBlank(), "${p::class.simpleName} id must be non-blank")
+            assertTrue(
+                p.baseUrl.isNotBlank() || p.id == "google-notebooklm",  // NotebookLM URL templated on region
+                "${p::class.simpleName} baseUrl must be non-blank: ${p.baseUrl}",
+            )
+        }
+        // Specific base URLs
+        assertEquals("https://app-api.pixverse.ai/openapi/v2", kotlinx.kmp.util.LlmProvider.PixVerse().baseUrl)
+        assertTrue(kotlinx.kmp.util.LlmProvider.Suno().baseUrl.contains("suno"))
+        assertEquals(
+            "https://generativelanguage.googleapis.com/v1beta",
+            kotlinx.kmp.util.LlmProvider.GoogleNanoBanana.baseUrl,
+        )
+        assertEquals("gemini-2.5-flash-image", kotlinx.kmp.util.LlmProvider.GoogleNanoBanana.defaultModel)
+        assertTrue(kotlinx.kmp.util.LlmProvider.GoogleVeo().defaultModel.startsWith("veo-"))
+        val azure = kotlinx.kmp.util.LlmProvider.AzureAi(resourceName = "myres", deployment = "dep")
+        assertTrue(azure.baseUrl.contains("myres.openai.azure.com"))
+        assertTrue(azure.baseUrl.contains("/deployments/dep"))
+        val firefly = kotlinx.kmp.util.LlmProvider.AdobeFirefly(clientId = "abc")
+        assertEquals("abc", firefly.clientId)
+        assertTrue(firefly.baseUrl.contains("firefly-api.adobe.io"))
+    }
 }

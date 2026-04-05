@@ -58,7 +58,7 @@ sealed interface LlmProvider {
         const val DEFAULT_VERSION = "2023-06-01"
     }
 
-    /** Google Gemini GenerateContent API. `x-goog-api-key` header auth. */
+    /** Google Gemini GenerateContent API (text + vision). `x-goog-api-key` header auth. */
     object Google : LlmProvider {
         override val id = "google"
         override val baseUrl = "https://generativelanguage.googleapis.com/v1beta"
@@ -66,6 +66,68 @@ sealed interface LlmProvider {
         override val requestFormat = RequestFormat.GEMINI_GENERATE
         override val auth = AuthScheme.API_KEY_HEADER
         const val HEADER_API_KEY = "x-goog-api-key"
+    }
+
+    /**
+     * Google **Nano Banana** (`gemini-2.5-flash-image`) — image generation +
+     * editing via the same Generative Language API. Returns image bytes
+     * inline in ContentBlock.image.data. Accepts text prompts plus optional
+     * reference images (inline base64 or multipart upload on the public API).
+     *
+     * Same `x-goog-api-key` auth as [Google]. Served via the standard
+     * `models/{model}:generateContent` endpoint — only the model name and
+     * response handling differ (images not text).
+     */
+    object GoogleNanoBanana : LlmProvider {
+        override val id = "google-nano-banana"
+        override val baseUrl = "https://generativelanguage.googleapis.com/v1beta"
+        override val defaultModel = "gemini-2.5-flash-image"
+        override val requestFormat = RequestFormat.GEMINI_GENERATE
+        override val auth = AuthScheme.API_KEY_HEADER
+    }
+
+    /**
+     * Google **Veo** (text-to-video / image-to-video). Uses the long-running
+     * operation pattern: POST `models/{model}:predictLongRunning` returns an
+     * operation name; client polls `operations/{id}` until `done=true`.
+     *
+     * Image-to-video can accept reference images either inline (base64 in
+     * JSON) or via Files API upload (multipart) — both paths supported.
+     */
+    data class GoogleVeo(
+        override val defaultModel: String = "veo-3.0-generate-preview",
+    ) : LlmProvider {
+        override val id = "google-veo"
+        override val baseUrl = "https://generativelanguage.googleapis.com/v1beta"
+        override val requestFormat = RequestFormat.GEMINI_VEO
+        override val auth = AuthScheme.API_KEY_HEADER
+    }
+
+    /**
+     * Google **NotebookLM** — source-grounded research assistant. Access
+     * tiers:
+     * - **NotebookLM Enterprise** via Vertex AI — official REST API at
+     *   `https://{region}-notebooklm.googleapis.com` (requires GCP project
+     *   + OAuth2 / service-account auth, not simple API key).
+     * - **Public consumer** (notebooklm.google.com) — no official public
+     *   REST API as of late 2025; community gateways exist but are unstable.
+     *
+     * Capabilities: upload source documents (PDF, URL, YouTube, text →
+     * Files API-style multipart upload), ask grounded questions,
+     * generate audio overviews (podcast-style TTS).
+     *
+     * Default base URL points to the Vertex AI Enterprise endpoint. Override
+     * via constructor with your actual region + project.
+     */
+    data class GoogleNotebookLm(
+        val region: String = "us-central1",
+        val projectId: String = "",
+        override val defaultModel: String = "notebooklm-default",
+    ) : LlmProvider {
+        override val id = "google-notebooklm"
+        override val baseUrl = "https://$region-notebooklm.googleapis.com/v1beta"
+        override val requestFormat = RequestFormat.NOTEBOOKLM_GROUNDED
+        override val auth = AuthScheme.BEARER  // OAuth2 access token from gcloud
     }
 
     /** OpenAI Chat Completions (or any OpenAI-compatible cloud endpoint). */
@@ -176,6 +238,139 @@ sealed interface LlmProvider {
         override val auth = AuthScheme.NONE
     }
 
+    // === Media generation providers (exercise file upload / multipart path) ===
+
+    /**
+     * Suno AI — music generation. Accepts text prompts + reference audio
+     * file uploads via multipart/form-data and returns generated tracks.
+     *
+     * **Note on base URL:** Suno does not publish a single official public
+     * REST API. Users supply the base URL of their chosen gateway
+     * (e.g. `sunoapi.org`, `apibox.erweima.ai`, `gcop.ai`, `acedata.cloud`)
+     * since each has slightly different paths and auth conventions. The
+     * default below is a placeholder — override via constructor.
+     *
+     * Exercises the **multipart/form-data upload** code path of the
+     * generator: reference-audio endpoint accepts an `audio` field with
+     * content-type audio/mpeg or audio/wav.
+     */
+    data class Suno(
+        override val baseUrl: String = "https://api.sunoapi.org/v1",
+        override val defaultModel: String = "chirp-v4",
+    ) : LlmProvider {
+        override val id = "suno"
+        override val requestFormat = RequestFormat.SUNO_MUSIC
+        override val auth = AuthScheme.BEARER
+    }
+
+    /**
+     * PixVerse AI — video generation (text-to-video + image-to-video).
+     * Image-to-video uses a two-step flow: upload image via
+     * multipart/form-data then POST JSON referencing the returned img_id.
+     *
+     * **Note on base URL:** PixVerse platform base URL varies by tenant.
+     * Common default: `https://app-api.pixverse.ai/openapi/v2`. Override
+     * via constructor for your deployment.
+     *
+     * Auth: custom `API-KEY` header (not Bearer). Also sends `Ai-trace-id`
+     * per request for support tracing.
+     */
+    data class PixVerse(
+        override val baseUrl: String = "https://app-api.pixverse.ai/openapi/v2",
+        override val defaultModel: String = "v3.5",
+    ) : LlmProvider {
+        override val id = "pixverse"
+        override val requestFormat = RequestFormat.PIXVERSE_VIDEO
+        override val auth = AuthScheme.API_KEY_HEADER
+        companion object {
+            const val HEADER_API_KEY = "API-KEY"
+            const val HEADER_TRACE_ID = "Ai-trace-id"
+        }
+    }
+
+    /**
+     * **Azure AI / Azure OpenAI** — Microsoft's hosted OpenAI models plus
+     * Azure-exclusive models (Phi, Mistral-via-Azure, etc.). Also the backend
+     * for **Microsoft Copilot Designer** (image generation uses DALL-E 3 /
+     * GPT-Image-1 deployed via Azure OpenAI).
+     *
+     * Base URL pattern (tenant-specific):
+     *   `https://<resource>.openai.azure.com/openai/deployments/<deployment>`
+     *
+     * Auth: custom `api-key` header (not Bearer). An `api-version` query
+     * param is **required** on every request (e.g. `2024-10-21`,
+     * `2024-02-15-preview`).
+     *
+     * Supports both text chat completions (OpenAI-compatible) and image
+     * generation via `:images/generations` — pass a DALL-E 3 deployment
+     * name as [defaultModel] to use it as a Copilot Designer backend.
+     */
+    data class AzureAi(
+        val resourceName: String = "my-resource",
+        val deployment: String = "gpt-4o",
+        val apiVersion: String = "2024-10-21",
+    ) : LlmProvider {
+        override val id = "azure"
+        override val baseUrl: String =
+            "https://$resourceName.openai.azure.com/openai/deployments/$deployment"
+        override val defaultModel: String = deployment
+        override val requestFormat = RequestFormat.AZURE_OPENAI
+        override val auth = AuthScheme.API_KEY_HEADER
+        companion object {
+            const val HEADER_API_KEY = "api-key"
+            const val QUERY_API_VERSION = "api-version"
+
+            /**
+             * Convenience factory for **Microsoft Copilot Designer** style
+             * image generation via Azure-hosted DALL-E 3 / GPT-Image.
+             * Usage: `LlmProvider.AzureAi.copilotDesigner("my-resource", "dalle-3")`.
+             */
+            @JvmStatic
+            fun copilotDesigner(
+                resourceName: String,
+                dalleDeployment: String = "dall-e-3",
+            ): AzureAi = AzureAi(
+                resourceName = resourceName,
+                deployment = dalleDeployment,
+                apiVersion = "2024-02-15-preview",
+            )
+        }
+    }
+
+    /**
+     * **Adobe Firefly Services** — Adobe's generative AI API (text-to-image,
+     * generative fill, generative expand, generative match, text-to-vector,
+     * text-to-video, object composite). Also powers Adobe Express AI.
+     *
+     * Base URL: `https://firefly-api.adobe.io/` (v3).
+     *
+     * Auth requires **two headers simultaneously**:
+     *   - `Authorization: Bearer <IMS_access_token>`  (from Adobe IMS OAuth2)
+     *   - `x-api-key: <client_id>`                    (your Adobe dev API key)
+     *
+     * Uses async job pattern: POST returns a job URL; client polls it until
+     * the generation completes and returns signed URLs to the output assets.
+     *
+     * File uploads (reference images, style references, masks) go via a
+     * separate Storage API at `https://firefly-api.adobe.io/v2/storage/image`
+     * using multipart/form-data.
+     */
+    data class AdobeFirefly(
+        val clientId: String = "",
+        override val baseUrl: String = "https://firefly-api.adobe.io",
+        override val defaultModel: String = "firefly-v3",
+    ) : LlmProvider {
+        override val id = "adobe-firefly"
+        override val requestFormat = RequestFormat.ADOBE_FIREFLY
+        override val auth = AuthScheme.BEARER  // PLUS the x-api-key header — bridge handles both
+        companion object {
+            const val HEADER_API_KEY = "x-api-key"
+            const val STORAGE_UPLOAD_PATH = "/v2/storage/image"
+            const val GENERATE_IMAGE_PATH = "/v3/images/generate-async"
+            const val GENERATE_VIDEO_PATH = "/v3/videos/generate-async"
+        }
+    }
+
     /** No provider — placeholder for generated code that selects at install time. */
     object None : LlmProvider {
         override val id = "none"
@@ -199,6 +394,12 @@ enum class RequestFormat {
     DJL_NATIVE,             // no wire format — in-process JVM bridge
     JLAMA_NATIVE,           // no wire format — in-process JVM bridge
     MCP_TOOL,               // MCP JSON-RPC tools/call
+    SUNO_MUSIC,             // Suno gateway — music gen + reference audio upload
+    PIXVERSE_VIDEO,         // PixVerse — text-to-video + image-to-video (multipart upload)
+    GEMINI_VEO,             // Google Veo — long-running video ops (poll operations/{id})
+    NOTEBOOKLM_GROUNDED,    // NotebookLM (Vertex Enterprise) — source-grounded QA + audio overview
+    AZURE_OPENAI,           // Azure OpenAI — OpenAI-compatible + Copilot Designer (DALL-E 3)
+    ADOBE_FIREFLY,          // Adobe Firefly Services — async image/video/vector generation
 }
 
 /** HTTP authentication scheme. Maps 1:1 to OpenAPI `securitySchemes` types. */

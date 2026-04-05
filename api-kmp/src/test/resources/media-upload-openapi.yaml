@@ -1,0 +1,225 @@
+openapi: 3.0.3
+info:
+  title: Media Generation Multipart Upload API
+  version: "1.0.0"
+  description: |
+    Mixed spec exercising all multipart/form-data upload patterns across
+    media-gen providers. Used by MultiProviderGenTest to verify api-gen
+    emits correct multipart upload code per provider.
+
+    Combines shapes from:
+    - Suno music gen (audio reference upload)
+    - PixVerse image-to-video (image upload → img_id → video)
+    - ComfyUI /upload/image (workflow reference upload)
+    - Adobe Firefly /v2/storage/image (style reference upload)
+    - Google NotebookLM source upload (PDF/text)
+servers:
+  - url: https://api.example.com/v1
+    description: Test server
+
+paths:
+  /suno/upload/audio:
+    post:
+      operationId: sunoUploadAudio
+      tags: [suno]
+      summary: Upload a reference audio file for Suno music generation
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [audio]
+              properties:
+                audio:
+                  type: string
+                  format: binary
+                  description: Reference audio file
+                prompt:
+                  type: string
+                  description: Text prompt to guide extension/continuation
+                model:
+                  type: string
+                  default: chirp-v4
+            encoding:
+              audio:
+                contentType: audio/mpeg, audio/wav, audio/ogg, audio/flac
+      responses:
+        '200':
+          description: Upload accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResult'
+
+  /pixverse/image/upload:
+    post:
+      operationId: pixverseUploadImage
+      tags: [pixverse]
+      summary: Upload an image for PixVerse image-to-video generation
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [image]
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: Source image for image-to-video
+            encoding:
+              image:
+                contentType: image/png, image/jpeg, image/webp
+      responses:
+        '200':
+          description: Upload accepted, returns img_id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  img_id:
+                    type: string
+
+  /pixverse/video/image:
+    post:
+      operationId: pixverseImageToVideo
+      tags: [pixverse]
+      summary: Generate video from previously uploaded image
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImageToVideoRequest'
+      responses:
+        '200':
+          description: Video generation job started
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /comfyui/upload/image:
+    post:
+      operationId: comfyuiUploadImage
+      tags: [comfyui]
+      summary: Upload a reference image to ComfyUI's input directory
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [image]
+              properties:
+                image:
+                  type: string
+                  format: binary
+                subfolder:
+                  type: string
+                  default: ""
+                type:
+                  type: string
+                  default: input
+                overwrite:
+                  type: string
+                  default: "true"
+      responses:
+        '200':
+          description: Stored filename in ComfyUI input dir
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResult'
+
+  /firefly/v2/storage/image:
+    post:
+      operationId: fireflyUploadReference
+      tags: [firefly]
+      summary: Upload a style/reference image to Adobe Firefly storage
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Reference image for generative match
+      responses:
+        '200':
+          description: Upload accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResult'
+
+  /notebooklm/sources/upload:
+    post:
+      operationId: notebooklmUploadSource
+      tags: [notebooklm]
+      summary: Upload a source document to a NotebookLM notebook
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [source]
+              properties:
+                source:
+                  type: string
+                  format: binary
+                  description: Source document (PDF, text, markdown)
+                notebookId:
+                  type: string
+                  description: Target notebook ID
+            encoding:
+              source:
+                contentType: application/pdf, text/plain, text/markdown
+      responses:
+        '200':
+          description: Source uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResult'
+
+components:
+  schemas:
+    UploadResult:
+      type: object
+      properties:
+        id:
+          type: string
+        filename:
+          type: string
+        size:
+          type: integer
+          format: int64
+        contentType:
+          type: string
+    ImageToVideoRequest:
+      type: object
+      required: [img_id, prompt]
+      properties:
+        img_id:
+          type: string
+        prompt:
+          type: string
+        model:
+          type: string
+          default: v3.5
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: x-api-key
+security:
+  - apiKey: []

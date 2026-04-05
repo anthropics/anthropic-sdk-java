@@ -83,6 +83,22 @@ data class ParsedPath(
     val description: String?,
     val tags: List<String>,
     val customSql: String? = null,
+    /**
+     * True when the operation accepts `multipart/form-data` — i.e. the
+     * generated client must submit file uploads via
+     * `io.ktor.client.request.forms.MultiPartFormDataContent` instead of
+     * JSON. Media-gen providers (Suno audio upload, PixVerse image upload,
+     * Adobe Firefly reference-image, ComfyUI /upload/image) exercise this.
+     */
+    val multipart: Boolean = false,
+    /**
+     * File part schema when [multipart] is true. Maps form-field name →
+     * accepted content-types (e.g. `"audio" -> ["audio/mpeg", "audio/wav"]`).
+     * Empty when the operation has text fields only.
+     */
+    val multipartFileFields: Map<String, List<String>> = emptyMap(),
+    /** Text (non-file) form fields when multipart. */
+    val multipartTextFields: List<String> = emptyList(),
 )
 
 data class ParsedSecurity(
@@ -257,11 +273,34 @@ object OpenApiParser {
         return paths.flatMap { (path, pathItem) ->
             pathItem.readOperationsMap().map { (method, op) ->
                 val operationId = op.operationId ?: "${method.name.lowercase()}${path.replace("/", "_")}"
-                val requestRef = op.requestBody?.content?.values?.firstOrNull()
+                val requestBodyContent = op.requestBody?.content
+                val requestRef = requestBodyContent?.values?.firstOrNull()
                     ?.schema?.`$ref`?.substringAfterLast("/")
                 val responseRef = op.responses?.get("200")?.content?.values?.firstOrNull()
                     ?.schema?.`$ref`?.substringAfterLast("/")
                 val streaming = op.responses?.get("200")?.content?.containsKey("text/event-stream") == true
+
+                // Detect multipart/form-data — drives file-upload code gen
+                val multipartSchema = requestBodyContent?.get("multipart/form-data")?.schema
+                val isMultipart = multipartSchema != null
+                val multipartFileFields = mutableMapOf<String, List<String>>()
+                val multipartTextFields = mutableListOf<String>()
+                if (isMultipart && multipartSchema?.properties != null) {
+                    multipartSchema.properties.forEach { (propName, propSchema) ->
+                        // Binary file field: type=string, format=binary (OpenAPI 3.x convention)
+                        if (propSchema.type == "string" && propSchema.format == "binary") {
+                            // Accepted content-types come from encoding if specified,
+                            // else a sensible default based on field name heuristic.
+                            val encoding = requestBodyContent.get("multipart/form-data")
+                                ?.encoding?.get(propName)
+                            val contentTypes = encoding?.contentType?.split(",")?.map { it.trim() }
+                                ?: defaultMultipartContentTypes(propName)
+                            multipartFileFields[propName] = contentTypes
+                        } else {
+                            multipartTextFields.add(propName)
+                        }
+                    }
+                }
 
                 operationId to ParsedPath(
                     method = method.name,
@@ -273,9 +312,33 @@ object OpenApiParser {
                     description = op.description ?: op.summary,
                     tags = op.tags ?: emptyList(),
                     customSql = op.extensions?.get("x-sql") as? String,
+                    multipart = isMultipart,
+                    multipartFileFields = multipartFileFields,
+                    multipartTextFields = multipartTextFields,
                 )
             }
         }.toMap()
+    }
+
+    /**
+     * Sensible default content-types for a multipart file field when the
+     * spec doesn't declare them via `encoding.<field>.contentType`. Picks
+     * based on field-name heuristics — covers Suno audio, PixVerse image,
+     * Adobe Firefly reference image, ComfyUI upload/image, NotebookLM source.
+     */
+    private fun defaultMultipartContentTypes(fieldName: String): List<String> {
+        val lower = fieldName.lowercase()
+        return when {
+            "audio" in lower || "music" in lower || "song" in lower ->
+                listOf("audio/mpeg", "audio/wav", "audio/ogg", "audio/flac")
+            "image" in lower || "img" in lower || "photo" in lower || "picture" in lower ->
+                listOf("image/png", "image/jpeg", "image/webp", "image/gif")
+            "video" in lower || "movie" in lower || "clip" in lower ->
+                listOf("video/mp4", "video/webm", "video/quicktime")
+            "pdf" in lower || "document" in lower || "source" in lower || "doc" in lower ->
+                listOf("application/pdf", "text/plain", "text/markdown")
+            else -> listOf("application/octet-stream")
+        }
     }
 
     private fun parseSecurity(openApi: OpenAPI): Map<String, ParsedSecurity> {

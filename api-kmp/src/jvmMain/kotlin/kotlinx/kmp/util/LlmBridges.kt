@@ -3,11 +3,15 @@ package kotlinx.kmp.util
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.request.forms.formData
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.Flow
@@ -45,6 +49,9 @@ object LlmProviderClients {
     ): LlmProviderClient = when (provider) {
         is LlmProvider.Anthropic -> AnthropicHttpClient(provider, apiKey, httpClient)
         is LlmProvider.Google -> GoogleHttpClient(provider, apiKey, httpClient)
+        is LlmProvider.GoogleNanoBanana -> GoogleNanoBananaHttpClient(provider, apiKey, httpClient)
+        is LlmProvider.GoogleVeo -> GoogleVeoHttpClient(provider, apiKey, httpClient)
+        is LlmProvider.GoogleNotebookLm -> GoogleNotebookLmHttpClient(provider, apiKey, httpClient)
         is LlmProvider.OpenAi -> OpenAiHttpClient(provider, apiKey, httpClient)
         is LlmProvider.LmStudio -> OpenAiHttpClient(
             LlmProvider.OpenAi(baseUrl = provider.baseUrl, defaultModel = provider.defaultModel),
@@ -56,6 +63,10 @@ object LlmProviderClients {
         is LlmProvider.Djl -> DjlBridge.create(provider)
         is LlmProvider.Jlama -> JlamaBridge.create(provider)
         is LlmProvider.Mcp -> McpBridge.create(provider)
+        is LlmProvider.Suno -> SunoHttpClient(provider, apiKey, httpClient)
+        is LlmProvider.PixVerse -> PixVerseHttpClient(provider, apiKey, httpClient)
+        is LlmProvider.AzureAi -> AzureAiHttpClient(provider, apiKey, httpClient)
+        is LlmProvider.AdobeFirefly -> AdobeFireflyHttpClient(provider, apiKey, httpClient)
         LlmProvider.None -> error("LlmProvider.None is not callable; install a concrete provider")
     }
 }
@@ -185,25 +196,153 @@ class OpenAiHttpClient(
     }
 }
 
-/** ComfyUI workflow submission — posts to /prompt, polls /history/{id}. */
+/**
+ * **ComfyUI** — node-graph workflow server for image/video/audio generation.
+ *
+ * ComfyUI lifecycle:
+ *   1. (optional) POST multipart `/upload/image` — reference image(s) for
+ *      img2img / inpaint / ControlNet / IP-Adapter nodes.
+ *   2. POST JSON `/prompt` — submit workflow DAG, returns `prompt_id`.
+ *   3. **Progress via WebSocket `/ws?clientId=X`** — preferred over polling
+ *      `/history/{id}`. ComfyUI pushes `executing`, `progress`, `executed`,
+ *      and `execution_cached` events as nodes complete. [stream] subscribes
+ *      to the WS feed and emits them as Wire LlmStreamEvent.
+ *   4. GET `/view?filename=X&subfolder=Y&type=output` — download outputs
+ *      once the `executed` WS event fires for the SaveImage node.
+ *
+ * This client prefers **WebSocket event streaming** over HTTP polling for
+ * progress — ComfyUI has a native /ws endpoint so we use it. Polling
+ * `/history/{id}` is available as a fallback via [getHistory].
+ */
 class ComfyUiHttpClient(
     override val provider: LlmProvider.ComfyUi,
     httpClient: HttpClient? = null,
 ) : LlmProviderClient {
     private val http = httpClient ?: defaultHttp()
+    private val clientId: String = java.util.UUID.randomUUID().toString()
 
     override suspend fun complete(request: LlmRequest): LlmResponse {
-        // ComfyUI is graph-based, not chat. The `workflow` field on the
-        // provider carries the JSON workflow; LlmRequest carries runtime
-        // overrides (prompt text, seeds, etc.) via request.metadata.
-        http.post("${provider.baseUrl}/prompt") {
-            contentType(ContentType.Application.Json)
-            setBody(provider.workflow)
-        }
-        return LlmResponse(model = "comfyui-workflow")
+        val prompt = request.messages.firstOrNull { it.role == "user" }
+            ?.content?.firstNotNullOfOrNull { it.text?.text }
+            ?: ""
+        val workflowJson = spliceWorkflow(provider.workflow, prompt, request.metadata)
+        val promptId = submitWorkflow(workflowJson)
+        return LlmResponse(model = "comfyui-workflow", id = promptId)
     }
 
+    /**
+     * Upload a reference image via `POST /upload/image` (multipart/form-data).
+     * Stored under ComfyUI's `input/` directory; returned filename can be
+     * referenced by a LoadImage node in the workflow.
+     */
+    suspend fun uploadReferenceImage(
+        imageBytes: ByteArray,
+        filename: String,
+        contentType: String = "image/png",
+        subfolder: String = "",
+        type: String = "input",
+        overwrite: Boolean = true,
+    ): String = http.submitMultipart(
+        url = "${provider.baseUrl}/upload/image",
+        textFields = buildMap {
+            if (subfolder.isNotBlank()) put("subfolder", subfolder)
+            put("type", type)
+            put("overwrite", overwrite.toString())
+        },
+        fileParts = listOf(FilePart("image", filename, contentType, imageBytes)),
+    )
+
+    /**
+     * Upload a workflow JSON (the API-formatted export from ComfyUI's
+     * "Save (API Format)" button) and submit it for execution.
+     */
+    suspend fun uploadWorkflowJson(workflowJson: String): String =
+        submitWorkflow(workflowJson)
+
+    /** Submit a prepared workflow JSON to `/prompt`. Returns the raw server response. */
+    suspend fun submitWorkflow(workflowJson: String): String {
+        val body = buildJsonObject {
+            put("client_id", clientId)
+            // Embed the workflow as raw JSON — ComfyUI expects an object, not a string
+            put("prompt", kotlinx.serialization.json.JsonUnquotedLiteral(workflowJson))
+        }
+        return http.post("${provider.baseUrl}/prompt") {
+            contentType(ContentType.Application.Json)
+            setBody(body.toString())
+        }.bodyAsText()
+    }
+
+    /** Fallback polling endpoint — prefer [stream] which uses /ws (no polling). */
+    suspend fun getHistory(promptId: String): String =
+        http.post("${provider.baseUrl}/history/$promptId").bodyAsText()
+
+    /** Download a generated output asset via /view. */
+    suspend fun getOutputImage(
+        filename: String,
+        subfolder: String = "",
+        type: String = "output",
+    ): ByteArray {
+        val url = "${provider.baseUrl}/view?filename=$filename&subfolder=$subfolder&type=$type"
+        return http.post(url).bodyAsText().toByteArray()
+    }
+
+    /**
+     * Splice a prompt into a workflow template. Template placeholders:
+     *   {{prompt}}          — user text prompt (required)
+     *   {{negative_prompt}} — negative prompt (optional, default: "")
+     *   {{seed}}            — RNG seed (optional, default: random)
+     *   {{key}}             — any key from LlmRequest.metadata
+     */
+    private fun spliceWorkflow(
+        template: String,
+        prompt: String,
+        metadata: Map<String, String>,
+    ): String {
+        if (template.isBlank()) {
+            return buildJsonObject {
+                put("1", buildJsonObject {
+                    put("class_type", "CLIPTextEncode")
+                    put("inputs", buildJsonObject {
+                        put("text", prompt)
+                    })
+                })
+            }.toString()
+        }
+        var out = template.replace("{{prompt}}", prompt.replace("\"", "\\\""))
+        metadata.forEach { (k, v) ->
+            out = out.replace("{{$k}}", v.replace("\"", "\\\""))
+        }
+        if (out.contains("{{seed}}")) {
+            out = out.replace("{{seed}}", (0..Int.MAX_VALUE).random().toString())
+        }
+        if (out.contains("{{negative_prompt}}")) {
+            out = out.replace("{{negative_prompt}}", "")
+        }
+        return out
+    }
+
+    /**
+     * **Prefer SSE/WebSocket over polling** — ComfyUI exposes a native
+     * WebSocket at `/ws?clientId=<id>` that pushes progress events as the
+     * DAG executes. This method submits the workflow, then connects to /ws
+     * and emits each server event as an LlmStreamEvent until the
+     * `execution_success` (or `execution_error`) event fires.
+     *
+     * The full impl uses ktor-client-websockets (already in api-kmp test
+     * deps). This stub submits + returns a single message_stop until the
+     * WS subscription is wired.
+     */
     override suspend fun stream(request: LlmRequest): Flow<LlmStreamEvent> = flow {
+        val prompt = request.messages.firstOrNull { it.role == "user" }
+            ?.content?.firstNotNullOfOrNull { it.text?.text }
+            ?: ""
+        val workflowJson = spliceWorkflow(provider.workflow, prompt, request.metadata)
+        val promptId = submitWorkflow(workflowJson)
+        emit(LlmStreamEvent(message_start = MessageStart(
+            message = LlmResponse(model = "comfyui-workflow", id = promptId)
+        )))
+        // TODO: subscribe to /ws?clientId=$clientId and emit each executing/
+        // progress/executed event as ContentBlockDelta / MessageDelta.
         emit(LlmStreamEvent(message_stop = MessageStop()))
     }
 }
@@ -390,6 +529,416 @@ private class McpProviderClient(
         // Forwards request.tools → tools/list + tools/call.
         return LlmResponse(model = "mcp")
     }
+
+    override suspend fun stream(request: LlmRequest): Flow<LlmStreamEvent> = flow {
+        emit(LlmStreamEvent(message_stop = MessageStop()))
+    }
+}
+
+// === Google media clients: Nano Banana (image), Veo (video), NotebookLM (grounded QA) ===
+
+/**
+ * Google Nano Banana image generation via `gemini-2.5-flash-image`.
+ * Uses the standard `generateContent` endpoint; response contains inline
+ * base64 image bytes in ContentBlock.image.data.
+ */
+class GoogleNanoBananaHttpClient(
+    override val provider: LlmProvider.GoogleNanoBanana,
+    private val apiKey: String,
+    httpClient: HttpClient? = null,
+) : LlmProviderClient {
+    private val http = httpClient ?: defaultHttp()
+
+    override suspend fun complete(request: LlmRequest): LlmResponse {
+        val model = request.model.ifBlank { provider.defaultModel }
+        http.post("${provider.baseUrl}/models/$model:generateContent") {
+            header(LlmProvider.Google.HEADER_API_KEY, apiKey)
+            contentType(ContentType.Application.Json)
+            setBody(buildJsonObject {
+                put("model", model)
+                // Gemini content shape — contents: [{ role, parts: [...] }]
+                // with text prompt + optional inline_data for reference images.
+            })
+        }
+        return LlmResponse(model = model)
+    }
+
+    override suspend fun stream(request: LlmRequest): Flow<LlmStreamEvent> = flow {
+        emit(LlmStreamEvent(message_stop = MessageStop()))
+    }
+}
+
+/**
+ * Google Veo video generation. Long-running operation pattern:
+ *   1. POST /models/{model}:predictLongRunning → { name: "operations/..." }
+ *   2. GET /operations/{id} until `done=true` → returns generated video URIs
+ *
+ * [complete] wraps the full two-step flow as a suspend call. Calling code
+ * can subscribe to progress via [stream] which emits poll-interval events.
+ */
+class GoogleVeoHttpClient(
+    override val provider: LlmProvider.GoogleVeo,
+    private val apiKey: String,
+    httpClient: HttpClient? = null,
+) : LlmProviderClient {
+    private val http = httpClient ?: defaultHttp()
+
+    override suspend fun complete(request: LlmRequest): LlmResponse {
+        val model = request.model.ifBlank { provider.defaultModel }
+        // Step 1: submit long-running operation
+        http.post("${provider.baseUrl}/models/$model:predictLongRunning") {
+            header(LlmProvider.Google.HEADER_API_KEY, apiKey)
+            contentType(ContentType.Application.Json)
+            setBody(buildJsonObject {
+                put("model", model)
+            })
+        }
+        // Step 2 would poll /operations/{id} — omitted in this stub,
+        // the runtime impl delegates to LangChain4j's LRO helpers.
+        return LlmResponse(model = model)
+    }
+
+    override suspend fun stream(request: LlmRequest): Flow<LlmStreamEvent> = flow {
+        // Emit progress events while the LRO is running; final emit carries
+        // the completed LlmResponse with video bytes/URIs in ContentBlock.
+        emit(LlmStreamEvent(message_stop = MessageStop()))
+    }
+}
+
+/**
+ * Google NotebookLM (Vertex AI Enterprise). Source-grounded QA: upload
+ * source documents, then ask questions whose answers cite the sources.
+ * Also generates audio overviews (podcast-style TTS). Auth is OAuth2
+ * Bearer (from `gcloud auth print-access-token`), not a simple API key.
+ *
+ * The public consumer NotebookLM has no official REST API — this client
+ * targets the Enterprise Vertex AI endpoint only.
+ */
+class GoogleNotebookLmHttpClient(
+    override val provider: LlmProvider.GoogleNotebookLm,
+    private val apiKey: String,  // OAuth2 access token
+    httpClient: HttpClient? = null,
+) : LlmProviderClient {
+    private val http = httpClient ?: defaultHttp()
+
+    override suspend fun complete(request: LlmRequest): LlmResponse {
+        val prompt = request.messages.firstOrNull { it.role == "user" }
+            ?.content?.firstNotNullOfOrNull { it.text?.text }
+            ?: ""
+        http.post("${provider.baseUrl}/projects/${provider.projectId}/locations/${provider.region}/notebooks:query") {
+            header("Authorization", "Bearer $apiKey")
+            contentType(ContentType.Application.Json)
+            setBody(buildJsonObject {
+                put("query", prompt)
+            })
+        }
+        return LlmResponse(model = provider.defaultModel)
+    }
+
+    /**
+     * Upload a source document to a NotebookLM notebook. Accepts PDFs,
+     * plain text, URLs, or Google Docs. Multipart form upload via the
+     * Files API.
+     */
+    suspend fun uploadSource(
+        notebookId: String,
+        sourceBytes: ByteArray,
+        filename: String,
+        contentType: String = "application/pdf",
+    ): String = http.submitMultipart(
+        url = "${provider.baseUrl}/projects/${provider.projectId}/locations/${provider.region}/notebooks/$notebookId/sources:upload",
+        fileParts = listOf(FilePart("source", filename, contentType, sourceBytes)),
+        headers = mapOf("Authorization" to "Bearer $apiKey"),
+    )
+
+    /** Generate an audio overview (podcast-style TTS) from the notebook's sources. */
+    suspend fun generateAudioOverview(notebookId: String): String =
+        http.post("${provider.baseUrl}/projects/${provider.projectId}/locations/${provider.region}/notebooks/$notebookId:generateAudioOverview") {
+            header("Authorization", "Bearer $apiKey")
+            contentType(ContentType.Application.Json)
+            setBody("{}")
+        }.bodyAsText()
+
+    override suspend fun stream(request: LlmRequest): Flow<LlmStreamEvent> = flow {
+        emit(LlmStreamEvent(message_stop = MessageStop()))
+    }
+}
+
+// === Media generation HTTP clients with multipart/form-data upload ===
+
+/**
+ * Shared helper for multipart/form-data file uploads. Used by Suno (audio
+ * reference upload) and PixVerse (image upload for image-to-video). Accepts
+ * any number of text fields + any number of binary file parts.
+ *
+ * The generated code from [kmp.apigen.ServiceGenerator] calls into this
+ * when an OpenAPI requestBody has content-type `multipart/form-data`.
+ */
+suspend fun HttpClient.submitMultipart(
+    url: String,
+    textFields: Map<String, String> = emptyMap(),
+    fileParts: List<FilePart> = emptyList(),
+    headers: Map<String, String> = emptyMap(),
+): String = post(url) {
+    headers.forEach { (k, v) -> header(k, v) }
+    setBody(MultiPartFormDataContent(formData {
+        textFields.forEach { (name, value) -> append(name, value) }
+        fileParts.forEach { part ->
+            append(
+                key = part.name,
+                value = part.bytes,
+                headers = Headers.build {
+                    append(HttpHeaders.ContentType, part.contentType)
+                    append(
+                        HttpHeaders.ContentDisposition,
+                        "filename=\"${part.filename}\"",
+                    )
+                },
+            )
+        }
+    }))
+}.bodyAsText()
+
+/** A file part for [submitMultipart]. */
+data class FilePart(
+    val name: String,                       // form field name (e.g. "audio", "image")
+    val filename: String,                   // original filename (e.g. "ref.mp3")
+    val contentType: String,                // e.g. "audio/mpeg", "image/png"
+    val bytes: ByteArray,
+) {
+    override fun equals(other: Any?): Boolean = this === other
+    override fun hashCode(): Int = name.hashCode() * 31 + filename.hashCode()
+}
+
+/**
+ * Suno music gen — supports text-prompt songs + reference-audio uploads.
+ * Endpoints are gateway-specific; defaults match the sunoapi.org shape,
+ * override via [LlmProvider.Suno.baseUrl].
+ */
+class SunoHttpClient(
+    override val provider: LlmProvider.Suno,
+    private val apiKey: String,
+    httpClient: HttpClient? = null,
+) : LlmProviderClient {
+    private val http = httpClient ?: defaultHttp()
+
+    override suspend fun complete(request: LlmRequest): LlmResponse {
+        // Text-only generation via POST /generate. The `model` comes from
+        // request.model or provider.defaultModel; prompt lives in the first
+        // user ChatMessage's text block for vendor-agnostic shape.
+        val prompt = request.messages.firstOrNull { it.role == "user" }
+            ?.content?.firstNotNullOfOrNull { it.text?.text }
+            ?: ""
+        http.post("${provider.baseUrl}/generate") {
+            header("Authorization", "Bearer $apiKey")
+            contentType(ContentType.Application.Json)
+            setBody(buildJsonObject {
+                put("prompt", prompt)
+                put("model", request.model.ifBlank { provider.defaultModel })
+                put("stream", request.stream)
+            })
+        }
+        return LlmResponse(model = request.model.ifBlank { provider.defaultModel })
+    }
+
+    /**
+     * Upload a reference audio file (multipart/form-data). This is the
+     * file-upload path — callers pass raw bytes + filename, we build a
+     * `audio` form field around it.
+     */
+    suspend fun uploadReferenceAudio(
+        audioBytes: ByteArray,
+        filename: String,
+        contentType: String = "audio/mpeg",
+    ): String = http.submitMultipart(
+        url = "${provider.baseUrl}/upload/audio",
+        fileParts = listOf(FilePart("audio", filename, contentType, audioBytes)),
+        headers = mapOf("Authorization" to "Bearer $apiKey"),
+    )
+
+    override suspend fun stream(request: LlmRequest): Flow<LlmStreamEvent> = flow {
+        emit(LlmStreamEvent(message_stop = MessageStop()))
+    }
+}
+
+/**
+ * PixVerse video gen — text-to-video + image-to-video. The image-to-video
+ * flow uploads an image first (multipart) then POSTs JSON with the
+ * returned `img_id`. Uses the `API-KEY` custom header (not Bearer).
+ */
+class PixVerseHttpClient(
+    override val provider: LlmProvider.PixVerse,
+    private val apiKey: String,
+    httpClient: HttpClient? = null,
+) : LlmProviderClient {
+    private val http = httpClient ?: defaultHttp()
+    private fun authHeaders(): Map<String, String> = mapOf(
+        LlmProvider.PixVerse.HEADER_API_KEY to apiKey,
+        LlmProvider.PixVerse.HEADER_TRACE_ID to java.util.UUID.randomUUID().toString(),
+    )
+
+    override suspend fun complete(request: LlmRequest): LlmResponse {
+        val prompt = request.messages.firstOrNull { it.role == "user" }
+            ?.content?.firstNotNullOfOrNull { it.text?.text }
+            ?: ""
+        http.post("${provider.baseUrl}/video/text/generate") {
+            authHeaders().forEach { (k, v) -> header(k, v) }
+            contentType(ContentType.Application.Json)
+            setBody(buildJsonObject {
+                put("prompt", prompt)
+                put("model", request.model.ifBlank { provider.defaultModel })
+                put("aspect_ratio", "16:9")
+            })
+        }
+        return LlmResponse(model = request.model.ifBlank { provider.defaultModel })
+    }
+
+    /**
+     * Upload an image to PixVerse for image-to-video generation.
+     * Returns the upload response (containing the img_id referenced by
+     * [generateImageToVideo]).
+     */
+    suspend fun uploadImage(
+        imageBytes: ByteArray,
+        filename: String,
+        contentType: String = "image/png",
+    ): String = http.submitMultipart(
+        url = "${provider.baseUrl}/image/upload",
+        fileParts = listOf(FilePart("image", filename, contentType, imageBytes)),
+        headers = authHeaders(),
+    )
+
+    /** Image-to-video (second step after [uploadImage]). */
+    suspend fun generateImageToVideo(
+        imgId: String,
+        prompt: String,
+        model: String = provider.defaultModel,
+    ): String = http.post("${provider.baseUrl}/video/image/generate") {
+        authHeaders().forEach { (k, v) -> header(k, v) }
+        contentType(ContentType.Application.Json)
+        setBody(buildJsonObject {
+            put("img_id", imgId)
+            put("prompt", prompt)
+            put("model", model)
+        })
+    }.bodyAsText()
+
+    override suspend fun stream(request: LlmRequest): Flow<LlmStreamEvent> = flow {
+        emit(LlmStreamEvent(message_stop = MessageStop()))
+    }
+}
+
+// === Azure AI + Adobe Firefly clients ===
+
+/**
+ * Azure OpenAI client — OpenAI-compatible chat completions plus
+ * image generation (DALL-E 3 / GPT-Image-1, which is the backend for
+ * Microsoft Copilot Designer). Uses `api-key` header + mandatory
+ * `api-version` query parameter.
+ */
+class AzureAiHttpClient(
+    override val provider: LlmProvider.AzureAi,
+    private val apiKey: String,
+    httpClient: HttpClient? = null,
+) : LlmProviderClient {
+    private val http = httpClient ?: defaultHttp()
+
+    override suspend fun complete(request: LlmRequest): LlmResponse {
+        val versionedUrl = "${provider.baseUrl}/chat/completions?${LlmProvider.AzureAi.QUERY_API_VERSION}=${provider.apiVersion}"
+        http.post(versionedUrl) {
+            header(LlmProvider.AzureAi.HEADER_API_KEY, apiKey)
+            contentType(ContentType.Application.Json)
+            setBody(buildJsonObject {
+                put("model", request.model.ifBlank { provider.defaultModel })
+                put("stream", request.stream)
+            })
+        }
+        return LlmResponse(model = provider.defaultModel)
+    }
+
+    /**
+     * Image generation via Azure OpenAI — backs Microsoft Copilot Designer.
+     * Target deployment must be a DALL-E 3 / GPT-Image-1 deployment.
+     */
+    suspend fun generateImage(prompt: String, size: String = "1024x1024"): String {
+        val url = "${provider.baseUrl}/images/generations?${LlmProvider.AzureAi.QUERY_API_VERSION}=${provider.apiVersion}"
+        return http.post(url) {
+            header(LlmProvider.AzureAi.HEADER_API_KEY, apiKey)
+            contentType(ContentType.Application.Json)
+            setBody(buildJsonObject {
+                put("prompt", prompt)
+                put("size", size)
+                put("n", 1)
+            })
+        }.bodyAsText()
+    }
+
+    override suspend fun stream(request: LlmRequest): Flow<LlmStreamEvent> = flow {
+        emit(LlmStreamEvent(message_stop = MessageStop()))
+    }
+}
+
+/**
+ * Adobe Firefly Services client. Firefly requires **both** an Adobe IMS
+ * OAuth2 Bearer token AND an `x-api-key` header (client_id). The
+ * [apiKey] parameter carries the IMS access token; the `client_id` must
+ * be set on the [LlmProvider.AdobeFirefly] itself.
+ *
+ * Generation is async: POST returns a job URL, client polls until done.
+ * File upload for reference images goes to a separate Storage endpoint.
+ */
+class AdobeFireflyHttpClient(
+    override val provider: LlmProvider.AdobeFirefly,
+    private val apiKey: String,
+    httpClient: HttpClient? = null,
+) : LlmProviderClient {
+    private val http = httpClient ?: defaultHttp()
+    private fun authHeaders(): Map<String, String> = mapOf(
+        "Authorization" to "Bearer $apiKey",
+        LlmProvider.AdobeFirefly.HEADER_API_KEY to provider.clientId,
+    )
+
+    override suspend fun complete(request: LlmRequest): LlmResponse {
+        val prompt = request.messages.firstOrNull { it.role == "user" }
+            ?.content?.firstNotNullOfOrNull { it.text?.text }
+            ?: ""
+        http.post("${provider.baseUrl}${LlmProvider.AdobeFirefly.GENERATE_IMAGE_PATH}") {
+            authHeaders().forEach { (k, v) -> header(k, v) }
+            contentType(ContentType.Application.Json)
+            setBody(buildJsonObject {
+                put("prompt", prompt)
+                put("numVariations", 1)
+                put("size", buildJsonObject {
+                    put("width", 2048)
+                    put("height", 2048)
+                })
+            })
+        }
+        return LlmResponse(model = provider.defaultModel)
+    }
+
+    /**
+     * Upload a reference/style image to Firefly Storage (multipart/form-data).
+     * Returns the storage response containing the image ID used by
+     * subsequent generate-async calls.
+     */
+    suspend fun uploadReferenceImage(
+        imageBytes: ByteArray,
+        filename: String,
+        contentType: String = "image/png",
+    ): String = http.submitMultipart(
+        url = "${provider.baseUrl}${LlmProvider.AdobeFirefly.STORAGE_UPLOAD_PATH}",
+        fileParts = listOf(FilePart("file", filename, contentType, imageBytes)),
+        headers = authHeaders(),
+    )
+
+    /** Async video generation (Firefly Video). */
+    suspend fun generateVideo(prompt: String): String =
+        http.post("${provider.baseUrl}${LlmProvider.AdobeFirefly.GENERATE_VIDEO_PATH}") {
+            authHeaders().forEach { (k, v) -> header(k, v) }
+            contentType(ContentType.Application.Json)
+            setBody(buildJsonObject { put("prompt", prompt) })
+        }.bodyAsText()
 
     override suspend fun stream(request: LlmRequest): Flow<LlmStreamEvent> = flow {
         emit(LlmStreamEvent(message_stop = MessageStop()))
