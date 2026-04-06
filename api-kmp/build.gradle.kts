@@ -29,6 +29,10 @@ kotlin {
         browser { testTask { useMocha() } }
         nodejs()
     }
+    // Native targets
+    linuxX64()
+    macosX64()
+    macosArm64()
 
     sourceSets {
         val commonMain by getting {
@@ -54,6 +58,15 @@ kotlin {
                 implementation("io.ktor:ktor-client-js:3.4.2")
             }
         }
+        val nativeMain by creating {
+            dependsOn(commonMain)
+            dependencies {
+                implementation("io.ktor:ktor-client-cio:3.4.2")
+            }
+        }
+        val linuxX64Main by getting { dependsOn(nativeMain) }
+        val macosX64Main by getting { dependsOn(nativeMain) }
+        val macosArm64Main by getting { dependsOn(nativeMain) }
         val jvmMain by getting {
             dependencies {
                 api("com.fasterxml.jackson.core:jackson-annotations:2.18.2")
