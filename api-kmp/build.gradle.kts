@@ -48,7 +48,9 @@ kotlin {
                 api("com.squareup.wire:wire-runtime:5.3.1")
                 api("io.modelcontextprotocol:kotlin-sdk:0.11.0")
                 implementation("io.ktor:ktor-client-core:3.4.2")
+                implementation("io.ktor:ktor-client-cio:3.4.2")
                 implementation("io.ktor:ktor-client-content-negotiation:3.4.2")
+                implementation("io.ktor:ktor-client-auth:3.4.2")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:3.4.2")
             }
         }
@@ -87,8 +89,7 @@ kotlin {
                 implementation("com.github.victools:jsonschema-module-swagger-2:4.38.0")
                 api("io.swagger.core.v3:swagger-annotations:2.2.31")
                 api("com.google.errorprone:error_prone_annotations:2.33.0")
-                implementation("io.ktor:ktor-client-cio:3.4.2")
-                implementation("io.ktor:ktor-client-auth:3.4.2")  // Basic/Digest/Bearer — critical for CalDAV
+                // ktor-client-cio + auth moved to commonMain (KMP)
                 // Validation libs (JVM)
                 implementation("commons-validator:commons-validator:1.9.0")
                 implementation("com.googlecode.libphonenumber:libphonenumber:8.13.50")

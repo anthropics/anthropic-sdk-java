@@ -1,3 +1,5 @@
+@file:OptIn(kotlin.uuid.ExperimentalUuidApi::class)
+
 package kotlinx.kmp.util
 
 import io.ktor.client.HttpClient
@@ -288,7 +290,7 @@ object ProviderSpecs {
                 put("aspect_ratio", "16:9")
             }
         },
-        secondaryAuth = { LlmProvider.PixVerse.HEADER_TRACE_ID to java.util.UUID.randomUUID().toString() },
+        secondaryAuth = { LlmProvider.PixVerse.HEADER_TRACE_ID to kotlin.uuid.Uuid.random().toString() },
     )
 
     val AdobeFirefly = ProviderSpec(
