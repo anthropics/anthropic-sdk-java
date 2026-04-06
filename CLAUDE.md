@@ -9,7 +9,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 
 - **Migration Plan + Low-Level Design**: [`docs/KMP-CONVERSION-PLAN.md`](docs/KMP-CONVERSION-PLAN.md)
 - **Branch**: `claude/convert-to-kmp-I9zBV`
-- **202 commits** on branch, all pushed
+- **212 commits** on branch, all pushed
 
 ## Current Status
 
@@ -20,7 +20,8 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | api-kmp jvmMain | 54 files (Jackson adapters, JVM handlers, async extensions) |
 | api-kmp jsMain | 6 files (JS platform actuals, Jackson annotation stubs) |
 | api-kmp nativeMain | 6 files (Native platform actuals, Jackson annotation stubs) |
-| api-kmp commonTest | 5 test files (99 tests — KmpOptional 66, KotlinxApiJsonBackend 8, JsonValueSerializer 8, McpTypes 5, ContentFormats 12) |
+| api-kmp commonTest | 6 test files (119 tests — KmpOptional 66, KotlinxApiJsonBackend 8, JsonValueSerializer 8, McpTypes 5, ContentFormats 12, PlatformE2eTest 20) |
+| JS Node tests | ✅ All commonTest tests pass on JS (Node) — first time JS tests run |
 | api-kmp jvmTest | 2 test files (26 tests — HttpRetryTest 20 WireMock + KtorServerProtocolTest 6 JSON/SSE/WS) |
 | api-kmp test (gen) | 4 test files (24 tests — MultiProviderGenTest 14, ComposeEmitterTest 3, DatabaseEmitterTest 3, AnthropicApiGenTest 4) |
 | KMP targets | JVM ✅, JS (IR) ✅ — both compile with zero errors |
