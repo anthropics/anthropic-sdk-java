@@ -16,10 +16,13 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | Metric | Value |
 |---|---|
 | Files in anthropic-java-core commonMain | 540 (models, services, helpers, client) |
-| api-kmp commonMain | 122 files (kotlinx.kmp.util.core — HTTP, JSON, errors, paging, platform) |
-| api-kmp jvmMain | 51 files (Jackson adapters, JVM handlers, async extensions) |
+| api-kmp commonMain | 121 files (kotlinx.kmp.util.core — HTTP, JSON, errors, paging, platform) |
+| api-kmp jvmMain | 54 files (Jackson adapters, JVM handlers, async extensions) |
+| api-kmp jsMain | 6 files (JS platform actuals, Jackson annotation stubs) |
+| api-kmp nativeMain | 6 files (Native platform actuals, Jackson annotation stubs) |
 | api-kmp commonTest | 5 test files (97 tests — KmpOptional 66, KotlinxApiJsonBackend 8, JsonValueSerializer 8, McpTypes 5, ContentFormats 10) |
 | api-kmp jvmTest | 2 test files (26 tests — HttpRetryTest 20 WireMock + KtorServerProtocolTest 6 JSON/SSE/WS) |
+| api-kmp test (gen) | 3 test files (20 tests — MultiProviderGenTest 14, ComposeEmitterTest 3, DatabaseEmitterTest 3) |
 | KMP targets | JVM ✅, JS (IR) ✅ — both compile with zero errors |
 | Native targets | linuxX64, macosX64, macosArm64 — actuals written, pending toolchain download |
 | GraalVM | Oracle 25.0.2 + native-image — .sdkmanrc java=25.0.2-graal |
@@ -77,6 +80,22 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 |---|---|
 | JS/Native targets | Add js() + native() targets to anthropic-java-core (currently JVM-only) |
 | MsgPack | Add kotlinx-serialization-msgpack (third-party) when stable KMP version available |
+
+### What stays, what gets typealiased, what's NOT migrated
+
+| Category | Approach | Code Migration? |
+|---|---|---|
+| Jackson annotations (`@JsonProperty` etc.) | **Keep** — standard, JVM runtime, ignored on non-JVM | None |
+| kotlin.jvm annotations (`@JvmStatic` etc.) | **Keep** — standard, JVM bytecode, ignored on non-JVM | None |
+| `java.util.Optional<T>` | **typealias** → `expect class Optional` in commonMain | None — same API |
+| `java.util.function.*` | **typealias** → `expect fun interface` in commonMain | None — same API |
+| Jackson annotations (`@JsonProperty` etc.) | **typealias** → `kotlinx.kmp.util.core.json.JsonProperty` (resolves to Jackson on JVM) | ✅ Done — ~600 model files rewritten |
+| Jackson runtime (`JsonMapper`, serializers) | **jvmMain only** — expect/actual `jsonMapper()` + `ApiJsonBackend` | ✅ Done — `JacksonApiJsonBackend` in jvmMain |
+| `java.util.concurrent.CompletableFuture` | **jvmMain extension** — `HttpClient.executeAsync()` as JVM ext, not interface | ✅ Done — commonMain suspend-only |
+| `java.time.Clock` | **Replaced** — `nowMillisProvider: () -> Long` in ClientOptions | ✅ Done |
+| `java.io.InputStream/OutputStream` | **okio** `BufferedSource/BufferedSink` | ✅ Done (core interfaces) |
+| `java.util.concurrent.Executor` | **jvmMain** — `createDefaultStreamExecutor()` expect/actual | ✅ Done |
+| Wire `@WireRpc`, `@WireField` | **Use directly** — standard proto lib | None |
 
 ### Low-Level Designs
 | Section | Line | Commit | What |
