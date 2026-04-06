@@ -9,7 +9,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 
 - **Migration Plan + Low-Level Design**: [`docs/KMP-CONVERSION-PLAN.md`](docs/KMP-CONVERSION-PLAN.md)
 - **Branch**: `claude/convert-to-kmp-I9zBV`
-- **180 commits** on branch, all pushed
+- **182 commits** on branch, all pushed
 
 ## Current Status
 
@@ -18,7 +18,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | Files in anthropic-java-core commonMain | 540 (models, services, helpers, client) |
 | api-kmp commonMain | 122 files (kotlinx.kmp.util.core — HTTP, JSON, errors, paging, platform) |
 | api-kmp jvmMain | 51 files (Jackson adapters, JVM handlers, async extensions) |
-| api-kmp commonTest | 3 test files (82 tests — KmpOptional, KotlinxApiJsonBackend, JsonValueSerializer) |
+| api-kmp commonTest | 4 test files (87 tests — KmpOptional, KotlinxApiJsonBackend, JsonValueSerializer, McpTypes) |
 | api-kmp jvmTest | 1 test file (20 tests — HttpRetryTest WireMock) |
 | KMP targets | JVM ✅, JS (IR) ✅ — both compile with zero errors |
 | Native targets | linuxX64, macosX64, macosArm64 — actuals written, pending toolchain download |
@@ -66,13 +66,14 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | JS (IR) target compiles | `5dd4364` — js(IR) { browser; nodejs }, JS platform actuals, CaseInsensitiveMap, runBlockingCompat |
 | Native target | `215c819` — linuxX64/macosX64/macosArm64 actuals + Jackson stubs (pending toolchain) |
 | @Serializable on api-gen models | `fe7d511` — api-gen emits @JsonProperty + @Serializable + @SerialName |
+| MCP tool types | `ab9604d` — commonMain McpTypes (ToolDefinition, ToolCallRequest/Result, ToolContent) + 5 tests |
 
 ### 🔲 Remaining Work
 | Section | What |
 |---|---|
-| MCP SDK Integration | Add MCP SDK dependency and create tool bridge |
-| Native target | Add native() target and native actuals |
-| @Serializable on api-gen models | Extend api-gen to emit @Serializable + @SerialName for kotlinx backend |
+| ktor CIO server tests | Test all serializers (JSON, XML, MsgPack, Protobuf) + all protocols (HTTPS, WSS, SSE, WebDAV, GraphQL) |
+| Compose KMP UI generation | Form/List/Detail @Composable from OpenAPI schemas |
+| Database generation | Exposed tables (JVM) / SQLDelight .sq (KMP) from schemas |
 
 ### Low-Level Designs
 | Section | Line | Commit | What |

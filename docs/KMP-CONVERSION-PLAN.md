@@ -636,7 +636,7 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 
 ## Current Progress (synced with branch claude/convert-to-kmp-I9zBV)
 
-### 📊 Commit Summary (180 commits since KMP migration began)
+### 📊 Commit Summary (182 commits since KMP migration began)
 
 | Theme | Commits | Status |
 |---|---|---|
@@ -658,12 +658,13 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 | Smack XEP-0054 + Bedework bridges | 4 | ✅ |
 | Architectural refactors (package moves, dedup, trimIndent) | 12 | ✅ |
 | Fixes (schema validator, RFC 5545 formats, type mappings) | 9 | ✅ |
-| **Phase 12 — commonMain purification + multi-backend JSON + JS/Native target** | **20** | **✅** |
+| **Phase 12 — commonMain purification + multi-backend JSON + JS/Native + MCP** | **22** | **✅** |
 | Plan documentation updates | 54 | ✅ |
 
 ### 📝 Recent Commits (newest first, post-initial-migration)
 
 **Phase 12 — commonMain purification + multi-backend JSON + JS target (most recent)**
+- `ab9604d` feat: MCP tool types in commonMain (ToolDefinition, ToolCallRequest/Result, ToolContent) + JVM toolchain config + 5 tests
 - `fe7d511` feat: api-gen emits @JsonProperty alongside @Serializable + @SerialName
 - `215c819` feat: native target (linuxX64, macosX64, macosArm64) with platform actuals + Jackson stubs
 - `f425ede` refactor: reuse Jackson annotations directly — JS stubs in jsMain; model files import Jackson directly; all tests pass
