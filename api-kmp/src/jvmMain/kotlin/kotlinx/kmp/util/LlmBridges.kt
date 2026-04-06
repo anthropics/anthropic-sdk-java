@@ -187,40 +187,32 @@ private class JlamaClient(override val provider: LlmProvider.Jlama) : StubStream
 
 object McpBridge {
     fun create(provider: LlmProvider.Mcp): LlmProviderClient {
-        requireClass(
-            "io.modelcontextprotocol.kotlin.sdk.Tool",
-            "MCP Kotlin SDK",
-            "io.modelcontextprotocol:kotlin-sdk:<version>",
-        )
         return McpClient(provider)
     }
 
-    /** Wire Tool → MCP SDK Tool. Reflective so api-kmp compiles without the dep. */
+    /** Wire Tool → MCP SDK Tool. Direct import — no more reflection. */
     @JvmStatic
-    fun wireToolToMcp(tool: Tool): Any {
+    fun wireToolToMcp(tool: Tool): io.modelcontextprotocol.kotlin.sdk.types.Tool {
         val schemaJson = tool.input_schema.utf8()
-        val toolClass = Class.forName("io.modelcontextprotocol.kotlin.sdk.Tool")
-        val inputClass = Class.forName("io.modelcontextprotocol.kotlin.sdk.Tool\$Input")
         val properties = Json.parseToJsonElement(schemaJson.ifBlank { "{}" })
             as? JsonObject ?: JsonObject(emptyMap())
-        val inputCtor = inputClass.getConstructor(JsonObject::class.java, List::class.java)
-        val input = inputCtor.newInstance(properties, emptyList<String>())
-        val toolCtor = toolClass.getConstructor(String::class.java, String::class.java, inputClass)
-        return toolCtor.newInstance(tool.name, tool.description, input)
+        return io.modelcontextprotocol.kotlin.sdk.types.Tool(
+            name = tool.name,
+            inputSchema = io.modelcontextprotocol.kotlin.sdk.types.ToolSchema(
+                properties = properties,
+            ),
+            description = tool.description,
+        )
     }
 
     /** MCP SDK Tool → Wire Tool. */
     @JvmStatic
-    fun mcpToolToWire(mcpTool: Any): Tool {
-        val cls = mcpTool.javaClass
-        val name = cls.getMethod("getName").invoke(mcpTool) as String
-        val description = cls.getMethod("getDescription").invoke(mcpTool) as String
-        val input = cls.getMethod("getInputSchema").invoke(mcpTool)
-        val props = input.javaClass.getMethod("getProperties").invoke(input) as JsonObject
+    fun mcpToolToWire(mcpTool: io.modelcontextprotocol.kotlin.sdk.types.Tool): Tool {
+        val props = mcpTool.inputSchema.properties
         return Tool(
-            name = name,
-            description = description,
-            input_schema = props.toString().let {
+            name = mcpTool.name,
+            description = mcpTool.description ?: "",
+            input_schema = (props?.toString() ?: "{}").let {
                 okio.ByteString.of(*it.toByteArray(Charsets.UTF_8))
             },
         )

@@ -46,6 +46,7 @@ kotlin {
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
                 api("com.squareup.okio:okio:3.17.0")
                 api("com.squareup.wire:wire-runtime:5.3.1")
+                api("io.modelcontextprotocol:kotlin-sdk:0.11.0")
                 implementation("io.ktor:ktor-client-core:3.4.2")
                 implementation("io.ktor:ktor-client-content-negotiation:3.4.2")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:3.4.2")
@@ -78,6 +79,7 @@ kotlin {
                 api("com.fasterxml.jackson.core:jackson-databind:2.18.2")
                 api("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
                 api("com.squareup.wire:wire-grpc-client:5.3.1")
+                // MCP SDK moved to commonMain
                 implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.18.2")
                 implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2")
                 implementation("com.github.victools:jsonschema-generator:4.38.0")
@@ -105,7 +107,6 @@ kotlin {
                 // Consumers pull in only the backends they actually use.
                 compileOnly("dev.langchain4j:langchain4j-core:0.36.2")           // wraps ~20 vendors
                 compileOnly("dev.langchain4j:langchain4j:0.36.2")
-                compileOnly("io.modelcontextprotocol:kotlin-sdk:0.5.0")          // MCP SDK (Tool/Server/Client)
                 compileOnly("ai.djl:api:0.30.0")                                 // Deep Java Library core
                 compileOnly("ai.djl.huggingface:tokenizers:0.30.0")              // HF tokenizers via DJL
                 compileOnly("com.github.tjake:jlama-core:0.8.4")                 // Pure-Java GGUF/llama.cpp
