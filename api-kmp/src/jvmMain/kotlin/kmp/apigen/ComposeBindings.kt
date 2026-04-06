@@ -45,6 +45,24 @@ interface ComposeBinding {
 
     /** Lazy list container. */
     fun lazyColumn(itemsExpr: String, itemContent: String): String
+
+    /** Master-detail split layout (list left, detail right). */
+    fun masterDetail(masterContent: String, detailContent: String): String
+
+    /** FK navigation link — renders a clickable reference to another entity. */
+    fun fkLink(label: String, entityId: String, targetEntity: String, onClick: String): String
+
+    /** Detail field row — label + value display. */
+    fun detailField(label: String, valueExpr: String): String
+
+    /** Form submit button. */
+    fun submitButton(text: String, onClick: String): String
+
+    /** Empty state placeholder. */
+    fun emptyState(message: String): String
+
+    /** Add button (for master-detail top bar). */
+    fun addButton(text: String, onClick: String): String
 }
 
 /**
@@ -86,6 +104,35 @@ class Material3Binding : ComposeBinding {
         $itemContent
     }
 }"""
+
+    override fun masterDetail(masterContent: String, detailContent: String) =
+        """androidx.compose.foundation.layout.Row {
+    // Master (list)
+    androidx.compose.foundation.layout.Box(modifier = androidx.compose.ui.Modifier.weight(1f)) {
+$masterContent
+    }
+    // Detail (selected entity)
+    androidx.compose.foundation.layout.Box(modifier = androidx.compose.ui.Modifier.weight(1f)) {
+$detailContent
+    }
+}"""
+
+    override fun fkLink(label: String, entityId: String, targetEntity: String, onClick: String) =
+        """    androidx.compose.material3.TextButton(onClick = { $onClick }) {
+        androidx.compose.material3.Text("$label: ${'$'}{$entityId} → $targetEntity")
+    }"""
+
+    override fun detailField(label: String, valueExpr: String) =
+        """    androidx.compose.material3.Text("$label: ${'$'}{$valueExpr}")"""
+
+    override fun submitButton(text: String, onClick: String) =
+        """    androidx.compose.material3.Button(onClick = { $onClick }) { androidx.compose.material3.Text("$text") }"""
+
+    override fun emptyState(message: String) =
+        """    androidx.compose.material3.Text("$message")"""
+
+    override fun addButton(text: String, onClick: String) =
+        """    androidx.compose.material3.TextButton(onClick = { $onClick }) { androidx.compose.material3.Text("$text") }"""
 }
 
 /**
@@ -130,4 +177,33 @@ class WebDomBinding : ComposeBinding {
         $itemContent
     }
 }"""
+
+    override fun masterDetail(masterContent: String, detailContent: String) =
+        """org.jetbrains.compose.web.dom.Div(attrs = { style { display(org.jetbrains.compose.web.css.DisplayStyle.Flex); flexDirection(org.jetbrains.compose.web.css.FlexDirection.Row); gap(16.px) } }) {
+    // Master (list)
+    org.jetbrains.compose.web.dom.Div(attrs = { style { flex(1) } }) {
+$masterContent
+    }
+    // Detail (selected entity)
+    org.jetbrains.compose.web.dom.Div(attrs = { style { flex(1) } }) {
+$detailContent
+    }
+}"""
+
+    override fun fkLink(label: String, entityId: String, targetEntity: String, onClick: String) =
+        """    org.jetbrains.compose.web.dom.A(attrs = { onClick { $onClick }; style { cursor("pointer"); color(org.jetbrains.compose.web.css.Color.blue) } }) {
+        org.jetbrains.compose.web.dom.Text("$label: ${'$'}{$entityId} → $targetEntity")
+    }"""
+
+    override fun detailField(label: String, valueExpr: String) =
+        """    org.jetbrains.compose.web.dom.P { org.jetbrains.compose.web.dom.Text("$label: ${'$'}{$valueExpr}") }"""
+
+    override fun submitButton(text: String, onClick: String) =
+        """    org.jetbrains.compose.web.dom.Button(attrs = { onClick { $onClick } }) { org.jetbrains.compose.web.dom.Text("$text") }"""
+
+    override fun emptyState(message: String) =
+        """    org.jetbrains.compose.web.dom.P(attrs = { style { color(org.jetbrains.compose.web.css.Color.gray) } }) { org.jetbrains.compose.web.dom.Text("$message") }"""
+
+    override fun addButton(text: String, onClick: String) =
+        """    org.jetbrains.compose.web.dom.Button(attrs = { onClick { $onClick } }) { org.jetbrains.compose.web.dom.Text("$text") }"""
 }
