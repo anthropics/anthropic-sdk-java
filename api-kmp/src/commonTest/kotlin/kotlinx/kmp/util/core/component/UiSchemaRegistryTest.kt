@@ -135,6 +135,9 @@ class UiSchemaRegistryTest {
         assertEquals("+1", decoded.placeholder)
     }
 
+    
+}
+
     // === Helpers ===
 
     private fun lookup(format: String) = UiSchemaRegistry.forTypeFormat("string", format)
@@ -144,4 +147,58 @@ class UiSchemaRegistryTest {
         assertEquals(expectedInputType, m.inputType, "inputType for $format")
         assertEquals(expectedCategory, m.category, "category for $format")
     }
-}
+
+    // === maxLength → input/textarea switching ===
+
+    @Test fun short_string_stays_input() {
+        val m = UiSchemaRegistry.forTypeFormat("string", maxLength = 100)
+        assertEquals("text", m.resolvedWidget)
+    }
+
+    @Test fun long_string_upgrades_to_textarea() {
+        val m = UiSchemaRegistry.forTypeFormat("string", maxLength = 500)
+        assertEquals("textarea", m.resolvedWidget)
+    }
+
+    @Test fun vcard_note_is_textarea() {
+        assertEquals("textarea", lookup("vcard-note").resolvedWidget)
+        assertEquals(4000, lookup("vcard-note").maxLength)
+    }
+
+    @Test fun markdown_is_large_textarea() {
+        assertEquals("markdown-editor", lookup("markdown").resolvedWidget) // explicit widget not overridden
+        assertEquals(65535, lookup("markdown").maxLength)
+    }
+
+    // === SQL type resolution (PG18 / SQLDelight) ===
+
+    @Test fun jsonb_column_resolves_to_JSONB() {
+        assertEquals("JSONB", lookup("vcf").resolvedSqlType)
+        assertEquals("JSONB", lookup("json").resolvedSqlType)
+        assertEquals("JSONB", lookup("geojson").resolvedSqlType)
+    }
+
+    @Test fun integer_resolves_to_INTEGER() {
+        assertEquals("INTEGER", UiSchemaRegistry.forTypeFormat("string", "int32").resolvedSqlType)
+    }
+
+    @Test fun number_resolves_to_REAL() {
+        assertEquals("REAL", UiSchemaRegistry.forTypeFormat("string", "float").resolvedSqlType)
+    }
+
+    @Test fun boolean_resolves_to_BOOLEAN() {
+        assertEquals("BOOLEAN", UiSchemaRegistry.forTypeFormat("boolean").resolvedSqlType)
+    }
+
+    @Test fun varchar_with_maxLength() {
+        val m = UiSchemaRegistry.forTypeFormat("string", maxLength = 100)
+        assertEquals("VARCHAR(100)", m.resolvedSqlType)
+
+    @Test fun text_default_for_string() {
+        assertEquals("TEXT", UiSchemaRegistry.forTypeFormat("string").resolvedSqlType)
+    }
+
+    @Test fun date_resolves_to_TEXT() {
+        assertEquals("TEXT", lookup("date").resolvedSqlType) // ISO 8601 stored as TEXT
+    }
+    }

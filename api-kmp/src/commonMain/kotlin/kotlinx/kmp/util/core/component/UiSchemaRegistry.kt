@@ -42,7 +42,47 @@ data class UiFieldMapping(
     val unit: String? = null,
     /** Currency code (for monetary types) */
     val currencyCode: String? = null,
-)
+    /** Max string length — switches input→textarea when >255 */
+    val maxLength: Int? = null,
+    /** Min string length */
+    val minLength: Int? = null,
+    /** Min/max items for array types */
+    val minItems: Int? = null,
+    val maxItems: Int? = null,
+    /** Unique items constraint (array → set semantics) */
+    val uniqueItems: Boolean = false,
+    /** Whether this field maps to a PG18 jsonb column or SQLite TEXT AS JSON */
+    val jsonbColumn: Boolean = false,
+    /** SQL column type override for DatabaseEmitter (e.g. "TEXT", "INTEGER", "JSONB") */
+    val sqlType: String? = null,
+) {
+    /** Resolved widget: auto-upgrade based on constraints */
+    val resolvedWidget: String get() = when {
+        maxLength != null && maxLength > 255 && widget in setOf("text", "input") -> "textarea"
+        uniqueItems && widget == "array-editor" -> "set-editor"
+        else -> widget
+    }
+
+    /** Whether this represents a set (unique items) vs list */
+    val isSet: Boolean get() = uniqueItems
+
+    /** Resolved HTML input type: textarea overrides to text (textarea is not an input type) */
+    val resolvedInputType: String get() = when {
+        resolvedWidget == "textarea" -> "text"
+        else -> inputType
+    }
+
+    /** SQL type for PG18 / SQLDelight generation */
+    val resolvedSqlType: String get() = sqlType ?: when {
+        jsonbColumn -> "JSONB"
+        inputType == "number" && step == 1.0 -> "INTEGER"
+        inputType == "number" -> "REAL"
+        inputType == "checkbox" -> "BOOLEAN"
+        inputType == "date" || inputType == "datetime-local" -> "TEXT" // ISO 8601
+        maxLength != null -> "VARCHAR($maxLength)"
+        else -> "TEXT"
+    }
+}
 
 /**
  * Master registry: OpenAPI type+format → [UiFieldMapping].
@@ -55,8 +95,17 @@ data class UiFieldMapping(
  */
 object UiSchemaRegistry {
 
-    fun forTypeFormat(type: String, format: String? = null): UiFieldMapping =
-        FORMAT_MAP[format ?: type] ?: typeDefault(type)
+    fun forTypeFormat(
+        type: String,
+        format: String? = null,
+        maxLength: Int? = null,
+        minLength: Int? = null,
+    ): UiFieldMapping {
+        val base = FORMAT_MAP[format ?: type] ?: typeDefault(type)
+        return if (maxLength != null || minLength != null) {
+            base.copy(maxLength = maxLength ?: base.maxLength, minLength = minLength ?: base.minLength)
+        } else base
+    }
 
     private fun typeDefault(type: String): UiFieldMapping = when (type) {
         "string" -> UiFieldMapping("text")
@@ -141,17 +190,17 @@ object UiSchemaRegistry {
         put("vcard-url", UiFieldMapping("url", category = "vCard"))
         put("vcard-photo", UiFieldMapping("file", widget = "image-upload", category = "vCard"))
         put("vcard-bday", UiFieldMapping("date", category = "vCard"))
-        put("vcard-note", UiFieldMapping("text", widget = "textarea", category = "vCard"))
+        put("vcard-note", UiFieldMapping("text", widget = "textarea", category = "vCard", maxLength = 4000))
         put("vcard-geo", UiFieldMapping("text", widget = "geo-picker", category = "vCard", placeholder = "lat,lng"))
         put("vcard-impp", UiFieldMapping("text", category = "vCard", placeholder = "xmpp:user@example.com"))
         put("vcard-x-socialprofile", UiFieldMapping("url", category = "vCard", placeholder = "https://twitter.com/user"))
-        put("vcf", UiFieldMapping("text", widget = "textarea", category = "vCard"))
+        put("vcf", UiFieldMapping("text", widget = "textarea", category = "vCard", jsonbColumn = true))
 
         // === iCalendar property types (RFC 5545) ===
         put("ical-dtstart", UiFieldMapping("datetime-local", category = "iCalendar"))
         put("ical-dtend", UiFieldMapping("datetime-local", category = "iCalendar"))
         put("ical-summary", UiFieldMapping("text", category = "iCalendar", placeholder = "Event title"))
-        put("ical-description", UiFieldMapping("text", widget = "textarea", category = "iCalendar"))
+        put("ical-description", UiFieldMapping("text", widget = "textarea", category = "iCalendar", maxLength = 4000))
         put("ical-location", UiFieldMapping("text", widget = "location-picker", category = "iCalendar"))
         put("ical-status", UiFieldMapping("text", widget = "select", category = "iCalendar",
             options = listOf("TENTATIVE", "CONFIRMED", "CANCELLED")))
@@ -165,13 +214,13 @@ object UiSchemaRegistry {
         put("ical-attendee", UiFieldMapping("email", widget = "attendee-editor", category = "iCalendar"))
         put("ical-organizer", UiFieldMapping("email", category = "iCalendar"))
         put("ical-priority", UiFieldMapping("number", widget = "slider", category = "iCalendar", min = 0.0, max = 9.0, step = 1.0))
-        put("ics", UiFieldMapping("text", widget = "textarea", category = "iCalendar"))
+        put("ics", UiFieldMapping("text", widget = "textarea", category = "iCalendar", jsonbColumn = true))
 
         // === Geo types ===
         put("geo", UiFieldMapping("text", widget = "geo-picker", category = "Geography", placeholder = "48.8566,2.3522"))
         put("geo-lat", UiFieldMapping("number", category = "Geography", min = -90.0, max = 90.0, step = 0.000001))
         put("geo-lng", UiFieldMapping("number", category = "Geography", min = -180.0, max = 180.0, step = 0.000001))
-        put("geojson", UiFieldMapping("text", widget = "geojson-editor", category = "Geography"))
+        put("geojson", UiFieldMapping("text", widget = "geojson-editor", category = "Geography", jsonbColumn = true))
 
         // === Person / Address ===
         put("person-name", UiFieldMapping("text", widget = "name-editor", category = "Person"))
@@ -179,9 +228,9 @@ object UiSchemaRegistry {
 
         // === Custom / Extension ===
         put("color", UiFieldMapping("color", category = "Custom"))
-        put("markdown", UiFieldMapping("text", widget = "markdown-editor", category = "Content"))
-        put("html", UiFieldMapping("text", widget = "rich-text-editor", category = "Content"))
-        put("json", UiFieldMapping("text", widget = "json-editor", category = "Data"))
+        put("markdown", UiFieldMapping("text", widget = "markdown-editor", category = "Content", maxLength = 65535))
+        put("html", UiFieldMapping("text", widget = "rich-text-editor", category = "Content", maxLength = 65535))
+        put("json", UiFieldMapping("text", widget = "json-editor", category = "Data", jsonbColumn = true))
         put("yaml", UiFieldMapping("text", widget = "code-editor", category = "Data"))
         put("xml", UiFieldMapping("text", widget = "code-editor", category = "Data"))
         put("cron", UiFieldMapping("text", widget = "cron-editor", category = "Scheduling", placeholder = "0 */5 * * *"))
