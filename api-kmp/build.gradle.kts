@@ -38,6 +38,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.10.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.10.0")
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
                 api("com.squareup.okio:okio:3.17.0")
@@ -152,7 +154,6 @@ kotlin {
         }
     }
 
-    jvmToolchain(21) // GraalVM CE via sdkman; set to match installed JDK
 
     jvm {
         testRuns["test"].executionTask.configure {
