@@ -7,7 +7,6 @@ import com.anthropic.backends.Backend
 import com.anthropic.client.AnthropicClient
 import com.anthropic.client.AnthropicClientImpl
 import kotlinx.kmp.util.core.ClientOptions
-import kotlinx.kmp.util.core.Sleeper
 import kotlinx.kmp.util.core.Timeout
 import kotlinx.kmp.util.core.http.AsyncStreamResponse
 import kotlinx.kmp.util.core.http.Headers
@@ -208,9 +207,8 @@ class AnthropicOkHttpClient private constructor() {
          *
          * Defaults to real execution delays.
          *
-         * This class takes ownership of the sleeper and closes it when closed.
          */
-        fun sleeper(sleeper: Sleeper) = apply { clientOptions.sleeper(sleeper) }
+        fun delayFn(delayFn: suspend (kotlin.time.Duration) -> Unit) = apply { clientOptions.delayFn(delayFn) }
 
         /**
          * The clock to use for operations that require timing, like retries.

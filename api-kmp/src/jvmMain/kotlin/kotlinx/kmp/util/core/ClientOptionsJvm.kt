@@ -25,8 +25,6 @@ actual fun createDefaultStreamExecutor(): Any? =
         )
     )
 
-actual fun createDefaultSleeper(): Sleeper = PhantomReachableSleeper(DefaultSleeper())
-
 actual fun shutdownStreamExecutor(executor: Any?) {
     (executor as? ExecutorService)?.shutdown()
 }

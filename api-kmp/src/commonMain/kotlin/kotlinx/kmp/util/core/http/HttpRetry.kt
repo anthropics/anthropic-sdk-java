@@ -1,6 +1,7 @@
 package kotlinx.kmp.util.core.http
 
 import kotlinx.kmp.util.core.*
+import kotlinx.coroutines.delay
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.random.Random
@@ -12,9 +13,7 @@ import kotlin.uuid.Uuid
 /**
  * Wrap an [HttpClient] with retry logic.
  *
- * Provider-agnostic retry wrapper. Semantics match ktor's `HttpRequestRetry`
- * plugin — if your HttpClient is ktor-based ([KtorHttpClient]), prefer
- * installing `HttpRequestRetry` natively instead of using this wrapper:
+ * Ktor-based clients should prefer the native `HttpRequestRetry` plugin:
  * ```kotlin
  * HttpClient { install(HttpRequestRetry) { maxRetries = 2; retryOnServerErrors() } }
  * ```
@@ -27,13 +26,16 @@ import kotlin.uuid.Uuid
  *   - honors `Retry-After` + `Retry-After-Ms` headers (numeric or RFC 1123)
  *   - honors `X-Should-Retry: true|false` server override
  *   - exponential backoff with jitter, capped at 8s
+ *
+ * @param delayFn suspend delay function — defaults to [kotlinx.coroutines.delay].
+ *   Override in tests with a recording lambda.
  */
 fun HttpClient.withRetry(
     maxRetries: Int,
-    sleeper: Sleeper,
     idempotencyHeader: String? = null,
     nowMillisProvider: () -> Long = ::currentTimeMillis,
-): HttpClient = RetryClient(this, sleeper, maxRetries, idempotencyHeader, nowMillisProvider)
+    delayFn: suspend (Duration) -> Unit = { delay(it) },
+): HttpClient = RetryClient(this, maxRetries, idempotencyHeader, nowMillisProvider, delayFn)
 
 /** Marker interface for exceptions that should always trigger a retry. */
 interface Retryable
@@ -41,10 +43,10 @@ interface Retryable
 @OptIn(ExperimentalUuidApi::class)
 private class RetryClient(
     private val delegate: HttpClient,
-    private val sleeper: Sleeper,
     private val maxRetries: Int,
     private val idempotencyHeader: String?,
     private val nowMillisProvider: () -> Long,
+    private val delayFn: suspend (Duration) -> Unit,
 ) : HttpClient {
 
     override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse {
@@ -69,7 +71,7 @@ private class RetryClient(
             }
             val backoff = getRetryBackoffDuration(retries, response)
             response?.close()
-            sleeper.sleep(backoff)
+            runBlockingCompat { delayFn(backoff) }
         }
     }
 
@@ -98,13 +100,12 @@ private class RetryClient(
             }
             val backoff = getRetryBackoffDuration(retries, response)
             response?.close()
-            sleeper.sleepSuspend(backoff)
+            delayFn(backoff)
         }
     }
 
     override fun close() {
         delegate.close()
-        sleeper.close()
     }
 
     private fun isRetryable(request: HttpRequest): Boolean = request.body?.repeatable() ?: true

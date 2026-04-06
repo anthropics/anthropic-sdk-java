@@ -16,8 +16,7 @@ import kotlin.time.Duration
 /** Create a default stream handler executor. JVM: cached thread pool. Other: no-op/null. */
 expect fun createDefaultStreamExecutor(): Any?
 
-/** Create a default wrapped sleeper. JVM: PhantomReachableSleeper(DefaultSleeper()). */
-expect fun createDefaultSleeper(): Sleeper
+
 
 /** Shut down the stream handler executor if it supports lifecycle management. */
 expect fun shutdownStreamExecutor(executor: Any?)
@@ -67,9 +66,8 @@ private constructor(
      *
      * Defaults to real execution delays.
      *
-     * This class takes ownership of the sleeper and closes it when closed.
      */
-    @get:JvmName("sleeper") val sleeper: Sleeper,
+    @get:JvmName("delayFn") val delayFn: suspend (kotlin.time.Duration) -> Unit,
     /** The time provider to use for operations that require timing, like retries. */
     @get:JvmName("nowMillisProvider") val nowMillisProvider: () -> Long,
     val baseUrl: String?,
@@ -146,7 +144,7 @@ private constructor(
         private var checkJsonVersionCompatibility: Boolean = true
         private var jsonMapper: JsonMapperType = kotlinx.kmp.util.core.jsonMapper()
         private var streamHandlerExecutor: Any? = null
-        private var sleeper: Sleeper? = null
+        private var delayFn: (suspend (kotlin.time.Duration) -> Unit)? = null
         private var nowMillisProvider: () -> Long = ::currentTimeMillis
         private var baseUrl: String? = null
         private var headers: Headers.Builder = Headers.builder()
@@ -161,7 +159,7 @@ private constructor(
             checkJsonVersionCompatibility = clientOptions.checkJsonVersionCompatibility
             jsonMapper = clientOptions.jsonMapper
             streamHandlerExecutor = clientOptions.streamHandlerExecutor
-            sleeper = clientOptions.sleeper
+            delayFn = clientOptions.delayFn
             nowMillisProvider = clientOptions.nowMillisProvider
             baseUrl = clientOptions.baseUrl
             headers = clientOptions.headers.toBuilder()
@@ -218,9 +216,8 @@ private constructor(
          *
          * Defaults to real execution delays.
          *
-         * This class takes ownership of the sleeper and closes it when closed.
-         */
-        fun sleeper(sleeper: Sleeper) = apply { this.sleeper = sleeper }
+             */
+        fun delayFn(delayFn: suspend (kotlin.time.Duration) -> Unit) = apply { this.delayFn = delayFn }
 
         /** The time provider to use for operations that require timing, like retries. */
         fun nowMillisProvider(nowMillisProvider: () -> Long) = apply { this.nowMillisProvider = nowMillisProvider }
@@ -384,7 +381,7 @@ private constructor(
         fun build(): ClientOptions {
             val httpClient = checkRequired("httpClient", httpClient)
             val streamHandlerExecutor = streamHandlerExecutor ?: createDefaultStreamExecutor()
-            val sleeper = sleeper ?: createDefaultSleeper()
+            val delayFn = delayFn ?: { duration: kotlin.time.Duration -> kotlinx.coroutines.delay(duration) }
 
             val headers = Headers.builder()
             val queryParams = QueryParams.builder()
@@ -402,11 +399,11 @@ private constructor(
 
             return ClientOptions(
                 httpClient,
-                httpClient.withRetry(maxRetries, sleeper, idempotencyHeader, nowMillisProvider),
+                httpClient.withRetry(maxRetries, idempotencyHeader, nowMillisProvider, delayFn),
                 checkJsonVersionCompatibility,
                 jsonMapper,
                 streamHandlerExecutor,
-                sleeper,
+                delayFn,
                 nowMillisProvider,
                 baseUrl,
                 headers.build(),
@@ -432,6 +429,6 @@ private constructor(
     fun close() {
         httpClient.close()
         shutdownStreamExecutor(streamHandlerExecutor)
-        sleeper.close()
+        
     }
 }

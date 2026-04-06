@@ -46,7 +46,6 @@ actual fun closeWhenPhantomReachable(observed: Any, close: () -> Unit) {
 // --- ClientOptions platform functions ---
 
 actual fun createDefaultStreamExecutor(): Any? = null
-actual fun createDefaultSleeper(): Sleeper = DefaultSleeper()
 actual fun shutdownStreamExecutor(executor: Any?) {} // no-op on JS
 actual fun wrapHttpClient(client: HttpClient): HttpClient = client // no phantom-reachable on JS
 

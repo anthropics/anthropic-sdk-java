@@ -50,7 +50,6 @@ actual fun closeWhenPhantomReachable(observed: Any, close: () -> Unit) {
 // --- ClientOptions ---
 
 actual fun createDefaultStreamExecutor(): Any? = null
-actual fun createDefaultSleeper(): Sleeper = DefaultSleeper()
 actual fun shutdownStreamExecutor(executor: Any?) {}
 actual fun wrapHttpClient(client: HttpClient): HttpClient = client
 
