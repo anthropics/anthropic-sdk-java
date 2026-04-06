@@ -12,9 +12,18 @@ import kotlin.uuid.Uuid
 /**
  * Wrap an [HttpClient] with retry logic.
  *
- * Provider-agnostic replacement for the former `RetryingHttpClient` class. Its
- * retry policy mirrors ktor's `HttpRequestRetry` plugin:
- *   - retries on 408/409/429/5xx and any `Throwable` whose type implements [Retryable]
+ * Provider-agnostic retry wrapper. Semantics match ktor's `HttpRequestRetry`
+ * plugin — if your HttpClient is ktor-based ([KtorHttpClient]), prefer
+ * installing `HttpRequestRetry` natively instead of using this wrapper:
+ * ```kotlin
+ * HttpClient { install(HttpRequestRetry) { maxRetries = 2; retryOnServerErrors() } }
+ * ```
+ *
+ * This wrapper exists for non-ktor HttpClient implementations (OkHttp, test
+ * doubles) that don't have a native ktor retry context.
+ *
+ * Policy:
+ *   - retries on 408/409/429/5xx and any `Throwable` implementing [Retryable]
  *   - honors `Retry-After` + `Retry-After-Ms` headers (numeric or RFC 1123)
  *   - honors `X-Should-Retry: true|false` server override
  *   - exponential backoff with jitter, capped at 8s
