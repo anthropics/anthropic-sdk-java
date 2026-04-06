@@ -9,7 +9,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 
 - **Migration Plan + Low-Level Design**: [`docs/KMP-CONVERSION-PLAN.md`](docs/KMP-CONVERSION-PLAN.md)
 - **Branch**: `claude/convert-to-kmp-I9zBV`
-- **188 commits** on branch, all pushed
+- **190 commits** on branch, all pushed
 
 ## Current Status
 
@@ -22,7 +22,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | api-kmp jvmTest | 2 test files (26 tests — HttpRetryTest 20 WireMock + KtorServerProtocolTest 6 JSON/SSE/WS) |
 | KMP targets | JVM ✅, JS (IR) ✅ — both compile with zero errors |
 | Native targets | linuxX64, macosX64, macosArm64 — actuals written, pending toolchain download |
-| GraalVM | CE 25.0.2 + native-image — .sdkmanrc java=25.0.2-graalce |
+| GraalVM | Oracle 25.0.2 + native-image — .sdkmanrc java=25.0.2-graal |
 | Content formats | JSON + CBOR + Protobuf via kotlinx.serialization (commonMain, all targets) |
 | java.* imports in api-kmp commonMain | **0** (zero — fully purified) |
 | Jackson imports in api-kmp commonMain | 2 (JsonSchemaValidator + ErrorType — by directive) |

@@ -636,7 +636,7 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 
 ## Current Progress (synced with branch claude/convert-to-kmp-I9zBV)
 
-### 📊 Commit Summary (188 commits since KMP migration began)
+### 📊 Commit Summary (190 commits since KMP migration began)
 
 | Theme | Commits | Status |
 |---|---|---|
@@ -658,12 +658,13 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 | Smack XEP-0054 + Bedework bridges | 4 | ✅ |
 | Architectural refactors (package moves, dedup, trimIndent) | 12 | ✅ |
 | Fixes (schema validator, RFC 5545 formats, type mappings) | 9 | ✅ |
-| **Phase 12 — commonMain purification + multi-backend JSON/CBOR/Protobuf + JS/Native + MCP + full tests** | **28** | **✅** |
+| **Phase 12 — commonMain purification + multi-backend JSON/CBOR/Protobuf + JS/Native + MCP + full tests** | **30** | **✅** |
 | Plan documentation updates | 54 | ✅ |
 
 ### 📝 Recent Commits (newest first, post-initial-migration)
 
 **Phase 12 — commonMain purification + multi-backend JSON + JS target (most recent)**
+- `04e0b8f` fix: test imports + switch to GraalVM Oracle 25.0.2 (.sdkmanrc java=25.0.2-graal)
 - `4c3f3c1` feat: CBOR + Protobuf content formats + .sdkmanrc java=25.0.2-graalce + 10 tests
 - `2da1388` test: ComposeEmitter + DatabaseEmitter tests — 6 tests (Form/List/Detail, Exposed+SQLDelight, jsonb RFC types)
 - `828b03b` test: ktor CIO server protocol tests — 6 tests: JSON GET/POST, SSE stream, WebSocket echo + JSON streaming
