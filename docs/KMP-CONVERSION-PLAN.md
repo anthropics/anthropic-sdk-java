@@ -628,15 +628,15 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 |---|---|---|---|
 | **Wire** 5.3.1 | `@WireRpc`, `@WireField`, `GrpcClient`, `GrpcCall`, `GrpcStreamingCall`, proto codegen | Custom `ProtoAnnotations.kt` (@Rpc, @ProtoService, @Streaming, @ProtoField) | ✅ `b02f3c6` — dependency added, custom annotations deleted |
 | **okio** 3.17.0 | `BufferedSource`, `BufferedSink`, `Buffer`, `Source`, `FileSystem` | `java.io.InputStream`, `OutputStream`, `ByteArrayI/O` | ✅ `7606ae7` — core HTTP interfaces migrated |
-| **ktor-client** 3.4.2 | `HttpClient`, `HttpRequestRetry`, SSE, `ContentNegotiation`, `MultiPartFormDataContent` | `RetryingHttpClient`, `SseHandler`, `MultipartBody`, custom `HttpClient` wrapper | 🔲 Phase 9 |
-| **kotlinx.serialization** 1.10.0 | `Json`, `@Serializable`, MsgPack, Protobuf, CBOR | Jackson `ObjectMapper`, `BaseSerializer/Deserializer` | 🔲 Phase 9 |
-| **kotlinx.coroutines** 1.10.2 | `suspend`, `Flow`, `Deferred`, `CoroutineDispatcher`, `delay()` | `CompletableFuture`, `Executor`, `Timer/TimerTask` | Partial ✅ (delay `23ec675`, Flow for Stream), 🔲 suspend conversion |
+| **ktor-client** 3.4.2 | `HttpClient`, `HttpRequestRetry`, SSE, `ContentNegotiation`, `MultiPartFormDataContent` | `RetryingHttpClient`, `SseHandler`, `MultipartBody`, custom `HttpClient` wrapper | ✅ `d0bf076` — RetryingHttpClient replaced with HttpClient.withRetry extension + Retryable marker |
+| **kotlinx.serialization** 1.10.0 | `Json`, `@Serializable`, MsgPack, Protobuf, CBOR | Jackson `ObjectMapper`, `BaseSerializer/Deserializer` | ✅ `94076fb` — KotlinxApiJsonBackend + JsonValueSerializer + JsonFieldSerializer; Jackson typealiases in kotlinx.kmp.util.core.json |
+| **kotlinx.coroutines** 1.10.2 | `suspend`, `Flow`, `Deferred`, `CoroutineDispatcher`, `delay()` | `CompletableFuture`, `Executor`, `Timer/TimerTask` | ✅ `b12470c` — executeAsync/sleepAsync moved to jvmMain extensions; commonMain uses suspend only |
 
 ---
 
 ## Current Progress (synced with branch claude/convert-to-kmp-I9zBV)
 
-### 📊 Commit Summary (158 commits since KMP migration began)
+### 📊 Commit Summary (172 commits since KMP migration began)
 
 | Theme | Commits | Status |
 |---|---|---|
@@ -658,11 +658,31 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 | Smack XEP-0054 + Bedework bridges | 4 | ✅ |
 | Architectural refactors (package moves, dedup, trimIndent) | 12 | ✅ |
 | Fixes (schema validator, RFC 5545 formats, type mappings) | 9 | ✅ |
-| Plan documentation updates | 53 | ✅ |
+| **Phase 12 — commonMain purification + multi-backend JSON** | **12** | **✅** |
+| Plan documentation updates | 54 | ✅ |
 
 ### 📝 Recent Commits (newest first, post-initial-migration)
 
-**Phase 10 — Full RFC stack + Principal (most recent)**
+**Phase 12 — commonMain purification + multi-backend JSON (most recent)**
+- `94076fb` feat: KotlinxApiJsonBackend + JsonValue↔JsonElement serializers (16 new tests)
+- `c422ed2` refactor: Jackson runtime typealiases (ObjectCodec, JsonNode, JsonGenerator, SerializerProvider) + inline annotation rewrites (~590 files)
+- `342c78b` refactor: Jackson annotation typealiases in kotlinx.kmp.util.core.json (~440 files)
+- `b12470c` refactor: **zero java.\* imports in api-kmp commonMain** — CompletableFuture/Executor→jvmMain extensions, Clock→nowMillisProvider, IOException→Retryable marker
+- `500fea9` refactor: move 6 Jackson handlers/bodies to jvmMain (ErrorHandler, JsonHandler, JsonlHandler, SseHandler, SseMessage, HttpRequestBodies)
+- `94b2536` refactor: Jackson cluster (BaseSerializer/BaseDeserializer/ObjectMappers/ValuesJvm) to jvmMain; expect/actual jsonMapper + ApiJsonBackend + checkJsonVersionCompatibility
+- `5536687` refactor: HttpRetryTest via ClientOptions config; drop "java-" from idempotency prefix; add idempotencyHeader to ClientOptions.Builder
+- `54a3f9f` refactor: rename Anthropic\*Exception → Api\*Exception in kotlinx.kmp.util.core.errors (518 files)
+- `c2d1ba5` test: restore HttpRetryTest using HttpClient.withRetry + KtorHttpClient (20 WireMock tests)
+- `d0bf076` refactor: replace RetryingHttpClient class with HttpClient.withRetry extension + Retryable marker interface (-628 lines)
+- `95b96e4` refactor: move entire com.anthropic.core + com.anthropic.errors + ErrorType to api-kmp (65 file renames, 715 files touched)
+- `66d982f` refactor: move Values/ValuesJvm/Utils + Jackson infra to api-kmp as kotlinx.kmp.util.core; AnthropicInvalidDataException→IllegalStateException
+
+**Phase 11 — api-kmp as vendor-agnostic LLM runtime**
+- `6dc5566` refactor: data-driven LLM provider client + TagGroupedEmitter base — 529 line reduction
+- `88c5d57` feat: media-gen providers + multipart file upload
+- `e30ecd5` feat: Phase 11 — api-kmp as vendor-agnostic LLM runtime (ktor + Camel + MCP)
+
+**Phase 10 — Full RFC stack + Principal**
 - `a010adc` fix: JSON schema validator allow 'default' keyword + RFC 5545 components
 - `91e9e57` feat: VCardContact set views + dedup + predefined proto types in api-gen
 - `1676e88` feat: CalDAV + Principal + jCard/jCal + Bedework/Smack + multi-locale tests

@@ -9,21 +9,28 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 
 - **Migration Plan + Low-Level Design**: [`docs/KMP-CONVERSION-PLAN.md`](docs/KMP-CONVERSION-PLAN.md)
 - **Branch**: `claude/convert-to-kmp-I9zBV`
-- **115 commits** on branch, all pushed
+- **172 commits** on branch, all pushed
 
 ## Current Status
 
 | Metric | Value |
 |---|---|
-| Files in commonMain | 615 (608 com.anthropic + 7 kotlinx.kmp.util) |
-| Files in jvmMain | 9 (Platform, PlatformTime, Properties, PhantomReachable, ServiceExceptions, Optional, Functional, AsyncJvm) |
-| KMP targets | JVM ✅, JS (IR) 🔲 compiling stubs |
-| java.* imports in core | 42 (standard Java patterns — kept as-is, stubs for non-JVM) |
-| JVM tests | 2,682 pass |
-| commonTest tests | 66 (KmpOptional) |
-| api-kmp module | 71 commonMain + 12 jvmMain + 7 test files |
+| Files in anthropic-java-core commonMain | 540 (models, services, helpers, client) |
+| api-kmp commonMain | 122 files (kotlinx.kmp.util.core — HTTP, JSON, errors, paging, platform) |
+| api-kmp jvmMain | 51 files (Jackson adapters, JVM handlers, async extensions) |
+| api-kmp commonTest | 3 test files (82 tests — KmpOptional, KotlinxApiJsonBackend, JsonValueSerializer) |
+| api-kmp jvmTest | 1 test file (20 tests — HttpRetryTest WireMock) |
+| KMP targets | JVM ✅, JS (IR) 🔲 |
+| java.* imports in api-kmp commonMain | **0** (zero — fully purified) |
+| Jackson imports in api-kmp commonMain | 2 (JsonSchemaValidator + ErrorType — by directive) |
+| Jackson annotation layer | `kotlinx.kmp.util.core.json.*` typealiases — ~600 model files rewritten |
+| JSON backends | JacksonApiJsonBackend (JVM) + KotlinxApiJsonBackend (commonMain) |
+| Error classes | `Api*Exception` (renamed from `Anthropic*Exception`) in `kotlinx.kmp.util.core.errors` |
+| Retry | `HttpClient.withRetry` extension + `Retryable` marker (deleted `RetryingHttpClient`) |
+| HttpClient interface | commonMain: `execute()` + `executeSuspend()` only; JVM extension: `executeAsync()` |
+| Sleeper interface | commonMain: `sleep()` + `sleepSuspend()` only; JVM extension: `sleepAsync()` |
 | api-gen | ✅ Generates KMP Kotlin from OpenAPI — tested with Petstore + Amazon SP-API |
-| Petstore tests | 5 WireMock tests, 0 failures — generated models verified end-to-end |
+| Petstore tests | 5 WireMock tests, 0 failures |
 
 ## Plan Structure — Where to Find What
 
@@ -41,12 +48,24 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | Petstore WireMock tests | — | 5 tests pass: GET/POST Pet, List, Inventory, Category |
 | Ktor extensions | — | HeadersBuilder/ParametersBuilder + KmpValue support |
 
+### ✅ Phase 12 — commonMain purification + multi-backend JSON
+| Section | What |
+|---|---|
+| Core/errors/ErrorType to api-kmp | `66d982f` `95b96e4` — entire `com.anthropic.core.*` + `com.anthropic.errors.*` → `kotlinx.kmp.util.core` (65 file renames) |
+| RetryingHttpClient deleted | `d0bf076` — replaced with `HttpClient.withRetry` extension + `Retryable` marker |
+| Api*Exception rename | `54a3f9f` — `Anthropic*Exception` → `Api*Exception` (518 files) |
+| Zero java.\* in commonMain | `b12470c` — CompletableFuture/Executor/Clock all moved to jvmMain extensions |
+| Jackson → jvmMain + typealiases | `94b2536` `500fea9` — adapters in jvmMain; `kotlinx.kmp.util.core.json.*` typealiases for annotations + runtime types |
+| Model import rewrite | `342c78b` `c422ed2` — ~600 model files → `kotlinx.kmp.util.core.json.*` imports |
+| KotlinxApiJsonBackend | `94076fb` — kotlinx.serialization backend + JsonValue↔JsonElement serializers (16 tests) |
+| HttpRetryTest restored | `c2d1ba5` `5536687` — 20 WireMock tests via ClientOptions config |
+
 ### 🔲 Remaining Work
 | Section | Line | What |
 |---|---|---|
-| GAPS — 22 core files | L1267 | Phase 0-4 tables with ✅/🔲 per file |
-| GAPS — 730 lines custom code | L1567 | RetryingHttpClient, MultipartBody, SseHandler to delete |
 | GAPS — MCP SDK Integration | L1333 | Not yet added |
+| GAPS — JS/Native targets | — | Add js() + native() targets to api-kmp build |
+| GAPS — @Serializable on models | — | Add @Serializable alongside @JsonProperty for kotlinx backend |
 
 ### Low-Level Designs
 | Section | Line | Commit | What |
@@ -108,16 +127,18 @@ by the stable lib that implements the spec (ktor, Wire, wasmtime).
 
 ### Decisions
 
-1. **Keep standard annotations** — Jackson (`@JsonProperty`, `@JsonCreator`, etc.) and kotlin.jvm (`@JvmStatic`, `@JvmName`, etc.) are standard Java best practices. They work on JVM, are ignored on non-JVM. **No code migration needed.**
-2. **Native typealiases, not code migration** — `expect/actual typealias` for types that need KMP compat (Optional → java.util.Optional on JVM, Function → java.util.function.Function on JVM). **Zero model file changes.**
+1. **Jackson annotations via typealias layer** — `kotlinx.kmp.util.core.json.JsonProperty` etc. are typealiases to Jackson on JVM. Model files import from our package, not from Jackson directly. To swap to kotlinx.serialization, change typealiases — **zero model file changes**.
+2. **Native typealiases, not code migration** — `expect/actual typealias` for types that need KMP compat (Optional → java.util.Optional on JVM, Function → java.util.function.Function on JVM, JsonMapperType → Jackson JsonMapper on JVM). **Zero model file changes.**
 3. **Standard specs for config** — OpenAPI, AsyncAPI, gRPC, WASM define tools + security. No proprietary config format, no custom annotations.
 4. **Only stable libs are secured** — ktor, Wire, okio, kotlinx.coroutines. Custom wrappers are security liabilities.
 5. **Don't duplicate stable libs** — use ktor/Wire/okio/kotlinx directly
 6. **`kotlinx.kmp.util.*`** — generic KMP utilities (Optional, functional interfaces)
 7. **JsonField/JsonValue = Wire field semantics** — format-agnostic, not JSON-specific
-8. **Additive suspend, not replace** — `executeSuspend()` added with default impl alongside existing `CompletableFuture` methods. Zero breaking changes. Services/models stay as-is.
-9. **Flow replaces Stream** — `stream()` returns `Flow<T>` on all platforms
-10. **JS/Native stubs** — non-JVM targets get compile-only stubs for java.*/Jackson/kotlin.jvm in `jsMain`. Zero commonMain changes.
+8. **commonMain is pure Kotlin** — zero `java.*` imports in api-kmp commonMain. JVM-only types (`CompletableFuture`, `Executor`, `Clock`, `Jackson`) live in jvmMain only. Common code uses `suspend fun`, `kotlinx.datetime`, `ApiJsonBackend`.
+9. **Dual JSON backend** — `JacksonApiJsonBackend` (jvmMain) + `KotlinxApiJsonBackend` (commonMain). Both implement `ApiJsonBackend` open class. Jackson for backward compat on JVM; kotlinx.serialization for cross-platform.
+10. **executeAsync is JVM extension, not interface** — `HttpClient` interface has only `execute()` + `executeSuspend()`. JVM gets `executeAsync()` as an extension function returning `CompletableFuture`.
+11. **Flow replaces Stream** — `stream()` returns `Flow<T>` on all platforms.
+12. **Retryable marker, not IOException check** — `HttpClient.withRetry` retries on any `Throwable` implementing `Retryable` interface. `ApiIoException` + `ApiRetryableException` implement it. Provider-neutral.
 
 ### What stays, what gets typealiased, what's NOT migrated
 
@@ -127,10 +148,12 @@ by the stable lib that implements the spec (ktor, Wire, wasmtime).
 | kotlin.jvm annotations (`@JvmStatic` etc.) | **Keep** — standard, JVM bytecode, ignored on non-JVM | None |
 | `java.util.Optional<T>` | **typealias** → `expect class Optional` in commonMain | None — same API |
 | `java.util.function.*` | **typealias** → `expect fun interface` in commonMain | None — same API |
-| Jackson core (`JsonMapper`, serializers) | **Keep in commonMain** — jar is a dependency | None |
-| `java.util.concurrent.CompletableFuture` | **Keep** — additive `executeSuspend()` alongside, stubs for non-JVM | None |
+| Jackson annotations (`@JsonProperty` etc.) | **typealias** → `kotlinx.kmp.util.core.json.JsonProperty` (resolves to Jackson on JVM) | ✅ Done — ~600 model files rewritten |
+| Jackson runtime (`JsonMapper`, serializers) | **jvmMain only** — expect/actual `jsonMapper()` + `ApiJsonBackend` | ✅ Done — `JacksonApiJsonBackend` in jvmMain |
+| `java.util.concurrent.CompletableFuture` | **jvmMain extension** — `HttpClient.executeAsync()` as JVM ext, not interface | ✅ Done — commonMain suspend-only |
+| `java.time.Clock` | **Replaced** — `nowMillisProvider: () -> Long` in ClientOptions | ✅ Done |
 | `java.io.InputStream/OutputStream` | **okio** `BufferedSource/BufferedSink` | ✅ Done (core interfaces) |
-| `java.time.*`, `java.io.*`, `java.nio.*` | **Keep** — stubs for non-JVM compilation | None |
+| `java.util.concurrent.Executor` | **jvmMain** — `createDefaultStreamExecutor()` expect/actual | ✅ Done |
 | Wire `@WireRpc`, `@WireField` | **Use directly** — standard proto lib | None |
 
 ### How any service becomes a secure tool
@@ -154,23 +177,57 @@ Security comes from the spec + the stable lib enforcing it:
 
 All paths relative to `anthropic-java-core/src/`.
 
-### Core Types (Wire-style field containers)
+### Core Types (Wire-style field containers) — all in api-kmp
 | Class | Location |
 |---|---|
-| `sealed class JsonField<T>` | `commonMain/.../core/Values.kt:5` |
-| `sealed class JsonValue` | `commonMain/.../core/Values.kt:86` |
-| `class KnownValue<T>` | `commonMain/.../core/Values.kt:119` |
-| `class JsonMissing` | `commonMain/.../core/Values.kt:127` |
-| `class JsonNull` | `commonMain/.../core/Values.kt:132` |
+| `sealed class JsonField<T>` | `api-kmp/commonMain/.../core/Values.kt` |
+| `sealed class JsonValue` | `api-kmp/commonMain/.../core/Values.kt` |
+| `class KnownValue<T>` | `api-kmp/commonMain/.../core/Values.kt` |
+| `class JsonMissing` | `api-kmp/commonMain/.../core/Values.kt` |
+| `class JsonNull` | `api-kmp/commonMain/.../core/Values.kt` |
 
-### HTTP Interfaces (okio-based)
+### HTTP Interfaces (okio-based) — all in api-kmp
 | Interface | Location | Key Method |
 |---|---|---|
-| `interface HttpClient` | `commonMain/.../core/http/HttpClient.kt:6` | `execute()`, `executeAsync()` |
-| `interface HttpResponse` | `commonMain/.../core/http/HttpResponse.kt:5` | `body(): BufferedSource` |
-| `interface HttpRequestBody` | `commonMain/.../core/http/HttpRequestBody.kt:5` | `writeTo(sink: BufferedSink)` |
-| `interface StreamResponse<T>` | `commonMain/.../core/http/StreamResponse.kt:6` | `stream(): Flow<T>` |
-| `interface HttpResponseFor<T>` | `commonMain/.../core/http/HttpResponseFor.kt:5` | `parse(): T` |
+| `interface HttpClient` | `api-kmp/commonMain/.../core/http/HttpClient.kt` | `execute()`, `executeSuspend()` |
+| `fun HttpClient.executeAsync()` | `api-kmp/jvmMain/.../core/http/HttpClientJvm.kt` | JVM extension → `CompletableFuture` |
+| `fun HttpClient.withRetry()` | `api-kmp/commonMain/.../core/http/HttpRetry.kt` | Retry wrapper with `Retryable` marker |
+| `interface HttpResponse` | `api-kmp/commonMain/.../core/http/HttpResponse.kt` | `body(): BufferedSource` |
+| `interface HttpRequestBody` | `api-kmp/commonMain/.../core/http/HttpRequestBody.kt` | `writeTo(sink: BufferedSink)` |
+| `interface StreamResponse<T>` | `api-kmp/commonMain/.../core/http/StreamResponse.kt` | `stream(): Flow<T>` |
+| `interface HttpResponseFor<T>` | `api-kmp/commonMain/.../core/http/HttpResponseFor.kt` | `parse(): T` |
+
+### JSON Backend (multi-platform)
+| Class | Location | What |
+|---|---|---|
+| `open class ApiJsonBackend` | `api-kmp/commonMain/.../core/ObjectMappers.kt` | Abstract backend: `encodeToString()`, `decodeFromString()`, `encodePretty()` |
+| `expect fun jsonMapper()` | `api-kmp/commonMain/.../core/ObjectMappers.kt` | Platform mapper factory |
+| `class JacksonApiJsonBackend` | `api-kmp/jvmMain/.../core/ObjectMappersJvm.kt` | JVM: delegates to Jackson `JsonMapper` |
+| `class KotlinxApiJsonBackend` | `api-kmp/commonMain/.../core/json/KotlinxApiJsonBackend.kt` | Multi-platform: kotlinx.serialization `Json` |
+| `object JsonValueSerializer` | `api-kmp/commonMain/.../core/json/BaseKSerializer.kt` | `KSerializer<JsonValue>` ↔ `JsonElement` bridge |
+| `class JsonFieldSerializer<T>` | `api-kmp/commonMain/.../core/json/BaseKSerializer.kt` | `KSerializer<JsonField<T>>` |
+| `fun toJsonElement(JsonValue)` | `api-kmp/commonMain/.../core/json/BaseKSerializer.kt` | SDK JsonValue → kotlinx JsonElement |
+| `fun fromJsonElement(JsonElement)` | `api-kmp/commonMain/.../core/json/BaseKSerializer.kt` | kotlinx JsonElement → SDK JsonValue |
+
+### Jackson Annotation Typealiases
+| Typealias | Resolves To (JVM) | Location |
+|---|---|---|
+| `JsonProperty` | `com.fasterxml.jackson.annotation.JsonProperty` | `api-kmp/commonMain/.../core/json/Annotations.kt` |
+| `JsonCreator` / `JsonCreatorMode` | `com.fasterxml.jackson.annotation.JsonCreator` / `.Mode` | same |
+| `JsonAnyGetter` / `JsonAnySetter` | `com.fasterxml.jackson.annotation.*` | same |
+| `JsonDeserialize` / `JsonSerialize` | `com.fasterxml.jackson.databind.annotation.*` | same |
+| `ObjectCodec` / `JsonNode` / `JsonGenerator` / `SerializerProvider` | `com.fasterxml.jackson.core/databind.*` | same |
+
+### Error Classes — api-kmp kotlinx.kmp.util.core.errors
+| Class | What |
+|---|---|
+| `ApiException` | Base (was `AnthropicException`) |
+| `ApiInvalidDataException` | Data validation (was `AnthropicInvalidDataException`) |
+| `ApiIoException` | I/O + implements `Retryable` |
+| `ApiRetryableException` | Generic retryable + implements `Retryable` |
+| `ApiServiceException` | HTTP error with status code + body |
+| `BadRequestException` / `UnauthorizedException` / etc. | Specific HTTP status |
+| `ErrorType` | Enum of API error types |
 
 ### Optional (expect/actual — kotlinx.kmp.util.optional)
 | Declaration | Location |
