@@ -1,0 +1,74 @@
+name: KMP CI
+on:
+  push:
+    branches: [claude/convert-to-kmp-*]
+  pull_request:
+    branches: [main]
+
+env:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+jobs:
+  build-jvm:
+    name: JVM Build + Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install sdkman + GraalVM
+        run: |
+          curl -s "https://get.sdkman.io" | bash
+          source "$HOME/.sdkman/bin/sdkman-init.sh"
+          sdk install java 25.0.2-graal
+          sdk use java 25.0.2-graal
+          java -version
+          native-image --version
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Build api-kmp (JVM + JS)
+        run: |
+          source "$HOME/.sdkman/bin/sdkman-init.sh"
+          sdk use java 25.0.2-graal
+          ./gradlew :api-kmp:compileKotlinJvm :api-kmp:compileKotlinJs --no-configuration-cache
+
+      - name: Test api-kmp (JVM)
+        run: |
+          source "$HOME/.sdkman/bin/sdkman-init.sh"
+          sdk use java 25.0.2-graal
+          ./gradlew :api-kmp:jvmTest --no-configuration-cache
+
+      - name: Test api-kmp (JS Node)
+        run: |
+          source "$HOME/.sdkman/bin/sdkman-init.sh"
+          sdk use java 25.0.2-graal
+          ./gradlew :api-kmp:jsNodeTest --no-configuration-cache
+
+      - name: Build anthropic-java-core
+        run: |
+          source "$HOME/.sdkman/bin/sdkman-init.sh"
+          sdk use java 25.0.2-graal
+          ./gradlew :anthropic-java-core:compileKotlinJvm :anthropic-java-client-okhttp:compileKotlin --no-configuration-cache
+
+      - name: Test anthropic-java-core
+        run: |
+          source "$HOME/.sdkman/bin/sdkman-init.sh"
+          sdk use java 25.0.2-graal
+          SKIP_MOCK_TESTS=true ./gradlew :anthropic-java-core:jvmTest --no-configuration-cache
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-jvm
+          path: |
+            api-kmp/build/reports/tests/
+            anthropic-java-core/build/reports/tests/

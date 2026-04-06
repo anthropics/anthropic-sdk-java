@@ -28,6 +28,9 @@ icu4j = "76.1"
 fabrikt = "26.1.0"
 kotlin-faker = "1.16.0"
 koin = "4.0.4"
+mcp-sdk = "0.11.0"
+msgpack = "0.5.6"
+graalvm = "25.0.2"
 
 [libraries]
 # Kotlin
@@ -92,6 +95,12 @@ assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-junit = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito-kotlin" }
+
+# KMP
+kotlinx-serialization-cbor = { module = "org.jetbrains.kotlinx:kotlinx-serialization-cbor", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
+mcp-sdk = { module = "io.modelcontextprotocol:kotlin-sdk", version.ref = "mcp-sdk" }
+msgpack = { module = "com.ensarsarajcic.kotlinx:serialization-msgpack", version.ref = "msgpack" }
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

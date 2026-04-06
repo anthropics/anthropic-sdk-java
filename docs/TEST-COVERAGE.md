@@ -4,10 +4,10 @@
 
 | Category | Tests | JVM | JS (Node) | Native |
 |---|---|---|---|---|
-| **Unit** (commonTest) | 116 | ✅ | ✅ | pending |
+| **Unit** (commonTest) | 120 | ✅ | ✅ | pending |
 | **Infrastructure** (jvmTest) | 16 | ✅ | — | — |
 | **Code Generation** (test) | 45 | ✅ | — | — |
-| **Total** | **177** | ✅ | ✅ | pending |
+| **Total** | **181** | ✅ | ✅ | pending |
 
 ```plantuml
 @startuml
@@ -96,6 +96,13 @@ SDK `JsonValue` ↔ kotlinx `JsonElement` bridge:
 - null, boolean, number, string, array, object round-trips
 - nested object round-trip
 - `fromJsonElement` primitive type detection
+
+### PatchEventTest — 4 tests
+Component mutation events (JSON Patch, RFC 6902):
+- `patchOperation_creation` — replace op with path + value
+- `patchOperation_serialization` — round-trip via kotlinx.serialization
+- `patchOperation_move` — move op with from field
+- `patchOperation_remove` — remove op (no value)
 
 ### McpTypesTest — 5 tests
 Provider-agnostic MCP tool definitions:
@@ -228,7 +235,7 @@ end note
 |---|---|---|
 | `kotlinx.kmp.util.async` | 1 | `KmpAsync.kt` — expect declarations only, tested indirectly via HttpRetryTest |
 | `kotlinx.kmp.util.core.annotations` | 1 | `Annotations.kt` — annotation-only file, no runtime logic |
-| `kotlinx.kmp.util.core.component` | 2 | `Component.kt` + `PatchEvent.kt` — tested via ComponentEmitter in gen tests |
+| `kotlinx.kmp.util.core.component` | 2 | `Component.kt` (interface) + `PatchEvent.kt` ✅ direct test (PatchEventTest 4 tests) |
 | `kotlinx.kmp.util.core.handlers` | 1 | `StreamHandler.kt` — tested indirectly via ktor server protocol tests |
 
 ## Coverage by Subsystem
