@@ -20,10 +20,10 @@ interface Backend {
 
     /**
      * Prepares the request for use by the backend service. Changes may be made to the request to
-     * adapt it for backends other than the default Anthropic backend.
+     * adapt it for backends other than the default backend.
      *
      * Changes may be made to the headers, path segments, query parameters, and body content to suit
-     * the requirements of the backend where they differ from the default Anthropic backend. All
+     * the requirements of the backend where they differ from the default backend. All
      * changes that may affect the resolution of the full URL for the request _must_ be made by this
      * method.
      *
@@ -54,7 +54,7 @@ interface Backend {
 
     /**
      * Prepares the response returned by the backend service. This allows changes to be made to the
-     * response to adapt it for backend services other than the default Anthropic backend service.
+     * response to adapt it for backend services other than the default backend service.
      * The adaptations make the response appear to come from that default Anthropic backend.
      *
      * If no changes are required, the given response can be returned unchanged. This is the

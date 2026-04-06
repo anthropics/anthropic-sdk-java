@@ -219,6 +219,8 @@ class GraphqlEmitter : ProtocolEmitter {
 class McpEmitter : ProtocolEmitter {
     override val protocol = "mcp"
 
+    private val mutatingMethods = setOf("POST", "PUT", "PATCH")
+
     override fun emit(spec: ParsedSpec, pkg: String, outputDir: File) {
         val mcpDir = File(outputDir, "mcp")
         mcpDir.mkdirs()
@@ -239,7 +241,7 @@ class McpEmitter : ProtocolEmitter {
     }
 
     private fun emitToolsJson(spec: ParsedSpec, dir: File) {
-        val tools = spec.paths.filter { it.value.method in setOf("POST", "PUT", "PATCH") }
+        val tools = spec.paths.filter { it.value.method in mutatingMethods }
             .map { (_, path) ->
                 buildString {
                     appendLine("{")
@@ -298,7 +300,7 @@ class McpEmitter : ProtocolEmitter {
         appendLine("        )")
         appendLine()
         // Register each POST/PUT/PATCH path as a tool
-        spec.paths.values.filter { it.method in setOf("POST", "PUT", "PATCH") }.forEach { op ->
+        spec.paths.values.filter { it.method in mutatingMethods }.forEach { op ->
             val safeOpId = op.operationId.replace(Regex("[^A-Za-z0-9_]"), "_")
             appendLine("        server.addTool(")
             appendLine("            name = \"${op.operationId}\",")

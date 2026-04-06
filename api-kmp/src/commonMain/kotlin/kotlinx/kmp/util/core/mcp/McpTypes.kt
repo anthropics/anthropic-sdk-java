@@ -1,12 +1,6 @@
 package kotlinx.kmp.util.core.mcp
 
 import kotlinx.kmp.util.core.JsonValue
-import kotlinx.kmp.util.core.JsonObject
-import kotlinx.kmp.util.core.JsonString
-import kotlinx.kmp.util.core.JsonArray
-import kotlinx.kmp.util.core.JsonNumber
-import kotlinx.kmp.util.core.JsonBoolean
-import kotlinx.kmp.util.core.JsonNull
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.json.*
