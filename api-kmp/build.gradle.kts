@@ -152,6 +152,8 @@ kotlin {
         }
     }
 
+    jvmToolchain(21) // GraalVM CE via sdkman; set to match installed JDK
+
     jvm {
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
