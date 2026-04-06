@@ -9,7 +9,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 
 - **Migration Plan + Low-Level Design**: [`docs/KMP-CONVERSION-PLAN.md`](docs/KMP-CONVERSION-PLAN.md)
 - **Branch**: `claude/convert-to-kmp-I9zBV`
-- **172 commits** on branch, all pushed
+- **174 commits** on branch, all pushed
 
 ## Current Status
 
@@ -20,7 +20,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | api-kmp jvmMain | 51 files (Jackson adapters, JVM handlers, async extensions) |
 | api-kmp commonTest | 3 test files (82 tests — KmpOptional, KotlinxApiJsonBackend, JsonValueSerializer) |
 | api-kmp jvmTest | 1 test file (20 tests — HttpRetryTest WireMock) |
-| KMP targets | JVM ✅, JS (IR) 🔲 |
+| KMP targets | JVM ✅, JS (IR) ✅ — both compile with zero errors |
 | java.* imports in api-kmp commonMain | **0** (zero — fully purified) |
 | Jackson imports in api-kmp commonMain | 2 (JsonSchemaValidator + ErrorType — by directive) |
 | Jackson annotation layer | `kotlinx.kmp.util.core.json.*` typealiases — ~600 model files rewritten |
@@ -59,13 +59,15 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | Model import rewrite | `342c78b` `c422ed2` — ~600 model files → `kotlinx.kmp.util.core.json.*` imports |
 | KotlinxApiJsonBackend | `94076fb` — kotlinx.serialization backend + JsonValue↔JsonElement serializers (16 tests) |
 | HttpRetryTest restored | `c2d1ba5` `5536687` — 20 WireMock tests via ClientOptions config |
+| JS (IR) target compiles | `5dd4364` — js(IR) { browser; nodejs } target, JS platform actuals (Optional, CompletableFuture, Executor, Atomic*), @OptionalExpectation annotations, CaseInsensitiveMap, runBlockingCompat |
 
 ### 🔲 Remaining Work
-| Section | Line | What |
-|---|---|---|
-| GAPS — MCP SDK Integration | L1333 | Not yet added |
-| GAPS — JS/Native targets | — | Add js() + native() targets to api-kmp build |
-| GAPS — @Serializable on models | — | Add @Serializable alongside @JsonProperty for kotlinx backend |
+| Section | What |
+|---|---|
+| MCP SDK Integration | Add MCP SDK dependency and create tool bridge |
+| Native target | Add native() target and native actuals |
+| Jackson AnnotationIntrospector | Bridge @OptionalExpectation annotations to Jackson runtime on JVM |
+| @Serializable on api-gen models | Extend api-gen to emit @Serializable + @SerialName for kotlinx backend |
 
 ### Low-Level Designs
 | Section | Line | Commit | What |

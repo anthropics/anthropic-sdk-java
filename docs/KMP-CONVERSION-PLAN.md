@@ -636,7 +636,7 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 
 ## Current Progress (synced with branch claude/convert-to-kmp-I9zBV)
 
-### 📊 Commit Summary (172 commits since KMP migration began)
+### 📊 Commit Summary (174 commits since KMP migration began)
 
 | Theme | Commits | Status |
 |---|---|---|
@@ -644,7 +644,7 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 | Model/HTTP/core → commonMain migration | 28 | ✅ |
 | Stable lib integration (okio, Wire, ktor) | 9 | ✅ |
 | `kotlinx.kmp.util.*` generic packages | 12 | ✅ |
-| JS target (partial — blocked on `@JvmStatic`) | 6 | 🟡 |
+| JS target | 7 | ✅ `5dd4364` — compiles with zero errors |
 | `api-gen` code generator (OpenAPI→KMP) | 18 | ✅ |
 | api-gen emitters (Compose, HTML, DB, GraphQL, gRPC, MCP, Test, Fabrikt, Faker) | 14 | ✅ |
 | Wire proto types + Google standard protos | 8 | ✅ |
@@ -658,12 +658,13 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 | Smack XEP-0054 + Bedework bridges | 4 | ✅ |
 | Architectural refactors (package moves, dedup, trimIndent) | 12 | ✅ |
 | Fixes (schema validator, RFC 5545 formats, type mappings) | 9 | ✅ |
-| **Phase 12 — commonMain purification + multi-backend JSON** | **12** | **✅** |
+| **Phase 12 — commonMain purification + multi-backend JSON + JS target** | **14** | **✅** |
 | Plan documentation updates | 54 | ✅ |
 
 ### 📝 Recent Commits (newest first, post-initial-migration)
 
-**Phase 12 — commonMain purification + multi-backend JSON (most recent)**
+**Phase 12 — commonMain purification + multi-backend JSON + JS target (most recent)**
+- `5dd4364` feat: **JS (IR) target compiles** — js(IR) { browser; nodejs }, JS platform actuals (Optional, CompletableFuture, Executor, Atomic*), @OptionalExpectation annotations, CaseInsensitiveMap, runBlockingCompat
 - `94076fb` feat: KotlinxApiJsonBackend + JsonValue↔JsonElement serializers (16 new tests)
 - `c422ed2` refactor: Jackson runtime typealiases (ObjectCodec, JsonNode, JsonGenerator, SerializerProvider) + inline annotation rewrites (~590 files)
 - `342c78b` refactor: Jackson annotation typealiases in kotlinx.kmp.util.core.json (~440 files)
