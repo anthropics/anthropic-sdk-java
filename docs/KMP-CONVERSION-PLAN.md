@@ -636,7 +636,7 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 
 ## Current Progress (synced with branch claude/convert-to-kmp-I9zBV)
 
-### 📊 Commit Summary (194 commits since KMP migration began)
+### 📊 Commit Summary (196 commits since KMP migration began)
 
 | Theme | Commits | Status |
 |---|---|---|
@@ -664,6 +664,7 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 ### 📝 Recent Commits (newest first, post-initial-migration)
 
 **Phase 12 — commonMain purification + multi-backend JSON + JS target (most recent)**
+- `cde1d3a` feat: api-gen generates full Anthropic API as KMP — 445 schemas, 47 paths, MCP tools, services (4 tests)
 - `a66376c` docs: JS/Native for anthropic-java-core NOT needed — api-gen + proto + moshi IS the KMP path
 - `90bbfc9` feat: MsgPack content format via kotlinx-serialization-msgpack — 4 wire formats (JSON/CBOR/Protobuf/MsgPack) + 12 tests
 - `04e0b8f` fix: test imports + switch to GraalVM Oracle 25.0.2 (.sdkmanrc java=25.0.2-graal)

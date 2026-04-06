@@ -9,7 +9,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 
 - **Migration Plan + Low-Level Design**: [`docs/KMP-CONVERSION-PLAN.md`](docs/KMP-CONVERSION-PLAN.md)
 - **Branch**: `claude/convert-to-kmp-I9zBV`
-- **194 commits** on branch, all pushed
+- **196 commits** on branch, all pushed
 
 ## Current Status
 
@@ -22,7 +22,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | api-kmp nativeMain | 6 files (Native platform actuals, Jackson annotation stubs) |
 | api-kmp commonTest | 5 test files (99 tests — KmpOptional 66, KotlinxApiJsonBackend 8, JsonValueSerializer 8, McpTypes 5, ContentFormats 12) |
 | api-kmp jvmTest | 2 test files (26 tests — HttpRetryTest 20 WireMock + KtorServerProtocolTest 6 JSON/SSE/WS) |
-| api-kmp test (gen) | 3 test files (20 tests — MultiProviderGenTest 14, ComposeEmitterTest 3, DatabaseEmitterTest 3) |
+| api-kmp test (gen) | 4 test files (24 tests — MultiProviderGenTest 14, ComposeEmitterTest 3, DatabaseEmitterTest 3, AnthropicApiGenTest 4) |
 | KMP targets | JVM ✅, JS (IR) ✅ — both compile with zero errors |
 | Native targets | linuxX64, macosX64, macosArm64 — actuals written, pending toolchain download |
 | GraalVM | Oracle 25.0.2 + native-image — .sdkmanrc java=25.0.2-graal |
@@ -35,8 +35,9 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | Retry | `HttpClient.withRetry` extension + `Retryable` marker (deleted `RetryingHttpClient`) |
 | HttpClient interface | commonMain: `execute()` + `executeSuspend()` only; JVM extension: `executeAsync()` |
 | Sleeper interface | commonMain: `sleep()` + `sleepSuspend()` only; JVM extension: `sleepAsync()` |
-| api-gen | ✅ Generates KMP Kotlin from OpenAPI — tested with Petstore + Amazon SP-API |
+| api-gen | ✅ Generates KMP Kotlin from OpenAPI — tested with Petstore + Amazon SP-API + **full Anthropic API (445 models)** |
 | Petstore tests | 5 WireMock tests, 0 failures |
+| Anthropic API gen | 4 tests: parse spec (445 schemas, 47 paths), generate models, services, MCP tools |
 
 ## Plan Structure — Where to Find What
 
