@@ -226,6 +226,28 @@ object UiSchemaRegistry {
         put("person-name", UiFieldMapping("text", widget = "name-editor", category = "Person"))
         put("address", UiFieldMapping("text", widget = "address-editor", category = "Person"))
 
+        // === Barcode / QR Code (qrkit integration) ===
+        // string-barcode: any string → Code 128 barcode
+        put("string-barcode", UiFieldMapping("text", widget = "barcode", category = "Barcode"))
+        // number-barcode: numeric → EAN/UPC barcode
+        put("number-barcode", UiFieldMapping("number", widget = "barcode-ean", category = "Barcode", pattern = "[0-9]+"))
+        // int-barcode: integer → Code 39 barcode (alphanumeric)
+        put("int-barcode", UiFieldMapping("number", widget = "barcode-code39", category = "Barcode", step = 1.0))
+        // uri-qrcode: any URI → QR code
+        put("uri-qrcode", UiFieldMapping("url", widget = "qrcode", category = "Barcode", placeholder = "https://"))
+        // qrcode: any string → QR code
+        put("qrcode", UiFieldMapping("text", widget = "qrcode", category = "Barcode"))
+        // ean13: already exists above as identity, add barcode widget alias
+        put("ean13-barcode", UiFieldMapping("text", widget = "barcode-ean13", category = "Barcode", pattern = "[0-9]{13}"))
+        // isbn-barcode: ISBN with barcode display
+        put("isbn-barcode", UiFieldMapping("text", widget = "barcode-isbn", category = "Barcode", pattern = "[0-9X-]+"))
+        // upc: UPC-A barcode
+        put("upc", UiFieldMapping("text", widget = "barcode-upc", category = "Barcode", pattern = "[0-9]{12}"))
+        // datamatrix: Data Matrix 2D barcode
+        put("datamatrix", UiFieldMapping("text", widget = "datamatrix", category = "Barcode"))
+        // pdf417: PDF417 2D barcode (driver's licenses, boarding passes)
+        put("pdf417", UiFieldMapping("text", widget = "pdf417", category = "Barcode"))
+
         // === Custom / Extension ===
         put("color", UiFieldMapping("color", category = "Custom"))
         put("markdown", UiFieldMapping("text", widget = "markdown-editor", category = "Content", maxLength = 65535))
