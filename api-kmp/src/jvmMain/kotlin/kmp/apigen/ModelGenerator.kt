@@ -18,6 +18,7 @@ class ModelGenerator(
     private val modelsPackage = "$basePackage.models"
     private val serializable = ClassName("kotlinx.serialization", "Serializable")
     private val serialName = ClassName("kotlinx.serialization", "SerialName")
+    private val jsonProperty = ClassName("com.fasterxml.jackson.annotation", "JsonProperty")
 
     fun generate(name: String, schema: ParsedSchema) {
         val fileSpec = when (schema) {
@@ -114,6 +115,12 @@ class ModelGenerator(
                 PropertySpec.builder(kotlinName, typeName)
                     .initializer(kotlinName)
                     .apply {
+                        // Always add @JsonProperty for Jackson compat
+                        addAnnotation(
+                            AnnotationSpec.builder(jsonProperty)
+                                .addMember("%S", propName)
+                                .build()
+                        )
                         // Add @SerialName if Kotlin name differs from JSON name
                         if (kotlinName != propName) {
                             addAnnotation(
