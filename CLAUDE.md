@@ -9,7 +9,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 
 - **Migration Plan + Low-Level Design**: [`docs/KMP-CONVERSION-PLAN.md`](docs/KMP-CONVERSION-PLAN.md)
 - **Branch**: `claude/convert-to-kmp-I9zBV`
-- **198 commits** on branch, all pushed
+- **200 commits** on branch, all pushed
 
 ## Current Status
 
@@ -140,7 +140,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | **ktor** | 3.4.2 | HttpClient, retry, SSE, multipart, content negotiation |
 | **kotlinx.serialization** | 1.10.0 | Jackson (JSON + MsgPack + Protobuf + CBOR) |
 | **kotlinx.coroutines** | 1.10.2 | CompletableFuture, Executor, Timer |
-| **MCP SDK** | 0.11.0 | Custom MCP integration |
+| **MCP SDK** | 0.11.0 | Custom MCP integration — KMP native (commonMain api dep) |
 
 ## Architecture Decisions
 
