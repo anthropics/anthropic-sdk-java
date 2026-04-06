@@ -1,4 +1,4 @@
-package kotlinx.kmp.util.core
+package com.anthropic.core
 
 import kotlinx.kmp.util.core.*
 

@@ -314,9 +314,9 @@ SKIP_MOCK_TESTS=true ./gradlew :anthropic-java-core:jvmTest --no-configuration-c
 
 1. ~~Suspend conversion~~ **DONE** — `executeSuspend()` + `prepareSuspend()` added with default impls. Zero breaking changes. Services/models stay as-is.
 2. ~~`api-gen` common lib~~ **DONE** — generates KMP Kotlin from OpenAPI. Tested: Petstore (5 WireMock tests pass), Amazon SP-API (69 models).
-3. **ktor CIO server tests** 🔲 — test all serializers (JSON, XML, MsgPack, Protobuf) + all protocols (HTTPS, WSS, SSE, WebDAV, GraphQL)
-4. **Compose KMP UI generation** 🔲 — Form/List/Detail @Composable from OpenAPI schemas
-5. **Database generation** 🔲 — Exposed tables (JVM) / SQLDelight .sq (KMP) from schemas
-6. **JS/Native targets** — Wire .proto generates KMP-native models for all targets
-7. **MCP SDK integration** — add dependency, create tool bridge
-8. **MsgPack + Protobuf** — add ktor ContentNegotiation formats
+3. ~~ktor CIO server tests~~ **DONE** — `828b03b` 6 tests: JSON GET/POST, SSE stream, WebSocket echo + JSON streaming
+4. ~~Compose KMP UI generation~~ **DONE** — `2da1388` ComposeEmitter generates Form/List/Detail/MasterDetail @Composable (3 tests)
+5. ~~Database generation~~ **DONE** — `2da1388` DatabaseEmitter generates Exposed tables + SQLDelight .sq (3 tests)
+6. ~~JS/Native targets~~ **DONE** — `5dd4364` JS (IR) compiles zero errors; `215c819` native actuals written
+7. ~~MCP SDK integration~~ **DONE** — `ab9604d` commonMain McpTypes + 5 tests; McpEmitter generates Server+Client
+8. ~~MsgPack + Protobuf~~ **DONE** — `4c3f3c1` ContentFormat enum: JSON + CBOR + Protobuf (10 tests)

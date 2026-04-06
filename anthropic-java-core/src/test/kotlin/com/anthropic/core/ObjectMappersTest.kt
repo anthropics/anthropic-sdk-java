@@ -1,4 +1,6 @@
-package kotlinx.kmp.util.core
+package com.anthropic.core
+
+import kotlinx.kmp.util.core.jsonMapper
 
 import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.ExcludeMissing

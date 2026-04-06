@@ -9,7 +9,7 @@ import kotlinx.kmp.util.core.http.Headers
 import kotlinx.kmp.util.core.jsonMapper
 import kotlinx.kmp.util.core.errors.ApiException
 import kotlinx.kmp.util.core.errors.BadRequestException
-import kotlinx.kmp.util.core.errors.errorType
+import com.anthropic.errors.errorType
 import kotlinx.kmp.util.core.errors.InternalServerException
 import kotlinx.kmp.util.core.errors.NotFoundException
 import kotlinx.kmp.util.core.errors.PermissionDeniedException

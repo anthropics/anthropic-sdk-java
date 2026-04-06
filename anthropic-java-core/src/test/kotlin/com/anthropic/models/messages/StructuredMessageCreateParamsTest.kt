@@ -1,13 +1,13 @@
 package com.anthropic.models.messages
 
-import kotlinx.kmp.util.core.DelegationWriteTestCase
+import com.anthropic.core.DelegationWriteTestCase
 import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.JsonValue
-import kotlinx.kmp.util.core.X
-import kotlinx.kmp.util.core.checkAllDelegation
-import kotlinx.kmp.util.core.checkAllDelegatorWriteFunctionsAreTested
-import kotlinx.kmp.util.core.checkOneDelegationWrite
-import kotlinx.kmp.util.core.findDelegationMethod
+import com.anthropic.core.X
+import com.anthropic.core.checkAllDelegation
+import com.anthropic.core.checkAllDelegatorWriteFunctionsAreTested
+import com.anthropic.core.checkOneDelegationWrite
+import com.anthropic.core.findDelegationMethod
 import kotlinx.kmp.util.core.http.Headers
 import kotlinx.kmp.util.core.http.QueryParams
 import com.anthropic.core.outputFormatFromClass

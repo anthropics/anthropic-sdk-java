@@ -1,16 +1,16 @@
 package com.anthropic.models.beta.messages
 
-import kotlinx.kmp.util.core.DelegationReadTestCase
-import kotlinx.kmp.util.core.JSON_FIELD
-import kotlinx.kmp.util.core.JSON_VALUE
+import com.anthropic.core.DelegationReadTestCase
+import com.anthropic.core.JSON_FIELD
+import com.anthropic.core.JSON_VALUE
 import kotlinx.kmp.util.core.JsonField
-import kotlinx.kmp.util.core.LONG
-import kotlinx.kmp.util.core.OPTIONAL
-import kotlinx.kmp.util.core.STRING
-import kotlinx.kmp.util.core.X
-import kotlinx.kmp.util.core.checkAllDelegation
-import kotlinx.kmp.util.core.checkAllDelegatorReadFunctionsAreTested
-import kotlinx.kmp.util.core.checkOneDelegationRead
+import com.anthropic.core.LONG
+import com.anthropic.core.OPTIONAL
+import com.anthropic.core.STRING
+import com.anthropic.core.X
+import com.anthropic.core.checkAllDelegation
+import com.anthropic.core.checkAllDelegatorReadFunctionsAreTested
+import com.anthropic.core.checkOneDelegationRead
 import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.anthropic.models.messages.Model
 import org.assertj.core.api.Assertions.assertThat
