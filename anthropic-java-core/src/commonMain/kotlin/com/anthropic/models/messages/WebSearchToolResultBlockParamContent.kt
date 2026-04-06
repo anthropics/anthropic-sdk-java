@@ -14,8 +14,8 @@ import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.SerializerProvider
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import kotlinx.kmp.util.core.json.JsonDeserialize
+import kotlinx.kmp.util.core.json.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotlinx.kmp.util.core.contentHash
 import java.util.Optional

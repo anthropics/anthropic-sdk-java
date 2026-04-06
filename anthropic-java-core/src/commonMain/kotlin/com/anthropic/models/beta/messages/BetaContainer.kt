@@ -11,10 +11,11 @@ import kotlinx.kmp.util.core.checkKnown
 import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.toImmutable
 import kotlinx.kmp.util.core.errors.ApiInvalidDataException
-import com.fasterxml.jackson.annotation.JsonAnyGetter
-import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
+import kotlinx.kmp.util.core.json.JsonAnyGetter
+import kotlinx.kmp.util.core.json.JsonAnySetter
+import kotlinx.kmp.util.core.json.JsonCreator
+import kotlinx.kmp.util.core.json.JsonCreatorMode
+import kotlinx.kmp.util.core.json.JsonProperty
 import java.time.OffsetDateTime
 import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
@@ -22,7 +23,7 @@ import kotlin.jvm.optionals.getOrNull
 
 /** Information about the container used in the request (for the code execution tool) */
 class BetaContainer
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
+@JsonCreator(mode = JsonCreatorMode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val expiresAt: JsonField<OffsetDateTime>,

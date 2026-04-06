@@ -4,11 +4,11 @@ import kotlinx.kmp.util.core.*
 
 import kotlinx.kmp.util.core.JsonSchemaValidator
 import kotlinx.kmp.util.core.errors.ApiInvalidDataException
-import com.fasterxml.jackson.annotation.JsonClassDescription
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.annotation.JsonPropertyDescription
-import com.fasterxml.jackson.annotation.JsonTypeName
+import kotlinx.kmp.util.core.json.JsonClassDescription
+import kotlinx.kmp.util.core.json.JsonIgnore
+import kotlinx.kmp.util.core.json.JsonProperty
+import kotlinx.kmp.util.core.json.JsonPropertyDescription
+import kotlinx.kmp.util.core.json.JsonTypeName
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode

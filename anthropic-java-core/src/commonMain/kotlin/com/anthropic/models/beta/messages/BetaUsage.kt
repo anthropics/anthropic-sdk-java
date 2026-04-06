@@ -16,16 +16,17 @@ import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.getOrThrow
 import kotlinx.kmp.util.core.toImmutable
 import kotlinx.kmp.util.core.errors.ApiInvalidDataException
-import com.fasterxml.jackson.annotation.JsonAnyGetter
-import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
+import kotlinx.kmp.util.core.json.JsonAnyGetter
+import kotlinx.kmp.util.core.json.JsonAnySetter
+import kotlinx.kmp.util.core.json.JsonCreator
+import kotlinx.kmp.util.core.json.JsonCreatorMode
+import kotlinx.kmp.util.core.json.JsonProperty
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.SerializerProvider
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import kotlinx.kmp.util.core.json.JsonDeserialize
+import kotlinx.kmp.util.core.json.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
@@ -33,7 +34,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BetaUsage
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
+@JsonCreator(mode = JsonCreatorMode.DISABLED)
 private constructor(
     private val cacheCreation: JsonField<BetaCacheCreation>,
     private val cacheCreationInputTokens: JsonField<Long>,

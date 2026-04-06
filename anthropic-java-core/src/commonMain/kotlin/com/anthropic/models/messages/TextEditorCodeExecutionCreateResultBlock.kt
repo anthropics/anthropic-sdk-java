@@ -8,14 +8,15 @@ import kotlinx.kmp.util.core.JsonMissing
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.errors.ApiInvalidDataException
-import com.fasterxml.jackson.annotation.JsonAnyGetter
-import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
+import kotlinx.kmp.util.core.json.JsonAnyGetter
+import kotlinx.kmp.util.core.json.JsonAnySetter
+import kotlinx.kmp.util.core.json.JsonCreator
+import kotlinx.kmp.util.core.json.JsonCreatorMode
+import kotlinx.kmp.util.core.json.JsonProperty
 import kotlinx.kmp.util.core.contentHash
 
 class TextEditorCodeExecutionCreateResultBlock
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
+@JsonCreator(mode = JsonCreatorMode.DISABLED)
 private constructor(
     private val isFileUpdate: JsonField<Boolean>,
     private val type: JsonValue,

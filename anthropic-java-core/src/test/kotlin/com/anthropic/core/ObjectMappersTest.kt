@@ -2,7 +2,7 @@ package kotlinx.kmp.util.core
 
 import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.ExcludeMissing
-import com.fasterxml.jackson.annotation.JsonProperty
+import kotlinx.kmp.util.core.json.JsonProperty
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.module.kotlin.readValue
 import java.time.LocalDate

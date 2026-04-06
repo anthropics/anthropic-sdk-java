@@ -17,10 +17,11 @@ import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.messages.Metadata
 import com.anthropic.models.messages.Model
-import com.fasterxml.jackson.annotation.JsonAnyGetter
-import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
+import kotlinx.kmp.util.core.json.JsonAnyGetter
+import kotlinx.kmp.util.core.json.JsonAnySetter
+import kotlinx.kmp.util.core.json.JsonCreator
+import kotlinx.kmp.util.core.json.JsonCreatorMode
+import kotlinx.kmp.util.core.json.JsonProperty
 import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
 
@@ -596,7 +597,7 @@ private constructor(
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     class Body
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    @JsonCreator(mode = JsonCreatorMode.DISABLED)
     private constructor(
         private val maxTokensToSample: JsonField<Long>,
         private val model: JsonField<Model>,

@@ -5,7 +5,7 @@ package com.anthropic.models.beta
 import kotlinx.kmp.util.core.Enum
 import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.errors.ApiInvalidDataException
-import com.fasterxml.jackson.annotation.JsonCreator
+import kotlinx.kmp.util.core.json.JsonCreator
 
 class AnthropicBeta @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 

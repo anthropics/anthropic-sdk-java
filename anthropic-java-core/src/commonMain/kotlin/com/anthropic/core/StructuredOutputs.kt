@@ -20,7 +20,7 @@ import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.anthropic.models.beta.messages.BetaJsonOutputFormat
 import com.anthropic.models.beta.messages.BetaTool
 import com.anthropic.models.messages.JsonOutputFormat
-import com.fasterxml.jackson.annotation.JsonTypeName
+import kotlinx.kmp.util.core.json.JsonTypeName
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.json.JsonMapper
