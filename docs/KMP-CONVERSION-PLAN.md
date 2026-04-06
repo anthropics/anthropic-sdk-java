@@ -636,7 +636,7 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 
 ## Current Progress (synced with branch claude/convert-to-kmp-I9zBV)
 
-### 📊 Commit Summary (174 commits since KMP migration began)
+### 📊 Commit Summary (176 commits since KMP migration began)
 
 | Theme | Commits | Status |
 |---|---|---|
@@ -658,13 +658,14 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 | Smack XEP-0054 + Bedework bridges | 4 | ✅ |
 | Architectural refactors (package moves, dedup, trimIndent) | 12 | ✅ |
 | Fixes (schema validator, RFC 5545 formats, type mappings) | 9 | ✅ |
-| **Phase 12 — commonMain purification + multi-backend JSON + JS target** | **14** | **✅** |
+| **Phase 12 — commonMain purification + multi-backend JSON + JS target** | **16** | **✅** |
 | Plan documentation updates | 54 | ✅ |
 
 ### 📝 Recent Commits (newest first, post-initial-migration)
 
 **Phase 12 — commonMain purification + multi-backend JSON + JS target (most recent)**
-- `5dd4364` feat: **JS (IR) target compiles** — js(IR) { browser; nodejs }, JS platform actuals (Optional, CompletableFuture, Executor, Atomic*), @OptionalExpectation annotations, CaseInsensitiveMap, runBlockingCompat
+- `f425ede` refactor: reuse Jackson annotations directly — JS stubs replace custom typealiases; delete Annotations.kt/JacksonTypes.kt/KmpAnnotationIntrospector; revert ~600 model imports; all tests pass
+- `5dd4364` feat: **JS (IR) target compiles** — js(IR) { browser; nodejs }, JS platform actuals (Optional, CompletableFuture, Executor, Atomic*), CaseInsensitiveMap, runBlockingCompat
 - `94076fb` feat: KotlinxApiJsonBackend + JsonValue↔JsonElement serializers (16 new tests)
 - `c422ed2` refactor: Jackson runtime typealiases (ObjectCodec, JsonNode, JsonGenerator, SerializerProvider) + inline annotation rewrites (~590 files)
 - `342c78b` refactor: Jackson annotation typealiases in kotlinx.kmp.util.core.json (~440 files)

@@ -9,7 +9,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 
 - **Migration Plan + Low-Level Design**: [`docs/KMP-CONVERSION-PLAN.md`](docs/KMP-CONVERSION-PLAN.md)
 - **Branch**: `claude/convert-to-kmp-I9zBV`
-- **174 commits** on branch, all pushed
+- **176 commits** on branch, all pushed
 
 ## Current Status
 
@@ -23,7 +23,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | KMP targets | JVM ✅, JS (IR) ✅ — both compile with zero errors |
 | java.* imports in api-kmp commonMain | **0** (zero — fully purified) |
 | Jackson imports in api-kmp commonMain | 2 (JsonSchemaValidator + ErrorType — by directive) |
-| Jackson annotation layer | `kotlinx.kmp.util.core.json.*` typealiases — ~600 model files rewritten |
+| Jackson annotations | Reused directly — JVM: real JAR; JS: stub classes in jsMain |
 | JSON backends | JacksonApiJsonBackend (JVM) + KotlinxApiJsonBackend (commonMain) |
 | Error classes | `Api*Exception` (renamed from `Anthropic*Exception`) in `kotlinx.kmp.util.core.errors` |
 | Retry | `HttpClient.withRetry` extension + `Retryable` marker (deleted `RetryingHttpClient`) |
@@ -59,14 +59,14 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | Model import rewrite | `342c78b` `c422ed2` — ~600 model files → `kotlinx.kmp.util.core.json.*` imports |
 | KotlinxApiJsonBackend | `94076fb` — kotlinx.serialization backend + JsonValue↔JsonElement serializers (16 tests) |
 | HttpRetryTest restored | `c2d1ba5` `5536687` — 20 WireMock tests via ClientOptions config |
-| JS (IR) target compiles | `5dd4364` — js(IR) { browser; nodejs } target, JS platform actuals (Optional, CompletableFuture, Executor, Atomic*), @OptionalExpectation annotations, CaseInsensitiveMap, runBlockingCompat |
+| JS (IR) target compiles | `5dd4364` — js(IR) { browser; nodejs }, JS platform actuals, CaseInsensitiveMap, runBlockingCompat |
+| Reuse Jackson annotations | `f425ede` — delete typealias layer; JS stubs in jsMain; model files import Jackson directly; all tests pass |
 
 ### 🔲 Remaining Work
 | Section | What |
 |---|---|
 | MCP SDK Integration | Add MCP SDK dependency and create tool bridge |
 | Native target | Add native() target and native actuals |
-| Jackson AnnotationIntrospector | Bridge @OptionalExpectation annotations to Jackson runtime on JVM |
 | @Serializable on api-gen models | Extend api-gen to emit @Serializable + @SerialName for kotlinx backend |
 
 ### Low-Level Designs
@@ -129,7 +129,7 @@ by the stable lib that implements the spec (ktor, Wire, wasmtime).
 
 ### Decisions
 
-1. **Jackson annotations via typealias layer** — `kotlinx.kmp.util.core.json.JsonProperty` etc. are typealiases to Jackson on JVM. Model files import from our package, not from Jackson directly. To swap to kotlinx.serialization, change typealiases — **zero model file changes**.
+1. **Reuse Jackson annotations directly** — Model files import `com.fasterxml.jackson.annotation.JsonProperty` etc. On JVM, the real Jackson JAR provides them. On JS, stub annotation classes in `jsMain/com/fasterxml/jackson/annotation/` provide compile-time compatibility. **No custom annotation layer needed.**
 2. **Native typealiases, not code migration** — `expect/actual typealias` for types that need KMP compat (Optional → java.util.Optional on JVM, Function → java.util.function.Function on JVM, JsonMapperType → Jackson JsonMapper on JVM). **Zero model file changes.**
 3. **Standard specs for config** — OpenAPI, AsyncAPI, gRPC, WASM define tools + security. No proprietary config format, no custom annotations.
 4. **Only stable libs are secured** — ktor, Wire, okio, kotlinx.coroutines. Custom wrappers are security liabilities.
