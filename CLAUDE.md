@@ -9,21 +9,22 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 
 - **Migration Plan + Low-Level Design**: [`docs/KMP-CONVERSION-PLAN.md`](docs/KMP-CONVERSION-PLAN.md)
 - **Branch**: `claude/convert-to-kmp-I9zBV`
-- **222 commits** on branch, all pushed
+- **225 commits** on branch, all pushed
 
 ## Current Status
 
 | Metric | Value |
 |---|---|
 | Files in anthropic-java-core commonMain | 540 (models, services, helpers, client) |
-| api-kmp commonMain | 125 files (kotlinx.kmp.util.core — HTTP, JSON, errors, paging, platform, component, mcp) |
+| api-kmp commonMain | 127 files (kotlinx.kmp.util.core — HTTP, JSON, errors, paging, platform, component, mcp, barcode) |
 | api-kmp jvmMain | 51 files (Jackson adapters, JVM handlers, async extensions) |
 | api-kmp jsMain | 6 files (JS platform actuals, Jackson annotation stubs) |
 | api-kmp nativeMain | 6 files (Native platform actuals, Jackson annotation stubs) |
-| api-kmp commonTest | 7 test files (123 tests — KmpOptional 66, PlatformE2eTest 17, ContentFormats 12, KotlinxApiJsonBackend 8, JsonValueSerializer 8, McpTypes 5, PatchEventTest 4) |
+| api-kmp commonTest | 11 test files (248 tests — KmpOptional 66, UiSchemaRegistry 66, BarcodeTypes 26, MenuPermission 24, PlatformE2eTest 17, ContentFormats 12, JsonForms 12, KotlinxApiJsonBackend 8, JsonValueSerializer 8, McpTypes 5, PatchEvent 4) |
+| JS Node tests | ✅ All commonTest tests pass on JS (Node) — first time JS tests run |
 | JS Node tests | ✅ All commonTest tests pass on JS (Node) — first time JS tests run |
 | api-kmp jvmTest | 2 test files (26 tests — HttpRetryTest 20 WireMock + KtorServerProtocolTest 6 JSON/SSE/WS) |
-| api-kmp test (gen) | 4 test files (24 tests — MultiProviderGenTest 14, ComposeEmitterTest 3, DatabaseEmitterTest 3, AnthropicApiGenTest 4) |
+| api-kmp test (gen) | 10 test files (84 tests — ComposeBindingTest 16, MasterDetailFkTest 15, MultiProviderGenTest 14, VCardRoundTrip 11, ComposePlaywright 8, ICalRoundTrip 6, AnthropicApiGen 5, FakerMultiLocale 3, ComposeEmitter 3, DatabaseEmitter 3) |
 | KMP targets | JVM ✅, JS (IR) ✅ — both compile with zero errors |
 | Native targets | linuxX64, macosX64, macosArm64 — actuals written, pending toolchain download |
 | GraalVM | Oracle 25.0.2 + native-image — .sdkmanrc java=25.0.2-graal |

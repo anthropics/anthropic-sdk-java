@@ -4,10 +4,10 @@
 
 | Category | Tests | JVM | JS (Node) | Native |
 |---|---|---|---|---|
-| **Unit** (commonTest) | 120 | ✅ | ✅ | pending |
+| **Unit** (commonTest) | 248 | ✅ | ✅ | pending |
 | **Infrastructure** (jvmTest) | 16 | ✅ | — | — |
-| **Code Generation** (test) | 45 | ✅ | — | — |
-| **Total** | **181** | ✅ | ✅ | pending |
+| **Code Generation** (test) | 84 | ✅ | — | — |
+| **Total** | **348** | ✅ | ✅ | pending |
 
 ```plantuml
 @startuml
@@ -104,6 +104,46 @@ Component mutation events (JSON Patch, RFC 6902):
 - `patchOperation_move` — move op with from field
 - `patchOperation_remove` — remove op (no value)
 
+### UiSchemaRegistryTest — 66 tests
+Comprehensive OpenAPI type+format → HTML input type mapping:
+- Standard formats: email→email, phone→tel, date→date, uri→url (8 tests)
+- Numeric: int32 step, double step (2 tests)
+- Financial/Identity: credit-card, isbn (2 tests)
+- Locale: currency/country/language/timezone → select (6 tests)
+- Measure: length(m)/mass(kg)/temperature(°C) with units (5 tests)
+- vCard (RFC 6350): fn, tel, email, adr, photo, bday, note, geo (8 tests)
+- iCalendar (RFC 5545): dtstart, status, partstat, role, rrule, priority (7 tests)
+- Geo: geo-picker, lat range, geojson (3 tests)
+- Custom: color, markdown, cron, json (4 tests)
+- Type defaults: string→text, integer→number, boolean→checkbox (4 tests)
+- Registry completeness (2 tests)
+- Wire format negotiation: JSON + CBOR + Protobuf + MsgPack round-trips (4 tests)
+- maxLength: short→input, long→textarea, vcard-note, markdown (4 tests)
+- SQL type resolution: JSONB, INTEGER, REAL, BOOLEAN, VARCHAR(N), TEXT (7 tests)
+
+### BarcodeTypesTest — 26 tests
+QR code / barcode symbology integration (qrkit):
+- Factory: qrCode, uriQrCode, code128, code39, ean13, upcA, isbn, dataMatrix, pdf417 (9 tests)
+- fromFormat auto-detection: all 11 format strings (11 tests)
+- UiSchemaRegistry integration: barcode widgets + category (3 tests)
+- Serialization: JSON + CBOR round-trip, symbology serial names (3 tests)
+
+### MenuPermissionTest — 24 tests
+JWT claims → menu UI permission-driven generation:
+- Parsing: full, wildcard, partial, roundTrip (4 tests)
+- Matching: exact, wildcard action/category, wrong obj/action (5 tests)
+- JWT claims: array, CSV, missing (3 tests)
+- MIME: png, puml, pdf, category fallback, wildcard (5 tests)
+- File extension, operationId (2 tests)
+- Menu tree: groups by object/action/category, wildcard leaf, serializes (5 tests)
+
+### JsonFormsSchemaTest — 12 tests
+JSON Schema + UI Schema generation + PatchEvent negotiation:
+- JSON Schema: basic, $ref, descriptions (3 tests)
+- UI Schema: vertical, FK navigation, categorized (3 tests)
+- Bundle serialization: JSON, CBOR PatchOp (2 tests)
+- PatchEvent: formFieldChanged, JSON negotiation, CBOR/Proto, compact (4 tests)
+
 ### McpTypesTest — 5 tests
 Provider-agnostic MCP tool definitions:
 - `ToolDefinition` serialization + round-trip
@@ -155,6 +195,28 @@ Multi-provider code generation:
 - Amazon SP-API: parse + generate (69 models)
 - Server URL extraction from `servers:` block
 - McpEmitter: runnable Kotlin McpServer + McpClient alongside tools.json
+
+### ComposeBindingTest — 16 tests
+Per-target Compose widget bindings + Wire proto content negotiation:
+- Material3 (6): textField, checkbox, button, textButton, listItem, layout
+- WebDOM (6): Input, CheckboxInput, HTML Button, anchor, Li, Div(flexbox)
+- Cross-binding (2): target names differ, same input → different widgets
+- Proto negotiation (2): all 4 ContentFormats, proto compact round-trip
+
+### MasterDetailFkTest — 15 tests
+Master-detail layout + FK navigation per target:
+- Layout: material3 weighted boxes, webDom flexbox row (2)
+- FK links: material3 TextButton vs webDom anchor, cross-target diff (3)
+- Detail fields: material3 Text vs webDom P (2)
+- Submit/Add/Empty: per-target (6)
+- Full scenarios: pet-owner (material3), order-product (webDom) (2)
+
+### ComposePlaywrightTest — 8 tests
+Playwright-style DOM assertions on generated Compose code:
+- Form: TextField/comment, Checkbox/comment, FK TextButton
+- List: items parameter, Detail: entity fields
+- MasterDetail: combines List + Detail
+- Multi-schema: separate files, Snapshot: full Contact form
 
 ### ComposeEmitterTest — 3 tests
 Compose Multiplatform UI generation:
@@ -235,7 +297,7 @@ end note
 |---|---|---|
 | `kotlinx.kmp.util.async` | 1 | `KmpAsync.kt` — expect declarations only, tested indirectly via HttpRetryTest |
 | `kotlinx.kmp.util.core.annotations` | 1 | `Annotations.kt` — annotation-only file, no runtime logic |
-| `kotlinx.kmp.util.core.component` | 2 | `Component.kt` (interface) + `PatchEvent.kt` ✅ direct test (PatchEventTest 4 tests) |
+| `kotlinx.kmp.util.core.component` | 6 | ✅ `PatchEventTest` 4, `JsonFormsSchemaTest` 12, `UiSchemaRegistryTest` 66, `MenuPermissionTest` 24, `BarcodeTypesTest` 26 |
 | `kotlinx.kmp.util.core.handlers` | 1 | `StreamHandler.kt` — tested indirectly via ktor server protocol tests |
 
 ## Coverage by Subsystem
@@ -250,6 +312,11 @@ end note
 | MCP tool types | 5 | via AnthropicApiGenTest |
 | Optional (KMP) | 66 | — |
 | Content formats (4) | 12 | — |
+| UI Schema registry | 66 | — |
+| Barcode/QR (qrkit) | 26 | — |
+| JWT menu permissions | 24 | — |
+| JSON Forms + PatchEvent | 12 + 4 | — |
+| Compose bindings (Material3/Web) | 16 + 15 + 8 | — |
 | Error hierarchy | 2 (in E2E) | via ErrorHandlingTest in anthropic-java-core |
 | Code generation (api-gen) | 45 | — |
 | Platform time | 1 (in E2E) | via HttpRetryTest |

@@ -636,7 +636,7 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 
 ## Current Progress (synced with branch claude/convert-to-kmp-I9zBV)
 
-### 📊 Commit Summary (216 commits since KMP migration began)
+### 📊 Commit Summary (225 commits since KMP migration began)
 
 | Theme | Commits | Status |
 |---|---|---|
