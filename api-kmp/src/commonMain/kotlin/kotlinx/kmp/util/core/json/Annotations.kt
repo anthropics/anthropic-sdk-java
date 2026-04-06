@@ -2,57 +2,103 @@
 
 package kotlinx.kmp.util.core.json
 
+import kotlin.reflect.KClass
+
 /**
- * KMP-compatible typealiases for Jackson annotations.
+ * KMP-compatible annotation declarations for JSON serialization.
  *
- * jackson-annotations is a pure metadata JAR (no JVM-only bytecode) already
- * in commonMain deps. These typealiases give model code a single stable import
- * path: `kotlinx.kmp.util.core.json.JsonProperty` instead of directly
- * `com.fasterxml.jackson.annotation.JsonProperty`.
+ * On JVM, these resolve to real Jackson annotations via actual typealias.
+ * On JS/Native, `@OptionalExpectation` silently drops them — model classes
+ * compile without annotations, and the KotlinxApiJsonBackend handles
+ * serialization via @Serializable/@SerialName instead.
  *
- * If the serialization backend changes in the future (e.g., to
- * kotlinx.serialization or Moshi), only these typealiases need updating —
- * zero model file changes.
- *
- * Usage: in model files, replace
- *   import com.fasterxml.jackson.annotation.JsonProperty
- * with
- *   import kotlinx.kmp.util.core.json.JsonProperty
+ * This design means model files can use `@JsonProperty("field_name")` on
+ * all platforms. On JVM it drives Jackson; on non-JVM it's a no-op.
  */
 
-// --- com.fasterxml.jackson.annotation ---
+// --- JSON property annotations ---
 
-typealias JsonProperty = com.fasterxml.jackson.annotation.JsonProperty
-typealias JsonCreator = com.fasterxml.jackson.annotation.JsonCreator
-typealias JsonCreatorMode = com.fasterxml.jackson.annotation.JsonCreator.Mode
-typealias JsonAnyGetter = com.fasterxml.jackson.annotation.JsonAnyGetter
-typealias JsonAnySetter = com.fasterxml.jackson.annotation.JsonAnySetter
-typealias JsonIgnore = com.fasterxml.jackson.annotation.JsonIgnore
-typealias JsonInclude = com.fasterxml.jackson.annotation.JsonInclude
-typealias JsonClassDescription = com.fasterxml.jackson.annotation.JsonClassDescription
-typealias JsonPropertyDescription = com.fasterxml.jackson.annotation.JsonPropertyDescription
-typealias JsonTypeName = com.fasterxml.jackson.annotation.JsonTypeName
-typealias JsonValue = com.fasterxml.jackson.annotation.JsonValue
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
+@Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION, AnnotationTarget.VALUE_PARAMETER,
+    AnnotationTarget.PROPERTY, AnnotationTarget.ANNOTATION_CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+expect annotation class JsonProperty(val value: String = "")
 
-// --- com.fasterxml.jackson.databind.annotation ---
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
+@Target(AnnotationTarget.CONSTRUCTOR, AnnotationTarget.FUNCTION, AnnotationTarget.FIELD)
+@Retention(AnnotationRetention.RUNTIME)
+expect annotation class JsonCreator(val mode: Int = 0)
 
-typealias JsonDeserialize = com.fasterxml.jackson.databind.annotation.JsonDeserialize
-typealias JsonSerialize = com.fasterxml.jackson.databind.annotation.JsonSerialize
+/** Constants matching Jackson's JsonCreator.Mode ordinals for use in @JsonCreator(mode = ...) */
+object JsonCreatorMode {
+    const val DEFAULT = 0
+    const val DELEGATING = 1
+    const val PROPERTIES = 2
+    const val DISABLED = 3
+}
 
-// --- com.fasterxml.jackson.module.kotlin ---
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER)
+@Retention(AnnotationRetention.RUNTIME)
+expect annotation class JsonAnyGetter()
 
-// Convenience: use inline reified function instead of typealias for TypeReference
-inline fun <reified T> jacksonTypeRef(): com.fasterxml.jackson.core.type.TypeReference<T> =
-    object : com.fasterxml.jackson.core.type.TypeReference<T>() {}
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_SETTER, AnnotationTarget.FIELD)
+@Retention(AnnotationRetention.RUNTIME)
+expect annotation class JsonAnySetter()
 
-// --- Jackson runtime types used in model (de)serializer inner classes ---
-// These are JVM-only at runtime. For future JS/Native targets, these would
-// need to be replaced with kotlinx.serialization equivalents or stubs.
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.FIELD, AnnotationTarget.VALUE_PARAMETER,
+    AnnotationTarget.PROPERTY)
+@Retention(AnnotationRetention.RUNTIME)
+expect annotation class JsonIgnore(val value: Boolean = true)
 
-typealias ObjectCodec = com.fasterxml.jackson.core.ObjectCodec
-typealias JsonNode = com.fasterxml.jackson.databind.JsonNode
-typealias JsonGenerator = com.fasterxml.jackson.core.JsonGenerator
-typealias SerializerProvider = com.fasterxml.jackson.databind.SerializerProvider
-typealias ObjectNode = com.fasterxml.jackson.databind.node.ObjectNode
-typealias ObjectMapper = com.fasterxml.jackson.databind.ObjectMapper
-typealias JsonNodeType = com.fasterxml.jackson.databind.node.JsonNodeType
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
+@Target(AnnotationTarget.CLASS, AnnotationTarget.PROPERTY, AnnotationTarget.FUNCTION,
+    AnnotationTarget.FIELD, AnnotationTarget.VALUE_PARAMETER)
+@Retention(AnnotationRetention.RUNTIME)
+expect annotation class JsonInclude()
+
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+expect annotation class JsonClassDescription(val value: String = "")
+
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
+@Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION, AnnotationTarget.VALUE_PARAMETER)
+@Retention(AnnotationRetention.RUNTIME)
+expect annotation class JsonPropertyDescription(val value: String = "")
+
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+expect annotation class JsonTypeName(val value: String = "")
+
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.FIELD)
+@Retention(AnnotationRetention.RUNTIME)
+expect annotation class JsonValue(val value: Boolean = true)
+
+// --- Serialization control annotations ---
+
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION, AnnotationTarget.FIELD)
+@Retention(AnnotationRetention.RUNTIME)
+expect annotation class JsonDeserialize(val using: KClass<*>)
+
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION, AnnotationTarget.FIELD)
+@Retention(AnnotationRetention.RUNTIME)
+expect annotation class JsonSerialize(val using: KClass<*>)

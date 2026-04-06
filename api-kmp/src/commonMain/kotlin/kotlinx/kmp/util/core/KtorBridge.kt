@@ -1,6 +1,7 @@
 @file:JvmName("KtorBridge")
 package kotlinx.kmp.util.core
 
+import kotlin.jvm.JvmName
 import kotlinx.kmp.util.core.http.Headers
 import kotlinx.kmp.util.core.http.HttpMethod
 import kotlinx.kmp.util.core.http.QueryParams

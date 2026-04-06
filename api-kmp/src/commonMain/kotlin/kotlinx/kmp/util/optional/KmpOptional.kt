@@ -2,6 +2,7 @@
 @file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 package kotlinx.kmp.util.optional
 
+import kotlin.jvm.JvmName
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
@@ -209,7 +210,7 @@ fun <K, V : Any> Iterable<Pair<K, Optional<V>>>.toOptionalMap(): Map<K, V> =
 
 /** Get all values for a key, returning empty list if absent. */
 fun <K, V> Map<K, List<V>>.getAll(key: K): List<V> =
-    getOrDefault(key, emptyList())
+    get(key) ?: emptyList()
 
 /** Get first value for a key as Optional. */
 fun <K, V : Any> Map<K, List<V>>.getFirst(key: K): Optional<V> =

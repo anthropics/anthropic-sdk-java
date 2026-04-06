@@ -32,9 +32,7 @@ expect fun <T, U> CompletableFuture<T>.cfThenComposeAsync(fn: (T) -> Completable
 expect fun <T> CompletableFuture<T>.cfWhenCompleteAsync(action: (T?, Throwable?) -> Unit, executor: Executor): CompletableFuture<T>
 
 // --- Executor ---
-expect fun interface Executor {
-    fun execute(command: Runnable)
-}
+expect interface Executor
 
 // --- AtomicReference ---
 expect class AtomicReference<V>(initialValue: V) {

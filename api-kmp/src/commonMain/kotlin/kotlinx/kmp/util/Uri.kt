@@ -1,5 +1,6 @@
 package kotlinx.kmp.util
 
+import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
 
 /**

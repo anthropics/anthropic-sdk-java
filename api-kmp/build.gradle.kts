@@ -8,16 +8,27 @@ repositories { mavenCentral() }
 
 wire {
     kotlin {
+        // Wire-generated models go to commonMain (pure data classes).
+        // gRPC services (GrpcCall, GrpcClient) go to jvmMain since
+        // wire-grpc-client is JVM-only.
         out = "src/commonMain/kotlin"
+        grpcServerCompatible = false
     }
     sourcePath {
         srcDir("src/main/proto")
         srcDir("src/test/proto")
     }
+    // Exclude gRPC service generation from proto — gRPC client is JVM-only.
+    // Generated models (message types) still land in commonMain.
+    prune("io_petstore.PetstoreService")
 }
 
 kotlin {
     jvm()
+    js(IR) {
+        browser { testTask { useMocha() } }
+        nodejs()
+    }
 
     sourceSets {
         val commonMain by getting {
@@ -27,11 +38,6 @@ kotlin {
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
                 api("com.squareup.okio:okio:3.17.0")
                 api("com.squareup.wire:wire-runtime:5.3.1")
-                api("com.squareup.wire:wire-grpc-client:5.3.1")
-                api("com.fasterxml.jackson.core:jackson-annotations:2.18.2")
-                api("com.fasterxml.jackson.core:jackson-core:2.18.2")
-                api("com.fasterxml.jackson.core:jackson-databind:2.18.2")
-                api("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
                 implementation("io.ktor:ktor-client-core:3.4.2")
                 implementation("io.ktor:ktor-client-content-negotiation:3.4.2")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:3.4.2")
@@ -43,11 +49,20 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
             }
         }
+        val jsMain by getting {
+            dependencies {
+                implementation("io.ktor:ktor-client-js:3.4.2")
+            }
+        }
         val jvmMain by getting {
             dependencies {
+                api("com.fasterxml.jackson.core:jackson-annotations:2.18.2")
+                api("com.fasterxml.jackson.core:jackson-core:2.18.2")
+                api("com.fasterxml.jackson.core:jackson-databind:2.18.2")
+                api("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
+                api("com.squareup.wire:wire-grpc-client:5.3.1")
                 implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.18.2")
                 implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2")
-                implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
                 implementation("com.github.victools:jsonschema-generator:4.38.0")
                 implementation("com.github.victools:jsonschema-module-jackson:4.38.0")
                 implementation("com.github.victools:jsonschema-module-swagger-2:4.38.0")

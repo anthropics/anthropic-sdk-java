@@ -1,6 +1,7 @@
 
 package kotlinx.kmp.util.core.handlers
 
+import kotlin.jvm.JvmSynthetic
 import kotlinx.kmp.util.core.http.HttpResponse
 import kotlinx.kmp.util.core.http.HttpResponse.Handler
 

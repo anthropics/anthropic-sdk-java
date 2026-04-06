@@ -1,6 +1,7 @@
 @file:JvmName("KtorExtensions")
 package kotlinx.kmp.util.core.http
 
+import kotlin.jvm.JvmName
 import kotlinx.kmp.util.core.JsonArray
 import kotlinx.kmp.util.core.JsonBoolean
 import kotlinx.kmp.util.core.JsonMissing

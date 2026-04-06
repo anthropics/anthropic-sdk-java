@@ -40,8 +40,8 @@ fun checkMinLength(name: String, value: String, minLength: Int): String =
 fun checkMaxLength(name: String, value: String, maxLength: Int): String =
     value.also { check(it.length <= maxLength) { "`$name` must have at most length $maxLength, but was ${it.length}" } }
 
-fun <T : Any> JsonField<T>.getOptional(name: String): java.util.Optional<@UnsafeVariance T> =
-    java.util.Optional.ofNullable(getNullable(name))
+fun <T : Any> JsonField<T>.getOptional(name: String): kotlinx.kmp.util.optional.Optional<@UnsafeVariance T> =
+    kotlinx.kmp.util.optional.optionalOfNullable(getNullable(name))
 
 fun <T : Any> checkKnown(name: String, value: JsonField<T>): T =
     value.asKnown() ?: throw IllegalStateException("`$name` is not a known type: ${value::class.simpleName}")

@@ -7,6 +7,7 @@ import io.ktor.client.statement.HttpResponse as KtorResponse
 import io.ktor.client.statement.readRawBytes
 import io.ktor.http.*
 import io.ktor.http.content.ByteArrayContent
+import kotlinx.kmp.util.core.runBlockingCompat
 import kotlinx.coroutines.*
 import okio.Buffer
 
@@ -18,7 +19,7 @@ class KtorHttpClient(
 ) : HttpClient {
 
     override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse =
-        runBlocking { executeKtor(request, requestOptions) }
+        runBlockingCompat { executeKtor(request, requestOptions) }
 
     override suspend fun executeSuspend(
         request: HttpRequest,

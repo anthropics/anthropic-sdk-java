@@ -1,5 +1,7 @@
 package kotlinx.kmp.util.core
 
+import kotlin.jvm.JvmStatic
+
 
 sealed class JsonField<out T : Any> {
 

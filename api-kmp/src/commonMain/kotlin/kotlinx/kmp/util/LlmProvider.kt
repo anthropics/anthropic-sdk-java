@@ -1,5 +1,7 @@
 package kotlinx.kmp.util
 
+import kotlin.jvm.JvmStatic
+
 /**
  * Vendor-agnostic LLM provider contract. Concrete providers supply a base URL,
  * auth scheme, default model, and request format mapping. The Wire-generated

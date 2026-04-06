@@ -2,6 +2,7 @@
 
 package kotlinx.kmp.util.core.http
 
+import kotlin.jvm.JvmStatic
 import kotlinx.kmp.util.core.JsonArray
 import kotlinx.kmp.util.core.JsonBoolean
 import kotlinx.kmp.util.core.JsonMissing
@@ -34,7 +35,7 @@ private constructor(
     class Builder internal constructor() {
 
         private val map: MutableMap<String, MutableList<String>> =
-            sortedMapOf(String.CASE_INSENSITIVE_ORDER)
+            CaseInsensitiveMap()
         private var size: Int = 0
 
         fun put(name: String, value: JsonValue): Builder = apply {
@@ -57,7 +58,7 @@ private constructor(
 
         fun put(name: String, values: Iterable<String>) = apply { values.forEach { put(name, it) } }
 
-        fun putAll(headers: Map<String, Iterable<String>>) = apply { headers.forEach(::put) }
+        fun putAll(headers: Map<String, Iterable<String>>) = apply { headers.forEach { (k, v) -> put(k, v) } }
 
         fun putAll(headers: Headers) = apply {
             headers.names().forEach { put(it, headers.values(it)) }
@@ -74,7 +75,7 @@ private constructor(
         }
 
         fun replaceAll(headers: Map<String, Iterable<String>>) = apply {
-            headers.forEach(::replace)
+            headers.forEach { (k, v) -> replace(k, v) }
         }
 
         fun replaceAll(headers: Headers) = apply {
@@ -91,7 +92,7 @@ private constructor(
         }
 
         fun build(): Headers {
-            val result = sortedMapOf<String, List<String>>(String.CASE_INSENSITIVE_ORDER)
+            val result = CaseInsensitiveMap<List<String>>()
             map.forEach { (key, values) -> result[key] = values.toImmutable() }
             return Headers(result, size)
         }

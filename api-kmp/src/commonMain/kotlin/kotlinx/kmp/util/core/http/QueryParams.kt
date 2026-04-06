@@ -2,6 +2,7 @@
 
 package kotlinx.kmp.util.core.http
 
+import kotlin.jvm.JvmStatic
 import kotlinx.kmp.util.core.JsonArray
 import kotlinx.kmp.util.core.JsonBoolean
 import kotlinx.kmp.util.core.JsonMissing
@@ -76,7 +77,7 @@ private constructor(
         fun put(key: String, values: Iterable<String>) = apply { values.forEach { put(key, it) } }
 
         fun putAll(queryParams: Map<String, Iterable<String>>) = apply {
-            queryParams.forEach(::put)
+            queryParams.forEach { (k, v) -> put(k, v) }
         }
 
         fun putAll(queryParams: QueryParams) = apply {
@@ -94,7 +95,7 @@ private constructor(
         }
 
         fun replaceAll(queryParams: Map<String, Iterable<String>>) = apply {
-            queryParams.forEach(::replace)
+            queryParams.forEach { (k, v) -> replace(k, v) }
         }
 
         fun replaceAll(queryParams: QueryParams) = apply {

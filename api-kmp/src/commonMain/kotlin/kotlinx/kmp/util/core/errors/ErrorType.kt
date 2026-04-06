@@ -2,13 +2,14 @@
 
 package kotlinx.kmp.util.core.errors
 
-import com.fasterxml.jackson.annotation.JsonCreator
-
+import kotlin.jvm.JvmSynthetic
+import kotlin.jvm.JvmStatic
 import kotlinx.kmp.util.core.Enum
 import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.errors.ApiInvalidDataException
+import kotlinx.kmp.util.core.json.JsonCreator
 
-class ErrorType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+class ErrorType @JsonCreator(mode = 0) private constructor(private val value: JsonField<String>) : Enum {
 
     /**
      * Returns this class instance's raw value.

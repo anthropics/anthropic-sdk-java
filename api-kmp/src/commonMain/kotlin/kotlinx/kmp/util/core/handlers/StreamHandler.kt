@@ -21,7 +21,7 @@ fun <T> streamHandler(
                         yield(line)
                     }
                 } catch (e: Exception) {
-                    if (e is java.io.IOException) {
+                    if (e is kotlinx.kmp.util.core.http.Retryable) {
                         throw ApiIoException("Stream failed", e)
                     }
                     throw e

@@ -2,6 +2,8 @@
 
 package kotlinx.kmp.util.core
 
+import kotlin.jvm.JvmStatic
+
 class AutoPager<T> private constructor(private val firstPage: Page<T>) : Iterable<T> {
 
     companion object {

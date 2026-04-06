@@ -1,5 +1,7 @@
 package kotlinx.kmp.util.core
 
+import kotlin.jvm.JvmSynthetic
+import kotlin.jvm.JvmStatic
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds

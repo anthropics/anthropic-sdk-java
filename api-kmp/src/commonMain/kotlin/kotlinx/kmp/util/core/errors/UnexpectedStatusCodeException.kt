@@ -2,6 +2,8 @@
 
 package kotlinx.kmp.util.core.errors
 
+import kotlin.jvm.JvmSynthetic
+import kotlin.jvm.JvmStatic
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.http.Headers

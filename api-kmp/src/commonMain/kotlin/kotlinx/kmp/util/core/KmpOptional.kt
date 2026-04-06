@@ -1,6 +1,7 @@
 @file:JvmName("KmpOptionals")
 package kotlinx.kmp.util.core
 
+import kotlin.jvm.JvmName
 import kotlinx.kmp.util.optional.orNull as _orNull
 import kotlinx.kmp.util.optional.toOptional as _toOptional
 import kotlinx.kmp.util.optional.getOrNull as _getOrNull

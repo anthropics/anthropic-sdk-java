@@ -2,6 +2,9 @@
 
 package kotlinx.kmp.util.core
 
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmSynthetic
+import kotlin.jvm.JvmStatic
 import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.jsonMapper
 import kotlinx.kmp.util.core.http.Headers

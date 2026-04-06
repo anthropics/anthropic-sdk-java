@@ -1,5 +1,7 @@
 package kotlinx.kmp.util.core.http
 
+import kotlin.jvm.JvmSynthetic
+import kotlin.jvm.JvmStatic
 import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.toImmutable
 import kotlinx.kmp.util.core.urlEncode

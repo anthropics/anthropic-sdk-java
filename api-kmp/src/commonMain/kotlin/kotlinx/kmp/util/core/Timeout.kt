@@ -2,6 +2,8 @@
 
 package kotlinx.kmp.util.core
 
+import kotlin.jvm.JvmSynthetic
+import kotlin.jvm.JvmStatic
 import kotlinx.kmp.util.core.contentHash
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
