@@ -9,15 +9,15 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 
 - **Migration Plan + Low-Level Design**: [`docs/KMP-CONVERSION-PLAN.md`](docs/KMP-CONVERSION-PLAN.md)
 - **Branch**: `claude/convert-to-kmp-I9zBV`
-- **216 commits** on branch, all pushed
+- **222 commits** on branch, all pushed
 
 ## Current Status
 
 | Metric | Value |
 |---|---|
 | Files in anthropic-java-core commonMain | 540 (models, services, helpers, client) |
-| api-kmp commonMain | 121 files (kotlinx.kmp.util.core — HTTP, JSON, errors, paging, platform) |
-| api-kmp jvmMain | 54 files (Jackson adapters, JVM handlers, async extensions) |
+| api-kmp commonMain | 125 files (kotlinx.kmp.util.core — HTTP, JSON, errors, paging, platform, component, mcp) |
+| api-kmp jvmMain | 51 files (Jackson adapters, JVM handlers, async extensions) |
 | api-kmp jsMain | 6 files (JS platform actuals, Jackson annotation stubs) |
 | api-kmp nativeMain | 6 files (Native platform actuals, Jackson annotation stubs) |
 | api-kmp commonTest | 7 test files (123 tests — KmpOptional 66, PlatformE2eTest 17, ContentFormats 12, KotlinxApiJsonBackend 8, JsonValueSerializer 8, McpTypes 5, PatchEventTest 4) |
