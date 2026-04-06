@@ -3,6 +3,7 @@ package kotlinx.kmp.util.core.json
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 import kotlin.test.Test
+import kotlin.test.assertTrue
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -27,9 +28,9 @@ class KotlinxApiJsonBackendTest {
     fun encodeSimple() {
         val model = SimpleModel("John", "Doe", 30)
         val json = backend.encodeToString(model, SimpleModel.serializer())
-        assert(json.contains("\"first_name\":\"John\"")) { "Expected first_name in $json" }
-        assert(json.contains("\"last_name\":\"Doe\"")) { "Expected last_name in $json" }
-        assert(json.contains("\"age\":30")) { "Expected age in $json" }
+        assertTrue(json.contains("\"first_name\":\"John\""), "Expected first_name in $json")
+        assertTrue(json.contains("\"last_name\":\"Doe\""), "Expected last_name in $json")
+        assertTrue(json.contains("\"age\":30"), "Expected age in $json")
     }
 
     @Test
@@ -73,7 +74,7 @@ class KotlinxApiJsonBackendTest {
     fun encodePretty() {
         val model = SimpleModel("A", "B")
         val pretty = backend.encodePretty(model)
-        assert(pretty.contains("\n")) { "Expected newlines in pretty output: $pretty" }
+        assertTrue(pretty.contains("\n"), "Expected newlines in pretty output: $pretty")
     }
 
     @Test

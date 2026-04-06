@@ -26,7 +26,7 @@ wire {
 kotlin {
     jvm()
     js(IR) {
-        browser { testTask { useMocha() } }
+        browser()
         nodejs()
     }
     // Native targets
