@@ -4,7 +4,7 @@ package com.anthropic.models.beta.messages.batches
 
 import kotlinx.kmp.util.core.jsonMapper
 import com.anthropic.models.beta.BetaErrorResponse
-import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import kotlinx.kmp.util.core.json.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

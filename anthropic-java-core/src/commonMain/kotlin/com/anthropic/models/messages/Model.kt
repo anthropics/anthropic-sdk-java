@@ -20,7 +20,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      * any known member, and you want to know that value. For example, if the SDK is on an older
      * version than the API, then the API may respond with new members that the SDK is unaware of.
      */
-    @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+    @kotlinx.kmp.util.core.json.JsonValue fun _value(): JsonField<String> = value
 
     companion object {
 

@@ -1,4 +1,4 @@
 package com.fasterxml.jackson.databind.node
-import com.fasterxml.jackson.databind.JsonNode
+import kotlinx.kmp.util.core.json.JsonNode
 enum class JsonNodeType { ARRAY, BINARY, BOOLEAN, MISSING, NULL, NUMBER, OBJECT, POJO, STRING }
 class ObjectNode : JsonNode() { override val nodeType: JsonNodeType = JsonNodeType.OBJECT; override val isObject: Boolean = true; private val _fields = mutableMapOf<String, JsonNode>(); override fun get(fieldName: String): JsonNode? = _fields[fieldName]; override fun fieldNames(): Iterator<String> = _fields.keys.iterator(); override fun fields(): Iterator<Map.Entry<String, JsonNode>> = _fields.entries.iterator(); override val isEmpty: Boolean get() = _fields.isEmpty(); override fun size(): Int = _fields.size; fun put(fieldName: String, value: String): ObjectNode = apply {}; fun set(fieldName: String, value: JsonNode): ObjectNode = apply { _fields[fieldName] = value }; fun remove(fieldName: String): JsonNode? = _fields.remove(fieldName) }

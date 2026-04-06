@@ -44,3 +44,15 @@ typealias JsonSerialize = com.fasterxml.jackson.databind.annotation.JsonSerializ
 // Convenience: use inline reified function instead of typealias for TypeReference
 inline fun <reified T> jacksonTypeRef(): com.fasterxml.jackson.core.type.TypeReference<T> =
     object : com.fasterxml.jackson.core.type.TypeReference<T>() {}
+
+// --- Jackson runtime types used in model (de)serializer inner classes ---
+// These are JVM-only at runtime. For future JS/Native targets, these would
+// need to be replaced with kotlinx.serialization equivalents or stubs.
+
+typealias ObjectCodec = com.fasterxml.jackson.core.ObjectCodec
+typealias JsonNode = com.fasterxml.jackson.databind.JsonNode
+typealias JsonGenerator = com.fasterxml.jackson.core.JsonGenerator
+typealias SerializerProvider = com.fasterxml.jackson.databind.SerializerProvider
+typealias ObjectNode = com.fasterxml.jackson.databind.node.ObjectNode
+typealias ObjectMapper = com.fasterxml.jackson.databind.ObjectMapper
+typealias JsonNodeType = com.fasterxml.jackson.databind.node.JsonNodeType

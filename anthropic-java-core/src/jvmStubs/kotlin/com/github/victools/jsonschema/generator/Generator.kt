@@ -1,5 +1,5 @@
 package com.github.victools.jsonschema.generator
-import com.fasterxml.jackson.databind.node.ObjectNode
+import kotlinx.kmp.util.core.json.ObjectNode
 enum class SchemaVersion { DRAFT_2020_12, DRAFT_2019_09, DRAFT_7 }
 enum class Option { FORBIDDEN_ADDITIONAL_PROPERTIES_BY_DEFAULT, DEFINITIONS_FOR_ALL_OBJECTS, PLAIN_DEFINITION_KEYS }
 class OptionPreset private constructor() { companion object { val PLAIN_JSON = OptionPreset() } }

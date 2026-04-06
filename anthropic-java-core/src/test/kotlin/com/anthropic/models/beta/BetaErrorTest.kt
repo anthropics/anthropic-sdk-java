@@ -5,7 +5,7 @@ package com.anthropic.models.beta
 import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.jsonMapper
 import kotlinx.kmp.util.core.errors.ApiInvalidDataException
-import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import kotlinx.kmp.util.core.json.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

@@ -16,7 +16,7 @@ import com.anthropic.models.messages.ServerToolUsage
 import com.anthropic.models.messages.StopReason
 import com.anthropic.models.messages.TextBlock
 import com.anthropic.models.messages.Usage
-import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import kotlinx.kmp.util.core.json.jacksonTypeRef
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

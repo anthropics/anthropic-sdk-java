@@ -342,7 +342,7 @@ private constructor(
     class Input
     @JsonCreator
     private constructor(
-        @com.fasterxml.jackson.annotation.JsonValue
+        @kotlinx.kmp.util.core.json.JsonValue
         private val additionalProperties: Map<String, JsonValue>
     ) {
 

@@ -29,13 +29,13 @@ import kotlinx.kmp.util.core.json.JsonAnySetter
 import kotlinx.kmp.util.core.json.JsonCreator
 import kotlinx.kmp.util.core.json.JsonCreatorMode
 import kotlinx.kmp.util.core.json.JsonProperty
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.core.ObjectCodec
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.SerializerProvider
+import kotlinx.kmp.util.core.json.JsonGenerator
+import kotlinx.kmp.util.core.json.ObjectCodec
+import kotlinx.kmp.util.core.json.JsonNode
+import kotlinx.kmp.util.core.json.SerializerProvider
 import kotlinx.kmp.util.core.json.JsonDeserialize
 import kotlinx.kmp.util.core.json.JsonSerialize
-import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import kotlinx.kmp.util.core.json.jacksonTypeRef
 import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
 
@@ -3676,7 +3676,7 @@ private constructor(
          * older version than the API, then the API may respond with new members that the SDK is
          * unaware of.
          */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+        @kotlinx.kmp.util.core.json.JsonValue fun _value(): JsonField<String> = value
 
         companion object {
 
@@ -3807,7 +3807,7 @@ private constructor(
          * older version than the API, then the API may respond with new members that the SDK is
          * unaware of.
          */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+        @kotlinx.kmp.util.core.json.JsonValue fun _value(): JsonField<String> = value
 
         companion object {
 
