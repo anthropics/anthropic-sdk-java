@@ -11,6 +11,8 @@ import io.ktor.http.ContentType
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
+import io.modelcontextprotocol.kotlin.sdk.types.Tool as McpTool
+import io.modelcontextprotocol.kotlin.sdk.types.ToolSchema
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
@@ -18,97 +20,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
-/**
- * Bridges from the Wire LLM types (LlmRequest/LlmResponse) to external
- * backends. **Pure glue** — no chat/streaming/tokenization logic is
- * reimplemented; everything delegates to the upstream library.
- *
- * HTTP-based providers (Anthropic, Google Gemini, Google Nano Banana,
- * Google Veo, Google NotebookLM, OpenAI, LM Studio, Suno, PixVerse, Azure,
- * Adobe Firefly) all flow through the **single** [HttpLlmClient] class via
- * a [ProviderSpec] data descriptor — 11 vendor-specific classes collapsed
- * into 1 data-driven client. Adding a new HTTP vendor means adding one
- * entry to [ProviderSpecs], not writing a new class.
- *
- * Non-HTTP providers with fundamentally different transports keep their
- * own clients:
- * - **ComfyUi** — node-graph workflow with WS progress events
- * - **LangChain4j / DJL / Jlama** — in-process JVM runtimes
- * - **MCP** — stdio or SSE JSON-RPC
- */
-object LlmProviderClients {
 
-    /**
-     * Return the right [LlmProviderClient] for a given [LlmProvider].
-     * Data-driven: HTTP providers all share [HttpLlmClient]; only
-     * non-HTTP ones get bespoke classes.
-     */
-    @JvmStatic
-    fun forProvider(
-        provider: LlmProvider,
-        apiKey: String = "",
-        httpClient: HttpClient? = null,
-    ): LlmProviderClient {
-        // HTTP providers — single data-driven client
-        ProviderSpecs.forProvider(provider)?.let { spec ->
-            return HttpLlmClient(provider, apiKey, spec, httpClient)
-        }
-
-        // Non-HTTP / in-process providers — bespoke transport
-        return when (provider) {
-            is LlmProvider.ComfyUi -> ComfyUiClient(provider, httpClient)
-            is LlmProvider.LangChain4j -> LangChain4jBridge.create(provider, apiKey)
-            is LlmProvider.Djl -> DjlBridge.create(provider)
-            is LlmProvider.Jlama -> JlamaBridge.create(provider)
-            is LlmProvider.Mcp -> McpBridge.create(provider)
-            LlmProvider.None -> error("LlmProvider.None is not callable; install a concrete provider")
-            else -> error("No client available for ${provider::class.simpleName}")
-        }
-    }
-}
-
-// === Shared multipart helper (used by HttpLlmClient.uploadFile + ComfyUI) ===
-
-/**
- * Shared ktor multipart/form-data uploader. Used by [HttpLlmClient.uploadFile]
- * for Suno/PixVerse/Adobe Firefly/NotebookLM uploads, and by [ComfyUiClient]
- * for reference-image + workflow uploads.
- */
-suspend fun HttpClient.submitMultipart(
-    url: String,
-    textFields: Map<String, String> = emptyMap(),
-    fileParts: List<FilePart> = emptyList(),
-    headers: Map<String, String> = emptyMap(),
-): String = post(url) {
-    headers.forEach { (k, v) -> header(k, v) }
-    setBody(MultiPartFormDataContent(formData {
-        textFields.forEach { (name, value) -> append(name, value) }
-        fileParts.forEach { part ->
-            append(
-                key = part.name,
-                value = part.bytes,
-                headers = Headers.build {
-                    append(HttpHeaders.ContentType, part.contentType)
-                    append(
-                        HttpHeaders.ContentDisposition,
-                        "filename=\"${part.filename}\"",
-                    )
-                },
-            )
-        }
-    }))
-}.bodyAsText()
-
-/** A file part for multipart/form-data uploads. */
-data class FilePart(
-    val name: String,                       // form field name (e.g. "audio", "image", "source", "file")
-    val filename: String,                   // original filename
-    val contentType: String,                // e.g. "audio/mpeg", "image/png"
-    val bytes: ByteArray,
-) {
-    override fun equals(other: Any?): Boolean = this === other
-    override fun hashCode(): Int = name.hashCode() * 31 + filename.hashCode()
-}
 
 // === Reflection-probed in-process bridges ===
 
@@ -407,3 +319,17 @@ suspend fun HttpLlmClient.notebookLmUploadSource(
     path = "/notebooks/$notebookId/sources:upload",
     files = listOf(FilePart("source", filename, contentType, sourceBytes)),
 )
+
+actual fun createPlatformClient(
+    provider: LlmProvider,
+    apiKey: String,
+    httpClient: io.ktor.client.HttpClient?,
+): LlmProviderClient = when (provider) {
+    is LlmProvider.ComfyUi -> ComfyUiClient(provider, httpClient)
+    is LlmProvider.LangChain4j -> LangChain4jBridge.create(provider, apiKey)
+    is LlmProvider.Djl -> DjlBridge.create(provider)
+    is LlmProvider.Jlama -> JlamaBridge.create(provider)
+    is LlmProvider.Mcp -> McpBridge.create(provider)
+    LlmProvider.None -> error("LlmProvider.None is not callable; install a concrete provider")
+    else -> error("No client available for ${provider::class.simpleName}")
+}

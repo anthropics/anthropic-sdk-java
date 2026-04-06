@@ -63,3 +63,4 @@ actual fun jsonMapper(): JsonMapperType = JsonMapperType(Json {
 actual fun apiJsonBackend(): ApiJsonBackend = KotlinxApiJsonBackend()
 
 actual fun checkJsonVersionCompatibility() {} // no-op on JS
+
