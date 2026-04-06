@@ -9,7 +9,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 
 - **Migration Plan + Low-Level Design**: [`docs/KMP-CONVERSION-PLAN.md`](docs/KMP-CONVERSION-PLAN.md)
 - **Branch**: `claude/convert-to-kmp-I9zBV`
-- **176 commits** on branch, all pushed
+- **180 commits** on branch, all pushed
 
 ## Current Status
 
@@ -21,6 +21,8 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | api-kmp commonTest | 3 test files (82 tests — KmpOptional, KotlinxApiJsonBackend, JsonValueSerializer) |
 | api-kmp jvmTest | 1 test file (20 tests — HttpRetryTest WireMock) |
 | KMP targets | JVM ✅, JS (IR) ✅ — both compile with zero errors |
+| Native targets | linuxX64, macosX64, macosArm64 — actuals written, pending toolchain download |
+| GraalVM | CE 25.0.2 + native-image installed via sdkman |
 | java.* imports in api-kmp commonMain | **0** (zero — fully purified) |
 | Jackson imports in api-kmp commonMain | 2 (JsonSchemaValidator + ErrorType — by directive) |
 | Jackson annotations | Reused directly — JVM: real JAR; JS: stub classes in jsMain |
@@ -61,6 +63,9 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | HttpRetryTest restored | `c2d1ba5` `5536687` — 20 WireMock tests via ClientOptions config |
 | JS (IR) target compiles | `5dd4364` — js(IR) { browser; nodejs }, JS platform actuals, CaseInsensitiveMap, runBlockingCompat |
 | Reuse Jackson annotations | `f425ede` — delete typealias layer; JS stubs in jsMain; model files import Jackson directly; all tests pass |
+| JS (IR) target compiles | `5dd4364` — js(IR) { browser; nodejs }, JS platform actuals, CaseInsensitiveMap, runBlockingCompat |
+| Native target | `215c819` — linuxX64/macosX64/macosArm64 actuals + Jackson stubs (pending toolchain) |
+| @Serializable on api-gen models | `fe7d511` — api-gen emits @JsonProperty + @Serializable + @SerialName |
 
 ### 🔲 Remaining Work
 | Section | What |
