@@ -9,7 +9,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 
 - **Migration Plan + Low-Level Design**: [`docs/KMP-CONVERSION-PLAN.md`](docs/KMP-CONVERSION-PLAN.md)
 - **Branch**: `claude/convert-to-kmp-I9zBV`
-- **190 commits** on branch, all pushed
+- **192 commits** on branch, all pushed
 
 ## Current Status
 
@@ -20,13 +20,13 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | api-kmp jvmMain | 54 files (Jackson adapters, JVM handlers, async extensions) |
 | api-kmp jsMain | 6 files (JS platform actuals, Jackson annotation stubs) |
 | api-kmp nativeMain | 6 files (Native platform actuals, Jackson annotation stubs) |
-| api-kmp commonTest | 5 test files (97 tests — KmpOptional 66, KotlinxApiJsonBackend 8, JsonValueSerializer 8, McpTypes 5, ContentFormats 10) |
+| api-kmp commonTest | 5 test files (99 tests — KmpOptional 66, KotlinxApiJsonBackend 8, JsonValueSerializer 8, McpTypes 5, ContentFormats 12) |
 | api-kmp jvmTest | 2 test files (26 tests — HttpRetryTest 20 WireMock + KtorServerProtocolTest 6 JSON/SSE/WS) |
 | api-kmp test (gen) | 3 test files (20 tests — MultiProviderGenTest 14, ComposeEmitterTest 3, DatabaseEmitterTest 3) |
 | KMP targets | JVM ✅, JS (IR) ✅ — both compile with zero errors |
 | Native targets | linuxX64, macosX64, macosArm64 — actuals written, pending toolchain download |
 | GraalVM | Oracle 25.0.2 + native-image — .sdkmanrc java=25.0.2-graal |
-| Content formats | JSON + CBOR + Protobuf via kotlinx.serialization (commonMain, all targets) |
+| Content formats | JSON + CBOR + Protobuf + MsgPack via kotlinx.serialization (commonMain, all targets) |
 | java.* imports in api-kmp commonMain | **0** (zero — fully purified) |
 | Jackson imports in api-kmp commonMain | 2 (JsonSchemaValidator + ErrorType — by directive) |
 | Jackson annotations | Reused directly — JVM: real JAR; JS: stub classes in jsMain |
@@ -73,13 +73,12 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | MCP tool types | `ab9604d` — commonMain McpTypes (ToolDefinition, ToolCallRequest/Result, ToolContent) + 5 tests |
 | ktor CIO server tests | `828b03b` — 6 tests: JSON GET/POST, SSE stream, WebSocket echo + JSON streaming |
 | Compose + DB emitter tests | `2da1388` — 6 tests: ComposeEmitter (Form/List/Detail/MasterDetail + skip rules) + DatabaseEmitter (Exposed + SQLDelight + jsonb RFC types) |
-| CBOR + Protobuf formats | `4c3f3c1` — ContentFormat enum (JSON/CBOR/PROTOBUF) + .sdkmanrc java=25.0.2-graalce + 10 tests |
+| CBOR + Protobuf + MsgPack formats | `4c3f3c1` `90bbfc9` — ContentFormat enum (JSON/CBOR/PROTOBUF/MSGPACK) + .sdkmanrc java=25.0.2-graal + 12 tests |
 
 ### 🔲 Remaining Work
 | Section | What |
 |---|---|
 | JS/Native targets | Add js() + native() targets to anthropic-java-core (currently JVM-only) |
-| MsgPack | Add kotlinx-serialization-msgpack (third-party) when stable KMP version available |
 
 ### What stays, what gets typealiased, what's NOT migrated
 
@@ -338,4 +337,4 @@ SKIP_MOCK_TESTS=true ./gradlew :anthropic-java-core:jvmTest --no-configuration-c
 5. ~~Database generation~~ **DONE** — `2da1388` DatabaseEmitter generates Exposed tables + SQLDelight .sq (3 tests)
 6. ~~JS/Native targets~~ **DONE** — `5dd4364` JS (IR) compiles zero errors; `215c819` native actuals written
 7. ~~MCP SDK integration~~ **DONE** — `ab9604d` commonMain McpTypes + 5 tests; McpEmitter generates Server+Client
-8. ~~MsgPack + Protobuf~~ **DONE** — `4c3f3c1` ContentFormat enum: JSON + CBOR + Protobuf (10 tests)
+8. ~~MsgPack + Protobuf~~ **DONE** — `4c3f3c1` ContentFormat enum: JSON + CBOR + Protobuf (10 tests); `90bbfc9` + MsgPack (12 tests)
