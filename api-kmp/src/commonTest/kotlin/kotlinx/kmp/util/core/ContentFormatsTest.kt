@@ -85,13 +85,29 @@ class ContentFormatsTest {
         assertTrue(protoBytes.size < jsonBytes.size, "Protobuf should be smaller than JSON")
     }
 
+    // --- MsgPack ---
+
+    @Test
+    fun msgpack_roundTrip() {
+        val pet = Pet("Luna", "available", 55)
+        val bytes = ContentFormat.MSGPACK.encodeToByteArray(Pet.serializer(), pet)
+        assertTrue(bytes.isNotEmpty())
+        val decoded = ContentFormat.MSGPACK.decodeFromByteArray(Pet.serializer(), bytes)
+        assertEquals(pet, decoded)
+    }
+
+    @Test
+    fun msgpack_mediaType() {
+        assertEquals("application/msgpack", ContentFormat.MSGPACK.mediaType)
+    }
+
     // --- Cross-format ---
 
     @Test
     fun all_formats_registered() {
-        assertEquals(3, ContentFormat.entries.size)
+        assertEquals(4, ContentFormat.entries.size)
         assertEquals(
-            setOf("application/json", "application/cbor", "application/protobuf"),
+            setOf("application/json", "application/cbor", "application/protobuf", "application/msgpack"),
             ContentFormat.entries.map { it.mediaType }.toSet()
         )
     }

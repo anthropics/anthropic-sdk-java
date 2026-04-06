@@ -1,5 +1,6 @@
 package kotlinx.kmp.util.core
 
+import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPack
 import kotlinx.serialization.*
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.json.Json
@@ -55,6 +56,14 @@ enum class ContentFormat(
             proto.encodeToByteArray(serializer, value)
         override fun <T> decodeFromByteArray(serializer: KSerializer<T>, bytes: ByteArray): T =
             proto.decodeFromByteArray(serializer, bytes)
+    },
+
+    MSGPACK("application/msgpack", "MessagePack — kotlinx-serialization-msgpack") {
+        private val msgpack = MsgPack()
+        override fun <T> encodeToByteArray(serializer: KSerializer<T>, value: T): ByteArray =
+            msgpack.encodeToByteArray(serializer, value)
+        override fun <T> decodeFromByteArray(serializer: KSerializer<T>, bytes: ByteArray): T =
+            msgpack.decodeFromByteArray(serializer, bytes)
     };
 
     /** Non-null for text-based formats (JSON). Null for binary (CBOR, Protobuf). */

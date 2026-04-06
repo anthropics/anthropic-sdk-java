@@ -40,6 +40,8 @@ kotlin {
                 api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.10.0")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.10.0")
+                // MsgPack via third-party KMP lib (ktor ContentNegotiation format)
+                implementation("com.ensarsarajcic.kotlinx:serialization-msgpack:0.5.6")
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
                 api("com.squareup.okio:okio:3.17.0")
