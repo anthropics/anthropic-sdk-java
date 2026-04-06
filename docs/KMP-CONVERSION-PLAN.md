@@ -636,7 +636,7 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 
 ## Current Progress (synced with branch claude/convert-to-kmp-I9zBV)
 
-### 📊 Commit Summary (184 commits since KMP migration began)
+### 📊 Commit Summary (186 commits since KMP migration began)
 
 | Theme | Commits | Status |
 |---|---|---|
@@ -658,12 +658,13 @@ These continue to use WireMock, AssertJ, JUnit5, Mockito.
 | Smack XEP-0054 + Bedework bridges | 4 | ✅ |
 | Architectural refactors (package moves, dedup, trimIndent) | 12 | ✅ |
 | Fixes (schema validator, RFC 5545 formats, type mappings) | 9 | ✅ |
-| **Phase 12 — commonMain purification + multi-backend JSON + JS/Native + MCP + ktor tests** | **24** | **✅** |
+| **Phase 12 — commonMain purification + multi-backend JSON + JS/Native + MCP + ktor + Compose/DB tests** | **26** | **✅** |
 | Plan documentation updates | 54 | ✅ |
 
 ### 📝 Recent Commits (newest first, post-initial-migration)
 
 **Phase 12 — commonMain purification + multi-backend JSON + JS target (most recent)**
+- `2da1388` test: ComposeEmitter + DatabaseEmitter tests — 6 tests (Form/List/Detail, Exposed+SQLDelight, jsonb RFC types)
 - `828b03b` test: ktor CIO server protocol tests — 6 tests: JSON GET/POST, SSE stream, WebSocket echo + JSON streaming
 - `ab9604d` feat: MCP tool types in commonMain (ToolDefinition, ToolCallRequest/Result, ToolContent) + JVM toolchain config + 5 tests
 - `fe7d511` feat: api-gen emits @JsonProperty alongside @Serializable + @SerialName

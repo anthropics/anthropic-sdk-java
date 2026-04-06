@@ -9,7 +9,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 
 - **Migration Plan + Low-Level Design**: [`docs/KMP-CONVERSION-PLAN.md`](docs/KMP-CONVERSION-PLAN.md)
 - **Branch**: `claude/convert-to-kmp-I9zBV`
-- **184 commits** on branch, all pushed
+- **186 commits** on branch, all pushed
 
 ## Current Status
 
@@ -68,12 +68,13 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | @Serializable on api-gen models | `fe7d511` — api-gen emits @JsonProperty + @Serializable + @SerialName |
 | MCP tool types | `ab9604d` — commonMain McpTypes (ToolDefinition, ToolCallRequest/Result, ToolContent) + 5 tests |
 | ktor CIO server tests | `828b03b` — 6 tests: JSON GET/POST, SSE stream, WebSocket echo + JSON streaming |
+| Compose + DB emitter tests | `2da1388` — 6 tests: ComposeEmitter (Form/List/Detail/MasterDetail + skip rules) + DatabaseEmitter (Exposed + SQLDelight + jsonb RFC types) |
 
 ### 🔲 Remaining Work
 | Section | What |
 |---|---|
-| Compose KMP UI generation | Form/List/Detail @Composable from OpenAPI schemas |
-| Database generation | Exposed tables (JVM) / SQLDelight .sq (KMP) from schemas |
+| MsgPack + Protobuf | Add ktor ContentNegotiation formats beyond JSON |
+| JS/Native targets | Add js() + native() targets to anthropic-java-core (currently JVM-only) |
 
 ### Low-Level Designs
 | Section | Line | Commit | What |
