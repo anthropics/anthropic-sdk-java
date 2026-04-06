@@ -9,7 +9,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 
 - **Migration Plan + Low-Level Design**: [`docs/KMP-CONVERSION-PLAN.md`](docs/KMP-CONVERSION-PLAN.md)
 - **Branch**: `claude/convert-to-kmp-I9zBV`
-- **196 commits** on branch, all pushed
+- **198 commits** on branch, all pushed
 
 ## Current Status
 
@@ -80,6 +80,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 | Section | What |
 |---|---|
 | ~~JS/Native targets~~ | **Not needed** — api-gen generates KMP-native models from OpenAPI spec via @Serializable + Wire proto. The 540 hand-written model files in anthropic-java-core are the JVM-only legacy path; the KMP path is api-gen output. |
+| ~~Generic code in models~~ | **Done** — compared all 484 hand-written files vs 445 api-gen. Only `Backend` was generic → moved to api-kmp (`8d393c7`). Rest is Anthropic-specific by design. |
 
 ### What stays, what gets typealiased, what's NOT migrated
 
