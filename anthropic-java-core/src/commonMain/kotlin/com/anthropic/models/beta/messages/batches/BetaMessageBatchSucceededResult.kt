@@ -9,15 +9,14 @@ import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.anthropic.models.beta.messages.BetaMessage
-import kotlinx.kmp.util.core.json.JsonAnyGetter
-import kotlinx.kmp.util.core.json.JsonAnySetter
-import kotlinx.kmp.util.core.json.JsonCreator
-import kotlinx.kmp.util.core.json.JsonCreatorMode
-import kotlinx.kmp.util.core.json.JsonProperty
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 import kotlinx.kmp.util.core.contentHash
 
 class BetaMessageBatchSucceededResult
-@JsonCreator(mode = JsonCreatorMode.DISABLED)
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val message: JsonField<BetaMessage>,
     private val type: JsonValue,

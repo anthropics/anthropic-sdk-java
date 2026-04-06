@@ -10,11 +10,10 @@ import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.errors.ApiInvalidDataException
 import com.anthropic.models.ErrorResponse
 import com.anthropic.models.messages.Message
-import kotlinx.kmp.util.core.json.JsonAnyGetter
-import kotlinx.kmp.util.core.json.JsonAnySetter
-import kotlinx.kmp.util.core.json.JsonCreator
-import kotlinx.kmp.util.core.json.JsonCreatorMode
-import kotlinx.kmp.util.core.json.JsonProperty
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 import kotlinx.kmp.util.core.contentHash
 
 /**
@@ -22,7 +21,7 @@ import kotlinx.kmp.util.core.contentHash
  * whole.
  */
 class MessageBatchIndividualResponse
-@JsonCreator(mode = JsonCreatorMode.DISABLED)
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val customId: JsonField<String>,
     private val result: JsonField<MessageBatchResult>,

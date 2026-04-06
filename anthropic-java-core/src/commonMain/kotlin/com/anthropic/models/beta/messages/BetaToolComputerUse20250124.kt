@@ -12,17 +12,16 @@ import kotlinx.kmp.util.core.checkKnown
 import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.toImmutable
 import kotlinx.kmp.util.core.errors.ApiInvalidDataException
-import kotlinx.kmp.util.core.json.JsonAnyGetter
-import kotlinx.kmp.util.core.json.JsonAnySetter
-import kotlinx.kmp.util.core.json.JsonCreator
-import kotlinx.kmp.util.core.json.JsonCreatorMode
-import kotlinx.kmp.util.core.json.JsonProperty
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BetaToolComputerUse20250124
-@JsonCreator(mode = JsonCreatorMode.DISABLED)
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val displayHeightPx: JsonField<Long>,
     private val displayWidthPx: JsonField<Long>,
@@ -589,7 +588,7 @@ private constructor(
          * older version than the API, then the API may respond with new members that the SDK is
          * unaware of.
          */
-        @kotlinx.kmp.util.core.json.JsonValue fun _value(): JsonField<String> = value
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
 
         companion object {
 
@@ -716,7 +715,7 @@ private constructor(
     class InputExample
     @JsonCreator
     private constructor(
-        @kotlinx.kmp.util.core.json.JsonValue
+        @com.fasterxml.jackson.annotation.JsonValue
         private val additionalProperties: Map<String, JsonValue>
     ) {
 

@@ -5,7 +5,7 @@ package com.anthropic.models.messages
 import kotlinx.kmp.util.core.Enum
 import kotlinx.kmp.util.core.JsonField
 import kotlinx.kmp.util.core.errors.ApiInvalidDataException
-import kotlinx.kmp.util.core.json.JsonCreator
+import com.fasterxml.jackson.annotation.JsonCreator
 
 class WebFetchToolResultErrorCode
 @JsonCreator
@@ -18,7 +18,7 @@ private constructor(private val value: JsonField<String>) : Enum {
      * any known member, and you want to know that value. For example, if the SDK is on an older
      * version than the API, then the API may respond with new members that the SDK is unaware of.
      */
-    @kotlinx.kmp.util.core.json.JsonValue fun _value(): JsonField<String> = value
+    @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
 
     companion object {
 

@@ -10,17 +10,16 @@ import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.toImmutable
 import kotlinx.kmp.util.core.errors.ApiInvalidDataException
-import kotlinx.kmp.util.core.json.JsonAnyGetter
-import kotlinx.kmp.util.core.json.JsonAnySetter
-import kotlinx.kmp.util.core.json.JsonCreator
-import kotlinx.kmp.util.core.json.JsonCreatorMode
-import kotlinx.kmp.util.core.json.JsonProperty
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BetaMcpToolUseBlockParam
-@JsonCreator(mode = JsonCreatorMode.DISABLED)
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val input: JsonField<Input>,
@@ -342,7 +341,7 @@ private constructor(
     class Input
     @JsonCreator
     private constructor(
-        @kotlinx.kmp.util.core.json.JsonValue
+        @com.fasterxml.jackson.annotation.JsonValue
         private val additionalProperties: Map<String, JsonValue>
     ) {
 

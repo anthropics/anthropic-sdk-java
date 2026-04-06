@@ -5,8 +5,8 @@ import kotlinx.kmp.util.core.RequestOptions
 import com.anthropic.models.beta.messages.*
 import com.anthropic.models.messages.Model
 import com.anthropic.services.blocking.beta.MessageService
-import kotlinx.kmp.util.core.json.JsonClassDescription
-import kotlinx.kmp.util.core.json.JsonPropertyDescription
+import com.fasterxml.jackson.annotation.JsonClassDescription
+import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import java.util.function.Supplier
 import kotlin.time.Duration.Companion.seconds
 import org.assertj.core.api.Assertions.assertThat

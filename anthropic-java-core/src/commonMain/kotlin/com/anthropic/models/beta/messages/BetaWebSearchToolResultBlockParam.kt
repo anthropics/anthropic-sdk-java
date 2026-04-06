@@ -13,25 +13,24 @@ import kotlinx.kmp.util.core.JsonValue
 import kotlinx.kmp.util.core.checkRequired
 import kotlinx.kmp.util.core.getOrThrow
 import kotlinx.kmp.util.core.errors.ApiInvalidDataException
-import kotlinx.kmp.util.core.json.JsonAnyGetter
-import kotlinx.kmp.util.core.json.JsonAnySetter
-import kotlinx.kmp.util.core.json.JsonCreator
-import kotlinx.kmp.util.core.json.JsonCreatorMode
-import kotlinx.kmp.util.core.json.JsonProperty
-import kotlinx.kmp.util.core.json.JsonGenerator
-import kotlinx.kmp.util.core.json.ObjectCodec
-import kotlinx.kmp.util.core.json.JsonNode
-import kotlinx.kmp.util.core.json.SerializerProvider
-import kotlinx.kmp.util.core.json.JsonDeserialize
-import kotlinx.kmp.util.core.json.JsonSerialize
-import kotlinx.kmp.util.core.json.jacksonTypeRef
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.core.ObjectCodec
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
 
 import kotlin.jvm.optionals.getOrNull
 
 class BetaWebSearchToolResultBlockParam
-@JsonCreator(mode = JsonCreatorMode.DISABLED)
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val content: JsonField<BetaWebSearchToolResultBlockParamContent>,
     private val toolUseId: JsonField<String>,

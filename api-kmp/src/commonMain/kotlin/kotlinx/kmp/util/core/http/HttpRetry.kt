@@ -40,7 +40,7 @@ private class RetryClient(
 
     override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse {
         var modifiedRequest = maybeAddIdempotencyHeader(request)
-        val shouldSendRetryCount = !modifiedRequest.headers.names().contains("X-Stainless-Retry-Count")
+        val shouldSendRetryCount = !modifiedRequest.headers.names().any { it.equals("X-Stainless-Retry-Count", ignoreCase = true) }
         var retries = 0
 
         while (true) {
@@ -69,7 +69,7 @@ private class RetryClient(
         requestOptions: RequestOptions,
     ): HttpResponse {
         var modifiedRequest = maybeAddIdempotencyHeader(request)
-        val shouldSendRetryCount = !modifiedRequest.headers.names().contains("X-Stainless-Retry-Count")
+        val shouldSendRetryCount = !modifiedRequest.headers.names().any { it.equals("X-Stainless-Retry-Count", ignoreCase = true) }
         var retries = 0
 
         while (true) {

@@ -54,18 +54,17 @@ import com.anthropic.models.messages.WebFetchTool20260209
 import com.anthropic.models.messages.WebFetchTool20260309
 import com.anthropic.models.messages.WebSearchTool20250305
 import com.anthropic.models.messages.WebSearchTool20260209
-import kotlinx.kmp.util.core.json.JsonAnyGetter
-import kotlinx.kmp.util.core.json.JsonAnySetter
-import kotlinx.kmp.util.core.json.JsonCreator
-import kotlinx.kmp.util.core.json.JsonCreatorMode
-import kotlinx.kmp.util.core.json.JsonProperty
-import kotlinx.kmp.util.core.json.JsonGenerator
-import kotlinx.kmp.util.core.json.ObjectCodec
-import kotlinx.kmp.util.core.json.JsonNode
-import kotlinx.kmp.util.core.json.SerializerProvider
-import kotlinx.kmp.util.core.json.JsonDeserialize
-import kotlinx.kmp.util.core.json.JsonSerialize
-import kotlinx.kmp.util.core.json.jacksonTypeRef
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.core.ObjectCodec
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotlinx.kmp.util.core.contentHash
 import java.util.Optional
 
@@ -314,7 +313,7 @@ private constructor(
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     class Body
-    @JsonCreator(mode = JsonCreatorMode.DISABLED)
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val requests: JsonField<List<Request>>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -495,7 +494,7 @@ private constructor(
     }
 
     class Request
-    @JsonCreator(mode = JsonCreatorMode.DISABLED)
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val customId: JsonField<String>,
         private val params: JsonField<Params>,
@@ -696,7 +695,7 @@ private constructor(
          * documentation on available parameters.
          */
         class Params
-        @JsonCreator(mode = JsonCreatorMode.DISABLED)
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val maxTokens: JsonField<Long>,
             private val messages: JsonField<List<MessageParam>>,
@@ -2222,7 +2221,7 @@ private constructor(
                  * the SDK is on an older version than the API, then the API may respond with new
                  * members that the SDK is unaware of.
                  */
-                @kotlinx.kmp.util.core.json.JsonValue fun _value(): JsonField<String> = value
+                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
 
                 companion object {
 

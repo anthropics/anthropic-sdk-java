@@ -4,14 +4,14 @@ import kotlinx.kmp.util.core.*
 
 import kotlinx.kmp.util.core.JsonSchemaValidator
 import kotlinx.kmp.util.core.errors.ApiInvalidDataException
-import kotlinx.kmp.util.core.json.JsonClassDescription
-import kotlinx.kmp.util.core.json.JsonIgnore
-import kotlinx.kmp.util.core.json.JsonProperty
-import kotlinx.kmp.util.core.json.JsonPropertyDescription
-import kotlinx.kmp.util.core.json.JsonTypeName
-import kotlinx.kmp.util.core.json.JsonNode
-import kotlinx.kmp.util.core.json.ObjectMapper
-import kotlinx.kmp.util.core.json.ObjectNode
+import com.fasterxml.jackson.annotation.JsonClassDescription
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonPropertyDescription
+import com.fasterxml.jackson.annotation.JsonTypeName
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.ObjectNode
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Schema
 import java.util.Optional
