@@ -9,7 +9,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 
 - **Migration Plan + Low-Level Design**: [`docs/KMP-CONVERSION-PLAN.md`](docs/KMP-CONVERSION-PLAN.md)
 - **Branch**: `claude/convert-to-kmp-I9zBV`
-- **192 commits** on branch, all pushed
+- **194 commits** on branch, all pushed
 
 ## Current Status
 
@@ -78,7 +78,7 @@ The core principle: **use stable KMP libs directly, don't duplicate them**.
 ### 🔲 Remaining Work
 | Section | What |
 |---|---|
-| JS/Native targets | Add js() + native() targets to anthropic-java-core (currently JVM-only) |
+| ~~JS/Native targets~~ | **Not needed** — api-gen generates KMP-native models from OpenAPI spec via @Serializable + Wire proto. The 540 hand-written model files in anthropic-java-core are the JVM-only legacy path; the KMP path is api-gen output. |
 
 ### What stays, what gets typealiased, what's NOT migrated
 
@@ -168,6 +168,8 @@ by the stable lib that implements the spec (ktor, Wire, wasmtime).
 10. **executeAsync is JVM extension, not interface** — `HttpClient` interface has only `execute()` + `executeSuspend()`. JVM gets `executeAsync()` as an extension function returning `CompletableFuture`.
 11. **Flow replaces Stream** — `stream()` returns `Flow<T>` on all platforms.
 12. **Retryable marker, not IOException check** — `HttpClient.withRetry` retries on any `Throwable` implementing `Retryable` interface. `ApiIoException` + `ApiRetryableException` implement it. Provider-neutral.
+13. **api-gen IS the KMP path** — The 540 hand-written model files in `anthropic-java-core` are the JVM-only legacy path (Jackson + Java types). For JS/Native, use api-gen to generate KMP-native models from the Anthropic OpenAPI spec: `@Serializable` + `@SerialName` + Wire proto types. No need to convert the hand-written files to KMP — they're replaced by generated output.
+14. **4 wire formats** — JSON + CBOR + Protobuf + MsgPack via `ContentFormat` enum in commonMain. All backed by kotlinx.serialization (+ third-party msgpack). Usable with ktor `ContentNegotiation` on all targets.
 
 ### What stays, what gets typealiased, what's NOT migrated
 
