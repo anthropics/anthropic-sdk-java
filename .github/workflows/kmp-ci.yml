@@ -16,53 +16,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install sdkman + GraalVM
-        run: |
-          curl -s "https://get.sdkman.io" | bash
-          source "$HOME/.sdkman/bin/sdkman-init.sh"
-          sdk install java 25.0.2-graal
-          sdk use java 25.0.2-graal
-          java -version
-          native-image --version
-
-      - name: Cache Gradle
-        uses: actions/cache@v4
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts', '**/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradle-
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Build api-kmp (JVM + JS)
-        run: |
-          source "$HOME/.sdkman/bin/sdkman-init.sh"
-          sdk use java 25.0.2-graal
-          ./gradlew :api-kmp:compileKotlinJvm :api-kmp:compileKotlinJs --no-configuration-cache
+        run: ./gradlew :api-kmp:compileKotlinJvm :api-kmp:compileKotlinJs --no-configuration-cache
 
       - name: Test api-kmp (JVM)
-        run: |
-          source "$HOME/.sdkman/bin/sdkman-init.sh"
-          sdk use java 25.0.2-graal
-          ./gradlew :api-kmp:jvmTest --no-configuration-cache
+        run: ./gradlew :api-kmp:jvmTest --no-configuration-cache
 
       - name: Test api-kmp (JS Node)
-        run: |
-          source "$HOME/.sdkman/bin/sdkman-init.sh"
-          sdk use java 25.0.2-graal
-          ./gradlew :api-kmp:jsNodeTest --no-configuration-cache
+        run: ./gradlew :api-kmp:jsNodeTest --no-configuration-cache
 
       - name: Build anthropic-java-core
-        run: |
-          source "$HOME/.sdkman/bin/sdkman-init.sh"
-          sdk use java 25.0.2-graal
-          ./gradlew :anthropic-java-core:compileKotlinJvm :anthropic-java-client-okhttp:compileKotlin --no-configuration-cache
+        run: ./gradlew :anthropic-java-core:compileKotlinJvm :anthropic-java-client-okhttp:compileKotlin --no-configuration-cache
 
       - name: Test anthropic-java-core
-        run: |
-          source "$HOME/.sdkman/bin/sdkman-init.sh"
-          sdk use java 25.0.2-graal
-          SKIP_MOCK_TESTS=true ./gradlew :anthropic-java-core:jvmTest --no-configuration-cache
+        run: SKIP_MOCK_TESTS=true ./gradlew :anthropic-java-core:jvmTest --no-configuration-cache
 
       - name: Upload test results
         if: always()

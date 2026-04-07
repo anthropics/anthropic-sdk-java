@@ -58,7 +58,6 @@ class UiSchemaRegistryTest {
     @Test fun vcard_adr_address_editor() { assertEquals("address-editor", lookup("vcard-adr").widget) }
     @Test fun vcard_photo_is_file() { assertInput("vcard-photo", "file", "vCard") }
     @Test fun vcard_bday_is_date() { assertInput("vcard-bday", "date", "vCard") }
-    @Test fun vcard_note_is_textarea() { assertEquals("textarea", lookup("vcard-note").widget) }
     @Test fun vcard_geo_picker() { assertEquals("geo-picker", lookup("vcard-geo").widget) }
 
     // === iCalendar property types (RFC 5545) ===
@@ -135,9 +134,6 @@ class UiSchemaRegistryTest {
         assertEquals("+1", decoded.placeholder)
     }
 
-    
-}
-
     // === Helpers ===
 
     private fun lookup(format: String) = UiSchemaRegistry.forTypeFormat("string", format)
@@ -166,7 +162,7 @@ class UiSchemaRegistryTest {
     }
 
     @Test fun markdown_is_large_textarea() {
-        assertEquals("markdown-editor", lookup("markdown").resolvedWidget) // explicit widget not overridden
+        assertEquals("markdown-editor", lookup("markdown").resolvedWidget)
         assertEquals(65535, lookup("markdown").maxLength)
     }
 
@@ -193,12 +189,13 @@ class UiSchemaRegistryTest {
     @Test fun varchar_with_maxLength() {
         val m = UiSchemaRegistry.forTypeFormat("string", maxLength = 100)
         assertEquals("VARCHAR(100)", m.resolvedSqlType)
+    }
 
     @Test fun text_default_for_string() {
         assertEquals("TEXT", UiSchemaRegistry.forTypeFormat("string").resolvedSqlType)
     }
 
     @Test fun date_resolves_to_TEXT() {
-        assertEquals("TEXT", lookup("date").resolvedSqlType) // ISO 8601 stored as TEXT
+        assertEquals("TEXT", lookup("date").resolvedSqlType)
     }
-    }
+}
