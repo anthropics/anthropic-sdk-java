@@ -227,6 +227,9 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
+    @Deprecated(
+        "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 of will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+    )
     fun temperature(): Optional<Double> = body.temperature()
 
     /**
@@ -339,6 +342,9 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
+    @Deprecated(
+        "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
+    )
     fun topK(): Optional<Long> = body.topK()
 
     /**
@@ -354,6 +360,9 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
+    @Deprecated(
+        "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+    )
     fun topP(): Optional<Double> = body.topP()
 
     /**
@@ -438,6 +447,9 @@ private constructor(
      *
      * Unlike [temperature], this method doesn't throw if the JSON field has an unexpected type.
      */
+    @Deprecated(
+        "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 of will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+    )
     fun _temperature(): JsonField<Double> = body._temperature()
 
     /**
@@ -466,6 +478,9 @@ private constructor(
      *
      * Unlike [topK], this method doesn't throw if the JSON field has an unexpected type.
      */
+    @Deprecated(
+        "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
+    )
     fun _topK(): JsonField<Long> = body._topK()
 
     /**
@@ -473,6 +488,9 @@ private constructor(
      *
      * Unlike [topP], this method doesn't throw if the JSON field has an unexpected type.
      */
+    @Deprecated(
+        "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+    )
     fun _topP(): JsonField<Double> = body._topP()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
@@ -863,6 +881,9 @@ private constructor(
          *
          * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
          */
+        @Deprecated(
+            "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 of will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+        )
         fun temperature(temperature: Double) = apply { body.temperature(temperature) }
 
         /**
@@ -872,6 +893,9 @@ private constructor(
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
+        @Deprecated(
+            "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 of will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+        )
         fun temperature(temperature: JsonField<Double>) = apply { body.temperature(temperature) }
 
         /**
@@ -1163,6 +1187,9 @@ private constructor(
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
          */
+        @Deprecated(
+            "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
+        )
         fun topK(topK: Long) = apply { body.topK(topK) }
 
         /**
@@ -1171,6 +1198,9 @@ private constructor(
          * You should usually call [Builder.topK] with a well-typed [Long] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
+        @Deprecated(
+            "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
+        )
         fun topK(topK: JsonField<Long>) = apply { body.topK(topK) }
 
         /**
@@ -1183,6 +1213,9 @@ private constructor(
          *
          * Recommended for advanced use cases only. You usually only need to use `temperature`.
          */
+        @Deprecated(
+            "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+        )
         fun topP(topP: Double) = apply { body.topP(topP) }
 
         /**
@@ -1191,6 +1224,9 @@ private constructor(
          * You should usually call [Builder.topP] with a well-typed [Double] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
+        @Deprecated(
+            "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+        )
         fun topP(topP: JsonField<Double>) = apply { body.topP(topP) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
@@ -1608,6 +1644,9 @@ private constructor(
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
+        @Deprecated(
+            "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 of will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+        )
         fun temperature(): Optional<Double> = temperature.getOptional("temperature")
 
         /**
@@ -1722,6 +1761,9 @@ private constructor(
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
+        @Deprecated(
+            "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
+        )
         fun topK(): Optional<Long> = topK.getOptional("top_k")
 
         /**
@@ -1737,6 +1779,9 @@ private constructor(
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
+        @Deprecated(
+            "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+        )
         fun topP(): Optional<Double> = topP.getOptional("top_p")
 
         /**
@@ -1837,6 +1882,9 @@ private constructor(
          *
          * Unlike [temperature], this method doesn't throw if the JSON field has an unexpected type.
          */
+        @Deprecated(
+            "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 of will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+        )
         @JsonProperty("temperature")
         @ExcludeMissing
         fun _temperature(): JsonField<Double> = temperature
@@ -1871,14 +1919,24 @@ private constructor(
          *
          * Unlike [topK], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("top_k") @ExcludeMissing fun _topK(): JsonField<Long> = topK
+        @Deprecated(
+            "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
+        )
+        @JsonProperty("top_k")
+        @ExcludeMissing
+        fun _topK(): JsonField<Long> = topK
 
         /**
          * Returns the raw JSON value of [topP].
          *
          * Unlike [topP], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("top_p") @ExcludeMissing fun _topP(): JsonField<Double> = topP
+        @Deprecated(
+            "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+        )
+        @JsonProperty("top_p")
+        @ExcludeMissing
+        fun _topP(): JsonField<Double> = topP
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2314,6 +2372,9 @@ private constructor(
              * Note that even with `temperature` of `0.0`, the results will not be fully
              * deterministic.
              */
+            @Deprecated(
+                "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 of will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+            )
             fun temperature(temperature: Double) = temperature(JsonField.of(temperature))
 
             /**
@@ -2323,6 +2384,9 @@ private constructor(
              * instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
+            @Deprecated(
+                "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 of will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+            )
             fun temperature(temperature: JsonField<Double>) = apply {
                 this.temperature = temperature
             }
@@ -2623,6 +2687,9 @@ private constructor(
              *
              * Recommended for advanced use cases only. You usually only need to use `temperature`.
              */
+            @Deprecated(
+                "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
+            )
             fun topK(topK: Long) = topK(JsonField.of(topK))
 
             /**
@@ -2632,6 +2699,9 @@ private constructor(
              * method is primarily for setting the field to an undocumented or not yet supported
              * value.
              */
+            @Deprecated(
+                "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
+            )
             fun topK(topK: JsonField<Long>) = apply { this.topK = topK }
 
             /**
@@ -2644,6 +2714,9 @@ private constructor(
              *
              * Recommended for advanced use cases only. You usually only need to use `temperature`.
              */
+            @Deprecated(
+                "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+            )
             fun topP(topP: Double) = topP(JsonField.of(topP))
 
             /**
@@ -2653,6 +2726,9 @@ private constructor(
              * method is primarily for setting the field to an undocumented or not yet supported
              * value.
              */
+            @Deprecated(
+                "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+            )
             fun topP(topP: JsonField<Double>) = apply { this.topP = topP }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
