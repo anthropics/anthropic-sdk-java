@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
     api(project(":anthropic-java-core"))
+    api(project(":anthropic-java-aws"))
 
     // Elements of the Amazon AWS SDK for Java 2.0 providing low-level operations such as
     // credentials resolution and AWS SigV4 request signing. The versions of the AWS SDK modules are
@@ -20,6 +21,7 @@ dependencies {
     // Amazon AWS EventStream for parsing Bedrock streaming responses.
     implementation("software.amazon.eventstream:eventstream:1.0.1")
 
+    testImplementation(project(":anthropic-java-client-okhttp"))
     testImplementation(kotlin("test"))
     testImplementation("org.assertj:assertj-core:3.25.3")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
