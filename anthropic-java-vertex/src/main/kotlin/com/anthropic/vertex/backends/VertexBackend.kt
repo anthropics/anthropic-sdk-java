@@ -45,8 +45,11 @@ private constructor(
     }
 
     override fun baseUrl(): String =
-        if (region == "global") "https://aiplatform.googleapis.com"
-        else "https://$region-aiplatform.googleapis.com"
+        when (region) {
+            "global" -> "https://aiplatform.googleapis.com"
+            "us" -> "https://aiplatform.us.rep.googleapis.com"
+            else -> "https://$region-aiplatform.googleapis.com"
+        }
 
     override fun prepareRequest(request: HttpRequest): HttpRequest {
         val pathSegments = request.pathSegments

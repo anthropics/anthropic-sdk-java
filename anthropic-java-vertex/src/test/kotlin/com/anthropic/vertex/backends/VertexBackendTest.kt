@@ -72,6 +72,22 @@ internal class VertexBackendTest {
     }
 
     @Test
+    fun baseUrlGlobalRegion() {
+        val backend1 = createBackend()
+        val globalBackend = createBackend(backend1.googleCredentials, "global", backend1.project)
+
+        assertThat(globalBackend.baseUrl()).isEqualTo("https://aiplatform.googleapis.com")
+    }
+
+    @Test
+    fun baseUrlUsRegion() {
+        val backend1 = createBackend()
+        val usBackend = createBackend(backend1.googleCredentials, "us", backend1.project)
+
+        assertThat(usBackend.baseUrl()).isEqualTo("https://aiplatform.us.rep.googleapis.com")
+    }
+
+    @Test
     fun baseUrlOtherRegion() {
         // Try with a *different* region to confirm that it is not hard-coded.
         val backend1 = createBackend()
@@ -80,14 +96,6 @@ internal class VertexBackendTest {
 
         assertThat(GC_REGION).isNotEqualTo(otherRegion)
         assertThat(backend2.baseUrl()).isEqualTo("https://$otherRegion-aiplatform.googleapis.com")
-    }
-
-    @Test
-    fun baseUrlGlobalRegion() {
-        val backend1 = createBackend()
-        val globalBackend = createBackend(backend1.googleCredentials, "global", backend1.project)
-
-        assertThat(globalBackend.baseUrl()).isEqualTo("https://aiplatform.googleapis.com")
     }
 
     @Test
