@@ -11,6 +11,7 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsCustomToolInputSchema;
 import com.anthropic.models.beta.agents.BetaManagedAgentsCustomToolParams;
 import com.anthropic.models.beta.agents.BetaManagedAgentsMcpToolsetParams;
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel;
+import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfigParams;
 import com.anthropic.models.beta.agents.BetaManagedAgentsUrlMcpServerParams;
 import com.anthropic.models.beta.environments.EnvironmentCreateParams;
 import com.anthropic.models.beta.sessions.SessionCreateParams;
@@ -90,7 +91,9 @@ public final class ManagedAgentsComprehensiveExample {
                 .agents()
                 .create(AgentCreateParams.builder()
                         .name("comprehensive-example-agent")
-                        .model(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                        .model(BetaManagedAgentsModelConfigParams.builder()
+                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
+                                .build())
                         .system("You are a helpful assistant.")
                         .addMcpServer(BetaManagedAgentsUrlMcpServerParams.builder()
                                 .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)

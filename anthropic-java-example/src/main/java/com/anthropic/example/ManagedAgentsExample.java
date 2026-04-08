@@ -5,6 +5,7 @@ import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.core.http.StreamResponse;
 import com.anthropic.models.beta.agents.AgentCreateParams;
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel;
+import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfigParams;
 import com.anthropic.models.beta.environments.EnvironmentCreateParams;
 import com.anthropic.models.beta.sessions.SessionCreateParams;
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsStreamSessionEvents;
@@ -33,7 +34,9 @@ public final class ManagedAgentsExample {
                 .agents()
                 .create(AgentCreateParams.builder()
                         .name("simple-example-agent")
-                        .model(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                        .model(BetaManagedAgentsModelConfigParams.builder()
+                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
+                                .build())
                         .build());
         System.out.println("Created agent: " + agent.id());
 

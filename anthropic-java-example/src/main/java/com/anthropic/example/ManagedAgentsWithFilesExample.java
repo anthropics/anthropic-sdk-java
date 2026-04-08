@@ -8,6 +8,7 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolset20260401Par
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolsetDefaultConfigParams;
 import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAllowPolicy;
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel;
+import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfigParams;
 import com.anthropic.models.beta.environments.EnvironmentCreateParams;
 import com.anthropic.models.beta.files.FileUploadParams;
 import com.anthropic.models.beta.sessions.BetaManagedAgentsFileResourceParams;
@@ -41,7 +42,9 @@ public final class ManagedAgentsWithFilesExample {
                 .agents()
                 .create(AgentCreateParams.builder()
                         .name("files-example-agent")
-                        .model(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                        .model(BetaManagedAgentsModelConfigParams.builder()
+                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
+                                .build())
                         .addTool(BetaManagedAgentsAgentToolset20260401Params.builder()
                                 .type(BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401)
                                 .defaultConfig(BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
