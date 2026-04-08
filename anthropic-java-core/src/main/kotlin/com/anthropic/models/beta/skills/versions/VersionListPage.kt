@@ -29,13 +29,6 @@ private constructor(
     /**
      * Delegates to [VersionListPageResponse], but gracefully handles missing data.
      *
-     * @see VersionListPageResponse.hasMore
-     */
-    fun hasMore(): Optional<Boolean> = response._hasMore().getOptional("has_more")
-
-    /**
-     * Delegates to [VersionListPageResponse], but gracefully handles missing data.
-     *
      * @see VersionListPageResponse.nextPage
      */
     fun nextPageRaw(): Optional<String> = response._nextPage().getOptional("next_page")

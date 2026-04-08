@@ -3,10 +3,14 @@
 package com.anthropic.services.async
 
 import com.anthropic.core.ClientOptions
+import com.anthropic.services.async.beta.AgentServiceAsync
+import com.anthropic.services.async.beta.EnvironmentServiceAsync
 import com.anthropic.services.async.beta.FileServiceAsync
 import com.anthropic.services.async.beta.MessageServiceAsync
 import com.anthropic.services.async.beta.ModelServiceAsync
+import com.anthropic.services.async.beta.SessionServiceAsync
 import com.anthropic.services.async.beta.SkillServiceAsync
+import com.anthropic.services.async.beta.VaultServiceAsync
 import java.util.function.Consumer
 
 interface BetaServiceAsync {
@@ -27,6 +31,14 @@ interface BetaServiceAsync {
 
     fun messages(): MessageServiceAsync
 
+    fun agents(): AgentServiceAsync
+
+    fun environments(): EnvironmentServiceAsync
+
+    fun sessions(): SessionServiceAsync
+
+    fun vaults(): VaultServiceAsync
+
     fun files(): FileServiceAsync
 
     fun skills(): SkillServiceAsync
@@ -44,6 +56,14 @@ interface BetaServiceAsync {
         fun models(): ModelServiceAsync.WithRawResponse
 
         fun messages(): MessageServiceAsync.WithRawResponse
+
+        fun agents(): AgentServiceAsync.WithRawResponse
+
+        fun environments(): EnvironmentServiceAsync.WithRawResponse
+
+        fun sessions(): SessionServiceAsync.WithRawResponse
+
+        fun vaults(): VaultServiceAsync.WithRawResponse
 
         fun files(): FileServiceAsync.WithRawResponse
 
