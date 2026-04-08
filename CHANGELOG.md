@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.22.0 (2026-04-08)
+
+Full Changelog: [v2.21.0...v2.22.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.21.0...v2.22.0)
+
+### Features
+
+* **api:** add support for Claude Managed Agents ([f410797](https://github.com/anthropics/anthropic-sdk-java/commit/f4107977660dc8ed894166d79b27ed0c0a291729))
+* **bedrock:** Create Bedrock Mantle client ([#1066](https://github.com/anthropics/anthropic-sdk-java/issues/1066)) ([100dfb5](https://github.com/anthropics/anthropic-sdk-java/commit/100dfb577cf0ad2d9a2e15dc9f497ab8701bff56))
+
+
+### Bug Fixes
+
+* **client:** fix examples for agents ([7c11a93](https://github.com/anthropics/anthropic-sdk-java/commit/7c11a93028f65c5471a3a48bbb45d15bc2ad95d2))
+* **internal:** run formatter ([a2aa0c8](https://github.com/anthropics/anthropic-sdk-java/commit/a2aa0c8645b67de892dbfac2bd0f4c9fdec4f299))
+
 ## 2.21.0 (2026-04-07)
 
 Full Changelog: [v2.20.0...v2.21.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.20.0...v2.21.0)
