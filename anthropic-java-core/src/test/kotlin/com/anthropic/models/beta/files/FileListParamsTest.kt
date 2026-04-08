@@ -16,6 +16,7 @@ internal class FileListParamsTest {
             .afterId("after_id")
             .beforeId("before_id")
             .limit(1L)
+            .scopeId("scope_id")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .build()
     }
@@ -27,6 +28,7 @@ internal class FileListParamsTest {
                 .afterId("after_id")
                 .beforeId("before_id")
                 .limit(1L)
+                .scopeId("scope_id")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
 
@@ -54,6 +56,7 @@ internal class FileListParamsTest {
                 .afterId("after_id")
                 .beforeId("before_id")
                 .limit(1L)
+                .scopeId("scope_id")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
 
@@ -65,6 +68,7 @@ internal class FileListParamsTest {
                     .put("after_id", "after_id")
                     .put("before_id", "before_id")
                     .put("limit", "1")
+                    .put("scope_id", "scope_id")
                     .build()
             )
     }

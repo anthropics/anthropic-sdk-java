@@ -17,6 +17,7 @@ private constructor(
     private val afterId: String?,
     private val beforeId: String?,
     private val limit: Long?,
+    private val scopeId: String?,
     private val betas: List<AnthropicBeta>?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -40,6 +41,12 @@ private constructor(
      * Defaults to `20`. Ranges from `1` to `1000`.
      */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
+
+    /**
+     * Filter by scope ID. Only returns files associated with the specified scope (e.g., a session
+     * ID).
+     */
+    fun scopeId(): Optional<String> = Optional.ofNullable(scopeId)
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
@@ -66,6 +73,7 @@ private constructor(
         private var afterId: String? = null
         private var beforeId: String? = null
         private var limit: Long? = null
+        private var scopeId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -75,6 +83,7 @@ private constructor(
             afterId = fileListParams.afterId
             beforeId = fileListParams.beforeId
             limit = fileListParams.limit
+            scopeId = fileListParams.scopeId
             betas = fileListParams.betas?.toMutableList()
             additionalHeaders = fileListParams.additionalHeaders.toBuilder()
             additionalQueryParams = fileListParams.additionalQueryParams.toBuilder()
@@ -114,6 +123,15 @@ private constructor(
 
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
+
+        /**
+         * Filter by scope ID. Only returns files associated with the specified scope (e.g., a
+         * session ID).
+         */
+        fun scopeId(scopeId: String?) = apply { this.scopeId = scopeId }
+
+        /** Alias for calling [Builder.scopeId] with `scopeId.orElse(null)`. */
+        fun scopeId(scopeId: Optional<String>) = scopeId(scopeId.getOrNull())
 
         /** Optional header to specify the beta version(s) you want to use. */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
@@ -247,6 +265,7 @@ private constructor(
                 afterId,
                 beforeId,
                 limit,
+                scopeId,
                 betas?.toImmutable(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -267,6 +286,7 @@ private constructor(
                 afterId?.let { put("after_id", it) }
                 beforeId?.let { put("before_id", it) }
                 limit?.let { put("limit", it.toString()) }
+                scopeId?.let { put("scope_id", it) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -280,14 +300,23 @@ private constructor(
             afterId == other.afterId &&
             beforeId == other.beforeId &&
             limit == other.limit &&
+            scopeId == other.scopeId &&
             betas == other.betas &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(afterId, beforeId, limit, betas, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            afterId,
+            beforeId,
+            limit,
+            scopeId,
+            betas,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "FileListParams{afterId=$afterId, beforeId=$beforeId, limit=$limit, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "FileListParams{afterId=$afterId, beforeId=$beforeId, limit=$limit, scopeId=$scopeId, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

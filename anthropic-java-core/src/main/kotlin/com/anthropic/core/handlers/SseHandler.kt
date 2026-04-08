@@ -28,7 +28,8 @@ internal fun sseHandler(jsonMapper: JsonMapper): Handler<StreamResponse<SseMessa
                 "message_stop",
                 "content_block_start",
                 "content_block_delta",
-                "content_block_stop" -> yield(message)
+                "content_block_stop",
+                "message" -> yield(message)
                 "ping" -> continue
                 "error" -> {
                     throw SseException.builder()

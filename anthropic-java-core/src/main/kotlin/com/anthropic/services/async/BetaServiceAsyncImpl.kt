@@ -3,14 +3,22 @@
 package com.anthropic.services.async
 
 import com.anthropic.core.ClientOptions
+import com.anthropic.services.async.beta.AgentServiceAsync
+import com.anthropic.services.async.beta.AgentServiceAsyncImpl
+import com.anthropic.services.async.beta.EnvironmentServiceAsync
+import com.anthropic.services.async.beta.EnvironmentServiceAsyncImpl
 import com.anthropic.services.async.beta.FileServiceAsync
 import com.anthropic.services.async.beta.FileServiceAsyncImpl
 import com.anthropic.services.async.beta.MessageServiceAsync
 import com.anthropic.services.async.beta.MessageServiceAsyncImpl
 import com.anthropic.services.async.beta.ModelServiceAsync
 import com.anthropic.services.async.beta.ModelServiceAsyncImpl
+import com.anthropic.services.async.beta.SessionServiceAsync
+import com.anthropic.services.async.beta.SessionServiceAsyncImpl
 import com.anthropic.services.async.beta.SkillServiceAsync
 import com.anthropic.services.async.beta.SkillServiceAsyncImpl
+import com.anthropic.services.async.beta.VaultServiceAsync
+import com.anthropic.services.async.beta.VaultServiceAsyncImpl
 import java.util.function.Consumer
 
 class BetaServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -23,6 +31,16 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
     private val models: ModelServiceAsync by lazy { ModelServiceAsyncImpl(clientOptions) }
 
     private val messages: MessageServiceAsync by lazy { MessageServiceAsyncImpl(clientOptions) }
+
+    private val agents: AgentServiceAsync by lazy { AgentServiceAsyncImpl(clientOptions) }
+
+    private val environments: EnvironmentServiceAsync by lazy {
+        EnvironmentServiceAsyncImpl(clientOptions)
+    }
+
+    private val sessions: SessionServiceAsync by lazy { SessionServiceAsyncImpl(clientOptions) }
+
+    private val vaults: VaultServiceAsync by lazy { VaultServiceAsyncImpl(clientOptions) }
 
     private val files: FileServiceAsync by lazy { FileServiceAsyncImpl(clientOptions) }
 
@@ -37,6 +55,14 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
 
     override fun messages(): MessageServiceAsync = messages
 
+    override fun agents(): AgentServiceAsync = agents
+
+    override fun environments(): EnvironmentServiceAsync = environments
+
+    override fun sessions(): SessionServiceAsync = sessions
+
+    override fun vaults(): VaultServiceAsync = vaults
+
     override fun files(): FileServiceAsync = files
 
     override fun skills(): SkillServiceAsync = skills
@@ -50,6 +76,22 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
 
         private val messages: MessageServiceAsync.WithRawResponse by lazy {
             MessageServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val agents: AgentServiceAsync.WithRawResponse by lazy {
+            AgentServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val environments: EnvironmentServiceAsync.WithRawResponse by lazy {
+            EnvironmentServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val sessions: SessionServiceAsync.WithRawResponse by lazy {
+            SessionServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val vaults: VaultServiceAsync.WithRawResponse by lazy {
+            VaultServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val files: FileServiceAsync.WithRawResponse by lazy {
@@ -70,6 +112,14 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
         override fun models(): ModelServiceAsync.WithRawResponse = models
 
         override fun messages(): MessageServiceAsync.WithRawResponse = messages
+
+        override fun agents(): AgentServiceAsync.WithRawResponse = agents
+
+        override fun environments(): EnvironmentServiceAsync.WithRawResponse = environments
+
+        override fun sessions(): SessionServiceAsync.WithRawResponse = sessions
+
+        override fun vaults(): VaultServiceAsync.WithRawResponse = vaults
 
         override fun files(): FileServiceAsync.WithRawResponse = files
 
