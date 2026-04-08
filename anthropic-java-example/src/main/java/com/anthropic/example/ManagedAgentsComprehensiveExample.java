@@ -34,9 +34,8 @@ public final class ManagedAgentsComprehensiveExample {
     private static final String MCP_SERVER_NAME = "github";
     private static final String MCP_SERVER_URL = "https://api.githubcopilot.com/mcp/";
 
-    private static final String PROMPT =
-            "Hi! List every tool and skill you have access to, grouped by where they "
-                    + "came from (built-in toolset, custom tool, MCP server, skills).";
+    private static final String PROMPT = "Hi! List every tool and skill you have access to, grouped by where they "
+            + "came from (built-in toolset, custom tool, MCP server, skills).";
 
     public static void main(String[] args) {
         // Configures using the `ANTHROPIC_API_KEY` environment variable
@@ -44,26 +43,29 @@ public final class ManagedAgentsComprehensiveExample {
 
         String githubToken = System.getenv("GITHUB_TOKEN");
         if (githubToken == null || githubToken.isEmpty()) {
-            throw new RuntimeException(
-                    "GITHUB_TOKEN is required (use a fine-grained PAT with public-repo read only)");
+            throw new RuntimeException("GITHUB_TOKEN is required (use a fine-grained PAT with public-repo read only)");
         }
 
         // Create an environment
-        var environment = client.beta().environments().create(
-                EnvironmentCreateParams.builder()
+        var environment = client.beta()
+                .environments()
+                .create(EnvironmentCreateParams.builder()
                         .name("comprehensive-example-environment")
                         .build());
         System.out.println("Created environment: " + environment.id());
 
         // Create a vault and store the MCP server credential in it
-        var vault = client.beta().vaults().create(
-                VaultCreateParams.builder()
+        var vault = client.beta()
+                .vaults()
+                .create(VaultCreateParams.builder()
                         .displayName("comprehensive-example-vault")
                         .build());
         System.out.println("Created vault: " + vault.id());
 
-        var credential = client.beta().vaults().credentials().create(
-                CredentialCreateParams.builder()
+        var credential = client.beta()
+                .vaults()
+                .credentials()
+                .create(CredentialCreateParams.builder()
                         .vaultId(vault.id())
                         .displayName("github-mcp")
                         .auth(BetaManagedAgentsStaticBearerCreateParams.builder()
@@ -75,16 +77,18 @@ public final class ManagedAgentsComprehensiveExample {
         System.out.println("Created credential: " + credential.id());
 
         // Upload a custom skill
-        var skill = client.beta().skills().create(
-                SkillCreateParams.builder()
+        var skill = client.beta()
+                .skills()
+                .create(SkillCreateParams.builder()
                         .displayTitle("comprehensive-greeting-" + System.currentTimeMillis())
                         .addFile(Paths.get("greeting-SKILL.md"))
                         .build());
         System.out.println("Created skill: " + skill.id());
 
         // Create v1 of the agent with the built-in toolset, an MCP server, and a custom tool
-        var agentV1 = client.beta().agents().create(
-                AgentCreateParams.builder()
+        var agentV1 = client.beta()
+                .agents()
+                .create(AgentCreateParams.builder()
                         .name("comprehensive-example-agent")
                         .model(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                         .system("You are a helpful assistant.")
@@ -107,8 +111,7 @@ public final class ManagedAgentsComprehensiveExample {
                                 .inputSchema(BetaManagedAgentsCustomToolInputSchema.builder()
                                         .type(BetaManagedAgentsCustomToolInputSchema.Type.OBJECT)
                                         .properties(BetaManagedAgentsCustomToolInputSchema.Properties.builder()
-                                                .putAdditionalProperty("city", JsonValue.from(Map.of(
-                                                        "type", "string")))
+                                                .putAdditionalProperty("city", JsonValue.from(Map.of("type", "string")))
                                                 .build())
                                         .required(List.of("city"))
                                         .build())
@@ -117,8 +120,9 @@ public final class ManagedAgentsComprehensiveExample {
         System.out.println("Created agent v1: " + agentV1.id());
 
         // Patch the agent to v2 by adding skills; each update bumps the version
-        var agent = client.beta().agents().update(
-                AgentUpdateParams.builder()
+        var agent = client.beta()
+                .agents()
+                .update(AgentUpdateParams.builder()
                         .agentId(agentV1.id())
                         .version(agentV1.version())
                         .addCustomSkill(skill.id())
@@ -130,8 +134,9 @@ public final class ManagedAgentsComprehensiveExample {
         System.out.println("Agent versions: " + versions.data());
 
         // Create a session pinned to v2; the vault supplies the MCP credential
-        var session = client.beta().sessions().create(
-                SessionCreateParams.builder()
+        var session = client.beta()
+                .sessions()
+                .create(SessionCreateParams.builder()
                         .environmentId(environment.id())
                         .agent(agent.id())
                         .addVaultId(vault.id())
@@ -139,21 +144,23 @@ public final class ManagedAgentsComprehensiveExample {
         System.out.println("Created session: " + session.id());
 
         // Send a prompt and stream events, answering the custom tool if called
-        client.beta().sessions().events().send(
-                EventSendParams.builder()
+        client.beta()
+                .sessions()
+                .events()
+                .send(EventSendParams.builder()
                         .sessionId(session.id())
-                        .addUserMessageEvent(List.of(
-                                BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                                        BetaManagedAgentsTextBlock.builder()
-                                                .text(PROMPT)
-                                                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                                .build())))
+                        .addUserMessageEvent(List.of(BetaManagedAgentsUserMessageEventParams.Content.ofText(
+                                BetaManagedAgentsTextBlock.builder()
+                                        .text(PROMPT)
+                                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
+                                        .build())))
                         .build());
 
         System.out.println("Streaming events:");
         try (StreamResponse<BetaManagedAgentsStreamSessionEvents> streamResponse =
                 client.beta().sessions().events().streamStreaming(session.id())) {
-            Iterator<BetaManagedAgentsStreamSessionEvents> it = streamResponse.stream().iterator();
+            Iterator<BetaManagedAgentsStreamSessionEvents> it =
+                    streamResponse.stream().iterator();
             while (it.hasNext()) {
                 BetaManagedAgentsStreamSessionEvents event = it.next();
                 System.out.println(event);
@@ -162,11 +169,15 @@ public final class ManagedAgentsComprehensiveExample {
                 if (event.isAgentCustomToolUse()) {
                     var toolUse = event.asAgentCustomToolUse();
                     if ("get_weather".equals(toolUse.name())) {
-                        client.beta().sessions().events().send(
-                                EventSendParams.builder()
+                        client.beta()
+                                .sessions()
+                                .events()
+                                .send(EventSendParams.builder()
                                         .sessionId(session.id())
                                         .addEvent(BetaManagedAgentsUserCustomToolResultEventParams.builder()
-                                                .type(BetaManagedAgentsUserCustomToolResultEventParams.Type.USER_CUSTOM_TOOL_RESULT)
+                                                .type(
+                                                        BetaManagedAgentsUserCustomToolResultEventParams.Type
+                                                                .USER_CUSTOM_TOOL_RESULT)
                                                 .customToolUseId(toolUse.id())
                                                 .addTextContent("{\"temperature_c\": 14}")
                                                 .build())

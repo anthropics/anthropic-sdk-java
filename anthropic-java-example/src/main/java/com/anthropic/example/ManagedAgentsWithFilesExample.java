@@ -29,15 +29,17 @@ public final class ManagedAgentsWithFilesExample {
         AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
         // Create an environment
-        var environment = client.beta().environments().create(
-                EnvironmentCreateParams.builder()
+        var environment = client.beta()
+                .environments()
+                .create(EnvironmentCreateParams.builder()
                         .name("files-example-environment")
                         .build());
         System.out.println("Created environment: " + environment.id());
 
         // Create an agent with the built-in toolset and an always-allow permission policy
-        var agent = client.beta().agents().create(
-                AgentCreateParams.builder()
+        var agent = client.beta()
+                .agents()
+                .create(AgentCreateParams.builder()
                         .name("files-example-agent")
                         .model(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                         .addTool(BetaManagedAgentsAgentToolset20260401Params.builder()
@@ -53,15 +55,15 @@ public final class ManagedAgentsWithFilesExample {
         System.out.println("Created agent: " + agent.id());
 
         // Upload a file (resolved relative to the example working directory)
-        var file = client.beta().files().upload(
-                FileUploadParams.builder()
-                        .file(Paths.get("data.csv"))
-                        .build());
+        var file = client.beta()
+                .files()
+                .upload(FileUploadParams.builder().file(Paths.get("data.csv")).build());
         System.out.println("Uploaded file: " + file.id());
 
         // Create a session with the file mounted as a resource
-        var session = client.beta().sessions().create(
-                SessionCreateParams.builder()
+        var session = client.beta()
+                .sessions()
+                .create(SessionCreateParams.builder()
                         .environmentId(environment.id())
                         .agent(agent.id())
                         .addResource(BetaManagedAgentsFileResourceParams.builder()
@@ -73,29 +75,31 @@ public final class ManagedAgentsWithFilesExample {
         System.out.println("Created session: " + session.id());
 
         // List session resources
-        var resources = client.beta().sessions().resources().list(
-                ResourceListParams.builder()
-                        .sessionId(session.id())
-                        .build());
+        var resources = client.beta()
+                .sessions()
+                .resources()
+                .list(ResourceListParams.builder().sessionId(session.id()).build());
         System.out.println("Listed session resources: " + resources.data());
 
         // Send a prompt asking the agent to read the mounted file
-        client.beta().sessions().events().send(
-                EventSendParams.builder()
+        client.beta()
+                .sessions()
+                .events()
+                .send(EventSendParams.builder()
                         .sessionId(session.id())
-                        .addUserMessageEvent(List.of(
-                                BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                                        BetaManagedAgentsTextBlock.builder()
-                                                .text("Read /uploads/data.csv and tell me the column names.")
-                                                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                                .build())))
+                        .addUserMessageEvent(List.of(BetaManagedAgentsUserMessageEventParams.Content.ofText(
+                                BetaManagedAgentsTextBlock.builder()
+                                        .text("Read /uploads/data.csv and tell me the column names.")
+                                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
+                                        .build())))
                         .build());
 
         // Stream events until the session goes idle
         System.out.println("Streaming events:");
         try (StreamResponse<BetaManagedAgentsStreamSessionEvents> streamResponse =
                 client.beta().sessions().events().streamStreaming(session.id())) {
-            Iterator<BetaManagedAgentsStreamSessionEvents> it = streamResponse.stream().iterator();
+            Iterator<BetaManagedAgentsStreamSessionEvents> it =
+                    streamResponse.stream().iterator();
             while (it.hasNext()) {
                 BetaManagedAgentsStreamSessionEvents event = it.next();
                 System.out.println(event);
