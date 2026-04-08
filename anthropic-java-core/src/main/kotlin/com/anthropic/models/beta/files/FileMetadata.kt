@@ -16,6 +16,7 @@ import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 class FileMetadata
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -27,6 +28,7 @@ private constructor(
     private val sizeBytes: JsonField<Long>,
     private val type: JsonValue,
     private val downloadable: JsonField<Boolean>,
+    private val scope: JsonField<BetaFileScope>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -43,7 +45,18 @@ private constructor(
         @JsonProperty("downloadable")
         @ExcludeMissing
         downloadable: JsonField<Boolean> = JsonMissing.of(),
-    ) : this(id, createdAt, filename, mimeType, sizeBytes, type, downloadable, mutableMapOf())
+        @JsonProperty("scope") @ExcludeMissing scope: JsonField<BetaFileScope> = JsonMissing.of(),
+    ) : this(
+        id,
+        createdAt,
+        filename,
+        mimeType,
+        sizeBytes,
+        type,
+        downloadable,
+        scope,
+        mutableMapOf(),
+    )
 
     /**
      * Unique object identifier.
@@ -111,6 +124,14 @@ private constructor(
     fun downloadable(): Optional<Boolean> = downloadable.getOptional("downloadable")
 
     /**
+     * The scope of this file, indicating the context in which it was created (e.g., a session).
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun scope(): Optional<BetaFileScope> = scope.getOptional("scope")
+
+    /**
      * Returns the raw JSON value of [id].
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
@@ -156,6 +177,13 @@ private constructor(
     @ExcludeMissing
     fun _downloadable(): JsonField<Boolean> = downloadable
 
+    /**
+     * Returns the raw JSON value of [scope].
+     *
+     * Unlike [scope], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("scope") @ExcludeMissing fun _scope(): JsonField<BetaFileScope> = scope
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -195,6 +223,7 @@ private constructor(
         private var sizeBytes: JsonField<Long>? = null
         private var type: JsonValue = JsonValue.from("file")
         private var downloadable: JsonField<Boolean> = JsonMissing.of()
+        private var scope: JsonField<BetaFileScope> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -206,6 +235,7 @@ private constructor(
             sizeBytes = fileMetadata.sizeBytes
             type = fileMetadata.type
             downloadable = fileMetadata.downloadable
+            scope = fileMetadata.scope
             additionalProperties = fileMetadata.additionalProperties.toMutableMap()
         }
 
@@ -297,6 +327,23 @@ private constructor(
             this.downloadable = downloadable
         }
 
+        /**
+         * The scope of this file, indicating the context in which it was created (e.g., a session).
+         */
+        fun scope(scope: BetaFileScope?) = scope(JsonField.ofNullable(scope))
+
+        /** Alias for calling [Builder.scope] with `scope.orElse(null)`. */
+        fun scope(scope: Optional<BetaFileScope>) = scope(scope.getOrNull())
+
+        /**
+         * Sets [Builder.scope] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.scope] with a well-typed [BetaFileScope] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun scope(scope: JsonField<BetaFileScope>) = apply { this.scope = scope }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -341,6 +388,7 @@ private constructor(
                 checkRequired("sizeBytes", sizeBytes),
                 type,
                 downloadable,
+                scope,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -363,6 +411,7 @@ private constructor(
             }
         }
         downloadable()
+        scope().ifPresent { it.validate() }
         validated = true
     }
 
@@ -387,7 +436,8 @@ private constructor(
             (if (mimeType.asKnown().isPresent) 1 else 0) +
             (if (sizeBytes.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("file")) 1 else 0 } +
-            (if (downloadable.asKnown().isPresent) 1 else 0)
+            (if (downloadable.asKnown().isPresent) 1 else 0) +
+            (scope.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -402,6 +452,7 @@ private constructor(
             sizeBytes == other.sizeBytes &&
             type == other.type &&
             downloadable == other.downloadable &&
+            scope == other.scope &&
             additionalProperties == other.additionalProperties
     }
 
@@ -414,6 +465,7 @@ private constructor(
             sizeBytes,
             type,
             downloadable,
+            scope,
             additionalProperties,
         )
     }
@@ -421,5 +473,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "FileMetadata{id=$id, createdAt=$createdAt, filename=$filename, mimeType=$mimeType, sizeBytes=$sizeBytes, type=$type, downloadable=$downloadable, additionalProperties=$additionalProperties}"
+        "FileMetadata{id=$id, createdAt=$createdAt, filename=$filename, mimeType=$mimeType, sizeBytes=$sizeBytes, type=$type, downloadable=$downloadable, scope=$scope, additionalProperties=$additionalProperties}"
 }

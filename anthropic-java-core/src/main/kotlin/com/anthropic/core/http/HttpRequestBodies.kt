@@ -139,31 +139,7 @@ private fun serializePart(name: String, node: JsonNode): Sequence<Pair<String, I
         JsonNodeType.BOOLEAN -> sequenceOf(name to node.booleanValue().toString().byteInputStream())
         JsonNodeType.NUMBER -> sequenceOf(name to node.numberValue().toString().byteInputStream())
         JsonNodeType.ARRAY ->
-            sequenceOf(
-                name to
-                    node
-                        .elements()
-                        .asSequence()
-                        .mapNotNull { element ->
-                            when (element.nodeType) {
-                                JsonNodeType.MISSING,
-                                JsonNodeType.NULL -> null
-                                JsonNodeType.STRING -> element.textValue()
-                                JsonNodeType.BOOLEAN -> element.booleanValue().toString()
-                                JsonNodeType.NUMBER -> element.numberValue().toString()
-                                null,
-                                JsonNodeType.BINARY,
-                                JsonNodeType.ARRAY,
-                                JsonNodeType.OBJECT,
-                                JsonNodeType.POJO ->
-                                    throw AnthropicInvalidDataException(
-                                        "Unexpected JsonNode type in array: ${element.nodeType}"
-                                    )
-                            }
-                        }
-                        .joinToString(",")
-                        .byteInputStream()
-            )
+            node.elements().asSequence().flatMap { element -> serializePart("$name[]", element) }
         JsonNodeType.OBJECT ->
             node.fields().asSequence().flatMap { (key, value) ->
                 serializePart("$name[$key]", value)

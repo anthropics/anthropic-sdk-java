@@ -3,10 +3,14 @@
 package com.anthropic.services.blocking
 
 import com.anthropic.core.ClientOptions
+import com.anthropic.services.blocking.beta.AgentService
+import com.anthropic.services.blocking.beta.EnvironmentService
 import com.anthropic.services.blocking.beta.FileService
 import com.anthropic.services.blocking.beta.MessageService
 import com.anthropic.services.blocking.beta.ModelService
+import com.anthropic.services.blocking.beta.SessionService
 import com.anthropic.services.blocking.beta.SkillService
+import com.anthropic.services.blocking.beta.VaultService
 import java.util.function.Consumer
 
 interface BetaService {
@@ -27,6 +31,14 @@ interface BetaService {
 
     fun messages(): MessageService
 
+    fun agents(): AgentService
+
+    fun environments(): EnvironmentService
+
+    fun sessions(): SessionService
+
+    fun vaults(): VaultService
+
     fun files(): FileService
 
     fun skills(): SkillService
@@ -44,6 +56,14 @@ interface BetaService {
         fun models(): ModelService.WithRawResponse
 
         fun messages(): MessageService.WithRawResponse
+
+        fun agents(): AgentService.WithRawResponse
+
+        fun environments(): EnvironmentService.WithRawResponse
+
+        fun sessions(): SessionService.WithRawResponse
+
+        fun vaults(): VaultService.WithRawResponse
 
         fun files(): FileService.WithRawResponse
 

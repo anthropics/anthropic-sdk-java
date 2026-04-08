@@ -293,10 +293,20 @@ internal class HttpRequestBodiesTest {
             .isEqualTo(
                 """
                 |--$boundary
-                |Content-Disposition: form-data; name="items"
+                |Content-Disposition: form-data; name="items[]"
                 |Content-Type: text/plain
                 |
-                |alpha,beta,gamma
+                |alpha
+                |--$boundary
+                |Content-Disposition: form-data; name="items[]"
+                |Content-Type: text/plain
+                |
+                |beta
+                |--$boundary
+                |Content-Disposition: form-data; name="items[]"
+                |Content-Type: text/plain
+                |
+                |gamma
                 |--$boundary--
                 |
                 """
@@ -577,10 +587,15 @@ internal class HttpRequestBodiesTest {
             .isEqualTo(
                 """
                 |--$boundary
-                |Content-Disposition: form-data; name="data[tags]"
+                |Content-Disposition: form-data; name="data[tags][]"
                 |Content-Type: text/plain
                 |
-                |a,b
+                |a
+                |--$boundary
+                |Content-Disposition: form-data; name="data[tags][]"
+                |Content-Type: text/plain
+                |
+                |b
                 |--$boundary--
                 |
                 """
@@ -670,11 +685,6 @@ internal class HttpRequestBodiesTest {
                 |Content-Type: text/plain
                 |
                 |present
-                |--$boundary
-                |Content-Disposition: form-data; name="items"
-                |Content-Type: text/plain
-                |
-                |
                 |--$boundary--
                 |
                 """

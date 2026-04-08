@@ -42,7 +42,7 @@ configure<MavenPublishBaseExtension> {
     )
 
     pom {
-        name.set("Anthropic API")
+        name.set("Anthropic API + managed-agents")
         description.set("An SDK library for anthropic")
         url.set("https://docs.anthropic.com/claude/reference/")
 

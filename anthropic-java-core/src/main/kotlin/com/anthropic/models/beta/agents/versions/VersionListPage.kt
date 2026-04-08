@@ -1,0 +1,134 @@
+// File generated from our OpenAPI spec by Stainless.
+
+package com.anthropic.models.beta.agents.versions
+
+import com.anthropic.core.AutoPager
+import com.anthropic.core.Page
+import com.anthropic.core.checkRequired
+import com.anthropic.models.beta.agents.BetaManagedAgentsAgent
+import com.anthropic.services.blocking.beta.agents.VersionService
+import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
+
+/** @see VersionService.list */
+class VersionListPage
+private constructor(
+    private val service: VersionService,
+    private val params: VersionListParams,
+    private val response: VersionListPageResponse,
+) : Page<BetaManagedAgentsAgent> {
+
+    /**
+     * Delegates to [VersionListPageResponse], but gracefully handles missing data.
+     *
+     * @see VersionListPageResponse.data
+     */
+    fun data(): List<BetaManagedAgentsAgent> =
+        response._data().getOptional("data").getOrNull() ?: emptyList()
+
+    /**
+     * Delegates to [VersionListPageResponse], but gracefully handles missing data.
+     *
+     * @see VersionListPageResponse.nextPage
+     */
+    fun nextPageRaw(): Optional<String> = response._nextPage().getOptional("next_page")
+
+    override fun items(): List<BetaManagedAgentsAgent> = data()
+
+    override fun hasNextPage(): Boolean = items().isNotEmpty() && nextPageRaw().isPresent
+
+    fun nextPageParams(): VersionListParams {
+        val nextCursor =
+            nextPageRaw().getOrNull()
+                ?: throw IllegalStateException("Cannot construct next page params")
+        return params.toBuilder().page(nextCursor).build()
+    }
+
+    override fun nextPage(): VersionListPage = service.list(nextPageParams())
+
+    fun autoPager(): AutoPager<BetaManagedAgentsAgent> = AutoPager.from(this)
+
+    /** The parameters that were used to request this page. */
+    fun params(): VersionListParams = params
+
+    /** The response that this page was parsed from. */
+    fun response(): VersionListPageResponse = response
+
+    fun toBuilder() = Builder().from(this)
+
+    companion object {
+
+        /**
+         * Returns a mutable builder for constructing an instance of [VersionListPage].
+         *
+         * The following fields are required:
+         * ```java
+         * .service()
+         * .params()
+         * .response()
+         * ```
+         */
+        @JvmStatic fun builder() = Builder()
+    }
+
+    /** A builder for [VersionListPage]. */
+    class Builder internal constructor() {
+
+        private var service: VersionService? = null
+        private var params: VersionListParams? = null
+        private var response: VersionListPageResponse? = null
+
+        @JvmSynthetic
+        internal fun from(versionListPage: VersionListPage) = apply {
+            service = versionListPage.service
+            params = versionListPage.params
+            response = versionListPage.response
+        }
+
+        fun service(service: VersionService) = apply { this.service = service }
+
+        /** The parameters that were used to request this page. */
+        fun params(params: VersionListParams) = apply { this.params = params }
+
+        /** The response that this page was parsed from. */
+        fun response(response: VersionListPageResponse) = apply { this.response = response }
+
+        /**
+         * Returns an immutable instance of [VersionListPage].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .service()
+         * .params()
+         * .response()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
+        fun build(): VersionListPage =
+            VersionListPage(
+                checkRequired("service", service),
+                checkRequired("params", params),
+                checkRequired("response", response),
+            )
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+
+        return other is VersionListPage &&
+            service == other.service &&
+            params == other.params &&
+            response == other.response
+    }
+
+    override fun hashCode(): Int = Objects.hash(service, params, response)
+
+    override fun toString() =
+        "VersionListPage{service=$service, params=$params, response=$response}"
+}

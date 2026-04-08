@@ -29,13 +29,6 @@ private constructor(
     /**
      * Delegates to [SkillListPageResponse], but gracefully handles missing data.
      *
-     * @see SkillListPageResponse.hasMore
-     */
-    fun hasMore(): Optional<Boolean> = response._hasMore().getOptional("has_more")
-
-    /**
-     * Delegates to [SkillListPageResponse], but gracefully handles missing data.
-     *
      * @see SkillListPageResponse.nextPage
      */
     fun nextPageRaw(): Optional<String> = response._nextPage().getOptional("next_page")
