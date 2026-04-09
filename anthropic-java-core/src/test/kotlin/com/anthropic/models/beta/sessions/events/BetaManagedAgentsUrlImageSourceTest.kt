@@ -14,12 +14,12 @@ internal class BetaManagedAgentsUrlImageSourceTest {
         val betaManagedAgentsUrlImageSource =
             BetaManagedAgentsUrlImageSource.builder()
                 .type(BetaManagedAgentsUrlImageSource.Type.URL)
-                .url("url")
+                .url("x")
                 .build()
 
         assertThat(betaManagedAgentsUrlImageSource.type())
             .isEqualTo(BetaManagedAgentsUrlImageSource.Type.URL)
-        assertThat(betaManagedAgentsUrlImageSource.url()).isEqualTo("url")
+        assertThat(betaManagedAgentsUrlImageSource.url()).isEqualTo("x")
     }
 
     @Test
@@ -28,7 +28,7 @@ internal class BetaManagedAgentsUrlImageSourceTest {
         val betaManagedAgentsUrlImageSource =
             BetaManagedAgentsUrlImageSource.builder()
                 .type(BetaManagedAgentsUrlImageSource.Type.URL)
-                .url("url")
+                .url("x")
                 .build()
 
         val roundtrippedBetaManagedAgentsUrlImageSource =

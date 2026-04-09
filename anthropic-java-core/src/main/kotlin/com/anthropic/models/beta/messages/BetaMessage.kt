@@ -519,6 +519,13 @@ private constructor(
 
         /**
          * Alias for calling [addContent] with
+         * `BetaContentBlock.ofAdvisorToolResult(advisorToolResult)`.
+         */
+        fun addContent(advisorToolResult: BetaAdvisorToolResultBlock) =
+            addContent(BetaContentBlock.ofAdvisorToolResult(advisorToolResult))
+
+        /**
+         * Alias for calling [addContent] with
          * `BetaContentBlock.ofCodeExecutionToolResult(codeExecutionToolResult)`.
          */
         fun addContent(codeExecutionToolResult: BetaCodeExecutionToolResultBlock) =

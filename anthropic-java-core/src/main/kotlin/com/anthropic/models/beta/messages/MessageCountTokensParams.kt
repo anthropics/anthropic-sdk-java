@@ -1084,6 +1084,14 @@ private constructor(
 
         /**
          * Alias for calling [addTool] with
+         * `Tool.ofBetaAdvisorTool20260301(betaAdvisorTool20260301)`.
+         */
+        fun addTool(betaAdvisorTool20260301: BetaAdvisorTool20260301) = apply {
+            body.addTool(betaAdvisorTool20260301)
+        }
+
+        /**
+         * Alias for calling [addTool] with
          * `Tool.ofBetaToolSearchToolBm25_20251119(betaToolSearchToolBm25_20251119)`.
          */
         fun addTool(betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119) = apply {
@@ -2387,6 +2395,13 @@ private constructor(
 
             /**
              * Alias for calling [addTool] with
+             * `Tool.ofBetaAdvisorTool20260301(betaAdvisorTool20260301)`.
+             */
+            fun addTool(betaAdvisorTool20260301: BetaAdvisorTool20260301) =
+                addTool(Tool.ofBetaAdvisorTool20260301(betaAdvisorTool20260301))
+
+            /**
+             * Alias for calling [addTool] with
              * `Tool.ofBetaToolSearchToolBm25_20251119(betaToolSearchToolBm25_20251119)`.
              */
             fun addTool(betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119) =
@@ -2891,6 +2906,7 @@ private constructor(
         private val betaWebSearchTool20260209: BetaWebSearchTool20260209? = null,
         private val betaWebFetchTool20260209: BetaWebFetchTool20260209? = null,
         private val betaWebFetchTool20260309: BetaWebFetchTool20260309? = null,
+        private val betaAdvisorTool20260301: BetaAdvisorTool20260301? = null,
         private val betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119? = null,
         private val betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119? = null,
         private val betaMcpToolset: BetaMcpToolset? = null,
@@ -2955,6 +2971,9 @@ private constructor(
         fun betaWebFetchTool20260309(): Optional<BetaWebFetchTool20260309> =
             Optional.ofNullable(betaWebFetchTool20260309)
 
+        fun betaAdvisorTool20260301(): Optional<BetaAdvisorTool20260301> =
+            Optional.ofNullable(betaAdvisorTool20260301)
+
         fun betaToolSearchToolBm25_20251119(): Optional<BetaToolSearchToolBm25_20251119> =
             Optional.ofNullable(betaToolSearchToolBm25_20251119)
 
@@ -3006,6 +3025,8 @@ private constructor(
         fun isBetaWebFetchTool20260209(): Boolean = betaWebFetchTool20260209 != null
 
         fun isBetaWebFetchTool20260309(): Boolean = betaWebFetchTool20260309 != null
+
+        fun isBetaAdvisorTool20260301(): Boolean = betaAdvisorTool20260301 != null
 
         fun isBetaToolSearchToolBm25_20251119(): Boolean = betaToolSearchToolBm25_20251119 != null
 
@@ -3071,6 +3092,9 @@ private constructor(
         fun asBetaWebFetchTool20260309(): BetaWebFetchTool20260309 =
             betaWebFetchTool20260309.getOrThrow("betaWebFetchTool20260309")
 
+        fun asBetaAdvisorTool20260301(): BetaAdvisorTool20260301 =
+            betaAdvisorTool20260301.getOrThrow("betaAdvisorTool20260301")
+
         fun asBetaToolSearchToolBm25_20251119(): BetaToolSearchToolBm25_20251119 =
             betaToolSearchToolBm25_20251119.getOrThrow("betaToolSearchToolBm25_20251119")
 
@@ -3126,6 +3150,8 @@ private constructor(
                     visitor.visitBetaWebFetchTool20260209(betaWebFetchTool20260209)
                 betaWebFetchTool20260309 != null ->
                     visitor.visitBetaWebFetchTool20260309(betaWebFetchTool20260309)
+                betaAdvisorTool20260301 != null ->
+                    visitor.visitBetaAdvisorTool20260301(betaAdvisorTool20260301)
                 betaToolSearchToolBm25_20251119 != null ->
                     visitor.visitBetaToolSearchToolBm25_20251119(betaToolSearchToolBm25_20251119)
                 betaToolSearchToolRegex20251119 != null ->
@@ -3255,6 +3281,12 @@ private constructor(
                         betaWebFetchTool20260309.validate()
                     }
 
+                    override fun visitBetaAdvisorTool20260301(
+                        betaAdvisorTool20260301: BetaAdvisorTool20260301
+                    ) {
+                        betaAdvisorTool20260301.validate()
+                    }
+
                     override fun visitBetaToolSearchToolBm25_20251119(
                         betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
                     ) {
@@ -3367,6 +3399,10 @@ private constructor(
                         betaWebFetchTool20260309: BetaWebFetchTool20260309
                     ) = betaWebFetchTool20260309.validity()
 
+                    override fun visitBetaAdvisorTool20260301(
+                        betaAdvisorTool20260301: BetaAdvisorTool20260301
+                    ) = betaAdvisorTool20260301.validity()
+
                     override fun visitBetaToolSearchToolBm25_20251119(
                         betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
                     ) = betaToolSearchToolBm25_20251119.validity()
@@ -3407,6 +3443,7 @@ private constructor(
                 betaWebSearchTool20260209 == other.betaWebSearchTool20260209 &&
                 betaWebFetchTool20260209 == other.betaWebFetchTool20260209 &&
                 betaWebFetchTool20260309 == other.betaWebFetchTool20260309 &&
+                betaAdvisorTool20260301 == other.betaAdvisorTool20260301 &&
                 betaToolSearchToolBm25_20251119 == other.betaToolSearchToolBm25_20251119 &&
                 betaToolSearchToolRegex20251119 == other.betaToolSearchToolRegex20251119 &&
                 betaMcpToolset == other.betaMcpToolset
@@ -3433,6 +3470,7 @@ private constructor(
                 betaWebSearchTool20260209,
                 betaWebFetchTool20260209,
                 betaWebFetchTool20260309,
+                betaAdvisorTool20260301,
                 betaToolSearchToolBm25_20251119,
                 betaToolSearchToolRegex20251119,
                 betaMcpToolset,
@@ -3475,6 +3513,8 @@ private constructor(
                     "Tool{betaWebFetchTool20260209=$betaWebFetchTool20260209}"
                 betaWebFetchTool20260309 != null ->
                     "Tool{betaWebFetchTool20260309=$betaWebFetchTool20260309}"
+                betaAdvisorTool20260301 != null ->
+                    "Tool{betaAdvisorTool20260301=$betaAdvisorTool20260301}"
                 betaToolSearchToolBm25_20251119 != null ->
                     "Tool{betaToolSearchToolBm25_20251119=$betaToolSearchToolBm25_20251119}"
                 betaToolSearchToolRegex20251119 != null ->
@@ -3575,6 +3615,10 @@ private constructor(
                 Tool(betaWebFetchTool20260309 = betaWebFetchTool20260309)
 
             @JvmStatic
+            fun ofBetaAdvisorTool20260301(betaAdvisorTool20260301: BetaAdvisorTool20260301) =
+                Tool(betaAdvisorTool20260301 = betaAdvisorTool20260301)
+
+            @JvmStatic
             fun ofBetaToolSearchToolBm25_20251119(
                 betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
             ) = Tool(betaToolSearchToolBm25_20251119 = betaToolSearchToolBm25_20251119)
@@ -3664,6 +3708,8 @@ private constructor(
             /** Web fetch tool with use_cache parameter for bypassing cached content. */
             fun visitBetaWebFetchTool20260309(betaWebFetchTool20260309: BetaWebFetchTool20260309): T
 
+            fun visitBetaAdvisorTool20260301(betaAdvisorTool20260301: BetaAdvisorTool20260301): T
+
             fun visitBetaToolSearchToolBm25_20251119(
                 betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
             ): T
@@ -3748,6 +3794,9 @@ private constructor(
                             tryDeserialize(node, jacksonTypeRef<BetaWebFetchTool20260309>())?.let {
                                 Tool(betaWebFetchTool20260309 = it, _json = json)
                             },
+                            tryDeserialize(node, jacksonTypeRef<BetaAdvisorTool20260301>())?.let {
+                                Tool(betaAdvisorTool20260301 = it, _json = json)
+                            },
                             tryDeserialize(node, jacksonTypeRef<BetaToolSearchToolBm25_20251119>())
                                 ?.let { Tool(betaToolSearchToolBm25_20251119 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaToolSearchToolRegex20251119>())
@@ -3817,6 +3866,8 @@ private constructor(
                         generator.writeObject(value.betaWebFetchTool20260209)
                     value.betaWebFetchTool20260309 != null ->
                         generator.writeObject(value.betaWebFetchTool20260309)
+                    value.betaAdvisorTool20260301 != null ->
+                        generator.writeObject(value.betaAdvisorTool20260301)
                     value.betaToolSearchToolBm25_20251119 != null ->
                         generator.writeObject(value.betaToolSearchToolBm25_20251119)
                     value.betaToolSearchToolRegex20251119 != null ->

@@ -15,8 +15,8 @@ internal class BetaManagedAgentsImageBlockTest {
             BetaManagedAgentsImageBlock.builder()
                 .source(
                     BetaManagedAgentsBase64ImageSource.builder()
-                        .data("data")
-                        .mediaType("media_type")
+                        .data("x")
+                        .mediaType("x")
                         .type(BetaManagedAgentsBase64ImageSource.Type.BASE64)
                         .build()
                 )
@@ -27,8 +27,8 @@ internal class BetaManagedAgentsImageBlockTest {
             .isEqualTo(
                 BetaManagedAgentsImageBlock.Source.ofBase64(
                     BetaManagedAgentsBase64ImageSource.builder()
-                        .data("data")
-                        .mediaType("media_type")
+                        .data("x")
+                        .mediaType("x")
                         .type(BetaManagedAgentsBase64ImageSource.Type.BASE64)
                         .build()
                 )
@@ -44,8 +44,8 @@ internal class BetaManagedAgentsImageBlockTest {
             BetaManagedAgentsImageBlock.builder()
                 .source(
                     BetaManagedAgentsBase64ImageSource.builder()
-                        .data("data")
-                        .mediaType("media_type")
+                        .data("x")
+                        .mediaType("x")
                         .type(BetaManagedAgentsBase64ImageSource.Type.BASE64)
                         .build()
                 )

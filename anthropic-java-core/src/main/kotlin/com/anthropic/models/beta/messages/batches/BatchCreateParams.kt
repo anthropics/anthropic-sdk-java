@@ -19,6 +19,7 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.messages.BetaAdvisorTool20260301
 import com.anthropic.models.beta.messages.BetaCacheControlEphemeral
 import com.anthropic.models.beta.messages.BetaCodeExecutionTool20250522
 import com.anthropic.models.beta.messages.BetaCodeExecutionTool20250825
@@ -2387,6 +2388,13 @@ private constructor(
                  */
                 fun addTool(webFetchTool20260309: BetaWebFetchTool20260309) =
                     addTool(BetaToolUnion.ofWebFetchTool20260309(webFetchTool20260309))
+
+                /**
+                 * Alias for calling [addTool] with
+                 * `BetaToolUnion.ofAdvisorTool20260301(advisorTool20260301)`.
+                 */
+                fun addTool(advisorTool20260301: BetaAdvisorTool20260301) =
+                    addTool(BetaToolUnion.ofAdvisorTool20260301(advisorTool20260301))
 
                 /**
                  * Alias for calling [addTool] with
