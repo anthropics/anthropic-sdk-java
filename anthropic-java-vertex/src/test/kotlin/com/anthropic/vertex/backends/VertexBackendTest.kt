@@ -88,6 +88,14 @@ internal class VertexBackendTest {
     }
 
     @Test
+    fun baseUrlEuRegion() {
+        val backend1 = createBackend()
+        val euBackend = createBackend(backend1.googleCredentials, "eu", backend1.project)
+
+        assertThat(euBackend.baseUrl()).isEqualTo("https://aiplatform.eu.rep.googleapis.com")
+    }
+
+    @Test
     fun baseUrlOtherRegion() {
         // Try with a *different* region to confirm that it is not hard-coded.
         val backend1 = createBackend()

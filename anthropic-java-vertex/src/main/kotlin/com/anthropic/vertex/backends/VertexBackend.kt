@@ -48,6 +48,7 @@ private constructor(
         when (region) {
             "global" -> "https://aiplatform.googleapis.com"
             "us" -> "https://aiplatform.us.rep.googleapis.com"
+            "eu" -> "https://aiplatform.eu.rep.googleapis.com"
             else -> "https://$region-aiplatform.googleapis.com"
         }
 
