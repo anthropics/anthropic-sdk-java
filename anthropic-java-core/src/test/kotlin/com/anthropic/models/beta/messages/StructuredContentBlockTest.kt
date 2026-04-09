@@ -68,6 +68,17 @@ internal class StructuredContentBlockTest {
                 )
                 .toolUseId(STRING)
                 .build()
+        private val ADVISOR_TOOL_RESULT =
+            BetaAdvisorToolResultBlock.builder()
+                .content(
+                    BetaAdvisorToolResultBlock.Content.ofBetaAdvisorToolResultError(
+                        BetaAdvisorToolResultError.builder()
+                            .errorCode(BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED)
+                            .build()
+                    )
+                )
+                .toolUseId(STRING)
+                .build()
         private val CODE_EXECUTION_TOOL_RESULT =
             BetaCodeExecutionToolResultBlock.builder()
                 .content(
@@ -136,6 +147,7 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("serverToolUse", OPTIONAL),
                 DelegationReadTestCase("webSearchToolResult", OPTIONAL),
                 DelegationReadTestCase("webFetchToolResult", OPTIONAL),
+                DelegationReadTestCase("advisorToolResult", OPTIONAL),
                 DelegationReadTestCase("codeExecutionToolResult", OPTIONAL),
                 DelegationReadTestCase("bashCodeExecutionToolResult", OPTIONAL),
                 DelegationReadTestCase("textEditorCodeExecutionToolResult", OPTIONAL),
@@ -161,6 +173,8 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("isWebFetchToolResult", false),
                 DelegationReadTestCase("isWebFetchToolResult", true),
                 DelegationReadTestCase("isWebFetchToolResult", false),
+                DelegationReadTestCase("isAdvisorToolResult", true),
+                DelegationReadTestCase("isAdvisorToolResult", false),
                 DelegationReadTestCase("isCodeExecutionToolResult", true),
                 DelegationReadTestCase("isCodeExecutionToolResult", false),
                 DelegationReadTestCase("isBashCodeExecutionToolResult", true),
@@ -185,6 +199,7 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("asServerToolUse", SERVER_TOOL_USE),
                 DelegationReadTestCase("asWebSearchToolResult", WEB_SEARCH_TOOL_RESULT),
                 DelegationReadTestCase("asWebFetchToolResult", WEB_FETCH_TOOL_RESULT),
+                DelegationReadTestCase("asAdvisorToolResult", ADVISOR_TOOL_RESULT),
                 DelegationReadTestCase("asCodeExecutionToolResult", CODE_EXECUTION_TOOL_RESULT),
                 DelegationReadTestCase(
                     "asBashCodeExecutionToolResult",

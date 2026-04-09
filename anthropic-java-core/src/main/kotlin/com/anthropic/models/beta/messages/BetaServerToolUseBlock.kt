@@ -348,8 +348,171 @@ private constructor(
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (name.asKnown().getOrNull()?.validity() ?: 0) +
-            (caller.asKnown().getOrNull()?.validity() ?: 0) +
-            type.let { if (it == JsonValue.from("server_tool_use")) 1 else 0 }
+            type.let { if (it == JsonValue.from("server_tool_use")) 1 else 0 } +
+            (caller.asKnown().getOrNull()?.validity() ?: 0)
+
+    class Name @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val ADVISOR = of("advisor")
+
+            @JvmField val WEB_SEARCH = of("web_search")
+
+            @JvmField val WEB_FETCH = of("web_fetch")
+
+            @JvmField val CODE_EXECUTION = of("code_execution")
+
+            @JvmField val BASH_CODE_EXECUTION = of("bash_code_execution")
+
+            @JvmField val TEXT_EDITOR_CODE_EXECUTION = of("text_editor_code_execution")
+
+            @JvmField val TOOL_SEARCH_TOOL_REGEX = of("tool_search_tool_regex")
+
+            @JvmField val TOOL_SEARCH_TOOL_BM25 = of("tool_search_tool_bm25")
+
+            @JvmStatic fun of(value: String) = Name(JsonField.of(value))
+        }
+
+        /** An enum containing [Name]'s known values. */
+        enum class Known {
+            ADVISOR,
+            WEB_SEARCH,
+            WEB_FETCH,
+            CODE_EXECUTION,
+            BASH_CODE_EXECUTION,
+            TEXT_EDITOR_CODE_EXECUTION,
+            TOOL_SEARCH_TOOL_REGEX,
+            TOOL_SEARCH_TOOL_BM25,
+        }
+
+        /**
+         * An enum containing [Name]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Name] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            ADVISOR,
+            WEB_SEARCH,
+            WEB_FETCH,
+            CODE_EXECUTION,
+            BASH_CODE_EXECUTION,
+            TEXT_EDITOR_CODE_EXECUTION,
+            TOOL_SEARCH_TOOL_REGEX,
+            TOOL_SEARCH_TOOL_BM25,
+            /** An enum member indicating that [Name] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                ADVISOR -> Value.ADVISOR
+                WEB_SEARCH -> Value.WEB_SEARCH
+                WEB_FETCH -> Value.WEB_FETCH
+                CODE_EXECUTION -> Value.CODE_EXECUTION
+                BASH_CODE_EXECUTION -> Value.BASH_CODE_EXECUTION
+                TEXT_EDITOR_CODE_EXECUTION -> Value.TEXT_EDITOR_CODE_EXECUTION
+                TOOL_SEARCH_TOOL_REGEX -> Value.TOOL_SEARCH_TOOL_REGEX
+                TOOL_SEARCH_TOOL_BM25 -> Value.TOOL_SEARCH_TOOL_BM25
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                ADVISOR -> Known.ADVISOR
+                WEB_SEARCH -> Known.WEB_SEARCH
+                WEB_FETCH -> Known.WEB_FETCH
+                CODE_EXECUTION -> Known.CODE_EXECUTION
+                BASH_CODE_EXECUTION -> Known.BASH_CODE_EXECUTION
+                TEXT_EDITOR_CODE_EXECUTION -> Known.TEXT_EDITOR_CODE_EXECUTION
+                TOOL_SEARCH_TOOL_REGEX -> Known.TOOL_SEARCH_TOOL_REGEX
+                TOOL_SEARCH_TOOL_BM25 -> Known.TOOL_SEARCH_TOOL_BM25
+                else -> throw AnthropicInvalidDataException("Unknown Name: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        fun validate(): Name = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Name && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
 
     /** Tool invocation directly from the model. */
     @JsonDeserialize(using = Caller.Deserializer::class)
@@ -573,163 +736,6 @@ private constructor(
                 }
             }
         }
-    }
-
-    class Name @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val WEB_SEARCH = of("web_search")
-
-            @JvmField val WEB_FETCH = of("web_fetch")
-
-            @JvmField val CODE_EXECUTION = of("code_execution")
-
-            @JvmField val BASH_CODE_EXECUTION = of("bash_code_execution")
-
-            @JvmField val TEXT_EDITOR_CODE_EXECUTION = of("text_editor_code_execution")
-
-            @JvmField val TOOL_SEARCH_TOOL_REGEX = of("tool_search_tool_regex")
-
-            @JvmField val TOOL_SEARCH_TOOL_BM25 = of("tool_search_tool_bm25")
-
-            @JvmStatic fun of(value: String) = Name(JsonField.of(value))
-        }
-
-        /** An enum containing [Name]'s known values. */
-        enum class Known {
-            WEB_SEARCH,
-            WEB_FETCH,
-            CODE_EXECUTION,
-            BASH_CODE_EXECUTION,
-            TEXT_EDITOR_CODE_EXECUTION,
-            TOOL_SEARCH_TOOL_REGEX,
-            TOOL_SEARCH_TOOL_BM25,
-        }
-
-        /**
-         * An enum containing [Name]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Name] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            WEB_SEARCH,
-            WEB_FETCH,
-            CODE_EXECUTION,
-            BASH_CODE_EXECUTION,
-            TEXT_EDITOR_CODE_EXECUTION,
-            TOOL_SEARCH_TOOL_REGEX,
-            TOOL_SEARCH_TOOL_BM25,
-            /** An enum member indicating that [Name] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                WEB_SEARCH -> Value.WEB_SEARCH
-                WEB_FETCH -> Value.WEB_FETCH
-                CODE_EXECUTION -> Value.CODE_EXECUTION
-                BASH_CODE_EXECUTION -> Value.BASH_CODE_EXECUTION
-                TEXT_EDITOR_CODE_EXECUTION -> Value.TEXT_EDITOR_CODE_EXECUTION
-                TOOL_SEARCH_TOOL_REGEX -> Value.TOOL_SEARCH_TOOL_REGEX
-                TOOL_SEARCH_TOOL_BM25 -> Value.TOOL_SEARCH_TOOL_BM25
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                WEB_SEARCH -> Known.WEB_SEARCH
-                WEB_FETCH -> Known.WEB_FETCH
-                CODE_EXECUTION -> Known.CODE_EXECUTION
-                BASH_CODE_EXECUTION -> Known.BASH_CODE_EXECUTION
-                TEXT_EDITOR_CODE_EXECUTION -> Known.TEXT_EDITOR_CODE_EXECUTION
-                TOOL_SEARCH_TOOL_REGEX -> Known.TOOL_SEARCH_TOOL_REGEX
-                TOOL_SEARCH_TOOL_BM25 -> Known.TOOL_SEARCH_TOOL_BM25
-                else -> throw AnthropicInvalidDataException("Unknown Name: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
-
-        private var validated: Boolean = false
-
-        fun validate(): Name = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is Name && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
     }
 
     override fun equals(other: Any?): Boolean {

@@ -1505,6 +1505,14 @@ private constructor(
 
         /**
          * Alias for calling [addTool] with
+         * `BetaToolUnion.ofAdvisorTool20260301(advisorTool20260301)`.
+         */
+        fun addTool(advisorTool20260301: BetaAdvisorTool20260301) = apply {
+            body.addTool(advisorTool20260301)
+        }
+
+        /**
+         * Alias for calling [addTool] with
          * `BetaToolUnion.ofSearchToolBm25_20251119(searchToolBm25_20251119)`.
          */
         fun addTool(searchToolBm25_20251119: BetaToolSearchToolBm25_20251119) = apply {
@@ -3286,6 +3294,13 @@ private constructor(
              */
             fun addTool(webFetchTool20260309: BetaWebFetchTool20260309) =
                 addTool(BetaToolUnion.ofWebFetchTool20260309(webFetchTool20260309))
+
+            /**
+             * Alias for calling [addTool] with
+             * `BetaToolUnion.ofAdvisorTool20260301(advisorTool20260301)`.
+             */
+            fun addTool(advisorTool20260301: BetaAdvisorTool20260301) =
+                addTool(BetaToolUnion.ofAdvisorTool20260301(advisorTool20260301))
 
             /**
              * Alias for calling [addTool] with

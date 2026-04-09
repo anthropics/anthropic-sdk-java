@@ -496,6 +496,8 @@ private constructor(
 
         companion object {
 
+            @JvmField val ADVISOR = of("advisor")
+
             @JvmField val WEB_SEARCH = of("web_search")
 
             @JvmField val WEB_FETCH = of("web_fetch")
@@ -515,6 +517,7 @@ private constructor(
 
         /** An enum containing [Name]'s known values. */
         enum class Known {
+            ADVISOR,
             WEB_SEARCH,
             WEB_FETCH,
             CODE_EXECUTION,
@@ -534,6 +537,7 @@ private constructor(
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
+            ADVISOR,
             WEB_SEARCH,
             WEB_FETCH,
             CODE_EXECUTION,
@@ -554,6 +558,7 @@ private constructor(
          */
         fun value(): Value =
             when (this) {
+                ADVISOR -> Value.ADVISOR
                 WEB_SEARCH -> Value.WEB_SEARCH
                 WEB_FETCH -> Value.WEB_FETCH
                 CODE_EXECUTION -> Value.CODE_EXECUTION
@@ -575,6 +580,7 @@ private constructor(
          */
         fun known(): Known =
             when (this) {
+                ADVISOR -> Known.ADVISOR
                 WEB_SEARCH -> Known.WEB_SEARCH
                 WEB_FETCH -> Known.WEB_FETCH
                 CODE_EXECUTION -> Known.CODE_EXECUTION

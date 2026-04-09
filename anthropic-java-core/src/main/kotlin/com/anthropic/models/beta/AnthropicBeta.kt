@@ -64,6 +64,8 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
 
         @JvmField val OUTPUT_300K_2026_03_24 = of("output-300k-2026-03-24")
 
+        @JvmField val ADVISOR_TOOL_2026_03_01 = of("advisor-tool-2026-03-01")
+
         @JvmStatic fun of(value: String) = AnthropicBeta(JsonField.of(value))
     }
 
@@ -90,6 +92,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         SKILLS_2025_10_02,
         FAST_MODE_2026_02_01,
         OUTPUT_300K_2026_03_24,
+        ADVISOR_TOOL_2026_03_01,
     }
 
     /**
@@ -123,6 +126,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         SKILLS_2025_10_02,
         FAST_MODE_2026_02_01,
         OUTPUT_300K_2026_03_24,
+        ADVISOR_TOOL_2026_03_01,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
          */
@@ -160,6 +164,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             SKILLS_2025_10_02 -> Value.SKILLS_2025_10_02
             FAST_MODE_2026_02_01 -> Value.FAST_MODE_2026_02_01
             OUTPUT_300K_2026_03_24 -> Value.OUTPUT_300K_2026_03_24
+            ADVISOR_TOOL_2026_03_01 -> Value.ADVISOR_TOOL_2026_03_01
             else -> Value._UNKNOWN
         }
 
@@ -195,6 +200,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             SKILLS_2025_10_02 -> Known.SKILLS_2025_10_02
             FAST_MODE_2026_02_01 -> Known.FAST_MODE_2026_02_01
             OUTPUT_300K_2026_03_24 -> Known.OUTPUT_300K_2026_03_24
+            ADVISOR_TOOL_2026_03_01 -> Known.ADVISOR_TOOL_2026_03_01
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }
 

@@ -15,8 +15,8 @@ internal class BetaManagedAgentsDocumentBlockTest {
             BetaManagedAgentsDocumentBlock.builder()
                 .source(
                     BetaManagedAgentsBase64DocumentSource.builder()
-                        .data("data")
-                        .mediaType("media_type")
+                        .data("x")
+                        .mediaType("x")
                         .type(BetaManagedAgentsBase64DocumentSource.Type.BASE64)
                         .build()
                 )
@@ -29,8 +29,8 @@ internal class BetaManagedAgentsDocumentBlockTest {
             .isEqualTo(
                 BetaManagedAgentsDocumentBlock.Source.ofBase64(
                     BetaManagedAgentsBase64DocumentSource.builder()
-                        .data("data")
-                        .mediaType("media_type")
+                        .data("x")
+                        .mediaType("x")
                         .type(BetaManagedAgentsBase64DocumentSource.Type.BASE64)
                         .build()
                 )
@@ -48,8 +48,8 @@ internal class BetaManagedAgentsDocumentBlockTest {
             BetaManagedAgentsDocumentBlock.builder()
                 .source(
                     BetaManagedAgentsBase64DocumentSource.builder()
-                        .data("data")
-                        .mediaType("media_type")
+                        .data("x")
+                        .mediaType("x")
                         .type(BetaManagedAgentsBase64DocumentSource.Type.BASE64)
                         .build()
                 )

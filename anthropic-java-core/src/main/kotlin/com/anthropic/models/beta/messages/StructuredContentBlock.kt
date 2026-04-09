@@ -45,6 +45,10 @@ internal constructor(
     fun webFetchToolResult(): Optional<BetaWebFetchToolResultBlock> =
         rawContentBlock.webFetchToolResult()
 
+    /** @see BetaContentBlock.advisorToolResult */
+    fun advisorToolResult(): Optional<BetaAdvisorToolResultBlock> =
+        rawContentBlock.advisorToolResult()
+
     /** @see BetaContentBlock.codeExecutionToolResult */
     fun codeExecutionToolResult(): Optional<BetaCodeExecutionToolResultBlock> =
         rawContentBlock.codeExecutionToolResult()
@@ -93,6 +97,9 @@ internal constructor(
 
     /** @see BetaContentBlock.isWebFetchToolResult */
     fun isWebFetchToolResult(): Boolean = rawContentBlock.isWebFetchToolResult()
+
+    /** @see BetaContentBlock.isAdvisorToolResult */
+    fun isAdvisorToolResult(): Boolean = rawContentBlock.isAdvisorToolResult()
 
     /** @see BetaContentBlock.isCodeExecutionToolResult */
     fun isCodeExecutionToolResult(): Boolean = rawContentBlock.isCodeExecutionToolResult()
@@ -144,6 +151,9 @@ internal constructor(
 
     /** @see BetaContentBlock.asWebFetchToolResult */
     fun asWebFetchToolResult(): BetaWebFetchToolResultBlock = rawContentBlock.asWebFetchToolResult()
+
+    /** @see BetaContentBlock.asAdvisorToolResult */
+    fun asAdvisorToolResult(): BetaAdvisorToolResultBlock = rawContentBlock.asAdvisorToolResult()
 
     /** @see BetaContentBlock.asCodeExecutionToolResult */
     fun asCodeExecutionToolResult(): BetaCodeExecutionToolResultBlock =

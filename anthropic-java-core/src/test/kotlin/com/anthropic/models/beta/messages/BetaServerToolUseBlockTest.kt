@@ -16,13 +16,13 @@ internal class BetaServerToolUseBlockTest {
             BetaServerToolUseBlock.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
                 .input(JsonValue.from(mapOf<String, Any>()))
-                .name(BetaServerToolUseBlock.Name.WEB_SEARCH)
+                .name(BetaServerToolUseBlock.Name.ADVISOR)
                 .caller(BetaDirectCaller.builder().build())
                 .build()
 
         assertThat(betaServerToolUseBlock.id()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
         assertThat(betaServerToolUseBlock._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
-        assertThat(betaServerToolUseBlock.name()).isEqualTo(BetaServerToolUseBlock.Name.WEB_SEARCH)
+        assertThat(betaServerToolUseBlock.name()).isEqualTo(BetaServerToolUseBlock.Name.ADVISOR)
         assertThat(betaServerToolUseBlock.caller())
             .contains(BetaServerToolUseBlock.Caller.ofDirect(BetaDirectCaller.builder().build()))
     }
@@ -34,7 +34,7 @@ internal class BetaServerToolUseBlockTest {
             BetaServerToolUseBlock.builder()
                 .id("srvtoolu_SQfNkl1n_JR_")
                 .input(JsonValue.from(mapOf<String, Any>()))
-                .name(BetaServerToolUseBlock.Name.WEB_SEARCH)
+                .name(BetaServerToolUseBlock.Name.ADVISOR)
                 .caller(BetaDirectCaller.builder().build())
                 .build()
 

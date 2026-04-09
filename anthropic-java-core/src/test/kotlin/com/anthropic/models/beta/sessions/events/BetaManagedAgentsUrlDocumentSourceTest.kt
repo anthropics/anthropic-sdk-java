@@ -14,12 +14,12 @@ internal class BetaManagedAgentsUrlDocumentSourceTest {
         val betaManagedAgentsUrlDocumentSource =
             BetaManagedAgentsUrlDocumentSource.builder()
                 .type(BetaManagedAgentsUrlDocumentSource.Type.URL)
-                .url("url")
+                .url("x")
                 .build()
 
         assertThat(betaManagedAgentsUrlDocumentSource.type())
             .isEqualTo(BetaManagedAgentsUrlDocumentSource.Type.URL)
-        assertThat(betaManagedAgentsUrlDocumentSource.url()).isEqualTo("url")
+        assertThat(betaManagedAgentsUrlDocumentSource.url()).isEqualTo("x")
     }
 
     @Test
@@ -28,7 +28,7 @@ internal class BetaManagedAgentsUrlDocumentSourceTest {
         val betaManagedAgentsUrlDocumentSource =
             BetaManagedAgentsUrlDocumentSource.builder()
                 .type(BetaManagedAgentsUrlDocumentSource.Type.URL)
-                .url("url")
+                .url("x")
                 .build()
 
         val roundtrippedBetaManagedAgentsUrlDocumentSource =

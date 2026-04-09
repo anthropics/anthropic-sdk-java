@@ -527,6 +527,11 @@ internal constructor(
         }
 
         /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(advisorTool20260301: BetaAdvisorTool20260301) = apply {
+            paramsBuilder.addTool(advisorTool20260301)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
         fun addTool(searchToolBm25_20251119: BetaToolSearchToolBm25_20251119) = apply {
             paramsBuilder.addTool(searchToolBm25_20251119)
         }

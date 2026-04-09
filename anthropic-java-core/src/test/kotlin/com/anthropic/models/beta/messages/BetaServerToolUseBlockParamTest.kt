@@ -20,7 +20,7 @@ internal class BetaServerToolUseBlockParamTest {
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
-                .name(BetaServerToolUseBlockParam.Name.WEB_SEARCH)
+                .name(BetaServerToolUseBlockParam.Name.ADVISOR)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -37,7 +37,7 @@ internal class BetaServerToolUseBlockParamTest {
                     .build()
             )
         assertThat(betaServerToolUseBlockParam.name())
-            .isEqualTo(BetaServerToolUseBlockParam.Name.WEB_SEARCH)
+            .isEqualTo(BetaServerToolUseBlockParam.Name.ADVISOR)
         assertThat(betaServerToolUseBlockParam.cacheControl())
             .contains(
                 BetaCacheControlEphemeral.builder()
@@ -61,7 +61,7 @@ internal class BetaServerToolUseBlockParamTest {
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
-                .name(BetaServerToolUseBlockParam.Name.WEB_SEARCH)
+                .name(BetaServerToolUseBlockParam.Name.ADVISOR)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)

@@ -13,13 +13,13 @@ internal class BetaManagedAgentsBase64DocumentSourceTest {
     fun create() {
         val betaManagedAgentsBase64DocumentSource =
             BetaManagedAgentsBase64DocumentSource.builder()
-                .data("data")
-                .mediaType("media_type")
+                .data("x")
+                .mediaType("x")
                 .type(BetaManagedAgentsBase64DocumentSource.Type.BASE64)
                 .build()
 
-        assertThat(betaManagedAgentsBase64DocumentSource.data()).isEqualTo("data")
-        assertThat(betaManagedAgentsBase64DocumentSource.mediaType()).isEqualTo("media_type")
+        assertThat(betaManagedAgentsBase64DocumentSource.data()).isEqualTo("x")
+        assertThat(betaManagedAgentsBase64DocumentSource.mediaType()).isEqualTo("x")
         assertThat(betaManagedAgentsBase64DocumentSource.type())
             .isEqualTo(BetaManagedAgentsBase64DocumentSource.Type.BASE64)
     }
@@ -29,8 +29,8 @@ internal class BetaManagedAgentsBase64DocumentSourceTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsBase64DocumentSource =
             BetaManagedAgentsBase64DocumentSource.builder()
-                .data("data")
-                .mediaType("media_type")
+                .data("x")
+                .mediaType("x")
                 .type(BetaManagedAgentsBase64DocumentSource.Type.BASE64)
                 .build()
 
