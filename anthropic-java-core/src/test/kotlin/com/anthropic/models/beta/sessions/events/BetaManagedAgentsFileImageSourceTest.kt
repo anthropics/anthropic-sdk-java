@@ -13,11 +13,11 @@ internal class BetaManagedAgentsFileImageSourceTest {
     fun create() {
         val betaManagedAgentsFileImageSource =
             BetaManagedAgentsFileImageSource.builder()
-                .fileId("file_id")
+                .fileId("x")
                 .type(BetaManagedAgentsFileImageSource.Type.FILE)
                 .build()
 
-        assertThat(betaManagedAgentsFileImageSource.fileId()).isEqualTo("file_id")
+        assertThat(betaManagedAgentsFileImageSource.fileId()).isEqualTo("x")
         assertThat(betaManagedAgentsFileImageSource.type())
             .isEqualTo(BetaManagedAgentsFileImageSource.Type.FILE)
     }
@@ -27,7 +27,7 @@ internal class BetaManagedAgentsFileImageSourceTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsFileImageSource =
             BetaManagedAgentsFileImageSource.builder()
-                .fileId("file_id")
+                .fileId("x")
                 .type(BetaManagedAgentsFileImageSource.Type.FILE)
                 .build()
 

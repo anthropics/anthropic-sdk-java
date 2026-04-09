@@ -491,6 +491,13 @@ private constructor(
         fun addIteration(compaction: BetaCompactionIterationUsage) =
             addIteration(BetaIterationsUsageItems.ofCompaction(compaction))
 
+        /**
+         * Alias for calling [addIteration] with
+         * `BetaIterationsUsageItems.ofAdvisorMessage(advisorMessage)`.
+         */
+        fun addIteration(advisorMessage: BetaAdvisorMessageIterationUsage) =
+            addIteration(BetaIterationsUsageItems.ofAdvisorMessage(advisorMessage))
+
         /** The number of output tokens which were used. */
         fun outputTokens(outputTokens: Long) = outputTokens(JsonField.of(outputTokens))
 
@@ -662,6 +669,7 @@ private constructor(
     private constructor(
         private val message: BetaMessageIterationUsage? = null,
         private val compaction: BetaCompactionIterationUsage? = null,
+        private val advisorMessage: BetaAdvisorMessageIterationUsage? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -671,9 +679,15 @@ private constructor(
         /** Token usage for a compaction iteration. */
         fun compaction(): Optional<BetaCompactionIterationUsage> = Optional.ofNullable(compaction)
 
+        /** Token usage for an advisor sub-inference iteration. */
+        fun advisorMessage(): Optional<BetaAdvisorMessageIterationUsage> =
+            Optional.ofNullable(advisorMessage)
+
         fun isMessage(): Boolean = message != null
 
         fun isCompaction(): Boolean = compaction != null
+
+        fun isAdvisorMessage(): Boolean = advisorMessage != null
 
         /** Token usage for a sampling iteration. */
         fun asMessage(): BetaMessageIterationUsage = message.getOrThrow("message")
@@ -681,12 +695,17 @@ private constructor(
         /** Token usage for a compaction iteration. */
         fun asCompaction(): BetaCompactionIterationUsage = compaction.getOrThrow("compaction")
 
+        /** Token usage for an advisor sub-inference iteration. */
+        fun asAdvisorMessage(): BetaAdvisorMessageIterationUsage =
+            advisorMessage.getOrThrow("advisorMessage")
+
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 message != null -> visitor.visitMessage(message)
                 compaction != null -> visitor.visitCompaction(compaction)
+                advisorMessage != null -> visitor.visitAdvisorMessage(advisorMessage)
                 else -> visitor.unknown(_json)
             }
 
@@ -705,6 +724,12 @@ private constructor(
 
                     override fun visitCompaction(compaction: BetaCompactionIterationUsage) {
                         compaction.validate()
+                    }
+
+                    override fun visitAdvisorMessage(
+                        advisorMessage: BetaAdvisorMessageIterationUsage
+                    ) {
+                        advisorMessage.validate()
                     }
                 }
             )
@@ -735,6 +760,10 @@ private constructor(
                     override fun visitCompaction(compaction: BetaCompactionIterationUsage) =
                         compaction.validity()
 
+                    override fun visitAdvisorMessage(
+                        advisorMessage: BetaAdvisorMessageIterationUsage
+                    ) = advisorMessage.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -746,15 +775,17 @@ private constructor(
 
             return other is BetaIterationsUsageItems &&
                 message == other.message &&
-                compaction == other.compaction
+                compaction == other.compaction &&
+                advisorMessage == other.advisorMessage
         }
 
-        override fun hashCode(): Int = Objects.hash(message, compaction)
+        override fun hashCode(): Int = Objects.hash(message, compaction, advisorMessage)
 
         override fun toString(): String =
             when {
                 message != null -> "BetaIterationsUsageItems{message=$message}"
                 compaction != null -> "BetaIterationsUsageItems{compaction=$compaction}"
+                advisorMessage != null -> "BetaIterationsUsageItems{advisorMessage=$advisorMessage}"
                 _json != null -> "BetaIterationsUsageItems{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid BetaIterationsUsageItems")
             }
@@ -770,6 +801,11 @@ private constructor(
             @JvmStatic
             fun ofCompaction(compaction: BetaCompactionIterationUsage) =
                 BetaIterationsUsageItems(compaction = compaction)
+
+            /** Token usage for an advisor sub-inference iteration. */
+            @JvmStatic
+            fun ofAdvisorMessage(advisorMessage: BetaAdvisorMessageIterationUsage) =
+                BetaIterationsUsageItems(advisorMessage = advisorMessage)
         }
 
         /**
@@ -783,6 +819,9 @@ private constructor(
 
             /** Token usage for a compaction iteration. */
             fun visitCompaction(compaction: BetaCompactionIterationUsage): T
+
+            /** Token usage for an advisor sub-inference iteration. */
+            fun visitAdvisorMessage(advisorMessage: BetaAdvisorMessageIterationUsage): T
 
             /**
              * Maps an unknown variant of [BetaIterationsUsageItems] to a value of type [T].
@@ -817,6 +856,14 @@ private constructor(
                             ?.let { BetaIterationsUsageItems(compaction = it, _json = json) }
                             ?: BetaIterationsUsageItems(_json = json)
                     }
+                    "advisor_message" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaAdvisorMessageIterationUsage>(),
+                            )
+                            ?.let { BetaIterationsUsageItems(advisorMessage = it, _json = json) }
+                            ?: BetaIterationsUsageItems(_json = json)
+                    }
                 }
 
                 return BetaIterationsUsageItems(_json = json)
@@ -834,6 +881,7 @@ private constructor(
                 when {
                     value.message != null -> generator.writeObject(value.message)
                     value.compaction != null -> generator.writeObject(value.compaction)
+                    value.advisorMessage != null -> generator.writeObject(value.advisorMessage)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid BetaIterationsUsageItems")
                 }

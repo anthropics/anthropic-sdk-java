@@ -13,12 +13,12 @@ internal class BetaManagedAgentsPlainTextDocumentSourceTest {
     fun create() {
         val betaManagedAgentsPlainTextDocumentSource =
             BetaManagedAgentsPlainTextDocumentSource.builder()
-                .data("data")
+                .data("x")
                 .mediaType(BetaManagedAgentsPlainTextDocumentSource.MediaType.TEXT_PLAIN)
                 .type(BetaManagedAgentsPlainTextDocumentSource.Type.TEXT)
                 .build()
 
-        assertThat(betaManagedAgentsPlainTextDocumentSource.data()).isEqualTo("data")
+        assertThat(betaManagedAgentsPlainTextDocumentSource.data()).isEqualTo("x")
         assertThat(betaManagedAgentsPlainTextDocumentSource.mediaType())
             .isEqualTo(BetaManagedAgentsPlainTextDocumentSource.MediaType.TEXT_PLAIN)
         assertThat(betaManagedAgentsPlainTextDocumentSource.type())
@@ -30,7 +30,7 @@ internal class BetaManagedAgentsPlainTextDocumentSourceTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsPlainTextDocumentSource =
             BetaManagedAgentsPlainTextDocumentSource.builder()
-                .data("data")
+                .data("x")
                 .mediaType(BetaManagedAgentsPlainTextDocumentSource.MediaType.TEXT_PLAIN)
                 .type(BetaManagedAgentsPlainTextDocumentSource.Type.TEXT)
                 .build()

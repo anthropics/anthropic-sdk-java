@@ -20,7 +20,7 @@ internal class BetaServerToolUseBlockTest {
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
-                .name(BetaServerToolUseBlock.Name.WEB_SEARCH)
+                .name(BetaServerToolUseBlock.Name.ADVISOR)
                 .caller(BetaDirectCaller.builder().build())
                 .build()
 
@@ -31,7 +31,7 @@ internal class BetaServerToolUseBlockTest {
                     .putAdditionalProperty("foo", JsonValue.from("bar"))
                     .build()
             )
-        assertThat(betaServerToolUseBlock.name()).isEqualTo(BetaServerToolUseBlock.Name.WEB_SEARCH)
+        assertThat(betaServerToolUseBlock.name()).isEqualTo(BetaServerToolUseBlock.Name.ADVISOR)
         assertThat(betaServerToolUseBlock.caller())
             .contains(BetaServerToolUseBlock.Caller.ofDirect(BetaDirectCaller.builder().build()))
     }
@@ -47,7 +47,7 @@ internal class BetaServerToolUseBlockTest {
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
-                .name(BetaServerToolUseBlock.Name.WEB_SEARCH)
+                .name(BetaServerToolUseBlock.Name.ADVISOR)
                 .caller(BetaDirectCaller.builder().build())
                 .build()
 
