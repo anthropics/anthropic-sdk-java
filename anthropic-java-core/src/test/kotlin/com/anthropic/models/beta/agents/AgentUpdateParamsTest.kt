@@ -30,12 +30,7 @@ internal class AgentUpdateParamsTest {
                     .putAdditionalProperty("foo", JsonValue.from("string"))
                     .build()
             )
-            .model(
-                BetaManagedAgentsModelConfigParams.builder()
-                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
-                    .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
-                    .build()
-            )
+            .model(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
             .name("name")
             .addSkill(
                 BetaManagedAgentsAnthropicSkillParams.builder()
@@ -106,12 +101,7 @@ internal class AgentUpdateParamsTest {
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
-                .model(
-                    BetaManagedAgentsModelConfigParams.builder()
-                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
-                        .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
-                        .build()
-                )
+                .model(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
                 .name("name")
                 .addSkill(
                     BetaManagedAgentsAnthropicSkillParams.builder()
@@ -191,12 +181,7 @@ internal class AgentUpdateParamsTest {
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
-                .model(
-                    BetaManagedAgentsModelConfigParams.builder()
-                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
-                        .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
-                        .build()
-                )
+                .model(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
                 .name("name")
                 .addSkill(
                     BetaManagedAgentsAnthropicSkillParams.builder()
@@ -258,10 +243,7 @@ internal class AgentUpdateParamsTest {
             )
         assertThat(body.model())
             .contains(
-                BetaManagedAgentsModelConfigParams.builder()
-                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
-                    .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
-                    .build()
+                AgentUpdateParams.Model.ofBetaManagedAgents(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
             )
         assertThat(body.name()).contains("name")
         assertThat(body.skills().getOrNull())
