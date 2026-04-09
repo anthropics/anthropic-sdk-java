@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.24.0 (2026-04-09)
+
+Full Changelog: [v2.23.0...v2.24.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.23.0...v2.24.0)
+
+### Features
+
+* **api:** add beta advisor tool ([346aba2](https://github.com/anthropics/anthropic-sdk-java/commit/346aba2c456202421eab6e31b25d864d8e30473d))
+* vertex eu region ([#1127](https://github.com/anthropics/anthropic-sdk-java/issues/1127)) ([f8bd149](https://github.com/anthropics/anthropic-sdk-java/commit/f8bd149bcfcaa404b1e8e96a8cab09d253ca8b10))
+
 ## 2.23.0 (2026-04-09)
 
 Full Changelog: [v2.22.0...v2.23.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.22.0...v2.23.0)
