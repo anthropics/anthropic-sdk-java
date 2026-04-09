@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.Params
+import com.anthropic.core.allMaxBy
 import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
@@ -86,12 +87,15 @@ private constructor(
     fun metadata(): Optional<Metadata> = body.metadata()
 
     /**
-     * An object that defines additional configuration control over model use
+     * Model identifier. Accepts the
+     * [model string](https://platform.claude.com/docs/en/about-claude/models/overview#latest-models-comparison),
+     * e.g. `claude-opus-4-6`, or a `model_config` object for additional configuration control. Omit
+     * to preserve. Cannot be cleared.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun model(): Optional<BetaManagedAgentsModelConfigParams> = body.model()
+    fun model(): Optional<Model> = body.model()
 
     /**
      * Human-readable name. 1-256 characters. Omit to preserve. Cannot be cleared.
@@ -160,7 +164,7 @@ private constructor(
      *
      * Unlike [model], this method doesn't throw if the JSON field has an unexpected type.
      */
-    fun _model(): JsonField<BetaManagedAgentsModelConfigParams> = body._model()
+    fun _model(): JsonField<Model> = body._model()
 
     /**
      * Returns the raw JSON value of [name].
@@ -357,18 +361,33 @@ private constructor(
          */
         fun metadata(metadata: JsonField<Metadata>) = apply { body.metadata(metadata) }
 
-        /** An object that defines additional configuration control over model use */
-        fun model(model: BetaManagedAgentsModelConfigParams) = apply { body.model(model) }
+        /**
+         * Model identifier. Accepts the
+         * [model string](https://platform.claude.com/docs/en/about-claude/models/overview#latest-models-comparison),
+         * e.g. `claude-opus-4-6`, or a `model_config` object for additional configuration control.
+         * Omit to preserve. Cannot be cleared.
+         */
+        fun model(model: Model) = apply { body.model(model) }
 
         /**
          * Sets [Builder.model] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.model] with a well-typed
-         * [BetaManagedAgentsModelConfigParams] value instead. This method is primarily for setting
-         * the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.model] with a well-typed [Model] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun model(model: JsonField<BetaManagedAgentsModelConfigParams>) = apply {
-            body.model(model)
+        fun model(model: JsonField<Model>) = apply { body.model(model) }
+
+        /** Alias for calling [model] with `Model.ofBetaManagedAgents(betaManagedAgents)`. */
+        fun model(betaManagedAgents: BetaManagedAgentsModel) = apply {
+            body.model(betaManagedAgents)
+        }
+
+        /**
+         * Alias for calling [model] with
+         * `Model.ofBetaManagedAgentsModelConfigParams(betaManagedAgentsModelConfigParams)`.
+         */
+        fun model(betaManagedAgentsModelConfigParams: BetaManagedAgentsModelConfigParams) = apply {
+            body.model(betaManagedAgentsModelConfigParams)
         }
 
         /** Human-readable name. 1-256 characters. Omit to preserve. Cannot be cleared. */
@@ -675,7 +694,7 @@ private constructor(
         private val description: JsonField<String>,
         private val mcpServers: JsonField<List<BetaManagedAgentsUrlMcpServerParams>>,
         private val metadata: JsonField<Metadata>,
-        private val model: JsonField<BetaManagedAgentsModelConfigParams>,
+        private val model: JsonField<Model>,
         private val name: JsonField<String>,
         private val skills: JsonField<List<BetaManagedAgentsSkillParams>>,
         private val system: JsonField<String>,
@@ -695,9 +714,7 @@ private constructor(
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
-            @JsonProperty("model")
-            @ExcludeMissing
-            model: JsonField<BetaManagedAgentsModelConfigParams> = JsonMissing.of(),
+            @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
             @JsonProperty("skills")
             @ExcludeMissing
@@ -756,12 +773,15 @@ private constructor(
         fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
 
         /**
-         * An object that defines additional configuration control over model use
+         * Model identifier. Accepts the
+         * [model string](https://platform.claude.com/docs/en/about-claude/models/overview#latest-models-comparison),
+         * e.g. `claude-opus-4-6`, or a `model_config` object for additional configuration control.
+         * Omit to preserve. Cannot be cleared.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun model(): Optional<BetaManagedAgentsModelConfigParams> = model.getOptional("model")
+        fun model(): Optional<Model> = model.getOptional("model")
 
         /**
          * Human-readable name. 1-256 characters. Omit to preserve. Cannot be cleared.
@@ -835,9 +855,7 @@ private constructor(
          *
          * Unlike [model], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("model")
-        @ExcludeMissing
-        fun _model(): JsonField<BetaManagedAgentsModelConfigParams> = model
+        @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
 
         /**
          * Returns the raw JSON value of [name].
@@ -902,7 +920,7 @@ private constructor(
             private var mcpServers: JsonField<MutableList<BetaManagedAgentsUrlMcpServerParams>>? =
                 null
             private var metadata: JsonField<Metadata> = JsonMissing.of()
-            private var model: JsonField<BetaManagedAgentsModelConfigParams> = JsonMissing.of()
+            private var model: JsonField<Model> = JsonMissing.of()
             private var name: JsonField<String> = JsonMissing.of()
             private var skills: JsonField<MutableList<BetaManagedAgentsSkillParams>>? = null
             private var system: JsonField<String> = JsonMissing.of()
@@ -1013,19 +1031,35 @@ private constructor(
              */
             fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
 
-            /** An object that defines additional configuration control over model use */
-            fun model(model: BetaManagedAgentsModelConfigParams) = model(JsonField.of(model))
+            /**
+             * Model identifier. Accepts the
+             * [model string](https://platform.claude.com/docs/en/about-claude/models/overview#latest-models-comparison),
+             * e.g. `claude-opus-4-6`, or a `model_config` object for additional configuration
+             * control. Omit to preserve. Cannot be cleared.
+             */
+            fun model(model: Model) = model(JsonField.of(model))
 
             /**
              * Sets [Builder.model] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.model] with a well-typed
-             * [BetaManagedAgentsModelConfigParams] value instead. This method is primarily for
-             * setting the field to an undocumented or not yet supported value.
+             * You should usually call [Builder.model] with a well-typed [Model] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
              */
-            fun model(model: JsonField<BetaManagedAgentsModelConfigParams>) = apply {
-                this.model = model
-            }
+            fun model(model: JsonField<Model>) = apply { this.model = model }
+
+            /** Alias for calling [model] with `Model.ofBetaManagedAgents(betaManagedAgents)`. */
+            fun model(betaManagedAgents: BetaManagedAgentsModel) =
+                model(Model.ofBetaManagedAgents(betaManagedAgents))
+
+            /**
+             * Alias for calling [model] with
+             * `Model.ofBetaManagedAgentsModelConfigParams(betaManagedAgentsModelConfigParams)`.
+             */
+            fun model(betaManagedAgentsModelConfigParams: BetaManagedAgentsModelConfigParams) =
+                model(
+                    Model.ofBetaManagedAgentsModelConfigParams(betaManagedAgentsModelConfigParams)
+                )
 
             /** Human-readable name. 1-256 characters. Omit to preserve. Cannot be cleared. */
             fun name(name: String) = name(JsonField.of(name))
@@ -1432,6 +1466,237 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() = "Metadata{additionalProperties=$additionalProperties}"
+    }
+
+    /**
+     * Model identifier. Accepts the
+     * [model string](https://platform.claude.com/docs/en/about-claude/models/overview#latest-models-comparison),
+     * e.g. `claude-opus-4-6`, or a `model_config` object for additional configuration control. Omit
+     * to preserve. Cannot be cleared.
+     */
+    @JsonDeserialize(using = Model.Deserializer::class)
+    @JsonSerialize(using = Model.Serializer::class)
+    class Model
+    private constructor(
+        private val betaManagedAgents: BetaManagedAgentsModel? = null,
+        private val betaManagedAgentsModelConfigParams: BetaManagedAgentsModelConfigParams? = null,
+        private val _json: JsonValue? = null,
+    ) {
+
+        /**
+         * The model that will power your agent.\n\nSee
+         * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
+         * options.
+         */
+        fun betaManagedAgents(): Optional<BetaManagedAgentsModel> =
+            Optional.ofNullable(betaManagedAgents)
+
+        /** An object that defines additional configuration control over model use */
+        fun betaManagedAgentsModelConfigParams(): Optional<BetaManagedAgentsModelConfigParams> =
+            Optional.ofNullable(betaManagedAgentsModelConfigParams)
+
+        fun isBetaManagedAgents(): Boolean = betaManagedAgents != null
+
+        fun isBetaManagedAgentsModelConfigParams(): Boolean =
+            betaManagedAgentsModelConfigParams != null
+
+        /**
+         * The model that will power your agent.\n\nSee
+         * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
+         * options.
+         */
+        fun asBetaManagedAgents(): BetaManagedAgentsModel =
+            betaManagedAgents.getOrThrow("betaManagedAgents")
+
+        /** An object that defines additional configuration control over model use */
+        fun asBetaManagedAgentsModelConfigParams(): BetaManagedAgentsModelConfigParams =
+            betaManagedAgentsModelConfigParams.getOrThrow("betaManagedAgentsModelConfigParams")
+
+        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+        fun <T> accept(visitor: Visitor<T>): T =
+            when {
+                betaManagedAgents != null -> visitor.visitBetaManagedAgents(betaManagedAgents)
+                betaManagedAgentsModelConfigParams != null ->
+                    visitor.visitBetaManagedAgentsModelConfigParams(
+                        betaManagedAgentsModelConfigParams
+                    )
+                else -> visitor.unknown(_json)
+            }
+
+        private var validated: Boolean = false
+
+        fun validate(): Model = apply {
+            if (validated) {
+                return@apply
+            }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitBetaManagedAgents(
+                        betaManagedAgents: BetaManagedAgentsModel
+                    ) {}
+
+                    override fun visitBetaManagedAgentsModelConfigParams(
+                        betaManagedAgentsModelConfigParams: BetaManagedAgentsModelConfigParams
+                    ) {
+                        betaManagedAgentsModelConfigParams.validate()
+                    }
+                }
+            )
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            accept(
+                object : Visitor<Int> {
+                    override fun visitBetaManagedAgents(betaManagedAgents: BetaManagedAgentsModel) =
+                        1
+
+                    override fun visitBetaManagedAgentsModelConfigParams(
+                        betaManagedAgentsModelConfigParams: BetaManagedAgentsModelConfigParams
+                    ) = betaManagedAgentsModelConfigParams.validity()
+
+                    override fun unknown(json: JsonValue?) = 0
+                }
+            )
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Model &&
+                betaManagedAgents == other.betaManagedAgents &&
+                betaManagedAgentsModelConfigParams == other.betaManagedAgentsModelConfigParams
+        }
+
+        override fun hashCode(): Int =
+            Objects.hash(betaManagedAgents, betaManagedAgentsModelConfigParams)
+
+        override fun toString(): String =
+            when {
+                betaManagedAgents != null -> "Model{betaManagedAgents=$betaManagedAgents}"
+                betaManagedAgentsModelConfigParams != null ->
+                    "Model{betaManagedAgentsModelConfigParams=$betaManagedAgentsModelConfigParams}"
+                _json != null -> "Model{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid Model")
+            }
+
+        companion object {
+
+            /**
+             * The model that will power your agent.\n\nSee
+             * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
+             * and options.
+             */
+            @JvmStatic
+            fun ofBetaManagedAgents(betaManagedAgents: BetaManagedAgentsModel) =
+                Model(betaManagedAgents = betaManagedAgents)
+
+            /** An object that defines additional configuration control over model use */
+            @JvmStatic
+            fun ofBetaManagedAgentsModelConfigParams(
+                betaManagedAgentsModelConfigParams: BetaManagedAgentsModelConfigParams
+            ) = Model(betaManagedAgentsModelConfigParams = betaManagedAgentsModelConfigParams)
+        }
+
+        /** An interface that defines how to map each variant of [Model] to a value of type [T]. */
+        interface Visitor<out T> {
+
+            /**
+             * The model that will power your agent.\n\nSee
+             * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
+             * and options.
+             */
+            fun visitBetaManagedAgents(betaManagedAgents: BetaManagedAgentsModel): T
+
+            /** An object that defines additional configuration control over model use */
+            fun visitBetaManagedAgentsModelConfigParams(
+                betaManagedAgentsModelConfigParams: BetaManagedAgentsModelConfigParams
+            ): T
+
+            /**
+             * Maps an unknown variant of [Model] to a value of type [T].
+             *
+             * An instance of [Model] can contain an unknown variant if it was deserialized from
+             * data that doesn't match any known variant. For example, if the SDK is on an older
+             * version than the API, then the API may respond with new variants that the SDK is
+             * unaware of.
+             *
+             * @throws AnthropicInvalidDataException in the default implementation.
+             */
+            fun unknown(json: JsonValue?): T {
+                throw AnthropicInvalidDataException("Unknown Model: $json")
+            }
+        }
+
+        internal class Deserializer : BaseDeserializer<Model>(Model::class) {
+
+            override fun ObjectCodec.deserialize(node: JsonNode): Model {
+                val json = JsonValue.fromJsonNode(node)
+
+                val bestMatches =
+                    sequenceOf(
+                            tryDeserialize(node, jacksonTypeRef<BetaManagedAgentsModel>())?.let {
+                                Model(betaManagedAgents = it, _json = json)
+                            },
+                            tryDeserialize(
+                                    node,
+                                    jacksonTypeRef<BetaManagedAgentsModelConfigParams>(),
+                                )
+                                ?.let {
+                                    Model(betaManagedAgentsModelConfigParams = it, _json = json)
+                                },
+                        )
+                        .filterNotNull()
+                        .allMaxBy { it.validity() }
+                        .toList()
+                return when (bestMatches.size) {
+                    // This can happen if what we're deserializing is completely incompatible with
+                    // all the possible variants (e.g. deserializing from boolean).
+                    0 -> Model(_json = json)
+                    1 -> bestMatches.single()
+                    // If there's more than one match with the highest validity, then use the first
+                    // completely valid match, or simply the first match if none are completely
+                    // valid.
+                    else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+                }
+            }
+        }
+
+        internal class Serializer : BaseSerializer<Model>(Model::class) {
+
+            override fun serialize(
+                value: Model,
+                generator: JsonGenerator,
+                provider: SerializerProvider,
+            ) {
+                when {
+                    value.betaManagedAgents != null ->
+                        generator.writeObject(value.betaManagedAgents)
+                    value.betaManagedAgentsModelConfigParams != null ->
+                        generator.writeObject(value.betaManagedAgentsModelConfigParams)
+                    value._json != null -> generator.writeObject(value._json)
+                    else -> throw IllegalStateException("Invalid Model")
+                }
+            }
+        }
     }
 
     /** Union type for tool configurations in the tools array. */

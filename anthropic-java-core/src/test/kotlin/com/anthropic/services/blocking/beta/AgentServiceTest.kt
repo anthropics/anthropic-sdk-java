@@ -16,7 +16,6 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolsetDefaultConf
 import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAllowPolicy
 import com.anthropic.models.beta.agents.BetaManagedAgentsAnthropicSkillParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel
-import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfigParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsUrlMcpServerParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -38,12 +37,7 @@ internal class AgentServiceTest {
             agentService.create(
                 AgentCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                    .model(
-                        BetaManagedAgentsModelConfigParams.builder()
-                            .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
-                            .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
-                            .build()
-                    )
+                    .model(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                     .name("My First Agent")
                     .description("A general-purpose starter agent.")
                     .addMcpServer(
@@ -157,12 +151,7 @@ internal class AgentServiceTest {
                             .putAdditionalProperty("foo", JsonValue.from("string"))
                             .build()
                     )
-                    .model(
-                        BetaManagedAgentsModelConfigParams.builder()
-                            .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
-                            .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
-                            .build()
-                    )
+                    .model(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
                     .name("name")
                     .addSkill(
                         BetaManagedAgentsAnthropicSkillParams.builder()
