@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.23.0 (2026-04-09)
+
+Full Changelog: [v2.22.0...v2.23.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.22.0...v2.23.0)
+
+### Features
+
+* **api:** Add beta advisor tool ([17d360c](https://github.com/anthropics/anthropic-sdk-java/commit/17d360c1a8c39135a6b50a34c03f13ef2eeabb83))
+
+
+### Chores
+
+* **client:** add Models enum as option in Managed Agents ([ebd7983](https://github.com/anthropics/anthropic-sdk-java/commit/ebd7983d17cd4335cd384613b7b210f786e69886))
+
 ## 2.22.0 (2026-04-08)
 
 Full Changelog: [v2.21.0...v2.22.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.21.0...v2.22.0)
