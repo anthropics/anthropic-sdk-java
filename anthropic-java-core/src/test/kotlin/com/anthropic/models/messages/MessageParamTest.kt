@@ -12,9 +12,59 @@ internal class MessageParamTest {
     @Test
     fun create() {
         val messageParam =
-            MessageParam.builder().content("string").role(MessageParam.Role.USER).build()
+            MessageParam.builder()
+                .contentOfBlockParams(
+                    listOf(
+                        ContentBlockParam.ofText(
+                            TextBlockParam.builder()
+                                .text("What is a quaternion?")
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .addCitation(
+                                    CitationCharLocationParam.builder()
+                                        .citedText("cited_text")
+                                        .documentIndex(0L)
+                                        .documentTitle("x")
+                                        .endCharIndex(0L)
+                                        .startCharIndex(0L)
+                                        .build()
+                                )
+                                .build()
+                        )
+                    )
+                )
+                .role(MessageParam.Role.USER)
+                .build()
 
-        assertThat(messageParam.content()).isEqualTo(MessageParam.Content.ofString("string"))
+        assertThat(messageParam.content())
+            .isEqualTo(
+                MessageParam.Content.ofBlockParams(
+                    listOf(
+                        ContentBlockParam.ofText(
+                            TextBlockParam.builder()
+                                .text("What is a quaternion?")
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .addCitation(
+                                    CitationCharLocationParam.builder()
+                                        .citedText("cited_text")
+                                        .documentIndex(0L)
+                                        .documentTitle("x")
+                                        .endCharIndex(0L)
+                                        .startCharIndex(0L)
+                                        .build()
+                                )
+                                .build()
+                        )
+                    )
+                )
+            )
         assertThat(messageParam.role()).isEqualTo(MessageParam.Role.USER)
     }
 
@@ -22,7 +72,32 @@ internal class MessageParamTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val messageParam =
-            MessageParam.builder().content("string").role(MessageParam.Role.USER).build()
+            MessageParam.builder()
+                .contentOfBlockParams(
+                    listOf(
+                        ContentBlockParam.ofText(
+                            TextBlockParam.builder()
+                                .text("What is a quaternion?")
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .addCitation(
+                                    CitationCharLocationParam.builder()
+                                        .citedText("cited_text")
+                                        .documentIndex(0L)
+                                        .documentTitle("x")
+                                        .endCharIndex(0L)
+                                        .startCharIndex(0L)
+                                        .build()
+                                )
+                                .build()
+                        )
+                    )
+                )
+                .role(MessageParam.Role.USER)
+                .build()
 
         val roundtrippedMessageParam =
             jsonMapper.readValue(
