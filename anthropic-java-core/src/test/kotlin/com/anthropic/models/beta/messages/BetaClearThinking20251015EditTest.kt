@@ -12,25 +12,17 @@ internal class BetaClearThinking20251015EditTest {
     @Test
     fun create() {
         val betaClearThinking20251015Edit =
-            BetaClearThinking20251015Edit.builder()
-                .keep(BetaThinkingTurns.builder().value(1L).build())
-                .build()
+            BetaClearThinking20251015Edit.builder().keepAll().build()
 
         assertThat(betaClearThinking20251015Edit.keep())
-            .contains(
-                BetaClearThinking20251015Edit.Keep.ofBetaThinkingTurns(
-                    BetaThinkingTurns.builder().value(1L).build()
-                )
-            )
+            .contains(BetaClearThinking20251015Edit.Keep.ofAll())
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaClearThinking20251015Edit =
-            BetaClearThinking20251015Edit.builder()
-                .keep(BetaThinkingTurns.builder().value(1L).build())
-                .build()
+            BetaClearThinking20251015Edit.builder().keepAll().build()
 
         val roundtrippedBetaClearThinking20251015Edit =
             jsonMapper.readValue(
