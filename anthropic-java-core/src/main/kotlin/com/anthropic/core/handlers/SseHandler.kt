@@ -29,7 +29,27 @@ internal fun sseHandler(jsonMapper: JsonMapper): Handler<StreamResponse<SseMessa
                 "content_block_start",
                 "content_block_delta",
                 "content_block_stop",
-                "message" -> yield(message)
+                "message",
+                "user.message",
+                "user.interrupt",
+                "user.tool_confirmation",
+                "user.custom_tool_result",
+                "agent.message",
+                "agent.thinking",
+                "agent.tool_use",
+                "agent.tool_result",
+                "agent.mcp_tool_use",
+                "agent.mcp_tool_result",
+                "agent.custom_tool_use",
+                "agent.thread_context_compacted",
+                "session.status_running",
+                "session.status_idle",
+                "session.status_rescheduled",
+                "session.status_terminated",
+                "session.error",
+                "session.deleted",
+                "span.model_request_start",
+                "span.model_request_end" -> yield(message)
                 "ping" -> continue
                 "error" -> {
                     throw SseException.builder()
