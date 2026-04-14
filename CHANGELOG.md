@@ -1,5 +1,28 @@
 # Changelog
 
+## 2.25.0 (2026-04-14)
+
+Full Changelog: [v2.24.0...v2.25.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.24.0...v2.25.0)
+
+### Features
+
+* **api:** mark Sonnet and Opus 4 as deprecated ([81c750e](https://github.com/anthropics/anthropic-sdk-java/commit/81c750e06acffb87f317c80360af6c6b420d70b8))
+
+
+### Bug Fixes
+
+* **streaming:** add missing events ([4ac1b6a](https://github.com/anthropics/anthropic-sdk-java/commit/4ac1b6a507e2fd770a424bbe0d3e9e6f5f15d98c))
+
+
+### Chores
+
+* **client:** reset .stats.yml ([1d409ea](https://github.com/anthropics/anthropic-sdk-java/commit/1d409eaa60d7e5622bc3aac2403dddd77d5213ef))
+
+
+### Documentation
+
+* improve examples ([64896b8](https://github.com/anthropics/anthropic-sdk-java/commit/64896b84b4b05054ffa24c7f7666050a04f34ed7))
+
 ## 2.24.0 (2026-04-09)
 
 Full Changelog: [v2.23.0...v2.24.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.23.0...v2.24.0)
