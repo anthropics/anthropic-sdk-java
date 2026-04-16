@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.26.0 (2026-04-16)
+
+Full Changelog: [v2.25.0...v2.26.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.25.0...v2.26.0)
+
+### Features
+
+* **api:** add claude-opus-4-7, token budgets and user_profiles ([a240f4f](https://github.com/anthropics/anthropic-sdk-java/commit/a240f4f01f60c1eeb73c17c3261f2de559642258))
+
+
+### Chores
+
+* **ci:** remove release-doctor workflow ([5d22f5b](https://github.com/anthropics/anthropic-sdk-java/commit/5d22f5b0bd8efd88b8b477b133a6e45225c4ac2c))
+
 ## 2.25.0 (2026-04-14)
 
 Full Changelog: [v2.24.0...v2.25.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.24.0...v2.25.0)
