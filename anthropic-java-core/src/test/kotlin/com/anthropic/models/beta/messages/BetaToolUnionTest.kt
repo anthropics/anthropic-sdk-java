@@ -1530,7 +1530,7 @@ internal class BetaToolUnionTest {
     fun ofAdvisorTool20260301() {
         val advisorTool20260301 =
             BetaAdvisorTool20260301.builder()
-                .model(Model.CLAUDE_MYTHOS_PREVIEW)
+                .model(Model.CLAUDE_OPUS_4_7)
                 .addAllowedCaller(BetaAdvisorTool20260301.AllowedCaller.DIRECT)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
@@ -1580,7 +1580,7 @@ internal class BetaToolUnionTest {
         val betaToolUnion =
             BetaToolUnion.ofAdvisorTool20260301(
                 BetaAdvisorTool20260301.builder()
-                    .model(Model.CLAUDE_MYTHOS_PREVIEW)
+                    .model(Model.CLAUDE_OPUS_4_7)
                     .addAllowedCaller(BetaAdvisorTool20260301.AllowedCaller.DIRECT)
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()

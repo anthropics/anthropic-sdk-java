@@ -15,7 +15,7 @@ internal class BetaAdvisorTool20260301Test {
     fun create() {
         val betaAdvisorTool20260301 =
             BetaAdvisorTool20260301.builder()
-                .model(Model.CLAUDE_MYTHOS_PREVIEW)
+                .model(Model.CLAUDE_OPUS_4_7)
                 .addAllowedCaller(BetaAdvisorTool20260301.AllowedCaller.DIRECT)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
@@ -32,7 +32,7 @@ internal class BetaAdvisorTool20260301Test {
                 .strict(true)
                 .build()
 
-        assertThat(betaAdvisorTool20260301.model()).isEqualTo(Model.CLAUDE_MYTHOS_PREVIEW)
+        assertThat(betaAdvisorTool20260301.model()).isEqualTo(Model.CLAUDE_OPUS_4_7)
         assertThat(betaAdvisorTool20260301.allowedCallers().getOrNull())
             .containsExactly(BetaAdvisorTool20260301.AllowedCaller.DIRECT)
         assertThat(betaAdvisorTool20260301.cacheControl())
@@ -57,7 +57,7 @@ internal class BetaAdvisorTool20260301Test {
         val jsonMapper = jsonMapper()
         val betaAdvisorTool20260301 =
             BetaAdvisorTool20260301.builder()
-                .model(Model.CLAUDE_MYTHOS_PREVIEW)
+                .model(Model.CLAUDE_OPUS_4_7)
                 .addAllowedCaller(BetaAdvisorTool20260301.AllowedCaller.DIRECT)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()

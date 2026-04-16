@@ -591,21 +591,6 @@ private constructor(
             addContent(BetaContentBlock.ofCompaction(compaction))
 
         /**
-         * Alias for calling [addContent] with the following:
-         * ```java
-         * BetaCompactionBlock.builder()
-         *     .content(content)
-         *     .build()
-         * ```
-         */
-        fun addCompactionContent(content: String?) =
-            addContent(BetaCompactionBlock.builder().content(content).build())
-
-        /** Alias for calling [addCompactionContent] with `content.orElse(null)`. */
-        fun addCompactionContent(content: Optional<String>) =
-            addCompactionContent(content.getOrNull())
-
-        /**
          * Context management response.
          *
          * Information about context management strategies applied during the request.

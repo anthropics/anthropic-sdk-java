@@ -4,7 +4,7 @@ import com.anthropic.models.beta.messages.BetaThinkingConfigParam
 import com.anthropic.models.messages.ThinkingConfigParam
 
 /** Models that should emit a warning when used with thinking.type=enabled */
-private val MODELS_TO_WARN_WITH_THINKING_ENABLED = setOf("claude-opus-4-6")
+private val MODELS_TO_WARN_WITH_THINKING_ENABLED = setOf("claude-opus-4-6", "claude-mythos-preview")
 
 /**
  * Checks if the model and thinking config should emit a warning, and prints it to stderr if needed.

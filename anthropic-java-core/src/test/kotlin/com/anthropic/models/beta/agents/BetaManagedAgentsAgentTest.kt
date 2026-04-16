@@ -16,7 +16,7 @@ internal class BetaManagedAgentsAgentTest {
         val betaManagedAgentsAgent =
             BetaManagedAgentsAgent.builder()
                 .id("agent_011CZkYpogX7uDKUyvBTophP")
-                .archivedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .archivedAt(null)
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .description("A general-purpose starter agent.")
                 .addMcpServer(
@@ -87,8 +87,7 @@ internal class BetaManagedAgentsAgentTest {
                 .build()
 
         assertThat(betaManagedAgentsAgent.id()).isEqualTo("agent_011CZkYpogX7uDKUyvBTophP")
-        assertThat(betaManagedAgentsAgent.archivedAt())
-            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(betaManagedAgentsAgent.archivedAt()).isEmpty
         assertThat(betaManagedAgentsAgent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
         assertThat(betaManagedAgentsAgent.description())
@@ -177,7 +176,7 @@ internal class BetaManagedAgentsAgentTest {
         val betaManagedAgentsAgent =
             BetaManagedAgentsAgent.builder()
                 .id("agent_011CZkYpogX7uDKUyvBTophP")
-                .archivedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .archivedAt(null)
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .description("A general-purpose starter agent.")
                 .addMcpServer(
