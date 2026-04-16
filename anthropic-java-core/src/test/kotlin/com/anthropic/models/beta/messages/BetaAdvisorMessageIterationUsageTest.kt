@@ -23,7 +23,7 @@ internal class BetaAdvisorMessageIterationUsageTest {
                 .cacheCreationInputTokens(0L)
                 .cacheReadInputTokens(0L)
                 .inputTokens(0L)
-                .model(Model.CLAUDE_MYTHOS_PREVIEW)
+                .model(Model.CLAUDE_OPUS_4_7)
                 .outputTokens(0L)
                 .build()
 
@@ -37,7 +37,7 @@ internal class BetaAdvisorMessageIterationUsageTest {
         assertThat(betaAdvisorMessageIterationUsage.cacheCreationInputTokens()).isEqualTo(0L)
         assertThat(betaAdvisorMessageIterationUsage.cacheReadInputTokens()).isEqualTo(0L)
         assertThat(betaAdvisorMessageIterationUsage.inputTokens()).isEqualTo(0L)
-        assertThat(betaAdvisorMessageIterationUsage.model()).isEqualTo(Model.CLAUDE_MYTHOS_PREVIEW)
+        assertThat(betaAdvisorMessageIterationUsage.model()).isEqualTo(Model.CLAUDE_OPUS_4_7)
         assertThat(betaAdvisorMessageIterationUsage.outputTokens()).isEqualTo(0L)
     }
 
@@ -55,7 +55,7 @@ internal class BetaAdvisorMessageIterationUsageTest {
                 .cacheCreationInputTokens(0L)
                 .cacheReadInputTokens(0L)
                 .inputTokens(0L)
-                .model(Model.CLAUDE_MYTHOS_PREVIEW)
+                .model(Model.CLAUDE_OPUS_4_7)
                 .outputTokens(0L)
                 .build()
 

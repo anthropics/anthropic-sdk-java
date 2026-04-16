@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Effort (reasoning_effort) capability details. */
@@ -25,6 +26,7 @@ private constructor(
     private val max: JsonField<CapabilitySupport>,
     private val medium: JsonField<CapabilitySupport>,
     private val supported: JsonField<Boolean>,
+    private val xhigh: JsonField<CapabilitySupport>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -37,7 +39,10 @@ private constructor(
         @ExcludeMissing
         medium: JsonField<CapabilitySupport> = JsonMissing.of(),
         @JsonProperty("supported") @ExcludeMissing supported: JsonField<Boolean> = JsonMissing.of(),
-    ) : this(high, low, max, medium, supported, mutableMapOf())
+        @JsonProperty("xhigh")
+        @ExcludeMissing
+        xhigh: JsonField<CapabilitySupport> = JsonMissing.of(),
+    ) : this(high, low, max, medium, supported, xhigh, mutableMapOf())
 
     /**
      * Whether the model supports high effort level.
@@ -80,6 +85,14 @@ private constructor(
     fun supported(): Boolean = supported.getRequired("supported")
 
     /**
+     * Indicates whether a capability is supported.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun xhigh(): Optional<CapabilitySupport> = xhigh.getOptional("xhigh")
+
+    /**
      * Returns the raw JSON value of [high].
      *
      * Unlike [high], this method doesn't throw if the JSON field has an unexpected type.
@@ -114,6 +127,13 @@ private constructor(
      */
     @JsonProperty("supported") @ExcludeMissing fun _supported(): JsonField<Boolean> = supported
 
+    /**
+     * Returns the raw JSON value of [xhigh].
+     *
+     * Unlike [xhigh], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("xhigh") @ExcludeMissing fun _xhigh(): JsonField<CapabilitySupport> = xhigh
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -138,6 +158,7 @@ private constructor(
          * .max()
          * .medium()
          * .supported()
+         * .xhigh()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -151,6 +172,7 @@ private constructor(
         private var max: JsonField<CapabilitySupport>? = null
         private var medium: JsonField<CapabilitySupport>? = null
         private var supported: JsonField<Boolean>? = null
+        private var xhigh: JsonField<CapabilitySupport>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -160,6 +182,7 @@ private constructor(
             max = effortCapability.max
             medium = effortCapability.medium
             supported = effortCapability.supported
+            xhigh = effortCapability.xhigh
             additionalProperties = effortCapability.additionalProperties.toMutableMap()
         }
 
@@ -223,6 +246,21 @@ private constructor(
          */
         fun supported(supported: JsonField<Boolean>) = apply { this.supported = supported }
 
+        /** Indicates whether a capability is supported. */
+        fun xhigh(xhigh: CapabilitySupport?) = xhigh(JsonField.ofNullable(xhigh))
+
+        /** Alias for calling [Builder.xhigh] with `xhigh.orElse(null)`. */
+        fun xhigh(xhigh: Optional<CapabilitySupport>) = xhigh(xhigh.getOrNull())
+
+        /**
+         * Sets [Builder.xhigh] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.xhigh] with a well-typed [CapabilitySupport] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun xhigh(xhigh: JsonField<CapabilitySupport>) = apply { this.xhigh = xhigh }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -254,6 +292,7 @@ private constructor(
          * .max()
          * .medium()
          * .supported()
+         * .xhigh()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -265,6 +304,7 @@ private constructor(
                 checkRequired("max", max),
                 checkRequired("medium", medium),
                 checkRequired("supported", supported),
+                checkRequired("xhigh", xhigh),
                 additionalProperties.toMutableMap(),
             )
     }
@@ -281,6 +321,7 @@ private constructor(
         max().validate()
         medium().validate()
         supported()
+        xhigh().ifPresent { it.validate() }
         validated = true
     }
 
@@ -303,7 +344,8 @@ private constructor(
             (low.asKnown().getOrNull()?.validity() ?: 0) +
             (max.asKnown().getOrNull()?.validity() ?: 0) +
             (medium.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (supported.asKnown().isPresent) 1 else 0)
+            (if (supported.asKnown().isPresent) 1 else 0) +
+            (xhigh.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -316,15 +358,16 @@ private constructor(
             max == other.max &&
             medium == other.medium &&
             supported == other.supported &&
+            xhigh == other.xhigh &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(high, low, max, medium, supported, additionalProperties)
+        Objects.hash(high, low, max, medium, supported, xhigh, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "EffortCapability{high=$high, low=$low, max=$max, medium=$medium, supported=$supported, additionalProperties=$additionalProperties}"
+        "EffortCapability{high=$high, low=$low, max=$max, medium=$medium, supported=$supported, xhigh=$xhigh, additionalProperties=$additionalProperties}"
 }

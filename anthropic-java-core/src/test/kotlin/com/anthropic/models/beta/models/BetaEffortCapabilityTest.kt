@@ -18,6 +18,7 @@ internal class BetaEffortCapabilityTest {
                 .max(BetaCapabilitySupport.builder().supported(true).build())
                 .medium(BetaCapabilitySupport.builder().supported(true).build())
                 .supported(true)
+                .xhigh(BetaCapabilitySupport.builder().supported(true).build())
                 .build()
 
         assertThat(betaEffortCapability.high())
@@ -29,6 +30,8 @@ internal class BetaEffortCapabilityTest {
         assertThat(betaEffortCapability.medium())
             .isEqualTo(BetaCapabilitySupport.builder().supported(true).build())
         assertThat(betaEffortCapability.supported()).isEqualTo(true)
+        assertThat(betaEffortCapability.xhigh())
+            .contains(BetaCapabilitySupport.builder().supported(true).build())
     }
 
     @Test
@@ -41,6 +44,7 @@ internal class BetaEffortCapabilityTest {
                 .max(BetaCapabilitySupport.builder().supported(true).build())
                 .medium(BetaCapabilitySupport.builder().supported(true).build())
                 .supported(true)
+                .xhigh(BetaCapabilitySupport.builder().supported(true).build())
                 .build()
 
         val roundtrippedBetaEffortCapability =

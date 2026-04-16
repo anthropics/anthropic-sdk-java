@@ -30,7 +30,7 @@ internal class VersionListPageResponseTest {
                 .addData(
                     BetaManagedAgentsAgent.builder()
                         .id("agent_011CZkYpogX7uDKUyvBTophP")
-                        .archivedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .archivedAt(null)
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .description("A general-purpose starter agent.")
                         .addMcpServer(
@@ -115,7 +115,7 @@ internal class VersionListPageResponseTest {
             .containsExactly(
                 BetaManagedAgentsAgent.builder()
                     .id("agent_011CZkYpogX7uDKUyvBTophP")
-                    .archivedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .archivedAt(null)
                     .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .description("A general-purpose starter agent.")
                     .addMcpServer(
@@ -198,7 +198,7 @@ internal class VersionListPageResponseTest {
                 .addData(
                     BetaManagedAgentsAgent.builder()
                         .id("agent_011CZkYpogX7uDKUyvBTophP")
-                        .archivedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .archivedAt(null)
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .description("A general-purpose starter agent.")
                         .addMcpServer(

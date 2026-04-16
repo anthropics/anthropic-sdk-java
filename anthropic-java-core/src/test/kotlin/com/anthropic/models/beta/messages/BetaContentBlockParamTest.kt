@@ -1369,6 +1369,7 @@ internal class BetaContentBlockParamTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .encryptedContent("encrypted_content")
                 .build()
 
         val betaContentBlockParam = BetaContentBlockParam.ofCompaction(compaction)
@@ -1407,6 +1408,7 @@ internal class BetaContentBlockParamTest {
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .encryptedContent("encrypted_content")
                     .build()
             )
 
