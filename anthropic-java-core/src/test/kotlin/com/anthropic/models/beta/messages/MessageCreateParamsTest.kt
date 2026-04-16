@@ -76,6 +76,7 @@ internal class MessageCreateParamsTest {
                             )
                             .build()
                     )
+                    .taskBudget(BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build())
                     .build()
             )
             .outputFormat(
@@ -152,6 +153,7 @@ internal class MessageCreateParamsTest {
             )
             .topK(5L)
             .topP(0.7)
+            .userProfileId("user_profile_id")
             .build()
     }
 
@@ -223,6 +225,9 @@ internal class MessageCreateParamsTest {
                                         .build()
                                 )
                                 .build()
+                        )
+                        .taskBudget(
+                            BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build()
                         )
                         .build()
                 )
@@ -300,6 +305,7 @@ internal class MessageCreateParamsTest {
                 )
                 .topK(5L)
                 .topP(0.7)
+                .userProfileId("user_profile_id")
                 .build()
 
         val headers = params._headers()
@@ -393,6 +399,9 @@ internal class MessageCreateParamsTest {
                                 )
                                 .build()
                         )
+                        .taskBudget(
+                            BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build()
+                        )
                         .build()
                 )
                 .outputFormat(
@@ -469,6 +478,7 @@ internal class MessageCreateParamsTest {
                 )
                 .topK(5L)
                 .topP(0.7)
+                .userProfileId("user_profile_id")
                 .build()
 
         val body = params._body()
@@ -547,6 +557,7 @@ internal class MessageCreateParamsTest {
                             )
                             .build()
                     )
+                    .taskBudget(BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build())
                     .build()
             )
         assertThat(body.outputFormat())
@@ -638,6 +649,7 @@ internal class MessageCreateParamsTest {
             )
         assertThat(body.topK()).contains(5L)
         assertThat(body.topP()).contains(0.7)
+        assertThat(body.userProfileId()).contains("user_profile_id")
     }
 
     @Test

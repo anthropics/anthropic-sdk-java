@@ -7,7 +7,9 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolset20260401
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolsetDefaultConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAllowPolicy
+import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAskPolicy
 import com.anthropic.models.beta.agents.BetaManagedAgentsAnthropicSkill
+import com.anthropic.models.beta.agents.BetaManagedAgentsCustomSkill
 import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
@@ -21,8 +23,8 @@ internal class BetaManagedAgentsSessionAgentTest {
     fun create() {
         val betaManagedAgentsSessionAgent =
             BetaManagedAgentsSessionAgent.builder()
-                .id("id")
-                .description("description")
+                .id("agent_011CZkYpogX7uDKUyvBTophP")
+                .description("A general-purpose starter agent.")
                 .addMcpServer(
                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                         .name("example-mcp")
@@ -32,11 +34,11 @@ internal class BetaManagedAgentsSessionAgentTest {
                 )
                 .model(
                     BetaManagedAgentsModelConfig.builder()
-                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
+                        .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                         .build()
                 )
-                .name("name")
+                .name("My First Agent")
                 .addSkill(
                     BetaManagedAgentsAnthropicSkill.builder()
                         .skillId("xlsx")
@@ -44,7 +46,16 @@ internal class BetaManagedAgentsSessionAgentTest {
                         .version("1")
                         .build()
                 )
-                .system("system")
+                .addSkill(
+                    BetaManagedAgentsCustomSkill.builder()
+                        .skillId("skill_011CZkZFNu9hAbo3jZPRgTlx")
+                        .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
+                        .version("2")
+                        .build()
+                )
+                .system(
+                    "You are a general-purpose agent that can research, write code, run commands, and use connected tools to complete the user's task end to end."
+                )
                 .addTool(
                     BetaManagedAgentsAgentToolset20260401.builder()
                         .addConfig(
@@ -62,8 +73,8 @@ internal class BetaManagedAgentsSessionAgentTest {
                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
+                                    BetaManagedAgentsAlwaysAskPolicy.builder()
+                                        .type(BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK)
                                         .build()
                                 )
                                 .build()
@@ -72,11 +83,12 @@ internal class BetaManagedAgentsSessionAgentTest {
                         .build()
                 )
                 .type(BetaManagedAgentsSessionAgent.Type.AGENT)
-                .version(0)
+                .version(1)
                 .build()
 
-        assertThat(betaManagedAgentsSessionAgent.id()).isEqualTo("id")
-        assertThat(betaManagedAgentsSessionAgent.description()).contains("description")
+        assertThat(betaManagedAgentsSessionAgent.id()).isEqualTo("agent_011CZkYpogX7uDKUyvBTophP")
+        assertThat(betaManagedAgentsSessionAgent.description())
+            .contains("A general-purpose starter agent.")
         assertThat(betaManagedAgentsSessionAgent.mcpServers())
             .containsExactly(
                 BetaManagedAgentsMcpServerUrlDefinition.builder()
@@ -88,11 +100,11 @@ internal class BetaManagedAgentsSessionAgentTest {
         assertThat(betaManagedAgentsSessionAgent.model())
             .isEqualTo(
                 BetaManagedAgentsModelConfig.builder()
-                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
+                    .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                     .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                     .build()
             )
-        assertThat(betaManagedAgentsSessionAgent.name()).isEqualTo("name")
+        assertThat(betaManagedAgentsSessionAgent.name()).isEqualTo("My First Agent")
         assertThat(betaManagedAgentsSessionAgent.skills())
             .containsExactly(
                 BetaManagedAgentsSessionAgent.Skill.ofAnthropic(
@@ -101,9 +113,19 @@ internal class BetaManagedAgentsSessionAgentTest {
                         .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
                         .version("1")
                         .build()
-                )
+                ),
+                BetaManagedAgentsSessionAgent.Skill.ofCustom(
+                    BetaManagedAgentsCustomSkill.builder()
+                        .skillId("skill_011CZkZFNu9hAbo3jZPRgTlx")
+                        .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
+                        .version("2")
+                        .build()
+                ),
             )
-        assertThat(betaManagedAgentsSessionAgent.system()).contains("system")
+        assertThat(betaManagedAgentsSessionAgent.system())
+            .contains(
+                "You are a general-purpose agent that can research, write code, run commands, and use connected tools to complete the user's task end to end."
+            )
         assertThat(betaManagedAgentsSessionAgent.tools())
             .containsExactly(
                 BetaManagedAgentsSessionAgent.Tool.ofAgentToolset20260401(
@@ -123,8 +145,8 @@ internal class BetaManagedAgentsSessionAgentTest {
                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
+                                    BetaManagedAgentsAlwaysAskPolicy.builder()
+                                        .type(BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK)
                                         .build()
                                 )
                                 .build()
@@ -135,7 +157,7 @@ internal class BetaManagedAgentsSessionAgentTest {
             )
         assertThat(betaManagedAgentsSessionAgent.type())
             .isEqualTo(BetaManagedAgentsSessionAgent.Type.AGENT)
-        assertThat(betaManagedAgentsSessionAgent.version()).isEqualTo(0)
+        assertThat(betaManagedAgentsSessionAgent.version()).isEqualTo(1)
     }
 
     @Test
@@ -143,8 +165,8 @@ internal class BetaManagedAgentsSessionAgentTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSessionAgent =
             BetaManagedAgentsSessionAgent.builder()
-                .id("id")
-                .description("description")
+                .id("agent_011CZkYpogX7uDKUyvBTophP")
+                .description("A general-purpose starter agent.")
                 .addMcpServer(
                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                         .name("example-mcp")
@@ -154,11 +176,11 @@ internal class BetaManagedAgentsSessionAgentTest {
                 )
                 .model(
                     BetaManagedAgentsModelConfig.builder()
-                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
+                        .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                         .build()
                 )
-                .name("name")
+                .name("My First Agent")
                 .addSkill(
                     BetaManagedAgentsAnthropicSkill.builder()
                         .skillId("xlsx")
@@ -166,7 +188,16 @@ internal class BetaManagedAgentsSessionAgentTest {
                         .version("1")
                         .build()
                 )
-                .system("system")
+                .addSkill(
+                    BetaManagedAgentsCustomSkill.builder()
+                        .skillId("skill_011CZkZFNu9hAbo3jZPRgTlx")
+                        .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
+                        .version("2")
+                        .build()
+                )
+                .system(
+                    "You are a general-purpose agent that can research, write code, run commands, and use connected tools to complete the user's task end to end."
+                )
                 .addTool(
                     BetaManagedAgentsAgentToolset20260401.builder()
                         .addConfig(
@@ -184,8 +215,8 @@ internal class BetaManagedAgentsSessionAgentTest {
                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
+                                    BetaManagedAgentsAlwaysAskPolicy.builder()
+                                        .type(BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK)
                                         .build()
                                 )
                                 .build()
@@ -194,7 +225,7 @@ internal class BetaManagedAgentsSessionAgentTest {
                         .build()
                 )
                 .type(BetaManagedAgentsSessionAgent.Type.AGENT)
-                .version(0)
+                .version(1)
                 .build()
 
         val roundtrippedBetaManagedAgentsSessionAgent =
