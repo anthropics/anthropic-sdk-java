@@ -32,6 +32,7 @@ private constructor(
     private val content: JsonField<String>,
     private val type: JsonValue,
     private val cacheControl: JsonField<BetaCacheControlEphemeral>,
+    private val encryptedContent: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -42,7 +43,10 @@ private constructor(
         @JsonProperty("cache_control")
         @ExcludeMissing
         cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
-    ) : this(content, type, cacheControl, mutableMapOf())
+        @JsonProperty("encrypted_content")
+        @ExcludeMissing
+        encryptedContent: JsonField<String> = JsonMissing.of(),
+    ) : this(content, type, cacheControl, encryptedContent, mutableMapOf())
 
     /**
      * Summary of previously compacted content, or null if compaction failed
@@ -73,6 +77,14 @@ private constructor(
         cacheControl.getOptional("cache_control")
 
     /**
+     * Opaque metadata from prior compaction, to be round-tripped verbatim
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun encryptedContent(): Optional<String> = encryptedContent.getOptional("encrypted_content")
+
+    /**
      * Returns the raw JSON value of [content].
      *
      * Unlike [content], this method doesn't throw if the JSON field has an unexpected type.
@@ -87,6 +99,16 @@ private constructor(
     @JsonProperty("cache_control")
     @ExcludeMissing
     fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
+
+    /**
+     * Returns the raw JSON value of [encryptedContent].
+     *
+     * Unlike [encryptedContent], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("encrypted_content")
+    @ExcludeMissing
+    fun _encryptedContent(): JsonField<String> = encryptedContent
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -119,6 +141,7 @@ private constructor(
         private var content: JsonField<String>? = null
         private var type: JsonValue = JsonValue.from("compaction")
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
+        private var encryptedContent: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -126,6 +149,7 @@ private constructor(
             content = betaCompactionBlockParam.content
             type = betaCompactionBlockParam.type
             cacheControl = betaCompactionBlockParam.cacheControl
+            encryptedContent = betaCompactionBlockParam.encryptedContent
             additionalProperties = betaCompactionBlockParam.additionalProperties.toMutableMap()
         }
 
@@ -176,6 +200,25 @@ private constructor(
             this.cacheControl = cacheControl
         }
 
+        /** Opaque metadata from prior compaction, to be round-tripped verbatim */
+        fun encryptedContent(encryptedContent: String?) =
+            encryptedContent(JsonField.ofNullable(encryptedContent))
+
+        /** Alias for calling [Builder.encryptedContent] with `encryptedContent.orElse(null)`. */
+        fun encryptedContent(encryptedContent: Optional<String>) =
+            encryptedContent(encryptedContent.getOrNull())
+
+        /**
+         * Sets [Builder.encryptedContent] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.encryptedContent] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun encryptedContent(encryptedContent: JsonField<String>) = apply {
+            this.encryptedContent = encryptedContent
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -212,6 +255,7 @@ private constructor(
                 checkRequired("content", content),
                 type,
                 cacheControl,
+                encryptedContent,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -230,6 +274,7 @@ private constructor(
             }
         }
         cacheControl().ifPresent { it.validate() }
+        encryptedContent()
         validated = true
     }
 
@@ -250,7 +295,8 @@ private constructor(
     internal fun validity(): Int =
         (if (content.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("compaction")) 1 else 0 } +
-            (cacheControl.asKnown().getOrNull()?.validity() ?: 0)
+            (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (encryptedContent.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -261,15 +307,16 @@ private constructor(
             content == other.content &&
             type == other.type &&
             cacheControl == other.cacheControl &&
+            encryptedContent == other.encryptedContent &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(content, type, cacheControl, additionalProperties)
+        Objects.hash(content, type, cacheControl, encryptedContent, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaCompactionBlockParam{content=$content, type=$type, cacheControl=$cacheControl, additionalProperties=$additionalProperties}"
+        "BetaCompactionBlockParam{content=$content, type=$type, cacheControl=$cacheControl, encryptedContent=$encryptedContent, additionalProperties=$additionalProperties}"
 }

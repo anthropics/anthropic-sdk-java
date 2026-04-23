@@ -19,6 +19,8 @@ import com.anthropic.services.blocking.beta.SessionService
 import com.anthropic.services.blocking.beta.SessionServiceImpl
 import com.anthropic.services.blocking.beta.SkillService
 import com.anthropic.services.blocking.beta.SkillServiceImpl
+import com.anthropic.services.blocking.beta.UserProfileService
+import com.anthropic.services.blocking.beta.UserProfileServiceImpl
 import com.anthropic.services.blocking.beta.VaultService
 import com.anthropic.services.blocking.beta.VaultServiceImpl
 import java.util.function.Consumer
@@ -47,6 +49,8 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
 
     private val skills: SkillService by lazy { SkillServiceImpl(clientOptions) }
 
+    private val userProfiles: UserProfileService by lazy { UserProfileServiceImpl(clientOptions) }
+
     override fun withRawResponse(): BetaService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BetaService =
@@ -69,6 +73,8 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
     override fun files(): FileService = files
 
     override fun skills(): SkillService = skills
+
+    override fun userProfiles(): UserProfileService = userProfiles
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         BetaService.WithRawResponse {
@@ -109,6 +115,10 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
             SkillServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val userProfiles: UserProfileService.WithRawResponse by lazy {
+            UserProfileServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): BetaService.WithRawResponse =
@@ -133,5 +143,7 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
         override fun files(): FileService.WithRawResponse = files
 
         override fun skills(): SkillService.WithRawResponse = skills
+
+        override fun userProfiles(): UserProfileService.WithRawResponse = userProfiles
     }
 }

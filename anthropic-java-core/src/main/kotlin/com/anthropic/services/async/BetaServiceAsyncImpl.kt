@@ -19,6 +19,8 @@ import com.anthropic.services.async.beta.SessionServiceAsync
 import com.anthropic.services.async.beta.SessionServiceAsyncImpl
 import com.anthropic.services.async.beta.SkillServiceAsync
 import com.anthropic.services.async.beta.SkillServiceAsyncImpl
+import com.anthropic.services.async.beta.UserProfileServiceAsync
+import com.anthropic.services.async.beta.UserProfileServiceAsyncImpl
 import com.anthropic.services.async.beta.VaultServiceAsync
 import com.anthropic.services.async.beta.VaultServiceAsyncImpl
 import java.util.function.Consumer
@@ -52,6 +54,10 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
 
     private val skills: SkillServiceAsync by lazy { SkillServiceAsyncImpl(clientOptions) }
 
+    private val userProfiles: UserProfileServiceAsync by lazy {
+        UserProfileServiceAsyncImpl(clientOptions)
+    }
+
     override fun withRawResponse(): BetaServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BetaServiceAsync =
@@ -74,6 +80,8 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
     override fun files(): FileServiceAsync = files
 
     override fun skills(): SkillServiceAsync = skills
+
+    override fun userProfiles(): UserProfileServiceAsync = userProfiles
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         BetaServiceAsync.WithRawResponse {
@@ -114,6 +122,10 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
             SkillServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val userProfiles: UserProfileServiceAsync.WithRawResponse by lazy {
+            UserProfileServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): BetaServiceAsync.WithRawResponse =
@@ -138,5 +150,7 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
         override fun files(): FileServiceAsync.WithRawResponse = files
 
         override fun skills(): SkillServiceAsync.WithRawResponse = skills
+
+        override fun userProfiles(): UserProfileServiceAsync.WithRawResponse = userProfiles
     }
 }
