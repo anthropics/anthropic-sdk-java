@@ -144,6 +144,30 @@ private constructor(
         fun addData(file: BetaManagedAgentsFileResource) =
             addData(BetaManagedAgentsSessionResource.ofFile(file))
 
+        /**
+         * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionResource.ofMemoryStore(memoryStore)`.
+         */
+        fun addData(memoryStore: BetaManagedAgentsMemoryStoreResource) =
+            addData(BetaManagedAgentsSessionResource.ofMemoryStore(memoryStore))
+
+        /**
+         * Alias for calling [addData] with the following:
+         * ```java
+         * BetaManagedAgentsMemoryStoreResource.builder()
+         *     .type(BetaManagedAgentsMemoryStoreResource.Type.MEMORY_STORE)
+         *     .memoryStoreId(memoryStoreId)
+         *     .build()
+         * ```
+         */
+        fun addMemoryStoreData(memoryStoreId: String) =
+            addData(
+                BetaManagedAgentsMemoryStoreResource.builder()
+                    .type(BetaManagedAgentsMemoryStoreResource.Type.MEMORY_STORE)
+                    .memoryStoreId(memoryStoreId)
+                    .build()
+            )
+
         /** Opaque cursor for the next page. Null when no more results. */
         fun nextPage(nextPage: String?) = nextPage(JsonField.ofNullable(nextPage))
 

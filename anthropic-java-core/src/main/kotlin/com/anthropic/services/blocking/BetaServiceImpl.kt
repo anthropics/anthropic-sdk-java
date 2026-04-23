@@ -9,6 +9,8 @@ import com.anthropic.services.blocking.beta.EnvironmentService
 import com.anthropic.services.blocking.beta.EnvironmentServiceImpl
 import com.anthropic.services.blocking.beta.FileService
 import com.anthropic.services.blocking.beta.FileServiceImpl
+import com.anthropic.services.blocking.beta.MemoryStoreService
+import com.anthropic.services.blocking.beta.MemoryStoreServiceImpl
 import com.anthropic.services.blocking.beta.MessageService
 import com.anthropic.services.blocking.beta.MessageServiceImpl
 import com.anthropic.services.blocking.beta.ModelService
@@ -41,6 +43,8 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
 
     private val vaults: VaultService by lazy { VaultServiceImpl(clientOptions) }
 
+    private val memoryStores: MemoryStoreService by lazy { MemoryStoreServiceImpl(clientOptions) }
+
     private val files: FileService by lazy { FileServiceImpl(clientOptions) }
 
     private val skills: SkillService by lazy { SkillServiceImpl(clientOptions) }
@@ -63,6 +67,8 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
     override fun sessions(): SessionService = sessions
 
     override fun vaults(): VaultService = vaults
+
+    override fun memoryStores(): MemoryStoreService = memoryStores
 
     override fun files(): FileService = files
 
@@ -97,6 +103,10 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
             VaultServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val memoryStores: MemoryStoreService.WithRawResponse by lazy {
+            MemoryStoreServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val files: FileService.WithRawResponse by lazy {
             FileServiceImpl.WithRawResponseImpl(clientOptions)
         }
@@ -127,6 +137,8 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
         override fun sessions(): SessionService.WithRawResponse = sessions
 
         override fun vaults(): VaultService.WithRawResponse = vaults
+
+        override fun memoryStores(): MemoryStoreService.WithRawResponse = memoryStores
 
         override fun files(): FileService.WithRawResponse = files
 

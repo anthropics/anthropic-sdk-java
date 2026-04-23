@@ -6,6 +6,7 @@ import com.anthropic.core.ClientOptions
 import com.anthropic.services.async.beta.AgentServiceAsync
 import com.anthropic.services.async.beta.EnvironmentServiceAsync
 import com.anthropic.services.async.beta.FileServiceAsync
+import com.anthropic.services.async.beta.MemoryStoreServiceAsync
 import com.anthropic.services.async.beta.MessageServiceAsync
 import com.anthropic.services.async.beta.ModelServiceAsync
 import com.anthropic.services.async.beta.SessionServiceAsync
@@ -40,6 +41,8 @@ interface BetaServiceAsync {
 
     fun vaults(): VaultServiceAsync
 
+    fun memoryStores(): MemoryStoreServiceAsync
+
     fun files(): FileServiceAsync
 
     fun skills(): SkillServiceAsync
@@ -67,6 +70,8 @@ interface BetaServiceAsync {
         fun sessions(): SessionServiceAsync.WithRawResponse
 
         fun vaults(): VaultServiceAsync.WithRawResponse
+
+        fun memoryStores(): MemoryStoreServiceAsync.WithRawResponse
 
         fun files(): FileServiceAsync.WithRawResponse
 
