@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.27.0 (2026-04-23)
+
+Full Changelog: [v2.26.0...v2.27.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.26.0...v2.27.0)
+
+### Features
+
+* **api:** CMA Memory public beta ([d95526a](https://github.com/anthropics/anthropic-sdk-java/commit/d95526a079a3aa875e73ae3b2da15f29d69addc6))
+
+
+### Bug Fixes
+
+* **api:** fix errors in api spec ([9d5a18a](https://github.com/anthropics/anthropic-sdk-java/commit/9d5a18a1e2bc9f579f30dc3abd7d4cc3458999a7))
+* **api:** restore missing features ([e737fbf](https://github.com/anthropics/anthropic-sdk-java/commit/e737fbf367c0470ffd3aa816e813ce20514bf291))
+
+
+### Chores
+
+* add missing methods ([5984a2f](https://github.com/anthropics/anthropic-sdk-java/commit/5984a2f0181aa44157b5fd57bdc3ecd0f20d37c9))
+* **client:** stable title ([4c4f2ce](https://github.com/anthropics/anthropic-sdk-java/commit/4c4f2cefffae98c1f97cdc966c539e5f8b0c9e0e))
+* **tests:** bump steady to v0.22.1 ([ef1bbca](https://github.com/anthropics/anthropic-sdk-java/commit/ef1bbcafbc83b79cf95a6b235a79a0b0c7ec775f))
+
 ## 2.26.0 (2026-04-16)
 
 Full Changelog: [v2.25.0...v2.26.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.25.0...v2.26.0)
