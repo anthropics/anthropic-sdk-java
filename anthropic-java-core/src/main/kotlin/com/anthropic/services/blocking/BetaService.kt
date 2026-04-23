@@ -11,6 +11,7 @@ import com.anthropic.services.blocking.beta.MessageService
 import com.anthropic.services.blocking.beta.ModelService
 import com.anthropic.services.blocking.beta.SessionService
 import com.anthropic.services.blocking.beta.SkillService
+import com.anthropic.services.blocking.beta.UserProfileService
 import com.anthropic.services.blocking.beta.VaultService
 import java.util.function.Consumer
 
@@ -46,6 +47,8 @@ interface BetaService {
 
     fun skills(): SkillService
 
+    fun userProfiles(): UserProfileService
+
     /** A view of [BetaService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
@@ -73,5 +76,7 @@ interface BetaService {
         fun files(): FileService.WithRawResponse
 
         fun skills(): SkillService.WithRawResponse
+
+        fun userProfiles(): UserProfileService.WithRawResponse
     }
 }

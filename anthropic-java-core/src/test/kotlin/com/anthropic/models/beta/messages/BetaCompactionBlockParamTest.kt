@@ -19,6 +19,7 @@ internal class BetaCompactionBlockParamTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .encryptedContent("encrypted_content")
                 .build()
 
         assertThat(betaCompactionBlockParam.content()).contains("content")
@@ -28,6 +29,7 @@ internal class BetaCompactionBlockParamTest {
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                     .build()
             )
+        assertThat(betaCompactionBlockParam.encryptedContent()).contains("encrypted_content")
     }
 
     @Test
@@ -41,6 +43,7 @@ internal class BetaCompactionBlockParamTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .encryptedContent("encrypted_content")
                 .build()
 
         val roundtrippedBetaCompactionBlockParam =
