@@ -24,7 +24,6 @@ internal class BetaOutputConfigTest {
                         )
                         .build()
                 )
-                .taskBudget(BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build())
                 .build()
 
         assertThat(betaOutputConfig.effort()).contains(BetaOutputConfig.Effort.LOW)
@@ -38,8 +37,6 @@ internal class BetaOutputConfigTest {
                     )
                     .build()
             )
-        assertThat(betaOutputConfig.taskBudget())
-            .contains(BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build())
     }
 
     @Test
@@ -57,7 +54,6 @@ internal class BetaOutputConfigTest {
                         )
                         .build()
                 )
-                .taskBudget(BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build())
                 .build()
 
         val roundtrippedBetaOutputConfig =

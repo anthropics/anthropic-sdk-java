@@ -53,9 +53,6 @@ internal class ModelListPageResponseTest {
                                             BetaCapabilitySupport.builder().supported(true).build()
                                         )
                                         .supported(true)
-                                        .xhigh(
-                                            BetaCapabilitySupport.builder().supported(true).build()
-                                        )
                                         .build()
                                 )
                                 .imageInput(BetaCapabilitySupport.builder().supported(true).build())
@@ -125,7 +122,6 @@ internal class ModelListPageResponseTest {
                                     .max(BetaCapabilitySupport.builder().supported(true).build())
                                     .medium(BetaCapabilitySupport.builder().supported(true).build())
                                     .supported(true)
-                                    .xhigh(BetaCapabilitySupport.builder().supported(true).build())
                                     .build()
                             )
                             .imageInput(BetaCapabilitySupport.builder().supported(true).build())
@@ -209,9 +205,6 @@ internal class ModelListPageResponseTest {
                                             BetaCapabilitySupport.builder().supported(true).build()
                                         )
                                         .supported(true)
-                                        .xhigh(
-                                            BetaCapabilitySupport.builder().supported(true).build()
-                                        )
                                         .build()
                                 )
                                 .imageInput(BetaCapabilitySupport.builder().supported(true).build())

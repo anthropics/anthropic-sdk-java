@@ -13,6 +13,7 @@ import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.sessions.resources.BetaManagedAgentsFileResource
 import com.anthropic.models.beta.sessions.resources.BetaManagedAgentsGitHubRepositoryResource
+import com.anthropic.models.beta.sessions.resources.BetaManagedAgentsMemoryStoreResource
 import com.anthropic.models.beta.sessions.resources.BetaManagedAgentsSessionResource
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -502,6 +503,30 @@ private constructor(
         /** Alias for calling [addResource] with `BetaManagedAgentsSessionResource.ofFile(file)`. */
         fun addResource(file: BetaManagedAgentsFileResource) =
             addResource(BetaManagedAgentsSessionResource.ofFile(file))
+
+        /**
+         * Alias for calling [addResource] with
+         * `BetaManagedAgentsSessionResource.ofMemoryStore(memoryStore)`.
+         */
+        fun addResource(memoryStore: BetaManagedAgentsMemoryStoreResource) =
+            addResource(BetaManagedAgentsSessionResource.ofMemoryStore(memoryStore))
+
+        /**
+         * Alias for calling [addResource] with the following:
+         * ```java
+         * BetaManagedAgentsMemoryStoreResource.builder()
+         *     .type(BetaManagedAgentsMemoryStoreResource.Type.MEMORY_STORE)
+         *     .memoryStoreId(memoryStoreId)
+         *     .build()
+         * ```
+         */
+        fun addMemoryStoreResource(memoryStoreId: String) =
+            addResource(
+                BetaManagedAgentsMemoryStoreResource.builder()
+                    .type(BetaManagedAgentsMemoryStoreResource.Type.MEMORY_STORE)
+                    .memoryStoreId(memoryStoreId)
+                    .build()
+            )
 
         /** Timing statistics for a session. */
         fun stats(stats: BetaManagedAgentsSessionStats) = stats(JsonField.of(stats))

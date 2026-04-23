@@ -61,7 +61,6 @@ internal class MessageCountTokensParamsTest {
                             )
                             .build()
                     )
-                    .taskBudget(BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build())
                     .build()
             )
             .outputFormat(
@@ -187,9 +186,6 @@ internal class MessageCountTokensParamsTest {
                                         .build()
                                 )
                                 .build()
-                        )
-                        .taskBudget(
-                            BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build()
                         )
                         .build()
                 )
@@ -337,9 +333,6 @@ internal class MessageCountTokensParamsTest {
                                 )
                                 .build()
                         )
-                        .taskBudget(
-                            BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build()
-                        )
                         .build()
                 )
                 .outputFormat(
@@ -470,7 +463,6 @@ internal class MessageCountTokensParamsTest {
                             )
                             .build()
                     )
-                    .taskBudget(BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build())
                     .build()
             )
         assertThat(body.outputFormat())

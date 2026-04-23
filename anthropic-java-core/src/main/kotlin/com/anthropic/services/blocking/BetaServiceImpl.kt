@@ -9,6 +9,8 @@ import com.anthropic.services.blocking.beta.EnvironmentService
 import com.anthropic.services.blocking.beta.EnvironmentServiceImpl
 import com.anthropic.services.blocking.beta.FileService
 import com.anthropic.services.blocking.beta.FileServiceImpl
+import com.anthropic.services.blocking.beta.MemoryStoreService
+import com.anthropic.services.blocking.beta.MemoryStoreServiceImpl
 import com.anthropic.services.blocking.beta.MessageService
 import com.anthropic.services.blocking.beta.MessageServiceImpl
 import com.anthropic.services.blocking.beta.ModelService
@@ -17,8 +19,6 @@ import com.anthropic.services.blocking.beta.SessionService
 import com.anthropic.services.blocking.beta.SessionServiceImpl
 import com.anthropic.services.blocking.beta.SkillService
 import com.anthropic.services.blocking.beta.SkillServiceImpl
-import com.anthropic.services.blocking.beta.UserProfileService
-import com.anthropic.services.blocking.beta.UserProfileServiceImpl
 import com.anthropic.services.blocking.beta.VaultService
 import com.anthropic.services.blocking.beta.VaultServiceImpl
 import java.util.function.Consumer
@@ -41,11 +41,11 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
 
     private val vaults: VaultService by lazy { VaultServiceImpl(clientOptions) }
 
+    private val memoryStores: MemoryStoreService by lazy { MemoryStoreServiceImpl(clientOptions) }
+
     private val files: FileService by lazy { FileServiceImpl(clientOptions) }
 
     private val skills: SkillService by lazy { SkillServiceImpl(clientOptions) }
-
-    private val userProfiles: UserProfileService by lazy { UserProfileServiceImpl(clientOptions) }
 
     override fun withRawResponse(): BetaService.WithRawResponse = withRawResponse
 
@@ -64,11 +64,11 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
 
     override fun vaults(): VaultService = vaults
 
+    override fun memoryStores(): MemoryStoreService = memoryStores
+
     override fun files(): FileService = files
 
     override fun skills(): SkillService = skills
-
-    override fun userProfiles(): UserProfileService = userProfiles
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         BetaService.WithRawResponse {
@@ -97,16 +97,16 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
             VaultServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val memoryStores: MemoryStoreService.WithRawResponse by lazy {
+            MemoryStoreServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val files: FileService.WithRawResponse by lazy {
             FileServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val skills: SkillService.WithRawResponse by lazy {
             SkillServiceImpl.WithRawResponseImpl(clientOptions)
-        }
-
-        private val userProfiles: UserProfileService.WithRawResponse by lazy {
-            UserProfileServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         override fun withOptions(
@@ -128,10 +128,10 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
 
         override fun vaults(): VaultService.WithRawResponse = vaults
 
+        override fun memoryStores(): MemoryStoreService.WithRawResponse = memoryStores
+
         override fun files(): FileService.WithRawResponse = files
 
         override fun skills(): SkillService.WithRawResponse = skills
-
-        override fun userProfiles(): UserProfileService.WithRawResponse = userProfiles
     }
 }

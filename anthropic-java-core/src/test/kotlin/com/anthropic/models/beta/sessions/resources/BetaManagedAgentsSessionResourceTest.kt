@@ -33,6 +33,7 @@ internal class BetaManagedAgentsSessionResourceTest {
 
         assertThat(betaManagedAgentsSessionResource.githubRepository()).contains(githubRepository)
         assertThat(betaManagedAgentsSessionResource.file()).isEmpty
+        assertThat(betaManagedAgentsSessionResource.memoryStore()).isEmpty
     }
 
     @Test
@@ -77,6 +78,7 @@ internal class BetaManagedAgentsSessionResourceTest {
 
         assertThat(betaManagedAgentsSessionResource.githubRepository()).isEmpty
         assertThat(betaManagedAgentsSessionResource.file()).contains(file)
+        assertThat(betaManagedAgentsSessionResource.memoryStore()).isEmpty
     }
 
     @Test
@@ -91,6 +93,53 @@ internal class BetaManagedAgentsSessionResourceTest {
                     .mountPath("/uploads/receipt.pdf")
                     .type(BetaManagedAgentsFileResource.Type.FILE)
                     .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                    .build()
+            )
+
+        val roundtrippedBetaManagedAgentsSessionResource =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaManagedAgentsSessionResource),
+                jacksonTypeRef<BetaManagedAgentsSessionResource>(),
+            )
+
+        assertThat(roundtrippedBetaManagedAgentsSessionResource)
+            .isEqualTo(betaManagedAgentsSessionResource)
+    }
+
+    @Test
+    fun ofMemoryStore() {
+        val memoryStore =
+            BetaManagedAgentsMemoryStoreResource.builder()
+                .memoryStoreId("memory_store_id")
+                .type(BetaManagedAgentsMemoryStoreResource.Type.MEMORY_STORE)
+                .access(BetaManagedAgentsMemoryStoreResource.Access.READ_WRITE)
+                .description("description")
+                .instructions("instructions")
+                .mountPath("mount_path")
+                .name("name")
+                .build()
+
+        val betaManagedAgentsSessionResource =
+            BetaManagedAgentsSessionResource.ofMemoryStore(memoryStore)
+
+        assertThat(betaManagedAgentsSessionResource.githubRepository()).isEmpty
+        assertThat(betaManagedAgentsSessionResource.file()).isEmpty
+        assertThat(betaManagedAgentsSessionResource.memoryStore()).contains(memoryStore)
+    }
+
+    @Test
+    fun ofMemoryStoreRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaManagedAgentsSessionResource =
+            BetaManagedAgentsSessionResource.ofMemoryStore(
+                BetaManagedAgentsMemoryStoreResource.builder()
+                    .memoryStoreId("memory_store_id")
+                    .type(BetaManagedAgentsMemoryStoreResource.Type.MEMORY_STORE)
+                    .access(BetaManagedAgentsMemoryStoreResource.Access.READ_WRITE)
+                    .description("description")
+                    .instructions("instructions")
+                    .mountPath("mount_path")
+                    .name("name")
                     .build()
             )
 

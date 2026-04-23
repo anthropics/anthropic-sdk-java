@@ -257,6 +257,21 @@ private constructor(
         fun contentBlock(compaction: BetaCompactionBlock) =
             contentBlock(ContentBlock.ofCompaction(compaction))
 
+        /**
+         * Alias for calling [contentBlock] with the following:
+         * ```java
+         * BetaCompactionBlock.builder()
+         *     .content(content)
+         *     .build()
+         * ```
+         */
+        fun compactionContentBlock(content: String?) =
+            contentBlock(BetaCompactionBlock.builder().content(content).build())
+
+        /** Alias for calling [compactionContentBlock] with `content.orElse(null)`. */
+        fun compactionContentBlock(content: Optional<String>) =
+            compactionContentBlock(content.getOrNull())
+
         fun index(index: Long) = index(JsonField.of(index))
 
         /**

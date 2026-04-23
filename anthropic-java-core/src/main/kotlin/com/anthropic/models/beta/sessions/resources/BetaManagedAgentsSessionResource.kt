@@ -18,12 +18,14 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/** A memory store attached to an agent session. */
 @JsonDeserialize(using = BetaManagedAgentsSessionResource.Deserializer::class)
 @JsonSerialize(using = BetaManagedAgentsSessionResource.Serializer::class)
 class BetaManagedAgentsSessionResource
 private constructor(
     private val githubRepository: BetaManagedAgentsGitHubRepositoryResource? = null,
     private val file: BetaManagedAgentsFileResource? = null,
+    private val memoryStore: BetaManagedAgentsMemoryStoreResource? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -32,14 +34,24 @@ private constructor(
 
     fun file(): Optional<BetaManagedAgentsFileResource> = Optional.ofNullable(file)
 
+    /** A memory store attached to an agent session. */
+    fun memoryStore(): Optional<BetaManagedAgentsMemoryStoreResource> =
+        Optional.ofNullable(memoryStore)
+
     fun isGitHubRepository(): Boolean = githubRepository != null
 
     fun isFile(): Boolean = file != null
+
+    fun isMemoryStore(): Boolean = memoryStore != null
 
     fun asGitHubRepository(): BetaManagedAgentsGitHubRepositoryResource =
         githubRepository.getOrThrow("githubRepository")
 
     fun asFile(): BetaManagedAgentsFileResource = file.getOrThrow("file")
+
+    /** A memory store attached to an agent session. */
+    fun asMemoryStore(): BetaManagedAgentsMemoryStoreResource =
+        memoryStore.getOrThrow("memoryStore")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -47,6 +59,7 @@ private constructor(
         when {
             githubRepository != null -> visitor.visitGitHubRepository(githubRepository)
             file != null -> visitor.visitFile(file)
+            memoryStore != null -> visitor.visitMemoryStore(memoryStore)
             else -> visitor.unknown(_json)
         }
 
@@ -67,6 +80,10 @@ private constructor(
 
                 override fun visitFile(file: BetaManagedAgentsFileResource) {
                     file.validate()
+                }
+
+                override fun visitMemoryStore(memoryStore: BetaManagedAgentsMemoryStoreResource) {
+                    memoryStore.validate()
                 }
             }
         )
@@ -96,6 +113,9 @@ private constructor(
 
                 override fun visitFile(file: BetaManagedAgentsFileResource) = file.validity()
 
+                override fun visitMemoryStore(memoryStore: BetaManagedAgentsMemoryStoreResource) =
+                    memoryStore.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -107,16 +127,18 @@ private constructor(
 
         return other is BetaManagedAgentsSessionResource &&
             githubRepository == other.githubRepository &&
-            file == other.file
+            file == other.file &&
+            memoryStore == other.memoryStore
     }
 
-    override fun hashCode(): Int = Objects.hash(githubRepository, file)
+    override fun hashCode(): Int = Objects.hash(githubRepository, file, memoryStore)
 
     override fun toString(): String =
         when {
             githubRepository != null ->
                 "BetaManagedAgentsSessionResource{githubRepository=$githubRepository}"
             file != null -> "BetaManagedAgentsSessionResource{file=$file}"
+            memoryStore != null -> "BetaManagedAgentsSessionResource{memoryStore=$memoryStore}"
             _json != null -> "BetaManagedAgentsSessionResource{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaManagedAgentsSessionResource")
         }
@@ -130,6 +152,11 @@ private constructor(
         @JvmStatic
         fun ofFile(file: BetaManagedAgentsFileResource) =
             BetaManagedAgentsSessionResource(file = file)
+
+        /** A memory store attached to an agent session. */
+        @JvmStatic
+        fun ofMemoryStore(memoryStore: BetaManagedAgentsMemoryStoreResource) =
+            BetaManagedAgentsSessionResource(memoryStore = memoryStore)
     }
 
     /**
@@ -141,6 +168,9 @@ private constructor(
         fun visitGitHubRepository(githubRepository: BetaManagedAgentsGitHubRepositoryResource): T
 
         fun visitFile(file: BetaManagedAgentsFileResource): T
+
+        /** A memory store attached to an agent session. */
+        fun visitMemoryStore(memoryStore: BetaManagedAgentsMemoryStoreResource): T
 
         /**
          * Maps an unknown variant of [BetaManagedAgentsSessionResource] to a value of type [T].
@@ -181,6 +211,14 @@ private constructor(
                         ?.let { BetaManagedAgentsSessionResource(file = it, _json = json) }
                         ?: BetaManagedAgentsSessionResource(_json = json)
                 }
+                "memory_store" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsMemoryStoreResource>(),
+                        )
+                        ?.let { BetaManagedAgentsSessionResource(memoryStore = it, _json = json) }
+                        ?: BetaManagedAgentsSessionResource(_json = json)
+                }
             }
 
             return BetaManagedAgentsSessionResource(_json = json)
@@ -198,6 +236,7 @@ private constructor(
             when {
                 value.githubRepository != null -> generator.writeObject(value.githubRepository)
                 value.file != null -> generator.writeObject(value.file)
+                value.memoryStore != null -> generator.writeObject(value.memoryStore)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaManagedAgentsSessionResource")
             }

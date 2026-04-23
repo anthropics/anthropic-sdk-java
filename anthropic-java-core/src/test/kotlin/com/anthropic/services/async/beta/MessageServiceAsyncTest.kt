@@ -20,7 +20,6 @@ import com.anthropic.models.beta.messages.BetaRequestMcpServerUrlDefinition
 import com.anthropic.models.beta.messages.BetaSkillParams
 import com.anthropic.models.beta.messages.BetaTextBlockParam
 import com.anthropic.models.beta.messages.BetaThinkingConfigAdaptive
-import com.anthropic.models.beta.messages.BetaTokenTaskBudget
 import com.anthropic.models.beta.messages.BetaTool
 import com.anthropic.models.beta.messages.BetaToolChoiceAuto
 import com.anthropic.models.beta.messages.BetaToolUsesKeep
@@ -112,9 +111,6 @@ internal class MessageServiceAsyncTest {
                                     )
                                     .build()
                             )
-                            .taskBudget(
-                                BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build()
-                            )
                             .build()
                     )
                     .outputFormat(
@@ -194,7 +190,6 @@ internal class MessageServiceAsyncTest {
                     )
                     .topK(5L)
                     .topP(0.7)
-                    .userProfileId("user_profile_id")
                     .build()
             )
 
@@ -281,9 +276,6 @@ internal class MessageServiceAsyncTest {
                                     )
                                     .build()
                             )
-                            .taskBudget(
-                                BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build()
-                            )
                             .build()
                     )
                     .outputFormat(
@@ -363,7 +355,6 @@ internal class MessageServiceAsyncTest {
                     )
                     .topK(5L)
                     .topP(0.7)
-                    .userProfileId("user_profile_id")
                     .build()
             )
 
@@ -433,9 +424,6 @@ internal class MessageServiceAsyncTest {
                                             .build()
                                     )
                                     .build()
-                            )
-                            .taskBudget(
-                                BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build()
                             )
                             .build()
                     )

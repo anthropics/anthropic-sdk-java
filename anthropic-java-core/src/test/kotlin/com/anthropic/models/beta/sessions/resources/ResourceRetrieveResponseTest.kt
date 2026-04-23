@@ -32,6 +32,7 @@ internal class ResourceRetrieveResponseTest {
 
         assertThat(resourceRetrieveResponse.githubRepository()).contains(githubRepository)
         assertThat(resourceRetrieveResponse.file()).isEmpty
+        assertThat(resourceRetrieveResponse.memoryStore()).isEmpty
     }
 
     @Test
@@ -75,6 +76,7 @@ internal class ResourceRetrieveResponseTest {
 
         assertThat(resourceRetrieveResponse.githubRepository()).isEmpty
         assertThat(resourceRetrieveResponse.file()).contains(file)
+        assertThat(resourceRetrieveResponse.memoryStore()).isEmpty
     }
 
     @Test
@@ -89,6 +91,51 @@ internal class ResourceRetrieveResponseTest {
                     .mountPath("/uploads/receipt.pdf")
                     .type(BetaManagedAgentsFileResource.Type.FILE)
                     .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                    .build()
+            )
+
+        val roundtrippedResourceRetrieveResponse =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(resourceRetrieveResponse),
+                jacksonTypeRef<ResourceRetrieveResponse>(),
+            )
+
+        assertThat(roundtrippedResourceRetrieveResponse).isEqualTo(resourceRetrieveResponse)
+    }
+
+    @Test
+    fun ofMemoryStore() {
+        val memoryStore =
+            BetaManagedAgentsMemoryStoreResource.builder()
+                .memoryStoreId("memory_store_id")
+                .type(BetaManagedAgentsMemoryStoreResource.Type.MEMORY_STORE)
+                .access(BetaManagedAgentsMemoryStoreResource.Access.READ_WRITE)
+                .description("description")
+                .instructions("instructions")
+                .mountPath("mount_path")
+                .name("name")
+                .build()
+
+        val resourceRetrieveResponse = ResourceRetrieveResponse.ofMemoryStore(memoryStore)
+
+        assertThat(resourceRetrieveResponse.githubRepository()).isEmpty
+        assertThat(resourceRetrieveResponse.file()).isEmpty
+        assertThat(resourceRetrieveResponse.memoryStore()).contains(memoryStore)
+    }
+
+    @Test
+    fun ofMemoryStoreRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val resourceRetrieveResponse =
+            ResourceRetrieveResponse.ofMemoryStore(
+                BetaManagedAgentsMemoryStoreResource.builder()
+                    .memoryStoreId("memory_store_id")
+                    .type(BetaManagedAgentsMemoryStoreResource.Type.MEMORY_STORE)
+                    .access(BetaManagedAgentsMemoryStoreResource.Access.READ_WRITE)
+                    .description("description")
+                    .instructions("instructions")
+                    .mountPath("mount_path")
+                    .name("name")
                     .build()
             )
 

@@ -22,7 +22,6 @@ class BetaOutputConfig
 private constructor(
     private val effort: JsonField<Effort>,
     private val format: JsonField<BetaJsonOutputFormat>,
-    private val taskBudget: JsonField<BetaTokenTaskBudget>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -32,10 +31,7 @@ private constructor(
         @JsonProperty("format")
         @ExcludeMissing
         format: JsonField<BetaJsonOutputFormat> = JsonMissing.of(),
-        @JsonProperty("task_budget")
-        @ExcludeMissing
-        taskBudget: JsonField<BetaTokenTaskBudget> = JsonMissing.of(),
-    ) : this(effort, format, taskBudget, mutableMapOf())
+    ) : this(effort, format, mutableMapOf())
 
     /**
      * All possible effort levels.
@@ -55,14 +51,6 @@ private constructor(
     fun format(): Optional<BetaJsonOutputFormat> = format.getOptional("format")
 
     /**
-     * User-configurable total token budget across contexts.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun taskBudget(): Optional<BetaTokenTaskBudget> = taskBudget.getOptional("task_budget")
-
-    /**
      * Returns the raw JSON value of [effort].
      *
      * Unlike [effort], this method doesn't throw if the JSON field has an unexpected type.
@@ -75,15 +63,6 @@ private constructor(
      * Unlike [format], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("format") @ExcludeMissing fun _format(): JsonField<BetaJsonOutputFormat> = format
-
-    /**
-     * Returns the raw JSON value of [taskBudget].
-     *
-     * Unlike [taskBudget], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("task_budget")
-    @ExcludeMissing
-    fun _taskBudget(): JsonField<BetaTokenTaskBudget> = taskBudget
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -108,14 +87,12 @@ private constructor(
 
         private var effort: JsonField<Effort> = JsonMissing.of()
         private var format: JsonField<BetaJsonOutputFormat> = JsonMissing.of()
-        private var taskBudget: JsonField<BetaTokenTaskBudget> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaOutputConfig: BetaOutputConfig) = apply {
             effort = betaOutputConfig.effort
             format = betaOutputConfig.format
-            taskBudget = betaOutputConfig.taskBudget
             additionalProperties = betaOutputConfig.additionalProperties.toMutableMap()
         }
 
@@ -151,25 +128,6 @@ private constructor(
          */
         fun format(format: JsonField<BetaJsonOutputFormat>) = apply { this.format = format }
 
-        /** User-configurable total token budget across contexts. */
-        fun taskBudget(taskBudget: BetaTokenTaskBudget?) =
-            taskBudget(JsonField.ofNullable(taskBudget))
-
-        /** Alias for calling [Builder.taskBudget] with `taskBudget.orElse(null)`. */
-        fun taskBudget(taskBudget: Optional<BetaTokenTaskBudget>) =
-            taskBudget(taskBudget.getOrNull())
-
-        /**
-         * Sets [Builder.taskBudget] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.taskBudget] with a well-typed [BetaTokenTaskBudget]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
-         */
-        fun taskBudget(taskBudget: JsonField<BetaTokenTaskBudget>) = apply {
-            this.taskBudget = taskBudget
-        }
-
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -195,7 +153,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          */
         fun build(): BetaOutputConfig =
-            BetaOutputConfig(effort, format, taskBudget, additionalProperties.toMutableMap())
+            BetaOutputConfig(effort, format, additionalProperties.toMutableMap())
     }
 
     private var validated: Boolean = false
@@ -207,7 +165,6 @@ private constructor(
 
         effort().ifPresent { it.validate() }
         format().ifPresent { it.validate() }
-        taskBudget().ifPresent { it.validate() }
         validated = true
     }
 
@@ -227,8 +184,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (effort.asKnown().getOrNull()?.validity() ?: 0) +
-            (format.asKnown().getOrNull()?.validity() ?: 0) +
-            (taskBudget.asKnown().getOrNull()?.validity() ?: 0)
+            (format.asKnown().getOrNull()?.validity() ?: 0)
 
     /** All possible effort levels. */
     class Effort @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -251,8 +207,6 @@ private constructor(
 
             @JvmField val HIGH = of("high")
 
-            @JvmField val XHIGH = of("xhigh")
-
             @JvmField val MAX = of("max")
 
             @JvmStatic fun of(value: String) = Effort(JsonField.of(value))
@@ -263,7 +217,6 @@ private constructor(
             LOW,
             MEDIUM,
             HIGH,
-            XHIGH,
             MAX,
         }
 
@@ -280,7 +233,6 @@ private constructor(
             LOW,
             MEDIUM,
             HIGH,
-            XHIGH,
             MAX,
             /** An enum member indicating that [Effort] was instantiated with an unknown value. */
             _UNKNOWN,
@@ -298,7 +250,6 @@ private constructor(
                 LOW -> Value.LOW
                 MEDIUM -> Value.MEDIUM
                 HIGH -> Value.HIGH
-                XHIGH -> Value.XHIGH
                 MAX -> Value.MAX
                 else -> Value._UNKNOWN
             }
@@ -317,7 +268,6 @@ private constructor(
                 LOW -> Known.LOW
                 MEDIUM -> Known.MEDIUM
                 HIGH -> Known.HIGH
-                XHIGH -> Known.XHIGH
                 MAX -> Known.MAX
                 else -> throw AnthropicInvalidDataException("Unknown Effort: $value")
             }
@@ -384,16 +334,13 @@ private constructor(
         return other is BetaOutputConfig &&
             effort == other.effort &&
             format == other.format &&
-            taskBudget == other.taskBudget &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(effort, format, taskBudget, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(effort, format, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaOutputConfig{effort=$effort, format=$format, taskBudget=$taskBudget, additionalProperties=$additionalProperties}"
+        "BetaOutputConfig{effort=$effort, format=$format, additionalProperties=$additionalProperties}"
 }
