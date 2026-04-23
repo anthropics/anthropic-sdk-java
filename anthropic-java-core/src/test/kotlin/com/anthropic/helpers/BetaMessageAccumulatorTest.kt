@@ -1155,7 +1155,9 @@ internal class BetaMessageAccumulatorTest {
     private fun compactionContentBlockStartEvent(index: Long, content: String = "") =
         contentBlockStartEvent(
             index,
-            ContentBlock.ofCompaction(BetaCompactionBlock.builder().content(content).build()),
+            ContentBlock.ofCompaction(
+                BetaCompactionBlock.builder().content(content).encryptedContent("").build()
+            ),
         )
 
     private fun compactionContentBlockDeltaEvent(index: Long, content: String) =
@@ -1268,7 +1270,7 @@ internal class BetaMessageAccumulatorTest {
         BetaSignatureDelta.builder().signature(signature).build()
 
     private fun compactionDelta(content: String) =
-        BetaCompactionContentBlockDelta.builder().content(content).build()
+        BetaCompactionContentBlockDelta.builder().content(content).encryptedContent("").build()
 
     private fun textBlock(text: String) =
         BetaTextBlock.builder().text(text).citations(listOf()).build()
@@ -1277,5 +1279,5 @@ internal class BetaMessageAccumulatorTest {
         BetaThinkingBlock.builder().thinking(thinking).signature(signature).build()
 
     private fun compactionBlock(content: String = "") =
-        BetaCompactionBlock.builder().content(content).build()
+        BetaCompactionBlock.builder().content(content).encryptedContent("").build()
 }
