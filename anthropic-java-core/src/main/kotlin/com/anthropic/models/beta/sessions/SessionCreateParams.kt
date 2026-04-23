@@ -310,6 +310,24 @@ private constructor(
          */
         fun addFileResource(fileId: String) = apply { body.addFileResource(fileId) }
 
+        /** Alias for calling [addResource] with `Resource.ofMemoryStore(memoryStore)`. */
+        fun addResource(memoryStore: BetaManagedAgentsMemoryStoreResourceParam) = apply {
+            body.addResource(memoryStore)
+        }
+
+        /**
+         * Alias for calling [addResource] with the following:
+         * ```java
+         * BetaManagedAgentsMemoryStoreResourceParam.builder()
+         *     .type(BetaManagedAgentsMemoryStoreResourceParam.Type.MEMORY_STORE)
+         *     .memoryStoreId(memoryStoreId)
+         *     .build()
+         * ```
+         */
+        fun addMemoryStoreResource(memoryStoreId: String) = apply {
+            body.addMemoryStoreResource(memoryStoreId)
+        }
+
         /** Human-readable session title. */
         fun title(title: String?) = apply { body.title(title) }
 
@@ -776,6 +794,27 @@ private constructor(
                     BetaManagedAgentsFileResourceParams.builder()
                         .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                         .fileId(fileId)
+                        .build()
+                )
+
+            /** Alias for calling [addResource] with `Resource.ofMemoryStore(memoryStore)`. */
+            fun addResource(memoryStore: BetaManagedAgentsMemoryStoreResourceParam) =
+                addResource(Resource.ofMemoryStore(memoryStore))
+
+            /**
+             * Alias for calling [addResource] with the following:
+             * ```java
+             * BetaManagedAgentsMemoryStoreResourceParam.builder()
+             *     .type(BetaManagedAgentsMemoryStoreResourceParam.Type.MEMORY_STORE)
+             *     .memoryStoreId(memoryStoreId)
+             *     .build()
+             * ```
+             */
+            fun addMemoryStoreResource(memoryStoreId: String) =
+                addResource(
+                    BetaManagedAgentsMemoryStoreResourceParam.builder()
+                        .type(BetaManagedAgentsMemoryStoreResourceParam.Type.MEMORY_STORE)
+                        .memoryStoreId(memoryStoreId)
                         .build()
                 )
 
@@ -1250,6 +1289,7 @@ private constructor(
     private constructor(
         private val githubRepository: BetaManagedAgentsGitHubRepositoryResourceParams? = null,
         private val file: BetaManagedAgentsFileResourceParams? = null,
+        private val memoryStore: BetaManagedAgentsMemoryStoreResourceParam? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -1260,9 +1300,15 @@ private constructor(
         /** Mount a file uploaded via the Files API into the session. */
         fun file(): Optional<BetaManagedAgentsFileResourceParams> = Optional.ofNullable(file)
 
+        /** Parameters for attaching a memory store to an agent session. */
+        fun memoryStore(): Optional<BetaManagedAgentsMemoryStoreResourceParam> =
+            Optional.ofNullable(memoryStore)
+
         fun isGitHubRepository(): Boolean = githubRepository != null
 
         fun isFile(): Boolean = file != null
+
+        fun isMemoryStore(): Boolean = memoryStore != null
 
         /** Mount a GitHub repository into the session's container. */
         fun asGitHubRepository(): BetaManagedAgentsGitHubRepositoryResourceParams =
@@ -1271,12 +1317,17 @@ private constructor(
         /** Mount a file uploaded via the Files API into the session. */
         fun asFile(): BetaManagedAgentsFileResourceParams = file.getOrThrow("file")
 
+        /** Parameters for attaching a memory store to an agent session. */
+        fun asMemoryStore(): BetaManagedAgentsMemoryStoreResourceParam =
+            memoryStore.getOrThrow("memoryStore")
+
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 githubRepository != null -> visitor.visitGitHubRepository(githubRepository)
                 file != null -> visitor.visitFile(file)
+                memoryStore != null -> visitor.visitMemoryStore(memoryStore)
                 else -> visitor.unknown(_json)
             }
 
@@ -1297,6 +1348,12 @@ private constructor(
 
                     override fun visitFile(file: BetaManagedAgentsFileResourceParams) {
                         file.validate()
+                    }
+
+                    override fun visitMemoryStore(
+                        memoryStore: BetaManagedAgentsMemoryStoreResourceParam
+                    ) {
+                        memoryStore.validate()
                     }
                 }
             )
@@ -1328,6 +1385,10 @@ private constructor(
                     override fun visitFile(file: BetaManagedAgentsFileResourceParams) =
                         file.validity()
 
+                    override fun visitMemoryStore(
+                        memoryStore: BetaManagedAgentsMemoryStoreResourceParam
+                    ) = memoryStore.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -1339,15 +1400,17 @@ private constructor(
 
             return other is Resource &&
                 githubRepository == other.githubRepository &&
-                file == other.file
+                file == other.file &&
+                memoryStore == other.memoryStore
         }
 
-        override fun hashCode(): Int = Objects.hash(githubRepository, file)
+        override fun hashCode(): Int = Objects.hash(githubRepository, file, memoryStore)
 
         override fun toString(): String =
             when {
                 githubRepository != null -> "Resource{githubRepository=$githubRepository}"
                 file != null -> "Resource{file=$file}"
+                memoryStore != null -> "Resource{memoryStore=$memoryStore}"
                 _json != null -> "Resource{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Resource")
             }
@@ -1362,6 +1425,11 @@ private constructor(
 
             /** Mount a file uploaded via the Files API into the session. */
             @JvmStatic fun ofFile(file: BetaManagedAgentsFileResourceParams) = Resource(file = file)
+
+            /** Parameters for attaching a memory store to an agent session. */
+            @JvmStatic
+            fun ofMemoryStore(memoryStore: BetaManagedAgentsMemoryStoreResourceParam) =
+                Resource(memoryStore = memoryStore)
         }
 
         /**
@@ -1376,6 +1444,9 @@ private constructor(
 
             /** Mount a file uploaded via the Files API into the session. */
             fun visitFile(file: BetaManagedAgentsFileResourceParams): T
+
+            /** Parameters for attaching a memory store to an agent session. */
+            fun visitMemoryStore(memoryStore: BetaManagedAgentsMemoryStoreResourceParam): T
 
             /**
              * Maps an unknown variant of [Resource] to a value of type [T].
@@ -1414,6 +1485,14 @@ private constructor(
                             )
                             ?.let { Resource(file = it, _json = json) } ?: Resource(_json = json)
                     }
+                    "memory_store" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsMemoryStoreResourceParam>(),
+                            )
+                            ?.let { Resource(memoryStore = it, _json = json) }
+                            ?: Resource(_json = json)
+                    }
                 }
 
                 return Resource(_json = json)
@@ -1430,6 +1509,7 @@ private constructor(
                 when {
                     value.githubRepository != null -> generator.writeObject(value.githubRepository)
                     value.file != null -> generator.writeObject(value.file)
+                    value.memoryStore != null -> generator.writeObject(value.memoryStore)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Resource")
                 }

@@ -192,11 +192,7 @@ internal class BetaRawContentBlockDeltaTest {
 
     @Test
     fun ofCompaction() {
-        val compaction =
-            BetaCompactionContentBlockDelta.builder()
-                .content("content")
-                .encryptedContent("encrypted_content")
-                .build()
+        val compaction = BetaCompactionContentBlockDelta.builder().content("content").build()
 
         val betaRawContentBlockDelta = BetaRawContentBlockDelta.ofCompaction(compaction)
 
@@ -213,10 +209,7 @@ internal class BetaRawContentBlockDeltaTest {
         val jsonMapper = jsonMapper()
         val betaRawContentBlockDelta =
             BetaRawContentBlockDelta.ofCompaction(
-                BetaCompactionContentBlockDelta.builder()
-                    .content("content")
-                    .encryptedContent("encrypted_content")
-                    .build()
+                BetaCompactionContentBlockDelta.builder().content("content").build()
             )
 
         val roundtrippedBetaRawContentBlockDelta =

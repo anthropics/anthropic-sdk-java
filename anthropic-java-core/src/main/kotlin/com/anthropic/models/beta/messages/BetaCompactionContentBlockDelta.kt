@@ -21,7 +21,6 @@ class BetaCompactionContentBlockDelta
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val content: JsonField<String>,
-    private val encryptedContent: JsonField<String>,
     private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -29,25 +28,14 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("content") @ExcludeMissing content: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("encrypted_content")
-        @ExcludeMissing
-        encryptedContent: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(content, encryptedContent, type, mutableMapOf())
+    ) : this(content, type, mutableMapOf())
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun content(): Optional<String> = content.getOptional("content")
-
-    /**
-     * Opaque metadata from prior compaction, to be round-tripped verbatim
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun encryptedContent(): Optional<String> = encryptedContent.getOptional("encrypted_content")
 
     /**
      * Expected to always return the following:
@@ -66,16 +54,6 @@ private constructor(
      * Unlike [content], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("content") @ExcludeMissing fun _content(): JsonField<String> = content
-
-    /**
-     * Returns the raw JSON value of [encryptedContent].
-     *
-     * Unlike [encryptedContent], this method doesn't throw if the JSON field has an unexpected
-     * type.
-     */
-    @JsonProperty("encrypted_content")
-    @ExcludeMissing
-    fun _encryptedContent(): JsonField<String> = encryptedContent
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -98,7 +76,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .content()
-         * .encryptedContent()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -108,7 +85,6 @@ private constructor(
     class Builder internal constructor() {
 
         private var content: JsonField<String>? = null
-        private var encryptedContent: JsonField<String>? = null
         private var type: JsonValue = JsonValue.from("compaction_delta")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -116,7 +92,6 @@ private constructor(
         internal fun from(betaCompactionContentBlockDelta: BetaCompactionContentBlockDelta) =
             apply {
                 content = betaCompactionContentBlockDelta.content
-                encryptedContent = betaCompactionContentBlockDelta.encryptedContent
                 type = betaCompactionContentBlockDelta.type
                 additionalProperties =
                     betaCompactionContentBlockDelta.additionalProperties.toMutableMap()
@@ -134,25 +109,6 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun content(content: JsonField<String>) = apply { this.content = content }
-
-        /** Opaque metadata from prior compaction, to be round-tripped verbatim */
-        fun encryptedContent(encryptedContent: String?) =
-            encryptedContent(JsonField.ofNullable(encryptedContent))
-
-        /** Alias for calling [Builder.encryptedContent] with `encryptedContent.orElse(null)`. */
-        fun encryptedContent(encryptedContent: Optional<String>) =
-            encryptedContent(encryptedContent.getOrNull())
-
-        /**
-         * Sets [Builder.encryptedContent] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.encryptedContent] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun encryptedContent(encryptedContent: JsonField<String>) = apply {
-            this.encryptedContent = encryptedContent
-        }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -195,7 +151,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .content()
-         * .encryptedContent()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -203,7 +158,6 @@ private constructor(
         fun build(): BetaCompactionContentBlockDelta =
             BetaCompactionContentBlockDelta(
                 checkRequired("content", content),
-                checkRequired("encryptedContent", encryptedContent),
                 type,
                 additionalProperties.toMutableMap(),
             )
@@ -217,7 +171,6 @@ private constructor(
         }
 
         content()
-        encryptedContent()
         _type().let {
             if (it != JsonValue.from("compaction_delta")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
@@ -242,7 +195,6 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (content.asKnown().isPresent) 1 else 0) +
-            (if (encryptedContent.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("compaction_delta")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
@@ -252,17 +204,14 @@ private constructor(
 
         return other is BetaCompactionContentBlockDelta &&
             content == other.content &&
-            encryptedContent == other.encryptedContent &&
             type == other.type &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(content, encryptedContent, type, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(content, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaCompactionContentBlockDelta{content=$content, encryptedContent=$encryptedContent, type=$type, additionalProperties=$additionalProperties}"
+        "BetaCompactionContentBlockDelta{content=$content, type=$type, additionalProperties=$additionalProperties}"
 }

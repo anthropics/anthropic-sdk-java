@@ -18,7 +18,6 @@ internal class EffortCapabilityTest {
                 .max(CapabilitySupport.builder().supported(true).build())
                 .medium(CapabilitySupport.builder().supported(true).build())
                 .supported(true)
-                .xhigh(CapabilitySupport.builder().supported(true).build())
                 .build()
 
         assertThat(effortCapability.high())
@@ -30,8 +29,6 @@ internal class EffortCapabilityTest {
         assertThat(effortCapability.medium())
             .isEqualTo(CapabilitySupport.builder().supported(true).build())
         assertThat(effortCapability.supported()).isEqualTo(true)
-        assertThat(effortCapability.xhigh())
-            .contains(CapabilitySupport.builder().supported(true).build())
     }
 
     @Test
@@ -44,7 +41,6 @@ internal class EffortCapabilityTest {
                 .max(CapabilitySupport.builder().supported(true).build())
                 .medium(CapabilitySupport.builder().supported(true).build())
                 .supported(true)
-                .xhigh(CapabilitySupport.builder().supported(true).build())
                 .build()
 
         val roundtrippedEffortCapability =

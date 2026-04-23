@@ -825,11 +825,7 @@ internal class BetaContentBlockTest {
 
     @Test
     fun ofCompaction() {
-        val compaction =
-            BetaCompactionBlock.builder()
-                .content("content")
-                .encryptedContent("encrypted_content")
-                .build()
+        val compaction = BetaCompactionBlock.builder().content("content").build()
 
         val betaContentBlock = BetaContentBlock.ofCompaction(compaction)
 
@@ -855,12 +851,7 @@ internal class BetaContentBlockTest {
     fun ofCompactionRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaContentBlock =
-            BetaContentBlock.ofCompaction(
-                BetaCompactionBlock.builder()
-                    .content("content")
-                    .encryptedContent("encrypted_content")
-                    .build()
-            )
+            BetaContentBlock.ofCompaction(BetaCompactionBlock.builder().content("content").build())
 
         val roundtrippedBetaContentBlock =
             jsonMapper.readValue(

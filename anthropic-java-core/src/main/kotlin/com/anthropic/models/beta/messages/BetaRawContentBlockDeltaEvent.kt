@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BetaRawContentBlockDeltaEvent
@@ -238,6 +239,20 @@ private constructor(
         /** Alias for calling [delta] with `BetaRawContentBlockDelta.ofCompaction(compaction)`. */
         fun delta(compaction: BetaCompactionContentBlockDelta) =
             delta(BetaRawContentBlockDelta.ofCompaction(compaction))
+
+        /**
+         * Alias for calling [delta] with the following:
+         * ```java
+         * BetaCompactionContentBlockDelta.builder()
+         *     .content(content)
+         *     .build()
+         * ```
+         */
+        fun compactionDelta(content: String?) =
+            delta(BetaCompactionContentBlockDelta.builder().content(content).build())
+
+        /** Alias for calling [compactionDelta] with `content.orElse(null)`. */
+        fun compactionDelta(content: Optional<String>) = compactionDelta(content.getOrNull())
 
         fun index(index: Long) = index(JsonField.of(index))
 

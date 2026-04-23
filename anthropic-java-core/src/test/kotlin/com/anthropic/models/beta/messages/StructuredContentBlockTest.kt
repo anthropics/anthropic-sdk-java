@@ -133,8 +133,7 @@ internal class StructuredContentBlockTest {
         private val MCP_TOOL_RESULT =
             BetaMcpToolResultBlock.builder().content(STRING).isError(true).toolUseId(STRING).build()
         private val CONTAINER_UPLOAD = BetaContainerUploadBlock.builder().fileId(STRING).build()
-        private val COMPACTION =
-            BetaCompactionBlock.builder().content(STRING).encryptedContent(null).build()
+        private val COMPACTION = BetaCompactionBlock.builder().content(STRING).build()
 
         // The list order follows the declaration order in `BetaContentBlock` for easier
         // maintenance.

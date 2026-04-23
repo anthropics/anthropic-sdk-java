@@ -389,7 +389,7 @@ private constructor(
      * Used to remove "long tail" low probability responses.
      * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
      *
-     * Recommended for advanced use cases only. You usually only need to use `temperature`.
+     * Recommended for advanced use cases only.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -404,10 +404,9 @@ private constructor(
      *
      * In nucleus sampling, we compute the cumulative distribution over all the options for each
      * subsequent token in decreasing probability order and cut it off once it reaches a particular
-     * probability specified by `top_p`. You should either alter `temperature` or `top_p`, but not
-     * both.
+     * probability specified by `top_p`.
      *
-     * Recommended for advanced use cases only. You usually only need to use `temperature`.
+     * Recommended for advanced use cases only.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -416,15 +415,6 @@ private constructor(
         "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
     )
     fun topP(): Optional<Double> = body.topP()
-
-    /**
-     * The user profile ID to attribute this request to. Use when acting on behalf of a party other
-     * than your organization.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun userProfileId(): Optional<String> = body.userProfileId()
 
     /**
      * Returns the raw JSON value of [maxTokens].
@@ -583,13 +573,6 @@ private constructor(
         "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
     )
     fun _topP(): JsonField<Double> = body._topP()
-
-    /**
-     * Returns the raw JSON value of [userProfileId].
-     *
-     * Unlike [userProfileId], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    fun _userProfileId(): JsonField<String> = body._userProfileId()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -1552,7 +1535,7 @@ private constructor(
          * Used to remove "long tail" low probability responses.
          * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
          *
-         * Recommended for advanced use cases only. You usually only need to use `temperature`.
+         * Recommended for advanced use cases only.
          */
         @Deprecated(
             "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
@@ -1575,10 +1558,9 @@ private constructor(
          *
          * In nucleus sampling, we compute the cumulative distribution over all the options for each
          * subsequent token in decreasing probability order and cut it off once it reaches a
-         * particular probability specified by `top_p`. You should either alter `temperature` or
-         * `top_p`, but not both.
+         * particular probability specified by `top_p`.
          *
-         * Recommended for advanced use cases only. You usually only need to use `temperature`.
+         * Recommended for advanced use cases only.
          */
         @Deprecated(
             "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
@@ -1595,27 +1577,6 @@ private constructor(
             "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
         )
         fun topP(topP: JsonField<Double>) = apply { body.topP(topP) }
-
-        /**
-         * The user profile ID to attribute this request to. Use when acting on behalf of a party
-         * other than your organization.
-         */
-        fun userProfileId(userProfileId: String?) = apply { body.userProfileId(userProfileId) }
-
-        /** Alias for calling [Builder.userProfileId] with `userProfileId.orElse(null)`. */
-        fun userProfileId(userProfileId: Optional<String>) =
-            userProfileId(userProfileId.getOrNull())
-
-        /**
-         * Sets [Builder.userProfileId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.userProfileId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun userProfileId(userProfileId: JsonField<String>) = apply {
-            body.userProfileId(userProfileId)
-        }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -1794,7 +1755,6 @@ private constructor(
         private val tools: JsonField<List<BetaToolUnion>>,
         private val topK: JsonField<Long>,
         private val topP: JsonField<Double>,
-        private val userProfileId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -1853,9 +1813,6 @@ private constructor(
             tools: JsonField<List<BetaToolUnion>> = JsonMissing.of(),
             @JsonProperty("top_k") @ExcludeMissing topK: JsonField<Long> = JsonMissing.of(),
             @JsonProperty("top_p") @ExcludeMissing topP: JsonField<Double> = JsonMissing.of(),
-            @JsonProperty("user_profile_id")
-            @ExcludeMissing
-            userProfileId: JsonField<String> = JsonMissing.of(),
         ) : this(
             maxTokens,
             messages,
@@ -1878,7 +1835,6 @@ private constructor(
             tools,
             topK,
             topP,
-            userProfileId,
             mutableMapOf(),
         )
 
@@ -2219,7 +2175,7 @@ private constructor(
          * Used to remove "long tail" low probability responses.
          * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
          *
-         * Recommended for advanced use cases only. You usually only need to use `temperature`.
+         * Recommended for advanced use cases only.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -2234,10 +2190,9 @@ private constructor(
          *
          * In nucleus sampling, we compute the cumulative distribution over all the options for each
          * subsequent token in decreasing probability order and cut it off once it reaches a
-         * particular probability specified by `top_p`. You should either alter `temperature` or
-         * `top_p`, but not both.
+         * particular probability specified by `top_p`.
          *
-         * Recommended for advanced use cases only. You usually only need to use `temperature`.
+         * Recommended for advanced use cases only.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -2246,15 +2201,6 @@ private constructor(
             "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
         )
         fun topP(): Optional<Double> = topP.getOptional("top_p")
-
-        /**
-         * The user profile ID to attribute this request to. Use when acting on behalf of a party
-         * other than your organization.
-         *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
-         *   the server responded with an unexpected value).
-         */
-        fun userProfileId(): Optional<String> = userProfileId.getOptional("user_profile_id")
 
         /**
          * Returns the raw JSON value of [maxTokens].
@@ -2451,16 +2397,6 @@ private constructor(
         @ExcludeMissing
         fun _topP(): JsonField<Double> = topP
 
-        /**
-         * Returns the raw JSON value of [userProfileId].
-         *
-         * Unlike [userProfileId], this method doesn't throw if the JSON field has an unexpected
-         * type.
-         */
-        @JsonProperty("user_profile_id")
-        @ExcludeMissing
-        fun _userProfileId(): JsonField<String> = userProfileId
-
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -2513,7 +2449,6 @@ private constructor(
             private var tools: JsonField<MutableList<BetaToolUnion>>? = null
             private var topK: JsonField<Long> = JsonMissing.of()
             private var topP: JsonField<Double> = JsonMissing.of()
-            private var userProfileId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -2539,7 +2474,6 @@ private constructor(
                 tools = body.tools.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 topK = body.topK
                 topP = body.topP
-                userProfileId = body.userProfileId
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -3389,7 +3323,7 @@ private constructor(
              * Used to remove "long tail" low probability responses.
              * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
              *
-             * Recommended for advanced use cases only. You usually only need to use `temperature`.
+             * Recommended for advanced use cases only.
              */
             @Deprecated(
                 "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
@@ -3413,10 +3347,9 @@ private constructor(
              *
              * In nucleus sampling, we compute the cumulative distribution over all the options for
              * each subsequent token in decreasing probability order and cut it off once it reaches
-             * a particular probability specified by `top_p`. You should either alter `temperature`
-             * or `top_p`, but not both.
+             * a particular probability specified by `top_p`.
              *
-             * Recommended for advanced use cases only. You usually only need to use `temperature`.
+             * Recommended for advanced use cases only.
              */
             @Deprecated(
                 "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
@@ -3434,28 +3367,6 @@ private constructor(
                 "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
             )
             fun topP(topP: JsonField<Double>) = apply { this.topP = topP }
-
-            /**
-             * The user profile ID to attribute this request to. Use when acting on behalf of a
-             * party other than your organization.
-             */
-            fun userProfileId(userProfileId: String?) =
-                userProfileId(JsonField.ofNullable(userProfileId))
-
-            /** Alias for calling [Builder.userProfileId] with `userProfileId.orElse(null)`. */
-            fun userProfileId(userProfileId: Optional<String>) =
-                userProfileId(userProfileId.getOrNull())
-
-            /**
-             * Sets [Builder.userProfileId] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.userProfileId] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun userProfileId(userProfileId: JsonField<String>) = apply {
-                this.userProfileId = userProfileId
-            }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -3513,7 +3424,6 @@ private constructor(
                     (tools ?: JsonMissing.of()).map { it.toImmutable() },
                     topK,
                     topP,
-                    userProfileId,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -3546,7 +3456,6 @@ private constructor(
             tools().ifPresent { it.forEach { it.validate() } }
             topK()
             topP()
-            userProfileId()
             validated = true
         }
 
@@ -3586,8 +3495,7 @@ private constructor(
                 (toolChoice.asKnown().getOrNull()?.validity() ?: 0) +
                 (tools.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (topK.asKnown().isPresent) 1 else 0) +
-                (if (topP.asKnown().isPresent) 1 else 0) +
-                (if (userProfileId.asKnown().isPresent) 1 else 0)
+                (if (topP.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -3616,7 +3524,6 @@ private constructor(
                 tools == other.tools &&
                 topK == other.topK &&
                 topP == other.topP &&
-                userProfileId == other.userProfileId &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -3643,7 +3550,6 @@ private constructor(
                 tools,
                 topK,
                 topP,
-                userProfileId,
                 additionalProperties,
             )
         }
@@ -3651,7 +3557,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, cacheControl=$cacheControl, container=$container, contextManagement=$contextManagement, inferenceGeo=$inferenceGeo, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, userProfileId=$userProfileId, additionalProperties=$additionalProperties}"
+            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, cacheControl=$cacheControl, container=$container, contextManagement=$contextManagement, inferenceGeo=$inferenceGeo, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
     }
 
     /** Container identifier for reuse across requests. */

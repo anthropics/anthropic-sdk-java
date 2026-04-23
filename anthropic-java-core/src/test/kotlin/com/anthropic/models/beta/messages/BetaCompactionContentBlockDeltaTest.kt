@@ -12,23 +12,16 @@ internal class BetaCompactionContentBlockDeltaTest {
     @Test
     fun create() {
         val betaCompactionContentBlockDelta =
-            BetaCompactionContentBlockDelta.builder()
-                .content("content")
-                .encryptedContent("encrypted_content")
-                .build()
+            BetaCompactionContentBlockDelta.builder().content("content").build()
 
         assertThat(betaCompactionContentBlockDelta.content()).contains("content")
-        assertThat(betaCompactionContentBlockDelta.encryptedContent()).contains("encrypted_content")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaCompactionContentBlockDelta =
-            BetaCompactionContentBlockDelta.builder()
-                .content("content")
-                .encryptedContent("encrypted_content")
-                .build()
+            BetaCompactionContentBlockDelta.builder().content("content").build()
 
         val roundtrippedBetaCompactionContentBlockDelta =
             jsonMapper.readValue(

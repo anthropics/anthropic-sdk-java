@@ -563,21 +563,6 @@ internal constructor(
         /** @see MessageCreateParams.Builder.topP */
         fun topP(topP: JsonField<Double>) = apply { paramsBuilder.topP(topP) }
 
-        /** @see MessageCreateParams.Builder.userProfileId */
-        fun userProfileId(userProfileId: String?) = apply {
-            paramsBuilder.userProfileId(userProfileId)
-        }
-
-        /** @see MessageCreateParams.Builder.userProfileId */
-        fun userProfileId(userProfileId: Optional<String>) = apply {
-            paramsBuilder.userProfileId(userProfileId)
-        }
-
-        /** @see MessageCreateParams.Builder.userProfileId */
-        fun userProfileId(userProfileId: JsonField<String>) = apply {
-            paramsBuilder.userProfileId(userProfileId)
-        }
-
         /** @see MessageCreateParams.Builder.additionalBodyProperties */
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             paramsBuilder.additionalBodyProperties(additionalBodyProperties)

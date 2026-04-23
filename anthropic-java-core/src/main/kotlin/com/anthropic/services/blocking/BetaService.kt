@@ -6,11 +6,11 @@ import com.anthropic.core.ClientOptions
 import com.anthropic.services.blocking.beta.AgentService
 import com.anthropic.services.blocking.beta.EnvironmentService
 import com.anthropic.services.blocking.beta.FileService
+import com.anthropic.services.blocking.beta.MemoryStoreService
 import com.anthropic.services.blocking.beta.MessageService
 import com.anthropic.services.blocking.beta.ModelService
 import com.anthropic.services.blocking.beta.SessionService
 import com.anthropic.services.blocking.beta.SkillService
-import com.anthropic.services.blocking.beta.UserProfileService
 import com.anthropic.services.blocking.beta.VaultService
 import java.util.function.Consumer
 
@@ -40,11 +40,11 @@ interface BetaService {
 
     fun vaults(): VaultService
 
+    fun memoryStores(): MemoryStoreService
+
     fun files(): FileService
 
     fun skills(): SkillService
-
-    fun userProfiles(): UserProfileService
 
     /** A view of [BetaService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -68,10 +68,10 @@ interface BetaService {
 
         fun vaults(): VaultService.WithRawResponse
 
+        fun memoryStores(): MemoryStoreService.WithRawResponse
+
         fun files(): FileService.WithRawResponse
 
         fun skills(): SkillService.WithRawResponse
-
-        fun userProfiles(): UserProfileService.WithRawResponse
     }
 }
