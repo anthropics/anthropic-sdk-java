@@ -251,6 +251,8 @@ private constructor(
 
             @JvmField val HIGH = of("high")
 
+            @JvmField val XHIGH = of("xhigh")
+
             @JvmField val MAX = of("max")
 
             @JvmStatic fun of(value: String) = Effort(JsonField.of(value))
@@ -261,6 +263,7 @@ private constructor(
             LOW,
             MEDIUM,
             HIGH,
+            XHIGH,
             MAX,
         }
 
@@ -277,6 +280,7 @@ private constructor(
             LOW,
             MEDIUM,
             HIGH,
+            XHIGH,
             MAX,
             /** An enum member indicating that [Effort] was instantiated with an unknown value. */
             _UNKNOWN,
@@ -294,6 +298,7 @@ private constructor(
                 LOW -> Value.LOW
                 MEDIUM -> Value.MEDIUM
                 HIGH -> Value.HIGH
+                XHIGH -> Value.XHIGH
                 MAX -> Value.MAX
                 else -> Value._UNKNOWN
             }
@@ -312,6 +317,7 @@ private constructor(
                 LOW -> Known.LOW
                 MEDIUM -> Known.MEDIUM
                 HIGH -> Known.HIGH
+                XHIGH -> Known.XHIGH
                 MAX -> Known.MAX
                 else -> throw AnthropicInvalidDataException("Unknown Effort: $value")
             }
