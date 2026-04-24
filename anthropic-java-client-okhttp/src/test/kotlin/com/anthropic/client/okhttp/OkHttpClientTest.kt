@@ -31,6 +31,43 @@ internal class OkHttpClientTest {
     }
 
     @Test
+    fun addInterceptor_interceptorIsCalledAndCanAddHeaders() {
+        stubFor(post(urlPathEqualTo("/something")).willReturn(ok()))
+        val traceIdHolder = ThreadLocal<String>()
+        val clientWithInterceptor =
+            OkHttpClient.builder()
+                .backend(TestBackend(baseUrl))
+                .addInterceptor { chain ->
+                    val traceId = traceIdHolder.get()
+                    val request =
+                        if (traceId != null) {
+                            chain.request().newBuilder().addHeader("X-Trace-Id", traceId).build()
+                        } else {
+                            chain.request()
+                        }
+                    chain.proceed(request)
+                }
+                .build()
+
+        traceIdHolder.set("test-trace-123")
+        try {
+            clientWithInterceptor
+                .execute(
+                    HttpRequest.builder()
+                        .method(HttpMethod.POST)
+                        .baseUrl(baseUrl)
+                        .addPathSegment("something")
+                        .build()
+                )
+                .close()
+        } finally {
+            traceIdHolder.remove()
+        }
+
+        verify(postRequestedFor(urlPathEqualTo("/something")).withHeader("X-Trace-Id", equalTo("test-trace-123")))
+    }
+
+    @Test
     fun executeAsync_whenFutureCancelled_cancelsUnderlyingCall() {
         stubFor(post(urlPathEqualTo("/something")).willReturn(ok()))
         val responseFuture =
