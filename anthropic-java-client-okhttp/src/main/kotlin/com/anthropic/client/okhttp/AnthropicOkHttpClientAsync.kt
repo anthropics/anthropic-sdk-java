@@ -382,7 +382,10 @@ class AnthropicOkHttpClientAsync private constructor() {
          *
          * System properties take precedence over environment variables.
          */
-        fun fromEnv() = apply { ensureDefaultBackendBuilder("fromEnv").fromEnv() }
+        fun fromEnv() = apply {
+            clientOptions.fromEnv()
+            ensureDefaultBackendBuilder("fromEnv").fromEnv()
+        }
 
         fun backend(backend: Backend) = apply {
             check(defaultBackendBuilder == null) {
